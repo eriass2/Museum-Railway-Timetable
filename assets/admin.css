@@ -1,0 +1,26 @@
+/* Admin styling for Museum Railway Timetable */
+.wrap h1 { color: #444; }
+
+/* Table for departures */
+.mrt-table { width:100%; border-collapse: collapse; margin: .5rem 0; }
+.mrt-table th, .mrt-table td { border:1px solid #ddd; padding:6px 8px; text-align:left; }
+.mrt-table th { background:#f6f6f6; }
+
+/* Station picker */
+.mrt-picker { margin-bottom: .75rem; }
+.mrt-picker select { min-width: 240px; }
+
+/* Month calendar */
+.mrt-month { margin: 1rem 0; }
+.mrt-month-header { font-weight: 600; font-size: 1.1rem; margin-bottom: .25rem; }
+.mrt-month-table { width:100%; border-collapse: collapse; table-layout: fixed; }
+.mrt-month-table th, .mrt-month-table td { border:1px solid #eee; width:14.285%; vertical-align: top; height: 72px; padding: 4px; }
+.mrt-month-table thead th { background:#fafafa; font-weight:600; }
+.mrt-day { position: relative; }
+.mrt-daynum { font-size:.9rem; opacity:.8; }
+.mrt-dot { position:absolute; right:6px; bottom:4px; font-size:.85rem; }
+.mrt-running { background: #f4fff4; }
+.mrt-empty { background: #fcfcfc; }
+.mrt-legend { margin-top: .5rem; font-size:.9rem; color:#444; }
+.mrt-legend-item { display:inline-flex; align-items:center; gap:.35rem; margin-right: .75rem; }
+.mrt-legend-dot { display:inline-block; width:.6rem; height:.6rem; background:#9ad29a; border:1px solid #6fb36f; border-radius:50%; }

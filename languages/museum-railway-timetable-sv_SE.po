@@ -1,0 +1,234 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Museum Railway Timetable 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-13 07:50:10+0000\n"
+"PO-Revision-Date: 2025-08-13 07:50:10+0000\n"
+"Last-Translator: Erik <info@bytex.se>\n"
+"Language-Team: Swedish\n"
+"Language: sv_SE\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: ChatGPT\n"
+"X-Domain: museum-railway-timetable\n"
+
+msgid "Museum Railway Timetable"
+msgstr "Museijärnvägens tidtabell"
+
+msgid "Railway Timetable"
+msgstr "Järnvägens tidtabell"
+
+msgid "General Settings"
+msgstr "Allmänna inställningar"
+
+msgid "Configure timetable display."
+msgstr "Konfigurera visning av tidtabell."
+
+msgid "Enable Plugin"
+msgstr "Aktivera tillägget"
+
+msgid "Note"
+msgstr "Anteckning"
+
+msgid "CSV Import"
+msgstr "CSV-import"
+
+msgid "📥 Import Guide – format & examples"
+msgstr "📥 Importguide – format & exempel"
+
+msgid "General"
+msgstr "Allmänt"
+
+msgid "CSV must have a header row and use comma as the delimiter."
+msgstr "CSV måste ha en rubrikrad och använda komma som avgränsare."
+
+msgid "Times: HH:MM (24h). Dates: YYYY-MM-DD."
+msgstr "Tider: HH:MM (24h). Datum: YYYY-MM-DD."
+
+msgid "Decimals for lat/lng must use a dot (e.g. 57.486), not a comma."
+msgstr "Decimaler för lat/lng ska använda punkt (t.ex. 57.486), inte komma."
+
+msgid "Services are created automatically if the title does not exist. Stations must already exist (via the stations import)."
+msgstr "Turer skapas automatiskt om titeln inte finns. Stationer måste redan finnas (via stationsimporten)."
+
+msgid "1) Stations"
+msgstr "1) Stationer"
+
+msgid "Headers:"
+msgstr "Rubriker:"
+
+msgid "station_type: station | halt | depot | museum"
+msgstr "station_type: station | halt | depot | museum"
+
+msgid "lat/lng are optional (decimals with dot)."
+msgstr "lat/lng är valfria (decimaler med punkt)."
+
+msgid "display_order is an integer used for sorting in lists."
+msgstr "display_order är ett heltal som används för sortering i listor."
+
+msgid "2) Stop Times"
+msgstr "2) Stoptider"
+
+msgid "service = the trip name (must match title exactly; will be created if needed)."
+msgstr "service = turens namn (måste matcha titeln exakt; skapas vid behov)."
+
+msgid "station = the station name (must be imported first)."
+msgstr "station = stationsnamn (måste importeras först)."
+
+msgid "sequence = 1..n (order along the route)."
+msgstr "sequence = 1..n (ordning längs rutten)."
+
+msgid "arrive/depart = HH:MM. For first stop arrive can be empty, for last stop depart can be empty."
+msgstr "arrive/depart = HH:MM. För första stopp kan arrive vara tomt, för sista kan depart vara tomt."
+
+msgid "pickup/dropoff = 1 or 0 (optional; default 1)."
+msgstr "pickup/dropoff = 1 eller 0 (valfritt; standard 1)."
+
+msgid "Importer replaces existing stop times for a service (removes and inserts new)."
+msgstr "Importören ersätter befintliga stoptider för en tur (tar bort och lägger in nya)."
+
+msgid "3) Calendar (service days)"
+msgstr "3) Kalender (kördagar)"
+
+msgid "The interval defines the base, weekdays (0/1) specify which days apply within the interval."
+msgstr "Intervallet definierar basen, veckodagar (0/1) anger vilka dagar som gäller inom intervallet."
+
+msgid "include_dates/exclude_dates: comma-separated YYYY-MM-DD for extra/cancelled days."
+msgstr "include_dates/exclude_dates: kommaseparerade YYYY-MM-DD för extra/inställda dagar."
+
+msgid "You can have multiple rows for the same service with different periods."
+msgstr "Du kan ha flera rader för samma tur med olika perioder."
+
+msgid "Common mistakes & tips"
+msgstr "Vanliga fel och tips"
+
+msgid "Excel may save with semicolons; choose “CSV (comma delimited)” or open in a text editor and replace \";\" with \",\"."
+msgstr "Excel kan spara med semikolon; välj ”CSV (kommaavgränsad)” eller öppna i en texteditor och ersätt \";\" med \",\"."
+
+msgid "Check that station names in stop times exactly match the titles in “Stations”."
+msgstr "Kontrollera att stationsnamn i stoptider exakt matchar titlarna i ”Stationer”."
+
+msgid "Time format must be HH:MM (e.g. 09:05, not 9:5)."
+msgstr "Tidsformat måste vara HH:MM (t.ex. 09:05, inte 9:5)."
+
+msgid "Lat/Lng should use a dot as the decimal separator."
+msgstr "Lat/Lng ska använda punkt som decimaltecken."
+
+msgid "Calendar: ensure start_date ≤ end_date and correct weekdays set to 1."
+msgstr "Kalender: säkerställ att start_date ≤ end_date och att rätt veckodagar är satta till 1."
+
+msgid "Download sample: Stations CSV"
+msgstr "Ladda ner exempel: Stationer CSV"
+
+msgid "Download sample: Stop Times CSV"
+msgstr "Ladda ner exempel: Stoptider CSV"
+
+msgid "Download sample: Calendar CSV"
+msgstr "Ladda ner exempel: Kalender CSV"
+
+msgid "Paste CSV here"
+msgstr "Klistra in CSV här"
+
+msgid "Import"
+msgstr "Importera"
+
+msgid "Nonce failed."
+msgstr "Nonce misslyckades."
+
+msgid "No rows parsed. Check CSV headers."
+msgstr "Inga rader lästes in. Kontrollera CSV-rubriker."
+
+msgid "Unknown tab."
+msgstr "Okänd flik."
+
+msgid "Stations: %d created, %d updated."
+msgstr "Stationer: %d skapade, %d uppdaterade."
+
+msgid "Stop times: %d inserted, %d skipped."
+msgstr "Stoptider: %d inlagda, %d överhoppade."
+
+msgid "Calendar: %d inserted, %d skipped."
+msgstr "Kalender: %d inlagda, %d överhoppade."
+
+msgid "You do not have permission to access this resource."
+msgstr "Du har inte behörighet att komma åt denna resurs."
+
+msgid "Nonce verification failed."
+msgstr "Nonce-verifiering misslyckades."
+
+msgid "Unknown CSV type."
+msgstr "Okänd CSV-typ."
+
+msgid "Stations"
+msgstr "Stationer"
+
+msgid "Station"
+msgstr "Station"
+
+msgid "Routes"
+msgstr "Sträckor"
+
+msgid "Route"
+msgstr "Sträcka"
+
+msgid "Services"
+msgstr "Turer"
+
+msgid "Service"
+msgstr "Tur"
+
+msgid "Train Types"
+msgstr "Tågtyper"
+
+msgid "Train Type"
+msgstr "Tågtyp"
+
+msgid "No upcoming departures."
+msgstr "Inga kommande avgångar."
+
+msgid "Arrives"
+msgstr "Ankommer"
+
+msgid "Departs"
+msgstr "Avgår"
+
+msgid "Direction"
+msgstr "Riktning"
+
+msgid "No services today."
+msgstr "Inga turer idag."
+
+msgid "Select station"
+msgstr "Välj station"
+
+msgid "Mon"
+msgstr "Mån"
+
+msgid "Tue"
+msgstr "Tis"
+
+msgid "Wed"
+msgstr "Ons"
+
+msgid "Thu"
+msgstr "Tors"
+
+msgid "Fri"
+msgstr "Fre"
+
+msgid "Sat"
+msgstr "Lör"
+
+msgid "Sun"
+msgstr "Sön"
+
+msgid "Service day"
+msgstr "Kördag"
+
+msgid "count per day"
+msgstr "antal per dag"
+
+msgid "Services running"
+msgstr "Turer körs"
+
