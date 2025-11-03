@@ -1,0 +1,319 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025
+# This file is distributed under the same license as the Museum Railway Timetable plugin.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Museum Railway Timetable 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-13 07:47:25+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: ChatGPT POT builder\n"
+"X-Domain: museum-railway-timetable\n"
+
+#: plugin
+msgid "Museum Railway Timetable"
+msgstr ""
+
+#: plugin
+msgid "Railway Timetable"
+msgstr ""
+
+#: plugin
+msgid "General Settings"
+msgstr ""
+
+#: plugin
+msgid "Configure timetable display."
+msgstr ""
+
+#: plugin
+msgid "Enable Plugin"
+msgstr ""
+
+#: plugin
+msgid "Note"
+msgstr ""
+
+#: plugin
+msgid "CSV Import"
+msgstr ""
+
+#: plugin
+msgid "📥 Import Guide – format & examples"
+msgstr ""
+
+#: plugin
+msgid "General"
+msgstr ""
+
+#: plugin
+msgid "CSV must have a header row and use comma as the delimiter."
+msgstr ""
+
+#: plugin
+msgid "Times: HH:MM (24h). Dates: YYYY-MM-DD."
+msgstr ""
+
+#: plugin
+msgid "Decimals for lat/lng must use a dot (e.g. 57.486), not a comma."
+msgstr ""
+
+#: plugin
+msgid "Services are created automatically if the title does not exist. Stations must already exist (via the stations import)."
+msgstr ""
+
+#: plugin
+msgid "1) Stations"
+msgstr ""
+
+#: plugin
+msgid "Headers:"
+msgstr ""
+
+#: plugin
+msgid "station_type: station | halt | depot | museum"
+msgstr ""
+
+#: plugin
+msgid "lat/lng are optional (decimals with dot)."
+msgstr ""
+
+#: plugin
+msgid "display_order is an integer used for sorting in lists."
+msgstr ""
+
+#: plugin
+msgid "2) Stop Times"
+msgstr ""
+
+#: plugin
+msgid "service = the trip name (must match title exactly; will be created if needed)."
+msgstr ""
+
+#: plugin
+msgid "station = the station name (must be imported first)."
+msgstr ""
+
+#: plugin
+msgid "sequence = 1..n (order along the route)."
+msgstr ""
+
+#: plugin
+msgid "arrive/depart = HH:MM. For first stop arrive can be empty, for last stop depart can be empty."
+msgstr ""
+
+#: plugin
+msgid "pickup/dropoff = 1 or 0 (optional; default 1)."
+msgstr ""
+
+#: plugin
+msgid "Importer replaces existing stop times for a service (removes and inserts new)."
+msgstr ""
+
+#: plugin
+msgid "3) Calendar (service days)"
+msgstr ""
+
+#: plugin
+msgid "The interval defines the base, weekdays (0/1) specify which days apply within the interval."
+msgstr ""
+
+#: plugin
+msgid "include_dates/exclude_dates: comma-separated YYYY-MM-DD for extra/cancelled days."
+msgstr ""
+
+#: plugin
+msgid "You can have multiple rows for the same service with different periods."
+msgstr ""
+
+#: plugin
+msgid "Common mistakes & tips"
+msgstr ""
+
+#: plugin
+msgid "Excel may save with semicolons; choose “CSV (comma delimited)” or open in a text editor and replace \";\" with \",\"."
+msgstr ""
+
+#: plugin
+msgid "Check that station names in stop times exactly match the titles in “Stations”."
+msgstr ""
+
+#: plugin
+msgid "Time format must be HH:MM (e.g. 09:05, not 9:5)."
+msgstr ""
+
+#: plugin
+msgid "Lat/Lng should use a dot as the decimal separator."
+msgstr ""
+
+#: plugin
+msgid "Calendar: ensure start_date ≤ end_date and correct weekdays set to 1."
+msgstr ""
+
+#: plugin
+msgid "Download sample: Stations CSV"
+msgstr ""
+
+#: plugin
+msgid "Download sample: Stop Times CSV"
+msgstr ""
+
+#: plugin
+msgid "Download sample: Calendar CSV"
+msgstr ""
+
+#: plugin
+msgid "Paste CSV here"
+msgstr ""
+
+#: plugin
+msgid "Import"
+msgstr ""
+
+#: plugin
+msgid "Nonce failed."
+msgstr ""
+
+#: plugin
+msgid "No rows parsed. Check CSV headers."
+msgstr ""
+
+#: plugin
+msgid "Unknown tab."
+msgstr ""
+
+#: plugin
+msgid "Stations: %d created, %d updated."
+msgstr ""
+
+#: plugin
+msgid "Stop times: %d inserted, %d skipped."
+msgstr ""
+
+#: plugin
+msgid "Calendar: %d inserted, %d skipped."
+msgstr ""
+
+#: plugin
+msgid "You do not have permission to access this resource."
+msgstr ""
+
+#: plugin
+msgid "Nonce verification failed."
+msgstr ""
+
+#: plugin
+msgid "Unknown CSV type."
+msgstr ""
+
+#: plugin
+msgid "Stations"
+msgstr ""
+
+#: plugin
+msgid "Station"
+msgstr ""
+
+#: plugin
+msgid "Routes"
+msgstr ""
+
+#: plugin
+msgid "Route"
+msgstr ""
+
+#: plugin
+msgid "Services"
+msgstr ""
+
+#: plugin
+msgid "Service"
+msgstr ""
+
+#: plugin
+msgid "Train Types"
+msgstr ""
+
+#: plugin
+msgid "Train Type"
+msgstr ""
+
+#: plugin
+msgid "No upcoming departures."
+msgstr ""
+
+#: plugin
+msgid "Service"
+msgstr ""
+
+#: plugin
+msgid "Arrives"
+msgstr ""
+
+#: plugin
+msgid "Departs"
+msgstr ""
+
+#: plugin
+msgid "Direction"
+msgstr ""
+
+#: plugin
+msgid "No services today."
+msgstr ""
+
+#: plugin
+msgid "Select station"
+msgstr ""
+
+#: plugin
+msgid "Station"
+msgstr ""
+
+#: plugin
+msgid "Mon"
+msgstr ""
+
+#: plugin
+msgid "Tue"
+msgstr ""
+
+#: plugin
+msgid "Wed"
+msgstr ""
+
+#: plugin
+msgid "Thu"
+msgstr ""
+
+#: plugin
+msgid "Fri"
+msgstr ""
+
+#: plugin
+msgid "Sat"
+msgstr ""
+
+#: plugin
+msgid "Sun"
+msgstr ""
+
+#: plugin
+msgid "Service day"
+msgstr ""
+
+#: plugin
+msgid "count per day"
+msgstr ""
+
+#: plugin
+msgid "Services running"
+msgstr ""
+
