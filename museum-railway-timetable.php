@@ -82,6 +82,9 @@ function MRT_deactivate() {
 require_once MRT_PATH . 'inc/functions/helpers.php';
 require_once MRT_PATH . 'inc/functions/services.php';
 
+// Load assets (CSS/JS enqueuing)
+require_once MRT_PATH . 'inc/assets.php';
+
 // Admin and features
 require_once MRT_PATH . 'inc/admin-page.php';
 require_once MRT_PATH . 'inc/admin-list.php';

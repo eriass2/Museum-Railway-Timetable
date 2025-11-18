@@ -2,6 +2,8 @@
 
 This document lists changes needed to align the project with the WordPress Plugin Style Guide.
 
+**Last Updated**: After code refactoring (file structure reorganization)
+
 ## 🔴 Critical Issues
 
 ### 1. Asset Loading (Performance)
@@ -26,69 +28,67 @@ add_action('admin_enqueue_scripts', function($hook) {
 });
 ```
 
-### 2. SQL Injection Risk
-**Issue**: In `inc/shortcode.php` line 52, column name is interpolated directly in SQL.
+### 2. SQL Injection Risk ✅ FIXED
+**Status**: ✅ **RESOLVED**
 
-**Current Code**:
+**Issue**: Column name was interpolated directly in SQL.
+
+**Fixed In**: `inc/functions/services.php` line 22-24
+
+**Solution Applied**:
 ```php
-$sql = $wpdb->prepare("SELECT service_post_id, include_dates, exclude_dates, $col AS dow
-    FROM $calendar
-    WHERE %s BETWEEN start_date AND end_date", $dateYmd);
-```
-
-**Required Change**: Column names should be whitelisted, not interpolated.
-
-**Fix**:
-```php
+// Whitelist column names to prevent SQL injection
 $allowed_cols = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
 $col = in_array($col, $allowed_cols) ? $col : 'mon';
-$sql = $wpdb->prepare("SELECT service_post_id, include_dates, exclude_dates, `$col` AS dow
-    FROM $calendar
-    WHERE %s BETWEEN start_date AND end_date", $dateYmd);
 ```
 
 ## 🟡 Important Improvements
 
-### 3. Function Documentation
-**Issue**: Functions lack PHPDoc comments.
+### 3. Function Documentation ✅ MOSTLY FIXED
+**Status**: ✅ **MOSTLY RESOLVED**
 
-**Required Changes**: Add PHPDoc blocks to all functions.
+**Issue**: Functions lacked PHPDoc comments.
 
-**Example**:
-```php
-/**
- * Get all stations ordered by display order
- *
- * @return array Array of station post IDs
- */
-function MRT_get_all_stations() {
-    // ...
-}
-```
+**Fixed**: All new files have PHPDoc comments:
+- ✅ `inc/functions/helpers.php` - All functions documented
+- ✅ `inc/functions/services.php` - All functions documented
+- ✅ `inc/shortcodes.php` - All shortcodes documented
+- ✅ `inc/import/csv-parser.php` - All functions documented
+- ✅ `inc/import/import-handlers.php` - All functions documented
+- ✅ `inc/import/import-page.php` - Functions documented
+- ✅ `inc/import/sample-csv.php` - Functions documented
+- ✅ `inc/import/download-handler.php` - Functions documented
 
-**Files to update**:
-- `inc/shortcode.php` - All functions
-- `inc/import.php` - All functions
-- `inc/admin-page.php` - All functions
-- `inc/admin-list.php` - All functions
-- `museum-railway-timetable.php` - MRT_activate(), MRT_deactivate()
+**Still Needs Work**:
+- ⚠️ `inc/admin-page.php` - Functions need PHPDoc
+- ⚠️ `inc/admin-list.php` - Some functions need PHPDoc
+- ⚠️ `inc/cpt.php` - No PHPDoc needed (simple registration)
+- ⚠️ `museum-railway-timetable.php` - MRT_activate(), MRT_deactivate() need PHPDoc
 
-### 4. Escaping Improvements
+### 4. Escaping Improvements ⚠️ PARTIALLY FIXED
+**Status**: ⚠️ **PARTIALLY RESOLVED**
+
 **Issue**: Some places use `_e()` instead of `esc_html_e()`.
 
-**Current Code** (line 135 in `inc/import.php`):
-```php
-<h1><?php _e('CSV Import', 'museum-railway-timetable'); ?></h1>
-```
+**Fixed**:
+- ✅ `inc/import/import-page.php` - Now uses `esc_html_e()` (lines 117, 145)
 
-**Required Change**:
-```php
-<h1><?php esc_html_e('CSV Import', 'museum-railway-timetable'); ?></h1>
-```
+**Still Needs Work**:
+- ⚠️ `inc/admin-page.php` - Line 69 still uses `_e()`
+- ⚠️ `inc/admin-page.php` - Line 27 uses `__()` in echo (should use `esc_html__()`)
 
-**Files to check**:
-- `inc/import.php` - Line 135, 163
-- `inc/admin-page.php` - Line 27, 69
+**Required Changes**:
+```php
+// Line 69 - Change from:
+<h1><?php _e('Museum Railway Timetable', 'museum-railway-timetable'); ?></h1>
+// To:
+<h1><?php esc_html_e('Museum Railway Timetable', 'museum-railway-timetable'); ?></h1>
+
+// Line 27 - Change from:
+function(){ echo '<p>' . __('Configure timetable display.', 'museum-railway-timetable') . '</p>'; },
+// To:
+function(){ echo '<p>' . esc_html__('Configure timetable display.', 'museum-railway-timetable') . '</p>'; },
+```
 
 ### 5. Asset File Structure
 **Issue**: CSS/JS files are directly in `assets/` instead of `assets/css/` and `assets/js/`.
@@ -144,12 +144,18 @@ function MRT_get_all_stations() {
 }
 ```
 
-### 8. Code Comments
-**Issue**: Some complex logic lacks explanatory comments.
+### 8. Code Comments ✅ IMPROVED
+**Status**: ✅ **IMPROVED**
 
-**Files to improve**:
-- `inc/shortcode.php` - `MRT_services_running_on_date()` function
-- `inc/import.php` - CSV parsing logic
+**Issue**: Some complex logic lacked explanatory comments.
+
+**Fixed**: 
+- ✅ Better organization with file-level comments
+- ✅ PHPDoc comments added to all functions
+- ✅ Complex logic in `MRT_services_running_on_date()` now has better structure
+
+**Could Still Improve**:
+- More inline comments explaining "why" in complex date calculations
 
 ### 9. Error Handling
 **Issue**: Limited error handling in some functions.
@@ -171,27 +177,69 @@ function MRT_get_all_stations() {
 - ✅ Capability checks in admin functions
 - ✅ CSS class naming follows convention (.mrt-*)
 - ✅ JavaScript wrapped in IIFE
+- ✅ **NEW**: Better code organization with modular file structure
+- ✅ **NEW**: SQL injection vulnerability fixed
+- ✅ **NEW**: PHPDoc comments added to new files
 
 ## 📋 Priority Action Items
 
 1. **High Priority**:
    - [ ] Add asset enqueuing (wp_enqueue_style/wp_enqueue_script)
-   - [ ] Fix SQL injection risk in shortcode.php
-   - [ ] Replace `_e()` with `esc_html_e()` where needed
+   - [x] Fix SQL injection risk in services.php ✅
+   - [ ] Replace remaining `_e()` with `esc_html_e()` in admin-page.php
 
 2. **Medium Priority**:
-   - [ ] Add PHPDoc to all functions
+   - [x] Add PHPDoc to new functions ✅ (mostly done)
+   - [ ] Add PHPDoc to remaining functions in admin-page.php and admin-list.php
    - [ ] Create README.md
    - [ ] Reorganize assets folder structure (optional)
 
 3. **Low Priority**:
    - [ ] Add caching for expensive queries
-   - [ ] Improve code comments
+   - [ ] Improve inline code comments
    - [ ] Enhance error handling
 
-## 📝 Notes
+## 📝 Recent Changes
 
-- The project structure already matches the style guide (using `inc/` folder)
-- Most security practices are already in place
-- The main gaps are documentation and asset loading
+### Code Refactoring (Completed)
+- ✅ Split `shortcode.php` (291 lines) into smaller modules:
+  - `inc/functions/helpers.php` - Helper functions
+  - `inc/functions/services.php` - Service-related functions
+  - `inc/shortcodes.php` - Shortcode registrations
+- ✅ Split `import.php` (397 lines) into smaller modules:
+  - `inc/import/csv-parser.php` - CSV parsing
+  - `inc/import/import-handlers.php` - Import handlers
+  - `inc/import/import-page.php` - Admin page
+  - `inc/import/sample-csv.php` - Sample generators
+  - `inc/import/download-handler.php` - Download handler
+- ✅ Fixed SQL injection vulnerability
+- ✅ Added PHPDoc comments to all new files
+- ✅ Improved escaping in import-page.php
 
+### File Structure Now
+```
+inc/
+├─ functions/
+│   ├─ helpers.php (54 lines)
+│   └─ services.php (113 lines)
+├─ import/
+│   ├─ csv-parser.php (50 lines)
+│   ├─ import-handlers.php (170 lines)
+│   ├─ import-page.php (149 lines)
+│   ├─ sample-csv.php (48 lines)
+│   └─ download-handler.php (42 lines)
+├─ shortcodes.php (173 lines)
+├─ admin-page.php (70 lines)
+├─ admin-list.php (142 lines)
+└─ cpt.php (50 lines)
+```
+
+All files are now under 200 lines, making them much more manageable!
+
+## 📊 Compliance Status
+
+- **Critical Issues**: 1 remaining (Asset loading)
+- **Important Issues**: 2 remaining (Escaping, README)
+- **Nice to Have**: 3 items (Caching, Comments, Error handling)
+
+**Overall Progress**: ~70% compliant with style guide
