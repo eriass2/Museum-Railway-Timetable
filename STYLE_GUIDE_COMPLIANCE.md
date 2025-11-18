@@ -6,27 +6,19 @@ This document lists changes needed to align the project with the WordPress Plugi
 
 ## 🔴 Critical Issues
 
-### 1. Asset Loading (Performance)
+### 1. Asset Loading (Performance) ✅ FIXED
+**Status**: ✅ **RESOLVED**
+
 **Issue**: CSS and JavaScript files are not being enqueued using WordPress functions.
 
-**Current State**: No `wp_enqueue_style()` or `wp_enqueue_script()` calls found.
+**Fixed In**: `inc/assets.php` (new file)
 
-**Required Changes**:
-- Add asset enqueuing in `inc/admin-page.php` or create a new file `inc/assets.php`
-- Enqueue CSS only in admin area
-- Enqueue JS only where needed
-- Use plugin version for cache-busting
-
-**Location**: `inc/admin-page.php` or new `inc/assets.php`
-
-**Example**:
-```php
-add_action('admin_enqueue_scripts', function($hook) {
-    if (strpos($hook, 'mrt_') === false) return;
-    wp_enqueue_style('mrt-admin', MRT_URL . 'assets/admin.css', [], MRT_VERSION);
-    wp_enqueue_script('mrt-admin', MRT_URL . 'assets/admin.js', ['jquery'], MRT_VERSION, true);
-});
-```
+**Solution Applied**:
+- Created `inc/assets.php` with proper enqueuing functions
+- Admin assets load only on plugin admin pages (checks for 'mrt_' prefix)
+- Frontend CSS loads conditionally when shortcodes are detected
+- Uses `MRT_VERSION` for cache-busting
+- Includes filter `mrt_should_enqueue_frontend_assets` for extensibility
 
 ### 2. SQL Injection Risk ✅ FIXED
 **Status**: ✅ **RESOLVED**
@@ -44,12 +36,12 @@ $col = in_array($col, $allowed_cols) ? $col : 'mon';
 
 ## 🟡 Important Improvements
 
-### 3. Function Documentation ✅ MOSTLY FIXED
-**Status**: ✅ **MOSTLY RESOLVED**
+### 3. Function Documentation ✅ FIXED
+**Status**: ✅ **RESOLVED**
 
 **Issue**: Functions lacked PHPDoc comments.
 
-**Fixed**: All new files have PHPDoc comments:
+**Fixed**: All files now have PHPDoc comments:
 - ✅ `inc/functions/helpers.php` - All functions documented
 - ✅ `inc/functions/services.php` - All functions documented
 - ✅ `inc/shortcodes.php` - All shortcodes documented
@@ -58,37 +50,21 @@ $col = in_array($col, $allowed_cols) ? $col : 'mon';
 - ✅ `inc/import/import-page.php` - Functions documented
 - ✅ `inc/import/sample-csv.php` - Functions documented
 - ✅ `inc/import/download-handler.php` - Functions documented
+- ✅ `inc/assets.php` - All functions documented
+- ✅ `inc/admin-page.php` - All functions documented
+- ✅ `inc/admin-list.php` - All functions documented
+- ✅ `museum-railway-timetable.php` - MRT_activate(), MRT_deactivate() documented
+- ✅ `inc/cpt.php` - No PHPDoc needed (simple registration)
 
-**Still Needs Work**:
-- ⚠️ `inc/admin-page.php` - Functions need PHPDoc
-- ⚠️ `inc/admin-list.php` - Some functions need PHPDoc
-- ⚠️ `inc/cpt.php` - No PHPDoc needed (simple registration)
-- ⚠️ `museum-railway-timetable.php` - MRT_activate(), MRT_deactivate() need PHPDoc
-
-### 4. Escaping Improvements ⚠️ PARTIALLY FIXED
-**Status**: ⚠️ **PARTIALLY RESOLVED**
+### 4. Escaping Improvements ✅ FIXED
+**Status**: ✅ **RESOLVED**
 
 **Issue**: Some places use `_e()` instead of `esc_html_e()`.
 
 **Fixed**:
 - ✅ `inc/import/import-page.php` - Now uses `esc_html_e()` (lines 117, 145)
-
-**Still Needs Work**:
-- ⚠️ `inc/admin-page.php` - Line 69 still uses `_e()`
-- ⚠️ `inc/admin-page.php` - Line 27 uses `__()` in echo (should use `esc_html__()`)
-
-**Required Changes**:
-```php
-// Line 69 - Change from:
-<h1><?php _e('Museum Railway Timetable', 'museum-railway-timetable'); ?></h1>
-// To:
-<h1><?php esc_html_e('Museum Railway Timetable', 'museum-railway-timetable'); ?></h1>
-
-// Line 27 - Change from:
-function(){ echo '<p>' . __('Configure timetable display.', 'museum-railway-timetable') . '</p>'; },
-// To:
-function(){ echo '<p>' . esc_html__('Configure timetable display.', 'museum-railway-timetable') . '</p>'; },
-```
+- ✅ `inc/admin-page.php` - Line 69 now uses `esc_html_e()`
+- ✅ `inc/admin-page.php` - Line 27 now uses `esc_html__()` in echo
 
 ### 5. Asset File Structure
 **Issue**: CSS/JS files are directly in `assets/` instead of `assets/css/` and `assets/js/`.
@@ -184,13 +160,12 @@ function MRT_get_all_stations() {
 ## 📋 Priority Action Items
 
 1. **High Priority**:
-   - [ ] Add asset enqueuing (wp_enqueue_style/wp_enqueue_script)
+   - [x] Add asset enqueuing (wp_enqueue_style/wp_enqueue_script) ✅
    - [x] Fix SQL injection risk in services.php ✅
-   - [ ] Replace remaining `_e()` with `esc_html_e()` in admin-page.php
+   - [x] Replace remaining `_e()` with `esc_html_e()` in admin-page.php ✅
 
 2. **Medium Priority**:
-   - [x] Add PHPDoc to new functions ✅ (mostly done)
-   - [ ] Add PHPDoc to remaining functions in admin-page.php and admin-list.php
+   - [x] Add PHPDoc to all functions ✅
    - [ ] Create README.md
    - [ ] Reorganize assets folder structure (optional)
 
@@ -238,8 +213,13 @@ All files are now under 200 lines, making them much more manageable!
 
 ## 📊 Compliance Status
 
-- **Critical Issues**: 1 remaining (Asset loading)
-- **Important Issues**: 2 remaining (Escaping, README)
+- **Critical Issues**: 0 remaining ✅
+- **Important Issues**: 1 remaining (README)
 - **Nice to Have**: 3 items (Caching, Comments, Error handling)
 
-**Overall Progress**: ~70% compliant with style guide
+**Overall Progress**: ~90% compliant with style guide
+
+### Recent Fixes (Latest Session)
+- ✅ Asset enqueuing implemented (`inc/assets.php`)
+- ✅ Escaping improvements completed (admin-page.php)
+- ✅ PHPDoc comments added to all remaining functions

@@ -24,7 +24,7 @@ add_action('admin_init', function () {
     add_settings_section(
         'mrt_main',
         __('General Settings', 'museum-railway-timetable'),
-        function(){ echo '<p>' . __('Configure timetable display.', 'museum-railway-timetable') . '</p>'; },
+        function(){ echo '<p>' . esc_html__('Configure timetable display.', 'museum-railway-timetable') . '</p>'; },
         'mrt_settings'
     );
 
@@ -45,6 +45,12 @@ add_action('admin_init', function () {
     );
 });
 
+/**
+ * Sanitize plugin settings input
+ *
+ * @param array $input Raw input array
+ * @return array Sanitized settings array
+ */
 function MRT_sanitize_settings($input) {
     return [
         'enabled' => !empty($input['enabled']),
@@ -52,21 +58,30 @@ function MRT_sanitize_settings($input) {
     ];
 }
 
+/**
+ * Render the enabled checkbox field
+ */
 function MRT_render_enabled_field() {
     $opts = get_option('mrt_settings');
     echo '<input type="checkbox" name="mrt_settings[enabled]" value="1" ' . checked(!empty($opts['enabled']), true, false) . ' />';
 }
 
+/**
+ * Render the note text field
+ */
 function MRT_render_note_field() {
     $opts = get_option('mrt_settings');
     echo '<input type="text" name="mrt_settings[note]" value="' . esc_attr($opts['note'] ?? '') . '" class="regular-text" />';
 }
 
+/**
+ * Render the main admin settings page
+ */
 function MRT_render_admin_page() {
     if (!current_user_can('manage_options')) { return; }
     ?>
     <div class="wrap">
-        <h1><?php _e('Museum Railway Timetable', 'museum-railway-timetable'); ?></h1>
+        <h1><?php esc_html_e('Museum Railway Timetable', 'museum-railway-timetable'); ?></h1>
         <form method="post" action="options.php">
             <?php
             settings_fields('mrt_group');

@@ -25,6 +25,10 @@ add_action('plugins_loaded', function() {
 register_activation_hook(__FILE__, 'MRT_activate');
 register_deactivation_hook(__FILE__, 'MRT_deactivate');
 
+/**
+ * Plugin activation hook
+ * Creates custom database tables and sets default options
+ */
 function MRT_activate() {
     // Create custom DB tables and default options if needed
     global $wpdb;
@@ -74,6 +78,10 @@ function MRT_activate() {
     }
 }
 
+/**
+ * Plugin deactivation hook
+ * Keeps data on deactivation; uninstall.php will remove options
+ */
 function MRT_deactivate() {
     // No-op: keep data on deactivation; uninstall.php will remove options
 }

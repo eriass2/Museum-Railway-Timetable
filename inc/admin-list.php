@@ -18,6 +18,12 @@ add_action('admin_menu', function () {
     );
 });
 
+/**
+ * Get all service IDs that stop at a given station
+ *
+ * @param int $station_id Station post ID
+ * @return array Array of service post IDs
+ */
 function MRT_get_services_for_station($station_id) {
     global $wpdb;
     $table = $wpdb->prefix . 'mrt_stoptimes';
@@ -29,6 +35,10 @@ function MRT_get_services_for_station($station_id) {
 /**
  * Find next running day for a station by intersecting station's services with calendar-running services.
  * Checks from 'today' up to +60 days (configurable via filter 'mrt_overview_days_ahead').
+ *
+ * @param int    $station_id Station post ID
+ * @param string $train_type_slug Optional train type taxonomy slug
+ * @return string Date in YYYY-MM-DD format or empty string if none found
  */
 function MRT_next_running_day_for_station($station_id, $train_type_slug = '') {
     $days_ahead = apply_filters('mrt_overview_days_ahead', 60);
@@ -49,6 +59,9 @@ function MRT_next_running_day_for_station($station_id, $train_type_slug = '') {
     return '';
 }
 
+/**
+ * Render the stations overview admin page
+ */
 function MRT_render_stations_overview_page() {
     if (!current_user_can('manage_options')) return;
 
