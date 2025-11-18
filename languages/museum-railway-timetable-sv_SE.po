@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Museum Railway Timetable 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-13 07:50:10+0000\n"
-"PO-Revision-Date: 2025-08-13 07:50:10+0000\n"
+"PO-Revision-Date: 2025-01-27 12:00:00+0000\n"
 "Last-Translator: Erik <info@bytex.se>\n"
 "Language-Team: Swedish\n"
 "Language: sv_SE\n"
@@ -231,4 +231,52 @@ msgstr "antal per dag"
 
 msgid "Services running"
 msgstr "Turer körs"
+
+msgid "Station not found."
+msgstr "Station hittades inte."
+
+msgid "Invalid date."
+msgstr "Ogiltigt datum."
+
+msgid "Stations Overview"
+msgstr "Översikt över stationer"
+
+msgid "Train type:"
+msgstr "Tågtyp:"
+
+msgid "All types"
+msgstr "Alla typer"
+
+msgid "Filter"
+msgstr "Filtrera"
+
+msgid "Reset"
+msgstr "Återställ"
+
+msgid "Type"
+msgstr "Typ"
+
+msgid "Display order"
+msgstr "Visningsordning"
+
+msgid "Services (count)"
+msgstr "Turer (antal)"
+
+msgid "Next running day"
+msgstr "Nästa kördag"
+
+msgid "Actions"
+msgstr "Åtgärder"
+
+msgid "No stations found."
+msgstr "Inga stationer hittades."
+
+msgid "— none within range —"
+msgstr "— ingen inom intervallet —"
+
+msgid "Edit station"
+msgstr "Redigera station"
+
+msgid "Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug."
+msgstr "Obs: Nästa kördag tittar framåt upp till 60 dagar. Använd filtret ovan för att begränsa efter tågtyps-slug."
 

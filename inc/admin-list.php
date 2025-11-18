@@ -101,7 +101,7 @@ function MRT_render_stations_overview_page() {
     <div class="wrap">
         <h1><?php echo esc_html__('Stations Overview', 'museum-railway-timetable'); ?></h1>
 
-                <form method="get" style="margin: .5rem 0 1rem 0;">
+                <form method="get" class="mrt-filter-form">
             <input type="hidden" name="page" value="mrt_stations_overview" />
             <label><?php echo esc_html__('Train type:', 'museum-railway-timetable'); ?></label>
             <?php
@@ -159,7 +159,7 @@ function MRT_render_stations_overview_page() {
                             $datetime = MRT_get_current_datetime();
                             echo esc_html(date_i18n(get_option('date_format'), strtotime($next, $datetime['timestamp'])));
                         } else {
-                            echo '<span style="opacity:.7">'.esc_html__('— none within range —', 'museum-railway-timetable').'</span>';
+                            echo '<span class="mrt-no-date">'.esc_html__('— none within range —', 'museum-railway-timetable').'</span>';
                         }
                         ?>
                     </td>
@@ -174,7 +174,7 @@ function MRT_render_stations_overview_page() {
             </tbody>
         </table>
 
-        <p style="margin-top:.75rem; color:#555;">
+        <p class="mrt-note">
             <?php echo esc_html__('Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug.', 'museum-railway-timetable'); ?>
         </p>
     </div>

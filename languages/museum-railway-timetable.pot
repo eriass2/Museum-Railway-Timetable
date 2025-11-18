@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Museum Railway Timetable 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-13 07:47:25+0000\n"
+"POT-Creation-Date: 2025-01-27 12:00:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: \n"
@@ -315,5 +315,69 @@ msgstr ""
 
 #: plugin
 msgid "Services running"
+msgstr ""
+
+#: plugin
+msgid "Station not found."
+msgstr ""
+
+#: plugin
+msgid "Invalid date."
+msgstr ""
+
+#: plugin
+msgid "Stations Overview"
+msgstr ""
+
+#: plugin
+msgid "Train type:"
+msgstr ""
+
+#: plugin
+msgid "All types"
+msgstr ""
+
+#: plugin
+msgid "Filter"
+msgstr ""
+
+#: plugin
+msgid "Reset"
+msgstr ""
+
+#: plugin
+msgid "Type"
+msgstr ""
+
+#: plugin
+msgid "Display order"
+msgstr ""
+
+#: plugin
+msgid "Services (count)"
+msgstr ""
+
+#: plugin
+msgid "Next running day"
+msgstr ""
+
+#: plugin
+msgid "Actions"
+msgstr ""
+
+#: plugin
+msgid "No stations found."
+msgstr ""
+
+#: plugin
+msgid "— none within range —"
+msgstr ""
+
+#: plugin
+msgid "Edit station"
+msgstr ""
+
+#: plugin
+msgid "Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug."
 msgstr ""
 

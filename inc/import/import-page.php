@@ -24,14 +24,14 @@ add_action('admin_menu', function () {
  */
 function MRT_import_help_panel() {
     ?>
-    <div class="mrt-help-panel" style="margin-top:1rem;">
-        <details open class="mrt-help-box" style="border:1px solid #ccd0d4; border-radius:6px; background:#fff;">
-            <summary style="cursor:pointer; padding:.6rem .8rem; font-weight:600;">
+    <div class="mrt-help-panel">
+        <details open class="mrt-help-box">
+            <summary>
                 <?php echo esc_html__('📥 Import Guide – format & examples', 'museum-railway-timetable'); ?>
             </summary>
-            <div style="padding:.8rem 1rem 1rem 1rem;">
+            <div>
                 <p><strong><?php echo esc_html__('General', 'museum-railway-timetable'); ?></strong></p>
-                <ul style="list-style:disc; padding-left:1.2rem;">
+                <ul>
                     <li><?php echo esc_html__('CSV must have a header row and use comma as the delimiter.', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('Times: HH:MM (24h). Dates: YYYY-MM-DD.', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('Decimals for lat/lng must use a dot (e.g. 57.486), not a comma.', 'museum-railway-timetable'); ?></li>
@@ -40,14 +40,14 @@ function MRT_import_help_panel() {
 
                 <hr />
 
-                <h3 style="margin:.6rem 0;"><?php echo esc_html__('1) Stations', 'museum-railway-timetable'); ?></h3>
+                <h3><?php echo esc_html__('1) Stations', 'museum-railway-timetable'); ?></h3>
                 <p><strong><?php echo esc_html__('Headers:', 'museum-railway-timetable'); ?></strong> <code>name,station_type,lat,lng,display_order</code></p>
-                <ul style="list-style:disc; padding-left:1.2rem;">
+                <ul>
                     <li><?php echo esc_html__('station_type: station | halt | depot | museum', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('lat/lng are optional (decimals with dot).', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('display_order is an integer used for sorting in lists.', 'museum-railway-timetable'); ?></li>
                 </ul>
-<pre style="white-space:pre; background:#f6f7f7; border:1px solid #e2e4e7; padding:.6rem; overflow:auto;">name,station_type,lat,lng,display_order
+<pre>name,station_type,lat,lng,display_order
 Hultsfred Museum,station,57.486,15.842,1
 Skoghult Halt,halt,57.501,15.900,2
 Depån,depot,57.480,15.830,99
@@ -55,9 +55,9 @@ Depån,depot,57.480,15.830,99
 
                 <hr />
 
-                <h3 style="margin:.6rem 0;"><?php echo esc_html__('2) Stop Times', 'museum-railway-timetable'); ?></h3>
+                <h3><?php echo esc_html__('2) Stop Times', 'museum-railway-timetable'); ?></h3>
                 <p><strong><?php echo esc_html__('Headers:', 'museum-railway-timetable'); ?></strong> <code>service,station,sequence,arrive,depart,pickup,dropoff</code></p>
-                <ul style="list-style:disc; padding-left:1.2rem;">
+                <ul>
                     <li><?php echo esc_html__('service = the trip name (must match title exactly; will be created if needed).', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('station = the station name (must be imported first).', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('sequence = 1..n (order along the route).', 'museum-railway-timetable'); ?></li>
@@ -65,7 +65,7 @@ Depån,depot,57.480,15.830,99
                     <li><?php echo esc_html__('pickup/dropoff = 1 or 0 (optional; default 1).', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('Importer replaces existing stop times for a service (removes and inserts new).', 'museum-railway-timetable'); ?></li>
                 </ul>
-<pre style="white-space:pre; background:#f6f7f7; border:1px solid #e2e4e7; padding:.6rem; overflow:auto;">service,station,sequence,arrive,depart,pickup,dropoff
+<pre>service,station,sequence,arrive,depart,pickup,dropoff
 Steam Train A,Hultsfred Museum,1,,10:00,1,1
 Steam Train A,Skoghult Halt,2,10:25,10:27,1,1
 Steam Train A,Depån,3,10:45,,0,1
@@ -73,22 +73,22 @@ Steam Train A,Depån,3,10:45,,0,1
 
                 <hr />
 
-                <h3 style="margin:.6rem 0;"><?php echo esc_html__('3) Calendar (service days)', 'museum-railway-timetable'); ?></h3>
+                <h3><?php echo esc_html__('3) Calendar (service days)', 'museum-railway-timetable'); ?></h3>
                 <p><strong><?php echo esc_html__('Headers:', 'museum-railway-timetable'); ?></strong> <code>service,start_date,end_date,mon,tue,wed,thu,fri,sat,sun,include_dates,exclude_dates</code></p>
-                <ul style="list-style:disc; padding-left:1.2rem;">
+                <ul>
                     <li><?php echo esc_html__('The interval defines the base, weekdays (0/1) specify which days apply within the interval.', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('include_dates/exclude_dates: comma-separated YYYY-MM-DD for extra/cancelled days.', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('You can have multiple rows for the same service with different periods.', 'museum-railway-timetable'); ?></li>
                 </ul>
-<pre style="white-space:pre; background:#f6f7f7; border:1px solid #e2e4e7; padding:.6rem; overflow:auto;">service,start_date,end_date,mon,tue,wed,thu,fri,sat,sun,include_dates,exclude_dates
+<pre>service,start_date,end_date,mon,tue,wed,thu,fri,sat,sun,include_dates,exclude_dates
 Steam Train A,2025-06-01,2025-08-31,0,0,0,0,0,1,1,2025-06-06,
 Steam Train B,2025-07-01,2025-07-31,0,0,0,0,1,1,0,,2025-07-20
 </pre>
 
                 <hr />
 
-                <h3 style="margin:.6rem 0;"><?php echo esc_html__('Common mistakes & tips', 'museum-railway-timetable'); ?></h3>
-                <ul style="list-style:disc; padding-left:1.2rem;">
+                <h3><?php echo esc_html__('Common mistakes & tips', 'museum-railway-timetable'); ?></h3>
+                <ul>
                     <li><?php echo esc_html__('Excel may save with semicolons; choose "CSV (comma delimited)" or open in a text editor and replace ";" with ",".', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('Check that station names in stop times exactly match the titles in "Stations".', 'museum-railway-timetable'); ?></li>
                     <li><?php echo esc_html__('Time format must be HH:MM (e.g. 09:05, not 9:5).', 'museum-railway-timetable'); ?></li>
@@ -133,7 +133,7 @@ function MRT_render_import_page() {
             'calendar'  => add_query_arg(['action'=>'mrt_download_csv','type'=>'calendar','_wpnonce'=>$nonce], $dl_base),
         ];
         ?>
-        <div class="mrt-download-examples" style="margin:.75rem 0 1rem 0; display:flex; gap:.5rem; flex-wrap:wrap;">
+        <div class="mrt-download-examples">
             <a class="button" href="<?php echo esc_url($links['stations']); ?>"><?php echo esc_html__('Download sample: Stations CSV', 'museum-railway-timetable'); ?></a>
             <a class="button" href="<?php echo esc_url($links['stoptimes']); ?>"><?php echo esc_html__('Download sample: Stop Times CSV', 'museum-railway-timetable'); ?></a>
             <a class="button" href="<?php echo esc_url($links['calendar']); ?>"><?php echo esc_html__('Download sample: Calendar CSV', 'museum-railway-timetable'); ?></a>
@@ -141,12 +141,12 @@ function MRT_render_import_page() {
 
         <form method="post">
             <?php wp_nonce_field('mrt_import_'.$active, 'mrt_import_nonce'); ?>
-            <p><textarea name="csv" rows="12" style="width:100%;" placeholder="<?php echo esc_attr__('Paste CSV here', 'museum-railway-timetable'); ?>"></textarea></p>
+            <p><textarea name="csv" rows="12" class="mrt-csv-textarea" placeholder="<?php echo esc_attr__('Paste CSV here', 'museum-railway-timetable'); ?>"></textarea></p>
             <p><button class="button button-primary"><?php esc_html_e('Import', 'museum-railway-timetable'); ?></button></p>
             <input type="hidden" name="tab" value="<?php echo esc_attr($active); ?>" />
         </form>
 
-        <div style="margin-top:1rem;">
+        <div class="mrt-import-results">
         <?php
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['csv'])) {
             $tab = sanitize_text_field($_POST['tab'] ?? 'stations');

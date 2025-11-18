@@ -1,26 +1,267 @@
-/* Admin styling for Museum Railway Timetable */
-.wrap h1 { color: #444; }
+/**
+ * Admin and Frontend Styling for Museum Railway Timetable
+ *
+ * @package Museum_Railway_Timetable
+ */
 
-/* Table for departures */
-.mrt-table { width:100%; border-collapse: collapse; margin: .5rem 0; }
-.mrt-table th, .mrt-table td { border:1px solid #ddd; padding:6px 8px; text-align:left; }
-.mrt-table th { background:#f6f6f6; }
+/* ==========================================================================
+   Admin Page Headers
+   ========================================================================== */
 
-/* Station picker */
-.mrt-picker { margin-bottom: .75rem; }
-.mrt-picker select { min-width: 240px; }
+.wrap h1 {
+    color: #444;
+}
 
-/* Month calendar */
-.mrt-month { margin: 1rem 0; }
-.mrt-month-header { font-weight: 600; font-size: 1.1rem; margin-bottom: .25rem; }
-.mrt-month-table { width:100%; border-collapse: collapse; table-layout: fixed; }
-.mrt-month-table th, .mrt-month-table td { border:1px solid #eee; width:14.285%; vertical-align: top; height: 72px; padding: 4px; }
-.mrt-month-table thead th { background:#fafafa; font-weight:600; }
-.mrt-day { position: relative; }
-.mrt-daynum { font-size:.9rem; opacity:.8; }
-.mrt-dot { position:absolute; right:6px; bottom:4px; font-size:.85rem; }
-.mrt-running { background: #f4fff4; }
-.mrt-empty { background: #fcfcfc; }
-.mrt-legend { margin-top: .5rem; font-size:.9rem; color:#444; }
-.mrt-legend-item { display:inline-flex; align-items:center; gap:.35rem; margin-right: .75rem; }
-.mrt-legend-dot { display:inline-block; width:.6rem; height:.6rem; background:#9ad29a; border:1px solid #6fb36f; border-radius:50%; }
+/* ==========================================================================
+   Timetable Table Component
+   ========================================================================== */
+
+.mrt-timetable {
+    margin: 1rem 0;
+}
+
+.mrt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.5rem 0;
+}
+
+.mrt-table th,
+.mrt-table td {
+    border: 1px solid #ddd;
+    padding: 6px 8px;
+    text-align: left;
+}
+
+.mrt-table th {
+    background: #f6f6f6;
+}
+
+/* ==========================================================================
+   Station Picker Component
+   ========================================================================== */
+
+.mrt-picker {
+    margin-bottom: 0.75rem;
+}
+
+.mrt-picker select {
+    min-width: 240px;
+}
+
+/* ==========================================================================
+   Month Calendar Component
+   ========================================================================== */
+
+.mrt-month {
+    margin: 1rem 0;
+}
+
+.mrt-month-header {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.mrt-month-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.mrt-month-table th,
+.mrt-month-table td {
+    border: 1px solid #eee;
+    width: 14.285%;
+    vertical-align: top;
+    height: 72px;
+    padding: 4px;
+}
+
+.mrt-month-table thead th {
+    background: #fafafa;
+    font-weight: 600;
+}
+
+/* Month Calendar - Day Cell */
+.mrt-day {
+    position: relative;
+}
+
+.mrt-daynum {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.mrt-dot {
+    position: absolute;
+    right: 6px;
+    bottom: 4px;
+    font-size: 0.85rem;
+}
+
+.mrt-running {
+    background: #f4fff4;
+}
+
+.mrt-empty {
+    background: #fcfcfc;
+}
+
+/* Month Calendar - Legend */
+.mrt-legend {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    color: #444;
+}
+
+.mrt-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-right: 0.75rem;
+}
+
+.mrt-legend-item-count {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+
+.mrt-legend-dot {
+    display: inline-block;
+    width: 0.6rem;
+    height: 0.6rem;
+    background: #9ad29a;
+    border: 1px solid #6fb36f;
+    border-radius: 50%;
+}
+
+/* ==========================================================================
+   Status Messages
+   ========================================================================== */
+
+.mrt-none {
+    padding: 0.75rem;
+    color: #666;
+    font-style: italic;
+}
+
+.mrt-error {
+    padding: 0.75rem;
+    color: #d63638;
+    background: #fcf0f1;
+    border-left: 4px solid #d63638;
+}
+
+/* ==========================================================================
+   Import Page Components
+   ========================================================================== */
+
+.mrt-help-panel {
+    margin-top: 1rem;
+}
+
+.mrt-help-box {
+    border: 1px solid #ccd0d4;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.mrt-help-box summary {
+    cursor: pointer;
+    padding: 0.6rem 0.8rem;
+    font-weight: 600;
+}
+
+.mrt-help-box > div {
+    padding: 0.8rem 1rem 1rem 1rem;
+}
+
+.mrt-help-box ul {
+    list-style: disc;
+    padding-left: 1.2rem;
+}
+
+.mrt-help-box h3 {
+    margin: 0.6rem 0;
+}
+
+.mrt-help-box pre {
+    white-space: pre;
+    background: #f6f7f7;
+    border: 1px solid #e2e4e7;
+    padding: 0.6rem;
+    overflow: auto;
+}
+
+.mrt-download-examples {
+    margin: 0.75rem 0 1rem 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+/* Import Form */
+.mrt-csv-textarea {
+    width: 100%;
+}
+
+.mrt-import-results {
+    margin-top: 1rem;
+}
+
+/* Admin List Page */
+.mrt-filter-form {
+    margin: 0.5rem 0 1rem 0;
+}
+
+.mrt-no-date {
+    opacity: 0.7;
+}
+
+.mrt-note {
+    margin-top: 0.75rem;
+    color: #555;
+}
+
+/* ==========================================================================
+   Responsive Design
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+    .mrt-month-table th,
+    .mrt-month-table td {
+        height: 60px;
+        padding: 2px;
+        font-size: 0.85rem;
+    }
+
+    .mrt-month-table .mrt-daynum {
+        font-size: 0.8rem;
+    }
+
+    .mrt-table {
+        font-size: 0.9rem;
+    }
+
+    .mrt-picker select {
+        min-width: 100%;
+        width: 100%;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .mrt-month-table th,
+    .mrt-month-table td {
+        height: 50px;
+        font-size: 0.75rem;
+    }
+
+    .mrt-legend {
+        font-size: 0.8rem;
+    }
+
+    .mrt-legend-item {
+        margin-right: 0.5rem;
+    }
+}
