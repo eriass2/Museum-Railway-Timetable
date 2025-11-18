@@ -26,9 +26,22 @@ add_action('admin_menu', function () {
  */
 function MRT_get_services_for_station($station_id) {
     global $wpdb;
+    
+    // Validate input
+    $station_id = intval($station_id);
+    if ($station_id <= 0) {
+        return [];
+    }
+    
     $table = $wpdb->prefix . 'mrt_stoptimes';
     $sql = $wpdb->prepare("SELECT DISTINCT service_post_id FROM $table WHERE station_post_id = %d", $station_id);
     $ids = $wpdb->get_col($sql);
+    
+    // Check for database errors
+    if (MRT_check_db_error('MRT_get_services_for_station')) {
+        return [];
+    }
+    
     return array_map('intval', $ids ?: []);
 }
 
@@ -42,7 +55,8 @@ function MRT_get_services_for_station($station_id) {
  */
 function MRT_next_running_day_for_station($station_id, $train_type_slug = '') {
     $days_ahead = apply_filters('mrt_overview_days_ahead', 60);
-    $tz_ts = current_time('timestamp');
+    $datetime = MRT_get_current_datetime();
+    $tz_ts = $datetime['timestamp'];
     $services_here = MRT_get_services_for_station($station_id);
     if (!$services_here) return '';
 
@@ -142,7 +156,8 @@ function MRT_render_stations_overview_page() {
                     <td>
                         <?php
                         if ($next) {
-                            echo esc_html(date_i18n(get_option('date_format'), strtotime($next, current_time('timestamp'))));
+                            $datetime = MRT_get_current_datetime();
+                            echo esc_html(date_i18n(get_option('date_format'), strtotime($next, $datetime['timestamp'])));
                         } else {
                             echo '<span style="opacity:.7">'.esc_html__('— none within range —', 'museum-railway-timetable').'</span>';
                         }

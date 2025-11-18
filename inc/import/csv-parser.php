@@ -11,16 +11,35 @@ if (!defined('ABSPATH')) { exit; }
  * Minimal CSV parser for pasted text areas; expects header row and comma delimiter
  *
  * @param string $csv CSV content
- * @return array Array of parsed rows
+ * @return array Array of parsed rows, empty array on error
  */
 function MRT_parse_csv($csv) {
+    if (empty($csv) || !is_string($csv)) {
+        return [];
+    }
+    
     $lines = preg_split('/\R/u', trim($csv));
-    if (!$lines || count($lines) < 2) return [];
+    if (!$lines || count($lines) < 2) {
+        return [];
+    }
+    
     $headers = str_getcsv(array_shift($lines));
+    if (empty($headers)) {
+        return [];
+    }
+    
     $rows = [];
-    foreach ($lines as $line) {
-        if ('' === trim($line)) continue;
+    foreach ($lines as $line_num => $line) {
+        if ('' === trim($line)) {
+            continue;
+        }
+        
         $vals = str_getcsv($line);
+        if (false === $vals) {
+            MRT_log_error('Failed to parse CSV line ' . ($line_num + 2) . ': ' . $line);
+            continue;
+        }
+        
         $row = [];
         foreach ($headers as $i => $h) {
             $key = sanitize_key($h);
@@ -28,6 +47,7 @@ function MRT_parse_csv($csv) {
         }
         $rows[] = $row;
     }
+    
     return $rows;
 }
 

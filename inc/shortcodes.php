@@ -22,19 +22,31 @@ add_shortcode('museum_timetable', function ($atts) {
 
     $station_id = intval($atts['station_id']);
     if (!$station_id && $atts['station']) {
-        $s = get_page_by_title(sanitize_text_field($atts['station']), OBJECT, 'mrt_station');
-        if ($s) $station_id = intval($s->ID);
+        $s = MRT_get_post_by_title($atts['station'], 'mrt_station');
+        if ($s) {
+            $station_id = intval($s->ID);
+        }
     }
-    if (!$station_id) return '<div class="mrt-error">'.esc_html__('Station not found.', 'museum-railway-timetable').'</div>';
+    
+    if (!$station_id || $station_id <= 0) {
+        return '<div class="mrt-error">'.esc_html__('Station not found.', 'museum-railway-timetable').'</div>';
+    }
 
-    $now_ts = current_time('timestamp');
-    $today  = date('Y-m-d', $now_ts);
-    $time   = date('H:i', $now_ts);
+    $limit = intval($atts['limit']);
+    if ($limit <= 0) {
+        $limit = 5; // Default fallback
+    }
+
+    $datetime = MRT_get_current_datetime();
+    $today = $datetime['date'];
+    $time = $datetime['time'];
 
     $services_today = MRT_services_running_on_date($today, $atts['train_type']);
-    if (!$services_today) return '<div class="mrt-none">'.esc_html__('No services today.', 'museum-railway-timetable').'</div>';
+    if (empty($services_today)) {
+        return '<div class="mrt-none">'.esc_html__('No services today.', 'museum-railway-timetable').'</div>';
+    }
 
-    $rows = MRT_next_departures_for_station($station_id, $services_today, $time, intval($atts['limit']), !!$atts['show_arrival']);
+    $rows = MRT_next_departures_for_station($station_id, $services_today, $time, $limit, !!$atts['show_arrival']);
     return MRT_render_timetable_table($rows, !empty($atts['show_arrival']));
 });
 
@@ -63,9 +75,16 @@ add_shortcode('museum_timetable_picker', function ($atts) {
         $current_station_id = intval($_GET[$param_station]);
     }
 
-    if (!$current_station_id && $atts['default_station']) {
-        $s = get_page_by_title(sanitize_text_field($atts['default_station']), OBJECT, 'mrt_station');
-        if ($s) $current_station_id = intval($s->ID);
+    if (!$current_station_id && !empty($atts['default_station'])) {
+        $s = MRT_get_post_by_title($atts['default_station'], 'mrt_station');
+        if ($s) {
+            $current_station_id = intval($s->ID);
+        }
+    }
+    
+    $limit = intval($atts['limit']);
+    if ($limit <= 0) {
+        $limit = 6; // Default fallback
     }
 
     // Form + dropdown
@@ -90,8 +109,8 @@ add_shortcode('museum_timetable_picker', function ($atts) {
         $time   = date('H:i', $now_ts);
 
         $services_today = MRT_services_running_on_date($today, $atts['train_type']);
-        if ($services_today) {
-            $rows = MRT_next_departures_for_station($current_station_id, $services_today, $time, intval($atts['limit']), !!$atts['show_arrival']);
+        if (!empty($services_today)) {
+            $rows = MRT_next_departures_for_station($current_station_id, $services_today, $time, $limit, !!$atts['show_arrival']);
             echo MRT_render_timetable_table($rows, !empty($atts['show_arrival']));
         } else {
             echo '<div class="mrt-none">'.esc_html__('No services today.', 'museum-railway-timetable').'</div>';
@@ -114,18 +133,32 @@ add_shortcode('museum_timetable_month', function ($atts) {
         'start_monday' => 1,
     ], $atts, 'museum_timetable_month');
 
-    $now_ts = current_time('timestamp');
-    if ($atts['month'] and preg_match('/^\d{4}-\d{2}$/', $atts['month'])) {
+    $datetime = MRT_get_current_datetime();
+    $now_ts = $datetime['timestamp'];
+    if (!empty($atts['month']) && preg_match('/^\d{4}-\d{2}$/', $atts['month'])) {
         $firstDay = $atts['month'] . '-01';
         $first_ts = strtotime($firstDay . ' 00:00:00', $now_ts);
+        if (false === $first_ts) {
+            // Invalid date, fall back to current month
+            $first_ts = strtotime(date('Y-m-01', $now_ts));
+            $firstDay = date('Y-m-01', $first_ts);
+        }
     } else {
         $first_ts = strtotime(date('Y-m-01', $now_ts));
         $firstDay = date('Y-m-01', $first_ts);
+    }
+    
+    if (false === $first_ts) {
+        return '<div class="mrt-error">'.esc_html__('Invalid date.', 'museum-railway-timetable').'</div>';
     }
 
     $year  = intval(date('Y', $first_ts));
     $month = intval(date('m', $first_ts));
     $daysInMonth = intval(date('t', $first_ts));
+    
+    if ($year <= 0 || $month <= 0 || $month > 12 || $daysInMonth <= 0) {
+        return '<div class="mrt-error">'.esc_html__('Invalid date.', 'museum-railway-timetable').'</div>';
+    }
 
     $weekdayFirst = intval(date('N', $first_ts)); // 1..7 (Mon..Sun)
     $startMonday = !empty($atts['start_monday']);

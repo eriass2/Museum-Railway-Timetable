@@ -27,10 +27,20 @@ function MRT_services_running_on_date($dateYmd, $train_type_slug = '', $service_
     $allowed_cols = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
     $col = in_array($col, $allowed_cols) ? $col : 'mon';
 
+    // Validate date format
+    if (!MRT_validate_date($dateYmd)) {
+        return [];
+    }
+    
     $sql = $wpdb->prepare("SELECT service_post_id, include_dates, exclude_dates, `$col` AS dow
         FROM $calendar
         WHERE %s BETWEEN start_date AND end_date", $dateYmd);
     $rows = $wpdb->get_results($sql, ARRAY_A);
+    
+    // Check for database errors
+    if (MRT_check_db_error('MRT_services_running_on_date')) {
+        return [];
+    }
 
     $ids = [];
     foreach ($rows as $r) {
@@ -54,7 +64,7 @@ function MRT_services_running_on_date($dateYmd, $train_type_slug = '', $service_
 
     // Filter by specific service title if provided
     if ($service_title_exact !== '') {
-        $post = get_page_by_title($service_title_exact, OBJECT, 'mrt_service');
+        $post = MRT_get_post_by_title($service_title_exact, 'mrt_service');
         if (!$post) return [];
         $ids = array_values(array_intersect($ids, [intval($post->ID)]));
         if (!$ids) return [];
@@ -96,6 +106,16 @@ function MRT_next_departures_for_station($station_id, $service_ids, $timeHHMM, $
     $in = implode(',', array_map('intval', $service_ids));
     $col_time = $with_arrival ? "COALESCE(departure_time, arrival_time)" : "departure_time";
 
+    // Validate inputs
+    if ($station_id <= 0 || $limit <= 0) {
+        return [];
+    }
+    
+    // Validate time format (HH:MM) - empty not allowed here
+    if (empty($timeHHMM) || !MRT_validate_time_hhmm($timeHHMM)) {
+        return [];
+    }
+    
     $sql = $wpdb->prepare("
         SELECT s.service_post_id, s.arrival_time, s.departure_time, s.stop_sequence
         FROM $table s
@@ -110,7 +130,15 @@ function MRT_next_departures_for_station($station_id, $service_ids, $timeHHMM, $
     ", $station_id, $timeHHMM, $timeHHMM, $limit);
 
     $rows = $wpdb->get_results($sql, ARRAY_A);
-    if (!$rows) return [];
+    
+    // Check for database errors
+    if (MRT_check_db_error('MRT_next_departures_for_station')) {
+        return [];
+    }
+    
+    if (!$rows) {
+        return [];
+    }
 
     $out = [];
     foreach ($rows as $r) {

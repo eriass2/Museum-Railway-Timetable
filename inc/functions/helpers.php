@@ -29,6 +29,69 @@ function MRT_get_all_stations() {
 }
 
 /**
+ * Get post by title and post type
+ *
+ * @param string $title Post title
+ * @param string $post_type Post type (e.g., 'mrt_station', 'mrt_service')
+ * @return WP_Post|null Post object or null if not found
+ */
+function MRT_get_post_by_title($title, $post_type) {
+    if (empty($title) || empty($post_type)) {
+        return null;
+    }
+    $post = get_page_by_title(sanitize_text_field($title), OBJECT, $post_type);
+    return $post ?: null;
+}
+
+/**
+ * Get current datetime information
+ *
+ * @return array Array with 'timestamp', 'date' (Y-m-d), and 'time' (H:i)
+ */
+function MRT_get_current_datetime() {
+    $timestamp = current_time('timestamp');
+    return [
+        'timestamp' => $timestamp,
+        'date' => date('Y-m-d', $timestamp),
+        'time' => date('H:i', $timestamp),
+    ];
+}
+
+/**
+ * Check for database errors and log if WP_DEBUG is enabled
+ *
+ * @param string $context Context string for error logging (e.g., function name)
+ * @return bool True if error occurred, false otherwise
+ */
+function MRT_check_db_error($context = '') {
+    global $wpdb;
+    if ($wpdb->last_error) {
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            $message = 'MRT: Database error';
+            if ($context) {
+                $message .= ' in ' . $context;
+            }
+            $message .= ': ' . $wpdb->last_error;
+            error_log($message);
+        }
+        return true;
+    }
+    return false;
+}
+
+/**
+ * Log error message if WP_DEBUG is enabled
+ *
+ * @param string $message Error message to log
+ * @return void
+ */
+function MRT_log_error($message) {
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('MRT: ' . $message);
+    }
+}
+
+/**
  * Render a generic timetable table (reused by multiple shortcodes)
  *
  * @param array $rows Array of timetable row data
