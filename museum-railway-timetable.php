@@ -78,12 +78,16 @@ function MRT_deactivate() {
     // No-op: keep data on deactivation; uninstall.php will remove options
 }
 
+// Load helper functions first
+require_once MRT_PATH . 'inc/functions/helpers.php';
+require_once MRT_PATH . 'inc/functions/services.php';
+
 // Admin and features
 require_once MRT_PATH . 'inc/admin-page.php';
 require_once MRT_PATH . 'inc/admin-list.php';
 require_once MRT_PATH . 'inc/cpt.php';
 require_once MRT_PATH . 'inc/import.php';
-require_once MRT_PATH . 'inc/shortcode.php';
+require_once MRT_PATH . 'inc/shortcodes.php';
 
 // Example init hook for future extensions
 add_action('init', function () {
