@@ -280,3 +280,42 @@ msgstr "Redigera station"
 msgid "Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug."
 msgstr "Obs: Nästa kördag tittar framåt upp till 60 dagar. Använd filtret ovan för att begränsa efter tågtyps-slug."
 
+msgid "Station Details"
+msgstr "Stationdetaljer"
+
+msgid "— Select —"
+msgstr "— Välj —"
+
+msgid "Latitude"
+msgstr "Latitud"
+
+msgid "Longitude"
+msgstr "Longitud"
+
+msgid "Latitude coordinate (e.g., 57.486). Optional."
+msgstr "Latitudkoordinat (t.ex. 57.486). Valfritt."
+
+msgid "Longitude coordinate (e.g., 15.842). Optional."
+msgstr "Longitudkoordinat (t.ex. 15.842). Valfritt."
+
+msgid "Order for sorting in lists (lower numbers appear first)."
+msgstr "Ordning för sortering i listor (lägre nummer visas först)."
+
+msgid "Type of station (station, halt, depot, or museum)."
+msgstr "Typ av station (station, halt, depot eller museum)."
+
+msgid "Service Details"
+msgstr "Turdetaljer"
+
+msgid "Direction of the service (e.g., \"Northbound\", \"Southbound\"). Optional."
+msgstr "Riktning för turen (t.ex. \"Norrut\", \"Söderut\"). Valfritt."
+
+msgid "Add New Station"
+msgstr "Lägg till ny station"
+
+msgid "Add New Service"
+msgstr "Lägg till ny tur"
+
+msgid "Add New Route"
+msgstr "Lägg till ny sträcka"
+

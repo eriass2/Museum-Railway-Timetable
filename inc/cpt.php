@@ -10,9 +10,10 @@ add_action('init', function () {
         ],
         'public' => true,
         'has_archive' => false,
+        'show_in_menu' => false, // Will be added as submenu under main menu
         'menu_icon' => 'dashicons-location',
-        'supports' => ['title', 'editor'],
-        'show_in_rest' => true,
+        'supports' => ['title'], // Only title needed - meta fields handled by meta box
+        'show_in_rest' => false, // Disable Gutenberg/block editor
     ]);
 
     // Route post type (optional)
@@ -23,8 +24,9 @@ add_action('init', function () {
         ],
         'public' => true,
         'has_archive' => false,
+        'show_in_menu' => false, // Will be added as submenu under main menu
         'menu_icon' => 'dashicons-randomize',
-        'supports' => ['title', 'editor'],
+        'supports' => ['title'], // Only title needed - no meta fields currently used
         'show_in_rest' => true,
     ]);
 
@@ -36,9 +38,10 @@ add_action('init', function () {
         ],
         'public' => true,
         'has_archive' => false,
+        'show_in_menu' => false, // Will be added as submenu under main menu
         'menu_icon' => 'dashicons-clock',
-        'supports' => ['title', 'editor'],
-        'show_in_rest' => true,
+        'supports' => ['title'], // Only title needed - meta fields handled by meta box
+        'show_in_rest' => false, // Disable Gutenberg/block editor
     ]);
 
     // Train type taxonomy
@@ -49,6 +52,6 @@ add_action('init', function () {
         ],
         'public' => true,
         'hierarchical' => false,
-        'show_in_rest' => true,
+        'show_in_rest' => false, // Disable REST API (not needed for simple taxonomy)
     ]);
 });

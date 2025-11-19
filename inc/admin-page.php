@@ -3,6 +3,7 @@ if (!defined('ABSPATH')) { exit; }
 
 // Add a top-level menu for the plugin settings
 add_action('admin_menu', function () {
+    // Main menu page
     add_menu_page(
         __('Museum Railway Timetable', 'museum-railway-timetable'),
         __('Railway Timetable', 'museum-railway-timetable'),
@@ -10,6 +11,64 @@ add_action('admin_menu', function () {
         'mrt_settings',
         'MRT_render_admin_page',
         'dashicons-calendar-alt'
+    );
+    
+    // Add CPTs as submenus under main menu
+    add_submenu_page(
+        'mrt_settings',
+        __('Stations', 'museum-railway-timetable'),
+        __('Stations', 'museum-railway-timetable'),
+        'edit_posts',
+        'edit.php?post_type=mrt_station'
+    );
+    
+    add_submenu_page(
+        'mrt_settings',
+        __('Add New Station', 'museum-railway-timetable'),
+        __('Add New Station', 'museum-railway-timetable'),
+        'edit_posts',
+        'post-new.php?post_type=mrt_station'
+    );
+    
+    add_submenu_page(
+        'mrt_settings',
+        __('Services', 'museum-railway-timetable'),
+        __('Services', 'museum-railway-timetable'),
+        'edit_posts',
+        'edit.php?post_type=mrt_service'
+    );
+    
+    add_submenu_page(
+        'mrt_settings',
+        __('Add New Service', 'museum-railway-timetable'),
+        __('Add New Service', 'museum-railway-timetable'),
+        'edit_posts',
+        'post-new.php?post_type=mrt_service'
+    );
+    
+    add_submenu_page(
+        'mrt_settings',
+        __('Routes', 'museum-railway-timetable'),
+        __('Routes', 'museum-railway-timetable'),
+        'edit_posts',
+        'edit.php?post_type=mrt_route'
+    );
+    
+    add_submenu_page(
+        'mrt_settings',
+        __('Add New Route', 'museum-railway-timetable'),
+        __('Add New Route', 'museum-railway-timetable'),
+        'edit_posts',
+        'post-new.php?post_type=mrt_route'
+    );
+    
+    // Train Types taxonomy
+    add_submenu_page(
+        'mrt_settings',
+        __('Train Types', 'museum-railway-timetable'),
+        __('Train Types', 'museum-railway-timetable'),
+        'manage_categories',
+        'edit-tags.php?taxonomy=mrt_train_type&post_type=mrt_service'
     );
 });
 

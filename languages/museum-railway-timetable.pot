@@ -381,3 +381,55 @@ msgstr ""
 msgid "Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug."
 msgstr ""
 
+#: plugin
+msgid "Station Details"
+msgstr ""
+
+#: plugin
+msgid "— Select —"
+msgstr ""
+
+#: plugin
+msgid "Latitude"
+msgstr ""
+
+#: plugin
+msgid "Longitude"
+msgstr ""
+
+#: plugin
+msgid "Latitude coordinate (e.g., 57.486). Optional."
+msgstr ""
+
+#: plugin
+msgid "Longitude coordinate (e.g., 15.842). Optional."
+msgstr ""
+
+#: plugin
+msgid "Order for sorting in lists (lower numbers appear first)."
+msgstr ""
+
+#: plugin
+msgid "Type of station (station, halt, depot, or museum)."
+msgstr ""
+
+#: plugin
+msgid "Service Details"
+msgstr ""
+
+#: plugin
+msgid "Direction of the service (e.g., \"Northbound\", \"Southbound\"). Optional."
+msgstr ""
+
+#: plugin
+msgid "Add New Station"
+msgstr ""
+
+#: plugin
+msgid "Add New Service"
+msgstr ""
+
+#: plugin
+msgid "Add New Route"
+msgstr ""
+

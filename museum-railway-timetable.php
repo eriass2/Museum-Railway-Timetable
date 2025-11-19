@@ -95,6 +95,7 @@ require_once MRT_PATH . 'inc/assets.php';
 
 // Admin and features
 require_once MRT_PATH . 'inc/admin-page.php';
+require_once MRT_PATH . 'inc/admin-meta-boxes.php';
 require_once MRT_PATH . 'inc/admin-list.php';
 require_once MRT_PATH . 'inc/cpt.php';
 require_once MRT_PATH . 'inc/import.php';
