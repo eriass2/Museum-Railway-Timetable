@@ -7,17 +7,13 @@
 
 if (!defined('ABSPATH')) { exit; }
 
-// Ensure validation functions are available
-if (!function_exists('MRT_validate_time_hhmm')) {
-    require_once MRT_PATH . 'inc/import/csv-parser.php';
-}
-
 /**
  * Register AJAX actions
  */
 add_action('wp_ajax_mrt_add_stoptime', 'MRT_ajax_add_stoptime');
 add_action('wp_ajax_mrt_update_stoptime', 'MRT_ajax_update_stoptime');
 add_action('wp_ajax_mrt_delete_stoptime', 'MRT_ajax_delete_stoptime');
+add_action('wp_ajax_mrt_save_all_stoptimes', 'MRT_ajax_save_all_stoptimes');
 add_action('wp_ajax_mrt_add_calendar', 'MRT_ajax_add_calendar');
 add_action('wp_ajax_mrt_update_calendar', 'MRT_ajax_update_calendar');
 add_action('wp_ajax_mrt_delete_calendar', 'MRT_ajax_delete_calendar');
@@ -199,6 +195,81 @@ function MRT_ajax_get_stoptime() {
     }
     
     wp_send_json_success($stoptime);
+}
+
+/**
+ * Save all stop times for a service (from route-based form)
+ */
+function MRT_ajax_save_all_stoptimes() {
+    check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
+    
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
+    }
+    
+    $service_id = intval($_POST['service_id'] ?? 0);
+    if ($service_id <= 0) {
+        wp_send_json_error(['message' => __('Invalid service ID.', 'museum-railway-timetable')]);
+    }
+    
+    $stops = isset($_POST['stops']) ? $_POST['stops'] : [];
+    if (!is_array($stops)) {
+        wp_send_json_error(['message' => __('Invalid stops data.', 'museum-railway-timetable')]);
+    }
+    
+    global $wpdb;
+    $table = $wpdb->prefix . 'mrt_stoptimes';
+    
+    // Delete all existing stop times for this service
+    $wpdb->delete($table, ['service_post_id' => $service_id], ['%d']);
+    
+    $inserted = 0;
+    $sequence = 1;
+    
+    foreach ($stops as $stop) {
+        $station_id = intval($stop['station_id'] ?? 0);
+        $stops_here = isset($stop['stops_here']) && $stop['stops_here'] == '1';
+        
+        if (!$stops_here || $station_id <= 0) {
+            continue; // Skip stations where train doesn't stop
+        }
+        
+        $arrival = sanitize_text_field($stop['arrival'] ?? '');
+        $departure = sanitize_text_field($stop['departure'] ?? '');
+        
+        // Validate times if provided
+        if ($arrival && !MRT_validate_time_hhmm($arrival)) {
+            continue;
+        }
+        if ($departure && !MRT_validate_time_hhmm($departure)) {
+            continue;
+        }
+        
+        $pickup = isset($stop['pickup']) && $stop['pickup'] == '1' ? 1 : 0;
+        $dropoff = isset($stop['dropoff']) && $stop['dropoff'] == '1' ? 1 : 0;
+        
+        $result = $wpdb->insert($table, [
+            'service_post_id' => $service_id,
+            'station_post_id' => $station_id,
+            'stop_sequence' => $sequence,
+            'arrival_time' => $arrival ?: null,
+            'departure_time' => $departure ?: null,
+            'pickup_allowed' => $pickup,
+            'dropoff_allowed' => $dropoff,
+        ], ['%d', '%d', '%d', '%s', '%s', '%d', '%d']);
+        
+        if ($result !== false) {
+            $inserted++;
+            $sequence++;
+        } else {
+            MRT_check_db_error('MRT_ajax_save_all_stoptimes');
+        }
+    }
+    
+    wp_send_json_success([
+        'message' => sprintf(__('%d stop times saved.', 'museum-railway-timetable'), $inserted),
+        'count' => $inserted,
+    ]);
 }
 
 /**

@@ -6,7 +6,6 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 
 - **Custom Post Types**: Stations, Routes, and Services
 - **Custom Taxonomies**: Train Types
-- **CSV Import**: Import stations, stop times, and calendar data via CSV
 - **Shortcodes**: Display timetables on the frontend
 - **Admin Interface**: 
   - Inline editing for Stop Times and Calendar entries directly in Service edit pages
@@ -78,46 +77,28 @@ Display a calendar showing service days for a month:
 
 Services can be managed in two ways:
 
-#### Inline Editing (Recommended)
-1. Go to **Railway Timetable > Services** and edit a service
-2. In the **Stop Times** meta box:
-   - Click on any row to edit it inline
-   - Use the "Add New" row at the bottom to add new stop times
-   - Click "Save" to save changes or "Cancel" to discard
-3. In the **Calendar** meta box:
+#### Route-Based Editing (Recommended)
+1. **Create a Route first:**
+   - Go to **Railway Timetable > Routes** and create a new route
+   - Add stations to the route in order using the "Route Stations" meta box
+2. **Create a Service:**
+   - Go to **Railway Timetable > Services** and create a new service
+   - Select a **Route** (required) - this defines which stations are available
+   - Select a **Train Type** (optional)
+   - Add a **Direction** (optional, e.g., "Northbound")
+   - Save the service
+3. **Configure Stop Times:**
+   - In the **Stop Times** meta box, all stations on the selected route are displayed
+   - Check "Stops here" for each station where the train stops
+   - Fill in Arrival/Departure times for each stop
+   - Select Pickup/Dropoff options
+   - Click "Save Stop Times" to save all changes at once
+4. **Configure Calendar:**
+   - In the **Calendar** meta box:
    - Click on any row to edit it inline
    - Use the "Add New" row at the bottom to add new calendar entries
    - Configure date ranges, weekdays, and include/exclude dates
 
-#### CSV Import
-For bulk importing data:
-
-1. Go to **Railway Timetable > CSV Import** in the admin menu
-2. Select the import type (Stations, Stop Times, or Calendar)
-3. Paste your CSV data or download sample files
-4. Click Import
-
-**CSV Formats:**
-
-#### Stations
-```
-name,station_type,lat,lng,display_order
-Hultsfred Museum,station,57.486,15.842,1
-```
-
-#### Stop Times
-```
-service,station,sequence,arrive,depart,pickup,dropoff
-Steam Train A,Hultsfred Museum,1,,10:00,1,1
-```
-
-#### Calendar
-```
-service,start_date,end_date,mon,tue,wed,thu,fri,sat,sun,include_dates,exclude_dates
-Steam Train A,2025-06-01,2025-08-31,0,0,0,0,0,1,1,2025-06-06,
-```
-
-See the import page for detailed format specifications and examples.
 
 ## Development
 
@@ -190,7 +171,6 @@ This plugin is provided as-is for use with WordPress.
 ### 0.1.0
 - Initial release
 - Custom post types for stations, routes, and services
-- CSV import functionality
 - Three shortcodes for timetable display
 - Admin interface for management
 

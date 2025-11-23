@@ -99,7 +99,6 @@ require_once MRT_PATH . 'inc/admin-meta-boxes.php';
 require_once MRT_PATH . 'inc/admin-ajax.php';
 require_once MRT_PATH . 'inc/admin-list.php';
 require_once MRT_PATH . 'inc/cpt.php';
-require_once MRT_PATH . 'inc/import.php';
 require_once MRT_PATH . 'inc/shortcodes.php';
 
 // Example init hook for future extensions

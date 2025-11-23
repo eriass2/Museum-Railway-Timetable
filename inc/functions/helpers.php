@@ -92,6 +92,28 @@ function MRT_log_error($message) {
 }
 
 /**
+ * Validate time format (HH:MM)
+ *
+ * @param string $s Time string
+ * @return bool True if valid or empty
+ */
+function MRT_validate_time_hhmm($s) {
+    // Accept empty for first/last stop cases
+    if ($s === '' || $s === null) return true;
+    return (bool) preg_match('/^(?:[01]\d|2[0-3]):[0-5]\d$/', $s);
+}
+
+/**
+ * Validate date format (YYYY-MM-DD)
+ *
+ * @param string $s Date string
+ * @return bool True if valid
+ */
+function MRT_validate_date($s) {
+    return (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $s);
+}
+
+/**
  * Render a generic timetable table (reused by multiple shortcodes)
  *
  * @param array $rows Array of timetable row data

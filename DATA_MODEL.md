@@ -15,10 +15,10 @@ The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom
          │ (many-to-many via mrt_stoptimes)
          │
          ▼
-┌─────────────────┐      ┌─────────────────┐
-│   Stop Time     │◄─────┤   Service       │
-│  (Custom Table) │      │   (CPT)         │
-└─────────────────┘      └────────┬────────┘
+┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
+│   Stop Time     │◄─────┤   Service       │◄─────┤   Route         │
+│  (Custom Table) │      │   (CPT)         │      │   (CPT)         │
+└─────────────────┘      └────────┬────────┘      └─────────────────┘
                                   │
                                   │ (one-to-many)
                                   │
@@ -80,6 +80,9 @@ The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom
 - **Post ID** (ID) - Unique identifier
 
 **Meta Fields:**
+- `mrt_service_route_id` (int) - Route post ID that this service runs on (required)
+  - Links service to a route
+  - Used to filter available stations when configuring stop times
 - `mrt_direction` (string) - Direction of the service (optional)
   - Example: "Northbound", "Southbound"
 
@@ -88,6 +91,9 @@ The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom
   - Links service to train types (e.g., "steam", "diesel", "electric")
 
 **Relationships:**
+- **Many-to-One** with `Route` (via `mrt_service_route_id` meta field)
+  - Each service is linked to one route
+  - Multiple services can use the same route
 - **One-to-Many** with `StopTime` (via `mrt_stoptimes.service_post_id`)
 - **One-to-Many** with `Calendar` (via `mrt_calendar.service_post_id`)
 - **Many-to-Many** with `Station` (via `mrt_stoptimes` table)
@@ -102,23 +108,30 @@ The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom
 
 ### 1.3 Route (`mrt_route`)
 
-**Description:** Optional post type for defining routes (currently not actively used in core functionality).
+**Description:** Defines a route (line) with a sequence of stations. Routes are used to organize services and simplify stop time configuration.
 
 **Storage:** WordPress `wp_posts` table (post_type = 'mrt_route')
 
 **Fields:**
 - **Title** (post_title) - Route name (required)
+  - Example: "Hultsfred → Västervik", "Main Line", "Northbound"
 - **Post ID** (ID) - Unique identifier
 
 **Meta Fields:**
-- None currently defined
+- `mrt_route_stations` (array) - Array of station post IDs in order
+  - Defines which stations are on the route and their sequence
+  - Example: `[123, 456, 789]` means station 123 is first, 456 is second, etc.
 
 **Relationships:**
-- Currently no relationships defined
+- **One-to-Many** with `Service` (via `mrt_service_route_id` meta field)
+  - Multiple services can use the same route
+  - Each service can be linked to one route
 
 **Usage:**
-- Reserved for future use
-- Not used in current timetable logic
+- Used in Service edit screen to automatically display all stations on the route
+- Simplifies stop time configuration - user selects which stations the train stops at
+- Routes can be reused for multiple services (e.g., 12 departures per direction)
+- Routes can work in both directions (create separate routes for each direction if needed)
 
 ---
 
@@ -198,7 +211,7 @@ CREATE TABLE {prefix}_mrt_stoptimes (
 **Usage:**
 - Core table for timetable functionality
 - Used by shortcodes to display departure/arrival times
-- Imported via CSV import functionality
+- Created via admin interface
 
 **Example Data:**
 ```
@@ -263,7 +276,7 @@ CREATE TABLE {prefix}_mrt_calendar (
 **Usage:**
 - Determines which dates a service runs
 - Used by `MRT_services_running_on_date()` to find active services
-- Imported via CSV import functionality
+- Created via admin interface
 
 **Example Data:**
 ```
@@ -362,10 +375,12 @@ WHERE start_date <= {date}
 
 ## 6. Data Flow
 
-### Import Flow
-1. **Stations CSV** → Creates `mrt_station` posts with meta fields
-2. **Stop Times CSV** → Inserts into `mrt_stoptimes` table
-3. **Calendar CSV** → Inserts into `mrt_calendar` table
+### Data Creation Flow
+1. **Stations** → Created via admin interface (`mrt_station` posts with meta fields)
+2. **Routes** → Created via admin interface (`mrt_route` posts with station sequence)
+3. **Services** → Created via admin interface (`mrt_service` posts linked to routes)
+4. **Stop Times** → Created via admin interface (inserts into `mrt_stoptimes` table)
+5. **Calendar** → Created via admin interface (inserts into `mrt_calendar` table)
 
 ### Display Flow
 1. **Shortcode** → Queries services running on date
@@ -388,10 +403,6 @@ WHERE start_date <= {date}
 - `MRT_get_services_for_station()` - Get services stopping at station
 - `MRT_next_running_day_for_station()` - Find next service day for station
 
-### Import Functions
-- `MRT_import_stations()` - Import stations from CSV
-- `MRT_import_stoptimes()` - Import stop times from CSV
-- `MRT_import_calendar()` - Import calendar entries from CSV
 
 ---
 

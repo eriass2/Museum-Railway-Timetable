@@ -8,21 +8,20 @@
 
 1. **Services (CPT) - Redigering**
    - Skapa/redigera services via WordPress standard edit-sida
-   - Meta box med "Direction" fält
-   - **✅ NYTT**: Stop Times meta box med full CRUD-funktionalitet
+   - Meta box med "Route", "Train Type", och "Direction" fält
+   - **✅ NYTT**: Route-baserad Stop Times meta box - Välj Route, sedan kryssa i vilka stations tåget stannar vid
    - **✅ NYTT**: Calendar meta box med full CRUD-funktionalitet
    - Tillgängligt via: Railway Timetable → Services
 
-2. **Stations (CPT) - Redigering**
+2. **Routes (CPT) - Redigering**
+   - Skapa/redigera routes via WordPress standard edit-sida
+   - Meta box för att definiera stations på sträckan i ordning
+   - Tillgängligt via: Railway Timetable → Routes
+
+3. **Stations (CPT) - Redigering**
    - Skapa/redigera stations via WordPress standard edit-sida
    - Meta box med: Station Type, Latitude, Longitude, Display Order
    - Tillgängligt via: Railway Timetable → Stations
-
-3. **CSV Import**
-   - Importera Stations, Stop Times, och Calendar via CSV
-   - Tre separata tabs för varje typ
-   - Sample CSV downloads
-   - Tillgängligt via: Railway Timetable → CSV Import
 
 4. **Stations Overview**
    - Översikt över alla stations
@@ -30,7 +29,7 @@
    - Filter på Train Type
    - Tillgängligt via: Railway Timetable → Stations Overview
 
-5. **Train Types (Taxonomy)**
+6. **Train Types (Taxonomy)**
    - Skapa/redigera train types
    - Tillgängligt via: Railway Timetable → Train Types
 
@@ -41,17 +40,19 @@
 ### ✅ Problem 1: Visuell hantering av Stop Times - LÖST
 
 **Implementerat:**
-- ✅ Meta box i Service edit-sidan som visar alla stop times för servicen
-- ✅ Möjlighet att lägga till/redigera/ta bort stop times direkt via AJAX
-- ✅ Visuell tabell med: Sequence, Station, Arrival, Departure, Pickup, Dropoff
-- ✅ Formulär för att lägga till nya stop times
-- ✅ Edit/Delete-knappar för varje stop time
-- ✅ Validering av input (tider, sequence, etc.)
+- ✅ Route-baserad Stop Times meta box i Service edit-sidan
+- ✅ När Route väljs visas alla stations på sträckan automatiskt
+- ✅ Checkbox "Stops here" för varje station - enkelt att välja vilka stations tåget stannar vid
+- ✅ Tidsfält (Arrival/Departure) aktiveras automatiskt när "Stops here" är ikryssat
+- ✅ Pickup/Dropoff checkboxar per station
+- ✅ "Save Stop Times" knapp som sparar alla ändringar på en gång via AJAX
+- ✅ Validering av input (tider, etc.)
+- ✅ Hjälptext och placeholders för alla fält
 
 **Teknisk implementation:**
 - Fil: `inc/admin-meta-boxes.php` - `MRT_render_service_stoptimes_box()`
-- Fil: `inc/admin-ajax.php` - AJAX handlers för CRUD-operationer
-- Fil: `assets/admin.js` - UI-interaktioner
+- Fil: `inc/admin-ajax.php` - AJAX handler `MRT_ajax_save_all_stoptimes()`
+- Fil: `assets/admin.js` - UI-interaktioner för checkboxar och tidsfält
 - Fil: `assets/admin.css` - Styling
 
 ### ✅ Problem 2: Visuell hantering av Calendar - LÖST
@@ -118,16 +119,6 @@
   - Calendar entries (med datumintervall)
   - När servicen körs nästa gång
 
-### Prioritet 3: Förbättrad CSV Import (VALFRITT)
-
-**Status**: Inte implementerat
-
-**Befintlig funktionalitet är bra, men:**
-- Lägg till "Export" funktionalitet
-- Möjlighet att exportera befintliga data till CSV för backup/redigering
-- Export per service eller alla services
-
-**Anledning**: Nu när användare kan redigera direkt i admin-sidan är CSV-export mindre kritiskt, men kan fortfarande vara användbart för backup.
 
 ---
 
@@ -135,37 +126,36 @@
 
 ### För att skapa en komplett service med 2-3 återanvända tidtabeller:
 
-**Steg 1: Skapa Services**
+**Steg 1: Skapa Routes**
+1. Gå till Railway Timetable → Routes → Add New
+2. Skapa Route (t.ex. "Hultsfred → Västervik")
+3. Lägg till stations i ordning i "Route Stations" meta box
+
+**Steg 2: Skapa Services**
 1. Gå till Railway Timetable → Services → Add New
-2. Skapa "Vardagstidtabell" (namn + direction)
-3. Skapa "Helgtidtabell" (namn + direction)
-4. Skapa "Specialdag 4 juli" (namn + direction)
+2. Skapa "Vardagstidtabell 09:00" (välj Route, Train Type, direction)
+3. Skapa "Helgtidtabell 10:00" (välj Route, Train Type, direction)
+4. Skapa "Specialdag 4 juli 14:00" (välj Route, Train Type, direction)
 
-**Steg 2: Lägg till Stop Times**
-**Alternativ A: Via Admin UI (REKOMMENDERAT)**
+**Steg 3: Konfigurera Stop Times**
+**Via Admin UI (REKOMMENDERAT)**
 1. Öppna Service edit-sidan
-2. Scrolla till "Stop Times" meta box
-3. Använd formuläret för att lägga till varje stop time
-4. Klicka "Add Stop Time" för varje station
-5. Redigera/ta bort direkt om något behöver ändras
+2. Kontrollera att Route är vald i "Service Details" meta box
+3. Scrolla till "Stop Times" meta box
+4. Alla stations på Route:n visas automatiskt i en tabell
+5. För varje station där tåget stannar:
+   - Kryssa i "Stops here"
+   - Fyll i Arrival/Departure tider
+   - Välj Pickup/Dropoff
+6. Klicka "Save Stop Times" för att spara alla ändringar på en gång
 
-**Alternativ B: Via CSV Import (för bulk-import)**
-1. Gå till Railway Timetable → CSV Import → Stop Times
-2. Skapa CSV med alla stop times för alla services
-3. Importera
-
-**Steg 3: Lägg till Calendar Entries**
-**Alternativ A: Via Admin UI (REKOMMENDERAT)**
+**Steg 4: Lägg till Calendar Entries**
+**Via Admin UI (REKOMMENDERAT)**
 1. Öppna Service edit-sidan
 2. Scrolla till "Calendar (Service Schedule)" meta box
 3. Använd formuläret för att lägga till varje calendar entry
 4. Klicka "Add Calendar Entry" för varje datumintervall
 5. Redigera/ta bort direkt om något behöver ändras
-
-**Alternativ B: Via CSV Import (för bulk-import)**
-1. Gå till Railway Timetable → CSV Import → Calendar
-2. Skapa CSV med alla calendar entries för alla services
-3. Importera
 
 **Förbättringar:**
 - ✅ Visuell feedback - ser alla stop times och calendar entries direkt
@@ -182,7 +172,6 @@
 **För att "pussla ihop" 2-3 services med olika stop times och calendar entries:**
 
 **Nuvarande verktyg:**
-- ✅ CSV Import (fungerar för bulk-import)
 - ✅ Service/Station redigering med alla fält
 - ✅ **NYTT**: Visuell hantering av Stop Times i Service edit-sidan
 - ✅ **NYTT**: Visuell hantering av Calendar i Service edit-sidan
@@ -200,6 +189,5 @@ Det är nu mycket enklare att "pussla ihop" services utan att behöva använda C
 
 **Rekommendation för användning:**
 - Använd Admin UI för att skapa och redigera services, stop times och calendar entries
-- Använd CSV Import för bulk-import av stora mängder data eller initial setup
 
 
