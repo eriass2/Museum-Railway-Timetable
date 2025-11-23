@@ -233,6 +233,72 @@
     max-width: 300px;
 }
 
+/* Stop Times and Calendar Tables */
+.mrt-stoptimes-table,
+.mrt-calendar-table {
+    margin-top: 1rem;
+}
+
+.mrt-stoptimes-table th,
+.mrt-calendar-table th {
+    background: #f5f5f5;
+    font-weight: 600;
+}
+
+.mrt-stoptimes-table td,
+.mrt-calendar-table td {
+    vertical-align: middle;
+}
+
+.mrt-add-stoptime-form,
+.mrt-add-calendar-form {
+    margin-top: 1rem;
+    padding: 1rem;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.mrt-add-stoptime-form h4,
+.mrt-add-calendar-form h4 {
+    margin-top: 0;
+    margin-bottom: 0.75rem;
+}
+
+.mrt-add-stoptime-form .form-table,
+.mrt-add-calendar-form .form-table {
+    margin-top: 0;
+}
+
+.mrt-add-stoptime-form .form-table th,
+.mrt-add-calendar-form .form-table th {
+    width: 150px;
+    padding: 10px 10px 10px 0;
+}
+
+.mrt-add-stoptime-form .form-table td,
+.mrt-add-calendar-form .form-table td {
+    padding: 10px 0;
+}
+
+.mrt-add-stoptime-form label,
+.mrt-add-calendar-form label {
+    margin-right: 1rem;
+    font-weight: normal;
+}
+
+.mrt-empty-row td {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+    padding: 2rem;
+}
+
+.mrt-none {
+    color: #666;
+    font-style: italic;
+}
+
 /* ==========================================================================
    Responsive Design
    ========================================================================== */

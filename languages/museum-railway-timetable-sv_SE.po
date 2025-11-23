@@ -319,3 +319,222 @@ msgstr "Lägg till ny tur"
 msgid "Add New Route"
 msgstr "Lägg till ny sträcka"
 
+msgid "Stop Times"
+msgstr "Hållplatser"
+
+msgid "Calendar (Service Schedule)"
+msgstr "Kalender (Turschema)"
+
+msgid "Seq"
+msgstr "Ord"
+
+msgid "Arrival"
+msgstr "Ankomst"
+
+msgid "Departure"
+msgstr "Avgång"
+
+msgid "Pickup"
+msgstr "Påstigning"
+
+msgid "Dropoff"
+msgstr "Avstigning"
+
+msgid "Actions"
+msgstr "Åtgärder"
+
+msgid "No stop times defined. Add one below."
+msgstr "Inga hållplatser definierade. Lägg till en nedan."
+
+msgid "Add Stop Time"
+msgstr "Lägg till hållplats"
+
+msgid "— Select Station —"
+msgstr "— Välj station —"
+
+msgid "Sequence"
+msgstr "Ordning"
+
+msgid "Order along the route (1, 2, 3...)."
+msgstr "Ordning längs rutten (1, 2, 3...)."
+
+msgid "Arrival Time"
+msgstr "Ankomsttid"
+
+msgid "HH:MM format. Leave empty for first stop."
+msgstr "HH:MM-format. Lämna tomt för första hållplatsen."
+
+msgid "Departure Time"
+msgstr "Avgångstid"
+
+msgid "HH:MM format. Leave empty for last stop."
+msgstr "HH:MM-format. Lämna tomt för sista hållplatsen."
+
+msgid "Options"
+msgstr "Alternativ"
+
+msgid "Pickup allowed"
+msgstr "Påstigning tillåten"
+
+msgid "Dropoff allowed"
+msgstr "Avstigning tillåten"
+
+msgid "Date Range"
+msgstr "Datumintervall"
+
+msgid "Days"
+msgstr "Dagar"
+
+msgid "Include Dates"
+msgstr "Inkludera datum"
+
+msgid "Exclude Dates"
+msgstr "Exkludera datum"
+
+msgid "No calendar entries defined. Add one below."
+msgstr "Inga kalenderposter definierade. Lägg till en nedan."
+
+msgid "Add Calendar Entry"
+msgstr "Lägg till kalenderpost"
+
+msgid "Start Date"
+msgstr "Startdatum"
+
+msgid "End Date"
+msgstr "Slutdatum"
+
+msgid "Days of Week"
+msgstr "Veckodagar"
+
+msgid "Monday"
+msgstr "Måndag"
+
+msgid "Tuesday"
+msgstr "Tisdag"
+
+msgid "Wednesday"
+msgstr "Onsdag"
+
+msgid "Thursday"
+msgstr "Torsdag"
+
+msgid "Friday"
+msgstr "Fredag"
+
+msgid "Saturday"
+msgstr "Lördag"
+
+msgid "Sunday"
+msgstr "Söndag"
+
+msgid "Comma-separated dates to include (overrides weekdays)."
+msgstr "Kommaseparerade datum att inkludera (överrider veckodagar)."
+
+msgid "Comma-separated dates to exclude."
+msgstr "Kommaseparerade datum att exkludera."
+
+msgid "Mon"
+msgstr "Mån"
+
+msgid "Tue"
+msgstr "Tis"
+
+msgid "Wed"
+msgstr "Ons"
+
+msgid "Thu"
+msgstr "Tor"
+
+msgid "Fri"
+msgstr "Fre"
+
+msgid "Sat"
+msgstr "Lör"
+
+msgid "Sun"
+msgstr "Sön"
+
+msgid "None"
+msgstr "Ingen"
+
+msgid "Permission denied."
+msgstr "Åtkomst nekad."
+
+msgid "Invalid input."
+msgstr "Ogiltig inmatning."
+
+msgid "Invalid arrival time format. Use HH:MM."
+msgstr "Ogiltigt format för ankomsttid. Använd HH:MM."
+
+msgid "Invalid departure time format. Use HH:MM."
+msgstr "Ogiltigt format för avgångstid. Använd HH:MM."
+
+msgid "Failed to add stop time."
+msgstr "Kunde inte lägga till hållplats."
+
+msgid "Failed to update stop time."
+msgstr "Kunde inte uppdatera hållplats."
+
+msgid "Failed to delete stop time."
+msgstr "Kunde inte ta bort hållplats."
+
+msgid "Invalid ID."
+msgstr "Ogiltigt ID."
+
+msgid "Stop time not found."
+msgstr "Hållplats hittades inte."
+
+msgid "Start date must be before end date."
+msgstr "Startdatum måste vara före slutdatum."
+
+msgid "Failed to add calendar entry."
+msgstr "Kunde inte lägga till kalenderpost."
+
+msgid "Failed to update calendar entry."
+msgstr "Kunde inte uppdatera kalenderpost."
+
+msgid "Failed to delete calendar entry."
+msgstr "Kunde inte ta bort kalenderpost."
+
+msgid "Calendar entry not found."
+msgstr "Kalenderpost hittades inte."
+
+msgid "Update Stop Time"
+msgstr "Uppdatera hållplats"
+
+msgid "Update Calendar Entry"
+msgstr "Uppdatera kalenderpost"
+
+msgid "Please fill in Station and Sequence."
+msgstr "Fyll i Station och Ordning."
+
+msgid "Error adding stop time."
+msgstr "Fel vid tillägg av hållplats."
+
+msgid "Error updating stop time."
+msgstr "Fel vid uppdatering av hållplats."
+
+msgid "Are you sure you want to delete this stop time?"
+msgstr "Är du säker på att du vill ta bort denna hållplats?"
+
+msgid "Error deleting stop time."
+msgstr "Fel vid borttagning av hållplats."
+
+msgid "Please fill in Start Date and End Date."
+msgstr "Fyll i Startdatum och Slutdatum."
+
+msgid "Error adding calendar entry."
+msgstr "Fel vid tillägg av kalenderpost."
+
+msgid "Error updating calendar entry."
+msgstr "Fel vid uppdatering av kalenderpost."
+
+msgid "Are you sure you want to delete this calendar entry?"
+msgstr "Är du säker på att du vill ta bort denna kalenderpost?"
+
+msgid "Error deleting calendar entry."
+msgstr "Fel vid borttagning av kalenderpost."
+
+msgid "Cancel"
+msgstr "Avbryt"
+

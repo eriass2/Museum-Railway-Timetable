@@ -13,9 +13,20 @@ if (!defined('ABSPATH')) { exit; }
  * @param string $hook Current admin page hook
  */
 function MRT_enqueue_admin_assets($hook) {
-    // Only load on plugin admin pages
-    if (strpos($hook, 'mrt_') === false) {
+    // Load on plugin admin pages or when editing services/stations
+    $is_plugin_page = (strpos($hook, 'mrt_') !== false);
+    $is_edit_page = in_array($hook, ['post.php', 'post-new.php']);
+    
+    if (!$is_plugin_page && !$is_edit_page) {
         return;
+    }
+    
+    // For edit pages, only load if editing our CPTs
+    if ($is_edit_page) {
+        $post_type = get_post_type();
+        if (!in_array($post_type, ['mrt_station', 'mrt_service', 'mrt_route'], true)) {
+            return;
+        }
     }
 
     // Enqueue admin CSS
@@ -34,6 +45,11 @@ function MRT_enqueue_admin_assets($hook) {
         MRT_VERSION,
         true
     );
+    
+    // Localize script for AJAX
+    wp_localize_script('mrt-admin', 'mrtAdmin', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+    ]);
 }
 add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');
 

@@ -433,3 +433,295 @@ msgstr ""
 msgid "Add New Route"
 msgstr ""
 
+#: plugin
+msgid "Stop Times"
+msgstr ""
+
+#: plugin
+msgid "Calendar (Service Schedule)"
+msgstr ""
+
+#: plugin
+msgid "Seq"
+msgstr ""
+
+#: plugin
+msgid "Arrival"
+msgstr ""
+
+#: plugin
+msgid "Departure"
+msgstr ""
+
+#: plugin
+msgid "Pickup"
+msgstr ""
+
+#: plugin
+msgid "Dropoff"
+msgstr ""
+
+#: plugin
+msgid "Actions"
+msgstr ""
+
+#: plugin
+msgid "No stop times defined. Add one below."
+msgstr ""
+
+#: plugin
+msgid "Add Stop Time"
+msgstr ""
+
+#: plugin
+msgid "— Select Station —"
+msgstr ""
+
+#: plugin
+msgid "Sequence"
+msgstr ""
+
+#: plugin
+msgid "Order along the route (1, 2, 3...)."
+msgstr ""
+
+#: plugin
+msgid "Arrival Time"
+msgstr ""
+
+#: plugin
+msgid "HH:MM format. Leave empty for first stop."
+msgstr ""
+
+#: plugin
+msgid "Departure Time"
+msgstr ""
+
+#: plugin
+msgid "HH:MM format. Leave empty for last stop."
+msgstr ""
+
+#: plugin
+msgid "Options"
+msgstr ""
+
+#: plugin
+msgid "Pickup allowed"
+msgstr ""
+
+#: plugin
+msgid "Dropoff allowed"
+msgstr ""
+
+#: plugin
+msgid "Date Range"
+msgstr ""
+
+#: plugin
+msgid "Days"
+msgstr ""
+
+#: plugin
+msgid "Include Dates"
+msgstr ""
+
+#: plugin
+msgid "Exclude Dates"
+msgstr ""
+
+#: plugin
+msgid "No calendar entries defined. Add one below."
+msgstr ""
+
+#: plugin
+msgid "Add Calendar Entry"
+msgstr ""
+
+#: plugin
+msgid "Start Date"
+msgstr ""
+
+#: plugin
+msgid "End Date"
+msgstr ""
+
+#: plugin
+msgid "Days of Week"
+msgstr ""
+
+#: plugin
+msgid "Monday"
+msgstr ""
+
+#: plugin
+msgid "Tuesday"
+msgstr ""
+
+#: plugin
+msgid "Wednesday"
+msgstr ""
+
+#: plugin
+msgid "Thursday"
+msgstr ""
+
+#: plugin
+msgid "Friday"
+msgstr ""
+
+#: plugin
+msgid "Saturday"
+msgstr ""
+
+#: plugin
+msgid "Sunday"
+msgstr ""
+
+#: plugin
+msgid "Comma-separated dates to include (overrides weekdays)."
+msgstr ""
+
+#: plugin
+msgid "Comma-separated dates to exclude."
+msgstr ""
+
+#: plugin
+msgid "Mon"
+msgstr ""
+
+#: plugin
+msgid "Tue"
+msgstr ""
+
+#: plugin
+msgid "Wed"
+msgstr ""
+
+#: plugin
+msgid "Thu"
+msgstr ""
+
+#: plugin
+msgid "Fri"
+msgstr ""
+
+#: plugin
+msgid "Sat"
+msgstr ""
+
+#: plugin
+msgid "Sun"
+msgstr ""
+
+#: plugin
+msgid "None"
+msgstr ""
+
+#: plugin
+msgid "Permission denied."
+msgstr ""
+
+#: plugin
+msgid "Invalid input."
+msgstr ""
+
+#: plugin
+msgid "Invalid arrival time format. Use HH:MM."
+msgstr ""
+
+#: plugin
+msgid "Invalid departure time format. Use HH:MM."
+msgstr ""
+
+#: plugin
+msgid "Failed to add stop time."
+msgstr ""
+
+#: plugin
+msgid "Failed to update stop time."
+msgstr ""
+
+#: plugin
+msgid "Failed to delete stop time."
+msgstr ""
+
+#: plugin
+msgid "Invalid ID."
+msgstr ""
+
+#: plugin
+msgid "Stop time not found."
+msgstr ""
+
+#: plugin
+msgid "Start date must be before end date."
+msgstr ""
+
+#: plugin
+msgid "Failed to add calendar entry."
+msgstr ""
+
+#: plugin
+msgid "Failed to update calendar entry."
+msgstr ""
+
+#: plugin
+msgid "Failed to delete calendar entry."
+msgstr ""
+
+#: plugin
+msgid "Calendar entry not found."
+msgstr ""
+
+#: plugin
+msgid "Update Stop Time"
+msgstr ""
+
+#: plugin
+msgid "Update Calendar Entry"
+msgstr ""
+
+#: plugin
+msgid "Please fill in Station and Sequence."
+msgstr ""
+
+#: plugin
+msgid "Error adding stop time."
+msgstr ""
+
+#: plugin
+msgid "Error updating stop time."
+msgstr ""
+
+#: plugin
+msgid "Are you sure you want to delete this stop time?"
+msgstr ""
+
+#: plugin
+msgid "Error deleting stop time."
+msgstr ""
+
+#: plugin
+msgid "Please fill in Start Date and End Date."
+msgstr ""
+
+#: plugin
+msgid "Error adding calendar entry."
+msgstr ""
+
+#: plugin
+msgid "Error updating calendar entry."
+msgstr ""
+
+#: plugin
+msgid "Are you sure you want to delete this calendar entry?"
+msgstr ""
+
+#: plugin
+msgid "Error deleting calendar entry."
+msgstr ""
+
+#: plugin
+msgid "Cancel"
+msgstr ""
+
