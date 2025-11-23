@@ -36,143 +36,114 @@
     }
 
     /**
-     * Initialize Stop Times UI
+     * Initialize Stop Times UI with inline editing
      */
     function initStopTimesUI() {
         var $container = $('#mrt-stoptimes-container');
         if (!$container.length) return;
 
         var nonce = $('#mrt_stoptimes_nonce').val();
+        var editingRow = null;
 
-        // Add stop time
-        $('#mrt-add-stoptime').on('click', function() {
-            var $btn = $(this);
-            var editId = $btn.data('edit-id');
-            
-            if (editId) {
-                // Update existing
-                var data = {
-                    action: 'mrt_update_stoptime',
-                    nonce: nonce,
-                    id: editId,
-                    station_id: $('#mrt-new-station').val(),
-                    sequence: $('#mrt-new-sequence').val(),
-                    arrival: $('#mrt-new-arrival').val(),
-                    departure: $('#mrt-new-departure').val(),
-                    pickup: $('#mrt-new-pickup').is(':checked') ? 1 : 0,
-                    dropoff: $('#mrt-new-dropoff').is(':checked') ? 1 : 0
-                };
-
-                if (!data.station_id || !data.sequence) {
-                    alert('Please fill in Station and Sequence.');
-                    return;
-                }
-
-                $btn.prop('disabled', true).text('Updating...');
-
-                $.post(mrtAdmin.ajaxurl, data, function(response) {
-                    if (response.success) {
-                        // Reset form
-                        $('#mrt-new-station').val('');
-                        $('#mrt-new-sequence').val('1');
-                        $('#mrt-new-arrival').val('');
-                        $('#mrt-new-departure').val('');
-                        $('#mrt-new-pickup').prop('checked', true);
-                        $('#mrt-new-dropoff').prop('checked', true);
-                        $btn.removeData('edit-id').text('Add Stop Time');
-                        $('#mrt-cancel-stoptime').hide();
-                        location.reload();
-                    } else {
-                        $btn.prop('disabled', false).text('Update Stop Time');
-                        alert(response.data.message || 'Error updating stop time.');
-                    }
-                });
-            } else {
-                // Add new
-                var serviceId = $btn.data('service-id');
-                var data = {
-                    action: 'mrt_add_stoptime',
-                    nonce: nonce,
-                    service_id: serviceId,
-                    station_id: $('#mrt-new-station').val(),
-                    sequence: $('#mrt-new-sequence').val(),
-                    arrival: $('#mrt-new-arrival').val(),
-                    departure: $('#mrt-new-departure').val(),
-                    pickup: $('#mrt-new-pickup').is(':checked') ? 1 : 0,
-                    dropoff: $('#mrt-new-dropoff').is(':checked') ? 1 : 0
-                };
-
-                if (!data.station_id || !data.sequence) {
-                    alert('Please fill in Station and Sequence.');
-                    return;
-                }
-
-                $btn.prop('disabled', true).text('Adding...');
-
-                $.post(mrtAdmin.ajaxurl, data, function(response) {
-                    if (response.success) {
-                        // Reset form
-                        $('#mrt-new-station').val('');
-                        $('#mrt-new-sequence').val('1');
-                        $('#mrt-new-arrival').val('');
-                        $('#mrt-new-departure').val('');
-                        $('#mrt-new-pickup').prop('checked', true);
-                        $('#mrt-new-dropoff').prop('checked', true);
-                        location.reload();
-                    } else {
-                        $btn.prop('disabled', false).text('Add Stop Time');
-                        alert(response.data.message || 'Error adding stop time.');
-                    }
-                });
+        // Click on row to edit (except new row and action buttons)
+        $container.on('click', '.mrt-stoptime-row:not(.mrt-new-row)', function(e) {
+            if ($(e.target).is('button, input, select') || $(e.target).closest('button, input, select').length) {
+                return;
             }
+            if (editingRow && editingRow[0] !== this) {
+                cancelEditStopTime(editingRow);
+            }
+            startEditStopTime($(this));
         });
 
-        // Edit stop time
-        $container.on('click', '.mrt-edit-stoptime', function() {
-            var id = $(this).data('id');
-            $.post(mrtAdmin.ajaxurl, {
-                action: 'mrt_get_stoptime',
+        // Save stop time
+        $container.on('click', '.mrt-save-stoptime', function(e) {
+            e.stopPropagation();
+            var $row = $(this).closest('.mrt-stoptime-row');
+            var id = $row.data('stoptime-id');
+            var serviceId = $row.data('service-id');
+            
+            var $stationField = $row.find('[data-field="station"]');
+            var stationId = $stationField.find('select').length ? $stationField.find('select').val() : $stationField.find('input').val();
+            
+            var data = {
+                action: id === 'new' ? 'mrt_add_stoptime' : 'mrt_update_stoptime',
                 nonce: nonce,
-                id: id
-            }, function(response) {
+                service_id: serviceId,
+                station_id: stationId,
+                sequence: $row.find('[data-field="sequence"] input').val(),
+                arrival: $row.find('[data-field="arrival"] input').val(),
+                departure: $row.find('[data-field="departure"] input').val(),
+                pickup: $row.find('[data-field="pickup"] input[type="checkbox"]').is(':checked') ? 1 : 0,
+                dropoff: $row.find('[data-field="dropoff"] input[type="checkbox"]').is(':checked') ? 1 : 0
+            };
+
+            if (id !== 'new') {
+                data.id = id;
+            }
+
+            if (!data.station_id || !data.sequence) {
+                alert('Please fill in Station and Sequence.');
+                return;
+            }
+
+            $(this).prop('disabled', true).text('Saving...');
+
+            $.post(mrtAdmin.ajaxurl, data, function(response) {
                 if (response.success) {
-                    var st = response.data;
-                    // Populate form and show edit mode
-                    $('#mrt-new-station').val(st.station_post_id);
-                    $('#mrt-new-sequence').val(st.stop_sequence);
-                    $('#mrt-new-arrival').val(st.arrival_time || '');
-                    $('#mrt-new-departure').val(st.departure_time || '');
-                    $('#mrt-new-pickup').prop('checked', st.pickup_allowed == 1);
-                    $('#mrt-new-dropoff').prop('checked', st.dropoff_allowed == 1);
-                    
-                    // Change button to update
-                    var $btn = $('#mrt-add-stoptime');
-                    $btn.data('edit-id', id).text('Update Stop Time');
-                    $('#mrt-cancel-stoptime').show();
-                    
-                    // Scroll to form
-                    $('html, body').animate({
-                        scrollTop: $('.mrt-add-stoptime-form').offset().top - 100
-                    }, 500);
+                    location.reload();
+                } else {
+                    alert(response.data.message || 'Error saving stop time.');
+                    $(this).prop('disabled', false).text('Save');
                 }
             });
         });
-        
-        // Cancel edit stop time
-        $('#mrt-cancel-stoptime').on('click', function() {
-            $('#mrt-new-station').val('');
-            $('#mrt-new-sequence').val('1');
-            $('#mrt-new-arrival').val('');
-            $('#mrt-new-departure').val('');
-            $('#mrt-new-pickup').prop('checked', true);
-            $('#mrt-new-dropoff').prop('checked', true);
-            var $btn = $('#mrt-add-stoptime');
-            $btn.removeData('edit-id').text('Add Stop Time');
-            $('#mrt-cancel-stoptime').hide();
+
+        // Add new stop time
+        $container.on('click', '.mrt-add-stoptime', function(e) {
+            e.stopPropagation();
+            var $row = $(this).closest('.mrt-stoptime-row');
+            var serviceId = $row.data('service-id');
+            
+            var data = {
+                action: 'mrt_add_stoptime',
+                nonce: nonce,
+                service_id: serviceId,
+                station_id: $row.find('[data-field="station"] select').val(),
+                sequence: $row.find('[data-field="sequence"] input').val(),
+                arrival: $row.find('[data-field="arrival"] input').val(),
+                departure: $row.find('[data-field="departure"] input').val(),
+                pickup: $row.find('[data-field="pickup"] input[type="checkbox"]').is(':checked') ? 1 : 0,
+                dropoff: $row.find('[data-field="dropoff"] input[type="checkbox"]').is(':checked') ? 1 : 0
+            };
+
+            if (!data.station_id || !data.sequence) {
+                alert('Please fill in Station and Sequence.');
+                return;
+            }
+
+            $(this).prop('disabled', true).text('Adding...');
+
+            $.post(mrtAdmin.ajaxurl, data, function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.data.message || 'Error adding stop time.');
+                    $(this).prop('disabled', false).text('Add');
+                }
+            });
+        });
+
+        // Cancel edit
+        $container.on('click', '.mrt-cancel-edit', function(e) {
+            e.stopPropagation();
+            var $row = $(this).closest('.mrt-stoptime-row');
+            cancelEditStopTime($row);
         });
 
         // Delete stop time
-        $container.on('click', '.mrt-delete-stoptime', function() {
+        $container.on('click', '.mrt-delete-stoptime', function(e) {
+            e.stopPropagation();
             if (!confirm('Are you sure you want to delete this stop time?')) {
                 return;
             }
@@ -189,158 +160,161 @@
                 }
             });
         });
+
+        function startEditStopTime($row) {
+            editingRow = $row;
+            $row.addClass('mrt-editing');
+            $row.find('.mrt-display').hide();
+            $row.find('.mrt-input').show();
+            $row.find('.mrt-save-stoptime, .mrt-cancel-edit').show();
+            $row.find('.mrt-delete-stoptime').hide();
+        }
+
+        function cancelEditStopTime($row) {
+            if (!$row.length) return;
+            $row.removeClass('mrt-editing');
+            $row.find('.mrt-display').show();
+            $row.find('.mrt-input').hide();
+            $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
+            $row.find('.mrt-delete-stoptime').show();
+            editingRow = null;
+            // Reload to reset values
+            if ($row.data('stoptime-id') !== 'new') {
+                location.reload();
+            }
+        }
     }
 
     /**
-     * Initialize Calendar UI
+     * Initialize Calendar UI with inline editing
      */
     function initCalendarUI() {
         var $container = $('#mrt-calendar-container');
         if (!$container.length) return;
 
         var nonce = $('#mrt_calendar_nonce').val();
+        var editingRow = null;
 
-        // Add calendar entry
-        $('#mrt-add-calendar').on('click', function() {
-            var $btn = $(this);
-            var editId = $btn.data('edit-id');
-            
-            if (editId) {
-                // Update existing
-                var data = {
-                    action: 'mrt_update_calendar',
-                    nonce: nonce,
-                    id: editId,
-                    start_date: $('#mrt-new-start-date').val(),
-                    end_date: $('#mrt-new-end-date').val(),
-                    mon: $('#mrt-new-mon').is(':checked') ? 1 : 0,
-                    tue: $('#mrt-new-tue').is(':checked') ? 1 : 0,
-                    wed: $('#mrt-new-wed').is(':checked') ? 1 : 0,
-                    thu: $('#mrt-new-thu').is(':checked') ? 1 : 0,
-                    fri: $('#mrt-new-fri').is(':checked') ? 1 : 0,
-                    sat: $('#mrt-new-sat').is(':checked') ? 1 : 0,
-                    sun: $('#mrt-new-sun').is(':checked') ? 1 : 0,
-                    include_dates: $('#mrt-new-include-dates').val(),
-                    exclude_dates: $('#mrt-new-exclude-dates').val()
-                };
-
-                if (!data.start_date || !data.end_date) {
-                    alert('Please fill in Start Date and End Date.');
-                    return;
-                }
-
-                $btn.prop('disabled', true).text('Updating...');
-
-                $.post(mrtAdmin.ajaxurl, data, function(response) {
-                    if (response.success) {
-                        // Reset form
-                        $('#mrt-new-start-date').val('');
-                        $('#mrt-new-end-date').val('');
-                        $('#mrt-new-mon, #mrt-new-tue, #mrt-new-wed, #mrt-new-thu, #mrt-new-fri, #mrt-new-sat, #mrt-new-sun').prop('checked', false);
-                        $('#mrt-new-include-dates').val('');
-                        $('#mrt-new-exclude-dates').val('');
-                        $btn.removeData('edit-id').text('Add Calendar Entry');
-                        $('#mrt-cancel-calendar').hide();
-                        location.reload();
-                    } else {
-                        $btn.prop('disabled', false).text('Update Calendar Entry');
-                        alert(response.data.message || 'Error updating calendar entry.');
-                    }
-                });
-            } else {
-                // Add new
-                var serviceId = $btn.data('service-id');
-                var data = {
-                    action: 'mrt_add_calendar',
-                    nonce: nonce,
-                    service_id: serviceId,
-                    start_date: $('#mrt-new-start-date').val(),
-                    end_date: $('#mrt-new-end-date').val(),
-                    mon: $('#mrt-new-mon').is(':checked') ? 1 : 0,
-                    tue: $('#mrt-new-tue').is(':checked') ? 1 : 0,
-                    wed: $('#mrt-new-wed').is(':checked') ? 1 : 0,
-                    thu: $('#mrt-new-thu').is(':checked') ? 1 : 0,
-                    fri: $('#mrt-new-fri').is(':checked') ? 1 : 0,
-                    sat: $('#mrt-new-sat').is(':checked') ? 1 : 0,
-                    sun: $('#mrt-new-sun').is(':checked') ? 1 : 0,
-                    include_dates: $('#mrt-new-include-dates').val(),
-                    exclude_dates: $('#mrt-new-exclude-dates').val()
-                };
-
-                if (!data.start_date || !data.end_date) {
-                    alert('Please fill in Start Date and End Date.');
-                    return;
-                }
-
-                $btn.prop('disabled', true).text('Adding...');
-
-                $.post(mrtAdmin.ajaxurl, data, function(response) {
-                    if (response.success) {
-                        // Reset form
-                        $('#mrt-new-start-date').val('');
-                        $('#mrt-new-end-date').val('');
-                        $('#mrt-new-mon, #mrt-new-tue, #mrt-new-wed, #mrt-new-thu, #mrt-new-fri, #mrt-new-sat, #mrt-new-sun').prop('checked', false);
-                        $('#mrt-new-include-dates').val('');
-                        $('#mrt-new-exclude-dates').val('');
-                        location.reload();
-                    } else {
-                        $btn.prop('disabled', false).text('Add Calendar Entry');
-                        alert(response.data.message || 'Error adding calendar entry.');
-                    }
-                });
+        // Click on row to edit (except new row and action buttons)
+        $container.on('click', '.mrt-calendar-row:not(.mrt-new-row)', function(e) {
+            if ($(e.target).is('button, input, select, label') || $(e.target).closest('button, input, select, label').length) {
+                return;
             }
+            if (editingRow && editingRow[0] !== this) {
+                cancelEditCalendar(editingRow);
+            }
+            startEditCalendar($(this));
         });
 
-        // Edit calendar entry
-        $container.on('click', '.mrt-edit-calendar', function() {
-            var id = $(this).data('id');
-            $.post(mrtAdmin.ajaxurl, {
-                action: 'mrt_get_calendar',
+        // Save calendar entry
+        $container.on('click', '.mrt-save-calendar', function(e) {
+            e.stopPropagation();
+            var $row = $(this).closest('.mrt-calendar-row');
+            var id = $row.data('calendar-id');
+            var serviceId = $row.data('service-id');
+            
+            var startDate = $row.find('.mrt-start-date').val();
+            var endDate = $row.find('.mrt-end-date').val();
+            var days = {};
+            $row.find('.mrt-day').each(function() {
+                days[$(this).data('day')] = $(this).is(':checked') ? 1 : 0;
+            });
+
+            var data = {
+                action: id === 'new' ? 'mrt_add_calendar' : 'mrt_update_calendar',
                 nonce: nonce,
-                id: id
-            }, function(response) {
+                service_id: serviceId,
+                start_date: startDate,
+                end_date: endDate,
+                mon: days.mon || 0,
+                tue: days.tue || 0,
+                wed: days.wed || 0,
+                thu: days.thu || 0,
+                fri: days.fri || 0,
+                sat: days.sat || 0,
+                sun: days.sun || 0,
+                include_dates: $row.find('[data-field="include"] input').val(),
+                exclude_dates: $row.find('[data-field="exclude"] input').val()
+            };
+
+            if (id !== 'new') {
+                data.id = id;
+            }
+
+            if (!data.start_date || !data.end_date) {
+                alert('Please fill in Start Date and End Date.');
+                return;
+            }
+
+            $(this).prop('disabled', true).text('Saving...');
+
+            $.post(mrtAdmin.ajaxurl, data, function(response) {
                 if (response.success) {
-                    var cal = response.data;
-                    // Populate form
-                    $('#mrt-new-start-date').val(cal.start_date);
-                    $('#mrt-new-end-date').val(cal.end_date);
-                    $('#mrt-new-mon').prop('checked', cal.mon == 1);
-                    $('#mrt-new-tue').prop('checked', cal.tue == 1);
-                    $('#mrt-new-wed').prop('checked', cal.wed == 1);
-                    $('#mrt-new-thu').prop('checked', cal.thu == 1);
-                    $('#mrt-new-fri').prop('checked', cal.fri == 1);
-                    $('#mrt-new-sat').prop('checked', cal.sat == 1);
-                    $('#mrt-new-sun').prop('checked', cal.sun == 1);
-                    $('#mrt-new-include-dates').val(cal.include_dates || '');
-                    $('#mrt-new-exclude-dates').val(cal.exclude_dates || '');
-                    
-                    // Change button to update
-                    var $btn = $('#mrt-add-calendar');
-                    $btn.data('edit-id', id).text('Update Calendar Entry');
-                    $('#mrt-cancel-calendar').show();
-                    
-                    // Scroll to form
-                    $('html, body').animate({
-                        scrollTop: $('.mrt-add-calendar-form').offset().top - 100
-                    }, 500);
+                    location.reload();
+                } else {
+                    alert(response.data.message || 'Error saving calendar entry.');
+                    $(this).prop('disabled', false).text('Save');
                 }
             });
         });
-        
-        // Cancel edit calendar
-        $('#mrt-cancel-calendar').on('click', function() {
-            $('#mrt-new-start-date').val('');
-            $('#mrt-new-end-date').val('');
-            $('#mrt-new-mon, #mrt-new-tue, #mrt-new-wed, #mrt-new-thu, #mrt-new-fri, #mrt-new-sat, #mrt-new-sun').prop('checked', false);
-            $('#mrt-new-include-dates').val('');
-            $('#mrt-new-exclude-dates').val('');
-            var $btn = $('#mrt-add-calendar');
-            $btn.removeData('edit-id').text('Add Calendar Entry');
-            $('#mrt-cancel-calendar').hide();
+
+        // Add new calendar entry
+        $container.on('click', '.mrt-add-calendar', function(e) {
+            e.stopPropagation();
+            var $row = $(this).closest('.mrt-calendar-row');
+            var serviceId = $row.data('service-id');
+            
+            var startDate = $row.find('.mrt-start-date').val();
+            var endDate = $row.find('.mrt-end-date').val();
+            var days = {};
+            $row.find('.mrt-day').each(function() {
+                days[$(this).data('day')] = $(this).is(':checked') ? 1 : 0;
+            });
+
+            var data = {
+                action: 'mrt_add_calendar',
+                nonce: nonce,
+                service_id: serviceId,
+                start_date: startDate,
+                end_date: endDate,
+                mon: days.mon || 0,
+                tue: days.tue || 0,
+                wed: days.wed || 0,
+                thu: days.thu || 0,
+                fri: days.fri || 0,
+                sat: days.sat || 0,
+                sun: days.sun || 0,
+                include_dates: $row.find('[data-field="include"] input').val(),
+                exclude_dates: $row.find('[data-field="exclude"] input').val()
+            };
+
+            if (!data.start_date || !data.end_date) {
+                alert('Please fill in Start Date and End Date.');
+                return;
+            }
+
+            $(this).prop('disabled', true).text('Adding...');
+
+            $.post(mrtAdmin.ajaxurl, data, function(response) {
+                if (response.success) {
+                    location.reload();
+                } else {
+                    alert(response.data.message || 'Error adding calendar entry.');
+                    $(this).prop('disabled', false).text('Add');
+                }
+            });
+        });
+
+        // Cancel edit
+        $container.on('click', '.mrt-cancel-edit', function(e) {
+            e.stopPropagation();
+            var $row = $(this).closest('.mrt-calendar-row');
+            cancelEditCalendar($row);
         });
 
         // Delete calendar entry
-        $container.on('click', '.mrt-delete-calendar', function() {
+        $container.on('click', '.mrt-delete-calendar', function(e) {
+            e.stopPropagation();
             if (!confirm('Are you sure you want to delete this calendar entry?')) {
                 return;
             }
@@ -357,6 +331,29 @@
                 }
             });
         });
+
+        function startEditCalendar($row) {
+            editingRow = $row;
+            $row.addClass('mrt-editing');
+            $row.find('.mrt-display').hide();
+            $row.find('.mrt-input').show();
+            $row.find('.mrt-save-calendar, .mrt-cancel-edit').show();
+            $row.find('.mrt-delete-calendar').hide();
+        }
+
+        function cancelEditCalendar($row) {
+            if (!$row.length) return;
+            $row.removeClass('mrt-editing');
+            $row.find('.mrt-display').show();
+            $row.find('.mrt-input').hide();
+            $row.find('.mrt-save-calendar, .mrt-cancel-edit').hide();
+            $row.find('.mrt-delete-calendar').show();
+            editingRow = null;
+            // Reload to reset values
+            if ($row.data('calendar-id') !== 'new') {
+                location.reload();
+            }
+        }
     }
 
 })(jQuery);

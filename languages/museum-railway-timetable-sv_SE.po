@@ -538,3 +538,15 @@ msgstr "Fel vid borttagning av kalenderpost."
 msgid "Cancel"
 msgstr "Avbryt"
 
+msgid "Save"
+msgstr "Spara"
+
+msgid "Add"
+msgstr "Lägg till"
+
+msgid "Click on any row to edit. Click \"Add New\" to add a new stop time."
+msgstr "Klicka på en rad för att redigera. Klicka på \"Lägg till\" för att lägga till en ny hållplats."
+
+msgid "Click on any row to edit. Click \"Add New\" to add a new calendar entry."
+msgstr "Klicka på en rad för att redigera. Klicka på \"Lägg till\" för att lägga till en ny kalenderpost."
+

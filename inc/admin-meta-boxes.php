@@ -239,6 +239,7 @@ function MRT_render_service_stoptimes_box($post) {
     wp_nonce_field('mrt_stoptimes_nonce', 'mrt_stoptimes_nonce');
     ?>
     <div id="mrt-stoptimes-container">
+        <p class="description"><?php esc_html_e('Click on any row to edit. Click "Add New" to add a new stop time.', 'museum-railway-timetable'); ?></p>
         <table class="widefat striped mrt-stoptimes-table">
             <thead>
                 <tr>
@@ -248,88 +249,84 @@ function MRT_render_service_stoptimes_box($post) {
                     <th style="width: 100px;"><?php esc_html_e('Departure', 'museum-railway-timetable'); ?></th>
                     <th style="width: 80px;"><?php esc_html_e('Pickup', 'museum-railway-timetable'); ?></th>
                     <th style="width: 80px;"><?php esc_html_e('Dropoff', 'museum-railway-timetable'); ?></th>
-                    <th style="width: 100px;"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
+                    <th style="width: 120px;"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
                 </tr>
             </thead>
             <tbody id="mrt-stoptimes-tbody">
-                <?php if (empty($stoptimes)): ?>
-                    <tr class="mrt-empty-row">
-                        <td colspan="7" class="mrt-none"><?php esc_html_e('No stop times defined. Add one below.', 'museum-railway-timetable'); ?></td>
-                    </tr>
-                <?php else: ?>
+                <?php if (!empty($stoptimes)): ?>
                     <?php foreach ($stoptimes as $st): 
                         $station = get_post($st['station_post_id']);
                         $station_name = $station ? $station->post_title : '#' . $st['station_post_id'];
                     ?>
-                        <tr data-stoptime-id="<?php echo esc_attr($st['id']); ?>">
-                            <td><?php echo esc_html($st['stop_sequence']); ?></td>
-                            <td><?php echo esc_html($station_name); ?></td>
-                            <td><?php echo esc_html($st['arrival_time'] ?: '—'); ?></td>
-                            <td><?php echo esc_html($st['departure_time'] ?: '—'); ?></td>
-                            <td><?php echo $st['pickup_allowed'] ? '✓' : '—'; ?></td>
-                            <td><?php echo $st['dropoff_allowed'] ? '✓' : '—'; ?></td>
+                        <tr class="mrt-stoptime-row" data-stoptime-id="<?php echo esc_attr($st['id']); ?>" data-service-id="<?php echo esc_attr($post->ID); ?>">
+                            <td class="mrt-edit-field" data-field="sequence">
+                                <span class="mrt-display"><?php echo esc_html($st['stop_sequence']); ?></span>
+                                <input type="number" class="mrt-input" value="<?php echo esc_attr($st['stop_sequence']); ?>" min="1" style="display: none; width: 60px;" />
+                            </td>
+                            <td class="mrt-edit-field" data-field="station">
+                                <span class="mrt-display"><?php echo esc_html($station_name); ?></span>
+                                <select class="mrt-input" style="display: none; width: 100%;">
+                                    <option value=""><?php esc_html_e('— Select —', 'museum-railway-timetable'); ?></option>
+                                    <?php foreach ($stations as $station): ?>
+                                        <option value="<?php echo esc_attr($station->ID); ?>" <?php selected($st['station_post_id'], $station->ID); ?>><?php echo esc_html($station->post_title); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </td>
+                            <td class="mrt-edit-field" data-field="arrival">
+                                <span class="mrt-display"><?php echo esc_html($st['arrival_time'] ?: '—'); ?></span>
+                                <input type="text" class="mrt-input" value="<?php echo esc_attr($st['arrival_time']); ?>" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" style="display: none; width: 100px;" />
+                            </td>
+                            <td class="mrt-edit-field" data-field="departure">
+                                <span class="mrt-display"><?php echo esc_html($st['departure_time'] ?: '—'); ?></span>
+                                <input type="text" class="mrt-input" value="<?php echo esc_attr($st['departure_time']); ?>" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" style="display: none; width: 100px;" />
+                            </td>
+                            <td class="mrt-edit-field" data-field="pickup">
+                                <span class="mrt-display"><?php echo $st['pickup_allowed'] ? '✓' : '—'; ?></span>
+                                <input type="checkbox" class="mrt-input" <?php checked($st['pickup_allowed'], 1); ?> style="display: none;" />
+                            </td>
+                            <td class="mrt-edit-field" data-field="dropoff">
+                                <span class="mrt-display"><?php echo $st['dropoff_allowed'] ? '✓' : '—'; ?></span>
+                                <input type="checkbox" class="mrt-input" <?php checked($st['dropoff_allowed'], 1); ?> style="display: none;" />
+                            </td>
                             <td>
-                                <button type="button" class="button button-small mrt-edit-stoptime" data-id="<?php echo esc_attr($st['id']); ?>"><?php esc_html_e('Edit', 'museum-railway-timetable'); ?></button>
+                                <button type="button" class="button button-small mrt-save-stoptime" data-id="<?php echo esc_attr($st['id']); ?>" style="display: none;"><?php esc_html_e('Save', 'museum-railway-timetable'); ?></button>
+                                <button type="button" class="button button-small mrt-cancel-edit" style="display: none;"><?php esc_html_e('Cancel', 'museum-railway-timetable'); ?></button>
                                 <button type="button" class="button button-small mrt-delete-stoptime" data-id="<?php echo esc_attr($st['id']); ?>"><?php esc_html_e('Delete', 'museum-railway-timetable'); ?></button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
-            </tbody>
-        </table>
-        
-        <div class="mrt-add-stoptime-form" style="margin-top: 1rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ddd;">
-            <h4><?php esc_html_e('Add Stop Time', 'museum-railway-timetable'); ?></h4>
-            <table class="form-table">
-                <tr>
-                    <th><label for="mrt-new-station"><?php esc_html_e('Station', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <select id="mrt-new-station" class="mrt-meta-field">
+                <!-- Add new row -->
+                <tr class="mrt-stoptime-row mrt-new-row" data-stoptime-id="new" data-service-id="<?php echo esc_attr($post->ID); ?>" style="background: #f9f9f9;">
+                    <td class="mrt-edit-field" data-field="sequence">
+                        <input type="number" class="mrt-input" value="1" min="1" style="width: 60px;" />
+                    </td>
+                    <td class="mrt-edit-field" data-field="station">
+                        <select class="mrt-input" style="width: 100%;">
                             <option value=""><?php esc_html_e('— Select Station —', 'museum-railway-timetable'); ?></option>
                             <?php foreach ($stations as $station): ?>
                                 <option value="<?php echo esc_attr($station->ID); ?>"><?php echo esc_html($station->post_title); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </td>
-                </tr>
-                <tr>
-                    <th><label for="mrt-new-sequence"><?php esc_html_e('Sequence', 'museum-railway-timetable'); ?></label></th>
+                    <td class="mrt-edit-field" data-field="arrival">
+                        <input type="text" class="mrt-input" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" style="width: 100px;" />
+                    </td>
+                    <td class="mrt-edit-field" data-field="departure">
+                        <input type="text" class="mrt-input" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" style="width: 100px;" />
+                    </td>
+                    <td class="mrt-edit-field" data-field="pickup">
+                        <input type="checkbox" class="mrt-input" checked />
+                    </td>
+                    <td class="mrt-edit-field" data-field="dropoff">
+                        <input type="checkbox" class="mrt-input" checked />
+                    </td>
                     <td>
-                        <input type="number" id="mrt-new-sequence" min="1" value="1" class="mrt-meta-field" style="width: 80px;" />
-                        <p class="description"><?php esc_html_e('Order along the route (1, 2, 3...).', 'museum-railway-timetable'); ?></p>
+                        <button type="button" class="button button-primary button-small mrt-add-stoptime"><?php esc_html_e('Add', 'museum-railway-timetable'); ?></button>
                     </td>
                 </tr>
-                <tr>
-                    <th><label for="mrt-new-arrival"><?php esc_html_e('Arrival Time', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <input type="text" id="mrt-new-arrival" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" class="mrt-meta-field" style="width: 100px;" />
-                        <p class="description"><?php esc_html_e('HH:MM format. Leave empty for first stop.', 'museum-railway-timetable'); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="mrt-new-departure"><?php esc_html_e('Departure Time', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <input type="text" id="mrt-new-departure" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" class="mrt-meta-field" style="width: 100px;" />
-                        <p class="description"><?php esc_html_e('HH:MM format. Leave empty for last stop.', 'museum-railway-timetable'); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label><?php esc_html_e('Options', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <label><input type="checkbox" id="mrt-new-pickup" checked /> <?php esc_html_e('Pickup allowed', 'museum-railway-timetable'); ?></label><br />
-                        <label><input type="checkbox" id="mrt-new-dropoff" checked /> <?php esc_html_e('Dropoff allowed', 'museum-railway-timetable'); ?></label>
-                    </td>
-                </tr>
-            </table>
-            <p>
-                <button type="button" id="mrt-add-stoptime" class="button button-primary" data-service-id="<?php echo esc_attr($post->ID); ?>">
-                    <?php esc_html_e('Add Stop Time', 'museum-railway-timetable'); ?>
-                </button>
-                <button type="button" id="mrt-cancel-stoptime" class="button" style="display: none;">
-                    <?php esc_html_e('Cancel', 'museum-railway-timetable'); ?>
-                </button>
-            </p>
-        </div>
+            </tbody>
+        </table>
     </div>
     <?php
 }
@@ -352,6 +349,7 @@ function MRT_render_service_calendar_box($post) {
     wp_nonce_field('mrt_calendar_nonce', 'mrt_calendar_nonce');
     ?>
     <div id="mrt-calendar-container">
+        <p class="description"><?php esc_html_e('Click on any row to edit. Click "Add New" to add a new calendar entry.', 'museum-railway-timetable'); ?></p>
         <table class="widefat striped mrt-calendar-table">
             <thead>
                 <tr>
@@ -359,15 +357,11 @@ function MRT_render_service_calendar_box($post) {
                     <th><?php esc_html_e('Days', 'museum-railway-timetable'); ?></th>
                     <th><?php esc_html_e('Include Dates', 'museum-railway-timetable'); ?></th>
                     <th><?php esc_html_e('Exclude Dates', 'museum-railway-timetable'); ?></th>
-                    <th style="width: 100px;"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
+                    <th style="width: 120px;"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
                 </tr>
             </thead>
             <tbody id="mrt-calendar-tbody">
-                <?php if (empty($calendars)): ?>
-                    <tr class="mrt-empty-row">
-                        <td colspan="5" class="mrt-none"><?php esc_html_e('No calendar entries defined. Add one below.', 'museum-railway-timetable'); ?></td>
-                    </tr>
-                <?php else: ?>
+                <?php if (!empty($calendars)): ?>
                     <?php foreach ($calendars as $cal): 
                         $days = [];
                         if ($cal['mon']) $days[] = __('Mon', 'museum-railway-timetable');
@@ -379,72 +373,73 @@ function MRT_render_service_calendar_box($post) {
                         if ($cal['sun']) $days[] = __('Sun', 'museum-railway-timetable');
                         $days_str = !empty($days) ? implode(', ', $days) : __('None', 'museum-railway-timetable');
                     ?>
-                        <tr data-calendar-id="<?php echo esc_attr($cal['id']); ?>">
-                            <td><?php echo esc_html($cal['start_date'] . ' to ' . $cal['end_date']); ?></td>
-                            <td><?php echo esc_html($days_str); ?></td>
-                            <td><?php echo esc_html($cal['include_dates'] ?: '—'); ?></td>
-                            <td><?php echo esc_html($cal['exclude_dates'] ?: '—'); ?></td>
+                        <tr class="mrt-calendar-row" data-calendar-id="<?php echo esc_attr($cal['id']); ?>" data-service-id="<?php echo esc_attr($post->ID); ?>" style="cursor: pointer;">
+                            <td class="mrt-edit-field" data-field="daterange">
+                                <span class="mrt-display"><?php echo esc_html($cal['start_date'] . ' to ' . $cal['end_date']); ?></span>
+                                <div class="mrt-input" style="display: none;">
+                                    <input type="date" class="mrt-start-date" value="<?php echo esc_attr($cal['start_date']); ?>" style="width: 48%;" />
+                                    <input type="date" class="mrt-end-date" value="<?php echo esc_attr($cal['end_date']); ?>" style="width: 48%;" />
+                                </div>
+                            </td>
+                            <td class="mrt-edit-field" data-field="days">
+                                <span class="mrt-display"><?php echo esc_html($days_str); ?></span>
+                                <div class="mrt-input" style="display: none;">
+                                    <label><input type="checkbox" class="mrt-day" data-day="mon" <?php checked($cal['mon'], 1); ?> /> <?php esc_html_e('Mon', 'museum-railway-timetable'); ?></label>
+                                    <label><input type="checkbox" class="mrt-day" data-day="tue" <?php checked($cal['tue'], 1); ?> /> <?php esc_html_e('Tue', 'museum-railway-timetable'); ?></label>
+                                    <label><input type="checkbox" class="mrt-day" data-day="wed" <?php checked($cal['wed'], 1); ?> /> <?php esc_html_e('Wed', 'museum-railway-timetable'); ?></label>
+                                    <label><input type="checkbox" class="mrt-day" data-day="thu" <?php checked($cal['thu'], 1); ?> /> <?php esc_html_e('Thu', 'museum-railway-timetable'); ?></label>
+                                    <label><input type="checkbox" class="mrt-day" data-day="fri" <?php checked($cal['fri'], 1); ?> /> <?php esc_html_e('Fri', 'museum-railway-timetable'); ?></label>
+                                    <label><input type="checkbox" class="mrt-day" data-day="sat" <?php checked($cal['sat'], 1); ?> /> <?php esc_html_e('Sat', 'museum-railway-timetable'); ?></label>
+                                    <label><input type="checkbox" class="mrt-day" data-day="sun" <?php checked($cal['sun'], 1); ?> /> <?php esc_html_e('Sun', 'museum-railway-timetable'); ?></label>
+                                </div>
+                            </td>
+                            <td class="mrt-edit-field" data-field="include">
+                                <span class="mrt-display"><?php echo esc_html($cal['include_dates'] ?: '—'); ?></span>
+                                <input type="text" class="mrt-input" value="<?php echo esc_attr($cal['include_dates']); ?>" placeholder="YYYY-MM-DD, YYYY-MM-DD" style="display: none; width: 100%;" />
+                            </td>
+                            <td class="mrt-edit-field" data-field="exclude">
+                                <span class="mrt-display"><?php echo esc_html($cal['exclude_dates'] ?: '—'); ?></span>
+                                <input type="text" class="mrt-input" value="<?php echo esc_attr($cal['exclude_dates']); ?>" placeholder="YYYY-MM-DD, YYYY-MM-DD" style="display: none; width: 100%;" />
+                            </td>
                             <td>
-                                <button type="button" class="button button-small mrt-edit-calendar" data-id="<?php echo esc_attr($cal['id']); ?>"><?php esc_html_e('Edit', 'museum-railway-timetable'); ?></button>
+                                <button type="button" class="button button-small mrt-save-calendar" data-id="<?php echo esc_attr($cal['id']); ?>" style="display: none;"><?php esc_html_e('Save', 'museum-railway-timetable'); ?></button>
+                                <button type="button" class="button button-small mrt-cancel-edit" style="display: none;"><?php esc_html_e('Cancel', 'museum-railway-timetable'); ?></button>
                                 <button type="button" class="button button-small mrt-delete-calendar" data-id="<?php echo esc_attr($cal['id']); ?>"><?php esc_html_e('Delete', 'museum-railway-timetable'); ?></button>
                             </td>
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
+                <!-- Add new row -->
+                <tr class="mrt-calendar-row mrt-new-row" data-calendar-id="new" data-service-id="<?php echo esc_attr($post->ID); ?>" style="background: #f9f9f9;">
+                    <td class="mrt-edit-field" data-field="daterange">
+                        <div class="mrt-input">
+                            <input type="date" class="mrt-start-date" style="width: 48%;" />
+                            <input type="date" class="mrt-end-date" style="width: 48%;" />
+                        </div>
+                    </td>
+                    <td class="mrt-edit-field" data-field="days">
+                        <div class="mrt-input">
+                            <label><input type="checkbox" class="mrt-day" data-day="mon" /> <?php esc_html_e('Mon', 'museum-railway-timetable'); ?></label>
+                            <label><input type="checkbox" class="mrt-day" data-day="tue" /> <?php esc_html_e('Tue', 'museum-railway-timetable'); ?></label>
+                            <label><input type="checkbox" class="mrt-day" data-day="wed" /> <?php esc_html_e('Wed', 'museum-railway-timetable'); ?></label>
+                            <label><input type="checkbox" class="mrt-day" data-day="thu" /> <?php esc_html_e('Thu', 'museum-railway-timetable'); ?></label>
+                            <label><input type="checkbox" class="mrt-day" data-day="fri" /> <?php esc_html_e('Fri', 'museum-railway-timetable'); ?></label>
+                            <label><input type="checkbox" class="mrt-day" data-day="sat" /> <?php esc_html_e('Sat', 'museum-railway-timetable'); ?></label>
+                            <label><input type="checkbox" class="mrt-day" data-day="sun" /> <?php esc_html_e('Sun', 'museum-railway-timetable'); ?></label>
+                        </div>
+                    </td>
+                    <td class="mrt-edit-field" data-field="include">
+                        <input type="text" class="mrt-input" placeholder="YYYY-MM-DD, YYYY-MM-DD" style="width: 100%;" />
+                    </td>
+                    <td class="mrt-edit-field" data-field="exclude">
+                        <input type="text" class="mrt-input" placeholder="YYYY-MM-DD, YYYY-MM-DD" style="width: 100%;" />
+                    </td>
+                    <td>
+                        <button type="button" class="button button-primary button-small mrt-add-calendar"><?php esc_html_e('Add', 'museum-railway-timetable'); ?></button>
+                    </td>
+                </tr>
             </tbody>
         </table>
-        
-        <div class="mrt-add-calendar-form" style="margin-top: 1rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ddd;">
-            <h4><?php esc_html_e('Add Calendar Entry', 'museum-railway-timetable'); ?></h4>
-            <table class="form-table">
-                <tr>
-                    <th><label for="mrt-new-start-date"><?php esc_html_e('Start Date', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <input type="date" id="mrt-new-start-date" class="mrt-meta-field" required />
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="mrt-new-end-date"><?php esc_html_e('End Date', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <input type="date" id="mrt-new-end-date" class="mrt-meta-field" required />
-                    </td>
-                </tr>
-                <tr>
-                    <th><label><?php esc_html_e('Days of Week', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <label><input type="checkbox" id="mrt-new-mon" /> <?php esc_html_e('Monday', 'museum-railway-timetable'); ?></label>
-                        <label><input type="checkbox" id="mrt-new-tue" /> <?php esc_html_e('Tuesday', 'museum-railway-timetable'); ?></label>
-                        <label><input type="checkbox" id="mrt-new-wed" /> <?php esc_html_e('Wednesday', 'museum-railway-timetable'); ?></label>
-                        <label><input type="checkbox" id="mrt-new-thu" /> <?php esc_html_e('Thursday', 'museum-railway-timetable'); ?></label>
-                        <label><input type="checkbox" id="mrt-new-fri" /> <?php esc_html_e('Friday', 'museum-railway-timetable'); ?></label>
-                        <label><input type="checkbox" id="mrt-new-sat" /> <?php esc_html_e('Saturday', 'museum-railway-timetable'); ?></label>
-                        <label><input type="checkbox" id="mrt-new-sun" /> <?php esc_html_e('Sunday', 'museum-railway-timetable'); ?></label>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="mrt-new-include-dates"><?php esc_html_e('Include Dates', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <input type="text" id="mrt-new-include-dates" class="mrt-meta-field" placeholder="YYYY-MM-DD, YYYY-MM-DD" />
-                        <p class="description"><?php esc_html_e('Comma-separated dates to include (overrides weekdays).', 'museum-railway-timetable'); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th><label for="mrt-new-exclude-dates"><?php esc_html_e('Exclude Dates', 'museum-railway-timetable'); ?></label></th>
-                    <td>
-                        <input type="text" id="mrt-new-exclude-dates" class="mrt-meta-field" placeholder="YYYY-MM-DD, YYYY-MM-DD" />
-                        <p class="description"><?php esc_html_e('Comma-separated dates to exclude.', 'museum-railway-timetable'); ?></p>
-                    </td>
-                </tr>
-            </table>
-            <p>
-                <button type="button" id="mrt-add-calendar" class="button button-primary" data-service-id="<?php echo esc_attr($post->ID); ?>">
-                    <?php esc_html_e('Add Calendar Entry', 'museum-railway-timetable'); ?>
-                </button>
-                <button type="button" id="mrt-cancel-calendar" class="button" style="display: none;">
-                    <?php esc_html_e('Cancel', 'museum-railway-timetable'); ?>
-                </button>
-            </p>
-        </div>
     </div>
     <?php
 }

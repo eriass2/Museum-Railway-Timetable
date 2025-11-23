@@ -725,3 +725,19 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: plugin
+msgid "Save"
+msgstr ""
+
+#: plugin
+msgid "Add"
+msgstr ""
+
+#: plugin
+msgid "Click on any row to edit. Click \"Add New\" to add a new stop time."
+msgstr ""
+
+#: plugin
+msgid "Click on any row to edit. Click \"Add New\" to add a new calendar entry."
+msgstr ""
+

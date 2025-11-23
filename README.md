@@ -8,7 +8,11 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 - **Custom Taxonomies**: Train Types
 - **CSV Import**: Import stations, stop times, and calendar data via CSV
 - **Shortcodes**: Display timetables on the frontend
-- **Admin Interface**: Manage stations, services, and import data
+- **Admin Interface**: 
+  - Inline editing for Stop Times and Calendar entries directly in Service edit pages
+  - Streamlined menu structure
+  - Meta boxes for managing service data
+  - Stations overview with filtering
 - **Internationalization**: Fully translatable (Swedish included)
 
 ## Requirements
@@ -70,9 +74,23 @@ Display a calendar showing service days for a month:
 - `show_counts` - Show service count per day (0 or 1, default: 1)
 - `start_monday` - Start week on Monday (0 or 1, default: 1)
 
-### CSV Import
+### Managing Services
 
-The plugin includes a CSV import feature for bulk importing data:
+Services can be managed in two ways:
+
+#### Inline Editing (Recommended)
+1. Go to **Railway Timetable > Services** and edit a service
+2. In the **Stop Times** meta box:
+   - Click on any row to edit it inline
+   - Use the "Add New" row at the bottom to add new stop times
+   - Click "Save" to save changes or "Cancel" to discard
+3. In the **Calendar** meta box:
+   - Click on any row to edit it inline
+   - Use the "Add New" row at the bottom to add new calendar entries
+   - Configure date ranges, weekdays, and include/exclude dates
+
+#### CSV Import
+For bulk importing data:
 
 1. Go to **Railway Timetable > CSV Import** in the admin menu
 2. Select the import type (Stations, Stop Times, or Calendar)
@@ -120,14 +138,16 @@ museum-railway-timetable/
 │   │   ├─ sample-csv.php        # Sample CSV generators
 │   │   └─ download-handler.php  # CSV download handler
 │   ├─ assets.php                # Asset enqueuing
-│   ├─ admin-page.php            # Main admin page
+│   ├─ admin-page.php            # Main admin page and menu
 │   ├─ admin-list.php            # Stations overview
+│   ├─ admin-meta-boxes.php      # Meta boxes for CPTs (inline editing)
+│   ├─ admin-ajax.php            # AJAX handlers for CRUD operations
 │   ├─ cpt.php                   # Custom post types
 │   ├─ shortcodes.php            # Shortcode registrations
 │   └─ import.php                # Import loader
 ├─ assets/
-│   ├─ admin.css
-│   └─ admin.js
+│   ├─ admin.css                 # Admin and frontend styles
+│   └─ admin.js                  # Admin JavaScript (inline editing)
 └─ languages/                    # Translation files
 ```
 
@@ -159,6 +179,13 @@ The plugin creates two custom tables:
 This plugin is provided as-is for use with WordPress.
 
 ## Changelog
+
+### 0.2.0
+- **Inline Editing**: Click-to-edit functionality for Stop Times and Calendar entries
+- **Streamlined Menu**: Cleaned up admin menu structure
+- **Enhanced UX**: Direct editing in Service edit pages without separate forms
+- **AJAX Operations**: All CRUD operations use AJAX for better performance
+- **Improved UI**: Visual feedback for editing mode with hover effects
 
 ### 0.1.0
 - Initial release

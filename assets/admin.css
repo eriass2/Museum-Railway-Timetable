@@ -250,41 +250,58 @@
     vertical-align: middle;
 }
 
-.mrt-add-stoptime-form,
-.mrt-add-calendar-form {
-    margin-top: 1rem;
-    padding: 1rem;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+/* Inline editing styles */
+.mrt-stoptime-row:not(.mrt-new-row),
+.mrt-calendar-row:not(.mrt-new-row) {
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.mrt-add-stoptime-form h4,
-.mrt-add-calendar-form h4 {
-    margin-top: 0;
-    margin-bottom: 0.75rem;
+.mrt-stoptime-row:not(.mrt-new-row):hover,
+.mrt-calendar-row:not(.mrt-new-row):hover {
+    background-color: #f0f8ff !important;
 }
 
-.mrt-add-stoptime-form .form-table,
-.mrt-add-calendar-form .form-table {
-    margin-top: 0;
+.mrt-stoptime-row.mrt-editing,
+.mrt-calendar-row.mrt-editing {
+    background-color: #fff9e6 !important;
 }
 
-.mrt-add-stoptime-form .form-table th,
-.mrt-add-calendar-form .form-table th {
-    width: 150px;
-    padding: 10px 10px 10px 0;
+.mrt-edit-field {
+    position: relative;
 }
 
-.mrt-add-stoptime-form .form-table td,
-.mrt-add-calendar-form .form-table td {
-    padding: 10px 0;
+.mrt-edit-field .mrt-display {
+    display: inline-block;
 }
 
-.mrt-add-stoptime-form label,
-.mrt-add-calendar-form label {
-    margin-right: 1rem;
+.mrt-edit-field .mrt-input {
+    display: none;
+}
+
+.mrt-edit-field .mrt-input input,
+.mrt-edit-field .mrt-input select {
+    width: 100%;
+    max-width: 100%;
+}
+
+.mrt-edit-field .mrt-input label {
+    display: inline-block;
+    margin-right: 0.75rem;
     font-weight: normal;
+    white-space: nowrap;
+}
+
+.mrt-new-row {
+    background: #f9f9f9 !important;
+}
+
+.mrt-new-row .mrt-input {
+    display: block !important;
+}
+
+.mrt-new-row .mrt-display {
+    display: none !important;
 }
 
 .mrt-empty-row td {

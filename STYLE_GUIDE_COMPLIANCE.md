@@ -200,6 +200,16 @@ function MRT_get_all_stations() {
 
 ## 📝 Recent Changes
 
+### Admin UI Implementation (Latest)
+- ✅ Implemented Stop Times meta box in Service edit page
+- ✅ Implemented Calendar meta box in Service edit page
+- ✅ Added AJAX handlers for CRUD operations (`inc/admin-ajax.php`)
+- ✅ Enhanced JavaScript for UI interactions (`assets/admin.js`)
+- ✅ Added CSS styling for new admin components (`assets/admin.css`)
+- ✅ Updated asset enqueuing to load on edit pages (`inc/assets.php`)
+- ✅ Added complete translation support for new UI strings
+- ✅ All security measures in place (nonces, capability checks, sanitization)
+
 ### Code Refactoring (Completed)
 - ✅ Split `shortcode.php` (291 lines) into smaller modules:
   - `inc/functions/helpers.php` - Helper functions
@@ -219,21 +229,24 @@ function MRT_get_all_stations() {
 ```
 inc/
 ├─ functions/
-│   ├─ helpers.php (54 lines)
+│   ├─ helpers.php (122 lines)
 │   └─ services.php (113 lines)
 ├─ import/
-│   ├─ csv-parser.php (50 lines)
+│   ├─ csv-parser.php (76 lines)
 │   ├─ import-handlers.php (170 lines)
 │   ├─ import-page.php (149 lines)
 │   ├─ sample-csv.php (48 lines)
 │   └─ download-handler.php (42 lines)
 ├─ shortcodes.php (173 lines)
-├─ admin-page.php (70 lines)
-├─ admin-list.php (142 lines)
-└─ cpt.php (50 lines)
+├─ admin-page.php (154 lines)
+├─ admin-list.php (180 lines)
+├─ admin-meta-boxes.php (495 lines)
+├─ admin-ajax.php (404 lines)
+├─ assets.php (98 lines)
+└─ cpt.php (58 lines)
 ```
 
-All files are now under 200 lines, making them much more manageable!
+Most files are under 200 lines. Some files like `admin-meta-boxes.php` and `admin-ajax.php` are larger but well-organized with clear sections.
 
 ## 📊 Compliance Status
 
@@ -249,3 +262,6 @@ All files are now under 200 lines, making them much more manageable!
 - ✅ PHPDoc comments added to all remaining functions
 - ✅ README.md created with comprehensive documentation
 - ✅ Error handling significantly improved across all modules
+- ✅ Admin UI for Stop Times and Calendar fully implemented
+- ✅ AJAX handlers with proper security (nonces, capability checks)
+- ✅ Complete translation support for new UI components
