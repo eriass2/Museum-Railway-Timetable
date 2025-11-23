@@ -124,6 +124,83 @@ function MRT_render_admin_page() {
             submit_button();
             ?>
         </form>
+        
+        <?php if (defined('WP_DEBUG') && WP_DEBUG): ?>
+        <div style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
+            <h2><?php esc_html_e('Development Tools', 'museum-railway-timetable'); ?></h2>
+            <p><?php esc_html_e('These tools are only available when WP_DEBUG is enabled.', 'museum-railway-timetable'); ?></p>
+            <form method="post" action="" onsubmit="return confirm('<?php echo esc_js(__('Are you sure you want to delete ALL timetable data? This cannot be undone!', 'museum-railway-timetable')); ?>');">
+                <?php wp_nonce_field('mrt_clear_db', 'mrt_clear_db_nonce'); ?>
+                <input type="hidden" name="mrt_action" value="clear_db" />
+                <p>
+                    <button type="submit" class="button button-secondary" style="background: #dc3545; color: #fff; border-color: #dc3545;">
+                        <?php esc_html_e('Clear All Timetable Data', 'museum-railway-timetable'); ?>
+                    </button>
+                </p>
+                <p class="description">
+                    <?php esc_html_e('This will delete all Stations, Services, Routes, Stop Times, and Calendar entries. Use with caution!', 'museum-railway-timetable'); ?>
+                </p>
+            </form>
+        </div>
+        <?php endif; ?>
     </div>
     <?php
 }
+
+/**
+ * Handle clear DB action (development only)
+ */
+add_action('admin_init', function() {
+    if (!defined('WP_DEBUG') || !WP_DEBUG) {
+        return;
+    }
+    
+    if (!isset($_POST['mrt_action']) || $_POST['mrt_action'] !== 'clear_db') {
+        return;
+    }
+    
+    if (!current_user_can('manage_options')) {
+        return;
+    }
+    
+    if (!isset($_POST['mrt_clear_db_nonce']) || !wp_verify_nonce($_POST['mrt_clear_db_nonce'], 'mrt_clear_db')) {
+        wp_die(__('Security check failed.', 'museum-railway-timetable'));
+    }
+    
+    global $wpdb;
+    
+    // Delete all CPTs
+    $stations = get_posts(['post_type' => 'mrt_station', 'posts_per_page' => -1, 'fields' => 'ids']);
+    $services = get_posts(['post_type' => 'mrt_service', 'posts_per_page' => -1, 'fields' => 'ids']);
+    $routes = get_posts(['post_type' => 'mrt_route', 'posts_per_page' => -1, 'fields' => 'ids']);
+    
+    foreach ($stations as $id) {
+        wp_delete_post($id, true);
+    }
+    foreach ($services as $id) {
+        wp_delete_post($id, true);
+    }
+    foreach ($routes as $id) {
+        wp_delete_post($id, true);
+    }
+    
+    // Delete custom tables data
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}mrt_stoptimes");
+    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}mrt_calendar");
+    
+    // Delete train types
+    $terms = get_terms(['taxonomy' => 'mrt_train_type', 'hide_empty' => false]);
+    foreach ($terms as $term) {
+        wp_delete_term($term->term_id, 'mrt_train_type');
+    }
+    
+    wp_redirect(add_query_arg(['mrt_cleared' => '1'], admin_url('admin.php?page=mrt_settings')));
+    exit;
+});
+
+// Show success message
+add_action('admin_notices', function() {
+    if (isset($_GET['mrt_cleared']) && $_GET['mrt_cleared'] == '1') {
+        echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('All timetable data has been cleared.', 'museum-railway-timetable') . '</p></div>';
+    }
+});

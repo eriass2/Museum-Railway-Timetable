@@ -12,6 +12,7 @@
     $(function() {
         // Initialize admin features
         initAdminFeatures();
+        initRouteUI();
         initStopTimesUI();
         initCalendarUI();
 
@@ -33,6 +34,88 @@
             // Auto-submit is handled by onchange attribute in HTML
             // This is a placeholder for future JavaScript enhancements
         });
+        
+        // Update stations dropdown when route changes in Service edit
+        $('#mrt_service_route_id').on('change', function() {
+            var routeId = $(this).val();
+            if (routeId) {
+                // Reload page to update stations list
+                // Could be improved with AJAX in the future
+                var $form = $(this).closest('form');
+                if ($form.length && !$form.data('saving')) {
+                    // Show message that page needs to reload
+                    alert('Please save the service to update available stations from the selected route.');
+                }
+            }
+        });
+    }
+
+    /**
+     * Initialize Route UI
+     */
+    function initRouteUI() {
+        var $container = $('#mrt-route-stations-container');
+        if (!$container.length) return;
+
+        // Add station to route
+        $('#mrt-add-route-station').on('click', function() {
+            var $select = $('#mrt-new-route-station');
+            var stationId = $select.val();
+            if (!stationId) {
+                alert('Please select a station.');
+                return;
+            }
+
+            // Get current stations
+            var currentStations = $('#mrt_route_stations').val().split(',').filter(function(id) { return id; });
+            if (currentStations.indexOf(stationId) !== -1) {
+                alert('This station is already on the route.');
+                return;
+            }
+
+            // Add to hidden field
+            currentStations.push(stationId);
+            $('#mrt_route_stations').val(currentStations.join(','));
+
+            // Get station name
+            var stationName = $select.find('option:selected').text();
+
+            // Add row
+            var $tbody = $('#mrt-route-stations-tbody');
+            var $newRow = $tbody.find('.mrt-new-route-station-row');
+            var newIndex = currentStations.length;
+
+            var $row = $('<tr data-station-id="' + stationId + '">' +
+                '<td>' + newIndex + '</td>' +
+                '<td>' + stationName + '</td>' +
+                '<td><button type="button" class="button button-small mrt-remove-route-station" data-station-id="' + stationId + '">Remove</button></td>' +
+                '</tr>');
+            
+            $newRow.before($row);
+            $select.val('').focus();
+            
+            // Update order numbers
+            updateRouteStationOrders();
+        });
+
+        // Remove station from route
+        $container.on('click', '.mrt-remove-route-station', function() {
+            var stationId = $(this).data('station-id');
+            var currentStations = $('#mrt_route_stations').val().split(',').filter(function(id) { 
+                return id && id != stationId; 
+            });
+            $('#mrt_route_stations').val(currentStations.join(','));
+            $(this).closest('tr').remove();
+            updateRouteStationOrders();
+        });
+
+        function updateRouteStationOrders() {
+            $('#mrt-route-stations-tbody tr:not(.mrt-new-route-station-row)').each(function(index) {
+                $(this).find('td:first').text(index + 1);
+            });
+            var nextOrder = $('#mrt-route-stations-tbody tr:not(.mrt-new-route-station-row)').length + 1;
+            $('.mrt-new-route-station-row td:first').text(nextOrder);
+        }
     }
 
     /**

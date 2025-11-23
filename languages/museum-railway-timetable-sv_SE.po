@@ -550,3 +550,54 @@ msgstr "Klicka på en rad för att redigera. Klicka på \"Lägg till\" för att 
 msgid "Click on any row to edit. Click \"Add New\" to add a new calendar entry."
 msgstr "Klicka på en rad för att redigera. Klicka på \"Lägg till\" för att lägga till en ny kalenderpost."
 
+msgid "Route Details"
+msgstr "Sträckdetaljer"
+
+msgid "Define which stations are on this route, in order. The route works in both directions."
+msgstr "Definiera vilka stationer som finns på sträckan, i ordning. Sträckan fungerar i båda riktningar."
+
+msgid "Order"
+msgstr "Ordning"
+
+msgid "Remove"
+msgstr "Ta bort"
+
+msgid "Example route name: \"Hultsfred - Västervik\" or \"Main Line\". Add stations in the order they appear on the route."
+msgstr "Exempel på sträcknamn: \"Hultsfred - Västervik\" eller \"Huvudlinje\". Lägg till stationer i den ordning de förekommer på sträckan."
+
+msgid "Route"
+msgstr "Sträcka"
+
+msgid "— Select Route —"
+msgstr "— Välj sträcka —"
+
+msgid "Select the route this service runs on. Stations will be available from the selected route."
+msgstr "Välj sträckan som denna service kör på. Stationer kommer att begränsas till de på sträckan."
+
+msgid "Route selected: Stations are limited to those on the route."
+msgstr "Sträcka vald: Stationer är begränsade till de på sträckan."
+
+msgid "No route selected. Select a route in Service Details to limit stations to the route."
+msgstr "Ingen sträcka vald. Välj en sträcka i Service Details för att begränsa stationer till sträckan."
+
+msgid "Development Tools"
+msgstr "Utvecklingsverktyg"
+
+msgid "These tools are only available when WP_DEBUG is enabled."
+msgstr "Dessa verktyg är endast tillgängliga när WP_DEBUG är aktiverat."
+
+msgid "Clear All Timetable Data"
+msgstr "Rensa all tidtabellsdata"
+
+msgid "Are you sure you want to delete ALL timetable data? This cannot be undone!"
+msgstr "Är du säker på att du vill radera ALL tidtabellsdata? Detta kan inte ångras!"
+
+msgid "This will delete all Stations, Services, Routes, Stop Times, and Calendar entries. Use with caution!"
+msgstr "Detta kommer att radera alla Stations, Services, Routes, Stop Times och Calendar-poster. Använd med försiktighet!"
+
+msgid "All timetable data has been cleared."
+msgstr "All tidtabellsdata har rensats."
+
+msgid "Security check failed."
+msgstr "Säkerhetskontroll misslyckades."
+
