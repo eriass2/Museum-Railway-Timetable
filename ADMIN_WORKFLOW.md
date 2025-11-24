@@ -48,6 +48,7 @@ För att skapa en fungerande tidtabell behöver du:
 2. Klicka på **"Add New"**
 3. Fyll i:
    - **Titel**: Route-namnet (t.ex. "Hultsfred - Västervik", "Main Line")
+   - Hjälptext visas direkt under title-fältet med exempel
 4. I **"Route Stations"** meta box:
    - Välj en station från dropdown
    - Klicka **"Add Station to Route"**

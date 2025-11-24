@@ -129,7 +129,7 @@ Before deploying, test:
 
 ## Code Statistics
 
-- **PHP Files**: 9
+- **PHP Files**: 10 (9 in inc/ + 1 main plugin file)
 - **CSS Files**: 1 (268 lines)
 - **JavaScript Files**: 1 (37 lines)
 - **Translation Files**: 2

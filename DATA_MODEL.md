@@ -425,10 +425,10 @@ WHERE start_date <= {date}
 ## 9. Future Considerations
 
 ### Potential Enhancements
-- **Route Post Type**: Currently defined but not used - could link services to routes
 - **Station Meta**: Could add more location data (address, facilities, etc.)
 - **Service Meta**: Could add more service details (capacity, amenities, etc.)
 - **Calendar Enhancements**: Could add time-based exceptions (runs only morning/afternoon)
+- **Caching**: Transient caching for expensive queries (station lists, service lookups)
 
 ---
 
