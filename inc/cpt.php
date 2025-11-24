@@ -30,7 +30,21 @@ add_action('init', function () {
         'show_in_rest' => true,
     ]);
 
-    // Service (a scheduled trip)
+    // Timetable (represents days with multiple trips)
+    register_post_type('mrt_timetable', [
+        'labels' => [
+            'name' => __('Timetables', 'museum-railway-timetable'),
+            'singular_name' => __('Timetable', 'museum-railway-timetable'),
+        ],
+        'public' => true,
+        'has_archive' => false,
+        'show_in_menu' => false, // Will be added as submenu under main menu
+        'menu_icon' => 'dashicons-calendar-alt',
+        'supports' => [], // No title required - dates handled by meta box
+        'show_in_rest' => false, // Disable Gutenberg/block editor
+    ]);
+
+    // Service (a trip - belongs to a timetable)
     register_post_type('mrt_service', [
         'labels' => [
             'name' => __('Services', 'museum-railway-timetable'),

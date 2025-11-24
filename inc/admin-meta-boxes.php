@@ -21,6 +21,16 @@ add_action('add_meta_boxes', function() {
         'high'
     );
     
+    // Timetable meta box
+    add_meta_box(
+        'mrt_timetable_details',
+        __('Timetable Details', 'museum-railway-timetable'),
+        'MRT_render_timetable_meta_box',
+        'mrt_timetable',
+        'normal',
+        'high'
+    );
+    
     // Route meta box
     add_meta_box(
         'mrt_route_details',
@@ -50,14 +60,6 @@ add_action('add_meta_boxes', function() {
         'default'
     );
     
-    add_meta_box(
-        'mrt_service_calendar',
-        __('Calendar (Service Schedule)', 'museum-railway-timetable'),
-        'MRT_render_service_calendar_box',
-        'mrt_service',
-        'normal',
-        'default'
-    );
 });
 
 /**
@@ -270,6 +272,103 @@ add_action('save_post_mrt_route', function($post_id) {
 });
 
 /**
+ * Render timetable meta box
+ *
+ * @param WP_Post $post Current post object
+ */
+function MRT_render_timetable_meta_box($post) {
+    wp_nonce_field('mrt_save_timetable_meta', 'mrt_timetable_meta_nonce');
+    
+    $dates = get_post_meta($post->ID, 'mrt_timetable_dates', true);
+    if (!is_array($dates)) {
+        // Try to migrate from old single date field
+        $old_date = get_post_meta($post->ID, 'mrt_timetable_date', true);
+        $dates = !empty($old_date) ? [$old_date] : [date('Y-m-d')];
+    }
+    if (empty($dates)) {
+        $dates = [date('Y-m-d')];
+    }
+    
+    wp_enqueue_script('jquery');
+    ?>
+    <table class="form-table">
+        <tr>
+            <th><label for="mrt_timetable_dates"><?php esc_html_e('Dates', 'museum-railway-timetable'); ?></label></th>
+            <td>
+                <div id="mrt-timetable-dates-container">
+                    <?php foreach ($dates as $index => $date): ?>
+                        <div class="mrt-date-row" style="margin-bottom: 8px;">
+                            <input type="date" name="mrt_timetable_dates[]" value="<?php echo esc_attr($date); ?>" class="mrt-meta-field" required />
+                            <?php if ($index > 0): ?>
+                                <button type="button" class="button mrt-remove-date" style="margin-left: 8px;"><?php esc_html_e('Remove', 'museum-railway-timetable'); ?></button>
+                            <?php endif; ?>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+                <button type="button" id="mrt-add-date" class="button" style="margin-top: 8px;"><?php esc_html_e('Add Date', 'museum-railway-timetable'); ?></button>
+                <p class="description"><?php esc_html_e('The dates (days) when this timetable applies (YYYY-MM-DD). This timetable can apply to multiple days and will contain multiple trips (services) for these days.', 'museum-railway-timetable'); ?></p>
+            </td>
+        </tr>
+    </table>
+    <script>
+    jQuery(document).ready(function($) {
+        $('#mrt-add-date').on('click', function() {
+            var newRow = $('<div class="mrt-date-row" style="margin-bottom: 8px;"><input type="date" name="mrt_timetable_dates[]" class="mrt-meta-field" required /> <button type="button" class="button mrt-remove-date" style="margin-left: 8px;"><?php echo esc_js(__('Remove', 'museum-railway-timetable')); ?></button></div>');
+            $('#mrt-timetable-dates-container').append(newRow);
+        });
+        
+        $(document).on('click', '.mrt-remove-date', function() {
+            $(this).closest('.mrt-date-row').remove();
+        });
+    });
+    </script>
+    <?php
+}
+
+/**
+ * Save timetable meta box data
+ *
+ * @param int $post_id Post ID
+ */
+add_action('save_post_mrt_timetable', function($post_id) {
+    // Check nonce
+    if (!isset($_POST['mrt_timetable_meta_nonce']) || !wp_verify_nonce($_POST['mrt_timetable_meta_nonce'], 'mrt_save_timetable_meta')) {
+        return;
+    }
+    
+    // Check autosave
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return;
+    }
+    
+    // Check permissions
+    if (!current_user_can('edit_post', $post_id)) {
+        return;
+    }
+    
+    // Save timetable dates (array)
+    if (isset($_POST['mrt_timetable_dates']) && is_array($_POST['mrt_timetable_dates'])) {
+        $dates = [];
+        foreach ($_POST['mrt_timetable_dates'] as $date) {
+            $date = sanitize_text_field($date);
+            if (MRT_validate_date($date)) {
+                $dates[] = $date;
+            }
+        }
+        // Remove duplicates and sort
+        $dates = array_unique($dates);
+        sort($dates);
+        if (!empty($dates)) {
+            update_post_meta($post_id, 'mrt_timetable_dates', $dates);
+            // Remove old single date field if it exists
+            delete_post_meta($post_id, 'mrt_timetable_date');
+        } else {
+            delete_post_meta($post_id, 'mrt_timetable_dates');
+        }
+    }
+});
+
+/**
  * Render service meta box
  *
  * @param WP_Post $post Current post object
@@ -277,8 +376,19 @@ add_action('save_post_mrt_route', function($post_id) {
 function MRT_render_service_meta_box($post) {
     wp_nonce_field('mrt_save_service_meta', 'mrt_service_meta_nonce');
     
+    $timetable_id = get_post_meta($post->ID, 'mrt_service_timetable_id', true);
     $route_id = get_post_meta($post->ID, 'mrt_service_route_id', true);
     $direction = get_post_meta($post->ID, 'mrt_direction', true);
+    
+    // Get all timetables for dropdown
+    $timetables = get_posts([
+        'post_type' => 'mrt_timetable',
+        'posts_per_page' => -1,
+        'orderby' => 'meta_value',
+        'meta_key' => 'mrt_timetable_date',
+        'order' => 'DESC',
+        'fields' => 'all',
+    ]);
     
     // Get all routes for dropdown
     $routes = get_posts([
@@ -300,6 +410,24 @@ function MRT_render_service_meta_box($post) {
     
     ?>
     <table class="form-table">
+        <tr>
+            <th><label for="mrt_service_timetable_id"><?php esc_html_e('Timetable', 'museum-railway-timetable'); ?></label></th>
+            <td>
+                <select name="mrt_service_timetable_id" id="mrt_service_timetable_id" class="mrt-meta-field" required>
+                    <option value=""><?php esc_html_e('— Select Timetable —', 'museum-railway-timetable'); ?></option>
+                    <?php foreach ($timetables as $timetable): 
+                        $timetable_date = get_post_meta($timetable->ID, 'mrt_timetable_date', true);
+                        $display = $timetable->post_title;
+                        if ($timetable_date) {
+                            $display .= ' (' . date_i18n(get_option('date_format'), strtotime($timetable_date)) . ')';
+                        }
+                    ?>
+                        <option value="<?php echo esc_attr($timetable->ID); ?>" <?php selected($timetable_id, $timetable->ID); ?>><?php echo esc_html($display); ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <p class="description"><?php esc_html_e('Select the timetable (day) this trip belongs to. A timetable represents one day with multiple trips.', 'museum-railway-timetable'); ?></p>
+            </td>
+        </tr>
         <tr>
             <th><label for="mrt_service_route_id"><?php esc_html_e('Route', 'museum-railway-timetable'); ?></label></th>
             <td>
@@ -327,8 +455,12 @@ function MRT_render_service_meta_box($post) {
         <tr>
             <th><label for="mrt_direction"><?php esc_html_e('Direction', 'museum-railway-timetable'); ?></label></th>
             <td>
-                <input type="text" name="mrt_direction" id="mrt_direction" value="<?php echo esc_attr($direction); ?>" class="mrt-meta-field" placeholder="<?php esc_attr_e('e.g., Northbound, Southbound, A→B', 'museum-railway-timetable'); ?>" />
-                <p class="description"><?php esc_html_e('Direction of the service (e.g., "Northbound", "Southbound", "A→B"). Optional.', 'museum-railway-timetable'); ?></p>
+                <select name="mrt_direction" id="mrt_direction" class="mrt-meta-field">
+                    <option value=""><?php esc_html_e('— Select —', 'museum-railway-timetable'); ?></option>
+                    <option value="dit" <?php selected($direction, 'dit'); ?>><?php esc_html_e('Dit', 'museum-railway-timetable'); ?></option>
+                    <option value="från" <?php selected($direction, 'från'); ?>><?php esc_html_e('Från', 'museum-railway-timetable'); ?></option>
+                </select>
+                <p class="description"><?php esc_html_e('Direction of the service. Optional.', 'museum-railway-timetable'); ?></p>
             </td>
         </tr>
     </table>
@@ -356,6 +488,16 @@ add_action('save_post_mrt_service', function($post_id) {
         return;
     }
     
+    // Save timetable ID
+    if (isset($_POST['mrt_service_timetable_id'])) {
+        $timetable_id = intval($_POST['mrt_service_timetable_id']);
+        if ($timetable_id > 0) {
+            update_post_meta($post_id, 'mrt_service_timetable_id', $timetable_id);
+        } else {
+            delete_post_meta($post_id, 'mrt_service_timetable_id');
+        }
+    }
+    
     // Save route field
     if (isset($_POST['mrt_service_route_id'])) {
         $route_id = intval($_POST['mrt_service_route_id']);
@@ -376,10 +518,10 @@ add_action('save_post_mrt_service', function($post_id) {
         }
     }
     
-    // Save direction field
+    // Save direction field (restricted to 'dit' or 'från')
     if (isset($_POST['mrt_direction'])) {
         $direction = sanitize_text_field($_POST['mrt_direction']);
-        if ($direction === '') {
+        if ($direction === '' || !in_array($direction, ['dit', 'från'], true)) {
             delete_post_meta($post_id, 'mrt_direction');
         } else {
             update_post_meta($post_id, 'mrt_direction', $direction);
@@ -463,11 +605,11 @@ function MRT_render_service_stoptimes_box($post) {
                                 </td>
                                 <td class="mrt-time-field" style="<?php echo $stops_here ? '' : 'opacity: 0.5;'; ?>">
                                     <input type="text" class="mrt-arrival-time" value="<?php echo $st ? esc_attr($st['arrival_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" style="width: 100px;" <?php echo $stops_here ? '' : 'disabled'; ?> />
-                                    <p class="description" style="margin: 0; font-size: 11px; color: #666;"><?php esc_html_e('Leave empty for first station', 'museum-railway-timetable'); ?></p>
+                                    <p class="description" style="margin: 0; font-size: 11px; color: #666;"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
                                 </td>
                                 <td class="mrt-time-field" style="<?php echo $stops_here ? '' : 'opacity: 0.5;'; ?>">
                                     <input type="text" class="mrt-departure-time" value="<?php echo $st ? esc_attr($st['departure_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" style="width: 100px;" <?php echo $stops_here ? '' : 'disabled'; ?> />
-                                    <p class="description" style="margin: 0; font-size: 11px; color: #666;"><?php esc_html_e('Leave empty for last station', 'museum-railway-timetable'); ?></p>
+                                    <p class="description" style="margin: 0; font-size: 11px; color: #666;"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
                                 </td>
                                 <td class="mrt-option-field" style="<?php echo $stops_here ? '' : 'opacity: 0.5;'; ?>">
                                     <label>

@@ -6,42 +6,149 @@ This document describes all data objects in the Museum Railway Timetable plugin 
 
 The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom Database Tables, and Post Meta to manage timetable data.
 
+**New Data Model:**
+- A **Timetable** has one or more dates (days) when it applies and contains multiple trips (Services)
+- A **Service** (trip) belongs to one Timetable, has arrival/departure times (Stop Times), and a train type
+- A **Route** defines which stations are available (independent of timetable)
+- A **Station** is used in Routes and Stop Times
+- **Stop Times** can have NULL times when the train stops but the time is not fixed
+
+### UML Class Diagram
+
+```plantuml
+@startuml
+class Timetable {
+  +ID: int
+  +dates: string[] (YYYY-MM-DD)
+  --
+  +getServices(): Service[]
+}
+
+class Service {
+  +ID: int
+  +title: string
+  +timetable_id: int
+  +route_id: int
+  +direction: string ("dit" | "från" | null)
+  --
+  +getStopTimes(): StopTime[]
+  +getTrainTypes(): TrainType[]
+}
+
+class Route {
+  +ID: int
+  +title: string
+  +stations: int[]
+  --
+  +getStations(): Station[]
+}
+
+class Station {
+  +ID: int
+  +title: string
+  +type: string
+  +lat: float
+  +lng: float
+  +display_order: int
+}
+
+class StopTime {
+  +id: int
+  +service_post_id: int
+  +station_post_id: int
+  +stop_sequence: int
+  +arrival_time: string | null
+  +departure_time: string | null
+  +pickup_allowed: boolean
+  +dropoff_allowed: boolean
+}
+
+class TrainType {
+  +term_id: int
+  +name: string
+  +slug: string
+}
+
+' Relationships
+Timetable "1" *-- "many" Service : contains
+Service "many" --> "1" Route : uses
+Service "1" *-- "many" StopTime : has
+StopTime "many" --> "1" Station : at
+Service "many" <-- "many" TrainType : has
+Route "1" *-- "many" Station : defines
+
+note right of Timetable
+  Timetable has one or more
+  dates (days) when it applies.
+  Services belong to the timetable.
+end note
+
+note right of Service
+  Service (trip) belongs to
+  one Timetable and uses
+  one Route.
+end note
+
+@enduml
 ```
-┌─────────────────┐
-│   Station       │
-│  (CPT)          │
-└────────┬────────┘
-         │
-         │ (many-to-many via mrt_stoptimes)
-         │
-         ▼
-┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
-│   Stop Time     │◄─────┤   Service       │◄─────┤   Route         │
-│  (Custom Table) │      │   (CPT)         │      │   (CPT)         │
-└─────────────────┘      └────────┬────────┘      └─────────────────┘
-                                  │
-                                  │ (one-to-many)
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │   Calendar      │
-                         │  (Custom Table) │
-                         └─────────────────┘
-                                  │
-                                  │ (many-to-one)
-                                  │
-                                  ▼
-                         ┌─────────────────┐
-                         │  Train Type     │
-                         │  (Taxonomy)     │
-                         └─────────────────┘
+
+### Simplified Relationship Diagram
+
+```
+Timetable (has dates: [YYYY-MM-DD, ...])
+    │
+    │ 1-to-many
+    │
+    ▼
+Service (trip) ──────► Route (defines stations)
+    │
+    │ 1-to-many
+    │
+    ▼
+StopTime (times can be NULL) ──────► Station
+    │
+    │ many-to-many
+    │
+    ▼
+TrainType
 ```
 
 ---
 
 ## 1. Custom Post Types
 
-### 1.1 Station (`mrt_station`)
+### 1.1 Timetable (`mrt_timetable`)
+
+**Description:** A timetable has one or more dates (days) when it applies and contains multiple trips (services). The timetable defines the days, and services belong to the timetable.
+
+**Storage:** WordPress `wp_posts` table (post_type = 'mrt_timetable')
+
+**Fields:**
+- **Post ID** (ID) - Unique identifier
+- **Title** (post_title) - Optional, not required
+
+**Meta Fields:**
+- `mrt_timetable_dates` (array) - Array of dates in YYYY-MM-DD format (required, at least one date)
+  - **The dates (days) when this timetable applies**
+  - A timetable can apply to multiple days
+  - Example: `["2025-06-15", "2025-06-16", "2025-06-17"]`
+  - Dates are stored as an array and sorted
+
+**Relationships:**
+- **One-to-Many** with `Service` (via `mrt_service_timetable_id` meta field)
+  - One timetable contains multiple services (trips)
+  - **Each service belongs to one timetable** (the service has a reference to the timetable)
+  - The timetable has the dates; services belong to the timetable
+
+**Usage:**
+- **Has the dates (days) when it applies** - the timetable owns the dates
+- Groups multiple trips (services) that run on the same days
+- Services reference the timetable (they belong to it)
+- Used to query all trips for a specific date by finding timetables that include that date
+
+---
+
+### 1.2 Station (`mrt_station`)
 
 **Description:** Represents a physical station, halt, depot, or museum location.
 
@@ -69,44 +176,62 @@ The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom
 
 ---
 
-### 1.2 Service (`mrt_service`)
+### 1.3 Service (`mrt_service`)
 
-**Description:** Represents a scheduled train trip/service (e.g., "Morning Express", "Steam Train Tour").
+**Description:** Represents a single train trip. A service (trip) belongs to one timetable and has arrival/departure times at stations. The service does not have the date - it belongs to a timetable which has the date.
 
 **Storage:** WordPress `wp_posts` table (post_type = 'mrt_service')
 
 **Fields:**
-- **Title** (post_title) - Service name (required)
+- **Title** (post_title) - Service/trip name (required)
+  - Example: "09:00 Departure", "Morning Express", "Steam Train Tour"
 - **Post ID** (ID) - Unique identifier
 
 **Meta Fields:**
+- `mrt_service_timetable_id` (int) - Timetable post ID that this service belongs to (required)
+  - **Links service to a timetable - the service belongs to the timetable**
+  - The timetable has the date; the service references the timetable
+  - Each service belongs to exactly one timetable
 - `mrt_service_route_id` (int) - Route post ID that this service runs on (required)
   - Links service to a route
   - Used to filter available stations when configuring stop times
-- `mrt_direction` (string) - Direction of the service (optional)
-  - Example: "Northbound", "Southbound"
+  - Multiple services can use the same route
+- `mrt_direction` (string) - Direction of the service (optional, restricted values)
+  - Allowed values: `'dit'` or `'från'`
+  - Empty string if not set
+  - Example: "dit" (towards), "från" (from)
 
 **Taxonomies:**
 - `mrt_train_type` - Train type taxonomy (many-to-many)
   - Links service to train types (e.g., "steam", "diesel", "electric")
+  - A service can have multiple train types
 
 **Relationships:**
+- **Many-to-One** with `Timetable` (via `mrt_service_timetable_id` meta field)
+  - **Each service belongs to one timetable** - the service references the timetable
+  - The timetable has the date; services belong to the timetable
+  - One timetable contains multiple services (trips)
 - **Many-to-One** with `Route` (via `mrt_service_route_id` meta field)
-  - Each service is linked to one route
+  - Each service uses one route
   - Multiple services can use the same route
 - **One-to-Many** with `StopTime` (via `mrt_stoptimes.service_post_id`)
-- **One-to-Many** with `Calendar` (via `mrt_calendar.service_post_id`)
+  - One service has multiple stop times (one per station where it stops)
 - **Many-to-Many** with `Station` (via `mrt_stoptimes` table)
+  - A service stops at multiple stations
+  - A station is served by multiple services
 - **Many-to-Many** with `TrainType` (via taxonomy)
+  - A service can have multiple train types
+  - A train type can be assigned to multiple services
 
 **Usage:**
-- Defines which stations a train stops at and when
-- Linked to calendar entries to determine when service runs
+- Represents one trip
+- **Belongs to a timetable** (which has the date)
+- Defines which stations the train stops at and when (via Stop Times)
 - Can be filtered by train type in shortcodes
 
 ---
 
-### 1.3 Route (`mrt_route`)
+### 1.4 Route (`mrt_route`)
 
 **Description:** Defines a route (line) with a sequence of stations. Routes are used to organize services and simplify stop time configuration.
 
@@ -125,12 +250,14 @@ The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom
 **Relationships:**
 - **One-to-Many** with `Service` (via `mrt_service_route_id` meta field)
   - Multiple services can use the same route
-  - Each service can be linked to one route
+  - Each service uses one route
+  - Routes are independent of timetables - they just define which stations are available
 
 **Usage:**
+- Defines which stations are on a route and their order
 - Used in Service edit screen to automatically display all stations on the route
 - Simplifies stop time configuration - user selects which stations the train stops at
-- Routes can be reused for multiple services (e.g., 12 departures per direction)
+- Routes can be reused for multiple services across different timetables
 - Routes can work in both directions (create separate routes for each direction if needed)
 
 ---
@@ -195,7 +322,11 @@ CREATE TABLE {prefix}_mrt_stoptimes (
 - `station_post_id` (BIGINT) - Foreign key to `wp_posts.ID` (mrt_station)
 - `stop_sequence` (INT) - Order of stop in service route (1, 2, 3, ...)
 - `arrival_time` (CHAR(5)) - Arrival time in HH:MM format (nullable)
+  - Can be NULL if the train stops but the time is not fixed
+  - Example: "09:15" or NULL
 - `departure_time` (CHAR(5)) - Departure time in HH:MM format (nullable)
+  - Can be NULL if the train stops but the time is not fixed
+  - Example: "09:20" or NULL
 - `pickup_allowed` (TINYINT) - Whether passengers can board (default: 1)
 - `dropoff_allowed` (TINYINT) - Whether passengers can alight (default: 1)
 
@@ -224,66 +355,7 @@ service_post_id | station_post_id | stop_sequence | arrival_time | departure_tim
 
 ---
 
-### 3.2 Calendar (`{prefix}_mrt_calendar`)
-
-**Description:** Defines when services run, including date ranges, days of week, and exception dates.
-
-**Table Structure:**
-```sql
-CREATE TABLE {prefix}_mrt_calendar (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    service_post_id BIGINT UNSIGNED NOT NULL,
-    start_date DATE NOT NULL,
-    end_date DATE NOT NULL,
-    mon TINYINT(1) DEFAULT 0,
-    tue TINYINT(1) DEFAULT 0,
-    wed TINYINT(1) DEFAULT 0,
-    thu TINYINT(1) DEFAULT 0,
-    fri TINYINT(1) DEFAULT 0,
-    sat TINYINT(1) DEFAULT 0,
-    sun TINYINT(1) DEFAULT 0,
-    include_dates TEXT NULL,
-    exclude_dates TEXT NULL,
-    PRIMARY KEY (id),
-    KEY service (service_post_id),
-    KEY range_idx (start_date, end_date)
-)
-```
-
-**Fields:**
-- `id` (BIGINT) - Primary key, auto-increment
-- `service_post_id` (BIGINT) - Foreign key to `wp_posts.ID` (mrt_service)
-- `start_date` (DATE) - First date service runs (YYYY-MM-DD)
-- `end_date` (DATE) - Last date service runs (YYYY-MM-DD)
-- `mon` (TINYINT) - Runs on Monday (0 or 1)
-- `tue` (TINYINT) - Runs on Tuesday (0 or 1)
-- `wed` (TINYINT) - Runs on Wednesday (0 or 1)
-- `thu` (TINYINT) - Runs on Thursday (0 or 1)
-- `fri` (TINYINT) - Runs on Friday (0 or 1)
-- `sat` (TINYINT) - Runs on Saturday (0 or 1)
-- `sun` (TINYINT) - Runs on Sunday (0 or 1)
-- `include_dates` (TEXT) - Comma-separated list of additional dates (YYYY-MM-DD format)
-- `exclude_dates` (TEXT) - Comma-separated list of dates to exclude (YYYY-MM-DD format)
-
-**Relationships:**
-- **Many-to-One** with `Service` (via `service_post_id`)
-
-**Indexes:**
-- Primary key on `id`
-- Index on `service_post_id` for efficient service queries
-- Composite index on `(start_date, end_date)` for efficient date range queries
-
-**Usage:**
-- Determines which dates a service runs
-- Used by `MRT_services_running_on_date()` to find active services
-- Created via admin interface
-
-**Example Data:**
-```
-service_post_id | start_date  | end_date    | sat | sun | exclude_dates
-----------------|-------------|-------------|-----|-----|------------------
-123            | 2025-06-01  | 2025-08-31  | 1   | 1   | 2025-07-04,2025-08-15
-```
+**Note:** The `mrt_calendar` table is deprecated in the new data model. Services are now linked directly to Timetables (which represent specific days) instead of using calendar date ranges.
 
 ---
 
@@ -321,27 +393,40 @@ service_post_id | start_date  | end_date    | sat | sun | exclude_dates
 
 ### Primary Relationships
 
-1. **Service ↔ Station** (Many-to-Many)
+1. **Timetable → Service** (One-to-Many)
+   - Via: `mrt_service_timetable_id` meta field
+   - **Timetable has the date (day) when it applies**
+   - **Service belongs to the timetable** (service references timetable)
+   - One timetable contains multiple services (trips)
+   - Each service belongs to one timetable
+
+2. **Service → Route** (Many-to-One)
+   - Via: `mrt_service_route_id` meta field
+   - Each service uses one route
+   - Multiple services can use the same route
+
+3. **Service ↔ Station** (Many-to-Many)
    - Via: `mrt_stoptimes` table
    - A service stops at multiple stations
    - A station is served by multiple services
 
-2. **Service → StopTime** (One-to-Many)
+4. **Service → StopTime** (One-to-Many)
    - Via: `mrt_stoptimes.service_post_id`
-   - One service has multiple stop times (one per station)
+   - One service has multiple stop times (one per station where it stops)
 
-3. **Station → StopTime** (One-to-Many)
+5. **Station → StopTime** (One-to-Many)
    - Via: `mrt_stoptimes.station_post_id`
    - One station has multiple stop times (from different services)
 
-4. **Service → Calendar** (One-to-Many)
-   - Via: `mrt_calendar.service_post_id`
-   - One service can have multiple calendar entries (different date ranges)
-
-5. **Service ↔ TrainType** (Many-to-Many)
+6. **Service ↔ TrainType** (Many-to-Many)
    - Via: WordPress taxonomy system
    - A service can have multiple train types
    - A train type can be assigned to multiple services
+
+7. **Route → Station** (One-to-Many, via meta field)
+   - Via: `mrt_route_stations` meta field (array)
+   - A route defines which stations are available and their order
+   - Stations can be used in multiple routes
 
 ### Query Patterns
 
@@ -360,15 +445,26 @@ WHERE service_post_id = {service_id}
 ORDER BY stop_sequence
 ```
 
-**Find services running on a specific date:**
+**Find all services (trips) for a specific date (timetable):**
 ```sql
-SELECT service_post_id
-FROM mrt_calendar
-WHERE start_date <= {date} 
-  AND end_date >= {date}
-  AND {day_of_week} = 1
-  AND (exclude_dates IS NULL OR {date} NOT IN exclude_dates)
-  OR (include_dates IS NOT NULL AND {date} IN include_dates)
+-- Note: This requires checking if the date exists in the timetable's dates array
+-- In WordPress, this is typically done via PHP by:
+-- 1. Finding all timetables where the date is in mrt_timetable_dates array
+-- 2. Finding all services linked to those timetables
+
+SELECT p.ID
+FROM wp_posts p
+INNER JOIN wp_postmeta pm ON p.ID = pm.post_id
+WHERE p.post_type = 'mrt_service'
+  AND pm.meta_key = 'mrt_service_timetable_id'
+  AND pm.meta_value IN (
+    SELECT t.ID
+    FROM wp_posts t
+    INNER JOIN wp_postmeta tm ON t.ID = tm.post_id
+    WHERE t.post_type = 'mrt_timetable'
+      AND tm.meta_key = 'mrt_timetable_dates'
+      AND tm.meta_value LIKE '%{date}%'  -- Note: Array search in meta_value
+  )
 ```
 
 ---
@@ -378,16 +474,17 @@ WHERE start_date <= {date}
 ### Data Creation Flow
 1. **Stations** → Created via admin interface (`mrt_station` posts with meta fields)
 2. **Routes** → Created via admin interface (`mrt_route` posts with station sequence)
-3. **Services** → Created via admin interface (`mrt_service` posts linked to routes)
-4. **Stop Times** → Created via admin interface (inserts into `mrt_stoptimes` table)
-5. **Calendar** → Created via admin interface (inserts into `mrt_calendar` table)
+3. **Timetables** → Created via admin interface (`mrt_timetable` posts with date)
+4. **Services** → Created via admin interface (`mrt_service` posts linked to timetable and route)
+5. **Stop Times** → Created via admin interface (inserts into `mrt_stoptimes` table)
 
 ### Display Flow
-1. **Shortcode** → Queries services running on date
-2. **Service Query** → Checks `mrt_calendar` for active services
-3. **Stop Time Query** → Gets stops from `mrt_stoptimes` for service
-4. **Station Lookup** → Gets station details from `mrt_station` posts
-5. **Train Type Filter** → Filters via taxonomy if specified
+1. **Shortcode** → Queries timetables for a specific date
+2. **Timetable Query** → Finds timetable(s) for the date
+3. **Service Query** → Gets all services (trips) belonging to the timetable
+4. **Stop Time Query** → Gets stops from `mrt_stoptimes` for each service
+5. **Station Lookup** → Gets station details from `mrt_station` posts
+6. **Train Type Filter** → Filters via taxonomy if specified
 
 ---
 
@@ -424,17 +521,80 @@ WHERE start_date <= {date}
 
 ## 9. Future Considerations
 
-### Potential Enhancements
+### Planned Features
+
+#### 9.1 Ersättningstur/Tågtyp (Substitute Trip/Train Type)
+**Description:** Möjlighet att definiera ersättningsturer eller alternativa tågtyper när en service inte kan köras som planerat.
+
+**Potential Implementation:**
+- Lägg till meta field `mrt_service_substitute_service_id` för att länka till en ersättningstur
+- Lägg till meta field `mrt_service_substitute_train_type` för att ange alternativ tågtyp
+- Admin-gränssnitt för att konfigurera ersättningar
+- Shortcode-parameter för att visa ersättningar i tidtabeller
+- Notifiering när en service har en aktiv ersättning
+
+**Use Cases:**
+- När ett ånglok inte kan köras, ersätt med diesellok
+- När en service är inställd, visa alternativ service
+- Planera underhåll med automatisk ersättning
+
+---
+
+#### 9.2 Reseplanerare (Journey Planner)
+**Description:** Funktion för att planera resor mellan stationer med anslutningar och rekommendationer.
+
+**Potential Implementation:**
+- Ny shortcode: `[mrt_journey_planner]` med parametrar för startstation, slutstation, datum, tid
+- Algoritm för att hitta rutter med anslutningar
+- Beräkning av restid och antal byten
+- Visning av anslutningstider och varningar för korta anslutningar
+- Filtrering baserat på tågtyp (t.ex. endast ånglok)
+
+**Use Cases:**
+- Besökare vill resa från Station A till Station B
+- Hitta alla möjliga rutter för en dag
+- Visa snabbaste resväg eller mest sceniska rutt
+- Planera dagsturer med flera stopp
+
+---
+
+#### 9.3 Samankopplade Rutter (Connected Routes)
+**Description:** Möjlighet att länka rutter tillsammans för att skapa längre resvägar och förenkla reseplanering.
+
+**Potential Implementation:**
+- Ny meta field `mrt_route_connected_routes` (array av route IDs)
+- Definition av anslutningsstationer mellan rutter
+- Automatisk beräkning av anslutningstider
+- Visning av sammanhängande ruttnätverk i admin-gränssnittet
+- Integration med reseplanerare för att hitta rutter via anslutningar
+
+**Use Cases:**
+- Route A går från Station 1 → Station 5
+- Route B går från Station 5 → Station 10
+- Systemet kan automatiskt föreslå anslutning vid Station 5
+- Skapa längre resvägar genom att kombinera flera rutter
+- Visualisera hela ruttnätverket på en karta
+
+---
+
+### Other Potential Enhancements
 - **Station Meta**: Could add more location data (address, facilities, etc.)
 - **Service Meta**: Could add more service details (capacity, amenities, etc.)
-- **Calendar Enhancements**: Could add time-based exceptions (runs only morning/afternoon)
 - **Caching**: Transient caching for expensive queries (station lists, service lookups)
+- **Real-time Updates**: Integration med realtidsdata för förseningar och ändringar
 
 ---
 
 ## 10. Database Schema Diagram
 
 ```
+wp_posts (mrt_timetable)
+    ├─ ID (PK)
+    ├─ post_title (optional, not required)
+    └─ post_type = 'mrt_timetable'
+        └─ wp_postmeta
+            └─ mrt_timetable_dates (array of YYYY-MM-DD dates)
+
 wp_posts (mrt_station)
     ├─ ID (PK)
     ├─ post_title
@@ -445,33 +605,33 @@ wp_posts (mrt_station)
             ├─ mrt_lng
             └─ mrt_display_order
 
+wp_posts (mrt_route)
+    ├─ ID (PK)
+    ├─ post_title
+    └─ post_type = 'mrt_route'
+        └─ wp_postmeta
+            └─ mrt_route_stations (array of station IDs)
+
 wp_posts (mrt_service)
     ├─ ID (PK)
     ├─ post_title
     └─ post_type = 'mrt_service'
         └─ wp_postmeta
+            ├─ mrt_service_timetable_id (FK → mrt_timetable.ID)
+            ├─ mrt_service_route_id (FK → mrt_route.ID)
             └─ mrt_direction
         └─ wp_term_relationships
             └─ mrt_train_type (taxonomy)
 
 {prefix}_mrt_stoptimes
     ├─ id (PK)
-    ├─ service_post_id (FK → wp_posts.ID)
-    ├─ station_post_id (FK → wp_posts.ID)
+    ├─ service_post_id (FK → wp_posts.ID, mrt_service)
+    ├─ station_post_id (FK → wp_posts.ID, mrt_station)
     ├─ stop_sequence
     ├─ arrival_time
     ├─ departure_time
     ├─ pickup_allowed
     └─ dropoff_allowed
-
-{prefix}_mrt_calendar
-    ├─ id (PK)
-    ├─ service_post_id (FK → wp_posts.ID)
-    ├─ start_date
-    ├─ end_date
-    ├─ mon, tue, wed, thu, fri, sat, sun
-    ├─ include_dates
-    └─ exclude_dates
 
 wp_terms (mrt_train_type)
     ├─ term_id (PK)

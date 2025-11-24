@@ -16,6 +16,14 @@ add_action('admin_menu', function () {
     // Add CPTs as submenus under main menu (WordPress automatically adds "Add New" links)
     add_submenu_page(
         'mrt_settings',
+        __('Timetables', 'museum-railway-timetable'),
+        __('Timetables', 'museum-railway-timetable'),
+        'edit_posts',
+        'edit.php?post_type=mrt_timetable'
+    );
+    
+    add_submenu_page(
+        'mrt_settings',
         __('Stations', 'museum-railway-timetable'),
         __('Stations', 'museum-railway-timetable'),
         'edit_posts',
@@ -124,6 +132,61 @@ function MRT_render_admin_page() {
             submit_button();
             ?>
         </form>
+        
+        <div style="margin-top: 2rem; padding: 1.5rem; background: #f0f6fc; border: 1px solid #c3c4c7; border-radius: 4px;">
+            <h2><?php esc_html_e('Shortcodes', 'museum-railway-timetable'); ?></h2>
+            <p><?php esc_html_e('Use these shortcodes to display timetables on your pages and posts.', 'museum-railway-timetable'); ?></p>
+            
+            <div style="margin-top: 1.5rem;">
+                <h3 style="margin-top: 0;">1. <?php esc_html_e('Simple Timetable', 'museum-railway-timetable'); ?></h3>
+                <p><code>[museum_timetable station="Station Name" limit="5" show_arrival="1" train_type="steam"]</code></p>
+                <p class="description">
+                    <?php esc_html_e('Displays next departures from a specific station.', 'museum-railway-timetable'); ?><br>
+                    <strong><?php esc_html_e('Parameters:', 'museum-railway-timetable'); ?></strong><br>
+                    • <code>station</code> - <?php esc_html_e('Station name (or use station_id)', 'museum-railway-timetable'); ?><br>
+                    • <code>station_id</code> - <?php esc_html_e('Station post ID (alternative to station name)', 'museum-railway-timetable'); ?><br>
+                    • <code>limit</code> - <?php esc_html_e('Number of departures to show (default: 5)', 'museum-railway-timetable'); ?><br>
+                    • <code>show_arrival</code> - <?php esc_html_e('Show arrival times (0 or 1, default: 0)', 'museum-railway-timetable'); ?><br>
+                    • <code>train_type</code> - <?php esc_html_e('Filter by train type slug (optional)', 'museum-railway-timetable'); ?>
+                </p>
+                <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
+                <pre style="background: #fff; padding: 0.75rem; border: 1px solid #ddd; border-radius: 3px; overflow-x: auto;">[museum_timetable station="Hultsfred" limit="10" show_arrival="1"]</pre>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <h3>2. <?php esc_html_e('Station Picker', 'museum-railway-timetable'); ?></h3>
+                <p><code>[museum_timetable_picker default_station="Station Name" limit="6" show_arrival="1"]</code></p>
+                <p class="description">
+                    <?php esc_html_e('Displays a dropdown to select a station and show its timetable.', 'museum-railway-timetable'); ?><br>
+                    <strong><?php esc_html_e('Parameters:', 'museum-railway-timetable'); ?></strong><br>
+                    • <code>default_station</code> - <?php esc_html_e('Default selected station name', 'museum-railway-timetable'); ?><br>
+                    • <code>limit</code> - <?php esc_html_e('Number of departures to show (default: 6)', 'museum-railway-timetable'); ?><br>
+                    • <code>show_arrival</code> - <?php esc_html_e('Show arrival times (0 or 1, default: 0)', 'museum-railway-timetable'); ?><br>
+                    • <code>train_type</code> - <?php esc_html_e('Filter by train type slug (optional)', 'museum-railway-timetable'); ?><br>
+                    • <code>form_method</code> - <?php esc_html_e('Form submission method: "get" or "post" (default: "get")', 'museum-railway-timetable'); ?><br>
+                    • <code>placeholder</code> - <?php esc_html_e('Placeholder text for dropdown', 'museum-railway-timetable'); ?>
+                </p>
+                <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
+                <pre style="background: #fff; padding: 0.75rem; border: 1px solid #ddd; border-radius: 3px; overflow-x: auto;">[museum_timetable_picker default_station="Hultsfred" limit="8"]</pre>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <h3>3. <?php esc_html_e('Month View', 'museum-railway-timetable'); ?></h3>
+                <p><code>[museum_timetable_month month="2025-06" train_type="" service="" legend="1" show_counts="1"]</code></p>
+                <p class="description">
+                    <?php esc_html_e('Displays a calendar month view showing which days have services running.', 'museum-railway-timetable'); ?><br>
+                    <strong><?php esc_html_e('Parameters:', 'museum-railway-timetable'); ?></strong><br>
+                    • <code>month</code> - <?php esc_html_e('Month in YYYY-MM format (default: current month)', 'museum-railway-timetable'); ?><br>
+                    • <code>train_type</code> - <?php esc_html_e('Filter by train type slug (optional)', 'museum-railway-timetable'); ?><br>
+                    • <code>service</code> - <?php esc_html_e('Filter by exact service title (optional)', 'museum-railway-timetable'); ?><br>
+                    • <code>legend</code> - <?php esc_html_e('Show legend (0 or 1, default: 1)', 'museum-railway-timetable'); ?><br>
+                    • <code>show_counts</code> - <?php esc_html_e('Show service count per day (0 or 1, default: 1)', 'museum-railway-timetable'); ?><br>
+                    • <code>start_monday</code> - <?php esc_html_e('Start week on Monday (0 or 1, default: 1)', 'museum-railway-timetable'); ?>
+                </p>
+                <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
+                <pre style="background: #fff; padding: 0.75rem; border: 1px solid #ddd; border-radius: 3px; overflow-x: auto;">[museum_timetable_month month="2025-06" train_type="steam" show_counts="1"]</pre>
+            </div>
+        </div>
         
         <?php if (defined('WP_DEBUG') && WP_DEBUG): ?>
         <div style="margin-top: 2rem; padding: 1rem; background: #fff3cd; border: 1px solid #ffc107; border-radius: 4px;">
