@@ -11,7 +11,6 @@ Alla CSV import-referenser har tagits bort från projektet enligt beslut. Projek
 - ✅ CSV import-referenser från README.md
 - ✅ CSV import-referenser från validate.php och validate.ps1
 - ✅ CSV import-checklistor från VALIDATION_CHECKLIST.md och VALIDATION_REPORT.md
-- ✅ CSV import-referenser från STYLE_GUIDE_COMPLIANCE.md
 - ✅ CSV import-stilar från admin.css
 - ✅ CSV import-översättningar från translation-filer (.pot och .po)
 
@@ -48,7 +47,7 @@ Alla CSV import-referenser har tagits bort från projektet enligt beslut. Projek
 **Status**: Valfritt förbättring, inte kritiskt
 
 ### 2. Caching för Prestanda
-**Källa**: STYLE_GUIDE_COMPLIANCE.md
+**Källa**: wordpress-plugin-style-guide.md
 
 - Transient caching för `MRT_get_all_stations()` - Cache station list
 - Transient caching för `MRT_services_running_on_date()` - Cache service lookups
