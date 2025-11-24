@@ -127,7 +127,7 @@ museum-railway-timetable/
 
 ### Coding Standards
 
-This plugin follows the WordPress Plugin Style Guide. See `wordpress-plugin-style-guide.md` for details.
+This plugin follows WordPress coding standards and best practices.
 
 ### Hooks and Filters
 
