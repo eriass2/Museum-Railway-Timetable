@@ -55,7 +55,6 @@ Before deploying, please test:
 ### 2. Admin Interface
 - [ ] Settings page loads correctly
 - [ ] Stations overview page loads correctly
-- [ ] CSV import page loads correctly
 - [ ] All forms submit without errors
 - [ ] Nonce verification works
 
@@ -65,13 +64,7 @@ Before deploying, please test:
 - [ ] `[museum_timetable_month]` displays correctly
 - [ ] All parameters work as expected
 
-### 4. CSV Import
-- [ ] Stations import works
-- [ ] Stop times import works
-- [ ] Calendar import works
-- [ ] Error messages display for invalid CSV
-
-### 5. Frontend
+### 4. Frontend
 - [ ] CSS loads correctly
 - [ ] Responsive design works on mobile/tablet
 - [ ] No JavaScript errors in browser console
@@ -79,11 +72,11 @@ Before deploying, please test:
 
 ## Code Statistics
 
-- **PHP Files**: 15
+- **PHP Files**: 9
 - **CSS Files**: 1 (268 lines)
 - **JavaScript Files**: 1 (37 lines)
 - **Translation Files**: 2 (384 + 283 lines)
-- **Total Lines of Code**: ~2,500+
+- **Total Lines of Code**: ~2,000+
 
 ## Known Issues
 

@@ -112,20 +112,13 @@ museum-railway-timetable/
 │   ├─ functions/
 │   │   ├─ helpers.php           # Helper functions
 │   │   └─ services.php          # Service-related functions
-│   ├─ import/
-│   │   ├─ csv-parser.php        # CSV parsing
-│   │   ├─ import-handlers.php   # Import logic
-│   │   ├─ import-page.php       # Admin import page
-│   │   ├─ sample-csv.php        # Sample CSV generators
-│   │   └─ download-handler.php  # CSV download handler
 │   ├─ assets.php                # Asset enqueuing
 │   ├─ admin-page.php            # Main admin page and menu
 │   ├─ admin-list.php            # Stations overview
 │   ├─ admin-meta-boxes.php      # Meta boxes for CPTs (inline editing)
 │   ├─ admin-ajax.php            # AJAX handlers for CRUD operations
 │   ├─ cpt.php                   # Custom post types
-│   ├─ shortcodes.php            # Shortcode registrations
-│   └─ import.php                # Import loader
+│   └─ shortcodes.php            # Shortcode registrations
 ├─ assets/
 │   ├─ admin.css                 # Admin and frontend styles
 │   └─ admin.js                  # Admin JavaScript (inline editing)

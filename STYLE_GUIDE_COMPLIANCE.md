@@ -45,14 +45,11 @@ $col = in_array($col, $allowed_cols) ? $col : 'mon';
 - ✅ `inc/functions/helpers.php` - All functions documented
 - ✅ `inc/functions/services.php` - All functions documented
 - ✅ `inc/shortcodes.php` - All shortcodes documented
-- ✅ `inc/import/csv-parser.php` - All functions documented
-- ✅ `inc/import/import-handlers.php` - All functions documented
-- ✅ `inc/import/import-page.php` - Functions documented
-- ✅ `inc/import/sample-csv.php` - Functions documented
-- ✅ `inc/import/download-handler.php` - Functions documented
 - ✅ `inc/assets.php` - All functions documented
 - ✅ `inc/admin-page.php` - All functions documented
 - ✅ `inc/admin-list.php` - All functions documented
+- ✅ `inc/admin-meta-boxes.php` - All functions documented
+- ✅ `inc/admin-ajax.php` - All functions documented
 - ✅ `museum-railway-timetable.php` - MRT_activate(), MRT_deactivate() documented
 - ✅ `inc/cpt.php` - No PHPDoc needed (simple registration)
 
@@ -62,7 +59,6 @@ $col = in_array($col, $allowed_cols) ? $col : 'mon';
 **Issue**: Some places use `_e()` instead of `esc_html_e()`.
 
 **Fixed**:
-- ✅ `inc/import/import-page.php` - Now uses `esc_html_e()` (lines 117, 145)
 - ✅ `inc/admin-page.php` - Line 69 now uses `esc_html_e()`
 - ✅ `inc/admin-page.php` - Line 27 now uses `esc_html__()` in echo
 
@@ -96,7 +92,6 @@ assets/
 - ✅ Plugin description and features
 - ✅ Installation instructions
 - ✅ Usage examples for all shortcodes
-- ✅ CSV import documentation
 - ✅ Development setup and project structure
 - ✅ Hooks and filters documentation
 - ✅ Contributing guidelines
@@ -146,14 +141,11 @@ function MRT_get_all_stations() {
 - ✅ Database operations - Check `$wpdb->last_error` after queries
 - ✅ `wp_insert_post()` - Proper `WP_Error` handling with logging
 - ✅ User input validation - Validate dates, times, IDs before use
-- ✅ CSV parsing - Handle parsing errors gracefully
 - ✅ Date validation - Validate date ranges and formats
 - ✅ Error logging - Log errors when `WP_DEBUG` is enabled
 
 **Files Updated**:
 - ✅ `inc/functions/services.php` - Database error checking, input validation
-- ✅ `inc/import/import-handlers.php` - Enhanced error handling for all import functions
-- ✅ `inc/import/csv-parser.php` - Better CSV parsing error handling
 - ✅ `inc/admin-list.php` - Database error checking
 - ✅ `inc/shortcodes.php` - Input validation and error messages
 
@@ -161,8 +153,8 @@ function MRT_get_all_stations() {
 - All database operations now check for errors
 - `wp_insert_post()` errors are properly handled and logged
 - Input validation added before database operations
-- Date range validation in calendar import
-- Sequence validation in stop times import
+- Date range validation in calendar entries
+- Sequence validation in stop times
 - Graceful fallbacks for invalid input
 
 ## ✅ What's Already Good
@@ -215,15 +207,8 @@ function MRT_get_all_stations() {
   - `inc/functions/helpers.php` - Helper functions
   - `inc/functions/services.php` - Service-related functions
   - `inc/shortcodes.php` - Shortcode registrations
-- ✅ Split `import.php` (397 lines) into smaller modules:
-  - `inc/import/csv-parser.php` - CSV parsing
-  - `inc/import/import-handlers.php` - Import handlers
-  - `inc/import/import-page.php` - Admin page
-  - `inc/import/sample-csv.php` - Sample generators
-  - `inc/import/download-handler.php` - Download handler
 - ✅ Fixed SQL injection vulnerability
 - ✅ Added PHPDoc comments to all new files
-- ✅ Improved escaping in import-page.php
 
 ### File Structure Now
 ```
@@ -231,12 +216,6 @@ inc/
 ├─ functions/
 │   ├─ helpers.php (122 lines)
 │   └─ services.php (113 lines)
-├─ import/
-│   ├─ csv-parser.php (76 lines)
-│   ├─ import-handlers.php (170 lines)
-│   ├─ import-page.php (149 lines)
-│   ├─ sample-csv.php (48 lines)
-│   └─ download-handler.php (42 lines)
 ├─ shortcodes.php (173 lines)
 ├─ admin-page.php (154 lines)
 ├─ admin-list.php (180 lines)

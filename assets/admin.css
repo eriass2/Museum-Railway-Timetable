@@ -153,63 +153,6 @@
     border-left: 4px solid #d63638;
 }
 
-/* ==========================================================================
-   Import Page Components
-   ========================================================================== */
-
-.mrt-help-panel {
-    margin-top: 1rem;
-}
-
-.mrt-help-box {
-    border: 1px solid #ccd0d4;
-    border-radius: 6px;
-    background: #fff;
-}
-
-.mrt-help-box summary {
-    cursor: pointer;
-    padding: 0.6rem 0.8rem;
-    font-weight: 600;
-}
-
-.mrt-help-box > div {
-    padding: 0.8rem 1rem 1rem 1rem;
-}
-
-.mrt-help-box ul {
-    list-style: disc;
-    padding-left: 1.2rem;
-}
-
-.mrt-help-box h3 {
-    margin: 0.6rem 0;
-}
-
-.mrt-help-box pre {
-    white-space: pre;
-    background: #f6f7f7;
-    border: 1px solid #e2e4e7;
-    padding: 0.6rem;
-    overflow: auto;
-}
-
-.mrt-download-examples {
-    margin: 0.75rem 0 1rem 0;
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-}
-
-/* Import Form */
-.mrt-csv-textarea {
-    width: 100%;
-}
-
-.mrt-import-results {
-    margin-top: 1rem;
-}
-
 /* Admin List Page */
 .mrt-filter-form {
     margin: 0.5rem 0 1rem 0;

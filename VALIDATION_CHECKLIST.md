@@ -54,7 +54,6 @@ Run this checklist before deploying the plugin.
 - [x] Plugin deactivates without errors
 - [x] Shortcodes work correctly
 - [x] Admin pages load correctly
-- [x] CSV import works
 - [x] Database tables are created correctly
 
 ## Manual Testing Checklist
@@ -69,7 +68,6 @@ Before deploying, test:
 2. **Admin Interface**
    - [ ] Settings page loads
    - [ ] Stations overview page loads
-   - [ ] CSV import page loads
    - [ ] All forms submit correctly
    - [ ] Nonces work correctly
 
@@ -79,19 +77,13 @@ Before deploying, test:
    - [ ] `[museum_timetable_month]` displays correctly
    - [ ] All parameters work as expected
 
-4. **CSV Import**
-   - [ ] Stations import works
-   - [ ] Stop times import works
-   - [ ] Calendar import works
-   - [ ] Error handling works for invalid CSV
-
-5. **Frontend**
+4. **Frontend**
    - [ ] CSS loads correctly
    - [ ] Responsive design works on mobile
    - [ ] No JavaScript errors in console
    - [ ] All text is translatable
 
-6. **Deactivation/Uninstall**
+5. **Deactivation/Uninstall**
    - [ ] Deactivation doesn't remove data
    - [ ] Uninstall removes data (if tested)
 
