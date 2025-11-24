@@ -644,6 +644,17 @@ add_filter('use_block_editor_for_post_type', function($use_block_editor, $post_t
 }, 10, 2);
 
 /**
+ * Add help text for Route title field
+ */
+add_action('edit_form_after_title', function($post) {
+    if ($post->post_type === 'mrt_route') {
+        echo '<p class="description" style="margin-top: 0.5rem; margin-bottom: 1rem;">';
+        esc_html_e('Example route name: "Hultsfred - Västervik" or "Main Line".', 'museum-railway-timetable');
+        echo '</p>';
+    }
+});
+
+/**
  * Remove description field from train type taxonomy (only name needed)
  */
 add_action('admin_head', function() {
