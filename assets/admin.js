@@ -15,6 +15,7 @@
         initRouteUI();
         initStopTimesUI();
         initCalendarUI();
+        initTimetableServicesUI();
 
         // Debug logging (only in development)
         if (typeof console !== 'undefined' && console.log && window.mrtDebug) {
@@ -555,6 +556,157 @@
                 location.reload();
             }
         }
+    }
+
+    /**
+     * Initialize Timetable Services UI
+     */
+    function initTimetableServicesUI() {
+        var $container = $('#mrt-timetable-services-container');
+        if (!$container.length) {
+            console.log('MRT: Timetable services container not found');
+            return;
+        }
+
+        console.log('MRT: Initializing timetable services UI');
+
+        var nonce = $('#mrt_timetable_services_nonce').val();
+        console.log('MRT: Nonce value:', nonce ? 'Found' : 'NOT FOUND');
+
+        // Add service to timetable
+        $('#mrt-add-service-to-timetable').on('click', function(e) {
+            e.preventDefault();
+            console.log('MRT: Add trip button clicked');
+            
+            var $btn = $(this);
+            var timetableId = $btn.data('timetable-id');
+            var routeId = $('#mrt-new-service-route').val();
+            var trainTypeId = $('#mrt-new-service-train-type').val();
+            var direction = $('#mrt-new-service-direction').val();
+
+            console.log('MRT: Form values:', {
+                timetableId: timetableId,
+                routeId: routeId,
+                trainTypeId: trainTypeId,
+                direction: direction,
+                nonce: nonce ? 'Present' : 'Missing'
+            });
+
+            if (!routeId) {
+                alert('Please select a route.');
+                console.log('MRT: Validation failed - no route selected');
+                return;
+            }
+
+            if (!nonce) {
+                alert('Security token missing. Please refresh the page.');
+                console.error('MRT: Nonce is missing!');
+                return;
+            }
+
+            $btn.prop('disabled', true).text('Adding...');
+            console.log('MRT: Sending AJAX request...');
+
+            // Use mrtAdmin.ajaxurl if available, otherwise fall back to global ajaxurl
+            var ajaxUrl = (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
+            console.log('MRT: Using AJAX URL:', ajaxUrl);
+
+            $.ajax({
+                url: ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'mrt_add_service_to_timetable',
+                    nonce: nonce,
+                    timetable_id: timetableId,
+                    route_id: routeId,
+                    train_type_id: trainTypeId,
+                    direction: direction
+                },
+                success: function(response) {
+                    console.log('MRT: AJAX success response:', response);
+                    if (response.success) {
+                        console.log('MRT: Service created successfully:', response.data);
+                        // Add row to table
+                        var $tbody = $('#mrt-timetable-services-tbody');
+                        var $newRow = $tbody.find('.mrt-new-service-row');
+                        var editUrlWithTimetable = response.data.edit_url + (response.data.edit_url.indexOf('?') > -1 ? '&' : '?') + 'timetable_id=' + timetableId;
+                        var $row = $('<tr data-service-id="' + response.data.service_id + '">' +
+                            '<td>' + response.data.route_name + '</td>' +
+                            '<td>' + response.data.train_type_name + '</td>' +
+                            '<td>' + response.data.direction + '</td>' +
+                            '<td>' +
+                            '<a href="' + editUrlWithTimetable + '" class="button button-small">Edit</a> ' +
+                            '<button type="button" class="button button-small mrt-delete-service-from-timetable" data-service-id="' + response.data.service_id + '">Remove</button>' +
+                            '</td>' +
+                            '</tr>');
+                        $newRow.before($row);
+                        console.log('MRT: Row added to table');
+
+                        // Clear form
+                        $('#mrt-new-service-route').val('');
+                        $('#mrt-new-service-train-type').val('');
+                        $('#mrt-new-service-direction').val('');
+                        console.log('MRT: Form cleared');
+                    } else {
+                        console.error('MRT: Server returned error:', response.data);
+                        alert(response.data.message || 'Error adding trip.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('MRT: AJAX error:', {
+                        status: status,
+                        error: error,
+                        responseText: xhr.responseText,
+                        statusCode: xhr.status
+                    });
+                    alert('Error adding trip. Check console for details.');
+                },
+                complete: function() {
+                    $btn.prop('disabled', false).text('Add Trip');
+                    console.log('MRT: AJAX request completed');
+                }
+            });
+        });
+
+        // Remove service from timetable
+        $container.on('click', '.mrt-delete-service-from-timetable', function() {
+            if (!confirm('Are you sure you want to remove this trip from the timetable?')) {
+                return;
+            }
+
+            var $btn = $(this);
+            var serviceId = $btn.data('service-id');
+            var $row = $btn.closest('tr');
+
+            $btn.prop('disabled', true);
+
+            // Use mrtAdmin.ajaxurl if available, otherwise fall back to global ajaxurl
+            var ajaxUrl = (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
+            
+            $.ajax({
+                url: ajaxUrl,
+                type: 'POST',
+                data: {
+                    action: 'mrt_remove_service_from_timetable',
+                    nonce: nonce,
+                    service_id: serviceId
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $row.fadeOut(function() {
+                            $(this).remove();
+                        });
+                    } else {
+                        alert(response.data.message || 'Error removing trip.');
+                        $btn.prop('disabled', false);
+                    }
+                },
+                error: function() {
+                    alert('Error removing trip.');
+                    $btn.prop('disabled', false);
+                }
+            });
+        });
     }
 
 })(jQuery);

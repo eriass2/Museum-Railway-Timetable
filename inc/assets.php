@@ -24,7 +24,7 @@ function MRT_enqueue_admin_assets($hook) {
     // For edit pages, only load if editing our CPTs
     if ($is_edit_page) {
         $post_type = get_post_type();
-        if (!in_array($post_type, ['mrt_station', 'mrt_service', 'mrt_route'], true)) {
+        if (!in_array($post_type, ['mrt_station', 'mrt_service', 'mrt_route', 'mrt_timetable'], true)) {
             return;
         }
     }
