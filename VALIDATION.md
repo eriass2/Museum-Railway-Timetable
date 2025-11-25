@@ -113,6 +113,7 @@ Before deploying, test:
 - [ ] `[museum_timetable]` displays correctly
 - [ ] `[museum_timetable_picker]` displays correctly
 - [ ] `[museum_timetable_month]` displays correctly
+- [ ] `[museum_timetable_overview]` displays correctly
 - [ ] All parameters work as expected
 
 ### 4. Frontend
@@ -129,9 +130,9 @@ Before deploying, test:
 
 ## Code Statistics
 
-- **PHP Files**: 10 (9 in inc/ + 1 main plugin file)
-- **CSS Files**: 1 (268 lines)
-- **JavaScript Files**: 1 (37 lines)
+- **PHP Files**: 11 (10 in inc/ + 1 main plugin file)
+- **CSS Files**: 1 (includes admin and frontend styles)
+- **JavaScript Files**: 1 (admin functionality)
 - **Translation Files**: 2
 - **Total Lines of Code**: ~2,000+
 

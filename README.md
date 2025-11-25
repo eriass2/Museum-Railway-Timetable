@@ -12,6 +12,8 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
   - Streamlined menu structure
   - Meta boxes for managing service data
   - Stations overview with filtering
+  - **Timetable Overview**: Visual preview of timetable grouped by route and direction
+  - **Direct Trip Management**: Add, edit, and remove trips directly from Timetable edit screen
 - **Internationalization**: Fully translatable (Swedish included)
 
 ## Requirements
@@ -73,6 +75,23 @@ Display a calendar showing service days for a month:
 - `show_counts` - Show service count per day (0 or 1, default: 1)
 - `start_monday` - Start week on Monday (0 or 1, default: 1)
 
+#### 4. Timetable Overview
+Display a complete timetable overview grouped by route and direction (like traditional printed timetables):
+
+```
+[museum_timetable_overview timetable_id="123"]
+```
+
+**Parameters:**
+- `timetable_id` - Timetable post ID (recommended)
+- `timetable` - Timetable name (alternative to timetable_id)
+
+**Features:**
+- Groups trips by route and direction (e.g., "Från Uppsala Ö Till Marielund")
+- Shows train types (Ångtåg, Rälsbuss, Dieseltåg) for each trip
+- Displays times for each station, with "X" for null/unspecified times
+- Perfect for displaying complete timetables on pages
+
 ### Managing Services
 
 Services can be managed in two ways:
@@ -86,14 +105,18 @@ Services can be managed in two ways:
    - Go to **Railway Timetable > Timetables** and create a new timetable
    - Add dates (YYYY-MM-DD) when this timetable applies
    - A timetable can have multiple dates (e.g., all weekends in a month)
-3. **Create a Service:**
-   - Go to **Railway Timetable > Services** and create a new service
-   - Select a **Timetable** (required) - this defines which days the service runs
-   - Select a **Route** (required) - this defines which stations are available
+   - **View the "Timetable Overview" meta box** to see a visual preview of all trips grouped by route and direction
+3. **Add Trips to Timetable (Recommended):**
+   - In the **Trips (Services)** meta box on the Timetable edit screen, you can directly add trips
+   - Select a **Route** (required)
    - Select a **Train Type** (optional)
    - Select a **Direction** (optional: "Dit" or "Från")
-   - Save the service
-4. **Configure Stop Times:**
+   - Click **"Add Trip"** - the trip will be automatically created and linked to this timetable
+   - Trips are automatically named based on Route + Direction
+4. **Edit Trips:**
+   - Click **"Edit"** on any trip in the timetable to configure Stop Times
+   - Or go to **Railway Timetable > Services** to edit trips directly
+5. **Configure Stop Times:**
    - In the **Stop Times** meta box, all stations on the selected route are displayed
    - Check "Stops here" for each station where the train stops
    - Fill in Arrival/Departure times (can be empty if time is not fixed)
@@ -112,7 +135,8 @@ museum-railway-timetable/
 ├─ inc/
 │   ├─ functions/
 │   │   ├─ helpers.php           # Helper functions
-│   │   └─ services.php          # Service-related functions
+│   │   ├─ services.php          # Service-related functions
+│   │   └─ timetable-view.php    # Timetable overview rendering
 │   ├─ assets.php                # Asset enqueuing
 │   ├─ admin-page.php            # Main admin page and menu
 │   ├─ admin-list.php            # Stations overview
@@ -153,6 +177,12 @@ The plugin creates one custom table:
 This plugin is provided as-is for use with WordPress.
 
 ## Changelog
+
+### 0.3.0
+- **Timetable Overview**: Visual preview of timetable grouped by route and direction, showing train types and times
+- **Direct Trip Management**: Add, edit, and remove trips directly from Timetable edit screen
+- **Automatic Trip Naming**: Trips are automatically named based on Route + Direction (no manual naming required)
+- **Improved Workflow**: Streamlined process for managing trips within timetables
 
 ### 0.2.0
 - **Inline Editing**: Click-to-edit functionality for Stop Times and Calendar entries

@@ -41,6 +41,16 @@ add_action('add_meta_boxes', function() {
         'default'
     );
     
+    // Timetable overview preview
+    add_meta_box(
+        'mrt_timetable_overview',
+        __('Timetable Overview', 'museum-railway-timetable'),
+        'MRT_render_timetable_overview_box',
+        'mrt_timetable',
+        'normal',
+        'low'
+    );
+    
     // Route meta box
     add_meta_box(
         'mrt_route_details',
@@ -512,6 +522,22 @@ function MRT_render_timetable_services_box($post) {
                 </tr>
             </tbody>
         </table>
+    </div>
+    <?php
+}
+
+/**
+ * Render timetable overview preview box
+ *
+ * @param WP_Post $post Current post object (Timetable)
+ */
+function MRT_render_timetable_overview_box($post) {
+    ?>
+    <div class="mrt-timetable-overview-preview">
+        <p class="description">
+            <?php esc_html_e('Preview of how the timetable will look when displayed. Services are grouped by route and direction.', 'museum-railway-timetable'); ?>
+        </p>
+        <?php echo MRT_render_timetable_overview($post->ID); ?>
     </div>
     <?php
 }

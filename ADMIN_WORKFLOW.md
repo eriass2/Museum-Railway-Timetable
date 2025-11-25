@@ -107,16 +107,35 @@ För att skapa en fungerande tidtabell behöver du:
 
 ---
 
-### Steg 5: Skapa Services
+### Steg 5: Lägg till Turer i Timetable (Rekommenderat)
 
-**Varför?** Services är själva tidtabellerna. Varje service representerar ett tåg med specifika tider.
+**Varför?** Det enklaste sättet att hantera turer är direkt i tidtabellen. Varje tur representerar ett tåg med specifika tider.
 
 **Så här gör du:**
+
+1. Gå till **Railway Timetable → Timetables**
+2. Öppna eller skapa en timetable
+3. I **"Trips (Services)"** meta box:
+   - **Route**: Välj en route (obligatoriskt)
+   - **Train Type**: Välj tågtyp (valfritt, t.ex. "Ånglok", "Diesellok")
+   - **Direction**: Välj riktning (valfritt: "Dit" eller "Från")
+   - Klicka **"Add Trip"** - turen skapas automatiskt och kopplas till timetable
+4. **Turen får automatiskt ett namn** baserat på Route + Direction (t.ex. "Hultsfred → Västervik - Dit")
+5. Klicka **"Edit"** på en tur för att konfigurera Stop Times
+
+**Tips:**
+- **Route är obligatoriskt** - Du måste välja en Route innan du kan lägga till en tur
+- Du kan lägga till flera turer med olika tågtyper och riktningar på samma timetable
+- **Se översikten** i "Timetable Overview" meta box för att se hur tidtabellen ser ut
+- Turen tillhör automatiskt timetable - du behöver inte välja timetable separat
+
+### Alternativ: Skapa Services separat
+
+Om du föredrar att skapa services separat:
 
 1. Gå till **Railway Timetable → Services**
 2. Klicka på **"Add New"**
 3. Fyll i:
-   - **Titel**: Service-namnet (t.ex. "09:00 Avgång", "Morgontåg", "Steam Express")
    - **Timetable**: **VÄLJ EN TIMETABLE** (obligatoriskt) - Välj den timetable som denna service tillhör
    - **Route**: **VÄLJ EN ROUTE** (obligatoriskt) - Välj den Route som denna service kör på
    - **Train Type**: Välj tågtyp (t.ex. "Ånglok", "Diesellok")
@@ -126,13 +145,32 @@ För att skapa en fungerande tidtabell behöver du:
 **Tips:**
 - **Timetable är obligatoriskt** - Service tillhör en timetable (som definierar vilka dagar den körs)
 - **Route är obligatoriskt** - Du måste välja en Route innan du kan konfigurera Stop Times
-- Skapa en service för varje unik tur (t.ex. "09:00 Avgång", "11:00 Avgång", "14:00 Avgång")
+- Skapa en service för varje unik tur
 - Du kan skapa många services med olika tider på samma Route och Timetable
-- Exempel: Om du har Timetable "Helger i juni" och Route "Hultsfred → Västervik" kan du skapa flera services med olika avgångstider
 
 ---
 
-### Steg 6: Konfigurera Stop Times för varje Service
+### Steg 6: Se Timetable Overview
+
+**Vad är Timetable Overview?** En visuell förhandsvisning av hela tidtabellen, grupperad efter route och riktning.
+
+**Så här gör du:**
+
+1. I **Timetable edit screen**, scrolla ner till **"Timetable Overview"** meta box
+2. Här ser du:
+   - Alla turer grupperade efter route och riktning (t.ex. "Från Uppsala Ö Till Marielund")
+   - Tågtyp för varje tur (Ångtåg, Rälsbuss, Dieseltåg)
+   - Tider för varje station
+   - "X" markerar tider som är null/ej specificerade
+
+**Tips:**
+- Översikten uppdateras automatiskt när du lägger till eller tar bort turer
+- Använd översikten för att snabbt kontrollera att allt ser rätt ut
+- Layouten liknar traditionella tryckta tidtabeller
+
+---
+
+### Steg 7: Konfigurera Stop Times för varje Service
 
 **Vad är Stop Times?** Detta definierar vilka stationer varje service stannar vid, i vilken ordning, och när (ankomst/avgångstider).
 

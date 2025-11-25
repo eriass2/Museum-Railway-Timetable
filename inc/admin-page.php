@@ -134,6 +134,20 @@ function MRT_render_admin_page() {
         </form>
         
         <div style="margin-top: 2rem; padding: 1.5rem; background: #f0f6fc; border: 1px solid #c3c4c7; border-radius: 4px;">
+            <h2><?php esc_html_e('Quick Start Guide', 'museum-railway-timetable'); ?></h2>
+            <p><?php esc_html_e('Recommended workflow for managing timetables:', 'museum-railway-timetable'); ?></p>
+            <ol style="margin-left: 1.5rem; line-height: 1.8;">
+                <li><?php esc_html_e('Create Stations', 'museum-railway-timetable'); ?> - <?php esc_html_e('Go to Railway Timetable → Stations', 'museum-railway-timetable'); ?></li>
+                <li><?php esc_html_e('Create Routes', 'museum-railway-timetable'); ?> - <?php esc_html_e('Go to Railway Timetable → Routes and add stations in order', 'museum-railway-timetable'); ?></li>
+                <li><?php esc_html_e('Create Timetables', 'museum-railway-timetable'); ?> - <?php esc_html_e('Go to Railway Timetable → Timetables and add dates when the timetable applies', 'museum-railway-timetable'); ?></li>
+                <li><?php esc_html_e('Add Trips to Timetable', 'museum-railway-timetable'); ?> - <?php esc_html_e('In the Timetable edit screen, use the "Trips (Services)" meta box to add trips directly. Select Route, Train Type, and Direction, then click "Add Trip".', 'museum-railway-timetable'); ?></li>
+                <li><?php esc_html_e('Configure Stop Times', 'museum-railway-timetable'); ?> - <?php esc_html_e('Click "Edit" on any trip to configure arrival/departure times for each station.', 'museum-railway-timetable'); ?></li>
+                <li><?php esc_html_e('View Overview', 'museum-railway-timetable'); ?> - <?php esc_html_e('Check the "Timetable Overview" meta box to see a visual preview of the timetable grouped by route and direction.', 'museum-railway-timetable'); ?></li>
+            </ol>
+            <p style="margin-top: 1rem;"><strong><?php esc_html_e('Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('Trips are automatically named based on Route + Direction, so you don\'t need to enter a name manually.', 'museum-railway-timetable'); ?></p>
+        </div>
+        
+        <div style="margin-top: 2rem; padding: 1.5rem; background: #f0f6fc; border: 1px solid #c3c4c7; border-radius: 4px;">
             <h2><?php esc_html_e('Shortcodes', 'museum-railway-timetable'); ?></h2>
             <p><?php esc_html_e('Use these shortcodes to display timetables on your pages and posts.', 'museum-railway-timetable'); ?></p>
             
@@ -185,6 +199,40 @@ function MRT_render_admin_page() {
                 </p>
                 <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
                 <pre style="background: #fff; padding: 0.75rem; border: 1px solid #ddd; border-radius: 3px; overflow-x: auto;">[museum_timetable_month month="2025-06" train_type="steam" show_counts="1"]</pre>
+            </div>
+            
+            <div style="margin-top: 1.5rem;">
+                <h3>4. <?php esc_html_e('Timetable Overview', 'museum-railway-timetable'); ?></h3>
+                <p><code>[museum_timetable_overview timetable_id="123"]</code></p>
+                <p class="description">
+                    <?php esc_html_e('Displays a complete timetable overview grouped by route and direction, showing all trips with train types and times. Similar to traditional printed timetables.', 'museum-railway-timetable'); ?>
+                </p>
+                <p class="description" style="margin-top: 0.75rem;">
+                    <strong><?php esc_html_e('What it shows:', 'museum-railway-timetable'); ?></strong><br>
+                    • <?php esc_html_e('All trips (services) in the timetable', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Grouped by route and direction (e.g., "Från Uppsala Ö Till Marielund")', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Train types for each trip (Ångtåg, Rälsbuss, Dieseltåg)', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Arrival/departure times for each station', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('"X" marker for null/unspecified times', 'museum-railway-timetable'); ?>
+                </p>
+                <p class="description" style="margin-top: 0.75rem;">
+                    <strong><?php esc_html_e('Parameters:', 'museum-railway-timetable'); ?></strong><br>
+                    • <code>timetable_id</code> - <?php esc_html_e('Timetable post ID (recommended).', 'museum-railway-timetable'); ?><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<?php esc_html_e('How to find it:', 'museum-railway-timetable'); ?><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;1. <?php esc_html_e('Go to Railway Timetable → Timetables', 'museum-railway-timetable'); ?><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;2. <?php esc_html_e('Look in the "ID" column - the number is displayed there', 'museum-railway-timetable'); ?><br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;3. <?php esc_html_e('Or click "Edit" and look at the URL - the number after "post=" is the ID', 'museum-railway-timetable'); ?><br>
+                    • <code>timetable</code> - <?php esc_html_e('Timetable name (alternative to timetable_id). Use the exact title of the timetable.', 'museum-railway-timetable'); ?>
+                </p>
+                <p><strong><?php esc_html_e('Examples:', 'museum-railway-timetable'); ?></strong></p>
+                <pre style="background: #fff; padding: 0.75rem; border: 1px solid #ddd; border-radius: 3px; overflow-x: auto;">[museum_timetable_overview timetable_id="123"]</pre>
+                <p class="description" style="margin-top: 0.5rem; font-size: 0.9em;">
+                    <?php esc_html_e('Or use the timetable name:', 'museum-railway-timetable'); ?>
+                </p>
+                <pre style="background: #fff; padding: 0.75rem; border: 1px solid #ddd; border-radius: 3px; overflow-x: auto;">[museum_timetable_overview timetable="Sommar 2025"]</pre>
+                <p class="description" style="margin-top: 0.75rem; padding: 0.75rem; background: #fff3cd; border-left: 4px solid #ffc107;">
+                    <strong><?php esc_html_e('Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('You can preview how the timetable will look in the "Timetable Overview" meta box when editing a timetable in the admin.', 'museum-railway-timetable'); ?>
+                </p>
             </div>
         </div>
         

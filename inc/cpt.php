@@ -69,3 +69,24 @@ add_action('init', function () {
         'show_in_rest' => false, // Disable REST API (not needed for simple taxonomy)
     ]);
 });
+
+/**
+ * Add ID column to Timetable list
+ */
+add_filter('manage_edit-mrt_timetable_columns', function($columns) {
+    // Add ID column after title
+    $new_columns = [];
+    foreach ($columns as $key => $value) {
+        $new_columns[$key] = $value;
+        if ($key === 'title') {
+            $new_columns['mrt_timetable_id'] = __('ID', 'museum-railway-timetable');
+        }
+    }
+    return $new_columns;
+});
+
+add_action('manage_mrt_timetable_posts_custom_column', function($column, $post_id) {
+    if ($column === 'mrt_timetable_id') {
+        echo '<code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">' . esc_html($post_id) . '</code>';
+    }
+}, 10, 2);

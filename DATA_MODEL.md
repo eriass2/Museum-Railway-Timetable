@@ -474,9 +474,21 @@ WHERE p.post_type = 'mrt_service'
 ### Data Creation Flow
 1. **Stations** → Created via admin interface (`mrt_station` posts with meta fields)
 2. **Routes** → Created via admin interface (`mrt_route` posts with station sequence)
-3. **Timetables** → Created via admin interface (`mrt_timetable` posts with date)
+3. **Timetables** → Created via admin interface (`mrt_timetable` posts with dates array)
 4. **Services** → Created via admin interface (`mrt_service` posts linked to timetable and route)
+   - Can be created directly from Timetable edit screen (recommended workflow)
+   - Automatically named based on Route + Direction
 5. **Stop Times** → Created via admin interface (inserts into `mrt_stoptimes` table)
+
+### Timetable Overview View
+
+The plugin provides a visual overview of timetables that groups services (trips) by route and direction, similar to traditional printed timetables. This view:
+
+- **Groups trips** by route and direction (e.g., "Från Uppsala Ö Till Marielund")
+- **Displays train types** (Ångtåg, Rälsbuss, Dieseltåg) for each trip
+- **Shows times** for each station, with "X" indicating null/unspecified times
+- **Available in admin** as a preview meta box on Timetable edit screens
+- **Rendered by** `MRT_render_timetable_overview()` function in `inc/functions/timetable-view.php`
 
 ### Display Flow
 1. **Shortcode** → Queries timetables for a specific date

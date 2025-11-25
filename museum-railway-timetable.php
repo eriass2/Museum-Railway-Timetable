@@ -89,6 +89,7 @@ function MRT_deactivate() {
 // Load helper functions first
 require_once MRT_PATH . 'inc/functions/helpers.php';
 require_once MRT_PATH . 'inc/functions/services.php';
+require_once MRT_PATH . 'inc/functions/timetable-view.php';
 
 // Load assets (CSS/JS enqueuing)
 require_once MRT_PATH . 'inc/assets.php';

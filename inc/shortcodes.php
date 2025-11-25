@@ -231,3 +231,30 @@ add_shortcode('museum_timetable_month', function ($atts) {
     return ob_get_clean();
 });
 
+/**
+ * Shortcode 4: Timetable Overview
+ * [museum_timetable_overview timetable_id="123" timetable="Timetable Name"]
+ */
+add_shortcode('museum_timetable_overview', function ($atts) {
+    $atts = shortcode_atts([
+        'timetable_id' => '',
+        'timetable' => '',
+    ], $atts, 'museum_timetable_overview');
+    
+    $timetable_id = intval($atts['timetable_id']);
+    
+    // If no ID provided, try to find by title
+    if (!$timetable_id && !empty($atts['timetable'])) {
+        $timetable_post = MRT_get_post_by_title($atts['timetable'], 'mrt_timetable');
+        if ($timetable_post) {
+            $timetable_id = intval($timetable_post->ID);
+        }
+    }
+    
+    if (!$timetable_id || $timetable_id <= 0) {
+        return '<div class="mrt-error">' . esc_html__('Timetable not found.', 'museum-railway-timetable') . '</div>';
+    }
+    
+    return MRT_render_timetable_overview($timetable_id);
+});
+
