@@ -8,7 +8,7 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * Resolve which services run on a given date (interval + weekday + include/exclude overrides)
+ * Resolve which services run on a given date (using Timetables)
  *
  * @param string $dateYmd Date in YYYY-MM-DD format
  * @param string $train_type_slug Optional train type taxonomy slug
@@ -16,65 +16,77 @@ if (!defined('ABSPATH')) { exit; }
  * @return array Array of service post IDs
  */
 function MRT_services_running_on_date($dateYmd, $train_type_slug = '', $service_title_exact = '') {
-    global $wpdb;
-    $calendar = $wpdb->prefix . 'mrt_calendar';
-
-    $weekday = strtolower(date('D', strtotime($dateYmd))); // mon..sun
-    $map = ['mon'=>'mon','tue'=>'tue','wed'=>'wed','thu'=>'thu','fri'=>'fri','sat'=>'sat','sun'=>'sun'];
-    $col = $map[$weekday] ?? '';
-    
-    // Whitelist column names to prevent SQL injection
-    $allowed_cols = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-    $col = in_array($col, $allowed_cols) ? $col : 'mon';
-
     // Validate date format
     if (!MRT_validate_date($dateYmd)) {
         return [];
     }
     
-    $sql = $wpdb->prepare("SELECT service_post_id, include_dates, exclude_dates, `$col` AS dow
-        FROM $calendar
-        WHERE %s BETWEEN start_date AND end_date", $dateYmd);
-    $rows = $wpdb->get_results($sql, ARRAY_A);
+    // Find all timetables that include this date
+    $timetables = get_posts([
+        'post_type' => 'mrt_timetable',
+        'posts_per_page' => -1,
+        'fields' => 'ids',
+        'meta_query' => [[
+            'key' => 'mrt_timetable_dates',
+            'value' => $dateYmd,
+            'compare' => 'LIKE', // WordPress stores arrays as serialized strings
+        ]],
+    ]);
     
-    // Check for database errors
-    if (MRT_check_db_error('MRT_services_running_on_date')) {
+    if (empty($timetables)) {
         return [];
     }
-
-    $ids = [];
-    foreach ($rows as $r) {
-        $include = array_filter(array_map('trim', explode(',', (string)$r['include_dates'])));
-        $exclude = array_filter(array_map('trim', explode(',', (string)$r['exclude_dates'])));
-        $run = false;
-
-        if (in_array($dateYmd, $exclude, true)) {
-            $run = false;
-        } elseif (in_array($dateYmd, $include, true)) {
-            $run = true;
-        } elseif (intval($r['dow']) === 1) {
-            $run = true;
+    
+    // Find all services that belong to these timetables
+    $service_ids = get_posts([
+        'post_type' => 'mrt_service',
+        'posts_per_page' => -1,
+        'fields' => 'ids',
+        'meta_query' => [[
+            'key' => 'mrt_service_timetable_id',
+            'value' => $timetables,
+            'compare' => 'IN',
+        ]],
+    ]);
+    
+    // Additional check: verify that the date is actually in the timetable's dates array
+    // (WordPress LIKE comparison might match partial strings)
+    $valid_service_ids = [];
+    foreach ($service_ids as $service_id) {
+        $timetable_id = get_post_meta($service_id, 'mrt_service_timetable_id', true);
+        if (!$timetable_id || !in_array($timetable_id, $timetables)) {
+            continue;
         }
-
-        if ($run) $ids[] = intval($r['service_post_id']);
+        
+        $timetable_dates = get_post_meta($timetable_id, 'mrt_timetable_dates', true);
+        if (!is_array($timetable_dates)) {
+            // Try to migrate from old single date field
+            $old_date = get_post_meta($timetable_id, 'mrt_timetable_date', true);
+            $timetable_dates = !empty($old_date) ? [$old_date] : [];
+        }
+        
+        if (in_array($dateYmd, $timetable_dates, true)) {
+            $valid_service_ids[] = $service_id;
+        }
     }
-
-    $ids = array_values(array_unique($ids));
-    if (!$ids) return [];
-
+    
+    if (empty($valid_service_ids)) {
+        return [];
+    }
+    
     // Filter by specific service title if provided
     if ($service_title_exact !== '') {
         $post = MRT_get_post_by_title($service_title_exact, 'mrt_service');
         if (!$post) return [];
-        $ids = array_values(array_intersect($ids, [intval($post->ID)]));
-        if (!$ids) return [];
+        $valid_service_ids = array_values(array_intersect($valid_service_ids, [intval($post->ID)]));
+        if (empty($valid_service_ids)) return [];
     }
 
     // Filter by train type taxonomy
     if ($train_type_slug) {
         $q = new WP_Query([
             'post_type' => 'mrt_service',
-            'post__in'  => $ids,
+            'post__in'  => $valid_service_ids,
             'fields'    => 'ids',
             'nopaging'  => true,
             'tax_query' => [[
@@ -85,7 +97,8 @@ function MRT_services_running_on_date($dateYmd, $train_type_slug = '', $service_
         ]);
         return $q->posts;
     }
-    return $ids;
+    
+    return array_values(array_unique($valid_service_ids));
 }
 
 /**

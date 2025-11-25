@@ -386,8 +386,7 @@ function MRT_render_service_meta_box($post) {
     $timetables = get_posts([
         'post_type' => 'mrt_timetable',
         'posts_per_page' => -1,
-        'orderby' => 'meta_value',
-        'meta_key' => 'mrt_timetable_date',
+        'orderby' => 'date',
         'order' => 'DESC',
         'fields' => 'all',
     ]);
@@ -418,10 +417,21 @@ function MRT_render_service_meta_box($post) {
                 <select name="mrt_service_timetable_id" id="mrt_service_timetable_id" class="mrt-meta-field" required>
                     <option value=""><?php esc_html_e('— Select Timetable —', 'museum-railway-timetable'); ?></option>
                     <?php foreach ($timetables as $timetable): 
-                        $timetable_date = get_post_meta($timetable->ID, 'mrt_timetable_date', true);
-                        $display = $timetable->post_title;
-                        if ($timetable_date) {
-                            $display .= ' (' . date_i18n(get_option('date_format'), strtotime($timetable_date)) . ')';
+                        $timetable_dates = get_post_meta($timetable->ID, 'mrt_timetable_dates', true);
+                        if (!is_array($timetable_dates)) {
+                            // Try to migrate from old single date field
+                            $old_date = get_post_meta($timetable->ID, 'mrt_timetable_date', true);
+                            $timetable_dates = !empty($old_date) ? [$old_date] : [];
+                        }
+                        $display = $timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable->ID;
+                        if (!empty($timetable_dates)) {
+                            $date_count = count($timetable_dates);
+                            $first_date = date_i18n(get_option('date_format'), strtotime($timetable_dates[0]));
+                            if ($date_count === 1) {
+                                $display .= ' (' . $first_date . ')';
+                            } else {
+                                $display .= ' (' . $first_date . ' + ' . ($date_count - 1) . ' ' . __('more', 'museum-railway-timetable') . ')';
+                            }
                         }
                     ?>
                         <option value="<?php echo esc_attr($timetable->ID); ?>" <?php selected($timetable_id, $timetable->ID); ?>><?php echo esc_html($display); ?></option>
