@@ -200,7 +200,7 @@ function MRT_render_route_meta_box($post) {
                 <tr>
                     <th style="width: 60px;"><?php esc_html_e('Order', 'museum-railway-timetable'); ?></th>
                     <th><?php esc_html_e('Station', 'museum-railway-timetable'); ?></th>
-                    <th style="width: 100px;"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
+                    <th style="width: 200px;"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
                 </tr>
             </thead>
             <tbody id="mrt-route-stations-tbody">
@@ -213,6 +213,8 @@ function MRT_render_route_meta_box($post) {
                             <td><?php echo esc_html($index + 1); ?></td>
                             <td><?php echo esc_html($station->post_title); ?></td>
                             <td>
+                                <button type="button" class="button button-small mrt-move-route-station-up" data-station-id="<?php echo esc_attr($station_id); ?>" title="<?php esc_attr_e('Move up', 'museum-railway-timetable'); ?>" <?php echo $index === 0 ? 'disabled' : ''; ?>>↑</button>
+                                <button type="button" class="button button-small mrt-move-route-station-down" data-station-id="<?php echo esc_attr($station_id); ?>" title="<?php esc_attr_e('Move down', 'museum-railway-timetable'); ?>" <?php echo $index === count($route_stations) - 1 ? 'disabled' : ''; ?>>↓</button>
                                 <button type="button" class="button button-small mrt-remove-route-station" data-station-id="<?php echo esc_attr($station_id); ?>"><?php esc_html_e('Remove', 'museum-railway-timetable'); ?></button>
                             </td>
                         </tr>

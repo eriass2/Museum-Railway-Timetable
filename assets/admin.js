@@ -153,7 +153,11 @@
             var $row = $('<tr data-station-id="' + stationId + '">' +
                 '<td>' + newIndex + '</td>' +
                 '<td>' + stationName + '</td>' +
-                '<td><button type="button" class="button button-small mrt-remove-route-station" data-station-id="' + stationId + '">Remove</button></td>' +
+                '<td>' +
+                '<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="' + stationId + '" title="Move up">↑</button> ' +
+                '<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="' + stationId + '" title="Move down">↓</button> ' +
+                '<button type="button" class="button button-small mrt-remove-route-station" data-station-id="' + stationId + '">Remove</button>' +
+                '</td>' +
                 '</tr>');
             
             $newRow.before($row);
@@ -161,6 +165,26 @@
             
             // Update order numbers
             updateRouteStationOrders();
+        });
+
+        // Move station up
+        $container.on('click', '.mrt-move-route-station-up', function() {
+            var $row = $(this).closest('tr');
+            var $prevRow = $row.prev();
+            if ($prevRow.length && !$prevRow.hasClass('mrt-new-route-station-row')) {
+                $row.insertBefore($prevRow);
+                updateRouteStationOrders();
+            }
+        });
+
+        // Move station down
+        $container.on('click', '.mrt-move-route-station-down', function() {
+            var $row = $(this).closest('tr');
+            var $nextRow = $row.next();
+            if ($nextRow.length && !$nextRow.hasClass('mrt-new-route-station-row')) {
+                $row.insertAfter($nextRow);
+                updateRouteStationOrders();
+            }
         });
 
         // Remove station from route
@@ -175,10 +199,39 @@
         });
 
         function updateRouteStationOrders() {
-            $('#mrt-route-stations-tbody tr:not(.mrt-new-route-station-row)').each(function(index) {
+            var $rows = $('#mrt-route-stations-tbody tr:not(.mrt-new-route-station-row)');
+            var totalRows = $rows.length;
+            
+            // Update order numbers and button states
+            $rows.each(function(index) {
                 $(this).find('td:first').text(index + 1);
+                
+                // Update up/down button states
+                var $upBtn = $(this).find('.mrt-move-route-station-up');
+                var $downBtn = $(this).find('.mrt-move-route-station-down');
+                
+                if (index === 0) {
+                    $upBtn.prop('disabled', true);
+                } else {
+                    $upBtn.prop('disabled', false);
+                }
+                
+                if (index === totalRows - 1) {
+                    $downBtn.prop('disabled', true);
+                } else {
+                    $downBtn.prop('disabled', false);
+                }
             });
-            var nextOrder = $('#mrt-route-stations-tbody tr:not(.mrt-new-route-station-row)').length + 1;
+            
+            // Update hidden field with new order
+            var stationIds = [];
+            $rows.each(function() {
+                stationIds.push($(this).data('station-id'));
+            });
+            $('#mrt_route_stations').val(stationIds.join(','));
+            
+            // Update next order number
+            var nextOrder = totalRows + 1;
             $('.mrt-new-route-station-row td:first').text(nextOrder);
         }
     }

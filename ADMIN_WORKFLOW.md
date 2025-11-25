@@ -9,9 +9,9 @@ För att skapa en fungerande tidtabell behöver du:
 1. **Stations** - Var tågen stannar
 2. **Routes** - Definiera sträckor med stations i ordning
 3. **Train Types** (valfritt) - Kategorisera tåg (t.ex. ånglok, diesellok)
-4. **Services** - Vilka tåg/tidtabeller som finns (kopplade till Routes)
-5. **Stop Times** - Vilka stationer varje service stannar vid och när
-6. **Calendar** - När varje service körs (datumintervall och veckodagar)
+4. **Timetables** - Definiera dagar när tidtabellen gäller
+5. **Services** - Vilka tåg/turer som finns (kopplade till Timetables och Routes)
+6. **Stop Times** - Vilka stationer varje service stannar vid och när
 
 ---
 
@@ -51,13 +51,16 @@ För att skapa en fungerande tidtabell behöver du:
    - Hjälptext visas direkt under title-fältet med exempel
 4. I **"Route Stations"** meta box:
    - Välj en station från dropdown
-   - Klicka **"Add Station to Route"**
+   - Klicka **"Add"** för att lägga till stationen
    - Upprepa för varje station i ordning (första stationen först, sista sist)
+   - **Ordna stationer:** Använd ↑ (upp) och ↓ (ner) knapparna för att ändra ordningen
+   - **Ta bort station:** Klicka "Remove" för att ta bort en station från rutten
 5. Klicka **"Publish"** (eller "Update")
 
 **Tips:**
 - Skapa en Route för varje unik sträcka (t.ex. "Nordgående", "Sydgående", "Huvudlinje")
 - Stations ordning i Route är viktig - den används när du konfigurerar Stop Times
+- **Använd upp/ner-knapparna (↑ ↓) för att enkelt ändra ordningen** - mycket lättare än att ta bort och lägga till igen
 - Du kan ha flera Routes med samma stations men i olika ordning
 - Exempel: "Hultsfred → Västervik" och "Västervik → Hultsfred" kan vara två olika Routes
 
@@ -83,7 +86,28 @@ För att skapa en fungerande tidtabell behöver du:
 
 ---
 
-### Steg 4: Skapa Services
+### Steg 4: Skapa Timetables
+
+**Varför?** Timetables definierar vilka dagar tidtabellen gäller. En timetable kan gälla flera dagar och innehåller flera turer (services).
+
+**Så här gör du:**
+
+1. Gå till **Railway Timetable → Timetables** i admin-menyn
+2. Klicka på **"Add New"**
+3. I **"Timetable Details"** meta box:
+   - **Dates**: Lägg till datum (YYYY-MM-DD) när denna tidtabell gäller
+   - Klicka **"Add Date"** för att lägga till fler datum
+   - En timetable kan gälla flera dagar (t.ex. alla lördagar i juni)
+4. Klicka **"Publish"** (eller "Update")
+
+**Tips:**
+- En timetable kan ha flera datum (t.ex. alla helger i en månad)
+- Services (turer) tillhör en timetable - de körs på de dagar som timetable definierar
+- Du kan skapa olika timetables för olika säsonger (sommar, vinter, helger, etc.)
+
+---
+
+### Steg 5: Skapa Services
 
 **Varför?** Services är själva tidtabellerna. Varje service representerar ett tåg med specifika tider.
 
@@ -92,21 +116,23 @@ För att skapa en fungerande tidtabell behöver du:
 1. Gå till **Railway Timetable → Services**
 2. Klicka på **"Add New"**
 3. Fyll i:
-   - **Titel**: Service-namnet (t.ex. "Vardagstidtabell 09:00", "Helgtidtabell 10:00")
+   - **Titel**: Service-namnet (t.ex. "09:00 Avgång", "Morgontåg", "Steam Express")
+   - **Timetable**: **VÄLJ EN TIMETABLE** (obligatoriskt) - Välj den timetable som denna service tillhör
    - **Route**: **VÄLJ EN ROUTE** (obligatoriskt) - Välj den Route som denna service kör på
    - **Train Type**: Välj tågtyp (t.ex. "Ånglok", "Diesellok")
-   - **Direction**: (valfritt) Riktning (t.ex. "Nordgående", "Sydgående")
+   - **Direction**: (valfritt) Riktning - välj "Dit" eller "Från" från dropdown
 4. Klicka **"Publish"** (eller "Update")
 
 **Tips:**
+- **Timetable är obligatoriskt** - Service tillhör en timetable (som definierar vilka dagar den körs)
 - **Route är obligatoriskt** - Du måste välja en Route innan du kan konfigurera Stop Times
-- Skapa en service för varje unik avgång (t.ex. "Vardagstidtabell 09:00", "Vardagstidtabell 11:00", "Helgtidtabell 10:00")
-- Du kan skapa många services med olika tider på samma Route (t.ex. 12 avgångar per riktning)
-- Exempel: Om du har Route "Hultsfred → Västervik" kan du skapa flera services med olika avgångstider
+- Skapa en service för varje unik tur (t.ex. "09:00 Avgång", "11:00 Avgång", "14:00 Avgång")
+- Du kan skapa många services med olika tider på samma Route och Timetable
+- Exempel: Om du har Timetable "Helger i juni" och Route "Hultsfred → Västervik" kan du skapa flera services med olika avgångstider
 
 ---
 
-### Steg 5: Konfigurera Stop Times för varje Service
+### Steg 6: Konfigurera Stop Times för varje Service
 
 **Vad är Stop Times?** Detta definierar vilka stationer varje service stannar vid, i vilken ordning, och när (ankomst/avgångstider).
 
@@ -120,8 +146,8 @@ För att skapa en fungerande tidtabell behöver du:
    - **Order**: Stationsordning på sträckan (1, 2, 3...)
    - **Station**: Stationsnamn
    - **Stops here**: Checkbox - kryssa i för varje station där tåget stannar
-   - **Arrival**: Ankomsttid (HH:MM) - lämna tomt för första stationen
-   - **Departure**: Avgångstid (HH:MM) - lämna tomt för sista stationen
+   - **Arrival**: Ankomsttid (HH:MM) - lämna tomt om tåget stannar men tiden inte är fast
+   - **Departure**: Avgångstid (HH:MM) - lämna tomt om tåget stannar men tiden inte är fast
    - **Pickup/Dropoff**: Kryssa i om passagerare kan gå på/av
 6. För varje station där tåget stannar:
    - Kryssa i **"Stops here"**
@@ -132,8 +158,7 @@ För att skapa en fungerande tidtabell behöver du:
 **Tips:**
 - **Route måste väljas först** - Om ingen Route är vald visas ett meddelande
 - När du kryssar i "Stops here" aktiveras tidsfälten automatiskt
-- Första stationen behöver oftast ingen ankomsttid (lämna Arrival tomt)
-- Sista stationen behöver oftast ingen avgångstid (lämna Departure tomt)
+- **Tider kan vara tomma** - Om tåget stannar men tiden inte är fast, lämna Arrival/Departure tomt
 - Du kan välja att tåget ska köra förbi vissa stations (lämna "Stops here" avkryssat)
 - Alla ändringar sparas på en gång när du klickar "Save Stop Times"
 
@@ -148,46 +173,6 @@ Order | Station          | Stops | Arrival | Departure | Pickup | Dropoff
 ```
 
 I exemplet ovan stannar tåget vid de tre första stations men kör förbi Kalmar.
-
----
-
-### Steg 6: Lägg till Calendar Entries för varje Service
-
-**Vad är Calendar?** Detta definierar **när** varje service körs (datumintervall, veckodagar, och specialdagar).
-
-**Så här gör du:**
-
-1. I samma Service edit-sida, scrolla ner till **"Calendar (Service Schedule)"** meta box
-2. I tabellen längst ner (den grå "Add New"-raden):
-   - Ange **Start Date** (YYYY-MM-DD)
-   - Ange **End Date** (YYYY-MM-DD)
-   - Kryssa i veckodagar när servicen körs (Mån, Tis, Ons, etc.)
-   - (Valfritt) **Include Dates**: Kommaseparerade datum att inkludera (överrider veckodagar)
-   - (Valfritt) **Exclude Dates**: Kommaseparerade datum att exkludera
-3. Klicka **"Add"**
-4. Upprepa för varje datumintervall
-
-**Tips:**
-- **Include Dates** används för specialdagar (t.ex. "2025-07-04" för 4 juli)
-- **Exclude Dates** används för att hoppa över dagar (t.ex. julafton)
-- Du kan ha flera calendar entries per service (t.ex. sommar och vinter)
-- Du kan klicka på en rad för att redigera den direkt
-
-**Exempel för "Vardagstidtabell":**
-```
-Date Range        | Days              | Include | Exclude
-------------------|-------------------|---------|--------
-2025-06-01 to     | Mån, Tis, Ons,    | —       | —
-2025-08-31        | Tor, Fre          |         |
-```
-
-**Exempel för "Specialdag 4 juli":**
-```
-Date Range        | Days | Include    | Exclude
-------------------|------|------------|--------
-2025-07-04 to     | —    | 2025-07-04 | —
-2025-07-04        |      |            |
-```
 
 ---
 
@@ -211,48 +196,38 @@ Låt oss säga att du vill skapa en säsongstidtabell för juni–augusti med:
 1. Skapa "Ånglok" (slug: "steam")
 2. Skapa "Diesellok" (slug: "diesel")
 
-### Steg 4: Skapa Services
-1. Skapa "Vardagstidtabell 09:00" (Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Nordgående)
-2. Skapa "Helgtidtabell 10:00" (Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Nordgående)
-3. Skapa "Specialdag 4 juli 14:00" (Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Nordgående)
+### Steg 4: Skapa Timetables
+1. Skapa "Vardagar i juni-augusti" med datum: 2025-06-01, 2025-06-02, ... (alla vardagar)
+2. Skapa "Helger i juni-augusti" med datum: 2025-06-07, 2025-06-08, ... (alla helger)
+3. Skapa "4 juli" med datum: 2025-07-04
 
-### Steg 5: Konfigurera Stop Times
+### Steg 5: Skapa Services
+1. Skapa "09:00 Avgång" (Timetable: "Vardagar i juni-augusti", Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Dit)
+2. Skapa "10:00 Avgång" (Timetable: "Helger i juni-augusti", Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Dit)
+3. Skapa "14:00 Avgång" (Timetable: "4 juli", Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Dit)
 
-**För "Vardagstidtabell 09:00":**
+### Steg 6: Konfigurera Stop Times
+
+**För "09:00 Avgång":**
 - Kryssa i "Stops here" för alla tre stations
 - Hultsfred Museum: Departure 09:00
 - Västervik: Arrival 09:30, Departure 09:35
 - Oskarshamn: Arrival 10:00
 - Klicka "Save Stop Times"
 
-**För "Helgtidtabell 10:00":**
+**För "10:00 Avgång":**
 - Kryssa i "Stops here" för alla tre stations
 - Hultsfred Museum: Departure 10:00
 - Västervik: Arrival 10:30, Departure 10:35
 - Oskarshamn: Arrival 11:00
 - Klicka "Save Stop Times"
 
-**För "Specialdag 4 juli 14:00":**
+**För "14:00 Avgång":**
 - Kryssa i "Stops here" för alla tre stations
 - Hultsfred Museum: Departure 14:00
 - Västervik: Arrival 14:30, Departure 14:35
 - Oskarshamn: Arrival 15:00
 - Klicka "Save Stop Times"
-
-### Steg 6: Lägg till Calendar
-
-**För "Vardagstidtabell 09:00":**
-- Date Range: 2025-06-01 to 2025-08-31
-- Days: Mån, Tis, Ons, Tor, Fre
-
-**För "Helgtidtabell 10:00":**
-- Date Range: 2025-06-01 to 2025-08-31
-- Days: Lör, Sön
-
-**För "Specialdag 4 juli 14:00":**
-- Date Range: 2025-07-04 to 2025-07-04
-- Days: (inga)
-- Include Dates: 2025-07-04
 
 ---
 
@@ -260,36 +235,35 @@ Låt oss säga att du vill skapa en säsongstidtabell för juni–augusti med:
 
 1. **Börja med Stations** - De behövs för allt annat
 2. **Skapa Routes först** - Routes definierar sträckor och gör det enklare att konfigurera Services
-3. **Använd Display Order** - Sortera stations logiskt (1, 2, 3...) i Stations
-4. **Tydliga Service-namn** - T.ex. "Vardagstidtabell 09:00" istället för "Service 1"
-5. **Välj Route innan Stop Times** - Route måste väljas för att konfigurera Stop Times
-6. **Använd "Stops here" checkbox** - Enkelt att välja vilka stations tåget stannar vid
-7. **Spara Stop Times på en gång** - Klicka "Save Stop Times" när du är klar med alla ändringar
-8. **Testa Calendar-logik** - Se till att datumintervall och veckodagar är korrekta
-9. **Använd Train Types** - Gör det enklare att filtrera i shortcodes
-10. **Spara ofta** - Klicka "Update" efter varje större ändring
-11. **Skapa många Services** - Du kan skapa många services (t.ex. 12 avgångar) med olika tider på samma Route
+3. **Använd upp/ner-knapparna (↑ ↓)** - Mycket enklare att ordna stationer i Routes än att ta bort och lägga till igen
+4. **Använd Display Order** - Sortera stations logiskt (1, 2, 3...) i Stations
+5. **Skapa Timetables** - Definiera vilka dagar tidtabellen gäller
+6. **Tydliga Service-namn** - T.ex. "09:00 Avgång" istället för "Service 1"
+7. **Välj Timetable och Route** - Båda måste väljas innan du kan konfigurera Stop Times
+8. **Använd "Stops here" checkbox** - Enkelt att välja vilka stations tåget stannar vid
+9. **Tider kan vara tomma** - Om tåget stannar men tiden inte är fast, lämna Arrival/Departure tomt
+10. **Spara Stop Times på en gång** - Klicka "Save Stop Times" när du är klar med alla ändringar
+11. **Använd Train Types** - Gör det enklare att filtrera i shortcodes
+12. **Spara ofta** - Klicka "Update" efter varje större ändring
+13. **Skapa många Services** - Du kan skapa många services (t.ex. 12 avgångar) med olika tider på samma Route och Timetable
 
 ---
 
 ## Felsökning
 
 **Problem: Service visas inte i shortcode**
-- Kontrollera att Calendar entries är korrekta (datumintervall, veckodagar)
+- Kontrollera att Timetable innehåller rätt datum
+- Kontrollera att Service är kopplad till rätt Timetable
 - Kontrollera att Stop Times finns för servicen
 
 **Problem: Fel stationer visas**
 - Kontrollera att rätt Route är vald för servicen
 - Kontrollera att "Stops here" är ikryssat för rätt stations
-- Kontrollera stations ordning i Route:n
+- Kontrollera stations ordning i Route:n (använd upp/ner-knapparna för att ändra)
 
 **Problem: Tider visas inte**
 - Kontrollera att Arrival/Departure-tider är korrekta (HH:MM-format)
-- Första stationen behöver ingen Arrival, sista ingen Departure
-
-**Problem: Service körs på fel dagar**
-- Kontrollera Calendar entries (veckodagar, include/exclude dates)
-- Kontrollera datumintervall (start_date ≤ end_date)
+- Tider kan vara tomma om tåget stannar men tiden inte är fast
 
 ---
 

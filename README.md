@@ -4,7 +4,7 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 
 ## Features
 
-- **Custom Post Types**: Stations, Routes, and Services
+- **Custom Post Types**: Stations, Routes, Timetables, and Services
 - **Custom Taxonomies**: Train Types
 - **Shortcodes**: Display timetables on the frontend
 - **Admin Interface**: 
@@ -81,23 +81,24 @@ Services can be managed in two ways:
 1. **Create a Route first:**
    - Go to **Railway Timetable > Routes** and create a new route
    - Add stations to the route in order using the "Route Stations" meta box
-2. **Create a Service:**
+   - **Use ↑ ↓ buttons to easily reorder stations** - much easier than removing and re-adding
+2. **Create a Timetable:**
+   - Go to **Railway Timetable > Timetables** and create a new timetable
+   - Add dates (YYYY-MM-DD) when this timetable applies
+   - A timetable can have multiple dates (e.g., all weekends in a month)
+3. **Create a Service:**
    - Go to **Railway Timetable > Services** and create a new service
+   - Select a **Timetable** (required) - this defines which days the service runs
    - Select a **Route** (required) - this defines which stations are available
    - Select a **Train Type** (optional)
-   - Add a **Direction** (optional, e.g., "Northbound")
+   - Select a **Direction** (optional: "Dit" or "Från")
    - Save the service
-3. **Configure Stop Times:**
+4. **Configure Stop Times:**
    - In the **Stop Times** meta box, all stations on the selected route are displayed
    - Check "Stops here" for each station where the train stops
-   - Fill in Arrival/Departure times for each stop
+   - Fill in Arrival/Departure times (can be empty if time is not fixed)
    - Select Pickup/Dropoff options
    - Click "Save Stop Times" to save all changes at once
-4. **Configure Calendar:**
-   - In the **Calendar** meta box:
-   - Click on any row to edit it inline
-   - Use the "Add New" row at the bottom to add new calendar entries
-   - Configure date ranges, weekdays, and include/exclude dates
 
 
 ## Development
@@ -137,9 +138,8 @@ This plugin follows WordPress coding standards and best practices.
 
 ### Database Tables
 
-The plugin creates two custom tables:
-- `{prefix}_mrt_stoptimes` - Stop times for services
-- `{prefix}_mrt_calendar` - Calendar data for service schedules
+The plugin creates one custom table:
+- `{prefix}_mrt_stoptimes` - Stop times for services (arrival/departure times can be NULL)
 
 ## Contributing
 
