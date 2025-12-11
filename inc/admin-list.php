@@ -46,7 +46,7 @@ function MRT_get_services_for_station($station_id) {
 }
 
 /**
- * Find next running day for a station by intersecting station's services with calendar-running services.
+ * Find next running day for a station by checking timetables for services that stop at the station.
  * Checks from 'today' up to +60 days (configurable via filter 'mrt_overview_days_ahead').
  *
  * @param int    $station_id Station post ID

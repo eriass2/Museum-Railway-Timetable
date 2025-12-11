@@ -249,7 +249,7 @@ function MRT_render_admin_page() {
                     </button>
                 </p>
                 <p class="description">
-                    <?php esc_html_e('This will delete all Stations, Services, Routes, Stop Times, and Calendar entries. Use with caution!', 'museum-railway-timetable'); ?>
+                    <?php esc_html_e('This will delete all Stations, Services, Routes, Timetables, and Stop Times. Use with caution!', 'museum-railway-timetable'); ?>
                 </p>
             </form>
         </div>
@@ -297,7 +297,6 @@ add_action('admin_init', function() {
     
     // Delete custom tables data
     $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}mrt_stoptimes");
-    $wpdb->query("TRUNCATE TABLE {$wpdb->prefix}mrt_calendar");
     
     // Delete train types
     $terms = get_terms(['taxonomy' => 'mrt_train_type', 'hide_empty' => false]);

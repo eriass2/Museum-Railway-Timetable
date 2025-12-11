@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Museum Railway Timetable
  * Description: A calendar displaying train timetables for a museum railway.
- * Version: 0.1.0
+ * Version: 0.3.0
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Author: Erik
@@ -12,7 +12,7 @@
 
 if (!defined('ABSPATH')) { exit; }
 
-define('MRT_VERSION', '0.1.0');
+define('MRT_VERSION', '0.3.0');
 define('MRT_PATH', plugin_dir_path(__FILE__));
 define('MRT_URL', plugin_dir_url(__FILE__));
 
@@ -36,7 +36,7 @@ function MRT_activate() {
     $charset = $wpdb->get_charset_collate();
 
     $stoptimes = $wpdb->prefix . 'mrt_stoptimes';
-    $sql1 = "CREATE TABLE $stoptimes (
+    $sql = "CREATE TABLE $stoptimes (
         id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
         service_post_id BIGINT UNSIGNED NOT NULL,
         station_post_id BIGINT UNSIGNED NOT NULL,
@@ -50,28 +50,7 @@ function MRT_activate() {
         KEY station (station_post_id)
     ) $charset;";
 
-    $calendar = $wpdb->prefix . 'mrt_calendar';
-    $sql2 = "CREATE TABLE $calendar (
-        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-        service_post_id BIGINT UNSIGNED NOT NULL,
-        start_date DATE NOT NULL,
-        end_date DATE NOT NULL,
-        mon TINYINT(1) DEFAULT 0,
-        tue TINYINT(1) DEFAULT 0,
-        wed TINYINT(1) DEFAULT 0,
-        thu TINYINT(1) DEFAULT 0,
-        fri TINYINT(1) DEFAULT 0,
-        sat TINYINT(1) DEFAULT 0,
-        sun TINYINT(1) DEFAULT 0,
-        include_dates TEXT NULL,
-        exclude_dates TEXT NULL,
-        PRIMARY KEY (id),
-        KEY service (service_post_id),
-        KEY range_idx (start_date, end_date)
-    ) $charset;";
-
-    dbDelta($sql1);
-    dbDelta($sql2);
+    dbDelta($sql);
 
     if (get_option('mrt_settings') === false) {
         add_option('mrt_settings', ['enabled' => true]);

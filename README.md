@@ -8,7 +8,7 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 - **Custom Taxonomies**: Train Types
 - **Shortcodes**: Display timetables on the frontend
 - **Admin Interface**: 
-  - Inline editing for Stop Times and Calendar entries directly in Service edit pages
+  - Inline editing for Stop Times directly in Service edit pages
   - Streamlined menu structure
   - Meta boxes for managing service data
   - Stations overview with filtering
@@ -185,7 +185,7 @@ This plugin is provided as-is for use with WordPress.
 - **Improved Workflow**: Streamlined process for managing trips within timetables
 
 ### 0.2.0
-- **Inline Editing**: Click-to-edit functionality for Stop Times and Calendar entries
+- **Inline Editing**: Click-to-edit functionality for Stop Times
 - **Streamlined Menu**: Cleaned up admin menu structure
 - **Enhanced UX**: Direct editing in Service edit pages without separate forms
 - **AJAX Operations**: All CRUD operations use AJAX for better performance

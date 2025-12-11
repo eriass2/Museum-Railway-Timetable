@@ -355,7 +355,7 @@ service_post_id | station_post_id | stop_sequence | arrival_time | departure_tim
 
 ---
 
-**Note:** The `mrt_calendar` table is deprecated in the new data model. Services are now linked directly to Timetables (which represent specific days) instead of using calendar date ranges.
+**Note:** The `mrt_calendar` table has been removed. Services are now linked directly to Timetables (which represent specific days).
 
 ---
 
@@ -519,9 +519,7 @@ The plugin provides a visual overview of timetables that groups services (trips)
 
 ### Constraints
 - **Stop Times**: `service_post_id` and `station_post_id` must reference valid posts
-- **Calendar**: `service_post_id` must reference valid service post
 - **Stop Sequence**: Must be unique per service (enforced in application logic)
-- **Date Ranges**: `end_date` should be >= `start_date` (enforced in application logic)
 
 ### Validation
 - Time formats: HH:MM (24-hour format)
