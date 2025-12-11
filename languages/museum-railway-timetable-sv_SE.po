@@ -472,3 +472,358 @@ msgstr "All tidtabellsdata har rensats."
 msgid "Security check failed."
 msgstr "Säkerhetskontroll misslyckades."
 
+# New translations for dashboard and UI improvements
+msgid "Trips (Services)"
+msgstr "Turer (Services)"
+
+msgid "Managed via Timetables"
+msgstr "Hanteras via Tidtabeller"
+
+msgid "Routes Overview"
+msgstr "Översikt över sträckor"
+
+msgid "Routes define which stations trains travel between and in what order. When creating a trip, you select a route to automatically get all its stations."
+msgstr "Sträckor definierar vilka stationer tåg reser mellan och i vilken ordning. När du skapar en tur väljer du en sträcka för att automatiskt få alla dess stationer."
+
+msgid "Route Name"
+msgstr "Sträcknamn"
+
+msgid "Used by Trips"
+msgstr "Används av turer"
+
+msgid "stations"
+msgstr "stationer"
+
+msgid "No stations added"
+msgstr "Inga stationer tillagda"
+
+msgid "trip(s)"
+msgstr "tur(ar)"
+
+msgid "Not used yet"
+msgstr "Används inte ännu"
+
+msgid "Quick Actions"
+msgstr "Snabbåtgärder"
+
+msgid "➕ Add Station"
+msgstr "➕ Lägg till station"
+
+msgid "Create a new station"
+msgstr "Skapa en ny station"
+
+msgid "➕ Add Route"
+msgstr "➕ Lägg till sträcka"
+
+msgid "Create a new route with stations"
+msgstr "Skapa en ny sträcka med stationer"
+
+msgid "➕ Add Timetable"
+msgstr "➕ Lägg till tidtabell"
+
+msgid "Create a new timetable with dates"
+msgstr "Skapa en ny tidtabell med datum"
+
+msgid "📊 Stations Overview"
+msgstr "📊 Översikt över stationer"
+
+msgid "View all stations with statistics"
+msgstr "Visa alla stationer med statistik"
+
+msgid "Settings"
+msgstr "Inställningar"
+
+msgid "📖 Quick Start Guide"
+msgstr "📖 Snabbstartsguide"
+
+msgid "Click to expand"
+msgstr "Klicka för att expandera"
+
+msgid "Recommended workflow:"
+msgstr "Rekommenderat arbetsflöde:"
+
+msgid "Create all stations where trains stop"
+msgstr "Skapa alla stationer där tåg stannar"
+
+msgid "Create routes and add stations in order (use ↑ ↓ buttons to reorder)"
+msgstr "Skapa sträckor och lägg till stationer i ordning (använd ↑ ↓ knappar för att ordna om)"
+
+msgid "Create timetables and add dates (YYYY-MM-DD) when they apply"
+msgstr "Skapa tidtabeller och lägg till datum (ÅÅÅÅ-MM-DD) när de gäller"
+
+msgid "Add Trips"
+msgstr "Lägg till turer"
+
+msgid "In Timetable edit screen, use \"Trips (Services)\" meta box. Select Route, Train Type, Direction, then click \"Add Trip\""
+msgstr "I Tidtabell-redigeringsskärmen, använd \"Turer (Services)\" meta box. Välj Sträcka, Tågtyp, Riktning, klicka sedan på \"Lägg till tur\""
+
+msgid "Configure Stop Times"
+msgstr "Konfigurera hållplatstider"
+
+msgid "Click \"Edit\" on any trip to set arrival/departure times for each station"
+msgstr "Klicka \"Redigera\" på en tur för att sätta ankomst/avgångstider för varje station"
+
+msgid "💡 Tip:"
+msgstr "💡 Tips:"
+
+msgid "Trips are automatically named based on Route + Direction. You don't need to enter a name manually!"
+msgstr "Turer namnges automatiskt baserat på Sträcka + Riktning. Du behöver inte ange ett namn manuellt!"
+
+msgid "Shortcodes"
+msgstr "Shortcodes"
+
+msgid "Use these shortcodes to display timetables on your pages and posts."
+msgstr "Använd dessa shortcodes för att visa tidtabeller på dina sidor och inlägg."
+
+msgid "Simple Timetable"
+msgstr "Enkel tidtabell"
+
+msgid "Displays next departures from a specific station."
+msgstr "Visar nästa avgångar från en specifik station."
+
+msgid "Parameters:"
+msgstr "Parametrar:"
+
+msgid "Station name (or use station_id)"
+msgstr "Stationsnamn (eller använd station_id)"
+
+msgid "Station post ID (alternative to station name)"
+msgstr "Stations post-ID (alternativ till stationsnamn)"
+
+msgid "Number of departures to show (default: 5)"
+msgstr "Antal avgångar att visa (standard: 5)"
+
+msgid "Show arrival times (0 or 1, default: 0)"
+msgstr "Visa ankomsttider (0 eller 1, standard: 0)"
+
+msgid "Filter by train type slug (optional)"
+msgstr "Filtrera efter tågtyps-slug (valfritt)"
+
+msgid "Example:"
+msgstr "Exempel:"
+
+msgid "Station Picker"
+msgstr "Stationsväljare"
+
+msgid "Displays a dropdown to select a station and show its timetable."
+msgstr "Visar en rullgardinsmeny för att välja en station och visa dess tidtabell."
+
+msgid "Default selected station name"
+msgstr "Standardvald stationsnamn"
+
+msgid "Number of departures to show (default: 6)"
+msgstr "Antal avgångar att visa (standard: 6)"
+
+msgid "Form submission method: \"get\" or \"post\" (default: \"get\")"
+msgstr "Formulärskickningsmetod: \"get\" eller \"post\" (standard: \"get\")"
+
+msgid "Placeholder text for dropdown"
+msgstr "Platshållartext för rullgardinsmeny"
+
+msgid "Month View"
+msgstr "Månadsvy"
+
+msgid "Displays a calendar month view showing which days have services running."
+msgstr "Visar en kalendermånadsvy som visar vilka dagar som har turer som körs."
+
+msgid "Month in YYYY-MM format (default: current month)"
+msgstr "Månad i ÅÅÅÅ-MM format (standard: aktuell månad)"
+
+msgid "Filter by exact service title (optional)"
+msgstr "Filtrera efter exakt tur-titel (valfritt)"
+
+msgid "Show legend (0 or 1, default: 1)"
+msgstr "Visa förklaring (0 eller 1, standard: 1)"
+
+msgid "Show service count per day (0 or 1, default: 1)"
+msgstr "Visa antal turer per dag (0 eller 1, standard: 1)"
+
+msgid "Start week on Monday (0 or 1, default: 1)"
+msgstr "Starta veckan på måndag (0 eller 1, standard: 1)"
+
+msgid "Timetable Overview"
+msgstr "Tidtabellsöversikt"
+
+msgid "Displays a complete timetable overview grouped by route and direction, showing all trips with train types and times. Similar to traditional printed timetables."
+msgstr "Visar en komplett tidtabellsöversikt grupperad efter sträcka och riktning, visar alla turer med tågtyper och tider. Liknande traditionella tryckta tidtabeller."
+
+msgid "What it shows:"
+msgstr "Vad den visar:"
+
+msgid "All trips (services) in the timetable"
+msgstr "Alla turer (services) i tidtabellen"
+
+msgid "Grouped by route and direction (e.g., \"Från Uppsala Ö Till Marielund\")"
+msgstr "Grupperade efter sträcka och riktning (t.ex. \"Från Uppsala Ö Till Marielund\")"
+
+msgid "Train types for each trip (Ångtåg, Rälsbuss, Dieseltåg)"
+msgstr "Tågtyper för varje tur (Ångtåg, Rälsbuss, Dieseltåg)"
+
+msgid "Arrival/departure times for each station"
+msgstr "Ankomst/avgångstider för varje station"
+
+msgid "\"X\" marker for null/unspecified times"
+msgstr "\"X\" markör för null/ospecificerade tider"
+
+msgid "Timetable post ID (recommended)."
+msgstr "Tidtabells post-ID (rekommenderas)."
+
+msgid "How to find it:"
+msgstr "Hur man hittar det:"
+
+msgid "Go to Railway Timetable → Timetables"
+msgstr "Gå till Järnvägens tidtabell → Tidtabeller"
+
+msgid "Look in the \"ID\" column - the number is displayed there"
+msgstr "Titta i \"ID\" kolumnen - numret visas där"
+
+msgid "Or click \"Edit\" and look at the URL - the number after \"post=\" is the ID"
+msgstr "Eller klicka \"Redigera\" och titta på URL:en - numret efter \"post=\" är ID:et"
+
+msgid "Timetable name (alternative to timetable_id). Use the exact title of the timetable."
+msgstr "Tidtabellsnamn (alternativ till timetable_id). Använd den exakta titeln på tidtabellen."
+
+msgid "Examples:"
+msgstr "Exempel:"
+
+msgid "Or use the timetable name:"
+msgstr "Eller använd tidtabellsnamnet:"
+
+msgid "Tip:"
+msgstr "Tips:"
+
+msgid "You can preview how the timetable will look in the \"Timetable Overview\" meta box when editing a timetable in the admin."
+msgstr "Du kan förhandsgranska hur tidtabellen kommer att se ut i \"Tidtabellsöversikt\" meta box när du redigerar en tidtabell i admin."
+
+msgid "💡 What is a Station?"
+msgstr "💡 Vad är en Station?"
+
+msgid "A station is a physical location where trains can stop. Stations are used in Routes and Stop Times to define where trains travel and when they arrive/depart."
+msgstr "En station är en fysisk plats där tåg kan stanna. Stationer används i Sträckor och Hållplatstider för att definiera var tåg reser och när de ankommer/avgår."
+
+msgid "💡 What is a Route?"
+msgstr "💡 Vad är en Sträcka?"
+
+msgid "A route defines which stations trains travel between and in what order. When you create a trip (service), you select a route, and all stations on that route become available for configuring stop times."
+msgstr "En sträcka definierar vilka stationer tåg reser mellan och i vilken ordning. När du skapar en tur (service) väljer du en sträcka, och alla stationer på den sträckan blir tillgängliga för att konfigurera hållplatstider."
+
+msgid "How to use:"
+msgstr "Hur man använder:"
+
+msgid "Give your route a descriptive name, e.g., \"Hultsfred → Västervik\" or \"Main Line\""
+msgstr "Ge din sträcka ett beskrivande namn, t.ex. \"Hultsfred → Västervik\" eller \"Huvudlinje\""
+
+msgid "Add stations in the order they appear on the route using the dropdown below"
+msgstr "Lägg till stationer i den ordning de förekommer på sträckan med hjälp av rullgardinsmenyn nedan"
+
+msgid "Use ↑ ↓ buttons to reorder stations if needed"
+msgstr "Använd ↑ ↓ knappar för att ordna om stationer om det behövs"
+
+msgid "When creating a trip in a Timetable, select this route to automatically get all its stations"
+msgstr "När du skapar en tur i en Tidtabell, välj denna sträcka för att automatiskt få alla dess stationer"
+
+msgid "Move up"
+msgstr "Flytta upp"
+
+msgid "Move down"
+msgstr "Flytta ner"
+
+msgid "💡 What is a Timetable?"
+msgstr "💡 Vad är en Tidtabell?"
+
+msgid "A timetable defines which days (dates) trains run. Add one or more dates (YYYY-MM-DD) when this timetable applies. Then add trips (services) to this timetable - those trips will run on all the dates you specify here."
+msgstr "En tidtabell definierar vilka dagar (datum) tåg kör. Lägg till ett eller flera datum (ÅÅÅÅ-MM-DD) när denna tidtabell gäller. Lägg sedan till turer (services) till denna tidtabell - dessa turer kommer att köra på alla datum du anger här."
+
+msgid "Dates"
+msgstr "Datum"
+
+msgid "Add dates in YYYY-MM-DD format. Example: 2025-06-15. You can add multiple dates (e.g., all weekends in a month)."
+msgstr "Lägg till datum i ÅÅÅÅ-MM-DD format. Exempel: 2025-06-15. Du kan lägga till flera datum (t.ex. alla helger i en månad)."
+
+msgid "Add Date"
+msgstr "Lägg till datum"
+
+msgid "Trips (Services)"
+msgstr "Turer (Services)"
+
+msgid "Manage trips (services) for this timetable. Add, edit, or remove trips directly here."
+msgstr "Hantera turer (services) för denna tidtabell. Lägg till, redigera eller ta bort turer direkt här."
+
+msgid "Train Type"
+msgstr "Tågtyp"
+
+msgid "Add Trip"
+msgstr "Lägg till tur"
+
+msgid "💡 What is a Trip (Service)?"
+msgstr "💡 Vad är en Tur (Service)?"
+
+msgid "A trip represents one train journey. It belongs to a Timetable (which defines which days it runs) and uses a Route (which defines which stations are available). After selecting a Route, you can configure Stop Times to set arrival/departure times for each station."
+msgstr "En tur representerar en tågresa. Den tillhör en Tidtabell (som definierar vilka dagar den kör) och använder en Sträcka (som definierar vilka stationer som är tillgängliga). Efter att ha valt en Sträcka kan du konfigurera Hållplatstider för att sätta ankomst/avgångstider för varje station."
+
+msgid "Timetable"
+msgstr "Tidtabell"
+
+msgid "This trip belongs to the timetable you are editing. To change the timetable, go back to the timetable and remove this trip, then add it to another timetable."
+msgstr "Denna tur tillhör tidtabellen du redigerar. För att ändra tidtabellen, gå tillbaka till tidtabellen och ta bort denna tur, lägg sedan till den i en annan tidtabell."
+
+msgid "⚠️ Required: Select the timetable this trip belongs to. The timetable defines which days (dates) the trip runs."
+msgstr "⚠️ Obligatoriskt: Välj tidtabellen som denna tur tillhör. Tidtabellen definierar vilka dagar (datum) turen kör."
+
+msgid "— Select Timetable —"
+msgstr "— Välj tidtabell —"
+
+msgid "⚠️ Required: Select the route this trip runs on. After selecting a route and saving, you can configure Stop Times below. Example: \"Hultsfred - Västervik\" or \"Main Line\"."
+msgstr "⚠️ Obligatoriskt: Välj sträckan som denna tur kör på. Efter att ha valt en sträcka och sparat kan du konfigurera Hållplatstider nedan. Exempel: \"Hultsfred - Västervik\" eller \"Huvudlinje\"."
+
+msgid "more"
+msgstr "mer"
+
+msgid "💡 How to configure Stop Times:"
+msgstr "💡 Hur man konfigurerar Hållplatstider:"
+
+msgid "Check \"Stops here\" for each station where the train stops"
+msgstr "Kryssa i \"Stannar här\" för varje station där tåget stannar"
+
+msgid "Fill in Arrival and/or Departure times (HH:MM format, e.g., 09:15)"
+msgstr "Fyll i Ankomst och/eller Avgångstider (HH:MM format, t.ex. 09:15)"
+
+msgid "Times can be left empty if the train stops but the time is not fixed"
+msgstr "Tider kan lämnas tomma om tåget stannar men tiden inte är fast"
+
+msgid "Select Pickup/Dropoff if passengers can board/alight"
+msgstr "Välj Påstigning/Avstigning om passagerare kan gå på/av"
+
+msgid "Click \"Save Stop Times\" at the bottom to save all changes"
+msgstr "Klicka \"Spara hållplatstider\" längst ner för att spara alla ändringar"
+
+msgid "Stops here"
+msgstr "Stannar här"
+
+msgid "Leave empty if train stops but time is not fixed"
+msgstr "Lämna tomt om tåget stannar men tiden inte är fast"
+
+msgid "Save Stop Times"
+msgstr "Spara hållplatstider"
+
+msgid "No route selected. Select a Route in Service Details above to configure stop times."
+msgstr "Ingen sträcka vald. Välj en Sträcka i Turdetaljer ovan för att konfigurera hållplatstider."
+
+msgid "Please select a Route in Service Details above first. Then you can configure which stations this service stops at."
+msgstr "Vänligen välj en Sträcka i Turdetaljer ovan först. Sedan kan du konfigurera vilka stationer denna service stannar vid."
+
+msgid "Timetable Overview"
+msgstr "Tidtabellsöversikt"
+
+msgid "Preview of how the timetable will look when displayed. Services are grouped by route and direction."
+msgstr "Förhandsgranskning av hur tidtabellen kommer att se ut när den visas. Tjänster är grupperade efter sträcka och riktning."
+
+msgid "Example route name: \"Hultsfred - Västervik\" or \"Main Line\"."
+msgstr "Exempel på sträcknamn: \"Hultsfred - Västervik\" eller \"Huvudlinje\"."
+
+msgid "Edit"
+msgstr "Redigera"
+
+msgid "Routes"
+msgstr "Sträckor"
+
