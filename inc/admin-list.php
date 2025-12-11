@@ -111,6 +111,7 @@ function MRT_render_stations_overview_inline() {
                     <th><?php echo esc_html__('Station', 'museum-railway-timetable'); ?></th>
                     <th><?php echo esc_html__('Type', 'museum-railway-timetable'); ?></th>
                     <th><?php echo esc_html__('Display order', 'museum-railway-timetable'); ?></th>
+                    <th><?php echo esc_html__('Routes', 'museum-railway-timetable'); ?></th>
                     <th><?php echo esc_html__('Services (count)', 'museum-railway-timetable'); ?></th>
                     <th><?php echo esc_html__('Next running day', 'museum-railway-timetable'); ?></th>
                     <th><?php echo esc_html__('Actions', 'museum-railway-timetable'); ?></th>
@@ -118,12 +119,27 @@ function MRT_render_stations_overview_inline() {
             </thead>
             <tbody>
             <?php if (!$station_ids): ?>
-                <tr><td colspan="6"><?php echo esc_html__('No stations found.', 'museum-railway-timetable'); ?></td></tr>
+                <tr><td colspan="7"><?php echo esc_html__('No stations found.', 'museum-railway-timetable'); ?></td></tr>
             <?php else: ?>
                 <?php foreach ($station_ids as $sid):
                     $title = get_the_title($sid);
                     $type  = get_post_meta($sid, 'mrt_station_type', true);
                     $order = intval(get_post_meta($sid, 'mrt_display_order', true));
+                    
+                    // Get routes that use this station
+                    $all_routes = get_posts([
+                        'post_type' => 'mrt_route',
+                        'posts_per_page' => -1,
+                        'fields' => 'all',
+                    ]);
+                    $routes_using_station = [];
+                    foreach ($all_routes as $route) {
+                        $route_stations = get_post_meta($route->ID, 'mrt_route_stations', true);
+                        if (is_array($route_stations) && in_array($sid, $route_stations)) {
+                            $routes_using_station[] = $route;
+                        }
+                    }
+                    
                     $services = MRT_get_services_for_station($sid);
                     $count = count($services);
                     $next = MRT_next_running_day_for_station($sid, $train_type);
@@ -133,6 +149,19 @@ function MRT_render_stations_overview_inline() {
                     <td><?php echo esc_html($title ?: ('#'.$sid)); ?></td>
                     <td><?php echo esc_html($type ?: ''); ?></td>
                     <td><?php echo esc_html($order); ?></td>
+                    <td>
+                        <?php if (!empty($routes_using_station)): ?>
+                            <?php 
+                            $route_names = [];
+                            foreach ($routes_using_station as $route) {
+                                $route_names[] = '<a href="' . esc_url(get_edit_post_link($route->ID)) . '">' . esc_html($route->post_title) . '</a>';
+                            }
+                            echo implode(', ', $route_names);
+                            ?>
+                        <?php else: ?>
+                            <span class="description"><?php echo esc_html__('None', 'museum-railway-timetable'); ?></span>
+                        <?php endif; ?>
+                    </td>
                     <td><?php echo esc_html($count); ?></td>
                     <td>
                         <?php

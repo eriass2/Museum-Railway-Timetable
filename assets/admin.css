@@ -424,6 +424,13 @@
     color: inherit;
 }
 
+.mrt-stat-subtitle {
+    display: block;
+    font-size: 0.85em;
+    margin-top: 0.25rem;
+    opacity: 0.8;
+}
+
 /* Quick Actions Grid */
 .mrt-quick-actions {
     display: grid;

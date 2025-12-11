@@ -219,7 +219,14 @@ function MRT_render_route_meta_box($post) {
     ?>
     <div class="mrt-info-box">
         <p><strong><?php esc_html_e('💡 What is a Route?', 'museum-railway-timetable'); ?></strong></p>
-        <p><?php esc_html_e('A route defines which stations trains travel between and in what order. When you create a trip (service), you select a route, and all stations on that route become available for configuring stop times. Use ↑ ↓ buttons to easily reorder stations.', 'museum-railway-timetable'); ?></p>
+        <p><?php esc_html_e('A route defines which stations trains travel between and in what order. When you create a trip (service), you select a route, and all stations on that route become available for configuring stop times.', 'museum-railway-timetable'); ?></p>
+        <p style="margin-top: 0.5rem;"><strong><?php esc_html_e('How to use:', 'museum-railway-timetable'); ?></strong></p>
+        <ol style="margin: 0.5rem 0 0 1.5rem; line-height: 1.6;">
+            <li><?php esc_html_e('Give your route a descriptive name, e.g., "Hultsfred → Västervik" or "Main Line"', 'museum-railway-timetable'); ?></li>
+            <li><?php esc_html_e('Add stations in the order they appear on the route using the dropdown below', 'museum-railway-timetable'); ?></li>
+            <li><?php esc_html_e('Use ↑ ↓ buttons to reorder stations if needed', 'museum-railway-timetable'); ?></li>
+            <li><?php esc_html_e('When creating a trip in a Timetable, select this route to automatically get all its stations', 'museum-railway-timetable'); ?></li>
+        </ol>
     </div>
     <div id="mrt-route-stations-container">
         <table class="widefat striped" id="mrt-route-stations-table">
@@ -265,9 +272,6 @@ function MRT_render_route_meta_box($post) {
         </table>
         <input type="hidden" name="mrt_route_stations" id="mrt_route_stations" value="<?php echo esc_attr(implode(',', $route_stations)); ?>" />
     </div>
-    <p class="description mrt-description-mt">
-        <?php esc_html_e('Example route name: "Hultsfred - Västervik" or "Main Line". Add stations in the order they appear on the route.', 'museum-railway-timetable'); ?>
-    </p>
     <?php
 }
 
