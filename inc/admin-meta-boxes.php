@@ -383,44 +383,194 @@ function MRT_render_timetable_meta_box($post) {
         $dates = !empty($old_date) ? [$old_date] : [date('Y-m-d')];
     }
     if (empty($dates)) {
-        $dates = [date('Y-m-d')];
+        $dates = [];
     }
     
     wp_enqueue_script('jquery');
     ?>
     <div class="mrt-info-box">
         <p><strong><?php esc_html_e('💡 What is a Timetable?', 'museum-railway-timetable'); ?></strong></p>
-        <p><?php esc_html_e('A timetable defines which days (dates) trains run. Add one or more dates (YYYY-MM-DD) when this timetable applies. Then add trips (services) to this timetable - those trips will run on all the dates you specify here.', 'museum-railway-timetable'); ?></p>
+        <p><?php esc_html_e('A timetable defines which days (dates) trains run. You can add dates using patterns (e.g., all Wednesdays in June-September) or add specific dates. You can also remove individual dates from patterns.', 'museum-railway-timetable'); ?></p>
     </div>
-    <table class="form-table">
-        <tr>
-            <th><label for="mrt_timetable_dates"><?php esc_html_e('Dates', 'museum-railway-timetable'); ?></label></th>
-            <td>
-                <div id="mrt-timetable-dates-container">
-                    <?php foreach ($dates as $index => $date): ?>
-                        <div class="mrt-date-row">
-                            <input type="date" name="mrt_timetable_dates[]" value="<?php echo esc_attr($date); ?>" class="mrt-meta-field" required />
-                            <?php if ($index > 0): ?>
-                                <button type="button" class="button mrt-remove-date mrt-date-remove-button"><?php esc_html_e('Remove', 'museum-railway-timetable'); ?></button>
-                            <?php endif; ?>
-                        </div>
-                    <?php endforeach; ?>
+    
+    <!-- Pattern-based date selection -->
+    <div class="mrt-date-pattern-section" style="margin-bottom: 1.5rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px;">
+        <h3 style="margin-top: 0;"><?php esc_html_e('Add Dates from Pattern', 'museum-railway-timetable'); ?></h3>
+        <p class="description"><?php esc_html_e('Select a day of the week and a date range to automatically add all matching dates.', 'museum-railway-timetable'); ?></p>
+        <table class="form-table" style="margin-top: 0.5rem;">
+            <tr>
+                <th style="width: 150px;"><label for="mrt-pattern-weekday"><?php esc_html_e('Day of Week', 'museum-railway-timetable'); ?></label></th>
+                <td>
+                    <select id="mrt-pattern-weekday" class="mrt-meta-field">
+                        <option value=""><?php esc_html_e('— Select Day —', 'museum-railway-timetable'); ?></option>
+                        <option value="1"><?php esc_html_e('Monday', 'museum-railway-timetable'); ?></option>
+                        <option value="2"><?php esc_html_e('Tuesday', 'museum-railway-timetable'); ?></option>
+                        <option value="3"><?php esc_html_e('Wednesday', 'museum-railway-timetable'); ?></option>
+                        <option value="4"><?php esc_html_e('Thursday', 'museum-railway-timetable'); ?></option>
+                        <option value="5"><?php esc_html_e('Friday', 'museum-railway-timetable'); ?></option>
+                        <option value="6"><?php esc_html_e('Saturday', 'museum-railway-timetable'); ?></option>
+                        <option value="0"><?php esc_html_e('Sunday', 'museum-railway-timetable'); ?></option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <th><label for="mrt-pattern-start-date"><?php esc_html_e('From Date', 'museum-railway-timetable'); ?></label></th>
+                <td>
+                    <input type="date" id="mrt-pattern-start-date" class="mrt-meta-field" />
+                </td>
+            </tr>
+            <tr>
+                <th><label for="mrt-pattern-end-date"><?php esc_html_e('To Date', 'museum-railway-timetable'); ?></label></th>
+                <td>
+                    <input type="date" id="mrt-pattern-end-date" class="mrt-meta-field" />
+                </td>
+            </tr>
+        </table>
+        <button type="button" id="mrt-add-pattern-dates" class="button button-primary"><?php esc_html_e('Add Dates from Pattern', 'museum-railway-timetable'); ?></button>
+    </div>
+    
+    <!-- Single date addition -->
+    <div class="mrt-date-single-section" style="margin-bottom: 1.5rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px;">
+        <h3 style="margin-top: 0;"><?php esc_html_e('Add Single Date', 'museum-railway-timetable'); ?></h3>
+        <p class="description"><?php esc_html_e('Add a specific date manually.', 'museum-railway-timetable'); ?></p>
+        <p>
+            <input type="date" id="mrt-single-date" class="mrt-meta-field" style="margin-right: 0.5rem;" />
+            <button type="button" id="mrt-add-single-date" class="button"><?php esc_html_e('Add Date', 'museum-railway-timetable'); ?></button>
+        </p>
+    </div>
+    
+    <!-- Selected dates list -->
+    <div class="mrt-selected-dates-section">
+        <h3><?php esc_html_e('Selected Dates', 'museum-railway-timetable'); ?></h3>
+        <p class="description"><?php esc_html_e('All dates when this timetable applies. Click "Remove" to remove individual dates.', 'museum-railway-timetable'); ?></p>
+        <div id="mrt-timetable-dates-container" style="margin-top: 0.5rem;">
+            <?php foreach ($dates as $index => $date): ?>
+                <div class="mrt-date-row" data-date="<?php echo esc_attr($date); ?>">
+                    <input type="hidden" name="mrt_timetable_dates[]" value="<?php echo esc_attr($date); ?>" />
+                    <span class="mrt-date-display"><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($date))); ?></span>
+                    <span class="mrt-date-iso" style="color: #666; font-size: 0.9em; margin-left: 0.5rem;">(<?php echo esc_html($date); ?>)</span>
+                    <button type="button" class="button button-small mrt-remove-date mrt-date-remove-button" style="margin-left: 1rem;"><?php esc_html_e('Remove', 'museum-railway-timetable'); ?></button>
                 </div>
-                <button type="button" id="mrt-add-date" class="button mrt-add-date-button"><?php esc_html_e('Add Date', 'museum-railway-timetable'); ?></button>
-                <p class="description"><?php esc_html_e('Add dates in YYYY-MM-DD format. Example: 2025-06-15. You can add multiple dates (e.g., all weekends in a month).', 'museum-railway-timetable'); ?></p>
-            </td>
-        </tr>
-    </table>
+            <?php endforeach; ?>
+        </div>
+        <?php if (empty($dates)): ?>
+            <p class="description" id="mrt-no-dates-message"><?php esc_html_e('No dates selected. Add dates using patterns or single date selection above.', 'museum-railway-timetable'); ?></p>
+        <?php endif; ?>
+    </div>
+    
     <script>
     jQuery(document).ready(function($) {
-        $('#mrt-add-date').on('click', function() {
-            var newRow = $('<div class="mrt-date-row"><input type="date" name="mrt_timetable_dates[]" class="mrt-meta-field" required /> <button type="button" class="button mrt-remove-date mrt-date-remove-button"><?php echo esc_js(__('Remove', 'museum-railway-timetable')); ?></button></div>');
-            $('#mrt-timetable-dates-container').append(newRow);
+        var selectedDates = new Set(<?php echo json_encode($dates); ?>);
+        
+        function updateDatesList() {
+            var $container = $('#mrt-timetable-dates-container');
+            $container.empty();
+            
+            if (selectedDates.size === 0) {
+                $container.after('<p class="description" id="mrt-no-dates-message"><?php echo esc_js(__('No dates selected. Add dates using patterns or single date selection above.', 'museum-railway-timetable')); ?></p>');
+                return;
+            }
+            
+            $('#mrt-no-dates-message').remove();
+            
+            var sortedDates = Array.from(selectedDates).sort();
+            sortedDates.forEach(function(date) {
+                var dateObj = new Date(date + 'T00:00:00');
+                var formattedDate = dateObj.toLocaleDateString('<?php echo esc_js(get_locale()); ?>', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    weekday: 'long'
+                });
+                
+                var $row = $('<div class="mrt-date-row" data-date="' + date + '">' +
+                    '<input type="hidden" name="mrt_timetable_dates[]" value="' + date + '" />' +
+                    '<span class="mrt-date-display">' + formattedDate + '</span> ' +
+                    '<span class="mrt-date-iso" style="color: #666; font-size: 0.9em; margin-left: 0.5rem;">(' + date + ')</span> ' +
+                    '<button type="button" class="button button-small mrt-remove-date mrt-date-remove-button" style="margin-left: 1rem;"><?php echo esc_js(__('Remove', 'museum-railway-timetable')); ?></button>' +
+                    '</div>');
+                $container.append($row);
+            });
+        }
+        
+        // Add dates from pattern
+        $('#mrt-add-pattern-dates').on('click', function() {
+            var weekday = parseInt($('#mrt-pattern-weekday').val());
+            var startDate = $('#mrt-pattern-start-date').val();
+            var endDate = $('#mrt-pattern-end-date').val();
+            
+            if (!weekday || weekday === '' || !startDate || !endDate) {
+                alert('<?php echo esc_js(__('Please select a day of week, start date, and end date.', 'museum-railway-timetable')); ?>');
+                return;
+            }
+            
+            var start = new Date(startDate + 'T00:00:00');
+            var end = new Date(endDate + 'T00:00:00');
+            
+            if (start > end) {
+                alert('<?php echo esc_js(__('Start date must be before or equal to end date.', 'museum-railway-timetable')); ?>');
+                return;
+            }
+            
+            var current = new Date(start);
+            var added = 0;
+            
+            while (current <= end) {
+                if (current.getDay() === weekday) {
+                    var dateStr = current.toISOString().split('T')[0];
+                    selectedDates.add(dateStr);
+                    added++;
+                }
+                current.setDate(current.getDate() + 1);
+            }
+            
+            updateDatesList();
+            
+            if (added > 0) {
+                var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p><?php echo esc_js(__('Added', 'museum-railway-timetable')); ?> ' + added + ' <?php echo esc_js(__('dates from pattern.', 'museum-railway-timetable')); ?></p></div>');
+                $('#mrt-timetable-dates-container').before($successMsg);
+                setTimeout(function() {
+                    $successMsg.fadeOut(300, function() { $(this).remove(); });
+                }, 3000);
+            } else {
+                alert('<?php echo esc_js(__('No dates found matching the pattern.', 'museum-railway-timetable')); ?>');
+            }
         });
         
-        $(document).on('click', '.mrt-remove-date', function() {
-            $(this).closest('.mrt-date-row').remove();
+        // Add single date
+        $('#mrt-add-single-date').on('click', function() {
+            var date = $('#mrt-single-date').val();
+            if (!date) {
+                alert('<?php echo esc_js(__('Please select a date.', 'museum-railway-timetable')); ?>');
+                return;
+            }
+            
+            if (selectedDates.has(date)) {
+                alert('<?php echo esc_js(__('This date is already added.', 'museum-railway-timetable')); ?>');
+                return;
+            }
+            
+            selectedDates.add(date);
+            updateDatesList();
+            $('#mrt-single-date').val('');
+            
+            var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p><?php echo esc_js(__('Date added successfully.', 'museum-railway-timetable')); ?></p></div>');
+            $('#mrt-timetable-dates-container').before($successMsg);
+            setTimeout(function() {
+                $successMsg.fadeOut(300, function() { $(this).remove(); });
+            }, 3000);
         });
+        
+        // Remove date
+        $(document).on('click', '.mrt-remove-date', function() {
+            var $row = $(this).closest('.mrt-date-row');
+            var date = $row.data('date');
+            selectedDates.delete(date);
+            updateDatesList();
+        });
+        
+        // Initialize
+        updateDatesList();
     });
     </script>
     <?php

@@ -875,6 +875,342 @@ msgstr "Tur tillagd."
 msgid "Trip removed successfully."
 msgstr "Tur borttagen."
 
+msgid "Add New"
+msgstr "Lägg till ny"
+
+msgid "Add New Station"
+msgstr "Lägg till ny station"
+
+msgid "Edit Station"
+msgstr "Redigera station"
+
+msgid "New Station"
+msgstr "Ny station"
+
+msgid "View Station"
+msgstr "Visa station"
+
+msgid "View Stations"
+msgstr "Visa stationer"
+
+msgid "All Stations"
+msgstr "Alla stationer"
+
+msgid "Search Stations"
+msgstr "Sök stationer"
+
+msgid "No stations found"
+msgstr "Inga stationer hittades"
+
+msgid "No stations found in Trash"
+msgstr "Inga stationer hittades i papperskorgen"
+
+msgid "Parent Station:"
+msgstr "Överordnad station:"
+
+msgid "Station Archives"
+msgstr "Stationarkiv"
+
+msgid "Station Attributes"
+msgstr "Stationattribut"
+
+msgid "Insert into station"
+msgstr "Infoga i station"
+
+msgid "Uploaded to this station"
+msgstr "Uppladdad till denna station"
+
+msgid "Filter stations list"
+msgstr "Filtrera stationslista"
+
+msgid "Stations list navigation"
+msgstr "Stationslistnavigering"
+
+msgid "Stations list"
+msgstr "Stationslista"
+
+msgid "Add New Route"
+msgstr "Lägg till ny sträcka"
+
+msgid "Edit Route"
+msgstr "Redigera sträcka"
+
+msgid "New Route"
+msgstr "Ny sträcka"
+
+msgid "View Route"
+msgstr "Visa sträcka"
+
+msgid "View Routes"
+msgstr "Visa sträckor"
+
+msgid "All Routes"
+msgstr "Alla sträckor"
+
+msgid "Search Routes"
+msgstr "Sök sträckor"
+
+msgid "No routes found"
+msgstr "Inga sträckor hittades"
+
+msgid "No routes found in Trash"
+msgstr "Inga sträckor hittades i papperskorgen"
+
+msgid "Parent Route:"
+msgstr "Överordnad sträcka:"
+
+msgid "Route Archives"
+msgstr "Sträckarkiv"
+
+msgid "Route Attributes"
+msgstr "Sträckattribut"
+
+msgid "Insert into route"
+msgstr "Infoga i sträcka"
+
+msgid "Uploaded to this route"
+msgstr "Uppladdad till denna sträcka"
+
+msgid "Filter routes list"
+msgstr "Filtrera sträcklista"
+
+msgid "Routes list navigation"
+msgstr "Sträcklistnavigering"
+
+msgid "Routes list"
+msgstr "Sträcklista"
+
+msgid "Add New Timetable"
+msgstr "Lägg till ny tidtabell"
+
+msgid "Edit Timetable"
+msgstr "Redigera tidtabell"
+
+msgid "New Timetable"
+msgstr "Ny tidtabell"
+
+msgid "View Timetable"
+msgstr "Visa tidtabell"
+
+msgid "View Timetables"
+msgstr "Visa tidtabeller"
+
+msgid "All Timetables"
+msgstr "Alla tidtabeller"
+
+msgid "Search Timetables"
+msgstr "Sök tidtabeller"
+
+msgid "No timetables found"
+msgstr "Inga tidtabeller hittades"
+
+msgid "No timetables found in Trash"
+msgstr "Inga tidtabeller hittades i papperskorgen"
+
+msgid "Parent Timetable:"
+msgstr "Överordnad tidtabell:"
+
+msgid "Timetable Archives"
+msgstr "Tidtabellarkiv"
+
+msgid "Timetable Attributes"
+msgstr "Tidtabellattribut"
+
+msgid "Insert into timetable"
+msgstr "Infoga i tidtabell"
+
+msgid "Uploaded to this timetable"
+msgstr "Uppladdad till denna tidtabell"
+
+msgid "Filter timetables list"
+msgstr "Filtrera tidtabellista"
+
+msgid "Timetables list navigation"
+msgstr "Tidtabellistnavigering"
+
+msgid "Timetables list"
+msgstr "Tidtabellista"
+
+msgid "Add New Trip"
+msgstr "Lägg till ny tur"
+
+msgid "Edit Trip"
+msgstr "Redigera tur"
+
+msgid "New Trip"
+msgstr "Ny tur"
+
+msgid "View Trip"
+msgstr "Visa tur"
+
+msgid "View Trips"
+msgstr "Visa turer"
+
+msgid "All Trips"
+msgstr "Alla turer"
+
+msgid "Search Trips"
+msgstr "Sök turer"
+
+msgid "No trips found"
+msgstr "Inga turer hittades"
+
+msgid "No trips found in Trash"
+msgstr "Inga turer hittades i papperskorgen"
+
+msgid "Parent Trip:"
+msgstr "Överordnad tur:"
+
+msgid "Trip Archives"
+msgstr "Turaarkiv"
+
+msgid "Trip Attributes"
+msgstr "Turaattribut"
+
+msgid "Insert into trip"
+msgstr "Infoga i tur"
+
+msgid "Uploaded to this trip"
+msgstr "Uppladdad till denna tur"
+
+msgid "Filter trips list"
+msgstr "Filtrera turlista"
+
+msgid "Trips list navigation"
+msgstr "Turlistnavigering"
+
+msgid "Trips list"
+msgstr "Turlista"
+
+msgid "Add New Train Type"
+msgstr "Lägg till ny tågtyp"
+
+msgid "Edit Train Type"
+msgstr "Redigera tågtyp"
+
+msgid "Update Train Type"
+msgstr "Uppdatera tågtyp"
+
+msgid "New Train Type Name"
+msgstr "Nytt tågtypnamn"
+
+msgid "Search Train Types"
+msgstr "Sök tågtyper"
+
+msgid "Popular Train Types"
+msgstr "Populära tågtyper"
+
+msgid "All Train Types"
+msgstr "Alla tågtyper"
+
+msgid "Separate train types with commas"
+msgstr "Separera tågtyper med kommatecken"
+
+msgid "Add or remove train types"
+msgstr "Lägg till eller ta bort tågtyper"
+
+msgid "Choose from the most used train types"
+msgstr "Välj från de mest använda tågtyperna"
+
+msgid "No train types found"
+msgstr "Inga tågtyper hittades"
+
+msgid "No train types"
+msgstr "Inga tågtyper"
+
+msgid "Train types list navigation"
+msgstr "Tågtyplistnavigering"
+
+msgid "Train types list"
+msgstr "Tågtyplista"
+
+msgid "← Back to Train Types"
+msgstr "← Tillbaka till tågtyper"
+
+msgid "A timetable defines which days (dates) trains run. You can add dates using patterns (e.g., all Wednesdays in June-September) or add specific dates. You can also remove individual dates from patterns."
+msgstr "En tidtabell definierar vilka dagar (datum) tågen kör. Du kan lägga till datum med mönster (t.ex. alla onsdagar i juni-september) eller lägga till specifika datum. Du kan också ta bort enskilda datum från mönster."
+
+msgid "Add Dates from Pattern"
+msgstr "Lägg till datum från mönster"
+
+msgid "Select a day of the week and a date range to automatically add all matching dates."
+msgstr "Välj en veckodag och ett datumintervall för att automatiskt lägga till alla matchande datum."
+
+msgid "Day of Week"
+msgstr "Veckodag"
+
+msgid "— Select Day —"
+msgstr "— Välj dag —"
+
+msgid "Monday"
+msgstr "Måndag"
+
+msgid "Tuesday"
+msgstr "Tisdag"
+
+msgid "Wednesday"
+msgstr "Onsdag"
+
+msgid "Thursday"
+msgstr "Torsdag"
+
+msgid "Friday"
+msgstr "Fredag"
+
+msgid "Saturday"
+msgstr "Lördag"
+
+msgid "Sunday"
+msgstr "Söndag"
+
+msgid "From Date"
+msgstr "Från datum"
+
+msgid "To Date"
+msgstr "Till datum"
+
+msgid "Add Dates from Pattern"
+msgstr "Lägg till datum från mönster"
+
+msgid "Add Single Date"
+msgstr "Lägg till enskilt datum"
+
+msgid "Add a specific date manually."
+msgstr "Lägg till ett specifikt datum manuellt."
+
+msgid "Selected Dates"
+msgstr "Valda datum"
+
+msgid "All dates when this timetable applies. Click \"Remove\" to remove individual dates."
+msgstr "Alla datum när denna tidtabell gäller. Klicka på \"Ta bort\" för att ta bort enskilda datum."
+
+msgid "No dates selected. Add dates using patterns or single date selection above."
+msgstr "Inga datum valda. Lägg till datum med mönster eller enskilt datumval ovan."
+
+msgid "Please select a day of week, start date, and end date."
+msgstr "Vänligen välj en veckodag, startdatum och slutdatum."
+
+msgid "Start date must be before or equal to end date."
+msgstr "Startdatum måste vara före eller lika med slutdatum."
+
+msgid "Added"
+msgstr "Lagt till"
+
+msgid "dates from pattern."
+msgstr "datum från mönster."
+
+msgid "No dates found matching the pattern."
+msgstr "Inga datum hittades som matchar mönstret."
+
+msgid "Please select a date."
+msgstr "Vänligen välj ett datum."
+
+msgid "This date is already added."
+msgstr "Detta datum är redan tillagt."
+
+msgid "Date added successfully."
+msgstr "Datum tillagt."
+
 msgid "Routes"
 msgstr "Sträckor"
 

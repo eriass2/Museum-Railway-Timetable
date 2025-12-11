@@ -572,15 +572,51 @@
 
 /* Form Elements */
 .mrt-date-row {
-    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.mrt-date-display {
+    font-weight: 500;
+    flex: 1;
+}
+
+.mrt-date-iso {
+    color: #666;
+    font-size: 0.9em;
+    margin-left: 0.5rem;
 }
 
 .mrt-date-remove-button {
-    margin-left: 8px;
+    margin-left: 1rem;
 }
 
 .mrt-add-date-button {
     margin-top: 8px;
+}
+
+.mrt-date-pattern-section,
+.mrt-date-single-section {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.mrt-date-pattern-section h3,
+.mrt-date-single-section h3 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+}
+
+.mrt-selected-dates-section {
+    margin-top: 1.5rem;
 }
 
 .mrt-filter-form {
