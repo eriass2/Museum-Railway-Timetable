@@ -977,7 +977,62 @@ function MRT_render_service_meta_box($post) {
                         <option value="<?php echo esc_attr($term->term_id); ?>" <?php selected(in_array($term->term_id, $train_types)); ?>><?php echo esc_html($term->name); ?></option>
                     <?php endforeach; ?>
                 </select>
-                <p class="description"><?php esc_html_e('Select the train type for this service. Example: "Steam", "Diesel", "Electric".', 'museum-railway-timetable'); ?></p>
+                <p class="description"><?php esc_html_e('Select the default train type for this service. You can override this for specific dates below. Example: "Steam", "Diesel", "Electric".', 'museum-railway-timetable'); ?></p>
+            </td>
+        </tr>
+        <?php
+        // Get date-specific train types
+        $train_types_by_date = get_post_meta($post->ID, 'mrt_service_train_types_by_date', true);
+        if (!is_array($train_types_by_date)) {
+            $train_types_by_date = [];
+        }
+        
+        // Get timetable dates if timetable is set
+        $timetable_dates = [];
+        if ($timetable_id) {
+            $timetable_dates_meta = get_post_meta($timetable_id, 'mrt_timetable_dates', true);
+            if (is_array($timetable_dates_meta)) {
+                $timetable_dates = $timetable_dates_meta;
+            } else {
+                // Try old single date field
+                $old_date = get_post_meta($timetable_id, 'mrt_timetable_date', true);
+                if (!empty($old_date)) {
+                    $timetable_dates = [$old_date];
+                }
+            }
+        }
+        sort($timetable_dates);
+        ?>
+        <tr>
+            <th><label><?php esc_html_e('Date-Specific Train Types', 'museum-railway-timetable'); ?></label></th>
+            <td>
+                <p class="description"><?php esc_html_e('Override the default train type for specific dates. Leave empty to use the default train type.', 'museum-railway-timetable'); ?></p>
+                <?php if (empty($timetable_dates)): ?>
+                    <p class="description" style="color: #d63638;">
+                        <?php esc_html_e('⚠️ Please select a timetable first to see available dates.', 'museum-railway-timetable'); ?>
+                    </p>
+                <?php else: ?>
+                    <div id="mrt-train-types-by-date-container" style="margin-top: 1rem;">
+                        <?php foreach ($timetable_dates as $date): ?>
+                            <?php
+                            $date_formatted = date_i18n(get_option('date_format'), strtotime($date));
+                            $train_type_id = isset($train_types_by_date[$date]) ? intval($train_types_by_date[$date]) : 0;
+                            ?>
+                            <div class="mrt-train-type-date-row" style="margin-bottom: 0.5rem; padding: 0.5rem; background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px;">
+                                <label style="display: inline-block; min-width: 150px; font-weight: 600;">
+                                    <?php echo esc_html($date_formatted); ?>
+                                    <span style="color: #666; font-weight: normal; font-size: 0.9em;">(<?php echo esc_html($date); ?>)</span>
+                                </label>
+                                <select name="mrt_train_types_by_date[<?php echo esc_attr($date); ?>]" class="mrt-meta-field" style="margin-left: 0.5rem; min-width: 200px;">
+                                    <option value=""><?php esc_html_e('— Use Default —', 'museum-railway-timetable'); ?></option>
+                                    <?php foreach ($all_train_types as $term): ?>
+                                        <option value="<?php echo esc_attr($term->term_id); ?>" <?php selected($train_type_id, $term->term_id); ?>><?php echo esc_html($term->name); ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </td>
         </tr>
         <tr>
@@ -1044,6 +1099,32 @@ add_action('save_post_mrt_service', function($post_id) {
         } else {
             wp_set_object_terms($post_id, [], 'mrt_train_type');
         }
+    }
+    
+    // Save date-specific train types
+    if (isset($_POST['mrt_train_types_by_date']) && is_array($_POST['mrt_train_types_by_date'])) {
+        $train_types_by_date = [];
+        foreach ($_POST['mrt_train_types_by_date'] as $date => $train_type_id) {
+            $date = sanitize_text_field($date);
+            $train_type_id = intval($train_type_id);
+            
+            // Validate date format
+            if (MRT_validate_date($date) && $train_type_id > 0) {
+                // Verify train type exists
+                $term = get_term($train_type_id, 'mrt_train_type');
+                if ($term && !is_wp_error($term)) {
+                    $train_types_by_date[$date] = $train_type_id;
+                }
+            }
+        }
+        
+        if (!empty($train_types_by_date)) {
+            update_post_meta($post_id, 'mrt_service_train_types_by_date', $train_types_by_date);
+        } else {
+            delete_post_meta($post_id, 'mrt_service_train_types_by_date');
+        }
+    } else {
+        // If field is not set, keep existing values (don't delete them)
     }
     
     // Save direction field (restricted to 'dit' or 'från')

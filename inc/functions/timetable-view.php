@@ -12,9 +12,10 @@ if (!defined('ABSPATH')) { exit; }
  * Groups services by route and direction, shows train types
  *
  * @param int $timetable_id Timetable post ID
+ * @param string|null $dateYmd Optional date in YYYY-MM-DD format to show date-specific train types
  * @return string HTML output
  */
-function MRT_render_timetable_overview($timetable_id) {
+function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
     global $wpdb;
     
     if (!$timetable_id || $timetable_id <= 0) {
@@ -63,9 +64,13 @@ function MRT_render_timetable_overview($timetable_id) {
             $route_stations = [];
         }
         
-        // Get train types
-        $train_types = wp_get_post_terms($service->ID, 'mrt_train_type', ['fields' => 'all']);
-        $train_type = !empty($train_types) ? $train_types[0] : null;
+        // Get train type (use date-specific if date provided)
+        if ($dateYmd && function_exists('MRT_get_service_train_type_for_date')) {
+            $train_type = MRT_get_service_train_type_for_date($service->ID, $dateYmd);
+        } else {
+            $train_types = wp_get_post_terms($service->ID, 'mrt_train_type', ['fields' => 'all']);
+            $train_type = !empty($train_types) ? $train_types[0] : null;
+        }
         
         // Create group key: route_id + direction
         $group_key = $route_id . '_' . $direction;

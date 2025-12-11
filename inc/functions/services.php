@@ -8,6 +8,51 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
+ * Get train type for a service on a specific date
+ * Checks date-specific train types first, then falls back to default train type
+ *
+ * @param int $service_id Service post ID
+ * @param string $dateYmd Date in YYYY-MM-DD format (optional, defaults to today)
+ * @return WP_Term|null Train type term object or null if not found
+ */
+function MRT_get_service_train_type_for_date($service_id, $dateYmd = null) {
+    if (!$service_id) {
+        return null;
+    }
+    
+    // Use current date if not provided
+    if ($dateYmd === null) {
+        $datetime = MRT_get_current_datetime();
+        $dateYmd = $datetime['date'];
+    }
+    
+    // Validate date format
+    if (!MRT_validate_date($dateYmd)) {
+        return null;
+    }
+    
+    // Check for date-specific train type
+    $train_types_by_date = get_post_meta($service_id, 'mrt_service_train_types_by_date', true);
+    if (is_array($train_types_by_date) && isset($train_types_by_date[$dateYmd])) {
+        $train_type_id = intval($train_types_by_date[$dateYmd]);
+        if ($train_type_id > 0) {
+            $train_type = get_term($train_type_id, 'mrt_train_type');
+            if ($train_type && !is_wp_error($train_type)) {
+                return $train_type;
+            }
+        }
+    }
+    
+    // Fall back to default train type from taxonomy
+    $train_types = wp_get_post_terms($service_id, 'mrt_train_type', ['fields' => 'all']);
+    if (!empty($train_types) && !is_wp_error($train_types)) {
+        return $train_types[0];
+    }
+    
+    return null;
+}
+
+/**
  * Resolve which services run on a given date (using Timetables)
  *
  * @param string $dateYmd Date in YYYY-MM-DD format
