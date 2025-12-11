@@ -100,6 +100,33 @@ function MRT_render_station_meta_box($post) {
         <p><strong><?php esc_html_e('💡 What is a Station?', 'museum-railway-timetable'); ?></strong></p>
         <p><?php esc_html_e('A station is a physical location where trains can stop. Stations are used in Routes and Stop Times to define where trains travel and when they arrive/depart.', 'museum-railway-timetable'); ?></p>
     </div>
+    <?php
+    // Show related routes using this station
+    $all_routes = get_posts([
+        'post_type' => 'mrt_route',
+        'posts_per_page' => -1,
+        'fields' => 'all',
+    ]);
+    $routes_using_station = [];
+    foreach ($all_routes as $route) {
+        $route_stations = get_post_meta($route->ID, 'mrt_route_stations', true);
+        if (is_array($route_stations) && in_array($post->ID, $route_stations)) {
+            $routes_using_station[] = $route;
+        }
+    }
+    
+    if (!empty($routes_using_station)) {
+        echo '<div class="mrt-info-box" style="margin-bottom: 1rem;">';
+        echo '<p><strong>' . esc_html__('Used in Routes:', 'museum-railway-timetable') . '</strong></p>';
+        echo '<p class="description">' . esc_html__('This station is used in the following routes:', 'museum-railway-timetable') . '</p>';
+        echo '<ul style="margin: 0.5rem 0 0 1.5rem;">';
+        foreach ($routes_using_station as $route) {
+            echo '<li><a href="' . esc_url(get_edit_post_link($route->ID)) . '">' . esc_html($route->post_title) . '</a></li>';
+        }
+        echo '</ul>';
+        echo '</div>';
+    }
+    ?>
     <table class="form-table">
         <tr>
             <th><label for="mrt_station_type"><?php esc_html_e('Station Type', 'museum-railway-timetable'); ?></label></th>
@@ -272,6 +299,43 @@ function MRT_render_route_meta_box($post) {
         </table>
         <input type="hidden" name="mrt_route_stations" id="mrt_route_stations" value="<?php echo esc_attr(implode(',', $route_stations)); ?>" />
     </div>
+    
+    <?php
+    // Show related services using this route
+    $services_using_route = get_posts([
+        'post_type' => 'mrt_service',
+        'posts_per_page' => -1,
+        'meta_query' => [[
+            'key' => 'mrt_service_route_id',
+            'value' => $post->ID,
+            'compare' => '=',
+        ]],
+        'fields' => 'all',
+    ]);
+    
+    if (!empty($services_using_route)) {
+        echo '<div class="mrt-info-box" style="margin-top: 1rem;">';
+        echo '<p><strong>' . esc_html__('Related Trips:', 'museum-railway-timetable') . '</strong></p>';
+        echo '<p class="description">' . esc_html__('This route is used by the following trips:', 'museum-railway-timetable') . '</p>';
+        echo '<ul style="margin: 0.5rem 0 0 1.5rem;">';
+        foreach ($services_using_route as $service) {
+            $timetable_id = get_post_meta($service->ID, 'mrt_service_timetable_id', true);
+            $timetable_link = $timetable_id ? get_edit_post_link($timetable_id) : '';
+            $service_link = $timetable_link ? add_query_arg('timetable_id', $timetable_id, get_edit_post_link($service->ID)) : get_edit_post_link($service->ID);
+            echo '<li>';
+            echo '<a href="' . esc_url($service_link) . '">' . esc_html($service->post_title) . '</a>';
+            if ($timetable_link) {
+                $timetable = get_post($timetable_id);
+                if ($timetable) {
+                    echo ' <span class="description">(' . esc_html__('in', 'museum-railway-timetable') . ' <a href="' . esc_url($timetable_link) . '">' . esc_html($timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable_id) . '</a>)</span>';
+                }
+            }
+            echo '</li>';
+        }
+        echo '</ul>';
+        echo '</div>';
+    }
+    ?>
     <?php
 }
 
@@ -499,6 +563,7 @@ function MRT_render_timetable_services_box($post) {
                             <a href="<?php echo esc_url(add_query_arg('timetable_id', $post->ID, get_edit_post_link($service->ID))); ?>" class="button button-small">
                                 <?php esc_html_e('Edit', 'museum-railway-timetable'); ?>
                             </a>
+                            <input type="hidden" name="mrt_service_timetable_id" value="<?php echo esc_attr($post->ID); ?>" />
                             <button type="button" class="button button-small mrt-delete-service-from-timetable" data-service-id="<?php echo esc_attr($service->ID); ?>">
                                 <?php esc_html_e('Remove', 'museum-railway-timetable'); ?>
                             </button>
@@ -604,6 +669,31 @@ function MRT_render_service_meta_box($post) {
     
     // Check if editing from timetable
     $editing_from_timetable = isset($_GET['timetable_id']) && intval($_GET['timetable_id']) === intval($timetable_id);
+    
+    // Hide title field if editing from timetable
+    if ($editing_from_timetable && $timetable_id) {
+        // Hide title field using admin_head hook
+        add_action('admin_head', function() {
+            global $post_type;
+            if ($post_type === 'mrt_service' && isset($_GET['timetable_id'])) {
+                echo '<style>#title, #title-prompt-text, #titlewrap { display: none !important; }</style>';
+            }
+        });
+        
+        // Add back to timetable button
+        add_action('edit_form_top', function() use ($timetable_id) {
+            global $post_type;
+            if ($post_type === 'mrt_service' && isset($_GET['timetable_id'])) {
+                $timetable_edit_link = get_edit_post_link($timetable_id);
+                if ($timetable_edit_link) {
+                    echo '<div class="mrt-info-box" style="margin-bottom: 1rem;">';
+                    echo '<a href="' . esc_url($timetable_edit_link) . '" class="button" style="margin-right: 0.5rem;">← ' . esc_html__('Back to Timetable', 'museum-railway-timetable') . '</a>';
+                    echo '<span class="description">' . esc_html__('This trip belongs to a timetable. The title is automatically generated from Route + Direction.', 'museum-railway-timetable') . '</span>';
+                    echo '</div>';
+                }
+            }
+        });
+    }
     
     ?>
     <div class="mrt-info-box">

@@ -60,6 +60,63 @@
             }
         });
         
+        // Validate time format (HH:MM) in real-time
+        function validateTimeFormat(timeString) {
+            if (!timeString || timeString.trim() === '') {
+                return true; // Empty is allowed
+            }
+            // Match HH:MM format (00:00 to 23:59)
+            var timePattern = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
+            return timePattern.test(timeString.trim());
+        }
+        
+        // Real-time validation for time inputs
+        $(document).on('input blur', '.mrt-arrival-time, .mrt-departure-time', function() {
+            var $input = $(this);
+            var timeValue = $input.val();
+            var $field = $input.closest('td');
+            
+            // Remove previous error styling
+            $input.removeClass('mrt-time-error');
+            $field.find('.mrt-time-error-message').remove();
+            
+            if (timeValue && timeValue.trim() !== '') {
+                if (!validateTimeFormat(timeValue)) {
+                    // Invalid format
+                    $input.addClass('mrt-time-error');
+                    var errorText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.invalidTimeFormat) ? 
+                        mrtAdmin.invalidTimeFormat : 
+                        'Invalid format. Use HH:MM (e.g., 09:15)';
+                    var $errorMsg = $('<span class="mrt-time-error-message" style="display: block; color: #d63638; font-size: 11px; margin-top: 2px;">' + 
+                        errorText + 
+                        '</span>');
+                    $field.append($errorMsg);
+                }
+            }
+        });
+        
+        // Also validate before saving
+        $(document).on('click', '#mrt-save-all-stoptimes', function(e) {
+            var hasErrors = false;
+            $('.mrt-arrival-time, .mrt-departure-time').each(function() {
+                var $input = $(this);
+                var timeValue = $input.val();
+                if (timeValue && timeValue.trim() !== '' && !validateTimeFormat(timeValue)) {
+                    hasErrors = true;
+                    $input.trigger('blur'); // Show error message
+                }
+            });
+            
+            if (hasErrors) {
+                e.preventDefault();
+                var errorMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.fixTimeFormats) ? 
+                    mrtAdmin.fixTimeFormats : 
+                    'Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).';
+                alert(errorMsg);
+                return false;
+            }
+        });
+        
         // Initialize "stops here" state on page load
         $('.mrt-stops-here').each(function() {
             var $row = $(this).closest('tr');
@@ -93,7 +150,8 @@
                 });
             });
             
-            $btn.prop('disabled', true).text('Saving...');
+            var originalText = $btn.data('original-text') || $btn.text();
+            $btn.prop('disabled', true).text('Saving...').addClass('mrt-saving');
             
             $.post(mrtAdmin.ajaxurl, {
                 action: 'mrt_save_all_stoptimes',
@@ -101,16 +159,29 @@
                 service_id: serviceId,
                 stops: stops
             }, function(response) {
+                var originalText = $btn.data('original-text') || 'Save Stop Times';
                 if (response.success) {
-                    alert(response.data.message || 'Stop times saved successfully.');
-                    location.reload();
+                    // Show success message
+                    var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>' + 
+                        (response.data.message || 'Stop times saved successfully.') + '</p></div>');
+                    $btn.closest('.mrt-stoptimes-box').before($successMsg);
+                    // Auto-dismiss after 3 seconds
+                    setTimeout(function() {
+                        $successMsg.fadeOut(300, function() { $(this).remove(); });
+                    }, 3000);
+                    $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');
                 } else {
-                    alert(response.data.message || 'Error saving stop times.');
-                    $btn.prop('disabled', false).text($btn.data('original-text') || 'Save Stop Times');
+                    // Show error message
+                    var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + 
+                        (response.data.message || 'Error saving stop times.') + '</p></div>');
+                    $btn.closest('.mrt-stoptimes-box').before($errorMsg);
+                    $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');
                 }
             }).fail(function() {
-                alert('Network error. Please try again.');
-                $btn.prop('disabled', false).text($btn.data('original-text') || 'Save Stop Times');
+                var originalText = $btn.data('original-text') || 'Save Stop Times';
+                var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>Network error. Please try again.</p></div>');
+                $btn.closest('.mrt-stoptimes-box').before($errorMsg);
+                $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');
             });
         });
     }
@@ -494,6 +565,13 @@
                         if (window.mrtDebug) {
                             console.log('MRT: Row added to table');
                         }
+                        
+                        // Show success message
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>Trip added successfully.</p></div>');
+                        $('#mrt-timetable-services-box').before($successMsg);
+                        setTimeout(function() {
+                            $successMsg.fadeOut(300, function() { $(this).remove(); });
+                        }, 3000);
 
                         // Clear form
                         $('#mrt-new-service-route').val('');
@@ -506,7 +584,10 @@
                         if (window.mrtDebug) {
                             console.error('MRT: Server returned error:', response.data);
                         }
-                        alert(response.data.message || 'Error adding trip.');
+                        var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + 
+                            (response.data.message || 'Error adding trip.') + '</p></div>');
+                        $('#mrt-timetable-services-box').before($errorMsg);
+                        $btn.prop('disabled', false).text($btn.data('original-text') || 'Add Trip');
                     }
                 },
                 error: function(xhr, status, error) {
@@ -518,10 +599,11 @@
                             statusCode: xhr.status
                         });
                     }
-                    alert('Error adding trip. Check console for details.');
+                    var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>Network error. Please try again.</p></div>');
+                    $('#mrt-timetable-services-box').before($errorMsg);
                 },
                 complete: function() {
-                    $btn.prop('disabled', false).text('Add Trip');
+                    $btn.prop('disabled', false).text($btn.data('original-text') || 'Add Trip');
                     if (window.mrtDebug) {
                         console.log('MRT: AJAX request completed');
                     }
@@ -557,8 +639,16 @@
                         $row.fadeOut(function() {
                             $(this).remove();
                         });
+                        // Show success message
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>Trip removed successfully.</p></div>');
+                        $('#mrt-timetable-services-box').before($successMsg);
+                        setTimeout(function() {
+                            $successMsg.fadeOut(300, function() { $(this).remove(); });
+                        }, 3000);
                     } else {
-                        alert(response.data.message || 'Error removing trip.');
+                        var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + 
+                            (response.data.message || 'Error removing trip.') + '</p></div>');
+                        $('#mrt-timetable-services-box').before($errorMsg);
                         $btn.prop('disabled', false);
                     }
                 },

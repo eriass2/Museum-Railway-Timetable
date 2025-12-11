@@ -71,6 +71,30 @@ add_action('init', function () {
 });
 
 /**
+ * Change "Title" column name to more descriptive names in list tables
+ */
+add_filter('manage_edit-mrt_station_columns', function($columns) {
+    if (isset($columns['title'])) {
+        $columns['title'] = __('Station Name', 'museum-railway-timetable');
+    }
+    return $columns;
+});
+
+add_filter('manage_edit-mrt_route_columns', function($columns) {
+    if (isset($columns['title'])) {
+        $columns['title'] = __('Route Name', 'museum-railway-timetable');
+    }
+    return $columns;
+});
+
+add_filter('manage_edit-mrt_service_columns', function($columns) {
+    if (isset($columns['title'])) {
+        $columns['title'] = __('Trip Name', 'museum-railway-timetable');
+    }
+    return $columns;
+});
+
+/**
  * Add ID column to Timetable list
  */
 add_filter('manage_edit-mrt_timetable_columns', function($columns) {
@@ -90,3 +114,60 @@ add_action('manage_mrt_timetable_posts_custom_column', function($column, $post_i
         echo '<code class="mrt-code-inline">' . esc_html($post_id) . '</code>';
     }
 }, 10, 2);
+
+/**
+ * Change title field placeholder and label for custom post types
+ */
+add_filter('enter_title_here', function($title, $post) {
+    if (!$post) {
+        global $post_type;
+        if ($post_type === 'mrt_station') {
+            return __('Enter station name', 'museum-railway-timetable');
+        } elseif ($post_type === 'mrt_route') {
+            return __('Enter route name', 'museum-railway-timetable');
+        } elseif ($post_type === 'mrt_service') {
+            return __('Trip name (auto-generated from Route + Direction)', 'museum-railway-timetable');
+        }
+        return $title;
+    }
+    
+    if ($post->post_type === 'mrt_station') {
+        return __('Enter station name', 'museum-railway-timetable');
+    } elseif ($post->post_type === 'mrt_route') {
+        return __('Enter route name', 'museum-railway-timetable');
+    } elseif ($post->post_type === 'mrt_service') {
+        return __('Trip name (auto-generated from Route + Direction)', 'museum-railway-timetable');
+    }
+    
+    return $title;
+}, 10, 2);
+
+/**
+ * Change title field label text for custom post types
+ */
+add_action('admin_head', function() {
+    $screen = get_current_screen();
+    if (!$screen) {
+        return;
+    }
+    
+    if ($screen->post_type === 'mrt_station') {
+        echo '<script>
+        jQuery(document).ready(function($) {
+            $("#titlewrap label").text("' . esc_js(__('Station Name', 'museum-railway-timetable')) . '");
+        });
+        </script>';
+    } elseif ($screen->post_type === 'mrt_route') {
+        echo '<script>
+        jQuery(document).ready(function($) {
+            $("#titlewrap label").text("' . esc_js(__('Route Name', 'museum-railway-timetable')) . '");
+        });
+        </script>';
+    } elseif ($screen->post_type === 'mrt_service') {
+        echo '<script>
+        jQuery(document).ready(function($) {
+            $("#titlewrap label").text("' . esc_js(__('Trip Name', 'museum-railway-timetable')) . '");
+        });
+        </script>';
+    }
+});

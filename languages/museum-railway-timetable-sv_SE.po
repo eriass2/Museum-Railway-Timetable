@@ -824,6 +824,57 @@ msgstr "Exempel på sträcknamn: \"Hultsfred - Västervik\" eller \"Huvudlinje\"
 msgid "Edit"
 msgstr "Redigera"
 
+msgid "Back to Timetable"
+msgstr "Tillbaka till tidtabell"
+
+msgid "This trip belongs to a timetable. The title is automatically generated from Route + Direction."
+msgstr "Denna tur tillhör en tidtabell. Titeln genereras automatiskt från Sträcka + Riktning."
+
+msgid "Invalid format. Use HH:MM (e.g., 09:15)"
+msgstr "Ogiltigt format. Använd HH:MM (t.ex. 09:15)"
+
+msgid "Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15)."
+msgstr "Vänligen åtgärda ogiltiga tidsformat innan du sparar. Använd HH:MM format (t.ex. 09:15)."
+
+msgid "Station Name"
+msgstr "Stationsnamn"
+
+msgid "Route Name"
+msgstr "Sträcknamn"
+
+msgid "Trip Name"
+msgstr "Turnamn"
+
+msgid "Enter station name"
+msgstr "Ange stationsnamn"
+
+msgid "Enter route name"
+msgstr "Ange sträcknamn"
+
+msgid "Trip name (auto-generated from Route + Direction)"
+msgstr "Turnamn (genereras automatiskt från Sträcka + Riktning)"
+
+msgid "Related Trips:"
+msgstr "Relaterade turer:"
+
+msgid "This route is used by the following trips:"
+msgstr "Denna sträcka används av följande turer:"
+
+msgid "in"
+msgstr "i"
+
+msgid "Used in Routes:"
+msgstr "Används i sträckor:"
+
+msgid "This station is used in the following routes:"
+msgstr "Denna station används i följande sträckor:"
+
+msgid "Trip added successfully."
+msgstr "Tur tillagd."
+
+msgid "Trip removed successfully."
+msgstr "Tur borttagen."
+
 msgid "Routes"
 msgstr "Sträckor"
 

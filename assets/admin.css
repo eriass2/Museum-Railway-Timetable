@@ -677,3 +677,38 @@
     padding: 2px 6px;
     border-radius: 3px;
 }
+
+/* Time validation error */
+.mrt-time-error {
+    border-color: #d63638 !important;
+    box-shadow: 0 0 0 1px #d63638 !important;
+}
+
+/* ==========================================================================
+   Loading States
+   ========================================================================== */
+
+.mrt-saving {
+    opacity: 0.6;
+    cursor: wait !important;
+}
+
+/* ==========================================================================
+   Success/Error Messages
+   ========================================================================== */
+
+.mrt-success-message,
+.mrt-error-message {
+    animation: mrt-fade-in 0.3s ease-in;
+}
+
+@keyframes mrt-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

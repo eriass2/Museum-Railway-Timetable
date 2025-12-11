@@ -46,9 +46,11 @@ function MRT_enqueue_admin_assets($hook) {
         true
     );
     
-    // Localize script for AJAX
+    // Localize script for AJAX and translations
     wp_localize_script('mrt-admin', 'mrtAdmin', [
         'ajaxurl' => admin_url('admin-ajax.php'),
+        'invalidTimeFormat' => __('Invalid format. Use HH:MM (e.g., 09:15)', 'museum-railway-timetable'),
+        'fixTimeFormats' => __('Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).', 'museum-railway-timetable'),
     ]);
 }
 add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');
