@@ -87,6 +87,6 @@ add_filter('manage_edit-mrt_timetable_columns', function($columns) {
 
 add_action('manage_mrt_timetable_posts_custom_column', function($column, $post_id) {
     if ($column === 'mrt_timetable_id') {
-        echo '<code style="background: #f0f0f0; padding: 2px 6px; border-radius: 3px;">' . esc_html($post_id) . '</code>';
+        echo '<code class="mrt-code-inline">' . esc_html($post_id) . '</code>';
     }
 }, 10, 2);

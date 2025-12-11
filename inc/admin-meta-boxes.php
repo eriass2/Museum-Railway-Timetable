@@ -96,6 +96,10 @@ function MRT_render_station_meta_box($post) {
     $display_order = get_post_meta($post->ID, 'mrt_display_order', true);
     
     ?>
+    <div class="mrt-info-box">
+        <p><strong><?php esc_html_e('💡 What is a Station?', 'museum-railway-timetable'); ?></strong></p>
+        <p><?php esc_html_e('A station is a physical location where trains can stop. Stations are used in Routes and Stop Times to define where trains travel and when they arrive/depart.', 'museum-railway-timetable'); ?></p>
+    </div>
     <table class="form-table">
         <tr>
             <th><label for="mrt_station_type"><?php esc_html_e('Station Type', 'museum-railway-timetable'); ?></label></th>
@@ -213,14 +217,17 @@ function MRT_render_route_meta_box($post) {
     ]);
     
     ?>
-    <p class="description"><?php esc_html_e('Define which stations are on this route, in order. The route works in both directions.', 'museum-railway-timetable'); ?></p>
+    <div class="mrt-info-box">
+        <p><strong><?php esc_html_e('💡 What is a Route?', 'museum-railway-timetable'); ?></strong></p>
+        <p><?php esc_html_e('A route defines which stations trains travel between and in what order. When you create a trip (service), you select a route, and all stations on that route become available for configuring stop times. Use ↑ ↓ buttons to easily reorder stations.', 'museum-railway-timetable'); ?></p>
+    </div>
     <div id="mrt-route-stations-container">
         <table class="widefat striped" id="mrt-route-stations-table">
             <thead>
                 <tr>
-                    <th style="width: 60px;"><?php esc_html_e('Order', 'museum-railway-timetable'); ?></th>
+                    <th class="mrt-col-order-60"><?php esc_html_e('Order', 'museum-railway-timetable'); ?></th>
                     <th><?php esc_html_e('Station', 'museum-railway-timetable'); ?></th>
-                    <th style="width: 200px;"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
+                    <th class="mrt-col-actions-200"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
                 </tr>
             </thead>
             <tbody id="mrt-route-stations-tbody">
@@ -240,7 +247,7 @@ function MRT_render_route_meta_box($post) {
                         </tr>
                     <?php endforeach; ?>
                 <?php endif; ?>
-                <tr class="mrt-new-route-station-row" style="background: #f9f9f9;">
+                <tr class="mrt-new-route-station-row mrt-new-row">
                     <td><?php echo esc_html(count($route_stations) + 1); ?></td>
                     <td>
                         <select id="mrt-new-route-station" class="mrt-meta-field">
@@ -258,7 +265,7 @@ function MRT_render_route_meta_box($post) {
         </table>
         <input type="hidden" name="mrt_route_stations" id="mrt_route_stations" value="<?php echo esc_attr(implode(',', $route_stations)); ?>" />
     </div>
-    <p class="description" style="margin-top: 1rem;">
+    <p class="description mrt-description-mt">
         <?php esc_html_e('Example route name: "Hultsfred - Västervik" or "Main Line". Add stations in the order they appear on the route.', 'museum-railway-timetable'); ?>
     </p>
     <?php
@@ -313,29 +320,33 @@ function MRT_render_timetable_meta_box($post) {
     
     wp_enqueue_script('jquery');
     ?>
+    <div class="mrt-info-box">
+        <p><strong><?php esc_html_e('💡 What is a Timetable?', 'museum-railway-timetable'); ?></strong></p>
+        <p><?php esc_html_e('A timetable defines which days (dates) trains run. Add one or more dates (YYYY-MM-DD) when this timetable applies. Then add trips (services) to this timetable - those trips will run on all the dates you specify here.', 'museum-railway-timetable'); ?></p>
+    </div>
     <table class="form-table">
         <tr>
             <th><label for="mrt_timetable_dates"><?php esc_html_e('Dates', 'museum-railway-timetable'); ?></label></th>
             <td>
                 <div id="mrt-timetable-dates-container">
                     <?php foreach ($dates as $index => $date): ?>
-                        <div class="mrt-date-row" style="margin-bottom: 8px;">
+                        <div class="mrt-date-row">
                             <input type="date" name="mrt_timetable_dates[]" value="<?php echo esc_attr($date); ?>" class="mrt-meta-field" required />
                             <?php if ($index > 0): ?>
-                                <button type="button" class="button mrt-remove-date" style="margin-left: 8px;"><?php esc_html_e('Remove', 'museum-railway-timetable'); ?></button>
+                                <button type="button" class="button mrt-remove-date mrt-date-remove-button"><?php esc_html_e('Remove', 'museum-railway-timetable'); ?></button>
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
                 </div>
-                <button type="button" id="mrt-add-date" class="button" style="margin-top: 8px;"><?php esc_html_e('Add Date', 'museum-railway-timetable'); ?></button>
-                <p class="description"><?php esc_html_e('The dates (days) when this timetable applies (YYYY-MM-DD). This timetable can apply to multiple days and will contain multiple trips (services) for these days.', 'museum-railway-timetable'); ?></p>
+                <button type="button" id="mrt-add-date" class="button mrt-add-date-button"><?php esc_html_e('Add Date', 'museum-railway-timetable'); ?></button>
+                <p class="description"><?php esc_html_e('Add dates in YYYY-MM-DD format. Example: 2025-06-15. You can add multiple dates (e.g., all weekends in a month).', 'museum-railway-timetable'); ?></p>
             </td>
         </tr>
     </table>
     <script>
     jQuery(document).ready(function($) {
         $('#mrt-add-date').on('click', function() {
-            var newRow = $('<div class="mrt-date-row" style="margin-bottom: 8px;"><input type="date" name="mrt_timetable_dates[]" class="mrt-meta-field" required /> <button type="button" class="button mrt-remove-date" style="margin-left: 8px;"><?php echo esc_js(__('Remove', 'museum-railway-timetable')); ?></button></div>');
+            var newRow = $('<div class="mrt-date-row"><input type="date" name="mrt_timetable_dates[]" class="mrt-meta-field" required /> <button type="button" class="button mrt-remove-date mrt-date-remove-button"><?php echo esc_js(__('Remove', 'museum-railway-timetable')); ?></button></div>');
             $('#mrt-timetable-dates-container').append(newRow);
         });
         
@@ -436,9 +447,9 @@ function MRT_render_timetable_services_box($post) {
             <thead>
                 <tr>
                     <th><?php esc_html_e('Route', 'museum-railway-timetable'); ?></th>
-                    <th style="width: 150px;"><?php esc_html_e('Train Type', 'museum-railway-timetable'); ?></th>
-                    <th style="width: 100px;"><?php esc_html_e('Direction', 'museum-railway-timetable'); ?></th>
-                    <th style="width: 150px;"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
+                    <th class="mrt-col-train-type"><?php esc_html_e('Train Type', 'museum-railway-timetable'); ?></th>
+                    <th class="mrt-col-direction"><?php esc_html_e('Direction', 'museum-railway-timetable'); ?></th>
+                    <th class="mrt-col-actions"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
                 </tr>
             </thead>
             <tbody id="mrt-timetable-services-tbody">
@@ -490,9 +501,9 @@ function MRT_render_timetable_services_box($post) {
                         </td>
                     </tr>
                 <?php endforeach; ?>
-                <tr class="mrt-new-service-row" style="background: #f9f9f9;">
+                <tr class="mrt-new-service-row mrt-new-row">
                     <td>
-                        <select id="mrt-new-service-route" class="mrt-meta-field" style="width: 100%;" required>
+                        <select id="mrt-new-service-route" class="mrt-meta-field mrt-full-width" required>
                             <option value=""><?php esc_html_e('— Select Route —', 'museum-railway-timetable'); ?></option>
                             <?php foreach ($routes as $route): ?>
                                 <option value="<?php echo esc_attr($route->ID); ?>"><?php echo esc_html($route->post_title); ?></option>
@@ -500,7 +511,7 @@ function MRT_render_timetable_services_box($post) {
                         </select>
                     </td>
                     <td>
-                        <select id="mrt-new-service-train-type" class="mrt-meta-field" style="width: 100%;">
+                        <select id="mrt-new-service-train-type" class="mrt-meta-field mrt-full-width">
                             <option value=""><?php esc_html_e('— Select —', 'museum-railway-timetable'); ?></option>
                             <?php foreach ($all_train_types as $train_type): ?>
                                 <option value="<?php echo esc_attr($train_type->term_id); ?>"><?php echo esc_html($train_type->name); ?></option>
@@ -508,7 +519,7 @@ function MRT_render_timetable_services_box($post) {
                         </select>
                     </td>
                     <td>
-                        <select id="mrt-new-service-direction" class="mrt-meta-field" style="width: 100%;">
+                        <select id="mrt-new-service-direction" class="mrt-meta-field mrt-full-width">
                             <option value=""><?php esc_html_e('— Select —', 'museum-railway-timetable'); ?></option>
                             <option value="dit"><?php esc_html_e('Dit', 'museum-railway-timetable'); ?></option>
                             <option value="från"><?php esc_html_e('Från', 'museum-railway-timetable'); ?></option>
@@ -591,6 +602,10 @@ function MRT_render_service_meta_box($post) {
     $editing_from_timetable = isset($_GET['timetable_id']) && intval($_GET['timetable_id']) === intval($timetable_id);
     
     ?>
+    <div class="mrt-info-box">
+        <p><strong><?php esc_html_e('💡 What is a Trip (Service)?', 'museum-railway-timetable'); ?></strong></p>
+        <p><?php esc_html_e('A trip represents one train journey. It belongs to a Timetable (which defines which days it runs) and uses a Route (which defines which stations are available). After selecting a Route, you can configure Stop Times to set arrival/departure times for each station.', 'museum-railway-timetable'); ?></p>
+    </div>
     <table class="form-table">
         <tr>
             <th><label for="mrt_service_timetable_id"><?php esc_html_e('Timetable', 'museum-railway-timetable'); ?></label></th>
@@ -641,7 +656,7 @@ function MRT_render_service_meta_box($post) {
                         <option value="<?php echo esc_attr($timetable->ID); ?>" <?php selected($timetable_id, $timetable->ID); ?>><?php echo esc_html($display); ?></option>
                     <?php endforeach; ?>
                     </select>
-                    <p class="description"><?php esc_html_e('Select the timetable this service belongs to. The timetable defines which days the service runs.', 'museum-railway-timetable'); ?></p>
+                    <p class="description"><?php esc_html_e('⚠️ Required: Select the timetable this trip belongs to. The timetable defines which days (dates) the trip runs.', 'museum-railway-timetable'); ?></p>
                 <?php endif; ?>
             </td>
         </tr>
@@ -654,7 +669,7 @@ function MRT_render_service_meta_box($post) {
                         <option value="<?php echo esc_attr($route->ID); ?>" <?php selected($route_id, $route->ID); ?>><?php echo esc_html($route->post_title); ?></option>
                     <?php endforeach; ?>
                 </select>
-                <p class="description"><?php esc_html_e('Select the route this service runs on. Example: "Hultsfred - Västervik" or "Main Line".', 'museum-railway-timetable'); ?></p>
+                <p class="description"><?php esc_html_e('⚠️ Required: Select the route this trip runs on. After selecting a route and saving, you can configure Stop Times below. Example: "Hultsfred - Västervik" or "Main Line".', 'museum-railway-timetable'); ?></p>
             </td>
         </tr>
         <tr>
@@ -792,19 +807,26 @@ function MRT_render_service_stoptimes_box($post) {
     ?>
     <div id="mrt-stoptimes-container">
         <?php if ($route_id && !empty($route_stations)): ?>
-            <p class="description" style="color: #2271b1; font-weight: 600;">
-                <?php esc_html_e('Configure which stations this service stops at and the times. Check "Stops here" for each station where the train stops.', 'museum-railway-timetable'); ?>
-            </p>
+            <div class="mrt-info-box">
+                <p><strong><?php esc_html_e('💡 How to configure Stop Times:', 'museum-railway-timetable'); ?></strong></p>
+                <ol>
+                    <li><?php esc_html_e('Check "Stops here" for each station where the train stops', 'museum-railway-timetable'); ?></li>
+                    <li><?php esc_html_e('Fill in Arrival and/or Departure times (HH:MM format, e.g., 09:15)', 'museum-railway-timetable'); ?></li>
+                    <li><?php esc_html_e('Times can be left empty if the train stops but the time is not fixed', 'museum-railway-timetable'); ?></li>
+                    <li><?php esc_html_e('Select Pickup/Dropoff if passengers can board/alight', 'museum-railway-timetable'); ?></li>
+                    <li><?php esc_html_e('Click "Save Stop Times" at the bottom to save all changes', 'museum-railway-timetable'); ?></li>
+                </ol>
+            </div>
             <table class="widefat striped mrt-stoptimes-table">
                 <thead>
                     <tr>
-                        <th style="width: 40px;"><?php esc_html_e('Order', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-col-order"><?php esc_html_e('Order', 'museum-railway-timetable'); ?></th>
                         <th><?php esc_html_e('Station', 'museum-railway-timetable'); ?></th>
-                        <th style="width: 100px;"><?php esc_html_e('Stops here', 'museum-railway-timetable'); ?></th>
-                        <th style="width: 100px;"><?php esc_html_e('Arrival', 'museum-railway-timetable'); ?></th>
-                        <th style="width: 100px;"><?php esc_html_e('Departure', 'museum-railway-timetable'); ?></th>
-                        <th style="width: 80px;"><?php esc_html_e('Pickup', 'museum-railway-timetable'); ?></th>
-                        <th style="width: 80px;"><?php esc_html_e('Dropoff', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-col-stops-here"><?php esc_html_e('Stops here', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-col-time"><?php esc_html_e('Arrival', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-col-time"><?php esc_html_e('Departure', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-col-pickup-dropoff"><?php esc_html_e('Pickup', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-col-pickup-dropoff"><?php esc_html_e('Dropoff', 'museum-railway-timetable'); ?></th>
                     </tr>
                 </thead>
                 <tbody id="mrt-stoptimes-tbody">
@@ -820,21 +842,21 @@ function MRT_render_service_stoptimes_box($post) {
                                 <td>
                                     <input type="checkbox" class="mrt-stops-here" <?php checked($stops_here); ?> data-station-id="<?php echo esc_attr($station->ID); ?>" />
                                 </td>
-                                <td class="mrt-time-field" style="<?php echo $stops_here ? '' : 'opacity: 0.5;'; ?>">
-                                    <input type="text" class="mrt-arrival-time" value="<?php echo $st ? esc_attr($st['arrival_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" style="width: 100px;" <?php echo $stops_here ? '' : 'disabled'; ?> />
-                                    <p class="description" style="margin: 0; font-size: 11px; color: #666;"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
+                                <td class="mrt-time-field <?php echo $stops_here ? '' : 'mrt-field-disabled-opacity'; ?>">
+                                    <input type="text" class="mrt-arrival-time mrt-time-input" value="<?php echo $st ? esc_attr($st['arrival_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" <?php echo $stops_here ? '' : 'disabled'; ?> />
+                                    <p class="description mrt-description-small"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
                                 </td>
-                                <td class="mrt-time-field" style="<?php echo $stops_here ? '' : 'opacity: 0.5;'; ?>">
-                                    <input type="text" class="mrt-departure-time" value="<?php echo $st ? esc_attr($st['departure_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" style="width: 100px;" <?php echo $stops_here ? '' : 'disabled'; ?> />
-                                    <p class="description" style="margin: 0; font-size: 11px; color: #666;"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
+                                <td class="mrt-time-field <?php echo $stops_here ? '' : 'mrt-field-disabled-opacity'; ?>">
+                                    <input type="text" class="mrt-departure-time mrt-time-input" value="<?php echo $st ? esc_attr($st['departure_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" <?php echo $stops_here ? '' : 'disabled'; ?> />
+                                    <p class="description mrt-description-small"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
                                 </td>
-                                <td class="mrt-option-field" style="<?php echo $stops_here ? '' : 'opacity: 0.5;'; ?>">
+                                <td class="mrt-option-field <?php echo $stops_here ? '' : 'mrt-field-disabled-opacity'; ?>">
                                     <label>
                                         <input type="checkbox" class="mrt-pickup" <?php checked($st ? $st['pickup_allowed'] : true, 1); ?> <?php echo $stops_here ? '' : 'disabled'; ?> />
                                         <?php esc_html_e('Pickup', 'museum-railway-timetable'); ?>
                                     </label>
                                 </td>
-                                <td class="mrt-option-field" style="<?php echo $stops_here ? '' : 'opacity: 0.5;'; ?>">
+                                <td class="mrt-option-field <?php echo $stops_here ? '' : 'mrt-field-disabled-opacity'; ?>">
                                     <label>
                                         <input type="checkbox" class="mrt-dropoff" <?php checked($st ? $st['dropoff_allowed'] : true, 1); ?> <?php echo $stops_here ? '' : 'disabled'; ?> />
                                         <?php esc_html_e('Dropoff', 'museum-railway-timetable'); ?>
@@ -852,17 +874,17 @@ function MRT_render_service_stoptimes_box($post) {
                 </tbody>
             </table>
             <?php if (!empty($stations)): ?>
-            <p style="margin-top: 1rem;">
+            <p class="mrt-mt-1">
                 <button type="button" id="mrt-save-all-stoptimes" class="button button-primary" data-service-id="<?php echo esc_attr($post->ID); ?>">
                     <?php esc_html_e('Save Stop Times', 'museum-railway-timetable'); ?>
                 </button>
-                <span class="description" style="margin-left: 1rem;">
+                <span class="description mrt-ml-1">
                     <?php esc_html_e('Configure which stations the train stops at, then click "Save Stop Times" to save all changes.', 'museum-railway-timetable'); ?>
                 </span>
             </p>
             <?php endif; ?>
         <?php else: ?>
-            <p class="description" style="color: #d63638; font-weight: 600;">
+            <p class="description mrt-description-error">
                 <?php esc_html_e('Please select a Route in Service Details above first. Then you can configure which stations this service stops at.', 'museum-railway-timetable'); ?>
             </p>
         <?php endif; ?>
@@ -894,7 +916,7 @@ add_filter('use_block_editor_for_post_type', function($use_block_editor, $post_t
  */
 add_action('edit_form_after_title', function($post) {
     if ($post->post_type === 'mrt_route') {
-        echo '<p class="description" style="margin-top: 0.5rem; margin-bottom: 1rem;">';
+        echo '<p class="description mrt-mb-1">';
         esc_html_e('Example route name: "Hultsfred - Västervik" or "Main Line".', 'museum-railway-timetable');
         echo '</p>';
     }

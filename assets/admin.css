@@ -387,3 +387,286 @@
         margin-right: 0.5rem;
     }
 }
+
+/* ==========================================================================
+   Dashboard & Admin UI Components
+   ========================================================================== */
+
+/* Dashboard Statistics Grid */
+.mrt-dashboard-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.mrt-stat-card {
+    padding: 1rem;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.mrt-stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2271b1;
+}
+
+.mrt-stat-label {
+    color: #646970;
+    margin-top: 0.5rem;
+}
+
+.mrt-stat-label a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Quick Actions Grid */
+.mrt-quick-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.mrt-quick-action-button {
+    text-align: left;
+    height: auto;
+    padding: 0.75rem 1rem;
+}
+
+.mrt-quick-action-button strong {
+    display: block;
+}
+
+.mrt-quick-action-button span {
+    font-size: 0.9em;
+    opacity: 0.8;
+    display: block;
+    margin-top: 0.25rem;
+}
+
+/* Info Boxes */
+.mrt-info-box {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background: #f0f6fc;
+    border-left: 4px solid #2271b1;
+    border-radius: 3px;
+}
+
+.mrt-info-box p {
+    margin: 0;
+}
+
+.mrt-info-box p:not(:first-child) {
+    margin-top: 0.5rem;
+}
+
+.mrt-info-box strong {
+    display: block;
+}
+
+.mrt-info-box ol {
+    margin: 0.5rem 0 0 1.5rem;
+    line-height: 1.6;
+}
+
+/* Settings Section */
+.mrt-settings-section {
+    padding: 1.5rem;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    margin-top: 2rem;
+}
+
+.mrt-settings-section h2 {
+    margin-top: 0;
+}
+
+/* Guide Section */
+.mrt-guide-section {
+    padding: 1.5rem;
+    background: #f0f6fc;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    margin-top: 2rem;
+}
+
+.mrt-guide-section h2 {
+    margin-top: 0;
+    cursor: pointer;
+}
+
+.mrt-guide-toggle {
+    font-size: 0.8em;
+    font-weight: normal;
+    color: #646970;
+}
+
+.mrt-guide-content {
+    display: none;
+    margin-top: 1rem;
+}
+
+.mrt-guide-content ol {
+    margin-left: 1.5rem;
+    line-height: 1.8;
+}
+
+.mrt-tip-box {
+    margin-top: 1rem;
+    padding: 0.75rem;
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    border-radius: 3px;
+}
+
+/* Table Column Widths */
+.mrt-col-order {
+    width: 40px;
+}
+
+.mrt-col-order-60 {
+    width: 60px;
+}
+
+.mrt-col-actions {
+    width: 150px;
+}
+
+.mrt-col-actions-200 {
+    width: 200px;
+}
+
+.mrt-col-train-type {
+    width: 150px;
+}
+
+.mrt-col-direction {
+    width: 100px;
+}
+
+.mrt-col-stops-here {
+    width: 100px;
+}
+
+.mrt-col-time {
+    width: 100px;
+}
+
+.mrt-col-pickup-dropoff {
+    width: 80px;
+}
+
+/* Form Elements */
+.mrt-date-row {
+    margin-bottom: 8px;
+}
+
+.mrt-date-remove-button {
+    margin-left: 8px;
+}
+
+.mrt-add-date-button {
+    margin-top: 8px;
+}
+
+.mrt-filter-form {
+    margin-bottom: 1rem;
+}
+
+.mrt-full-width {
+    width: 100%;
+}
+
+/* Spacing Utilities */
+.mrt-mt-1 {
+    margin-top: 1rem;
+}
+
+.mrt-mb-1 {
+    margin-bottom: 1rem;
+}
+
+.mrt-ml-1 {
+    margin-left: 1rem;
+}
+
+/* Text Styles */
+.mrt-description-small {
+    margin: 0;
+    font-size: 11px;
+    color: #666;
+}
+
+.mrt-description-mt {
+    margin-top: 1rem;
+}
+
+.mrt-description-error {
+    color: #d63638;
+    font-weight: 600;
+}
+
+/* Disabled/Inactive States */
+.mrt-field-disabled {
+    opacity: 0.5;
+}
+
+.mrt-time-input {
+    width: 100px;
+}
+
+/* Code/Pre blocks */
+.mrt-code-block {
+    background: #fff;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    overflow-x: auto;
+}
+
+/* Section headings */
+.mrt-section-heading {
+    margin-top: 0;
+}
+
+/* Warning/Development boxes */
+.mrt-warning-box {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 4px;
+}
+
+.mrt-danger-button {
+    background: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+}
+
+.mrt-description-mt-small {
+    margin-top: 0.75rem;
+}
+
+.mrt-description-small-text {
+    font-size: 0.9em;
+}
+
+/* Dynamic states */
+.mrt-field-disabled-opacity {
+    opacity: 0.5;
+}
+
+/* Code display */
+.mrt-code-inline {
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 3px;
+}
