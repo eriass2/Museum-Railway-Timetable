@@ -380,11 +380,22 @@ function MRT_render_timetable_meta_box($post) {
     if (!is_array($dates)) {
         // Try to migrate from old single date field
         $old_date = get_post_meta($post->ID, 'mrt_timetable_date', true);
-        $dates = !empty($old_date) ? [$old_date] : [date('Y-m-d')];
+        if (!empty($old_date)) {
+            $dates = [$old_date];
+        } else {
+            $dates = [];
+        }
     }
-    if (empty($dates)) {
+    // Ensure dates is always an array
+    if (!is_array($dates)) {
         $dates = [];
     }
+    // Filter out any empty or invalid dates
+    $dates = array_filter($dates, function($date) {
+        return !empty($date) && MRT_validate_date($date);
+    });
+    // Re-index array after filtering
+    $dates = array_values($dates);
     
     wp_enqueue_script('jquery');
     ?>
@@ -460,7 +471,24 @@ function MRT_render_timetable_meta_box($post) {
     
     <script>
     jQuery(document).ready(function($) {
-        var selectedDates = new Set(<?php echo json_encode($dates); ?>);
+        // Initialize Set from PHP-rendered dates first
+        var selectedDates = new Set();
+        $('#mrt-timetable-dates-container .mrt-date-row').each(function() {
+            var date = $(this).data('date');
+            if (date) {
+                selectedDates.add(date);
+            }
+        });
+        
+        // Also add dates from PHP array (in case they're not in DOM yet)
+        var phpDates = <?php echo json_encode($dates); ?>;
+        if (Array.isArray(phpDates)) {
+            phpDates.forEach(function(date) {
+                if (date) {
+                    selectedDates.add(date);
+                }
+            });
+        }
         
         function updateDatesList() {
             var $container = $('#mrt-timetable-dates-container');
@@ -475,16 +503,35 @@ function MRT_render_timetable_meta_box($post) {
             
             var sortedDates = Array.from(selectedDates).sort();
             sortedDates.forEach(function(date) {
-                var dateObj = new Date(date + 'T00:00:00');
-                var formattedDate = dateObj.toLocaleDateString('<?php echo esc_js(get_locale()); ?>', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric',
-                    weekday: 'long'
-                });
+                if (!date || typeof date !== 'string') {
+                    return; // Skip invalid dates
+                }
                 
-                var $row = $('<div class="mrt-date-row" data-date="' + date + '">' +
-                    '<input type="hidden" name="mrt_timetable_dates[]" value="' + date + '" />' +
+                // Format date for display
+                var dateObj = new Date(date + 'T00:00:00');
+                var formattedDate;
+                if (isNaN(dateObj.getTime())) {
+                    // Invalid date, just show the raw date string
+                    formattedDate = date;
+                } else {
+                    try {
+                        formattedDate = dateObj.toLocaleDateString('<?php echo esc_js(get_locale()); ?>', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric',
+                            weekday: 'long'
+                        });
+                        // Fallback if locale formatting fails
+                        if (!formattedDate || formattedDate === 'Invalid Date') {
+                            formattedDate = dateObj.toLocaleDateString();
+                        }
+                    } catch (e) {
+                        formattedDate = dateObj.toLocaleDateString();
+                    }
+                }
+                
+                var $row = $('<div class="mrt-date-row" data-date="' + date.replace(/"/g, '&quot;') + '">' +
+                    '<input type="hidden" name="mrt_timetable_dates[]" value="' + date.replace(/"/g, '&quot;') + '" />' +
                     '<span class="mrt-date-display">' + formattedDate + '</span> ' +
                     '<span class="mrt-date-iso" style="color: #666; font-size: 0.9em; margin-left: 0.5rem;">(' + date + ')</span> ' +
                     '<button type="button" class="button button-small mrt-remove-date mrt-date-remove-button" style="margin-left: 1rem;"><?php echo esc_js(__('Remove', 'museum-railway-timetable')); ?></button>' +
@@ -614,8 +661,13 @@ add_action('save_post_mrt_timetable', function($post_id) {
             // Remove old single date field if it exists
             delete_post_meta($post_id, 'mrt_timetable_date');
         } else {
+            // Only delete if explicitly empty array was sent
+            // Don't delete if field wasn't sent at all (might be autosave or other issue)
             delete_post_meta($post_id, 'mrt_timetable_dates');
         }
+    } else {
+        // If mrt_timetable_dates is not set, keep existing dates (don't delete them)
+        // This handles cases where the field might not be included in the form submission
     }
 });
 

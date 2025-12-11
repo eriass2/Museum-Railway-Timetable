@@ -51,6 +51,22 @@ function MRT_enqueue_admin_assets($hook) {
         'ajaxurl' => admin_url('admin-ajax.php'),
         'invalidTimeFormat' => __('Invalid format. Use HH:MM (e.g., 09:15)', 'museum-railway-timetable'),
         'fixTimeFormats' => __('Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).', 'museum-railway-timetable'),
+        'saveServiceToUpdateStations' => __('Please save the service to update available stations from the selected route.', 'museum-railway-timetable'),
+        'pleaseSelectStation' => __('Please select a station.', 'museum-railway-timetable'),
+        'stationAlreadyOnRoute' => __('This station is already on the route.', 'museum-railway-timetable'),
+        'pleaseFillStationAndSequence' => __('Please fill in Station and Sequence.', 'museum-railway-timetable'),
+        'errorSavingStopTime' => __('Error saving stop time.', 'museum-railway-timetable'),
+        'errorAddingStopTime' => __('Error adding stop time.', 'museum-railway-timetable'),
+        'confirmDeleteStopTime' => __('Are you sure you want to delete this stop time?', 'museum-railway-timetable'),
+        'errorDeletingStopTime' => __('Error deleting stop time.', 'museum-railway-timetable'),
+        'pleaseSelectRoute' => __('Please select a route.', 'museum-railway-timetable'),
+        'securityTokenMissing' => __('Security token missing. Please refresh the page.', 'museum-railway-timetable'),
+        'confirmRemoveTrip' => __('Are you sure you want to remove this trip from the timetable?', 'museum-railway-timetable'),
+        'errorRemovingTrip' => __('Error removing trip.', 'museum-railway-timetable'),
+        'networkError' => __('Network error. Please try again.', 'museum-railway-timetable'),
+        'moveUp' => __('Move up', 'museum-railway-timetable'),
+        'moveDown' => __('Move down', 'museum-railway-timetable'),
+        'remove' => __('Remove', 'museum-railway-timetable'),
     ]);
 }
 add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');

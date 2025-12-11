@@ -211,9 +211,6 @@ msgstr "Påstigning"
 msgid "Dropoff"
 msgstr "Avstigning"
 
-msgid "Actions"
-msgstr "Åtgärder"
-
 msgid "No stop times defined. Add one below."
 msgstr "Inga hållplatser definierade. Lägg till en nedan."
 
@@ -303,27 +300,6 @@ msgstr "Kommaseparerade datum att inkludera (överrider veckodagar)."
 
 msgid "Comma-separated dates to exclude."
 msgstr "Kommaseparerade datum att exkludera."
-
-msgid "Mon"
-msgstr "Mån"
-
-msgid "Tue"
-msgstr "Tis"
-
-msgid "Wed"
-msgstr "Ons"
-
-msgid "Thu"
-msgstr "Tor"
-
-msgid "Fri"
-msgstr "Fre"
-
-msgid "Sat"
-msgstr "Lör"
-
-msgid "Sun"
-msgstr "Sön"
 
 msgid "None"
 msgstr "Ingen"
@@ -435,9 +411,6 @@ msgstr "Ta bort"
 
 msgid "Example route name: \"Hultsfred - Västervik\" or \"Main Line\". Add stations in the order they appear on the route."
 msgstr "Exempel på sträcknamn: \"Hultsfred - Västervik\" eller \"Huvudlinje\". Lägg till stationer i den ordning de förekommer på sträckan."
-
-msgid "Route"
-msgstr "Sträcka"
 
 msgid "— Select Route —"
 msgstr "— Välj sträcka —"
@@ -743,14 +716,8 @@ msgstr "Lägg till datum i ÅÅÅÅ-MM-DD format. Exempel: 2025-06-15. Du kan l�
 msgid "Add Date"
 msgstr "Lägg till datum"
 
-msgid "Trips (Services)"
-msgstr "Turer (Services)"
-
 msgid "Manage trips (services) for this timetable. Add, edit, or remove trips directly here."
 msgstr "Hantera turer (services) för denna tidtabell. Lägg till, redigera eller ta bort turer direkt här."
-
-msgid "Train Type"
-msgstr "Tågtyp"
 
 msgid "Add Trip"
 msgstr "Lägg till tur"
@@ -812,9 +779,6 @@ msgstr "Ingen sträcka vald. Välj en Sträcka i Turdetaljer ovan för att konfi
 msgid "Please select a Route in Service Details above first. Then you can configure which stations this service stops at."
 msgstr "Vänligen välj en Sträcka i Turdetaljer ovan först. Sedan kan du konfigurera vilka stationer denna service stannar vid."
 
-msgid "Timetable Overview"
-msgstr "Tidtabellsöversikt"
-
 msgid "Preview of how the timetable will look when displayed. Services are grouped by route and direction."
 msgstr "Förhandsgranskning av hur tidtabellen kommer att se ut när den visas. Tjänster är grupperade efter sträcka och riktning."
 
@@ -838,9 +802,6 @@ msgstr "Vänligen åtgärda ogiltiga tidsformat innan du sparar. Använd HH:MM f
 
 msgid "Station Name"
 msgstr "Stationsnamn"
-
-msgid "Route Name"
-msgstr "Sträcknamn"
 
 msgid "Trip Name"
 msgstr "Turnamn"
@@ -877,9 +838,6 @@ msgstr "Tur borttagen."
 
 msgid "Add New"
 msgstr "Lägg till ny"
-
-msgid "Add New Station"
-msgstr "Lägg till ny station"
 
 msgid "Edit Station"
 msgstr "Redigera station"
@@ -928,9 +886,6 @@ msgstr "Stationslistnavigering"
 
 msgid "Stations list"
 msgstr "Stationslista"
-
-msgid "Add New Route"
-msgstr "Lägg till ny sträcka"
 
 msgid "Edit Route"
 msgstr "Redigera sträcka"
@@ -1142,35 +1097,11 @@ msgstr "Veckodag"
 msgid "— Select Day —"
 msgstr "— Välj dag —"
 
-msgid "Monday"
-msgstr "Måndag"
-
-msgid "Tuesday"
-msgstr "Tisdag"
-
-msgid "Wednesday"
-msgstr "Onsdag"
-
-msgid "Thursday"
-msgstr "Torsdag"
-
-msgid "Friday"
-msgstr "Fredag"
-
-msgid "Saturday"
-msgstr "Lördag"
-
-msgid "Sunday"
-msgstr "Söndag"
-
 msgid "From Date"
 msgstr "Från datum"
 
 msgid "To Date"
 msgstr "Till datum"
-
-msgid "Add Dates from Pattern"
-msgstr "Lägg till datum från mönster"
 
 msgid "Add Single Date"
 msgstr "Lägg till enskilt datum"
@@ -1210,7 +1141,4 @@ msgstr "Detta datum är redan tillagt."
 
 msgid "Date added successfully."
 msgstr "Datum tillagt."
-
-msgid "Routes"
-msgstr "Sträckor"
 

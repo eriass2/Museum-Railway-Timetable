@@ -44,7 +44,7 @@
                 var $form = $(this).closest('form');
                 if ($form.length && !$form.data('saving')) {
                     // Show message that page needs to reload
-                    alert('Please save the service to update available stations from the selected route.');
+                    alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.saveServiceToUpdateStations : 'Please save the service to update available stations from the selected route.');
                 }
             }
         });
@@ -179,7 +179,8 @@
                 }
             }).fail(function() {
                 var originalText = $btn.data('original-text') || 'Save Stop Times';
-                var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>Network error. Please try again.</p></div>');
+                var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
+                var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + networkErrorMsg + '</p></div>');
                 $btn.closest('.mrt-stoptimes-box').before($errorMsg);
                 $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');
             });
@@ -198,14 +199,14 @@
             var $select = $('#mrt-new-route-station');
             var stationId = $select.val();
             if (!stationId) {
-                alert('Please select a station.');
+                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.pleaseSelectStation : 'Please select a station.');
                 return;
             }
 
             // Get current stations
             var currentStations = $('#mrt_route_stations').val().split(',').filter(function(id) { return id; });
             if (currentStations.indexOf(stationId) !== -1) {
-                alert('This station is already on the route.');
+                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.stationAlreadyOnRoute : 'This station is already on the route.');
                 return;
             }
 
@@ -225,9 +226,9 @@
                 '<td>' + newIndex + '</td>' +
                 '<td>' + stationName + '</td>' +
                 '<td>' +
-                '<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="' + stationId + '" title="Move up">↑</button> ' +
-                '<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="' + stationId + '" title="Move down">↓</button> ' +
-                '<button type="button" class="button button-small mrt-remove-route-station" data-station-id="' + stationId + '">Remove</button>' +
+                '<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="' + stationId + '" title="' + (typeof mrtAdmin !== 'undefined' ? mrtAdmin.moveUp : 'Move up') + '">↑</button> ' +
+                '<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="' + stationId + '" title="' + (typeof mrtAdmin !== 'undefined' ? mrtAdmin.moveDown : 'Move down') + '">↓</button> ' +
+                '<button type="button" class="button button-small mrt-remove-route-station" data-station-id="' + stationId + '">' + (typeof mrtAdmin !== 'undefined' ? mrtAdmin.remove : 'Remove') + '</button>' +
                 '</td>' +
                 '</tr>');
             
@@ -355,7 +356,7 @@
             }
 
             if (!data.station_id || !data.sequence) {
-                alert('Please fill in Station and Sequence.');
+                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.pleaseFillStationAndSequence : 'Please fill in Station and Sequence.');
                 return;
             }
 
@@ -365,7 +366,7 @@
                 if (response.success) {
                     location.reload();
                 } else {
-                    alert(response.data.message || 'Error saving stop time.');
+                    alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorSavingStopTime : 'Error saving stop time.'));
                     $(this).prop('disabled', false).text('Save');
                 }
             });
@@ -390,7 +391,7 @@
             };
 
             if (!data.station_id || !data.sequence) {
-                alert('Please fill in Station and Sequence.');
+                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.pleaseFillStationAndSequence : 'Please fill in Station and Sequence.');
                 return;
             }
 
@@ -400,7 +401,7 @@
                 if (response.success) {
                     location.reload();
                 } else {
-                    alert(response.data.message || 'Error adding stop time.');
+                    alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorAddingStopTime : 'Error adding stop time.'));
                     $(this).prop('disabled', false).text('Add');
                 }
             });
@@ -416,7 +417,7 @@
         // Delete stop time
         $container.on('click', '.mrt-delete-stoptime', function(e) {
             e.stopPropagation();
-            if (!confirm('Are you sure you want to delete this stop time?')) {
+            if (!confirm(typeof mrtAdmin !== 'undefined' ? mrtAdmin.confirmDeleteStopTime : 'Are you sure you want to delete this stop time?')) {
                 return;
             }
             var id = $(this).data('id');
@@ -428,7 +429,7 @@
                 if (response.success) {
                     location.reload();
                 } else {
-                    alert(response.data.message || 'Error deleting stop time.');
+                    alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorDeletingStopTime : 'Error deleting stop time.'));
                 }
             });
         });
@@ -503,7 +504,7 @@
             }
 
             if (!routeId) {
-                alert('Please select a route.');
+                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.pleaseSelectRoute : 'Please select a route.');
                 if (window.mrtDebug) {
                     console.log('MRT: Validation failed - no route selected');
                 }
@@ -511,7 +512,7 @@
             }
 
             if (!nonce) {
-                alert('Security token missing. Please refresh the page.');
+                alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.securityTokenMissing : 'Security token missing. Please refresh the page.');
                 if (window.mrtDebug) {
                     console.error('MRT: Nonce is missing!');
                 }
@@ -599,7 +600,8 @@
                             statusCode: xhr.status
                         });
                     }
-                    var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>Network error. Please try again.</p></div>');
+                    var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
+                var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + networkErrorMsg + '</p></div>');
                     $('#mrt-timetable-services-box').before($errorMsg);
                 },
                 complete: function() {
@@ -613,7 +615,7 @@
 
         // Remove service from timetable
         $container.on('click', '.mrt-delete-service-from-timetable', function() {
-            if (!confirm('Are you sure you want to remove this trip from the timetable?')) {
+            if (!confirm(typeof mrtAdmin !== 'undefined' ? mrtAdmin.confirmRemoveTrip : 'Are you sure you want to remove this trip from the timetable?')) {
                 return;
             }
 
@@ -653,7 +655,7 @@
                     }
                 },
                 error: function() {
-                    alert('Error removing trip.');
+                    alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorRemovingTrip : 'Error removing trip.');
                     $btn.prop('disabled', false);
                 }
             });
