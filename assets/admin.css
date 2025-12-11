@@ -269,37 +269,31 @@
     max-width: 300px;
 }
 
-/* Stop Times and Calendar Tables */
-.mrt-stoptimes-table,
-.mrt-calendar-table {
+/* Stop Times Tables */
+.mrt-stoptimes-table {
     margin-top: 1rem;
 }
 
-.mrt-stoptimes-table th,
-.mrt-calendar-table th {
+.mrt-stoptimes-table th {
     background: #f5f5f5;
     font-weight: 600;
 }
 
-.mrt-stoptimes-table td,
-.mrt-calendar-table td {
+.mrt-stoptimes-table td {
     vertical-align: middle;
 }
 
 /* Inline editing styles */
-.mrt-stoptime-row:not(.mrt-new-row),
-.mrt-calendar-row:not(.mrt-new-row) {
+.mrt-stoptime-row:not(.mrt-new-row) {
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.mrt-stoptime-row:not(.mrt-new-row):hover,
-.mrt-calendar-row:not(.mrt-new-row):hover {
+.mrt-stoptime-row:not(.mrt-new-row):hover {
     background-color: #f0f8ff !important;
 }
 
-.mrt-stoptime-row.mrt-editing,
-.mrt-calendar-row.mrt-editing {
+.mrt-stoptime-row.mrt-editing {
     background-color: #fff9e6 !important;
 }
 
