@@ -284,6 +284,7 @@ add_action('admin_init', function() {
     $stations = get_posts(['post_type' => 'mrt_station', 'posts_per_page' => -1, 'fields' => 'ids']);
     $services = get_posts(['post_type' => 'mrt_service', 'posts_per_page' => -1, 'fields' => 'ids']);
     $routes = get_posts(['post_type' => 'mrt_route', 'posts_per_page' => -1, 'fields' => 'ids']);
+    $timetables = get_posts(['post_type' => 'mrt_timetable', 'posts_per_page' => -1, 'fields' => 'ids']);
     
     foreach ($stations as $id) {
         wp_delete_post($id, true);
@@ -292,6 +293,9 @@ add_action('admin_init', function() {
         wp_delete_post($id, true);
     }
     foreach ($routes as $id) {
+        wp_delete_post($id, true);
+    }
+    foreach ($timetables as $id) {
         wp_delete_post($id, true);
     }
     

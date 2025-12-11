@@ -393,19 +393,27 @@
     function initTimetableServicesUI() {
         var $container = $('#mrt-timetable-services-container');
         if (!$container.length) {
-            console.log('MRT: Timetable services container not found');
+            if (window.mrtDebug) {
+                console.log('MRT: Timetable services container not found');
+            }
             return;
         }
 
-        console.log('MRT: Initializing timetable services UI');
+        if (window.mrtDebug) {
+            console.log('MRT: Initializing timetable services UI');
+        }
 
         var nonce = $('#mrt_timetable_services_nonce').val();
-        console.log('MRT: Nonce value:', nonce ? 'Found' : 'NOT FOUND');
+        if (window.mrtDebug) {
+            console.log('MRT: Nonce value:', nonce ? 'Found' : 'NOT FOUND');
+        }
 
         // Add service to timetable
         $('#mrt-add-service-to-timetable').on('click', function(e) {
             e.preventDefault();
-            console.log('MRT: Add trip button clicked');
+            if (window.mrtDebug) {
+                console.log('MRT: Add trip button clicked');
+            }
             
             var $btn = $(this);
             var timetableId = $btn.data('timetable-id');
@@ -413,32 +421,42 @@
             var trainTypeId = $('#mrt-new-service-train-type').val();
             var direction = $('#mrt-new-service-direction').val();
 
-            console.log('MRT: Form values:', {
-                timetableId: timetableId,
-                routeId: routeId,
-                trainTypeId: trainTypeId,
-                direction: direction,
-                nonce: nonce ? 'Present' : 'Missing'
-            });
+            if (window.mrtDebug) {
+                console.log('MRT: Form values:', {
+                    timetableId: timetableId,
+                    routeId: routeId,
+                    trainTypeId: trainTypeId,
+                    direction: direction,
+                    nonce: nonce ? 'Present' : 'Missing'
+                });
+            }
 
             if (!routeId) {
                 alert('Please select a route.');
-                console.log('MRT: Validation failed - no route selected');
+                if (window.mrtDebug) {
+                    console.log('MRT: Validation failed - no route selected');
+                }
                 return;
             }
 
             if (!nonce) {
                 alert('Security token missing. Please refresh the page.');
-                console.error('MRT: Nonce is missing!');
+                if (window.mrtDebug) {
+                    console.error('MRT: Nonce is missing!');
+                }
                 return;
             }
 
             $btn.prop('disabled', true).text('Adding...');
-            console.log('MRT: Sending AJAX request...');
+            if (window.mrtDebug) {
+                console.log('MRT: Sending AJAX request...');
+            }
 
             // Use mrtAdmin.ajaxurl if available, otherwise fall back to global ajaxurl
             var ajaxUrl = (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
-            console.log('MRT: Using AJAX URL:', ajaxUrl);
+            if (window.mrtDebug) {
+                console.log('MRT: Using AJAX URL:', ajaxUrl);
+            }
 
             $.ajax({
                 url: ajaxUrl,
@@ -452,9 +470,13 @@
                     direction: direction
                 },
                 success: function(response) {
-                    console.log('MRT: AJAX success response:', response);
+                    if (window.mrtDebug) {
+                        console.log('MRT: AJAX success response:', response);
+                    }
                     if (response.success) {
-                        console.log('MRT: Service created successfully:', response.data);
+                        if (window.mrtDebug) {
+                            console.log('MRT: Service created successfully:', response.data);
+                        }
                         // Add row to table
                         var $tbody = $('#mrt-timetable-services-tbody');
                         var $newRow = $tbody.find('.mrt-new-service-row');
@@ -469,30 +491,40 @@
                             '</td>' +
                             '</tr>');
                         $newRow.before($row);
-                        console.log('MRT: Row added to table');
+                        if (window.mrtDebug) {
+                            console.log('MRT: Row added to table');
+                        }
 
                         // Clear form
                         $('#mrt-new-service-route').val('');
                         $('#mrt-new-service-train-type').val('');
                         $('#mrt-new-service-direction').val('');
-                        console.log('MRT: Form cleared');
+                        if (window.mrtDebug) {
+                            console.log('MRT: Form cleared');
+                        }
                     } else {
-                        console.error('MRT: Server returned error:', response.data);
+                        if (window.mrtDebug) {
+                            console.error('MRT: Server returned error:', response.data);
+                        }
                         alert(response.data.message || 'Error adding trip.');
                     }
                 },
                 error: function(xhr, status, error) {
-                    console.error('MRT: AJAX error:', {
-                        status: status,
-                        error: error,
-                        responseText: xhr.responseText,
-                        statusCode: xhr.status
-                    });
+                    if (window.mrtDebug) {
+                        console.error('MRT: AJAX error:', {
+                            status: status,
+                            error: error,
+                            responseText: xhr.responseText,
+                            statusCode: xhr.status
+                        });
+                    }
                     alert('Error adding trip. Check console for details.');
                 },
                 complete: function() {
                     $btn.prop('disabled', false).text('Add Trip');
-                    console.log('MRT: AJAX request completed');
+                    if (window.mrtDebug) {
+                        console.log('MRT: AJAX request completed');
+                    }
                 }
             });
         });

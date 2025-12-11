@@ -1,6 +1,6 @@
 <?php
 /**
- * AJAX handlers for Stop Times and Calendar management
+ * AJAX handlers for Stop Times and Timetable management
  *
  * @package Museum_Railway_Timetable
  */
@@ -274,17 +274,23 @@ function MRT_ajax_save_all_stoptimes() {
  * Add service to timetable via AJAX
  */
 function MRT_ajax_add_service_to_timetable() {
-    error_log('MRT: AJAX add_service_to_timetable called');
-    error_log('MRT: POST data: ' . print_r($_POST, true));
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('MRT: AJAX add_service_to_timetable called');
+        error_log('MRT: POST data: ' . print_r($_POST, true));
+    }
     
     // Check nonce
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mrt_timetable_services_nonce')) {
-        error_log('MRT: Nonce verification failed');
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('MRT: Nonce verification failed');
+        }
         wp_send_json_error(['message' => __('Security check failed. Please refresh the page.', 'museum-railway-timetable')]);
     }
     
     if (!current_user_can('edit_posts')) {
-        error_log('MRT: Permission denied for user: ' . get_current_user_id());
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('MRT: Permission denied for user: ' . get_current_user_id());
+        }
         wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
     }
     
@@ -293,16 +299,22 @@ function MRT_ajax_add_service_to_timetable() {
     $train_type_id = intval($_POST['train_type_id'] ?? 0);
     $direction = sanitize_text_field($_POST['direction'] ?? '');
     
-    error_log('MRT: Parsed values - timetable_id: ' . $timetable_id . ', route_id: ' . $route_id . ', train_type_id: ' . $train_type_id . ', direction: ' . $direction);
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('MRT: Parsed values - timetable_id: ' . $timetable_id . ', route_id: ' . $route_id . ', train_type_id: ' . $train_type_id . ', direction: ' . $direction);
+    }
     
     // Validation
     if ($timetable_id <= 0) {
-        error_log('MRT: Invalid timetable_id: ' . $timetable_id);
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('MRT: Invalid timetable_id: ' . $timetable_id);
+        }
         wp_send_json_error(['message' => __('Invalid timetable.', 'museum-railway-timetable')]);
     }
     
     if ($route_id <= 0) {
-        error_log('MRT: Invalid route_id: ' . $route_id);
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('MRT: Invalid route_id: ' . $route_id);
+        }
         wp_send_json_error(['message' => __('Route is required.', 'museum-railway-timetable')]);
     }
     
@@ -323,7 +335,9 @@ function MRT_ajax_add_service_to_timetable() {
     $auto_title = $route_name . $direction_text;
     
     // Create service
-    error_log('MRT: Creating service with title: ' . $auto_title);
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('MRT: Creating service with title: ' . $auto_title);
+    }
     $service_id = wp_insert_post([
         'post_type' => 'mrt_service',
         'post_title' => $auto_title,
@@ -331,11 +345,15 @@ function MRT_ajax_add_service_to_timetable() {
     ]);
     
     if (is_wp_error($service_id)) {
-        error_log('MRT: Failed to create service: ' . $service_id->get_error_message());
+        if (defined('WP_DEBUG') && WP_DEBUG) {
+            error_log('MRT: Failed to create service: ' . $service_id->get_error_message());
+        }
         wp_send_json_error(['message' => __('Failed to create trip: ', 'museum-railway-timetable') . $service_id->get_error_message()]);
     }
     
-    error_log('MRT: Service created with ID: ' . $service_id);
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('MRT: Service created with ID: ' . $service_id);
+    }
     
     // Link to timetable
     update_post_meta($service_id, 'mrt_service_timetable_id', $timetable_id);
@@ -367,7 +385,9 @@ function MRT_ajax_add_service_to_timetable() {
         'edit_url' => get_edit_post_link($service_id, 'raw'),
     ];
     
-    error_log('MRT: Sending success response: ' . print_r($response_data, true));
+    if (defined('WP_DEBUG') && WP_DEBUG) {
+        error_log('MRT: Sending success response: ' . print_r($response_data, true));
+    }
     wp_send_json_success($response_data);
 }
 
