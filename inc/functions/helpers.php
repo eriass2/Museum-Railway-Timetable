@@ -97,6 +97,144 @@ function MRT_calculate_direction_from_end_station($route_id, $end_station_id) {
 }
 
 /**
+ * Get destination station name for a service
+ * Returns the end station name if set, otherwise falls back to direction (dit/från)
+ *
+ * @param int $service_id Service post ID
+ * @return array Array with 'destination' (station name or direction), 'direction' (for backward compatibility), and 'end_station_id'
+ */
+function MRT_get_service_destination($service_id) {
+    if (!$service_id || $service_id <= 0) {
+        return [
+            'destination' => '',
+            'direction' => '',
+            'end_station_id' => 0,
+        ];
+    }
+    
+    $destination = '';
+    $direction = '';
+    $end_station_id = get_post_meta($service_id, 'mrt_service_end_station_id', true);
+    
+    if ($end_station_id) {
+        $end_station = get_post($end_station_id);
+        if ($end_station) {
+            $destination = $end_station->post_title;
+        }
+    }
+    
+    // Fallback to direction if no end station (backward compatibility)
+    if (empty($destination)) {
+        $direction = get_post_meta($service_id, 'mrt_direction', true);
+        if ($direction === 'dit') {
+            $destination = __('Dit', 'museum-railway-timetable');
+        } elseif ($direction === 'från') {
+            $destination = __('Från', 'museum-railway-timetable');
+        }
+    }
+    
+    return [
+        'destination' => $destination,
+        'direction' => $direction !== '' ? $direction : '',
+        'end_station_id' => $end_station_id ? intval($end_station_id) : 0,
+    ];
+}
+
+/**
+ * Get route label based on end stations or direction
+ * Creates a human-readable label like "Från X Till Y" or "Route to Y"
+ *
+ * @param WP_Post $route Route post object
+ * @param string $direction Direction ('dit' or 'från')
+ * @param array $services_list Optional array of service data to check for end stations
+ * @param array $station_posts Optional array of station posts (for direction fallback)
+ * @return string Route label
+ */
+function MRT_get_route_label($route, $direction, $services_list = [], $station_posts = []) {
+    if (!$route) {
+        return '';
+    }
+    
+    $route_id = $route->ID;
+    $route_label = $route->post_title;
+    
+    // Check if services have end stations set
+    $has_end_stations = false;
+    $end_station_ids = [];
+    
+    if (!empty($services_list)) {
+        foreach ($services_list as $service_data) {
+            $service = is_array($service_data) && isset($service_data['service']) 
+                ? $service_data['service'] 
+                : (is_object($service_data) ? $service_data : null);
+            
+            if (!$service) continue;
+            
+            $end_station_id = get_post_meta($service->ID, 'mrt_service_end_station_id', true);
+            if ($end_station_id) {
+                $has_end_stations = true;
+                $end_station_ids[] = $end_station_id;
+            }
+        }
+    }
+    
+    if ($has_end_stations && !empty($end_station_ids)) {
+        // Use the first end station found (they should all be the same for a group)
+        $unique_end_stations = array_unique($end_station_ids);
+        
+        if (count($unique_end_stations) === 1) {
+            $end_station_id = reset($unique_end_stations);
+            $end_station_post = get_post($end_station_id);
+            if ($end_station_post) {
+                $end_stations = MRT_get_route_end_stations($route_id);
+                $start_station_id = $end_stations['start'];
+                $start_station = $start_station_id ? get_post($start_station_id) : null;
+                
+                if ($start_station) {
+                    $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
+                        $start_station->post_title, 
+                        $end_station_post->post_title);
+                } else {
+                    $route_label = sprintf(__('Route to %s', 'museum-railway-timetable'), $end_station_post->post_title);
+                }
+            }
+        }
+    } elseif ($direction === 'dit' || $direction === 'från') {
+        // Fallback to direction-based label
+        // Use provided station_posts if available, otherwise fetch them
+        if (empty($station_posts)) {
+            $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+            if (is_array($route_stations) && !empty($route_stations)) {
+                $station_posts = get_posts([
+                    'post_type' => 'mrt_station',
+                    'post__in' => $route_stations,
+                    'posts_per_page' => -1,
+                    'orderby' => 'post__in',
+                    'fields' => 'all',
+                ]);
+            }
+        }
+        
+        if (!empty($station_posts)) {
+            $first_station = $station_posts[0];
+            $last_station = end($station_posts);
+            
+            if ($direction === 'dit') {
+                $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
+                    $first_station->post_title, 
+                    $last_station->post_title);
+            } else {
+                $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
+                    $last_station->post_title, 
+                    $first_station->post_title);
+            }
+        }
+    }
+    
+    return $route_label;
+}
+
+/**
  * Get post by title and post type
  *
  * @param string $title Post title

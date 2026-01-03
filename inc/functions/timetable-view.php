@@ -129,57 +129,8 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                 ]);
             }
             
-            // Determine route label based on end stations or direction
-            $route_label = $route->post_title;
-            
-            // Check if services have end stations set
-            $has_end_stations = false;
-            $end_station_ids = [];
-            foreach ($services_list as $service_data) {
-                $end_station_id = get_post_meta($service_data['service']->ID, 'mrt_service_end_station_id', true);
-                if ($end_station_id) {
-                    $has_end_stations = true;
-                    $end_station_ids[] = $end_station_id;
-                }
-            }
-            
-            if ($has_end_stations && !empty($end_station_ids)) {
-                // Use end stations to determine label
-                $end_stations = MRT_get_route_end_stations($route_id);
-                $unique_end_stations = array_unique($end_station_ids);
-                
-                if (count($unique_end_stations) === 1) {
-                    // All services go to same destination
-                    $end_station_id = reset($unique_end_stations);
-                    $end_station = get_post($end_station_id);
-                    if ($end_station) {
-                        $start_station_id = $end_stations['start'];
-                        $start_station = $start_station_id ? get_post($start_station_id) : null;
-                        if ($start_station) {
-                            $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
-                                $start_station->post_title, 
-                                $end_station->post_title);
-                        } else {
-                            $route_label = $route->post_title . ' → ' . $end_station->post_title;
-                        }
-                    }
-                }
-            } elseif ($direction === 'dit' || $direction === 'från') {
-                // Fallback to direction-based label
-                if (!empty($station_posts)) {
-                    $first_station = $station_posts[0];
-                    $last_station = end($station_posts);
-                    if ($direction === 'dit') {
-                        $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
-                            $first_station->post_title, 
-                            $last_station->post_title);
-                    } else {
-                        $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
-                            $last_station->post_title, 
-                            $first_station->post_title);
-                    }
-                }
-            }
+            // Determine route label using helper function
+            $route_label = MRT_get_route_label($route, $direction, $services_list, $station_posts);
         ?>
             <div class="mrt-timetable-group">
                 <h3 class="mrt-route-header"><?php echo esc_html($route_label); ?></h3>
@@ -422,42 +373,8 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
                     ]);
                 }
                 
-                // Determine route label based on end stations or direction
-                $route_label = $route->post_title;
-                
-                // Check if services have end stations set
-                $has_end_stations = false;
-                $end_station_ids = [];
-                foreach ($services_list as $service_data) {
-                    $end_station_id = get_post_meta($service_data['service']->ID, 'mrt_service_end_station_id', true);
-                    if ($end_station_id) {
-                        $has_end_stations = true;
-                        $end_station_ids[] = $end_station_id;
-                    }
-                }
-                
-                if ($has_end_stations && !empty($end_station_ids)) {
-                    // Use the first end station found (they should all be the same for a group)
-                    $end_station_id = $end_station_ids[0];
-                    $end_station_post = get_post($end_station_id);
-                    if ($end_station_post) {
-                        $route_label = sprintf(__('Route to %s', 'museum-railway-timetable'), $end_station_post->post_title);
-                    }
-                } elseif ($direction === 'dit' || $direction === 'från') {
-                    // Fallback to old direction logic
-                    $first_station = !empty($station_posts) ? $station_posts[0] : null;
-                    $last_station = !empty($station_posts) ? end($station_posts) : null;
-                    
-                    if ($direction === 'dit' && $last_station) {
-                        $route_label = sprintf(__('From %s To %s', 'museum-railway-timetable'), 
-                            $first_station ? $first_station->post_title : '', 
-                            $last_station->post_title);
-                    } elseif ($direction === 'från' && $first_station) {
-                        $route_label = sprintf(__('From %s To %s', 'museum-railway-timetable'), 
-                            $last_station ? $last_station->post_title : '', 
-                            $first_station->post_title);
-                    }
-                }
+                // Determine route label using helper function
+                $route_label = MRT_get_route_label($route, $direction, $services_list, $station_posts);
                 ?>
                 <div class="mrt-route-group">
                     <h4 class="mrt-route-header"><?php echo esc_html($route_label); ?></h4>

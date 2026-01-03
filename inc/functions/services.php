@@ -203,33 +203,16 @@ function MRT_next_departures_for_station($station_id, $service_ids, $timeHHMM, $
         $service_id = intval($r['service_post_id']);
         $service_name = get_the_title($service_id);
         
-        // Get destination station (end station) instead of direction
-        $destination = '';
-        $end_station_id = get_post_meta($service_id, 'mrt_service_end_station_id', true);
-        if ($end_station_id) {
-            $end_station = get_post($end_station_id);
-            if ($end_station) {
-                $destination = $end_station->post_title;
-            }
-        }
-        
-        // Fallback to direction if no end station (backward compatibility)
-        if (empty($destination)) {
-            $direction = get_post_meta($service_id, 'mrt_direction', true);
-            if ($direction === 'dit') {
-                $destination = __('Dit', 'museum-railway-timetable');
-            } elseif ($direction === 'från') {
-                $destination = __('Från', 'museum-railway-timetable');
-            }
-        }
+        // Get destination using helper function
+        $destination_data = MRT_get_service_destination($service_id);
         
         $out[] = [
             'service_id' => $service_id,
             'service_name' => $service_name ?: ('#'.$service_id),
             'arrival_time' => $r['arrival_time'],
             'departure_time' => $r['departure_time'],
-            'destination' => $destination,
-            'direction' => $direction ?? '', // Keep for backward compatibility
+            'destination' => $destination_data['destination'],
+            'direction' => $destination_data['direction'], // Keep for backward compatibility
         ];
     }
     return $out;
@@ -305,26 +288,8 @@ function MRT_find_connections($from_station_id, $to_station_id, $dateYmd) {
         $service_id = intval($r['service_post_id']);
         $service_name = get_the_title($service_id);
         
-        // Get destination station (end station) instead of direction
-        $destination = '';
-        $end_station_id = get_post_meta($service_id, 'mrt_service_end_station_id', true);
-        if ($end_station_id) {
-            $end_station = get_post($end_station_id);
-            if ($end_station) {
-                $destination = $end_station->post_title;
-            }
-        }
-        
-        // Fallback to direction if no end station (backward compatibility)
-        $direction = '';
-        if (empty($destination)) {
-            $direction = get_post_meta($service_id, 'mrt_direction', true);
-            if ($direction === 'dit') {
-                $destination = __('Dit', 'museum-railway-timetable');
-            } elseif ($direction === 'från') {
-                $destination = __('Från', 'museum-railway-timetable');
-            }
-        }
+        // Get destination using helper function
+        $destination_data = MRT_get_service_destination($service_id);
         
         // Get train type for this date
         $train_type = MRT_get_service_train_type_for_date($service_id, $dateYmd);
@@ -338,8 +303,8 @@ function MRT_find_connections($from_station_id, $to_station_id, $dateYmd) {
             'service_id' => $service_id,
             'service_name' => $service_name ?: ('#'.$service_id),
             'route_name' => $route_name,
-            'destination' => $destination,
-            'direction' => $direction !== '' ? $direction : '', // Keep for backward compatibility
+            'destination' => $destination_data['destination'],
+            'direction' => $destination_data['direction'], // Keep for backward compatibility
             'train_type' => $train_type_name,
             'from_departure' => $r['from_departure'] ?: '',
             'from_arrival' => $r['from_arrival'] ?: '',

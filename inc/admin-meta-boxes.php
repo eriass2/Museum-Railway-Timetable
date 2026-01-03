@@ -800,17 +800,9 @@ function MRT_render_timetable_services_box($post) {
                         </td>
                         <td>
                             <?php 
-                            $service_end_station_id = get_post_meta($service->ID, 'mrt_service_end_station_id', true);
-                            if ($service_end_station_id) {
-                                $end_station = get_post($service_end_station_id);
-                                if ($end_station) {
-                                    echo esc_html($end_station->post_title);
-                                } else {
-                                    echo '—';
-                                }
-                            } elseif ($direction === 'dit' || $direction === 'från') {
-                                // Fallback to direction for backward compatibility
-                                echo $direction === 'dit' ? esc_html__('Dit', 'museum-railway-timetable') : esc_html__('Från', 'museum-railway-timetable');
+                            $destination_data = MRT_get_service_destination($service->ID);
+                            if (!empty($destination_data['destination'])) {
+                                echo esc_html($destination_data['destination']);
                             } else {
                                 echo '—';
                             }
