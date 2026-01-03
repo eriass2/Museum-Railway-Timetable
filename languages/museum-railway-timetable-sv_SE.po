@@ -1142,3 +1142,81 @@ msgstr "Detta datum är redan tillagt."
 msgid "Date added successfully."
 msgstr "Datum tillagt."
 
+msgid "From"
+msgstr "Från"
+
+msgid "To"
+msgstr "Till"
+
+msgid "Date"
+msgstr "Datum"
+
+msgid "Search"
+msgstr "Sök"
+
+msgid "Connections from %s to %s on %s"
+msgstr "Förbindelser från %s till %s den %s"
+
+msgid "No connections found for this route on the selected date."
+msgstr "Inga förbindelser hittades för denna sträcka på valt datum."
+
+msgid "Please select different stations for departure and arrival."
+msgstr "Vänligen välj olika stationer för avgång och ankomst."
+
+msgid "Journey Planner (Reseplanerare)"
+msgstr "Reseplanerare"
+
+msgid "Displays a journey planner where users can search for connections between two stations on a specific date."
+msgstr "Visar en reseplanerare där användare kan söka efter förbindelser mellan två stationer på ett specifikt datum."
+
+msgid "Dropdown to select departure station (From)"
+msgstr "Dropdown för att välja avgångsstation (Från)"
+
+msgid "Dropdown to select arrival station (To)"
+msgstr "Dropdown för att välja ankomststation (Till)"
+
+msgid "Date picker (defaults to today's date)"
+msgstr "Datumväljare (standard: dagens datum)"
+
+msgid "Search button to find connections"
+msgstr "Sök-knapp för att hitta förbindelser"
+
+msgid "Results table showing all available connections with departure/arrival times, train types, and service information"
+msgstr "Resultattabell som visar alla tillgängliga förbindelser med avgångs-/ankomsttider, tågtyper och serviceinformation"
+
+msgid "Default date in YYYY-MM-DD format (optional, defaults to today)"
+msgstr "Standarddatum i YYYY-MM-DD-format (valfritt, standard: idag)"
+
+msgid "How it works:"
+msgstr "Så fungerar det:"
+
+msgid "Users select a departure station and arrival station"
+msgstr "Användare väljer en avgångsstation och ankomststation"
+
+msgid "Users can choose a date (defaults to today)"
+msgstr "Användare kan välja ett datum (standard: idag)"
+
+msgid "After clicking \"Search\", the planner finds all services that:"
+msgstr "Efter att ha klickat på \"Sök\" hittar planeraren alla turer som:"
+
+msgid "Run on the selected date"
+msgstr "Körs på valt datum"
+
+msgid "Stop at both the departure and arrival stations"
+msgstr "Stannar vid både avgångs- och ankomststationen"
+
+msgid "Have the departure station before the arrival station in the route sequence"
+msgstr "Har avgångsstationen före ankomststationen i rutten"
+
+msgid "Allow pickup at departure station and dropoff at arrival station"
+msgstr "Tillåter påstigning vid avgångsstationen och avstigning vid ankomststationen"
+
+msgid "Results are sorted by departure time"
+msgstr "Resultat sorteras efter avgångstid"
+
+msgid "Or with a default date:"
+msgstr "Eller med ett standarddatum:"
+
+msgid "The journey planner automatically shows today's date by default, but users can select any date to check future connections. Make sure you have created timetables with dates and services with stop times for the dates you want to support."
+msgstr "Reseplaneraren visar automatiskt dagens datum som standard, men användare kan välja vilket datum som helst för att kontrollera framtida förbindelser. Se till att du har skapat tidtabeller med datum och turer med stopptider för de datum du vill stödja."
+

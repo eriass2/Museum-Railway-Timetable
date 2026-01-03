@@ -213,3 +213,100 @@ function MRT_next_departures_for_station($station_id, $service_ids, $timeHHMM, $
     return $out;
 }
 
+/**
+ * Find connections (services) from one station to another on a specific date
+ *
+ * @param int    $from_station_id From station post ID
+ * @param int    $to_station_id To station post ID
+ * @param string $dateYmd Date in YYYY-MM-DD format
+ * @return array Array of connection data with service info, departure/arrival times
+ */
+function MRT_find_connections($from_station_id, $to_station_id, $dateYmd) {
+    global $wpdb;
+    $table = $wpdb->prefix . 'mrt_stoptimes';
+    
+    // Validate inputs
+    if ($from_station_id <= 0 || $to_station_id <= 0 || $from_station_id === $to_station_id) {
+        return [];
+    }
+    
+    if (!MRT_validate_date($dateYmd)) {
+        return [];
+    }
+    
+    // Get all services running on this date
+    $service_ids = MRT_services_running_on_date($dateYmd);
+    if (empty($service_ids)) {
+        return [];
+    }
+    
+    $in = implode(',', array_map('intval', $service_ids));
+    
+    // Find services that stop at both stations, where from comes before to
+    $sql = $wpdb->prepare("
+        SELECT 
+            from_st.service_post_id,
+            from_st.departure_time as from_departure,
+            from_st.arrival_time as from_arrival,
+            from_st.stop_sequence as from_sequence,
+            to_st.arrival_time as to_arrival,
+            to_st.departure_time as to_departure,
+            to_st.stop_sequence as to_sequence
+        FROM $table from_st
+        INNER JOIN $table to_st ON from_st.service_post_id = to_st.service_post_id
+        WHERE from_st.station_post_id = %d
+          AND to_st.station_post_id = %d
+          AND from_st.service_post_id IN ($in)
+          AND from_st.stop_sequence < to_st.stop_sequence
+          AND (
+              (from_st.pickup_allowed = 1 OR from_st.dropoff_allowed = 1)
+              AND (to_st.pickup_allowed = 1 OR to_st.dropoff_allowed = 1)
+          )
+        ORDER BY 
+            COALESCE(from_st.departure_time, from_st.arrival_time) ASC,
+            from_st.stop_sequence ASC
+    ", $from_station_id, $to_station_id);
+    
+    $rows = $wpdb->get_results($sql, ARRAY_A);
+    
+    // Check for database errors
+    if (MRT_check_db_error('MRT_find_connections')) {
+        return [];
+    }
+    
+    if (!$rows) {
+        return [];
+    }
+    
+    $connections = [];
+    foreach ($rows as $r) {
+        $service_id = intval($r['service_post_id']);
+        $service_name = get_the_title($service_id);
+        $direction = get_post_meta($service_id, 'mrt_direction', true);
+        
+        // Get train type for this date
+        $train_type = MRT_get_service_train_type_for_date($service_id, $dateYmd);
+        $train_type_name = $train_type ? $train_type->name : '';
+        
+        // Get route info
+        $route_id = get_post_meta($service_id, 'mrt_service_route_id', true);
+        $route_name = $route_id ? get_the_title($route_id) : '';
+        
+        $connections[] = [
+            'service_id' => $service_id,
+            'service_name' => $service_name ?: ('#'.$service_id),
+            'route_name' => $route_name,
+            'direction' => $direction !== '' ? $direction : '',
+            'train_type' => $train_type_name,
+            'from_departure' => $r['from_departure'] ?: '',
+            'from_arrival' => $r['from_arrival'] ?: '',
+            'to_arrival' => $r['to_arrival'] ?: '',
+            'to_departure' => $r['to_departure'] ?: '',
+            'from_sequence' => intval($r['from_sequence']),
+            'to_sequence' => intval($r['to_sequence']),
+        ];
+    }
+    
+    return $connections;
+}
+

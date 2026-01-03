@@ -748,3 +748,116 @@
         transform: translateY(0);
     }
 }
+
+/* ==========================================================================
+   Journey Planner (Reseplanerare)
+   ========================================================================== */
+
+.mrt-journey-planner {
+    margin: 1.5rem 0;
+}
+
+.mrt-journey-form {
+    background: #f9f9f9;
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+}
+
+.mrt-journey-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.mrt-journey-field {
+    flex: 1;
+    min-width: 150px;
+}
+
+.mrt-journey-field label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.mrt-journey-field select,
+.mrt-journey-field input[type="date"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    font-size: 1em;
+}
+
+.mrt-journey-field select:focus,
+.mrt-journey-field input[type="date"]:focus {
+    outline: none;
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+}
+
+.mrt-journey-search {
+    background: #2271b1;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 3px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.mrt-journey-search:hover {
+    background: #135e96;
+}
+
+.mrt-journey-search:active {
+    background: #0a4b78;
+}
+
+.mrt-journey-results {
+    margin-top: 1.5rem;
+}
+
+.mrt-journey-results-title {
+    margin-bottom: 1rem;
+    font-size: 1.2em;
+    color: #333;
+}
+
+.mrt-journey-table-container {
+    overflow-x: auto;
+}
+
+.mrt-journey-table {
+    margin-top: 0.5rem;
+}
+
+.mrt-journey-table td strong {
+    color: #2271b1;
+    font-size: 1.05em;
+}
+
+.mrt-route-name {
+    color: #666;
+    font-style: italic;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .mrt-journey-fields {
+        flex-direction: column;
+    }
+    
+    .mrt-journey-field {
+        width: 100%;
+    }
+    
+    .mrt-journey-search {
+        width: 100%;
+    }
+}

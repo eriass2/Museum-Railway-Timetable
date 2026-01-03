@@ -78,7 +78,7 @@ function MRT_enqueue_frontend_assets() {
     // Check if any of our shortcodes are used on the page
     global $post;
     
-    $shortcodes = ['museum_timetable', 'museum_timetable_picker', 'museum_timetable_month', 'museum_timetable_overview'];
+    $shortcodes = ['museum_timetable', 'museum_timetable_picker', 'museum_timetable_month', 'museum_timetable_overview', 'museum_journey_planner'];
     $has_shortcode = false;
     
     // Check in post content
