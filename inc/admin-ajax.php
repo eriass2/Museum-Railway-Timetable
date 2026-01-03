@@ -17,6 +17,7 @@ add_action('wp_ajax_mrt_save_all_stoptimes', 'MRT_ajax_save_all_stoptimes');
 add_action('wp_ajax_mrt_get_stoptime', 'MRT_ajax_get_stoptime');
 add_action('wp_ajax_mrt_add_service_to_timetable', 'MRT_ajax_add_service_to_timetable');
 add_action('wp_ajax_mrt_remove_service_from_timetable', 'MRT_ajax_remove_service_from_timetable');
+add_action('wp_ajax_mrt_get_route_destinations', 'MRT_ajax_get_route_destinations');
 
 /**
  * Add stop time via AJAX
@@ -297,10 +298,12 @@ function MRT_ajax_add_service_to_timetable() {
     $timetable_id = intval($_POST['timetable_id'] ?? 0);
     $route_id = intval($_POST['route_id'] ?? 0);
     $train_type_id = intval($_POST['train_type_id'] ?? 0);
+    $end_station_id = intval($_POST['end_station_id'] ?? 0);
+    // Legacy support for direction
     $direction = sanitize_text_field($_POST['direction'] ?? '');
     
     if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('MRT: Parsed values - timetable_id: ' . $timetable_id . ', route_id: ' . $route_id . ', train_type_id: ' . $train_type_id . ', direction: ' . $direction);
+        error_log('MRT: Parsed values - timetable_id: ' . $timetable_id . ', route_id: ' . $route_id . ', train_type_id: ' . $train_type_id . ', end_station_id: ' . $end_station_id . ', direction: ' . $direction);
     }
     
     // Validation
@@ -318,21 +321,28 @@ function MRT_ajax_add_service_to_timetable() {
         wp_send_json_error(['message' => __('Route is required.', 'museum-railway-timetable')]);
     }
     
-    // Validate direction
-    if ($direction !== '' && !in_array($direction, ['dit', 'från'], true)) {
+    // Calculate direction from end station if provided
+    if ($end_station_id > 0) {
+        $direction = MRT_calculate_direction_from_end_station($route_id, $end_station_id);
+    } elseif ($direction !== '' && !in_array($direction, ['dit', 'från'], true)) {
         $direction = '';
     }
     
-    // Generate automatic title based on route and direction
+    // Generate automatic title based on route and destination
     $route = get_post($route_id);
     $route_name = $route ? $route->post_title : __('Route', 'museum-railway-timetable') . ' #' . $route_id;
-    $direction_text = '';
-    if ($direction === 'dit') {
-        $direction_text = ' - ' . __('Dit', 'museum-railway-timetable');
+    $destination_text = '';
+    if ($end_station_id > 0) {
+        $end_station = get_post($end_station_id);
+        if ($end_station) {
+            $destination_text = ' → ' . $end_station->post_title;
+        }
+    } elseif ($direction === 'dit') {
+        $destination_text = ' - ' . __('Dit', 'museum-railway-timetable');
     } elseif ($direction === 'från') {
-        $direction_text = ' - ' . __('Från', 'museum-railway-timetable');
+        $destination_text = ' - ' . __('Från', 'museum-railway-timetable');
     }
-    $auto_title = $route_name . $direction_text;
+    $auto_title = $route_name . $destination_text;
     
     // Create service
     if (defined('WP_DEBUG') && WP_DEBUG) {
@@ -361,8 +371,14 @@ function MRT_ajax_add_service_to_timetable() {
     // Link to route
     update_post_meta($service_id, 'mrt_service_route_id', $route_id);
     
-    // Set direction
-    if ($direction !== '') {
+    // Set end station and direction
+    if ($end_station_id > 0) {
+        update_post_meta($service_id, 'mrt_service_end_station_id', $end_station_id);
+        if ($direction) {
+            update_post_meta($service_id, 'mrt_direction', $direction);
+        }
+    } elseif ($direction !== '') {
+        // Legacy: Set direction if no end station
         update_post_meta($service_id, 'mrt_direction', $direction);
     }
     
@@ -376,11 +392,25 @@ function MRT_ajax_add_service_to_timetable() {
     $route = get_post($route_id);
     $train_type = $train_type_id > 0 ? get_term($train_type_id, 'mrt_train_type') : null;
     
+    // Get destination name
+    $destination_name = '—';
+    if ($end_station_id > 0) {
+        $end_station = get_post($end_station_id);
+        if ($end_station) {
+            $destination_name = $end_station->post_title;
+        }
+    } elseif ($direction === 'dit') {
+        $destination_name = __('Dit', 'museum-railway-timetable');
+    } elseif ($direction === 'från') {
+        $destination_name = __('Från', 'museum-railway-timetable');
+    }
+    
     $response_data = [
         'service_id' => $service_id,
         'service_title' => $service ? $service->post_title : '',
         'route_name' => $route ? $route->post_title : '—',
         'train_type_name' => $train_type ? $train_type->name : '—',
+        'destination' => $destination_name,
         'direction' => $direction === 'dit' ? __('Dit', 'museum-railway-timetable') : ($direction === 'från' ? __('Från', 'museum-railway-timetable') : '—'),
         'edit_url' => get_edit_post_link($service_id, 'raw'),
     ];
@@ -411,5 +441,67 @@ function MRT_ajax_remove_service_from_timetable() {
     delete_post_meta($service_id, 'mrt_service_timetable_id');
     
     wp_send_json_success(['message' => __('Trip removed from timetable.', 'museum-railway-timetable')]);
+}
+
+/**
+ * Get available destinations for a route via AJAX
+ */
+function MRT_ajax_get_route_destinations() {
+    check_ajax_referer('mrt_timetable_services_nonce', 'nonce');
+    
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
+    }
+    
+    $route_id = intval($_POST['route_id'] ?? 0);
+    
+    if ($route_id <= 0) {
+        wp_send_json_error(['message' => __('Invalid route.', 'museum-railway-timetable')]);
+    }
+    
+    $end_stations = MRT_get_route_end_stations($route_id);
+    $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+    if (!is_array($route_stations)) {
+        $route_stations = [];
+    }
+    
+    $destinations = [];
+    
+    // Add start and end stations if they exist
+    if ($end_stations['start'] > 0) {
+        $start_station = get_post($end_stations['start']);
+        if ($start_station) {
+            $destinations[] = [
+                'id' => $end_stations['start'],
+                'name' => $start_station->post_title . ' (' . __('Start', 'museum-railway-timetable') . ')',
+            ];
+        }
+    }
+    if ($end_stations['end'] > 0) {
+        $end_station = get_post($end_stations['end']);
+        if ($end_station) {
+            $destinations[] = [
+                'id' => $end_stations['end'],
+                'name' => $end_station->post_title . ' (' . __('End', 'museum-railway-timetable') . ')',
+            ];
+        }
+    }
+    
+    // Also add all stations on the route as potential destinations
+    foreach ($route_stations as $station_id) {
+        // Skip if already added as start/end
+        if ($station_id == $end_stations['start'] || $station_id == $end_stations['end']) {
+            continue;
+        }
+        $station = get_post($station_id);
+        if ($station) {
+            $destinations[] = [
+                'id' => $station_id,
+                'name' => $station->post_title,
+            ];
+        }
+    }
+    
+    wp_send_json_success(['destinations' => $destinations]);
 }
 

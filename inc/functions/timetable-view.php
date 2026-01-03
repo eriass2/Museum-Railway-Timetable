@@ -129,10 +129,43 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                 ]);
             }
             
-            // Determine route label
+            // Determine route label based on end stations or direction
             $route_label = $route->post_title;
-            if ($direction === 'dit' || $direction === 'från') {
-                // Try to extract start/end stations from route name or stations
+            
+            // Check if services have end stations set
+            $has_end_stations = false;
+            $end_station_ids = [];
+            foreach ($services_list as $service_data) {
+                $end_station_id = get_post_meta($service_data['service']->ID, 'mrt_service_end_station_id', true);
+                if ($end_station_id) {
+                    $has_end_stations = true;
+                    $end_station_ids[] = $end_station_id;
+                }
+            }
+            
+            if ($has_end_stations && !empty($end_station_ids)) {
+                // Use end stations to determine label
+                $end_stations = MRT_get_route_end_stations($route_id);
+                $unique_end_stations = array_unique($end_station_ids);
+                
+                if (count($unique_end_stations) === 1) {
+                    // All services go to same destination
+                    $end_station_id = reset($unique_end_stations);
+                    $end_station = get_post($end_station_id);
+                    if ($end_station) {
+                        $start_station_id = $end_stations['start'];
+                        $start_station = $start_station_id ? get_post($start_station_id) : null;
+                        if ($start_station) {
+                            $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
+                                $start_station->post_title, 
+                                $end_station->post_title);
+                        } else {
+                            $route_label = $route->post_title . ' → ' . $end_station->post_title;
+                        }
+                    }
+                }
+            } elseif ($direction === 'dit' || $direction === 'från') {
+                // Fallback to direction-based label
                 if (!empty($station_posts)) {
                     $first_station = $station_posts[0];
                     $last_station = end($station_posts);

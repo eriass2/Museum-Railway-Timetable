@@ -1220,3 +1220,48 @@ msgstr "Eller med ett standarddatum:"
 msgid "The journey planner automatically shows today's date by default, but users can select any date to check future connections. Make sure you have created timetables with dates and services with stop times for the dates you want to support."
 msgstr "Reseplaneraren visar automatiskt dagens datum som standard, men användare kan välja vilket datum som helst för att kontrollera framtida förbindelser. Se till att du har skapat tidtabeller med datum och turer med stopptider för de datum du vill stödja."
 
+msgid "End Stations (Terminus)"
+msgstr "Ändhållplatser (Terminus)"
+
+msgid "Define the start and end stations for this route. These are the terminus stations where trains can start or end their journey."
+msgstr "Definiera start- och slutstationer för denna linje. Dessa är ändhållplatserna där tåg kan starta eller avsluta sin resa."
+
+msgid "Start Station"
+msgstr "Startstation"
+
+msgid "The starting point (origin) of this route."
+msgstr "Startpunkten (ursprung) för denna linje."
+
+msgid "End Station"
+msgstr "Slutstation"
+
+msgid "The ending point (destination/terminus) of this route."
+msgstr "Slutpunkten (destination/terminus) för denna linje."
+
+msgid "Destination Station"
+msgstr "Destinationsstation"
+
+msgid "Select the destination station for this trip. The direction will be calculated automatically based on the route and destination."
+msgstr "Välj destinationsstation för denna tur. Riktningen beräknas automatiskt baserat på linjen och destinationen."
+
+msgid "Calculated direction:"
+msgstr "Beräknad riktning:"
+
+msgid "Destination"
+msgstr "Destination"
+
+msgid "Select a route first"
+msgstr "Välj en linje först"
+
+msgid "Select route first to see available destinations"
+msgstr "Välj linje först för att se tillgängliga destinationer"
+
+msgid "Loading..."
+msgstr "Laddar..."
+
+msgid "Error loading destinations"
+msgstr "Fel vid laddning av destinationer"
+
+msgid "— Select Destination —"
+msgstr "— Välj destination —"
+

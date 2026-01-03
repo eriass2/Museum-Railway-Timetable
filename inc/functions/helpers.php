@@ -29,6 +29,74 @@ function MRT_get_all_stations() {
 }
 
 /**
+ * Get end stations (start and end) for a route
+ *
+ * @param int $route_id Route post ID
+ * @return array Array with 'start' and 'end' station IDs, or empty array if not set
+ */
+function MRT_get_route_end_stations($route_id) {
+    $start = get_post_meta($route_id, 'mrt_route_start_station', true);
+    $end = get_post_meta($route_id, 'mrt_route_end_station', true);
+    return [
+        'start' => $start ? intval($start) : 0,
+        'end' => $end ? intval($end) : 0,
+    ];
+}
+
+/**
+ * Calculate direction based on route and end station
+ * 
+ * @param int $route_id Route post ID
+ * @param int $end_station_id End station (destination) post ID
+ * @return string 'dit' if going towards end station, 'från' if going from end station, or '' if cannot determine
+ */
+function MRT_calculate_direction_from_end_station($route_id, $end_station_id) {
+    if (!$route_id || !$end_station_id) {
+        return '';
+    }
+    
+    $end_stations = MRT_get_route_end_stations($route_id);
+    $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+    
+    if (!is_array($route_stations) || empty($route_stations)) {
+        return '';
+    }
+    
+    // If end station is the route's end station, direction is 'dit' (towards)
+    if ($end_stations['end'] == $end_station_id) {
+        return 'dit';
+    }
+    
+    // If end station is the route's start station, direction is 'från' (from)
+    if ($end_stations['start'] == $end_station_id) {
+        return 'från';
+    }
+    
+    // Check position in route stations array
+    $end_station_index = array_search($end_station_id, $route_stations);
+    $start_station_index = array_search($end_stations['start'], $route_stations);
+    $route_end_station_index = array_search($end_stations['end'], $route_stations);
+    
+    if ($end_station_index === false) {
+        return '';
+    }
+    
+    // If end station is closer to route's end station, direction is 'dit'
+    if ($route_end_station_index !== false && $end_station_index > $route_end_station_index) {
+        return 'dit';
+    }
+    
+    // If end station is closer to route's start station, direction is 'från'
+    if ($start_station_index !== false && $end_station_index < $start_station_index) {
+        return 'från';
+    }
+    
+    // Default: if end station is after middle point, assume 'dit', otherwise 'från'
+    $middle = count($route_stations) / 2;
+    return $end_station_index >= $middle ? 'dit' : 'från';
+}
+
+/**
  * Get post by title and post type
  *
  * @param string $title Post title

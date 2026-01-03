@@ -480,6 +480,43 @@
             console.log('MRT: Nonce value:', nonce ? 'Found' : 'NOT FOUND');
         }
 
+        // Load destinations when route is selected
+        $('#mrt-new-service-route').on('change', function() {
+            var routeId = $(this).val();
+            var $destinationSelect = $('#mrt-new-service-end-station');
+            
+            if (!routeId) {
+                $destinationSelect.html('<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option><option value="" disabled><?php echo esc_js(__('Select a route first', 'museum-railway-timetable')); ?></option>');
+                return;
+            }
+            
+            $destinationSelect.prop('disabled', true).html('<option value=""><?php echo esc_js(__('Loading...', 'museum-railway-timetable')); ?></option>');
+            
+            $.ajax({
+                url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
+                type: 'POST',
+                data: {
+                    action: 'mrt_get_route_destinations',
+                    nonce: nonce,
+                    route_id: routeId
+                },
+                success: function(response) {
+                    if (response.success && response.data.destinations) {
+                        var options = '<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option>';
+                        response.data.destinations.forEach(function(dest) {
+                            options += '<option value="' + dest.id + '">' + dest.name + '</option>';
+                        });
+                        $destinationSelect.html(options).prop('disabled', false);
+                    } else {
+                        $destinationSelect.html('<option value=""><?php echo esc_js(__('Error loading destinations', 'museum-railway-timetable')); ?></option>').prop('disabled', false);
+                    }
+                },
+                error: function() {
+                    $destinationSelect.html('<option value=""><?php echo esc_js(__('Error loading destinations', 'museum-railway-timetable')); ?></option>').prop('disabled', false);
+                }
+            });
+        });
+        
         // Add service to timetable
         $('#mrt-add-service-to-timetable').on('click', function(e) {
             e.preventDefault();
@@ -491,14 +528,14 @@
             var timetableId = $btn.data('timetable-id');
             var routeId = $('#mrt-new-service-route').val();
             var trainTypeId = $('#mrt-new-service-train-type').val();
-            var direction = $('#mrt-new-service-direction').val();
+            var endStationId = $('#mrt-new-service-end-station').val();
 
             if (window.mrtDebug) {
                 console.log('MRT: Form values:', {
                     timetableId: timetableId,
                     routeId: routeId,
                     trainTypeId: trainTypeId,
-                    direction: direction,
+                    endStationId: endStationId,
                     nonce: nonce ? 'Present' : 'Missing'
                 });
             }
@@ -539,7 +576,7 @@
                     timetable_id: timetableId,
                     route_id: routeId,
                     train_type_id: trainTypeId,
-                    direction: direction
+                    end_station_id: endStationId
                 },
                 success: function(response) {
                     if (window.mrtDebug) {
@@ -556,7 +593,7 @@
                         var $row = $('<tr data-service-id="' + response.data.service_id + '">' +
                             '<td>' + response.data.route_name + '</td>' +
                             '<td>' + response.data.train_type_name + '</td>' +
-                            '<td>' + response.data.direction + '</td>' +
+                            '<td>' + (response.data.destination || response.data.direction || '—') + '</td>' +
                             '<td>' +
                             '<a href="' + editUrlWithTimetable + '" class="button button-small">Edit</a> ' +
                             '<button type="button" class="button button-small mrt-delete-service-from-timetable" data-service-id="' + response.data.service_id + '">Remove</button>' +
@@ -577,7 +614,7 @@
                         // Clear form
                         $('#mrt-new-service-route').val('');
                         $('#mrt-new-service-train-type').val('');
-                        $('#mrt-new-service-direction').val('');
+                        $('#mrt-new-service-end-station').html('<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option><option value="" disabled><?php echo esc_js(__('Select a route first', 'museum-railway-timetable')); ?></option>');
                         if (window.mrtDebug) {
                             console.log('MRT: Form cleared');
                         }
