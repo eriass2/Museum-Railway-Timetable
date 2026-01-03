@@ -92,6 +92,9 @@
                 });
             }
             
+            // Update service title preview when route changes
+            updateServiceTitlePreview(routeId, null);
+            
             // Update Stop Times table
             if ($stoptimesContainer.length && nonce) {
                 $.ajax({
@@ -153,6 +156,51 @@
                     }
                 });
             }
+        });
+        
+        // Update service title when destination changes
+        $('#mrt_service_end_station_id').on('change', function() {
+            var routeId = $('#mrt_service_route_id').val();
+            var endStationId = $(this).val();
+            updateServiceTitlePreview(routeId, endStationId);
+        });
+        
+        // Function to update service title preview
+        function updateServiceTitlePreview(routeId, endStationId) {
+            var $titleField = $('#title');
+            if (!$titleField.length) return; // Title field might be hidden
+            
+            if (!routeId) {
+                return;
+            }
+            
+            // Get route name
+            var routeName = $('#mrt_service_route_id option:selected').text();
+            if (!routeName || routeName.indexOf('—') === 0) {
+                return;
+            }
+            
+            var newTitle = routeName;
+            
+            if (endStationId) {
+                // Get destination name
+                var destinationName = $('#mrt_service_end_station_id option:selected').text();
+                if (destinationName && destinationName.indexOf('—') !== 0) {
+                    // Remove (Start) or (End) suffix if present
+                    destinationName = destinationName.replace(/\s*\(Start\)\s*$/i, '').replace(/\s*\(End\)\s*$/i, '');
+                    newTitle = routeName + ' → ' + destinationName;
+                }
+            }
+            
+            // Update title field if it's visible and not manually edited
+            if ($titleField.is(':visible') && !$titleField.data('user-edited')) {
+                $titleField.val(newTitle);
+            }
+        }
+        
+        // Track if user manually edits title
+        $('#title').on('input', function() {
+            $(this).data('user-edited', true);
         });
         
         // Handle "stops here" checkbox - enable/disable time fields
@@ -412,6 +460,49 @@
             var nextOrder = totalRows + 1;
             $('.mrt-new-route-station-row td:first').text(nextOrder);
         }
+        
+        // Auto-save route end stations when changed (optional - can be removed if not needed)
+        // This allows saving end stations without full form submission
+        var endStationsSaveTimeout;
+        $('#mrt-route-start-station, #mrt-route-end-station').on('change', function() {
+            var routeId = $('#post_ID').val();
+            if (!routeId) return; // Only for existing routes
+            
+            clearTimeout(endStationsSaveTimeout);
+            endStationsSaveTimeout = setTimeout(function() {
+                var startStation = $('#mrt-route-start-station').val();
+                var endStation = $('#mrt-route-end-station').val();
+                var nonce = $('#mrt_route_meta_nonce').val();
+                
+                if (!nonce) return;
+                
+                $.ajax({
+                    url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
+                    type: 'POST',
+                    data: {
+                        action: 'mrt_save_route_end_stations',
+                        nonce: nonce,
+                        route_id: routeId,
+                        start_station: startStation || 0,
+                        end_station: endStation || 0
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Show brief success indicator
+                            var $indicator = $('<span class="mrt-save-indicator" style="color: #46b450; margin-left: 0.5rem; font-size: 0.9em;">✓ Saved</span>');
+                            $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
+                            $('#mrt-route-end-station').closest('td').append($indicator);
+                            setTimeout(function() {
+                                $indicator.fadeOut(300, function() { $(this).remove(); });
+                            }, 2000);
+                        }
+                    },
+                    error: function() {
+                        // Silently fail - user can still save via form
+                    }
+                });
+            }, 1000); // Debounce: wait 1 second after last change
+        });
     }
 
     /**
@@ -468,12 +559,38 @@
 
             $(this).prop('disabled', true).text('Saving...');
 
+            var $btn = $(this);
+            var originalText = $btn.text();
+            $btn.prop('disabled', true).text('Saving...');
+            
             $.post(mrtAdmin.ajaxurl, data, function(response) {
                 if (response.success) {
-                    location.reload();
+                    // Update row with saved data instead of reloading
+                    if (response.data) {
+                        var st = response.data;
+                        $row.find('[data-field="arrival"] input').val(st.arrival_time || '');
+                        $row.find('[data-field="departure"] input').val(st.departure_time || '');
+                        $row.find('[data-field="pickup"] input[type="checkbox"]').prop('checked', st.pickup_allowed == 1);
+                        $row.find('[data-field="dropoff"] input[type="checkbox"]').prop('checked', st.dropoff_allowed == 1);
+                    }
+                    // Exit edit mode
+                    $row.removeClass('mrt-editing');
+                    $row.find('.mrt-display').show();
+                    $row.find('.mrt-input').hide();
+                    $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
+                    $row.find('.mrt-delete-stoptime').show();
+                    editingRow = null;
+                    
+                    // Show success message
+                    var successMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.stopTimeSavedSuccessfully) ? mrtAdmin.stopTimeSavedSuccessfully : 'Stop time saved successfully.';
+                    var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>' + successMsg + '</p></div>');
+                    $container.before($successMsg);
+                    setTimeout(function() {
+                        $successMsg.fadeOut(300, function() { $(this).remove(); });
+                    }, 3000);
                 } else {
                     alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorSavingStopTime : 'Error saving stop time.'));
-                    $(this).prop('disabled', false).text('Save');
+                    $btn.prop('disabled', false).text(originalText);
                 }
             });
         });
@@ -503,12 +620,44 @@
 
             $(this).prop('disabled', true).text('Adding...');
 
+            var $btn = $(this);
+            var originalText = $btn.text();
+            $btn.prop('disabled', true).text('Adding...');
+            
             $.post(mrtAdmin.ajaxurl, data, function(response) {
                 if (response.success) {
-                    location.reload();
+                    // Convert new row to regular row with saved data
+                    if (response.data) {
+                        var st = response.data;
+                        $row.data('stoptime-id', st.id);
+                        $row.data('id', st.id);
+                        $row.removeClass('mrt-new-row');
+                        
+                        // Update fields with saved data
+                        $row.find('[data-field="arrival"] input').val(st.arrival_time || '');
+                        $row.find('[data-field="departure"] input').val(st.departure_time || '');
+                        $row.find('[data-field="pickup"] input[type="checkbox"]').prop('checked', st.pickup_allowed == 1);
+                        $row.find('[data-field="dropoff"] input[type="checkbox"]').prop('checked', st.dropoff_allowed == 1);
+                        
+                        // Exit edit mode
+                        $row.removeClass('mrt-editing');
+                        $row.find('.mrt-display').show();
+                        $row.find('.mrt-input').hide();
+                        $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
+                        $row.find('.mrt-delete-stoptime').show();
+                        editingRow = null;
+                        
+                        // Show success message
+                        var successMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.stopTimeAddedSuccessfully) ? mrtAdmin.stopTimeAddedSuccessfully : 'Stop time added successfully.';
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>' + successMsg + '</p></div>');
+                        $container.before($successMsg);
+                        setTimeout(function() {
+                            $successMsg.fadeOut(300, function() { $(this).remove(); });
+                        }, 3000);
+                    }
                 } else {
                     alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorAddingStopTime : 'Error adding stop time.'));
-                    $(this).prop('disabled', false).text('Add');
+                    $btn.prop('disabled', false).text(originalText);
                 }
             });
         });

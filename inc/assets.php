@@ -71,6 +71,9 @@ function MRT_enqueue_admin_assets($hook) {
         'noRouteSelected' => __('No route selected. Select a route to configure stop times.', 'museum-railway-timetable'),
         'noStationsOnRoute' => __('No stations found on this route.', 'museum-railway-timetable'),
         'errorLoadingStations' => __('Error loading stations. Please refresh the page.', 'museum-railway-timetable'),
+        'stopTimeSavedSuccessfully' => __('Stop time saved successfully.', 'museum-railway-timetable'),
+        'stopTimeAddedSuccessfully' => __('Stop time added successfully.', 'museum-railway-timetable'),
+        'endStationsSavedSuccessfully' => __('End stations saved successfully.', 'museum-railway-timetable'),
     ]);
 }
 add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');

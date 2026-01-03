@@ -1259,6 +1259,15 @@ msgstr "Välj linje först för att se tillgängliga destinationer"
 msgid "Loading..."
 msgstr "Laddar..."
 
+msgid "Stop time saved successfully."
+msgstr "Stopptid sparad."
+
+msgid "Stop time added successfully."
+msgstr "Stopptid tillagd."
+
+msgid "End stations saved successfully."
+msgstr "Slutstationer sparade."
+
 msgid "Error loading destinations"
 msgstr "Fel vid laddning av destinationer"
 

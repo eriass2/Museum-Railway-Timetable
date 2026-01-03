@@ -19,6 +19,7 @@ add_action('wp_ajax_mrt_add_service_to_timetable', 'MRT_ajax_add_service_to_time
 add_action('wp_ajax_mrt_remove_service_from_timetable', 'MRT_ajax_remove_service_from_timetable');
 add_action('wp_ajax_mrt_get_route_destinations', 'MRT_ajax_get_route_destinations');
 add_action('wp_ajax_mrt_get_route_stations_for_stoptimes', 'MRT_ajax_get_route_stations_for_stoptimes');
+add_action('wp_ajax_mrt_save_route_end_stations', 'MRT_ajax_save_route_end_stations');
 
 /**
  * Add stop time via AJAX
@@ -591,6 +592,65 @@ function MRT_ajax_get_route_stations_for_stoptimes() {
     wp_send_json_success([
         'stations' => $stations,
         'has_stations' => !empty($stations),
+    ]);
+}
+
+/**
+ * Save route end stations via AJAX
+ */
+function MRT_ajax_save_route_end_stations() {
+    // Accept route meta nonce
+    $nonce = $_POST['nonce'] ?? '';
+    if (!wp_verify_nonce($nonce, 'mrt_save_route_meta')) {
+        wp_send_json_error(['message' => __('Security check failed.', 'museum-railway-timetable')]);
+        return;
+    }
+    
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
+    }
+    
+    $route_id = intval($_POST['route_id'] ?? 0);
+    $start_station = intval($_POST['start_station'] ?? 0);
+    $end_station = intval($_POST['end_station'] ?? 0);
+    
+    if ($route_id <= 0) {
+        wp_send_json_error(['message' => __('Invalid route.', 'museum-railway-timetable')]);
+    }
+    
+    // Save end stations
+    if ($start_station > 0) {
+        update_post_meta($route_id, 'mrt_route_start_station', $start_station);
+    } else {
+        delete_post_meta($route_id, 'mrt_route_start_station');
+    }
+    
+    if ($end_station > 0) {
+        update_post_meta($route_id, 'mrt_route_end_station', $end_station);
+    } else {
+        delete_post_meta($route_id, 'mrt_route_end_station');
+    }
+    
+    // Get station names for response
+    $start_station_name = '';
+    $end_station_name = '';
+    if ($start_station > 0) {
+        $start_post = get_post($start_station);
+        if ($start_post) {
+            $start_station_name = $start_post->post_title;
+        }
+    }
+    if ($end_station > 0) {
+        $end_post = get_post($end_station);
+        if ($end_post) {
+            $end_station_name = $end_post->post_title;
+        }
+    }
+    
+    wp_send_json_success([
+        'message' => __('End stations saved successfully.', 'museum-railway-timetable'),
+        'start_station_name' => $start_station_name,
+        'end_station_name' => $end_station_name,
     ]);
 }
 
