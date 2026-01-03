@@ -293,3 +293,219 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
     return ob_get_clean();
 }
 
+/**
+ * Render timetable for a specific date
+ * Shows all services running on that date, grouped by route and direction
+ *
+ * @param string $dateYmd Date in YYYY-MM-DD format
+ * @param string $train_type_slug Optional train type filter
+ * @return string HTML output
+ */
+function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
+    global $wpdb;
+    
+    if (!MRT_validate_date($dateYmd)) {
+        return '<div class="mrt-error">' . esc_html__('Invalid date.', 'museum-railway-timetable') . '</div>';
+    }
+    
+    // Get all services running on this date
+    $service_ids = MRT_services_running_on_date($dateYmd, $train_type_slug);
+    
+    if (empty($service_ids)) {
+        return '<div class="mrt-none">' . esc_html__('No services running on this date.', 'museum-railway-timetable') . '</div>';
+    }
+    
+    // Get service posts
+    $services = get_posts([
+        'post_type' => 'mrt_service',
+        'post__in' => $service_ids,
+        'posts_per_page' => -1,
+        'orderby' => 'title',
+        'order' => 'ASC',
+        'fields' => 'all',
+    ]);
+    
+    if (empty($services)) {
+        return '<div class="mrt-none">' . esc_html__('No services found.', 'museum-railway-timetable') . '</div>';
+    }
+    
+    // Group services by route and direction
+    $grouped_services = [];
+    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
+    
+    foreach ($services as $service) {
+        $route_id = get_post_meta($service->ID, 'mrt_service_route_id', true);
+        $direction = get_post_meta($service->ID, 'mrt_direction', true);
+        
+        if (!$route_id) {
+            continue;
+        }
+        
+        // Get route info
+        $route = get_post($route_id);
+        if (!$route) {
+            continue;
+        }
+        
+        // Get route stations
+        $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+        if (!is_array($route_stations)) {
+            $route_stations = [];
+        }
+        
+        // Get train type (use date-specific)
+        $train_type = MRT_get_service_train_type_for_date($service->ID, $dateYmd);
+        
+        // Create group key: route_id + direction
+        $group_key = $route_id . '_' . $direction;
+        
+        if (!isset($grouped_services[$group_key])) {
+            $grouped_services[$group_key] = [
+                'route' => $route,
+                'route_id' => $route_id,
+                'direction' => $direction,
+                'stations' => $route_stations,
+                'services' => [],
+            ];
+        }
+        
+        // Get stop times for this service
+        $stop_times = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $stoptimes_table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
+            $service->ID
+        ), ARRAY_A);
+        
+        $stop_times_by_station = [];
+        foreach ($stop_times as $st) {
+            $stop_times_by_station[$st['station_post_id']] = $st;
+        }
+        
+        $grouped_services[$group_key]['services'][] = [
+            'service' => $service,
+            'train_type' => $train_type,
+            'stop_times' => $stop_times_by_station,
+        ];
+    }
+    
+    if (empty($grouped_services)) {
+        return '<div class="mrt-none">' . esc_html__('No valid services found for this date.', 'museum-railway-timetable') . '</div>';
+    }
+    
+    // Render HTML (similar to timetable overview)
+    ob_start();
+    ?>
+    <div class="mrt-day-timetable">
+        <h3 class="mrt-day-timetable-title">
+            <?php 
+            printf(
+                esc_html__('Timetable for %s', 'museum-railway-timetable'),
+                esc_html(date_i18n(get_option('date_format'), strtotime($dateYmd)))
+            );
+            ?>
+        </h3>
+        <div class="mrt-timetable-overview">
+            <?php foreach ($grouped_services as $group): 
+                $route = $group['route'];
+                $direction = $group['direction'];
+                $stations = $group['stations'];
+                $services_list = $group['services'];
+                
+                // Get station posts
+                $station_posts = [];
+                if (!empty($stations)) {
+                    $station_posts = get_posts([
+                        'post_type' => 'mrt_station',
+                        'post__in' => $stations,
+                        'posts_per_page' => -1,
+                        'orderby' => 'post__in',
+                        'fields' => 'all',
+                    ]);
+                }
+                
+                // Determine route label based on end stations or direction
+                $route_label = $route->post_title;
+                
+                // Check if services have end stations set
+                $has_end_stations = false;
+                $end_station_ids = [];
+                foreach ($services_list as $service_data) {
+                    $end_station_id = get_post_meta($service_data['service']->ID, 'mrt_service_end_station_id', true);
+                    if ($end_station_id) {
+                        $has_end_stations = true;
+                        $end_station_ids[] = $end_station_id;
+                    }
+                }
+                
+                if ($has_end_stations && !empty($end_station_ids)) {
+                    // Use the first end station found (they should all be the same for a group)
+                    $end_station_id = $end_station_ids[0];
+                    $end_station_post = get_post($end_station_id);
+                    if ($end_station_post) {
+                        $route_label = sprintf(__('Route to %s', 'museum-railway-timetable'), $end_station_post->post_title);
+                    }
+                } elseif ($direction === 'dit' || $direction === 'från') {
+                    // Fallback to old direction logic
+                    $first_station = !empty($station_posts) ? $station_posts[0] : null;
+                    $last_station = !empty($station_posts) ? end($station_posts) : null;
+                    
+                    if ($direction === 'dit' && $last_station) {
+                        $route_label = sprintf(__('From %s To %s', 'museum-railway-timetable'), 
+                            $first_station ? $first_station->post_title : '', 
+                            $last_station->post_title);
+                    } elseif ($direction === 'från' && $first_station) {
+                        $route_label = sprintf(__('From %s To %s', 'museum-railway-timetable'), 
+                            $last_station ? $last_station->post_title : '', 
+                            $first_station->post_title);
+                    }
+                }
+                ?>
+                <div class="mrt-route-group">
+                    <h4 class="mrt-route-header"><?php echo esc_html($route_label); ?></h4>
+                    <table class="mrt-table mrt-overview-table">
+                        <thead>
+                            <tr>
+                                <th><?php esc_html_e('Service', 'museum-railway-timetable'); ?></th>
+                                <th><?php esc_html_e('Train Type', 'museum-railway-timetable'); ?></th>
+                                <?php foreach ($station_posts as $station): ?>
+                                    <th><?php echo esc_html($station->post_title); ?></th>
+                                <?php endforeach; ?>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($services_list as $service_data): 
+                                $service = $service_data['service'];
+                                $train_type = $service_data['train_type'];
+                                $stop_times = $service_data['stop_times'];
+                            ?>
+                                <tr>
+                                    <td><strong><?php echo esc_html($service->post_title); ?></strong></td>
+                                    <td><?php echo $train_type ? esc_html($train_type->name) : '—'; ?></td>
+                                    <?php foreach ($station_posts as $station): 
+                                        $st = $stop_times[$station->ID] ?? null;
+                                        $arrival = $st && !empty($st['arrival_time']) ? $st['arrival_time'] : '';
+                                        $departure = $st && !empty($st['departure_time']) ? $st['departure_time'] : '';
+                                        $time_display = '';
+                                        if ($arrival && $departure) {
+                                            $time_display = $arrival . ' / ' . $departure;
+                                        } elseif ($arrival) {
+                                            $time_display = $arrival;
+                                        } elseif ($departure) {
+                                            $time_display = $departure;
+                                        } else {
+                                            $time_display = $st ? 'X' : '—';
+                                        }
+                                    ?>
+                                        <td><?php echo esc_html($time_display); ?></td>
+                                    <?php endforeach; ?>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
+    <?php
+    return ob_get_clean();
+}
+

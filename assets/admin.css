@@ -165,6 +165,36 @@
     background: var(--mrt-bg-success);
 }
 
+.mrt-day-clickable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mrt-day-clickable:hover {
+    background-color: var(--mrt-green-hover, #2d7a3d) !important;
+    transform: scale(1.05);
+}
+
+.mrt-day-clickable.mrt-day-active {
+    background-color: var(--mrt-blue-primary, #2271b1) !important;
+    box-shadow: 0 0 0 2px var(--mrt-blue-primary, #2271b1);
+}
+
+.mrt-day-timetable-container {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: var(--mrt-bg-light);
+    border: 1px solid var(--mrt-border-default);
+    border-radius: 4px;
+}
+
+.mrt-day-timetable-title {
+    margin: 0 0 1rem 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--mrt-text-primary);
+}
+
 .mrt-empty {
     background: var(--mrt-bg-lightest);
 }

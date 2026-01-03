@@ -181,7 +181,7 @@ add_shortcode('museum_timetable_month', function ($atts) {
 
     // Render table: 7 columns
     ob_start();
-    echo '<div class="mrt-month">';
+    echo '<div class="mrt-month" data-train-type="'.esc_attr($atts['train_type']).'">';
     echo '<div class="mrt-month-header">'.esc_html(date_i18n('F Y', $first_ts)).'</div>';
     echo '<table class="mrt-month-table"><thead><tr>';
     if ($startMonday) {
@@ -200,9 +200,14 @@ add_shortcode('museum_timetable_month', function ($atts) {
     for ($d = 1; $d <= $daysInMonth; $d++) {
         $info = $dates[$d];
         $classes = ['mrt-day'];
-        if ($info['running']) $classes[] = 'mrt-running';
-        $title = $info['running'] ? esc_attr__('Services running', 'museum-railway-timetable') : '';
-        echo '<td class="'.esc_attr(implode(' ', $classes)).'" title="'.$title.'">';
+        if ($info['running']) {
+            $classes[] = 'mrt-running';
+            $classes[] = 'mrt-day-clickable';
+        }
+        $title = $info['running'] 
+            ? sprintf(esc_attr__('Click to view timetable for %s', 'museum-railway-timetable'), esc_attr(date_i18n(get_option('date_format'), strtotime($info['ymd']))))
+            : '';
+        echo '<td class="'.esc_attr(implode(' ', $classes)).'" data-date="'.esc_attr($info['ymd']).'" title="'.$title.'">';
         echo '<div class="mrt-daynum">'.intval($d).'</div>';
         if (!empty($atts['show_counts']) && $info['running']) {
             echo '<div class="mrt-dot">'.intval($info['count']).'</div>';
@@ -228,8 +233,12 @@ add_shortcode('museum_timetable_month', function ($atts) {
         if (!empty($atts['show_counts'])) {
             echo ' <span class="mrt-legend-item-count">('.esc_html__('count per day', 'museum-railway-timetable').')</span>';
         }
+        echo ' <span class="mrt-legend-item-click">('.esc_html__('Click to view timetable', 'museum-railway-timetable').')</span>';
         echo '</div>';
     }
+
+    // Container for day timetable (shown when day is clicked)
+    echo '<div class="mrt-day-timetable-container" style="display: none;"></div>';
 
     echo '</div>'; // .mrt-month
     return ob_get_clean();
@@ -350,9 +359,18 @@ add_shortcode('museum_journey_planner', function ($atts) {
                     ?>
                 </h3>
                 
-                <?php if (empty($connections)): ?>
+                <?php 
+                // Check if services run on this date
+                $services_on_date = MRT_services_running_on_date($selected_date);
+                if (empty($services_on_date)): ?>
+                    <div class="mrt-error">
+                        <p><strong><?php esc_html_e('No services running.', 'museum-railway-timetable'); ?></strong></p>
+                        <p><?php esc_html_e('There are no services running on the selected date. Please try a different date.', 'museum-railway-timetable'); ?></p>
+                    </div>
+                <?php elseif (empty($connections)): ?>
                     <div class="mrt-none">
-                        <?php esc_html_e('No connections found for this route on the selected date.', 'museum-railway-timetable'); ?>
+                        <p><strong><?php esc_html_e('No connections found.', 'museum-railway-timetable'); ?></strong></p>
+                        <p><?php esc_html_e('There are no direct connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
                     </div>
                 <?php else: ?>
                     <div class="mrt-journey-table-container">

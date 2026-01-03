@@ -26,6 +26,8 @@ add_action('wp_ajax_mrt_search_journey', 'MRT_ajax_search_journey');
 add_action('wp_ajax_nopriv_mrt_search_journey', 'MRT_ajax_search_journey');
 add_action('wp_ajax_mrt_get_timetable_for_station', 'MRT_ajax_get_timetable_for_station');
 add_action('wp_ajax_nopriv_mrt_get_timetable_for_station', 'MRT_ajax_get_timetable_for_station');
+add_action('wp_ajax_mrt_get_timetable_for_date', 'MRT_ajax_get_timetable_for_date');
+add_action('wp_ajax_nopriv_mrt_get_timetable_for_date', 'MRT_ajax_get_timetable_for_date');
 
 /**
  * Add stop time via AJAX
@@ -684,6 +686,16 @@ function MRT_ajax_search_journey() {
         return;
     }
     
+    // Check if services run on this date
+    $services_on_date = MRT_services_running_on_date($date);
+    if (empty($services_on_date)) {
+        $html = '<div class="mrt-error">';
+        $html .= esc_html__('No services are running on the selected date.', 'museum-railway-timetable');
+        $html .= '</div>';
+        wp_send_json_success(['html' => $html]);
+        return;
+    }
+    
     // Find connections
     $connections = MRT_find_connections($from_station_id, $to_station_id, $date);
     $from_station_name = get_the_title($from_station_id);
@@ -705,7 +717,8 @@ function MRT_ajax_search_journey() {
     
     <?php if (empty($connections)): ?>
         <div class="mrt-none">
-            <?php esc_html_e('No connections found for this route on the selected date.', 'museum-railway-timetable'); ?>
+            <p><strong><?php esc_html_e('No connections found.', 'museum-railway-timetable'); ?></strong></p>
+            <p><?php esc_html_e('There are no direct connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
         </div>
     <?php else: ?>
         <div class="mrt-journey-table-container">
@@ -784,6 +797,25 @@ function MRT_ajax_get_timetable_for_station() {
     // Get next departures
     $rows = MRT_next_departures_for_station($station_id, $services_today, $time, $limit, $show_arrival);
     $html = MRT_render_timetable_table($rows, $show_arrival);
+    
+    wp_send_json_success(['html' => $html]);
+}
+
+/**
+ * Get timetable for a specific date via AJAX (frontend)
+ */
+function MRT_ajax_get_timetable_for_date() {
+    $date = sanitize_text_field($_POST['date'] ?? '');
+    $train_type = sanitize_text_field($_POST['train_type'] ?? '');
+    
+    // Validation
+    if (empty($date) || !MRT_validate_date($date)) {
+        wp_send_json_error(['message' => __('Please select a valid date.', 'museum-railway-timetable')]);
+        return;
+    }
+    
+    // Render timetable for date
+    $html = MRT_render_timetable_for_date($date, $train_type);
     
     wp_send_json_success(['html' => $html]);
 }

@@ -142,11 +142,63 @@
     }
 
     /**
+     * Initialize Month Calendar with clickable days
+     */
+    function initMonthCalendar() {
+        var $month = $('.mrt-month');
+        if (!$month.length) return;
+
+        var $container = $month.find('.mrt-day-timetable-container');
+        if (!$container.length) return;
+
+        // Handle click on day
+        $month.on('click', '.mrt-day-clickable', function(e) {
+            e.preventDefault();
+            var $day = $(this);
+            var date = $day.data('date');
+            
+            if (!date) return;
+
+            // Get train type filter from shortcode attributes (if available)
+            var trainType = $month.data('train-type') || '';
+
+            // Remove previous active state
+            $month.find('.mrt-day-clickable').removeClass('mrt-day-active');
+            $day.addClass('mrt-day-active');
+
+            // Show loading
+            $container.html('<div class="mrt-loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>').slideDown(300);
+
+            // AJAX request
+            $.ajax({
+                url: (typeof mrtFrontend !== 'undefined' && mrtFrontend.ajaxurl) ? mrtFrontend.ajaxurl : '/wp-admin/admin-ajax.php',
+                type: 'POST',
+                data: {
+                    action: 'mrt_get_timetable_for_date',
+                    date: date,
+                    train_type: trainType
+                },
+                success: function(response) {
+                    if (response.success) {
+                        $container.html(response.data.html);
+                    } else {
+                        $container.html('<div class="mrt-error">' + (response.data.message || (typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorLoading : 'Error loading timetable.')) + '</div>');
+                    }
+                },
+                error: function() {
+                    $container.html('<div class="mrt-error">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : 'Network error. Please try again.') + '</div>');
+                }
+            });
+        });
+    }
+
+    /**
      * Initialize all frontend features
      */
     function init() {
         initJourneyPlanner();
         initTimetablePicker();
+        initMonthCalendar();
     }
 
     // Initialize when DOM is ready
