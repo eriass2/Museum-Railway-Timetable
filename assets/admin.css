@@ -5,11 +5,72 @@
  */
 
 /* ==========================================================================
+   CSS Variables (Theme Colors)
+   ========================================================================== */
+
+:root {
+    /* Primary Colors */
+    --mrt-green-primary: #2d5016;        /* Green header for route sections */
+    --mrt-green-light: #9ad29a;         /* Light green for success states */
+    --mrt-green-border: #6fb36f;         /* Green border */
+    
+    /* Service Type Colors */
+    --mrt-bus-bg: #e3f2fd;               /* Light blue for bus connections */
+    --mrt-special-bg: #fff9c4;           /* Light yellow for special services */
+    
+    /* Background Colors */
+    --mrt-bg-white: #fff;
+    --mrt-bg-light: #f9f9f9;
+    --mrt-bg-lighter: #f5f5f5;
+    --mrt-bg-lightest: #fafafa;
+    --mrt-bg-success: #f4fff4;
+    --mrt-bg-error: #fcf0f1;
+    
+    /* Border Colors */
+    --mrt-border-default: #ddd;
+    --mrt-border-light: #eee;
+    
+    /* Text Colors */
+    --mrt-text-primary: #444;
+    --mrt-text-secondary: #333;
+    --mrt-text-tertiary: #666;
+    --mrt-text-quaternary: #555;
+    --mrt-text-muted: #999;
+    --mrt-text-white: #fff;
+    --mrt-text-error: #d63638;
+    
+    /* WordPress Colors */
+    --mrt-wp-blue: #2271b1;
+    --mrt-wp-blue-dark: #135e96;
+    --mrt-wp-blue-darker: #0a4b78;
+    --mrt-wp-gray: #646970;
+    --mrt-wp-border: #c3c4c7;
+    
+    /* Button/UI Colors */
+    --mrt-warning-bg: #fff3cd;
+    --mrt-warning-border: #ffc107;
+    --mrt-danger-bg: #dc3545;
+    --mrt-danger-border: #dc3545;
+    --mrt-info-bg: #f0f6fc;
+    --mrt-info-border: #2271b1;
+    --mrt-light-blue-bg: #f0f8ff;
+    --mrt-light-yellow-bg: #fff9e6;
+    --mrt-gray-bg: #f0f0f0;
+    
+    /* Spacing */
+    --mrt-spacing-xs: 0.25rem;
+    --mrt-spacing-sm: 0.5rem;
+    --mrt-spacing-md: 1rem;
+    --mrt-spacing-lg: 1.5rem;
+    --mrt-spacing-xl: 2rem;
+}
+
+/* ==========================================================================
    Admin Page Headers
    ========================================================================== */
 
 .wrap h1 {
-    color: #444;
+    color: var(--mrt-text-primary);
 }
 
 /* ==========================================================================
@@ -28,13 +89,13 @@
 
 .mrt-table th,
 .mrt-table td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--mrt-border-default);
     padding: 6px 8px;
     text-align: left;
 }
 
 .mrt-table th {
-    background: #f6f6f6;
+    background: var(--mrt-bg-lighter);
 }
 
 /* ==========================================================================
@@ -71,7 +132,7 @@
 
 .mrt-month-table th,
 .mrt-month-table td {
-    border: 1px solid #eee;
+    border: 1px solid var(--mrt-border-light);
     width: 14.285%;
     vertical-align: top;
     height: 72px;
@@ -79,7 +140,7 @@
 }
 
 .mrt-month-table thead th {
-    background: #fafafa;
+    background: var(--mrt-bg-lightest);
     font-weight: 600;
 }
 
@@ -101,18 +162,18 @@
 }
 
 .mrt-running {
-    background: #f4fff4;
+    background: var(--mrt-bg-success);
 }
 
 .mrt-empty {
-    background: #fcfcfc;
+    background: var(--mrt-bg-lightest);
 }
 
 /* Month Calendar - Legend */
 .mrt-legend {
     margin-top: 0.5rem;
     font-size: 0.9rem;
-    color: #444;
+    color: var(--mrt-text-primary);
 }
 
 .mrt-legend-item {
@@ -131,8 +192,8 @@
     display: inline-block;
     width: 0.6rem;
     height: 0.6rem;
-    background: #9ad29a;
-    border: 1px solid #6fb36f;
+    background: var(--mrt-green-light);
+    border: 1px solid var(--mrt-green-border);
     border-radius: 50%;
 }
 
@@ -148,8 +209,8 @@
     max-height: 600px;
     overflow-y: auto;
     padding: 1rem;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
+    background: var(--mrt-bg-light);
+    border: 1px solid var(--mrt-border-default);
 }
 
 .mrt-timetable-group {
@@ -157,10 +218,10 @@
 }
 
 .mrt-route-header {
-    background: #2271b1;
-    color: #fff;
-    padding: 0.5rem 1rem;
-    margin: 0 0 0.5rem 0;
+    background: var(--mrt-green-primary);
+    color: var(--mrt-text-white);
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
+    margin: 0 0 var(--mrt-spacing-sm) 0;
     font-size: 1.1rem;
     font-weight: 600;
 }
@@ -168,28 +229,38 @@
 .mrt-overview-table {
     width: 100%;
     border-collapse: collapse;
-    background: #fff;
-    margin-bottom: 1rem;
+    background: var(--mrt-bg-white);
+    margin-bottom: var(--mrt-spacing-md);
 }
 
 .mrt-overview-table th,
 .mrt-overview-table td {
-    border: 1px solid #ddd;
+    border: 1px solid var(--mrt-border-default);
     padding: 8px 12px;
     text-align: center;
 }
 
 .mrt-overview-table th {
-    background: #f5f5f5;
+    background: var(--mrt-bg-lighter);
     font-weight: 600;
     vertical-align: bottom;
 }
 
+/* Service column styling - can be overridden for bus/special services */
+.mrt-overview-table .mrt-service-col.mrt-service-bus {
+    background: var(--mrt-bus-bg);
+}
+
+.mrt-overview-table .mrt-service-col.mrt-service-special {
+    background: var(--mrt-special-bg);
+}
+
 .mrt-overview-table .mrt-station-col {
     text-align: left;
-    background: #f9f9f9;
+    background: var(--mrt-bg-light);
     font-weight: 600;
     min-width: 150px;
+    vertical-align: middle;
 }
 
 .mrt-overview-table .mrt-service-col {
@@ -201,17 +272,20 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
+    align-items: center;
 }
 
 .mrt-train-type {
     font-size: 0.85rem;
-    color: #666;
-    font-weight: normal;
+    color: var(--mrt-text-secondary);
+    font-weight: 500;
+    text-align: center;
 }
 
 .mrt-service-number {
     font-weight: 600;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    text-align: center;
 }
 
 .mrt-station-name {
@@ -222,11 +296,23 @@
 .mrt-time-cell {
     font-family: monospace;
     font-size: 0.95rem;
+    white-space: nowrap;
 }
 
 .mrt-time-cell:empty::before {
     content: '—';
-    color: #999;
+    color: var(--mrt-text-muted);
+}
+
+/* Symbol styling for approximate times and stop types */
+.mrt-time-cell {
+    position: relative;
+}
+
+/* Style for vertical bar (train doesn't stop) */
+.mrt-time-cell:has-text('|') {
+    color: var(--mrt-text-tertiary);
+    font-weight: bold;
 }
 
 /* ==========================================================================
@@ -235,15 +321,15 @@
 
 .mrt-none {
     padding: 0.75rem;
-    color: #666;
+    color: var(--mrt-text-tertiary);
     font-style: italic;
 }
 
 .mrt-error {
     padding: 0.75rem;
-    color: #d63638;
-    background: #fcf0f1;
-    border-left: 4px solid #d63638;
+    color: var(--mrt-text-error);
+    background: var(--mrt-bg-error);
+    border-left: 4px solid var(--mrt-text-error);
 }
 
 /* Admin List Page */
@@ -257,7 +343,7 @@
 
 .mrt-note {
     margin-top: 0.75rem;
-    color: #555;
+    color: var(--mrt-text-quaternary);
 }
 
 /* ==========================================================================
@@ -275,7 +361,7 @@
 }
 
 .mrt-stoptimes-table th {
-    background: #f5f5f5;
+    background: var(--mrt-bg-lighter);
     font-weight: 600;
 }
 
@@ -290,11 +376,11 @@
 }
 
 .mrt-stoptime-row:not(.mrt-new-row):hover {
-    background-color: #f0f8ff !important;
+    background-color: var(--mrt-light-blue-bg) !important;
 }
 
 .mrt-stoptime-row.mrt-editing {
-    background-color: #fff9e6 !important;
+    background-color: var(--mrt-light-yellow-bg) !important;
 }
 
 .mrt-edit-field {
@@ -336,13 +422,13 @@
 
 .mrt-empty-row td {
     text-align: center;
-    color: #666;
+    color: var(--mrt-text-tertiary);
     font-style: italic;
     padding: 2rem;
 }
 
 .mrt-none {
-    color: #666;
+    color: var(--mrt-text-tertiary);
     font-style: italic;
 }
 
@@ -402,8 +488,8 @@
 
 .mrt-stat-card {
     padding: 1rem;
-    background: #fff;
-    border: 1px solid #c3c4c7;
+    background: var(--mrt-bg-white);
+    border: 1px solid var(--mrt-wp-border);
     border-radius: 4px;
     text-align: center;
 }
@@ -411,11 +497,11 @@
 .mrt-stat-number {
     font-size: 2rem;
     font-weight: bold;
-    color: #2271b1;
+    color: var(--mrt-wp-blue);
 }
 
 .mrt-stat-label {
-    color: #646970;
+    color: var(--mrt-wp-gray);
     margin-top: 0.5rem;
 }
 
@@ -460,8 +546,8 @@
 .mrt-info-box {
     padding: 0.75rem;
     margin-bottom: 1rem;
-    background: #f0f6fc;
-    border-left: 4px solid #2271b1;
+    background: var(--mrt-info-bg);
+    border-left: 4px solid var(--mrt-info-border);
     border-radius: 3px;
 }
 
@@ -485,8 +571,8 @@
 /* Settings Section */
 .mrt-settings-section {
     padding: 1.5rem;
-    background: #fff;
-    border: 1px solid #c3c4c7;
+    background: var(--mrt-bg-white);
+    border: 1px solid var(--mrt-wp-border);
     border-radius: 4px;
     margin-top: 2rem;
 }
@@ -499,7 +585,7 @@
 .mrt-guide-section {
     padding: 1.5rem;
     background: #f0f6fc;
-    border: 1px solid #c3c4c7;
+    border: 1px solid var(--mrt-wp-border);
     border-radius: 4px;
     margin-top: 2rem;
 }
@@ -512,7 +598,7 @@
 .mrt-guide-toggle {
     font-size: 0.8em;
     font-weight: normal;
-    color: #646970;
+    color: var(--mrt-wp-gray);
 }
 
 .mrt-guide-content {
@@ -528,8 +614,8 @@
 .mrt-tip-box {
     margin-top: 1rem;
     padding: 0.75rem;
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
+    background: var(--mrt-warning-bg);
+    border-left: 4px solid var(--mrt-warning-border);
     border-radius: 3px;
 }
 
@@ -576,8 +662,8 @@
     align-items: center;
     padding: 0.5rem;
     margin-bottom: 0.5rem;
-    background: #fff;
-    border: 1px solid #ddd;
+    background: var(--mrt-bg-white);
+    border: 1px solid var(--mrt-border-default);
     border-radius: 3px;
 }
 
@@ -587,7 +673,7 @@
 }
 
 .mrt-date-iso {
-    color: #666;
+    color: var(--mrt-text-tertiary);
     font-size: 0.9em;
     margin-left: 0.5rem;
 }
@@ -604,8 +690,8 @@
 .mrt-date-single-section {
     margin-bottom: 1.5rem;
     padding: 1rem;
-    background: #f9f9f9;
-    border: 1px solid #ddd;
+    background: var(--mrt-bg-light);
+    border: 1px solid var(--mrt-border-default);
     border-radius: 4px;
 }
 
@@ -644,7 +730,7 @@
 .mrt-description-small {
     margin: 0;
     font-size: 11px;
-    color: #666;
+    color: var(--mrt-text-tertiary);
 }
 
 .mrt-description-mt {
@@ -667,9 +753,9 @@
 
 /* Code/Pre blocks */
 .mrt-code-block {
-    background: #fff;
+    background: var(--mrt-bg-white);
     padding: 0.75rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--mrt-border-default);
     border-radius: 3px;
     overflow-x: auto;
 }
@@ -684,14 +770,14 @@
     margin-top: 2rem;
     padding: 1rem;
     background: #fff3cd;
-    border: 1px solid #ffc107;
+    border: 1px solid var(--mrt-warning-border);
     border-radius: 4px;
 }
 
 .mrt-danger-button {
-    background: #dc3545;
-    color: #fff;
-    border-color: #dc3545;
+    background: var(--mrt-danger-bg);
+    color: var(--mrt-text-white);
+    border-color: var(--mrt-danger-border);
 }
 
 .mrt-description-mt-small {
@@ -709,7 +795,7 @@
 
 /* Code display */
 .mrt-code-inline {
-    background: #f0f0f0;
+    background: var(--mrt-gray-bg);
     padding: 2px 6px;
     border-radius: 3px;
 }
@@ -758,7 +844,7 @@
 }
 
 .mrt-journey-form {
-    background: #f9f9f9;
+    background: var(--mrt-bg-light);
     padding: 1.5rem;
     border-radius: 4px;
     margin-bottom: 1.5rem;
@@ -780,14 +866,14 @@
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 600;
-    color: #333;
+    color: var(--mrt-text-secondary);
 }
 
 .mrt-journey-field select,
 .mrt-journey-field input[type="date"] {
     width: 100%;
     padding: 0.5rem;
-    border: 1px solid #ddd;
+    border: 1px solid var(--mrt-border-default);
     border-radius: 3px;
     font-size: 1em;
 }
@@ -795,13 +881,13 @@
 .mrt-journey-field select:focus,
 .mrt-journey-field input[type="date"]:focus {
     outline: none;
-    border-color: #2271b1;
+    border-color: var(--mrt-wp-blue);
     box-shadow: 0 0 0 1px #2271b1;
 }
 
 .mrt-journey-search {
-    background: #2271b1;
-    color: #fff;
+    background: var(--mrt-wp-blue);
+    color: var(--mrt-text-white);
     border: none;
     padding: 0.6rem 1.5rem;
     border-radius: 3px;
@@ -812,11 +898,11 @@
 }
 
 .mrt-journey-search:hover {
-    background: #135e96;
+    background: var(--mrt-wp-blue-dark);
 }
 
 .mrt-journey-search:active {
-    background: #0a4b78;
+    background: var(--mrt-wp-blue-darker);
 }
 
 .mrt-journey-results {
@@ -826,7 +912,7 @@
 .mrt-journey-results-title {
     margin-bottom: 1rem;
     font-size: 1.2em;
-    color: #333;
+    color: var(--mrt-text-secondary);
 }
 
 .mrt-journey-table-container {
@@ -838,12 +924,12 @@
 }
 
 .mrt-journey-table td strong {
-    color: #2271b1;
+    color: var(--mrt-wp-blue);
     font-size: 1.05em;
 }
 
 .mrt-route-name {
-    color: #666;
+    color: var(--mrt-text-tertiary);
     font-style: italic;
 }
 
