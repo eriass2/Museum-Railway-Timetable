@@ -7,6 +7,11 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 - **Custom Post Types**: Stations, Routes, Timetables, and Services
 - **Custom Taxonomies**: Train Types
 - **Shortcodes**: Display timetables on the frontend
+  - Simple timetable display
+  - Station picker with dropdown
+  - Month calendar view
+  - Complete timetable overview
+  - **Journey Planner**: Search for connections between stations
 - **Admin Interface**: 
   - Inline editing for Stop Times directly in Service edit pages
   - Streamlined menu structure
@@ -92,6 +97,39 @@ Display a complete timetable overview grouped by route and direction (like tradi
 - Displays times for each station, with "X" for null/unspecified times
 - Perfect for displaying complete timetables on pages
 
+#### 5. Journey Planner
+Display a journey planner where users can search for connections between two stations on a specific date:
+
+```
+[museum_journey_planner]
+```
+
+**Parameters:**
+- `default_date` - Default date in YYYY-MM-DD format (optional, defaults to today)
+
+**Features:**
+- Dropdown to select departure station (From)
+- Dropdown to select arrival station (To)
+- Date picker (defaults to today's date)
+- Search button to find connections
+- Results table showing all available connections with:
+  - Departure and arrival times
+  - Train types
+  - Route information
+  - Service details
+- Automatically finds services that:
+  - Run on the selected date
+  - Stop at both departure and arrival stations
+  - Have the departure station before the arrival station in the route sequence
+  - Allow pickup at departure station and dropoff at arrival station
+- Results sorted by departure time
+
+**Example:**
+```
+[museum_journey_planner]
+[museum_journey_planner default_date="2025-06-15"]
+```
+
 ### Managing Services
 
 Services can be managed in two ways:
@@ -123,6 +161,31 @@ Services can be managed in two ways:
    - Select Pickup/Dropoff options
    - Click "Save Stop Times" to save all changes at once
 
+
+## Planned Features
+
+The following features are planned for future releases:
+
+1. **End Stations on Routes**
+   - Introduce end stations (terminus) on routes
+   - Routes will have a final destination instead of "hit och dit" (to and from) as direction
+
+2. **Approximate Departure Times**
+   - Ability to mark departures as approximate (e.g., "ca. 10:00" or "~10:00")
+   - Useful for services with flexible timing
+
+3. **Stop Type Indicators**
+   - Create unique indicators for stop behavior:
+     - Train does not stop (passes through)
+     - Train only drops off passengers (no pickup)
+     - Train only picks up passengers (no dropoff)
+     - Train stops for both pickup and dropoff
+
+4. **Symbol Legend**
+   - Add a legend explaining all symbols used in timetables
+   - Will help users understand the various indicators and markings
+
+These features will enhance the flexibility and clarity of timetable displays, making it easier to represent complex railway operations.
 
 ## Development
 
@@ -177,6 +240,11 @@ The plugin creates one custom table:
 This plugin is provided as-is for use with WordPress.
 
 ## Changelog
+
+### 0.4.0
+- **Journey Planner**: New shortcode `[museum_journey_planner]` for searching connections between stations
+- **Admin Documentation**: Comprehensive documentation for all shortcodes including journey planner
+- **Enhanced Help**: Improved admin page with detailed shortcode usage instructions
 
 ### 0.3.0
 - **Timetable Overview**: Visual preview of timetable grouped by route and direction, showing train types and times
