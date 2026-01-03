@@ -1265,3 +1265,15 @@ msgstr "Fel vid laddning av destinationer"
 msgid "— Select Destination —"
 msgstr "— Välj destination —"
 
+msgid "Loading stations..."
+msgstr "Laddar stationer..."
+
+msgid "No route selected. Select a route to configure stop times."
+msgstr "Ingen linje vald. Välj en linje för att konfigurera stopptider."
+
+msgid "No stations found on this route."
+msgstr "Inga stationer hittades på denna linje."
+
+msgid "Error loading stations. Please refresh the page."
+msgstr "Fel vid laddning av stationer. Vänligen uppdatera sidan."
+

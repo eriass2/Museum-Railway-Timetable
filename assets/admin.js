@@ -35,17 +35,123 @@
             // This is a placeholder for future JavaScript enhancements
         });
         
-        // Update stations list when route changes in Service edit
+        // Update stations list and destination dropdown when route changes in Service edit
         $('#mrt_service_route_id').on('change', function() {
             var routeId = $(this).val();
-            if (routeId) {
-                // Reload page to update stations list
-                // Could be improved with AJAX in the future
-                var $form = $(this).closest('form');
-                if ($form.length && !$form.data('saving')) {
-                    // Show message that page needs to reload
-                    alert(typeof mrtAdmin !== 'undefined' ? mrtAdmin.saveServiceToUpdateStations : 'Please save the service to update available stations from the selected route.');
+            var serviceId = $('#post_ID').val() || 0;
+            var $stoptimesContainer = $('#mrt-stoptimes-container');
+            var $destinationSelect = $('#mrt_service_end_station_id');
+            var nonce = $('#mrt_stoptimes_nonce').val();
+            
+            if (!routeId) {
+                // Clear Stop Times table and destination dropdown
+                if ($stoptimesContainer.length) {
+                    $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-none">' + 
+                        (typeof mrtAdmin !== 'undefined' ? mrtAdmin.noRouteSelected : 'No route selected. Select a route to configure stop times.') + 
+                        '</td></tr>');
+                    $('#mrt-save-all-stoptimes').closest('p').hide();
                 }
+                if ($destinationSelect.length) {
+                    $destinationSelect.html('<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option>');
+                }
+                return;
+            }
+            
+            // Show loading state
+            if ($stoptimesContainer.length) {
+                $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" style="text-align: center; padding: 2rem;"><span class="spinner is-active" style="float: none; margin: 0;"></span> ' + 
+                    (typeof mrtAdmin !== 'undefined' ? mrtAdmin.loadingStations : 'Loading stations...') + '</td></tr>');
+            }
+            
+            // Update destination dropdown
+            if ($destinationSelect.length) {
+                $destinationSelect.prop('disabled', true).html('<option value=""><?php echo esc_js(__('Loading...', 'museum-railway-timetable')); ?></option>');
+                
+                $.ajax({
+                    url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
+                    type: 'POST',
+                    data: {
+                        action: 'mrt_get_route_destinations',
+                        nonce: $('#mrt_service_meta_nonce').val() || $('#mrt_timetable_services_nonce').val() || nonce,
+                        route_id: routeId
+                    },
+                    success: function(response) {
+                        if (response.success && response.data.destinations) {
+                            var options = '<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option>';
+                            response.data.destinations.forEach(function(dest) {
+                                options += '<option value="' + dest.id + '">' + dest.name + '</option>';
+                            });
+                            $destinationSelect.html(options).prop('disabled', false);
+                        } else {
+                            $destinationSelect.html('<option value=""><?php echo esc_js(__('Error loading destinations', 'museum-railway-timetable')); ?></option>').prop('disabled', false);
+                        }
+                    },
+                    error: function() {
+                        $destinationSelect.html('<option value=""><?php echo esc_js(__('Error loading destinations', 'museum-railway-timetable')); ?></option>').prop('disabled', false);
+                    }
+                });
+            }
+            
+            // Update Stop Times table
+            if ($stoptimesContainer.length && nonce) {
+                $.ajax({
+                    url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
+                    type: 'POST',
+                    data: {
+                        action: 'mrt_get_route_stations_for_stoptimes',
+                        nonce: nonce,
+                        route_id: routeId,
+                        service_id: serviceId
+                    },
+                    success: function(response) {
+                        if (response.success && response.data.has_stations) {
+                            var $tbody = $('#mrt-stoptimes-tbody');
+                            $tbody.empty();
+                            
+                            response.data.stations.forEach(function(station, index) {
+                                var stopsHere = station.stops_here;
+                                var disabledAttr = stopsHere ? '' : 'disabled';
+                                var opacityClass = stopsHere ? '' : 'mrt-field-disabled-opacity';
+                                
+                                var row = '<tr class="mrt-route-station-row" data-station-id="' + station.id + '" data-service-id="' + serviceId + '" data-sequence="' + station.sequence + '">' +
+                                    '<td>' + (index + 1) + '</td>' +
+                                    '<td><strong>' + station.name + '</strong></td>' +
+                                    '<td>' +
+                                    '<input type="checkbox" class="mrt-stops-here" ' + (stopsHere ? 'checked' : '') + ' data-station-id="' + station.id + '" />' +
+                                    '</td>' +
+                                    '<td class="mrt-time-field ' + opacityClass + '">' +
+                                    '<input type="text" class="mrt-arrival-time mrt-time-input" value="' + (station.arrival_time || '') + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
+                                    '<p class="description mrt-description-small">Leave empty if train stops but time is not fixed</p>' +
+                                    '</td>' +
+                                    '<td class="mrt-time-field ' + opacityClass + '">' +
+                                    '<input type="text" class="mrt-departure-time mrt-time-input" value="' + (station.departure_time || '') + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
+                                    '<p class="description mrt-description-small">Leave empty if train stops but time is not fixed</p>' +
+                                    '</td>' +
+                                    '<td class="mrt-option-field ' + opacityClass + '">' +
+                                    '<label><input type="checkbox" class="mrt-pickup" ' + (station.pickup_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> Pickup</label>' +
+                                    '</td>' +
+                                    '<td class="mrt-option-field ' + opacityClass + '">' +
+                                    '<label><input type="checkbox" class="mrt-dropoff" ' + (station.dropoff_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> Dropoff</label>' +
+                                    '</td>' +
+                                    '</tr>';
+                                $tbody.append(row);
+                            });
+                            
+                            // Show save button
+                            $('#mrt-save-all-stoptimes').closest('p').show();
+                        } else {
+                            $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-none">' + 
+                                (typeof mrtAdmin !== 'undefined' ? mrtAdmin.noStationsOnRoute : 'No stations found on this route.') + 
+                                '</td></tr>');
+                            $('#mrt-save-all-stoptimes').closest('p').hide();
+                        }
+                    },
+                    error: function() {
+                        $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-error">' + 
+                            (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorLoadingStations : 'Error loading stations. Please refresh the page.') + 
+                            '</td></tr>');
+                    }
+                });
             }
         });
         
@@ -445,15 +551,49 @@
 
         function cancelEditStopTime($row) {
             if (!$row.length) return;
-            $row.removeClass('mrt-editing');
-            $row.find('.mrt-display').show();
-            $row.find('.mrt-input').hide();
-            $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
-            $row.find('.mrt-delete-stoptime').show();
-            editingRow = null;
-            // Reload to reset values
-            if ($row.data('stoptime-id') !== 'new') {
-                location.reload();
+            
+            var stoptimeId = $row.data('stoptime-id');
+            if (stoptimeId && stoptimeId !== 'new') {
+                // Reload original values from server for existing stop times
+                var id = $row.data('id');
+                if (id) {
+                    $.post(mrtAdmin.ajaxurl, {
+                        action: 'mrt_get_stoptime',
+                        nonce: nonce,
+                        id: id
+                    }, function(response) {
+                        if (response.success && response.data) {
+                            var st = response.data;
+                            $row.find('.mrt-arrival-time').val(st.arrival_time || '');
+                            $row.find('.mrt-departure-time').val(st.departure_time || '');
+                            $row.find('.mrt-pickup').prop('checked', st.pickup_allowed == 1);
+                            $row.find('.mrt-dropoff').prop('checked', st.dropoff_allowed == 1);
+                        }
+                        // Exit edit mode
+                        $row.removeClass('mrt-editing');
+                        $row.find('.mrt-display').show();
+                        $row.find('.mrt-input').hide();
+                        $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
+                        $row.find('.mrt-delete-stoptime').show();
+                        editingRow = null;
+                    });
+                } else {
+                    // No ID, just exit edit mode
+                    $row.removeClass('mrt-editing');
+                    $row.find('.mrt-display').show();
+                    $row.find('.mrt-input').hide();
+                    $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
+                    $row.find('.mrt-delete-stoptime').show();
+                    editingRow = null;
+                }
+            } else {
+                // New row or no ID, just exit edit mode
+                $row.removeClass('mrt-editing');
+                $row.find('.mrt-display').show();
+                $row.find('.mrt-input').hide();
+                $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
+                $row.find('.mrt-delete-stoptime').show();
+                editingRow = null;
             }
         }
     }

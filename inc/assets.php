@@ -67,6 +67,10 @@ function MRT_enqueue_admin_assets($hook) {
         'moveUp' => __('Move up', 'museum-railway-timetable'),
         'moveDown' => __('Move down', 'museum-railway-timetable'),
         'remove' => __('Remove', 'museum-railway-timetable'),
+        'loadingStations' => __('Loading stations...', 'museum-railway-timetable'),
+        'noRouteSelected' => __('No route selected. Select a route to configure stop times.', 'museum-railway-timetable'),
+        'noStationsOnRoute' => __('No stations found on this route.', 'museum-railway-timetable'),
+        'errorLoadingStations' => __('Error loading stations. Please refresh the page.', 'museum-railway-timetable'),
     ]);
 }
 add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');

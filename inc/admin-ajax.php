@@ -18,6 +18,7 @@ add_action('wp_ajax_mrt_get_stoptime', 'MRT_ajax_get_stoptime');
 add_action('wp_ajax_mrt_add_service_to_timetable', 'MRT_ajax_add_service_to_timetable');
 add_action('wp_ajax_mrt_remove_service_from_timetable', 'MRT_ajax_remove_service_from_timetable');
 add_action('wp_ajax_mrt_get_route_destinations', 'MRT_ajax_get_route_destinations');
+add_action('wp_ajax_mrt_get_route_stations_for_stoptimes', 'MRT_ajax_get_route_stations_for_stoptimes');
 
 /**
  * Add stop time via AJAX
@@ -447,7 +448,23 @@ function MRT_ajax_remove_service_from_timetable() {
  * Get available destinations for a route via AJAX
  */
 function MRT_ajax_get_route_destinations() {
-    check_ajax_referer('mrt_timetable_services_nonce', 'nonce');
+    // Accept multiple nonces for flexibility (timetable services or service meta)
+    $nonce = $_POST['nonce'] ?? '';
+    $valid = false;
+    
+    // Try timetable services nonce first
+    if (wp_verify_nonce($nonce, 'mrt_timetable_services_nonce')) {
+        $valid = true;
+    }
+    // Try service meta nonce
+    elseif (wp_verify_nonce($nonce, 'mrt_save_service_meta')) {
+        $valid = true;
+    }
+    
+    if (!$valid) {
+        wp_send_json_error(['message' => __('Security check failed.', 'museum-railway-timetable')]);
+        return;
+    }
     
     if (!current_user_can('edit_posts')) {
         wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
@@ -503,5 +520,77 @@ function MRT_ajax_get_route_destinations() {
     }
     
     wp_send_json_success(['destinations' => $destinations]);
+}
+
+/**
+ * Get route stations for Stop Times table via AJAX
+ */
+function MRT_ajax_get_route_stations_for_stoptimes() {
+    check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
+    
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
+    }
+    
+    $route_id = intval($_POST['route_id'] ?? 0);
+    $service_id = intval($_POST['service_id'] ?? 0);
+    
+    if ($route_id <= 0) {
+        wp_send_json_error(['message' => __('Invalid route.', 'museum-railway-timetable')]);
+    }
+    
+    // Get route stations
+    $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+    if (!is_array($route_stations)) {
+        $route_stations = [];
+    }
+    
+    // Get existing stop times for this service
+    global $wpdb;
+    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
+    $existing_stoptimes = [];
+    if ($service_id > 0) {
+        $stoptimes = $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM $stoptimes_table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
+            $service_id
+        ), ARRAY_A);
+        foreach ($stoptimes as $st) {
+            $existing_stoptimes[$st['station_post_id']] = $st;
+        }
+    }
+    
+    // Get station posts
+    $stations = [];
+    if (!empty($route_stations)) {
+        $station_posts = get_posts([
+            'post_type' => 'mrt_station',
+            'post__in' => $route_stations,
+            'posts_per_page' => -1,
+            'orderby' => 'post__in',
+            'fields' => 'all',
+        ]);
+        
+        foreach ($station_posts as $index => $station) {
+            $st = $existing_stoptimes[$station->ID] ?? null;
+            $stops_here = $st !== null;
+            $sequence = $st ? $st['stop_sequence'] : ($index + 1);
+            
+            $stations[] = [
+                'id' => $station->ID,
+                'name' => $station->post_title,
+                'sequence' => $sequence,
+                'stops_here' => $stops_here,
+                'arrival_time' => $st ? $st['arrival_time'] : '',
+                'departure_time' => $st ? $st['departure_time'] : '',
+                'pickup_allowed' => $st ? !empty($st['pickup_allowed']) : true,
+                'dropoff_allowed' => $st ? !empty($st['dropoff_allowed']) : true,
+            ];
+        }
+    }
+    
+    wp_send_json_success([
+        'stations' => $stations,
+        'has_stations' => !empty($stations),
+    ]);
 }
 
