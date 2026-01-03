@@ -117,6 +117,27 @@ function MRT_enqueue_frontend_assets() {
         [],
         MRT_VERSION
     );
+    
+    // Enqueue frontend JavaScript
+    wp_enqueue_script(
+        'mrt-frontend',
+        MRT_URL . 'assets/frontend.js',
+        ['jquery'],
+        MRT_VERSION,
+        true
+    );
+    
+    // Localize script for AJAX and translations
+    wp_localize_script('mrt-frontend', 'mrtFrontend', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'search' => __('Search', 'museum-railway-timetable'),
+        'searching' => __('Searching...', 'museum-railway-timetable'),
+        'loading' => __('Loading...', 'museum-railway-timetable'),
+        'errorSearching' => __('Error searching for connections.', 'museum-railway-timetable'),
+        'errorLoading' => __('Error loading timetable.', 'museum-railway-timetable'),
+        'errorSameStations' => __('Please select different stations for departure and arrival.', 'museum-railway-timetable'),
+        'networkError' => __('Network error. Please try again.', 'museum-railway-timetable'),
+    ]);
 }
 add_action('wp_enqueue_scripts', 'MRT_enqueue_frontend_assets');
 

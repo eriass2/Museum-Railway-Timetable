@@ -21,6 +21,12 @@ add_action('wp_ajax_mrt_get_route_destinations', 'MRT_ajax_get_route_destination
 add_action('wp_ajax_mrt_get_route_stations_for_stoptimes', 'MRT_ajax_get_route_stations_for_stoptimes');
 add_action('wp_ajax_mrt_save_route_end_stations', 'MRT_ajax_save_route_end_stations');
 
+// Frontend AJAX endpoints (available to both logged in and non-logged in users)
+add_action('wp_ajax_mrt_search_journey', 'MRT_ajax_search_journey');
+add_action('wp_ajax_nopriv_mrt_search_journey', 'MRT_ajax_search_journey');
+add_action('wp_ajax_mrt_get_timetable_for_station', 'MRT_ajax_get_timetable_for_station');
+add_action('wp_ajax_nopriv_mrt_get_timetable_for_station', 'MRT_ajax_get_timetable_for_station');
+
 /**
  * Add stop time via AJAX
  */
@@ -652,5 +658,133 @@ function MRT_ajax_save_route_end_stations() {
         'start_station_name' => $start_station_name,
         'end_station_name' => $end_station_name,
     ]);
+}
+
+/**
+ * Search for journey connections via AJAX (frontend)
+ */
+function MRT_ajax_search_journey() {
+    $from_station_id = intval($_POST['from_station'] ?? 0);
+    $to_station_id = intval($_POST['to_station'] ?? 0);
+    $date = sanitize_text_field($_POST['date'] ?? '');
+    
+    // Validation
+    if ($from_station_id <= 0 || $to_station_id <= 0) {
+        wp_send_json_error(['message' => __('Please select both departure and arrival stations.', 'museum-railway-timetable')]);
+        return;
+    }
+    
+    if ($from_station_id === $to_station_id) {
+        wp_send_json_error(['message' => __('Please select different stations for departure and arrival.', 'museum-railway-timetable')]);
+        return;
+    }
+    
+    if (empty($date) || !MRT_validate_date($date)) {
+        wp_send_json_error(['message' => __('Please select a valid date.', 'museum-railway-timetable')]);
+        return;
+    }
+    
+    // Find connections
+    $connections = MRT_find_connections($from_station_id, $to_station_id, $date);
+    $from_station_name = get_the_title($from_station_id);
+    $to_station_name = get_the_title($to_station_id);
+    
+    // Render HTML
+    ob_start();
+    ?>
+    <h3 class="mrt-journey-results-title">
+        <?php 
+        printf(
+            esc_html__('Connections from %s to %s on %s', 'museum-railway-timetable'),
+            esc_html($from_station_name),
+            esc_html($to_station_name),
+            esc_html(date_i18n(get_option('date_format'), strtotime($date)))
+        );
+        ?>
+    </h3>
+    
+    <?php if (empty($connections)): ?>
+        <div class="mrt-none">
+            <?php esc_html_e('No connections found for this route on the selected date.', 'museum-railway-timetable'); ?>
+        </div>
+    <?php else: ?>
+        <div class="mrt-journey-table-container">
+            <table class="mrt-table mrt-journey-table">
+                <thead>
+                    <tr>
+                        <th><?php esc_html_e('Service', 'museum-railway-timetable'); ?></th>
+                        <th><?php esc_html_e('Train Type', 'museum-railway-timetable'); ?></th>
+                        <th><?php esc_html_e('Departure', 'museum-railway-timetable'); ?></th>
+                        <th><?php esc_html_e('Arrival', 'museum-railway-timetable'); ?></th>
+                        <th><?php esc_html_e('Direction', 'museum-railway-timetable'); ?></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($connections as $conn): ?>
+                        <tr>
+                            <td>
+                                <strong><?php echo esc_html($conn['service_name']); ?></strong>
+                                <?php if (!empty($conn['route_name'])): ?>
+                                    <br><small class="mrt-route-name"><?php echo esc_html($conn['route_name']); ?></small>
+                                <?php endif; ?>
+                            </td>
+                            <td><?php echo esc_html($conn['train_type']); ?></td>
+                            <td>
+                                <strong><?php echo esc_html($conn['from_departure'] ?: ($conn['from_arrival'] ?: '—')); ?></strong>
+                            </td>
+                            <td>
+                                <strong><?php echo esc_html($conn['to_arrival'] ?: ($conn['to_departure'] ?: '—')); ?></strong>
+                            </td>
+                            <td><?php echo esc_html($conn['direction']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+            </table>
+        </div>
+    <?php endif; ?>
+    <?php
+    $html = ob_get_clean();
+    
+    wp_send_json_success(['html' => $html]);
+}
+
+/**
+ * Get timetable for a station via AJAX (frontend)
+ */
+function MRT_ajax_get_timetable_for_station() {
+    $station_id = intval($_POST['station_id'] ?? 0);
+    $limit = intval($_POST['limit'] ?? 6);
+    $show_arrival = !empty($_POST['show_arrival']);
+    $train_type = sanitize_text_field($_POST['train_type'] ?? '');
+    
+    // Validation
+    if ($station_id <= 0) {
+        wp_send_json_error(['message' => __('Please select a station.', 'museum-railway-timetable')]);
+        return;
+    }
+    
+    if ($limit <= 0) {
+        $limit = 6;
+    }
+    
+    // Get current date and time
+    $datetime = MRT_get_current_datetime();
+    $today = $datetime['date'];
+    $time = $datetime['time'];
+    
+    // Get services running today
+    $services_today = MRT_services_running_on_date($today, $train_type);
+    
+    if (empty($services_today)) {
+        $html = '<div class="mrt-none">' . esc_html__('No services today.', 'museum-railway-timetable') . '</div>';
+        wp_send_json_success(['html' => $html]);
+        return;
+    }
+    
+    // Get next departures
+    $rows = MRT_next_departures_for_station($station_id, $services_today, $time, $limit, $show_arrival);
+    $html = MRT_render_timetable_table($rows, $show_arrival);
+    
+    wp_send_json_success(['html' => $html]);
 }
 

@@ -432,6 +432,19 @@
     font-style: italic;
 }
 
+/* Loading indicator */
+.mrt-loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--mrt-text-secondary);
+    font-style: italic;
+}
+
+.mrt-loading::before {
+    content: "⏳ ";
+    margin-right: 0.5rem;
+}
+
 /* ==========================================================================
    Responsive Design
    ========================================================================== */

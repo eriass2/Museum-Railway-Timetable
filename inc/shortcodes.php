@@ -90,9 +90,9 @@ add_shortcode('museum_timetable_picker', function ($atts) {
     // Form + dropdown
     $stations = MRT_get_all_stations();
     ob_start();
-    echo '<form class="mrt-picker" method="'.esc_attr($method).'">';
+    echo '<form class="mrt-picker" method="'.esc_attr($method).'" data-ajax-enabled="true" data-limit="'.esc_attr($limit).'" data-show-arrival="'.esc_attr($atts['show_arrival']).'" data-train-type="'.esc_attr($atts['train_type']).'">';
     echo '<label>'.esc_html__('Station', 'museum-railway-timetable').'</label> ';
-    echo '<select name="'.esc_attr($param_station).'" onchange="this.form.submit()">';
+    echo '<select name="'.esc_attr($param_station).'">';
     echo '<option value="">' . esc_html($atts['placeholder']) . '</option>';
     foreach ($stations as $sid) {
         $title = get_the_title($sid);
@@ -102,8 +102,9 @@ add_shortcode('museum_timetable_picker', function ($atts) {
     echo '</select>';
     echo '</form>';
 
-    // List after selection
+    // List after selection (wrapped in container for AJAX updates)
     if ($current_station_id) {
+        echo '<div class="mrt-timetable-results">';
         $now_ts = current_time('timestamp');
         $today  = date('Y-m-d', $now_ts);
         $time   = date('H:i', $now_ts);
@@ -115,6 +116,9 @@ add_shortcode('museum_timetable_picker', function ($atts) {
         } else {
             echo '<div class="mrt-none">'.esc_html__('No services today.', 'museum-railway-timetable').'</div>';
         }
+        echo '</div>';
+    } else {
+        echo '<div class="mrt-timetable-results"></div>';
     }
     return ob_get_clean();
 });
@@ -286,7 +290,7 @@ add_shortcode('museum_journey_planner', function ($atts) {
     ob_start();
     ?>
     <div class="mrt-journey-planner">
-        <form class="mrt-journey-form" method="get" action="">
+        <form class="mrt-journey-form" method="get" action="" data-ajax-enabled="true">
             <div class="mrt-journey-fields">
                 <div class="mrt-journey-field">
                     <label for="mrt_from"><?php esc_html_e('From', 'museum-railway-timetable'); ?></label>
