@@ -103,12 +103,7 @@ function MRT_services_running_on_date($dateYmd, $train_type_slug = '', $service_
             continue;
         }
         
-        $timetable_dates = get_post_meta($timetable_id, 'mrt_timetable_dates', true);
-        if (!is_array($timetable_dates)) {
-            // Try to migrate from old single date field
-            $old_date = get_post_meta($timetable_id, 'mrt_timetable_date', true);
-            $timetable_dates = !empty($old_date) ? [$old_date] : [];
-        }
+        $timetable_dates = MRT_get_timetable_dates($timetable_id);
         
         if (in_array($dateYmd, $timetable_dates, true)) {
             $valid_service_ids[] = $service_id;

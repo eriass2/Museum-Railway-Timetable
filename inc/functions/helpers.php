@@ -235,6 +235,136 @@ function MRT_get_route_label($route, $direction, $services_list = [], $station_p
 }
 
 /**
+ * Get stop times for a service, indexed by station ID
+ *
+ * @param int $service_id Service post ID
+ * @return array Array of stop times indexed by station_post_id
+ */
+function MRT_get_service_stop_times($service_id) {
+    global $wpdb;
+    
+    if (!$service_id || $service_id <= 0) {
+        return [];
+    }
+    
+    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
+    $stop_times = $wpdb->get_results($wpdb->prepare(
+        "SELECT * FROM $stoptimes_table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
+        $service_id
+    ), ARRAY_A);
+    
+    if (MRT_check_db_error('MRT_get_service_stop_times')) {
+        return [];
+    }
+    
+    $stop_times_by_station = [];
+    foreach ($stop_times as $st) {
+        $stop_times_by_station[$st['station_post_id']] = $st;
+    }
+    
+    return $stop_times_by_station;
+}
+
+/**
+ * Get timetable dates, handling both array and legacy single date format
+ *
+ * @param int $timetable_id Timetable post ID
+ * @return array Array of dates in YYYY-MM-DD format
+ */
+function MRT_get_timetable_dates($timetable_id) {
+    if (!$timetable_id || $timetable_id <= 0) {
+        return [];
+    }
+    
+    $timetable_dates = get_post_meta($timetable_id, 'mrt_timetable_dates', true);
+    
+    // Handle array format (new)
+    if (is_array($timetable_dates)) {
+        return $timetable_dates;
+    }
+    
+    // Handle legacy single date field (old)
+    $old_date = get_post_meta($timetable_id, 'mrt_timetable_date', true);
+    if (!empty($old_date)) {
+        return [$old_date];
+    }
+    
+    return [];
+}
+
+/**
+ * Group services by route and direction
+ * Prepares services for timetable rendering
+ *
+ * @param array $services Array of service post objects
+ * @param string|null $dateYmd Optional date for date-specific train types
+ * @return array Grouped services array
+ */
+function MRT_group_services_by_route($services, $dateYmd = null) {
+    global $wpdb;
+    
+    if (empty($services)) {
+        return [];
+    }
+    
+    $grouped_services = [];
+    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
+    
+    foreach ($services as $service) {
+        $route_id = get_post_meta($service->ID, 'mrt_service_route_id', true);
+        $direction = get_post_meta($service->ID, 'mrt_direction', true);
+        
+        if (!$route_id) {
+            continue;
+        }
+        
+        // Get route info
+        $route = get_post($route_id);
+        if (!$route) {
+            continue;
+        }
+        
+        // Get route stations
+        $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+        if (!is_array($route_stations)) {
+            $route_stations = [];
+        }
+        
+        // Get train type (use date-specific if date provided)
+        if ($dateYmd && function_exists('MRT_get_service_train_type_for_date')) {
+            $train_type = MRT_get_service_train_type_for_date($service->ID, $dateYmd);
+        } else {
+            $train_types = wp_get_post_terms($service->ID, 'mrt_train_type', ['fields' => 'all']);
+            $train_type = !empty($train_types) ? $train_types[0] : null;
+        }
+        
+        // Create group key: route_id + direction
+        $group_key = $route_id . '_' . $direction;
+        
+        if (!isset($grouped_services[$group_key])) {
+            $grouped_services[$group_key] = [
+                'route' => $route,
+                'route_id' => $route_id,
+                'direction' => $direction,
+                'stations' => $route_stations,
+                'services' => [],
+            ];
+        }
+        
+        // Get stop times using helper function
+        $stop_times_by_station = MRT_get_service_stop_times($service->ID);
+        
+        $grouped_services[$group_key]['services'][] = [
+            'service' => $service,
+            'train_type' => $train_type,
+            'stop_times' => $stop_times_by_station,
+        ];
+    }
+    
+    return $grouped_services;
+}
+
+/**
  * Get post by title and post type
  *
  * @param string $title Post title

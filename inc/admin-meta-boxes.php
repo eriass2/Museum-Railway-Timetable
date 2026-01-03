@@ -424,16 +424,7 @@ add_action('save_post_mrt_route', function($post_id) {
 function MRT_render_timetable_meta_box($post) {
     wp_nonce_field('mrt_save_timetable_meta', 'mrt_timetable_meta_nonce');
     
-    $dates = get_post_meta($post->ID, 'mrt_timetable_dates', true);
-    if (!is_array($dates)) {
-        // Try to migrate from old single date field
-        $old_date = get_post_meta($post->ID, 'mrt_timetable_date', true);
-        if (!empty($old_date)) {
-            $dates = [$old_date];
-        } else {
-            $dates = [];
-        }
-    }
+    $dates = MRT_get_timetable_dates($post->ID);
     // Ensure dates is always an array
     if (!is_array($dates)) {
         $dates = [];
@@ -957,11 +948,7 @@ function MRT_render_service_meta_box($post) {
                     <input type="hidden" name="mrt_service_timetable_id" value="<?php echo esc_attr($timetable_id); ?>" />
                     <?php 
                     $current_timetable = get_post($timetable_id);
-                    $timetable_dates = get_post_meta($timetable_id, 'mrt_timetable_dates', true);
-                    if (!is_array($timetable_dates)) {
-                        $old_date = get_post_meta($timetable_id, 'mrt_timetable_date', true);
-                        $timetable_dates = !empty($old_date) ? [$old_date] : [];
-                    }
+                    $timetable_dates = MRT_get_timetable_dates($timetable_id);
                     $display = $current_timetable ? ($current_timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable_id) : '';
                     if (!empty($timetable_dates)) {
                         $date_count = count($timetable_dates);
@@ -979,12 +966,7 @@ function MRT_render_service_meta_box($post) {
                     <select name="mrt_service_timetable_id" id="mrt_service_timetable_id" class="mrt-meta-field" required>
                         <option value=""><?php esc_html_e('— Select Timetable —', 'museum-railway-timetable'); ?></option>
                         <?php foreach ($timetables as $timetable): 
-                        $timetable_dates = get_post_meta($timetable->ID, 'mrt_timetable_dates', true);
-                        if (!is_array($timetable_dates)) {
-                            // Try to migrate from old single date field
-                            $old_date = get_post_meta($timetable->ID, 'mrt_timetable_date', true);
-                            $timetable_dates = !empty($old_date) ? [$old_date] : [];
-                        }
+                        $timetable_dates = MRT_get_timetable_dates($timetable->ID);
                         $display = $timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable->ID;
                         if (!empty($timetable_dates)) {
                             $date_count = count($timetable_dates);
@@ -1035,19 +1017,7 @@ function MRT_render_service_meta_box($post) {
         }
         
         // Get timetable dates if timetable is set
-        $timetable_dates = [];
-        if ($timetable_id) {
-            $timetable_dates_meta = get_post_meta($timetable_id, 'mrt_timetable_dates', true);
-            if (is_array($timetable_dates_meta)) {
-                $timetable_dates = $timetable_dates_meta;
-            } else {
-                // Try old single date field
-                $old_date = get_post_meta($timetable_id, 'mrt_timetable_date', true);
-                if (!empty($old_date)) {
-                    $timetable_dates = [$old_date];
-                }
-            }
-        }
+        $timetable_dates = $timetable_id ? MRT_get_timetable_dates($timetable_id) : [];
         sort($timetable_dates);
         ?>
         <tr>
@@ -1293,19 +1263,8 @@ add_action('save_post_mrt_service', function($post_id) {
  * @param WP_Post $post Current post object
  */
 function MRT_render_service_stoptimes_box($post) {
-    global $wpdb;
-    $table = $wpdb->prefix . 'mrt_stoptimes';
-    
-    // Get all stop times for this service (indexed by station_id for quick lookup)
-    $stoptimes = $wpdb->get_results($wpdb->prepare(
-        "SELECT * FROM $table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
-        $post->ID
-    ), ARRAY_A);
-    
-    $stoptimes_by_station = [];
-    foreach ($stoptimes as $st) {
-        $stoptimes_by_station[$st['station_post_id']] = $st;
-    }
+    // Get all stop times for this service using helper function
+    $stoptimes_by_station = MRT_get_service_stop_times($post->ID);
     
     // Get service route
     $route_id = get_post_meta($post->ID, 'mrt_service_route_id', true);

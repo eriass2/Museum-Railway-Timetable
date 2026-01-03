@@ -40,68 +40,8 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
         return '<div class="mrt-none">' . esc_html__('No trips in this timetable.', 'museum-railway-timetable') . '</div>';
     }
     
-    // Group services by route and direction
-    $grouped_services = [];
-    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
-    
-    foreach ($services as $service) {
-        $route_id = get_post_meta($service->ID, 'mrt_service_route_id', true);
-        $direction = get_post_meta($service->ID, 'mrt_direction', true);
-        
-        if (!$route_id) {
-            continue;
-        }
-        
-        // Get route info
-        $route = get_post($route_id);
-        if (!$route) {
-            continue;
-        }
-        
-        // Get route stations
-        $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
-        if (!is_array($route_stations)) {
-            $route_stations = [];
-        }
-        
-        // Get train type (use date-specific if date provided)
-        if ($dateYmd && function_exists('MRT_get_service_train_type_for_date')) {
-            $train_type = MRT_get_service_train_type_for_date($service->ID, $dateYmd);
-        } else {
-            $train_types = wp_get_post_terms($service->ID, 'mrt_train_type', ['fields' => 'all']);
-            $train_type = !empty($train_types) ? $train_types[0] : null;
-        }
-        
-        // Create group key: route_id + direction
-        $group_key = $route_id . '_' . $direction;
-        
-        if (!isset($grouped_services[$group_key])) {
-            $grouped_services[$group_key] = [
-                'route' => $route,
-                'route_id' => $route_id,
-                'direction' => $direction,
-                'stations' => $route_stations,
-                'services' => [],
-            ];
-        }
-        
-        // Get stop times for this service
-        $stop_times = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $stoptimes_table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
-            $service->ID
-        ), ARRAY_A);
-        
-        $stop_times_by_station = [];
-        foreach ($stop_times as $st) {
-            $stop_times_by_station[$st['station_post_id']] = $st;
-        }
-        
-        $grouped_services[$group_key]['services'][] = [
-            'service' => $service,
-            'train_type' => $train_type,
-            'stop_times' => $stop_times_by_station,
-        ];
-    }
+    // Group services by route and direction using helper function
+    $grouped_services = MRT_group_services_by_route($services, $dateYmd);
     
     if (empty($grouped_services)) {
         return '<div class="mrt-none">' . esc_html__('No valid trips in this timetable.', 'museum-railway-timetable') . '</div>';
@@ -280,63 +220,8 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
         return '<div class="mrt-none">' . esc_html__('No services found.', 'museum-railway-timetable') . '</div>';
     }
     
-    // Group services by route and direction
-    $grouped_services = [];
-    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
-    
-    foreach ($services as $service) {
-        $route_id = get_post_meta($service->ID, 'mrt_service_route_id', true);
-        $direction = get_post_meta($service->ID, 'mrt_direction', true);
-        
-        if (!$route_id) {
-            continue;
-        }
-        
-        // Get route info
-        $route = get_post($route_id);
-        if (!$route) {
-            continue;
-        }
-        
-        // Get route stations
-        $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
-        if (!is_array($route_stations)) {
-            $route_stations = [];
-        }
-        
-        // Get train type (use date-specific)
-        $train_type = MRT_get_service_train_type_for_date($service->ID, $dateYmd);
-        
-        // Create group key: route_id + direction
-        $group_key = $route_id . '_' . $direction;
-        
-        if (!isset($grouped_services[$group_key])) {
-            $grouped_services[$group_key] = [
-                'route' => $route,
-                'route_id' => $route_id,
-                'direction' => $direction,
-                'stations' => $route_stations,
-                'services' => [],
-            ];
-        }
-        
-        // Get stop times for this service
-        $stop_times = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $stoptimes_table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
-            $service->ID
-        ), ARRAY_A);
-        
-        $stop_times_by_station = [];
-        foreach ($stop_times as $st) {
-            $stop_times_by_station[$st['station_post_id']] = $st;
-        }
-        
-        $grouped_services[$group_key]['services'][] = [
-            'service' => $service,
-            'train_type' => $train_type,
-            'stop_times' => $stop_times_by_station,
-        ];
-    }
+    // Group services by route and direction using helper function
+    $grouped_services = MRT_group_services_by_route($services, $dateYmd);
     
     if (empty($grouped_services)) {
         return '<div class="mrt-none">' . esc_html__('No valid services found for this date.', 'museum-railway-timetable') . '</div>';
