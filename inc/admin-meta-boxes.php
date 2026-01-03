@@ -872,7 +872,7 @@ function MRT_render_timetable_overview_box($post) {
     ?>
     <div class="mrt-timetable-overview-preview">
         <p class="description">
-            <?php esc_html_e('Preview of how the timetable will look when displayed. Services are grouped by route and direction.', 'museum-railway-timetable'); ?>
+            <?php esc_html_e('Preview of how the timetable will look when displayed. Services are grouped by route and destination.', 'museum-railway-timetable'); ?>
         </p>
         <?php echo MRT_render_timetable_overview($post->ID); ?>
     </div>
@@ -945,7 +945,7 @@ function MRT_render_service_meta_box($post) {
                 if ($timetable_edit_link) {
                     echo '<div class="mrt-info-box" style="margin-bottom: 1rem;">';
                     echo '<a href="' . esc_url($timetable_edit_link) . '" class="button" style="margin-right: 0.5rem;">← ' . esc_html__('Back to Timetable', 'museum-railway-timetable') . '</a>';
-                    echo '<span class="description">' . esc_html__('This trip belongs to a timetable. The title is automatically generated from Route + Direction.', 'museum-railway-timetable') . '</span>';
+                    echo '<span class="description">' . esc_html__('This trip belongs to a timetable. The title is automatically generated from Route + Destination.', 'museum-railway-timetable') . '</span>';
                     echo '</div>';
                 }
             }

@@ -195,14 +195,16 @@ function MRT_render_timetable_table($rows, $show_arrival = false) {
     echo '<th>'.esc_html__('Service', 'museum-railway-timetable').'</th>';
     if ($show_arrival) echo '<th>'.esc_html__('Arrives', 'museum-railway-timetable').'</th>';
     echo '<th>'.esc_html__('Departs', 'museum-railway-timetable').'</th>';
-    echo '<th>'.esc_html__('Direction', 'museum-railway-timetable').'</th>';
+    echo '<th>'.esc_html__('Destination', 'museum-railway-timetable').'</th>';
     echo '</tr></thead><tbody>';
     foreach ($rows as $r) {
         echo '<tr>';
         echo '<td>'.esc_html($r['service_name']).'</td>';
         if ($show_arrival) echo '<td>'.esc_html($r['arrival_time'] ?? '').'</td>';
         echo '<td>'.esc_html($r['departure_time'] ?? '').'</td>';
-        echo '<td>'.esc_html($r['direction']).'</td>';
+        // Use destination if available, otherwise fallback to direction
+        $destination = !empty($r['destination']) ? $r['destination'] : (!empty($r['direction']) ? $r['direction'] : '—');
+        echo '<td>'.esc_html($destination).'</td>';
         echo '</tr>';
     }
     echo '</tbody></table></div>';

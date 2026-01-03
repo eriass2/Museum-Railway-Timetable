@@ -729,7 +729,7 @@ function MRT_ajax_search_journey() {
                         <th><?php esc_html_e('Train Type', 'museum-railway-timetable'); ?></th>
                         <th><?php esc_html_e('Departure', 'museum-railway-timetable'); ?></th>
                         <th><?php esc_html_e('Arrival', 'museum-railway-timetable'); ?></th>
-                        <th><?php esc_html_e('Direction', 'museum-railway-timetable'); ?></th>
+                        <th><?php esc_html_e('Destination', 'museum-railway-timetable'); ?></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -748,7 +748,7 @@ function MRT_ajax_search_journey() {
                             <td>
                                 <strong><?php echo esc_html($conn['to_arrival'] ?: ($conn['to_departure'] ?: '—')); ?></strong>
                             </td>
-                            <td><?php echo esc_html($conn['direction']); ?></td>
+                            <td><?php echo esc_html(!empty($conn['destination']) ? $conn['destination'] : (!empty($conn['direction']) ? $conn['direction'] : '—')); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
