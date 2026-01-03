@@ -105,9 +105,9 @@ function MRT_calculate_direction_from_end_station($route_id, $end_station_id) {
     }
     
     $end_stations = MRT_get_route_end_stations($route_id);
-    $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+    $route_stations = MRT_get_route_stations($route_id);
     
-    if (!is_array($route_stations) || empty($route_stations)) {
+    if (empty($route_stations)) {
         return '';
     }
     
