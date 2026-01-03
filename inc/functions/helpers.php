@@ -28,6 +28,10 @@ function MRT_get_all_stations() {
     return $q->posts;
 }
 
+// ============================================================================
+// ROUTE FUNCTIONS
+// ============================================================================
+
 /**
  * Get end stations (start and end) for a route
  *
@@ -41,6 +45,51 @@ function MRT_get_route_end_stations($route_id) {
         'start' => $start ? intval($start) : 0,
         'end' => $end ? intval($end) : 0,
     ];
+}
+
+/**
+ * Get route stations array, normalized to array format
+ *
+ * @param int $route_id Route post ID
+ * @return array Array of station post IDs
+ */
+function MRT_get_route_stations($route_id) {
+    if (!$route_id || $route_id <= 0) {
+        return [];
+    }
+    
+    $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+    if (!is_array($route_stations)) {
+        return [];
+    }
+    
+    return $route_stations;
+}
+
+/**
+ * Get train type for a service, with optional date-specific support
+ *
+ * @param int $service_id Service post ID
+ * @param string|null $dateYmd Optional date in YYYY-MM-DD format for date-specific train types
+ * @return WP_Term|null Train type term object or null if not found
+ */
+function MRT_get_service_train_type($service_id, $dateYmd = null) {
+    if (!$service_id || $service_id <= 0) {
+        return null;
+    }
+    
+    // Use date-specific train type if date provided and function exists
+    if ($dateYmd && function_exists('MRT_get_service_train_type_for_date')) {
+        return MRT_get_service_train_type_for_date($service_id, $dateYmd);
+    }
+    
+    // Fall back to default train type from taxonomy
+    $train_types = wp_get_post_terms($service_id, 'mrt_train_type', ['fields' => 'all']);
+    if (!empty($train_types) && !is_wp_error($train_types)) {
+        return $train_types[0];
+    }
+    
+    return null;
 }
 
 /**
@@ -96,6 +145,10 @@ function MRT_calculate_direction_from_end_station($route_id, $end_station_id) {
     return $end_station_index >= $middle ? 'dit' : 'från';
 }
 
+// ============================================================================
+// SERVICE FUNCTIONS
+// ============================================================================
+
 /**
  * Get destination station name for a service
  * Returns the end station name if set, otherwise falls back to direction (dit/från)
@@ -141,6 +194,79 @@ function MRT_get_service_destination($service_id) {
 }
 
 /**
+ * Get route label from end stations
+ * Helper function for MRT_get_route_label()
+ *
+ * @param int $route_id Route post ID
+ * @param int $end_station_id End station post ID
+ * @return string Route label or empty string if cannot determine
+ */
+function MRT_get_route_label_from_end_station($route_id, $end_station_id) {
+    $end_station_post = get_post($end_station_id);
+    if (!$end_station_post) {
+        return '';
+    }
+    
+    $end_stations = MRT_get_route_end_stations($route_id);
+    $start_station_id = $end_stations['start'];
+    $start_station = $start_station_id ? get_post($start_station_id) : null;
+    
+    if ($start_station) {
+        return sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
+            $start_station->post_title, 
+            $end_station_post->post_title);
+    }
+    
+    return sprintf(__('Route to %s', 'museum-railway-timetable'), $end_station_post->post_title);
+}
+
+/**
+ * Get route label from direction
+ * Helper function for MRT_get_route_label()
+ *
+ * @param int $route_id Route post ID
+ * @param string $direction Direction ('dit' or 'från')
+ * @param array $station_posts Optional array of station posts (will be fetched if not provided)
+ * @return string Route label or empty string if cannot determine
+ */
+function MRT_get_route_label_from_direction($route_id, $direction, $station_posts = []) {
+    if ($direction !== 'dit' && $direction !== 'från') {
+        return '';
+    }
+    
+    // Fetch station posts if not provided
+    if (empty($station_posts)) {
+        $route_stations = MRT_get_route_stations($route_id);
+        if (!empty($route_stations)) {
+            $station_posts = get_posts([
+                'post_type' => 'mrt_station',
+                'post__in' => $route_stations,
+                'posts_per_page' => -1,
+                'orderby' => 'post__in',
+                'fields' => 'all',
+            ]);
+        }
+    }
+    
+    if (empty($station_posts)) {
+        return '';
+    }
+    
+    $first_station = $station_posts[0];
+    $last_station = end($station_posts);
+    
+    if ($direction === 'dit') {
+        return sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
+            $first_station->post_title, 
+            $last_station->post_title);
+    }
+    
+    return sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
+        $last_station->post_title, 
+        $first_station->post_title);
+}
+
+/**
  * Get route label based on end stations or direction
  * Creates a human-readable label like "Från X Till Y" or "Route to Y"
  *
@@ -159,9 +285,7 @@ function MRT_get_route_label($route, $direction, $services_list = [], $station_p
     $route_label = $route->post_title;
     
     // Check if services have end stations set
-    $has_end_stations = false;
     $end_station_ids = [];
-    
     if (!empty($services_list)) {
         foreach ($services_list as $service_data) {
             $service = is_array($service_data) && isset($service_data['service']) 
@@ -172,63 +296,26 @@ function MRT_get_route_label($route, $direction, $services_list = [], $station_p
             
             $end_station_id = get_post_meta($service->ID, 'mrt_service_end_station_id', true);
             if ($end_station_id) {
-                $has_end_stations = true;
                 $end_station_ids[] = $end_station_id;
             }
         }
     }
     
-    if ($has_end_stations && !empty($end_station_ids)) {
-        // Use the first end station found (they should all be the same for a group)
+    // Try to get label from end stations first
+    if (!empty($end_station_ids)) {
         $unique_end_stations = array_unique($end_station_ids);
-        
         if (count($unique_end_stations) === 1) {
-            $end_station_id = reset($unique_end_stations);
-            $end_station_post = get_post($end_station_id);
-            if ($end_station_post) {
-                $end_stations = MRT_get_route_end_stations($route_id);
-                $start_station_id = $end_stations['start'];
-                $start_station = $start_station_id ? get_post($start_station_id) : null;
-                
-                if ($start_station) {
-                    $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
-                        $start_station->post_title, 
-                        $end_station_post->post_title);
-                } else {
-                    $route_label = sprintf(__('Route to %s', 'museum-railway-timetable'), $end_station_post->post_title);
-                }
+            $label = MRT_get_route_label_from_end_station($route_id, reset($unique_end_stations));
+            if (!empty($label)) {
+                return $label;
             }
         }
-    } elseif ($direction === 'dit' || $direction === 'från') {
-        // Fallback to direction-based label
-        // Use provided station_posts if available, otherwise fetch them
-        if (empty($station_posts)) {
-            $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
-            if (is_array($route_stations) && !empty($route_stations)) {
-                $station_posts = get_posts([
-                    'post_type' => 'mrt_station',
-                    'post__in' => $route_stations,
-                    'posts_per_page' => -1,
-                    'orderby' => 'post__in',
-                    'fields' => 'all',
-                ]);
-            }
-        }
-        
-        if (!empty($station_posts)) {
-            $first_station = $station_posts[0];
-            $last_station = end($station_posts);
-            
-            if ($direction === 'dit') {
-                $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
-                    $first_station->post_title, 
-                    $last_station->post_title);
-            } else {
-                $route_label = sprintf(__('Från %s Till %s', 'museum-railway-timetable'), 
-                    $last_station->post_title, 
-                    $first_station->post_title);
-            }
-        }
+    }
+    
+    // Fallback to direction-based label
+    $label = MRT_get_route_label_from_direction($route_id, $direction, $station_posts);
+    if (!empty($label)) {
+        return $label;
     }
     
     return $route_label;
@@ -324,19 +411,11 @@ function MRT_group_services_by_route($services, $dateYmd = null) {
             continue;
         }
         
-        // Get route stations
-        $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
-        if (!is_array($route_stations)) {
-            $route_stations = [];
-        }
+        // Get route stations using helper function
+        $route_stations = MRT_get_route_stations($route_id);
         
-        // Get train type (use date-specific if date provided)
-        if ($dateYmd && function_exists('MRT_get_service_train_type_for_date')) {
-            $train_type = MRT_get_service_train_type_for_date($service->ID, $dateYmd);
-        } else {
-            $train_types = wp_get_post_terms($service->ID, 'mrt_train_type', ['fields' => 'all']);
-            $train_type = !empty($train_types) ? $train_types[0] : null;
-        }
+        // Get train type using helper function
+        $train_type = MRT_get_service_train_type($service->ID, $dateYmd);
         
         // Create group key: route_id + direction
         $group_key = $route_id . '_' . $direction;
@@ -363,6 +442,10 @@ function MRT_group_services_by_route($services, $dateYmd = null) {
     
     return $grouped_services;
 }
+
+// ============================================================================
+// UTILITY FUNCTIONS
+// ============================================================================
 
 /**
  * Get post by title and post type
@@ -427,6 +510,10 @@ function MRT_log_error($message) {
     }
 }
 
+// ============================================================================
+// VALIDATION FUNCTIONS
+// ============================================================================
+
 /**
  * Validate time format (HH:MM)
  *
@@ -448,6 +535,10 @@ function MRT_validate_time_hhmm($s) {
 function MRT_validate_date($s) {
     return (bool) preg_match('/^\d{4}-\d{2}-\d{2}$/', $s);
 }
+
+// ============================================================================
+// RENDERING FUNCTIONS
+// ============================================================================
 
 /**
  * Render a generic timetable table (reused by multiple shortcodes)
