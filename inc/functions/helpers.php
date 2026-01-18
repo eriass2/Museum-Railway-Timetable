@@ -636,6 +636,13 @@ function MRT_find_connecting_services($station_id, $arriving_service_id, $arriva
  * @return string HTML table
  */
 function MRT_render_timetable_table($rows, $show_arrival = false) {
+    // Ensure MRT_format_time_display is available
+    if (!function_exists('MRT_format_time_display')) {
+        function MRT_format_time_display($time) {
+            if (empty($time)) return '';
+            return str_replace(':', '.', $time);
+        }
+    }
     if (!$rows) return '<div class="mrt-none">'.esc_html__('No upcoming departures.', 'museum-railway-timetable').'</div>';
     ob_start();
     echo '<div class="mrt-timetable"><table class="mrt-table"><thead><tr>';
@@ -647,8 +654,12 @@ function MRT_render_timetable_table($rows, $show_arrival = false) {
     foreach ($rows as $r) {
         echo '<tr>';
         echo '<td>'.esc_html($r['service_name']).'</td>';
-        if ($show_arrival) echo '<td>'.esc_html($r['arrival_time'] ?? '').'</td>';
-        echo '<td>'.esc_html($r['departure_time'] ?? '').'</td>';
+        if ($show_arrival) {
+            $arr_time = $r['arrival_time'] ?? '';
+            echo '<td>'.esc_html($arr_time ? MRT_format_time_display($arr_time) : '').'</td>';
+        }
+        $dep_time = $r['departure_time'] ?? '';
+        echo '<td>'.esc_html($dep_time ? MRT_format_time_display($dep_time) : '').'</td>';
         // Use destination if available, otherwise fallback to direction
         $destination = !empty($r['destination']) ? $r['destination'] : (!empty($r['direction']) ? $r['direction'] : '—');
         echo '<td>'.esc_html($destination).'</td>';
