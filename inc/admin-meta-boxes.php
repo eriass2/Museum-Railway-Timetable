@@ -1009,6 +1009,16 @@ function MRT_render_service_meta_box($post) {
                 <p class="description"><?php esc_html_e('Select the default train type for this service. You can override this for specific dates below. Example: "Steam", "Diesel", "Electric".', 'museum-railway-timetable'); ?></p>
             </td>
         </tr>
+        <tr>
+            <th><label for="mrt_service_number"><?php esc_html_e('Train Number', 'museum-railway-timetable'); ?></label></th>
+            <td>
+                <?php
+                $service_number = get_post_meta($post->ID, 'mrt_service_number', true);
+                ?>
+                <input type="text" name="mrt_service_number" id="mrt_service_number" value="<?php echo esc_attr($service_number); ?>" class="mrt-meta-field" placeholder="<?php esc_attr_e('e.g., 71, 91, 73', 'museum-railway-timetable'); ?>" />
+                <p class="description"><?php esc_html_e('Enter the train number displayed in timetables (e.g., 71, 91, 73). If left empty, the service ID will be used as fallback.', 'museum-railway-timetable'); ?></p>
+            </td>
+        </tr>
         <?php
         // Get date-specific train types
         $train_types_by_date = get_post_meta($post->ID, 'mrt_service_train_types_by_date', true);
@@ -1176,6 +1186,16 @@ add_action('save_post_mrt_service', function($post_id) {
             wp_set_object_terms($post_id, [$train_type_id], 'mrt_train_type');
         } else {
             wp_set_object_terms($post_id, [], 'mrt_train_type');
+        }
+    }
+    
+    // Save train number
+    if (isset($_POST['mrt_service_number'])) {
+        $service_number = sanitize_text_field($_POST['mrt_service_number']);
+        if (!empty($service_number)) {
+            update_post_meta($post_id, 'mrt_service_number', $service_number);
+        } else {
+            delete_post_meta($post_id, 'mrt_service_number');
         }
     }
     

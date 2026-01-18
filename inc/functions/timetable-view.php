@@ -82,8 +82,11 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                             <?php foreach ($services_list as $service_data): 
                                 $service = $service_data['service'];
                                 $train_type = $service_data['train_type'];
-                                // Use service ID as number if no custom number is set
-                                $service_number = $service->ID;
+                                // Get train number from meta, fallback to service ID
+                                $service_number = get_post_meta($service->ID, 'mrt_service_number', true);
+                                if (empty($service_number)) {
+                                    $service_number = $service->ID;
+                                }
                             ?>
                                 <th class="mrt-service-col <?php 
                                     // Add CSS class for bus or special services
@@ -121,6 +124,8 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                                         $departure = $stop_time['departure_time'];
                                         $pickup_allowed = !empty($stop_time['pickup_allowed']);
                                         $dropoff_allowed = !empty($stop_time['dropoff_allowed']);
+                                        
+                                        // Determine if train stops here
                                         $stops_here = $pickup_allowed || $dropoff_allowed;
                                         
                                         // If train doesn't stop (no pickup, no dropoff), show vertical bar
@@ -128,7 +133,6 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                                             $time_display = '|';
                                         } else {
                                             // Determine symbol prefix based on stop behavior
-                                            // Note: We don't have "approximate" flag yet, so we'll use X/P/A based on pickup/dropoff
                                             $symbol_prefix = '';
                                             
                                             // Determine symbol based on pickup/dropoff behavior
@@ -136,31 +140,28 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                                                 // Only pickup allowed = P (påstigning)
                                                 $symbol_prefix = 'P ';
                                             } elseif (!$pickup_allowed && $dropoff_allowed) {
-                                                // Only dropoff allowed = A (avstigning) - typically for buses
+                                                // Only dropoff allowed = A (avstigning)
                                                 $symbol_prefix = 'A ';
-                                            } elseif ($pickup_allowed && $dropoff_allowed) {
-                                                // Both allowed - check if time is approximate (null = approximate)
-                                                // For now, if time is null, use X, otherwise no prefix
-                                                if (!$departure && !$arrival) {
-                                                    $symbol_prefix = 'X ';
-                                                }
                                             }
+                                            // If both allowed, no prefix (normal stop)
                                             
-                                            // Show time or X if null
+                                            // Get time string (prefer departure, fallback to arrival)
                                             if ($departure) {
                                                 $time_str = $departure;
                                             } elseif ($arrival) {
                                                 $time_str = $arrival;
                                             } else {
-                                                $time_str = '';
-                                                // If no time and both pickup/dropoff, use X prefix
+                                                // No time specified - show X if both pickup/dropoff, otherwise just symbol
                                                 if ($pickup_allowed && $dropoff_allowed) {
-                                                    $symbol_prefix = 'X ';
+                                                    $time_str = 'X';
+                                                    $symbol_prefix = ''; // X replaces prefix
+                                                } else {
+                                                    $time_str = '';
                                                 }
                                             }
                                             
                                             // Convert HH:MM to HH.MM format
-                                            if ($time_str) {
+                                            if ($time_str && $time_str !== 'X') {
                                                 $time_str = str_replace(':', '.', $time_str);
                                             }
                                             

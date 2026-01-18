@@ -274,6 +274,16 @@
     vertical-align: middle;
 }
 
+/* Highlight important rows (e.g., transfer stations) */
+.mrt-overview-table tr.mrt-row-highlight {
+    background: #e3f2fd;
+}
+
+.mrt-overview-table tr.mrt-row-highlight td {
+    background: #e3f2fd;
+    font-weight: 500;
+}
+
 .mrt-overview-table th,
 .mrt-overview-table td {
     border: 1px solid var(--mrt-border-default);
