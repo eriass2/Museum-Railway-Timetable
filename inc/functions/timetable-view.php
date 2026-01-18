@@ -57,7 +57,11 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
     ob_start();
     ?>
     <div class="mrt-timetable-overview">
-        <?php foreach ($grouped_services as $group): 
+        <?php 
+        $group_count = count($grouped_services);
+        $group_index = 0;
+        foreach ($grouped_services as $group):
+            $group_index++; 
             $route = $group['route'];
             $direction = $group['direction'];
             $stations = $group['stations'];
