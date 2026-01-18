@@ -55,6 +55,9 @@ msgstr "Tågtyper"
 msgid "Train Type"
 msgstr "Tågtyp"
 
+msgid "Train Number"
+msgstr "Tågnummer"
+
 msgid "No upcoming departures."
 msgstr "Inga kommande avgångar."
 
