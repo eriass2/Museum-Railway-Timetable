@@ -84,7 +84,7 @@
 .mrt-table {
     width: 100%;
     border-collapse: collapse;
-    margin: 0.5rem 0;
+    margin: var(--mrt-spacing-sm) 0;
 }
 
 .mrt-table th,
@@ -96,6 +96,7 @@
 
 .mrt-table th {
     background: var(--mrt-bg-lighter);
+    font-weight: 600;
 }
 
 /* ==========================================================================
@@ -103,7 +104,7 @@
    ========================================================================== */
 
 .mrt-picker {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--mrt-spacing-sm);
 }
 
 .mrt-picker select {
@@ -115,13 +116,13 @@
    ========================================================================== */
 
 .mrt-month {
-    margin: 1rem 0;
+    margin: var(--mrt-spacing-md) 0;
 }
 
 .mrt-month-header {
     font-weight: 600;
     font-size: 1.1rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: var(--mrt-spacing-xs);
 }
 
 .mrt-month-table {
@@ -181,15 +182,15 @@
 }
 
 .mrt-day-timetable-container {
-    margin-top: 2rem;
-    padding: 1.5rem;
+    margin-top: var(--mrt-spacing-xl);
+    padding: var(--mrt-spacing-lg);
     background: var(--mrt-bg-light);
     border: 1px solid var(--mrt-border-default);
     border-radius: 4px;
 }
 
 .mrt-day-timetable-title {
-    margin: 0 0 1rem 0;
+    margin: 0 0 var(--mrt-spacing-md) 0;
     font-size: 1.3rem;
     font-weight: 600;
     color: var(--mrt-text-primary);
@@ -201,7 +202,7 @@
 
 /* Month Calendar - Legend */
 .mrt-legend {
-    margin-top: 0.5rem;
+    margin-top: var(--mrt-spacing-sm);
     font-size: 0.9rem;
     color: var(--mrt-text-primary);
 }
@@ -210,7 +211,7 @@
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    margin-right: 0.75rem;
+    margin-right: var(--mrt-spacing-sm);
 }
 
 .mrt-legend-item-count {
@@ -232,19 +233,19 @@
    ========================================================================== */
 
 .mrt-timetable-overview {
-    margin: 1rem 0;
+    margin: var(--mrt-spacing-md) 0;
 }
 
 .mrt-timetable-overview-preview {
     max-height: 600px;
     overflow-y: auto;
-    padding: 1rem;
+    padding: var(--mrt-spacing-md);
     background: var(--mrt-bg-light);
     border: 1px solid var(--mrt-border-default);
 }
 
 .mrt-timetable-group {
-    margin-bottom: 2rem;
+    margin-bottom: var(--mrt-spacing-xl);
 }
 
 .mrt-route-header {
@@ -254,6 +255,7 @@
     margin: 0 0 var(--mrt-spacing-sm) 0;
     font-size: 1.1rem;
     font-weight: 600;
+    border-radius: 3px;
 }
 
 .mrt-overview-table {
@@ -261,6 +263,15 @@
     border-collapse: collapse;
     background: var(--mrt-bg-white);
     margin-bottom: var(--mrt-spacing-md);
+}
+
+.mrt-overview-table .mrt-service-col { min-width: 100px; vertical-align: top; }
+.mrt-overview-table .mrt-station-col {
+    text-align: left;
+    background: var(--mrt-bg-light);
+    font-weight: 600;
+    min-width: 150px;
+    vertical-align: middle;
 }
 
 .mrt-overview-table th,
@@ -276,6 +287,14 @@
     vertical-align: bottom;
 }
 
+/* Shared table styles */
+.mrt-table th,
+.mrt-overview-table th,
+.mrt-stoptimes-table th {
+    background: var(--mrt-bg-lighter);
+    font-weight: 600;
+}
+
 /* Service column styling - can be overridden for bus/special services */
 .mrt-overview-table .mrt-service-col.mrt-service-bus {
     background: var(--mrt-bus-bg);
@@ -285,18 +304,6 @@
     background: var(--mrt-special-bg);
 }
 
-.mrt-overview-table .mrt-station-col {
-    text-align: left;
-    background: var(--mrt-bg-light);
-    font-weight: 600;
-    min-width: 150px;
-    vertical-align: middle;
-}
-
-.mrt-overview-table .mrt-service-col {
-    min-width: 100px;
-    vertical-align: top;
-}
 
 .mrt-service-header {
     display: flex;
@@ -346,33 +353,41 @@
 }
 
 /* ==========================================================================
-   Status Messages
+   Status Messages & Utilities
    ========================================================================== */
 
 .mrt-none {
-    padding: 0.75rem;
+    padding: var(--mrt-spacing-sm);
     color: var(--mrt-text-tertiary);
     font-style: italic;
 }
 
 .mrt-error {
-    padding: 0.75rem;
+    padding: var(--mrt-spacing-sm);
     color: var(--mrt-text-error);
     background: var(--mrt-bg-error);
     border-left: 4px solid var(--mrt-text-error);
 }
 
-/* Admin List Page */
+.mrt-loading {
+    text-align: center;
+    padding: var(--mrt-spacing-xl);
+    color: var(--mrt-text-secondary);
+    font-style: italic;
+}
+
+.mrt-loading::before {
+    content: "⏳ ";
+    margin-right: var(--mrt-spacing-sm);
+}
+
 .mrt-filter-form {
-    margin: 0.5rem 0 1rem 0;
+    margin: var(--mrt-spacing-sm) 0 var(--mrt-spacing-md) 0;
 }
 
-.mrt-no-date {
-    opacity: 0.7;
-}
-
+.mrt-no-date { opacity: 0.7; }
 .mrt-note {
-    margin-top: 0.75rem;
+    margin-top: var(--mrt-spacing-sm);
     color: var(--mrt-text-quaternary);
 }
 
@@ -387,12 +402,7 @@
 
 /* Stop Times Tables */
 .mrt-stoptimes-table {
-    margin-top: 1rem;
-}
-
-.mrt-stoptimes-table th {
-    background: var(--mrt-bg-lighter);
-    font-weight: 600;
+    margin-top: var(--mrt-spacing-md);
 }
 
 .mrt-stoptimes-table td {
@@ -454,25 +464,7 @@
     text-align: center;
     color: var(--mrt-text-tertiary);
     font-style: italic;
-    padding: 2rem;
-}
-
-.mrt-none {
-    color: var(--mrt-text-tertiary);
-    font-style: italic;
-}
-
-/* Loading indicator */
-.mrt-loading {
-    text-align: center;
-    padding: 2rem;
-    color: var(--mrt-text-secondary);
-    font-style: italic;
-}
-
-.mrt-loading::before {
-    content: "⏳ ";
-    margin-right: 0.5rem;
+    padding: var(--mrt-spacing-xl);
 }
 
 /* ==========================================================================
@@ -525,12 +517,12 @@
 .mrt-dashboard-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    margin: 1.5rem 0;
+    gap: var(--mrt-spacing-md);
+    margin: var(--mrt-spacing-lg) 0;
 }
 
 .mrt-stat-card {
-    padding: 1rem;
+    padding: var(--mrt-spacing-md);
     background: var(--mrt-bg-white);
     border: 1px solid var(--mrt-wp-border);
     border-radius: 4px;
@@ -545,7 +537,7 @@
 
 .mrt-stat-label {
     color: var(--mrt-wp-gray);
-    margin-top: 0.5rem;
+    margin-top: var(--mrt-spacing-sm);
 }
 
 .mrt-stat-label a {
@@ -556,7 +548,7 @@
 .mrt-stat-subtitle {
     display: block;
     font-size: 0.85em;
-    margin-top: 0.25rem;
+    margin-top: var(--mrt-spacing-xs);
     opacity: 0.8;
 }
 
@@ -564,14 +556,14 @@
 .mrt-quick-actions {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1rem;
-    margin-top: 1rem;
+    gap: var(--mrt-spacing-md);
+    margin-top: var(--mrt-spacing-md);
 }
 
 .mrt-quick-action-button {
     text-align: left;
     height: auto;
-    padding: 0.75rem 1rem;
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
 }
 
 .mrt-quick-action-button strong {
@@ -582,13 +574,13 @@
     font-size: 0.9em;
     opacity: 0.8;
     display: block;
-    margin-top: 0.25rem;
+    margin-top: var(--mrt-spacing-xs);
 }
 
 /* Info Boxes */
 .mrt-info-box {
-    padding: 0.75rem;
-    margin-bottom: 1rem;
+    padding: var(--mrt-spacing-sm);
+    margin-bottom: var(--mrt-spacing-md);
     background: var(--mrt-info-bg);
     border-left: 4px solid var(--mrt-info-border);
     border-radius: 3px;
@@ -599,7 +591,7 @@
 }
 
 .mrt-info-box p:not(:first-child) {
-    margin-top: 0.5rem;
+    margin-top: var(--mrt-spacing-sm);
 }
 
 .mrt-info-box strong {
@@ -607,17 +599,17 @@
 }
 
 .mrt-info-box ol {
-    margin: 0.5rem 0 0 1.5rem;
+    margin: var(--mrt-spacing-sm) 0 0 1.5rem;
     line-height: 1.6;
 }
 
 /* Settings Section */
 .mrt-settings-section {
-    padding: 1.5rem;
+    padding: var(--mrt-spacing-lg);
     background: var(--mrt-bg-white);
     border: 1px solid var(--mrt-wp-border);
     border-radius: 4px;
-    margin-top: 2rem;
+    margin-top: var(--mrt-spacing-xl);
 }
 
 .mrt-settings-section h2 {
@@ -626,11 +618,11 @@
 
 /* Guide Section */
 .mrt-guide-section {
-    padding: 1.5rem;
-    background: #f0f6fc;
+    padding: var(--mrt-spacing-lg);
+    background: var(--mrt-info-bg);
     border: 1px solid var(--mrt-wp-border);
     border-radius: 4px;
-    margin-top: 2rem;
+    margin-top: var(--mrt-spacing-xl);
 }
 
 .mrt-guide-section h2 {
@@ -646,17 +638,17 @@
 
 .mrt-guide-content {
     display: none;
-    margin-top: 1rem;
+    margin-top: var(--mrt-spacing-md);
 }
 
 .mrt-guide-content ol {
-    margin-left: 1.5rem;
+    margin-left: var(--mrt-spacing-lg);
     line-height: 1.8;
 }
 
 .mrt-tip-box {
-    margin-top: 1rem;
-    padding: 0.75rem;
+    margin-top: var(--mrt-spacing-md);
+    padding: var(--mrt-spacing-sm);
     background: var(--mrt-warning-bg);
     border-left: 4px solid var(--mrt-warning-border);
     border-radius: 3px;
@@ -703,8 +695,8 @@
 .mrt-date-row {
     display: flex;
     align-items: center;
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
+    padding: var(--mrt-spacing-sm);
+    margin-bottom: var(--mrt-spacing-sm);
     background: var(--mrt-bg-white);
     border: 1px solid var(--mrt-border-default);
     border-radius: 3px;
@@ -718,11 +710,11 @@
 .mrt-date-iso {
     color: var(--mrt-text-tertiary);
     font-size: 0.9em;
-    margin-left: 0.5rem;
+    margin-left: var(--mrt-spacing-sm);
 }
 
 .mrt-date-remove-button {
-    margin-left: 1rem;
+    margin-left: var(--mrt-spacing-md);
 }
 
 .mrt-add-date-button {
@@ -731,8 +723,8 @@
 
 .mrt-date-pattern-section,
 .mrt-date-single-section {
-    margin-bottom: 1.5rem;
-    padding: 1rem;
+    margin-bottom: var(--mrt-spacing-lg);
+    padding: var(--mrt-spacing-md);
     background: var(--mrt-bg-light);
     border: 1px solid var(--mrt-border-default);
     border-radius: 4px;
@@ -741,15 +733,15 @@
 .mrt-date-pattern-section h3,
 .mrt-date-single-section h3 {
     margin-top: 0;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--mrt-spacing-sm);
 }
 
 .mrt-selected-dates-section {
-    margin-top: 1.5rem;
+    margin-top: var(--mrt-spacing-lg);
 }
 
 .mrt-filter-form {
-    margin-bottom: 1rem;
+    margin-bottom: var(--mrt-spacing-md);
 }
 
 .mrt-full-width {
@@ -757,17 +749,9 @@
 }
 
 /* Spacing Utilities */
-.mrt-mt-1 {
-    margin-top: 1rem;
-}
-
-.mrt-mb-1 {
-    margin-bottom: 1rem;
-}
-
-.mrt-ml-1 {
-    margin-left: 1rem;
-}
+.mrt-mt-1 { margin-top: var(--mrt-spacing-md); }
+.mrt-mb-1 { margin-bottom: var(--mrt-spacing-md); }
+.mrt-ml-1 { margin-left: var(--mrt-spacing-md); }
 
 /* Text Styles */
 .mrt-description-small {
@@ -776,17 +760,16 @@
     color: var(--mrt-text-tertiary);
 }
 
-.mrt-description-mt {
-    margin-top: 1rem;
-}
-
+.mrt-description-mt { margin-top: var(--mrt-spacing-md); }
+.mrt-description-mt-small { margin-top: var(--mrt-spacing-sm); }
 .mrt-description-error {
-    color: #d63638;
+    color: var(--mrt-text-error);
     font-weight: 600;
 }
 
 /* Disabled/Inactive States */
-.mrt-field-disabled {
+.mrt-field-disabled,
+.mrt-field-disabled-opacity {
     opacity: 0.5;
 }
 
@@ -810,9 +793,9 @@
 
 /* Warning/Development boxes */
 .mrt-warning-box {
-    margin-top: 2rem;
-    padding: 1rem;
-    background: #fff3cd;
+    margin-top: var(--mrt-spacing-xl);
+    padding: var(--mrt-spacing-md);
+    background: var(--mrt-warning-bg);
     border: 1px solid var(--mrt-warning-border);
     border-radius: 4px;
 }
@@ -823,17 +806,8 @@
     border-color: var(--mrt-danger-border);
 }
 
-.mrt-description-mt-small {
-    margin-top: 0.75rem;
-}
-
 .mrt-description-small-text {
     font-size: 0.9em;
-}
-
-/* Dynamic states */
-.mrt-field-disabled-opacity {
-    opacity: 0.5;
 }
 
 /* Code display */
@@ -883,20 +857,20 @@
    ========================================================================== */
 
 .mrt-journey-planner {
-    margin: 1.5rem 0;
+    margin: var(--mrt-spacing-lg) 0;
 }
 
 .mrt-journey-form {
     background: var(--mrt-bg-light);
-    padding: 1.5rem;
+    padding: var(--mrt-spacing-lg);
     border-radius: 4px;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--mrt-spacing-lg);
 }
 
 .mrt-journey-fields {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--mrt-spacing-md);
     align-items: flex-end;
 }
 
@@ -907,7 +881,7 @@
 
 .mrt-journey-field label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--mrt-spacing-sm);
     font-weight: 600;
     color: var(--mrt-text-secondary);
 }
@@ -915,7 +889,7 @@
 .mrt-journey-field select,
 .mrt-journey-field input[type="date"] {
     width: 100%;
-    padding: 0.5rem;
+    padding: var(--mrt-spacing-sm);
     border: 1px solid var(--mrt-border-default);
     border-radius: 3px;
     font-size: 1em;
@@ -949,11 +923,11 @@
 }
 
 .mrt-journey-results {
-    margin-top: 1.5rem;
+    margin-top: var(--mrt-spacing-lg);
 }
 
 .mrt-journey-results-title {
-    margin-bottom: 1rem;
+    margin-bottom: var(--mrt-spacing-md);
     font-size: 1.2em;
     color: var(--mrt-text-secondary);
 }
@@ -963,7 +937,7 @@
 }
 
 .mrt-journey-table {
-    margin-top: 0.5rem;
+    margin-top: var(--mrt-spacing-sm);
 }
 
 .mrt-journey-table td strong {
