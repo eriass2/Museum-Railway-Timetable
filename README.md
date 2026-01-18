@@ -7,8 +7,6 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 - **Custom Post Types**: Stations, Routes, Timetables, and Services
 - **Custom Taxonomies**: Train Types
 - **Shortcodes**: Display timetables on the frontend
-  - Simple timetable display
-  - Station picker with dropdown
   - Month calendar view
   - Complete timetable overview
   - **Journey Planner**: Search for connections between stations
@@ -80,7 +78,7 @@ Display a calendar showing service days for a month:
 - `show_counts` - Show service count per day (0 or 1, default: 1)
 - `start_monday` - Start week on Monday (0 or 1, default: 1)
 
-#### 4. Timetable Overview
+#### 2. Timetable Overview
 Display a complete timetable overview grouped by route and direction (like traditional printed timetables):
 
 ```

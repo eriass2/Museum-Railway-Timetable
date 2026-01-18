@@ -1,53 +1,8 @@
 # Översikt över Shortcodes och Komponenter
 
-## Shortcodes (5 st)
+## Shortcodes (3 st)
 
-### 1. `[museum_timetable]` - Enkel Tidtabell
-Visar nästa avgångar från en specifik station.
-
-**Användning:**
-```
-[museum_timetable station="Station Name" limit="5" show_arrival="1" train_type="steam"]
-```
-
-**Parametrar:**
-- `station` - Stationens namn (eller använd `station_id`)
-- `station_id` - Station post ID
-- `limit` - Antal avgångar att visa (standard: 5)
-- `show_arrival` - Visa ankomsttider (0 eller 1, standard: 0)
-- `train_type` - Filtrera efter train type slug (valfritt)
-
-**Exempel:**
-```
-[museum_timetable station="Hultsfred" limit="10" show_arrival="1"]
-```
-
----
-
-### 2. `[museum_timetable_picker]` - Station Väljare
-Visar en dropdown för att välja station och visa dess tidtabell.
-
-**Användning:**
-```
-[museum_timetable_picker default_station="Station Name" limit="6" show_arrival="1"]
-```
-
-**Parametrar:**
-- `default_station` - Förvald station
-- `limit` - Antal avgångar att visa (standard: 6)
-- `show_arrival` - Visa ankomsttider (0 eller 1, standard: 0)
-- `train_type` - Filtrera efter train type slug (valfritt)
-- `form_method` - Form-metod: "get" eller "post" (standard: "get")
-- `placeholder` - Placeholder-text för dropdown
-
-**Exempel:**
-```
-[museum_timetable_picker default_station="Hultsfred" limit="8"]
-```
-
----
-
-### 3. `[museum_timetable_month]` - Månadsvy
+### 1. `[museum_timetable_month]` - Månadsvy
 Visar en kalendermånadsvy som visar vilka dagar som har turer.
 
 **Användning:**
@@ -75,7 +30,7 @@ Visar en kalendermånadsvy som visar vilka dagar som har turer.
 
 ---
 
-### 4. `[museum_timetable_overview]` - Komplett Tidtabell
+### 2. `[museum_timetable_overview]` - Komplett Tidtabell
 Visar en komplett tidtabell-översikt grupperad per route och riktning.
 
 **Användning:**
@@ -106,7 +61,7 @@ Visar en komplett tidtabell-översikt grupperad per route och riktning.
 
 ---
 
-### 5. `[museum_journey_planner]` - Reseplanerare
+### 3. `[museum_journey_planner]` - Reseplanerare
 Visar en reseplanerare där användare kan söka efter anslutningar mellan två stationer.
 
 **Användning:**

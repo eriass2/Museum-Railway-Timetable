@@ -110,8 +110,6 @@ Before deploying, test:
 - [ ] Nonce verification works
 
 ### 3. Shortcodes
-- [ ] `[museum_timetable]` displays correctly
-- [ ] `[museum_timetable_picker]` displays correctly
 - [ ] `[museum_timetable_month]` displays correctly
 - [ ] `[museum_timetable_overview]` displays correctly
 - [ ] All parameters work as expected
