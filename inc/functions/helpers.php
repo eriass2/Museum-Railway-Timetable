@@ -570,6 +570,65 @@ function MRT_get_train_type_icon($train_type) {
 }
 
 /**
+ * Convert time format from HH:MM to HH.MM
+ *
+ * @param string|null $time Time in HH:MM format or null
+ * @return string Time in HH.MM format or empty string
+ */
+function MRT_format_time_display($time) {
+    if (empty($time)) {
+        return '';
+    }
+    return str_replace(':', '.', $time);
+}
+
+/**
+ * Find connecting services at a station after a service arrives
+ * Used for transfer information display
+ *
+ * @param int $station_id Station post ID
+ * @param int $arriving_service_id Service that arrives at the station
+ * @param string $arrival_time Arrival time in HH:MM format
+ * @param string $dateYmd Date in YYYY-MM-DD format
+ * @param int $limit Maximum number of connecting services to return
+ * @return array Array of connecting service data
+ */
+function MRT_find_connecting_services($station_id, $arriving_service_id, $arrival_time, $dateYmd, $limit = 3) {
+    if (!$station_id || !$arrival_time || !$dateYmd) {
+        return [];
+    }
+    
+    // Get all services running on this date
+    $service_ids = MRT_services_running_on_date($dateYmd);
+    if (empty($service_ids)) {
+        return [];
+    }
+    
+    // Remove the arriving service from the list
+    $service_ids = array_filter($service_ids, function($id) use ($arriving_service_id) {
+        return $id != $arriving_service_id;
+    });
+    
+    if (empty($service_ids)) {
+        return [];
+    }
+    
+    // Use existing function to find next departures
+    $connections = MRT_next_departures_for_station($station_id, array_values($service_ids), $arrival_time, $limit, false);
+    
+    // Enrich with service numbers
+    foreach ($connections as &$conn) {
+        $service_number = get_post_meta($conn['service_id'], 'mrt_service_number', true);
+        if (empty($service_number)) {
+            $service_number = $conn['service_id'];
+        }
+        $conn['service_number'] = $service_number;
+    }
+    
+    return $connections;
+}
+
+/**
  * Render a generic timetable table (reused by multiple shortcodes)
  *
  * @param array $rows Array of timetable row data

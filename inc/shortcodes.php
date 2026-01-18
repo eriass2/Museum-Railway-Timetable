@@ -395,10 +395,16 @@ add_shortcode('museum_journey_planner', function ($atts) {
                                         </td>
                                         <td><?php echo esc_html($conn['train_type']); ?></td>
                                         <td>
-                                            <strong><?php echo esc_html($conn['from_departure'] ?: ($conn['from_arrival'] ?: '—')); ?></strong>
+                                            <strong><?php 
+                                                $dep_time = $conn['from_departure'] ?: $conn['from_arrival'];
+                                                echo $dep_time ? esc_html(MRT_format_time_display($dep_time)) : '—';
+                                            ?></strong>
                                         </td>
                                         <td>
-                                            <strong><?php echo esc_html($conn['to_arrival'] ?: ($conn['to_departure'] ?: '—')); ?></strong>
+                                            <strong><?php 
+                                                $arr_time = $conn['to_arrival'] ?: $conn['to_departure'];
+                                                echo $arr_time ? esc_html(MRT_format_time_display($arr_time)) : '—';
+                                            ?></strong>
                                         </td>
                                         <td><?php echo esc_html(!empty($conn['destination']) ? $conn['destination'] : (!empty($conn['direction']) ? $conn['direction'] : '—')); ?></td>
                                     </tr>

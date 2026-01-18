@@ -366,6 +366,42 @@
     font-size: 0.9rem;
 }
 
+.mrt-direction-arrow {
+    color: var(--mrt-green-primary);
+    font-weight: bold;
+    margin-right: 4px;
+}
+
+.mrt-service-destination {
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: var(--mrt-text-secondary);
+}
+
+.mrt-destination-label {
+    display: block;
+    font-weight: 500;
+}
+
+.mrt-transfer-info {
+    margin-top: 2px;
+    font-size: 0.7rem;
+    color: var(--mrt-text-tertiary);
+}
+
+.mrt-transfer-label {
+    font-weight: 500;
+    margin-right: 4px;
+}
+
+.mrt-connecting-train {
+    display: inline-block;
+    margin-right: 6px;
+    padding: 1px 4px;
+    background: var(--mrt-bg-lighter);
+    border-radius: 2px;
+}
+
 .mrt-time-cell {
     font-family: monospace;
     font-size: 0.9rem;

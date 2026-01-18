@@ -22,6 +22,12 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
         return '<div class="mrt-error">' . esc_html__('Invalid timetable.', 'museum-railway-timetable') . '</div>';
     }
     
+    // Use current date if not provided
+    if ($dateYmd === null) {
+        $datetime = MRT_get_current_datetime();
+        $dateYmd = $datetime['date'];
+    }
+    
     // Get all services for this timetable
     $services = get_posts([
         'post_type' => 'mrt_service',
@@ -124,6 +130,8 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                             // Render header row
                             foreach ($services_list as $idx => $service_data): 
                                 $info = $service_info[$idx];
+                                // Get stop times for this service
+                                $service_stop_times = $service_data['stop_times'] ?? [];
                             ?>
                                 <th class="<?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>">
                                     <div class="mrt-service-header">
@@ -135,6 +143,45 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                                         <?php if ($info['is_special'] && !empty($info['special_name'])): ?>
                                             <span class="mrt-special-label"><?php echo esc_html($info['special_name']); ?></span>
                                         <?php endif; ?>
+                                        <?php
+                                        // Show destination/transfer info
+                                        $destination_data = MRT_get_service_destination($info['service']->ID);
+                                        if (!empty($destination_data['destination'])): 
+                                            // Check if this is the end station for this service
+                                            $end_station_id = $destination_data['end_station_id'];
+                                            
+                                            // Find if this service ends at any station in this route
+                                            $is_end_station = false;
+                                            $connections = [];
+                                            if ($end_station_id && isset($service_stop_times[$end_station_id])) {
+                                                $end_stop = $service_stop_times[$end_station_id];
+                                                $end_arrival = $end_stop['arrival_time'] ?? '';
+                                                if ($end_arrival && $dateYmd) {
+                                                    // Find connecting services
+                                                    $connections = MRT_find_connecting_services($end_station_id, $info['service']->ID, $end_arrival, $dateYmd, 2);
+                                                    if (!empty($connections)) {
+                                                        $is_end_station = true;
+                                                    }
+                                                }
+                                            }
+                                        ?>
+                                            <div class="mrt-service-destination">
+                                                <span class="mrt-destination-label"><?php echo esc_html($destination_data['destination']); ?></span>
+                                                <?php if ($is_end_station && !empty($connections)): ?>
+                                                    <div class="mrt-transfer-info">
+                                                        <span class="mrt-transfer-label"><?php esc_html_e('Tågbyte', 'museum-railway-timetable'); ?>:</span>
+                                                        <?php foreach ($connections as $conn): ?>
+                                                            <span class="mrt-connecting-train"><?php 
+                                                                echo esc_html($conn['service_number']);
+                                                                if ($conn['departure_time']) {
+                                                                    echo ' ' . esc_html(MRT_format_time_display($conn['departure_time']));
+                                                                }
+                                                            ?></span>
+                                                        <?php endforeach; ?>
+                                                    </div>
+                                                <?php endif; ?>
+                                            </div>
+                                        <?php endif; ?>
                                     </div>
                                 </th>
                             <?php endforeach; ?>
@@ -145,7 +192,17 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                             $station_id = $station->ID;
                         ?>
                             <tr>
-                                <td class="mrt-station-name"><?php echo esc_html($station->post_title); ?></td>
+                                <td class="mrt-station-name">
+                                    <?php 
+                                    // Add direction arrow for first and last stations
+                                    $is_first = ($station_id === $station_posts[0]->ID);
+                                    $is_last = ($station_id === $station_posts[count($station_posts) - 1]->ID);
+                                    if ($is_first || $is_last) {
+                                        echo '<span class="mrt-direction-arrow">↓</span> ';
+                                    }
+                                    echo esc_html($station->post_title);
+                                    ?>
+                                </td>
                                 <?php foreach ($services_list as $idx => $service_data): 
                                     $stop_time = isset($service_data['stop_times'][$station_id]) ? $service_data['stop_times'][$station_id] : null;
                                     
@@ -190,9 +247,9 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                                                 }
                                             }
                                             
-                                            // Convert HH:MM to HH.MM format
+                                            // Convert HH:MM to HH.MM format using helper
                                             if ($time_str && $time_str !== 'X') {
-                                                $time_str = str_replace(':', '.', $time_str);
+                                                $time_str = MRT_format_time_display($time_str);
                                             }
                                             
                                             $time_display = $symbol_prefix . esc_html($time_str);
@@ -319,11 +376,11 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
                                         $departure = $st && !empty($st['departure_time']) ? $st['departure_time'] : '';
                                         $time_display = '';
                                         if ($arrival && $departure) {
-                                            $time_display = $arrival . ' / ' . $departure;
+                                            $time_display = MRT_format_time_display($arrival) . ' / ' . MRT_format_time_display($departure);
                                         } elseif ($arrival) {
-                                            $time_display = $arrival;
+                                            $time_display = MRT_format_time_display($arrival);
                                         } elseif ($departure) {
-                                            $time_display = $departure;
+                                            $time_display = MRT_format_time_display($departure);
                                         } else {
                                             $time_display = $st ? 'X' : '—';
                                         }
