@@ -112,6 +112,7 @@ Before deploying, test:
 ### 3. Shortcodes
 - [ ] `[museum_timetable_month]` displays correctly
 - [ ] `[museum_timetable_overview]` displays correctly
+- [ ] `[museum_journey_planner]` displays correctly
 - [ ] All parameters work as expected
 
 ### 4. Frontend
