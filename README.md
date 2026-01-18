@@ -66,7 +66,7 @@ Display a complete timetable overview grouped by route and direction (like tradi
 - Displays times for each station, with "X" for null/unspecified times
 - Perfect for displaying complete timetables on pages
 
-#### 5. Journey Planner
+#### 3. Journey Planner
 Display a journey planner where users can search for connections between two stations on a specific date:
 
 ```
