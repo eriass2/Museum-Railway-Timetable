@@ -24,8 +24,6 @@ add_action('wp_ajax_mrt_save_route_end_stations', 'MRT_ajax_save_route_end_stati
 // Frontend AJAX endpoints (available to both logged in and non-logged in users)
 add_action('wp_ajax_mrt_search_journey', 'MRT_ajax_search_journey');
 add_action('wp_ajax_nopriv_mrt_search_journey', 'MRT_ajax_search_journey');
-add_action('wp_ajax_mrt_get_timetable_for_station', 'MRT_ajax_get_timetable_for_station');
-add_action('wp_ajax_nopriv_mrt_get_timetable_for_station', 'MRT_ajax_get_timetable_for_station');
 add_action('wp_ajax_mrt_get_timetable_for_date', 'MRT_ajax_get_timetable_for_date');
 add_action('wp_ajax_nopriv_mrt_get_timetable_for_date', 'MRT_ajax_get_timetable_for_date');
 
@@ -757,46 +755,6 @@ function MRT_ajax_search_journey() {
     <?php endif; ?>
     <?php
     $html = ob_get_clean();
-    
-    wp_send_json_success(['html' => $html]);
-}
-
-/**
- * Get timetable for a station via AJAX (frontend)
- */
-function MRT_ajax_get_timetable_for_station() {
-    $station_id = intval($_POST['station_id'] ?? 0);
-    $limit = intval($_POST['limit'] ?? 6);
-    $show_arrival = !empty($_POST['show_arrival']);
-    $train_type = sanitize_text_field($_POST['train_type'] ?? '');
-    
-    // Validation
-    if ($station_id <= 0) {
-        wp_send_json_error(['message' => __('Please select a station.', 'museum-railway-timetable')]);
-        return;
-    }
-    
-    if ($limit <= 0) {
-        $limit = 6;
-    }
-    
-    // Get current date and time
-    $datetime = MRT_get_current_datetime();
-    $today = $datetime['date'];
-    $time = $datetime['time'];
-    
-    // Get services running today
-    $services_today = MRT_services_running_on_date($today, $train_type);
-    
-    if (empty($services_today)) {
-        $html = '<div class="mrt-none">' . esc_html__('No services today.', 'museum-railway-timetable') . '</div>';
-        wp_send_json_success(['html' => $html]);
-        return;
-    }
-    
-    // Get next departures
-    $rows = MRT_next_departures_for_station($station_id, $services_today, $time, $limit, $show_arrival);
-    $html = MRT_render_timetable_table($rows, $show_arrival);
     
     wp_send_json_success(['html' => $html]);
 }

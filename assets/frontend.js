@@ -83,65 +83,6 @@
     }
 
     /**
-     * Initialize Timetable Picker AJAX
-     */
-    function initTimetablePicker() {
-        var $picker = $('.mrt-picker');
-        if (!$picker.length) return;
-
-        var $select = $picker.find('select[name="mrt_station_id"]');
-        var $form = $picker.closest('form');
-        var $resultsContainer = $picker.next('.mrt-timetable-results');
-        
-        // Create results container if it doesn't exist
-        if (!$resultsContainer.length) {
-            $resultsContainer = $('<div class="mrt-timetable-results"></div>');
-            $picker.after($resultsContainer);
-        }
-
-        // Remove onchange submit, use AJAX instead
-        $select.off('change').on('change', function() {
-            var stationId = $(this).val();
-            
-            if (!stationId) {
-                $resultsContainer.empty();
-                return;
-            }
-
-            // Get shortcode attributes from data attributes
-            var limit = $picker.data('limit') || 6;
-            var showArrival = $picker.data('show-arrival') || 0;
-            var trainType = $picker.data('train-type') || '';
-
-            // Show loading
-            $resultsContainer.html('<div class="mrt-loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>');
-
-            // AJAX request
-            $.ajax({
-                url: (typeof mrtFrontend !== 'undefined' && mrtFrontend.ajaxurl) ? mrtFrontend.ajaxurl : '/wp-admin/admin-ajax.php',
-                type: 'POST',
-                data: {
-                    action: 'mrt_get_timetable_for_station',
-                    station_id: stationId,
-                    limit: limit,
-                    show_arrival: showArrival ? 1 : 0,
-                    train_type: trainType
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $resultsContainer.html(response.data.html);
-                    } else {
-                        $resultsContainer.html('<div class="mrt-error">' + (response.data.message || (typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorLoading : 'Error loading timetable.')) + '</div>');
-                    }
-                },
-                error: function() {
-                    $resultsContainer.html('<div class="mrt-error">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : 'Network error. Please try again.') + '</div>');
-                }
-            });
-        });
-    }
-
-    /**
      * Initialize Month Calendar with clickable days
      */
     function initMonthCalendar() {
@@ -197,7 +138,6 @@
      */
     function init() {
         initJourneyPlanner();
-        initTimetablePicker();
         initMonthCalendar();
     }
 

@@ -103,14 +103,6 @@
    Station Picker Component
    ========================================================================== */
 
-.mrt-picker {
-    margin-bottom: var(--mrt-spacing-sm);
-}
-
-.mrt-picker select {
-    min-width: 240px;
-}
-
 /* ==========================================================================
    Month Calendar Component
    ========================================================================== */
@@ -610,10 +602,6 @@
         font-size: 0.9rem;
     }
 
-    .mrt-picker select {
-        min-width: 100%;
-        width: 100%;
-    }
 }
 
 @media screen and (max-width: 480px) {

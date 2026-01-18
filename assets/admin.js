@@ -29,11 +29,6 @@
         // Add event handlers for admin interface
         // Example: Handle form submissions, toggle elements, etc.
         
-        // Station picker auto-submit (if needed)
-        $('.mrt-picker select').on('change', function() {
-            // Auto-submit is handled by onchange attribute in HTML
-            // This is a placeholder for future JavaScript enhancements
-        });
         
         // Update stations list and destination dropdown when route changes in Service edit
         $('#mrt_service_route_id').on('change', function() {
