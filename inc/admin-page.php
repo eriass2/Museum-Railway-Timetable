@@ -398,9 +398,13 @@ function MRT_render_admin_page() {
                     <strong><?php esc_html_e('What it shows:', 'museum-railway-timetable'); ?></strong><br>
                     • <?php esc_html_e('All trips (services) in the timetable', 'museum-railway-timetable'); ?><br>
                     • <?php esc_html_e('Grouped by route and direction (e.g., "Från Uppsala Ö Till Marielund")', 'museum-railway-timetable'); ?><br>
-                    • <?php esc_html_e('Train types for each trip (Ångtåg, Rälsbuss, Dieseltåg)', 'museum-railway-timetable'); ?><br>
-                    • <?php esc_html_e('Arrival/departure times for each station', 'museum-railway-timetable'); ?><br>
-                    • <?php esc_html_e('"X" marker for null/unspecified times', 'museum-railway-timetable'); ?>
+                    • <?php esc_html_e('Train types with icons for each trip (🚂 Ångtåg, 🚌 Rälsbuss, 🚃 Dieseltåg)', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Train numbers displayed prominently (or service ID as fallback)', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Arrival/departure times in HH.MM format for each station', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Symbols: P (pickup only), A (dropoff only), X (no time), | (passes without stopping)', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Transfer information showing connecting trains at destination stations', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Direction arrows (↓) for first and last stations', 'museum-railway-timetable'); ?><br>
+                    • <?php esc_html_e('Special styling for express services (yellow vertical bar)', 'museum-railway-timetable'); ?>
                 </p>
                 <p class="description mrt-description-mt-small">
                     <strong><?php esc_html_e('Parameters:', 'museum-railway-timetable'); ?></strong><br>

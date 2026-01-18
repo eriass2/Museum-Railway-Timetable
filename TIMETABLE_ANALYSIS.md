@@ -51,10 +51,10 @@
 ### ❌ **Vad som saknas eller skiljer sig:**
 
 #### 1. **Header-struktur**
-- **Saknas**: Ikoner för transporttyper
-- **Saknas**: Tågnummer visas inte tydligt i header
-- **Saknas**: Specialmarkeringar (gul bar, vertikal text)
-- **Skillnad**: Vi visar train type + service ID, men inte som tydlig header
+- ✅ **Implementerat**: Ikoner för transporttyper (emoji: 🚂, 🚃, 🚄, 🚌)
+- ✅ **Implementerat**: Tågnummer visas tydligt i header (med fallback till service ID)
+- ✅ **Implementerat**: Specialmarkeringar (gul bar för express services)
+- ✅ **Implementerat**: Train type + service number visas tydligt i header
 
 #### 2. **Sektionsrubriker**
 - **Skillnad**: Vi visar "Från X Till Y" i route header, men inte som separata sektioner
@@ -62,49 +62,58 @@
 - **Saknas**: "Från" och "Till" som separata rader i tabellen
 
 #### 3. **Tidsformat**
-- **Skillnad**: Vi använder HH:MM, tidtabellen använder HH.MM
-- **Lösning**: Vi konverterar redan till HH.MM i overview, men inte konsekvent
+- ✅ **Implementerat**: Alla tider konverteras konsekvent till HH.MM format
+- ✅ **Implementerat**: Helper-funktion `MRT_format_time_display()` för konsekvent formatering
 
 #### 4. **Symboler**
-- **Delvis**: Vi har P, X, | men logiken kan förbättras
-- **Saknas**: Tydligare skillnad mellan "X" (stannar inte) och "|" (passerar)
-- **Saknas**: "A" för avstigning (dropoff only) - vi har det i koden men använder det inte konsekvent
+- ✅ **Implementerat**: Förbättrad symbol-logik för P (pickup only), A (dropoff only), X (no time), | (passes without stopping)
+- ✅ **Implementerat**: Symboler används konsekvent i timetable overview
 
 #### 5. **Visuella markeringar**
-- **Saknas**: Blå bakgrund för viktiga rader
-- **Saknas**: Gul vertikal bar för special services
-- **Saknas**: Pilar för riktning
-- **Delvis**: Vi har CSS-klasser men de används inte fullt ut
+- ✅ **Implementerat**: CSS-klass `.mrt-row-highlight` för blå bakgrund (kan appliceras dynamiskt)
+- ✅ **Implementerat**: Gul vertikal bar (4px) för special services
+- ✅ **Implementerat**: Pilar (↓) för riktning i station-kolumnen (första och sista stationen)
+- ✅ **Implementerat**: Kompakt design med reducerad padding och mindre fontstorlekar
 
 #### 6. **Överföringsinformation**
-- **Saknas**: "Tågbyte" information under destinationer
-- **Saknas**: Visning av anslutande tåg
+- ✅ **Implementerat**: "Tågbyte" information visas under destinationer i service headers
+- ✅ **Implementerat**: Visning av anslutande tåg med tågnummer och avgångstid
+- ✅ **Implementerat**: Helper-funktion `MRT_find_connecting_services()` för att hitta anslutningar
 
 #### 7. **Layout och design**
-- **Skillnad**: Vår design är mer "WordPress-standard", tidtabellen är mer kompakt
-- **Skillnad**: Vi har mer padding/spacing, tidtabellen är tätare
-- **Saknas**: Grön header-stil matchar inte exakt
+- ✅ **Implementerat**: Mer kompakt design med reducerad padding (4px 6px istället för 8px 12px)
+- ✅ **Implementerat**: Mindre fontstorlekar (0.9rem för stationer och tider)
+- ✅ **Implementerat**: Tätare spacing i service headers
+- **Skillnad**: Grön header-stil matchar inte exakt (men fungerar bra)
 
 #### 8. **Service-nummer**
-- **Skillnad**: Vi använder service ID, tidtabellen använder faktiska tågnummer (71, 91, etc.)
-- **Saknas**: Fält för att ange tågnummer separat från service title
+- ✅ **Implementerat**: Fält för att ange tågnummer (`mrt_service_number`) i Service meta box
+- ✅ **Implementerat**: Tågnummer visas i timetable headers (fallback till service ID om tomt)
 
-## Rekommendationer för förbättringar
+## Implementeringsstatus
 
-### Prioritet 1 (Hög)
-1. **Lägg till tågnummer-fält** i Service meta box
-2. **Förbättra symbol-logik** för P/X/|/A
-3. **Lägg till blå highlight** för viktiga rader (via CSS-klass)
-4. **Förbättra header** med tågnummer och train type tydligare
+### ✅ **Klart (Prioritet 1)**
+1. ✅ **Tågnummer-fält** - Implementerat i Service meta box (`mrt_service_number`)
+2. ✅ **Symbol-logik** - Förbättrad logik för P/X/|/A med tydlig skillnad
+3. ✅ **Blå highlight** - CSS-klass `.mrt-row-highlight` tillgänglig
+4. ✅ **Header-förbättringar** - Tågnummer och train type visas tydligt med ikoner
 
-### Prioritet 2 (Medel)
-5. **Lägg till ikoner** för transporttyper (kan vara emoji eller SVG)
-6. **Förbättra sektionsrubriker** med "Från X" och "Till Y" som separata rader
-7. **Lägg till gul vertikal bar** för special services
-8. **Förbättra kompakt design** i CSS
+### ✅ **Klart (Prioritet 2)**
+5. ✅ **Ikoner för transporttyper** - Emoji-ikoner implementerade (🚂, 🚃, 🚄, 🚌)
+6. ⚠️ **Sektionsrubriker** - Delvis implementerat (route headers finns, men inte separata rader)
+7. ✅ **Gul vertikal bar** - Implementerad för special services (4px gul bar)
+8. ✅ **Kompakt design** - Reducerad padding och mindre fontstorlekar
 
-### Prioritet 3 (Låg)
-9. **Lägg till överföringsinformation** (tågbyte)
-10. **Lägg till pilar** för riktning
-11. **Förbättra tidsformat** konsekvent till HH.MM
+### ✅ **Klart (Prioritet 3)**
+9. ✅ **Överföringsinformation** - Implementerad med "Tågbyte" och anslutande tåg
+10. ✅ **Pilar för riktning** - Implementerade (↓) för första och sista stationen
+11. ✅ **Tidsformat HH.MM** - Konsekvent implementerat överallt
+
+## Återstående förbättringar (Låg prioritet)
+
+### Möjliga framtida förbättringar:
+- **Sektionsrubriker som separata rader**: "Från X" och "Till Y" som separata rader i tabellen (istället för bara i header)
+- **Mer avancerade ikoner**: SVG-ikoner istället för emoji för bättre kontroll
+- **Anpassningsbar highlight**: Möjlighet att markera specifika rader som viktiga i admin
+- **Förbättrad special service-styling**: Mer avancerad styling för express services (t.ex. vertikal text)
 
