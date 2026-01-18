@@ -29,7 +29,9 @@ class Service {
   +title: string
   +timetable_id: int
   +route_id: int
-  +direction: string ("dit" | "från" | null)
+  +direction: string ("dit" | "från" | null) [DEPRECATED - use end_station_id]
+  +end_station_id: int (station post ID)
+  +service_number: string (train number)
   --
   +getStopTimes(): StopTime[]
   +getTrainTypes(): TrainType[]
@@ -196,10 +198,20 @@ TrainType
   - Links service to a route
   - Used to filter available stations when configuring stop times
   - Multiple services can use the same route
-- `mrt_direction` (string) - Direction of the service (optional, restricted values)
+- `mrt_direction` (string) - Direction of the service (optional, deprecated - use `mrt_service_end_station_id` instead)
   - Allowed values: `'dit'` or `'från'`
   - Empty string if not set
   - Example: "dit" (towards), "från" (from)
+  - **Note**: This field is kept for backward compatibility. New services should use `mrt_service_end_station_id` instead.
+- `mrt_service_end_station_id` (int) - End station (destination) post ID (optional, recommended)
+  - References a Station post ID
+  - Used to determine the destination/end station of the service
+  - Takes precedence over `mrt_direction` if set
+  - Example: 123 (station post ID)
+- `mrt_service_number` (string) - Train number displayed in timetables (optional)
+  - Train number as displayed to users (e.g., "71", "91", "73")
+  - If empty, service ID is used as fallback
+  - Example: "71", "91", "73"
 
 **Taxonomies:**
 - `mrt_train_type` - Train type taxonomy (many-to-many)

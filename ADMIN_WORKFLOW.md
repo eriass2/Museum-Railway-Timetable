@@ -139,7 +139,8 @@ Om du föredrar att skapa services separat:
    - **Timetable**: **VÄLJ EN TIMETABLE** (obligatoriskt) - Välj den timetable som denna service tillhör
    - **Route**: **VÄLJ EN ROUTE** (obligatoriskt) - Välj den Route som denna service kör på
    - **Train Type**: Välj tågtyp (t.ex. "Ånglok", "Diesellok")
-   - **Direction**: (valfritt) Riktning - välj "Dit" eller "Från" från dropdown
+   - **End Station**: Välj slutstation/destination (valfritt, rekommenderat)
+   - **Train Number**: Ange tågnummer som visas i tidtabeller (valfritt, t.ex. "71", "91")
 4. Klicka **"Publish"** (eller "Update")
 
 **Tips:**
