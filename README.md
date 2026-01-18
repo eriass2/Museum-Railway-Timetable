@@ -34,36 +34,7 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 
 ### Shortcodes
 
-#### 1. Simple Timetable
-Display next departures from a station:
-
-```
-[museum_timetable station="Station Name" limit="5" show_arrival="1" train_type="steam"]
-```
-
-**Parameters:**
-- `station` - Station name (or use `station_id`)
-- `station_id` - Station post ID
-- `limit` - Number of departures to show (default: 5)
-- `show_arrival` - Show arrival times (0 or 1, default: 0)
-- `train_type` - Filter by train type slug (optional)
-
-#### 2. Station Picker
-Display a dropdown to select a station and show its timetable:
-
-```
-[museum_timetable_picker default_station="Station Name" limit="6" show_arrival="1"]
-```
-
-**Parameters:**
-- `default_station` - Default selected station name
-- `limit` - Number of departures to show (default: 6)
-- `show_arrival` - Show arrival times (0 or 1, default: 0)
-- `train_type` - Filter by train type slug (optional)
-- `form_method` - Form submission method: "get" or "post" (default: "get")
-- `placeholder` - Placeholder text for dropdown
-
-#### 3. Month Calendar View
+#### 1. Month Calendar View
 Display a calendar showing service days for a month:
 
 ```
