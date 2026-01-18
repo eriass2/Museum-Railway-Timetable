@@ -541,6 +541,35 @@ function MRT_validate_date($s) {
 // ============================================================================
 
 /**
+ * Get icon for train type
+ * Returns emoji or HTML based on train type name/slug
+ *
+ * @param WP_Term|null $train_type Train type term object
+ * @return string Icon (emoji or empty string)
+ */
+function MRT_get_train_type_icon($train_type) {
+    if (!$train_type) {
+        return '';
+    }
+    
+    $name_lower = strtolower($train_type->name);
+    $slug_lower = strtolower($train_type->slug);
+    
+    // Match common train types
+    if (strpos($name_lower, 'ång') !== false || strpos($slug_lower, 'steam') !== false || strpos($slug_lower, 'ang') !== false) {
+        return '🚂'; // Steam train
+    } elseif (strpos($name_lower, 'diesel') !== false || strpos($slug_lower, 'diesel') !== false) {
+        return '🚃'; // Diesel train
+    } elseif (strpos($name_lower, 'elektrisk') !== false || strpos($name_lower, 'electric') !== false || strpos($slug_lower, 'electric') !== false) {
+        return '🚄'; // Electric train
+    } elseif (strpos($name_lower, 'rälsbuss') !== false || strpos($name_lower, 'railbus') !== false || strpos($slug_lower, 'bus') !== false || strpos($slug_lower, 'buss') !== false) {
+        return '🚌'; // Rail bus
+    }
+    
+    return '🚆'; // Default train icon
+}
+
+/**
  * Render a generic timetable table (reused by multiple shortcodes)
  *
  * @param array $rows Array of timetable row data

@@ -90,7 +90,7 @@
 .mrt-table th,
 .mrt-table td {
     border: 1px solid var(--mrt-border-default);
-    padding: 6px 8px;
+    padding: 4px 6px;
     text-align: left;
 }
 
@@ -251,9 +251,9 @@
 .mrt-route-header {
     background: var(--mrt-green-primary);
     color: var(--mrt-text-white);
-    padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
-    margin: 0 0 var(--mrt-spacing-sm) 0;
-    font-size: 1.1rem;
+    padding: 6px var(--mrt-spacing-md);
+    margin: 0 0 var(--mrt-spacing-xs) 0;
+    font-size: 1rem;
     font-weight: 600;
     border-radius: 3px;
 }
@@ -287,7 +287,7 @@
 .mrt-overview-table th,
 .mrt-overview-table td {
     border: 1px solid var(--mrt-border-default);
-    padding: 8px 12px;
+    padding: 4px 6px;
     text-align: center;
 }
 
@@ -312,38 +312,65 @@
 
 .mrt-overview-table .mrt-service-col.mrt-service-special {
     background: var(--mrt-special-bg);
+    position: relative;
+    border-left: 4px solid #ffc107;
+}
+
+/* Yellow vertical bar for special services - applies to all cells in column */
+.mrt-overview-table .mrt-service-col.mrt-service-special,
+.mrt-overview-table tbody tr td.mrt-service-col.mrt-service-special {
+    border-left: 4px solid #ffc107;
 }
 
 
 .mrt-service-header {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
     align-items: center;
+    padding: 4px;
+}
+
+.mrt-train-type-icon {
+    font-size: 1.2rem;
+    line-height: 1;
+    margin-bottom: 2px;
 }
 
 .mrt-train-type {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: var(--mrt-text-secondary);
     font-weight: 500;
     text-align: center;
+    line-height: 1.2;
 }
 
 .mrt-service-number {
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1rem;
     text-align: center;
+    line-height: 1.2;
+}
+
+.mrt-special-label {
+    font-size: 0.7rem;
+    color: var(--mrt-text-tertiary);
+    font-style: italic;
+    margin-top: 2px;
 }
 
 .mrt-station-name {
     text-align: left;
     font-weight: 500;
+    padding: 4px 8px;
+    font-size: 0.9rem;
 }
 
 .mrt-time-cell {
     font-family: monospace;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     white-space: nowrap;
+    padding: 4px 6px;
 }
 
 .mrt-time-cell:empty::before {

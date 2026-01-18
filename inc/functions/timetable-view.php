@@ -79,7 +79,11 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                     <thead>
                         <tr>
                             <th class="mrt-station-col"><?php esc_html_e('Station', 'museum-railway-timetable'); ?></th>
-                            <?php foreach ($services_list as $service_data): 
+                            <?php 
+                            // Pre-calculate service classes and info for reuse
+                            $service_classes = [];
+                            $service_info = [];
+                            foreach ($services_list as $idx => $service_data): 
                                 $service = $service_data['service'];
                                 $train_type = $service_data['train_type'];
                                 // Get train number from meta, fallback to service ID
@@ -87,24 +91,50 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                                 if (empty($service_number)) {
                                     $service_number = $service->ID;
                                 }
-                            ?>
-                                <th class="mrt-service-col <?php 
-                                    // Add CSS class for bus or special services
-                                    if ($train_type) {
-                                        $train_type_slug = $train_type->slug;
-                                        $train_type_name_lower = strtolower($train_type->name);
-                                        if (strpos($train_type_name_lower, 'buss') !== false || strpos($train_type_slug, 'bus') !== false) {
-                                            echo 'mrt-service-bus';
-                                        } elseif (strpos($train_type_name_lower, 'express') !== false || strpos($service->post_title, 'express') !== false) {
-                                            echo 'mrt-service-special';
+                                
+                                // Determine CSS classes
+                                $classes = ['mrt-service-col'];
+                                $is_special = false;
+                                $special_name = '';
+                                if ($train_type) {
+                                    $train_type_slug = $train_type->slug;
+                                    $train_type_name_lower = strtolower($train_type->name);
+                                    if (strpos($train_type_name_lower, 'buss') !== false || strpos($train_type_slug, 'bus') !== false) {
+                                        $classes[] = 'mrt-service-bus';
+                                    } elseif (strpos($train_type_name_lower, 'express') !== false || strpos($service->post_title, 'express') !== false) {
+                                        $classes[] = 'mrt-service-special';
+                                        $is_special = true;
+                                        if (strpos(strtolower($service->post_title), 'express') !== false) {
+                                            $special_name = 'Express';
+                                        } elseif (strpos(strtolower($service->post_title), 'thun') !== false) {
+                                            $special_name = "Thun's-expressen";
                                         }
                                     }
-                                ?>">
+                                }
+                                $service_classes[$idx] = $classes;
+                                $service_info[$idx] = [
+                                    'service' => $service,
+                                    'train_type' => $train_type,
+                                    'service_number' => $service_number,
+                                    'is_special' => $is_special,
+                                    'special_name' => $special_name,
+                                ];
+                            endforeach; 
+                            
+                            // Render header row
+                            foreach ($services_list as $idx => $service_data): 
+                                $info = $service_info[$idx];
+                            ?>
+                                <th class="<?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>">
                                     <div class="mrt-service-header">
-                                        <?php if ($train_type): ?>
-                                            <span class="mrt-train-type"><?php echo esc_html($train_type->name); ?></span>
+                                        <?php if ($info['train_type']): ?>
+                                            <span class="mrt-train-type-icon"><?php echo MRT_get_train_type_icon($info['train_type']); ?></span>
+                                            <span class="mrt-train-type"><?php echo esc_html($info['train_type']->name); ?></span>
                                         <?php endif; ?>
-                                        <span class="mrt-service-number"><?php echo esc_html($service_number); ?></span>
+                                        <span class="mrt-service-number"><?php echo esc_html($info['service_number']); ?></span>
+                                        <?php if ($info['is_special'] && !empty($info['special_name'])): ?>
+                                            <span class="mrt-special-label"><?php echo esc_html($info['special_name']); ?></span>
+                                        <?php endif; ?>
                                     </div>
                                 </th>
                             <?php endforeach; ?>
@@ -116,7 +146,7 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                         ?>
                             <tr>
                                 <td class="mrt-station-name"><?php echo esc_html($station->post_title); ?></td>
-                                <?php foreach ($services_list as $service_data): 
+                                <?php foreach ($services_list as $idx => $service_data): 
                                     $stop_time = isset($service_data['stop_times'][$station_id]) ? $service_data['stop_times'][$station_id] : null;
                                     
                                     if ($stop_time) {
@@ -172,7 +202,7 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                                         $time_display = '—';
                                     }
                                 ?>
-                                    <td class="mrt-time-cell"><?php echo $time_display; ?></td>
+                                    <td class="mrt-time-cell <?php echo esc_attr(implode(' ', $service_classes[$idx])); ?>"><?php echo $time_display; ?></td>
                                 <?php endforeach; ?>
                             </tr>
                         <?php endforeach; ?>
