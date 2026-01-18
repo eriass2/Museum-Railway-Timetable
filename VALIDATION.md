@@ -14,7 +14,7 @@ Run this validation guide before deploying the plugin.
 - [x] Uninstall file exists: `uninstall.php`
 - [x] All required PHP files exist in `inc/` directory
 - [x] CSS file exists: `assets/admin.css`
-- [x] JavaScript file exists: `assets/admin.js`
+- [x] JavaScript files exist: `assets/admin.js` and `assets/frontend.js`
 - [x] Translation files exist: `languages/museum-railway-timetable.pot` and `languages/museum-railway-timetable-sv_SE.po`
 
 **Status**: ✅ All required files exist. File organization follows WordPress standards.
