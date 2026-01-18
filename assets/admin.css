@@ -323,6 +323,24 @@
     text-align: center;
 }
 
+/* Better visual separation for timetable groups */
+.mrt-timetable-group + .mrt-timetable-group {
+    margin-top: var(--mrt-spacing-lg);
+}
+
+/* Separator between timetable groups */
+.mrt-timetable-separator {
+    height: 1px;
+    background: var(--mrt-border-default);
+    margin: var(--mrt-spacing-md) 0;
+    opacity: 0.5;
+}
+
+/* Add subtle background alternation for better readability */
+.mrt-overview-table tbody tr:nth-child(even) {
+    background-color: var(--mrt-bg-lightest);
+}
+
 .mrt-overview-table th {
     background: var(--mrt-bg-lighter);
     font-weight: 600;

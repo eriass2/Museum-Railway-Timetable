@@ -279,6 +279,9 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
                     </tbody>
                 </table>
             </div>
+            <?php if ($group_index < $group_count): ?>
+                <div class="mrt-timetable-separator"></div>
+            <?php endif; ?>
         <?php endforeach; ?>
     </div>
     <?php
