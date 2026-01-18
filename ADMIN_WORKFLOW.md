@@ -188,6 +188,11 @@ Om du föredrar att skapa services separat:
    - **Arrival**: Ankomsttid (HH:MM) - lämna tomt om tåget stannar men tiden inte är fast
    - **Departure**: Avgångstid (HH:MM) - lämna tomt om tåget stannar men tiden inte är fast
    - **Pickup/Dropoff**: Kryssa i om passagerare kan gå på/av
+   - **Symboler i tidtabeller**: 
+     - **P**: Endast påstigning (pickup only)
+     - **A**: Endast avstigning (dropoff only)
+     - **X**: Tåget stannar men ingen tid angiven
+     - **|**: Tåget passerar utan att stanna (no pickup, no dropoff)
 6. För varje station där tåget stannar:
    - Kryssa i **"Stops here"**
    - Fyll i **Arrival** och/eller **Departure** tider
