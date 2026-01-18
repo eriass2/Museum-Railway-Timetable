@@ -130,8 +130,9 @@ Before deploying, test:
 
 - **PHP Files**: 11 (10 in inc/ + 1 main plugin file)
 - **CSS Files**: 1 (includes admin and frontend styles)
-- **JavaScript Files**: 1 (admin functionality)
+- **JavaScript Files**: 2 (admin.js and frontend.js)
 - **Translation Files**: 2
+- **Shortcodes**: 3 (month view, timetable overview, journey planner)
 - **Total Lines of Code**: ~2,000+
 
 ---

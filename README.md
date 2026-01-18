@@ -231,6 +231,6 @@ This plugin is provided as-is for use with WordPress.
 ### 0.1.0
 - Initial release
 - Custom post types for stations, routes, and services
-- Three shortcodes for timetable display
+- Shortcodes for timetable display
 - Admin interface for management
 
