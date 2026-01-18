@@ -178,7 +178,8 @@ museum-railway-timetable/
 │   └─ shortcodes.php            # Shortcode registrations
 ├─ assets/
 │   ├─ admin.css                 # Admin and frontend styles
-│   └─ admin.js                  # Admin JavaScript (inline editing)
+│   ├─ admin.js                  # Admin JavaScript (inline editing)
+│   └─ frontend.js                # Frontend JavaScript (AJAX for shortcodes)
 └─ languages/                    # Translation files
 ```
 

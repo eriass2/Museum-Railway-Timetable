@@ -87,7 +87,7 @@ Run this validation guide before deploying the plugin.
 ### ✅ Functionality
 - [x] Plugin activates without errors
 - [x] Plugin deactivates without errors
-- [x] Shortcodes work correctly
+- [x] Shortcodes work correctly (3 shortcodes: month view, timetable overview, journey planner)
 - [x] Admin pages load correctly
 - [x] Database tables are created correctly
 
