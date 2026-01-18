@@ -77,9 +77,22 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
             
             // Determine route label using helper function
             $route_label = MRT_get_route_label($route, $direction, $services_list, $station_posts);
+            
+            // Extract "Från" and "Till" stations for better display
+            $from_station = !empty($station_posts) ? $station_posts[0] : null;
+            $to_station = !empty($station_posts) ? end($station_posts) : null;
         ?>
             <div class="mrt-timetable-group">
-                <h3 class="mrt-route-header"><?php echo esc_html($route_label); ?></h3>
+                <div class="mrt-route-header">
+                    <div class="mrt-route-header-main"><?php echo esc_html($route_label); ?></div>
+                    <?php if ($from_station && $to_station): ?>
+                        <div class="mrt-route-header-details">
+                            <span class="mrt-route-from"><?php printf(esc_html__('Från %s', 'museum-railway-timetable'), esc_html($from_station->post_title)); ?></span>
+                            <span class="mrt-route-separator">→</span>
+                            <span class="mrt-route-to"><?php printf(esc_html__('Till %s', 'museum-railway-timetable'), esc_html($to_station->post_title)); ?></span>
+                        </div>
+                    <?php endif; ?>
+                </div>
                 
                 <table class="mrt-overview-table">
                     <thead>

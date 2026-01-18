@@ -234,6 +234,9 @@
 
 .mrt-timetable-overview {
     margin: var(--mrt-spacing-md) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--mrt-spacing-lg);
 }
 
 .mrt-timetable-overview-preview {
@@ -246,23 +249,52 @@
 
 .mrt-timetable-group {
     margin-bottom: var(--mrt-spacing-xl);
+    border: 1px solid var(--mrt-border-default);
+    border-radius: 4px;
+    background: var(--mrt-bg-white);
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .mrt-route-header {
     background: var(--mrt-green-primary);
     color: var(--mrt-text-white);
-    padding: 6px var(--mrt-spacing-md);
-    margin: 0 0 var(--mrt-spacing-xs) 0;
+    padding: 8px var(--mrt-spacing-md);
+    margin: 0;
+    border-radius: 0;
+    border-bottom: 2px solid var(--mrt-green-dark);
+}
+
+.mrt-route-header-main {
     font-size: 1rem;
     font-weight: 600;
-    border-radius: 3px;
+    margin-bottom: 4px;
+}
+
+.mrt-route-header-details {
+    font-size: 0.85rem;
+    opacity: 0.95;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 2px;
+}
+
+.mrt-route-from,
+.mrt-route-to {
+    font-weight: 500;
+}
+
+.mrt-route-separator {
+    opacity: 0.8;
+    font-weight: 300;
 }
 
 .mrt-overview-table {
     width: 100%;
     border-collapse: collapse;
     background: var(--mrt-bg-white);
-    margin-bottom: var(--mrt-spacing-md);
+    margin: 0;
 }
 
 .mrt-overview-table .mrt-service-col { min-width: 100px; vertical-align: top; }
