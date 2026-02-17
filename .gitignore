@@ -47,3 +47,6 @@ wp-config.php
 # uncomment the next line
 #/wp-content/themes
 COMMIT_MESSAGE.txt
+
+# Deploy config (user-specific Local path)
+deploy.config.json

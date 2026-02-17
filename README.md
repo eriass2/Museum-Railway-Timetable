@@ -30,6 +30,8 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Go to **Railway Timetable** in the admin menu to configure
 
+**Local development:** Use `.\deploy.ps1 -OpenBrowser` to copy the plugin to Local by Flywheel and open the site. See [Deploy to Local](#deploy-to-local-wordpress) for setup.
+
 ## Usage
 
 ### Shortcodes
@@ -157,6 +159,19 @@ The following features are planned for future releases:
 These features will enhance the flexibility and clarity of timetable displays, making it easier to represent complex railway operations.
 
 ## Development
+
+### Deploy to Local (WordPress)
+
+To automate copying the plugin to your Local by Flywheel site for testing:
+
+1. **First time:** Copy `deploy.config.example.json` to `deploy.config.json` and edit with your Local site path and URL.
+2. Run:
+   ```powershell
+   .\deploy.ps1              # Copy plugin files only
+   .\deploy.ps1 -OpenBrowser # Copy and open localhost in browser
+   ```
+
+The script copies `inc/`, `assets/`, `languages/`, and main plugin files to your Local site's plugins folder.
 
 ### Project Structure
 
