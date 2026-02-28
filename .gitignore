@@ -48,5 +48,8 @@ wp-config.php
 #/wp-content/themes
 COMMIT_MESSAGE.txt
 
+# Composer
+/vendor/
+
 # Deploy config (user-specific Local path)
 deploy.config.json

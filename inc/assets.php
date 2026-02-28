@@ -1,20 +1,24 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Asset enqueuing for Museum Railway Timetable
  *
  * @package Museum_Railway_Timetable
  */
 
-if (!defined('ABSPATH')) { exit; }
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 /**
  * Check if admin assets should be loaded for current page
  *
  * @param string $hook Current admin page hook
- * @return bool
  */
-function MRT_should_load_admin_assets($hook) {
-    $allowed_post_types = ['mrt_station', 'mrt_service', 'mrt_route', 'mrt_timetable'];
+function MRT_should_load_admin_assets(string $hook): bool {
+    $allowed_post_types = MRT_POST_TYPES;
 
     $is_plugin_page = (strpos($hook, 'mrt_') !== false);
     $is_edit_page = in_array($hook, ['post.php', 'post-new.php']);
@@ -45,17 +49,17 @@ function MRT_should_load_admin_assets($hook) {
  * @param string $hook Current admin page hook
  * @return bool
  */
-function MRT_should_load_admin_timetable_overview($hook) {
+function MRT_should_load_admin_timetable_overview(string $hook): bool {
     $screen = function_exists('get_current_screen') ? get_current_screen() : null;
     if (!$screen) {
         return false;
     }
     // Timetable edit (post.php / post-new.php)
-    if (in_array($hook, ['post.php', 'post-new.php'], true) && $screen->post_type === 'mrt_timetable') {
+    if (in_array($hook, ['post.php', 'post-new.php'], true) && $screen->post_type === MRT_POST_TYPE_TIMETABLE) {
         return true;
     }
     // Station overview (edit.php?post_type=mrt_station&mrt_view=overview)
-    if ($screen->id === 'edit-mrt_station') {
+    if ($screen->id === 'edit-' . MRT_POST_TYPE_STATION) {
         $mrt_view = isset($_GET['mrt_view']) ? sanitize_text_field(wp_unslash($_GET['mrt_view'])) : '';
         if ($mrt_view === 'overview') {
             return true;
@@ -70,7 +74,7 @@ function MRT_should_load_admin_timetable_overview($hook) {
  * @param string $hook Current admin page hook
  * @return bool
  */
-function MRT_should_load_admin_dashboard($hook) {
+function MRT_should_load_admin_dashboard(string $hook): bool {
     return $hook === 'toplevel_page_mrt_settings';
 }
 
@@ -79,7 +83,7 @@ function MRT_should_load_admin_dashboard($hook) {
  *
  * @param string $hook Current admin page hook (from admin_enqueue_scripts)
  */
-function MRT_enqueue_admin_css($hook) {
+function MRT_enqueue_admin_css(string $hook): void {
     $base = MRT_URL . 'assets/';
     wp_enqueue_style('mrt-admin-base', $base . 'admin-base.css', [], MRT_VERSION);
     wp_enqueue_style('mrt-admin-components', $base . 'admin-components.css', ['mrt-admin-base'], MRT_VERSION);
@@ -121,35 +125,35 @@ function MRT_enqueue_admin_js() {
 function MRT_localize_admin_script() {
     wp_localize_script('mrt-admin', 'mrtAdmin', [
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'invalidTimeFormat' => __('Invalid format. Use HH:MM (e.g., 09:15)', 'museum-railway-timetable'),
-        'fixTimeFormats' => __('Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).', 'museum-railway-timetable'),
-        'saveServiceToUpdateStations' => __('Please save the service to update available stations from the selected route.', 'museum-railway-timetable'),
-        'pleaseSelectStation' => __('Please select a station.', 'museum-railway-timetable'),
-        'stationAlreadyOnRoute' => __('This station is already on the route.', 'museum-railway-timetable'),
-        'pleaseFillStationAndSequence' => __('Please fill in Station and Sequence.', 'museum-railway-timetable'),
-        'errorSavingStopTime' => __('Error saving stop time.', 'museum-railway-timetable'),
-        'errorAddingStopTime' => __('Error adding stop time.', 'museum-railway-timetable'),
-        'confirmDeleteStopTime' => __('Are you sure you want to delete this stop time?', 'museum-railway-timetable'),
-        'errorDeletingStopTime' => __('Error deleting stop time.', 'museum-railway-timetable'),
-        'pleaseSelectRoute' => __('Please select a route.', 'museum-railway-timetable'),
-        'securityTokenMissing' => __('Security token missing. Please refresh the page.', 'museum-railway-timetable'),
-        'confirmRemoveTrip' => __('Are you sure you want to remove this trip from the timetable?', 'museum-railway-timetable'),
-        'errorRemovingTrip' => __('Error removing trip.', 'museum-railway-timetable'),
-        'networkError' => __('Network error. Please try again.', 'museum-railway-timetable'),
-        'moveUp' => __('Move up', 'museum-railway-timetable'),
-        'moveDown' => __('Move down', 'museum-railway-timetable'),
-        'remove' => __('Remove', 'museum-railway-timetable'),
-        'loadingStations' => __('Loading stations...', 'museum-railway-timetable'),
-        'noRouteSelected' => __('No route selected. Select a route to configure stop times.', 'museum-railway-timetable'),
-        'noStationsOnRoute' => __('No stations found on this route.', 'museum-railway-timetable'),
-        'errorLoadingStations' => __('Error loading stations. Please refresh the page.', 'museum-railway-timetable'),
-        'stopTimeSavedSuccessfully' => __('Stop time saved successfully.', 'museum-railway-timetable'),
-        'stopTimeAddedSuccessfully' => __('Stop time added successfully.', 'museum-railway-timetable'),
-        'endStationsSavedSuccessfully' => __('End stations saved successfully.', 'museum-railway-timetable'),
-        'selectDestination' => __('— Select Destination —', 'museum-railway-timetable'),
-        'selectRouteFirst' => __('Select a route first', 'museum-railway-timetable'),
-        'loading' => __('Loading...', 'museum-railway-timetable'),
-        'errorLoadingDestinations' => __('Error loading destinations', 'museum-railway-timetable'),
+        'invalidTimeFormat' => __('Invalid format. Use HH:MM (e.g., 09:15)', MRT_TEXT_DOMAIN),
+        'fixTimeFormats' => __('Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).', MRT_TEXT_DOMAIN),
+        'saveServiceToUpdateStations' => __('Please save the service to update available stations from the selected route.', MRT_TEXT_DOMAIN),
+        'pleaseSelectStation' => __('Please select a station.', MRT_TEXT_DOMAIN),
+        'stationAlreadyOnRoute' => __('This station is already on the route.', MRT_TEXT_DOMAIN),
+        'pleaseFillStationAndSequence' => __('Please fill in Station and Sequence.', MRT_TEXT_DOMAIN),
+        'errorSavingStopTime' => __('Error saving stop time.', MRT_TEXT_DOMAIN),
+        'errorAddingStopTime' => __('Error adding stop time.', MRT_TEXT_DOMAIN),
+        'confirmDeleteStopTime' => __('Are you sure you want to delete this stop time?', MRT_TEXT_DOMAIN),
+        'errorDeletingStopTime' => __('Error deleting stop time.', MRT_TEXT_DOMAIN),
+        'pleaseSelectRoute' => __('Please select a route.', MRT_TEXT_DOMAIN),
+        'securityTokenMissing' => __('Security token missing. Please refresh the page.', MRT_TEXT_DOMAIN),
+        'confirmRemoveTrip' => __('Are you sure you want to remove this trip from the timetable?', MRT_TEXT_DOMAIN),
+        'errorRemovingTrip' => __('Error removing trip.', MRT_TEXT_DOMAIN),
+        'networkError' => __('Network error. Please try again.', MRT_TEXT_DOMAIN),
+        'moveUp' => __('Move up', MRT_TEXT_DOMAIN),
+        'moveDown' => __('Move down', MRT_TEXT_DOMAIN),
+        'remove' => __('Remove', MRT_TEXT_DOMAIN),
+        'loadingStations' => __('Loading stations...', MRT_TEXT_DOMAIN),
+        'noRouteSelected' => __('No route selected. Select a route to configure stop times.', MRT_TEXT_DOMAIN),
+        'noStationsOnRoute' => __('No stations found on this route.', MRT_TEXT_DOMAIN),
+        'errorLoadingStations' => __('Error loading stations. Please refresh the page.', MRT_TEXT_DOMAIN),
+        'stopTimeSavedSuccessfully' => __('Stop time saved successfully.', MRT_TEXT_DOMAIN),
+        'stopTimeAddedSuccessfully' => __('Stop time added successfully.', MRT_TEXT_DOMAIN),
+        'endStationsSavedSuccessfully' => __('End stations saved successfully.', MRT_TEXT_DOMAIN),
+        'selectDestination' => __('— Select Destination —', MRT_TEXT_DOMAIN),
+        'selectRouteFirst' => __('Select a route first', MRT_TEXT_DOMAIN),
+        'loading' => __('Loading...', MRT_TEXT_DOMAIN),
+        'errorLoadingDestinations' => __('Error loading destinations', MRT_TEXT_DOMAIN),
     ]);
 }
 
@@ -158,7 +162,7 @@ function MRT_localize_admin_script() {
  *
  * @param string $hook Current admin page hook
  */
-function MRT_enqueue_admin_assets($hook) {
+function MRT_enqueue_admin_assets(string $hook): void {
     if (!MRT_should_load_admin_assets($hook)) {
         return;
     }
@@ -171,7 +175,7 @@ add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');
 /**
  * Enqueue frontend assets for shortcodes
  */
-function MRT_enqueue_frontend_assets() {
+function MRT_enqueue_frontend_assets(): void {
     // Check if any of our shortcodes are used on the page
     global $post;
 
@@ -267,13 +271,13 @@ function MRT_enqueue_frontend_assets() {
     // Localize script for AJAX and translations
     wp_localize_script('mrt-frontend', 'mrtFrontend', [
         'ajaxurl' => admin_url('admin-ajax.php'),
-        'search' => __('Search', 'museum-railway-timetable'),
-        'searching' => __('Searching...', 'museum-railway-timetable'),
-        'loading' => __('Loading...', 'museum-railway-timetable'),
-        'errorSearching' => __('Error searching for connections.', 'museum-railway-timetable'),
-        'errorLoading' => __('Error loading timetable.', 'museum-railway-timetable'),
-        'errorSameStations' => __('Please select different stations for departure and arrival.', 'museum-railway-timetable'),
-        'networkError' => __('Network error. Please try again.', 'museum-railway-timetable'),
+        'search' => __('Search', MRT_TEXT_DOMAIN),
+        'searching' => __('Searching...', MRT_TEXT_DOMAIN),
+        'loading' => __('Loading...', MRT_TEXT_DOMAIN),
+        'errorSearching' => __('Error searching for connections.', MRT_TEXT_DOMAIN),
+        'errorLoading' => __('Error loading timetable.', MRT_TEXT_DOMAIN),
+        'errorSameStations' => __('Please select different stations for departure and arrival.', MRT_TEXT_DOMAIN),
+        'networkError' => __('Network error. Please try again.', MRT_TEXT_DOMAIN),
     ]);
 }
 add_action('wp_enqueue_scripts', 'MRT_enqueue_frontend_assets');

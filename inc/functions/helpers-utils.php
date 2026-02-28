@@ -1,11 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Utility helper functions for Museum Railway Timetable
  *
  * @package Museum_Railway_Timetable
  */
 
-if (!defined('ABSPATH')) { exit; }
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 /**
  * Verify meta box save: nonce, autosave, permissions
@@ -16,7 +21,7 @@ if (!defined('ABSPATH')) { exit; }
  * @param string $nonce_action wp_verify_nonce action
  * @return bool True if save should proceed, false to abort
  */
-function MRT_verify_meta_box_save($post_id, $nonce_name, $nonce_action) {
+function MRT_verify_meta_box_save(int $post_id, string $nonce_name, string $nonce_action): bool {
     if (!isset($_POST[$nonce_name]) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST[$nonce_name])), $nonce_action)) {
         return false;
     }
@@ -35,9 +40,9 @@ function MRT_verify_meta_box_save($post_id, $nonce_name, $nonce_action) {
  *
  * @return void
  */
-function MRT_verify_ajax_permission() {
+function MRT_verify_ajax_permission(): void {
     if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Permission denied.', MRT_TEXT_DOMAIN)]);
         exit;
     }
 }
@@ -50,7 +55,7 @@ function MRT_verify_ajax_permission() {
  * @param string $extra_classes Optional extra CSS classes (e.g. 'mrt-empty')
  * @return string HTML
  */
-function MRT_render_alert($message, $type = 'error', $extra_classes = '') {
+function MRT_render_alert(string $message, string $type = 'error', string $extra_classes = ''): string {
     $allowed_types = ['error', 'info', 'warning'];
     $type = in_array($type, $allowed_types) ? $type : 'error';
     $classes = 'mrt-alert mrt-alert-' . $type;
@@ -68,7 +73,7 @@ function MRT_render_alert($message, $type = 'error', $extra_classes = '') {
  * @param string $extra_classes Optional extra CSS classes (e.g. 'mrt-mb-1')
  * @return void Outputs HTML
  */
-function MRT_render_info_box($title, $content, $extra_classes = '') {
+function MRT_render_info_box(string $title, string $content, string $extra_classes = ''): void {
     $classes = 'mrt-alert mrt-alert-info mrt-info-box';
     if (!empty($extra_classes)) {
         $classes .= ' ' . esc_attr($extra_classes);
@@ -86,7 +91,7 @@ function MRT_render_info_box($title, $content, $extra_classes = '') {
  * @param string $post_type Post type (e.g., 'mrt_station', 'mrt_service')
  * @return WP_Post|null Post object or null if not found
  */
-function MRT_get_post_by_title($title, $post_type) {
+function MRT_get_post_by_title(string $title, string $post_type): ?WP_Post {
     if (empty($title) || empty($post_type)) {
         return null;
     }
@@ -100,7 +105,7 @@ function MRT_get_post_by_title($title, $post_type) {
  * @param string $context Context string for error logging (e.g., function name)
  * @return bool True if error occurred, false otherwise
  */
-function MRT_check_db_error($context = '') {
+function MRT_check_db_error(string $context = ''): bool {
     global $wpdb;
     if ($wpdb->last_error) {
         if (defined('WP_DEBUG') && WP_DEBUG) {
@@ -122,7 +127,7 @@ function MRT_check_db_error($context = '') {
  * @param string $message Error message to log
  * @return void
  */
-function MRT_log_error($message) {
+function MRT_log_error(string $message): void {
     if (defined('WP_DEBUG') && WP_DEBUG) {
         error_log('MRT: ' . $message);
     }
@@ -135,7 +140,7 @@ function MRT_log_error($message) {
  * @param WP_Term|null $train_type Train type term object
  * @return string Icon (emoji or empty string)
  */
-function MRT_get_train_type_icon($train_type) {
+function MRT_get_train_type_icon(?WP_Term $train_type): string {
     if (!$train_type) {
         return '';
     }
@@ -163,7 +168,7 @@ function MRT_get_train_type_icon($train_type) {
  * @param string|null $time Time in HH:MM format or null
  * @return string Time in HH.MM format or empty string
  */
-function MRT_format_time_display($time) {
+function MRT_format_time_display(?string $time): string {
     if (empty($time)) {
         return '';
     }
@@ -177,7 +182,7 @@ function MRT_format_time_display($time) {
  * @param array|null $stop_time Stop time data array with keys: arrival_time, departure_time, pickup_allowed, dropoff_allowed
  * @return string Formatted time display (e.g., "10.13", "P 10.13", "X", "|", "—")
  */
-function MRT_format_stop_time_display($stop_time) {
+function MRT_format_stop_time_display(?array $stop_time): string {
     if (!$stop_time) {
         return '—';
     }

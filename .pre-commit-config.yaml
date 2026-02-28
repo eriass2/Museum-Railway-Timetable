@@ -1,0 +1,18 @@
+# Pre-commit hooks for Museum Railway Timetable
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  - repo: local
+    hooks:
+      - id: phpstan
+        name: PHPStan
+        entry: bash -c 'if [ -d vendor ]; then vendor/bin/phpstan analyse --no-progress; fi'
+        language: system
+        files: \.php$
+
+      - id: phpcs
+        name: PHPCS
+        entry: bash -c 'if [ -d vendor ]; then vendor/bin/phpcs; fi'
+        language: system
+        files: \.php$

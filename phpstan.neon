@@ -1,0 +1,14 @@
+parameters:
+    level: 5
+    paths:
+        - inc/
+        - museum-railway-timetable.php
+    bootstrapFiles:
+        - phpstan-bootstrap.php
+    ignoreErrors:
+        # WordPress globals
+        - '#Variable \$_POST might not be defined#'
+        - '#Variable \$_GET might not be defined#
+        # Dynamic WordPress functions
+        - '#Function get_post_type called with#
+        - '#Function get_current_screen might not exist#

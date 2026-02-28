@@ -1,11 +1,16 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * AJAX handlers for Stop Times
  *
  * @package Museum_Railway_Timetable
  */
 
-if (!defined('ABSPATH')) { exit; }
+if (!defined('ABSPATH')) {
+    exit;
+}
 
 /**
  * Validate stoptime input for add/update
@@ -25,16 +30,16 @@ function MRT_validate_stoptime_input($require_id = false) {
     $dropoff = isset($_POST['dropoff']) ? 1 : 0;
 
     if ($require_id && $id <= 0) {
-        wp_send_json_error(['message' => __('Invalid input.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Invalid input.', MRT_TEXT_DOMAIN)]);
     }
     if (!$require_id && ($service_id <= 0 || $station_id <= 0 || $sequence <= 0)) {
-        wp_send_json_error(['message' => __('Invalid input.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Invalid input.', MRT_TEXT_DOMAIN)]);
     }
     if ($require_id && ($station_id <= 0 || $sequence <= 0)) {
-        wp_send_json_error(['message' => __('Invalid input.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Invalid input.', MRT_TEXT_DOMAIN)]);
     }
-    $arrival_msg = __('Invalid arrival time format. Use HH:MM.', 'museum-railway-timetable');
-    $departure_msg = __('Invalid departure time format. Use HH:MM.', 'museum-railway-timetable');
+    $arrival_msg = __('Invalid arrival time format. Use HH:MM.', MRT_TEXT_DOMAIN);
+    $departure_msg = __('Invalid departure time format. Use HH:MM.', MRT_TEXT_DOMAIN);
     if ($arrival && !MRT_validate_time_hhmm($arrival)) {
         wp_send_json_error(['message' => $arrival_msg]);
     }
@@ -72,7 +77,7 @@ function MRT_ajax_add_stoptime() {
 
     if ($result === false) {
         MRT_check_db_error('MRT_ajax_add_stoptime');
-        wp_send_json_error(['message' => __('Failed to add stop time.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Failed to add stop time.', MRT_TEXT_DOMAIN)]);
     }
     $station = get_post($data['station_id']);
     $station_name = $station ? $station->post_title : '#' . $data['station_id'];
@@ -107,7 +112,7 @@ function MRT_ajax_update_stoptime() {
 
     if ($result === false) {
         MRT_check_db_error('MRT_ajax_update_stoptime');
-        wp_send_json_error(['message' => __('Failed to update stop time.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Failed to update stop time.', MRT_TEXT_DOMAIN)]);
     }
     $station = get_post($data['station_id']);
     $station_name = $station ? $station->post_title : '#' . $data['station_id'];
@@ -129,7 +134,7 @@ function MRT_ajax_delete_stoptime() {
 
     $id = intval($_POST['id'] ?? 0);
     if ($id <= 0) {
-        wp_send_json_error(['message' => __('Invalid ID.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Invalid ID.', MRT_TEXT_DOMAIN)]);
     }
     
     global $wpdb;
@@ -139,7 +144,7 @@ function MRT_ajax_delete_stoptime() {
     
     if ($result === false) {
         MRT_check_db_error('MRT_ajax_delete_stoptime');
-        wp_send_json_error(['message' => __('Failed to delete stop time.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Failed to delete stop time.', MRT_TEXT_DOMAIN)]);
     }
     
     wp_send_json_success();
@@ -154,7 +159,7 @@ function MRT_ajax_get_stoptime() {
 
     $id = intval($_POST['id'] ?? 0);
     if ($id <= 0) {
-        wp_send_json_error(['message' => __('Invalid ID.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Invalid ID.', MRT_TEXT_DOMAIN)]);
     }
     
     global $wpdb;
@@ -163,7 +168,7 @@ function MRT_ajax_get_stoptime() {
     $stoptime = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table WHERE id = %d", $id), ARRAY_A);
     
     if (!$stoptime) {
-        wp_send_json_error(['message' => __('Stop time not found.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Stop time not found.', MRT_TEXT_DOMAIN)]);
     }
     
     wp_send_json_success($stoptime);
@@ -216,11 +221,11 @@ function MRT_ajax_save_all_stoptimes() {
     MRT_verify_ajax_permission();
     $service_id = intval($_POST['service_id'] ?? 0);
     if ($service_id <= 0) {
-        wp_send_json_error(['message' => __('Invalid service ID.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Invalid service ID.', MRT_TEXT_DOMAIN)]);
     }
     $stops = isset($_POST['stops']) ? $_POST['stops'] : [];
     if (!is_array($stops)) {
-        wp_send_json_error(['message' => __('Invalid stops data.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => __('Invalid stops data.', MRT_TEXT_DOMAIN)]);
     }
 
     global $wpdb;
@@ -238,7 +243,7 @@ function MRT_ajax_save_all_stoptimes() {
     }
 
     wp_send_json_success([
-        'message' => sprintf(__('%d stop times saved.', 'museum-railway-timetable'), $inserted),
+        'message' => sprintf(__('%d stop times saved.', MRT_TEXT_DOMAIN), $inserted),
         'count' => $inserted,
     ]);
 }

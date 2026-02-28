@@ -16,9 +16,11 @@ define('MRT_VERSION', '0.3.0');
 define('MRT_PATH', plugin_dir_path(__FILE__));
 define('MRT_URL', plugin_dir_url(__FILE__));
 
+require_once MRT_PATH . 'inc/constants.php';
+
 // Load translations
 add_action('plugins_loaded', function() {
-    load_plugin_textdomain('museum-railway-timetable', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    load_plugin_textdomain(MRT_TEXT_DOMAIN, false, dirname(plugin_basename(__FILE__)) . '/languages');
 });
 
 // Activation & deactivation hooks
