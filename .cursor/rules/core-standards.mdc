@@ -1,0 +1,27 @@
+---
+description: Core coding standards and clean code for Museum Railway Timetable
+alwaysApply: true
+---
+
+# Museum Railway Timetable – Core Standards
+
+WordPress-plugin för tidtabeller. Följ dessa regler i all kod.
+
+## Clean Code
+- **Korta funktioner** – En sak per funktion, max ~50 rader
+- **DRY** – Extrahera duplicerad logik till helpers
+- **KISS** – Välj enklaste lösningen
+- **Validera input** – Kontrollera data vid ingång till funktioner
+
+## Projektkonventioner
+- **Text domain**: `museum-railway-timetable` för alla översättningar
+- **Prefix**: `MRT_` för funktioner, `mrt_` för hooks/meta/post types
+- **Filstruktur**: `inc/` för PHP, `assets/` för CSS/JS
+
+## Säkerhet (alltid)
+- Escape all output: `esc_html()`, `esc_attr()`, `esc_url()`
+- Sanitize all input: `sanitize_text_field()`, `intval()`
+- Nonces på formulär och AJAX
+- `$wpdb->prepare()` för SQL
+
+Se STYLE_GUIDE.md för fullständig dokumentation.

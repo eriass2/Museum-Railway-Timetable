@@ -47,7 +47,7 @@ Run this validation guide before deploying the plugin.
 - **Inline Styles**: None found - all moved to CSS
 - **Syntax**: No syntax errors detected
 - **PHPDoc**: All functions documented
-- **Naming Conventions**: Consistent (MRT_ prefix)
+- **Naming Conventions**: See [STYLE_GUIDE.md](STYLE_GUIDE.md) (MRT_ prefix)
 - **Text Domain**: Consistent (`museum-railway-timetable`)
 
 ### ✅ WordPress Standards
@@ -69,7 +69,7 @@ Run this validation guide before deploying the plugin.
 - [x] Responsive design implemented
 
 **Status**: ✅ Well-structured:
-- **CSS Naming**: Follows convention (`.mrt-*`)
+- **CSS Naming**: See [STYLE_GUIDE.md](STYLE_GUIDE.md) (`.mrt-*`)
 - **JavaScript Structure**: Uses IIFE with jQuery
 - **Console.log**: Only with debug flag (`window.mrtDebug`)
 - **Responsive Design**: Media queries implemented

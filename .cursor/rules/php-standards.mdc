@@ -1,0 +1,38 @@
+---
+description: PHP standards for Museum Railway Timetable
+globs: **/*.php
+alwaysApply: false
+---
+
+# PHP Standards
+
+## Namnkonventioner
+| Element | Format | Exempel |
+|---------|--------|---------|
+| Funktioner | `MRT_` + snake_case | `MRT_get_service_stop_times()` |
+| Hooks | `mrt_` prefix | `mrt_overview_days_ahead` |
+| Meta keys | `mrt_` prefix | `mrt_service_number` |
+| Post types | `mrt_` prefix | `mrt_station`, `mrt_timetable` |
+
+## Obligatoriskt
+- **ABSPATH** i alla PHP-filer (utom uninstall.php): `if (!defined('ABSPATH')) { exit; }`
+- **PHPDoc** på alla funktioner: `@param`, `@return`
+- **Inga inline styles** – använd CSS-klasser
+- **Översättning**: `esc_html__()`, `__()` med text domain `museum-railway-timetable`
+
+## Säkerhet
+```php
+// ❌ BAD
+echo $user_input;
+
+// ✅ GOOD
+echo esc_html($user_input);
+```
+
+```php
+// ❌ BAD
+$wpdb->query("SELECT * FROM table WHERE id = $id");
+
+// ✅ GOOD
+$wpdb->get_results($wpdb->prepare("SELECT * FROM {$table} WHERE id = %d", $id));
+```

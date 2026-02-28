@@ -200,7 +200,7 @@ museum-railway-timetable/
 
 ### Coding Standards
 
-This plugin follows WordPress coding standards and best practices.
+Se [STYLE_GUIDE.md](STYLE_GUIDE.md) för kodstandarder, clean code-principer och namnkonventioner.
 
 ### Hooks and Filters
 
@@ -215,7 +215,7 @@ The plugin creates one custom table:
 
 ## Contributing
 
-1. Follow the WordPress coding standards
+1. Följ [STYLE_GUIDE.md](STYLE_GUIDE.md)
 2. Add PHPDoc comments to all functions
 3. Ensure all output is properly escaped
 4. Test your changes thoroughly

@@ -1,0 +1,20 @@
+---
+description: JavaScript standards for Museum Railway Timetable
+globs: **/*.js
+alwaysApply: false
+---
+
+# JavaScript Standards
+
+## Struktur
+- **IIFE** – Wrappas i Immediately Invoked Function Expression
+- **jQuery** – Använd `$` för DOM-manipulation
+- **Ingen `console.log`** i produktion – endast med debug-flagga
+
+## Namnkonventioner
+- **camelCase** för variabler och funktioner
+- **Prefix** för plugin-specifika: `mrtAdmin`, `mrtFrontend`
+
+## AJAX
+- **Nonces** – Skicka alltid med AJAX-anrop
+- **Felhantering** – Hantera nätverksfel, visa användarvänliga meddelanden

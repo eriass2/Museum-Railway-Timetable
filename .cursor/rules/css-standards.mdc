@@ -1,0 +1,23 @@
+---
+description: CSS standards for Museum Railway Timetable
+globs: **/*.css
+alwaysApply: false
+---
+
+# CSS Standards
+
+## Namnkonventioner
+- **Prefix**: Alla klasser `.mrt-` (t.ex. `.mrt-timetable-overview`)
+- **Variabler**: `--mrt-` i `:root` för färger, spacing
+
+## Regler
+- **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar
+- **Inga inline styles** – All styling i CSS-filer
+- **BEM-liknande** vid behov: `.mrt-block__element--modifier`
+
+## Exempel
+```css
+.mrt-timetable-group { }
+.mrt-route-header { }
+.mrt-time-cell.mrt-service-bus { }
+```
