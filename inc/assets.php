@@ -50,8 +50,9 @@ function MRT_enqueue_admin_js() {
     wp_enqueue_script('mrt-admin-route-ui', MRT_URL . 'assets/admin-route-ui.js', ['jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-stoptimes-ui', MRT_URL . 'assets/admin-stoptimes-ui.js', ['jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-timetable-services', MRT_URL . 'assets/admin-timetable-services-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-service-edit', MRT_URL . 'assets/admin-service-edit.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin', MRT_URL . 'assets/admin.js', [
-        'mrt-admin-utils', 'mrt-admin-route-ui', 'mrt-admin-stoptimes-ui', 'mrt-admin-timetable-services', 'jquery'
+        'mrt-admin-utils', 'mrt-admin-route-ui', 'mrt-admin-stoptimes-ui', 'mrt-admin-timetable-services', 'mrt-admin-service-edit', 'jquery'
     ], MRT_VERSION, true);
 }
 

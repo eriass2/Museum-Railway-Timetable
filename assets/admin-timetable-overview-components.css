@@ -1,0 +1,191 @@
+/**
+ * Timetable Overview – Components (header icons, service columns, transfer info)
+ * Part of admin-timetable-overview.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-grid-cell .mrt-train-type-icon {
+    font-size: var(--mrt-font-lg);
+    line-height: 1;
+    margin-bottom: var(--mrt-spacing-xs);
+    display: block;
+}
+
+.mrt-grid-cell .mrt-train-type {
+    font-size: var(--mrt-font-xs);
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    display: block;
+    line-height: 1.3;
+}
+
+.mrt-grid-cell .mrt-service-number {
+    font-size: var(--mrt-font-base);
+    font-weight: 700;
+    display: block;
+    line-height: 1.2;
+    margin-top: var(--mrt-spacing-xs);
+}
+
+.mrt-grid-cell .mrt-special-label {
+    font-size: var(--mrt-font-xs);
+    display: block;
+    margin-top: var(--mrt-spacing-xs);
+    line-height: 1.2;
+}
+
+.mrt-overview-table th {
+    background: var(--mrt-bg-lighter);
+    font-weight: 600;
+    vertical-align: middle;
+    padding: var(--mrt-cell-padding-md);
+    border-bottom: 2px solid var(--mrt-border-default);
+    border-top: 2px solid var(--mrt-border-default);
+}
+
+.mrt-overview-table th.mrt-station-col {
+    background: var(--mrt-bg-light);
+    font-weight: 700;
+    text-align: left;
+}
+
+.mrt-service-bus.mrt-grid-cell,
+.mrt-service-bus.mrt-grid-cell.mrt-time-cell {
+    background: var(--mrt-bus-bg);
+}
+
+.mrt-service-special.mrt-grid-cell,
+.mrt-service-special.mrt-grid-cell.mrt-time-cell {
+    background: var(--mrt-special-bg);
+    border-left: 4px solid var(--mrt-warning-border);
+}
+
+.mrt-service-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--mrt-spacing-xs);
+    align-items: center;
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-xs);
+    min-height: auto;
+    justify-content: center;
+}
+
+.mrt-train-type-icon {
+    font-size: var(--mrt-font-lg);
+    line-height: 1;
+    margin-bottom: var(--mrt-spacing-xs);
+}
+
+.mrt-train-type {
+    font-size: var(--mrt-font-xs);
+    color: var(--mrt-text-secondary);
+    font-weight: 600;
+    text-align: center;
+    line-height: 1.2;
+    margin-bottom: var(--mrt-spacing-xs);
+}
+
+.mrt-service-number {
+    font-weight: 700;
+    font-size: var(--mrt-font-md);
+    text-align: center;
+    line-height: 1.2;
+    color: var(--mrt-text-primary);
+    padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
+    background: var(--mrt-overlay-white-80);
+    border-radius: var(--mrt-radius-sm);
+    display: inline-block;
+    min-width: 32px;
+}
+
+.mrt-special-label {
+    font-size: var(--mrt-font-xs);
+    color: var(--mrt-text-tertiary);
+    font-style: italic;
+    margin-top: var(--mrt-spacing-xs);
+    padding: var(--mrt-spacing-xs);
+    background: var(--mrt-special-bg-subtle);
+    border-radius: var(--mrt-radius-xs);
+    font-weight: 500;
+}
+
+.mrt-station-name {
+    text-align: left;
+    font-weight: 600;
+    padding: var(--mrt-cell-padding-lg);
+    font-size: var(--mrt-font-base);
+    color: var(--mrt-text-primary);
+    display: flex;
+    align-items: center;
+    gap: var(--mrt-spacing-xs);
+}
+
+.mrt-direction-arrow {
+    color: var(--mrt-green-primary);
+    font-weight: bold;
+    font-size: var(--mrt-font-md);
+    margin-right: var(--mrt-spacing-xs);
+}
+
+.mrt-service-destination {
+    margin-top: var(--mrt-spacing-xs);
+    font-size: var(--mrt-font-xs);
+    color: var(--mrt-text-secondary);
+    width: 100%;
+    line-height: 1.3;
+}
+
+.mrt-destination-label {
+    display: block;
+    font-weight: 600;
+    color: var(--mrt-text-primary);
+    margin-bottom: var(--mrt-spacing-xs);
+    font-size: var(--mrt-font-xs);
+}
+
+.mrt-transfer-info {
+    margin-top: var(--mrt-spacing-xs);
+    font-size: var(--mrt-font-xs);
+    color: var(--mrt-text-tertiary);
+    padding: var(--mrt-spacing-xs);
+    background: var(--mrt-overlay-black-02);
+    border-radius: var(--mrt-radius-xs);
+    border-left: 2px solid var(--mrt-green-light);
+    line-height: 1.4;
+}
+
+.mrt-transfer-label {
+    font-weight: 600;
+    margin-right: var(--mrt-spacing-xs);
+    color: var(--mrt-text-secondary);
+}
+
+.mrt-connecting-train {
+    display: inline-block;
+    margin-right: var(--mrt-spacing-xs);
+    padding: var(--mrt-spacing-xs);
+    background: var(--mrt-bg-white);
+    border: 1px solid var(--mrt-border-light);
+    border-radius: var(--mrt-radius-xs);
+    font-weight: 600;
+    font-size: var(--mrt-font-xs);
+}
+
+.mrt-time-cell:has-text('|') {
+    color: var(--mrt-text-tertiary);
+    font-weight: 700;
+    font-size: var(--mrt-font-md);
+    opacity: var(--mrt-opacity-70);
+}
+
+.mrt-time-cell:has-text('P'),
+.mrt-time-cell:has-text('A') {
+    color: var(--mrt-text-primary);
+}
+
+.mrt-time-cell:has-text('X') {
+    color: var(--mrt-text-secondary);
+    font-weight: 700;
+}

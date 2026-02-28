@@ -1,0 +1,163 @@
+/**
+ * Timetable Overview – Layout (container, grid structure, header)
+ * Part of admin-timetable-overview.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-timetable-overview {
+    margin: var(--mrt-spacing-lg) 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--mrt-spacing-xl);
+}
+
+.mrt-timetable-type-header {
+    font-size: var(--mrt-font-lg);
+    font-weight: 700;
+    color: var(--mrt-text-primary);
+    margin-bottom: var(--mrt-spacing-sm);
+    padding: var(--mrt-spacing-sm) 0;
+    border-bottom: 2px solid var(--mrt-border-default);
+}
+
+.mrt-timetable-overview-preview {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.mrt-timetable-group {
+    background: var(--mrt-bg-white);
+    border-radius: var(--mrt-radius-md);
+    overflow: hidden;
+    box-shadow: var(--mrt-shadow-lg);
+    border: 1px solid var(--mrt-border-light);
+    transition: box-shadow 0.2s ease;
+}
+
+.mrt-timetable-group:hover {
+    box-shadow: var(--mrt-shadow-xl);
+}
+
+.mrt-route-header {
+    background: linear-gradient(135deg, var(--mrt-green-primary) 0%, var(--mrt-route-header-end) 100%);
+    color: var(--mrt-text-white);
+    padding: var(--mrt-spacing-md) var(--mrt-spacing-lg);
+    margin: 0;
+    border-radius: 0;
+    box-shadow: var(--mrt-shadow-md);
+}
+
+.mrt-route-header-main {
+    font-size: var(--mrt-font-lg);
+    font-weight: 700;
+    margin-bottom: var(--mrt-spacing-xs);
+    letter-spacing: 0.3px;
+}
+
+.mrt-route-header-details {
+    font-size: var(--mrt-font-base);
+    opacity: var(--mrt-opacity-95);
+    display: flex;
+    align-items: center;
+    gap: var(--mrt-spacing-sm);
+    margin-top: var(--mrt-spacing-xs);
+    flex-wrap: wrap;
+}
+
+.mrt-route-from,
+.mrt-route-to {
+    font-weight: 600;
+    padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
+    background: var(--mrt-overlay-white-15);
+    border-radius: var(--mrt-radius-sm);
+}
+
+.mrt-route-separator {
+    opacity: var(--mrt-opacity-95);
+    font-weight: 400;
+    font-size: var(--mrt-font-lg);
+}
+
+.mrt-overview-grid {
+    display: grid;
+    grid-template-columns: minmax(120px, 160px) repeat(var(--service-count, 6), minmax(90px, 1fr));
+    width: 100%;
+    background: var(--mrt-bg-white);
+    margin: 0;
+    font-size: var(--mrt-font-base);
+    border: 1px solid var(--mrt-border-default);
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.mrt-grid-header {
+    display: contents;
+}
+
+.mrt-grid-cell {
+    border: 1px solid var(--mrt-border-default);
+    padding: var(--mrt-cell-padding-md);
+    text-align: center;
+    vertical-align: middle;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mrt-station-col-header {
+    grid-row: 1 / 3;
+    text-align: left;
+    background: var(--mrt-bg-light);
+    font-weight: 700;
+    padding: var(--mrt-cell-padding-lg);
+    position: sticky;
+    left: 0;
+    z-index: 10;
+    box-shadow: var(--mrt-shadow-side);
+    border-right: 2px solid var(--mrt-border-default);
+    justify-content: flex-start;
+}
+
+.mrt-station-col-header-empty {
+    display: none;
+}
+
+.mrt-header-train-type {
+    border-bottom: 1px solid var(--mrt-border-default);
+    padding-bottom: var(--mrt-spacing-xs);
+    font-weight: 600;
+    background: var(--mrt-bg-lighter);
+    flex-direction: column;
+    gap: var(--mrt-spacing-xs);
+}
+
+.mrt-header-train-number {
+    border-top: 1px solid var(--mrt-border-default);
+    padding-top: var(--mrt-spacing-xs);
+    font-weight: 600;
+    background: var(--mrt-bg-lighter);
+}
+
+.mrt-grid-body {
+    display: contents;
+}
+
+.mrt-grid-row {
+    display: contents;
+}
+
+.mrt-timetable-group + .mrt-timetable-group {
+    margin-top: var(--mrt-spacing-xl);
+}
+
+.mrt-timetable-separator {
+    height: 1px;
+    background: var(--mrt-border-default);
+    margin: var(--mrt-spacing-lg) 0;
+    opacity: var(--mrt-opacity-50);
+}
+
+.mrt-route-group {
+    margin-bottom: var(--mrt-spacing-lg);
+}
