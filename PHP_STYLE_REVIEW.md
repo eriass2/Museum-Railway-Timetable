@@ -2,7 +2,7 @@
 
 Granskning av `*.php` mot STYLE_GUIDE.md (sektion 2. PHP).
 
-**Senast analyserad:** 2025-02-17
+**Senast analyserad:** 2025-02-17 (efter commit 2202bc3)
 
 ---
 
@@ -35,20 +35,13 @@ Granskning av `*.php` mot STYLE_GUIDE.md (sektion 2. PHP).
 
 - **clear-db.php**: `$_GET['mrt_cleared']` sanitizes med `sanitize_text_field(wp_unslash())`
 
-### 3. MRT_render_info_box – $content
+### 3. MRT_render_info_box – $content ✓ (genomfört)
 
-**inc/functions/helpers-utils.php** (rad 83):
-```php
-echo $content;
-```
-- Docblock säger att anroparen ska använda esc_html eller wp_kses_post
-- **Åtgärd:** Överväg att kräva pre-escaped content eller lägg till wp_kses_post som default om det är HTML från användare
+- wp_kses_post($content) används för säker HTML-output
 
-### 4. Inline styles
+### 4. Inline styles ✓ (genomfört)
 
-**inc/admin-meta-boxes/hooks.php** (rad 46), **inc/admin-meta-boxes/service.php** (rad 19):
-- `echo '<style>...'` – inline style för admin-specifika tweaks
-- **Kommentar:** Style guide säger "inga inline styles" – men för admin UI-hiding är det vanligt. Överväg att flytta till CSS-fil.
+- hooks.php, service.php: Inline styles flyttade till admin-meta-boxes.css
 
 ### 5. PHPDoc – täckning ✓ (genomfört)
 
@@ -70,6 +63,14 @@ echo $content;
 | inc/functions/*.php | Helpers (services, stations, routes, connections, datetime) |
 | inc/shortcodes/*.php | shortcode-month, shortcode-journey, shortcode-overview |
 | inc/admin-page/*.php | Dashboard, stats, routes, shortcodes |
+
+---
+
+## Mindre observationer (låg prioritet)
+
+| Område | Fil | Kommentar |
+|--------|-----|-----------|
+| CSS-variabel inline | inc/functions/timetable-view/grid.php:81 | `style="--service-count: N"` – dynamisk layout, inte användardata. Acceptabelt för grid. |
 
 ---
 
