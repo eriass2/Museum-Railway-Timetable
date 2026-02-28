@@ -192,7 +192,9 @@ museum-railway-timetable/
 │   ├─ cpt.php                   # Custom post types
 │   └─ shortcodes.php            # Shortcode registrations
 ├─ assets/
-│   ├─ admin.css                 # Admin and frontend styles
+│   ├─ admin-base.css            # Variables, base styles
+│   ├─ admin-timetable.css       # Timetable grid, calendar
+│   ├─ admin-ui.css              # Meta boxes, dashboard, responsive
 │   ├─ admin.js                  # Admin JavaScript (inline editing)
 │   └─ frontend.js                # Frontend JavaScript (AJAX for shortcodes)
 └─ languages/                    # Translation files

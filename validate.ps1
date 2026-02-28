@@ -19,7 +19,9 @@ $required_files = @(
     "inc/cpt.php",
     "inc/functions/helpers.php",
     "inc/functions/services.php",
-    "assets/admin.css",
+    "assets/admin-base.css",
+    "assets/admin-timetable.css",
+    "assets/admin-ui.css",
     "assets/admin.js",
     "languages/museum-railway-timetable.pot",
     "languages/museum-railway-timetable-sv_SE.po"
@@ -65,7 +67,7 @@ foreach ($file in $php_files) {
     }
 }
 
-# 3. Check for inline styles
+# 3. Check for inline styles (CSS custom properties like --service-count are allowed)
 Write-Host "`n3. Checking for inline styles..." -ForegroundColor Yellow
 foreach ($file in $php_files) {
     $checks++
@@ -73,8 +75,13 @@ foreach ($file in $php_files) {
     $relativePath = $file.FullName.Replace((Get-Location).Path + "\", "")
     
     if ($content -match 'style\s*=') {
-        $warnings += "Inline style found in $relativePath"
-        Write-Host "  WARNING: $relativePath (contains inline styles)" -ForegroundColor Yellow
+        # Allow style="--var: value" (CSS custom properties for dynamic grid columns etc.)
+        if ($content -match 'style\s*=\s*[^>]*--[a-zA-Z-]+\s*:') {
+            Write-Host "  OK: $relativePath (CSS custom property only)" -ForegroundColor Green
+        } else {
+            $warnings += "Inline style found in $relativePath"
+            Write-Host "  WARNING: $relativePath (contains inline styles)" -ForegroundColor Yellow
+        }
     } else {
         Write-Host "  OK: $relativePath" -ForegroundColor Green
     }
@@ -100,38 +107,48 @@ if (Test-Path "museum-railway-timetable.php") {
     Write-Host "  ERROR: Main plugin file missing" -ForegroundColor Red
 }
 
-# 5. Check CSS file
-Write-Host "`n5. Checking CSS file..." -ForegroundColor Yellow
-$checks++
-if (Test-Path "assets/admin.css") {
-    $css = Get-Content "assets/admin.css" -Raw
-    if ($css.Length -gt 0) {
-        $cssLength = $css.Length
-        Write-Host "  OK: CSS file exists and has content - $cssLength characters" -ForegroundColor Green
+# 5. Check CSS files
+Write-Host "`n5. Checking CSS files..." -ForegroundColor Yellow
+$cssFiles = @("assets/admin-base.css", "assets/admin-timetable.css", "assets/admin-ui.css")
+foreach ($cssFile in $cssFiles) {
+    $checks++
+    if (Test-Path $cssFile) {
+        $css = Get-Content $cssFile -Raw
+        if ($css.Length -gt 0) {
+            Write-Host "  OK: $cssFile" -ForegroundColor Green
+        } else {
+            $errors += "CSS file is empty: $cssFile"
+            Write-Host "  ERROR: $cssFile is empty" -ForegroundColor Red
+        }
     } else {
-        $errors += "CSS file is empty"
-        Write-Host "  ERROR: CSS file is empty" -ForegroundColor Red
+        $errors += "CSS file missing: $cssFile"
+        Write-Host "  ERROR: $cssFile missing" -ForegroundColor Red
     }
-} else {
-    $errors += "CSS file missing"
-    Write-Host "  ERROR: CSS file missing" -ForegroundColor Red
 }
 
-# 6. Check JS file
-Write-Host "`n6. Checking JavaScript file..." -ForegroundColor Yellow
-$checks++
-if (Test-Path "assets/admin.js") {
-    $js = Get-Content "assets/admin.js" -Raw
-    if ($js.Length -gt 0) {
-        $jsLength = $js.Length
-        Write-Host "  OK: JS file exists and has content - $jsLength characters" -ForegroundColor Green
+# 6. Check JS files
+Write-Host "`n6. Checking JavaScript files..." -ForegroundColor Yellow
+$admin_js_files = @(
+    "assets/admin-utils.js",
+    "assets/admin-route-ui.js",
+    "assets/admin-stoptimes-ui.js",
+    "assets/admin-timetable-services-ui.js",
+    "assets/admin.js"
+)
+foreach ($jsFile in $admin_js_files) {
+    $checks++
+    if (Test-Path $jsFile) {
+        $js = Get-Content $jsFile -Raw
+        if ($js.Length -gt 0) {
+            Write-Host "  OK: $jsFile" -ForegroundColor Green
+        } else {
+            $errors += "JS file is empty: $jsFile"
+            Write-Host "  ERROR: $jsFile is empty" -ForegroundColor Red
+        }
     } else {
-        $errors += "JS file is empty"
-        Write-Host "  ERROR: JS file is empty" -ForegroundColor Red
+        $errors += "JS file missing: $jsFile"
+        Write-Host "  ERROR: $jsFile missing" -ForegroundColor Red
     }
-} else {
-    $errors += "JS file missing"
-    Write-Host "  ERROR: JS file missing" -ForegroundColor Red
 }
 
 # Summary

@@ -1,0 +1,78 @@
+/**
+ * Admin and Frontend Styling for Museum Railway Timetable
+ * Base: Variables, Admin Page Headers
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+/* ==========================================================================
+   CSS Variables (Theme Colors)
+   ========================================================================== */
+
+:root {
+    /* Primary Colors */
+    --mrt-green-primary: #2d5016;        /* Green header for route sections */
+    --mrt-green-light: #9ad29a;         /* Light green for success states */
+    --mrt-green-border: #6fb36f;         /* Green border */
+    --mrt-green-dark: #1e3410;          /* Dark green for borders */
+    --mrt-green-hover: #2d7a3d;         /* Green hover state */
+    --mrt-blue-primary: #2271b1;         /* Primary blue color */
+    
+    /* Service Type Colors */
+    --mrt-bus-bg: #e3f2fd;               /* Light blue for bus connections */
+    --mrt-special-bg: #fff9c4;           /* Light yellow for special services */
+    
+    /* Background Colors */
+    --mrt-bg-white: #fff;
+    --mrt-bg-light: #f9f9f9;
+    --mrt-bg-lighter: #f5f5f5;
+    --mrt-bg-lightest: #fafafa;
+    --mrt-bg-success: #f4fff4;
+    --mrt-bg-error: #fcf0f1;
+    
+    /* Border Colors */
+    --mrt-border-default: #ddd;
+    --mrt-border-light: #eee;
+    
+    /* Text Colors */
+    --mrt-text-primary: #444;
+    --mrt-text-secondary: #333;
+    --mrt-text-tertiary: #666;
+    --mrt-text-quaternary: #555;
+    --mrt-text-muted: #999;
+    --mrt-text-white: #fff;
+    --mrt-text-error: #d63638;
+    
+    /* WordPress Colors */
+    --mrt-wp-blue: #2271b1;
+    --mrt-wp-blue-dark: #135e96;
+    --mrt-wp-blue-darker: #0a4b78;
+    --mrt-wp-gray: #646970;
+    --mrt-wp-border: #c3c4c7;
+    
+    /* Button/UI Colors */
+    --mrt-warning-bg: #fff3cd;
+    --mrt-warning-border: #ffc107;
+    --mrt-danger-bg: #dc3545;
+    --mrt-danger-border: #dc3545;
+    --mrt-info-bg: #f0f6fc;
+    --mrt-info-border: #2271b1;
+    --mrt-light-blue-bg: #f0f8ff;
+    --mrt-light-yellow-bg: #fff9e6;
+    --mrt-gray-bg: #f0f0f0;
+    
+    /* Spacing */
+    --mrt-spacing-xs: 0.25rem;
+    --mrt-spacing-sm: 0.5rem;
+    --mrt-spacing-md: 1rem;
+    --mrt-spacing-lg: 1.5rem;
+    --mrt-spacing-xl: 2rem;
+}
+
+/* ==========================================================================
+   Admin Page Headers
+   ========================================================================== */
+
+.wrap h1 {
+    color: var(--mrt-text-primary);
+}

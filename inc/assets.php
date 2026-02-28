@@ -29,23 +29,63 @@ function MRT_enqueue_admin_assets($hook) {
         }
     }
 
-    // Enqueue admin CSS
+    // Enqueue admin CSS (base, timetable, ui - in that order)
     wp_enqueue_style(
-        'mrt-admin',
-        MRT_URL . 'assets/admin.css',
+        'mrt-admin-base',
+        MRT_URL . 'assets/admin-base.css',
         [],
         MRT_VERSION
     );
+    wp_enqueue_style(
+        'mrt-admin-timetable',
+        MRT_URL . 'assets/admin-timetable.css',
+        ['mrt-admin-base'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
+        'mrt-admin-ui',
+        MRT_URL . 'assets/admin-ui.css',
+        ['mrt-admin-timetable'],
+        MRT_VERSION
+    );
 
-    // Enqueue admin JavaScript
+    // Enqueue admin JavaScript (utils first, then UI modules, then main)
     wp_enqueue_script(
-        'mrt-admin',
-        MRT_URL . 'assets/admin.js',
+        'mrt-admin-utils',
+        MRT_URL . 'assets/admin-utils.js',
         ['jquery'],
         MRT_VERSION,
         true
     );
-    
+    wp_enqueue_script(
+        'mrt-admin-route-ui',
+        MRT_URL . 'assets/admin-route-ui.js',
+        ['jquery'],
+        MRT_VERSION,
+        true
+    );
+    wp_enqueue_script(
+        'mrt-admin-stoptimes-ui',
+        MRT_URL . 'assets/admin-stoptimes-ui.js',
+        ['jquery'],
+        MRT_VERSION,
+        true
+    );
+    wp_enqueue_script(
+        'mrt-admin-timetable-services',
+        MRT_URL . 'assets/admin-timetable-services-ui.js',
+        ['mrt-admin-utils', 'jquery'],
+        MRT_VERSION,
+        true
+    );
+    wp_enqueue_script(
+        'mrt-admin',
+        MRT_URL . 'assets/admin.js',
+        ['mrt-admin-utils', 'mrt-admin-route-ui', 'mrt-admin-stoptimes-ui', 'mrt-admin-timetable-services', 'jquery'],
+        MRT_VERSION,
+        true
+    );
+
     // Localize script for AJAX and translations
     wp_localize_script('mrt-admin', 'mrtAdmin', [
         'ajaxurl' => admin_url('admin-ajax.php'),
@@ -114,11 +154,23 @@ function MRT_enqueue_frontend_assets() {
         return;
     }
 
-    // Enqueue frontend CSS (same file for now, but could be separate)
+    // Enqueue frontend CSS (base, timetable, ui - same as admin)
     wp_enqueue_style(
-        'mrt-frontend',
-        MRT_URL . 'assets/admin.css', // Using same CSS file for now
+        'mrt-frontend-base',
+        MRT_URL . 'assets/admin-base.css',
         [],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
+        'mrt-frontend-timetable',
+        MRT_URL . 'assets/admin-timetable.css',
+        ['mrt-frontend-base'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
+        'mrt-frontend-ui',
+        MRT_URL . 'assets/admin-ui.css',
+        ['mrt-frontend-timetable'],
         MRT_VERSION
     );
     

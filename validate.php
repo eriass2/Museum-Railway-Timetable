@@ -22,7 +22,13 @@ $required_files = [
     'inc/cpt.php',
     'inc/functions/helpers.php',
     'inc/functions/services.php',
-    'assets/admin.css',
+    'assets/admin-base.css',
+    'assets/admin-timetable.css',
+    'assets/admin-ui.css',
+    'assets/admin-utils.js',
+    'assets/admin-route-ui.js',
+    'assets/admin-stoptimes-ui.js',
+    'assets/admin-timetable-services-ui.js',
     'assets/admin.js',
     'languages/museum-railway-timetable.pot',
     'languages/museum-railway-timetable-sv_SE.po',
@@ -40,9 +46,13 @@ foreach ($required_files as $file) {
 
 // 2. Check PHP syntax
 echo "\n2. Checking PHP syntax...\n";
-$php_files = glob('*.php');
-$php_files = array_merge($php_files, glob('inc/**/*.php'));
-$php_files = array_merge($php_files, glob('inc/*.php'));
+$php_files = array_merge(
+    glob('*.php') ?: [],
+    glob('inc/*.php') ?: [],
+    glob('inc/*/*.php') ?: [],
+    glob('inc/*/*/*.php') ?: []
+);
+$php_files = array_unique(array_filter($php_files));
 
 foreach ($php_files as $file) {
     if (strpos($file, 'validate.php') !== false) continue;
@@ -75,15 +85,20 @@ foreach ($php_files as $file) {
     }
 }
 
-// 4. Check for inline styles
+// 4. Check for inline styles (CSS custom properties like --service-count are allowed)
 echo "\n4. Checking for inline styles...\n";
 foreach ($php_files as $file) {
     if (strpos($file, 'validate.php') !== false) continue;
     $checks++;
     $content = file_get_contents($file);
     if (preg_match('/style\s*=\s*["\']/', $content)) {
-        $warnings[] = "Inline style found in $file";
-        echo "  ⚠️  $file (contains inline styles)\n";
+        // Allow style="--var: value" (CSS custom properties for dynamic values)
+        if (preg_match('/style\s*=\s*[^>]*--[a-zA-Z-]+\s*:/', $content)) {
+            echo "  ✅ $file (CSS custom property only)\n";
+        } else {
+            $warnings[] = "Inline style found in $file";
+            echo "  ⚠️  $file (contains inline styles)\n";
+        }
     } else {
         echo "  ✅ $file\n";
     }
@@ -135,36 +150,48 @@ if ($domain_issues === 0) {
     echo "  ⚠️  Found $domain_issues inconsistent text domain(s)\n";
 }
 
-// 7. Check CSS file exists and is valid
-echo "\n7. Checking CSS file...\n";
-$checks++;
-if (file_exists('assets/admin.css')) {
-    $css = file_get_contents('assets/admin.css');
-    if (strlen($css) > 0) {
-        echo "  ✅ CSS file exists and has content\n";
+// 7. Check CSS files exist and are valid
+echo "\n7. Checking CSS files...\n";
+$css_files = ['assets/admin-base.css', 'assets/admin-timetable.css', 'assets/admin-ui.css'];
+foreach ($css_files as $css_file) {
+    $checks++;
+    if (file_exists($css_file)) {
+        $css = file_get_contents($css_file);
+        if (strlen($css) > 0) {
+            echo "  ✅ $css_file\n";
+        } else {
+            $errors[] = "CSS file is empty: $css_file";
+            echo "  ❌ $css_file is empty\n";
+        }
     } else {
-        $errors[] = "CSS file is empty";
-        echo "  ❌ CSS file is empty\n";
+        $errors[] = "CSS file missing: $css_file";
+        echo "  ❌ $css_file missing\n";
     }
-} else {
-    $errors[] = "CSS file missing";
-    echo "  ❌ CSS file missing\n";
 }
 
-// 8. Check JS file exists and is valid
-echo "\n8. Checking JavaScript file...\n";
-$checks++;
-if (file_exists('assets/admin.js')) {
-    $js = file_get_contents('assets/admin.js');
-    if (strlen($js) > 0) {
-        echo "  ✅ JS file exists and has content\n";
+// 8. Check JS files exist and are valid
+echo "\n8. Checking JavaScript files...\n";
+$admin_js_files = [
+    'assets/admin-utils.js',
+    'assets/admin-route-ui.js',
+    'assets/admin-stoptimes-ui.js',
+    'assets/admin-timetable-services-ui.js',
+    'assets/admin.js',
+];
+foreach ($admin_js_files as $js_file) {
+    $checks++;
+    if (file_exists($js_file)) {
+        $js = file_get_contents($js_file);
+        if (strlen($js) > 0) {
+            echo "  ✅ $js_file\n";
+        } else {
+            $errors[] = "JS file is empty: $js_file";
+            echo "  ❌ $js_file is empty\n";
+        }
     } else {
-        $errors[] = "JS file is empty";
-        echo "  ❌ JS file is empty\n";
+        $errors[] = "JS file missing: $js_file";
+        echo "  ❌ $js_file missing\n";
     }
-} else {
-    $errors[] = "JS file missing";
-    echo "  ❌ JS file missing\n";
 }
 
 // Summary

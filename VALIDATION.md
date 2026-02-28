@@ -13,7 +13,7 @@ Run this validation guide before deploying the plugin.
 - [x] Main plugin file exists: `museum-railway-timetable.php`
 - [x] Uninstall file exists: `uninstall.php`
 - [x] All required PHP files exist in `inc/` directory
-- [x] CSS file exists: `assets/admin.css`
+- [x] CSS files exist: `assets/admin-base.css`, `assets/admin-timetable.css`, `assets/admin-ui.css`
 - [x] JavaScript files exist: `assets/admin.js` and `assets/frontend.js`
 - [x] Translation files exist: `languages/museum-railway-timetable.pot` and `languages/museum-railway-timetable-sv_SE.po`
 
