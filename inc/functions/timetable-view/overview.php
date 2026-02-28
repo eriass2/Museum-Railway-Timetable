@@ -19,7 +19,7 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
     global $wpdb;
 
     if (!$timetable_id || $timetable_id <= 0) {
-        return '<div class="mrt-alert mrt-alert-error mrt-error">' . esc_html__('Invalid timetable.', 'museum-railway-timetable') . '</div>';
+        return '<div class="mrt-alert mrt-alert-error">' . esc_html__('Invalid timetable.', 'museum-railway-timetable') . '</div>';
     }
 
     // Use current date if not provided
@@ -101,7 +101,7 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
     global $wpdb;
 
     if (!MRT_validate_date($dateYmd)) {
-        return '<div class="mrt-alert mrt-alert-error mrt-error">' . esc_html__('Invalid date.', 'museum-railway-timetable') . '</div>';
+        return '<div class="mrt-alert mrt-alert-error">' . esc_html__('Invalid date.', 'museum-railway-timetable') . '</div>';
     }
 
     // Get all services running on this date

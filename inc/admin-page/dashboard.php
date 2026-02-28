@@ -85,7 +85,7 @@ function MRT_render_admin_page() {
         <?php MRT_render_dashboard_routes($all_routes); ?>
         <?php MRT_render_dashboard_quick_actions(); ?>
 
-        <div class="mrt-section mrt-settings-section">
+        <div class="mrt-section">
             <h2><?php esc_html_e('Settings', 'museum-railway-timetable'); ?></h2>
             <form method="post" action="options.php">
                 <?php

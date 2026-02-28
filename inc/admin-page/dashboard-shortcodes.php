@@ -17,7 +17,7 @@ function MRT_render_dashboard_shortcodes() {
         <p><?php esc_html_e('Use these shortcodes to display timetables on your pages and posts.', 'museum-railway-timetable'); ?></p>
 
         <div class="mrt-mt-1">
-            <h3 class="mrt-section-heading mrt-mt-0">1. <?php esc_html_e('Month View', 'museum-railway-timetable'); ?></h3>
+            <h3 class="mrt-heading mrt-mt-0">1. <?php esc_html_e('Month View', 'museum-railway-timetable'); ?></h3>
             <p><code>[museum_timetable_month month="2025-06" train_type="" service="" legend="1" show_counts="1"]</code></p>
             <p class="description">
                 <?php esc_html_e('Displays a calendar month view showing which days have services running.', 'museum-railway-timetable'); ?><br>
@@ -66,7 +66,7 @@ function MRT_render_dashboard_shortcodes() {
                 <?php esc_html_e('Or use the timetable name:', 'museum-railway-timetable'); ?>
             </p>
             <pre class="mrt-box mrt-code-block">[museum_timetable_overview timetable="Sommar 2025"]</pre>
-            <p class="description mrt-mt-sm mrt-alert mrt-alert-warning mrt-tip-box">
+            <p class="description mrt-mt-sm mrt-alert mrt-alert-warning">
                 <strong><?php esc_html_e('Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('You can preview how the timetable will look in the "Timetable Overview" meta box when editing a timetable in the admin.', 'museum-railway-timetable'); ?>
             </p>
         </div>
@@ -104,7 +104,7 @@ function MRT_render_dashboard_shortcodes() {
                 <?php esc_html_e('Or with a default date:', 'museum-railway-timetable'); ?>
             </p>
             <pre class="mrt-box mrt-code-block">[museum_journey_planner default_date="2025-06-15"]</pre>
-            <p class="description mrt-mt-sm mrt-alert mrt-alert-warning mrt-tip-box">
+            <p class="description mrt-mt-sm mrt-alert mrt-alert-warning">
                 <strong><?php esc_html_e('Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('The journey planner automatically shows today\'s date by default, but users can select any date to check future connections. Make sure you have created timetables with dates and services with stop times for the dates you want to support.', 'museum-railway-timetable'); ?>
             </p>
         </div>

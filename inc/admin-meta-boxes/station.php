@@ -53,7 +53,7 @@ function MRT_render_station_meta_box($post) {
     }
     ?>
     <div class="mrt-box mrt-mt-1">
-    <h3 class="mrt-section-heading mrt-mt-0"><?php esc_html_e('Station Details', 'museum-railway-timetable'); ?></h3>
+    <h3 class="mrt-heading mrt-mt-0"><?php esc_html_e('Station Details', 'museum-railway-timetable'); ?></h3>
     <table class="form-table">
         <tr>
             <th><label for="mrt_station_type"><?php esc_html_e('Station Type', 'museum-railway-timetable'); ?></label></th>

@@ -153,7 +153,7 @@ function MRT_render_journey_connections_table($connections) {
  */
 function MRT_render_journey_results($from_station_id, $to_station_id, $selected_date) {
     if ($from_station_id > 0 && $to_station_id > 0 && $from_station_id === $to_station_id) {
-        echo '<div class="mrt-alert mrt-alert-error mrt-error">';
+        echo '<div class="mrt-alert mrt-alert-error">';
         esc_html_e('Please select different stations for departure and arrival.', 'museum-railway-timetable');
         echo '</div>';
         return;
@@ -170,7 +170,7 @@ function MRT_render_journey_results($from_station_id, $to_station_id, $selected_
     <div class="mrt-journey-results mrt-mt-lg">
         <h3 class="mrt-heading mrt-heading--xl mrt-mb-1"><?php MRT_render_journey_results_title($from_name, $to_name, $selected_date); ?></h3>
         <?php if (empty($services_on_date)): ?>
-            <div class="mrt-alert mrt-alert-error mrt-error">
+            <div class="mrt-alert mrt-alert-error">
                 <p><strong><?php esc_html_e('No services running.', 'museum-railway-timetable'); ?></strong></p>
                 <p><?php esc_html_e('There are no services running on the selected date. Please try a different date.', 'museum-railway-timetable'); ?></p>
             </div>

@@ -70,7 +70,7 @@ function MRT_render_timetable_dates_script($dates) {
                     '<input type="hidden" name="mrt_timetable_dates[]" value="' + date.replace(/"/g, '&quot;') + '" />' +
                     '<span class="mrt-font-medium mrt-flex-1">' + formattedDate + '</span> ' +
                     '<span class="mrt-text-tertiary mrt-ml-sm">(' + date + ')</span> ' +
-                    '<button type="button" class="button button-small mrt-remove-date mrt-date-remove-button mrt-ml-1"><?php echo $remove_label; ?></button>' +
+                    '<button type="button" class="button button-small mrt-remove-date mrt-ml-1"><?php echo $remove_label; ?></button>' +
                     '</div>');
                 $container.append($row);
             });

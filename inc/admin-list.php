@@ -214,7 +214,7 @@ function MRT_render_stations_overview_inline() {
     <div class="mrt-section mrt-mt-1">
         <?php MRT_render_stations_overview_filter_form(); ?>
         <?php MRT_render_stations_overview_table($station_ids, $train_type); ?>
-        <p class="mrt-alert mrt-alert-info mrt-note mrt-mt-sm mrt-text-quaternary">
+        <p class="mrt-alert mrt-alert-info mrt-mt-sm mrt-text-quaternary">
             <?php echo esc_html__('Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug.', 'museum-railway-timetable'); ?>
         </p>
     </div>

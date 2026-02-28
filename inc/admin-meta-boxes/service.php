@@ -305,7 +305,7 @@ function MRT_render_service_meta_box($post) {
     MRT_render_service_info_box();
     ?>
     <div class="mrt-box mrt-mt-1">
-        <h3 class="mrt-section-heading mrt-mt-0"><?php esc_html_e('Trip Details', 'museum-railway-timetable'); ?></h3>
+        <h3 class="mrt-heading mrt-mt-0"><?php esc_html_e('Trip Details', 'museum-railway-timetable'); ?></h3>
         <table class="form-table">
             <?php
             MRT_render_service_timetable_row($timetable_id, $timetables, $editing_from_timetable);

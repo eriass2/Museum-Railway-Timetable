@@ -14,14 +14,24 @@ if (!defined('ABSPATH')) { exit; }
  * @return bool
  */
 function MRT_should_load_admin_assets($hook) {
+    $allowed_post_types = ['mrt_station', 'mrt_service', 'mrt_route', 'mrt_timetable'];
+
     $is_plugin_page = (strpos($hook, 'mrt_') !== false);
     $is_edit_page = in_array($hook, ['post.php', 'post-new.php']);
-    if (!$is_plugin_page && !$is_edit_page) {
+    $is_list_page = ($hook === 'edit.php');
+
+    if (!$is_plugin_page && !$is_edit_page && !$is_list_page) {
         return false;
     }
     if ($is_edit_page) {
         $post_type = get_post_type();
-        if (!in_array($post_type, ['mrt_station', 'mrt_service', 'mrt_route', 'mrt_timetable'], true)) {
+        if (!in_array($post_type, $allowed_post_types, true)) {
+            return false;
+        }
+    }
+    if ($is_list_page) {
+        $post_type = isset($_GET['post_type']) ? sanitize_text_field(wp_unslash($_GET['post_type'])) : 'post';
+        if (!in_array($post_type, $allowed_post_types, true)) {
             return false;
         }
     }
@@ -29,17 +39,65 @@ function MRT_should_load_admin_assets($hook) {
 }
 
 /**
- * Enqueue admin CSS files
+ * Check if timetable overview CSS should load (admin)
+ * Load on: timetable edit, station overview view
+ *
+ * @param string $hook Current admin page hook
+ * @return bool
  */
-function MRT_enqueue_admin_css() {
+function MRT_should_load_admin_timetable_overview($hook) {
+    $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+    if (!$screen) {
+        return false;
+    }
+    // Timetable edit (post.php / post-new.php)
+    if (in_array($hook, ['post.php', 'post-new.php'], true) && $screen->post_type === 'mrt_timetable') {
+        return true;
+    }
+    // Station overview (edit.php?post_type=mrt_station&mrt_view=overview)
+    if ($screen->id === 'edit-mrt_station') {
+        $mrt_view = isset($_GET['mrt_view']) ? sanitize_text_field(wp_unslash($_GET['mrt_view'])) : '';
+        if ($mrt_view === 'overview') {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * Check if dashboard CSS should load (admin)
+ *
+ * @param string $hook Current admin page hook
+ * @return bool
+ */
+function MRT_should_load_admin_dashboard($hook) {
+    return $hook === 'toplevel_page_mrt_settings';
+}
+
+/**
+ * Enqueue admin CSS files
+ *
+ * @param string $hook Current admin page hook (from admin_enqueue_scripts)
+ */
+function MRT_enqueue_admin_css($hook) {
     $base = MRT_URL . 'assets/';
     wp_enqueue_style('mrt-admin-base', $base . 'admin-base.css', [], MRT_VERSION);
     wp_enqueue_style('mrt-admin-components', $base . 'admin-components.css', ['mrt-admin-base'], MRT_VERSION);
     wp_enqueue_style('mrt-admin-timetable', $base . 'admin-timetable.css', ['mrt-admin-components'], MRT_VERSION);
-    wp_enqueue_style('mrt-admin-timetable-overview', $base . 'admin-timetable-overview.css', ['mrt-admin-timetable'], MRT_VERSION);
-    wp_enqueue_style('mrt-admin-meta-boxes', $base . 'admin-meta-boxes.css', ['mrt-admin-timetable-overview'], MRT_VERSION);
-    wp_enqueue_style('mrt-admin-dashboard', $base . 'admin-dashboard.css', ['mrt-admin-meta-boxes'], MRT_VERSION);
-    wp_enqueue_style('mrt-admin-ui', $base . 'admin-ui.css', ['mrt-admin-dashboard'], MRT_VERSION);
+
+    $meta_deps = ['mrt-admin-timetable'];
+    if (MRT_should_load_admin_timetable_overview($hook)) {
+        wp_enqueue_style('mrt-admin-timetable-overview', $base . 'admin-timetable-overview.css', ['mrt-admin-timetable'], MRT_VERSION);
+        $meta_deps[] = 'mrt-admin-timetable-overview';
+    }
+    wp_enqueue_style('mrt-admin-meta-boxes', $base . 'admin-meta-boxes.css', $meta_deps, MRT_VERSION);
+
+    $ui_deps = ['mrt-admin-meta-boxes'];
+    if (MRT_should_load_admin_dashboard($hook)) {
+        wp_enqueue_style('mrt-admin-dashboard', $base . 'admin-dashboard.css', ['mrt-admin-meta-boxes'], MRT_VERSION);
+        $ui_deps[] = 'mrt-admin-dashboard';
+    }
+    wp_enqueue_style('mrt-admin-ui', $base . 'admin-ui.css', $ui_deps, MRT_VERSION);
     wp_enqueue_style('mrt-admin-responsive', $base . 'admin-responsive.css', ['mrt-admin-ui'], MRT_VERSION);
 }
 
@@ -104,7 +162,7 @@ function MRT_enqueue_admin_assets($hook) {
     if (!MRT_should_load_admin_assets($hook)) {
         return;
     }
-    MRT_enqueue_admin_css();
+    MRT_enqueue_admin_css($hook);
     MRT_enqueue_admin_js();
     MRT_localize_admin_script();
 }
@@ -116,23 +174,27 @@ add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');
 function MRT_enqueue_frontend_assets() {
     // Check if any of our shortcodes are used on the page
     global $post;
-    
+
     $shortcodes = ['museum_timetable_month', 'museum_timetable_overview', 'museum_journey_planner'];
     $has_shortcode = false;
-    
+    $has_overview_shortcode = false;
+
     // Check in post content
     if (is_a($post, 'WP_Post') && !empty($post->post_content)) {
         foreach ($shortcodes as $shortcode) {
             if (has_shortcode($post->post_content, $shortcode)) {
                 $has_shortcode = true;
-                break;
+                if ($shortcode === 'museum_timetable_overview') {
+                    $has_overview_shortcode = true;
+                }
             }
         }
     }
-    
+
     if (!$has_shortcode) {
         $has_shortcode = apply_filters('mrt_should_enqueue_frontend_assets', false);
     }
+    $has_overview_shortcode = apply_filters('mrt_should_enqueue_frontend_overview_css', $has_overview_shortcode);
 
     if (!$has_shortcode) {
         return;
@@ -157,16 +219,21 @@ function MRT_enqueue_frontend_assets() {
         ['mrt-frontend-components'],
         MRT_VERSION
     );
-    wp_enqueue_style(
-        'mrt-frontend-timetable-overview',
-        MRT_URL . 'assets/admin-timetable-overview.css',
-        ['mrt-frontend-timetable'],
-        MRT_VERSION
-    );
+
+    $frontend_meta_deps = ['mrt-frontend-timetable'];
+    if ($has_overview_shortcode) {
+        wp_enqueue_style(
+            'mrt-frontend-timetable-overview',
+            MRT_URL . 'assets/admin-timetable-overview.css',
+            ['mrt-frontend-timetable'],
+            MRT_VERSION
+        );
+        $frontend_meta_deps[] = 'mrt-frontend-timetable-overview';
+    }
     wp_enqueue_style(
         'mrt-frontend-meta-boxes',
         MRT_URL . 'assets/admin-meta-boxes.css',
-        ['mrt-frontend-timetable-overview'],
+        $frontend_meta_deps,
         MRT_VERSION
     );
     wp_enqueue_style(

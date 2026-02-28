@@ -78,8 +78,8 @@ function MRT_render_route_info_box() {
  */
 function MRT_render_route_end_stations_section($all_stations, $route_start_station, $route_end_station) {
     ?>
-    <div class="mrt-box mrt-end-stations-section">
-        <h3 class="mrt-section-heading mrt-mt-0"><?php esc_html_e('End Stations (Terminus)', 'museum-railway-timetable'); ?></h3>
+    <div class="mrt-box">
+        <h3 class="mrt-heading mrt-mt-0"><?php esc_html_e('End Stations (Terminus)', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Define the start and end stations for this route. These are the terminus stations where trains can start or end their journey.', 'museum-railway-timetable'); ?></p>
         <table class="form-table mrt-mt-sm">
             <tr>
@@ -120,7 +120,7 @@ function MRT_render_route_end_stations_section($all_stations, $route_start_stati
 function MRT_render_route_stations_table($route_stations, $all_stations) {
     ?>
     <div id="mrt-route-stations-container" class="mrt-box mrt-mt-1">
-        <h3 class="mrt-section-heading mrt-mt-0"><?php esc_html_e('Stations on Route', 'museum-railway-timetable'); ?></h3>
+        <h3 class="mrt-heading mrt-mt-0"><?php esc_html_e('Stations on Route', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Add stations in the order they appear on the route. Use ↑ ↓ to reorder.', 'museum-railway-timetable'); ?></p>
         <table class="widefat striped" id="mrt-route-stations-table">
             <thead>

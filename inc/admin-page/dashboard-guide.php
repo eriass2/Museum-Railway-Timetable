@@ -27,7 +27,7 @@ function MRT_render_dashboard_guide() {
                 <li><strong><?php esc_html_e('Set Train Number', 'museum-railway-timetable'); ?></strong> - <?php esc_html_e('When editing a trip (Service), enter the train number (e.g., 71, 91, 73) in the "Train Number" field. This will be displayed in timetables instead of the service ID.', 'museum-railway-timetable'); ?></li>
                 <li><strong><?php esc_html_e('Configure Stop Times', 'museum-railway-timetable'); ?></strong> - <?php esc_html_e('Click "Edit" on any trip to set arrival/departure times for each station. Use P/A symbols for pickup/dropoff restrictions, and leave times empty for "X" (stops but time not specified).', 'museum-railway-timetable'); ?></li>
             </ol>
-            <p class="mrt-alert mrt-alert-warning mrt-tip-box mrt-mt-1">
+            <p class="mrt-alert mrt-alert-warning mrt-mt-1">
                 <strong><?php esc_html_e('💡 Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('Trips are automatically named based on Route + Direction. You don\'t need to enter a name manually!', 'museum-railway-timetable'); ?>
             </p>
         </div>

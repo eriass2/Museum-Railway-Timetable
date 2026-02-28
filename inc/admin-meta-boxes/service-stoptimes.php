@@ -86,8 +86,8 @@ function MRT_render_stoptimes_table($stations, $stoptimes_by_station, $post_id) 
                         <th class="mrt-w-40"><?php esc_html_e('Order', 'museum-railway-timetable'); ?></th>
                         <th><?php esc_html_e('Station', 'museum-railway-timetable'); ?></th>
                         <th class="mrt-w-100"><?php esc_html_e('Stops here', 'museum-railway-timetable'); ?></th>
-                        <th class="mrt-col-time"><?php esc_html_e('Arrival', 'museum-railway-timetable'); ?></th>
-                        <th class="mrt-col-time"><?php esc_html_e('Departure', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-w-100"><?php esc_html_e('Arrival', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-w-100"><?php esc_html_e('Departure', 'museum-railway-timetable'); ?></th>
                         <th class="mrt-w-80"><?php esc_html_e('Pickup', 'museum-railway-timetable'); ?></th>
                         <th class="mrt-w-80"><?php esc_html_e('Dropoff', 'museum-railway-timetable'); ?></th>
                     </tr>

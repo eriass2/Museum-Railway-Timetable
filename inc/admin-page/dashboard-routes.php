@@ -17,7 +17,7 @@ function MRT_render_dashboard_routes($all_routes) {
         return;
     }
     ?>
-    <div class="mrt-section mrt-settings-section">
+    <div class="mrt-section">
         <h2><?php esc_html_e('Routes Overview', 'museum-railway-timetable'); ?></h2>
         <p class="description">
             <?php esc_html_e('Routes define which stations trains travel between and in what order. When creating a trip, you select a route to automatically get all its stations.', 'museum-railway-timetable'); ?>
