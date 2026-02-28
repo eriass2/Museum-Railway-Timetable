@@ -39,19 +39,8 @@ add_action('edit_form_after_title', function($post) {
 
 /**
  * Remove description field from train type taxonomy (only name needed)
+ * CSS in admin-meta-boxes.css: .taxonomy-mrt_train_type .term-description-wrap
  */
-add_action('admin_head', function() {
-    $screen = get_current_screen();
-    if ($screen && ($screen->taxonomy === 'mrt_train_type')) {
-        echo '<style>
-            .term-description-wrap,
-            .form-field.term-description-wrap,
-            tr.term-description-wrap {
-                display: none !important;
-            }
-        </style>';
-    }
-});
 
 /**
  * Hide description column in taxonomy list table

@@ -69,7 +69,7 @@ function MRT_render_alert(string $message, string $type = 'error', string $extra
  * Render info box (title + content)
  *
  * @param string $title Box title (will be escaped)
- * @param string $content HTML content (use esc_html for plain text, or wp_kses_post for safe HTML)
+ * @param string $content HTML content (sanitized with wp_kses_post for safe HTML)
  * @param string $extra_classes Optional extra CSS classes (e.g. 'mrt-mb-1')
  * @return void Outputs HTML
  */
@@ -78,9 +78,9 @@ function MRT_render_info_box(string $title, string $content, string $extra_class
     if (!empty($extra_classes)) {
         $classes .= ' ' . esc_attr($extra_classes);
     }
-    echo '<div class="' . $classes . '">';
+    echo '<div class="' . esc_attr($classes) . '">';
     echo '<p><strong>' . esc_html($title) . '</strong></p>';
-    echo $content;
+    echo wp_kses_post($content);
     echo '</div>';
 }
 

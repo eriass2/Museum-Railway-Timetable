@@ -13,11 +13,12 @@ if (!defined('ABSPATH')) { exit; }
  * @param int $timetable_id Timetable ID
  */
 function MRT_service_meta_box_setup_editing_from_timetable($timetable_id) {
-    add_action('admin_head', function() {
+    add_filter('admin_body_class', function($classes) {
         global $post_type;
         if ($post_type === 'mrt_service' && isset($_GET['timetable_id'])) {
-            echo '<style>#title, #title-prompt-text, #titlewrap { display: none !important; }</style>';
+            $classes .= ' mrt-editing-from-timetable';
         }
+        return $classes;
     });
     add_action('edit_form_top', function() use ($timetable_id) {
         global $post_type;

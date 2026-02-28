@@ -7,3 +7,17 @@
 
 @import url('admin-meta-boxes-fields.css');
 @import url('admin-meta-boxes-edit.css');
+
+/* Train type taxonomy: hide description field */
+.taxonomy-mrt_train_type .term-description-wrap,
+.taxonomy-mrt_train_type .form-field.term-description-wrap,
+.taxonomy-mrt_train_type tr.term-description-wrap {
+    display: none !important;
+}
+
+/* Service edit from timetable: hide title field */
+.mrt-editing-from-timetable #title,
+.mrt-editing-from-timetable #title-prompt-text,
+.mrt-editing-from-timetable #titlewrap {
+    display: none !important;
+}

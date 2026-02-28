@@ -50,10 +50,10 @@ echo $content;
 - `echo '<style>...'` – inline style för admin-specifika tweaks
 - **Kommentar:** Style guide säger "inga inline styles" – men för admin UI-hiding är det vanligt. Överväg att flytta till CSS-fil.
 
-### 5. PHPDoc – täckning
+### 5. PHPDoc – täckning ✓ (genomfört)
 
-- Vissa funktioner saknar @param/@return
 - **Åtgärd:** Lägg till PHPDoc på alla publika funktioner
+- **Genomfört:** @param/@return tillagd på: route-stations.php, route-destinations.php, service-save.php, stoptimes.php, timetable-services.php, journey.php, timetable-frontend.php
 
 ---
 
@@ -76,5 +76,4 @@ echo $content;
 ## Sammanfattning
 
 - **Struktur och grund:** Bra – följer STYLE_GUIDE och WordPress-konventioner
-- **Prioritet 1–2 genomförda:** Sanitize nonce, $_GET
-- **Återstår:** MRT_render_info_box content-säkerhet, inline styles, PHPDoc-täckning
+- **Prioritet 1–5 genomförda:** Sanitize nonce, $_GET, MRT_render_info_box (wp_kses_post), inline styles → CSS, PHPDoc-täckning

@@ -9,6 +9,8 @@ if (!defined('ABSPATH')) { exit; }
 
 /**
  * Search for journey connections via AJAX (frontend)
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_search_journey() {
     $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';

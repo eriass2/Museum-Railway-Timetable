@@ -57,6 +57,8 @@ function MRT_validate_stoptime_input($require_id = false) {
 
 /**
  * Add stop time via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_add_stoptime() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
@@ -93,6 +95,8 @@ function MRT_ajax_add_stoptime() {
 
 /**
  * Update stop time via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_update_stoptime() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
@@ -127,6 +131,8 @@ function MRT_ajax_update_stoptime() {
 
 /**
  * Delete stop time via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_delete_stoptime() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
@@ -152,6 +158,8 @@ function MRT_ajax_delete_stoptime() {
 
 /**
  * Get stop time data via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_get_stoptime() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
@@ -215,6 +223,8 @@ function MRT_insert_stoptime_for_save_all($wpdb, $stop, $service_id, $sequence) 
 
 /**
  * Save all stop times for a service (from route-based form)
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_save_all_stoptimes() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');

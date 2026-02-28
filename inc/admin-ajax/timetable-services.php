@@ -40,6 +40,11 @@ function MRT_ajax_validate_add_service_input() {
 
 /**
  * Build auto title for new service
+ *
+ * @param int    $route_id       Route post ID
+ * @param int    $end_station_id End station post ID
+ * @param string $direction      Direction ('dit' or 'från')
+ * @return string Service title
  */
 function MRT_build_service_auto_title($route_id, $end_station_id, $direction) {
     $route = get_post($route_id);
@@ -58,6 +63,13 @@ function MRT_build_service_auto_title($route_id, $end_station_id, $direction) {
 
 /**
  * Build response data for add-service success
+ *
+ * @param int    $service_id     Service post ID
+ * @param int    $route_id       Route post ID
+ * @param int    $train_type_id  Train type term ID
+ * @param int    $end_station_id End station post ID
+ * @param string $direction      Direction ('dit' or 'från')
+ * @return array Response data for frontend
  */
 function MRT_build_add_service_response($service_id, $route_id, $train_type_id, $end_station_id, $direction) {
     $service = get_post($service_id);
@@ -85,6 +97,8 @@ function MRT_build_add_service_response($service_id, $route_id, $train_type_id, 
 
 /**
  * Add service to timetable via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_add_service_to_timetable() {
     $input = MRT_ajax_validate_add_service_input();
@@ -126,6 +140,8 @@ function MRT_ajax_add_service_to_timetable() {
 
 /**
  * Remove service from timetable via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_remove_service_from_timetable() {
     check_ajax_referer('mrt_timetable_services_nonce', 'nonce');

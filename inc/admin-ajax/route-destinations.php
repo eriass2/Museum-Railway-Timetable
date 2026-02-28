@@ -9,6 +9,8 @@ if (!defined('ABSPATH')) { exit; }
 
 /**
  * Get available destinations for a route via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_get_route_destinations() {
     $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';

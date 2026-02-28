@@ -23,6 +23,14 @@ function MRT_should_load_admin_assets(string $hook): bool {
     $is_plugin_page = (strpos($hook, 'mrt_') !== false);
     $is_edit_page = in_array($hook, ['post.php', 'post-new.php']);
     $is_list_page = ($hook === 'edit.php');
+    $is_taxonomy_page = in_array($hook, ['edit-tags.php', 'term.php'], true);
+
+    if ($is_taxonomy_page) {
+        $taxonomy = isset($_GET['taxonomy']) ? sanitize_text_field(wp_unslash($_GET['taxonomy'])) : '';
+        if ($taxonomy === MRT_TAXONOMY_TRAIN_TYPE) {
+            return true;
+        }
+    }
 
     if (!$is_plugin_page && !$is_edit_page && !$is_list_page) {
         return false;

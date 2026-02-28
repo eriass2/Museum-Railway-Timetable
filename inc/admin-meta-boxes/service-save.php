@@ -28,30 +28,55 @@ function MRT_save_service_meta_box($post_id) {
     MRT_save_service_direction_legacy($post_id);
 }
 
+/**
+ * Save service timetable ID from meta box
+ *
+ * @param int $post_id Post ID
+ */
 function MRT_save_service_timetable($post_id) {
     if (!isset($_POST['mrt_service_timetable_id'])) return;
     $tid = intval($_POST['mrt_service_timetable_id']);
     $tid > 0 ? update_post_meta($post_id, 'mrt_service_timetable_id', $tid) : delete_post_meta($post_id, 'mrt_service_timetable_id');
 }
 
+/**
+ * Save service route ID from meta box
+ *
+ * @param int $post_id Post ID
+ */
 function MRT_save_service_route($post_id) {
     if (!isset($_POST['mrt_service_route_id'])) return;
     $rid = intval($_POST['mrt_service_route_id']);
     $rid > 0 ? update_post_meta($post_id, 'mrt_service_route_id', $rid) : delete_post_meta($post_id, 'mrt_service_route_id');
 }
 
+/**
+ * Save service train type taxonomy from meta box
+ *
+ * @param int $post_id Post ID
+ */
 function MRT_save_service_train_type($post_id) {
     if (!isset($_POST['mrt_service_train_type'])) return;
     $tid = intval($_POST['mrt_service_train_type']);
     wp_set_object_terms($post_id, $tid > 0 ? [$tid] : [], 'mrt_train_type');
 }
 
+/**
+ * Save service number from meta box
+ *
+ * @param int $post_id Post ID
+ */
 function MRT_save_service_number($post_id) {
     if (!isset($_POST['mrt_service_number'])) return;
     $num = sanitize_text_field($_POST['mrt_service_number']);
     !empty($num) ? update_post_meta($post_id, 'mrt_service_number', $num) : delete_post_meta($post_id, 'mrt_service_number');
 }
 
+/**
+ * Save service train types by date from meta box
+ *
+ * @param int $post_id Post ID
+ */
 function MRT_save_service_train_types_by_date($post_id) {
     if (!isset($_POST['mrt_train_types_by_date']) || !is_array($_POST['mrt_train_types_by_date'])) return;
     $by_date = [];
@@ -68,6 +93,11 @@ function MRT_save_service_train_types_by_date($post_id) {
     !empty($by_date) ? update_post_meta($post_id, 'mrt_service_train_types_by_date', $by_date) : delete_post_meta($post_id, 'mrt_service_train_types_by_date');
 }
 
+/**
+ * Save service end station and update title from meta box
+ *
+ * @param int $post_id Post ID
+ */
 function MRT_save_service_end_station($post_id) {
     if (!isset($_POST['mrt_service_end_station_id'])) return;
     $eid = intval($_POST['mrt_service_end_station_id']);
@@ -91,6 +121,11 @@ function MRT_save_service_end_station($post_id) {
     }
 }
 
+/**
+ * Save legacy direction field when end station not set
+ *
+ * @param int $post_id Post ID
+ */
 function MRT_save_service_direction_legacy($post_id) {
     if (!isset($_POST['mrt_direction'])) return;
     if (get_post_meta($post_id, 'mrt_service_end_station_id', true)) return;

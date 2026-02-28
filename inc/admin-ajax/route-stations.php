@@ -9,6 +9,8 @@ if (!defined('ABSPATH')) { exit; }
 
 /**
  * Get route stations for Stop Times table via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_get_route_stations_for_stoptimes() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
@@ -75,6 +77,8 @@ function MRT_ajax_get_route_stations_for_stoptimes() {
 
 /**
  * Save route end stations via AJAX
+ *
+ * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
 function MRT_ajax_save_route_end_stations() {
     $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
