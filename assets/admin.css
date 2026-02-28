@@ -1539,6 +1539,49 @@
 .mrt-mb-1 { margin-bottom: var(--mrt-spacing-md); }
 .mrt-ml-1 { margin-left: var(--mrt-spacing-md); }
 
+/* Admin meta boxes - replaces inline styles */
+.mrt-info-box.mrt-mb-1 { margin-bottom: var(--mrt-spacing-md); }
+.mrt-info-box.mrt-mt-1 { margin-top: var(--mrt-spacing-md); }
+.mrt-info-box ul.mrt-list-indent { margin: var(--mrt-spacing-sm) 0 0 1.5rem; }
+.mrt-how-to-use { margin-top: var(--mrt-spacing-sm); }
+.mrt-how-to-use ol { margin: var(--mrt-spacing-sm) 0 0 1.5rem; line-height: 1.6; }
+.mrt-end-stations-section {
+    margin-bottom: var(--mrt-spacing-lg);
+    padding: var(--mrt-spacing-md);
+    background: var(--mrt-bg-light);
+    border: 1px solid var(--mrt-border-default);
+    border-radius: 4px;
+}
+.mrt-end-stations-section h3,
+.mrt-date-pattern-section h3,
+.mrt-date-single-section h3 { margin-top: 0; }
+.mrt-form-table-mt { margin-top: var(--mrt-spacing-sm); }
+.mrt-form-table-mb { margin-bottom: var(--mrt-spacing-lg); }
+.mrt-th-label-150 { width: 150px; }
+.mrt-single-date-input { margin-right: var(--mrt-spacing-sm); }
+.mrt-dates-container { margin-top: var(--mrt-spacing-sm); }
+.mrt-date-iso { color: var(--mrt-text-tertiary); font-size: 0.9em; margin-left: var(--mrt-spacing-sm); }
+.mrt-date-remove-btn { margin-left: var(--mrt-spacing-md); }
+.mrt-success-message { margin: var(--mrt-spacing-md) 0; }
+.mrt-description-small-mt { font-size: 0.85em; margin-top: var(--mrt-spacing-xs); }
+.mrt-description-error { color: var(--mrt-text-error); }
+.mrt-train-types-container { margin-top: var(--mrt-spacing-md); }
+.mrt-train-type-date-row {
+    margin-bottom: var(--mrt-spacing-sm);
+    padding: var(--mrt-spacing-sm);
+    background: var(--mrt-bg-light);
+    border: 1px solid var(--mrt-border-default);
+    border-radius: 4px;
+}
+.mrt-train-type-label { display: inline-block; min-width: 150px; font-weight: 600; }
+.mrt-train-type-label span { color: var(--mrt-text-tertiary); font-weight: normal; font-size: 0.9em; }
+.mrt-train-type-select { margin-left: var(--mrt-spacing-sm); min-width: 200px; }
+.mrt-back-button { margin-right: var(--mrt-spacing-sm); }
+.mrt-description-tertiary { margin-top: var(--mrt-spacing-sm); color: var(--mrt-text-tertiary); }
+.mrt-routes-table-mt { margin-top: var(--mrt-spacing-md); }
+.mrt-description-block { display: block; font-size: 0.85em; margin-top: var(--mrt-spacing-xs); color: var(--mrt-wp-gray); }
+.mrt-day-timetable-hidden { display: none; }
+
 /* Text Styles */
 .mrt-description-small {
     margin: 0;

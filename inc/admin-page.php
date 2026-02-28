@@ -199,7 +199,7 @@ function MRT_render_admin_page() {
             <p class="description">
                 <?php esc_html_e('Routes define which stations trains travel between and in what order. When creating a trip, you select a route to automatically get all its stations.', 'museum-railway-timetable'); ?>
             </p>
-            <table class="widefat striped" style="margin-top: 1rem;">
+            <table class="widefat striped mrt-routes-table-mt">
                 <thead>
                     <tr>
                         <th><?php esc_html_e('Route Name', 'museum-railway-timetable'); ?></th>
@@ -246,7 +246,7 @@ function MRT_render_admin_page() {
                                 <?php if (!empty($station_names)): ?>
                                     <span title="<?php echo esc_attr(implode(' → ', $station_names)); ?>">
                                         <?php echo esc_html($stations_count_for_route); ?> <?php esc_html_e('stations', 'museum-railway-timetable'); ?>
-                                        <span class="description" style="display: block; font-size: 0.85em; margin-top: 0.25rem; color: #646970;">
+                                        <span class="description mrt-description-block">
                                             <?php echo esc_html(implode(' → ', array_slice($station_names, 0, 3))); ?>
                                             <?php if (count($station_names) > 3): ?>
                                                 ... (+<?php echo esc_html(count($station_names) - 3); ?>)

@@ -122,7 +122,7 @@ add_shortcode('museum_timetable_month', function ($atts) {
     }
 
     // Container for day timetable (shown when day is clicked)
-    echo '<div class="mrt-day-timetable-container" style="display: none;"></div>';
+    echo '<div class="mrt-day-timetable-container mrt-day-timetable-hidden"></div>';
 
     echo '</div>'; // .mrt-month
     return ob_get_clean();

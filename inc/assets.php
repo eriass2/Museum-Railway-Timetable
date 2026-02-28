@@ -74,6 +74,10 @@ function MRT_enqueue_admin_assets($hook) {
         'stopTimeSavedSuccessfully' => __('Stop time saved successfully.', 'museum-railway-timetable'),
         'stopTimeAddedSuccessfully' => __('Stop time added successfully.', 'museum-railway-timetable'),
         'endStationsSavedSuccessfully' => __('End stations saved successfully.', 'museum-railway-timetable'),
+        'selectDestination' => __('— Select Destination —', 'museum-railway-timetable'),
+        'selectRouteFirst' => __('Select a route first', 'museum-railway-timetable'),
+        'loading' => __('Loading...', 'museum-railway-timetable'),
+        'errorLoadingDestinations' => __('Error loading destinations', 'museum-railway-timetable'),
     ]);
 }
 add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');

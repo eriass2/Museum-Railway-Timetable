@@ -7,6 +7,42 @@
     'use strict';
 
     /**
+     * Populate a select element with destination options (XSS-safe via textContent)
+     * @param {jQuery} $select - The select element
+     * @param {Array} destinations - Array of {id, name}
+     * @param {string} defaultLabel - Label for the empty option
+     */
+    function populateDestinationsSelect($select, destinations, defaultLabel) {
+        var label = defaultLabel || (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
+        var selectEl = $select[0];
+        $select.empty();
+        var defaultOpt = document.createElement('option');
+        defaultOpt.value = '';
+        defaultOpt.textContent = label;
+        selectEl.appendChild(defaultOpt);
+        if (destinations && destinations.length) {
+            destinations.forEach(function(dest) {
+                var opt = document.createElement('option');
+                opt.value = dest.id;
+                opt.textContent = (dest.name != null ? String(dest.name) : '');
+                selectEl.appendChild(opt);
+            });
+        }
+        $select.prop('disabled', false);
+    }
+
+    /**
+     * Set select to loading or error state (XSS-safe)
+     */
+    function setSelectState($select, state, label) {
+        var text = label || (state === 'loading' ? ((typeof mrtAdmin !== 'undefined' && mrtAdmin.loading) ? mrtAdmin.loading : 'Loading...') : ((typeof mrtAdmin !== 'undefined' && mrtAdmin.errorLoadingDestinations) ? mrtAdmin.errorLoadingDestinations : 'Error loading destinations'));
+        var opt = document.createElement('option');
+        opt.value = '';
+        opt.textContent = text;
+        $select.empty().append(opt).prop('disabled', state === 'loading');
+    }
+
+    /**
      * Initialize admin functionality when DOM is ready
      */
     $(function() {
@@ -47,7 +83,10 @@
                     $('#mrt-save-all-stoptimes').closest('p').hide();
                 }
                 if ($destinationSelect.length) {
-                    $destinationSelect.html('<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option>');
+                    var defOpt = document.createElement('option');
+                    defOpt.value = '';
+                    defOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
+                    $destinationSelect.empty().append(defOpt);
                 }
                 return;
             }
@@ -60,7 +99,7 @@
             
             // Update destination dropdown
             if ($destinationSelect.length) {
-                $destinationSelect.prop('disabled', true).html('<option value=""><?php echo esc_js(__('Loading...', 'museum-railway-timetable')); ?></option>');
+                setSelectState($destinationSelect, 'loading');
                 
                 $.ajax({
                     url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
@@ -72,17 +111,13 @@
                     },
                     success: function(response) {
                         if (response.success && response.data.destinations) {
-                            var options = '<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option>';
-                            response.data.destinations.forEach(function(dest) {
-                                options += '<option value="' + dest.id + '">' + dest.name + '</option>';
-                            });
-                            $destinationSelect.html(options).prop('disabled', false);
+                            populateDestinationsSelect($destinationSelect, response.data.destinations);
                         } else {
-                            $destinationSelect.html('<option value=""><?php echo esc_js(__('Error loading destinations', 'museum-railway-timetable')); ?></option>').prop('disabled', false);
+                            setSelectState($destinationSelect, 'error');
                         }
                     },
                     error: function() {
-                        $destinationSelect.html('<option value=""><?php echo esc_js(__('Error loading destinations', 'museum-railway-timetable')); ?></option>').prop('disabled', false);
+                        setSelectState($destinationSelect, 'error');
                     }
                 });
             }
@@ -329,7 +364,9 @@
             }).fail(function() {
                 var originalText = $btn.data('original-text') || 'Save Stop Times';
                 var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
-                var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + networkErrorMsg + '</p></div>');
+                var $errP = document.createElement('p');
+                $errP.textContent = networkErrorMsg;
+                var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
                 $btn.closest('.mrt-stoptimes-box').before($errorMsg);
                 $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');
             });
@@ -770,11 +807,20 @@
             var $destinationSelect = $('#mrt-new-service-end-station');
             
             if (!routeId) {
-                $destinationSelect.html('<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option><option value="" disabled><?php echo esc_js(__('Select a route first', 'museum-railway-timetable')); ?></option>');
+                $destinationSelect.empty();
+                var defOpt = document.createElement('option');
+                defOpt.value = '';
+                defOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
+                $destinationSelect.append(defOpt);
+                var disOpt = document.createElement('option');
+                disOpt.value = '';
+                disOpt.disabled = true;
+                disOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectRouteFirst) ? mrtAdmin.selectRouteFirst : 'Select a route first';
+                $destinationSelect.append(disOpt);
                 return;
             }
             
-            $destinationSelect.prop('disabled', true).html('<option value=""><?php echo esc_js(__('Loading...', 'museum-railway-timetable')); ?></option>');
+            setSelectState($destinationSelect, 'loading');
             
             $.ajax({
                 url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
@@ -786,17 +832,13 @@
                 },
                 success: function(response) {
                     if (response.success && response.data.destinations) {
-                        var options = '<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option>';
-                        response.data.destinations.forEach(function(dest) {
-                            options += '<option value="' + dest.id + '">' + dest.name + '</option>';
-                        });
-                        $destinationSelect.html(options).prop('disabled', false);
+                        populateDestinationsSelect($destinationSelect, response.data.destinations);
                     } else {
-                        $destinationSelect.html('<option value=""><?php echo esc_js(__('Error loading destinations', 'museum-railway-timetable')); ?></option>').prop('disabled', false);
+                        setSelectState($destinationSelect, 'error');
                     }
                 },
                 error: function() {
-                    $destinationSelect.html('<option value=""><?php echo esc_js(__('Error loading destinations', 'museum-railway-timetable')); ?></option>').prop('disabled', false);
+                    setSelectState($destinationSelect, 'error');
                 }
             });
         });
@@ -870,26 +912,38 @@
                         if (window.mrtDebug) {
                             console.log('MRT: Service created successfully:', response.data);
                         }
-                        // Add row to table
+                        // Add row to table (use textContent for user data to prevent XSS)
                         var $tbody = $('#mrt-timetable-services-tbody');
                         var $newRow = $tbody.find('.mrt-new-service-row');
                         var editUrlWithTimetable = response.data.edit_url + (response.data.edit_url.indexOf('?') > -1 ? '&' : '?') + 'timetable_id=' + timetableId;
-                        var $row = $('<tr data-service-id="' + response.data.service_id + '">' +
-                            '<td>' + response.data.route_name + '</td>' +
-                            '<td>' + response.data.train_type_name + '</td>' +
-                            '<td>' + (response.data.destination || response.data.direction || '—') + '</td>' +
-                            '<td>' +
-                            '<a href="' + editUrlWithTimetable + '" class="button button-small">Edit</a> ' +
-                            '<button type="button" class="button button-small mrt-delete-service-from-timetable" data-service-id="' + response.data.service_id + '">Remove</button>' +
-                            '</td>' +
-                            '</tr>');
+                        var $row = $('<tr></tr>').attr('data-service-id', response.data.service_id);
+                        var td1 = document.createElement('td');
+                        td1.textContent = response.data.route_name || '';
+                        var td2 = document.createElement('td');
+                        td2.textContent = response.data.train_type_name || '';
+                        var td3 = document.createElement('td');
+                        td3.textContent = response.data.destination || response.data.direction || '—';
+                        var td4 = document.createElement('td');
+                        var editLink = document.createElement('a');
+                        editLink.href = editUrlWithTimetable;
+                        editLink.className = 'button button-small';
+                        editLink.textContent = 'Edit';
+                        var removeBtn = document.createElement('button');
+                        removeBtn.type = 'button';
+                        removeBtn.className = 'button button-small mrt-delete-service-from-timetable';
+                        removeBtn.setAttribute('data-service-id', response.data.service_id);
+                        removeBtn.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.remove) ? mrtAdmin.remove : 'Remove';
+                        td4.appendChild(editLink);
+                        td4.appendChild(document.createTextNode(' '));
+                        td4.appendChild(removeBtn);
+                        $row.append(td1).append(td2).append(td3).append(td4);
                         $newRow.before($row);
                         if (window.mrtDebug) {
                             console.log('MRT: Row added to table');
                         }
                         
                         // Show success message
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>Trip added successfully.</p></div>');
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible"><p>Trip added successfully.</p></div>');
                         $('#mrt-timetable-services-box').before($successMsg);
                         setTimeout(function() {
                             $successMsg.fadeOut(300, function() { $(this).remove(); });
@@ -898,7 +952,17 @@
                         // Clear form
                         $('#mrt-new-service-route').val('');
                         $('#mrt-new-service-train-type').val('');
-                        $('#mrt-new-service-end-station').html('<option value=""><?php echo esc_js(__('— Select Destination —', 'museum-railway-timetable')); ?></option><option value="" disabled><?php echo esc_js(__('Select a route first', 'museum-railway-timetable')); ?></option>');
+                        var $destSel = $('#mrt-new-service-end-station');
+                        $destSel.empty();
+                        var defOpt = document.createElement('option');
+                        defOpt.value = '';
+                        defOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectDestination) ? mrtAdmin.selectDestination : '— Select Destination —';
+                        $destSel.append(defOpt);
+                        var disOpt = document.createElement('option');
+                        disOpt.value = '';
+                        disOpt.disabled = true;
+                        disOpt.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.selectRouteFirst) ? mrtAdmin.selectRouteFirst : 'Select a route first';
+                        $destSel.append(disOpt);
                         if (window.mrtDebug) {
                             console.log('MRT: Form cleared');
                         }
@@ -906,8 +970,10 @@
                         if (window.mrtDebug) {
                             console.error('MRT: Server returned error:', response.data);
                         }
-                        var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + 
-                            (response.data.message || 'Error adding trip.') + '</p></div>');
+                        var errMsg = (response.data && response.data.message) ? String(response.data.message) : 'Error adding trip.';
+                        var $errP = document.createElement('p');
+                        $errP.textContent = errMsg;
+                        var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
                         $('#mrt-timetable-services-box').before($errorMsg);
                         $btn.prop('disabled', false).text($btn.data('original-text') || 'Add Trip');
                     }
@@ -922,7 +988,9 @@
                         });
                     }
                     var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
-                var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + networkErrorMsg + '</p></div>');
+                    var $errP = document.createElement('p');
+                    $errP.textContent = networkErrorMsg;
+                    var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
                     $('#mrt-timetable-services-box').before($errorMsg);
                 },
                 complete: function() {
@@ -963,14 +1031,16 @@
                             $(this).remove();
                         });
                         // Show success message
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>Trip removed successfully.</p></div>');
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible"><p>Trip removed successfully.</p></div>');
                         $('#mrt-timetable-services-box').before($successMsg);
                         setTimeout(function() {
                             $successMsg.fadeOut(300, function() { $(this).remove(); });
                         }, 3000);
                     } else {
-                        var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' + 
-                            (response.data.message || 'Error removing trip.') + '</p></div>');
+                        var errMsg = (response.data && response.data.message) ? String(response.data.message) : 'Error removing trip.';
+                        var $errP = document.createElement('p');
+                        $errP.textContent = errMsg;
+                        var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
                         $('#mrt-timetable-services-box').before($errorMsg);
                         $btn.prop('disabled', false);
                     }
