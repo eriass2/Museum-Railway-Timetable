@@ -12,15 +12,6 @@
     gap: var(--mrt-spacing-xl);
 }
 
-.mrt-timetable-type-header {
-    font-size: var(--mrt-font-lg);
-    font-weight: 700;
-    color: var(--mrt-text-primary);
-    margin-bottom: var(--mrt-spacing-sm);
-    padding: var(--mrt-spacing-sm) 0;
-    border-bottom: 2px solid var(--mrt-border-default);
-}
-
 .mrt-timetable-overview-preview {
     max-height: 600px;
     overflow-y: auto;

@@ -1,0 +1,11 @@
+/**
+ * Component Library – återanvändbara komponenter
+ * Bygger på admin-base.css (tokens, utilities)
+ * Importerar: form, ui, width
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+@import url('admin-components-form.css');
+@import url('admin-components-ui.css');
+@import url('admin-components-width.css');

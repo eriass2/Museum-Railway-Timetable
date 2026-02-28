@@ -1,0 +1,29 @@
+/**
+ * Timetable Table Component
+ * Importeras av admin-timetable.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.mrt-table th,
+.mrt-table td {
+    border: 1px solid var(--mrt-border-default);
+    padding: var(--mrt-cell-padding);
+    text-align: left;
+}
+
+.mrt-table th {
+    background: var(--mrt-bg-lighter);
+    font-weight: 600;
+}
+
+.mrt-table th,
+.mrt-stoptimes-table th {
+    background: linear-gradient(to bottom, var(--mrt-bg-lighter) 0%, var(--mrt-bg-light) 100%);
+    font-weight: 700;
+}

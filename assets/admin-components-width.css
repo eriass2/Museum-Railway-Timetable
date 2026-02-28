@@ -1,0 +1,26 @@
+/**
+ * Width utilities och form responsive
+ * Importeras av admin-components.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-w-40 { width: 40px; min-width: 40px; }
+.mrt-w-60 { width: 60px; min-width: 60px; }
+.mrt-w-80 { width: 80px; min-width: 80px; }
+.mrt-w-100 { width: 100px; min-width: 100px; }
+.mrt-w-150 { width: 150px; min-width: 150px; }
+.mrt-w-200 { width: 200px; min-width: 200px; }
+
+@media (max-width: 768px) {
+    .mrt-form-fields {
+        flex-direction: column;
+    }
+    .mrt-form-field {
+        width: 100%;
+    }
+    .mrt-btn--primary,
+    .mrt-btn--block {
+        width: 100%;
+    }
+}

@@ -1,0 +1,11 @@
+/**
+ * Dashboard Misc – form elements, code, validation
+ * Importeras av admin-dashboard.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-time-error {
+    border-color: var(--mrt-text-error) !important;
+    box-shadow: var(--mrt-shadow-focus-error) !important;
+}

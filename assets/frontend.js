@@ -15,7 +15,7 @@
 
         var $form = $planner.find('.mrt-journey-form');
         var $results = $planner.find('.mrt-journey-results');
-        var $searchBtn = $form.find('.mrt-journey-search');
+        var $searchBtn = $form.find('button[type="submit"]');
         
         // Prevent default form submission
         $form.on('submit', function(e) {
@@ -40,7 +40,7 @@
 
             // Show loading state
             $searchBtn.prop('disabled', true).text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.searching : 'Searching...');
-            $results.html('<div class="mrt-loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>');
+            $results.html('<div class="mrt-empty mrt-empty--loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>');
 
             // AJAX request
             $.ajax({
@@ -108,7 +108,7 @@
             $day.addClass('mrt-day-active');
 
             // Show loading
-            $container.html('<div class="mrt-loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>').slideDown(300);
+            $container.html('<div class="mrt-empty mrt-empty--loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>').slideDown(300);
 
             // AJAX request
             $.ajax({

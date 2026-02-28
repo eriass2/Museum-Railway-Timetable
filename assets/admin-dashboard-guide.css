@@ -1,0 +1,10 @@
+/**
+ * Dashboard Guide & Info Box
+ * Importeras av admin-dashboard.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-bg-info h2 {
+    margin-top: 0;
+}

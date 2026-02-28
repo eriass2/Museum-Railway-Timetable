@@ -18,11 +18,11 @@ require_once MRT_PATH . 'inc/admin-meta-boxes/timetable-dates-script.php';
 function MRT_render_timetable_date_sections($post, $dates) {
     $timetable_type = get_post_meta($post->ID, 'mrt_timetable_type', true);
     ?>
-    <table class="form-table mrt-form-table-mb">
+    <table class="form-table mrt-mb-lg">
         <tr>
             <th><label for="mrt_timetable_type"><?php esc_html_e('Timetable type', 'museum-railway-timetable'); ?></label></th>
             <td>
-                <select name="mrt_timetable_type" id="mrt_timetable_type" class="mrt-meta-field">
+                <select name="mrt_timetable_type" id="mrt_timetable_type" class="mrt-input mrt-input--meta">
                     <option value=""><?php esc_html_e('— None —', 'museum-railway-timetable'); ?></option>
                     <option value="green" <?php selected($timetable_type, 'green'); ?>><?php esc_html_e('Grön (Green)', 'museum-railway-timetable'); ?></option>
                     <option value="red" <?php selected($timetable_type, 'red'); ?>><?php esc_html_e('Röd (Red)', 'museum-railway-timetable'); ?></option>
@@ -34,13 +34,13 @@ function MRT_render_timetable_date_sections($post, $dates) {
         </tr>
     </table>
     <div class="mrt-box mrt-date-pattern-section">
-        <h3 class="mrt-section-heading"><?php esc_html_e('Add Dates from Pattern', 'museum-railway-timetable'); ?></h3>
+        <h3 class="mrt-section-heading mrt-mt-0"><?php esc_html_e('Add Dates from Pattern', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Select a day of the week and a date range to automatically add all matching dates.', 'museum-railway-timetable'); ?></p>
-        <table class="form-table mrt-form-table-mt">
+        <table class="form-table mrt-mt-sm">
             <tr>
-                <th class="mrt-th-label-150"><label for="mrt-pattern-weekday"><?php esc_html_e('Day of Week', 'museum-railway-timetable'); ?></label></th>
+                <th class="mrt-w-150"><label for="mrt-pattern-weekday"><?php esc_html_e('Day of Week', 'museum-railway-timetable'); ?></label></th>
                 <td>
-                    <select id="mrt-pattern-weekday" class="mrt-meta-field">
+                    <select id="mrt-pattern-weekday" class="mrt-input mrt-input--meta">
                         <option value=""><?php esc_html_e('— Select Day —', 'museum-railway-timetable'); ?></option>
                         <option value="1"><?php esc_html_e('Monday', 'museum-railway-timetable'); ?></option>
                         <option value="2"><?php esc_html_e('Tuesday', 'museum-railway-timetable'); ?></option>
@@ -54,33 +54,33 @@ function MRT_render_timetable_date_sections($post, $dates) {
             </tr>
             <tr>
                 <th><label for="mrt-pattern-start-date"><?php esc_html_e('From Date', 'museum-railway-timetable'); ?></label></th>
-                <td><input type="date" id="mrt-pattern-start-date" class="mrt-meta-field" /></td>
+                <td><input type="date" id="mrt-pattern-start-date" class="mrt-input mrt-input--meta" /></td>
             </tr>
             <tr>
                 <th><label for="mrt-pattern-end-date"><?php esc_html_e('To Date', 'museum-railway-timetable'); ?></label></th>
-                <td><input type="date" id="mrt-pattern-end-date" class="mrt-meta-field" /></td>
+                <td><input type="date" id="mrt-pattern-end-date" class="mrt-input mrt-input--meta" /></td>
             </tr>
         </table>
         <button type="button" id="mrt-add-pattern-dates" class="button button-primary"><?php esc_html_e('Add Dates from Pattern', 'museum-railway-timetable'); ?></button>
     </div>
     <div class="mrt-box mrt-date-single-section">
-        <h3 class="mrt-section-heading"><?php esc_html_e('Add Single Date', 'museum-railway-timetable'); ?></h3>
+        <h3 class="mrt-section-heading mrt-mt-0"><?php esc_html_e('Add Single Date', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Add a specific date manually.', 'museum-railway-timetable'); ?></p>
         <p>
-            <input type="date" id="mrt-single-date" class="mrt-meta-field mrt-single-date-input" />
+            <input type="date" id="mrt-single-date" class="mrt-input mrt-input--meta mrt-mr-sm" />
             <button type="button" id="mrt-add-single-date" class="button"><?php esc_html_e('Add Date', 'museum-railway-timetable'); ?></button>
         </p>
     </div>
-    <div class="mrt-box mrt-selected-dates-section">
-        <h3 class="mrt-section-heading"><?php esc_html_e('Selected Dates', 'museum-railway-timetable'); ?></h3>
+    <div class="mrt-box mrt-mt-lg">
+        <h3 class="mrt-section-heading mrt-mt-0"><?php esc_html_e('Selected Dates', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('All dates when this timetable applies. Click "Remove" to remove individual dates.', 'museum-railway-timetable'); ?></p>
-        <div id="mrt-timetable-dates-container" class="mrt-dates-container">
+        <div id="mrt-timetable-dates-container" class="mrt-mt-sm">
             <?php foreach ($dates as $date): ?>
-                <div class="mrt-box mrt-box-sm mrt-date-row" data-date="<?php echo esc_attr($date); ?>">
+                <div class="mrt-box mrt-box-sm mrt-form-row mrt-date-row" data-date="<?php echo esc_attr($date); ?>">
                     <input type="hidden" name="mrt_timetable_dates[]" value="<?php echo esc_attr($date); ?>" />
-                    <span class="mrt-date-display"><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($date))); ?></span>
-                    <span class="mrt-date-iso">(<?php echo esc_html($date); ?>)</span>
-                    <button type="button" class="button button-small mrt-remove-date mrt-date-remove-button mrt-date-remove-btn"><?php esc_html_e('Remove', 'museum-railway-timetable'); ?></button>
+                    <span class="mrt-font-medium mrt-flex-1"><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($date))); ?></span>
+                    <span class="mrt-text-tertiary mrt-ml-sm">(<?php echo esc_html($date); ?>)</span>
+                    <button type="button" class="button button-small mrt-remove-date mrt-date-remove-button mrt-ml-1"><?php esc_html_e('Remove', 'museum-railway-timetable'); ?></button>
                 </div>
             <?php endforeach; ?>
         </div>

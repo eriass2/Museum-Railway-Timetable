@@ -1,0 +1,79 @@
+/**
+ * Utilities – spacing, display, text
+ * Importeras av admin-base.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+/* Spacing – margin (xs/sm/md=1/lg) */
+.mrt-mt-0 { margin-top: 0; }
+.mrt-mt-xs { margin-top: var(--mrt-spacing-xs); }
+.mrt-mt-sm { margin-top: var(--mrt-spacing-sm); }
+.mrt-mt-1 { margin-top: var(--mrt-spacing-md); }
+.mrt-mt-lg { margin-top: var(--mrt-spacing-lg); }
+.mrt-mt-xl { margin-top: var(--mrt-spacing-xl); }
+.mrt-mb-xs { margin-bottom: var(--mrt-spacing-xs); }
+.mrt-mb-sm { margin-bottom: var(--mrt-spacing-sm); }
+.mrt-mb-1 { margin-bottom: var(--mrt-spacing-md); }
+.mrt-mb-lg { margin-bottom: var(--mrt-spacing-lg); }
+.mrt-ml-sm { margin-left: var(--mrt-spacing-sm); }
+.mrt-ml-1 { margin-left: var(--mrt-spacing-md); }
+.mrt-ml-lg { margin-left: var(--mrt-spacing-lg); }
+.mrt-mr-sm { margin-right: var(--mrt-spacing-sm); }
+.mrt-mr-md { margin-right: var(--mrt-spacing-md); }
+.mrt-my-sm { margin-top: var(--mrt-spacing-sm); margin-bottom: var(--mrt-spacing-sm); }
+.mrt-my-1 { margin-top: var(--mrt-spacing-md); margin-bottom: var(--mrt-spacing-md); }
+.mrt-my-lg { margin-top: var(--mrt-spacing-lg); margin-bottom: var(--mrt-spacing-lg); }
+.mrt-grid-auto-250 { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+
+/* Display */
+.mrt-hidden { display: none; }
+.mrt-block { display: block; }
+.mrt-w-full { width: 100%; }
+.mrt-relative { position: relative; }
+.mrt-overflow-x-auto { overflow-x: auto; }
+.mrt-border-none { border: none; }
+.mrt-border-b-2 { border-bottom: 2px solid var(--mrt-border-default); }
+.mrt-py-sm { padding-top: var(--mrt-spacing-sm); padding-bottom: var(--mrt-spacing-sm); }
+.mrt-bg-info { background: var(--mrt-info-bg); }
+
+.mrt-spinner-inline { float: none; margin: 0; }
+
+/* Text */
+.mrt-text-primary { color: var(--mrt-text-primary); }
+.mrt-text-tertiary { color: var(--mrt-text-tertiary); }
+.mrt-text-quaternary { color: var(--mrt-text-quaternary); }
+.mrt-text-muted { color: var(--mrt-wp-gray); }
+.mrt-text-base { font-size: var(--mrt-font-base); }
+.mrt-text-error { color: var(--mrt-text-error); }
+.mrt-text-success { color: var(--mrt-success); }
+.mrt-text-small { font-size: var(--mrt-font-sm); }
+.mrt-text-xs { font-size: var(--mrt-font-xs); }
+.mrt-text-2xl { font-size: 2rem; }
+.mrt-text-link { color: var(--mrt-wp-blue); }
+.mrt-text-muted a { text-decoration: none; color: inherit; }
+.mrt-font-semibold { font-weight: 600; }
+.mrt-opacity-50 { opacity: var(--mrt-opacity-50); }
+.mrt-opacity-70 { opacity: var(--mrt-opacity-70); }
+.mrt-opacity-85 { opacity: var(--mrt-opacity-85); }
+.mrt-text-center { text-align: center; }
+.mrt-p-xl { padding: var(--mrt-spacing-xl); }
+.mrt-cursor-wait { cursor: wait !important; }
+.mrt-cursor-pointer { cursor: pointer; }
+.mrt-flex-1 { flex: 1; }
+.mrt-inline-flex { display: inline-flex; }
+.mrt-items-center { align-items: center; }
+.mrt-gap-xs { gap: var(--mrt-spacing-xs); }
+.mrt-font-mono { font-family: monospace; }
+.mrt-font-medium { font-weight: 500; }
+.mrt-font-bold { font-weight: 700; }
+.mrt-font-italic { font-style: italic; }
+
+/* List indentation */
+.mrt-list-indent { margin: var(--mrt-spacing-sm) 0 0 var(--mrt-spacing-lg); line-height: 1.6; }
+.mrt-leading-relaxed { line-height: 1.8; }
+
+/* Admin Page Headers */
+.wrap h1 {
+    color: var(--mrt-text-primary);
+}

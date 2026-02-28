@@ -63,8 +63,8 @@ function MRT_render_shortcode_month($atts) {
     }
 
     ob_start();
-    echo '<div class="mrt-month" data-train-type="' . esc_attr($atts['train_type']) . '">';
-    echo '<div class="mrt-month-header">' . esc_html(date_i18n('F Y', $first_ts)) . '</div>';
+    echo '<div class="mrt-month mrt-my-1" data-train-type="' . esc_attr($atts['train_type']) . '">';
+    echo '<div class="mrt-heading mrt-heading--lg mrt-font-semibold">' . esc_html(date_i18n('F Y', $first_ts)) . '</div>';
     echo '<table class="mrt-month-table"><thead><tr>';
     $headers = $startMonday
         ? [__('Mon'), __('Tue'), __('Wed'), __('Thu'), __('Fri'), __('Sat'), __('Sun')]
@@ -82,7 +82,7 @@ function MRT_render_shortcode_month($atts) {
         $classes = ['mrt-day'];
         if ($info['running']) {
             $classes[] = 'mrt-running';
-            $classes[] = 'mrt-day-clickable';
+            $classes[] = 'mrt-day-clickable mrt-cursor-pointer';
         }
         $title = $info['running']
             ? sprintf(esc_attr__('Click to view timetable for %s', 'museum-railway-timetable'), esc_attr(date_i18n(get_option('date_format'), strtotime($info['ymd']))))
@@ -104,15 +104,15 @@ function MRT_render_shortcode_month($atts) {
     echo '</tr></tbody></table>';
 
     if (!empty($atts['legend'])) {
-        echo '<div class="mrt-legend">';
-        echo '<span class="mrt-legend-item"><span class="mrt-legend-dot"></span> ' . esc_html__('Service day', 'museum-railway-timetable') . '</span>';
+        echo '<div class="mrt-legend mrt-text-base mrt-text-primary mrt-mt-sm">';
+        echo '<span class="mrt-legend-item mrt-inline-flex mrt-items-center mrt-gap-xs mrt-mr-sm"><span class="mrt-dot mrt-dot--green"></span> ' . esc_html__('Service day', 'museum-railway-timetable') . '</span>';
         if (!empty($atts['show_counts'])) {
-            echo ' <span class="mrt-legend-item-count">(' . esc_html__('count per day', 'museum-railway-timetable') . ')</span>';
+            echo ' <span class="mrt-text-small mrt-opacity-85">(' . esc_html__('count per day', 'museum-railway-timetable') . ')</span>';
         }
-        echo ' <span class="mrt-legend-item-click">(' . esc_html__('Click to view timetable', 'museum-railway-timetable') . ')</span>';
+        echo ' <span class="mrt-text-tertiary mrt-text-small">(' . esc_html__('Click to view timetable', 'museum-railway-timetable') . ')</span>';
         echo '</div>';
     }
-    echo '<div class="mrt-box mrt-day-timetable-container mrt-day-timetable-hidden"></div>';
+    echo '<div class="mrt-box mrt-day-timetable-container mrt-mt-xl mrt-hidden"></div>';
     echo '</div>';
     return ob_get_clean();
 }

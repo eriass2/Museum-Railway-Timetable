@@ -128,7 +128,7 @@
                         $row.append(td1).append(td2).append(td3).append(td4);
                         $newRow.before($row);
 
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible"><p>Trip added successfully.</p></div>');
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>Trip added successfully.</p></div>');
                         $('#mrt-timetable-services-box').before($successMsg);
                         setTimeout(function() {
                             $successMsg.fadeOut(300, function() { $(this).remove(); });
@@ -195,7 +195,7 @@
                         $row.fadeOut(function() {
                             $(this).remove();
                         });
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible"><p>Trip removed successfully.</p></div>');
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>Trip removed successfully.</p></div>');
                         $('#mrt-timetable-services-box').before($successMsg);
                         setTimeout(function() {
                             $successMsg.fadeOut(300, function() { $(this).remove(); });

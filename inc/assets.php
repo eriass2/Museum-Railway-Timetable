@@ -34,7 +34,8 @@ function MRT_should_load_admin_assets($hook) {
 function MRT_enqueue_admin_css() {
     $base = MRT_URL . 'assets/';
     wp_enqueue_style('mrt-admin-base', $base . 'admin-base.css', [], MRT_VERSION);
-    wp_enqueue_style('mrt-admin-timetable', $base . 'admin-timetable.css', ['mrt-admin-base'], MRT_VERSION);
+    wp_enqueue_style('mrt-admin-components', $base . 'admin-components.css', ['mrt-admin-base'], MRT_VERSION);
+    wp_enqueue_style('mrt-admin-timetable', $base . 'admin-timetable.css', ['mrt-admin-components'], MRT_VERSION);
     wp_enqueue_style('mrt-admin-timetable-overview', $base . 'admin-timetable-overview.css', ['mrt-admin-timetable'], MRT_VERSION);
     wp_enqueue_style('mrt-admin-meta-boxes', $base . 'admin-meta-boxes.css', ['mrt-admin-timetable-overview'], MRT_VERSION);
     wp_enqueue_style('mrt-admin-dashboard', $base . 'admin-dashboard.css', ['mrt-admin-meta-boxes'], MRT_VERSION);
@@ -145,9 +146,15 @@ function MRT_enqueue_frontend_assets() {
         MRT_VERSION
     );
     wp_enqueue_style(
+        'mrt-frontend-components',
+        MRT_URL . 'assets/admin-components.css',
+        ['mrt-frontend-base'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
         'mrt-frontend-timetable',
         MRT_URL . 'assets/admin-timetable.css',
-        ['mrt-frontend-base'],
+        ['mrt-frontend-components'],
         MRT_VERSION
     );
     wp_enqueue_style(

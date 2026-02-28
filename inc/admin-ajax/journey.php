@@ -45,7 +45,7 @@ function MRT_ajax_search_journey() {
     
     ob_start();
     ?>
-    <h3 class="mrt-journey-results-title">
+    <h3 class="mrt-heading mrt-heading--xl mrt-mb-1">
         <?php 
         printf(
             esc_html__('Connections from %s to %s on %s', 'museum-railway-timetable'),
@@ -57,13 +57,13 @@ function MRT_ajax_search_journey() {
     </h3>
     
     <?php if (empty($connections)): ?>
-        <div class="mrt-alert mrt-alert-info mrt-none">
+        <div class="mrt-alert mrt-alert-info mrt-empty">
             <p><strong><?php esc_html_e('No connections found.', 'museum-railway-timetable'); ?></strong></p>
             <p><?php esc_html_e('There are no direct connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
         </div>
     <?php else: ?>
-        <div class="mrt-journey-table-container">
-            <table class="mrt-table mrt-journey-table">
+        <div class="mrt-journey-table-container mrt-overflow-x-auto">
+            <table class="mrt-table mrt-journey-table mrt-mt-sm">
                 <thead>
                     <tr>
                         <th><?php esc_html_e('Service', 'museum-railway-timetable'); ?></th>
@@ -79,7 +79,7 @@ function MRT_ajax_search_journey() {
                             <td>
                                 <strong><?php echo esc_html($conn['service_name']); ?></strong>
                                 <?php if (!empty($conn['route_name'])): ?>
-                                    <br><small class="mrt-route-name"><?php echo esc_html($conn['route_name']); ?></small>
+                                    <br><small class="mrt-text-tertiary mrt-font-italic"><?php echo esc_html($conn['route_name']); ?></small>
                                 <?php endif; ?>
                             </td>
                             <td><?php echo esc_html($conn['train_type']); ?></td>

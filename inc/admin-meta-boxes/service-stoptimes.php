@@ -25,25 +25,25 @@ function MRT_render_stoptime_row($station, $st, $index, $post_id) {
         <td><?php echo esc_html($index + 1); ?></td>
         <td><strong><?php echo esc_html($station->post_title); ?></strong></td>
         <td>
-            <input type="checkbox" class="mrt-stops-here" <?php checked($stops_here); ?> data-station-id="<?php echo esc_attr($station->ID); ?>" />
+            <input type="checkbox" class="mrt-stops-here mrt-cursor-pointer" <?php checked($stops_here); ?> data-station-id="<?php echo esc_attr($station->ID); ?>" />
         </td>
-        <td class="mrt-time-field <?php echo $stops_here ? '' : 'mrt-field-disabled-opacity'; ?>">
-            <input type="text" class="mrt-arrival-time mrt-time-input" value="<?php echo $st ? esc_attr($st['arrival_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" <?php echo $stops_here ? '' : 'disabled'; ?> />
-            <p class="description mrt-description-small"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
+        <td class="mrt-time-field mrt-relative <?php echo $stops_here ? '' : 'mrt-opacity-50'; ?>">
+            <input type="text" class="mrt-arrival-time mrt-input mrt-input--sm mrt-font-mono" value="<?php echo $st ? esc_attr($st['arrival_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" <?php echo $stops_here ? '' : 'disabled'; ?> />
+            <p class="description mrt-text-xs mrt-text-tertiary"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
         </td>
-        <td class="mrt-time-field <?php echo $stops_here ? '' : 'mrt-field-disabled-opacity'; ?>">
-            <input type="text" class="mrt-departure-time mrt-time-input" value="<?php echo $st ? esc_attr($st['departure_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" <?php echo $stops_here ? '' : 'disabled'; ?> />
-            <p class="description mrt-description-small"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
+        <td class="mrt-time-field mrt-relative <?php echo $stops_here ? '' : 'mrt-opacity-50'; ?>">
+            <input type="text" class="mrt-departure-time mrt-input mrt-input--sm mrt-font-mono" value="<?php echo $st ? esc_attr($st['departure_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" <?php echo $stops_here ? '' : 'disabled'; ?> />
+            <p class="description mrt-text-xs mrt-text-tertiary"><?php esc_html_e('Leave empty if train stops but time is not fixed', 'museum-railway-timetable'); ?></p>
         </td>
-        <td class="mrt-option-field <?php echo $stops_here ? '' : 'mrt-field-disabled-opacity'; ?>">
+        <td class="mrt-option-field mrt-text-center <?php echo $stops_here ? '' : 'mrt-opacity-50'; ?>">
             <label>
-                <input type="checkbox" class="mrt-pickup" <?php checked($st ? $st['pickup_allowed'] : true, 1); ?> <?php echo $stops_here ? '' : 'disabled'; ?> />
+                <input type="checkbox" class="mrt-pickup mrt-cursor-pointer" <?php checked($st ? $st['pickup_allowed'] : true, 1); ?> <?php echo $stops_here ? '' : 'disabled'; ?> />
                 <?php esc_html_e('Pickup', 'museum-railway-timetable'); ?>
             </label>
         </td>
-        <td class="mrt-option-field <?php echo $stops_here ? '' : 'mrt-field-disabled-opacity'; ?>">
+        <td class="mrt-option-field mrt-text-center <?php echo $stops_here ? '' : 'mrt-opacity-50'; ?>">
             <label>
-                <input type="checkbox" class="mrt-dropoff" <?php checked($st ? $st['dropoff_allowed'] : true, 1); ?> <?php echo $stops_here ? '' : 'disabled'; ?> />
+                <input type="checkbox" class="mrt-dropoff mrt-cursor-pointer" <?php checked($st ? $st['dropoff_allowed'] : true, 1); ?> <?php echo $stops_here ? '' : 'disabled'; ?> />
                 <?php esc_html_e('Dropoff', 'museum-railway-timetable'); ?>
             </label>
         </td>
@@ -79,17 +79,17 @@ function MRT_render_stoptimes_instructions() {
  */
 function MRT_render_stoptimes_table($stations, $stoptimes_by_station, $post_id) {
     ?>
-    <div class="mrt-box mrt-stoptimes-box">
-        <table class="widefat striped mrt-stoptimes-table">
+    <div class="mrt-box mrt-stoptimes-box mrt-my-1">
+        <table class="widefat striped mrt-stoptimes-table mrt-mt-1">
                 <thead>
                     <tr>
-                        <th class="mrt-col-order"><?php esc_html_e('Order', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-w-40"><?php esc_html_e('Order', 'museum-railway-timetable'); ?></th>
                         <th><?php esc_html_e('Station', 'museum-railway-timetable'); ?></th>
-                        <th class="mrt-col-stops-here"><?php esc_html_e('Stops here', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-w-100"><?php esc_html_e('Stops here', 'museum-railway-timetable'); ?></th>
                         <th class="mrt-col-time"><?php esc_html_e('Arrival', 'museum-railway-timetable'); ?></th>
                         <th class="mrt-col-time"><?php esc_html_e('Departure', 'museum-railway-timetable'); ?></th>
-                        <th class="mrt-col-pickup-dropoff"><?php esc_html_e('Pickup', 'museum-railway-timetable'); ?></th>
-                        <th class="mrt-col-pickup-dropoff"><?php esc_html_e('Dropoff', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-w-80"><?php esc_html_e('Pickup', 'museum-railway-timetable'); ?></th>
+                        <th class="mrt-w-80"><?php esc_html_e('Dropoff', 'museum-railway-timetable'); ?></th>
                     </tr>
                 </thead>
                 <tbody id="mrt-stoptimes-tbody">
@@ -100,7 +100,7 @@ function MRT_render_stoptimes_table($stations, $stoptimes_by_station, $post_id) 
                         endforeach; ?>
                     <?php else: ?>
                         <tr>
-                            <td colspan="7" class="mrt-none">
+                            <td colspan="7" class="mrt-empty">
                                 <?php esc_html_e('No route selected. Select a route in Service Details above to configure stop times.', 'museum-railway-timetable'); ?>
                             </td>
                         </tr>
@@ -151,7 +151,7 @@ function MRT_render_service_stoptimes_box($post) {
             <?php MRT_render_stoptimes_instructions(); ?>
             <?php MRT_render_stoptimes_table($stations, $stoptimes_by_station, $post->ID); ?>
         <?php else: ?>
-            <p class="mrt-alert mrt-alert-warning mrt-description-error">
+            <p class="mrt-alert mrt-alert-warning mrt-text-error mrt-font-semibold">
                 <?php esc_html_e('Please select a Route in Service Details above first. Then you can configure which stations this service stops at.', 'museum-railway-timetable'); ?>
             </p>
         <?php endif; ?>

@@ -1,0 +1,10 @@
+/**
+ * Meta Boxes – fields, stoptimes structure
+ * Importeras av admin-meta-boxes.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-stoptimes-table td {
+    vertical-align: middle;
+}

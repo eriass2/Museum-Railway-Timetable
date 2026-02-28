@@ -1,0 +1,95 @@
+/**
+ * Form Components – label, input, form-row, form-fields
+ * Importeras av admin-components.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-form-group {
+    margin-bottom: var(--mrt-spacing-md);
+}
+
+.mrt-form-label {
+    display: block;
+    margin-bottom: var(--mrt-spacing-sm);
+    font-weight: 600;
+    color: var(--mrt-text-secondary);
+}
+
+.mrt-form-label--inline {
+    display: inline-block;
+    min-width: 150px;
+    margin-bottom: 0;
+}
+
+.mrt-form-label__hint {
+    color: var(--mrt-text-tertiary);
+    font-weight: normal;
+    font-size: var(--mrt-font-base);
+}
+
+.mrt-input {
+    width: 100%;
+    padding: var(--mrt-spacing-sm);
+    border: 1px solid var(--mrt-border-default);
+    border-radius: var(--mrt-radius-sm);
+    font-size: 1em;
+}
+
+.mrt-input:focus {
+    outline: none;
+    border-color: var(--mrt-wp-blue);
+    box-shadow: var(--mrt-shadow-focus-wp);
+}
+
+.mrt-input--sm {
+    width: 100px;
+    max-width: 100px;
+}
+
+.mrt-input--meta {
+    max-width: 300px;
+}
+
+.mrt-form-row {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--mrt-spacing-sm);
+}
+
+.mrt-form-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--mrt-spacing-md);
+    align-items: flex-end;
+}
+
+.mrt-form-field {
+    flex: 1;
+    min-width: 150px;
+}
+
+.mrt-form-field label {
+    display: block;
+    margin-bottom: var(--mrt-spacing-sm);
+    font-weight: 600;
+    color: var(--mrt-text-secondary);
+}
+
+.mrt-form-field select,
+.mrt-form-field input[type="date"],
+.mrt-form-field input[type="text"] {
+    width: 100%;
+    padding: var(--mrt-spacing-sm);
+    border: 1px solid var(--mrt-border-default);
+    border-radius: var(--mrt-radius-sm);
+    font-size: 1em;
+}
+
+.mrt-form-field select:focus,
+.mrt-form-field input:focus {
+    outline: none;
+    border-color: var(--mrt-wp-blue);
+    box-shadow: var(--mrt-shadow-focus-wp);
+}

@@ -1,0 +1,154 @@
+/**
+ * UI Components – button, badge, heading, empty, card variants
+ * Importeras av admin-components.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-btn--primary {
+    background: var(--mrt-wp-blue);
+    color: var(--mrt-text-white);
+    border: none;
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-lg);
+    border-radius: var(--mrt-radius-sm);
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.mrt-btn--primary:hover {
+    background: var(--mrt-wp-blue-dark);
+}
+
+.mrt-btn--primary:active {
+    background: var(--mrt-wp-blue-darker);
+}
+
+.mrt-btn--danger {
+    background: var(--mrt-danger-bg);
+    color: var(--mrt-text-white);
+    border-color: var(--mrt-danger-border);
+}
+
+.mrt-btn--block {
+    width: 100%;
+    text-align: center;
+}
+
+.mrt-btn--action {
+    text-align: left;
+    height: auto;
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
+}
+
+.mrt-btn--action strong {
+    display: block;
+}
+
+.mrt-btn--action span {
+    font-size: var(--mrt-font-base);
+    opacity: var(--mrt-opacity-85);
+    display: block;
+    margin-top: var(--mrt-spacing-xs);
+}
+
+.mrt-badge {
+    display: inline-block;
+    padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
+    background: var(--mrt-overlay-white-80);
+    border-radius: var(--mrt-radius-sm);
+    font-weight: 700;
+    font-size: var(--mrt-font-md);
+    color: var(--mrt-text-primary);
+    min-width: 32px;
+    text-align: center;
+}
+
+.mrt-badge--muted {
+    background: var(--mrt-special-bg-subtle);
+    color: var(--mrt-text-tertiary);
+    font-style: italic;
+    font-weight: 500;
+}
+
+.mrt-heading {
+    margin: 0;
+}
+
+.mrt-heading--lg {
+    font-size: var(--mrt-font-lg);
+}
+
+.mrt-heading--xl {
+    font-size: var(--mrt-font-xl);
+    color: var(--mrt-text-secondary);
+}
+
+.mrt-empty {
+    padding: var(--mrt-spacing-sm);
+    color: var(--mrt-text-tertiary);
+    font-style: italic;
+}
+
+.mrt-empty--loading {
+    text-align: center;
+    padding: var(--mrt-spacing-xl);
+    color: var(--mrt-text-secondary);
+}
+
+.mrt-empty--loading::before {
+    content: "⏳ ";
+    margin-right: var(--mrt-spacing-sm);
+}
+
+.mrt-card--center {
+    text-align: center;
+}
+
+.mrt-card--warning {
+    background: var(--mrt-warning-bg);
+    border-color: var(--mrt-warning-border);
+}
+
+.mrt-card--compact {
+    padding: var(--mrt-spacing-sm);
+}
+
+.mrt-code-inline {
+    background: var(--mrt-gray-bg);
+    padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
+    border-radius: var(--mrt-radius-sm);
+}
+
+.mrt-code-block {
+    overflow-x: auto;
+}
+
+.mrt-dot {
+    display: inline-block;
+    width: var(--mrt-size-dot);
+    height: var(--mrt-size-dot);
+    border-radius: 50%;
+}
+
+.mrt-dot--green {
+    background: var(--mrt-green-light);
+    border: 1px solid var(--mrt-green-border);
+}
+
+.mrt-info-box p {
+    margin: 0;
+}
+
+.mrt-info-box p:not(:first-child) {
+    margin-top: var(--mrt-spacing-sm);
+}
+
+.mrt-info-box strong {
+    display: block;
+}
+
+.mrt-info-box ol {
+    margin: var(--mrt-spacing-sm) 0 0 var(--mrt-spacing-lg);
+    line-height: 1.6;
+}

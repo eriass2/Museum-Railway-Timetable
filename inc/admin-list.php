@@ -54,7 +54,7 @@ function MRT_render_stations_overview_filter_form() {
     $current_slug = isset($_GET['train_type']) ? sanitize_title($_GET['train_type']) : '';
     ?>
     <div class="mrt-box mrt-mb-1">
-        <form method="get" class="mrt-filter-form">
+        <form method="get" class="mrt-mt-sm mrt-mb-1">
             <input type="hidden" name="post_type" value="mrt_station" />
             <input type="hidden" name="mrt_view" value="overview" />
             <label><?php echo esc_html__('Train type:', 'museum-railway-timetable'); ?></label>
@@ -129,7 +129,7 @@ function MRT_render_stations_overview_row($sid, $train_type) {
                 $datetime = MRT_get_current_datetime();
                 echo esc_html(date_i18n(get_option('date_format'), strtotime($next, $datetime['timestamp'])));
             } else {
-                echo '<span class="mrt-no-date">' . esc_html__('— none within range —', 'museum-railway-timetable') . '</span>';
+                echo '<span class="mrt-opacity-70">' . esc_html__('— none within range —', 'museum-railway-timetable') . '</span>';
             }
             ?>
         </td>
@@ -214,7 +214,7 @@ function MRT_render_stations_overview_inline() {
     <div class="mrt-section mrt-mt-1">
         <?php MRT_render_stations_overview_filter_form(); ?>
         <?php MRT_render_stations_overview_table($station_ids, $train_type); ?>
-        <p class="mrt-alert mrt-alert-info mrt-note mrt-mt-1">
+        <p class="mrt-alert mrt-alert-info mrt-note mrt-mt-sm mrt-text-quaternary">
             <?php echo esc_html__('Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug.', 'museum-railway-timetable'); ?>
         </p>
     </div>

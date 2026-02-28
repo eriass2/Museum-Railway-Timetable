@@ -2,6 +2,8 @@
 
 Gemensamt utseende och återanvändbara komponenter för att minska unik CSS.
 
+**Se även:** `COMPONENT_LIBRARY.md` för fullständig lista över komponenter (btn, form, badge, heading, empty, card) och utilities.
+
 ---
 
 ## Design Tokens (admin-base.css)
@@ -103,7 +105,7 @@ Gemensamt utseende och återanvändbara komponenter för att minska unik CSS.
 Vit bakgrund, kant, rundade hörn. Används för statistik-kort.
 
 ```html
-<div class="mrt-card mrt-stat-card">...</div>
+<div class="mrt-card mrt-card--center">...</div>
 ```
 
 ### .mrt-box
@@ -158,21 +160,46 @@ Responsiv grid med gap.
 | Klass | Effekt |
 |-------|--------|
 | `.mrt-mt-0` | margin-top: 0 |
-| `.mrt-mt-1` | margin-top: var(--mrt-spacing-md) |
-| `.mrt-mb-1` | margin-bottom: var(--mrt-spacing-md) |
-| `.mrt-ml-1` | margin-left: var(--mrt-spacing-md) |
-| `.mrt-my-1` | margin-top/bottom: var(--mrt-spacing-md) |
-| `.mrt-loading-cell` | Centrerad padding för laddningscell |
+| `.mrt-mt-xs` | margin-top: xs |
+| `.mrt-mt-sm` | margin-top: sm |
+| `.mrt-mt-1` | margin-top: md |
+| `.mrt-mt-lg` | margin-top: lg |
+| `.mrt-mt-xl` | margin-top: xl |
+| `.mrt-mb-xs` | margin-bottom: xs |
+| `.mrt-mb-sm` | margin-bottom: sm |
+| `.mrt-mb-1` | margin-bottom: md |
+| `.mrt-mb-lg` | margin-bottom: lg |
+| `.mrt-ml-sm` | margin-left: sm |
+| `.mrt-ml-1` | margin-left: md |
+| `.mrt-ml-lg` | margin-left: lg |
+| `.mrt-mr-sm` | margin-right: sm |
+| `.mrt-mr-md` | margin-right: md |
+| `.mrt-my-sm` | margin-top/bottom: sm |
+| `.mrt-my-1` | margin-top/bottom: md |
+| `.mrt-my-lg` | margin-top/bottom: lg |
+| `.mrt-hidden` | display: none |
+| `.mrt-block` | display: block |
+| `.mrt-w-full` | width: 100% |
+| `.mrt-list-indent` | margin + line-height för listor |
+| `.mrt-loading-cell` | = `mrt-block mrt-text-center mrt-p-xl` |
 | `.mrt-spinner-inline` | Inline-spinner utan float |
 | `.mrt-text-tertiary` | Grå text |
+| `.mrt-text-quaternary` | Mörkare grå |
+| `.mrt-text-muted` | WP-grå text |
+| `.mrt-text-base` | Font-size base |
+| `.mrt-text-xs` | Font-size xs |
+| `.mrt-font-semibold` | font-weight: 600 |
 | `.mrt-text-error` | Röd feltext |
+| `.mrt-text-success` | Grön success-text |
 | `.mrt-text-small` | Mindre fontstorlek |
+
+*Fler utilities och komponenter: se `COMPONENT_LIBRARY.md`*
 
 ---
 
 ## Riktlinjer
 
 1. **Använd tokens** – Undvik hardkodade färger (#hex). Använd `var(--mrt-*)`.
-2. **Kombinera base + modifier** – T.ex. `mrt-card mrt-stat-card` istället för att duplicera alla stilar.
+2. **Kombinera base + modifier** – T.ex. `mrt-card mrt-card--center` istället för att duplicera alla stilar. Se `COMPONENT_LIBRARY.md` för komponenter.
 3. **Nya komponenter** – Kontrollera om `.mrt-card`, `.mrt-box` eller `.mrt-section` passar innan du skriver ny CSS.
 4. **Tokens** – Använd `var(--mrt-*)` med närmaste nivå (xs/sm/md/lg/xl).

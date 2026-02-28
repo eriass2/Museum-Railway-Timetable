@@ -1,0 +1,65 @@
+/**
+ * Meta Boxes – inline editing, new rows
+ * Importeras av admin-meta-boxes.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-stoptime-row:not(.mrt-new-row) {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.mrt-stoptime-row:not(.mrt-new-row):hover {
+    background-color: var(--mrt-light-blue-bg) !important;
+}
+
+.mrt-stoptime-row.mrt-editing {
+    background-color: var(--mrt-light-yellow-bg) !important;
+}
+
+.mrt-edit-field {
+    position: relative;
+}
+
+.mrt-edit-field .mrt-display {
+    display: inline-block;
+}
+
+.mrt-edit-field .mrt-input {
+    display: none;
+}
+
+.mrt-edit-field .mrt-input input,
+.mrt-edit-field .mrt-input select {
+    width: 100%;
+    max-width: 100%;
+}
+
+.mrt-edit-field .mrt-input label {
+    display: inline-block;
+    margin-right: var(--mrt-spacing-sm);
+    font-weight: normal;
+    white-space: nowrap;
+}
+
+.mrt-new-row,
+.mrt-new-route-station-row,
+.mrt-new-service-row {
+    background: var(--mrt-bg-light) !important;
+}
+
+.mrt-new-row .mrt-input {
+    display: block !important;
+}
+
+.mrt-new-row .mrt-display {
+    display: none !important;
+}
+
+.mrt-empty-row td {
+    text-align: center;
+    color: var(--mrt-text-tertiary);
+    font-style: italic;
+    padding: var(--mrt-spacing-xl);
+}

@@ -1,0 +1,11 @@
+/**
+ * Journey Planner (Reseplanerare)
+ * Importeras av admin-ui.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-table td strong {
+    color: var(--mrt-wp-blue);
+    font-size: var(--mrt-font-lg);
+}

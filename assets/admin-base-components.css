@@ -1,0 +1,82 @@
+/**
+ * Base Components – card, box, alert, section, grid
+ * Importeras av admin-base.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-card {
+    padding: var(--mrt-spacing-md);
+    background: var(--mrt-card-bg);
+    border: 1px solid var(--mrt-card-border);
+    border-radius: var(--mrt-radius-sm);
+}
+
+.mrt-box {
+    margin-bottom: var(--mrt-spacing-lg);
+    padding: var(--mrt-spacing-md);
+    background: var(--mrt-box-bg);
+    border: 1px solid var(--mrt-box-border);
+    border-radius: var(--mrt-radius-sm);
+}
+
+.mrt-box h3 {
+    margin-top: 0;
+    margin-bottom: var(--mrt-spacing-sm);
+}
+
+.mrt-box-sm {
+    margin-bottom: var(--mrt-spacing-sm);
+    padding: var(--mrt-spacing-sm);
+}
+
+.mrt-alert {
+    padding: var(--mrt-spacing-sm);
+    margin-bottom: var(--mrt-spacing-md);
+    border-radius: var(--mrt-radius-sm);
+}
+
+.mrt-alert-info {
+    background: var(--mrt-info-bg);
+    border-left: 4px solid var(--mrt-info-border);
+}
+
+.mrt-alert-warning {
+    background: var(--mrt-warning-bg);
+    border-left: 4px solid var(--mrt-warning-border);
+}
+
+.mrt-alert-error {
+    background: var(--mrt-bg-error);
+    border-left: 4px solid var(--mrt-text-error);
+    color: var(--mrt-text-error);
+}
+
+.mrt-section {
+    padding: var(--mrt-spacing-lg);
+    background: var(--mrt-bg-white);
+    border: 1px solid var(--mrt-wp-border);
+    border-radius: var(--mrt-radius-sm);
+    margin-top: var(--mrt-spacing-xl);
+}
+
+.mrt-section h2 {
+    margin-top: 0;
+}
+
+.mrt-row-hover {
+    transition: background-color 0.2s;
+}
+
+.mrt-row-hover:hover {
+    background-color: var(--mrt-bg-lightest);
+}
+
+.mrt-grid {
+    display: grid;
+    gap: var(--mrt-spacing-md);
+}
+
+.mrt-grid-auto {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}

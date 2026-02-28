@@ -125,7 +125,7 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            var $indicator = $('<span class="mrt-save-indicator">✓ Saved</span>');
+                            var $indicator = $('<span class="mrt-save-indicator mrt-text-success mrt-ml-sm">✓ Saved</span>');
                             $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
                             $('#mrt-route-end-station').closest('td').append($indicator);
                             setTimeout(function() {

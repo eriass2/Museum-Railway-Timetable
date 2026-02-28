@@ -66,11 +66,11 @@ function MRT_render_timetable_dates_script($dates) {
                         formattedDate = dateObj.toLocaleDateString();
                     }
                 }
-                var $row = $('<div class="mrt-box mrt-box-sm mrt-date-row" data-date="' + date.replace(/"/g, '&quot;') + '">' +
+                var $row = $('<div class="mrt-box mrt-box-sm mrt-form-row mrt-date-row" data-date="' + date.replace(/"/g, '&quot;') + '">' +
                     '<input type="hidden" name="mrt_timetable_dates[]" value="' + date.replace(/"/g, '&quot;') + '" />' +
-                    '<span class="mrt-date-display">' + formattedDate + '</span> ' +
-                    '<span class="mrt-date-iso">(' + date + ')</span> ' +
-                    '<button type="button" class="button button-small mrt-remove-date mrt-date-remove-button mrt-date-remove-btn"><?php echo $remove_label; ?></button>' +
+                    '<span class="mrt-font-medium mrt-flex-1">' + formattedDate + '</span> ' +
+                    '<span class="mrt-text-tertiary mrt-ml-sm">(' + date + ')</span> ' +
+                    '<button type="button" class="button button-small mrt-remove-date mrt-date-remove-button mrt-ml-1"><?php echo $remove_label; ?></button>' +
                     '</div>');
                 $container.append($row);
             });
@@ -122,7 +122,7 @@ function MRT_render_timetable_dates_script($dates) {
             selectedDates.add(date);
             updateDatesList();
             $('#mrt-single-date').val('');
-            var $msg = $('<div class="mrt-success-message notice notice-success is-dismissible"><p><?php echo $date_added; ?></p></div>');
+            var $msg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p><?php echo $date_added; ?></p></div>');
             $('#mrt-timetable-dates-container').before($msg);
             setTimeout(function() { $msg.fadeOut(300, function() { $(this).remove(); }); }, 3000);
         });

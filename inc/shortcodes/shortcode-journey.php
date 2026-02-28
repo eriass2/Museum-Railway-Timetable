@@ -17,9 +17,9 @@ if (!defined('ABSPATH')) { exit; }
  */
 function MRT_render_journey_form($stations, $from_station_id, $to_station_id, $selected_date) {
     ?>
-    <form class="mrt-box mrt-journey-form" method="get" action="" data-ajax-enabled="true">
-        <div class="mrt-journey-fields">
-            <div class="mrt-journey-field">
+    <form class="mrt-box mrt-journey-form mrt-border-none" method="get" action="" data-ajax-enabled="true">
+        <div class="mrt-form-fields">
+            <div class="mrt-form-field">
                 <label for="mrt_from"><?php esc_html_e('From', 'museum-railway-timetable'); ?></label>
                 <select name="mrt_from" id="mrt_from" required>
                     <option value=""><?php esc_html_e('Select station', 'museum-railway-timetable'); ?></option>
@@ -30,7 +30,7 @@ function MRT_render_journey_form($stations, $from_station_id, $to_station_id, $s
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="mrt-journey-field">
+            <div class="mrt-form-field">
                 <label for="mrt_to"><?php esc_html_e('To', 'museum-railway-timetable'); ?></label>
                 <select name="mrt_to" id="mrt_to" required>
                     <option value=""><?php esc_html_e('Select station', 'museum-railway-timetable'); ?></option>
@@ -41,12 +41,12 @@ function MRT_render_journey_form($stations, $from_station_id, $to_station_id, $s
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="mrt-journey-field">
+            <div class="mrt-form-field">
                 <label for="mrt_date"><?php esc_html_e('Date', 'museum-railway-timetable'); ?></label>
                 <input type="date" name="mrt_date" id="mrt_date" value="<?php echo esc_attr($selected_date); ?>" required>
             </div>
-            <div class="mrt-journey-field">
-                <button type="submit" class="mrt-journey-search"><?php esc_html_e('Search', 'museum-railway-timetable'); ?></button>
+            <div class="mrt-form-field">
+                <button type="submit" class="mrt-btn mrt-btn--primary mrt-journey-search"><?php esc_html_e('Search', 'museum-railway-timetable'); ?></button>
             </div>
         </div>
     </form>
@@ -75,7 +75,7 @@ function MRT_render_shortcode_journey($atts) {
 
     ob_start();
     ?>
-    <div class="mrt-journey-planner">
+    <div class="mrt-journey-planner mrt-my-lg">
         <?php MRT_render_journey_form($stations, $from_station_id, $to_station_id, $selected_date); ?>
         <?php MRT_render_journey_results($from_station_id, $to_station_id, $selected_date); ?>
     </div>
@@ -102,8 +102,8 @@ function MRT_render_journey_results_title($from_name, $to_name, $selected_date) 
  */
 function MRT_render_journey_connections_table($connections) {
     ?>
-    <div class="mrt-journey-table-container">
-        <table class="mrt-table mrt-journey-table">
+    <div class="mrt-journey-table-container mrt-overflow-x-auto">
+        <table class="mrt-table mrt-journey-table mrt-mt-sm">
             <thead>
                 <tr>
                     <th><?php esc_html_e('Service', 'museum-railway-timetable'); ?></th>
@@ -119,7 +119,7 @@ function MRT_render_journey_connections_table($connections) {
                         <td>
                             <strong><?php echo esc_html($conn['service_name']); ?></strong>
                             <?php if (!empty($conn['route_name'])): ?>
-                                <br><small class="mrt-route-name"><?php echo esc_html($conn['route_name']); ?></small>
+                                <br><small class="mrt-text-tertiary mrt-font-italic"><?php echo esc_html($conn['route_name']); ?></small>
                             <?php endif; ?>
                         </td>
                         <td><?php echo esc_html($conn['train_type']); ?></td>
@@ -167,15 +167,15 @@ function MRT_render_journey_results($from_station_id, $to_station_id, $selected_
     $to_name = get_the_title($to_station_id);
     $services_on_date = MRT_services_running_on_date($selected_date);
     ?>
-    <div class="mrt-journey-results">
-        <h3 class="mrt-journey-results-title"><?php MRT_render_journey_results_title($from_name, $to_name, $selected_date); ?></h3>
+    <div class="mrt-journey-results mrt-mt-lg">
+        <h3 class="mrt-heading mrt-heading--xl mrt-mb-1"><?php MRT_render_journey_results_title($from_name, $to_name, $selected_date); ?></h3>
         <?php if (empty($services_on_date)): ?>
             <div class="mrt-alert mrt-alert-error mrt-error">
                 <p><strong><?php esc_html_e('No services running.', 'museum-railway-timetable'); ?></strong></p>
                 <p><?php esc_html_e('There are no services running on the selected date. Please try a different date.', 'museum-railway-timetable'); ?></p>
             </div>
         <?php elseif (empty($connections)): ?>
-            <div class="mrt-alert mrt-alert-info mrt-none">
+            <div class="mrt-alert mrt-alert-info mrt-empty">
                 <p><strong><?php esc_html_e('No connections found.', 'museum-railway-timetable'); ?></strong></p>
                 <p><?php esc_html_e('There are no direct connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
             </div>

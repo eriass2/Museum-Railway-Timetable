@@ -50,7 +50,7 @@ function MRT_render_timetable_new_service_row($routes, $all_train_types, $timeta
     ?>
     <tr class="mrt-new-service-row mrt-new-row">
         <td>
-            <select id="mrt-new-service-route" class="mrt-meta-field mrt-full-width" required>
+            <select id="mrt-new-service-route" class="mrt-input mrt-w-full" required>
                 <option value=""><?php esc_html_e('— Select Route —', 'museum-railway-timetable'); ?></option>
                 <?php foreach ($routes as $route): ?>
                     <option value="<?php echo esc_attr($route->ID); ?>"><?php echo esc_html($route->post_title); ?></option>
@@ -58,7 +58,7 @@ function MRT_render_timetable_new_service_row($routes, $all_train_types, $timeta
             </select>
         </td>
         <td>
-            <select id="mrt-new-service-train-type" class="mrt-meta-field mrt-full-width">
+            <select id="mrt-new-service-train-type" class="mrt-input mrt-w-full">
                 <option value=""><?php esc_html_e('— Select —', 'museum-railway-timetable'); ?></option>
                 <?php foreach ($all_train_types as $train_type): ?>
                     <option value="<?php echo esc_attr($train_type->term_id); ?>"><?php echo esc_html($train_type->name); ?></option>
@@ -66,11 +66,11 @@ function MRT_render_timetable_new_service_row($routes, $all_train_types, $timeta
             </select>
         </td>
         <td>
-            <select id="mrt-new-service-end-station" class="mrt-meta-field mrt-full-width">
+            <select id="mrt-new-service-end-station" class="mrt-input mrt-w-full">
                 <option value=""><?php esc_html_e('— Select Destination —', 'museum-railway-timetable'); ?></option>
                 <option value="" disabled><?php esc_html_e('Select a route first', 'museum-railway-timetable'); ?></option>
             </select>
-            <p class="description mrt-description-small-mt"><?php esc_html_e('Select route first to see available destinations', 'museum-railway-timetable'); ?></p>
+            <p class="description mrt-text-small mrt-mt-xs"><?php esc_html_e('Select route first to see available destinations', 'museum-railway-timetable'); ?></p>
         </td>
         <td>
             <button type="button" class="button button-primary button-small" id="mrt-add-service-to-timetable" data-timetable-id="<?php echo esc_attr($timetable_id); ?>">
@@ -104,7 +104,7 @@ function MRT_render_timetable_services_box($post) {
     ]);
     $all_train_types = get_terms(['taxonomy' => 'mrt_train_type', 'hide_empty' => false]);
     ?>
-    <div id="mrt-timetable-services-container" class="mrt-box mrt-timetable-services-box">
+    <div id="mrt-timetable-services-container" class="mrt-box mrt-timetable-services-box mrt-my-1">
         <?php wp_nonce_field('mrt_timetable_services_nonce', 'mrt_timetable_services_nonce'); ?>
         <p class="description">
             <?php esc_html_e('Manage trips (services) for this timetable. Add, edit, or remove trips directly here.', 'museum-railway-timetable'); ?>
@@ -113,9 +113,9 @@ function MRT_render_timetable_services_box($post) {
             <thead>
                 <tr>
                     <th><?php esc_html_e('Route', 'museum-railway-timetable'); ?></th>
-                    <th class="mrt-col-train-type"><?php esc_html_e('Train Type', 'museum-railway-timetable'); ?></th>
-                    <th class="mrt-col-destination"><?php esc_html_e('Destination', 'museum-railway-timetable'); ?></th>
-                    <th class="mrt-col-actions"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
+                    <th class="mrt-w-150"><?php esc_html_e('Train Type', 'museum-railway-timetable'); ?></th>
+                    <th class="mrt-w-150"><?php esc_html_e('Destination', 'museum-railway-timetable'); ?></th>
+                    <th class="mrt-w-150"><?php esc_html_e('Actions', 'museum-railway-timetable'); ?></th>
                 </tr>
             </thead>
             <tbody id="mrt-timetable-services-tbody">

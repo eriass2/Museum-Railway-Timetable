@@ -1,0 +1,74 @@
+/**
+ * Month Calendar Component
+ * Importeras av admin-timetable.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-month-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.mrt-month-table th,
+.mrt-month-table td {
+    border: 1px solid var(--mrt-border-light);
+    width: 14.285%;
+    vertical-align: top;
+    height: 72px;
+    padding: var(--mrt-spacing-xs);
+}
+
+.mrt-month-table thead th {
+    background: var(--mrt-bg-lightest);
+    font-weight: 600;
+}
+
+.mrt-day {
+    position: relative;
+}
+
+.mrt-daynum {
+    font-size: var(--mrt-font-base);
+    opacity: var(--mrt-opacity-85);
+}
+
+.mrt-dot {
+    position: absolute;
+    right: var(--mrt-spacing-sm);
+    bottom: var(--mrt-spacing-xs);
+    font-size: var(--mrt-font-sm);
+}
+
+.mrt-running {
+    background: var(--mrt-bg-success);
+}
+
+.mrt-day-clickable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.mrt-day-clickable:hover {
+    background-color: var(--mrt-green-hover) !important;
+    transform: scale(1.05);
+}
+
+.mrt-day-clickable.mrt-day-active {
+    background-color: var(--mrt-blue-primary) !important;
+    box-shadow: var(--mrt-shadow-focus-ring);
+}
+
+/* mrt-day-timetable = mrt-my-1 */
+.mrt-day-timetable {
+    margin: var(--mrt-spacing-md) 0;
+}
+
+.mrt-day-timetable-container {
+    margin-top: var(--mrt-spacing-xl);
+}
+
+.mrt-empty {
+    background: var(--mrt-bg-lightest);
+}

@@ -48,7 +48,7 @@
 
         handleNoRoute: function($stoptimesContainer, $destinationSelect) {
             if ($stoptimesContainer.length) {
-                $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-none">' +
+                $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-empty">' +
                     (typeof mrtAdmin !== 'undefined' ? mrtAdmin.noRouteSelected : 'No route selected. Select a route to configure stop times.') +
                     '</td></tr>');
                 $('#mrt-save-all-stoptimes').closest('p').hide();
@@ -62,7 +62,7 @@
         },
 
         showLoadingStations: function($stoptimesContainer) {
-            $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-loading-cell"><span class="spinner is-active mrt-spinner-inline"></span> ' +
+            $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-block mrt-text-center mrt-p-xl"><span class="spinner is-active mrt-spinner-inline"></span> ' +
                 (typeof mrtAdmin !== 'undefined' ? mrtAdmin.loadingStations : 'Loading stations...') + '</td></tr>');
         },
 
@@ -105,7 +105,7 @@
                         self.renderStoptimesRows(response.data.stations, serviceId);
                         $('#mrt-save-all-stoptimes').closest('p').show();
                     } else {
-                        $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-none">' +
+                        $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-empty">' +
                             (typeof mrtAdmin !== 'undefined' ? mrtAdmin.noStationsOnRoute : 'No stations found on this route.') +
                             '</td></tr>');
                         $('#mrt-save-all-stoptimes').closest('p').hide();
@@ -125,21 +125,21 @@
             stations.forEach(function(station, index) {
                 var stopsHere = station.stops_here;
                 var disabledAttr = stopsHere ? '' : 'disabled';
-                var opacityClass = stopsHere ? '' : 'mrt-field-disabled-opacity';
+                var opacityClass = stopsHere ? '' : 'mrt-opacity-50';
                 var row = '<tr class="mrt-route-station-row" data-station-id="' + station.id + '" data-service-id="' + serviceId + '" data-sequence="' + station.sequence + '">' +
                     '<td>' + (index + 1) + '</td>' +
                     '<td><strong>' + station.name + '</strong></td>' +
-                    '<td><input type="checkbox" class="mrt-stops-here" ' + (stopsHere ? 'checked' : '') + ' data-station-id="' + station.id + '" /></td>' +
-                    '<td class="mrt-time-field ' + opacityClass + '">' +
-                    '<input type="text" class="mrt-arrival-time mrt-time-input" value="' + (station.arrival_time || '') + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
-                    '<p class="description mrt-description-small">Leave empty if train stops but time is not fixed</p></td>' +
-                    '<td class="mrt-time-field ' + opacityClass + '">' +
-                    '<input type="text" class="mrt-departure-time mrt-time-input" value="' + (station.departure_time || '') + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
-                    '<p class="description mrt-description-small">Leave empty if train stops but time is not fixed</p></td>' +
-                    '<td class="mrt-option-field ' + opacityClass + '">' +
-                    '<label><input type="checkbox" class="mrt-pickup" ' + (station.pickup_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> Pickup</label></td>' +
-                    '<td class="mrt-option-field ' + opacityClass + '">' +
-                    '<label><input type="checkbox" class="mrt-dropoff" ' + (station.dropoff_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> Dropoff</label></td>' +
+                    '<td><input type="checkbox" class="mrt-stops-here mrt-cursor-pointer" ' + (stopsHere ? 'checked' : '') + ' data-station-id="' + station.id + '" /></td>' +
+                    '<td class="mrt-time-field mrt-relative ' + opacityClass + '">' +
+                    '<input type="text" class="mrt-arrival-time mrt-input mrt-input--sm mrt-font-mono" value="' + (station.arrival_time || '') + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
+                    '<p class="description mrt-text-xs mrt-text-tertiary">Leave empty if train stops but time is not fixed</p></td>' +
+                    '<td class="mrt-time-field mrt-relative ' + opacityClass + '">' +
+                    '<input type="text" class="mrt-departure-time mrt-input mrt-input--sm mrt-font-mono" value="' + (station.departure_time || '') + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
+                    '<p class="description mrt-text-xs mrt-text-tertiary">Leave empty if train stops but time is not fixed</p></td>' +
+                    '<td class="mrt-option-field mrt-text-center ' + opacityClass + '">' +
+                    '<label><input type="checkbox" class="mrt-pickup mrt-cursor-pointer" ' + (station.pickup_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> Pickup</label></td>' +
+                    '<td class="mrt-option-field mrt-text-center ' + opacityClass + '">' +
+                    '<label><input type="checkbox" class="mrt-dropoff mrt-cursor-pointer" ' + (station.dropoff_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> Dropoff</label></td>' +
                     '</tr>';
                 $tbody.append(row);
             });
@@ -200,12 +200,12 @@
                 var $field = $input.closest('td');
 
                 $input.removeClass('mrt-time-error');
-                $field.find('.mrt-time-error-message').remove();
+                $field.find('.mrt-time-error-message mrt-block mrt-text-error mrt-text-small mrt-mt-xs').remove();
 
                 if (timeValue && timeValue.trim() !== '' && !utils.validateTimeFormat(timeValue)) {
                     $input.addClass('mrt-time-error');
                     var errorText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.invalidTimeFormat) ? mrtAdmin.invalidTimeFormat : 'Invalid format. Use HH:MM (e.g., 09:15)';
-                    $field.append('<span class="mrt-time-error-message">' + errorText + '</span>');
+                    $field.append('<span class="mrt-time-error-message mrt-block mrt-text-error mrt-text-small mrt-mt-xs">' + errorText + '</span>');
                 }
             });
         },
@@ -249,7 +249,7 @@
                 });
 
                 var originalText = $btn.data('original-text') || $btn.text();
-                $btn.prop('disabled', true).text('Saving...').addClass('mrt-saving');
+                $btn.prop('disabled', true).text('Saving...').addClass('mrt-opacity-70 mrt-cursor-wait');
 
                 $.post(mrtAdmin.ajaxurl, {
                     action: 'mrt_save_all_stoptimes',
@@ -265,14 +265,14 @@
                         var $msg = $('<div class="mrt-error-message notice notice-error is-dismissible mrt-my-1"><p>' + (response.data.message || 'Error saving stop times.') + '</p></div>');
                         $btn.closest('.mrt-stoptimes-box').before($msg);
                     }
-                    $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');
+                    $btn.prop('disabled', false).text(originalText).removeClass('mrt-opacity-70 mrt-cursor-wait');
                 }).fail(function() {
                     var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
                     var $errP = document.createElement('p');
                     $errP.textContent = networkErrorMsg;
                     var $msg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
                     $btn.closest('.mrt-stoptimes-box').before($msg);
-                    $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');
+                    $btn.prop('disabled', false).text(originalText).removeClass('mrt-opacity-70 mrt-cursor-wait');
                 });
             });
         },

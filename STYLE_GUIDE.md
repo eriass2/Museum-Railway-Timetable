@@ -66,20 +66,21 @@ Kodstandarder och clean code-principer för projektet.
 
 ### Namnkonventioner
 - **Prefix** – Alla klasser: `.mrt-` (t.ex. `.mrt-timetable-overview`)
-- **BEM-liknande** – `.mrt-block__element--modifier` vid behov
+- **BEM-liknande** – `.mrt-block--modifier` (t.ex. `.mrt-btn--primary`)
 - **Variabler** – CSS custom properties med `--mrt-` prefix
 
 ### Struktur
-- **Design system** – Se `DESIGN_SYSTEM.md` för tokens och base components
+- **Design system** – Se `DESIGN_SYSTEM.md` för tokens
+- **Komponentbibliotek** – Se `COMPONENT_LIBRARY.md` för återanvändbara komponenter (btn, form, badge, card m.fl.)
 - **CSS-variabler** i `:root` för färger, spacing, borders
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar
 - **Inga inline styles** – All styling i CSS-filer
 
 ### Exempel
-```css
-.mrt-timetable-group { }
-.mrt-route-header { }
-.mrt-time-cell.mrt-service-bus { }
+```html
+<button class="button mrt-btn mrt-btn--primary">Spara</button>
+<div class="mrt-card mrt-card--center">...</div>
+<div class="mrt-input mrt-input--meta mrt-mt-1">...</div>
 ```
 
 ---
@@ -157,6 +158,9 @@ museum-railway-timetable/
 
 ## 8. Referenser
 
+- **COMPONENT_LIBRARY.md** – Komponenter och utilities
+- **DESIGN_SYSTEM.md** – Tokens och base components
+- **assets/CSS_STRUCTURE.md** – CSS-filstruktur
 - [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
 - [Clean Code (Robert C. Martin)](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)
