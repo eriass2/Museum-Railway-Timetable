@@ -8,25 +8,152 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
+ * Setup hooks when editing service from timetable context
+ *
+ * @param int $timetable_id Timetable ID
+ */
+function MRT_service_meta_box_setup_editing_from_timetable($timetable_id) {
+    add_action('admin_head', function() {
+        global $post_type;
+        if ($post_type === 'mrt_service' && isset($_GET['timetable_id'])) {
+            echo '<style>#title, #title-prompt-text, #titlewrap { display: none !important; }</style>';
+        }
+    });
+    add_action('edit_form_top', function() use ($timetable_id) {
+        global $post_type;
+        if ($post_type === 'mrt_service' && isset($_GET['timetable_id'])) {
+            $timetable_edit_link = get_edit_post_link($timetable_id);
+            if ($timetable_edit_link) {
+                echo '<div class="mrt-alert mrt-alert-info mrt-info-box mrt-mb-1">';
+                echo '<a href="' . esc_url($timetable_edit_link) . '" class="button mrt-back-button">← ' . esc_html__('Back to Timetable', 'museum-railway-timetable') . '</a>';
+                echo '<span class="description">' . esc_html__('This trip belongs to a timetable. The title is automatically generated from Route + Destination.', 'museum-railway-timetable') . '</span>';
+                echo '</div>';
+            }
+        }
+    });
+}
+
+/**
+ * Get available end stations for a route (for destination dropdown)
+ *
+ * @param int $route_id Route post ID
+ * @return array [station_id => display_name]
+ */
+function MRT_get_service_available_end_stations($route_id) {
+    $available = [];
+    if (!$route_id) {
+        return $available;
+    }
+    $end_stations = MRT_get_route_end_stations($route_id);
+    $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
+    if (!is_array($route_stations)) {
+        $route_stations = [];
+    }
+    if ($end_stations['start'] > 0) {
+        $s = get_post($end_stations['start']);
+        if ($s) {
+            $available[$end_stations['start']] = $s->post_title . ' (' . __('Start', 'museum-railway-timetable') . ')';
+        }
+    }
+    if ($end_stations['end'] > 0) {
+        $s = get_post($end_stations['end']);
+        if ($s) {
+            $available[$end_stations['end']] = $s->post_title . ' (' . __('End', 'museum-railway-timetable') . ')';
+        }
+    }
+    foreach ($route_stations as $station_id) {
+        if (!isset($available[$station_id])) {
+            $s = get_post($station_id);
+            if ($s) {
+                $available[$station_id] = $s->post_title;
+            }
+        }
+    }
+    return $available;
+}
+
+/**
+ * Render destination station field for service meta box
+ *
+ * @param int $route_id Route ID
+ * @param int $end_station_id Selected end station ID
+ */
+function MRT_render_service_destination_field($route_id, $end_station_id) {
+    $available_end_stations = MRT_get_service_available_end_stations($route_id);
+    if (empty($available_end_stations)) {
+        $all_stations = get_posts([
+            'post_type' => 'mrt_station',
+            'posts_per_page' => -1,
+            'orderby' => ['meta_value_num' => 'ASC', 'title' => 'ASC'],
+            'meta_key' => 'mrt_display_order',
+            'fields' => 'all',
+        ]);
+        $available_end_stations = [];
+        foreach ($all_stations as $s) {
+            $available_end_stations[$s->ID] = $s->post_title;
+        }
+    }
+    $stations = $available_end_stations;
+    ?>
+    <tr>
+        <th><label for="mrt_service_end_station_id"><?php esc_html_e('Destination Station', 'museum-railway-timetable'); ?></label></th>
+        <td>
+            <select name="mrt_service_end_station_id" id="mrt_service_end_station_id" class="mrt-meta-field">
+                <option value=""><?php esc_html_e('— Select Destination —', 'museum-railway-timetable'); ?></option>
+                <?php foreach ($stations as $sid => $sname): ?>
+                    <option value="<?php echo esc_attr($sid); ?>" <?php selected($end_station_id, $sid); ?>><?php echo esc_html($sname); ?></option>
+                <?php endforeach; ?>
+            </select>
+            <p class="description"><?php esc_html_e('Select the destination station for this trip. The direction will be calculated automatically based on the route and destination.', 'museum-railway-timetable'); ?></p>
+            <?php if ($end_station_id && $route_id):
+                $calculated_direction = MRT_calculate_direction_from_end_station($route_id, $end_station_id);
+                if ($calculated_direction): ?>
+                <p class="description mrt-description-tertiary">
+                    <strong><?php esc_html_e('Calculated direction:', 'museum-railway-timetable'); ?></strong>
+                    <?php echo $calculated_direction === 'dit' ? esc_html__('Dit', 'museum-railway-timetable') : esc_html__('Från', 'museum-railway-timetable'); ?>
+                </p>
+                <?php endif;
+            endif; ?>
+        </td>
+    </tr>
+    <?php
+}
+
+/**
+ * Get formatted timetable display label for dropdown
+ *
+ * @param int $timetable_id Timetable ID
+ * @param WP_Post|null $timetable Timetable post (optional)
+ * @return string Display label
+ */
+function MRT_get_timetable_display_label($timetable_id, $timetable = null) {
+    $timetable = $timetable ?: get_post($timetable_id);
+    $display = $timetable ? ($timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable_id) : '';
+    $timetable_dates = MRT_get_timetable_dates($timetable_id);
+    if (!empty($timetable_dates)) {
+        $date_count = count($timetable_dates);
+        $first_date = date_i18n(get_option('date_format'), strtotime($timetable_dates[0]));
+        $display .= ($date_count === 1) ? ' (' . $first_date . ')' : ' (' . $first_date . ' + ' . ($date_count - 1) . ' ' . __('more', 'museum-railway-timetable') . ')';
+    }
+    return $display;
+}
+
+/**
  * Render service meta box
  *
  * @param WP_Post $post Current post object
  */
 function MRT_render_service_meta_box($post) {
     wp_nonce_field('mrt_save_service_meta', 'mrt_service_meta_nonce');
-    
+
     $timetable_id = get_post_meta($post->ID, 'mrt_service_timetable_id', true);
-    
-    // If editing from timetable, get timetable_id from URL parameter
     if (empty($timetable_id) && isset($_GET['timetable_id'])) {
         $timetable_id = intval($_GET['timetable_id']);
     }
-    
+
     $route_id = get_post_meta($post->ID, 'mrt_service_route_id', true);
-    $direction = get_post_meta($post->ID, 'mrt_direction', true);
     $end_station_id = get_post_meta($post->ID, 'mrt_service_end_station_id', true);
-    
-    // Get all timetables for dropdown
+
     $timetables = get_posts([
         'post_type' => 'mrt_timetable',
         'posts_per_page' => -1,
@@ -34,8 +161,6 @@ function MRT_render_service_meta_box($post) {
         'order' => 'DESC',
         'fields' => 'all',
     ]);
-    
-    // Get all routes for dropdown
     $routes = get_posts([
         'post_type' => 'mrt_route',
         'posts_per_page' => -1,
@@ -43,44 +168,14 @@ function MRT_render_service_meta_box($post) {
         'order' => 'ASC',
         'fields' => 'all',
     ]);
-    
-    // Get train types for this service
     $train_types = wp_get_post_terms($post->ID, 'mrt_train_type', ['fields' => 'ids']);
-    
-    // Get all train types for dropdown
-    $all_train_types = get_terms([
-        'taxonomy' => 'mrt_train_type',
-        'hide_empty' => false,
-    ]);
-    
-    // Check if editing from timetable
+    $all_train_types = get_terms(['taxonomy' => 'mrt_train_type', 'hide_empty' => false]);
+
     $editing_from_timetable = isset($_GET['timetable_id']) && intval($_GET['timetable_id']) === intval($timetable_id);
-    
-    // Hide title field if editing from timetable
     if ($editing_from_timetable && $timetable_id) {
-        // Hide title field using admin_head hook
-        add_action('admin_head', function() {
-            global $post_type;
-            if ($post_type === 'mrt_service' && isset($_GET['timetable_id'])) {
-                echo '<style>#title, #title-prompt-text, #titlewrap { display: none !important; }</style>';
-            }
-        });
-        
-        // Add back to timetable button
-        add_action('edit_form_top', function() use ($timetable_id) {
-            global $post_type;
-            if ($post_type === 'mrt_service' && isset($_GET['timetable_id'])) {
-                $timetable_edit_link = get_edit_post_link($timetable_id);
-                if ($timetable_edit_link) {
-                    echo '<div class="mrt-alert mrt-alert-info mrt-info-box mrt-mb-1">';
-                    echo '<a href="' . esc_url($timetable_edit_link) . '" class="button mrt-back-button">← ' . esc_html__('Back to Timetable', 'museum-railway-timetable') . '</a>';
-                    echo '<span class="description">' . esc_html__('This trip belongs to a timetable. The title is automatically generated from Route + Destination.', 'museum-railway-timetable') . '</span>';
-                    echo '</div>';
-                }
-            }
-        });
+        MRT_service_meta_box_setup_editing_from_timetable($timetable_id);
     }
-    
+
     ?>
     <div class="mrt-alert mrt-alert-info mrt-info-box">
         <p><strong><?php esc_html_e('💡 What is a Trip (Service)?', 'museum-railway-timetable'); ?></strong></p>
@@ -94,40 +189,14 @@ function MRT_render_service_meta_box($post) {
             <td>
                 <?php if ($editing_from_timetable): ?>
                     <input type="hidden" name="mrt_service_timetable_id" value="<?php echo esc_attr($timetable_id); ?>" />
-                    <?php 
-                    $current_timetable = get_post($timetable_id);
-                    $timetable_dates = MRT_get_timetable_dates($timetable_id);
-                    $display = $current_timetable ? ($current_timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable_id) : '';
-                    if (!empty($timetable_dates)) {
-                        $date_count = count($timetable_dates);
-                        $first_date = date_i18n(get_option('date_format'), strtotime($timetable_dates[0]));
-                        if ($date_count === 1) {
-                            $display .= ' (' . $first_date . ')';
-                        } else {
-                            $display .= ' (' . $first_date . ' + ' . ($date_count - 1) . ' ' . __('more', 'museum-railway-timetable') . ')';
-                        }
-                    }
-                    ?>
-                    <strong><?php echo esc_html($display); ?></strong>
+                    <strong><?php echo esc_html(MRT_get_timetable_display_label($timetable_id)); ?></strong>
                     <p class="description"><?php esc_html_e('This trip belongs to the timetable you are editing. To change the timetable, go back to the timetable and remove this trip, then add it to another timetable.', 'museum-railway-timetable'); ?></p>
                 <?php else: ?>
                     <select name="mrt_service_timetable_id" id="mrt_service_timetable_id" class="mrt-meta-field" required>
                         <option value=""><?php esc_html_e('— Select Timetable —', 'museum-railway-timetable'); ?></option>
-                        <?php foreach ($timetables as $timetable): 
-                        $timetable_dates = MRT_get_timetable_dates($timetable->ID);
-                        $display = $timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable->ID;
-                        if (!empty($timetable_dates)) {
-                            $date_count = count($timetable_dates);
-                            $first_date = date_i18n(get_option('date_format'), strtotime($timetable_dates[0]));
-                            if ($date_count === 1) {
-                                $display .= ' (' . $first_date . ')';
-                            } else {
-                                $display .= ' (' . $first_date . ' + ' . ($date_count - 1) . ' ' . __('more', 'museum-railway-timetable') . ')';
-                            }
-                        }
-                    ?>
-                        <option value="<?php echo esc_attr($timetable->ID); ?>" <?php selected($timetable_id, $timetable->ID); ?>><?php echo esc_html($display); ?></option>
-                    <?php endforeach; ?>
+                        <?php foreach ($timetables as $timetable): ?>
+                        <option value="<?php echo esc_attr($timetable->ID); ?>" <?php selected($timetable_id, $timetable->ID); ?>><?php echo esc_html(MRT_get_timetable_display_label($timetable->ID, $timetable)); ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <p class="description"><?php esc_html_e('⚠️ Required: Select the timetable this trip belongs to. The timetable defines which days (dates) the trip runs.', 'museum-railway-timetable'); ?></p>
                 <?php endif; ?>
@@ -210,78 +279,7 @@ function MRT_render_service_meta_box($post) {
                 <?php endif; ?>
             </td>
         </tr>
-        <tr>
-            <th><label for="mrt_service_end_station_id"><?php esc_html_e('Destination Station', 'museum-railway-timetable'); ?></label></th>
-            <td>
-                <?php
-                // Get available end stations based on selected route
-                $available_end_stations = [];
-                if ($route_id) {
-                    $end_stations = MRT_get_route_end_stations($route_id);
-                    $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
-                    if (!is_array($route_stations)) {
-                        $route_stations = [];
-                    }
-                    
-                    // Add start and end stations if they exist
-                    if ($end_stations['start'] > 0) {
-                        $start_station = get_post($end_stations['start']);
-                        if ($start_station) {
-                            $available_end_stations[$end_stations['start']] = $start_station->post_title . ' (' . __('Start', 'museum-railway-timetable') . ')';
-                        }
-                    }
-                    if ($end_stations['end'] > 0) {
-                        $end_station = get_post($end_stations['end']);
-                        if ($end_station) {
-                            $available_end_stations[$end_stations['end']] = $end_station->post_title . ' (' . __('End', 'museum-railway-timetable') . ')';
-                        }
-                    }
-                    
-                    // Also add all stations on the route as potential destinations
-                    foreach ($route_stations as $station_id) {
-                        if (!isset($available_end_stations[$station_id])) {
-                            $station = get_post($station_id);
-                            if ($station) {
-                                $available_end_stations[$station_id] = $station->post_title;
-                            }
-                        }
-                    }
-                }
-                
-                // Get all stations for fallback
-                $all_stations = get_posts([
-                    'post_type' => 'mrt_station',
-                    'posts_per_page' => -1,
-                    'orderby' => ['meta_value_num' => 'ASC', 'title' => 'ASC'],
-                    'meta_key' => 'mrt_display_order',
-                    'fields' => 'all',
-                ]);
-                ?>
-                <select name="mrt_service_end_station_id" id="mrt_service_end_station_id" class="mrt-meta-field">
-                    <option value=""><?php esc_html_e('— Select Destination —', 'museum-railway-timetable'); ?></option>
-                    <?php if (!empty($available_end_stations)): ?>
-                        <?php foreach ($available_end_stations as $station_id => $station_name): ?>
-                            <option value="<?php echo esc_attr($station_id); ?>" <?php selected($end_station_id, $station_id); ?>><?php echo esc_html($station_name); ?></option>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <?php foreach ($all_stations as $station): ?>
-                            <option value="<?php echo esc_attr($station->ID); ?>" <?php selected($end_station_id, $station->ID); ?>><?php echo esc_html($station->post_title); ?></option>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </select>
-                <p class="description"><?php esc_html_e('Select the destination station for this trip. The direction will be calculated automatically based on the route and destination.', 'museum-railway-timetable'); ?></p>
-                <?php if ($end_station_id && $route_id): ?>
-                    <?php
-                    $calculated_direction = MRT_calculate_direction_from_end_station($route_id, $end_station_id);
-                    if ($calculated_direction): ?>
-                        <p class="description mrt-description-tertiary">
-                            <strong><?php esc_html_e('Calculated direction:', 'museum-railway-timetable'); ?></strong> 
-                            <?php echo $calculated_direction === 'dit' ? esc_html__('Dit', 'museum-railway-timetable') : esc_html__('Från', 'museum-railway-timetable'); ?>
-                        </p>
-                    <?php endif; ?>
-                <?php endif; ?>
-            </td>
-        </tr>
+        <?php MRT_render_service_destination_field($route_id, $end_station_id); ?>
     </table>
     </div>
     <?php

@@ -8,139 +8,120 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * Add service to timetable via AJAX
+ * Validate and parse add-service-to-timetable AJAX input
+ *
+ * @return array|WP_Error [timetable_id, route_id, train_type_id, end_station_id, direction] or error
  */
-function MRT_ajax_add_service_to_timetable() {
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('MRT: AJAX add_service_to_timetable called');
-        error_log('MRT: POST data: ' . print_r($_POST, true));
-    }
-    
+function MRT_ajax_validate_add_service_input() {
     if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'mrt_timetable_services_nonce')) {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('MRT: Nonce verification failed');
-        }
-        wp_send_json_error(['message' => __('Security check failed. Please refresh the page.', 'museum-railway-timetable')]);
+        return new WP_Error('nonce', __('Security check failed. Please refresh the page.', 'museum-railway-timetable'));
     }
-    
     if (!current_user_can('edit_posts')) {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('MRT: Permission denied for user: ' . get_current_user_id());
-        }
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
+        return new WP_Error('permission', __('Permission denied.', 'museum-railway-timetable'));
     }
-    
     $timetable_id = intval($_POST['timetable_id'] ?? 0);
     $route_id = intval($_POST['route_id'] ?? 0);
+    if ($timetable_id <= 0) {
+        return new WP_Error('timetable', __('Invalid timetable.', 'museum-railway-timetable'));
+    }
+    if ($route_id <= 0) {
+        return new WP_Error('route', __('Route is required.', 'museum-railway-timetable'));
+    }
     $train_type_id = intval($_POST['train_type_id'] ?? 0);
     $end_station_id = intval($_POST['end_station_id'] ?? 0);
     $direction = sanitize_text_field($_POST['direction'] ?? '');
-    
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('MRT: Parsed values - timetable_id: ' . $timetable_id . ', route_id: ' . $route_id . ', train_type_id: ' . $train_type_id . ', end_station_id: ' . $end_station_id . ', direction: ' . $direction);
-    }
-    
-    if ($timetable_id <= 0) {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('MRT: Invalid timetable_id: ' . $timetable_id);
-        }
-        wp_send_json_error(['message' => __('Invalid timetable.', 'museum-railway-timetable')]);
-    }
-    
-    if ($route_id <= 0) {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('MRT: Invalid route_id: ' . $route_id);
-        }
-        wp_send_json_error(['message' => __('Route is required.', 'museum-railway-timetable')]);
-    }
-    
     if ($end_station_id > 0) {
         $direction = MRT_calculate_direction_from_end_station($route_id, $end_station_id);
     } elseif ($direction !== '' && !in_array($direction, ['dit', 'från'], true)) {
         $direction = '';
     }
-    
+    return compact('timetable_id', 'route_id', 'train_type_id', 'end_station_id', 'direction');
+}
+
+/**
+ * Build auto title for new service
+ */
+function MRT_build_service_auto_title($route_id, $end_station_id, $direction) {
     $route = get_post($route_id);
     $route_name = $route ? $route->post_title : __('Route', 'museum-railway-timetable') . ' #' . $route_id;
-    $destination_text = '';
+    $dest = '';
     if ($end_station_id > 0) {
-        $end_station = get_post($end_station_id);
-        if ($end_station) {
-            $destination_text = ' → ' . $end_station->post_title;
-        }
+        $s = get_post($end_station_id);
+        $dest = $s ? ' → ' . $s->post_title : '';
     } elseif ($direction === 'dit') {
-        $destination_text = ' - ' . __('Dit', 'museum-railway-timetable');
+        $dest = ' - ' . __('Dit', 'museum-railway-timetable');
     } elseif ($direction === 'från') {
-        $destination_text = ' - ' . __('Från', 'museum-railway-timetable');
+        $dest = ' - ' . __('Från', 'museum-railway-timetable');
     }
-    $auto_title = $route_name . $destination_text;
-    
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('MRT: Creating service with title: ' . $auto_title);
+    return $route_name . $dest;
+}
+
+/**
+ * Build response data for add-service success
+ */
+function MRT_build_add_service_response($service_id, $route_id, $train_type_id, $end_station_id, $direction) {
+    $service = get_post($service_id);
+    $route = get_post($route_id);
+    $train_type = $train_type_id > 0 ? get_term($train_type_id, 'mrt_train_type') : null;
+    $dest_name = '—';
+    if ($end_station_id > 0) {
+        $s = get_post($end_station_id);
+        $dest_name = $s ? $s->post_title : '—';
+    } elseif ($direction === 'dit') {
+        $dest_name = __('Dit', 'museum-railway-timetable');
+    } elseif ($direction === 'från') {
+        $dest_name = __('Från', 'museum-railway-timetable');
     }
+    return [
+        'service_id' => $service_id,
+        'service_title' => $service ? $service->post_title : '',
+        'route_name' => $route ? $route->post_title : '—',
+        'train_type_name' => $train_type ? $train_type->name : '—',
+        'destination' => $dest_name,
+        'direction' => $direction === 'dit' ? __('Dit', 'museum-railway-timetable') : ($direction === 'från' ? __('Från', 'museum-railway-timetable') : '—'),
+        'edit_url' => get_edit_post_link($service_id, 'raw'),
+    ];
+}
+
+/**
+ * Add service to timetable via AJAX
+ */
+function MRT_ajax_add_service_to_timetable() {
+    $input = MRT_ajax_validate_add_service_input();
+    if (is_wp_error($input)) {
+        wp_send_json_error(['message' => $input->get_error_message()]);
+    }
+
+    $auto_title = MRT_build_service_auto_title($input['route_id'], $input['end_station_id'], $input['direction']);
     $service_id = wp_insert_post([
         'post_type' => 'mrt_service',
         'post_title' => $auto_title,
         'post_status' => 'publish',
     ]);
-    
+
     if (is_wp_error($service_id)) {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            error_log('MRT: Failed to create service: ' . $service_id->get_error_message());
-        }
         wp_send_json_error(['message' => __('Failed to create trip: ', 'museum-railway-timetable') . $service_id->get_error_message()]);
     }
-    
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('MRT: Service created with ID: ' . $service_id);
-    }
-    
-    update_post_meta($service_id, 'mrt_service_timetable_id', $timetable_id);
-    update_post_meta($service_id, 'mrt_service_route_id', $route_id);
-    
-    if ($end_station_id > 0) {
-        update_post_meta($service_id, 'mrt_service_end_station_id', $end_station_id);
-        if ($direction) {
-            update_post_meta($service_id, 'mrt_direction', $direction);
+
+    update_post_meta($service_id, 'mrt_service_timetable_id', $input['timetable_id']);
+    update_post_meta($service_id, 'mrt_service_route_id', $input['route_id']);
+    if ($input['end_station_id'] > 0) {
+        update_post_meta($service_id, 'mrt_service_end_station_id', $input['end_station_id']);
+        if ($input['direction']) {
+            update_post_meta($service_id, 'mrt_direction', $input['direction']);
         }
-    } elseif ($direction !== '') {
-        update_post_meta($service_id, 'mrt_direction', $direction);
+    } elseif ($input['direction'] !== '') {
+        update_post_meta($service_id, 'mrt_direction', $input['direction']);
     }
-    
-    if ($train_type_id > 0) {
-        wp_set_object_terms($service_id, [$train_type_id], 'mrt_train_type');
+    if ($input['train_type_id'] > 0) {
+        wp_set_object_terms($service_id, [$input['train_type_id']], 'mrt_train_type');
     }
-    
-    $service = get_post($service_id);
-    $route = get_post($route_id);
-    $train_type = $train_type_id > 0 ? get_term($train_type_id, 'mrt_train_type') : null;
-    
-    $destination_name = '—';
-    if ($end_station_id > 0) {
-        $end_station = get_post($end_station_id);
-        if ($end_station) {
-            $destination_name = $end_station->post_title;
-        }
-    } elseif ($direction === 'dit') {
-        $destination_name = __('Dit', 'museum-railway-timetable');
-    } elseif ($direction === 'från') {
-        $destination_name = __('Från', 'museum-railway-timetable');
-    }
-    
-    $response_data = [
-        'service_id' => $service_id,
-        'service_title' => $service ? $service->post_title : '',
-        'route_name' => $route ? $route->post_title : '—',
-        'train_type_name' => $train_type ? $train_type->name : '—',
-        'destination' => $destination_name,
-        'direction' => $direction === 'dit' ? __('Dit', 'museum-railway-timetable') : ($direction === 'från' ? __('Från', 'museum-railway-timetable') : '—'),
-        'edit_url' => get_edit_post_link($service_id, 'raw'),
-    ];
-    
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('MRT: Sending success response: ' . print_r($response_data, true));
-    }
-    wp_send_json_success($response_data);
+
+    $response = MRT_build_add_service_response(
+        $service_id, $input['route_id'], $input['train_type_id'],
+        $input['end_station_id'], $input['direction']
+    );
+    wp_send_json_success($response);
 }
 
 /**

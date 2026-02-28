@@ -9,6 +9,7 @@ WordPress-plugin för tidtabeller. Följ dessa regler i all kod.
 
 ## Clean Code
 - **Korta funktioner** – En sak per funktion, max ~50 rader
+- **Max metodlängd** – Hård regel: max 50 rader per funktion/metod. Överskrids detta, dela upp i mindre funktioner (extract method)
 - **DRY** – Extrahera duplicerad logik till helpers
 - **KISS** – Välj enklaste lösningen
 - **Validera input** – Kontrollera data vid ingång till funktioner

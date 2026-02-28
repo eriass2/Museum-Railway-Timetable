@@ -184,72 +184,75 @@ function MRT_ajax_get_stoptime() {
 }
 
 /**
+ * Insert a single stop time for save_all
+ *
+ * @param wpdb $wpdb WordPress DB object
+ * @param array $stop Stop data
+ * @param int $service_id Service ID
+ * @param int $sequence Stop sequence
+ * @return int|false New sequence if inserted, false otherwise
+ */
+function MRT_insert_stoptime_for_save_all($wpdb, $stop, $service_id, $sequence) {
+    $station_id = intval($stop['station_id'] ?? 0);
+    $stops_here = isset($stop['stops_here']) && $stop['stops_here'] == '1';
+    if (!$stops_here || $station_id <= 0) {
+        return false;
+    }
+    $arrival = sanitize_text_field($stop['arrival'] ?? '');
+    $departure = sanitize_text_field($stop['departure'] ?? '');
+    if (($arrival && !MRT_validate_time_hhmm($arrival)) || ($departure && !MRT_validate_time_hhmm($departure))) {
+        return false;
+    }
+    $pickup = isset($stop['pickup']) && $stop['pickup'] == '1' ? 1 : 0;
+    $dropoff = isset($stop['dropoff']) && $stop['dropoff'] == '1' ? 1 : 0;
+    $table = $wpdb->prefix . 'mrt_stoptimes';
+    $result = $wpdb->insert($table, [
+        'service_post_id' => $service_id,
+        'station_post_id' => $station_id,
+        'stop_sequence' => $sequence,
+        'arrival_time' => $arrival ?: null,
+        'departure_time' => $departure ?: null,
+        'pickup_allowed' => $pickup,
+        'dropoff_allowed' => $dropoff,
+    ], ['%d', '%d', '%d', '%s', '%s', '%d', '%d']);
+    if ($result === false) {
+        MRT_check_db_error('MRT_ajax_save_all_stoptimes');
+        return false;
+    }
+    return $sequence + 1;
+}
+
+/**
  * Save all stop times for a service (from route-based form)
  */
 function MRT_ajax_save_all_stoptimes() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
-    
     if (!current_user_can('edit_posts')) {
         wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
     }
-    
     $service_id = intval($_POST['service_id'] ?? 0);
     if ($service_id <= 0) {
         wp_send_json_error(['message' => __('Invalid service ID.', 'museum-railway-timetable')]);
     }
-    
     $stops = isset($_POST['stops']) ? $_POST['stops'] : [];
     if (!is_array($stops)) {
         wp_send_json_error(['message' => __('Invalid stops data.', 'museum-railway-timetable')]);
     }
-    
+
     global $wpdb;
     $table = $wpdb->prefix . 'mrt_stoptimes';
-    
     $wpdb->delete($table, ['service_post_id' => $service_id], ['%d']);
-    
+
     $inserted = 0;
     $sequence = 1;
-    
     foreach ($stops as $stop) {
-        $station_id = intval($stop['station_id'] ?? 0);
-        $stops_here = isset($stop['stops_here']) && $stop['stops_here'] == '1';
-        
-        if (!$stops_here || $station_id <= 0) {
-            continue;
-        }
-        
-        $arrival = sanitize_text_field($stop['arrival'] ?? '');
-        $departure = sanitize_text_field($stop['departure'] ?? '');
-        
-        if ($arrival && !MRT_validate_time_hhmm($arrival)) {
-            continue;
-        }
-        if ($departure && !MRT_validate_time_hhmm($departure)) {
-            continue;
-        }
-        
-        $pickup = isset($stop['pickup']) && $stop['pickup'] == '1' ? 1 : 0;
-        $dropoff = isset($stop['dropoff']) && $stop['dropoff'] == '1' ? 1 : 0;
-        
-        $result = $wpdb->insert($table, [
-            'service_post_id' => $service_id,
-            'station_post_id' => $station_id,
-            'stop_sequence' => $sequence,
-            'arrival_time' => $arrival ?: null,
-            'departure_time' => $departure ?: null,
-            'pickup_allowed' => $pickup,
-            'dropoff_allowed' => $dropoff,
-        ], ['%d', '%d', '%d', '%s', '%s', '%d', '%d']);
-        
-        if ($result !== false) {
+        $next = MRT_insert_stoptime_for_save_all($wpdb, $stop, $service_id, $sequence);
+        if ($next !== false) {
             $inserted++;
-            $sequence++;
-        } else {
-            MRT_check_db_error('MRT_ajax_save_all_stoptimes');
+            $sequence = $next;
         }
     }
-    
+
     wp_send_json_success([
         'message' => sprintf(__('%d stop times saved.', 'museum-railway-timetable'), $inserted),
         'count' => $inserted,

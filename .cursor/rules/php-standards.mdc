@@ -14,6 +14,9 @@ alwaysApply: false
 | Meta keys | `mrt_` prefix | `mrt_service_number` |
 | Post types | `mrt_` prefix | `mrt_station`, `mrt_timetable` |
 
+## Metodlängd
+- **Max 50 rader** per funktion/metod. Överskrids detta, extrahera till mindre funktioner.
+
 ## Obligatoriskt
 - **ABSPATH** i alla PHP-filer (utom uninstall.php): `if (!defined('ABSPATH')) { exit; }`
 - **PHPDoc** på alla funktioner: `@param`, `@return`

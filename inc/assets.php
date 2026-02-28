@@ -8,109 +8,57 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * Enqueue admin assets
+ * Check if admin assets should be loaded for current page
  *
  * @param string $hook Current admin page hook
+ * @return bool
  */
-function MRT_enqueue_admin_assets($hook) {
-    // Load on plugin admin pages or when editing services/stations
+function MRT_should_load_admin_assets($hook) {
     $is_plugin_page = (strpos($hook, 'mrt_') !== false);
     $is_edit_page = in_array($hook, ['post.php', 'post-new.php']);
-    
     if (!$is_plugin_page && !$is_edit_page) {
-        return;
+        return false;
     }
-    
-    // For edit pages, only load if editing our CPTs
     if ($is_edit_page) {
         $post_type = get_post_type();
         if (!in_array($post_type, ['mrt_station', 'mrt_service', 'mrt_route', 'mrt_timetable'], true)) {
-            return;
+            return false;
         }
     }
+    return true;
+}
 
-    // Enqueue admin CSS (base, timetable, meta-boxes, dashboard, ui, responsive)
-    wp_enqueue_style(
-        'mrt-admin-base',
-        MRT_URL . 'assets/admin-base.css',
-        [],
-        MRT_VERSION
-    );
-    wp_enqueue_style(
-        'mrt-admin-timetable',
-        MRT_URL . 'assets/admin-timetable.css',
-        ['mrt-admin-base'],
-        MRT_VERSION
-    );
-    wp_enqueue_style(
-        'mrt-admin-timetable-overview',
-        MRT_URL . 'assets/admin-timetable-overview.css',
-        ['mrt-admin-timetable'],
-        MRT_VERSION
-    );
-    wp_enqueue_style(
-        'mrt-admin-meta-boxes',
-        MRT_URL . 'assets/admin-meta-boxes.css',
-        ['mrt-admin-timetable-overview'],
-        MRT_VERSION
-    );
-    wp_enqueue_style(
-        'mrt-admin-dashboard',
-        MRT_URL . 'assets/admin-dashboard.css',
-        ['mrt-admin-meta-boxes'],
-        MRT_VERSION
-    );
-    wp_enqueue_style(
-        'mrt-admin-ui',
-        MRT_URL . 'assets/admin-ui.css',
-        ['mrt-admin-dashboard'],
-        MRT_VERSION
-    );
-    wp_enqueue_style(
-        'mrt-admin-responsive',
-        MRT_URL . 'assets/admin-responsive.css',
-        ['mrt-admin-ui'],
-        MRT_VERSION
-    );
+/**
+ * Enqueue admin CSS files
+ */
+function MRT_enqueue_admin_css() {
+    $base = MRT_URL . 'assets/';
+    wp_enqueue_style('mrt-admin-base', $base . 'admin-base.css', [], MRT_VERSION);
+    wp_enqueue_style('mrt-admin-timetable', $base . 'admin-timetable.css', ['mrt-admin-base'], MRT_VERSION);
+    wp_enqueue_style('mrt-admin-timetable-overview', $base . 'admin-timetable-overview.css', ['mrt-admin-timetable'], MRT_VERSION);
+    wp_enqueue_style('mrt-admin-meta-boxes', $base . 'admin-meta-boxes.css', ['mrt-admin-timetable-overview'], MRT_VERSION);
+    wp_enqueue_style('mrt-admin-dashboard', $base . 'admin-dashboard.css', ['mrt-admin-meta-boxes'], MRT_VERSION);
+    wp_enqueue_style('mrt-admin-ui', $base . 'admin-ui.css', ['mrt-admin-dashboard'], MRT_VERSION);
+    wp_enqueue_style('mrt-admin-responsive', $base . 'admin-responsive.css', ['mrt-admin-ui'], MRT_VERSION);
+}
 
-    // Enqueue admin JavaScript (utils first, then UI modules, then main)
-    wp_enqueue_script(
-        'mrt-admin-utils',
-        MRT_URL . 'assets/admin-utils.js',
-        ['jquery'],
-        MRT_VERSION,
-        true
-    );
-    wp_enqueue_script(
-        'mrt-admin-route-ui',
-        MRT_URL . 'assets/admin-route-ui.js',
-        ['jquery'],
-        MRT_VERSION,
-        true
-    );
-    wp_enqueue_script(
-        'mrt-admin-stoptimes-ui',
-        MRT_URL . 'assets/admin-stoptimes-ui.js',
-        ['jquery'],
-        MRT_VERSION,
-        true
-    );
-    wp_enqueue_script(
-        'mrt-admin-timetable-services',
-        MRT_URL . 'assets/admin-timetable-services-ui.js',
-        ['mrt-admin-utils', 'jquery'],
-        MRT_VERSION,
-        true
-    );
-    wp_enqueue_script(
-        'mrt-admin',
-        MRT_URL . 'assets/admin.js',
-        ['mrt-admin-utils', 'mrt-admin-route-ui', 'mrt-admin-stoptimes-ui', 'mrt-admin-timetable-services', 'jquery'],
-        MRT_VERSION,
-        true
-    );
+/**
+ * Enqueue admin JavaScript files
+ */
+function MRT_enqueue_admin_js() {
+    wp_enqueue_script('mrt-admin-utils', MRT_URL . 'assets/admin-utils.js', ['jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-route-ui', MRT_URL . 'assets/admin-route-ui.js', ['jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-stoptimes-ui', MRT_URL . 'assets/admin-stoptimes-ui.js', ['jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-timetable-services', MRT_URL . 'assets/admin-timetable-services-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin', MRT_URL . 'assets/admin.js', [
+        'mrt-admin-utils', 'mrt-admin-route-ui', 'mrt-admin-stoptimes-ui', 'mrt-admin-timetable-services', 'jquery'
+    ], MRT_VERSION, true);
+}
 
-    // Localize script for AJAX and translations
+/**
+ * Localize admin script with translations and AJAX URL
+ */
+function MRT_localize_admin_script() {
     wp_localize_script('mrt-admin', 'mrtAdmin', [
         'ajaxurl' => admin_url('admin-ajax.php'),
         'invalidTimeFormat' => __('Invalid format. Use HH:MM (e.g., 09:15)', 'museum-railway-timetable'),
@@ -143,6 +91,20 @@ function MRT_enqueue_admin_assets($hook) {
         'loading' => __('Loading...', 'museum-railway-timetable'),
         'errorLoadingDestinations' => __('Error loading destinations', 'museum-railway-timetable'),
     ]);
+}
+
+/**
+ * Enqueue admin assets
+ *
+ * @param string $hook Current admin page hook
+ */
+function MRT_enqueue_admin_assets($hook) {
+    if (!MRT_should_load_admin_assets($hook)) {
+        return;
+    }
+    MRT_enqueue_admin_css();
+    MRT_enqueue_admin_js();
+    MRT_localize_admin_script();
 }
 add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');
 

@@ -2,6 +2,8 @@
 
 Översikt över filstorlekar och föreslagen uppdelning för enklare utveckling.
 
+**Max metodlängd:** 50 rader (STYLE_GUIDE.md + .cursor/rules)
+
 ## Nuvarande storlekar (uppskattat)
 
 | Fil | Rader | Status |

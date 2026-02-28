@@ -9,6 +9,7 @@ Kodstandarder och clean code-principer för projektet.
 ### Läsbarhet
 - **Namnge tydligt** – Variabler, funktioner och klasser ska beskriva sin syfte
 - **Korta funktioner** – En funktion gör en sak, max ~50 rader
+- **Max metodlängd** – Hård regel: max 50 rader per funktion/metod. Överskrids detta, dela upp i mindre funktioner (extract method)
 - **Undvik djup nästling** – Max 3–4 nivåer; refaktorera vid behov
 - **Kommentera varför, inte vad** – Koden ska vara självförklarande; kommentera affärslogik
 
