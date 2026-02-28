@@ -32,10 +32,11 @@
             var $tbody = $('#mrt-route-stations-tbody');
             var $newRow = $tbody.find('.mrt-new-route-station-row');
             var newIndex = currentStations.length;
+            var safeName = (window.MRTAdminUtils && window.MRTAdminUtils.escapeHtml) ? window.MRTAdminUtils.escapeHtml(stationName) : stationName;
 
             var $row = $('<tr class="mrt-row-hover" data-station-id="' + stationId + '">' +
                 '<td>' + newIndex + '</td>' +
-                '<td>' + stationName + '</td>' +
+                '<td>' + safeName + '</td>' +
                 '<td>' +
                 '<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="' + stationId + '" title="' + (typeof mrtAdmin !== 'undefined' ? mrtAdmin.moveUp : 'Move up') + '">↑</button> ' +
                 '<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="' + stationId + '" title="' + (typeof mrtAdmin !== 'undefined' ? mrtAdmin.moveDown : 'Move down') + '">↓</button> ' +
@@ -132,6 +133,15 @@
                                 $indicator.fadeOut(300, function() { $(this).remove(); });
                             }, 2000);
                         }
+                    },
+                    error: function() {
+                        var errMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.networkError) ? mrtAdmin.networkError : 'Network error. Please try again.';
+                        var safeMsg = (window.MRTAdminUtils && window.MRTAdminUtils.escapeHtml) ? window.MRTAdminUtils.escapeHtml(errMsg) : errMsg;
+                        var $err = $('<div class="mrt-alert mrt-alert-error mrt-mt-sm">' + safeMsg + '</div>');
+                        $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
+                        $('#mrt-route-end-station').closest('td').find('.mrt-alert').remove();
+                        $('#mrt-route-end-station').closest('td').append($err);
+                        setTimeout(function() { $err.fadeOut(300, function() { $(this).remove(); }); }, 3000);
                     }
                 });
             }, 1000);

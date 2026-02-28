@@ -110,7 +110,7 @@ function MRT_enqueue_admin_css(string $hook): void {
  */
 function MRT_enqueue_admin_js() {
     wp_enqueue_script('mrt-admin-utils', MRT_URL . 'assets/admin-utils.js', ['jquery'], MRT_VERSION, true);
-    wp_enqueue_script('mrt-admin-route-ui', MRT_URL . 'assets/admin-route-ui.js', ['jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-route-ui', MRT_URL . 'assets/admin-route-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-stoptimes-ui', MRT_URL . 'assets/admin-stoptimes-ui.js', ['jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-timetable-services', MRT_URL . 'assets/admin-timetable-services-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-service-edit', MRT_URL . 'assets/admin-service-edit.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
@@ -154,6 +154,14 @@ function MRT_localize_admin_script() {
         'selectRouteFirst' => __('Select a route first', MRT_TEXT_DOMAIN),
         'loading' => __('Loading...', MRT_TEXT_DOMAIN),
         'errorLoadingDestinations' => __('Error loading destinations', MRT_TEXT_DOMAIN),
+        'saving' => __('Saving...', MRT_TEXT_DOMAIN),
+        'adding' => __('Adding...', MRT_TEXT_DOMAIN),
+        'timeHint' => __('Leave empty if train stops but time is not fixed', MRT_TEXT_DOMAIN),
+        'pickup' => __('Pickup', MRT_TEXT_DOMAIN),
+        'dropoff' => __('Dropoff', MRT_TEXT_DOMAIN),
+        'edit' => __('Edit', MRT_TEXT_DOMAIN),
+        'tripAdded' => __('Trip added successfully.', MRT_TEXT_DOMAIN),
+        'tripRemoved' => __('Trip removed successfully.', MRT_TEXT_DOMAIN),
     ]);
 }
 

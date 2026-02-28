@@ -116,7 +116,7 @@
                         var editLink = document.createElement('a');
                         editLink.href = editUrlWithTimetable;
                         editLink.className = 'button button-small';
-                        editLink.textContent = 'Edit';
+                        editLink.textContent = (typeof mrtAdmin !== 'undefined' && mrtAdmin.edit) ? mrtAdmin.edit : 'Edit';
                         var removeBtn = document.createElement('button');
                         removeBtn.type = 'button';
                         removeBtn.className = 'button button-small mrt-delete-service-from-timetable';
@@ -128,7 +128,9 @@
                         $row.append(td1).append(td2).append(td3).append(td4);
                         $newRow.before($row);
 
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>Trip added successfully.</p></div>');
+                        var tripAddedMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.tripAdded) ? mrtAdmin.tripAdded : 'Trip added successfully.';
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p></p></div>');
+                        $successMsg.find('p').text(tripAddedMsg);
                         $('#mrt-timetable-services-box').before($successMsg);
                         setTimeout(function() {
                             $successMsg.fadeOut(300, function() { $(this).remove(); });
@@ -195,7 +197,9 @@
                         $row.fadeOut(function() {
                             $(this).remove();
                         });
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>Trip removed successfully.</p></div>');
+                        var tripRemovedMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.tripRemoved) ? mrtAdmin.tripRemoved : 'Trip removed successfully.';
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p></p></div>');
+                        $successMsg.find('p').text(tripRemovedMsg);
                         $('#mrt-timetable-services-box').before($successMsg);
                         setTimeout(function() {
                             $successMsg.fadeOut(300, function() { $(this).remove(); });

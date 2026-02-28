@@ -121,25 +121,32 @@
 
         renderStoptimesRows: function(stations, serviceId) {
             var $tbody = $('#mrt-stoptimes-tbody');
+            var utils = window.MRTAdminUtils;
+            var timeHint = (typeof mrtAdmin !== 'undefined' && mrtAdmin.timeHint) ? mrtAdmin.timeHint : 'Leave empty if train stops but time is not fixed';
+            var pickupLabel = (typeof mrtAdmin !== 'undefined' && mrtAdmin.pickup) ? mrtAdmin.pickup : 'Pickup';
+            var dropoffLabel = (typeof mrtAdmin !== 'undefined' && mrtAdmin.dropoff) ? mrtAdmin.dropoff : 'Dropoff';
             $tbody.empty();
             stations.forEach(function(station, index) {
                 var stopsHere = station.stops_here;
                 var disabledAttr = stopsHere ? '' : 'disabled';
                 var opacityClass = stopsHere ? '' : 'mrt-opacity-50';
+                var safeName = utils.escapeHtml(station.name || '');
+                var safeArrival = utils.escapeHtml(station.arrival_time || '');
+                var safeDeparture = utils.escapeHtml(station.departure_time || '');
                 var row = '<tr class="mrt-route-station-row" data-station-id="' + station.id + '" data-service-id="' + serviceId + '" data-sequence="' + station.sequence + '">' +
                     '<td>' + (index + 1) + '</td>' +
-                    '<td><strong>' + station.name + '</strong></td>' +
+                    '<td><strong>' + safeName + '</strong></td>' +
                     '<td><input type="checkbox" class="mrt-stops-here mrt-cursor-pointer" ' + (stopsHere ? 'checked' : '') + ' data-station-id="' + station.id + '" /></td>' +
                     '<td class="mrt-time-field mrt-relative ' + opacityClass + '">' +
-                    '<input type="text" class="mrt-arrival-time mrt-input mrt-input--sm mrt-font-mono" value="' + (station.arrival_time || '') + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
-                    '<p class="description mrt-text-xs mrt-text-tertiary">Leave empty if train stops but time is not fixed</p></td>' +
+                    '<input type="text" class="mrt-arrival-time mrt-input mrt-input--sm mrt-font-mono" value="' + safeArrival + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
+                    '<p class="description mrt-text-xs mrt-text-tertiary">' + utils.escapeHtml(timeHint) + '</p></td>' +
                     '<td class="mrt-time-field mrt-relative ' + opacityClass + '">' +
-                    '<input type="text" class="mrt-departure-time mrt-input mrt-input--sm mrt-font-mono" value="' + (station.departure_time || '') + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
-                    '<p class="description mrt-text-xs mrt-text-tertiary">Leave empty if train stops but time is not fixed</p></td>' +
+                    '<input type="text" class="mrt-departure-time mrt-input mrt-input--sm mrt-font-mono" value="' + safeDeparture + '" placeholder="HH:MM" pattern="[0-2][0-9]:[0-5][0-9]" ' + disabledAttr + ' />' +
+                    '<p class="description mrt-text-xs mrt-text-tertiary">' + utils.escapeHtml(timeHint) + '</p></td>' +
                     '<td class="mrt-option-field mrt-text-center ' + opacityClass + '">' +
-                    '<label><input type="checkbox" class="mrt-pickup mrt-cursor-pointer" ' + (station.pickup_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> Pickup</label></td>' +
+                    '<label><input type="checkbox" class="mrt-pickup mrt-cursor-pointer" ' + (station.pickup_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> ' + utils.escapeHtml(pickupLabel) + '</label></td>' +
                     '<td class="mrt-option-field mrt-text-center ' + opacityClass + '">' +
-                    '<label><input type="checkbox" class="mrt-dropoff mrt-cursor-pointer" ' + (station.dropoff_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> Dropoff</label></td>' +
+                    '<label><input type="checkbox" class="mrt-dropoff mrt-cursor-pointer" ' + (station.dropoff_allowed ? 'checked' : '') + ' ' + disabledAttr + ' /> ' + utils.escapeHtml(dropoffLabel) + '</label></td>' +
                     '</tr>';
                 $tbody.append(row);
             });
@@ -211,69 +218,75 @@
         },
 
         bindSaveAllStoptimes: function() {
-            var utils = window.MRTAdminUtils;
-
+            var self = this;
             $(document).on('click', '#mrt-save-all-stoptimes', function(e) {
-                var hasErrors = false;
-                $('.mrt-arrival-time, .mrt-departure-time').each(function() {
-                    var $input = $(this);
-                    var timeValue = $input.val();
-                    if (timeValue && timeValue.trim() !== '' && !utils.validateTimeFormat(timeValue)) {
-                        hasErrors = true;
-                        $input.trigger('blur');
-                    }
-                });
-                if (hasErrors) {
+                if (self.validateStoptimeFormats()) {
                     e.preventDefault();
-                    var errorMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.fixTimeFormats) ? mrtAdmin.fixTimeFormats : 'Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).';
-                    alert(errorMsg);
                     return false;
                 }
+                self.sendSaveAllStoptimes($(this));
+            });
+        },
 
-                var $btn = $(this);
-                if (!$btn.data('original-text')) $btn.data('original-text', $btn.text());
-                var serviceId = $btn.data('service-id');
-                var nonce = $('#mrt_stoptimes_nonce').val();
+        validateStoptimeFormats: function() {
+            var utils = window.MRTAdminUtils;
+            var hasErrors = false;
+            $('.mrt-arrival-time, .mrt-departure-time').each(function() {
+                var $input = $(this);
+                var timeValue = $input.val();
+                if (timeValue && timeValue.trim() !== '' && !utils.validateTimeFormat(timeValue)) {
+                    hasErrors = true;
+                    $input.trigger('blur');
+                }
+            });
+            if (hasErrors) {
+                var errorMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.fixTimeFormats) ? mrtAdmin.fixTimeFormats : 'Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).';
+                alert(errorMsg);
+                return true;
+            }
+            return false;
+        },
 
-                var stops = [];
-                $('#mrt-stoptimes-tbody .mrt-route-station-row').each(function() {
-                    var $row = $(this);
-                    stops.push({
-                        station_id: $row.data('station-id'),
-                        stops_here: $row.find('.mrt-stops-here').is(':checked') ? '1' : '0',
-                        arrival: $row.find('.mrt-arrival-time').val(),
-                        departure: $row.find('.mrt-departure-time').val(),
-                        pickup: $row.find('.mrt-pickup').is(':checked') ? '1' : '0',
-                        dropoff: $row.find('.mrt-dropoff').is(':checked') ? '1' : '0'
-                    });
+        sendSaveAllStoptimes: function($btn) {
+            if (!$btn.data('original-text')) $btn.data('original-text', $btn.text());
+            var serviceId = $btn.data('service-id');
+            var nonce = $('#mrt_stoptimes_nonce').val();
+            var stops = [];
+            $('#mrt-stoptimes-tbody .mrt-route-station-row').each(function() {
+                var $row = $(this);
+                stops.push({
+                    station_id: $row.data('station-id'),
+                    stops_here: $row.find('.mrt-stops-here').is(':checked') ? '1' : '0',
+                    arrival: $row.find('.mrt-arrival-time').val(),
+                    departure: $row.find('.mrt-departure-time').val(),
+                    pickup: $row.find('.mrt-pickup').is(':checked') ? '1' : '0',
+                    dropoff: $row.find('.mrt-dropoff').is(':checked') ? '1' : '0'
                 });
+            });
+            var originalText = $btn.data('original-text') || $btn.text();
+            var savingText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.saving) ? mrtAdmin.saving : 'Saving...';
+            $btn.prop('disabled', true).text(savingText).addClass('mrt-opacity-70 mrt-cursor-wait');
 
-                var originalText = $btn.data('original-text') || $btn.text();
-                $btn.prop('disabled', true).text('Saving...').addClass('mrt-opacity-70 mrt-cursor-wait');
-
-                $.post(mrtAdmin.ajaxurl, {
-                    action: 'mrt_save_all_stoptimes',
-                    nonce: nonce,
-                    service_id: serviceId,
-                    stops: stops
-                }, function(response) {
-                    if (response.success) {
-                        var $msg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>' + (response.data.message || 'Stop times saved successfully.') + '</p></div>');
-                        $btn.closest('.mrt-stoptimes-box').before($msg);
-                        setTimeout(function() { $msg.fadeOut(300, function() { $(this).remove(); }); }, 3000);
-                    } else {
-                        var $msg = $('<div class="mrt-error-message notice notice-error is-dismissible mrt-my-1"><p>' + (response.data.message || 'Error saving stop times.') + '</p></div>');
-                        $btn.closest('.mrt-stoptimes-box').before($msg);
-                    }
-                    $btn.prop('disabled', false).text(originalText).removeClass('mrt-opacity-70 mrt-cursor-wait');
-                }).fail(function() {
-                    var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
-                    var $errP = document.createElement('p');
-                    $errP.textContent = networkErrorMsg;
-                    var $msg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
-                    $btn.closest('.mrt-stoptimes-box').before($msg);
-                    $btn.prop('disabled', false).text(originalText).removeClass('mrt-opacity-70 mrt-cursor-wait');
-                });
+            $.post(mrtAdmin.ajaxurl, {
+                action: 'mrt_save_all_stoptimes',
+                nonce: nonce,
+                service_id: serviceId,
+                stops: stops
+            }, function(response) {
+                var msg = response.success ? (response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.stopTimeSavedSuccessfully : 'Stop times saved successfully.')) : (response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorSavingStopTime : 'Error saving stop times.'));
+                var cssClass = response.success ? 'mrt-success-message notice notice-success' : 'mrt-error-message notice notice-error';
+                var $msg = $('<div class="' + cssClass + ' is-dismissible mrt-my-1"><p></p></div>');
+                $msg.find('p').text(msg);
+                $btn.closest('.mrt-stoptimes-box').before($msg);
+                setTimeout(function() { $msg.fadeOut(300, function() { $(this).remove(); }); }, 3000);
+                $btn.prop('disabled', false).text(originalText).removeClass('mrt-opacity-70 mrt-cursor-wait');
+            }).fail(function() {
+                var networkErrorMsg = typeof mrtAdmin !== 'undefined' ? mrtAdmin.networkError : 'Network error. Please try again.';
+                var $errP = document.createElement('p');
+                $errP.textContent = networkErrorMsg;
+                var $msg = $('<div class="mrt-error-message notice notice-error is-dismissible"></div>').append($errP);
+                $btn.closest('.mrt-stoptimes-box').before($msg);
+                $btn.prop('disabled', false).text(originalText).removeClass('mrt-opacity-70 mrt-cursor-wait');
             });
         },
 

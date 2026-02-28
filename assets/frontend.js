@@ -78,7 +78,9 @@
         }
 
         function showError($container, message) {
-            $container.html('<div class="mrt-alert mrt-alert-error">' + message + '</div>');
+            var $div = $('<div class="mrt-alert mrt-alert-error"></div>');
+            $div.text(message);
+            $container.html($div);
         }
     }
 

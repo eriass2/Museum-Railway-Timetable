@@ -8,6 +8,22 @@
 
     window.MRTAdminUtils = {
         /**
+         * Escape HTML for safe insertion into HTML strings
+         * @param {string} str - String to escape
+         * @returns {string}
+         */
+        escapeHtml: function(str) {
+            if (str == null) return '';
+            var s = String(str);
+            return s
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        },
+
+        /**
          * Populate a select element with destination options (XSS-safe via textContent)
          * @param {jQuery} $select - The select element
          * @param {Array} destinations - Array of {id, name}

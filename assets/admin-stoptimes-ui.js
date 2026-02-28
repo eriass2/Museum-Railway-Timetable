@@ -55,30 +55,19 @@
 
             var $btn = $(this);
             var originalText = $btn.text();
-            $btn.prop('disabled', true).text('Saving...');
+            $btn.prop('disabled', true).text((typeof mrtAdmin !== 'undefined' && mrtAdmin.saving) ? mrtAdmin.saving : 'Saving...');
 
             $.post(mrtAdmin.ajaxurl, data, function(response) {
                 if (response.success) {
                     if (response.data) {
-                        var st = response.data;
-                        $row.find('[data-field="arrival"] input').val(st.arrival_time || '');
-                        $row.find('[data-field="departure"] input').val(st.departure_time || '');
-                        $row.find('[data-field="pickup"] input[type="checkbox"]').prop('checked', st.pickup_allowed == 1);
-                        $row.find('[data-field="dropoff"] input[type="checkbox"]').prop('checked', st.dropoff_allowed == 1);
+                        applyStoptimeToRow($row, response.data);
                     }
-                    $row.removeClass('mrt-editing');
-                    $row.find('.mrt-display').show();
-                    $row.find('.mrt-input').hide();
-                    $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
-                    $row.find('.mrt-delete-stoptime').show();
-                    editingRow = null;
-
+                    exitEditMode($row);
                     var successMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.stopTimeSavedSuccessfully) ? mrtAdmin.stopTimeSavedSuccessfully : 'Stop time saved successfully.';
-                    var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>' + successMsg + '</p></div>');
+                    var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p></p></div>');
+                    $successMsg.find('p').text(successMsg);
                     $container.before($successMsg);
-                    setTimeout(function() {
-                        $successMsg.fadeOut(300, function() { $(this).remove(); });
-                    }, 3000);
+                    setTimeout(function() { $successMsg.fadeOut(300, function() { $(this).remove(); }); }, 3000);
                 } else {
                     alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorSavingStopTime : 'Error saving stop time.'));
                     $btn.prop('disabled', false).text(originalText);
@@ -110,7 +99,7 @@
 
             var $btn = $(this);
             var originalText = $btn.text();
-            $btn.prop('disabled', true).text('Adding...');
+            $btn.prop('disabled', true).text((typeof mrtAdmin !== 'undefined' && mrtAdmin.adding) ? mrtAdmin.adding : 'Adding...');
 
             $.post(mrtAdmin.ajaxurl, data, function(response) {
                 if (response.success) {
@@ -119,25 +108,13 @@
                         $row.data('stoptime-id', st.id);
                         $row.data('id', st.id);
                         $row.removeClass('mrt-new-row');
-
-                        $row.find('[data-field="arrival"] input').val(st.arrival_time || '');
-                        $row.find('[data-field="departure"] input').val(st.departure_time || '');
-                        $row.find('[data-field="pickup"] input[type="checkbox"]').prop('checked', st.pickup_allowed == 1);
-                        $row.find('[data-field="dropoff"] input[type="checkbox"]').prop('checked', st.dropoff_allowed == 1);
-
-                        $row.removeClass('mrt-editing');
-                        $row.find('.mrt-display').show();
-                        $row.find('.mrt-input').hide();
-                        $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
-                        $row.find('.mrt-delete-stoptime').show();
-                        editingRow = null;
-
+                        applyStoptimeToRow($row, st);
+                        exitEditMode($row);
                         var successMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.stopTimeAddedSuccessfully) ? mrtAdmin.stopTimeAddedSuccessfully : 'Stop time added successfully.';
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>' + successMsg + '</p></div>');
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p></p></div>');
+                        $successMsg.find('p').text(successMsg);
                         $container.before($successMsg);
-                        setTimeout(function() {
-                            $successMsg.fadeOut(300, function() { $(this).remove(); });
-                        }, 3000);
+                        setTimeout(function() { $successMsg.fadeOut(300, function() { $(this).remove(); }); }, 3000);
                     }
                 } else {
                     alert(response.data.message || (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorAddingStopTime : 'Error adding stop time.'));
@@ -179,47 +156,39 @@
             $row.find('.mrt-delete-stoptime').hide();
         }
 
+        function exitEditMode($row) {
+            $row.removeClass('mrt-editing');
+            $row.find('.mrt-display').show();
+            $row.find('.mrt-input').hide();
+            $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
+            $row.find('.mrt-delete-stoptime').show();
+            editingRow = null;
+        }
+
+        function applyStoptimeToRow($row, st) {
+            $row.find('[data-field="arrival"] input').val(st.arrival_time || '');
+            $row.find('[data-field="departure"] input').val(st.departure_time || '');
+            $row.find('.mrt-arrival-time').val(st.arrival_time || '');
+            $row.find('.mrt-departure-time').val(st.departure_time || '');
+            $row.find('[data-field="pickup"] input[type="checkbox"]').prop('checked', st.pickup_allowed == 1);
+            $row.find('[data-field="dropoff"] input[type="checkbox"]').prop('checked', st.dropoff_allowed == 1);
+            $row.find('.mrt-pickup').prop('checked', st.pickup_allowed == 1);
+            $row.find('.mrt-dropoff').prop('checked', st.dropoff_allowed == 1);
+        }
+
         function cancelEditStopTime($row) {
             if (!$row.length) return;
-
             var stoptimeId = $row.data('stoptime-id');
-            if (stoptimeId && stoptimeId !== 'new') {
-                var id = $row.data('id');
-                if (id) {
-                    $.post(mrtAdmin.ajaxurl, {
-                        action: 'mrt_get_stoptime',
-                        nonce: nonce,
-                        id: id
-                    }, function(response) {
-                        if (response.success && response.data) {
-                            var st = response.data;
-                            $row.find('.mrt-arrival-time').val(st.arrival_time || '');
-                            $row.find('.mrt-departure-time').val(st.departure_time || '');
-                            $row.find('.mrt-pickup').prop('checked', st.pickup_allowed == 1);
-                            $row.find('.mrt-dropoff').prop('checked', st.dropoff_allowed == 1);
-                        }
-                        $row.removeClass('mrt-editing');
-                        $row.find('.mrt-display').show();
-                        $row.find('.mrt-input').hide();
-                        $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
-                        $row.find('.mrt-delete-stoptime').show();
-                        editingRow = null;
-                    });
-                } else {
-                    $row.removeClass('mrt-editing');
-                    $row.find('.mrt-display').show();
-                    $row.find('.mrt-input').hide();
-                    $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
-                    $row.find('.mrt-delete-stoptime').show();
-                    editingRow = null;
-                }
+            var id = $row.data('id');
+            if (stoptimeId && stoptimeId !== 'new' && id) {
+                $.post(mrtAdmin.ajaxurl, { action: 'mrt_get_stoptime', nonce: nonce, id: id }, function(response) {
+                    if (response.success && response.data) {
+                        applyStoptimeToRow($row, response.data);
+                    }
+                    exitEditMode($row);
+                });
             } else {
-                $row.removeClass('mrt-editing');
-                $row.find('.mrt-display').show();
-                $row.find('.mrt-input').hide();
-                $row.find('.mrt-save-stoptime, .mrt-cancel-edit').hide();
-                $row.find('.mrt-delete-stoptime').show();
-                editingRow = null;
+                exitEditMode($row);
             }
         }
     }
