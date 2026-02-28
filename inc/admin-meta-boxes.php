@@ -142,6 +142,16 @@ function MRT_render_station_meta_box($post) {
             </td>
         </tr>
         <tr>
+            <th><label for="mrt_station_bus_suffix"><?php esc_html_e('Bus stop marker', 'museum-railway-timetable'); ?></label></th>
+            <td>
+                <?php $bus_suffix = get_post_meta($post->ID, 'mrt_station_bus_suffix', true); ?>
+                <label>
+                    <input type="checkbox" name="mrt_station_bus_suffix" id="mrt_station_bus_suffix" value="1" <?php checked($bus_suffix, '1'); ?> />
+                    <?php esc_html_e('Show asterisk (*) in timetable (e.g. "Från Selknä*" for bus connections)', 'museum-railway-timetable'); ?>
+                </label>
+            </td>
+        </tr>
+        <tr>
             <th><label for="mrt_lat"><?php esc_html_e('Latitude', 'museum-railway-timetable'); ?></label></th>
             <td>
                 <input type="number" name="mrt_lat" id="mrt_lat" value="<?php echo esc_attr($lat); ?>" step="any" class="mrt-meta-field" placeholder="<?php esc_attr_e('e.g., 57.486', 'museum-railway-timetable'); ?>" />
@@ -194,6 +204,12 @@ add_action('save_post_mrt_station', function($post_id) {
         if (in_array($type, $allowed_types, true)) {
             update_post_meta($post_id, 'mrt_station_type', $type);
         }
+    }
+
+    if (isset($_POST['mrt_station_bus_suffix'])) {
+        update_post_meta($post_id, 'mrt_station_bus_suffix', '1');
+    } else {
+        update_post_meta($post_id, 'mrt_station_bus_suffix', '0');
     }
     
     if (isset($_POST['mrt_lat'])) {
@@ -442,6 +458,23 @@ function MRT_render_timetable_meta_box($post) {
         <p><strong><?php esc_html_e('💡 What is a Timetable?', 'museum-railway-timetable'); ?></strong></p>
         <p><?php esc_html_e('A timetable defines which days (dates) trains run. You can add dates using patterns (e.g., all Wednesdays in June-September) or add specific dates. You can also remove individual dates from patterns.', 'museum-railway-timetable'); ?></p>
     </div>
+
+    <?php $timetable_type = get_post_meta($post->ID, 'mrt_timetable_type', true); ?>
+    <table class="form-table" style="margin-bottom: 1.5rem;">
+        <tr>
+            <th><label for="mrt_timetable_type"><?php esc_html_e('Timetable type', 'museum-railway-timetable'); ?></label></th>
+            <td>
+                <select name="mrt_timetable_type" id="mrt_timetable_type" class="mrt-meta-field">
+                    <option value=""><?php esc_html_e('— None —', 'museum-railway-timetable'); ?></option>
+                    <option value="green" <?php selected($timetable_type, 'green'); ?>><?php esc_html_e('Grön (Green)', 'museum-railway-timetable'); ?></option>
+                    <option value="red" <?php selected($timetable_type, 'red'); ?>><?php esc_html_e('Röd (Red)', 'museum-railway-timetable'); ?></option>
+                    <option value="yellow" <?php selected($timetable_type, 'yellow'); ?>><?php esc_html_e('Gul (Yellow)', 'museum-railway-timetable'); ?></option>
+                    <option value="orange" <?php selected($timetable_type, 'orange'); ?>><?php esc_html_e('Orange', 'museum-railway-timetable'); ?></option>
+                </select>
+                <p class="description"><?php esc_html_e('Shows as "GRÖN TIDTABELL", "RÖD TIDTABELL" etc. in the timetable overview.', 'museum-railway-timetable'); ?></p>
+            </td>
+        </tr>
+    </table>
     
     <!-- Pattern-based date selection -->
     <div class="mrt-date-pattern-section" style="margin-bottom: 1.5rem; padding: 1rem; background: #f9f9f9; border: 1px solid #ddd; border-radius: 4px;">
@@ -683,6 +716,15 @@ add_action('save_post_mrt_timetable', function($post_id) {
         return;
     }
     
+    // Save timetable type (green, red, yellow, orange)
+    if (isset($_POST['mrt_timetable_type'])) {
+        $type = sanitize_text_field($_POST['mrt_timetable_type']);
+        $allowed = ['green', 'red', 'yellow', 'orange', ''];
+        if (in_array($type, $allowed, true)) {
+            update_post_meta($post_id, 'mrt_timetable_type', $type);
+        }
+    }
+
     // Save timetable dates (array)
     if (isset($_POST['mrt_timetable_dates']) && is_array($_POST['mrt_timetable_dates'])) {
         $dates = [];

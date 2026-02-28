@@ -8,6 +8,24 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
+ * Get station display name for timetable (with optional bus asterisk)
+ *
+ * @param WP_Post $station Station post object
+ * @return string Display name, e.g. "Selknä*" if bus suffix is set
+ */
+function MRT_get_station_display_name($station) {
+    if (!$station || !isset($station->post_title)) {
+        return '';
+    }
+    $name = $station->post_title;
+    $bus_suffix = get_post_meta($station->ID, 'mrt_station_bus_suffix', true);
+    if ($bus_suffix === '1') {
+        $name .= '*';
+    }
+    return $name;
+}
+
+/**
  * Get all stations ordered by display order
  *
  * @return array Array of station post IDs
@@ -580,6 +598,67 @@ function MRT_format_time_display($time) {
         return '';
     }
     return str_replace(':', '.', $time);
+}
+
+/**
+ * Format time display for a stop time
+ * Determines the appropriate symbol (P, A, X, |) and formats the time
+ *
+ * @param array|null $stop_time Stop time data array with keys: arrival_time, departure_time, pickup_allowed, dropoff_allowed
+ * @return string Formatted time display (e.g., "10.13", "P 10.13", "X", "|", "—")
+ */
+function MRT_format_stop_time_display($stop_time) {
+    if (!$stop_time) {
+        return '—';
+    }
+    
+    $arrival = $stop_time['arrival_time'] ?? '';
+    $departure = $stop_time['departure_time'] ?? '';
+    $pickup_allowed = !empty($stop_time['pickup_allowed']);
+    $dropoff_allowed = !empty($stop_time['dropoff_allowed']);
+    
+    // Determine if train stops here
+    $stops_here = $pickup_allowed || $dropoff_allowed;
+    
+    // If train doesn't stop (no pickup, no dropoff), show vertical bar
+    if (!$stops_here) {
+        return '|';
+    }
+    
+    // Determine symbol prefix based on stop behavior
+    $symbol_prefix = '';
+    
+    // Determine symbol based on pickup/dropoff behavior
+    if ($pickup_allowed && !$dropoff_allowed) {
+        // Only pickup allowed = P (påstigning)
+        $symbol_prefix = 'P ';
+    } elseif (!$pickup_allowed && $dropoff_allowed) {
+        // Only dropoff allowed = A (avstigning)
+        $symbol_prefix = 'A ';
+    }
+    // If both allowed, no prefix (normal stop)
+    
+    // Get time string (prefer departure, fallback to arrival)
+    if ($departure) {
+        $time_str = $departure;
+    } elseif ($arrival) {
+        $time_str = $arrival;
+    } else {
+        // No time specified - show X if both pickup/dropoff, otherwise just symbol
+        if ($pickup_allowed && $dropoff_allowed) {
+            $time_str = 'X';
+            $symbol_prefix = ''; // X replaces prefix
+        } else {
+            $time_str = '';
+        }
+    }
+    
+    // Convert HH:MM to HH.MM format using helper
+    if ($time_str && $time_str !== 'X') {
+        $time_str = MRT_format_time_display($time_str);
+    }
+    
+    return $symbol_prefix . $time_str;
 }
 
 /**
