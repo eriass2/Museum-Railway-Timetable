@@ -81,8 +81,3 @@ require_once MRT_PATH . 'inc/import-lennakatten.php';
 require_once MRT_PATH . 'inc/admin-list.php';
 require_once MRT_PATH . 'inc/cpt.php';
 require_once MRT_PATH . 'inc/shortcodes.php';
-
-// Example init hook for future extensions
-add_action('init', function () {
-    // Register additional hooks or logic here if needed
-});

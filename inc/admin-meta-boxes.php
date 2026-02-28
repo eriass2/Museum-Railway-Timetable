@@ -13,6 +13,7 @@ require_once MRT_PATH . 'inc/admin-meta-boxes/timetable.php';
 require_once MRT_PATH . 'inc/admin-meta-boxes/timetable-services.php';
 require_once MRT_PATH . 'inc/admin-meta-boxes/timetable-overview.php';
 require_once MRT_PATH . 'inc/admin-meta-boxes/service.php';
+require_once MRT_PATH . 'inc/admin-meta-boxes/service-save.php';
 require_once MRT_PATH . 'inc/admin-meta-boxes/service-stoptimes.php';
 require_once MRT_PATH . 'inc/admin-meta-boxes/hooks.php';
 

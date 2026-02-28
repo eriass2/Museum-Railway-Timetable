@@ -4,6 +4,33 @@
 
 **Max metodlängd:** 50 rader (STYLE_GUIDE.md + .cursor/rules)
 
+## Metodlängdsrefaktorering (klar)
+
+Alla långa metoder har brutits ner till max 50 rader:
+- `grid.php` – MRT_render_timetable_table_body → from/to/regular/transfer rows
+- `dashboard.php` – Partials (stats, routes, quick-actions, guide, shortcodes, dev-tools)
+- `service.php` – Timetable label, destination field, editing hooks, info/timetable/route/train-type/number/train-types-by-date rows
+- `admin-list.php` – Filterform, tabellrader, MRT_render_stations_overview_row, MRT_get_routes_using_station, MRT_render_stations_overview_table
+- `assets.php` – CSS, JS, localize i egna funktioner
+- `timetable-services.php` – Validering, auto title, response
+- `service-stoptimes.php` – Instruktioner, tabell
+- `stoptimes.php` – Insert per stop extraherat, MRT_validate_stoptime_add_input, MRT_validate_stoptime_update_input
+
+## Ytterligare refaktoreringar (runda 2)
+
+- `services.php` – MRT_get_timetables_for_date, MRT_filter_services_verified_for_date, MRT_map_departure_rows_to_result, MRT_map_connection_rows_to_result (redan separata)
+- `timetable-services.php` – MRT_render_timetable_service_row, MRT_render_timetable_new_service_row (redan separata)
+- `route.php` – MRT_render_route_related_services, MRT_render_route_info_box, MRT_render_route_end_stations_section, MRT_render_route_stations_table ✅
+- `timetable.php` – MRT_render_timetable_date_sections, timetable-dates-script.php (redan extraherat)
+
+## Filuppdelning (runda 3)
+
+- `shortcodes.php` → `inc/shortcodes/` (shortcode-month.php, shortcode-overview.php, shortcode-journey.php)
+- `shortcode-journey.php` – MRT_render_journey_form, MRT_render_journey_results_title, MRT_render_journey_connections_table ✅
+- `service.php` → service-save.php (save_post callback extraherad)
+- `import-lennakatten.php` → `inc/import-lennakatten/` (import-data.php, import-run.php)
+- `cpt.php` → `inc/cpt/` (cpt-register.php, cpt-admin.php)
+
 ## Nuvarande storlekar (uppskattat)
 
 | Fil | Rader | Status |

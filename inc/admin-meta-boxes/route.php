@@ -8,32 +8,49 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * Render route meta box
+ * Render related trips section for route meta box
  *
- * @param WP_Post $post Current post object
+ * @param int $route_id Route post ID
  */
-function MRT_render_route_meta_box($post) {
-    wp_nonce_field('mrt_save_route_meta', 'mrt_route_meta_nonce');
-    
-    // Get stations on this route (stored as post meta array)
-    $route_stations = get_post_meta($post->ID, 'mrt_route_stations', true);
-    if (!is_array($route_stations)) {
-        $route_stations = [];
-    }
-    
-    // Get end stations (start and end/terminus)
-    $route_start_station = get_post_meta($post->ID, 'mrt_route_start_station', true);
-    $route_end_station = get_post_meta($post->ID, 'mrt_route_end_station', true);
-    
-    // Get all stations for dropdown
-    $all_stations = get_posts([
-        'post_type' => 'mrt_station',
+function MRT_render_route_related_services($route_id) {
+    $services = get_posts([
+        'post_type' => 'mrt_service',
         'posts_per_page' => -1,
-        'orderby' => ['meta_value_num' => 'ASC', 'title' => 'ASC'],
-        'meta_key' => 'mrt_display_order',
+        'meta_query' => [['key' => 'mrt_service_route_id', 'value' => $route_id, 'compare' => '=']],
         'fields' => 'all',
     ]);
-    
+    if (empty($services)) {
+        return;
+    }
+    ?>
+    <div class="mrt-alert mrt-alert-info mrt-info-box mrt-mt-1">
+        <p><strong><?php esc_html_e('Related Trips:', 'museum-railway-timetable'); ?></strong></p>
+        <p class="description"><?php esc_html_e('This route is used by the following trips:', 'museum-railway-timetable'); ?></p>
+        <ul class="mrt-list-indent">
+            <?php foreach ($services as $service):
+                $timetable_id = get_post_meta($service->ID, 'mrt_service_timetable_id', true);
+                $timetable_link = $timetable_id ? get_edit_post_link($timetable_id) : '';
+                $service_link = $timetable_link ? add_query_arg('timetable_id', $timetable_id, get_edit_post_link($service->ID)) : get_edit_post_link($service->ID);
+                $timetable = $timetable_id ? get_post($timetable_id) : null;
+                $timetable_label = $timetable ? ($timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable_id) : '';
+            ?>
+                <li>
+                    <a href="<?php echo esc_url($service_link); ?>"><?php echo esc_html($service->post_title); ?></a>
+                    <?php if ($timetable_link && $timetable_label): ?>
+                        <span class="description">(<?php esc_html_e('in', 'museum-railway-timetable'); ?>
+                        <a href="<?php echo esc_url($timetable_link); ?>"><?php echo esc_html($timetable_label); ?></a>)</span>
+                    <?php endif; ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+    <?php
+}
+
+/**
+ * Render route info/help box
+ */
+function MRT_render_route_info_box() {
     ?>
     <div class="mrt-alert mrt-alert-info mrt-info-box">
         <p><strong><?php esc_html_e('💡 What is a Route?', 'museum-railway-timetable'); ?></strong></p>
@@ -49,8 +66,18 @@ function MRT_render_route_meta_box($post) {
         </ol>
         </div>
     </div>
-    
-    <!-- End Stations (Terminus) -->
+    <?php
+}
+
+/**
+ * Render route end stations (terminus) section
+ *
+ * @param array $all_stations All station posts
+ * @param mixed $route_start_station Start station ID
+ * @param mixed $route_end_station End station ID
+ */
+function MRT_render_route_end_stations_section($all_stations, $route_start_station, $route_end_station) {
+    ?>
     <div class="mrt-box mrt-end-stations-section">
         <h3 class="mrt-section-heading"><?php esc_html_e('End Stations (Terminus)', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Define the start and end stations for this route. These are the terminus stations where trains can start or end their journey.', 'museum-railway-timetable'); ?></p>
@@ -81,6 +108,17 @@ function MRT_render_route_meta_box($post) {
             </tr>
         </table>
     </div>
+    <?php
+}
+
+/**
+ * Render route stations table (stations on route)
+ *
+ * @param array $route_stations Array of station IDs
+ * @param array $all_stations All station posts
+ */
+function MRT_render_route_stations_table($route_stations, $all_stations) {
+    ?>
     <div id="mrt-route-stations-container" class="mrt-box mrt-mt-1">
         <h3 class="mrt-section-heading"><?php esc_html_e('Stations on Route', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Add stations in the order they appear on the route. Use ↑ ↓ to reorder.', 'museum-railway-timetable'); ?></p>
@@ -94,7 +132,7 @@ function MRT_render_route_meta_box($post) {
             </thead>
             <tbody id="mrt-route-stations-tbody">
                 <?php if (!empty($route_stations)): ?>
-                    <?php foreach ($route_stations as $index => $station_id): 
+                    <?php foreach ($route_stations as $index => $station_id):
                         $station = get_post($station_id);
                         if (!$station) continue;
                     ?>
@@ -127,44 +165,35 @@ function MRT_render_route_meta_box($post) {
         </table>
         <input type="hidden" name="mrt_route_stations" id="mrt_route_stations" value="<?php echo esc_attr(implode(',', $route_stations)); ?>" />
     </div>
-    
     <?php
-    // Show related services using this route
-    $services_using_route = get_posts([
-        'post_type' => 'mrt_service',
+}
+
+/**
+ * Render route meta box
+ *
+ * @param WP_Post $post Current post object
+ */
+function MRT_render_route_meta_box($post) {
+    wp_nonce_field('mrt_save_route_meta', 'mrt_route_meta_nonce');
+
+    $route_stations = get_post_meta($post->ID, 'mrt_route_stations', true);
+    if (!is_array($route_stations)) {
+        $route_stations = [];
+    }
+    $route_start_station = get_post_meta($post->ID, 'mrt_route_start_station', true);
+    $route_end_station = get_post_meta($post->ID, 'mrt_route_end_station', true);
+    $all_stations = get_posts([
+        'post_type' => 'mrt_station',
         'posts_per_page' => -1,
-        'meta_query' => [[
-            'key' => 'mrt_service_route_id',
-            'value' => $post->ID,
-            'compare' => '=',
-        ]],
+        'orderby' => ['meta_value_num' => 'ASC', 'title' => 'ASC'],
+        'meta_key' => 'mrt_display_order',
         'fields' => 'all',
     ]);
-    
-    if (!empty($services_using_route)) {
-        echo '<div class="mrt-alert mrt-alert-info mrt-info-box mrt-mt-1">';
-        echo '<p><strong>' . esc_html__('Related Trips:', 'museum-railway-timetable') . '</strong></p>';
-        echo '<p class="description">' . esc_html__('This route is used by the following trips:', 'museum-railway-timetable') . '</p>';
-        echo '<ul class="mrt-list-indent">';
-        foreach ($services_using_route as $service) {
-            $timetable_id = get_post_meta($service->ID, 'mrt_service_timetable_id', true);
-            $timetable_link = $timetable_id ? get_edit_post_link($timetable_id) : '';
-            $service_link = $timetable_link ? add_query_arg('timetable_id', $timetable_id, get_edit_post_link($service->ID)) : get_edit_post_link($service->ID);
-            echo '<li>';
-            echo '<a href="' . esc_url($service_link) . '">' . esc_html($service->post_title) . '</a>';
-            if ($timetable_link) {
-                $timetable = get_post($timetable_id);
-                if ($timetable) {
-                    echo ' <span class="description">(' . esc_html__('in', 'museum-railway-timetable') . ' <a href="' . esc_url($timetable_link) . '">' . esc_html($timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable_id) . '</a>)</span>';
-                }
-            }
-            echo '</li>';
-        }
-        echo '</ul>';
-        echo '</div>';
-    }
-    ?>
-    <?php
+
+    MRT_render_route_info_box();
+    MRT_render_route_end_stations_section($all_stations, $route_start_station, $route_end_station);
+    MRT_render_route_stations_table($route_stations, $all_stations);
+    MRT_render_route_related_services($post->ID);
 }
 
 /**

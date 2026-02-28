@@ -181,23 +181,37 @@ museum-railway-timetable/
 ├─ uninstall.php                 # Uninstall hook
 ├─ inc/
 │   ├─ functions/
-│   │   ├─ helpers.php           # Helper functions
+│   │   ├─ helpers.php           # Loader + helpers-*.php
 │   │   ├─ services.php          # Service-related functions
-│   │   └─ timetable-view.php    # Timetable overview rendering
-│   ├─ assets.php                # Asset enqueuing
-│   ├─ admin-page.php            # Main admin page and menu
-│   ├─ admin-list.php            # Stations overview
-│   ├─ admin-meta-boxes.php      # Meta boxes for CPTs (inline editing)
-│   ├─ admin-ajax.php            # AJAX handlers for CRUD operations
-│   ├─ cpt.php                   # Custom post types
-│   └─ shortcodes.php            # Shortcode registrations
+│   │   └─ timetable-view/       # prepare, grid, overview
+│   ├─ admin-page/               # dashboard, clear-db, dashboard-*
+│   ├─ admin-meta-boxes/         # station, route, timetable, service, etc.
+│   ├─ admin-ajax/              # stoptimes, timetable-services, journey, etc.
+│   ├─ shortcodes/              # shortcode-month, shortcode-overview, shortcode-journey
+│   ├─ cpt/                     # cpt-register, cpt-admin
+│   ├─ import-lennakatten/       # import-data, import-run
+│   ├─ assets.php               # Asset enqueuing
+│   ├─ admin-page.php           # Loader
+│   ├─ admin-meta-boxes.php     # Loader
+│   ├─ admin-ajax.php           # Loader
+│   ├─ admin-list.php           # Stations overview
+│   ├─ cpt.php                  # Loader
+│   ├─ shortcodes.php           # Loader
+│   └─ import-lennakatten.php   # Loader
 ├─ assets/
-│   ├─ admin-base.css            # Variables, base styles
-│   ├─ admin-timetable.css       # Timetable grid, calendar
-│   ├─ admin-ui.css              # Meta boxes, dashboard, responsive
-│   ├─ admin.js                  # Admin JavaScript (inline editing)
-│   └─ frontend.js                # Frontend JavaScript (AJAX for shortcodes)
-└─ languages/                    # Translation files
+│   ├─ admin-base.css           # Variables, base styles
+│   ├─ admin-timetable.css      # Timetable grid, calendar
+│   ├─ admin-timetable-overview.css
+│   ├─ admin-meta-boxes.css
+│   ├─ admin-dashboard.css
+│   ├─ admin-ui.css
+│   ├─ admin-responsive.css
+│   ├─ admin.js                 # Main admin script
+│   ├─ admin-utils.js           # Utilities
+│   ├─ admin-route-ui.js
+│   ├─ admin-stoptimes-ui.js
+│   └─ admin-timetable-services-ui.js
+└─ languages/                   # Translation files
 ```
 
 ### Coding Standards

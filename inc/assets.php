@@ -128,11 +128,7 @@ function MRT_enqueue_frontend_assets() {
         }
     }
     
-    // Also check in widgets and other content areas
     if (!$has_shortcode) {
-        // Check if shortcodes are registered (they might be used in widgets/blocks)
-        // For now, we'll enqueue on all pages, but this could be optimized
-        // by checking widget content or using a filter
         $has_shortcode = apply_filters('mrt_should_enqueue_frontend_assets', false);
     }
 
