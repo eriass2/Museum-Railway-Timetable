@@ -153,9 +153,7 @@ function MRT_render_journey_connections_table($connections) {
  */
 function MRT_render_journey_results($from_station_id, $to_station_id, $selected_date) {
     if ($from_station_id > 0 && $to_station_id > 0 && $from_station_id === $to_station_id) {
-        echo '<div class="mrt-alert mrt-alert-error">';
-        esc_html_e('Please select different stations for departure and arrival.', 'museum-railway-timetable');
-        echo '</div>';
+        echo MRT_render_alert(__('Please select different stations for departure and arrival.', 'museum-railway-timetable'), 'error');
         return;
     }
     if ($from_station_id <= 0 || $to_station_id <= 0) {

@@ -28,7 +28,7 @@ function MRT_render_shortcode_overview($atts) {
     }
 
     if (!$timetable_id || $timetable_id <= 0) {
-        return '<div class="mrt-alert mrt-alert-error">' . esc_html__('Timetable not found.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('Timetable not found.', 'museum-railway-timetable'), 'error');
     }
 
     return MRT_render_timetable_overview($timetable_id);

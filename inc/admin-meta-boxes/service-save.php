@@ -15,13 +15,7 @@ add_action('save_post_mrt_service', 'MRT_save_service_meta_box');
  * @param int $post_id Post ID
  */
 function MRT_save_service_meta_box($post_id) {
-    if (!isset($_POST['mrt_service_meta_nonce']) || !wp_verify_nonce($_POST['mrt_service_meta_nonce'], 'mrt_save_service_meta')) {
-        return;
-    }
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-    if (!current_user_can('edit_post', $post_id)) {
+    if (!MRT_verify_meta_box_save($post_id, 'mrt_service_meta_nonce', 'mrt_save_service_meta')) {
         return;
     }
 

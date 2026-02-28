@@ -24,11 +24,8 @@ function MRT_ajax_get_route_destinations() {
         wp_send_json_error(['message' => __('Security check failed.', 'museum-railway-timetable')]);
         return;
     }
-    
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
-    }
-    
+    MRT_verify_ajax_permission();
+
     $route_id = intval($_POST['route_id'] ?? 0);
     
     if ($route_id <= 0) {

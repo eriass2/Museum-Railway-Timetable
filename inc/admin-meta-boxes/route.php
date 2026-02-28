@@ -22,51 +22,38 @@ function MRT_render_route_related_services($route_id) {
     if (empty($services)) {
         return;
     }
-    ?>
-    <div class="mrt-alert mrt-alert-info mrt-info-box mrt-mt-1">
-        <p><strong><?php esc_html_e('Related Trips:', 'museum-railway-timetable'); ?></strong></p>
-        <p class="description"><?php esc_html_e('This route is used by the following trips:', 'museum-railway-timetable'); ?></p>
-        <ul class="mrt-list-indent">
-            <?php foreach ($services as $service):
-                $timetable_id = get_post_meta($service->ID, 'mrt_service_timetable_id', true);
-                $timetable_link = $timetable_id ? get_edit_post_link($timetable_id) : '';
-                $service_link = $timetable_link ? add_query_arg('timetable_id', $timetable_id, get_edit_post_link($service->ID)) : get_edit_post_link($service->ID);
-                $timetable = $timetable_id ? get_post($timetable_id) : null;
-                $timetable_label = $timetable ? ($timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable_id) : '';
-            ?>
-                <li>
-                    <a href="<?php echo esc_url($service_link); ?>"><?php echo esc_html($service->post_title); ?></a>
-                    <?php if ($timetable_link && $timetable_label): ?>
-                        <span class="description">(<?php esc_html_e('in', 'museum-railway-timetable'); ?>
-                        <a href="<?php echo esc_url($timetable_link); ?>"><?php echo esc_html($timetable_label); ?></a>)</span>
-                    <?php endif; ?>
-                </li>
-            <?php endforeach; ?>
-        </ul>
-    </div>
-    <?php
+    $content = '<p class="description">' . esc_html__('This route is used by the following trips:', 'museum-railway-timetable') . '</p>';
+    $content .= '<ul class="mrt-list-indent">';
+    foreach ($services as $service) {
+        $timetable_id = get_post_meta($service->ID, 'mrt_service_timetable_id', true);
+        $timetable_link = $timetable_id ? get_edit_post_link($timetable_id) : '';
+        $service_link = $timetable_link ? add_query_arg('timetable_id', $timetable_id, get_edit_post_link($service->ID)) : get_edit_post_link($service->ID);
+        $timetable = $timetable_id ? get_post($timetable_id) : null;
+        $timetable_label = $timetable ? ($timetable->post_title ?: __('Timetable', 'museum-railway-timetable') . ' #' . $timetable_id) : '';
+        $content .= '<li><a href="' . esc_url($service_link) . '">' . esc_html($service->post_title) . '</a>';
+        if ($timetable_link && $timetable_label) {
+            $content .= ' <span class="description">(' . esc_html__('in', 'museum-railway-timetable') . ' <a href="' . esc_url($timetable_link) . '">' . esc_html($timetable_label) . '</a>)</span>';
+        }
+        $content .= '</li>';
+    }
+    $content .= '</ul>';
+    MRT_render_info_box(__('Related Trips:', 'museum-railway-timetable'), $content, 'mrt-mt-1');
 }
 
 /**
  * Render route info/help box
  */
 function MRT_render_route_info_box() {
-    ?>
-    <div class="mrt-alert mrt-alert-info mrt-info-box">
-        <p><strong><?php esc_html_e('💡 What is a Route?', 'museum-railway-timetable'); ?></strong></p>
-        <p><?php esc_html_e('A route defines which stations trains travel between and in what order. When you create a trip (service), you select a route and a destination station, and all stations on that route become available for configuring stop times.', 'museum-railway-timetable'); ?></p>
-        <div class="mrt-mt-sm">
-        <p><strong><?php esc_html_e('How to use:', 'museum-railway-timetable'); ?></strong></p>
-        <ol class="mrt-list-indent">
-            <li><?php esc_html_e('Give your route a descriptive name, e.g., "Hultsfred → Västervik" or "Main Line"', 'museum-railway-timetable'); ?></li>
-            <li><?php esc_html_e('Set the start and end stations (terminus) for this route below', 'museum-railway-timetable'); ?></li>
-            <li><?php esc_html_e('Add stations in the order they appear on the route using the dropdown below', 'museum-railway-timetable'); ?></li>
-            <li><?php esc_html_e('Use ↑ ↓ buttons to reorder stations if needed', 'museum-railway-timetable'); ?></li>
-            <li><?php esc_html_e('When creating a trip in a Timetable, select this route and choose a destination station', 'museum-railway-timetable'); ?></li>
-        </ol>
-        </div>
-    </div>
-    <?php
+    $content = '<p>' . esc_html__('A route defines which stations trains travel between and in what order. When you create a trip (service), you select a route and a destination station, and all stations on that route become available for configuring stop times.', 'museum-railway-timetable') . '</p>';
+    $content .= '<div class="mrt-mt-sm"><p><strong>' . esc_html__('How to use:', 'museum-railway-timetable') . '</strong></p>';
+    $content .= '<ol class="mrt-list-indent">';
+    $content .= '<li>' . esc_html__('Give your route a descriptive name, e.g., "Hultsfred → Västervik" or "Main Line"', 'museum-railway-timetable') . '</li>';
+    $content .= '<li>' . esc_html__('Set the start and end stations (terminus) for this route below', 'museum-railway-timetable') . '</li>';
+    $content .= '<li>' . esc_html__('Add stations in the order they appear on the route using the dropdown below', 'museum-railway-timetable') . '</li>';
+    $content .= '<li>' . esc_html__('Use ↑ ↓ buttons to reorder stations if needed', 'museum-railway-timetable') . '</li>';
+    $content .= '<li>' . esc_html__('When creating a trip in a Timetable, select this route and choose a destination station', 'museum-railway-timetable') . '</li>';
+    $content .= '</ol></div>';
+    MRT_render_info_box(__('💡 What is a Route?', 'museum-railway-timetable'), $content);
 }
 
 /**
@@ -202,21 +189,10 @@ function MRT_render_route_meta_box($post) {
  * @param int $post_id Post ID
  */
 add_action('save_post_mrt_route', function($post_id) {
-    // Check nonce
-    if (!isset($_POST['mrt_route_meta_nonce']) || !wp_verify_nonce($_POST['mrt_route_meta_nonce'], 'mrt_save_route_meta')) {
+    if (!MRT_verify_meta_box_save($post_id, 'mrt_route_meta_nonce', 'mrt_save_route_meta')) {
         return;
     }
-    
-    // Check autosave
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-    
-    // Check permissions
-    if (!current_user_can('edit_post', $post_id)) {
-        return;
-    }
-    
+
     // Save route stations
     if (isset($_POST['mrt_route_stations'])) {
         $stations_str = sanitize_text_field($_POST['mrt_route_stations']);

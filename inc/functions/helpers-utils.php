@@ -8,6 +8,78 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
+ * Verify meta box save: nonce, autosave, permissions
+ * Call at start of save_post_* handlers.
+ *
+ * @param int $post_id Post ID
+ * @param string $nonce_name $_POST key for nonce
+ * @param string $nonce_action wp_verify_nonce action
+ * @return bool True if save should proceed, false to abort
+ */
+function MRT_verify_meta_box_save($post_id, $nonce_name, $nonce_action) {
+    if (!isset($_POST[$nonce_name]) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST[$nonce_name])), $nonce_action)) {
+        return false;
+    }
+    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
+        return false;
+    }
+    if (!current_user_can('edit_post', $post_id)) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Verify AJAX permission for edit_posts
+ * Sends JSON error and exits on failure.
+ *
+ * @return void
+ */
+function MRT_verify_ajax_permission() {
+    if (!current_user_can('edit_posts')) {
+        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
+        exit;
+    }
+}
+
+/**
+ * Render alert HTML (error, info, warning)
+ *
+ * @param string $message Message text (will be escaped)
+ * @param string $type 'error'|'info'|'warning'
+ * @param string $extra_classes Optional extra CSS classes (e.g. 'mrt-empty')
+ * @return string HTML
+ */
+function MRT_render_alert($message, $type = 'error', $extra_classes = '') {
+    $allowed_types = ['error', 'info', 'warning'];
+    $type = in_array($type, $allowed_types) ? $type : 'error';
+    $classes = 'mrt-alert mrt-alert-' . $type;
+    if (!empty($extra_classes)) {
+        $classes .= ' ' . esc_attr($extra_classes);
+    }
+    return '<div class="' . $classes . '">' . esc_html($message) . '</div>';
+}
+
+/**
+ * Render info box (title + content)
+ *
+ * @param string $title Box title (will be escaped)
+ * @param string $content HTML content (use esc_html for plain text, or wp_kses_post for safe HTML)
+ * @param string $extra_classes Optional extra CSS classes (e.g. 'mrt-mb-1')
+ * @return void Outputs HTML
+ */
+function MRT_render_info_box($title, $content, $extra_classes = '') {
+    $classes = 'mrt-alert mrt-alert-info mrt-info-box';
+    if (!empty($extra_classes)) {
+        $classes .= ' ' . esc_attr($extra_classes);
+    }
+    echo '<div class="' . $classes . '">';
+    echo '<p><strong>' . esc_html($title) . '</strong></p>';
+    echo $content;
+    echo '</div>';
+}
+
+/**
  * Get post by title and post type
  *
  * @param string $title Post title

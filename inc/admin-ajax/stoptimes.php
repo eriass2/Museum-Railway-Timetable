@@ -8,12 +8,14 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * Validate stoptime input for add
+ * Validate stoptime input for add/update
  * Sends JSON error and exits on failure
  *
+ * @param bool $require_id If true, require id field (for update)
  * @return array Validated data
  */
-function MRT_validate_stoptime_add_input() {
+function MRT_validate_stoptime_input($require_id = false) {
+    $id = intval($_POST['id'] ?? 0);
     $service_id = intval($_POST['service_id'] ?? 0);
     $station_id = intval($_POST['station_id'] ?? 0);
     $sequence = intval($_POST['sequence'] ?? 0);
@@ -22,16 +24,30 @@ function MRT_validate_stoptime_add_input() {
     $pickup = isset($_POST['pickup']) ? 1 : 0;
     $dropoff = isset($_POST['dropoff']) ? 1 : 0;
 
-    if ($service_id <= 0 || $station_id <= 0 || $sequence <= 0) {
+    if ($require_id && $id <= 0) {
         wp_send_json_error(['message' => __('Invalid input.', 'museum-railway-timetable')]);
     }
+    if (!$require_id && ($service_id <= 0 || $station_id <= 0 || $sequence <= 0)) {
+        wp_send_json_error(['message' => __('Invalid input.', 'museum-railway-timetable')]);
+    }
+    if ($require_id && ($station_id <= 0 || $sequence <= 0)) {
+        wp_send_json_error(['message' => __('Invalid input.', 'museum-railway-timetable')]);
+    }
+    $arrival_msg = __('Invalid arrival time format. Use HH:MM.', 'museum-railway-timetable');
+    $departure_msg = __('Invalid departure time format. Use HH:MM.', 'museum-railway-timetable');
     if ($arrival && !MRT_validate_time_hhmm($arrival)) {
-        wp_send_json_error(['message' => __('Invalid arrival time format. Use HH:MM.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => $arrival_msg]);
     }
     if ($departure && !MRT_validate_time_hhmm($departure)) {
-        wp_send_json_error(['message' => __('Invalid departure time format. Use HH:MM.', 'museum-railway-timetable')]);
+        wp_send_json_error(['message' => $departure_msg]);
     }
-    return compact('service_id', 'station_id', 'sequence', 'arrival', 'departure', 'pickup', 'dropoff');
+    $data = compact('station_id', 'sequence', 'arrival', 'departure', 'pickup', 'dropoff');
+    if ($require_id) {
+        $data['id'] = $id;
+    } else {
+        $data['service_id'] = $service_id;
+    }
+    return $data;
 }
 
 /**
@@ -39,10 +55,8 @@ function MRT_validate_stoptime_add_input() {
  */
 function MRT_ajax_add_stoptime() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
-    }
-    $data = MRT_validate_stoptime_add_input();
+    MRT_verify_ajax_permission();
+    $data = MRT_validate_stoptime_input(false);
 
     global $wpdb;
     $table = $wpdb->prefix . 'mrt_stoptimes';
@@ -73,41 +87,12 @@ function MRT_ajax_add_stoptime() {
 }
 
 /**
- * Validate stoptime input for update
- * Sends JSON error and exits on failure
- *
- * @return array Validated data
- */
-function MRT_validate_stoptime_update_input() {
-    $id = intval($_POST['id'] ?? 0);
-    $station_id = intval($_POST['station_id'] ?? 0);
-    $sequence = intval($_POST['sequence'] ?? 0);
-    $arrival = sanitize_text_field($_POST['arrival'] ?? '');
-    $departure = sanitize_text_field($_POST['departure'] ?? '');
-    $pickup = isset($_POST['pickup']) ? 1 : 0;
-    $dropoff = isset($_POST['dropoff']) ? 1 : 0;
-
-    if ($id <= 0 || $station_id <= 0 || $sequence <= 0) {
-        wp_send_json_error(['message' => __('Invalid input.', 'museum-railway-timetable')]);
-    }
-    if ($arrival && !MRT_validate_time_hhmm($arrival)) {
-        wp_send_json_error(['message' => __('Invalid arrival time format.', 'museum-railway-timetable')]);
-    }
-    if ($departure && !MRT_validate_time_hhmm($departure)) {
-        wp_send_json_error(['message' => __('Invalid departure time format.', 'museum-railway-timetable')]);
-    }
-    return compact('id', 'station_id', 'sequence', 'arrival', 'departure', 'pickup', 'dropoff');
-}
-
-/**
  * Update stop time via AJAX
  */
 function MRT_ajax_update_stoptime() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
-    }
-    $data = MRT_validate_stoptime_update_input();
+    MRT_verify_ajax_permission();
+    $data = MRT_validate_stoptime_input(true);
 
     global $wpdb;
     $table = $wpdb->prefix . 'mrt_stoptimes';
@@ -140,11 +125,8 @@ function MRT_ajax_update_stoptime() {
  */
 function MRT_ajax_delete_stoptime() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
-    
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
-    }
-    
+    MRT_verify_ajax_permission();
+
     $id = intval($_POST['id'] ?? 0);
     if ($id <= 0) {
         wp_send_json_error(['message' => __('Invalid ID.', 'museum-railway-timetable')]);
@@ -168,11 +150,8 @@ function MRT_ajax_delete_stoptime() {
  */
 function MRT_ajax_get_stoptime() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
-    
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
-    }
-    
+    MRT_verify_ajax_permission();
+
     $id = intval($_POST['id'] ?? 0);
     if ($id <= 0) {
         wp_send_json_error(['message' => __('Invalid ID.', 'museum-railway-timetable')]);
@@ -234,9 +213,7 @@ function MRT_insert_stoptime_for_save_all($wpdb, $stop, $service_id, $sequence) 
  */
 function MRT_ajax_save_all_stoptimes() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
-    }
+    MRT_verify_ajax_permission();
     $service_id = intval($_POST['service_id'] ?? 0);
     if ($service_id <= 0) {
         wp_send_json_error(['message' => __('Invalid service ID.', 'museum-railway-timetable')]);

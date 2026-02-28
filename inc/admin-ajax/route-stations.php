@@ -12,11 +12,8 @@ if (!defined('ABSPATH')) { exit; }
  */
 function MRT_ajax_get_route_stations_for_stoptimes() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
-    
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
-    }
-    
+    MRT_verify_ajax_permission();
+
     $route_id = intval($_POST['route_id'] ?? 0);
     $service_id = intval($_POST['service_id'] ?? 0);
     
@@ -85,11 +82,8 @@ function MRT_ajax_save_route_end_stations() {
         wp_send_json_error(['message' => __('Security check failed.', 'museum-railway-timetable')]);
         return;
     }
-    
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', 'museum-railway-timetable')]);
-    }
-    
+    MRT_verify_ajax_permission();
+
     $route_id = intval($_POST['route_id'] ?? 0);
     $start_station = intval($_POST['start_station'] ?? 0);
     $end_station = intval($_POST['end_station'] ?? 0);

@@ -19,7 +19,7 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
     global $wpdb;
 
     if (!$timetable_id || $timetable_id <= 0) {
-        return '<div class="mrt-alert mrt-alert-error">' . esc_html__('Invalid timetable.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('Invalid timetable.', 'museum-railway-timetable'), 'error');
     }
 
     // Use current date if not provided
@@ -43,14 +43,14 @@ function MRT_render_timetable_overview($timetable_id, $dateYmd = null) {
     ]);
 
     if (empty($services)) {
-        return '<div class="mrt-alert mrt-alert-info mrt-empty">' . esc_html__('No trips in this timetable.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('No trips in this timetable.', 'museum-railway-timetable'), 'info', 'mrt-empty');
     }
 
     // Group services by route and direction using helper function
     $grouped_services = MRT_group_services_by_route($services, $dateYmd);
 
     if (empty($grouped_services)) {
-        return '<div class="mrt-empty">' . esc_html__('No valid trips in this timetable.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('No valid trips in this timetable.', 'museum-railway-timetable'), 'info', 'mrt-empty');
     }
 
     // Get timetable type label (GRÖN, RÖD, etc.)
@@ -101,14 +101,14 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
     global $wpdb;
 
     if (!MRT_validate_date($dateYmd)) {
-        return '<div class="mrt-alert mrt-alert-error">' . esc_html__('Invalid date.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('Invalid date.', 'museum-railway-timetable'), 'error');
     }
 
     // Get all services running on this date
     $service_ids = MRT_services_running_on_date($dateYmd, $train_type_slug);
 
     if (empty($service_ids)) {
-        return '<div class="mrt-alert mrt-alert-info mrt-empty">' . esc_html__('No services running on this date.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('No services running on this date.', 'museum-railway-timetable'), 'info', 'mrt-empty');
     }
 
     // Get service posts
@@ -129,7 +129,7 @@ function MRT_render_timetable_for_date($dateYmd, $train_type_slug = '') {
     $grouped_services = MRT_group_services_by_route($services, $dateYmd);
 
     if (empty($grouped_services)) {
-        return '<div class="mrt-alert mrt-alert-info mrt-empty">' . esc_html__('No valid services found for this date.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('No valid services found for this date.', 'museum-railway-timetable'), 'info', 'mrt-empty');
     }
 
     // Render HTML using the same component as timetable overview

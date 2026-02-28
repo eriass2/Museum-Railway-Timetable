@@ -109,10 +109,10 @@ function MRT_render_timetable_meta_box($post) {
 
     wp_enqueue_script('jquery');
     ?>
-    <div class="mrt-alert mrt-alert-info mrt-info-box">
-        <p><strong><?php esc_html_e('💡 What is a Timetable?', 'museum-railway-timetable'); ?></strong></p>
-        <p><?php esc_html_e('A timetable defines which days (dates) trains run. You can add dates using patterns (e.g., all Wednesdays in June-September) or add specific dates. You can also remove individual dates from patterns.', 'museum-railway-timetable'); ?></p>
-    </div>
+    <?php MRT_render_info_box(
+        __('💡 What is a Timetable?', 'museum-railway-timetable'),
+        '<p>' . esc_html__('A timetable defines which days (dates) trains run. You can add dates using patterns (e.g., all Wednesdays in June-September) or add specific dates. You can also remove individual dates from patterns.', 'museum-railway-timetable') . '</p>'
+    ); ?>
     <?php MRT_render_timetable_date_sections($post, $dates); ?>
     <?php MRT_render_timetable_dates_script($dates); ?>
     <?php
@@ -124,21 +124,10 @@ function MRT_render_timetable_meta_box($post) {
  * @param int $post_id Post ID
  */
 add_action('save_post_mrt_timetable', function($post_id) {
-    // Check nonce
-    if (!isset($_POST['mrt_timetable_meta_nonce']) || !wp_verify_nonce($_POST['mrt_timetable_meta_nonce'], 'mrt_save_timetable_meta')) {
+    if (!MRT_verify_meta_box_save($post_id, 'mrt_timetable_meta_nonce', 'mrt_save_timetable_meta')) {
         return;
     }
-    
-    // Check autosave
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-    
-    // Check permissions
-    if (!current_user_can('edit_post', $post_id)) {
-        return;
-    }
-    
+
     // Save timetable type (green, red, yellow, orange)
     if (isset($_POST['mrt_timetable_type'])) {
         $type = sanitize_text_field($_POST['mrt_timetable_type']);

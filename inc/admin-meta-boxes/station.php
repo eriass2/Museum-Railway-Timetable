@@ -21,10 +21,10 @@ function MRT_render_station_meta_box($post) {
     $display_order = get_post_meta($post->ID, 'mrt_display_order', true);
     
     ?>
-    <div class="mrt-alert mrt-alert-info mrt-info-box">
-        <p><strong><?php esc_html_e('💡 What is a Station?', 'museum-railway-timetable'); ?></strong></p>
-        <p><?php esc_html_e('A station is a physical location where trains can stop. Stations are used in Routes and Stop Times to define where trains travel and when they arrive/depart.', 'museum-railway-timetable'); ?></p>
-    </div>
+    <?php MRT_render_info_box(
+        __('💡 What is a Station?', 'museum-railway-timetable'),
+        '<p>' . esc_html__('A station is a physical location where trains can stop. Stations are used in Routes and Stop Times to define where trains travel and when they arrive/depart.', 'museum-railway-timetable') . '</p>'
+    ); ?>
     <?php
     // Show related routes using this station
     $all_routes = get_posts([
@@ -41,15 +41,13 @@ function MRT_render_station_meta_box($post) {
     }
     
     if (!empty($routes_using_station)) {
-        echo '<div class="mrt-alert mrt-alert-info mrt-info-box mrt-mb-1">';
-        echo '<p><strong>' . esc_html__('Used in Routes:', 'museum-railway-timetable') . '</strong></p>';
-        echo '<p class="description">' . esc_html__('This station is used in the following routes:', 'museum-railway-timetable') . '</p>';
-        echo '<ul class="mrt-list-indent">';
+        $content = '<p class="description">' . esc_html__('This station is used in the following routes:', 'museum-railway-timetable') . '</p>';
+        $content .= '<ul class="mrt-list-indent">';
         foreach ($routes_using_station as $route) {
-            echo '<li><a href="' . esc_url(get_edit_post_link($route->ID)) . '">' . esc_html($route->post_title) . '</a></li>';
+            $content .= '<li><a href="' . esc_url(get_edit_post_link($route->ID)) . '">' . esc_html($route->post_title) . '</a></li>';
         }
-        echo '</ul>';
-        echo '</div>';
+        $content .= '</ul>';
+        MRT_render_info_box(__('Used in Routes:', 'museum-railway-timetable'), $content, 'mrt-mb-1');
     }
     ?>
     <div class="mrt-box mrt-mt-1">
@@ -105,13 +103,7 @@ function MRT_render_station_meta_box($post) {
 }
 
 add_action('save_post_mrt_station', function($post_id) {
-    if (!isset($_POST['mrt_station_meta_nonce']) || !wp_verify_nonce($_POST['mrt_station_meta_nonce'], 'mrt_save_station_meta')) {
-        return;
-    }
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return;
-    }
-    if (!current_user_can('edit_post', $post_id)) {
+    if (!MRT_verify_meta_box_save($post_id, 'mrt_station_meta_nonce', 'mrt_save_station_meta')) {
         return;
     }
     if (isset($_POST['mrt_station_type'])) {

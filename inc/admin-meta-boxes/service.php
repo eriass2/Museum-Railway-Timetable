@@ -142,12 +142,10 @@ function MRT_get_timetable_display_label($timetable_id, $timetable = null) {
  * Render service info box
  */
 function MRT_render_service_info_box() {
-    ?>
-    <div class="mrt-alert mrt-alert-info mrt-info-box">
-        <p><strong><?php esc_html_e('💡 What is a Trip (Service)?', 'museum-railway-timetable'); ?></strong></p>
-        <p><?php esc_html_e('A trip represents one train journey. It belongs to a Timetable (which defines which days it runs) and uses a Route (which defines which stations are available). After selecting a Route, you can configure Stop Times to set arrival/departure times for each station.', 'museum-railway-timetable'); ?></p>
-    </div>
-    <?php
+    MRT_render_info_box(
+        __('💡 What is a Trip (Service)?', 'museum-railway-timetable'),
+        '<p>' . esc_html__('A trip represents one train journey. It belongs to a Timetable (which defines which days it runs) and uses a Route (which defines which stations are available). After selecting a Route, you can configure Stop Times to set arrival/departure times for each station.', 'museum-railway-timetable') . '</p>'
+    );
 }
 
 /**

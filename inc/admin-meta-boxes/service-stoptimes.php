@@ -56,18 +56,14 @@ function MRT_render_stoptime_row($station, $st, $index, $post_id) {
  * Render stop times instructions box
  */
 function MRT_render_stoptimes_instructions() {
-    ?>
-    <div class="mrt-alert mrt-alert-info mrt-info-box">
-        <p><strong><?php esc_html_e('💡 How to configure Stop Times:', 'museum-railway-timetable'); ?></strong></p>
-        <ol>
-            <li><?php esc_html_e('Check "Stops here" for each station where the train stops', 'museum-railway-timetable'); ?></li>
-            <li><?php esc_html_e('Fill in Arrival and/or Departure times (HH:MM format, e.g., 09:15)', 'museum-railway-timetable'); ?></li>
-            <li><?php esc_html_e('Times can be left empty if the train stops but the time is not fixed', 'museum-railway-timetable'); ?></li>
-            <li><?php esc_html_e('Select Pickup/Dropoff if passengers can board/alight', 'museum-railway-timetable'); ?></li>
-            <li><?php esc_html_e('Click "Save Stop Times" at the bottom to save all changes', 'museum-railway-timetable'); ?></li>
-        </ol>
-    </div>
-    <?php
+    $content = '<ol>';
+    $content .= '<li>' . esc_html__('Check "Stops here" for each station where the train stops', 'museum-railway-timetable') . '</li>';
+    $content .= '<li>' . esc_html__('Fill in Arrival and/or Departure times (HH:MM format, e.g., 09:15)', 'museum-railway-timetable') . '</li>';
+    $content .= '<li>' . esc_html__('Times can be left empty if the train stops but the time is not fixed', 'museum-railway-timetable') . '</li>';
+    $content .= '<li>' . esc_html__('Select Pickup/Dropoff if passengers can board/alight', 'museum-railway-timetable') . '</li>';
+    $content .= '<li>' . esc_html__('Click "Save Stop Times" at the bottom to save all changes', 'museum-railway-timetable') . '</li>';
+    $content .= '</ol>';
+    MRT_render_info_box(__('💡 How to configure Stop Times:', 'museum-railway-timetable'), $content);
 }
 
 /**

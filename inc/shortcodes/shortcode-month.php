@@ -38,14 +38,14 @@ function MRT_render_shortcode_month($atts) {
     }
 
     if (false === $first_ts) {
-        return '<div class="mrt-alert mrt-alert-error">' . esc_html__('Invalid date.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('Invalid date.', 'museum-railway-timetable'), 'error');
     }
 
     $year = intval(date('Y', $first_ts));
     $month = intval(date('m', $first_ts));
     $daysInMonth = intval(date('t', $first_ts));
     if ($year <= 0 || $month <= 0 || $month > 12 || $daysInMonth <= 0) {
-        return '<div class="mrt-alert mrt-alert-error">' . esc_html__('Invalid date.', 'museum-railway-timetable') . '</div>';
+        return MRT_render_alert(__('Invalid date.', 'museum-railway-timetable'), 'error');
     }
 
     $weekdayFirst = intval(date('N', $first_ts));
