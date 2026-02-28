@@ -63,7 +63,7 @@ add_action('admin_init', function() {
 
 // Show success message
 add_action('admin_notices', function() {
-    if (isset($_GET['mrt_cleared']) && $_GET['mrt_cleared'] == '1') {
+    if (isset($_GET['mrt_cleared']) && sanitize_text_field(wp_unslash($_GET['mrt_cleared'])) === '1') {
         echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('All timetable data has been cleared.', 'museum-railway-timetable') . '</p></div>';
     }
 });

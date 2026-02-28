@@ -77,7 +77,7 @@ function MRT_ajax_get_route_stations_for_stoptimes() {
  * Save route end stations via AJAX
  */
 function MRT_ajax_save_route_end_stations() {
-    $nonce = $_POST['nonce'] ?? '';
+    $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
     if (!wp_verify_nonce($nonce, 'mrt_save_route_meta')) {
         wp_send_json_error(['message' => __('Security check failed.', 'museum-railway-timetable')]);
         return;

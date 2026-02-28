@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) { exit; }
  * Get available destinations for a route via AJAX
  */
 function MRT_ajax_get_route_destinations() {
-    $nonce = $_POST['nonce'] ?? '';
+    $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
     $valid = false;
     
     if (wp_verify_nonce($nonce, 'mrt_timetable_services_nonce')) {
