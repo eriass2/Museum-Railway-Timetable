@@ -8,6 +8,14 @@
 
     window.MRTAdminUtils = {
         /**
+         * Get AJAX URL for admin requests
+         * @returns {string}
+         */
+        getAjaxUrl: function() {
+            return (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
+        },
+
+        /**
          * Escape HTML for safe insertion into HTML strings
          * @param {string} str - String to escape
          * @returns {string}

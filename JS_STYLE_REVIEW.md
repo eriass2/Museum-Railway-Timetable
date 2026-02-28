@@ -46,17 +46,14 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 - **frontend.js:** `showError()` används nu för initMonthCalendar (response.data.message via .text())
 
-### 4. DRY – getAjaxUrl
+### 4. DRY – getAjaxUrl ✓ (genomfört)
 
-- **admin-service-edit.js**, **admin-route-ui.js**, **admin-timetable-services-ui.js**: Samma URL-logik upprepas
-- **Åtgärd:** Lägg till `MRTAdminUtils.getAjaxUrl()` i admin-utils.js och använd överallt
+- **admin-utils.js:** `MRTAdminUtils.getAjaxUrl()` tillagd
+- **admin-service-edit.js**, **admin-route-ui.js**, **admin-timetable-services-ui.js**: Använder nu getAjaxUrl()
 
-### 5. i18n – hårdkodade strängar
+### 5. i18n ✓ (genomfört)
 
-| Fil | Sträng | Åtgärd |
-|-----|--------|--------|
-| **admin-route-ui.js** | `"✓ Saved"` (rad 129) | Lägg till `mrtAdmin.saved` |
-| **admin-service-edit.js** | `bindTimeValidation` error span (rad 219) | `errorText` kommer redan från mrtAdmin – OK |
+- **admin-route-ui.js:** `mrtAdmin.saved` för "✓ Saved"
 
 ### 6. Frontend – nonce för AJAX (valfritt)
 
@@ -93,4 +90,4 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 - **Struktur och grund:** Bra
 - **Prioritet 1–3 genomförda:** Felhantering (.fail), XSS frontend, refaktorering initRouteUI/initStopTimesUI
-- **Återstår:** DRY getAjaxUrl, i18n "✓ Saved"
+- **Alla prioriterade förbättringar genomförda**

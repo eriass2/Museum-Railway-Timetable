@@ -6,10 +6,6 @@
 (function($) {
     'use strict';
 
-    function getAjaxUrl() {
-        return (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php');
-    }
-
     function getEmptyDestinationOptions() {
         var defOpt = document.createElement('option');
         defOpt.value = '';
@@ -79,7 +75,7 @@
             utils.setSelectState($destinationSelect, 'loading');
 
             $.ajax({
-                url: getAjaxUrl(),
+                url: window.MRTAdminUtils.getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_get_route_destinations',
@@ -127,7 +123,7 @@
             $btn.prop('disabled', true).text(addingText);
 
             $.ajax({
-                url: getAjaxUrl(),
+                url: window.MRTAdminUtils.getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_add_service_to_timetable',
@@ -176,7 +172,7 @@
             $btn.prop('disabled', true);
 
             $.ajax({
-                url: getAjaxUrl(),
+                url: window.MRTAdminUtils.getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_remove_service_from_timetable',

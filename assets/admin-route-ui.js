@@ -115,7 +115,7 @@
                 if (!nonce) return;
 
                 $.ajax({
-                    url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
+                    url: window.MRTAdminUtils.getAjaxUrl(),
                     type: 'POST',
                     data: {
                         action: 'mrt_save_route_end_stations',
@@ -126,7 +126,8 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            var $indicator = $('<span class="mrt-save-indicator mrt-text-success mrt-ml-sm">✓ Saved</span>');
+                            var savedText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.saved) ? mrtAdmin.saved : '✓ Saved';
+                            var $indicator = $('<span class="mrt-save-indicator mrt-text-success mrt-ml-sm"></span>').text(savedText);
                             $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
                             $('#mrt-route-end-station').closest('td').append($indicator);
                             setTimeout(function() {

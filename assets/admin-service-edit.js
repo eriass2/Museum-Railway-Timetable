@@ -69,7 +69,7 @@
         loadDestinations: function($destinationSelect, routeId, nonce, utils) {
             utils.setSelectState($destinationSelect, 'loading');
             $.ajax({
-                url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
+                url: utils.getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_get_route_destinations',
@@ -92,7 +92,7 @@
         loadRouteStations: function($stoptimesContainer, routeId, serviceId, nonce) {
             var self = this;
             $.ajax({
-                url: (typeof mrtAdmin !== 'undefined' && mrtAdmin.ajaxurl) ? mrtAdmin.ajaxurl : (typeof ajaxurl !== 'undefined' ? ajaxurl : '/wp-admin/admin-ajax.php'),
+                url: window.MRTAdminUtils.getAjaxUrl(),
                 type: 'POST',
                 data: {
                     action: 'mrt_get_route_stations_for_stoptimes',
@@ -267,7 +267,7 @@
             var savingText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.saving) ? mrtAdmin.saving : 'Saving...';
             $btn.prop('disabled', true).text(savingText).addClass('mrt-opacity-70 mrt-cursor-wait');
 
-            $.post(mrtAdmin.ajaxurl, {
+            $.post(window.MRTAdminUtils.getAjaxUrl(), {
                 action: 'mrt_save_all_stoptimes',
                 nonce: nonce,
                 service_id: serviceId,

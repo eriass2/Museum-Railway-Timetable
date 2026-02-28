@@ -162,6 +162,7 @@ function MRT_localize_admin_script() {
         'edit' => __('Edit', MRT_TEXT_DOMAIN),
         'tripAdded' => __('Trip added successfully.', MRT_TEXT_DOMAIN),
         'tripRemoved' => __('Trip removed successfully.', MRT_TEXT_DOMAIN),
+        'saved' => __('✓ Saved', MRT_TEXT_DOMAIN),
     ]);
 }
 
