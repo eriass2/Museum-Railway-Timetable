@@ -69,6 +69,7 @@ Kodstandarder och clean code-principer för projektet.
 - **Variabler** – CSS custom properties med `--mrt-` prefix
 
 ### Struktur
+- **Design system** – Se `DESIGN_SYSTEM.md` för tokens och base components
 - **CSS-variabler** i `:root` för färger, spacing, borders
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar
 - **Inga inline styles** – All styling i CSS-filer

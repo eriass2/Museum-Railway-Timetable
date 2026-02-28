@@ -29,7 +29,7 @@ function MRT_enqueue_admin_assets($hook) {
         }
     }
 
-    // Enqueue admin CSS (base, timetable, ui - in that order)
+    // Enqueue admin CSS (base, timetable, meta-boxes, dashboard, ui, responsive)
     wp_enqueue_style(
         'mrt-admin-base',
         MRT_URL . 'assets/admin-base.css',
@@ -43,9 +43,27 @@ function MRT_enqueue_admin_assets($hook) {
         MRT_VERSION
     );
     wp_enqueue_style(
+        'mrt-admin-meta-boxes',
+        MRT_URL . 'assets/admin-meta-boxes.css',
+        ['mrt-admin-timetable'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
+        'mrt-admin-dashboard',
+        MRT_URL . 'assets/admin-dashboard.css',
+        ['mrt-admin-meta-boxes'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
         'mrt-admin-ui',
         MRT_URL . 'assets/admin-ui.css',
-        ['mrt-admin-timetable'],
+        ['mrt-admin-dashboard'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
+        'mrt-admin-responsive',
+        MRT_URL . 'assets/admin-responsive.css',
+        ['mrt-admin-ui'],
         MRT_VERSION
     );
 
@@ -154,7 +172,7 @@ function MRT_enqueue_frontend_assets() {
         return;
     }
 
-    // Enqueue frontend CSS (base, timetable, ui - same as admin)
+    // Enqueue frontend CSS (same structure as admin)
     wp_enqueue_style(
         'mrt-frontend-base',
         MRT_URL . 'assets/admin-base.css',
@@ -168,9 +186,27 @@ function MRT_enqueue_frontend_assets() {
         MRT_VERSION
     );
     wp_enqueue_style(
+        'mrt-frontend-meta-boxes',
+        MRT_URL . 'assets/admin-meta-boxes.css',
+        ['mrt-frontend-timetable'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
+        'mrt-frontend-dashboard',
+        MRT_URL . 'assets/admin-dashboard.css',
+        ['mrt-frontend-meta-boxes'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
         'mrt-frontend-ui',
         MRT_URL . 'assets/admin-ui.css',
-        ['mrt-frontend-timetable'],
+        ['mrt-frontend-dashboard'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
+        'mrt-frontend-responsive',
+        MRT_URL . 'assets/admin-responsive.css',
+        ['mrt-frontend-ui'],
         MRT_VERSION
     );
     

@@ -21,7 +21,7 @@ function MRT_render_stoptime_row($station, $st, $index, $post_id) {
     $sequence = $st ? $st['stop_sequence'] : ($index + 1);
     ob_start();
     ?>
-    <tr class="mrt-route-station-row" data-station-id="<?php echo esc_attr($station->ID); ?>" data-service-id="<?php echo esc_attr($post_id); ?>" data-sequence="<?php echo esc_attr($sequence); ?>">
+    <tr class="mrt-row-hover mrt-route-station-row" data-station-id="<?php echo esc_attr($station->ID); ?>" data-service-id="<?php echo esc_attr($post_id); ?>" data-sequence="<?php echo esc_attr($sequence); ?>">
         <td><?php echo esc_html($index + 1); ?></td>
         <td><strong><?php echo esc_html($station->post_title); ?></strong></td>
         <td>
@@ -87,7 +87,7 @@ function MRT_render_service_stoptimes_box($post) {
     ?>
     <div id="mrt-stoptimes-container">
         <?php if ($route_id && !empty($route_stations)): ?>
-            <div class="mrt-info-box">
+            <div class="mrt-alert mrt-alert-info mrt-info-box">
                 <p><strong><?php esc_html_e('💡 How to configure Stop Times:', 'museum-railway-timetable'); ?></strong></p>
                 <ol>
                     <li><?php esc_html_e('Check "Stops here" for each station where the train stops', 'museum-railway-timetable'); ?></li>

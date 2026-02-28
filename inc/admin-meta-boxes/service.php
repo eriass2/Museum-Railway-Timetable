@@ -72,7 +72,7 @@ function MRT_render_service_meta_box($post) {
             if ($post_type === 'mrt_service' && isset($_GET['timetable_id'])) {
                 $timetable_edit_link = get_edit_post_link($timetable_id);
                 if ($timetable_edit_link) {
-                    echo '<div class="mrt-info-box mrt-mb-1">';
+                    echo '<div class="mrt-alert mrt-alert-info mrt-info-box mrt-mb-1">';
                     echo '<a href="' . esc_url($timetable_edit_link) . '" class="button mrt-back-button">← ' . esc_html__('Back to Timetable', 'museum-railway-timetable') . '</a>';
                     echo '<span class="description">' . esc_html__('This trip belongs to a timetable. The title is automatically generated from Route + Destination.', 'museum-railway-timetable') . '</span>';
                     echo '</div>';
@@ -82,7 +82,7 @@ function MRT_render_service_meta_box($post) {
     }
     
     ?>
-    <div class="mrt-info-box">
+    <div class="mrt-alert mrt-alert-info mrt-info-box">
         <p><strong><?php esc_html_e('💡 What is a Trip (Service)?', 'museum-railway-timetable'); ?></strong></p>
         <p><?php esc_html_e('A trip represents one train journey. It belongs to a Timetable (which defines which days it runs) and uses a Route (which defines which stations are available). After selecting a Route, you can configure Stop Times to set arrival/departure times for each station.', 'museum-railway-timetable'); ?></p>
     </div>
@@ -191,7 +191,7 @@ function MRT_render_service_meta_box($post) {
                             $date_formatted = date_i18n(get_option('date_format'), strtotime($date));
                             $train_type_id = isset($train_types_by_date[$date]) ? intval($train_types_by_date[$date]) : 0;
                             ?>
-                            <div class="mrt-train-type-date-row">
+                            <div class="mrt-box mrt-box-sm mrt-train-type-date-row">
                                 <label class="mrt-train-type-label">
                                     <?php echo esc_html($date_formatted); ?>
                                     <span>(<?php echo esc_html($date); ?>)</span>

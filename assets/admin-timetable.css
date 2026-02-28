@@ -10,7 +10,7 @@
    ========================================================================== */
 
 .mrt-timetable {
-    margin: 1rem 0;
+    margin: var(--mrt-spacing-md) 0;
 }
 
 .mrt-table {
@@ -22,7 +22,7 @@
 .mrt-table th,
 .mrt-table td {
     border: 1px solid var(--mrt-border-default);
-    padding: 4px 6px;
+    padding: var(--mrt-cell-padding);
     text-align: left;
 }
 
@@ -57,7 +57,7 @@
     width: 14.285%;
     vertical-align: top;
     height: 72px;
-    padding: 4px;
+    padding: var(--mrt-spacing-xs);
 }
 
 .mrt-month-table thead th {
@@ -77,8 +77,8 @@
 
 .mrt-dot {
     position: absolute;
-    right: 6px;
-    bottom: 4px;
+    right: var(--mrt-spacing-sm);
+    bottom: var(--mrt-spacing-xs);
     font-size: 0.85rem;
 }
 
@@ -105,12 +105,9 @@
     margin: var(--mrt-spacing-md) 0;
 }
 
+/* mrt-day-timetable-container använder .mrt-box */
 .mrt-day-timetable-container {
     margin-top: var(--mrt-spacing-xl);
-    padding: var(--mrt-spacing-lg);
-    background: var(--mrt-bg-light);
-    border: 1px solid var(--mrt-border-default);
-    border-radius: 4px;
 }
 
 .mrt-day-timetable-title {
@@ -178,18 +175,15 @@
     border-bottom: 2px solid var(--mrt-border-default);
 }
 
+/* Timetable overview preview – extends .mrt-box */
 .mrt-timetable-overview-preview {
     max-height: 600px;
     overflow-y: auto;
-    padding: var(--mrt-spacing-lg);
-    background: var(--mrt-bg-light);
-    border: 1px solid var(--mrt-border-default);
-    border-radius: 8px;
 }
 
 .mrt-timetable-group {
     background: var(--mrt-bg-white);
-    border-radius: 8px;
+    border-radius: var(--mrt-radius-lg);
     overflow: hidden;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     border: 1px solid var(--mrt-border-light);
@@ -201,7 +195,7 @@
 }
 
 .mrt-route-header {
-    background: linear-gradient(135deg, var(--mrt-green-primary) 0%, #3a6b1f 100%);
+    background: linear-gradient(135deg, var(--mrt-green-primary) 0%, var(--mrt-route-header-end) 100%);
     color: var(--mrt-text-white);
     padding: var(--mrt-spacing-md) var(--mrt-spacing-lg);
     margin: 0;
@@ -231,7 +225,7 @@
     font-weight: 600;
     padding: 2px 6px;
     background: rgba(255, 255, 255, 0.15);
-    border-radius: 3px;
+    border-radius: var(--mrt-radius-sm);
 }
 
 .mrt-route-separator {
@@ -260,7 +254,7 @@
 
 .mrt-grid-cell {
     border: 1px solid var(--mrt-border-default);
-    padding: 6px 8px;
+    padding: var(--mrt-cell-padding-md);
     text-align: center;
     vertical-align: middle;
     display: flex;
@@ -274,7 +268,7 @@
     text-align: left;
     background: var(--mrt-bg-light);
     font-weight: 700;
-    padding: 6px 10px;
+    padding: var(--mrt-cell-padding-lg);
     position: sticky;
     left: 0;
     z-index: 10;
@@ -290,17 +284,17 @@
 /* Header cells - Train Types (Row 1) */
 .mrt-header-train-type {
     border-bottom: 1px solid var(--mrt-border-default);
-    padding-bottom: 4px;
+    padding-bottom: var(--mrt-spacing-xs);
     font-weight: 600;
     background: var(--mrt-bg-lighter);
     flex-direction: column;
-    gap: 2px;
+    gap: var(--mrt-spacing-xs);
 }
 
 /* Header cells - Train Numbers (Row 2) */
 .mrt-header-train-number {
     border-top: 1px solid var(--mrt-border-default);
-    padding-top: 4px;
+    padding-top: var(--mrt-spacing-xs);
     font-weight: 600;
     background: var(--mrt-bg-lighter);
 }
@@ -336,13 +330,13 @@
 /* Special styling for "Från" and "Till" rows */
 .mrt-from-row > .mrt-grid-cell,
 .mrt-to-row > .mrt-grid-cell {
-    background: #e3f2fd;
+    background: var(--mrt-from-to-bg);
     font-weight: 600;
 }
 
 .mrt-from-row > .mrt-station-col,
 .mrt-to-row > .mrt-station-col {
-    background: #90caf9;
+    background: var(--mrt-from-to-col-bg);
     color: var(--mrt-text-primary);
     font-weight: 700;
     font-style: italic;
@@ -350,14 +344,14 @@
 
 /* Transfer row styling */
 .mrt-transfer-row > .mrt-grid-cell {
-    background: #fff9c4;
+    background: var(--mrt-transfer-bg);
     font-weight: 600;
     font-style: italic;
     font-size: 0.85rem;
 }
 
 .mrt-transfer-station-col {
-    background: #fff59d !important;
+    background: var(--mrt-transfer-col-bg) !important;
     font-style: normal;
 }
 
@@ -365,14 +359,14 @@
 .mrt-transfer-train-type {
     font-size: 0.8rem;
     font-weight: 600;
-    padding: 4px 6px;
+    padding: var(--mrt-cell-padding);
 }
 
 /* Transfer row - service number cell */
 .mrt-transfer-service-number {
     font-size: 0.9rem;
     font-weight: 700;
-    padding: 4px 6px;
+    padding: var(--mrt-cell-padding);
 }
 
 /* 1. Tomma Tågbyte-celler: PDF visar tomma celler, inte "—" */
@@ -387,7 +381,7 @@
     font-size: 0.9rem;
     font-weight: 600;
     white-space: nowrap;
-    padding: 6px 8px;
+    padding: var(--mrt-cell-padding-md);
     color: var(--mrt-text-primary);
 }
 
@@ -413,18 +407,18 @@
 /* Preserve special row backgrounds on hover */
 .mrt-from-row:hover > .mrt-grid-cell,
 .mrt-to-row:hover > .mrt-grid-cell {
-    background-color: #e3f2fd !important;
+    background-color: var(--mrt-from-to-bg) !important;
 }
 
 .mrt-from-row:hover > .mrt-station-col,
 .mrt-to-row:hover > .mrt-station-col {
-    background: #90caf9 !important;
+    background: var(--mrt-from-to-col-bg) !important;
 }
 
 /* 3. Thun's-expressen i första datacellen - visa speciallabel under tiden */
 .mrt-from-time-cell {
     flex-direction: column;
-    gap: 2px;
+    gap: var(--mrt-spacing-xs);
 }
 
 .mrt-from-time-cell .mrt-special-label-inline {
@@ -436,11 +430,11 @@
 }
 
 .mrt-transfer-row:hover > .mrt-grid-cell {
-    background-color: #fff9c4 !important;
+    background-color: var(--mrt-transfer-bg) !important;
 }
 
 .mrt-transfer-row:hover > .mrt-station-col {
-    background: #fff59d !important;
+    background: var(--mrt-transfer-col-bg) !important;
 }
 
 /* Better visual separation for timetable groups */
@@ -507,7 +501,7 @@
     background: var(--mrt-bg-lighter);
     font-weight: 600;
     vertical-align: middle;
-    padding: 6px 8px;
+    padding: var(--mrt-cell-padding-md);
     border-bottom: 2px solid var(--mrt-border-default);
     border-top: 2px solid var(--mrt-border-default);
 }
@@ -529,21 +523,21 @@
 
 .mrt-service-special.mrt-grid-cell {
     background: var(--mrt-special-bg);
-    border-left: 4px solid #ffc107;
+    border-left: 4px solid var(--mrt-warning-border);
 }
 
 .mrt-service-special.mrt-grid-cell.mrt-time-cell {
     background: var(--mrt-special-bg);
-    border-left: 4px solid #ffc107;
+    border-left: 4px solid var(--mrt-warning-border);
 }
 
 /* Service Header - Compact like PDF */
 .mrt-service-header {
     display: flex;
     flex-direction: column;
-    gap: 3px;
+    gap: var(--mrt-spacing-xs);
     align-items: center;
-    padding: 6px 4px;
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-xs);
     min-height: auto;
     justify-content: center;
 }
@@ -569,9 +563,9 @@
     text-align: center;
     line-height: 1.2;
     color: var(--mrt-text-primary);
-    padding: 2px 6px;
+    padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
     background: rgba(255, 255, 255, 0.8);
-    border-radius: 3px;
+    border-radius: var(--mrt-radius-sm);
     display: inline-block;
     min-width: 32px;
 }
@@ -590,12 +584,12 @@
 .mrt-station-name {
     text-align: left;
     font-weight: 600;
-    padding: 6px 10px;
+    padding: var(--mrt-cell-padding-lg);
     font-size: 0.9rem;
     color: var(--mrt-text-primary);
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: var(--mrt-spacing-xs);
 }
 
 .mrt-direction-arrow {

@@ -21,7 +21,7 @@ function MRT_render_station_meta_box($post) {
     $display_order = get_post_meta($post->ID, 'mrt_display_order', true);
     
     ?>
-    <div class="mrt-info-box">
+    <div class="mrt-alert mrt-alert-info mrt-info-box">
         <p><strong><?php esc_html_e('💡 What is a Station?', 'museum-railway-timetable'); ?></strong></p>
         <p><?php esc_html_e('A station is a physical location where trains can stop. Stations are used in Routes and Stop Times to define where trains travel and when they arrive/depart.', 'museum-railway-timetable'); ?></p>
     </div>
@@ -41,7 +41,7 @@ function MRT_render_station_meta_box($post) {
     }
     
     if (!empty($routes_using_station)) {
-        echo '<div class="mrt-info-box mrt-mb-1">';
+        echo '<div class="mrt-alert mrt-alert-info mrt-info-box mrt-mb-1">';
         echo '<p><strong>' . esc_html__('Used in Routes:', 'museum-railway-timetable') . '</strong></p>';
         echo '<p class="description">' . esc_html__('This station is used in the following routes:', 'museum-railway-timetable') . '</p>';
         echo '<ul class="mrt-list-indent">';

@@ -32,7 +32,7 @@ function MRT_ajax_search_journey() {
     
     $services_on_date = MRT_services_running_on_date($date);
     if (empty($services_on_date)) {
-        $html = '<div class="mrt-error">';
+        $html = '<div class="mrt-alert mrt-alert-error mrt-error">';
         $html .= esc_html__('No services are running on the selected date.', 'museum-railway-timetable');
         $html .= '</div>';
         wp_send_json_success(['html' => $html]);
@@ -57,7 +57,7 @@ function MRT_ajax_search_journey() {
     </h3>
     
     <?php if (empty($connections)): ?>
-        <div class="mrt-none">
+        <div class="mrt-alert mrt-alert-info mrt-none">
             <p><strong><?php esc_html_e('No connections found.', 'museum-railway-timetable'); ?></strong></p>
             <p><?php esc_html_e('There are no direct connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
         </div>

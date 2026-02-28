@@ -35,7 +35,7 @@ function MRT_render_route_meta_box($post) {
     ]);
     
     ?>
-    <div class="mrt-info-box">
+    <div class="mrt-alert mrt-alert-info mrt-info-box">
         <p><strong><?php esc_html_e('💡 What is a Route?', 'museum-railway-timetable'); ?></strong></p>
         <p><?php esc_html_e('A route defines which stations trains travel between and in what order. When you create a trip (service), you select a route and a destination station, and all stations on that route become available for configuring stop times.', 'museum-railway-timetable'); ?></p>
         <div class="mrt-how-to-use">
@@ -51,7 +51,7 @@ function MRT_render_route_meta_box($post) {
     </div>
     
     <!-- End Stations (Terminus) -->
-    <div class="mrt-end-stations-section">
+    <div class="mrt-box mrt-end-stations-section">
         <h3 class="mrt-section-heading"><?php esc_html_e('End Stations (Terminus)', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Define the start and end stations for this route. These are the terminus stations where trains can start or end their journey.', 'museum-railway-timetable'); ?></p>
         <table class="form-table mrt-form-table-mt">
@@ -140,7 +140,7 @@ function MRT_render_route_meta_box($post) {
     ]);
     
     if (!empty($services_using_route)) {
-        echo '<div class="mrt-info-box mrt-mt-1">';
+        echo '<div class="mrt-alert mrt-alert-info mrt-info-box mrt-mt-1">';
         echo '<p><strong>' . esc_html__('Related Trips:', 'museum-railway-timetable') . '</strong></p>';
         echo '<p class="description">' . esc_html__('This route is used by the following trips:', 'museum-railway-timetable') . '</p>';
         echo '<ul class="mrt-list-indent">';

@@ -133,7 +133,7 @@
                         }
                     },
                     error: function() {
-                        $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-error">' +
+                        $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-alert mrt-alert-error mrt-error">' +
                             (typeof mrtAdmin !== 'undefined' ? mrtAdmin.errorLoadingStations : 'Error loading stations. Please refresh the page.') +
                             '</td></tr>');
                     }
@@ -199,7 +199,7 @@
                     var errorText = (typeof mrtAdmin !== 'undefined' && mrtAdmin.invalidTimeFormat) ?
                         mrtAdmin.invalidTimeFormat :
                         'Invalid format. Use HH:MM (e.g., 09:15)';
-                    var $errorMsg = $('<span class="mrt-time-error-message" style="display: block; color: #d63638; font-size: 11px; margin-top: 2px;">' +
+                    var $errorMsg = $('<span class="mrt-time-error-message">' +
                         errorText +
                         '</span>');
                     $field.append($errorMsg);

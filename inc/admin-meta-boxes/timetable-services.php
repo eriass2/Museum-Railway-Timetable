@@ -65,7 +65,7 @@ function MRT_render_timetable_services_box($post) {
                     $train_types = wp_get_post_terms($service->ID, 'mrt_train_type', ['fields' => 'ids']);
                     $train_type_id = !empty($train_types) ? $train_types[0] : 0;
                 ?>
-                    <tr data-service-id="<?php echo esc_attr($service->ID); ?>">
+                    <tr class="mrt-row-hover" data-service-id="<?php echo esc_attr($service->ID); ?>">
                         <td>
                             <?php 
                             if ($route_id) {

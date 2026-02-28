@@ -37,7 +37,7 @@ add_shortcode('museum_timetable_month', function ($atts) {
     }
     
     if (false === $first_ts) {
-        return '<div class="mrt-error">'.esc_html__('Invalid date.', 'museum-railway-timetable').'</div>';
+        return '<div class="mrt-alert mrt-alert-error mrt-error">'.esc_html__('Invalid date.', 'museum-railway-timetable').'</div>';
     }
 
     $year  = intval(date('Y', $first_ts));
@@ -45,7 +45,7 @@ add_shortcode('museum_timetable_month', function ($atts) {
     $daysInMonth = intval(date('t', $first_ts));
     
     if ($year <= 0 || $month <= 0 || $month > 12 || $daysInMonth <= 0) {
-        return '<div class="mrt-error">'.esc_html__('Invalid date.', 'museum-railway-timetable').'</div>';
+        return '<div class="mrt-alert mrt-alert-error mrt-error">'.esc_html__('Invalid date.', 'museum-railway-timetable').'</div>';
     }
 
     $weekdayFirst = intval(date('N', $first_ts)); // 1..7 (Mon..Sun)
@@ -122,7 +122,7 @@ add_shortcode('museum_timetable_month', function ($atts) {
     }
 
     // Container for day timetable (shown when day is clicked)
-    echo '<div class="mrt-day-timetable-container mrt-day-timetable-hidden"></div>';
+    echo '<div class="mrt-box mrt-day-timetable-container mrt-day-timetable-hidden"></div>';
 
     echo '</div>'; // .mrt-month
     return ob_get_clean();
@@ -149,7 +149,7 @@ add_shortcode('museum_timetable_overview', function ($atts) {
     }
     
     if (!$timetable_id || $timetable_id <= 0) {
-        return '<div class="mrt-error">' . esc_html__('Timetable not found.', 'museum-railway-timetable') . '</div>';
+        return '<div class="mrt-alert mrt-alert-error mrt-error">' . esc_html__('Timetable not found.', 'museum-railway-timetable') . '</div>';
     }
     
     return MRT_render_timetable_overview($timetable_id);
@@ -183,7 +183,7 @@ add_shortcode('museum_journey_planner', function ($atts) {
     ob_start();
     ?>
     <div class="mrt-journey-planner">
-        <form class="mrt-journey-form" method="get" action="" data-ajax-enabled="true">
+        <form class="mrt-box mrt-journey-form" method="get" action="" data-ajax-enabled="true">
             <div class="mrt-journey-fields">
                 <div class="mrt-journey-field">
                     <label for="mrt_from"><?php esc_html_e('From', 'museum-railway-timetable'); ?></label>
@@ -247,12 +247,12 @@ add_shortcode('museum_journey_planner', function ($atts) {
                 // Check if services run on this date
                 $services_on_date = MRT_services_running_on_date($selected_date);
                 if (empty($services_on_date)): ?>
-                    <div class="mrt-error">
+                    <div class="mrt-alert mrt-alert-error mrt-error">
                         <p><strong><?php esc_html_e('No services running.', 'museum-railway-timetable'); ?></strong></p>
                         <p><?php esc_html_e('There are no services running on the selected date. Please try a different date.', 'museum-railway-timetable'); ?></p>
                     </div>
                 <?php elseif (empty($connections)): ?>
-                    <div class="mrt-none">
+                    <div class="mrt-alert mrt-alert-info mrt-none">
                         <p><strong><?php esc_html_e('No connections found.', 'museum-railway-timetable'); ?></strong></p>
                         <p><?php esc_html_e('There are no direct connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
                     </div>
@@ -299,7 +299,7 @@ add_shortcode('museum_journey_planner', function ($atts) {
                 <?php endif; ?>
             </div>
         <?php elseif ($from_station_id > 0 && $to_station_id > 0 && $from_station_id === $to_station_id): ?>
-            <div class="mrt-error">
+            <div class="mrt-alert mrt-alert-error mrt-error">
                 <?php esc_html_e('Please select different stations for departure and arrival.', 'museum-railway-timetable'); ?>
             </div>
         <?php endif; ?>

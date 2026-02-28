@@ -29,7 +29,7 @@ function MRT_render_timetable_meta_box($post) {
     
     wp_enqueue_script('jquery');
     ?>
-    <div class="mrt-info-box">
+    <div class="mrt-alert mrt-alert-info mrt-info-box">
         <p><strong><?php esc_html_e('💡 What is a Timetable?', 'museum-railway-timetable'); ?></strong></p>
         <p><?php esc_html_e('A timetable defines which days (dates) trains run. You can add dates using patterns (e.g., all Wednesdays in June-September) or add specific dates. You can also remove individual dates from patterns.', 'museum-railway-timetable'); ?></p>
     </div>
@@ -52,7 +52,7 @@ function MRT_render_timetable_meta_box($post) {
     </table>
     
     <!-- Pattern-based date selection -->
-    <div class="mrt-date-pattern-section">
+    <div class="mrt-box mrt-date-pattern-section">
         <h3 class="mrt-section-heading"><?php esc_html_e('Add Dates from Pattern', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Select a day of the week and a date range to automatically add all matching dates.', 'museum-railway-timetable'); ?></p>
         <table class="form-table mrt-form-table-mt">
@@ -88,7 +88,7 @@ function MRT_render_timetable_meta_box($post) {
     </div>
     
     <!-- Single date addition -->
-    <div class="mrt-date-single-section">
+    <div class="mrt-box mrt-date-single-section">
         <h3 class="mrt-section-heading"><?php esc_html_e('Add Single Date', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Add a specific date manually.', 'museum-railway-timetable'); ?></p>
         <p>
@@ -103,7 +103,7 @@ function MRT_render_timetable_meta_box($post) {
         <p class="description"><?php esc_html_e('All dates when this timetable applies. Click "Remove" to remove individual dates.', 'museum-railway-timetable'); ?></p>
         <div id="mrt-timetable-dates-container" class="mrt-dates-container">
             <?php foreach ($dates as $index => $date): ?>
-                <div class="mrt-date-row" data-date="<?php echo esc_attr($date); ?>">
+                <div class="mrt-box mrt-box-sm mrt-date-row" data-date="<?php echo esc_attr($date); ?>">
                     <input type="hidden" name="mrt_timetable_dates[]" value="<?php echo esc_attr($date); ?>" />
                     <span class="mrt-date-display"><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($date))); ?></span>
                     <span class="mrt-date-iso">(<?php echo esc_html($date); ?>)</span>
@@ -177,7 +177,7 @@ function MRT_render_timetable_meta_box($post) {
                     }
                 }
                 
-                var $row = $('<div class="mrt-date-row" data-date="' + date.replace(/"/g, '&quot;') + '">' +
+                var $row = $('<div class="mrt-box mrt-box-sm mrt-date-row" data-date="' + date.replace(/"/g, '&quot;') + '">' +
                     '<input type="hidden" name="mrt_timetable_dates[]" value="' + date.replace(/"/g, '&quot;') + '" />' +
                     '<span class="mrt-date-display">' + formattedDate + '</span> ' +
                     '<span class="mrt-date-iso">(' + date + ')</span> ' +

@@ -24,7 +24,10 @@ $required_files = [
     'inc/functions/services.php',
     'assets/admin-base.css',
     'assets/admin-timetable.css',
+    'assets/admin-meta-boxes.css',
+    'assets/admin-dashboard.css',
     'assets/admin-ui.css',
+    'assets/admin-responsive.css',
     'assets/admin-utils.js',
     'assets/admin-route-ui.js',
     'assets/admin-stoptimes-ui.js',
@@ -152,7 +155,14 @@ if ($domain_issues === 0) {
 
 // 7. Check CSS files exist and are valid
 echo "\n7. Checking CSS files...\n";
-$css_files = ['assets/admin-base.css', 'assets/admin-timetable.css', 'assets/admin-ui.css'];
+$css_files = [
+    'assets/admin-base.css',
+    'assets/admin-timetable.css',
+    'assets/admin-meta-boxes.css',
+    'assets/admin-dashboard.css',
+    'assets/admin-ui.css',
+    'assets/admin-responsive.css',
+];
 foreach ($css_files as $css_file) {
     $checks++;
     if (file_exists($css_file)) {

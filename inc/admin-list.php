@@ -80,7 +80,7 @@ function MRT_render_stations_overview_inline() {
         $('.wrap h1').text('<?php echo esc_js(__('Stations Overview', 'museum-railway-timetable')); ?>');
     });
     </script>
-    <div class="mrt-mt-1">
+    <div class="mrt-section mrt-mt-1">
         <form method="get" class="mrt-filter-form">
             <input type="hidden" name="post_type" value="mrt_station" />
             <input type="hidden" name="mrt_view" value="overview" />
@@ -145,7 +145,7 @@ function MRT_render_stations_overview_inline() {
                     $next = MRT_next_running_day_for_station($sid, $train_type);
                     $edit_link = get_edit_post_link($sid, '');
                 ?>
-                <tr>
+                <tr class="mrt-row-hover">
                     <td><?php echo esc_html($title ?: ('#'.$sid)); ?></td>
                     <td><?php echo esc_html($type ?: ''); ?></td>
                     <td><?php echo esc_html($order); ?></td>

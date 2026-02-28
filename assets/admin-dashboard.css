@@ -1,0 +1,253 @@
+/**
+ * Dashboard and Admin UI Components
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+/* ==========================================================================
+   Dashboard & Admin UI Components
+   ========================================================================== */
+
+/* Dashboard Statistics Grid – använder .mrt-grid .mrt-grid-auto */
+.mrt-dashboard-stats {
+    margin: var(--mrt-spacing-lg) 0;
+}
+
+.mrt-stat-card {
+    text-align: center;
+}
+
+.mrt-stat-number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: var(--mrt-wp-blue);
+}
+
+.mrt-stat-label {
+    color: var(--mrt-wp-gray);
+    margin-top: var(--mrt-spacing-sm);
+}
+
+.mrt-stat-label a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.mrt-stat-subtitle {
+    display: block;
+    font-size: var(--mrt-font-small);
+    margin-top: var(--mrt-spacing-xs);
+    opacity: 0.8;
+}
+
+/* Quick Actions Grid – använder .mrt-grid */
+.mrt-quick-actions {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    margin-top: var(--mrt-spacing-md);
+}
+
+.mrt-quick-action-button {
+    text-align: left;
+    height: auto;
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
+}
+
+.mrt-quick-action-button strong {
+    display: block;
+}
+
+.mrt-quick-action-button span {
+    font-size: 0.9em;
+    opacity: 0.8;
+    display: block;
+    margin-top: var(--mrt-spacing-xs);
+}
+
+/* Info Box – extends .mrt-alert .mrt-alert-info */
+.mrt-info-box p {
+    margin: 0;
+}
+
+.mrt-info-box p:not(:first-child) {
+    margin-top: var(--mrt-spacing-sm);
+}
+
+.mrt-info-box strong {
+    display: block;
+}
+
+.mrt-info-box ol {
+    margin: var(--mrt-spacing-sm) 0 0 1.5rem;
+    line-height: 1.6;
+}
+
+/* Guide Section – ljusblå bakgrund */
+.mrt-guide-section {
+    background: var(--mrt-info-bg);
+}
+
+.mrt-guide-section h2 {
+    margin-top: 0;
+    cursor: pointer;
+}
+
+.mrt-guide-toggle {
+    font-size: 0.8em;
+    font-weight: normal;
+    color: var(--mrt-wp-gray);
+}
+
+.mrt-guide-content {
+    display: none;
+    margin-top: var(--mrt-spacing-md);
+}
+
+.mrt-guide-content ol {
+    margin-left: var(--mrt-spacing-lg);
+    line-height: 1.8;
+}
+
+/* Tip Box – extends .mrt-alert .mrt-alert-warning */
+.mrt-tip-box {
+    margin-top: var(--mrt-spacing-md);
+}
+
+/* Table Column Widths – använd design tokens */
+.mrt-col-order { width: 40px; }
+.mrt-col-order-60 { width: 60px; }
+.mrt-col-actions { width: 150px; }
+.mrt-col-actions-200 { width: 200px; }
+.mrt-col-train-type { width: 150px; }
+.mrt-col-direction { width: 100px; }
+.mrt-col-destination { width: 150px; }
+.mrt-col-stops-here { width: 100px; }
+.mrt-col-time { width: 100px; }
+.mrt-col-pickup-dropoff { width: 80px; }
+
+/* Form Elements – mrt-date-row använder .mrt-box .mrt-box-sm */
+.mrt-date-row {
+    display: flex;
+    align-items: center;
+}
+
+.mrt-date-display {
+    font-weight: 500;
+    flex: 1;
+}
+
+.mrt-date-iso {
+    color: var(--mrt-text-tertiary);
+    font-size: 0.9em;
+    margin-left: var(--mrt-spacing-sm);
+}
+
+.mrt-date-remove-button {
+    margin-left: var(--mrt-spacing-md);
+}
+
+.mrt-add-date-button {
+    margin-top: var(--mrt-spacing-sm);
+}
+
+/* h3-stilar finns i .mrt-box h3 (admin-base) */
+
+.mrt-selected-dates-section {
+    margin-top: var(--mrt-spacing-lg);
+}
+
+.mrt-filter-form {
+    margin-bottom: var(--mrt-spacing-md);
+}
+
+.mrt-full-width {
+    width: 100%;
+}
+
+/* Admin meta boxes - replaces inline styles */
+.mrt-info-box.mrt-mb-1 { margin-bottom: var(--mrt-spacing-md); }
+.mrt-info-box.mrt-mt-1 { margin-top: var(--mrt-spacing-md); }
+.mrt-info-box ul.mrt-list-indent { margin: var(--mrt-spacing-sm) 0 0 1.5rem; }
+.mrt-how-to-use { margin-top: var(--mrt-spacing-sm); }
+.mrt-how-to-use ol { margin: var(--mrt-spacing-sm) 0 0 1.5rem; line-height: 1.6; }
+.mrt-form-table-mt { margin-top: var(--mrt-spacing-sm); }
+.mrt-form-table-mb { margin-bottom: var(--mrt-spacing-lg); }
+.mrt-th-label-150 { width: 150px; }
+.mrt-single-date-input { margin-right: var(--mrt-spacing-sm); }
+.mrt-dates-container { margin-top: var(--mrt-spacing-sm); }
+.mrt-date-remove-btn { margin-left: var(--mrt-spacing-md); }
+.mrt-success-message { margin: var(--mrt-spacing-md) 0; }
+.mrt-description-small-mt { font-size: var(--mrt-font-small); margin-top: var(--mrt-spacing-xs); }
+.mrt-train-types-container { margin-top: var(--mrt-spacing-md); }
+
+.mrt-train-type-label { display: inline-block; min-width: 150px; font-weight: 600; }
+.mrt-train-type-label span { color: var(--mrt-text-tertiary); font-weight: normal; font-size: 0.9em; }
+.mrt-train-type-select { margin-left: var(--mrt-spacing-sm); min-width: 200px; }
+.mrt-back-button { margin-right: var(--mrt-spacing-sm); }
+.mrt-description-tertiary { margin-top: var(--mrt-spacing-sm); color: var(--mrt-text-tertiary); }
+.mrt-routes-table-mt { margin-top: var(--mrt-spacing-md); }
+.mrt-description-block { display: block; font-size: 0.85em; margin-top: var(--mrt-spacing-xs); color: var(--mrt-wp-gray); }
+.mrt-day-timetable-hidden { display: none; }
+
+/* Text Styles */
+.mrt-description-small {
+    margin: 0;
+    font-size: 0.7rem;
+    color: var(--mrt-text-tertiary);
+}
+
+.mrt-description-mt { margin-top: var(--mrt-spacing-md); }
+.mrt-description-mt-small { margin-top: var(--mrt-spacing-sm); }
+.mrt-description-error {
+    color: var(--mrt-text-error);
+    font-weight: 600;
+}
+
+/* Disabled/Inactive States */
+.mrt-field-disabled,
+.mrt-field-disabled-opacity {
+    opacity: 0.5;
+}
+
+.mrt-time-input {
+    width: 100px;
+}
+
+/* Code/Pre blocks – använder .mrt-box */
+.mrt-code-block {
+    overflow-x: auto;
+}
+
+/* Section headings */
+.mrt-section-heading {
+    margin-top: 0;
+}
+
+/* Warning/Development boxes – extends .mrt-card */
+.mrt-warning-box {
+    margin-top: var(--mrt-spacing-xl);
+    background: var(--mrt-warning-bg);
+    border-color: var(--mrt-warning-border);
+}
+
+.mrt-danger-button {
+    background: var(--mrt-danger-bg);
+    color: var(--mrt-text-white);
+    border-color: var(--mrt-danger-border);
+}
+
+.mrt-description-small-text {
+    font-size: 0.9em;
+}
+
+/* Code display */
+.mrt-code-inline {
+    background: var(--mrt-gray-bg);
+    padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
+    border-radius: var(--mrt-radius-sm);
+}
+
+/* Time validation error */
+.mrt-time-error {
+    border-color: var(--mrt-text-error) !important;
+    box-shadow: 0 0 0 1px var(--mrt-text-error) !important;
+}

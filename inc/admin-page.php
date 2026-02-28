@@ -148,8 +148,8 @@ function MRT_render_admin_page() {
         <h1><?php esc_html_e('Museum Railway Timetable', 'museum-railway-timetable'); ?></h1>
         
         <!-- Statistics Dashboard -->
-        <div class="mrt-dashboard-stats">
-            <div class="mrt-stat-card">
+        <div class="mrt-grid mrt-grid-auto mrt-dashboard-stats">
+            <div class="mrt-card mrt-stat-card">
                 <div class="mrt-stat-number"><?php echo esc_html($stations_count); ?></div>
                 <div class="mrt-stat-label">
                     <a href="<?php echo esc_url(admin_url('edit.php?post_type=mrt_station')); ?>">
@@ -157,7 +157,7 @@ function MRT_render_admin_page() {
                     </a>
                 </div>
             </div>
-            <div class="mrt-stat-card">
+            <div class="mrt-card mrt-stat-card">
                 <div class="mrt-stat-number"><?php echo esc_html($routes_count); ?></div>
                 <div class="mrt-stat-label">
                     <a href="<?php echo esc_url(admin_url('edit.php?post_type=mrt_route')); ?>">
@@ -165,7 +165,7 @@ function MRT_render_admin_page() {
                     </a>
                 </div>
             </div>
-            <div class="mrt-stat-card">
+            <div class="mrt-card mrt-stat-card">
                 <div class="mrt-stat-number"><?php echo esc_html($timetables_count); ?></div>
                 <div class="mrt-stat-label">
                     <a href="<?php echo esc_url(admin_url('edit.php?post_type=mrt_timetable')); ?>">
@@ -173,7 +173,7 @@ function MRT_render_admin_page() {
                     </a>
                 </div>
             </div>
-            <div class="mrt-stat-card">
+            <div class="mrt-card mrt-stat-card">
                 <div class="mrt-stat-number"><?php echo esc_html($services_count); ?></div>
                 <div class="mrt-stat-label">
                     <?php esc_html_e('Trips (Services)', 'museum-railway-timetable'); ?>
@@ -182,7 +182,7 @@ function MRT_render_admin_page() {
                     </span>
                 </div>
             </div>
-            <div class="mrt-stat-card">
+            <div class="mrt-card mrt-stat-card">
                 <div class="mrt-stat-number"><?php echo esc_html($train_types_count); ?></div>
                 <div class="mrt-stat-label">
                     <a href="<?php echo esc_url(admin_url('edit-tags.php?taxonomy=mrt_train_type&post_type=mrt_service')); ?>">
@@ -194,7 +194,7 @@ function MRT_render_admin_page() {
         
         <!-- Routes Overview -->
         <?php if (!empty($all_routes)): ?>
-        <div class="mrt-settings-section">
+        <div class="mrt-section mrt-settings-section">
             <h2><?php esc_html_e('Routes Overview', 'museum-railway-timetable'); ?></h2>
             <p class="description">
                 <?php esc_html_e('Routes define which stations trains travel between and in what order. When creating a trip, you select a route to automatically get all its stations.', 'museum-railway-timetable'); ?>
@@ -279,9 +279,9 @@ function MRT_render_admin_page() {
         <?php endif; ?>
         
         <!-- Quick Actions -->
-        <div class="mrt-guide-section">
+        <div class="mrt-section mrt-guide-section">
             <h2><?php esc_html_e('Quick Actions', 'museum-railway-timetable'); ?></h2>
-            <div class="mrt-quick-actions">
+            <div class="mrt-grid mrt-quick-actions">
                 <a href="<?php echo esc_url(admin_url('post-new.php?post_type=mrt_station')); ?>" class="button button-primary mrt-quick-action-button">
                     <strong><?php esc_html_e('➕ Add Station', 'museum-railway-timetable'); ?></strong>
                     <span><?php esc_html_e('Create a new station', 'museum-railway-timetable'); ?></span>
@@ -302,7 +302,7 @@ function MRT_render_admin_page() {
         </div>
         
         <!-- Settings Form -->
-        <div class="mrt-settings-section">
+        <div class="mrt-section mrt-settings-section">
             <h2><?php esc_html_e('Settings', 'museum-railway-timetable'); ?></h2>
             <form method="post" action="options.php">
                 <?php
@@ -314,7 +314,7 @@ function MRT_render_admin_page() {
         </div>
         
         <!-- Quick Start Guide (Collapsible) -->
-        <div class="mrt-guide-section">
+        <div class="mrt-section mrt-guide-section">
             <h2 onclick="jQuery(this).next().slideToggle();">
                 <?php esc_html_e('📖 Quick Start Guide', 'museum-railway-timetable'); ?>
                 <span class="mrt-guide-toggle">(<?php esc_html_e('Click to expand', 'museum-railway-timetable'); ?>)</span>
@@ -329,13 +329,13 @@ function MRT_render_admin_page() {
                     <li><strong><?php esc_html_e('Set Train Number', 'museum-railway-timetable'); ?></strong> - <?php esc_html_e('When editing a trip (Service), enter the train number (e.g., 71, 91, 73) in the "Train Number" field. This will be displayed in timetables instead of the service ID.', 'museum-railway-timetable'); ?></li>
                     <li><strong><?php esc_html_e('Configure Stop Times', 'museum-railway-timetable'); ?></strong> - <?php esc_html_e('Click "Edit" on any trip to set arrival/departure times for each station. Use P/A symbols for pickup/dropoff restrictions, and leave times empty for "X" (stops but time not specified).', 'museum-railway-timetable'); ?></li>
                 </ol>
-                <p class="mrt-tip-box">
+                <p class="mrt-alert mrt-alert-warning mrt-tip-box">
                     <strong><?php esc_html_e('💡 Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('Trips are automatically named based on Route + Direction. You don\'t need to enter a name manually!', 'museum-railway-timetable'); ?>
                 </p>
             </div>
         </div>
         
-        <div class="mrt-guide-section">
+        <div class="mrt-section mrt-guide-section">
             <h2><?php esc_html_e('Shortcodes', 'museum-railway-timetable'); ?></h2>
             <p><?php esc_html_e('Use these shortcodes to display timetables on your pages and posts.', 'museum-railway-timetable'); ?></p>
             
@@ -353,7 +353,7 @@ function MRT_render_admin_page() {
                     • <code>start_monday</code> - <?php esc_html_e('Start week on Monday (0 or 1, default: 1)', 'museum-railway-timetable'); ?>
                 </p>
                 <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
-                <pre class="mrt-code-block">[museum_timetable_month month="2025-06" train_type="steam" show_counts="1"]</pre>
+                <pre class="mrt-box mrt-code-block">[museum_timetable_month month="2025-06" train_type="steam" show_counts="1"]</pre>
             </div>
             
             <div class="mrt-mt-1">
@@ -384,12 +384,12 @@ function MRT_render_admin_page() {
                     • <code>timetable</code> - <?php esc_html_e('Timetable name (alternative to timetable_id). Use the exact title of the timetable.', 'museum-railway-timetable'); ?>
                 </p>
                 <p><strong><?php esc_html_e('Examples:', 'museum-railway-timetable'); ?></strong></p>
-                <pre class="mrt-code-block">[museum_timetable_overview timetable_id="123"]</pre>
+                <pre class="mrt-box mrt-code-block">[museum_timetable_overview timetable_id="123"]</pre>
                 <p class="description mrt-description-mt-small mrt-description-small-text">
                     <?php esc_html_e('Or use the timetable name:', 'museum-railway-timetable'); ?>
                 </p>
-                <pre class="mrt-code-block">[museum_timetable_overview timetable="Sommar 2025"]</pre>
-                <p class="description mrt-description-mt-small mrt-tip-box">
+                <pre class="mrt-box mrt-code-block">[museum_timetable_overview timetable="Sommar 2025"]</pre>
+                <p class="description mrt-description-mt-small mrt-alert mrt-alert-warning mrt-tip-box">
                     <strong><?php esc_html_e('Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('You can preview how the timetable will look in the "Timetable Overview" meta box when editing a timetable in the admin.', 'museum-railway-timetable'); ?>
                 </p>
             </div>
@@ -422,19 +422,19 @@ function MRT_render_admin_page() {
                     • <?php esc_html_e('Results are sorted by departure time', 'museum-railway-timetable'); ?>
                 </p>
                 <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
-                <pre class="mrt-code-block">[museum_journey_planner]</pre>
+                <pre class="mrt-box mrt-code-block">[museum_journey_planner]</pre>
                 <p class="description mrt-description-mt-small">
                     <?php esc_html_e('Or with a default date:', 'museum-railway-timetable'); ?>
                 </p>
-                <pre class="mrt-code-block">[museum_journey_planner default_date="2025-06-15"]</pre>
-                <p class="description mrt-description-mt-small mrt-tip-box">
+                <pre class="mrt-box mrt-code-block">[museum_journey_planner default_date="2025-06-15"]</pre>
+                <p class="description mrt-description-mt-small mrt-alert mrt-alert-warning mrt-tip-box">
                     <strong><?php esc_html_e('Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('The journey planner automatically shows today\'s date by default, but users can select any date to check future connections. Make sure you have created timetables with dates and services with stop times for the dates you want to support.', 'museum-railway-timetable'); ?>
                 </p>
             </div>
         </div>
         
         <?php if (defined('WP_DEBUG') && WP_DEBUG): ?>
-        <div class="mrt-warning-box">
+        <div class="mrt-card mrt-warning-box">
             <h2><?php esc_html_e('Development Tools', 'museum-railway-timetable'); ?></h2>
             <p><?php esc_html_e('These tools are only available when WP_DEBUG is enabled.', 'museum-railway-timetable'); ?></p>
             <form method="post" action="" onsubmit="return confirm('<?php echo esc_js(__('Are you sure you want to delete ALL timetable data? This cannot be undone!', 'museum-railway-timetable')); ?>');">

@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) { exit; }
  */
 function MRT_render_timetable_overview_box($post) {
     ?>
-    <div class="mrt-timetable-overview-preview">
+    <div class="mrt-box mrt-timetable-overview-preview">
         <p class="description">
             <?php esc_html_e('Preview of how the timetable will look when displayed. Services are grouped by route and destination.', 'museum-railway-timetable'); ?>
         </p>
