@@ -33,7 +33,7 @@
     margin: var(--mrt-spacing-sm) 0 var(--mrt-spacing-md) 0;
 }
 
-.mrt-no-date { opacity: 0.7; }
+.mrt-no-date { opacity: var(--mrt-opacity-70); }
 .mrt-note {
     margin-top: var(--mrt-spacing-sm);
     color: var(--mrt-text-quaternary);
@@ -44,7 +44,7 @@
    ========================================================================== */
 
 .mrt-saving {
-    opacity: 0.6;
+    opacity: var(--mrt-opacity-70);
     cursor: wait !important;
 }
 
@@ -113,14 +113,14 @@
 .mrt-journey-field input[type="date"]:focus {
     outline: none;
     border-color: var(--mrt-wp-blue);
-    box-shadow: 0 0 0 1px var(--mrt-wp-blue);
+    box-shadow: var(--mrt-shadow-focus-wp);
 }
 
 .mrt-journey-search {
     background: var(--mrt-wp-blue);
     color: var(--mrt-text-white);
     border: none;
-    padding: 0.6rem 1.5rem;
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-lg);
     border-radius: var(--mrt-radius-sm);
     font-size: 1em;
     font-weight: 600;
@@ -142,7 +142,7 @@
 
 .mrt-journey-results-title {
     margin-bottom: var(--mrt-spacing-md);
-    font-size: 1.2em;
+    font-size: var(--mrt-font-xl);
     color: var(--mrt-text-secondary);
 }
 
@@ -156,7 +156,7 @@
 
 .mrt-journey-table td strong {
     color: var(--mrt-wp-blue);
-    font-size: 1.05em;
+    font-size: var(--mrt-font-lg);
 }
 
 .mrt-route-name {

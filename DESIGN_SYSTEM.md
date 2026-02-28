@@ -17,30 +17,74 @@ Gemensamt utseende och återanvändbara komponenter för att minska unik CSS.
 | `--mrt-card-bg` | Kort (statistik) |
 
 ### Spacing
+5 nivåer – använd närmaste vid behov.
+
+| Token | Värde | Användning |
+|-------|-------|------------|
+| `--mrt-spacing-xs` | 0.25rem (4px) | Små mellanrum, tight gap |
+| `--mrt-spacing-sm` | 0.5rem (8px) | Kompakta sektioner |
+| `--mrt-spacing-md` | 1rem (16px) | Standard |
+| `--mrt-spacing-lg` | 1.5rem (24px) | Sektioner, block |
+| `--mrt-spacing-xl` | 2rem (32px) | Stora avstånd |
+
+**Cell-padding** (tabeller):
 | Token | Värde |
 |-------|-------|
 | `--mrt-cell-padding` | 4px 6px |
 | `--mrt-cell-padding-md` | 6px 8px |
 | `--mrt-cell-padding-lg` | 6px 10px |
-| `--mrt-spacing-xs` | 0.25rem |
-| `--mrt-spacing-sm` | 0.5rem |
-| `--mrt-spacing-md` | 1rem |
-| `--mrt-spacing-lg` | 1.5rem |
-| `--mrt-spacing-xl` | 2rem |
 
 ### Border Radius
-| Token | Värde |
-|-------|-------|
-| `--mrt-radius-sm` | 3px |
-| `--mrt-radius-md` | 4px |
-| `--mrt-radius-lg` | 8px |
-| `--mrt-radius-xl` | 12px |
+4 nivåer – använd närmaste.
+
+| Token | Värde | Användning |
+|-------|-------|------------|
+| `--mrt-radius-xs` | 2px | Chips, tight |
+| `--mrt-radius-sm` | 4px | Buttons, inputs |
+| `--mrt-radius-md` | 8px | Cards |
+| `--mrt-radius-lg` | 12px | Modals |
 
 ### Font sizes
+6 nivåer – använd närmaste.
+
+| Token | Värde | Användning |
+|-------|-------|------------|
+| `--mrt-font-xs` | 0.75rem | Små lablar, chip |
+| `--mrt-font-sm` | 0.85rem | Mindre text |
+| `--mrt-font-base` | 0.9rem | Standard |
+| `--mrt-font-md` | 1rem | |
+| `--mrt-font-lg` | 1.1rem | Rubriker |
+| `--mrt-font-xl` | 1.2rem | Större rubriker |
+
+### Shadows
+4 nivåer + fokus-varianter.
+
 | Token | Värde |
 |-------|-------|
-| `--mrt-font-small` | 0.85em |
-| `--mrt-font-xs` | 0.8em |
+| `--mrt-shadow-sm` | 0 1px 3px rgba(0,0,0,0.1) |
+| `--mrt-shadow-md` | 0 2px 4px rgba(0,0,0,0.1) |
+| `--mrt-shadow-lg` | 0 2px 8px rgba(0,0,0,0.08) |
+| `--mrt-shadow-xl` | 0 4px 12px rgba(0,0,0,0.08) |
+| `--mrt-shadow-side` | Sidokant |
+| `--mrt-shadow-focus` | Gul fokusring |
+| `--mrt-shadow-focus-ring` | Blå fokusring |
+| `--mrt-shadow-focus-error` | Röd fokusring |
+| `--mrt-shadow-focus-wp` | WP-blå fokusring |
+
+### Opacity
+4 nivåer.
+
+| Token | Värde |
+|-------|-------|
+| `--mrt-opacity-50` | 0.5 |
+| `--mrt-opacity-70` | 0.7 |
+| `--mrt-opacity-85` | 0.85 |
+| `--mrt-opacity-95` | 0.95 |
+
+### Sizes
+| Token | Värde |
+|-------|-------|
+| `--mrt-size-dot` | 0.6rem (legend-prickar) |
 
 ### Timetable-specifika
 | Token | Användning |
@@ -116,6 +160,10 @@ Responsiv grid med gap.
 | `.mrt-mt-0` | margin-top: 0 |
 | `.mrt-mt-1` | margin-top: var(--mrt-spacing-md) |
 | `.mrt-mb-1` | margin-bottom: var(--mrt-spacing-md) |
+| `.mrt-ml-1` | margin-left: var(--mrt-spacing-md) |
+| `.mrt-my-1` | margin-top/bottom: var(--mrt-spacing-md) |
+| `.mrt-loading-cell` | Centrerad padding för laddningscell |
+| `.mrt-spinner-inline` | Inline-spinner utan float |
 | `.mrt-text-tertiary` | Grå text |
 | `.mrt-text-error` | Röd feltext |
 | `.mrt-text-small` | Mindre fontstorlek |
@@ -127,4 +175,4 @@ Responsiv grid med gap.
 1. **Använd tokens** – Undvik hardkodade färger (#hex). Använd `var(--mrt-*)`.
 2. **Kombinera base + modifier** – T.ex. `mrt-card mrt-stat-card` istället för att duplicera alla stilar.
 3. **Nya komponenter** – Kontrollera om `.mrt-card`, `.mrt-box` eller `.mrt-section` passar innan du skriver ny CSS.
-4. **Radius** – Använd `var(--mrt-radius-sm/md/lg)` istället för 3px, 4px, 8px.
+4. **Tokens** – Använd `var(--mrt-*)` med närmaste nivå (xs/sm/md/lg/xl).

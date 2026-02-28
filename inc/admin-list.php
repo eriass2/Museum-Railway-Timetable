@@ -81,6 +81,7 @@ function MRT_render_stations_overview_inline() {
     });
     </script>
     <div class="mrt-section mrt-mt-1">
+        <div class="mrt-box mrt-mb-1">
         <form method="get" class="mrt-filter-form">
             <input type="hidden" name="post_type" value="mrt_station" />
             <input type="hidden" name="mrt_view" value="overview" />
@@ -104,6 +105,7 @@ function MRT_render_stations_overview_inline() {
             <button class="button"><?php echo esc_html__('Filter', 'museum-railway-timetable'); ?></button>
             <a class="button button-secondary" href="<?php echo esc_url(admin_url('edit.php?post_type=mrt_station&mrt_view=overview')); ?>"><?php echo esc_html__('Reset', 'museum-railway-timetable'); ?></a>
         </form>
+        </div>
 
         <table class="widefat striped">
             <thead>
@@ -184,7 +186,7 @@ function MRT_render_stations_overview_inline() {
             </tbody>
         </table>
 
-        <p class="mrt-note mrt-mt-1">
+        <p class="mrt-alert mrt-alert-info mrt-note mrt-mt-1">
             <?php echo esc_html__('Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug.', 'museum-railway-timetable'); ?>
         </p>
     </div>

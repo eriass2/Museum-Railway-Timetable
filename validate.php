@@ -24,6 +24,7 @@ $required_files = [
     'inc/functions/services.php',
     'assets/admin-base.css',
     'assets/admin-timetable.css',
+    'assets/admin-timetable-overview.css',
     'assets/admin-meta-boxes.css',
     'assets/admin-dashboard.css',
     'assets/admin-ui.css',
@@ -158,6 +159,7 @@ echo "\n7. Checking CSS files...\n";
 $css_files = [
     'assets/admin-base.css',
     'assets/admin-timetable.css',
+    'assets/admin-timetable-overview.css',
     'assets/admin-meta-boxes.css',
     'assets/admin-dashboard.css',
     'assets/admin-ui.css',

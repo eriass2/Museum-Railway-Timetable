@@ -21,6 +21,7 @@ $required_files = @(
     "inc/functions/services.php",
     "assets/admin-base.css",
     "assets/admin-timetable.css",
+    "assets/admin-timetable-overview.css",
     "assets/admin-meta-boxes.css",
     "assets/admin-dashboard.css",
     "assets/admin-ui.css",
@@ -115,6 +116,7 @@ Write-Host "`n5. Checking CSS files..." -ForegroundColor Yellow
 $cssFiles = @(
     "assets/admin-base.css",
     "assets/admin-timetable.css",
+    "assets/admin-timetable-overview.css",
     "assets/admin-meta-boxes.css",
     "assets/admin-dashboard.css",
     "assets/admin-ui.css",

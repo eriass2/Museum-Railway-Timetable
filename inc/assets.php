@@ -43,9 +43,15 @@ function MRT_enqueue_admin_assets($hook) {
         MRT_VERSION
     );
     wp_enqueue_style(
+        'mrt-admin-timetable-overview',
+        MRT_URL . 'assets/admin-timetable-overview.css',
+        ['mrt-admin-timetable'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
         'mrt-admin-meta-boxes',
         MRT_URL . 'assets/admin-meta-boxes.css',
-        ['mrt-admin-timetable'],
+        ['mrt-admin-timetable-overview'],
         MRT_VERSION
     );
     wp_enqueue_style(
@@ -186,9 +192,15 @@ function MRT_enqueue_frontend_assets() {
         MRT_VERSION
     );
     wp_enqueue_style(
+        'mrt-frontend-timetable-overview',
+        MRT_URL . 'assets/admin-timetable-overview.css',
+        ['mrt-frontend-timetable'],
+        MRT_VERSION
+    );
+    wp_enqueue_style(
         'mrt-frontend-meta-boxes',
         MRT_URL . 'assets/admin-meta-boxes.css',
-        ['mrt-frontend-timetable'],
+        ['mrt-frontend-timetable-overview'],
         MRT_VERSION
     );
     wp_enqueue_style(

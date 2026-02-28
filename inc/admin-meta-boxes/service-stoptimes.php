@@ -97,6 +97,7 @@ function MRT_render_service_stoptimes_box($post) {
                     <li><?php esc_html_e('Click "Save Stop Times" at the bottom to save all changes', 'museum-railway-timetable'); ?></li>
                 </ol>
             </div>
+            <div class="mrt-box mrt-stoptimes-box">
             <table class="widefat striped mrt-stoptimes-table">
                 <thead>
                     <tr>
@@ -124,6 +125,7 @@ function MRT_render_service_stoptimes_box($post) {
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
             <?php if (!empty($stations)): ?>
             <p class="mrt-mt-1">
                 <button type="button" id="mrt-save-all-stoptimes" class="button button-primary" data-service-id="<?php echo esc_attr($post->ID); ?>">
@@ -135,7 +137,7 @@ function MRT_render_service_stoptimes_box($post) {
             </p>
             <?php endif; ?>
         <?php else: ?>
-            <p class="description mrt-description-error">
+            <p class="mrt-alert mrt-alert-warning mrt-description-error">
                 <?php esc_html_e('Please select a Route in Service Details above first. Then you can configure which stations this service stops at.', 'museum-railway-timetable'); ?>
             </p>
         <?php endif; ?>

@@ -81,7 +81,9 @@ function MRT_render_route_meta_box($post) {
             </tr>
         </table>
     </div>
-    <div id="mrt-route-stations-container">
+    <div id="mrt-route-stations-container" class="mrt-box mrt-mt-1">
+        <h3 class="mrt-section-heading"><?php esc_html_e('Stations on Route', 'museum-railway-timetable'); ?></h3>
+        <p class="description"><?php esc_html_e('Add stations in the order they appear on the route. Use ↑ ↓ to reorder.', 'museum-railway-timetable'); ?></p>
         <table class="widefat striped" id="mrt-route-stations-table">
             <thead>
                 <tr>
@@ -96,7 +98,7 @@ function MRT_render_route_meta_box($post) {
                         $station = get_post($station_id);
                         if (!$station) continue;
                     ?>
-                        <tr data-station-id="<?php echo esc_attr($station_id); ?>">
+                        <tr class="mrt-row-hover" data-station-id="<?php echo esc_attr($station_id); ?>">
                             <td><?php echo esc_html($index + 1); ?></td>
                             <td><?php echo esc_html($station->post_title); ?></td>
                             <td>

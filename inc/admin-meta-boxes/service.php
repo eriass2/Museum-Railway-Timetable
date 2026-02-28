@@ -86,6 +86,8 @@ function MRT_render_service_meta_box($post) {
         <p><strong><?php esc_html_e('💡 What is a Trip (Service)?', 'museum-railway-timetable'); ?></strong></p>
         <p><?php esc_html_e('A trip represents one train journey. It belongs to a Timetable (which defines which days it runs) and uses a Route (which defines which stations are available). After selecting a Route, you can configure Stop Times to set arrival/departure times for each station.', 'museum-railway-timetable'); ?></p>
     </div>
+    <div class="mrt-box mrt-mt-1">
+    <h3 class="mrt-section-heading"><?php esc_html_e('Trip Details', 'museum-railway-timetable'); ?></h3>
     <table class="form-table">
         <tr>
             <th><label for="mrt_service_timetable_id"><?php esc_html_e('Timetable', 'museum-railway-timetable'); ?></label></th>
@@ -281,6 +283,7 @@ function MRT_render_service_meta_box($post) {
             </td>
         </tr>
     </table>
+    </div>
     <?php
 }
 

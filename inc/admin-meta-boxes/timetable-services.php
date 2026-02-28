@@ -43,7 +43,7 @@ function MRT_render_timetable_services_box($post) {
     ]);
     
     ?>
-    <div id="mrt-timetable-services-container">
+    <div id="mrt-timetable-services-container" class="mrt-box mrt-timetable-services-box">
         <?php wp_nonce_field('mrt_timetable_services_nonce', 'mrt_timetable_services_nonce'); ?>
         <p class="description">
             <?php esc_html_e('Manage trips (services) for this timetable. Add, edit, or remove trips directly here.', 'museum-railway-timetable'); ?>

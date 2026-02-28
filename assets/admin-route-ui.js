@@ -33,7 +33,7 @@
             var $newRow = $tbody.find('.mrt-new-route-station-row');
             var newIndex = currentStations.length;
 
-            var $row = $('<tr data-station-id="' + stationId + '">' +
+            var $row = $('<tr class="mrt-row-hover" data-station-id="' + stationId + '">' +
                 '<td>' + newIndex + '</td>' +
                 '<td>' + stationName + '</td>' +
                 '<td>' +
@@ -125,7 +125,7 @@
                     },
                     success: function(response) {
                         if (response.success) {
-                            var $indicator = $('<span class="mrt-save-indicator" style="color: #46b450; margin-left: 0.5rem; font-size: 0.9em;">✓ Saved</span>');
+                            var $indicator = $('<span class="mrt-save-indicator">✓ Saved</span>');
                             $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
                             $('#mrt-route-end-station').closest('td').append($indicator);
                             setTimeout(function() {

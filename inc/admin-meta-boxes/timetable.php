@@ -98,8 +98,8 @@ function MRT_render_timetable_meta_box($post) {
     </div>
     
     <!-- Selected dates list -->
-    <div class="mrt-selected-dates-section">
-        <h3><?php esc_html_e('Selected Dates', 'museum-railway-timetable'); ?></h3>
+    <div class="mrt-box mrt-selected-dates-section">
+        <h3 class="mrt-section-heading"><?php esc_html_e('Selected Dates', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('All dates when this timetable applies. Click "Remove" to remove individual dates.', 'museum-railway-timetable'); ?></p>
         <div id="mrt-timetable-dates-container" class="mrt-dates-container">
             <?php foreach ($dates as $index => $date): ?>

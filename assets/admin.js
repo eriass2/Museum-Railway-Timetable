@@ -50,7 +50,7 @@
             }
 
             if ($stoptimesContainer.length) {
-                $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" style="text-align: center; padding: 2rem;"><span class="spinner is-active" style="float: none; margin: 0;"></span> ' +
+                $('#mrt-stoptimes-tbody').html('<tr><td colspan="7" class="mrt-loading-cell"><span class="spinner is-active mrt-spinner-inline"></span> ' +
                     (typeof mrtAdmin !== 'undefined' ? mrtAdmin.loadingStations : 'Loading stations...') + '</td></tr>');
             }
 
@@ -270,7 +270,7 @@
             }, function(response) {
                 var originalText = $btn.data('original-text') || 'Save Stop Times';
                 if (response.success) {
-                    var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>' +
+                    var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>' +
                         (response.data.message || 'Stop times saved successfully.') + '</p></div>');
                     $btn.closest('.mrt-stoptimes-box').before($successMsg);
                     setTimeout(function() {
@@ -278,7 +278,7 @@
                     }, 3000);
                     $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');
                 } else {
-                    var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible" style="margin: 1rem 0;"><p>' +
+                    var $errorMsg = $('<div class="mrt-error-message notice notice-error is-dismissible mrt-my-1"><p>' +
                         (response.data.message || 'Error saving stop times.') + '</p></div>');
                     $btn.closest('.mrt-stoptimes-box').before($errorMsg);
                     $btn.prop('disabled', false).text(originalText).removeClass('mrt-saving');

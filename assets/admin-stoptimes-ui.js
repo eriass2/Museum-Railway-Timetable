@@ -74,7 +74,7 @@
                     editingRow = null;
 
                     var successMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.stopTimeSavedSuccessfully) ? mrtAdmin.stopTimeSavedSuccessfully : 'Stop time saved successfully.';
-                    var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>' + successMsg + '</p></div>');
+                    var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>' + successMsg + '</p></div>');
                     $container.before($successMsg);
                     setTimeout(function() {
                         $successMsg.fadeOut(300, function() { $(this).remove(); });
@@ -133,7 +133,7 @@
                         editingRow = null;
 
                         var successMsg = (typeof mrtAdmin !== 'undefined' && mrtAdmin.stopTimeAddedSuccessfully) ? mrtAdmin.stopTimeAddedSuccessfully : 'Stop time added successfully.';
-                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible" style="margin: 1rem 0;"><p>' + successMsg + '</p></div>');
+                        var $successMsg = $('<div class="mrt-success-message notice notice-success is-dismissible mrt-my-1"><p>' + successMsg + '</p></div>');
                         $container.before($successMsg);
                         setTimeout(function() {
                             $successMsg.fadeOut(300, function() { $(this).remove(); });

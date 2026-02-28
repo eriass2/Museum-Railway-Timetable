@@ -38,14 +38,14 @@
 .mrt-time-error-message {
     display: block;
     color: var(--mrt-text-error);
-    font-size: 0.85rem;
+    font-size: var(--mrt-font-sm);
     margin-top: var(--mrt-spacing-xs);
 }
 
 .mrt-save-indicator {
     color: var(--mrt-success);
     margin-left: var(--mrt-spacing-sm);
-    font-size: 0.9em;
+    font-size: var(--mrt-font-base);
 }
 
 /* Inline editing styles */
@@ -82,7 +82,7 @@
 
 .mrt-edit-field .mrt-input label {
     display: inline-block;
-    margin-right: 0.75rem;
+    margin-right: var(--mrt-spacing-sm);
     font-weight: normal;
     white-space: nowrap;
 }

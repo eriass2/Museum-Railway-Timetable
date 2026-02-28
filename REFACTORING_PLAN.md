@@ -6,6 +6,7 @@
 
 | Fil | Rader | Status |
 |-----|-------|--------|
+| inc/admin-page.php | ~517 | ✅ Uppdelad (dashboard, clear-db) |
 | inc/admin-meta-boxes.php | ~1514 | ✅ Uppdelad |
 | assets/admin.css | ~1796 | ✅ Uppdelad (base, timetable, meta-boxes, dashboard, ui, responsive) |
 | assets/admin.js | ~1057 | ✅ Uppdelad (utils, route-ui, stoptimes-ui, timetable-services-ui) |
@@ -58,11 +59,19 @@
 **Alternativ B: Behåll en fil, men tydliga sektioner**
 - Lägg till `// === SECTION: X ===` kommentarer för bättre navigering
 
-## 5. admin.css → assets/
+## 5. admin-page.php → inc/admin-page/
+
+**Uppdelning (klar):**
+- `admin-page.php` – Loader (menu, settings registration)
+- `dashboard.php` – MRT_render_admin_page, settings field callbacks
+- `clear-db.php` – Clear DB handler (WP_DEBUG only)
+
+## 6. admin.css → assets/
 
 **Uppdelning (klar):**
 - `admin-base.css` – Variables, base
-- `admin-timetable.css` – Grid, cells, overview
+- `admin-timetable.css` – Table, month calendar, legend
+- `admin-timetable-overview.css` – Grid, cells, overview
 - `admin-meta-boxes.css` – Meta box styles
 - `admin-dashboard.css` – Dashboard, stats, form elements
 - `admin-ui.css` – Status, loading, messages, journey planner
