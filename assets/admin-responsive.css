@@ -75,31 +75,6 @@
         display: none;
     }
 
-    .mrt-overview-table tbody tr {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: var(--mrt-spacing-sm);
-        margin-bottom: var(--mrt-spacing-md);
-        padding: var(--mrt-spacing-md);
-        background: var(--mrt-bg-white);
-        border: 1px solid var(--mrt-border-default);
-        border-radius: var(--mrt-radius-sm);
-        box-shadow: var(--mrt-shadow-sm);
-    }
-
-    .mrt-overview-table tbody tr td.mrt-station-name {
-        position: static;
-        box-shadow: none;
-        background: var(--mrt-bg-light);
-        padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
-        margin: calc(-1 * var(--mrt-spacing-md)) calc(-1 * var(--mrt-spacing-md)) var(--mrt-spacing-sm);
-        border-radius: var(--mrt-radius-sm) var(--mrt-radius-sm) 0 0;
-        border: none;
-        border-bottom: 2px solid var(--mrt-green-primary);
-        font-size: 1rem;
-        font-weight: 600;
-    }
-
     .mrt-grid-row {
         display: block;
         margin-bottom: var(--mrt-spacing-md);
@@ -179,112 +154,6 @@
         border-radius: 0 0 var(--mrt-radius-lg) var(--mrt-radius-lg);
         border: none;
     }
-
-    .mrt-overview-table thead {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border-width: 0;
-    }
-
-    .mrt-overview-table tbody tr {
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        margin-bottom: var(--mrt-spacing-lg);
-        background: var(--mrt-bg-white);
-        border: 2px solid var(--mrt-border-light);
-        border-radius: var(--mrt-radius-lg);
-        overflow: hidden;
-        box-shadow: var(--mrt-shadow-xl);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .mrt-overview-table tbody tr:active {
-        transform: scale(0.98);
-    }
-
-    .mrt-overview-table tbody tr td.mrt-station-name {
-        display: block;
-        width: 100%;
-        position: static;
-        box-shadow: none;
-        background: linear-gradient(135deg, var(--mrt-green-primary) 0%, var(--mrt-route-header-end) 100%);
-        color: var(--mrt-text-white);
-        padding: var(--mrt-spacing-md) var(--mrt-spacing-lg);
-        margin: 0;
-        border: none;
-        border-bottom: 3px solid var(--mrt-green-dark);
-        border-radius: 0;
-        font-size: var(--mrt-font-lg);
-        font-weight: 700;
-        text-align: left;
-    }
-
-    .mrt-overview-table tbody tr td.mrt-time-cell {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: var(--mrt-spacing-md) var(--mrt-spacing-lg);
-        margin: var(--mrt-spacing-sm) var(--mrt-spacing-md);
-        background: var(--mrt-bg-lightest);
-        border: 2px solid var(--mrt-border-light);
-        border-radius: var(--mrt-radius-lg);
-        border-left: 5px solid var(--mrt-border-default);
-        font-family: 'Courier New', monospace;
-        font-weight: 700;
-        font-size: var(--mrt-font-lg);
-        text-align: left;
-        box-shadow: var(--mrt-shadow-md);
-        transition: all 0.2s ease;
-    }
-
-    .mrt-overview-table tbody tr td.mrt-time-cell:active {
-        transform: scale(0.97);
-    }
-
-    .mrt-overview-table tbody tr td.mrt-time-cell::before {
-        content: attr(data-service-label);
-        font-weight: 700;
-        color: var(--mrt-text-primary);
-        margin-right: var(--mrt-spacing-md);
-        font-size: var(--mrt-font-base);
-        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
-        background: var(--mrt-overlay-black-05);
-        border-radius: var(--mrt-radius-md);
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        font-size: var(--mrt-font-xs);
-    }
-
-    .mrt-overview-table tbody tr td.mrt-time-cell.mrt-service-bus {
-        border-left-color: var(--mrt-bus-accent);
-        background: var(--mrt-bus-bg);
-        border-left-width: 5px;
-    }
-
-    .mrt-overview-table tbody tr td.mrt-time-cell.mrt-service-bus::before {
-        background: var(--mrt-bus-bg-subtle);
-        color: var(--mrt-bus-accent-dark);
-    }
-
-    .mrt-overview-table tbody tr td.mrt-time-cell.mrt-service-special {
-        border-left-color: var(--mrt-warning-border);
-        background: linear-gradient(to right, var(--mrt-special-bg) 0%, var(--mrt-special-bg-light) 100%);
-        border-left-width: 5px;
-        box-shadow: var(--mrt-shadow-focus);
-    }
-
-    .mrt-overview-table tbody tr td.mrt-time-cell.mrt-service-special::before {
-        background: var(--mrt-special-bg-subtle-20);
-        color: var(--mrt-special-accent);
-    }
 }
 
 @media screen and (max-width: 480px) {
@@ -300,21 +169,6 @@
 
     .mrt-legend-item {
         margin-right: var(--mrt-spacing-sm);
-    }
-
-    .mrt-overview-table tbody tr {
-        padding: var(--mrt-spacing-sm);
-        margin-bottom: var(--mrt-spacing-md);
-    }
-
-    .mrt-overview-table tbody tr td.mrt-station-name {
-        font-size: 1rem;
-        padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
-    }
-
-    .mrt-overview-table tbody tr td.mrt-time-cell {
-        padding: var(--mrt-spacing-xs);
-        font-size: 1rem;
     }
 
     .mrt-route-header {
