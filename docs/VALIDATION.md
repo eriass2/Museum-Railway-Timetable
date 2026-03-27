@@ -11,7 +11,8 @@ Manuell checklista och automatiserade kontroller innan release eller deploy.
 Kör från **projektroten** (mappen som innehåller `museum-railway-timetable.php`):
 
 ```powershell
-php scripts\validate.php
+composer plugin-check
+# eller: php scripts\validate.php
 ```
 
 Skriptet kontrollerar bland annat: obligatoriska filer, PHP-syntax, ABSPATH, inline styles (utom CSS-variabler), plugin-header, text domain, CSS/JS-filer.

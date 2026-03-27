@@ -90,7 +90,10 @@ composer require --dev phpunit/phpunit
 | **Style guides** | STYLE_GUIDE, COMPONENT_LIBRARY, DESIGN_SYSTEM |
 | **Granskningar** | PHP_STYLE_REVIEW, JS_STYLE_REVIEW, CSS_STYLE_REVIEW |
 | **Datamodell** | DATA_MODEL.md med UML |
-| **Validering** | scripts/validate.php, validate.ps1 |
+| **Validering** | `composer plugin-check` (= `php scripts/validate.php`), validate.ps1 |
+| **CI** | `.github/workflows/ci.yml` (validate vid push/PR) |
+| **Dependabot** | `.github/dependabot.yml` (Composer månadsvis) |
+| **Överblick** | [PROJECT_HEALTH.md](PROJECT_HEALTH.md) |
 | **Lint** | PHPStan, PHPCS, scripts/lint.ps1 |
 | **Deploy** | scripts/deploy.ps1 för Local |
 | **Dokumentation** | docs/ med README som index |
@@ -104,14 +107,14 @@ composer require --dev phpunit/phpunit
 3. Kopiera `scripts/deploy.config.example.json` → `scripts/deploy.config.json`, sätt Local-sökväg
 4. `.\scripts\deploy.ps1 -OpenBrowser`
 5. Läs docs/DEVELOPER.md och docs/STYLE_GUIDE.md
-6. Vid ändringar: `composer lint`, `php scripts/validate.php`
+6. Vid ändringar: `composer plugin-check` (och vid behov `composer lint`)
 
 ---
 
 ## 6. Sammanfattning
 
-**Gör först:** CI (GitHub Actions), uppdatera REFACTORING_PLAN, stärk DEVELOPER.md.
+**Gör först:** ~~CI~~ ✅ `.github/workflows/ci.yml`, ~~DEVELOPER~~ ✅, REFACTORING ✅.
 
-**Gör sedan:** Enhetstester för kritiska helpers, integrera lint i validate.
+**Gör sedan:** Enhetstester för kritiska helpers, PHPStan WordPress-stubs, integrera valfri lint i validate.
 
 **Överväg:** CHANGELOG.md, pre-commit för Windows.

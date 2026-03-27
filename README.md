@@ -160,7 +160,7 @@ These features will enhance the flexibility and clarity of timetable displays, m
 
 ## Development
 
-**Utvecklare:** Se [docs/DEVELOPER.md](docs/DEVELOPER.md) för snabbstart, lint, validering och dokumentation.
+**Utvecklare:** Se [docs/DEVELOPER.md](docs/DEVELOPER.md) och [docs/PROJECT_HEALTH.md](docs/PROJECT_HEALTH.md) (CI, `composer plugin-check`). Bidrag: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Deploy to Local (WordPress)
 

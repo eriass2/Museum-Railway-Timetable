@@ -16,6 +16,7 @@
         }
     },
     "scripts": {
+        "plugin-check": "php scripts/validate.php",
         "phpstan": "phpstan analyse",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",

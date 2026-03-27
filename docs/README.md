@@ -13,6 +13,7 @@
 | [VALIDATION.md](VALIDATION.md) | Pre-deploy checklista |
 | [CSS_STYLE_REVIEW.md](CSS_STYLE_REVIEW.md) | CSS-granskning mot style guide |
 | [FUTURE_WORK.md](FUTURE_WORK.md) | Rekommendationer för framtida arbete |
+| [PROJECT_HEALTH.md](PROJECT_HEALTH.md) | CI, kontroller, `composer plugin-check` |
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | Installera PHP och Composer på Windows |
 | [DATA_MODEL.md](DATA_MODEL.md) | Datamodell |
 | [TIMETABLE_STRUCTURE.md](TIMETABLE_STRUCTURE.md) | Tidtabellstruktur |

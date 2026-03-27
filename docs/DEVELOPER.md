@@ -19,8 +19,9 @@ copy scripts\deploy.config.example.json scripts\deploy.config.json
 .\scripts\deploy.ps1 -OpenBrowser
 
 # 3. Vid kodändringar – validera innan commit
-composer lint
-php scripts\validate.php
+composer plugin-check
+# (samma som: php scripts\validate.php)
+# Valfritt: composer lint (phpstan + phpcs – se nedan)
 ```
 
 ---
@@ -39,6 +40,7 @@ php scripts\validate.php
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
 | [PHP_STYLE_REVIEW.md](PHP_STYLE_REVIEW.md) / [JS_STYLE_REVIEW.md](JS_STYLE_REVIEW.md) / [CSS_STYLE_REVIEW.md](CSS_STYLE_REVIEW.md) | Granskningar mot style guide |
 | [FUTURE_WORK.md](FUTURE_WORK.md) | Idéer för framtida förbättringar |
+| [PROJECT_HEALTH.md](PROJECT_HEALTH.md) | CI, Dependabot, vilka kommandon som körs |
 | [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md) | CSS-moduler och `@import` |
 
 ---
