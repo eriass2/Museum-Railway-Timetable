@@ -1,6 +1,6 @@
-# PHP på Windows – 3 alternativ
+# PHP och Composer på Windows
 
-Instruktioner för att installera PHP på PC (Windows) så att du kan köra `composer`, `php scripts/validate.php`, `composer phpstan` m.m.
+Instruktioner för att installera PHP och Composer på PC (Windows) så att du kan köra `composer install`, `php scripts/validate.php`, `composer phpstan` m.m.
 
 ---
 
@@ -66,6 +66,45 @@ Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManage
 
 ---
 
+## Composer – 3 alternativ
+
+**Förutsättning:** PHP måste vara installerat och i PATH (`php -v` ska fungera).
+
+### Alternativ 1: Installer (rekommenderat)
+
+1. Gå till [getcomposer.org/download](https://getcomposer.org/download/)
+2. Ladda ner **Composer-Setup.exe** (Windows Installer)
+3. Kör installationsprogrammet
+4. Välj sökväg till `php.exe` (t.ex. `C:\xampp\php\php.exe` eller `C:\php\php.exe`)
+5. Bekräfta – Composer läggs globalt till
+6. Starta om terminalen
+7. Kontrollera: `composer -V`
+
+### Alternativ 2: Manuellt (composer.phar)
+
+```powershell
+cd c:\Projects\Museum-Railway-Timetable
+php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+php composer-setup.php
+php -r "unlink('composer-setup.php');"
+```
+
+Använd sedan `php composer.phar` istället för `composer`:
+```powershell
+php composer.phar install
+php composer.phar lint
+```
+
+### Alternativ 3: Chocolatey
+
+```powershell
+choco install composer -y
+```
+
+Starta om terminalen. Kontrollera: `composer -V`
+
+---
+
 ## Efter installation
 
 ```powershell
@@ -74,5 +113,3 @@ composer install
 php scripts\validate.php
 composer phpstan
 ```
-
-Om `composer` inte hittas: installera Composer från [getcomposer.org/download](https://getcomposer.org/download/).

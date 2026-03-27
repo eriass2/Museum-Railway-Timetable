@@ -29,12 +29,17 @@ php scripts\validate.php
 
 | Dokument | Innehåll |
 |----------|----------|
-| [docs/README.md](README.md) | Index över all dokumentation |
+| [docs/README.md](README.md) | Fullständigt index över alla `.md`-filer |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |
 | [COMPONENT_LIBRARY.md](COMPONENT_LIBRARY.md) | UI-komponenter (.mrt-btn, .mrt-form, etc.) |
+| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Design tokens |
 | [DATA_MODEL.md](DATA_MODEL.md) | Datamodell, relationer, post types |
-| [REFACTORING_PLAN.md](REFACTORING_PLAN.md) | Filstruktur, uppdelning |
-| [FUTURE_WORK.md](FUTURE_WORK.md) | Rekommendationer för framtida arbete |
+| [REFACTORING_PLAN.md](REFACTORING_PLAN.md) | Filstruktur, genomförd uppdelning |
+| [VALIDATION.md](VALIDATION.md) | Checklista före deploy |
+| [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
+| [PHP_STYLE_REVIEW.md](PHP_STYLE_REVIEW.md) / [JS_STYLE_REVIEW.md](JS_STYLE_REVIEW.md) / [CSS_STYLE_REVIEW.md](CSS_STYLE_REVIEW.md) | Granskningar mot style guide |
+| [FUTURE_WORK.md](FUTURE_WORK.md) | Idéer för framtida förbättringar |
+| [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md) | CSS-moduler och `@import` |
 
 ---
 
@@ -64,11 +69,18 @@ composer lint       # Båda
 
 ### Validering
 
+Kör från **projektroten**:
+
 ```powershell
 php scripts\validate.php
 ```
 
-Kontrollerar: filer, PHP-syntax, ABSPATH, inline styles, plugin header, text domain, CSS/JS.
+Kontrollerar: obligatoriska filer, PHP-syntax, ABSPATH, inline styles, plugin header, text domain, CSS/JS.
+
+### PHPStan och PHPCS (`composer lint`)
+
+- **PHPStan:** Bootstrap laddar inte WordPress core; utan WordPress-stubs kan analysen rapportera många "function not found" för `add_action`, `__`, m.m. Det är ett känt tillstånd. För full analys: lägg till WordPress-stubs (t.ex. `phpstan-wordpress`) – se [FUTURE_WORK.md](FUTURE_WORK.md).
+- **PHPCS:** Använder WordPress Coding Standards. Projektet använder prefixet `MRT_` för funktioner; vissa WPCS-regler kan flagga det – bedöm utifrån [STYLE_GUIDE.md](STYLE_GUIDE.md). `composer phpcbf` fixar formateringsbar kod där det passar.
 
 ### Pre-commit hooks
 

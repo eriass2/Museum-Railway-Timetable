@@ -2,7 +2,7 @@
 
 Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
-**Senast analyserad:** 2025-02-17 (efter commit 2202bc3)
+**Senast analyserad:** 2026-03-27 (dokumentationsgenomgång)
 
 ---
 

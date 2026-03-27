@@ -2,7 +2,7 @@
 
 Granskning av `assets/*.css` mot STYLE_GUIDE.md (sektion 3. CSS), DESIGN_SYSTEM.md och COMPONENT_LIBRARY.md.
 
-**Senast analyserad:** 2025-02-28 (efter commit 29a523b)
+**Senast analyserad:** 2026-03-27 (dokumentationsgenomgång)
 
 ---
 

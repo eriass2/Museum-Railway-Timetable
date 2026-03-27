@@ -31,23 +31,19 @@ composer require --dev phpunit/phpunit
 **Varför:** Fångar fel innan merge, oberoende av lokal miljö.
 
 ### 1.3 Uppdatera REFACTORING_PLAN
-**Nuvarande:** REFACTORING_PLAN.md innehåller många genomförda punkter som inte är markerade.
+**Status:** ✅ Genomförd uppdelning dokumenterad i REFACTORING_PLAN.md (2026).
 
-**Rekommendation:** Gå igenom och markera klara punkter, ta bort eller arkivera avslutade sektioner. Behåll endast kvarvarande eller framtida idéer.
+### 1.4 PHPStan + WordPress-stubs
+**Nuvarande:** `phpstan-bootstrap.php` laddar inte WordPress core; PHPStan rapporterar många "function not found".
+
+**Rekommendation:** Lägg till `phpstan-wordpress` eller motsvarande stubs så att `composer phpstan` blir meningsfullt. Se [DEVELOPER.md](DEVELOPER.md).
 
 ---
 
 ## 2. Prioritet: Medium
 
 ### 2.1 En tydlig DEVELOPER.md som ingång
-**Nuvarande:** DEVELOPER.md fokuserar på lint. README har mycket.
-
-**Rekommendation:** Gör docs/DEVELOPER.md till **enda ingången** för utvecklare:
-- Snabbstart (clone → composer install → deploy)
-- Länkar till docs/README.md (alla docs)
-- Lint, validate, pre-commit
-- Datamodell (länk till DATA_MODEL.md)
-- Konstanter (MRT_POST_TYPE_* etc.)
+**Status:** ✅ Uppdaterad med snabbstart, dokumentindex och verktygsanteckningar (PHPStan/PHPCS).
 
 ### 2.2 Pre-commit på Windows
 **Nuvarande:** `.pre-commit-config.yaml` använder `bash -c`. På Windows krävs WSL eller Git Bash.

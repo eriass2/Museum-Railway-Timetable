@@ -181,39 +181,38 @@ The script copies `inc/`, `assets/`, `languages/`, and main plugin files to your
 museum-railway-timetable/
 ├─ museum-railway-timetable.php  # Main plugin file
 ├─ uninstall.php                 # Uninstall hook
-├─ docs/                         # Documentation (STYLE_GUIDE, COMPONENT_LIBRARY, etc.)
-├─ scripts/                      # deploy, validate, lint
+├─ composer.json                 # Dev tools (PHPStan, PHPCS)
+├─ phpcs.xml, phpstan.neon       # Lint config
+├─ docs/                         # All developer docs (see docs/README.md)
+├─ scripts/                      # deploy.ps1, validate.php, lint.ps1
 ├─ inc/
+│   ├─ constants.php             # MRT_* constants
 │   ├─ functions/
 │   │   ├─ helpers.php           # Loader + helpers-*.php
 │   │   ├─ services.php          # Service-related functions
 │   │   └─ timetable-view/       # prepare, grid, overview
-│   ├─ admin-page/               # dashboard, clear-db, admin-list (stations overview)
-│   ├─ admin-meta-boxes/         # station, route, timetable, service, etc.
-│   ├─ admin-ajax/              # stoptimes, timetable-services, journey, etc.
-│   ├─ shortcodes/              # shortcode-month, shortcode-overview, shortcode-journey
-│   ├─ cpt/                     # cpt-register, cpt-admin
+│   ├─ admin-page/               # dashboard, clear-db, admin-list
+│   ├─ admin-meta-boxes/         # station, route, timetable, service, …
+│   ├─ admin-ajax/               # stoptimes, timetable-services, journey, …
+│   ├─ shortcodes/               # shortcode-month, overview, journey
+│   ├─ cpt/                        # cpt-register, cpt-admin
 │   ├─ import-lennakatten/       # import-data, import-run, loader
-│   ├─ assets.php               # Asset enqueuing
-│   ├─ admin-page.php           # Loader
-│   ├─ admin-meta-boxes.php     # Loader
-│   ├─ admin-ajax.php           # Loader
-│   ├─ cpt.php                  # Loader
-│   ├─ shortcodes.php           # Loader
+│   ├─ assets.php                # Asset enqueuing
+│   ├─ admin-page.php            # Loader
+│   ├─ admin-meta-boxes.php      # Loader
+│   ├─ admin-ajax.php            # Loader
+│   ├─ cpt.php                   # Loader
+│   └─ shortcodes.php            # Loader
 ├─ assets/
-│   ├─ admin-base.css           # Variables, base styles
-│   ├─ admin-timetable.css      # Timetable grid, calendar
-│   ├─ admin-timetable-overview.css
-│   ├─ admin-meta-boxes.css
-│   ├─ admin-dashboard.css
-│   ├─ admin-ui.css
-│   ├─ admin-responsive.css
-│   ├─ admin.js                 # Main admin script
-│   ├─ admin-utils.js           # Utilities
+│   ├─ admin-base.css … admin-responsive.css   # See assets/CSS_STRUCTURE.md
+│   ├─ admin.js                  # Admin entry (depends on modules below)
+│   ├─ admin-utils.js
 │   ├─ admin-route-ui.js
 │   ├─ admin-stoptimes-ui.js
-│   └─ admin-timetable-services-ui.js
-└─ languages/                   # Translation files
+│   ├─ admin-timetable-services-ui.js
+│   ├─ admin-service-edit.js     # Service edit (route, stoptimes form)
+│   └─ frontend.js               # Shortcodes (month, journey, etc.)
+└─ languages/                    # .pot / .po
 ```
 
 ### Coding Standards
@@ -233,10 +232,11 @@ The plugin creates one custom table:
 
 ## Contributing
 
-1. Följ [STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
-2. Add PHPDoc comments to all functions
-3. Ensure all output is properly escaped
-4. Test your changes thoroughly
+1. Läs [docs/DEVELOPER.md](docs/DEVELOPER.md)
+2. Följ [STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
+3. Add PHPDoc comments to all functions
+4. Ensure all output is properly escaped
+5. Test your changes thoroughly
 
 ## License
 

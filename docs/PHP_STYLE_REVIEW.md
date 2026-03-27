@@ -2,7 +2,7 @@
 
 Granskning av `*.php` mot STYLE_GUIDE.md (sektion 2. PHP).
 
-**Senast analyserad:** 2025-02-17 (efter commit 2202bc3)
+**Senast analyserad:** 2026-03-27 (dokumentationsgenomgång)
 
 ---
 
