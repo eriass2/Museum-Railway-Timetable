@@ -1,6 +1,6 @@
 # Dokumentation
 
-**Börja här:** [DEVELOPER.md](DEVELOPER.md) (snabbstart, verktyg, länkar).
+**Börja här:** [DEVELOPER.md](DEVELOPER.md) (snabbstart, verktyg, länkar). **Överblick:** [PROJECT_HEALTH.md](PROJECT_HEALTH.md). **Bidrag:** [../CONTRIBUTING.md](../CONTRIBUTING.md).
 
 | Fil | Innehåll |
 |-----|----------|
