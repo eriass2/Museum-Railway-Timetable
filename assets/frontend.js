@@ -6,10 +6,32 @@
 (function($) {
     'use strict';
 
+    function prefersReducedMotion() {
+        return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    }
+
     function showError($container, message) {
-        var $div = $('<div class="mrt-alert mrt-alert-error"></div>');
+        var $div = $('<div class="mrt-alert mrt-alert-error" role="alert"></div>');
         $div.text(message);
         $container.html($div);
+        $container.attr('aria-busy', 'false');
+    }
+
+    function focusJourneyResultsHeading($results) {
+        var $h = $results.find('#mrt-journey-results-heading');
+        if ($h.length) {
+            $h.attr('tabindex', '-1');
+            $h.trigger('focus');
+            $h.one('blur', function() {
+                $(this).removeAttr('tabindex');
+            });
+        } else {
+            $results.attr('tabindex', '-1');
+            $results.trigger('focus');
+            $results.one('blur', function() {
+                $(this).removeAttr('tabindex');
+            });
+        }
     }
 
     /**
@@ -22,7 +44,7 @@
         var $form = $planner.find('.mrt-journey-form');
         var $results = $planner.find('.mrt-journey-results');
         var $searchBtn = $form.find('button[type="submit"]');
-        
+
         // Prevent default form submission
         $form.on('submit', function(e) {
             e.preventDefault();
@@ -41,11 +63,13 @@
 
             if (fromStation === toStation) {
                 showError($results, typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorSameStations : 'Please select different stations for departure and arrival.');
+                focusJourneyResultsHeading($results);
                 return;
             }
 
             // Show loading state
-            $searchBtn.prop('disabled', true).text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.searching : 'Searching...');
+            $searchBtn.prop('disabled', true).attr('aria-busy', 'true').text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.searching : 'Searching...');
+            $results.attr('aria-busy', 'true');
             $results.html('<div class="mrt-empty mrt-empty--loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>');
 
             // AJAX request
@@ -60,11 +84,13 @@
                     date: date
                 },
                 success: function(response) {
-                    $searchBtn.prop('disabled', false).text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.search : 'Search');
-                    
+                    $searchBtn.prop('disabled', false).attr('aria-busy', 'false').text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.search : 'Search');
+
                     if (response.success) {
                         $results.html(response.data.html);
-                        
+                        $results.attr('aria-busy', 'false');
+                        focusJourneyResultsHeading($results);
+
                         // Update URL without reload (optional)
                         if (history.pushState) {
                             var url = new URL(window.location);
@@ -75,11 +101,13 @@
                         }
                     } else {
                         showError($results, response.data.message || (typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorSearching : 'Error searching for connections.'));
+                        focusJourneyResultsHeading($results);
                     }
                 },
                 error: function() {
-                    $searchBtn.prop('disabled', false).text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.search : 'Search');
+                    $searchBtn.prop('disabled', false).attr('aria-busy', 'false').text(typeof mrtFrontend !== 'undefined' ? mrtFrontend.search : 'Search');
                     showError($results, typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : 'Network error. Please try again.');
+                    focusJourneyResultsHeading($results);
                 }
             });
         }
@@ -95,23 +123,31 @@
         var $container = $month.find('.mrt-day-timetable-container');
         if (!$container.length) return;
 
-        // Handle click on day
+        // Handle click on day (button inside cell)
         $month.on('click', '.mrt-day-clickable', function(e) {
             e.preventDefault();
             var $day = $(this);
             var date = $day.data('date');
-            
+
             if (!date) return;
 
             // Get train type filter from shortcode attributes (if available)
             var trainType = $month.data('train-type') || '';
 
-            // Remove previous active state
-            $month.find('.mrt-day-clickable').removeClass('mrt-day-active');
-            $day.addClass('mrt-day-active');
+            // Remove previous active state + aria-pressed
+            $month.find('.mrt-day-clickable').removeClass('mrt-day-active').attr('aria-pressed', 'false');
+            $day.addClass('mrt-day-active').attr('aria-pressed', 'true');
 
-            // Show loading
-            $container.html('<div class="mrt-empty mrt-empty--loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>').slideDown(300);
+            var wasHidden = $container.hasClass('mrt-hidden');
+            $container.removeClass('mrt-hidden').attr('aria-busy', 'true');
+            $container.html('<div class="mrt-empty mrt-empty--loading">' + (typeof mrtFrontend !== 'undefined' ? mrtFrontend.loading : 'Loading...') + '</div>');
+            if (wasHidden) {
+                if (prefersReducedMotion()) {
+                    $container.show();
+                } else {
+                    $container.hide().slideDown(300);
+                }
+            }
 
             // AJAX request
             $.ajax({
@@ -124,16 +160,19 @@
                     train_type: trainType
                 },
                 success: function(response) {
+                    $container.attr('aria-busy', 'false');
                     if (response.success) {
                         $container.html(response.data.html);
                     } else {
                         var msg = response.data.message || (typeof mrtFrontend !== 'undefined' ? mrtFrontend.errorLoading : 'Error loading timetable.');
                         showError($container, msg);
                     }
+                    $container.trigger('focus');
                 },
                 error: function() {
                     var msg = typeof mrtFrontend !== 'undefined' ? mrtFrontend.networkError : 'Network error. Please try again.';
                     showError($container, msg);
+                    $container.trigger('focus');
                 }
             });
         });
@@ -154,4 +193,3 @@
     $(document).on('mrt_reinit', init);
 
 })(jQuery);
-

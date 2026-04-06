@@ -27,3 +27,10 @@
     background: linear-gradient(to bottom, var(--mrt-bg-lighter) 0%, var(--mrt-bg-light) 100%);
     font-weight: 700;
 }
+
+.mrt-journey-table__caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    padding: var(--mrt-spacing-xs) 0;
+}

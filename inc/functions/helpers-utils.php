@@ -62,7 +62,9 @@ function MRT_render_alert(string $message, string $type = 'error', string $extra
     if (!empty($extra_classes)) {
         $classes .= ' ' . esc_attr($extra_classes);
     }
-    return '<div class="' . $classes . '">' . esc_html($message) . '</div>';
+    $role = ($type === 'info') ? 'status' : 'alert';
+
+    return '<div class="' . $classes . '" role="' . esc_attr($role) . '">' . esc_html($message) . '</div>';
 }
 
 /**

@@ -15,4 +15,5 @@ require_once $journey_dir . 'journey-return.php';
 require_once $journey_dir . 'journey-multi-leg.php';
 require_once $journey_dir . 'journey-prices.php';
 require_once $journey_dir . 'journey-notice.php';
+require_once $journey_dir . 'journey-connections-table.php';
 require_once $journey_dir . 'journey-normalize.php';
