@@ -25,5 +25,8 @@ jobs:
       - name: Validate plugin structure and PHP syntax
         run: php scripts/validate.php
 
+      - name: PHPStan
+        run: composer phpstan
+
       - name: PHPUnit
         run: composer test

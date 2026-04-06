@@ -12,9 +12,9 @@
 **Nästa steg (valfritt):** Integrationstester mot databas / wp-env för `MRT_find_connections` och full AJAX-kedja där enhetstest inte räcker.
 
 ### 1.2 CI (GitHub Actions)
-**Nuvarande:** Workflow kör `composer install`, `php scripts/validate.php`, `composer test`.
+**Nuvarande:** Workflow kör `composer install`, `php scripts/validate.php`, **`composer phpstan`**, `composer test`.
 
-**Nästa steg (valfritt):** `composer lint` (phpstan + phpcs) i samma eller separat jobb om varningar rensats.
+**Nästa steg (valfritt):** Lägg till `composer phpcs` (eller hela `composer lint`) när WPCS-varningar är hanterbara – idag kan PHPCS ge många träffar (radslut, prefix `MRT_`, m.m.).
 
 ### 1.3 Uppdatera REFACTORING_PLAN
 **Status:** ✅ Genomförd uppdelning dokumenterad i REFACTORING_PLAN.md (2026).
