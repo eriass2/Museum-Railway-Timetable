@@ -13,12 +13,13 @@ if (!defined('ABSPATH')) { exit; }
  * @param int    $from_station_id From station
  * @param int    $to_station_id To station
  * @param string $ymd Date YYYY-MM-DD
- * @param array<string, array<int>> $services_cache Ref-filled cache date => service ids
+ * @param array<string, list<int>> $services_cache Ref-filled cache date => service ids
  * @return string none|traffic_no_match|ok
  */
 function MRT_journey_calendar_day_status($from_station_id, $to_station_id, $ymd, array &$services_cache) {
     if (!isset($services_cache[$ymd])) {
-        $services_cache[$ymd] = MRT_services_running_on_date($ymd);
+        $run = MRT_services_running_on_date($ymd);
+        $services_cache[$ymd] = array_values(array_map(static fn ($id): int => (int) $id, $run));
     }
     if (empty($services_cache[$ymd])) {
         return 'none';

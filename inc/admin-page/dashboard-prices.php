@@ -31,8 +31,8 @@ function MRT_render_price_matrix_field() {
                     <th scope="row"><?php echo esc_html($tlabels[$tkey] ?? $tkey); ?></th>
                     <?php foreach (MRT_price_category_keys() as $ckey) :
                         $name = sprintf('mrt_price_matrix[%s][%s]', $tkey, $ckey);
-                        $val = isset($matrix[$tkey][$ckey]) && $matrix[$tkey][$ckey] !== null
-                            ? (int) $matrix[$tkey][$ckey] : '';
+                        $raw = $matrix[$tkey][$ckey] ?? null;
+                        $val = ($raw === null || $raw === '') ? '' : (int) $raw;
                         ?>
                         <td>
                             <input type="number" min="0" step="1" class="small-text"

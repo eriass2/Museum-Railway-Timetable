@@ -55,7 +55,6 @@ function MRT_import_get_train_types() {
  */
 function MRT_import_get_timetable_dates() {
     $dates = ['2026-05-30', '2026-05-31', '2026-06-06', '2026-06-13', '2026-06-20', '2026-07-04', '2026-07-11', '2026-07-18', '2026-08-01', '2026-08-08', '2026-08-15', '2026-09-05', '2026-09-12', '2026-09-19', '2026-09-26'];
-    $dates = array_unique(array_filter($dates));
     sort($dates);
     return $dates;
 }
