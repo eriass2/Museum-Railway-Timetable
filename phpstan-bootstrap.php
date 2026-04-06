@@ -1,7 +1,9 @@
 <?php
 
 /**
- * PHPStan bootstrap – simulate WordPress environment
+ * PHPStan bootstrap – plugin constants before analysis.
+ *
+ * WordPress core symbols come from szepeviktor/phpstan-wordpress (wordpress-stubs).
  */
 
 if (!defined('ABSPATH')) {

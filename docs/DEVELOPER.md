@@ -81,7 +81,7 @@ Kontrollerar: obligatoriska filer, PHP-syntax, ABSPATH, inline styles, plugin he
 
 ### PHPStan och PHPCS (`composer lint`)
 
-- **PHPStan:** Bootstrap laddar inte WordPress core; utan WordPress-stubs kan analysen rapportera många "function not found" för `add_action`, `__`, m.m. Det är ett känt tillstånd. För full analys: lägg till WordPress-stubs (t.ex. `phpstan-wordpress`) – se [FUTURE_WORK.md](FUTURE_WORK.md).
+- **PHPStan:** Använder **`szepeviktor/phpstan-wordpress`** (beror på `php-stubs/wordpress-stubs`) så att WordPress-API:er (`add_action`, `__`, `WP_Post`, m.m.) känns igen. Konfiguration: `phpstan.neon` + `phpstan-bootstrap.php` (plugin-konstanter). Kända kvarvarande varningar ligger i **`phpstan-baseline.neon`** – minska den successivt när kod eller PHPDoc förbättras. `treatPhpDocTypesAsCertain: false` minskar brus från osäkra docblock. Kör med `composer phpstan` (1G minne, en worker på Windows för stabilitet).
 - **PHPCS:** Använder WordPress Coding Standards. Projektet använder prefixet `MRT_` för funktioner; vissa WPCS-regler kan flagga det – bedöm utifrån [STYLE_GUIDE.md](STYLE_GUIDE.md). `composer phpcbf` fixar formateringsbar kod där det passar.
 
 ### Pre-commit hooks

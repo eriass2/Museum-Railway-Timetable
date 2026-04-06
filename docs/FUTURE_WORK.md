@@ -20,9 +20,9 @@
 **Status:** ✅ Genomförd uppdelning dokumenterad i REFACTORING_PLAN.md (2026).
 
 ### 1.4 PHPStan + WordPress-stubs
-**Nuvarande:** `phpstan-bootstrap.php` laddar inte WordPress core; PHPStan rapporterar många "function not found".
+**Status:** ✅ `szepeviktor/phpstan-wordpress` + `phpstan-baseline.neon`; `composer phpstan` är grön. Successivt: minska baseline, ev. uppgradera till PHPStan 2.x (kräver `phpstan-wordpress` 2.x).
 
-**Rekommendation:** Lägg till `phpstan-wordpress` eller motsvarande stubs så att `composer phpstan` blir meningsfullt. Se [DEVELOPER.md](DEVELOPER.md).
+**Se:** [DEVELOPER.md](DEVELOPER.md) (avsnitt PHPStan).
 
 ---
 

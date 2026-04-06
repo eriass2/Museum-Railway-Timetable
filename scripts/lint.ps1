@@ -8,7 +8,7 @@ if (-not (Test-Path vendor)) {
 }
 
 Write-Host "Running PHPStan..."
-& .\vendor\bin\phpstan analyse --no-progress
+& composer phpstan -- --no-progress
 
 Write-Host "Running PHPCS..."
 & .\vendor\bin\phpcs

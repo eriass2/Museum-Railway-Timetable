@@ -1,0 +1,76 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 6
+			path: inc/admin-ajax/journey.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: inc/admin-ajax/route-destinations.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: inc/admin-ajax/route-stations.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 2
+			path: inc/admin-ajax/timetable-frontend.php
+
+		-
+			message: "#^is_wp_error\\(int\\<0, max\\>\\) will always evaluate to false\\.$#"
+			count: 1
+			path: inc/admin-ajax/timetable-services.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_html expects string, int given\\.$#"
+			count: 1
+			path: inc/admin-meta-boxes/route.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_html expects string, int\\<1, max\\> given\\.$#"
+			count: 1
+			path: inc/admin-meta-boxes/route.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
+			count: 4
+			path: inc/admin-meta-boxes/service-stoptimes.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_html expects string, int given\\.$#"
+			count: 1
+			path: inc/admin-meta-boxes/service-stoptimes.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_attr expects string, int given\\.$#"
+			count: 4
+			path: inc/admin-meta-boxes/timetable-services.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_html expects string, int\\<0, max\\> given\\.$#"
+			count: 1
+			path: inc/admin-page/dashboard-routes.php
+
+		-
+			message: "#^Parameter \\#1 \\$text of function esc_html expects string, int\\<1, max\\> given\\.$#"
+			count: 2
+			path: inc/admin-page/dashboard-routes.php
+
+		-
+			message: "#^Property WP_Post\\:\\:\\$post_title \\(string\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: inc/functions/helpers-stations.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 1
+			path: inc/functions/helpers-utils.php
+
+		-
+			message: "#^is_wp_error\\(int\\<1, max\\>\\) will always evaluate to false\\.$#"
+			count: 4
+			path: inc/import-lennakatten/import-run.php
