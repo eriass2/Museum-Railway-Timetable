@@ -68,14 +68,10 @@
         },
 
         /**
-         * Validate time format (HH:MM)
+         * Validate time format (HH:MM) — delegates to MRTDateUtils.validateHhMm
          */
         validateTimeFormat: function(timeString) {
-            if (!timeString || timeString.trim() === '') {
-                return true;
-            }
-            var timePattern = /^([0-1][0-9]|2[0-3]):[0-5][0-9]$/;
-            return timePattern.test(timeString.trim());
+            return window.MRTDateUtils.validateHhMm(timeString);
         }
     };
 

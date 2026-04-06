@@ -117,7 +117,8 @@ function MRT_enqueue_admin_css(string $hook): void {
  * Enqueue admin JavaScript files
  */
 function MRT_enqueue_admin_js() {
-    wp_enqueue_script('mrt-admin-utils', MRT_URL . 'assets/admin-utils.js', ['jquery'], MRT_VERSION, true);
+    wp_register_script('mrt-date-utils', MRT_URL . 'assets/mrt-date-utils.js', [], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-utils', MRT_URL . 'assets/admin-utils.js', ['jquery', 'mrt-date-utils'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-route-ui', MRT_URL . 'assets/admin-route-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-stoptimes-ui', MRT_URL . 'assets/admin-stoptimes-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
     wp_enqueue_script('mrt-admin-timetable-services', MRT_URL . 'assets/admin-timetable-services-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
@@ -369,6 +370,7 @@ function MRT_enqueue_frontend_assets(): void {
     ]);
 
     if ($has_journey_wizard) {
+        wp_register_script('mrt-date-utils', MRT_URL . 'assets/mrt-date-utils.js', [], MRT_VERSION, true);
         wp_enqueue_style(
             'mrt-journey-wizard',
             MRT_URL . 'assets/journey-wizard.css',
@@ -378,7 +380,7 @@ function MRT_enqueue_frontend_assets(): void {
         wp_enqueue_script(
             'mrt-journey-wizard',
             MRT_URL . 'assets/journey-wizard.js',
-            ['jquery', 'mrt-frontend'],
+            ['jquery', 'mrt-frontend', 'mrt-date-utils'],
             MRT_VERSION,
             true
         );

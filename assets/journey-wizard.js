@@ -14,26 +14,299 @@
         return $('<div>').text(s).html();
     }
 
-    function formatDateYmd(ymd, cfg) {
-        var p = ymd.split('-');
-        if (p.length !== 3) {
-            return ymd;
-        }
-        var y = p[0];
-        var mo = parseInt(p[1], 10);
-        var day = parseInt(p[2], 10);
-        if (cfg.monthNames && cfg.monthNames[mo - 1]) {
-            return cfg.monthNames[mo - 1] + ' ' + day + ', ' + y;
-        }
-        return ymd;
-    }
-
     function arrivalAtDestination(conn) {
         return conn.to_arrival || conn.to_departure || conn.arrival || '';
     }
 
     function departureFromOrigin(conn) {
         return conn.from_departure || conn.from_arrival || conn.departure || '';
+    }
+
+    function mrtWizardMatrixHasAnyPrice(matrix) {
+        if (!matrix) {
+            return false;
+        }
+        var ti;
+        var ci;
+        for (ti = 0; ti < PRICE_TYPE_KEYS.length; ti++) {
+            var row = matrix[PRICE_TYPE_KEYS[ti]];
+            if (!row) {
+                continue;
+            }
+            for (ci = 0; ci < PRICE_CAT_KEYS.length; ci++) {
+                var v = row[PRICE_CAT_KEYS[ci]];
+                if (v !== null && v !== undefined && v !== '') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    function mrtWizardFormatPriceCell(v, cfg) {
+        if (v === null || v === undefined || v === '') {
+            return cfg.priceDash || '—';
+        }
+        return String(v);
+    }
+
+    function mrtWizardBuildPriceSection(tripType, cfg) {
+        if (!cfg.priceMatrix || !mrtWizardMatrixHasAnyPrice(cfg.priceMatrix)) {
+            return '';
+        }
+        var matrix = cfg.priceMatrix;
+        var tickets = cfg.priceTickets || {};
+        var cats = cfg.priceCategories || {};
+        var activeType = tripType === 'return' ? 'return' : 'single';
+        var html = '<div class="mrt-journey-wizard__prices mrt-mt-lg">';
+        html += '<h4 class="mrt-heading mrt-heading--md">' + escapeHtml(cfg.priceTitle || '') + '</h4>';
+        html += '<div class="mrt-journey-wizard__prices-scroll mrt-overflow-x-auto">';
+        html += '<table class="mrt-table mrt-journey-wizard__price-table"><thead><tr><th scope="col"><span class="mrt-sr-only">' +
+            escapeHtml(cfg.priceTableTypeColumn || '') + '</span></th>';
+        PRICE_CAT_KEYS.forEach(function(ck) {
+            html += '<th scope="col">' + escapeHtml(cats[ck] || ck) + '</th>';
+        });
+        html += '</tr></thead><tbody>';
+        PRICE_TYPE_KEYS.forEach(function(tk) {
+            var row = matrix[tk] || {};
+            var rowClass = tk === activeType ? ' class="mrt-journey-wizard__price-row--active"' : '';
+            html += '<tr' + rowClass + '><th scope="row">' + escapeHtml(tickets[tk] || tk) + '</th>';
+            PRICE_CAT_KEYS.forEach(function(ck) {
+                html += '<td>' + escapeHtml(mrtWizardFormatPriceCell(row[ck], cfg)) + '</td>';
+            });
+            html += '</tr>';
+        });
+        html += '</tbody></table></div>';
+        if (cfg.priceNote) {
+            html += '<p class="mrt-text-secondary mrt-journey-wizard__price-note mrt-mt-sm">' +
+                escapeHtml(cfg.priceNote) + '</p>';
+        }
+        html += '</div>';
+        return html;
+    }
+
+    function mrtWizardDayButtonAriaLabel(ymd, st, cfg) {
+        var human = window.MRTDateUtils.formatYmdForDisplay(ymd, cfg);
+        if (st === 'ok') {
+            return (cfg.dayDateOk || human).replace('%s', human);
+        }
+        if (st === 'traffic_no_match') {
+            return (cfg.dayDateTraffic || human).replace('%s', human);
+        }
+        return (cfg.dayDateNone || human).replace('%s', human);
+    }
+
+    function mrtWizardOrderedWeekdayHeaders(cfg, startOfWeek) {
+        var abb = cfg.weekdayAbbrev.slice();
+        var out = [];
+        var i;
+        for (i = 0; i < 7; i++) {
+            out.push(abb[(startOfWeek + i) % 7]);
+        }
+        return out;
+    }
+
+    function mrtWizardCalendarDayButton(ymd, dayNum, st, cfg, selectedDateYmd, $cal, onSelectOkDay) {
+        var $btn = $('<button type="button" class="mrt-journey-wizard__day"></button>');
+        $btn.text(String(dayNum));
+        $btn.attr('aria-label', mrtWizardDayButtonAriaLabel(ymd, st, cfg));
+        if (st === 'ok') {
+            $btn.addClass('mrt-journey-wizard__day--ok');
+            $btn.attr('aria-pressed', selectedDateYmd === ymd ? 'true' : 'false');
+            $btn.on('click', function() {
+                $cal.find('.mrt-journey-wizard__day--ok').each(function() {
+                    $(this).attr('aria-pressed', 'false').removeClass('is-selected');
+                });
+                $btn.attr('aria-pressed', 'true').addClass('is-selected');
+                onSelectOkDay(ymd);
+            });
+        } else if (st === 'traffic_no_match') {
+            $btn.addClass('mrt-journey-wizard__day--traffic');
+            $btn.attr('disabled', 'disabled');
+        } else {
+            $btn.addClass('mrt-journey-wizard__day--none');
+            $btn.attr('disabled', 'disabled');
+        }
+        if (selectedDateYmd === ymd && st === 'ok') {
+            $btn.addClass('is-selected');
+        }
+        return $btn;
+    }
+
+    function mrtWizardRenderCalendarGrid($root, year, month, daysMap, cfg, startOfWeek, selectedDateYmd, onSelectOkDay) {
+        var DU = window.MRTDateUtils;
+        var $cal = $root.find('[data-wizard-calendar]');
+        $cal.empty();
+        $root.find('.mrt-journey-wizard__cal-title').text(DU.calendarMonthTitle(year, month, cfg.monthNames));
+
+        var lastDay = DU.daysInMonth(year, month);
+        var startCol = DU.monthStartColumn(year, month, startOfWeek);
+
+        var $table = $('<table></table>')
+            .attr('role', 'grid')
+            .attr('aria-label', cfg.calendarGridLabel || '');
+        var $thead = $('<tr></tr>');
+        mrtWizardOrderedWeekdayHeaders(cfg, startOfWeek).forEach(function(ab) {
+            $thead.append($('<th scope="col"></th>').text(ab));
+        });
+        $table.append($('<thead></thead>').append($thead));
+
+        var $tb = $('<tbody></tbody>');
+        var col = 0;
+        var $row = $('<tr></tr>');
+        var d;
+        var pad;
+        for (pad = 0; pad < startCol; pad++) {
+            $row.append($('<td></td>'));
+            col++;
+        }
+        for (d = 1; d <= lastDay; d++) {
+            if (col >= 7) {
+                $tb.append($row);
+                $row = $('<tr></tr>');
+                col = 0;
+            }
+            var ymd = DU.ymdFromParts(year, month, d);
+            var st = daysMap[ymd] || 'none';
+            var $td = $('<td></td>');
+            $td.append(mrtWizardCalendarDayButton(ymd, d, st, cfg, selectedDateYmd, $cal, onSelectOkDay));
+            $row.append($td);
+            col++;
+        }
+        while (col > 0 && col < 7) {
+            $row.append($('<td></td>'));
+            col++;
+        }
+        $tb.append($row);
+        $table.append($tb);
+        $cal.append($table);
+    }
+
+    function mrtWizardAriaChooseTrip(conn, dep, arr, cfg) {
+        var s = cfg.btnChooseTripAria || '';
+        return s
+            .replace('%1$s', conn.service_name || '')
+            .replace('%2$s', dep)
+            .replace('%3$s', arr);
+    }
+
+    function mrtWizardConnectionTableRow(conn, idx, ctx, legFrom, legTo, cfg) {
+        var dep = departureFromOrigin(conn) || '—';
+        var arr = arrivalAtDestination(conn) || '—';
+        var $tr = $('<tr></tr>');
+        $tr.append($('<td></td>').append(
+            $('<button type="button" class="mrt-btn mrt-btn--primary mrt-journey-wizard__btn-select"></button>')
+                .text(cfg.selectTrip)
+                .attr('aria-label', mrtWizardAriaChooseTrip(conn, dep, arr, cfg))
+                .attr('data-ctx', ctx)
+                .attr('data-idx', String(idx))
+        ));
+        $tr.append($('<td></td>').text(conn.service_name || ''));
+        $tr.append($('<td></td>').text(conn.train_type || ''));
+        $tr.append($('<td></td>').text(dep));
+        $tr.append($('<td></td>').text(arr));
+        var $act = $('<td class="mrt-journey-wizard__conn-actions"></td>');
+        $act.append(
+            $('<button type="button" class="mrt-btn mrt-btn--secondary mrt-journey-wizard__btn-detail"></button>')
+                .text(cfg.showStops)
+                .attr('aria-label', (cfg.btnShowStopsAria || '').replace('%s', conn.service_name || ''))
+                .attr('aria-expanded', 'false')
+                .attr('data-ctx', ctx)
+                .attr('data-idx', String(idx))
+                .attr('data-leg-from', String(legFrom))
+                .attr('data-leg-to', String(legTo))
+        );
+        $tr.append($act);
+        return $tr;
+    }
+
+    function mrtWizardRenderConnectionTable($target, list, ctx, legFrom, legTo, cfg, outboundDateCaption) {
+        var $wrap = $('<div data-wizard-conn-context="' + escapeHtml(ctx) + '"></div>');
+        var captionText = ctx === 'return'
+            ? (cfg.tripsCaptionReturn || '')
+            : (cfg.tripsCaptionOutbound || '').replace('%s', outboundDateCaption);
+        var $table = $('<table class="mrt-table mrt-journey-table"></table>');
+        if (captionText) {
+            $table.append($('<caption class="mrt-journey-wizard__table-caption"></caption>').text(captionText));
+        }
+        var actionsTh = '<th scope="col"><span class="mrt-sr-only">' + escapeHtml(cfg.colActions || '') + '</span></th>';
+        var $thead = $('<thead><tr>' +
+            '<th scope="col">' + escapeHtml(cfg.selectTrip) + '</th>' +
+            '<th scope="col">' + escapeHtml(cfg.colService) + '</th>' +
+            '<th scope="col">' + escapeHtml(cfg.colTrainType) + '</th>' +
+            '<th scope="col">' + escapeHtml(cfg.colDeparture) + '</th>' +
+            '<th scope="col">' + escapeHtml(cfg.colArrival) + '</th>' +
+            actionsTh +
+            '</tr></thead>');
+        $table.append($thead);
+        var $tb = $('<tbody></tbody>');
+        list.forEach(function(conn, idx) {
+            $tb.append(mrtWizardConnectionTableRow(conn, idx, ctx, legFrom, legTo, cfg));
+        });
+        $table.append($tb);
+        $wrap.append($table);
+        $target.empty().append($wrap);
+    }
+
+    function mrtWizardBuildStopsDetailHtml(detail, notice, cfg) {
+        var html = '';
+        if (notice) {
+            html += '<p><strong>' + escapeHtml(cfg.noticeLabel) + ':</strong> ' + escapeHtml(notice) + '</p>';
+        }
+        if (detail.duration_minutes !== null && detail.duration_minutes !== undefined) {
+            html += '<p>' + escapeHtml(cfg.durationMinutes.replace('%d', String(detail.duration_minutes))) + '</p>';
+        }
+        html += '<table class="mrt-table"><thead><tr><th scope="col">' + escapeHtml(cfg.colStation) +
+            '</th><th scope="col">' + escapeHtml(cfg.colArrival) +
+            '</th><th scope="col">' + escapeHtml(cfg.colDeparture) + '</th></tr></thead><tbody>';
+        (detail.stops || []).forEach(function(s) {
+            html += '<tr><td>' + escapeHtml(s.station_title || '') + '</td><td>' +
+                escapeHtml(s.arrival_time || '—') + '</td><td>' +
+                escapeHtml(s.departure_time || '—') + '</td></tr>';
+        });
+        html += '</tbody></table>';
+        return html;
+    }
+
+    function mrtWizardLoadMultiLegDetailRows(conn, $cell, $btn, cfg, ajaxPost) {
+        var legTpl = cfg.legSegmentLabel || 'Train %d';
+        var multiHtml = '<div class="mrt-journey-wizard__detail mrt-journey-wizard__detail--multi">';
+        var legIndex = 0;
+        function loadNextLeg() {
+            if (legIndex >= conn.legs.length) {
+                multiHtml += '</div>';
+                $cell.html(multiHtml);
+                $btn.attr('aria-expanded', 'true');
+                return;
+            }
+            var leg = conn.legs[legIndex];
+            var title = legTpl.replace('%d', String(legIndex + 1));
+            ajaxPost('mrt_journey_connection_detail', {
+                from_station: leg.from_station_id,
+                to_station: leg.to_station_id,
+                service_id: leg.service_id
+            }).done(function(res) {
+                if (!res || !res.success || !res.data) {
+                    $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
+                    $cell.find('.mrt-alert').text(cfg.errorGeneric);
+                    $btn.attr('aria-expanded', 'true');
+                    return;
+                }
+                var detail = res.data.detail || {};
+                var notice = res.data.notice || '';
+                multiHtml += '<div class="mrt-journey-wizard__detail-segment mrt-mb-sm">';
+                multiHtml += '<h4 class="mrt-heading mrt-heading--sm">' + escapeHtml(title) + '</h4>';
+                multiHtml += mrtWizardBuildStopsDetailHtml(detail, notice, cfg);
+                multiHtml += '</div>';
+                legIndex += 1;
+                loadNextLeg();
+            }).fail(function() {
+                $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
+                $cell.find('.mrt-alert').text(cfg.errorGeneric);
+                $btn.attr('aria-expanded', 'true');
+            });
+        }
+        loadNextLeg();
     }
 
     function initOne($root) {
@@ -148,109 +421,13 @@
             }
         }
 
-        function dayButtonAriaLabel(ymd, st, cfg) {
-            var human = formatDateYmd(ymd, cfg);
-            if (st === 'ok') {
-                return (cfg.dayDateOk || human).replace('%s', human);
-            }
-            if (st === 'traffic_no_match') {
-                return (cfg.dayDateTraffic || human).replace('%s', human);
-            }
-            return (cfg.dayDateNone || human).replace('%s', human);
-        }
-
-        function ariaChooseTrip(conn, dep, arr, cfg) {
-            var s = cfg.btnChooseTripAria || '';
-            return s
-                .replace('%1$s', conn.service_name || '')
-                .replace('%2$s', dep)
-                .replace('%3$s', arr);
-        }
-
-        function orderedWeekdayHeaders() {
-            var abb = cfg.weekdayAbbrev.slice();
-            var out = [];
-            var i;
-            for (i = 0; i < 7; i++) {
-                out.push(abb[(startOfWeek + i) % 7]);
-            }
-            return out;
-        }
-
         function renderCalendarGrid(year, month, daysMap) {
-            var $cal = $root.find('[data-wizard-calendar]');
-            $cal.empty();
-            var title = (cfg.monthNames[month - 1] || month) + ' ' + year;
-            $root.find('.mrt-journey-wizard__cal-title').text(title);
-
-            var first = new Date(year, month - 1, 1);
-            var lastDay = new Date(year, month, 0).getDate();
-            var startCol = (first.getDay() - startOfWeek + 7) % 7;
-
-            var $table = $('<table></table>')
-                .attr('role', 'grid')
-                .attr('aria-label', cfg.calendarGridLabel || '');
-            var $thead = $('<tr></tr>');
-            orderedWeekdayHeaders().forEach(function(ab) {
-                $thead.append($('<th scope="col"></th>').text(ab));
+            mrtWizardRenderCalendarGrid($root, year, month, daysMap, cfg, startOfWeek, state.date, function(ymd) {
+                state.date = ymd;
+                clearError();
+                showPanel('outbound');
+                loadOutboundConnections();
             });
-            $table.append($('<thead></thead>').append($thead));
-
-            var $tb = $('<tbody></tbody>');
-            var col = 0;
-            var $row = $('<tr></tr>');
-            var d;
-            var pad;
-            for (pad = 0; pad < startCol; pad++) {
-                $row.append($('<td></td>'));
-                col++;
-            }
-            for (d = 1; d <= lastDay; d++) {
-                if (col >= 7) {
-                    $tb.append($row);
-                    $row = $('<tr></tr>');
-                    col = 0;
-                }
-                var ymd = year + '-' + (month < 10 ? '0' : '') + month + '-' + (d < 10 ? '0' : '') + d;
-                var st = daysMap[ymd] || 'none';
-                var $td = $('<td></td>');
-                var $btn = $('<button type="button" class="mrt-journey-wizard__day"></button>');
-                $btn.text(String(d));
-                $btn.attr('aria-label', dayButtonAriaLabel(ymd, st, cfg));
-                if (st === 'ok') {
-                    $btn.addClass('mrt-journey-wizard__day--ok');
-                    $btn.attr('aria-pressed', state.date === ymd ? 'true' : 'false');
-                    $btn.on('click', function() {
-                        $cal.find('.mrt-journey-wizard__day--ok').each(function() {
-                            $(this).attr('aria-pressed', 'false').removeClass('is-selected');
-                        });
-                        $btn.attr('aria-pressed', 'true').addClass('is-selected');
-                        state.date = ymd;
-                        clearError();
-                        showPanel('outbound');
-                        loadOutboundConnections();
-                    });
-                } else if (st === 'traffic_no_match') {
-                    $btn.addClass('mrt-journey-wizard__day--traffic');
-                    $btn.attr('disabled', 'disabled');
-                } else {
-                    $btn.addClass('mrt-journey-wizard__day--none');
-                    $btn.attr('disabled', 'disabled');
-                }
-                if (state.date === ymd && st === 'ok') {
-                    $btn.addClass('is-selected');
-                }
-                $td.append($btn);
-                $row.append($td);
-                col++;
-            }
-            while (col > 0 && col < 7) {
-                $row.append($('<td></td>'));
-                col++;
-            }
-            $tb.append($row);
-            $table.append($tb);
-            $cal.append($table);
         }
 
         function loadCalendar(year, month) {
@@ -284,77 +461,15 @@
             } else {
                 lastReturnList = list;
             }
-            var $wrap = $('<div data-wizard-conn-context="' + escapeHtml(ctx) + '"></div>');
-            var captionText = ctx === 'return'
-                ? (cfg.tripsCaptionReturn || '')
-                : (cfg.tripsCaptionOutbound || '').replace('%s', formatDateYmd(state.date, cfg));
-            var $table = $('<table class="mrt-table mrt-journey-table"></table>');
-            if (captionText) {
-                $table.append($('<caption class="mrt-journey-wizard__table-caption"></caption>').text(captionText));
-            }
-            var actionsTh = '<th scope="col"><span class="mrt-sr-only">' + escapeHtml(cfg.colActions || '') + '</span></th>';
-            var $thead = $('<thead><tr>' +
-                '<th scope="col">' + escapeHtml(cfg.selectTrip) + '</th>' +
-                '<th scope="col">' + escapeHtml(cfg.colService) + '</th>' +
-                '<th scope="col">' + escapeHtml(cfg.colTrainType) + '</th>' +
-                '<th scope="col">' + escapeHtml(cfg.colDeparture) + '</th>' +
-                '<th scope="col">' + escapeHtml(cfg.colArrival) + '</th>' +
-                actionsTh +
-                '</tr></thead>');
-            $table.append($thead);
-            var $tb = $('<tbody></tbody>');
-            list.forEach(function(conn, idx) {
-                var dep = departureFromOrigin(conn) || '—';
-                var arr = arrivalAtDestination(conn) || '—';
-                var $tr = $('<tr></tr>');
-                $tr.append($('<td></td>').append(
-                    $('<button type="button" class="mrt-btn mrt-btn--primary mrt-journey-wizard__btn-select"></button>')
-                        .text(cfg.selectTrip)
-                        .attr('aria-label', ariaChooseTrip(conn, dep, arr, cfg))
-                        .attr('data-ctx', ctx)
-                        .attr('data-idx', String(idx))
-                ));
-                $tr.append($('<td></td>').text(conn.service_name || ''));
-                $tr.append($('<td></td>').text(conn.train_type || ''));
-                $tr.append($('<td></td>').text(dep));
-                $tr.append($('<td></td>').text(arr));
-                var $act = $('<td class="mrt-journey-wizard__conn-actions"></td>');
-                $act.append(
-                    $('<button type="button" class="mrt-btn mrt-btn--secondary mrt-journey-wizard__btn-detail"></button>')
-                        .text(cfg.showStops)
-                        .attr('aria-label', (cfg.btnShowStopsAria || '').replace('%s', conn.service_name || ''))
-                        .attr('aria-expanded', 'false')
-                        .attr('data-ctx', ctx)
-                        .attr('data-idx', String(idx))
-                        .attr('data-leg-from', String(legFrom))
-                        .attr('data-leg-to', String(legTo))
-                );
-                $tr.append($act);
-                $tb.append($tr);
-            });
-            $table.append($tb);
-            $wrap.append($table);
-            $target.empty().append($wrap);
-        }
-
-        function buildStopsDetailHtml(detail, notice) {
-            var html = '';
-            if (notice) {
-                html += '<p><strong>' + escapeHtml(cfg.noticeLabel) + ':</strong> ' + escapeHtml(notice) + '</p>';
-            }
-            if (detail.duration_minutes !== null && detail.duration_minutes !== undefined) {
-                html += '<p>' + escapeHtml(cfg.durationMinutes.replace('%d', String(detail.duration_minutes))) + '</p>';
-            }
-            html += '<table class="mrt-table"><thead><tr><th scope="col">' + escapeHtml(cfg.colStation) +
-                '</th><th scope="col">' + escapeHtml(cfg.colArrival) +
-                '</th><th scope="col">' + escapeHtml(cfg.colDeparture) + '</th></tr></thead><tbody>';
-            (detail.stops || []).forEach(function(s) {
-                html += '<tr><td>' + escapeHtml(s.station_title || '') + '</td><td>' +
-                    escapeHtml(s.arrival_time || '—') + '</td><td>' +
-                    escapeHtml(s.departure_time || '—') + '</td></tr>';
-            });
-            html += '</tbody></table>';
-            return html;
+            mrtWizardRenderConnectionTable(
+                $target,
+                list,
+                ctx,
+                legFrom,
+                legTo,
+                cfg,
+                window.MRTDateUtils.formatYmdForDisplay(state.date, cfg)
+            );
         }
 
         function toggleDetailRow($btn) {
@@ -381,44 +496,7 @@
             $tr.after($detailTr);
 
             if (conn.legs && conn.legs.length > 1) {
-                var legTpl = cfg.legSegmentLabel || 'Train %d';
-                var multiHtml = '<div class="mrt-journey-wizard__detail mrt-journey-wizard__detail--multi">';
-                var legIndex = 0;
-                function loadNextLeg() {
-                    if (legIndex >= conn.legs.length) {
-                        multiHtml += '</div>';
-                        $cell.html(multiHtml);
-                        $btn.attr('aria-expanded', 'true');
-                        return;
-                    }
-                    var leg = conn.legs[legIndex];
-                    var title = legTpl.replace('%d', String(legIndex + 1));
-                    ajaxPost('mrt_journey_connection_detail', {
-                        from_station: leg.from_station_id,
-                        to_station: leg.to_station_id,
-                        service_id: leg.service_id
-                    }).done(function(res) {
-                        if (!res || !res.success || !res.data) {
-                            $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
-                            $cell.find('.mrt-alert').text(cfg.errorGeneric);
-                            $btn.attr('aria-expanded', 'true');
-                            return;
-                        }
-                        var detail = res.data.detail || {};
-                        var notice = res.data.notice || '';
-                        multiHtml += '<div class="mrt-journey-wizard__detail-segment mrt-mb-sm">';
-                        multiHtml += '<h4 class="mrt-heading mrt-heading--sm">' + escapeHtml(title) + '</h4>';
-                        multiHtml += buildStopsDetailHtml(detail, notice);
-                        multiHtml += '</div>';
-                        legIndex += 1;
-                        loadNextLeg();
-                    }).fail(function() {
-                        $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
-                        $cell.find('.mrt-alert').text(cfg.errorGeneric);
-                        $btn.attr('aria-expanded', 'true');
-                    });
-                }
-                loadNextLeg();
+                mrtWizardLoadMultiLegDetailRows(conn, $cell, $btn, cfg, ajaxPost);
                 return;
             }
 
@@ -434,7 +512,7 @@
                 }
                 var detail = res.data.detail || {};
                 var notice = res.data.notice || '';
-                var html = '<div class="mrt-journey-wizard__detail">' + buildStopsDetailHtml(detail, notice) + '</div>';
+                var html = '<div class="mrt-journey-wizard__detail">' + mrtWizardBuildStopsDetailHtml(detail, notice, cfg) + '</div>';
                 $cell.html(html);
                 $btn.attr('aria-expanded', 'true');
             }).fail(function() {
@@ -473,69 +551,6 @@
             });
         }
 
-        function matrixHasAnyPrice(matrix) {
-            if (!matrix) {
-                return false;
-            }
-            var ti;
-            var ci;
-            for (ti = 0; ti < PRICE_TYPE_KEYS.length; ti++) {
-                var row = matrix[PRICE_TYPE_KEYS[ti]];
-                if (!row) {
-                    continue;
-                }
-                for (ci = 0; ci < PRICE_CAT_KEYS.length; ci++) {
-                    var v = row[PRICE_CAT_KEYS[ci]];
-                    if (v !== null && v !== undefined && v !== '') {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        function formatPriceCell(v) {
-            if (v === null || v === undefined || v === '') {
-                return cfg.priceDash || '—';
-            }
-            return String(v);
-        }
-
-        function buildPriceSection(tripType) {
-            if (!cfg.priceMatrix || !matrixHasAnyPrice(cfg.priceMatrix)) {
-                return '';
-            }
-            var matrix = cfg.priceMatrix;
-            var tickets = cfg.priceTickets || {};
-            var cats = cfg.priceCategories || {};
-            var activeType = tripType === 'return' ? 'return' : 'single';
-            var html = '<div class="mrt-journey-wizard__prices mrt-mt-lg">';
-            html += '<h4 class="mrt-heading mrt-heading--md">' + escapeHtml(cfg.priceTitle || '') + '</h4>';
-            html += '<div class="mrt-journey-wizard__prices-scroll mrt-overflow-x-auto">';
-            html += '<table class="mrt-table mrt-journey-wizard__price-table"><thead><tr><th scope="col"><span class="mrt-sr-only">' +
-                escapeHtml(cfg.priceTableTypeColumn || '') + '</span></th>';
-            PRICE_CAT_KEYS.forEach(function(ck) {
-                html += '<th scope="col">' + escapeHtml(cats[ck] || ck) + '</th>';
-            });
-            html += '</tr></thead><tbody>';
-            PRICE_TYPE_KEYS.forEach(function(tk) {
-                var row = matrix[tk] || {};
-                var rowClass = tk === activeType ? ' class="mrt-journey-wizard__price-row--active"' : '';
-                html += '<tr' + rowClass + '><th scope="row">' + escapeHtml(tickets[tk] || tk) + '</th>';
-                PRICE_CAT_KEYS.forEach(function(ck) {
-                    html += '<td>' + escapeHtml(formatPriceCell(row[ck])) + '</td>';
-                });
-                html += '</tr>';
-            });
-            html += '</tbody></table></div>';
-            if (cfg.priceNote) {
-                html += '<p class="mrt-text-secondary mrt-journey-wizard__price-note mrt-mt-sm">' +
-                    escapeHtml(cfg.priceNote) + '</p>';
-            }
-            html += '</div>';
-            return html;
-        }
-
         function loadReturnConnections() {
             var arr = arrivalAtDestination(state.outbound);
             if (!arr) {
@@ -547,7 +562,7 @@
             var line = (ob.service_name || '') + ' · ' +
                 departureFromOrigin(ob) + '–' +
                 arrivalAtDestination(ob) + ' · ' +
-                formatDateYmd(state.date, cfg);
+                window.MRTDateUtils.formatYmdForDisplay(state.date, cfg);
             $sum.text(line);
 
             var $box = $root.find('[data-wizard-return]');
@@ -586,7 +601,7 @@
             if (ob) {
                 parts.push('<div class="mrt-box mrt-mb-sm"><strong>' + escapeHtml(cfg.outboundHeading) + '</strong><br>' +
                     escapeHtml(state.fromTitle) + ' → ' + escapeHtml(state.toTitle) + '<br>' +
-                    escapeHtml(formatDateYmd(state.date, cfg)) + '<br>' +
+                    escapeHtml(window.MRTDateUtils.formatYmdForDisplay(state.date, cfg)) + '<br>' +
                     escapeHtml(ob.service_name || '') + ' · ' +
                     escapeHtml(departureFromOrigin(ob)) + '–' +
                     escapeHtml(arrivalAtDestination(ob)) +
@@ -596,13 +611,13 @@
                 var ib = state.inbound;
                 parts.push('<div class="mrt-box"><strong>' + escapeHtml(cfg.returnHeading) + '</strong><br>' +
                     escapeHtml(state.toTitle) + ' → ' + escapeHtml(state.fromTitle) + '<br>' +
-                    escapeHtml(formatDateYmd(state.date, cfg)) + '<br>' +
+                    escapeHtml(window.MRTDateUtils.formatYmdForDisplay(state.date, cfg)) + '<br>' +
                     escapeHtml(ib.service_name || '') + ' · ' +
                     escapeHtml(departureFromOrigin(ib)) + '–' +
                     escapeHtml(arrivalAtDestination(ib)) +
                     '</div>');
             }
-            $box.html(parts.join('') + buildPriceSection(state.tripType));
+            $box.html(parts.join('') + mrtWizardBuildPriceSection(state.tripType, cfg));
 
             var url = $root.attr('data-ticket-url') || '';
             var $tw = $root.find('[data-wizard-ticket-wrap]');
@@ -639,28 +654,18 @@
             state.toTitle = $root.find('#mrt_wizard_to option:selected').text();
             buildStepNav();
             showPanel('date');
-            var now = new Date();
-            loadCalendar(now.getFullYear(), now.getMonth() + 1);
+            var cm0 = window.MRTDateUtils.currentCalendarYearMonth();
+            loadCalendar(cm0.year, cm0.month);
         });
 
         $root.on('click', '.mrt-journey-wizard__cal-prev', function() {
-            var y = state.calYear;
-            var m = state.calMonth - 1;
-            if (m < 1) {
-                m = 12;
-                y -= 1;
-            }
-            loadCalendar(y, m);
+            var cm = window.MRTDateUtils.addCalendarMonths(state.calYear, state.calMonth, -1);
+            loadCalendar(cm.year, cm.month);
         });
 
         $root.on('click', '.mrt-journey-wizard__cal-next', function() {
-            var y = state.calYear;
-            var m = state.calMonth + 1;
-            if (m > 12) {
-                m = 1;
-                y += 1;
-            }
-            loadCalendar(y, m);
+            var cm = window.MRTDateUtils.addCalendarMonths(state.calYear, state.calMonth, 1);
+            loadCalendar(cm.year, cm.month);
         });
 
         $root.on('click', '.mrt-journey-wizard__btn-detail', function() {

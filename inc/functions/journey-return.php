@@ -26,6 +26,60 @@ function MRT_journey_raw_item_first_departure(array $item) {
 }
 
 /**
+ * Whether return search has valid stations, date, and outbound arrival time
+ *
+ * @param int    $from_station_id Outbound origin
+ * @param int    $to_station_id   Outbound destination
+ * @param string $dateYmd         Date YYYY-MM-DD
+ * @param string $outbound_arrival_hhmm Arrival at outbound destination
+ */
+function MRT_return_journey_inputs_valid($from_station_id, $to_station_id, $dateYmd, $outbound_arrival_hhmm): bool {
+    if ($from_station_id <= 0 || $to_station_id <= 0) {
+        return false;
+    }
+    if (!MRT_validate_date($dateYmd) || MRT_time_hhmm_to_minutes($outbound_arrival_hhmm) === null) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Normalize raw multi-leg rows that depart on or after earliest allowed (turnaround)
+ *
+ * @param array<int, array<string, mixed>> $raw From MRT_find_multi_leg_connections
+ * @param string                           $dateYmd Date
+ * @param int                              $return_origin_id Station ID “from” on return (outbound destination)
+ * @param int                              $return_dest_id Station ID “to” on return (outbound origin)
+ * @param string                           $earliest_hhmm First allowed departure (HH:MM)
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_return_journey_normalized_after_turnaround(
+    array $raw,
+    string $dateYmd,
+    int $return_origin_id,
+    int $return_dest_id,
+    string $earliest_hhmm
+): array {
+    $out = [];
+    foreach ($raw as $item) {
+        $dep = MRT_journey_raw_item_first_departure($item);
+        if ($dep === '' || !MRT_validate_time_hhmm($dep)) {
+            continue;
+        }
+        if (MRT_compare_hhmm($dep, $earliest_hhmm) < 0) {
+            continue;
+        }
+        $out[] = MRT_normalize_connection_for_api(
+            $item,
+            $dateYmd,
+            $return_origin_id,
+            $return_dest_id
+        );
+    }
+    return $out;
+}
+
+/**
  * Return journeys (to → from) after outbound arrival + turnaround — direct and one transfer
  *
  * @param int    $from_station_id Outbound origin (becomes return destination)
@@ -42,10 +96,7 @@ function MRT_find_return_connections(
     $outbound_arrival_hhmm,
     $min_turnaround_minutes = 0
 ) {
-    if ($from_station_id <= 0 || $to_station_id <= 0) {
-        return [];
-    }
-    if (!MRT_validate_date($dateYmd) || MRT_time_hhmm_to_minutes($outbound_arrival_hhmm) === null) {
+    if (!MRT_return_journey_inputs_valid($from_station_id, $to_station_id, $dateYmd, $outbound_arrival_hhmm)) {
         return [];
     }
     $min_xfer = (int) apply_filters('mrt_min_transfer_minutes', 5);
@@ -63,21 +114,11 @@ function MRT_find_return_connections(
     if ($earliest === null) {
         return [];
     }
-    $out = [];
-    foreach ($raw as $item) {
-        $dep = MRT_journey_raw_item_first_departure($item);
-        if ($dep === '' || !MRT_validate_time_hhmm($dep)) {
-            continue;
-        }
-        if (MRT_compare_hhmm($dep, $earliest) < 0) {
-            continue;
-        }
-        $out[] = MRT_normalize_connection_for_api(
-            $item,
-            $dateYmd,
-            (int) $to_station_id,
-            (int) $from_station_id
-        );
-    }
-    return $out;
+    return MRT_return_journey_normalized_after_turnaround(
+        $raw,
+        $dateYmd,
+        (int) $to_station_id,
+        (int) $from_station_id,
+        $earliest
+    );
 }

@@ -5,7 +5,8 @@
  * @package Museum_Railway_Timetable
  *
  * MODULES:
- * - admin-utils.js: getAjaxUrl, escapeHtml, populateDestinationsSelect, setSelectState, validateTimeFormat
+ * - admin-utils.js: getAjaxUrl, escapeHtml, populateDestinationsSelect, setSelectState, validateTimeFormat (→ MRTDateUtils.validateHhMm)
+ * - mrt-date-utils.js: formatYmdForDisplay, calendar helpers, currentCalendarYearMonth, addCalendarMonths, validateHhMm
  * - admin-route-ui.js: Route stations add/remove/reorder
  * - admin-stoptimes-ui.js: Stop times legacy inline editing
  * - admin-timetable-services-ui.js: Timetable add/remove trips
