@@ -21,6 +21,10 @@ MVP enligt denna plan (**domänfunktioner → AJAX → `[museum_journey_wizard]`
 
 *Valfritt framåt:* rate limiting på AJAX (nämns i Del 2), integrationstester mot DB (Del 4), pixel-polish mot mockup (hero m.m.).
 
+**Parser/render-filer i repo:** `inc/admin-ajax/journey-parse.php` (POST-validering och `MRT_journey_ajax_parse_*`) och `inc/admin-ajax/journey-render.php` (`MRT_journey_render_search_results_html`) är **versionerade** och laddas från `inc/admin-ajax.php` tillsammans med `journey.php`.
+
+**Delade JS-moduler (frontend/admin):** `assets/mrt-string-utils.js` (`MRTStringUtils`), `assets/mrt-date-utils.js` (`MRTDateUtils`), `assets/mrt-frontend-api.js` (`MRTFrontendApi` + `mrtFrontend`), `admin-utils.js` (`MRTAdminUtils` inkl. `msg` för `mrtAdmin`). Se [STYLE_GUIDE.md](STYLE_GUIDE.md) §4.
+
 ---
 
 ## 0. Scope-beslut innan kod (kort)
@@ -163,7 +167,8 @@ Bygg **efter** att Del 1.1–1.3 (minst) och API i Del 2 finns för motsvarande 
 
 **Status (löpande):**
 
-- **Tester:** `composer test` (PHPUnit) med minimal WP-bootstrap i `tests/`; CI kör `composer test` + `php scripts/validate.php`. Täcker bland annat datum/tid-hjälpare, prismatris, journey-normalize, POST-parser, kalender **kantfall** (utan DB), anslutningsrad. **Integrationstester** mot riktig databas / full WordPress-kärna: planerade vid behov (se [FUTURE_WORK.md](FUTURE_WORK.md)).
+- **Tester (PHP):** `composer test` (PHPUnit) med minimal WP-bootstrap i `tests/`; CI kör `composer test` + `php scripts/validate.php`. Täcker bland annat datum/tid-hjälpare, prismatris, journey-normalize, POST-parser, kalender **kantfall** (utan DB), anslutningsrad. **Integrationstester** mot riktig databas / full WordPress-kärna: planerade vid behov (se [FUTURE_WORK.md](FUTURE_WORK.md)).
+- **Tester (JS, valfritt):** `composer test:js` eller `npm run test:js` kör Node inbyggda testrunner (`node --test`) mot `tests/js/*.test.mjs` – laddar `mrt-date-utils.js` och `mrt-string-utils.js` i en vm (ingen browser). Kräver **Node.js 18+** installerat och `node` i PATH.
 - **Tillgänglighet:** wizard enligt Del 3 och [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md) (regioner, `aria-live`, kalenderetiketter, tabellcaption, fokus); fortsatt manuell audit vid temabyte.
 - **Översättning:** nya strängar via `__()` / `esc_html__()` med textdomain `museum-railway-timetable`.
 - **PR:** checklista kopplad till [ARCHITECTURE.md](ARCHITECTURE.md) (`.github/pull_request_template.md`).

@@ -23,6 +23,7 @@
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
         "lint": ["@phpstan", "@phpcs"],
-        "test": "phpunit"
+        "test": "phpunit",
+        "test:js": "node --test tests/js/"
     }
 }

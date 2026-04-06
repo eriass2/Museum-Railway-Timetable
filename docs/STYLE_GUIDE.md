@@ -107,6 +107,7 @@ Kodstandarder och clean code-principer för projektet.
 - **`admin-utils.js`** – `window.MRTAdminUtils.msg(key, fallback)` för strängar från `mrtAdmin` (samma mönster som `MRTFrontendApi.msg`). Använd i admin-moduler i stället för upprepade `typeof mrtAdmin`-tester.
 - **Lägg ny återanvändbar logik** i rätt util-fil i stället för att duplicera i flera skript.
 - **Enqueue** – Registreras i `inc/assets.php` (admin: bl.a. `mrt-string-utils` före `mrt-admin-utils`; frontend: `mrt-string-utils` + `mrt-frontend-api` före `mrt-frontend`, wizard beror på string + frontend-api utöver befintliga).
+- **JS-tester (valfritt)** – `composer test:js` kör `node --test tests/js/` (Node 18+); täcker delade util-filer utan browser.
 
 ---
 
