@@ -55,7 +55,7 @@ function MRT_ajax_search_journey() {
             $params['outbound_arrival'],
             (int) $params['min_turnaround_minutes']
         );
-        $rows_for_html = $connections;
+        $rows_for_html = array_map('MRT_journey_normalized_to_planner_row', $connections);
         $from_name = get_the_title($params['to']);
         $to_name = get_the_title($params['from']);
         $is_return = true;

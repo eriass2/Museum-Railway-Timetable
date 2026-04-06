@@ -181,3 +181,17 @@ if (!function_exists('wp_get_post_terms')) {
         return [];
     }
 }
+
+if (!function_exists('apply_filters')) {
+    /**
+     * @param string $hook_name
+     * @param mixed  $value
+     * @param mixed  ...$args
+     * @return mixed
+     */
+    function apply_filters($hook_name, $value, ...$args) {
+        unset($hook_name, $args);
+
+        return $value;
+    }
+}

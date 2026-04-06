@@ -56,5 +56,6 @@ require_once ABSPATH . 'inc/functions/journey-detail.php';
 require_once ABSPATH . 'inc/functions/journey-multi-leg.php';
 require_once ABSPATH . 'inc/functions/journey-calendar.php';
 require_once ABSPATH . 'inc/functions/journey-normalize.php';
+require_once ABSPATH . 'inc/functions/journey-return.php';
 require_once ABSPATH . 'inc/functions/journey-prices.php';
 require_once ABSPATH . 'inc/admin-ajax/journey-parse.php';

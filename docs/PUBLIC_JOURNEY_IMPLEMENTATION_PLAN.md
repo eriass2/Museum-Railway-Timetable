@@ -35,7 +35,7 @@ MVP enligt denna plan (**domänfunktioner → AJAX → `[museum_journey_wizard]`
 
 | Fråga | Beslut |
 |--------|--------|
-| Direkt vs byte | **v1:** direkta tåg (`MRT_find_connections`) + **tur/retur** (`MRT_find_return_connections`). **Flerbensbyte** (Fas 1.4) är valfri nästa fas – kod finns som utökning men full mockup-UI kan vänta. |
+| Direkt vs byte | **v1:** utresa och **retur** använder samma flerbens-/direkt-sökning (`MRT_find_multi_leg_connections` + normalisering); retur filtreras på tid efter utresa + marginal (`MRT_find_return_connections`). |
 | Priser | **I v1:** option `mrt_price_matrix`, `MRT_get_prices_for_context`, visning i wizard-sammanfattning. |
 | Trafikmeddelanden | **MVP:** post meta `mrt_service_notice`, `MRT_get_service_notice` i detalj/API. |
 
@@ -76,7 +76,7 @@ Mål: tydliga `MRT_*`-funktioner som shortcode, AJAX och framtida REST kan anrop
 | Leverans | Beskrivning |
 |----------|-------------|
 | **`MRT_find_connections` behålls** för utresa som idag (direkt). |
-| **`MRT_find_return_connections($from_station_id, $to_station_id, $dateYmd, $outbound_arrival_hhmm, $min_turnaround_minutes = 0)`** | Söker `to → from` samma datum där avgång från `to` är **efter** ankomst + marginal. Returnerar samma struktur som utresa för enhetlig rendering. |
+| **`MRT_find_return_connections(...)`** | Söker `to → from` samma datum via `MRT_find_multi_leg_connections` (direkt + byte); behåller alternativ där **första benets** avgång från `to` är **efter** utresans ankomst + marginal. Returnerar **normaliserade** API-rader (`MRT_normalize_connection_for_api`). |
 
 **Acceptans:** Med testdata där retur finns efter ankomst returneras den; om ingen finns, tom lista med tydlig signal till UI.
 
