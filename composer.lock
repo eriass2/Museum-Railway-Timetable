@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5b83949e26617ae78d8aba688c87980",
+    "content-hash": "1e0cedf413ae3ff2d300890bece03e6b",
     "packages": [],
     "packages-dev": [
         {
@@ -516,15 +516,15 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "1.12.33",
+            "version": "2.1.46",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/37982d6fc7cbb746dda7773530cda557cdf119e1",
-                "reference": "37982d6fc7cbb746dda7773530cda557cdf119e1",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/a193923fc2d6325ef4e741cf3af8c3e8f54dbf25",
+                "reference": "a193923fc2d6325ef4e741cf3af8c3e8f54dbf25",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2|^8.0"
+                "php": "^7.4|^8.0"
             },
             "conflict": {
                 "phpstan/phpstan-shim": "*"
@@ -565,7 +565,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-02-28T20:30:03+00:00"
+            "time": "2026-04-01T09:25:14+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -2264,7 +2264,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.0"
+        "php": ">=8.2"
     },
     "platform-dev": {},
     "plugin-api-version": "2.9.0"
