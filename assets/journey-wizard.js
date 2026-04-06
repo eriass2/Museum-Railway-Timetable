@@ -29,7 +29,11 @@
     }
 
     function arrivalAtDestination(conn) {
-        return conn.to_arrival || conn.to_departure || '';
+        return conn.to_arrival || conn.to_departure || conn.arrival || '';
+    }
+
+    function departureFromOrigin(conn) {
+        return conn.from_departure || conn.from_arrival || conn.departure || '';
     }
 
     function initOne($root) {
@@ -300,8 +304,8 @@
             $table.append($thead);
             var $tb = $('<tbody></tbody>');
             list.forEach(function(conn, idx) {
-                var dep = conn.from_departure || conn.from_arrival || '—';
-                var arr = conn.to_arrival || conn.to_departure || '—';
+                var dep = departureFromOrigin(conn) || '—';
+                var arr = arrivalAtDestination(conn) || '—';
                 var $tr = $('<tr></tr>');
                 $tr.append($('<td></td>').append(
                     $('<button type="button" class="mrt-btn mrt-btn--primary mrt-journey-wizard__btn-select"></button>')
@@ -333,6 +337,26 @@
             $target.empty().append($wrap);
         }
 
+        function buildStopsDetailHtml(detail, notice) {
+            var html = '';
+            if (notice) {
+                html += '<p><strong>' + escapeHtml(cfg.noticeLabel) + ':</strong> ' + escapeHtml(notice) + '</p>';
+            }
+            if (detail.duration_minutes !== null && detail.duration_minutes !== undefined) {
+                html += '<p>' + escapeHtml(cfg.durationMinutes.replace('%d', String(detail.duration_minutes))) + '</p>';
+            }
+            html += '<table class="mrt-table"><thead><tr><th scope="col">' + escapeHtml(cfg.colStation) +
+                '</th><th scope="col">' + escapeHtml(cfg.colArrival) +
+                '</th><th scope="col">' + escapeHtml(cfg.colDeparture) + '</th></tr></thead><tbody>';
+            (detail.stops || []).forEach(function(s) {
+                html += '<tr><td>' + escapeHtml(s.station_title || '') + '</td><td>' +
+                    escapeHtml(s.arrival_time || '—') + '</td><td>' +
+                    escapeHtml(s.departure_time || '—') + '</td></tr>';
+            });
+            html += '</tbody></table>';
+            return html;
+        }
+
         function toggleDetailRow($btn) {
             var ctx = $btn.attr('data-ctx');
             var idx = parseInt($btn.attr('data-idx'), 10);
@@ -355,6 +379,49 @@
             $detailTr.append($cell);
             $cell.html('<p class="mrt-empty">' + escapeHtml(cfg.loading) + '</p>');
             $tr.after($detailTr);
+
+            if (conn.legs && conn.legs.length > 1) {
+                var legTpl = cfg.legSegmentLabel || 'Train %d';
+                var multiHtml = '<div class="mrt-journey-wizard__detail mrt-journey-wizard__detail--multi">';
+                var legIndex = 0;
+                function loadNextLeg() {
+                    if (legIndex >= conn.legs.length) {
+                        multiHtml += '</div>';
+                        $cell.html(multiHtml);
+                        $btn.attr('aria-expanded', 'true');
+                        return;
+                    }
+                    var leg = conn.legs[legIndex];
+                    var title = legTpl.replace('%d', String(legIndex + 1));
+                    ajaxPost('mrt_journey_connection_detail', {
+                        from_station: leg.from_station_id,
+                        to_station: leg.to_station_id,
+                        service_id: leg.service_id
+                    }).done(function(res) {
+                        if (!res || !res.success || !res.data) {
+                            $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
+                            $cell.find('.mrt-alert').text(cfg.errorGeneric);
+                            $btn.attr('aria-expanded', 'true');
+                            return;
+                        }
+                        var detail = res.data.detail || {};
+                        var notice = res.data.notice || '';
+                        multiHtml += '<div class="mrt-journey-wizard__detail-segment mrt-mb-sm">';
+                        multiHtml += '<h4 class="mrt-heading mrt-heading--sm">' + escapeHtml(title) + '</h4>';
+                        multiHtml += buildStopsDetailHtml(detail, notice);
+                        multiHtml += '</div>';
+                        legIndex += 1;
+                        loadNextLeg();
+                    }).fail(function() {
+                        $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
+                        $cell.find('.mrt-alert').text(cfg.errorGeneric);
+                        $btn.attr('aria-expanded', 'true');
+                    });
+                }
+                loadNextLeg();
+                return;
+            }
+
             ajaxPost('mrt_journey_connection_detail', {
                 from_station: legFrom,
                 to_station: legTo,
@@ -367,22 +434,7 @@
                 }
                 var detail = res.data.detail || {};
                 var notice = res.data.notice || '';
-                var html = '<div class="mrt-journey-wizard__detail">';
-                if (notice) {
-                    html += '<p><strong>' + escapeHtml(cfg.noticeLabel) + ':</strong> ' + escapeHtml(notice) + '</p>';
-                }
-                if (detail.duration_minutes !== null && detail.duration_minutes !== undefined) {
-                    html += '<p>' + escapeHtml(cfg.durationMinutes.replace('%d', String(detail.duration_minutes))) + '</p>';
-                }
-                html += '<table class="mrt-table"><thead><tr><th scope="col">' + escapeHtml(cfg.colStation) +
-                    '</th><th scope="col">' + escapeHtml(cfg.colArrival) +
-                    '</th><th scope="col">' + escapeHtml(cfg.colDeparture) + '</th></tr></thead><tbody>';
-                (detail.stops || []).forEach(function(s) {
-                    html += '<tr><td>' + escapeHtml(s.station_title || '') + '</td><td>' +
-                        escapeHtml(s.arrival_time || '—') + '</td><td>' +
-                        escapeHtml(s.departure_time || '—') + '</td></tr>';
-                });
-                html += '</tbody></table></div>';
+                var html = '<div class="mrt-journey-wizard__detail">' + buildStopsDetailHtml(detail, notice) + '</div>';
                 $cell.html(html);
                 $btn.attr('aria-expanded', 'true');
             }).fail(function() {
@@ -493,8 +545,8 @@
             var $sum = $root.find('[data-wizard-return-summary]');
             var ob = state.outbound;
             var line = (ob.service_name || '') + ' · ' +
-                (ob.from_departure || ob.from_arrival || '') + '–' +
-                (ob.to_arrival || ob.to_departure || '') + ' · ' +
+                departureFromOrigin(ob) + '–' +
+                arrivalAtDestination(ob) + ' · ' +
                 formatDateYmd(state.date, cfg);
             $sum.text(line);
 
@@ -536,8 +588,8 @@
                     escapeHtml(state.fromTitle) + ' → ' + escapeHtml(state.toTitle) + '<br>' +
                     escapeHtml(formatDateYmd(state.date, cfg)) + '<br>' +
                     escapeHtml(ob.service_name || '') + ' · ' +
-                    escapeHtml(ob.from_departure || ob.from_arrival || '') + '–' +
-                    escapeHtml(ob.to_arrival || ob.to_departure || '') +
+                    escapeHtml(departureFromOrigin(ob)) + '–' +
+                    escapeHtml(arrivalAtDestination(ob)) +
                     '</div>');
             }
             if (state.tripType === 'return' && state.inbound) {
@@ -546,8 +598,8 @@
                     escapeHtml(state.toTitle) + ' → ' + escapeHtml(state.fromTitle) + '<br>' +
                     escapeHtml(formatDateYmd(state.date, cfg)) + '<br>' +
                     escapeHtml(ib.service_name || '') + ' · ' +
-                    escapeHtml(ib.from_departure || ib.from_arrival || '') + '–' +
-                    escapeHtml(ib.to_arrival || ib.to_departure || '') +
+                    escapeHtml(departureFromOrigin(ib)) + '–' +
+                    escapeHtml(arrivalAtDestination(ib)) +
                     '</div>');
             }
             $box.html(parts.join('') + buildPriceSection(state.tripType));

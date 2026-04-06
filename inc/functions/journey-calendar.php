@@ -23,8 +23,15 @@ function MRT_journey_calendar_day_status($from_station_id, $to_station_id, $ymd,
     if (empty($services_cache[$ymd])) {
         return 'none';
     }
-    $conns = MRT_find_connections($from_station_id, $to_station_id, $ymd);
-    return !empty($conns) ? 'ok' : 'traffic_no_match';
+    $min_xfer = (int) apply_filters('mrt_min_transfer_minutes', 5);
+    $options = MRT_find_multi_leg_connections(
+        $from_station_id,
+        $to_station_id,
+        $ymd,
+        $min_xfer,
+        true
+    );
+    return !empty($options) ? 'ok' : 'traffic_no_match';
 }
 
 /**

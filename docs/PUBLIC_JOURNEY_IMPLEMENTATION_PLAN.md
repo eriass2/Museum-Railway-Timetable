@@ -15,7 +15,7 @@ MVP enligt denna plan (**domänfunktioner → AJAX → `[museum_journey_wizard]`
 | Del | Innehåll | Status |
 |-----|----------|--------|
 | **Del 1** | Fas 1.1–1.3, 1.5–1.7: bl.a. `MRT_get_connection_journey_detail`, `MRT_format_duration_minutes`, `MRT_get_journey_calendar_month`, `MRT_get_all_traffic_dates_in_range`, `MRT_find_return_connections`, prismatris + `MRT_get_prices_for_context`, `mrt_service_notice` + `MRT_get_service_notice`, `MRT_normalize_connection_for_api` | **Klart** (`inc/functions/journey-*.php`, admin prismatris + notice på service) |
-| **Del 1.4** | `MRT_find_multi_leg_connections` | **Kod finns**; wizard visar inte flerben som huvudflöde (valfri senare fas) |
+| **Del 1.4** | `MRT_find_multi_leg_connections` | **Kopplad:** utresa i wizard/planner/AJAX + kalender (`ok` om direkt eller byte); stopp-vy per ben i wizard; enhetstester (`tests/Unit/JourneyMultiLegTest.php`) |
 | **Del 2** | `mrt_search_journey`, `mrt_journey_calendar_month`, `mrt_journey_connection_detail` + `journey-parse.php` / `journey-render.php` | **Klart** |
 | **Del 3** | `[museum_journey_wizard]`, `[museum_journey_planner]` + tillhörande CSS/JS | **Klart** (MVP) |
 
@@ -89,7 +89,7 @@ Mål: tydliga `MRT_*`-funktioner som shortcode, AJAX och framtida REST kan anrop
 | **`MRT_find_multi_leg_connections(...)`** | Antingen: (a) begränsad **2-leg** sök (A→B på tåg 1, byte på station X, B→C på tåg 2) med max antal byten och minsta bytestid, eller (b) manuellt definierade “sammansatta resor”. |
 | Återanvänd **`MRT_find_connecting_services`** som byggsten där det passar. |
 
-**Acceptans:** Minst ett scenario från mockup (byte + väntetid) kan representeras i retur-array med segmentlista.
+**Acceptans:** Minst ett scenario från mockup (byte + väntetid) kan representeras i retur-array med segmentlista. **Tester:** validering, tom sökning utan fixture-DB, `MRT_journey_find_stop_index`, `MRT_journey_leg_from_connection_row`, `MRT_journey_wrap_direct_multi` (fallback utan stoptider), `MRT_journey_append_transfer_options` utan tjänster.
 
 ---
 

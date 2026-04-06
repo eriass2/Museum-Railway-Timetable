@@ -41,7 +41,7 @@ function MRT_journey_connections_table_caption($from_name, $to_name, $selected_d
 /**
  * Render connections table rows (caption + scoped headers)
  *
- * @param array<int, array<string, mixed>> $connections Rows from MRT_find_connections / return
+ * @param array<int, array<string, mixed>> $connections Planner table rows (flat connection or normalized row)
  * @param string                           $caption_text Accessible table caption (plain text)
  * @return void Outputs HTML
  */

@@ -58,21 +58,35 @@ function MRT_ajax_search_journey() {
             $params['outbound_arrival'],
             (int) $params['min_turnaround_minutes']
         );
+        $rows_for_html = $connections;
         $from_name = get_the_title($params['to']);
         $to_name = get_the_title($params['from']);
         $is_return = true;
     } else {
-        $connections = MRT_find_connections(
+        $min_xfer = (int) apply_filters('mrt_min_transfer_minutes', 5);
+        $raw_multi = MRT_find_multi_leg_connections(
             (int) $params['from'],
             (int) $params['to'],
-            $params['date']
+            $params['date'],
+            $min_xfer,
+            true
         );
+        $connections = [];
+        foreach ($raw_multi as $item) {
+            $connections[] = MRT_normalize_connection_for_api(
+                $item,
+                $params['date'],
+                (int) $params['from'],
+                (int) $params['to']
+            );
+        }
+        $rows_for_html = array_map('MRT_journey_normalized_to_planner_row', $connections);
         $from_name = get_the_title($params['from']);
         $to_name = get_the_title($params['to']);
         $is_return = false;
     }
     $html = MRT_journey_render_search_results_html(
-        $connections,
+        $rows_for_html,
         $from_name,
         $to_name,
         $params['date'],

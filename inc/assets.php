@@ -239,6 +239,7 @@ function MRT_journey_wizard_script_localization(): array {
         'tripsCaptionReturn' => __('Return trips on the same day', MRT_TEXT_DOMAIN),
         'btnChooseTripAria' => __('Choose this trip: %1$s, departure %2$s, arrival %3$s', MRT_TEXT_DOMAIN),
         'btnShowStopsAria' => __('Stops and times for %s', MRT_TEXT_DOMAIN),
+        'legSegmentLabel' => __('Train %d', MRT_TEXT_DOMAIN),
         'priceTableTypeColumn' => __('Ticket type', MRT_TEXT_DOMAIN),
         'priceTitle' => __('Indicative prices', MRT_TEXT_DOMAIN),
         'priceNote' => __('Amounts are configured in timetable settings (same units as there).', MRT_TEXT_DOMAIN),

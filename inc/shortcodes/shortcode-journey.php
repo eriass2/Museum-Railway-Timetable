@@ -121,7 +121,24 @@ function MRT_render_journey_results($from_station_id, $to_station_id, $selected_
         return;
     }
 
-    $connections = MRT_find_connections($from_station_id, $to_station_id, $selected_date);
+    $min_xfer = (int) apply_filters('mrt_min_transfer_minutes', 5);
+    $raw_multi = MRT_find_multi_leg_connections(
+        $from_station_id,
+        $to_station_id,
+        $selected_date,
+        $min_xfer,
+        true
+    );
+    $normalized = [];
+    foreach ($raw_multi as $item) {
+        $normalized[] = MRT_normalize_connection_for_api(
+            $item,
+            $selected_date,
+            $from_station_id,
+            $to_station_id
+        );
+    }
+    $connections = array_map('MRT_journey_normalized_to_planner_row', $normalized);
     $from_name = get_the_title($from_station_id);
     $to_name = get_the_title($to_station_id);
     $services_on_date = MRT_services_running_on_date($selected_date);
@@ -137,7 +154,7 @@ function MRT_render_journey_results($from_station_id, $to_station_id, $selected_
         <?php elseif (empty($connections)): ?>
             <div class="mrt-alert mrt-alert-info mrt-empty" role="status">
                 <p><strong><?php esc_html_e('No connections found.', 'museum-railway-timetable'); ?></strong></p>
-                <p><?php esc_html_e('There are no direct connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
+                <p><?php esc_html_e('There are no connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
             </div>
         <?php else: ?>
             <?php MRT_render_journey_connections_table($connections, $caption); ?>

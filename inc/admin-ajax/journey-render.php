@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) { exit; }
 /**
  * Render journey search results as HTML (direct connections table)
  *
- * @param array<int, array<string, mixed>> $connections Rows from MRT_find_connections / return
+ * @param array<int, array<string, mixed>> $connections Planner table rows (flat or from MRT_journey_normalized_to_planner_row)
  * @param string                           $from_station_name From title
  * @param string                           $to_station_name To title
  * @param string                           $dateYmd Date Y-m-d
@@ -44,7 +44,7 @@ function MRT_journey_render_search_results_html(
     <?php if (empty($connections)) : ?>
         <div class="mrt-alert mrt-alert-info mrt-empty" role="status">
             <p><strong><?php esc_html_e('No connections found.', 'museum-railway-timetable'); ?></strong></p>
-            <p><?php esc_html_e('There are no direct connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
+            <p><?php esc_html_e('There are no connections between these stations on the selected date. Please try a different date or different stations.', 'museum-railway-timetable'); ?></p>
         </div>
     <?php else : ?>
         <?php MRT_render_journey_connections_table($connections, $caption); ?>

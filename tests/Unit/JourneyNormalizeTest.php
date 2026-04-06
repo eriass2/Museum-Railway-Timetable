@@ -64,8 +64,15 @@ final class JourneyNormalizeTest extends TestCase {
         self::assertSame(70, $out['duration_minutes']);
         self::assertSame('10:00', $out['departure']);
         self::assertSame('11:30', $out['arrival']);
+        self::assertSame('10:00', $out['from_departure']);
+        self::assertSame('11:30', $out['to_arrival']);
         self::assertSame('diesel', $out['train_type']);
         self::assertSame(1, $out['service_id']);
+        self::assertStringContainsString('Post 1', (string) $out['service_name']);
+        self::assertStringContainsString('Post 5', (string) $out['service_name']);
+        $row = MRT_journey_normalized_to_planner_row($out);
+        self::assertSame('10:00', $row['from_departure']);
+        self::assertSame('11:30', $row['to_arrival']);
     }
 
     public function test_normalize_multi_leg_notice_unique(): void {
@@ -126,5 +133,43 @@ final class JourneyNormalizeTest extends TestCase {
             'legs' => [],
         ];
         self::assertNull(MRT_flatten_wrapped_direct_connection($item));
+    }
+
+    public function test_normalize_connection_for_api_direct_includes_departure_aliases(): void {
+        $conn = [
+            'service_id' => 10,
+            'service_name' => 'Test Service',
+            'from_departure' => '09:00',
+            'to_arrival' => '10:00',
+            'train_type' => 'steam',
+            'destination' => 'X',
+            'direction' => 'north',
+        ];
+        $out = MRT_normalize_connection_for_api($conn, '2026-06-01', 3, 4);
+        self::assertSame('direct', $out['connection_type']);
+        self::assertSame('09:00', $out['departure']);
+        self::assertSame('10:00', $out['arrival']);
+        self::assertSame('09:00', $out['from_departure']);
+        self::assertSame('10:00', $out['to_arrival']);
+        self::assertSame('Test Service', $out['service_name']);
+    }
+
+    public function test_journey_normalized_to_planner_row_direct_passes_through(): void {
+        $n = [
+            'connection_type' => 'direct',
+            'service_id' => 5,
+            'service_name' => 'A',
+            'route_name' => 'R',
+            'train_type' => 't',
+            'from_departure' => '08:01',
+            'to_arrival' => '09:02',
+            'destination' => 'Dest',
+            'direction' => 'Dir',
+        ];
+        $row = MRT_journey_normalized_to_planner_row($n);
+        self::assertSame('A', $row['service_name']);
+        self::assertSame('08:01', $row['from_departure']);
+        self::assertSame('09:02', $row['to_arrival']);
+        self::assertSame('Dest', $row['destination']);
     }
 }
