@@ -20,7 +20,7 @@
 **Status:** ✅ Genomförd uppdelning dokumenterad i REFACTORING_PLAN.md (2026).
 
 ### 1.4 PHPStan + WordPress-stubs
-**Status:** ✅ `szepeviktor/phpstan-wordpress` + `phpstan-baseline.neon`; `composer phpstan` är grön. Successivt: minska baseline, ev. uppgradera till PHPStan 2.x (kräver `phpstan-wordpress` 2.x).
+**Status:** ✅ `szepeviktor/phpstan-wordpress`; `composer phpstan` är grön utan baseline (nivå 5). **Nästa:** vid behov uppgradera till PHPStan 2.x + `phpstan-wordpress` 2.x (se uppgraderingsguide på phpstan.org).
 
 **Se:** [DEVELOPER.md](DEVELOPER.md) (avsnitt PHPStan).
 

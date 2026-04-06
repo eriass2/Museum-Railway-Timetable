@@ -14,7 +14,7 @@ if (!defined('ABSPATH')) { exit; }
  * @return string Display name, e.g. "Selknä*" if bus suffix is set
  */
 function MRT_get_station_display_name($station) {
-    if (!$station || !isset($station->post_title)) {
+    if (!$station || $station->post_title === '') {
         return '';
     }
     $name = $station->post_title;

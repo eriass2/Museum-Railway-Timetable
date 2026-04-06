@@ -22,7 +22,7 @@ function MRT_render_timetable_service_row($service, $timetable_id) {
     $destination_data = MRT_get_service_destination($service->ID);
     $destination = !empty($destination_data['destination']) ? $destination_data['destination'] : '—';
     ?>
-    <tr class="mrt-row-hover" data-service-id="<?php echo esc_attr($service->ID); ?>">
+    <tr class="mrt-row-hover" data-service-id="<?php echo esc_attr((string) $service->ID); ?>">
         <td><?php echo $route ? esc_html($route->post_title) : '—'; ?></td>
         <td><?php echo $train_type ? esc_html($train_type->name) : '—'; ?></td>
         <td><?php echo esc_html($destination); ?></td>
@@ -30,8 +30,8 @@ function MRT_render_timetable_service_row($service, $timetable_id) {
             <a href="<?php echo esc_url(add_query_arg('timetable_id', $timetable_id, get_edit_post_link($service->ID))); ?>" class="button button-small">
                 <?php esc_html_e('Edit', 'museum-railway-timetable'); ?>
             </a>
-            <input type="hidden" name="mrt_service_timetable_id" value="<?php echo esc_attr($timetable_id); ?>" />
-            <button type="button" class="button button-small mrt-delete-service-from-timetable" data-service-id="<?php echo esc_attr($service->ID); ?>">
+            <input type="hidden" name="mrt_service_timetable_id" value="<?php echo esc_attr((string) $timetable_id); ?>" />
+            <button type="button" class="button button-small mrt-delete-service-from-timetable" data-service-id="<?php echo esc_attr((string) $service->ID); ?>">
                 <?php esc_html_e('Remove', 'museum-railway-timetable'); ?>
             </button>
         </td>
@@ -53,7 +53,7 @@ function MRT_render_timetable_new_service_row($routes, $all_train_types, $timeta
             <select id="mrt-new-service-route" class="mrt-input mrt-w-full" required>
                 <option value=""><?php esc_html_e('— Select Route —', 'museum-railway-timetable'); ?></option>
                 <?php foreach ($routes as $route): ?>
-                    <option value="<?php echo esc_attr($route->ID); ?>"><?php echo esc_html($route->post_title); ?></option>
+                    <option value="<?php echo esc_attr((string) $route->ID); ?>"><?php echo esc_html($route->post_title); ?></option>
                 <?php endforeach; ?>
             </select>
         </td>
@@ -61,7 +61,7 @@ function MRT_render_timetable_new_service_row($routes, $all_train_types, $timeta
             <select id="mrt-new-service-train-type" class="mrt-input mrt-w-full">
                 <option value=""><?php esc_html_e('— Select —', 'museum-railway-timetable'); ?></option>
                 <?php foreach ($all_train_types as $train_type): ?>
-                    <option value="<?php echo esc_attr($train_type->term_id); ?>"><?php echo esc_html($train_type->name); ?></option>
+                    <option value="<?php echo esc_attr((string) $train_type->term_id); ?>"><?php echo esc_html($train_type->name); ?></option>
                 <?php endforeach; ?>
             </select>
         </td>
@@ -73,7 +73,7 @@ function MRT_render_timetable_new_service_row($routes, $all_train_types, $timeta
             <p class="description mrt-text-small mrt-mt-xs"><?php esc_html_e('Select route first to see available destinations', 'museum-railway-timetable'); ?></p>
         </td>
         <td>
-            <button type="button" class="button button-primary button-small" id="mrt-add-service-to-timetable" data-timetable-id="<?php echo esc_attr($timetable_id); ?>">
+            <button type="button" class="button button-primary button-small" id="mrt-add-service-to-timetable" data-timetable-id="<?php echo esc_attr((string) $timetable_id); ?>">
                 <?php esc_html_e('Add Trip', 'museum-railway-timetable'); ?>
             </button>
         </td>

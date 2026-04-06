@@ -81,7 +81,7 @@ Kontrollerar: obligatoriska filer, PHP-syntax, ABSPATH, inline styles, plugin he
 
 ### PHPStan och PHPCS (`composer lint`)
 
-- **PHPStan:** Använder **`szepeviktor/phpstan-wordpress`** (beror på `php-stubs/wordpress-stubs`) så att WordPress-API:er (`add_action`, `__`, `WP_Post`, m.m.) känns igen. Konfiguration: `phpstan.neon` + `phpstan-bootstrap.php` (plugin-konstanter). Kända kvarvarande varningar ligger i **`phpstan-baseline.neon`** – minska den successivt när kod eller PHPDoc förbättras. `treatPhpDocTypesAsCertain: false` minskar brus från osäkra docblock. Kör med `composer phpstan` (1G minne, en worker på Windows för stabilitet).
+- **PHPStan:** Använder **`szepeviktor/phpstan-wordpress`** (beror på `php-stubs/wordpress-stubs`) så att WordPress-API:er (`add_action`, `__`, `WP_Post`, m.m.) känns igen. Konfiguration: `phpstan.neon` + `phpstan-bootstrap.php` (plugin-konstanter). Vid nya varningar som är svåra att fixa direkt kan du lägga till **`phpstan-baseline.neon`** (`phpstan analyse --generate-baseline`). `treatPhpDocTypesAsCertain: false` minskar brus från osäkra docblock. Kör med `composer phpstan` (1G minne, en worker på Windows för stabilitet).
 - **PHPCS:** Använder WordPress Coding Standards. Projektet använder prefixet `MRT_` för funktioner; vissa WPCS-regler kan flagga det – bedöm utifrån [STYLE_GUIDE.md](STYLE_GUIDE.md). `composer phpcbf` fixar formateringsbar kod där det passar.
 
 ### Pre-commit hooks

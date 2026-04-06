@@ -50,7 +50,7 @@ function MRT_import_create_stations() {
                 'post_title' => $name,
                 'post_status' => 'publish',
             ]);
-            if ($id && !is_wp_error($id)) {
+            if ($id && !($id instanceof \WP_Error)) {
                 $station_ids[$name] = $id;
                 update_post_meta($id, 'mrt_display_order', $order);
                 update_post_meta($id, 'mrt_station_bus_suffix', $bus_suffix ? '1' : '0');
@@ -67,7 +67,7 @@ function MRT_import_create_train_types() {
         if (!$term) {
             $term = wp_insert_term($name, 'mrt_train_type', ['slug' => $slug]);
         }
-        if (!is_wp_error($term)) {
+        if (!($term instanceof \WP_Error)) {
             $ids[$name] = is_array($term) ? $term['term_id'] : $term;
         }
     }
@@ -98,7 +98,7 @@ function MRT_import_ensure_route($title, $station_ids) {
             'post_title' => $title,
             'post_status' => 'publish',
         ]);
-        if ($id && !is_wp_error($id)) {
+        if ($id && !($id instanceof \WP_Error)) {
             update_post_meta($id, 'mrt_route_stations', array_values($station_ids));
             update_post_meta($id, 'mrt_route_start_station', $station_ids[0]);
             update_post_meta($id, 'mrt_route_end_station', end($station_ids));
@@ -121,7 +121,7 @@ function MRT_import_create_timetable() {
             'post_title' => 'GRÖN TIDTABELL 2026',
             'post_status' => 'publish',
         ]);
-        if ($id && !is_wp_error($id)) {
+        if ($id && !($id instanceof \WP_Error)) {
             update_post_meta($id, 'mrt_timetable_dates', $timetable_dates);
             update_post_meta($id, 'mrt_timetable_type', 'green');
             return $id;
@@ -169,7 +169,9 @@ function MRT_import_insert_service($svc, $title, $route_id, $station_ids, $end_s
         'post_title' => $title,
         'post_status' => 'publish',
     ]);
-    if (!$service_id || is_wp_error($service_id)) return 0;
+    if (!$service_id || $service_id instanceof \WP_Error) {
+        return 0;
+    }
 
     if ($train_type_id) {
         wp_set_object_terms($service_id, (int) $train_type_id, 'mrt_train_type');

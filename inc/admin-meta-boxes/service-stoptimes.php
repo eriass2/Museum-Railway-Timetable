@@ -21,11 +21,11 @@ function MRT_render_stoptime_row($station, $st, $index, $post_id) {
     $sequence = $st ? $st['stop_sequence'] : ($index + 1);
     ob_start();
     ?>
-    <tr class="mrt-row-hover mrt-route-station-row" data-station-id="<?php echo esc_attr($station->ID); ?>" data-service-id="<?php echo esc_attr($post_id); ?>" data-sequence="<?php echo esc_attr($sequence); ?>">
-        <td><?php echo esc_html($index + 1); ?></td>
+    <tr class="mrt-row-hover mrt-route-station-row" data-station-id="<?php echo esc_attr((string) $station->ID); ?>" data-service-id="<?php echo esc_attr((string) $post_id); ?>" data-sequence="<?php echo esc_attr((string) $sequence); ?>">
+        <td><?php echo esc_html((string) ($index + 1)); ?></td>
         <td><strong><?php echo esc_html($station->post_title); ?></strong></td>
         <td>
-            <input type="checkbox" class="mrt-stops-here mrt-cursor-pointer" <?php checked($stops_here); ?> data-station-id="<?php echo esc_attr($station->ID); ?>" />
+            <input type="checkbox" class="mrt-stops-here mrt-cursor-pointer" <?php checked($stops_here); ?> data-station-id="<?php echo esc_attr((string) $station->ID); ?>" />
         </td>
         <td class="mrt-time-field mrt-relative <?php echo $stops_here ? '' : 'mrt-opacity-50'; ?>">
             <input type="text" class="mrt-arrival-time mrt-input mrt-input--sm mrt-font-mono" value="<?php echo $st ? esc_attr($st['arrival_time']) : ''; ?>" placeholder="<?php esc_attr_e('HH:MM', 'museum-railway-timetable'); ?>" pattern="[0-2][0-9]:[0-5][0-9]" <?php echo $stops_here ? '' : 'disabled'; ?> />
@@ -106,7 +106,7 @@ function MRT_render_stoptimes_table($stations, $stoptimes_by_station, $post_id) 
         </div>
         <?php if (!empty($stations)): ?>
         <p class="mrt-mt-1">
-            <button type="button" id="mrt-save-all-stoptimes" class="button button-primary" data-service-id="<?php echo esc_attr($post_id); ?>">
+            <button type="button" id="mrt-save-all-stoptimes" class="button button-primary" data-service-id="<?php echo esc_attr((string) $post_id); ?>">
                 <?php esc_html_e('Save Stop Times', 'museum-railway-timetable'); ?>
             </button>
             <span class="description mrt-ml-1">

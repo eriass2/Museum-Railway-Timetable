@@ -113,7 +113,7 @@ function MRT_ajax_add_service_to_timetable() {
         'post_status' => 'publish',
     ]);
 
-    if (is_wp_error($service_id)) {
+    if ($service_id instanceof \WP_Error) {
         wp_send_json_error(['message' => __('Failed to create trip: ', 'museum-railway-timetable') . $service_id->get_error_message()]);
     }
 

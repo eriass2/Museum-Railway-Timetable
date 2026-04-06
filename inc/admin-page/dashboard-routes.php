@@ -60,11 +60,11 @@ function MRT_render_dashboard_routes($all_routes) {
                         <td>
                             <?php if (!empty($station_names)): ?>
                                 <span title="<?php echo esc_attr(implode(' → ', $station_names)); ?>">
-                                    <?php echo esc_html($stations_count_for_route); ?> <?php esc_html_e('stations', 'museum-railway-timetable'); ?>
+                                    <?php echo esc_html((string) $stations_count_for_route); ?> <?php esc_html_e('stations', 'museum-railway-timetable'); ?>
                                     <span class="description mrt-block mrt-text-small mrt-mt-xs mrt-text-muted">
                                         <?php echo esc_html(implode(' → ', array_slice($station_names, 0, 3))); ?>
                                         <?php if (count($station_names) > 3): ?>
-                                            ... (+<?php echo esc_html(count($station_names) - 3); ?>)
+                                            ... (+<?php echo esc_html((string) (count($station_names) - 3)); ?>)
                                         <?php endif; ?>
                                     </span>
                                 </span>
@@ -75,7 +75,7 @@ function MRT_render_dashboard_routes($all_routes) {
                         <td>
                             <?php if ($services_count_for_route > 0): ?>
                                 <a href="<?php echo esc_url(admin_url('edit.php?post_type=mrt_service&meta_key=mrt_service_route_id&meta_value=' . $route->ID)); ?>">
-                                    <?php echo esc_html($services_count_for_route); ?> <?php esc_html_e('trip(s)', 'museum-railway-timetable'); ?>
+                                    <?php echo esc_html((string) $services_count_for_route); ?> <?php esc_html_e('trip(s)', 'museum-railway-timetable'); ?>
                                 </a>
                             <?php else: ?>
                                 <span class="description"><?php esc_html_e('Not used yet', 'museum-railway-timetable'); ?></span>

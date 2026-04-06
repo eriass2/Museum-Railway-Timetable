@@ -43,7 +43,6 @@ function MRT_verify_meta_box_save(int $post_id, string $nonce_name, string $nonc
 function MRT_verify_ajax_permission(): void {
     if (!current_user_can('edit_posts')) {
         wp_send_json_error(['message' => __('Permission denied.', MRT_TEXT_DOMAIN)]);
-        exit;
     }
 }
 

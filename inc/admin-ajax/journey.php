@@ -38,17 +38,14 @@ function MRT_ajax_search_journey() {
         wp_send_json_error([
             'message' => __('Security check failed. Please refresh the page.', 'museum-railway-timetable'),
         ]);
-        return;
     }
     $params = MRT_journey_ajax_parse_trip_search_params();
     if (is_wp_error($params)) {
         wp_send_json_error(['message' => $params->get_error_message()]);
-        return;
     }
     $services_on_date = MRT_services_running_on_date($params['date']);
     if (empty($services_on_date)) {
         MRT_journey_ajax_send_no_services_response($params['trip_type']);
-        return;
     }
     if ($params['trip_type'] === 'return') {
         $connections = MRT_find_return_connections(
@@ -111,12 +108,10 @@ function MRT_ajax_journey_calendar_month() {
         wp_send_json_error([
             'message' => __('Security check failed. Please refresh the page.', 'museum-railway-timetable'),
         ]);
-        return;
     }
     $parsed = MRT_journey_ajax_parse_calendar_month_params();
     if (is_wp_error($parsed)) {
         wp_send_json_error(['message' => $parsed->get_error_message()]);
-        return;
     }
     $days = MRT_get_journey_calendar_month(
         $parsed['from'],
@@ -143,12 +138,10 @@ function MRT_ajax_journey_connection_detail() {
         wp_send_json_error([
             'message' => __('Security check failed. Please refresh the page.', 'museum-railway-timetable'),
         ]);
-        return;
     }
     $parsed = MRT_journey_ajax_parse_connection_detail_params();
     if (is_wp_error($parsed)) {
         wp_send_json_error(['message' => $parsed->get_error_message()]);
-        return;
     }
     $detail = MRT_get_connection_journey_detail(
         $parsed['service_id'],

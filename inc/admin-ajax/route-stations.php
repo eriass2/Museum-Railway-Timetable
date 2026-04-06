@@ -84,7 +84,6 @@ function MRT_ajax_save_route_end_stations() {
     $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash($_POST['nonce'])) : '';
     if (!wp_verify_nonce($nonce, 'mrt_save_route_meta')) {
         wp_send_json_error(['message' => __('Security check failed.', 'museum-railway-timetable')]);
-        return;
     }
     MRT_verify_ajax_permission();
 

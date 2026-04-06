@@ -11,7 +11,7 @@ Snabb överblick över **vad som körs** och **var** – så du har koll utan at
 | `composer plugin-check` | Samma som `php scripts/validate.php` – filer, syntax, ABSPATH, text domain, CSS/JS |
 | `php scripts/validate.php` | Direkt körning (kräver PHP i PATH) |
 | `composer phpcs` | Kodstil (WordPress); kan flagga `MRT_`-prefix – se [DEVELOPER.md](DEVELOPER.md) |
-| `composer phpstan` | Statisk analys med `phpstan-wordpress` + `phpstan-baseline.neon` – se [DEVELOPER.md](DEVELOPER.md) |
+| `composer phpstan` | Statisk analys med `phpstan-wordpress` – se [DEVELOPER.md](DEVELOPER.md) |
 | `composer lint` | `phpstan` + `phpcs` i ett steg |
 
 ---

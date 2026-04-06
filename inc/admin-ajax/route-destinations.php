@@ -24,7 +24,6 @@ function MRT_ajax_get_route_destinations() {
     
     if (!$valid) {
         wp_send_json_error(['message' => __('Security check failed.', 'museum-railway-timetable')]);
-        return;
     }
     MRT_verify_ajax_permission();
 
