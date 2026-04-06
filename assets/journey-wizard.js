@@ -307,63 +307,213 @@
         loadNextLeg();
     }
 
-    function initOne($root) {
-        var cfg = typeof mrtJourneyWizard !== 'undefined' ? mrtJourneyWizard : null;
-        if (!cfg) {
+    /**
+     * Expand/collapse connection detail row (single-leg AJAX or multi-leg chain).
+     *
+     * @param {object} wctx Wizard runtime from mrtWizardCreateRuntime
+     * @param {jQuery} $btn Detail button
+     */
+    function mrtWizardToggleDetailRow(wctx, $btn) {
+        var cfg = wctx.cfg;
+        var legCtx = $btn.attr('data-ctx');
+        var idx = parseInt($btn.attr('data-idx'), 10);
+        var legFrom = parseInt($btn.attr('data-leg-from'), 10);
+        var legTo = parseInt($btn.attr('data-leg-to'), 10);
+        var list = legCtx === 'return' ? wctx.lastReturnList : wctx.lastOutboundList;
+        var conn = list[idx];
+        if (!conn) {
+            return;
+        }
+        var $tr = $btn.closest('tr');
+        var $next = $tr.next('.mrt-journey-wizard__detail-row');
+        if ($next.length) {
+            $next.toggle();
+            $btn.attr('aria-expanded', $next.is(':visible') ? 'true' : 'false');
+            return;
+        }
+        var $detailTr = $('<tr class="mrt-journey-wizard__detail-row"></tr>');
+        var $cell = $('<td colspan="6"></td>');
+        $detailTr.append($cell);
+        $cell.html('<p class="mrt-empty">' + SU.escapeHtml(cfg.loading) + '</p>');
+        $tr.after($detailTr);
+
+        if (conn.legs && conn.legs.length > 1) {
+            mrtWizardLoadMultiLegDetailRows(conn, $cell, $btn, cfg, wctx.ajaxPost);
             return;
         }
 
-        var startOfWeek = parseInt($root.data('startOfWeek'), 10);
-        if (isNaN(startOfWeek) || startOfWeek < 0 || startOfWeek > 6) {
-            startOfWeek = 1;
-        }
+        wctx.ajaxPost('mrt_journey_connection_detail', {
+            from_station: legFrom,
+            to_station: legTo,
+            service_id: conn.service_id
+        }).done(function(res) {
+            if (!res || !res.success || !res.data) {
+                $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
+                $cell.find('.mrt-alert').text(cfg.errorGeneric);
+                return;
+            }
+            var detail = res.data.detail || {};
+            var notice = res.data.notice || '';
+            var html = '<div class="mrt-journey-wizard__detail">' + mrtWizardBuildStopsDetailHtml(detail, notice, cfg) + '</div>';
+            $cell.html(html);
+            $btn.attr('aria-expanded', 'true');
+        }).fail(function() {
+            $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
+            $cell.find('.mrt-alert').text(cfg.errorGeneric);
+            $btn.attr('aria-expanded', 'true');
+        });
+    }
 
-        var state = {
-            tripType: 'single',
-            from: 0,
-            to: 0,
-            fromTitle: '',
-            toTitle: '',
-            date: '',
-            calYear: 0,
-            calMonth: 0,
-            outbound: null,
-            inbound: null
-        };
+    function mrtWizardBindRouteNext(wctx) {
+        var $root = wctx.$root;
+        var cfg = wctx.cfg;
+        var state = wctx.state;
+        $root.on('click', '[data-wizard-next="route"]', function() {
+            wctx.clearError();
+            var from = parseInt($root.find('#mrt_wizard_from').val(), 10);
+            var to = parseInt($root.find('#mrt_wizard_to').val(), 10);
+            var trip = $root.find('input[name="mrt_wizard_trip_type"]:checked').val() || 'single';
+            if (!from || !to) {
+                wctx.showError(cfg.pleaseStations);
+                return;
+            }
+            if (from === to) {
+                wctx.showError(FA.msg('errorSameStations', cfg.errorGeneric));
+                return;
+            }
+            state.from = from;
+            state.to = to;
+            state.tripType = trip === 'return' ? 'return' : 'single';
+            state.outbound = null;
+            state.inbound = null;
+            state.date = '';
+            state.fromTitle = $root.find('#mrt_wizard_from option:selected').text();
+            state.toTitle = $root.find('#mrt_wizard_to option:selected').text();
+            wctx.buildStepNav();
+            wctx.showPanel('date');
+            var cm0 = window.MRTDateUtils.currentCalendarYearMonth();
+            wctx.loadCalendar(cm0.year, cm0.month);
+        });
+    }
 
-        var lastOutboundList = [];
-        var lastReturnList = [];
+    function mrtWizardBindCalendarNav(wctx) {
+        var $root = wctx.$root;
+        var state = wctx.state;
+        $root.on('click', '.mrt-journey-wizard__cal-prev', function() {
+            var cm = window.MRTDateUtils.addCalendarMonths(state.calYear, state.calMonth, -1);
+            wctx.loadCalendar(cm.year, cm.month);
+        });
+        $root.on('click', '.mrt-journey-wizard__cal-next', function() {
+            var cm = window.MRTDateUtils.addCalendarMonths(state.calYear, state.calMonth, 1);
+            wctx.loadCalendar(cm.year, cm.month);
+        });
+    }
 
-        var $err = $root.find('.mrt-journey-wizard__errors');
-        var $stepsOl = $root.find('[data-wizard-steps]');
+    function mrtWizardBindDetailAndSelect(wctx) {
+        var $root = wctx.$root;
+        var state = wctx.state;
+        $root.on('click', '.mrt-journey-wizard__btn-detail', function() {
+            mrtWizardToggleDetailRow(wctx, $(this));
+        });
+        $root.on('click', '.mrt-journey-wizard__btn-select', function() {
+            var legCtx = $(this).attr('data-ctx');
+            var idx = parseInt($(this).attr('data-idx'), 10);
+            var list = legCtx === 'return' ? wctx.lastReturnList : wctx.lastOutboundList;
+            var conn = list[idx];
+            if (!conn) {
+                return;
+            }
+            if (legCtx === 'outbound') {
+                state.outbound = conn;
+                state.inbound = null;
+                if (state.tripType === 'return') {
+                    wctx.showPanel('return');
+                    wctx.loadReturnConnections();
+                } else {
+                    wctx.showPanel('summary');
+                    wctx.renderSummary();
+                }
+            } else {
+                state.inbound = conn;
+                wctx.showPanel('summary');
+                wctx.renderSummary();
+            }
+        });
+    }
 
-        function showError(msg) {
+    function mrtWizardBindBack(wctx) {
+        var $root = wctx.$root;
+        var state = wctx.state;
+        $root.on('click', '[data-wizard-back]', function() {
+            var step = $(this).attr('data-wizard-back');
+            wctx.clearError();
+            if (step === 'date') {
+                state.date = '';
+                wctx.showPanel('route');
+            } else if (step === 'outbound') {
+                state.outbound = null;
+                state.inbound = null;
+                wctx.showPanel('date');
+                wctx.loadCalendar(state.calYear, state.calMonth);
+            } else if (step === 'return') {
+                state.inbound = null;
+                wctx.showPanel('outbound');
+                wctx.loadOutboundConnections();
+            } else if (step === 'summary') {
+                if (state.tripType === 'return') {
+                    wctx.showPanel('return');
+                    wctx.loadReturnConnections();
+                } else {
+                    wctx.showPanel('outbound');
+                    wctx.loadOutboundConnections();
+                }
+            }
+        });
+    }
+
+    function mrtWizardBindTripType(wctx) {
+        var $root = wctx.$root;
+        var state = wctx.state;
+        $root.on('change', 'input[name="mrt_wizard_trip_type"]', function() {
+            state.tripType = $root.find('input[name="mrt_wizard_trip_type"]:checked').val() || 'single';
+        });
+    }
+
+    function mrtWizardBindAllEvents(wctx) {
+        mrtWizardBindRouteNext(wctx);
+        mrtWizardBindCalendarNav(wctx);
+        mrtWizardBindDetailAndSelect(wctx);
+        mrtWizardBindBack(wctx);
+        mrtWizardBindTripType(wctx);
+    }
+
+    function mrtWizardAttachRuntimeErrorsAjax(wctx, $err, cfg) {
+        wctx.showError = function(msg) {
             $err.html('<div class="mrt-alert mrt-alert-error"></div>');
             $err.find('.mrt-alert').text(msg);
-        }
-
-        function clearError() {
+        };
+        wctx.clearError = function() {
             $err.empty();
-        }
-
-        function ajaxPost(action, data) {
+        };
+        wctx.ajaxPost = function(action, data) {
             return FA.post(action, data, {
                 ajaxurl: cfg.ajaxurl,
                 nonce: cfg.nonce
             });
-        }
+        };
+    }
 
-        function getStepSequence() {
+    function mrtWizardAttachRuntimeStepNav(wctx, $root, cfg, state, $stepsOl) {
+        wctx.getStepSequence = function() {
             var seq = ['route', 'date', 'outbound'];
             if (state.tripType === 'return') {
                 seq.push('return');
             }
             seq.push('summary');
             return seq;
-        }
-
-        function buildStepNav() {
-            var seq = getStepSequence();
+        };
+        wctx.buildStepNav = function() {
+            var seq = wctx.getStepSequence();
             var labels = {
                 route: cfg.stepRoute,
                 date: cfg.stepDate,
@@ -377,10 +527,9 @@
                 $li.attr('data-wizard-indicator', key);
                 $stepsOl.append($li);
             });
-        }
-
-        function updateStepNav(name) {
-            var seq = getStepSequence();
+        };
+        wctx.updateStepNav = function(name) {
+            var seq = wctx.getStepSequence();
             var idx = seq.indexOf(name);
             $stepsOl.find('li').each(function(i) {
                 var $li = $(this);
@@ -392,9 +541,11 @@
                     $li.removeAttr('aria-current');
                 }
             });
-        }
+        };
+    }
 
-        function showPanel(name) {
+    function mrtWizardAttachRuntimeShowPanel(wctx, $root) {
+        wctx.showPanel = function(name) {
             var $visible = null;
             $root.find('.mrt-journey-wizard__panel').each(function() {
                 var $p = $(this);
@@ -406,7 +557,7 @@
                     $p.attr('hidden', 'hidden').removeClass('mrt-journey-wizard__panel--active');
                 }
             });
-            updateStepNav(name);
+            wctx.updateStepNav(name);
             if ($visible && $visible.length) {
                 var $h = $visible.find('h2, h3').first();
                 if ($h.length) {
@@ -417,24 +568,25 @@
                     });
                 }
             }
-        }
+        };
+    }
 
-        function renderCalendarGrid(year, month, daysMap) {
+    function mrtWizardAttachRuntimeCalendar(wctx, $root, cfg, startOfWeek, state) {
+        wctx.renderCalendarGrid = function(year, month, daysMap) {
             mrtWizardRenderCalendarGrid($root, year, month, daysMap, cfg, startOfWeek, state.date, function(ymd) {
                 state.date = ymd;
-                clearError();
-                showPanel('outbound');
-                loadOutboundConnections();
+                wctx.clearError();
+                wctx.showPanel('outbound');
+                wctx.loadOutboundConnections();
             });
-        }
-
-        function loadCalendar(year, month) {
+        };
+        wctx.loadCalendar = function(year, month) {
             state.calYear = year;
             state.calMonth = month;
             var $calHost = $root.find('[data-wizard-calendar]');
             $calHost.attr('aria-busy', 'true');
             $calHost.html('<p class="mrt-empty">' + SU.escapeHtml(cfg.loading) + '</p>');
-            ajaxPost('mrt_journey_calendar_month', {
+            wctx.ajaxPost('mrt_journey_calendar_month', {
                 from_station: state.from,
                 to_station: state.to,
                 year: year,
@@ -442,88 +594,42 @@
             }).done(function(res) {
                 if (!res || !res.success || !res.data) {
                     $calHost.attr('aria-busy', 'false');
-                    showError(cfg.errorGeneric);
+                    wctx.showError(cfg.errorGeneric);
                     return;
                 }
-                renderCalendarGrid(res.data.year, res.data.month, res.data.days || {});
+                wctx.renderCalendarGrid(res.data.year, res.data.month, res.data.days || {});
                 $calHost.attr('aria-busy', 'false');
             }).fail(function() {
                 $calHost.attr('aria-busy', 'false');
-                showError(FA.msg('networkError', cfg.errorGeneric));
+                wctx.showError(FA.msg('networkError', cfg.errorGeneric));
             });
-        }
+        };
+    }
 
-        function renderConnectionTable($target, list, ctx, legFrom, legTo) {
-            if (ctx === 'outbound') {
-                lastOutboundList = list;
+    function mrtWizardAttachRuntimeConnTable(wctx, cfg, state) {
+        wctx.renderConnectionTable = function($target, list, legCtx, legFrom, legTo) {
+            if (legCtx === 'outbound') {
+                wctx.lastOutboundList = list;
             } else {
-                lastReturnList = list;
+                wctx.lastReturnList = list;
             }
             mrtWizardRenderConnectionTable(
                 $target,
                 list,
-                ctx,
+                legCtx,
                 legFrom,
                 legTo,
                 cfg,
                 window.MRTDateUtils.formatYmdForDisplay(state.date, cfg)
             );
-        }
+        };
+    }
 
-        function toggleDetailRow($btn) {
-            var ctx = $btn.attr('data-ctx');
-            var idx = parseInt($btn.attr('data-idx'), 10);
-            var legFrom = parseInt($btn.attr('data-leg-from'), 10);
-            var legTo = parseInt($btn.attr('data-leg-to'), 10);
-            var list = ctx === 'return' ? lastReturnList : lastOutboundList;
-            var conn = list[idx];
-            if (!conn) {
-                return;
-            }
-            var $tr = $btn.closest('tr');
-            var $next = $tr.next('.mrt-journey-wizard__detail-row');
-            if ($next.length) {
-                $next.toggle();
-                $btn.attr('aria-expanded', $next.is(':visible') ? 'true' : 'false');
-                return;
-            }
-            var $detailTr = $('<tr class="mrt-journey-wizard__detail-row"></tr>');
-            var $cell = $('<td colspan="6"></td>');
-            $detailTr.append($cell);
-            $cell.html('<p class="mrt-empty">' + SU.escapeHtml(cfg.loading) + '</p>');
-            $tr.after($detailTr);
-
-            if (conn.legs && conn.legs.length > 1) {
-                mrtWizardLoadMultiLegDetailRows(conn, $cell, $btn, cfg, ajaxPost);
-                return;
-            }
-
-            ajaxPost('mrt_journey_connection_detail', {
-                from_station: legFrom,
-                to_station: legTo,
-                service_id: conn.service_id
-            }).done(function(res) {
-                if (!res || !res.success || !res.data) {
-                    $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
-                    $cell.find('.mrt-alert').text(cfg.errorGeneric);
-                    return;
-                }
-                var detail = res.data.detail || {};
-                var notice = res.data.notice || '';
-                var html = '<div class="mrt-journey-wizard__detail">' + mrtWizardBuildStopsDetailHtml(detail, notice, cfg) + '</div>';
-                $cell.html(html);
-                $btn.attr('aria-expanded', 'true');
-            }).fail(function() {
-                $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
-                $cell.find('.mrt-alert').text(cfg.errorGeneric);
-                $btn.attr('aria-expanded', 'true');
-            });
-        }
-
-        function loadOutboundConnections() {
+    function mrtWizardAttachRuntimeLoadOutbound(wctx, $root, cfg, state) {
+        wctx.loadOutboundConnections = function() {
             var $box = $root.find('[data-wizard-outbound]');
             $box.html('<p class="mrt-empty">' + SU.escapeHtml(cfg.loading) + '</p>');
-            ajaxPost('mrt_search_journey', {
+            wctx.ajaxPost('mrt_search_journey', {
                 from_station: state.from,
                 to_station: state.to,
                 date: state.date,
@@ -540,19 +646,21 @@
                     $box.html('<div class="mrt-alert mrt-alert-info"><p>' + SU.escapeHtml(cfg.noConnections) + '</p></div>');
                     return;
                 }
-                renderConnectionTable($box, conns, 'outbound', state.from, state.to);
+                wctx.renderConnectionTable($box, conns, 'outbound', state.from, state.to);
             }).fail(function() {
                 $box.html('<div class="mrt-alert mrt-alert-error"></div>');
                 $box.find('.mrt-alert').text(
                     FA.msg('networkError', cfg.errorGeneric)
                 );
             });
-        }
+        };
+    }
 
-        function loadReturnConnections() {
+    function mrtWizardAttachRuntimeLoadReturn(wctx, $root, cfg, state) {
+        wctx.loadReturnConnections = function() {
             var arr = arrivalAtDestination(state.outbound);
             if (!arr) {
-                showError(cfg.errorGeneric);
+                wctx.showError(cfg.errorGeneric);
                 return;
             }
             var $sum = $root.find('[data-wizard-return-summary]');
@@ -565,7 +673,7 @@
 
             var $box = $root.find('[data-wizard-return]');
             $box.html('<p class="mrt-empty">' + SU.escapeHtml(cfg.loading) + '</p>');
-            ajaxPost('mrt_search_journey', {
+            wctx.ajaxPost('mrt_search_journey', {
                 from_station: state.from,
                 to_station: state.to,
                 date: state.date,
@@ -583,16 +691,18 @@
                     $box.html('<div class="mrt-alert mrt-alert-info"><p>' + SU.escapeHtml(cfg.noConnections) + '</p></div>');
                     return;
                 }
-                renderConnectionTable($box, conns, 'return', state.to, state.from);
+                wctx.renderConnectionTable($box, conns, 'return', state.to, state.from);
             }).fail(function() {
                 $box.html('<div class="mrt-alert mrt-alert-error"></div>');
                 $box.find('.mrt-alert').text(
                     FA.msg('networkError', cfg.errorGeneric)
                 );
             });
-        }
+        };
+    }
 
-        function renderSummary() {
+    function mrtWizardAttachRuntimeSummary(wctx, $root, cfg, state) {
+        wctx.renderSummary = function() {
             var $box = $root.find('[data-wizard-summary]');
             var parts = [];
             var ob = state.outbound;
@@ -627,107 +737,72 @@
                 $tw.attr('hidden', 'hidden');
                 $ta.attr('href', '#');
             }
-        }
+        };
+    }
 
-        $root.on('click', '[data-wizard-next="route"]', function() {
-            clearError();
-            var from = parseInt($root.find('#mrt_wizard_from').val(), 10);
-            var to = parseInt($root.find('#mrt_wizard_to').val(), 10);
-            var trip = $root.find('input[name="mrt_wizard_trip_type"]:checked').val() || 'single';
-            if (!from || !to) {
-                showError(cfg.pleaseStations);
-                return;
-            }
-            if (from === to) {
-                showError(FA.msg('errorSameStations', cfg.errorGeneric));
-                return;
-            }
-            state.from = from;
-            state.to = to;
-            state.tripType = trip === 'return' ? 'return' : 'single';
-            state.outbound = null;
-            state.inbound = null;
-            state.date = '';
-            state.fromTitle = $root.find('#mrt_wizard_from option:selected').text();
-            state.toTitle = $root.find('#mrt_wizard_to option:selected').text();
-            buildStepNav();
-            showPanel('date');
-            var cm0 = window.MRTDateUtils.currentCalendarYearMonth();
-            loadCalendar(cm0.year, cm0.month);
-        });
+    /**
+     * Wizard state + UI actions for one root element.
+     *
+     * @param {jQuery} $root Wizard wrapper
+     * @param {object} cfg Localized config (mrtJourneyWizard)
+     * @param {number} startOfWeek 0–6
+     * @return {object} Runtime with methods; events via mrtWizardBindAllEvents
+     */
+    function mrtWizardCreateRuntime($root, cfg, startOfWeek) {
+        var state = {
+            tripType: 'single',
+            from: 0,
+            to: 0,
+            fromTitle: '',
+            toTitle: '',
+            date: '',
+            calYear: 0,
+            calMonth: 0,
+            outbound: null,
+            inbound: null
+        };
+        var lastOutboundList = [];
+        var lastReturnList = [];
+        var $err = $root.find('.mrt-journey-wizard__errors');
+        var $stepsOl = $root.find('[data-wizard-steps]');
 
-        $root.on('click', '.mrt-journey-wizard__cal-prev', function() {
-            var cm = window.MRTDateUtils.addCalendarMonths(state.calYear, state.calMonth, -1);
-            loadCalendar(cm.year, cm.month);
-        });
+        var wctx = {
+            $root: $root,
+            cfg: cfg,
+            startOfWeek: startOfWeek,
+            state: state,
+            lastOutboundList: lastOutboundList,
+            lastReturnList: lastReturnList,
+            $err: $err,
+            $stepsOl: $stepsOl
+        };
 
-        $root.on('click', '.mrt-journey-wizard__cal-next', function() {
-            var cm = window.MRTDateUtils.addCalendarMonths(state.calYear, state.calMonth, 1);
-            loadCalendar(cm.year, cm.month);
-        });
-
-        $root.on('click', '.mrt-journey-wizard__btn-detail', function() {
-            toggleDetailRow($(this));
-        });
-
-        $root.on('click', '.mrt-journey-wizard__btn-select', function() {
-            var ctx = $(this).attr('data-ctx');
-            var idx = parseInt($(this).attr('data-idx'), 10);
-            var list = ctx === 'return' ? lastReturnList : lastOutboundList;
-            var conn = list[idx];
-            if (!conn) {
-                return;
-            }
-            if (ctx === 'outbound') {
-                state.outbound = conn;
-                state.inbound = null;
-                if (state.tripType === 'return') {
-                    showPanel('return');
-                    loadReturnConnections();
-                } else {
-                    showPanel('summary');
-                    renderSummary();
-                }
-            } else {
-                state.inbound = conn;
-                showPanel('summary');
-                renderSummary();
-            }
-        });
-
-        $root.on('click', '[data-wizard-back]', function() {
-            var step = $(this).attr('data-wizard-back');
-            clearError();
-            if (step === 'date') {
-                state.date = '';
-                showPanel('route');
-            } else if (step === 'outbound') {
-                state.outbound = null;
-                state.inbound = null;
-                showPanel('date');
-                loadCalendar(state.calYear, state.calMonth);
-            } else if (step === 'return') {
-                state.inbound = null;
-                showPanel('outbound');
-                loadOutboundConnections();
-            } else if (step === 'summary') {
-                if (state.tripType === 'return') {
-                    showPanel('return');
-                    loadReturnConnections();
-                } else {
-                    showPanel('outbound');
-                    loadOutboundConnections();
-                }
-            }
-        });
+        mrtWizardAttachRuntimeErrorsAjax(wctx, $err, cfg);
+        mrtWizardAttachRuntimeStepNav(wctx, $root, cfg, state, $stepsOl);
+        mrtWizardAttachRuntimeShowPanel(wctx, $root);
+        mrtWizardAttachRuntimeCalendar(wctx, $root, cfg, startOfWeek, state);
+        mrtWizardAttachRuntimeConnTable(wctx, cfg, state);
+        mrtWizardAttachRuntimeLoadOutbound(wctx, $root, cfg, state);
+        mrtWizardAttachRuntimeLoadReturn(wctx, $root, cfg, state);
+        mrtWizardAttachRuntimeSummary(wctx, $root, cfg, state);
 
         state.tripType = $root.find('input[name="mrt_wizard_trip_type"]:checked').val() || 'single';
-        $root.on('change', 'input[name="mrt_wizard_trip_type"]', function() {
-            state.tripType = $root.find('input[name="mrt_wizard_trip_type"]:checked').val() || 'single';
-        });
+        return wctx;
+    }
 
-        buildStepNav();
-        updateStepNav('route');
+    function initOne($root) {
+        var cfg = typeof mrtJourneyWizard !== 'undefined' ? mrtJourneyWizard : null;
+        if (!cfg) {
+            return;
+        }
+        var startOfWeek = parseInt($root.data('startOfWeek'), 10);
+        if (isNaN(startOfWeek) || startOfWeek < 0 || startOfWeek > 6) {
+            startOfWeek = 1;
+        }
+        var wctx = mrtWizardCreateRuntime($root, cfg, startOfWeek);
+        mrtWizardBindAllEvents(wctx);
+        wctx.buildStepNav();
+        wctx.updateStepNav('route');
     }
 
     $(function() {

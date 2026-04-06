@@ -56,31 +56,35 @@
         });
     }
 
+    function stoptimeSavePayloadFromRow($row, id, serviceId, nonce) {
+        var $stationField = $row.find('[data-field="station"]');
+        var stationId = $stationField.find('select').length ? $stationField.find('select').val() : $stationField.find('input').val();
+
+        var data = {
+            action: id === 'new' ? 'mrt_add_stoptime' : 'mrt_update_stoptime',
+            nonce: nonce,
+            service_id: serviceId,
+            station_id: stationId,
+            sequence: $row.find('[data-field="sequence"] input').val(),
+            arrival: $row.find('[data-field="arrival"] input').val(),
+            departure: $row.find('[data-field="departure"] input').val(),
+            pickup: $row.find('[data-field="pickup"] input[type="checkbox"]').is(':checked') ? 1 : 0,
+            dropoff: $row.find('[data-field="dropoff"] input[type="checkbox"]').is(':checked') ? 1 : 0
+        };
+
+        if (id !== 'new') {
+            data.id = id;
+        }
+        return data;
+    }
+
     function bindSave($container, nonce, state) {
         $container.on('click', '.mrt-save-stoptime', function(e) {
             e.stopPropagation();
             var $row = $(this).closest('.mrt-stoptime-row');
             var id = $row.data('stoptime-id');
             var serviceId = $row.data('service-id');
-
-            var $stationField = $row.find('[data-field="station"]');
-            var stationId = $stationField.find('select').length ? $stationField.find('select').val() : $stationField.find('input').val();
-
-            var data = {
-                action: id === 'new' ? 'mrt_add_stoptime' : 'mrt_update_stoptime',
-                nonce: nonce,
-                service_id: serviceId,
-                station_id: stationId,
-                sequence: $row.find('[data-field="sequence"] input').val(),
-                arrival: $row.find('[data-field="arrival"] input').val(),
-                departure: $row.find('[data-field="departure"] input').val(),
-                pickup: $row.find('[data-field="pickup"] input[type="checkbox"]').is(':checked') ? 1 : 0,
-                dropoff: $row.find('[data-field="dropoff"] input[type="checkbox"]').is(':checked') ? 1 : 0
-            };
-
-            if (id !== 'new') {
-                data.id = id;
-            }
+            var data = stoptimeSavePayloadFromRow($row, id, serviceId, nonce);
 
             if (!data.station_id || !data.sequence) {
                 alert(u.msg('pleaseFillStationAndSequence', 'Please fill in Station and Sequence.'));

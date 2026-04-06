@@ -98,6 +98,42 @@
         });
     }
 
+    function addServiceToTimetableAjax($btn, nonce, timetableId, routeId, trainTypeId, endStationId) {
+        $.ajax({
+            url: window.MRTAdminUtils.getAjaxUrl(),
+            type: 'POST',
+            data: {
+                action: 'mrt_add_service_to_timetable',
+                nonce: nonce,
+                timetable_id: timetableId,
+                route_id: routeId,
+                train_type_id: trainTypeId,
+                end_station_id: endStationId
+            },
+            success: function(response) {
+                if (response.success) {
+                    var $tbody = $('#mrt-timetable-services-tbody');
+                    var $newRow = $tbody.find('.mrt-new-service-row');
+                    var $row = buildNewServiceRow(response, timetableId);
+                    $newRow.before($row);
+
+                    var tripAddedMsg = u.msg('tripAdded', 'Trip added successfully.');
+                    showTemporaryNotice(tripAddedMsg, 'success');
+                    resetNewServiceForm();
+                } else {
+                    var errMsg = (response.data && response.data.message) ? String(response.data.message) : 'Error adding trip.';
+                    showTemporaryNotice(errMsg, 'error');
+                }
+            },
+            error: function() {
+                showTemporaryNotice(u.msg('networkError', 'Network error. Please try again.'), 'error');
+            },
+            complete: function() {
+                $btn.prop('disabled', false).text($btn.data('original-text') || 'Add Trip');
+            }
+        });
+    }
+
     function bindAddService(nonce) {
         $('#mrt-add-service-to-timetable').on('click', function(e) {
             e.preventDefault();
@@ -121,42 +157,9 @@
             if (!$btn.data('original-text')) {
                 $btn.data('original-text', $btn.text());
             }
-            var addingText = u.msg('adding', 'Adding...');
-            $btn.prop('disabled', true).text(addingText);
+            $btn.prop('disabled', true).text(u.msg('adding', 'Adding...'));
 
-            $.ajax({
-                url: window.MRTAdminUtils.getAjaxUrl(),
-                type: 'POST',
-                data: {
-                    action: 'mrt_add_service_to_timetable',
-                    nonce: nonce,
-                    timetable_id: timetableId,
-                    route_id: routeId,
-                    train_type_id: trainTypeId,
-                    end_station_id: endStationId
-                },
-                success: function(response) {
-                    if (response.success) {
-                        var $tbody = $('#mrt-timetable-services-tbody');
-                        var $newRow = $tbody.find('.mrt-new-service-row');
-                        var $row = buildNewServiceRow(response, timetableId);
-                        $newRow.before($row);
-
-                        var tripAddedMsg = u.msg('tripAdded', 'Trip added successfully.');
-                        showTemporaryNotice(tripAddedMsg, 'success');
-                        resetNewServiceForm();
-                    } else {
-                        var errMsg = (response.data && response.data.message) ? String(response.data.message) : 'Error adding trip.';
-                        showTemporaryNotice(errMsg, 'error');
-                    }
-                },
-                error: function() {
-                    showTemporaryNotice(u.msg('networkError', 'Network error. Please try again.'), 'error');
-                },
-                complete: function() {
-                    $btn.prop('disabled', false).text($btn.data('original-text') || 'Add Trip');
-                }
-            });
+            addServiceToTimetableAjax($btn, nonce, timetableId, routeId, trainTypeId, endStationId);
         });
     }
 

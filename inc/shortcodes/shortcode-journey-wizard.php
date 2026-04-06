@@ -238,12 +238,9 @@ function MRT_render_journey_wizard_step_placeholders($title_out, $panel_out, $ti
 }
 
 /**
- * Render [museum_journey_wizard]
- *
- * @param array|string $atts Shortcode attributes
- * @return string HTML
+ * @return array{ticket_url: string, hero: array{image: string, subtitle: string}}
  */
-function MRT_render_shortcode_journey_wizard($atts) {
+function MRT_journey_wizard_parse_shortcode_atts($atts): array {
     $atts = shortcode_atts(
         [
             'ticket_url' => '',
@@ -253,17 +250,21 @@ function MRT_render_shortcode_journey_wizard($atts) {
         (array) $atts,
         'museum_journey_wizard'
     );
-    $ticket_url = esc_url($atts['ticket_url']);
-    $hero = [
-        'image' => is_string($atts['hero_image']) ? $atts['hero_image'] : '',
-        'subtitle' => is_string($atts['hero_subtitle']) ? $atts['hero_subtitle'] : '',
+
+    return [
+        'ticket_url' => esc_url($atts['ticket_url']),
+        'hero' => [
+            'image' => is_string($atts['hero_image']) ? $atts['hero_image'] : '',
+            'subtitle' => is_string($atts['hero_subtitle']) ? $atts['hero_subtitle'] : '',
+        ],
     ];
-    $stations = MRT_get_all_stations();
-    if (empty($stations)) {
-        return '<p class="mrt-alert mrt-alert-info">' . esc_html__('No stations are available.', 'museum-railway-timetable') . '</p>';
-    }
-    $u = wp_unique_id('mrtjw');
-    $ids = [
+}
+
+/**
+ * @return array<string, string>
+ */
+function MRT_journey_wizard_step_element_ids(string $u): array {
+    return [
         'route_title' => $u . '-route-t',
         'route_panel' => $u . '-route-p',
         'date_title' => $u . '-date-t',
@@ -275,6 +276,25 @@ function MRT_render_shortcode_journey_wizard($atts) {
         'sum_title' => $u . '-sum-t',
         'sum_panel' => $u . '-sum-p',
     ];
+}
+
+/**
+ * Render [museum_journey_wizard]
+ *
+ * @param array|string $atts Shortcode attributes
+ * @return string HTML
+ */
+function MRT_render_shortcode_journey_wizard($atts) {
+    $parsed = MRT_journey_wizard_parse_shortcode_atts($atts);
+    $ticket_url = $parsed['ticket_url'];
+    $hero = $parsed['hero'];
+
+    $stations = MRT_get_all_stations();
+    if (empty($stations)) {
+        return '<p class="mrt-alert mrt-alert-info">' . esc_html__('No stations are available.', 'museum-railway-timetable') . '</p>';
+    }
+    $u = wp_unique_id('mrtjw');
+    $ids = MRT_journey_wizard_step_element_ids($u);
     ob_start();
     ?>
     <div

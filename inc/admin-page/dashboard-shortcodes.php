@@ -8,14 +8,10 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
- * Render shortcodes documentation section
+ * Month view shortcode docs.
  */
-function MRT_render_dashboard_shortcodes() {
+function MRT_render_dashboard_shortcodes_block_month(): void {
     ?>
-    <div class="mrt-section mrt-bg-info">
-        <h2><?php esc_html_e('Shortcodes', 'museum-railway-timetable'); ?></h2>
-        <p><?php esc_html_e('Use these shortcodes to display timetables on your pages and posts.', 'museum-railway-timetable'); ?></p>
-
         <div class="mrt-mt-1">
             <h3 class="mrt-heading mrt-mt-0">1. <?php esc_html_e('Month View', 'museum-railway-timetable'); ?></h3>
             <p><code>[museum_timetable_month month="2025-06" train_type="" service="" legend="1" show_counts="1"]</code></p>
@@ -32,7 +28,14 @@ function MRT_render_dashboard_shortcodes() {
             <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
             <pre class="mrt-box mrt-code-block">[museum_timetable_month month="2025-06" train_type="steam" show_counts="1"]</pre>
         </div>
+    <?php
+}
 
+/**
+ * Journey wizard shortcode docs.
+ */
+function MRT_render_dashboard_shortcodes_block_wizard(): void {
+    ?>
         <div class="mrt-mt-1">
             <h3>2. <?php esc_html_e('Journey wizard (multi-step)', 'museum-railway-timetable'); ?></h3>
             <p><code>[museum_journey_wizard]</code></p>
@@ -48,7 +51,14 @@ function MRT_render_dashboard_shortcodes() {
             <p><strong><?php esc_html_e('Example:', 'museum-railway-timetable'); ?></strong></p>
             <pre class="mrt-box mrt-code-block">[museum_journey_wizard ticket_url="https://example.com/biljetter" hero_subtitle="Välj rutt och datum"]</pre>
         </div>
+    <?php
+}
 
+/**
+ * Timetable overview shortcode docs.
+ */
+function MRT_render_dashboard_shortcodes_block_overview(): void {
+    ?>
         <div class="mrt-mt-1">
             <h3>3. <?php esc_html_e('Timetable Overview', 'museum-railway-timetable'); ?></h3>
             <p><code>[museum_timetable_overview timetable_id="123"]</code></p>
@@ -86,7 +96,14 @@ function MRT_render_dashboard_shortcodes() {
                 <strong><?php esc_html_e('Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('You can preview how the timetable will look in the "Timetable Overview" meta box when editing a timetable in the admin.', 'museum-railway-timetable'); ?>
             </p>
         </div>
+    <?php
+}
 
+/**
+ * Journey planner shortcode docs.
+ */
+function MRT_render_dashboard_shortcodes_block_planner(): void {
+    ?>
         <div class="mrt-mt-1">
             <h3>4. <?php esc_html_e('Journey Planner (Reseplanerare)', 'museum-railway-timetable'); ?></h3>
             <p><code>[museum_journey_planner]</code></p>
@@ -124,6 +141,23 @@ function MRT_render_dashboard_shortcodes() {
                 <strong><?php esc_html_e('Tip:', 'museum-railway-timetable'); ?></strong> <?php esc_html_e('The journey planner automatically shows today\'s date by default, but users can select any date to check future connections. Make sure you have created timetables with dates and services with stop times for the dates you want to support.', 'museum-railway-timetable'); ?>
             </p>
         </div>
+    <?php
+}
+
+/**
+ * Render shortcodes documentation section
+ */
+function MRT_render_dashboard_shortcodes(): void {
+    ?>
+    <div class="mrt-section mrt-bg-info">
+        <h2><?php esc_html_e('Shortcodes', 'museum-railway-timetable'); ?></h2>
+        <p><?php esc_html_e('Use these shortcodes to display timetables on your pages and posts.', 'museum-railway-timetable'); ?></p>
+        <?php
+        MRT_render_dashboard_shortcodes_block_month();
+        MRT_render_dashboard_shortcodes_block_wizard();
+        MRT_render_dashboard_shortcodes_block_overview();
+        MRT_render_dashboard_shortcodes_block_planner();
+        ?>
     </div>
     <?php
 }

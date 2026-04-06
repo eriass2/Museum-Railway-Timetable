@@ -242,6 +242,23 @@ function MRT_month_shortcode_render_full($first_ts, array $atts, array $dates, $
  * @param array $atts Shortcode attributes
  * @return string HTML
  */
+/**
+ * Resolve calendar month start timestamp from shortcode atts.
+ *
+ * @param array<string, mixed> $atts
+ */
+function MRT_month_shortcode_resolve_month_start(array $atts, int $now_ts): int|false {
+    if (!empty($atts['month']) && preg_match('/^\d{4}-\d{2}$/', (string) $atts['month'])) {
+        $firstDay = $atts['month'] . '-01';
+        $first_ts = strtotime($firstDay . ' 00:00:00', $now_ts);
+        if (false === $first_ts) {
+            return strtotime(date('Y-m-01', $now_ts));
+        }
+        return $first_ts;
+    }
+    return strtotime(date('Y-m-01', $now_ts));
+}
+
 function MRT_render_shortcode_month($atts) {
     $atts = shortcode_atts([
         'month' => '',
@@ -257,30 +274,20 @@ function MRT_render_shortcode_month($atts) {
 
     $datetime = MRT_get_current_datetime();
     $now_ts = $datetime['timestamp'];
-    if (!empty($atts['month']) && preg_match('/^\d{4}-\d{2}$/', $atts['month'])) {
-        $firstDay = $atts['month'] . '-01';
-        $first_ts = strtotime($firstDay . ' 00:00:00', $now_ts);
-        if (false === $first_ts) {
-            $first_ts = strtotime(date('Y-m-01', $now_ts));
-            $firstDay = date('Y-m-01', $first_ts);
-        }
-    } else {
-        $first_ts = strtotime(date('Y-m-01', $now_ts));
-        $firstDay = date('Y-m-01', $first_ts);
-    }
+    $first_ts = MRT_month_shortcode_resolve_month_start($atts, $now_ts);
 
     if (false === $first_ts) {
         return MRT_render_alert(__('Invalid date.', 'museum-railway-timetable'), 'error');
     }
 
-    $year = intval(date('Y', $first_ts));
-    $month = intval(date('m', $first_ts));
-    $daysInMonth = intval(date('t', $first_ts));
+    $year = (int) date('Y', $first_ts);
+    $month = (int) date('m', $first_ts);
+    $daysInMonth = (int) date('t', $first_ts);
     if ($year <= 0 || $month <= 0 || $month > 12 || $daysInMonth <= 0) {
         return MRT_render_alert(__('Invalid date.', 'museum-railway-timetable'), 'error');
     }
 
-    $weekdayFirst = intval(date('N', $first_ts));
+    $weekdayFirst = (int) date('N', $first_ts);
     $startMonday = !empty($atts['start_monday']);
 
     $dates = MRT_month_shortcode_collect_day_meta($year, $month, $daysInMonth, $atts);

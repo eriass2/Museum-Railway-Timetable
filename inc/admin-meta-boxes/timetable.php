@@ -10,12 +10,11 @@ if (!defined('ABSPATH')) { exit; }
 require_once MRT_PATH . 'inc/admin-meta-boxes/timetable-dates-script.php';
 
 /**
- * Render timetable type and date sections (HTML only, no script)
+ * Timetable colour type field.
  *
  * @param WP_Post $post Current post object
- * @param array $dates Validated dates array
  */
-function MRT_render_timetable_date_sections($post, $dates) {
+function MRT_render_timetable_type_field(WP_Post $post): void {
     $timetable_type = get_post_meta($post->ID, 'mrt_timetable_type', true);
     ?>
     <table class="form-table mrt-mb-lg">
@@ -33,6 +32,14 @@ function MRT_render_timetable_date_sections($post, $dates) {
             </td>
         </tr>
     </table>
+    <?php
+}
+
+/**
+ * Pattern + single-date UI blocks (dates meta box).
+ */
+function MRT_render_timetable_date_pattern_and_single_blocks(): void {
+    ?>
     <div class="mrt-box mrt-date-pattern-section">
         <h3 class="mrt-heading mrt-mt-0"><?php esc_html_e('Add Dates from Pattern', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('Select a day of the week and a date range to automatically add all matching dates.', 'museum-railway-timetable'); ?></p>
@@ -71,11 +78,21 @@ function MRT_render_timetable_date_sections($post, $dates) {
             <button type="button" id="mrt-add-single-date" class="button"><?php esc_html_e('Add Date', 'museum-railway-timetable'); ?></button>
         </p>
     </div>
+    <?php
+}
+
+/**
+ * Selected dates list (server-rendered rows).
+ *
+ * @param array<int, string> $dates Validated YYYY-MM-DD strings
+ */
+function MRT_render_timetable_selected_dates_list(array $dates): void {
+    ?>
     <div class="mrt-box mrt-mt-lg">
         <h3 class="mrt-heading mrt-mt-0"><?php esc_html_e('Selected Dates', 'museum-railway-timetable'); ?></h3>
         <p class="description"><?php esc_html_e('All dates when this timetable applies. Click "Remove" to remove individual dates.', 'museum-railway-timetable'); ?></p>
         <div id="mrt-timetable-dates-container" class="mrt-mt-sm">
-            <?php foreach ($dates as $date): ?>
+            <?php foreach ($dates as $date) : ?>
                 <div class="mrt-box mrt-box-sm mrt-form-row mrt-date-row" data-date="<?php echo esc_attr($date); ?>">
                     <input type="hidden" name="mrt_timetable_dates[]" value="<?php echo esc_attr($date); ?>" />
                     <span class="mrt-font-medium mrt-flex-1"><?php echo esc_html(date_i18n(get_option('date_format'), strtotime($date))); ?></span>
@@ -84,11 +101,23 @@ function MRT_render_timetable_date_sections($post, $dates) {
                 </div>
             <?php endforeach; ?>
         </div>
-        <?php if (empty($dates)): ?>
+        <?php if ($dates === []) : ?>
             <p class="description" id="mrt-no-dates-message"><?php esc_html_e('No dates selected. Add dates using patterns or single date selection above.', 'museum-railway-timetable'); ?></p>
         <?php endif; ?>
     </div>
     <?php
+}
+
+/**
+ * Render timetable type and date sections (HTML only, no script)
+ *
+ * @param WP_Post $post Current post object
+ * @param array<int, string> $dates Validated dates array
+ */
+function MRT_render_timetable_date_sections(WP_Post $post, array $dates): void {
+    MRT_render_timetable_type_field($post);
+    MRT_render_timetable_date_pattern_and_single_blocks();
+    MRT_render_timetable_selected_dates_list($dates);
 }
 
 /**

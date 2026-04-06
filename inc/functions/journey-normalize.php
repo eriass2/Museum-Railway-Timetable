@@ -252,3 +252,34 @@ function MRT_normalize_connection_for_api($item, $dateYmd, $from_station_id, $to
         'notice' => $extra['notice'],
     ];
 }
+
+/**
+ * One-way journey search: normalized API connections + planner table rows (shared by AJAX + shortcode SSR).
+ *
+ * @return array{normalized: array<int, array<string, mixed>>, planner_rows: array<int, mixed>}
+ */
+function MRT_journey_single_trip_normalized_and_planner_rows(int $from_station_id, int $to_station_id, string $dateYmd): array {
+    $min_xfer = (int) apply_filters('mrt_min_transfer_minutes', 5);
+    $raw_multi = MRT_find_multi_leg_connections(
+        $from_station_id,
+        $to_station_id,
+        $dateYmd,
+        $min_xfer,
+        true
+    );
+    $normalized = [];
+    foreach ($raw_multi as $item) {
+        $normalized[] = MRT_normalize_connection_for_api(
+            $item,
+            $dateYmd,
+            $from_station_id,
+            $to_station_id
+        );
+    }
+    $planner_rows = array_map('MRT_journey_normalized_to_planner_row', $normalized);
+
+    return [
+        'normalized' => $normalized,
+        'planner_rows' => $planner_rows,
+    ];
+}

@@ -191,58 +191,55 @@ function MRT_get_timetable_dates($timetable_id) {
  * @param string|null $dateYmd Optional date for date-specific train types
  * @return array Grouped services array
  */
+/**
+ * @param array<string, mixed> $grouped_services
+ */
+function MRT_group_services_by_route_add_service(array &$grouped_services, $service, $dateYmd): void {
+    $route_id = get_post_meta($service->ID, 'mrt_service_route_id', true);
+    $direction = get_post_meta($service->ID, 'mrt_direction', true);
+
+    if (!$route_id) {
+        return;
+    }
+
+    $route = get_post($route_id);
+    if (!$route) {
+        return;
+    }
+
+    $route_stations = MRT_get_route_stations($route_id);
+    $train_type = MRT_get_service_train_type($service->ID, $dateYmd);
+    $group_key = $route_id . '_' . $direction;
+
+    if (!isset($grouped_services[$group_key])) {
+        $grouped_services[$group_key] = [
+            'route' => $route,
+            'route_id' => $route_id,
+            'direction' => $direction,
+            'stations' => $route_stations,
+            'services' => [],
+        ];
+    }
+
+    $stop_times_by_station = MRT_get_service_stop_times($service->ID);
+
+    $grouped_services[$group_key]['services'][] = [
+        'service' => $service,
+        'train_type' => $train_type,
+        'stop_times' => $stop_times_by_station,
+    ];
+}
+
 function MRT_group_services_by_route($services, $dateYmd = null) {
-    global $wpdb;
-    
     if (empty($services)) {
         return [];
     }
-    
+
     $grouped_services = [];
-    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
-    
+
     foreach ($services as $service) {
-        $route_id = get_post_meta($service->ID, 'mrt_service_route_id', true);
-        $direction = get_post_meta($service->ID, 'mrt_direction', true);
-        
-        if (!$route_id) {
-            continue;
-        }
-        
-        // Get route info
-        $route = get_post($route_id);
-        if (!$route) {
-            continue;
-        }
-        
-        // Get route stations using helper function
-        $route_stations = MRT_get_route_stations($route_id);
-        
-        // Get train type using helper function
-        $train_type = MRT_get_service_train_type($service->ID, $dateYmd);
-        
-        // Create group key: route_id + direction
-        $group_key = $route_id . '_' . $direction;
-        
-        if (!isset($grouped_services[$group_key])) {
-            $grouped_services[$group_key] = [
-                'route' => $route,
-                'route_id' => $route_id,
-                'direction' => $direction,
-                'stations' => $route_stations,
-                'services' => [],
-            ];
-        }
-        
-        // Get stop times using helper function
-        $stop_times_by_station = MRT_get_service_stop_times($service->ID);
-        
-        $grouped_services[$group_key]['services'][] = [
-            'service' => $service,
-            'train_type' => $train_type,
-            'stop_times' => $stop_times_by_station,
-        ];
+        MRT_group_services_by_route_add_service($grouped_services, $service, $dateYmd);
     }
-    
+
     return $grouped_services;
 }

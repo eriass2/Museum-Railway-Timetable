@@ -154,33 +154,13 @@ function MRT_import_create_services_in($route_rev_id, $route_rev_station_ids, $s
     return $created;
 }
 
-function MRT_import_insert_service($svc, $title, $route_id, $station_ids, $end_station_id, $timetable_id, $table, $train_type_ids) {
+/**
+ * @param array<int, mixed> $times
+ * @param array<int, string> $pickup
+ * @param array<int, int> $station_ids
+ */
+function MRT_import_insert_stoptimes_for_service(int $service_id, array $station_ids, array $times, array $pickup, string $table): void {
     global $wpdb;
-    $num = $svc[0];
-    $train_type_name = $svc[1];
-    $times = $svc[2];
-    $pickup = $svc[3];
-    $train_type_id = $train_type_ids[$train_type_name] ?? null;
-
-    if (MRT_get_post_by_title($title, 'mrt_service')) return 0;
-
-    $service_id = wp_insert_post([
-        'post_type' => 'mrt_service',
-        'post_title' => $title,
-        'post_status' => 'publish',
-    ]);
-    if (!$service_id || $service_id instanceof \WP_Error) {
-        return 0;
-    }
-
-    if ($train_type_id) {
-        wp_set_object_terms($service_id, (int) $train_type_id, 'mrt_train_type');
-    }
-    update_post_meta($service_id, 'mrt_service_timetable_id', $timetable_id);
-    update_post_meta($service_id, 'mrt_service_route_id', $route_id);
-    update_post_meta($service_id, 'mrt_service_number', $num);
-    update_post_meta($service_id, 'mrt_service_end_station_id', $end_station_id);
-
     $seq = 0;
     $n = count($station_ids);
     for ($i = 0; $i < $n; $i++) {
@@ -199,7 +179,9 @@ function MRT_import_insert_service($svc, $title, $route_id, $station_ids, $end_s
         $sym = $pickup[$i] ?? '';
         $pu = ($sym === 'P' || $sym === 'X' || $sym === '') ? 1 : 0;
         $do = ($sym === 'X' || $sym === '') ? 1 : 0;
-        if ($sym === 'P') $do = 0;
+        if ($sym === 'P') {
+            $do = 0;
+        }
 
         $wpdb->insert($table, [
             'service_post_id' => $service_id,
@@ -212,5 +194,36 @@ function MRT_import_insert_service($svc, $title, $route_id, $station_ids, $end_s
         ], ['%d', '%d', '%d', '%s', '%s', '%d', '%d']);
         $seq++;
     }
+}
+
+function MRT_import_insert_service($svc, $title, $route_id, $station_ids, $end_station_id, $timetable_id, $table, $train_type_ids) {
+    $num = $svc[0];
+    $train_type_name = $svc[1];
+    $times = $svc[2];
+    $pickup = $svc[3];
+    $train_type_id = $train_type_ids[$train_type_name] ?? null;
+
+    if (MRT_get_post_by_title($title, 'mrt_service')) {
+        return 0;
+    }
+
+    $service_id = wp_insert_post([
+        'post_type' => 'mrt_service',
+        'post_title' => $title,
+        'post_status' => 'publish',
+    ]);
+    if (!$service_id || $service_id instanceof \WP_Error) {
+        return 0;
+    }
+
+    if ($train_type_id) {
+        wp_set_object_terms($service_id, (int) $train_type_id, 'mrt_train_type');
+    }
+    update_post_meta($service_id, 'mrt_service_timetable_id', $timetable_id);
+    update_post_meta($service_id, 'mrt_service_route_id', $route_id);
+    update_post_meta($service_id, 'mrt_service_number', $num);
+    update_post_meta($service_id, 'mrt_service_end_station_id', $end_station_id);
+
+    MRT_import_insert_stoptimes_for_service($service_id, $station_ids, $times, $pickup, $table);
     return 1;
 }

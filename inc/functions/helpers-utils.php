@@ -183,56 +183,55 @@ function MRT_format_time_display(?string $time): string {
  * @param array|null $stop_time Stop time data array with keys: arrival_time, departure_time, pickup_allowed, dropoff_allowed
  * @return string Formatted time display (e.g., "10.13", "P 10.13", "X", "|", "—")
  */
-function MRT_format_stop_time_display(?array $stop_time): string {
-    if (!$stop_time) {
-        return '—';
-    }
-    
+/**
+ * Prefix (P/A) and time fragment for a stopping row.
+ *
+ * @return array{0: string, 1: string} [symbol_prefix, time_str]
+ */
+function MRT_stop_time_prefix_and_time_parts(array $stop_time): array {
     $arrival = $stop_time['arrival_time'] ?? '';
     $departure = $stop_time['departure_time'] ?? '';
     $pickup_allowed = !empty($stop_time['pickup_allowed']);
     $dropoff_allowed = !empty($stop_time['dropoff_allowed']);
-    
-    // Determine if train stops here
-    $stops_here = $pickup_allowed || $dropoff_allowed;
-    
-    // If train doesn't stop (no pickup, no dropoff), show vertical bar
-    if (!$stops_here) {
-        return '|';
-    }
-    
-    // Determine symbol prefix based on stop behavior
+
     $symbol_prefix = '';
-    
-    // Determine symbol based on pickup/dropoff behavior
     if ($pickup_allowed && !$dropoff_allowed) {
-        // Only pickup allowed = P (påstigning)
         $symbol_prefix = 'P ';
     } elseif (!$pickup_allowed && $dropoff_allowed) {
-        // Only dropoff allowed = A (avstigning)
         $symbol_prefix = 'A ';
     }
-    // If both allowed, no prefix (normal stop)
-    
-    // Get time string (prefer departure, fallback to arrival)
+
     if ($departure) {
         $time_str = $departure;
     } elseif ($arrival) {
         $time_str = $arrival;
+    } elseif ($pickup_allowed && $dropoff_allowed) {
+        return ['', 'X'];
     } else {
-        // No time specified - show X if both pickup/dropoff, otherwise just symbol
-        if ($pickup_allowed && $dropoff_allowed) {
-            $time_str = 'X';
-            $symbol_prefix = ''; // X replaces prefix
-        } else {
-            $time_str = '';
-        }
+        $time_str = '';
     }
-    
-    // Convert HH:MM to HH.MM format using helper
-    if ($time_str && $time_str !== 'X') {
+
+    if ($time_str !== '' && $time_str !== 'X') {
         $time_str = MRT_format_time_display($time_str);
     }
-    
+
+    return [$symbol_prefix, $time_str];
+}
+
+function MRT_format_stop_time_display(?array $stop_time): string {
+    if (!$stop_time) {
+        return '—';
+    }
+
+    $pickup_allowed = !empty($stop_time['pickup_allowed']);
+    $dropoff_allowed = !empty($stop_time['dropoff_allowed']);
+    $stops_here = $pickup_allowed || $dropoff_allowed;
+
+    if (!$stops_here) {
+        return '|';
+    }
+
+    [$symbol_prefix, $time_str] = MRT_stop_time_prefix_and_time_parts($stop_time);
+
     return $symbol_prefix . $time_str;
 }

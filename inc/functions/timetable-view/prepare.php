@@ -1,84 +1,112 @@
 <?php
+
+declare(strict_types=1);
+
 /**
  * Prepare service information for timetable rendering
  *
  * @package Museum_Railway_Timetable
  */
 
-if (!defined('ABSPATH')) { exit; }
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * @param WP_Post $service
+ * @param WP_Term|null $train_type
+ * @return array{classes: array<int, string>, is_special: bool, special_name: string, service_number: string|int}
+ */
+function MRT_prepare_service_train_display(WP_Post $service, $train_type): array {    $service_number = get_post_meta($service->ID, 'mrt_service_number', true);
+    if (empty($service_number)) {
+        $service_number = $service->ID;
+    }
+
+    $classes = ['mrt-service-col'];
+    $is_special = false;
+    $special_name = '';
+    if ($train_type) {
+        $train_type_slug = $train_type->slug;
+        $train_type_name_lower = strtolower($train_type->name);
+        if (strpos($train_type_name_lower, 'buss') !== false || strpos($train_type_slug, 'bus') !== false) {
+            $classes[] = 'mrt-service-bus';
+        } elseif (strpos($train_type_name_lower, 'express') !== false || strpos($service->post_title, 'express') !== false) {
+            $classes[] = 'mrt-service-special';
+            $is_special = true;
+            if (strpos(strtolower($service->post_title), 'express') !== false) {
+                $special_name = 'Express';
+            } elseif (strpos(strtolower($service->post_title), 'thun') !== false) {
+                $special_name = "Thun's-expressen";
+            }
+        }
+    }
+
+    return [
+        'classes' => $classes,
+        'is_special' => $is_special,
+        'special_name' => $special_name,
+        'service_number' => $service_number,
+    ];
+}
+
+/**
+ * Connections after this service at end station (for overview footnotes).
+ *
+ * @param array<string, mixed> $service_stop_times
+ * @param array<string, mixed> $destination_data
+ * @return array<int, mixed>
+ */
+function MRT_prepare_service_end_connections(WP_Post $service, $service_stop_times, $destination_data, string $dateYmd): array {
+    $connections = [];
+    if (empty($destination_data['end_station_id'])) {
+        return $connections;
+    }
+    $end_station_id = $destination_data['end_station_id'];
+    if (!isset($service_stop_times[$end_station_id])) {
+        return $connections;
+    }
+    $end_stop = $service_stop_times[$end_station_id];
+    $end_arrival = $end_stop['arrival_time'] ?? '';
+    if ($end_arrival && $dateYmd !== '') {
+        $connections = MRT_find_connecting_services($end_station_id, $service->ID, $end_arrival, $dateYmd, 2);
+    }
+    return $connections;
+}
 
 /**
  * Prepare service information and CSS classes for timetable rendering
  *
- * @param array $services_list Array of service data from MRT_group_services_by_route
- * @param string $dateYmd Date in YYYY-MM-DD format
- * @return array Array with 'service_classes', 'service_info', and 'all_connections'
+ * @param array<int, array<string, mixed>> $services_list From MRT_group_services_by_route
+ * @return array{service_classes: array<int, array<int, string>>, service_info: array<int, array<string, mixed>>, all_connections: array<int, mixed>}
  */
-function MRT_prepare_service_info($services_list, $dateYmd) {
+function MRT_prepare_service_info(array $services_list, string $dateYmd): array {
     $service_classes = [];
     $service_info = [];
     $all_connections = [];
 
-    foreach ($services_list as $idx => $service_data):
+    foreach ($services_list as $idx => $service_data) {
         $service = $service_data['service'];
         $train_type = $service_data['train_type'];
+        $disp = MRT_prepare_service_train_display($service, $train_type);
+        $service_classes[$idx] = $disp['classes'];
 
-        // Get train number from meta, fallback to service ID
-        $service_number = get_post_meta($service->ID, 'mrt_service_number', true);
-        if (empty($service_number)) {
-            $service_number = $service->ID;
-        }
-
-        // Determine CSS classes
-        $classes = ['mrt-service-col'];
-        $is_special = false;
-        $special_name = '';
-        if ($train_type) {
-            $train_type_slug = $train_type->slug;
-            $train_type_name_lower = strtolower($train_type->name);
-            if (strpos($train_type_name_lower, 'buss') !== false || strpos($train_type_slug, 'bus') !== false) {
-                $classes[] = 'mrt-service-bus';
-            } elseif (strpos($train_type_name_lower, 'express') !== false || strpos($service->post_title, 'express') !== false) {
-                $classes[] = 'mrt-service-special';
-                $is_special = true;
-                if (strpos(strtolower($service->post_title), 'express') !== false) {
-                    $special_name = 'Express';
-                } elseif (strpos(strtolower($service->post_title), 'thun') !== false) {
-                    $special_name = "Thun's-expressen";
-                }
-            }
-        }
-        $service_classes[$idx] = $classes;
-
-        // Get stop times for this service
         $service_stop_times = $service_data['stop_times'] ?? [];
-
-        // Check for connections at end station
-        $connections = [];
         $destination_data = MRT_get_service_destination($service->ID);
-        if (!empty($destination_data['end_station_id'])) {
-            $end_station_id = $destination_data['end_station_id'];
-            if (isset($service_stop_times[$end_station_id])) {
-                $end_stop = $service_stop_times[$end_station_id];
-                $end_arrival = $end_stop['arrival_time'] ?? '';
-                if ($end_arrival && $dateYmd) {
-                    $connections = MRT_find_connecting_services($end_station_id, $service->ID, $end_arrival, $dateYmd, 2);
-                }
-            }
-        }
-        if (!empty($connections)) {
+        $connections = MRT_prepare_service_end_connections($service, $service_stop_times, $destination_data, $dateYmd);
+
+        if ($connections !== []) {
             $all_connections[$idx] = $connections;
         }
 
         $service_info[$idx] = [
             'service' => $service,
             'train_type' => $train_type,
-            'service_number' => $service_number,
-            'is_special' => $is_special,
-            'special_name' => $special_name,
+            'service_number' => $disp['service_number'],
+            'is_special' => $disp['is_special'],
+            'special_name' => $disp['special_name'],
             'destination' => $destination_data['destination'] ?? '',
         ];
-    endforeach;
+    }
 
     return [
         'service_classes' => $service_classes,

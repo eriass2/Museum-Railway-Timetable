@@ -12,66 +12,85 @@ if (!defined('ABSPATH')) { exit; }
  *
  * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
  */
+/**
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_map_existing_stoptimes_by_station(int $service_id): array {
+    if ($service_id <= 0) {
+        return [];
+    }
+    global $wpdb;
+    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
+    $stoptimes = $wpdb->get_results($wpdb->prepare(
+        "SELECT * FROM $stoptimes_table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
+        $service_id
+    ), ARRAY_A);
+    $existing_stoptimes = [];
+    foreach ($stoptimes as $st) {
+        $existing_stoptimes[$st['station_post_id']] = $st;
+    }
+    return $existing_stoptimes;
+}
+
+/**
+ * @param array<int> $route_stations
+ * @param array<int, array<string, mixed>> $existing_stoptimes
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_build_stoptimes_station_rows(array $route_stations, array $existing_stoptimes): array {
+    if ($route_stations === []) {
+        return [];
+    }
+    $station_posts = get_posts([
+        'post_type' => 'mrt_station',
+        'post__in' => $route_stations,
+        'posts_per_page' => -1,
+        'orderby' => 'post__in',
+        'fields' => 'all',
+    ]);
+
+    $stations = [];
+    foreach ($station_posts as $index => $station) {
+        $st = $existing_stoptimes[$station->ID] ?? null;
+        $stops_here = $st !== null;
+        $sequence = $st ? $st['stop_sequence'] : ($index + 1);
+
+        $stations[] = [
+            'id' => $station->ID,
+            'name' => $station->post_title,
+            'sequence' => $sequence,
+            'stops_here' => $stops_here,
+            'arrival_time' => $st ? $st['arrival_time'] : '',
+            'departure_time' => $st ? $st['departure_time'] : '',
+            'pickup_allowed' => $st ? !empty($st['pickup_allowed']) : true,
+            'dropoff_allowed' => $st ? !empty($st['dropoff_allowed']) : true,
+        ];
+    }
+    return $stations;
+}
+
 function MRT_ajax_get_route_stations_for_stoptimes() {
     check_ajax_referer('mrt_stoptimes_nonce', 'nonce');
     MRT_verify_ajax_permission();
 
-    $route_id = intval($_POST['route_id'] ?? 0);
-    $service_id = intval($_POST['service_id'] ?? 0);
-    
+    $route_id = (int) ($_POST['route_id'] ?? 0);
+    $service_id = (int) ($_POST['service_id'] ?? 0);
+
     if ($route_id <= 0) {
         wp_send_json_error(['message' => __('Invalid route.', 'museum-railway-timetable')]);
     }
-    
+
     $route_stations = get_post_meta($route_id, 'mrt_route_stations', true);
     if (!is_array($route_stations)) {
         $route_stations = [];
     }
-    
-    global $wpdb;
-    $stoptimes_table = $wpdb->prefix . 'mrt_stoptimes';
-    $existing_stoptimes = [];
-    if ($service_id > 0) {
-        $stoptimes = $wpdb->get_results($wpdb->prepare(
-            "SELECT * FROM $stoptimes_table WHERE service_post_id = %d ORDER BY stop_sequence ASC",
-            $service_id
-        ), ARRAY_A);
-        foreach ($stoptimes as $st) {
-            $existing_stoptimes[$st['station_post_id']] = $st;
-        }
-    }
-    
-    $stations = [];
-    if (!empty($route_stations)) {
-        $station_posts = get_posts([
-            'post_type' => 'mrt_station',
-            'post__in' => $route_stations,
-            'posts_per_page' => -1,
-            'orderby' => 'post__in',
-            'fields' => 'all',
-        ]);
-        
-        foreach ($station_posts as $index => $station) {
-            $st = $existing_stoptimes[$station->ID] ?? null;
-            $stops_here = $st !== null;
-            $sequence = $st ? $st['stop_sequence'] : ($index + 1);
-            
-            $stations[] = [
-                'id' => $station->ID,
-                'name' => $station->post_title,
-                'sequence' => $sequence,
-                'stops_here' => $stops_here,
-                'arrival_time' => $st ? $st['arrival_time'] : '',
-                'departure_time' => $st ? $st['departure_time'] : '',
-                'pickup_allowed' => $st ? !empty($st['pickup_allowed']) : true,
-                'dropoff_allowed' => $st ? !empty($st['dropoff_allowed']) : true,
-            ];
-        }
-    }
-    
+
+    $existing = MRT_map_existing_stoptimes_by_station($service_id);
+    $stations = MRT_build_stoptimes_station_rows($route_stations, $existing);
+
     wp_send_json_success([
         'stations' => $stations,
-        'has_stations' => !empty($stations),
+        'has_stations' => $stations !== [],
     ]);
 }
 

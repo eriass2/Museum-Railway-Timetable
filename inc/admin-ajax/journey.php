@@ -26,13 +26,46 @@ function MRT_journey_ajax_send_no_services_response($trip_type) {
 }
 
 /**
- * Search for journey connections via AJAX (frontend)
+ * Planner rows + labels for AJAX search (single vs return).
  *
- * POST: nonce, from_station, to_station, date; optional trip_type (single|return),
- *       for return: outbound_arrival (HH:MM), optional outbound_service_id, min_turnaround_minutes.
- *
- * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
+ * @param array<string, mixed> $params From MRT_journey_ajax_parse_trip_search_params
+ * @return array{connections: array<int, mixed>, rows_for_html: array<int, mixed>, from_name: string, to_name: string, is_return: bool}
  */
+function MRT_journey_ajax_build_planner_result(array $params): array {
+    if ($params['trip_type'] === 'return') {
+        $connections = MRT_find_return_connections(
+            (int) $params['from'],
+            (int) $params['to'],
+            $params['date'],
+            $params['outbound_arrival'],
+            (int) $params['min_turnaround_minutes']
+        );
+        $rows_for_html = array_map('MRT_journey_normalized_to_planner_row', $connections);
+
+        return [
+            'connections' => $connections,
+            'rows_for_html' => $rows_for_html,
+            'from_name' => get_the_title($params['to']),
+            'to_name' => get_the_title($params['from']),
+            'is_return' => true,
+        ];
+    }
+
+    $bundle = MRT_journey_single_trip_normalized_and_planner_rows(
+        (int) $params['from'],
+        (int) $params['to'],
+        $params['date']
+    );
+
+    return [
+        'connections' => $bundle['normalized'],
+        'rows_for_html' => $bundle['planner_rows'],
+        'from_name' => get_the_title($params['from']),
+        'to_name' => get_the_title($params['to']),
+        'is_return' => false,
+    ];
+}
+
 function MRT_ajax_search_journey() {
     if (!MRT_journey_ajax_verify_nonce()) {
         wp_send_json_error([
@@ -47,52 +80,19 @@ function MRT_ajax_search_journey() {
     if (empty($services_on_date)) {
         MRT_journey_ajax_send_no_services_response($params['trip_type']);
     }
-    if ($params['trip_type'] === 'return') {
-        $connections = MRT_find_return_connections(
-            (int) $params['from'],
-            (int) $params['to'],
-            $params['date'],
-            $params['outbound_arrival'],
-            (int) $params['min_turnaround_minutes']
-        );
-        $rows_for_html = array_map('MRT_journey_normalized_to_planner_row', $connections);
-        $from_name = get_the_title($params['to']);
-        $to_name = get_the_title($params['from']);
-        $is_return = true;
-    } else {
-        $min_xfer = (int) apply_filters('mrt_min_transfer_minutes', 5);
-        $raw_multi = MRT_find_multi_leg_connections(
-            (int) $params['from'],
-            (int) $params['to'],
-            $params['date'],
-            $min_xfer,
-            true
-        );
-        $connections = [];
-        foreach ($raw_multi as $item) {
-            $connections[] = MRT_normalize_connection_for_api(
-                $item,
-                $params['date'],
-                (int) $params['from'],
-                (int) $params['to']
-            );
-        }
-        $rows_for_html = array_map('MRT_journey_normalized_to_planner_row', $connections);
-        $from_name = get_the_title($params['from']);
-        $to_name = get_the_title($params['to']);
-        $is_return = false;
-    }
+
+    $built = MRT_journey_ajax_build_planner_result($params);
     $html = MRT_journey_render_search_results_html(
-        $rows_for_html,
-        $from_name,
-        $to_name,
+        $built['rows_for_html'],
+        $built['from_name'],
+        $built['to_name'],
         $params['date'],
-        $is_return
+        $built['is_return']
     );
     wp_send_json_success([
         'html' => $html,
         'trip_type' => $params['trip_type'],
-        'connections' => $connections,
+        'connections' => $built['connections'],
     ]);
 }
 

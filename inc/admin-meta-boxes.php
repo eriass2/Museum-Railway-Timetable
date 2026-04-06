@@ -18,10 +18,9 @@ require_once MRT_PATH . 'inc/admin-meta-boxes/service-stoptimes.php';
 require_once MRT_PATH . 'inc/admin-meta-boxes/hooks.php';
 
 /**
- * Add meta boxes for stations and services
+ * Meta boxes: station + timetable post type.
  */
-add_action('add_meta_boxes', function() {
-    // Station meta box
+function MRT_register_meta_boxes_station_and_timetable(): void {
     add_meta_box(
         'mrt_station_details',
         __('Station Details', 'museum-railway-timetable'),
@@ -30,8 +29,7 @@ add_action('add_meta_boxes', function() {
         'normal',
         'high'
     );
-    
-    // Timetable meta box
+
     add_meta_box(
         'mrt_timetable_details',
         __('Timetable Details', 'museum-railway-timetable'),
@@ -40,8 +38,7 @@ add_action('add_meta_boxes', function() {
         'normal',
         'high'
     );
-    
-    // Timetable services meta box (to manage trips within timetable)
+
     add_meta_box(
         'mrt_timetable_services',
         __('Trips (Services)', 'museum-railway-timetable'),
@@ -50,8 +47,7 @@ add_action('add_meta_boxes', function() {
         'normal',
         'default'
     );
-    
-    // Timetable overview preview
+
     add_meta_box(
         'mrt_timetable_overview',
         __('Timetable Overview', 'museum-railway-timetable'),
@@ -60,8 +56,12 @@ add_action('add_meta_boxes', function() {
         'normal',
         'low'
     );
-    
-    // Route meta box
+}
+
+/**
+ * Meta boxes: route + service post types.
+ */
+function MRT_register_meta_boxes_route_and_service(): void {
     add_meta_box(
         'mrt_route_details',
         __('Route Details', 'museum-railway-timetable'),
@@ -70,8 +70,7 @@ add_action('add_meta_boxes', function() {
         'normal',
         'high'
     );
-    
-    // Service meta boxes
+
     add_meta_box(
         'mrt_service_details',
         __('Service Details', 'museum-railway-timetable'),
@@ -80,7 +79,7 @@ add_action('add_meta_boxes', function() {
         'normal',
         'high'
     );
-    
+
     add_meta_box(
         'mrt_service_stoptimes',
         __('Stop Times', 'museum-railway-timetable'),
@@ -89,4 +88,14 @@ add_action('add_meta_boxes', function() {
         'normal',
         'default'
     );
-});
+}
+
+/**
+ * Add meta boxes for stations and services
+ */
+function MRT_register_all_plugin_meta_boxes(): void {
+    MRT_register_meta_boxes_station_and_timetable();
+    MRT_register_meta_boxes_route_and_service();
+}
+
+add_action('add_meta_boxes', 'MRT_register_all_plugin_meta_boxes');

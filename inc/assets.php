@@ -13,6 +13,13 @@ if (!defined('ABSPATH')) {
 }
 
 /**
+ * Base URL for plugin assets directory (trailing slash).
+ */
+function MRT_assets_base_url(): string {
+    return MRT_URL . 'assets/';
+}
+
+/**
  * Check if admin assets should be loaded for current page
  *
  * @param string $hook Current admin page hook
@@ -92,7 +99,7 @@ function MRT_should_load_admin_dashboard(string $hook): bool {
  * @param string $hook Current admin page hook (from admin_enqueue_scripts)
  */
 function MRT_enqueue_admin_css(string $hook): void {
-    $base = MRT_URL . 'assets/';
+    $base = MRT_assets_base_url();
     wp_enqueue_style('mrt-admin-base', $base . 'admin-base.css', [], MRT_VERSION);
     wp_enqueue_style('mrt-admin-components', $base . 'admin-components.css', ['mrt-admin-base'], MRT_VERSION);
     wp_enqueue_style('mrt-admin-timetable', $base . 'admin-timetable.css', ['mrt-admin-components'], MRT_VERSION);
@@ -116,24 +123,27 @@ function MRT_enqueue_admin_css(string $hook): void {
 /**
  * Enqueue admin JavaScript files
  */
-function MRT_enqueue_admin_js() {
-    wp_register_script('mrt-string-utils', MRT_URL . 'assets/mrt-string-utils.js', [], MRT_VERSION, true);
-    wp_register_script('mrt-date-utils', MRT_URL . 'assets/mrt-date-utils.js', [], MRT_VERSION, true);
-    wp_enqueue_script('mrt-admin-utils', MRT_URL . 'assets/admin-utils.js', ['jquery', 'mrt-date-utils', 'mrt-string-utils'], MRT_VERSION, true);
-    wp_enqueue_script('mrt-admin-route-ui', MRT_URL . 'assets/admin-route-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
-    wp_enqueue_script('mrt-admin-stoptimes-ui', MRT_URL . 'assets/admin-stoptimes-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
-    wp_enqueue_script('mrt-admin-timetable-services', MRT_URL . 'assets/admin-timetable-services-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
-    wp_enqueue_script('mrt-admin-service-edit', MRT_URL . 'assets/admin-service-edit.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
-    wp_enqueue_script('mrt-admin', MRT_URL . 'assets/admin.js', [
+function MRT_enqueue_admin_js(): void {
+    $a = MRT_assets_base_url();
+    wp_register_script('mrt-string-utils', $a . 'mrt-string-utils.js', [], MRT_VERSION, true);
+    wp_register_script('mrt-date-utils', $a . 'mrt-date-utils.js', [], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-utils', $a . 'admin-utils.js', ['jquery', 'mrt-date-utils', 'mrt-string-utils'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-route-ui', $a . 'admin-route-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-stoptimes-ui', $a . 'admin-stoptimes-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-timetable-services', $a . 'admin-timetable-services-ui.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin-service-edit', $a . 'admin-service-edit.js', ['mrt-admin-utils', 'jquery'], MRT_VERSION, true);
+    wp_enqueue_script('mrt-admin', $a . 'admin.js', [
         'mrt-admin-utils', 'mrt-admin-route-ui', 'mrt-admin-stoptimes-ui', 'mrt-admin-timetable-services', 'mrt-admin-service-edit', 'jquery'
     ], MRT_VERSION, true);
 }
 
 /**
- * Localize admin script with translations and AJAX URL
+ * Strings passed to mrtAdmin (admin bundle).
+ *
+ * @return array<string, string>
  */
-function MRT_localize_admin_script() {
-    wp_localize_script('mrt-admin', 'mrtAdmin', [
+function MRT_admin_script_localization(): array {
+    return [
         'ajaxurl' => admin_url('admin-ajax.php'),
         'invalidTimeFormat' => __('Invalid format. Use HH:MM (e.g., 09:15)', MRT_TEXT_DOMAIN),
         'fixTimeFormats' => __('Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).', MRT_TEXT_DOMAIN),
@@ -173,7 +183,14 @@ function MRT_localize_admin_script() {
         'tripAdded' => __('Trip added successfully.', MRT_TEXT_DOMAIN),
         'tripRemoved' => __('Trip removed successfully.', MRT_TEXT_DOMAIN),
         'saved' => __('✓ Saved', MRT_TEXT_DOMAIN),
-    ]);
+    ];
+}
+
+/**
+ * Localize admin script with translations and AJAX URL
+ */
+function MRT_localize_admin_script(): void {
+    wp_localize_script('mrt-admin', 'mrtAdmin', MRT_admin_script_localization());
 }
 
 /**
@@ -192,11 +209,11 @@ function MRT_enqueue_admin_assets(string $hook): void {
 add_action('admin_enqueue_scripts', 'MRT_enqueue_admin_assets');
 
 /**
- * Localized strings and labels for [museum_journey_wizard] script
+ * Month names and weekday abbreviations for the journey wizard calendar.
  *
- * @return array<string, mixed>
+ * @return array{monthNames: array<int, string>, weekdayAbbrev: array<int, string>}
  */
-function MRT_journey_wizard_script_localization(): array {
+function MRT_journey_wizard_calendar_i18n_arrays(): array {
     $month_names = [];
     for ($m = 1; $m <= 12; $m++) {
         $month_names[] = date_i18n('F', mktime(0, 0, 0, $m, 15, 2020));
@@ -207,10 +224,18 @@ function MRT_journey_wizard_script_localization(): array {
         $weekday_abbrev[] = date_i18n('D', $sun + $d * DAY_IN_SECONDS);
     }
     return [
-        'ajaxurl' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('mrt_frontend'),
         'monthNames' => $month_names,
         'weekdayAbbrev' => $weekday_abbrev,
+    ];
+}
+
+/**
+ * Wizard step labels and connection UI strings.
+ *
+ * @return array<string, string>
+ */
+function MRT_journey_wizard_l10n_steps_and_trip(): array {
+    return [
         'stepRoute' => __('Route', MRT_TEXT_DOMAIN),
         'stepDate' => __('Date', MRT_TEXT_DOMAIN),
         'stepOutbound' => __('Outbound', MRT_TEXT_DOMAIN),
@@ -227,6 +252,16 @@ function MRT_journey_wizard_script_localization(): array {
         'returnHeading' => __('Return', MRT_TEXT_DOMAIN),
         'onDate' => __('on %s', MRT_TEXT_DOMAIN),
         'pleaseStations' => __('Please select both departure and arrival stations.', MRT_TEXT_DOMAIN),
+    ];
+}
+
+/**
+ * Table column labels, calendar day strings, and trip captions.
+ *
+ * @return array<string, string>
+ */
+function MRT_journey_wizard_l10n_table_calendar(): array {
+    return [
         'colService' => __('Service', MRT_TEXT_DOMAIN),
         'colTrainType' => __('Train Type', MRT_TEXT_DOMAIN),
         'colDeparture' => __('Departure', MRT_TEXT_DOMAIN),
@@ -242,6 +277,16 @@ function MRT_journey_wizard_script_localization(): array {
         'btnChooseTripAria' => __('Choose this trip: %1$s, departure %2$s, arrival %3$s', MRT_TEXT_DOMAIN),
         'btnShowStopsAria' => __('Stops and times for %s', MRT_TEXT_DOMAIN),
         'legSegmentLabel' => __('Train %d', MRT_TEXT_DOMAIN),
+    ];
+}
+
+/**
+ * Price matrix labels for the wizard summary.
+ *
+ * @return array<string, mixed>
+ */
+function MRT_journey_wizard_l10n_price(): array {
+    return [
         'priceTableTypeColumn' => __('Ticket type', MRT_TEXT_DOMAIN),
         'priceTitle' => __('Indicative prices', MRT_TEXT_DOMAIN),
         'priceNote' => __('Amounts are configured in timetable settings (same units as there).', MRT_TEXT_DOMAIN),
@@ -253,12 +298,32 @@ function MRT_journey_wizard_script_localization(): array {
 }
 
 /**
- * Enqueue frontend assets for shortcodes
+ * Localized strings and labels for [museum_journey_wizard] script
+ *
+ * @return array<string, mixed>
  */
-function MRT_enqueue_frontend_assets(): void {
-    // Check if any of our shortcodes are used on the page
-    global $post;
+function MRT_journey_wizard_script_localization(): array {
+    $cal = MRT_journey_wizard_calendar_i18n_arrays();
+    return array_merge(
+        [
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'nonce' => wp_create_nonce('mrt_frontend'),
+            'monthNames' => $cal['monthNames'],
+            'weekdayAbbrev' => $cal['weekdayAbbrev'],
+        ],
+        MRT_journey_wizard_l10n_steps_and_trip(),
+        MRT_journey_wizard_l10n_table_calendar(),
+        MRT_journey_wizard_l10n_price()
+    );
+}
 
+/**
+ * Detect which frontend shortcodes are present in post content.
+ *
+ * @return array{has_any: bool, has_overview: bool, has_journey_wizard: bool}
+ */
+function MRT_frontend_shortcode_flags_from_post(): array {
+    global $post;
     $shortcodes = [
         'museum_timetable_month',
         'museum_timetable_overview',
@@ -269,98 +334,135 @@ function MRT_enqueue_frontend_assets(): void {
     $has_overview_shortcode = false;
     $has_journey_wizard = false;
 
-    // Check in post content
     if (is_a($post, 'WP_Post') && !empty($post->post_content)) {
         foreach ($shortcodes as $shortcode) {
-            if (has_shortcode($post->post_content, $shortcode)) {
-                $has_shortcode = true;
-                if ($shortcode === 'museum_timetable_overview') {
-                    $has_overview_shortcode = true;
-                }
-                if ($shortcode === 'museum_journey_wizard') {
-                    $has_journey_wizard = true;
-                }
+            if (!has_shortcode($post->post_content, $shortcode)) {
+                continue;
+            }
+            $has_shortcode = true;
+            if ($shortcode === 'museum_timetable_overview') {
+                $has_overview_shortcode = true;
+            }
+            if ($shortcode === 'museum_journey_wizard') {
+                $has_journey_wizard = true;
             }
         }
     }
 
     if (!$has_shortcode) {
-        $has_shortcode = apply_filters('mrt_should_enqueue_frontend_assets', false);
+        $has_shortcode = (bool) apply_filters('mrt_should_enqueue_frontend_assets', false);
     }
-    $has_overview_shortcode = apply_filters('mrt_should_enqueue_frontend_overview_css', $has_overview_shortcode);
+    $has_overview_shortcode = (bool) apply_filters('mrt_should_enqueue_frontend_overview_css', $has_overview_shortcode);
 
-    if (!$has_shortcode) {
-        return;
-    }
+    return [
+        'has_any' => $has_shortcode,
+        'has_overview' => $has_overview_shortcode,
+        'has_journey_wizard' => $has_journey_wizard,
+    ];
+}
 
-    // Enqueue frontend CSS (same structure as admin)
+/**
+ * Base + components + timetable (frontend mirrors admin stack).
+ */
+function MRT_enqueue_frontend_style_admin_triplet(): void {
+    $a = MRT_assets_base_url();
     wp_enqueue_style(
         'mrt-frontend-base',
-        MRT_URL . 'assets/admin-base.css',
+        $a . 'admin-base.css',
         [],
         MRT_VERSION
     );
     wp_enqueue_style(
         'mrt-frontend-components',
-        MRT_URL . 'assets/admin-components.css',
+        $a . 'admin-components.css',
         ['mrt-frontend-base'],
         MRT_VERSION
     );
     wp_enqueue_style(
         'mrt-frontend-timetable',
-        MRT_URL . 'assets/admin-timetable.css',
+        $a . 'admin-timetable.css',
         ['mrt-frontend-components'],
         MRT_VERSION
     );
+}
 
-    $frontend_meta_deps = ['mrt-frontend-timetable'];
+/**
+ * Optional overview layer; returns dependency list for meta-boxes handle.
+ *
+ * @return array<int, string>
+ */
+function MRT_enqueue_frontend_overview_style_maybe(bool $has_overview_shortcode): array {
+    $deps = ['mrt-frontend-timetable'];
     if ($has_overview_shortcode) {
         wp_enqueue_style(
             'mrt-frontend-timetable-overview',
-            MRT_URL . 'assets/admin-timetable-overview.css',
+            MRT_assets_base_url() . 'admin-timetable-overview.css',
             ['mrt-frontend-timetable'],
             MRT_VERSION
         );
-        $frontend_meta_deps[] = 'mrt-frontend-timetable-overview';
+        $deps[] = 'mrt-frontend-timetable-overview';
     }
+    return $deps;
+}
+
+/**
+ * Meta-boxes, dashboard, UI, responsive (depends on meta deps array).
+ *
+ * @param array<int, string> $meta_box_deps
+ */
+function MRT_enqueue_frontend_style_upper_stack(array $meta_box_deps): void {
+    $a = MRT_assets_base_url();
     wp_enqueue_style(
         'mrt-frontend-meta-boxes',
-        MRT_URL . 'assets/admin-meta-boxes.css',
-        $frontend_meta_deps,
+        $a . 'admin-meta-boxes.css',
+        $meta_box_deps,
         MRT_VERSION
     );
     wp_enqueue_style(
         'mrt-frontend-dashboard',
-        MRT_URL . 'assets/admin-dashboard.css',
+        $a . 'admin-dashboard.css',
         ['mrt-frontend-meta-boxes'],
         MRT_VERSION
     );
     wp_enqueue_style(
         'mrt-frontend-ui',
-        MRT_URL . 'assets/admin-ui.css',
+        $a . 'admin-ui.css',
         ['mrt-frontend-dashboard'],
         MRT_VERSION
     );
     wp_enqueue_style(
         'mrt-frontend-responsive',
-        MRT_URL . 'assets/admin-responsive.css',
+        $a . 'admin-responsive.css',
         ['mrt-frontend-ui'],
         MRT_VERSION
     );
-    
-    wp_register_script('mrt-string-utils', MRT_URL . 'assets/mrt-string-utils.js', [], MRT_VERSION, true);
-    wp_register_script('mrt-frontend-api', MRT_URL . 'assets/mrt-frontend-api.js', ['jquery'], MRT_VERSION, true);
+}
 
-    // Enqueue frontend JavaScript
+/**
+ * Enqueue stacked frontend CSS (shared shortcode bundle).
+ */
+function MRT_enqueue_frontend_shortcode_styles(bool $has_overview_shortcode): void {
+    MRT_enqueue_frontend_style_admin_triplet();
+    $meta_deps = MRT_enqueue_frontend_overview_style_maybe($has_overview_shortcode);
+    MRT_enqueue_frontend_style_upper_stack($meta_deps);
+}
+
+/**
+ * Enqueue shared frontend JS and mrtFrontend localization.
+ */
+function MRT_enqueue_frontend_base_scripts(): void {
+    $a = MRT_assets_base_url();
+    wp_register_script('mrt-string-utils', $a . 'mrt-string-utils.js', [], MRT_VERSION, true);
+    wp_register_script('mrt-frontend-api', $a . 'mrt-frontend-api.js', ['jquery'], MRT_VERSION, true);
+
     wp_enqueue_script(
         'mrt-frontend',
-        MRT_URL . 'assets/frontend.js',
+        $a . 'frontend.js',
         ['jquery', 'mrt-string-utils', 'mrt-frontend-api'],
         MRT_VERSION,
         true
     );
-    
-    // Localize script for AJAX and translations
+
     wp_localize_script('mrt-frontend', 'mrtFrontend', [
         'ajaxurl' => admin_url('admin-ajax.php'),
         'nonce' => wp_create_nonce('mrt_frontend'),
@@ -372,23 +474,44 @@ function MRT_enqueue_frontend_assets(): void {
         'errorSameStations' => __('Please select different stations for departure and arrival.', MRT_TEXT_DOMAIN),
         'networkError' => __('Network error. Please try again.', MRT_TEXT_DOMAIN),
     ]);
+}
 
-    if ($has_journey_wizard) {
-        wp_register_script('mrt-date-utils', MRT_URL . 'assets/mrt-date-utils.js', [], MRT_VERSION, true);
-        wp_enqueue_style(
-            'mrt-journey-wizard',
-            MRT_URL . 'assets/journey-wizard.css',
-            ['mrt-frontend-responsive'],
-            MRT_VERSION
-        );
-        wp_enqueue_script(
-            'mrt-journey-wizard',
-            MRT_URL . 'assets/journey-wizard.js',
-            ['jquery', 'mrt-frontend', 'mrt-date-utils', 'mrt-string-utils', 'mrt-frontend-api'],
-            MRT_VERSION,
-            true
-        );
-        wp_localize_script('mrt-journey-wizard', 'mrtJourneyWizard', MRT_journey_wizard_script_localization());
+/**
+ * Enqueue journey wizard CSS/JS and localization (depends on frontend bundle).
+ */
+function MRT_enqueue_journey_wizard_assets(): void {
+    $a = MRT_assets_base_url();
+    wp_register_script('mrt-date-utils', $a . 'mrt-date-utils.js', [], MRT_VERSION, true);
+    wp_enqueue_style(
+        'mrt-journey-wizard',
+        $a . 'journey-wizard.css',
+        ['mrt-frontend-responsive'],
+        MRT_VERSION
+    );
+    wp_enqueue_script(
+        'mrt-journey-wizard',
+        $a . 'journey-wizard.js',
+        ['jquery', 'mrt-frontend', 'mrt-date-utils', 'mrt-string-utils', 'mrt-frontend-api'],
+        MRT_VERSION,
+        true
+    );
+    wp_localize_script('mrt-journey-wizard', 'mrtJourneyWizard', MRT_journey_wizard_script_localization());
+}
+
+/**
+ * Enqueue frontend assets for shortcodes
+ */
+function MRT_enqueue_frontend_assets(): void {
+    $flags = MRT_frontend_shortcode_flags_from_post();
+    if (!$flags['has_any']) {
+        return;
+    }
+
+    MRT_enqueue_frontend_shortcode_styles($flags['has_overview']);
+    MRT_enqueue_frontend_base_scripts();
+
+    if ($flags['has_journey_wizard']) {
+        MRT_enqueue_journey_wizard_assets();
     }
 }
 add_action('wp_enqueue_scripts', 'MRT_enqueue_frontend_assets');
