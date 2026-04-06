@@ -102,11 +102,13 @@ Alla nya funktioner konsumerar/producerar detta format så **AJAX/REST** kan ser
 
 ## Del 2 – API-yta (mellan funktioner och vy)
 
+**Status:** Implementerad. Parser/render i `inc/admin-ajax/journey-parse.php` och `journey-render.php`; handlers i `inc/admin-ajax/journey.php`. Registrering i `inc/admin-ajax.php`.
+
 Kort kedja innan pixelarbete:
 
-1. **Utöka `MRT_ajax_search_journey`** (eller ny action) med parametrar: `trip_type` (single|return), ev. `outbound_service_id` + `outbound_arrival` för retur-steg.
-2. **Ny AJAX** (eller samma med `step`): `mrt_calendar_month` → JSON från `MRT_get_journey_calendar_month`.
-3. **Nonce + rate limiting** enligt befintlig `mrt_frontend`-mönster.
+1. **`MRT_ajax_search_journey`** (`action=mrt_search_journey`): parametrar `trip_type` (`single` standard, `return`), för retur **kravs** `outbound_arrival` (HH:MM); valfritt `outbound_service_id`, `min_turnaround_minutes`. Svar: `html`, `trip_type`, `connections` (array). Nonce: `mrt_frontend`.
+2. **`MRT_ajax_journey_calendar_month`** (`action=mrt_journey_calendar_month`): `from_station`, `to_station`, `year`, `month` (1–12) → JSON `days` som `Y-m-d` → `none` \| `traffic_no_match` \| `ok` (via `MRT_get_journey_calendar_month`). Samma nonce.
+3. **Nonce** enligt `mrt_frontend` (som övrig frontend-AJAX). **Rate limiting** är inte tillagt; kan läggas senare om behov uppstår.
 
 Ingen ny skärm krävs för att **testa** – Postman eller en minimal admin-debug-sida räcker.
 
@@ -114,17 +116,19 @@ Ingen ny skärm krävs för att **testa** – Postman eller en minimal admin-deb
 
 ## Del 3 – Vyer (i ordning enligt mockup-flöde)
 
+**Status (MVP):** Ny shortcode `[museum_journey_wizard]` med `assets/journey-wizard.js` + `journey-wizard.css` (laddas när shortcoden finns på sidan). Flöde: rutt + enkel/retur → kalender (`mrt_journey_calendar_month`) → utresa (`mrt_search_journey` single) → valfritt retur (`mrt_search_journey` return) → sammanfattning inkl. **prismatris** (`mrt_price_matrix`, rad enkel/retur markerad). Mellanliggande stopp: `mrt_journey_connection_detail`. ARIA: `aria-labelledby` på paneler, `aria-current="step"` i steglista, kalender `role="grid"`, valda dagar `aria-pressed`, expanderbara stopp `aria-expanded`. Attribut: `ticket_url`. Befintlig `[museum_journey_planner]` oförändrad.
+
 Bygg **efter** att Del 1.1–1.3 (minst) och API i Del 2 finns för motsvarande steg.
 
 | Ordning | Mockup / vy | Koppling till funktioner |
 |--------|-------------|---------------------------|
-| **V1** | Hero + sök (`sok-din-resa`) | befintlig stationlista + validering; lägg till **Enkel / Tur–retur** (endast UI-state tills retur-API anropas). |
-| **V2** | Välj datum (`valj-datum`) | `MRT_get_journey_calendar_month` + legend. |
+| **V1** | Hero + sök (`sok-din-resa`) | befintlig stationlista + validering; **Enkel / Tur–retur** kan kopplas till `mrt_search_journey` med `trip_type` + returparametrar. |
+| **V2** | Välj datum (`valj-datum`) | `mrt_journey_calendar_month` (eller `MRT_get_journey_calendar_month` server-side) + legend. |
 | **V3** | Välj utresa (`valj-utresa`) | `MRT_find_connections` + `MRT_get_connection_journey_detail` för accordion; visa `train_type`, `notice`; pris-tabell om Fas 1.5 klar. |
 | **V4** | Välj återresa (`valj-aterresa`) | Endast om tur–retur; `MRT_find_return_connections` + sammanfattningskort för vald utresa (data från föregående steg). |
 | **V5** | Bekräftelse / nästa steg (biljett extern) | Kan vara statisk “gå till biljett”-länk i v1. |
 
-**Tekniskt:** antingen utöka `[museum_journey_planner]` med steg-parameter och JS-router, eller ny shortcode `[museum_journey_wizard]` som laddar en liten modul (t.ex. `assets/journey-wizard.js`) – följ befintlig `MRT_`-prefix och textdomain `museum-railway-timetable`.
+**Tekniskt:** implementerat som `[museum_journey_wizard]` + `assets/journey-wizard.js` (beror på `mrt-frontend` för delad nonce/AJAX-URL). **Priser:** matris från `mrt_price_matrix` visas i sista steget (raden enkel/retur markeras). Ytterligare polish: hero-layout, djupare WCAG (Del 4).
 
 **Stil:** återanvänd tokens från [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md); bygg CSS i `assets/` med BEM-liknande klasser som redan används (`mrt-*`).
 

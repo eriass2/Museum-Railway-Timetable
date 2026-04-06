@@ -1,0 +1,192 @@
+/**
+ * Journey wizard (public shortcode)
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-wizard__nav {
+    margin-bottom: 1.25rem;
+}
+
+.mrt-journey-wizard__steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mrt-journey-wizard__steps li {
+    font-size: 0.875rem;
+    color: var(--mrt-text-tertiary, #6b7280);
+}
+
+.mrt-journey-wizard__steps li.is-active {
+    font-weight: 600;
+    color: var(--mrt-text-primary, #111827);
+}
+
+.mrt-journey-wizard__steps li.is-done {
+    color: var(--mrt-text-secondary, #4b5563);
+}
+
+.mrt-journey-wizard__calendar-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.mrt-journey-wizard__cal-title {
+    font-weight: 600;
+}
+
+.mrt-journey-wizard__calendar table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.mrt-journey-wizard__calendar th {
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35rem;
+}
+
+.mrt-journey-wizard__calendar td {
+    padding: 0.2rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.mrt-journey-wizard__day {
+    width: 100%;
+    min-height: 2.25rem;
+    border: 1px solid var(--mrt-border, #e5e7eb);
+    border-radius: 4px;
+    background: var(--mrt-surface, #fff);
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.mrt-journey-wizard__day:hover:not(:disabled) {
+    border-color: var(--mrt-primary, #2563eb);
+}
+
+.mrt-journey-wizard__day--ok {
+    background: color-mix(in srgb, var(--mrt-success, #16a34a) 18%, transparent);
+}
+
+.mrt-journey-wizard__day--traffic {
+    background: color-mix(in srgb, var(--mrt-warning, #ca8a04) 15%, transparent);
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+.mrt-journey-wizard__day--none {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.mrt-journey-wizard__day.is-selected {
+    outline: 2px solid var(--mrt-primary, #2563eb);
+    outline-offset: 1px;
+}
+
+.mrt-journey-wizard__legend {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 0.8125rem;
+}
+
+.mrt-journey-wizard__legend li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+
+.mrt-journey-wizard__swatch {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 2px;
+    border: 1px solid var(--mrt-border, #e5e7eb);
+}
+
+.mrt-journey-wizard__swatch--ok {
+    background: color-mix(in srgb, var(--mrt-success, #16a34a) 25%, #fff);
+}
+
+.mrt-journey-wizard__swatch--traffic {
+    background: color-mix(in srgb, var(--mrt-warning, #ca8a04) 20%, #fff);
+}
+
+.mrt-journey-wizard__swatch--none {
+    background: #f3f4f6;
+}
+
+.mrt-journey-wizard__radio-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-right: 1rem;
+}
+
+.mrt-journey-wizard__legend {
+    margin-top: 0.5rem;
+}
+
+.mrt-journey-wizard__trip-type {
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+
+.mrt-journey-wizard__trip-type .mrt-journey-wizard__legend {
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+}
+
+.mrt-journey-wizard__conn-actions {
+    white-space: nowrap;
+}
+
+.mrt-journey-wizard__conn-actions .mrt-btn {
+    margin-right: 0.25rem;
+}
+
+.mrt-journey-wizard__detail {
+    font-size: 0.875rem;
+}
+
+.mrt-journey-wizard__detail table {
+    margin-top: 0.5rem;
+}
+
+.mrt-journey-wizard__price-table th[scope="row"] {
+    font-weight: 600;
+    text-align: left;
+}
+
+.mrt-journey-wizard__price-row--active td,
+.mrt-journey-wizard__price-row--active th {
+    background: color-mix(in srgb, var(--mrt-primary, #2563eb) 12%, transparent);
+}
+
+.mrt-journey-wizard__price-note {
+    font-size: 0.8125rem;
+    max-width: 40rem;
+}
+
+/* Component demo page (same URL may load wizard shortcode) */
+.mrt-demo-mockup-list {
+    margin: 0.5rem 0 0 1.25rem;
+}
+
+.mrt-demo-mockup-caption {
+    font-size: 0.875rem;
+}

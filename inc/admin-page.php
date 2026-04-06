@@ -10,6 +10,7 @@ if (!defined('ABSPATH')) { exit; }
 require_once MRT_PATH . 'inc/admin-page/dashboard.php';
 require_once MRT_PATH . 'inc/admin-page/clear-db.php';
 require_once MRT_PATH . 'inc/admin-page/admin-list.php';
+require_once MRT_PATH . 'inc/demo-page.php';
 
 // Add a top-level menu for the plugin settings
 add_action('admin_menu', function () {
@@ -56,6 +57,22 @@ add_action('admin_menu', function () {
         'manage_categories',
         'edit-tags.php?taxonomy=mrt_train_type&post_type=mrt_service'
     );
+
+    $demo_slug = MRT_components_demo_menu_slug();
+    add_submenu_page(
+        'mrt_settings',
+        __('Component demo page', 'museum-railway-timetable'),
+        __('Component demo page', 'museum-railway-timetable'),
+        'manage_options',
+        $demo_slug,
+        'MRT_render_components_demo_admin_page'
+    );
+
+    // If core did not attach the callback (get_plugin_page_hook empty), menu uses a broken relative href.
+    $demo_hook = get_plugin_page_hookname($demo_slug, 'mrt_settings');
+    if (is_string($demo_hook) && $demo_hook !== '' && !has_action($demo_hook)) {
+        add_action($demo_hook, 'MRT_render_components_demo_admin_page');
+    }
 });
 
 // Register basic settings

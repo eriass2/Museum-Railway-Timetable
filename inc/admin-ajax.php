@@ -11,6 +11,8 @@ require_once MRT_PATH . 'inc/admin-ajax/stoptimes.php';
 require_once MRT_PATH . 'inc/admin-ajax/timetable-services.php';
 require_once MRT_PATH . 'inc/admin-ajax/route-destinations.php';
 require_once MRT_PATH . 'inc/admin-ajax/route-stations.php';
+require_once MRT_PATH . 'inc/admin-ajax/journey-parse.php';
+require_once MRT_PATH . 'inc/admin-ajax/journey-render.php';
 require_once MRT_PATH . 'inc/admin-ajax/journey.php';
 require_once MRT_PATH . 'inc/admin-ajax/timetable-frontend.php';
 
@@ -30,5 +32,9 @@ add_action('wp_ajax_mrt_save_route_end_stations', 'MRT_ajax_save_route_end_stati
 
 add_action('wp_ajax_mrt_search_journey', 'MRT_ajax_search_journey');
 add_action('wp_ajax_nopriv_mrt_search_journey', 'MRT_ajax_search_journey');
+add_action('wp_ajax_mrt_journey_calendar_month', 'MRT_ajax_journey_calendar_month');
+add_action('wp_ajax_nopriv_mrt_journey_calendar_month', 'MRT_ajax_journey_calendar_month');
+add_action('wp_ajax_mrt_journey_connection_detail', 'MRT_ajax_journey_connection_detail');
+add_action('wp_ajax_nopriv_mrt_journey_connection_detail', 'MRT_ajax_journey_connection_detail');
 add_action('wp_ajax_mrt_get_timetable_for_date', 'MRT_ajax_get_timetable_for_date');
 add_action('wp_ajax_nopriv_mrt_get_timetable_for_date', 'MRT_ajax_get_timetable_for_date');

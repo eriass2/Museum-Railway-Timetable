@@ -101,3 +101,30 @@ function MRT_get_prices_for_context($args = []) {
         'active_row' => $full[$trip],
     ];
 }
+
+/**
+ * Human labels for ticket-type rows (admin + public wizard)
+ *
+ * @return array<string, string>
+ */
+function MRT_price_ticket_type_labels() {
+    return [
+        'single' => __('Single ticket', 'museum-railway-timetable'),
+        'return' => __('Return ticket', 'museum-railway-timetable'),
+        'day' => __('Day pass', 'museum-railway-timetable'),
+    ];
+}
+
+/**
+ * Human labels for passenger columns
+ *
+ * @return array<string, string>
+ */
+function MRT_price_category_labels() {
+    return [
+        'adult' => __('Adult', 'museum-railway-timetable'),
+        'child_4_15' => __('Child 4–15', 'museum-railway-timetable'),
+        'child_0_3' => __('Child 0–3', 'museum-railway-timetable'),
+        'student_senior' => __('Student / senior 65+', 'museum-railway-timetable'),
+    ];
+}
