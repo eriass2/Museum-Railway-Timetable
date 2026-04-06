@@ -8,6 +8,32 @@
 if (!defined('ABSPATH')) { exit; }
 
 /**
+ * Validate two station IDs for a journey (no POST)
+ *
+ * @param int $from_station_id From station post ID
+ * @param int $to_station_id To station post ID
+ * @return WP_Error|null Null when valid
+ */
+function MRT_journey_validate_station_pair_ids($from_station_id, $to_station_id) {
+    $from = (int) $from_station_id;
+    $to = (int) $to_station_id;
+    if ($from <= 0 || $to <= 0) {
+        return new WP_Error(
+            'mrt_journey_stations',
+            __('Please select both departure and arrival stations.', 'museum-railway-timetable')
+        );
+    }
+    if ($from === $to) {
+        return new WP_Error(
+            'mrt_journey_same',
+            __('Please select different stations for departure and arrival.', 'museum-railway-timetable')
+        );
+    }
+
+    return null;
+}
+
+/**
  * Verify mrt_frontend nonce from POST
  *
  * @return bool
@@ -25,18 +51,11 @@ function MRT_journey_ajax_verify_nonce() {
 function MRT_journey_ajax_parse_stations_pair() {
     $from = intval($_POST['from_station'] ?? 0);
     $to = intval($_POST['to_station'] ?? 0);
-    if ($from <= 0 || $to <= 0) {
-        return new WP_Error(
-            'mrt_journey_stations',
-            __('Please select both departure and arrival stations.', 'museum-railway-timetable')
-        );
+    $err = MRT_journey_validate_station_pair_ids($from, $to);
+    if ($err !== null) {
+        return $err;
     }
-    if ($from === $to) {
-        return new WP_Error(
-            'mrt_journey_same',
-            __('Please select different stations for departure and arrival.', 'museum-railway-timetable')
-        );
-    }
+
     return ['from' => $from, 'to' => $to];
 }
 

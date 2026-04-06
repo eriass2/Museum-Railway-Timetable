@@ -23,7 +23,8 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 - **Enhetstester (PHPUnit):** Ren PHP i `tests/` mot produktionskod i `inc/`; se `phpunit.xml.dist` och `composer test`.
 - **Utökning:** Ny eller ändrad affärsregel bör följa med test i samma leverans, när logiken är ren nog.
 - **Integration:** Väljs när domänlogik måste verifieras mot databas eller full WordPress; då WP test suite eller riktade tester – inte ersättning för enhetstest av rena funktioner.
-- **CI:** Pipeline kör `composer test` tillsammans med befintlig validering.
+- **CI:** Pipeline kör `composer test` tillsammans med befintlig validering (se `.github/workflows/ci.yml`).
+- **Refaktor:** Flytta validering som inte behöver `$_POST` till namngivna `MRT_*`-funktioner (t.ex. `MRT_journey_validate_station_pair_ids` i `journey-parse.php`) så samma regler kan testas utan HTTP.
 
 ---
 

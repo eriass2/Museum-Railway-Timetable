@@ -16,7 +16,15 @@ Princip: **domänlogik och testbara PHP-funktioner** byggs och stabiliseras för
 | **Priser** i v1 eller senare fas? | Egen datamodell + vy |
 | **Trafikmeddelanden** per tjänst – MVP med post meta? | Ett fält räcker första version |
 
-Dokumentera besluten här eller i `FUTURE_WORK.md` när de är tagna.
+**Beslut (uppdaterat med nuvarande leverans):**
+
+| Fråga | Beslut |
+|--------|--------|
+| Direkt vs byte | **v1:** direkta tåg (`MRT_find_connections`) + **tur/retur** (`MRT_find_return_connections`). **Flerbensbyte** (Fas 1.4) är valfri nästa fas – kod finns som utökning men full mockup-UI kan vänta. |
+| Priser | **I v1:** option `mrt_price_matrix`, `MRT_get_prices_for_context`, visning i wizard-sammanfattning. |
+| Trafikmeddelanden | **MVP:** post meta `mrt_service_notice`, `MRT_get_service_notice` i detalj/API. |
+
+Se även [ARCHITECTURE.md](ARCHITECTURE.md) för hur domänlogik hålls fri från UI.
 
 ---
 
@@ -138,9 +146,12 @@ Bygg **efter** att Del 1.1–1.3 (minst) och API i Del 2 finns för motsvarande 
 
 ## Del 4 – Kvalitet
 
-- **Tester:** PHPUnit för rena funktioner (kalender, returfilter, duration) där WordPress kan bootstrappas; annars integrationstester via WP test suite när det finns.
-- **Tillgänglighet:** kalender och accordion med tangentbord och ARIA (krav från user stories + WCAG).
-- **Översättning:** alla nya strängar via `__()` / `esc_html__()` med textdomain `museum-railway-timetable`.
+**Status (löpande):**
+
+- **Tester:** `composer test` (PHPUnit) med minimal WP-bootstrap i `tests/`; CI kör `composer test` + `php scripts/validate.php`. Täcker bland annat datum/tid-hjälpare, prismatris, journey-normalize, POST-parser, kalender **kantfall** (utan DB), anslutningsrad. **Integrationstester** mot riktig databas / full WordPress-kärna: planerade vid behov (se [FUTURE_WORK.md](FUTURE_WORK.md)).
+- **Tillgänglighet:** wizard enligt Del 3 (`aria-labelledby`, steg `aria-current`, kalender `role="grid"`, knappar `aria-expanded` / `aria-pressed`); fortsatt förbättring (tangentbord i alla delar, kontrast) i backlog.
+- **Översättning:** nya strängar via `__()` / `esc_html__()` med textdomain `museum-railway-timetable`.
+- **PR:** checklista kopplad till [ARCHITECTURE.md](ARCHITECTURE.md) (`.github/pull_request_template.md`).
 
 ---
 

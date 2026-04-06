@@ -7,28 +7,14 @@
 ## 1. Prioritet: Hög
 
 ### 1.1 Automatiserade tester
-**Nuvarande:** Inga tester.
+**Nuvarande:** PHPUnit (`composer test`), se `tests/` och `phpunit.xml.dist`. Stubbar för WP-funktioner i `tests/wp-stubs.php`.
 
-**Rekommendation:** Lägg till PHPUnit för kritiska funktioner.
-- **Vad:** Enhetstester för helpers (MRT_validate_time_hhmm, MRT_validate_date, MRT_calculate_direction_from_end_station)
-- **Varför:** Säkerställer att refaktorering inte bryter logik
-- **Effort:** Låg–medium. WordPress testmiljö kräver wp-env eller liknande
-
-```bash
-# Framtida setup (exempel)
-composer require --dev phpunit/phpunit
-# wp-env start (WordPress test environment)
-```
+**Nästa steg (valfritt):** Integrationstester mot databas / wp-env för `MRT_find_connections` och full AJAX-kedja där enhetstest inte räcker.
 
 ### 1.2 CI (GitHub Actions)
-**Nuvarande:** Pre-commit hooks (bash – fungerar inte direkt på Windows utan WSL).
+**Nuvarande:** Workflow kör `composer install`, `php scripts/validate.php`, `composer test`.
 
-**Rekommendation:** GitHub Actions som kör vid push/PR:
-- `composer install && composer lint` (phpstan + phpcs)
-- `php scripts/validate.php`
-- (Framtida) `composer test`
-
-**Varför:** Fångar fel innan merge, oberoende av lokal miljö.
+**Nästa steg (valfritt):** `composer lint` (phpstan + phpcs) i samma eller separat jobb om varningar rensats.
 
 ### 1.3 Uppdatera REFACTORING_PLAN
 **Status:** ✅ Genomförd uppdelning dokumenterad i REFACTORING_PLAN.md (2026).
