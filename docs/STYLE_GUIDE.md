@@ -100,6 +100,12 @@ Kodstandarder och clean code-principer för projektet.
 - **Nonces** – Skicka alltid med AJAX-anrop
 - **Felhantering** – Hantera nätverksfel och visa användarvänliga meddelanden
 
+### Datum och tid (delad JS)
+- **`assets/mrt-date-utils.js`** – Gemensamma hjälpare under `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för tid `HH:MM`)
+- **Lägg ny datum-/tidslogik här** om den kan återanvändas eller motsvarar befintliga metoder; undvik att duplicera i flera skript
+- **Enqueue** – Skriptet registreras i `inc/assets.php` och används som beroende till `mrt-admin-utils` och `mrt-journey-wizard` där det behövs
+- **`admin-utils.js`** – `validateTimeFormat` delegerar till `MRTDateUtils.validateHhMm`
+
 ---
 
 ## 5. WordPress-specifikt
@@ -146,6 +152,7 @@ museum-railway-timetable/
 ├── assets/
 │   ├── admin-*.css                # Uppdelad CSS (base, timetable, meta-boxes, dashboard, ui)
 │   ├── admin.js
+│   ├── mrt-date-utils.js          # MRTDateUtils (datum/tid, delad frontend + admin)
 │   ├── admin-*.js                 # Moduler (utils, route-ui, stoptimes-ui, timetable-services-ui)
 │   └── frontend.js
 └── languages/
