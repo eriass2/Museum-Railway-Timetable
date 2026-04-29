@@ -8,42 +8,54 @@ declare(strict_types=1);
  * @package Museum_Railway_Timetable
  */
 
-if (!defined('ABSPATH')) {
-    exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
 }
 
 /**
  * Verify meta box save: nonce, autosave, permissions
  * Call at start of save_post_* handlers.
  *
- * @param int $post_id Post ID
+ * @param int    $post_id Post ID
  * @param string $nonce_name $_POST key for nonce
  * @param string $nonce_action wp_verify_nonce action
  * @return bool True if save should proceed, false to abort
  */
-function MRT_verify_meta_box_save(int $post_id, string $nonce_name, string $nonce_action): bool {
-    if (!isset($_POST[$nonce_name]) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST[$nonce_name])), $nonce_action)) {
-        return false;
-    }
-    if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE) {
-        return false;
-    }
-    if (!current_user_can('edit_post', $post_id)) {
-        return false;
-    }
-    return true;
+function MRT_verify_meta_box_save( int $post_id, string $nonce_name, string $nonce_action ): bool {
+	if ( ! isset( $_POST[ $nonce_name ] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) ), $nonce_action ) ) {
+		return false;
+	}
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
+		return false;
+	}
+	if ( ! current_user_can( 'edit_post', $post_id ) ) {
+		return false;
+	}
+	return true;
 }
 
 /**
- * Verify AJAX permission for edit_posts
- * Sends JSON error and exits on failure.
+ * Verify AJAX permission to edit a specific post.
  *
+ * @param int $post_id Post ID
  * @return void
  */
-function MRT_verify_ajax_permission(): void {
-    if (!current_user_can('edit_posts')) {
-        wp_send_json_error(['message' => __('Permission denied.', MRT_TEXT_DOMAIN)]);
-    }
+function MRT_verify_ajax_edit_post_permission( int $post_id ): void {
+	if ( $post_id <= 0 || ! current_user_can( 'edit_post', $post_id ) ) {
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', MRT_TEXT_DOMAIN ) ) );
+	}
+}
+
+/**
+ * Verify AJAX permission to delete a specific post.
+ *
+ * @param int $post_id Post ID
+ * @return void
+ */
+function MRT_verify_ajax_delete_post_permission( int $post_id ): void {
+	if ( $post_id <= 0 || ! current_user_can( 'delete_post', $post_id ) ) {
+		wp_send_json_error( array( 'message' => __( 'Permission denied.', MRT_TEXT_DOMAIN ) ) );
+	}
 }
 
 /**
@@ -54,16 +66,16 @@ function MRT_verify_ajax_permission(): void {
  * @param string $extra_classes Optional extra CSS classes (e.g. 'mrt-empty')
  * @return string HTML
  */
-function MRT_render_alert(string $message, string $type = 'error', string $extra_classes = ''): string {
-    $allowed_types = ['error', 'info', 'warning'];
-    $type = in_array($type, $allowed_types) ? $type : 'error';
-    $classes = 'mrt-alert mrt-alert-' . $type;
-    if (!empty($extra_classes)) {
-        $classes .= ' ' . esc_attr($extra_classes);
-    }
-    $role = ($type === 'info') ? 'status' : 'alert';
+function MRT_render_alert( string $message, string $type = 'error', string $extra_classes = '' ): string {
+	$allowed_types = array( 'error', 'info', 'warning' );
+	$type          = in_array( $type, $allowed_types ) ? $type : 'error';
+	$classes       = 'mrt-alert mrt-alert-' . $type;
+	if ( ! empty( $extra_classes ) ) {
+		$classes .= ' ' . esc_attr( $extra_classes );
+	}
+	$role = ( $type === 'info' ) ? 'status' : 'alert';
 
-    return '<div class="' . $classes . '" role="' . esc_attr($role) . '">' . esc_html($message) . '</div>';
+	return '<div class="' . $classes . '" role="' . esc_attr( $role ) . '">' . esc_html( $message ) . '</div>';
 }
 
 /**
@@ -74,15 +86,15 @@ function MRT_render_alert(string $message, string $type = 'error', string $extra
  * @param string $extra_classes Optional extra CSS classes (e.g. 'mrt-mb-1')
  * @return void Outputs HTML
  */
-function MRT_render_info_box(string $title, string $content, string $extra_classes = ''): void {
-    $classes = 'mrt-alert mrt-alert-info mrt-info-box';
-    if (!empty($extra_classes)) {
-        $classes .= ' ' . esc_attr($extra_classes);
-    }
-    echo '<div class="' . esc_attr($classes) . '">';
-    echo '<p><strong>' . esc_html($title) . '</strong></p>';
-    echo wp_kses_post($content);
-    echo '</div>';
+function MRT_render_info_box( string $title, string $content, string $extra_classes = '' ): void {
+	$classes = 'mrt-alert mrt-alert-info mrt-info-box';
+	if ( ! empty( $extra_classes ) ) {
+		$classes .= ' ' . esc_attr( $extra_classes );
+	}
+	echo '<div class="' . esc_attr( $classes ) . '">';
+	echo '<p><strong>' . esc_html( $title ) . '</strong></p>';
+	echo wp_kses_post( $content );
+	echo '</div>';
 }
 
 /**
@@ -92,12 +104,12 @@ function MRT_render_info_box(string $title, string $content, string $extra_class
  * @param string $post_type Post type (e.g., 'mrt_station', 'mrt_service')
  * @return WP_Post|null Post object or null if not found
  */
-function MRT_get_post_by_title(string $title, string $post_type): ?WP_Post {
-    if (empty($title) || empty($post_type)) {
-        return null;
-    }
-    $post = get_page_by_title(sanitize_text_field($title), OBJECT, $post_type);
-    return $post ?: null;
+function MRT_get_post_by_title( string $title, string $post_type ): ?WP_Post {
+	if ( empty( $title ) || empty( $post_type ) ) {
+		return null;
+	}
+	$post = get_page_by_title( sanitize_text_field( $title ), OBJECT, $post_type );
+	return $post ?: null;
 }
 
 /**
@@ -106,20 +118,20 @@ function MRT_get_post_by_title(string $title, string $post_type): ?WP_Post {
  * @param string $context Context string for error logging (e.g., function name)
  * @return bool True if error occurred, false otherwise
  */
-function MRT_check_db_error(string $context = ''): bool {
-    global $wpdb;
-    if ($wpdb->last_error) {
-        if (defined('WP_DEBUG') && WP_DEBUG) {
-            $message = 'MRT: Database error';
-            if ($context) {
-                $message .= ' in ' . $context;
-            }
-            $message .= ': ' . $wpdb->last_error;
-            error_log($message);
-        }
-        return true;
-    }
-    return false;
+function MRT_check_db_error( string $context = '' ): bool {
+	global $wpdb;
+	if ( $wpdb->last_error ) {
+		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+			$message = 'MRT: Database error';
+			if ( $context ) {
+				$message .= ' in ' . $context;
+			}
+			$message .= ': ' . $wpdb->last_error;
+			error_log( $message );
+		}
+		return true;
+	}
+	return false;
 }
 
 /**
@@ -128,10 +140,10 @@ function MRT_check_db_error(string $context = ''): bool {
  * @param string $message Error message to log
  * @return void
  */
-function MRT_log_error(string $message): void {
-    if (defined('WP_DEBUG') && WP_DEBUG) {
-        error_log('MRT: ' . $message);
-    }
+function MRT_log_error( string $message ): void {
+	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+		error_log( 'MRT: ' . $message );
+	}
 }
 
 /**
@@ -141,26 +153,26 @@ function MRT_log_error(string $message): void {
  * @param WP_Term|null $train_type Train type term object
  * @return string Icon (emoji or empty string)
  */
-function MRT_get_train_type_icon(?WP_Term $train_type): string {
-    if (!$train_type) {
-        return '';
-    }
-    
-    $name_lower = strtolower($train_type->name);
-    $slug_lower = strtolower($train_type->slug);
-    
-    // Match common train types
-    if (strpos($name_lower, 'ång') !== false || strpos($slug_lower, 'steam') !== false || strpos($slug_lower, 'ang') !== false) {
-        return '🚂'; // Steam train
-    } elseif (strpos($name_lower, 'diesel') !== false || strpos($slug_lower, 'diesel') !== false) {
-        return '🚃'; // Diesel train
-    } elseif (strpos($name_lower, 'elektrisk') !== false || strpos($name_lower, 'electric') !== false || strpos($slug_lower, 'electric') !== false) {
-        return '🚄'; // Electric train
-    } elseif (strpos($name_lower, 'rälsbuss') !== false || strpos($name_lower, 'railbus') !== false || strpos($slug_lower, 'bus') !== false || strpos($slug_lower, 'buss') !== false) {
-        return '🚌'; // Rail bus
-    }
-    
-    return '🚆'; // Default train icon
+function MRT_get_train_type_icon( ?WP_Term $train_type ): string {
+	if ( ! $train_type ) {
+		return '';
+	}
+
+	$name_lower = strtolower( $train_type->name );
+	$slug_lower = strtolower( $train_type->slug );
+
+	// Match common train types
+	if ( strpos( $name_lower, 'ång' ) !== false || strpos( $slug_lower, 'steam' ) !== false || strpos( $slug_lower, 'ang' ) !== false ) {
+		return '🚂'; // Steam train
+	} elseif ( strpos( $name_lower, 'diesel' ) !== false || strpos( $slug_lower, 'diesel' ) !== false ) {
+		return '🚃'; // Diesel train
+	} elseif ( strpos( $name_lower, 'elektrisk' ) !== false || strpos( $name_lower, 'electric' ) !== false || strpos( $slug_lower, 'electric' ) !== false ) {
+		return '🚄'; // Electric train
+	} elseif ( strpos( $name_lower, 'rälsbuss' ) !== false || strpos( $name_lower, 'railbus' ) !== false || strpos( $slug_lower, 'bus' ) !== false || strpos( $slug_lower, 'buss' ) !== false ) {
+		return '🚌'; // Rail bus
+	}
+
+	return '🚆'; // Default train icon
 }
 
 /**
@@ -169,11 +181,11 @@ function MRT_get_train_type_icon(?WP_Term $train_type): string {
  * @param string|null $time Time in HH:MM format or null
  * @return string Time in HH.MM format or empty string
  */
-function MRT_format_time_display(?string $time): string {
-    if (empty($time)) {
-        return '';
-    }
-    return str_replace(':', '.', $time);
+function MRT_format_time_display( ?string $time ): string {
+	if ( empty( $time ) ) {
+		return '';
+	}
+	return str_replace( ':', '.', $time );
 }
 
 /**
@@ -188,50 +200,50 @@ function MRT_format_time_display(?string $time): string {
  *
  * @return array{0: string, 1: string} [symbol_prefix, time_str]
  */
-function MRT_stop_time_prefix_and_time_parts(array $stop_time): array {
-    $arrival = $stop_time['arrival_time'] ?? '';
-    $departure = $stop_time['departure_time'] ?? '';
-    $pickup_allowed = !empty($stop_time['pickup_allowed']);
-    $dropoff_allowed = !empty($stop_time['dropoff_allowed']);
+function MRT_stop_time_prefix_and_time_parts( array $stop_time ): array {
+	$arrival         = $stop_time['arrival_time'] ?? '';
+	$departure       = $stop_time['departure_time'] ?? '';
+	$pickup_allowed  = ! empty( $stop_time['pickup_allowed'] );
+	$dropoff_allowed = ! empty( $stop_time['dropoff_allowed'] );
 
-    $symbol_prefix = '';
-    if ($pickup_allowed && !$dropoff_allowed) {
-        $symbol_prefix = 'P ';
-    } elseif (!$pickup_allowed && $dropoff_allowed) {
-        $symbol_prefix = 'A ';
-    }
+	$symbol_prefix = '';
+	if ( $pickup_allowed && ! $dropoff_allowed ) {
+		$symbol_prefix = 'P ';
+	} elseif ( ! $pickup_allowed && $dropoff_allowed ) {
+		$symbol_prefix = 'A ';
+	}
 
-    if ($departure) {
-        $time_str = $departure;
-    } elseif ($arrival) {
-        $time_str = $arrival;
-    } elseif ($pickup_allowed && $dropoff_allowed) {
-        return ['', 'X'];
-    } else {
-        $time_str = '';
-    }
+	if ( $departure ) {
+		$time_str = $departure;
+	} elseif ( $arrival ) {
+		$time_str = $arrival;
+	} elseif ( $pickup_allowed && $dropoff_allowed ) {
+		return array( '', 'X' );
+	} else {
+		$time_str = '';
+	}
 
-    if ($time_str !== '' && $time_str !== 'X') {
-        $time_str = MRT_format_time_display($time_str);
-    }
+	if ( $time_str !== '' && $time_str !== 'X' ) {
+		$time_str = MRT_format_time_display( $time_str );
+	}
 
-    return [$symbol_prefix, $time_str];
+	return array( $symbol_prefix, $time_str );
 }
 
-function MRT_format_stop_time_display(?array $stop_time): string {
-    if (!$stop_time) {
-        return '—';
-    }
+function MRT_format_stop_time_display( ?array $stop_time ): string {
+	if ( ! $stop_time ) {
+		return '—';
+	}
 
-    $pickup_allowed = !empty($stop_time['pickup_allowed']);
-    $dropoff_allowed = !empty($stop_time['dropoff_allowed']);
-    $stops_here = $pickup_allowed || $dropoff_allowed;
+	$pickup_allowed  = ! empty( $stop_time['pickup_allowed'] );
+	$dropoff_allowed = ! empty( $stop_time['dropoff_allowed'] );
+	$stops_here      = $pickup_allowed || $dropoff_allowed;
 
-    if (!$stops_here) {
-        return '|';
-    }
+	if ( ! $stops_here ) {
+		return '|';
+	}
 
-    [$symbol_prefix, $time_str] = MRT_stop_time_prefix_and_time_parts($stop_time);
+	[$symbol_prefix, $time_str] = MRT_stop_time_prefix_and_time_parts( $stop_time );
 
-    return $symbol_prefix . $time_str;
+	return $symbol_prefix . $time_str;
 }
