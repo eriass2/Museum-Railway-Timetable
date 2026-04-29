@@ -90,6 +90,9 @@ function MRT_prepare_service_info( array $services_list, string $dateYmd ): arra
 		$train_type              = $service_data['train_type'];
 		$disp                    = MRT_prepare_service_train_display( $service, $train_type );
 		$service_classes[ $idx ] = $disp['classes'];
+		if ( in_array( (string) $disp['service_number'], array( '93', '96' ), true ) ) {
+			$service_classes[ $idx ][] = 'mrt-service-thuns';
+		}
 
 		$service_stop_times = $service_data['stop_times'] ?? array();
 		$destination_data   = MRT_get_service_destination( $service->ID );
