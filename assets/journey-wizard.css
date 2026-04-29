@@ -268,11 +268,9 @@
 }
 
 .mrt-journey-wizard__timetable-body {
-    max-height: 70dvh;
     max-width: 100%;
     min-width: 0;
     overflow-x: auto;
-    overflow-y: auto;
     padding: 0.9rem;
     background: #ffffff;
     color: var(--mrt-jw-text);
@@ -455,10 +453,26 @@
 
 .mrt-journey-wizard__timetable .mrt-grid-cell .mrt-train-type-icon,
 .mrt-journey-wizard__timetable .mrt-train-type-icon {
+    display: flex;
+    justify-content: center;
     margin: 0;
     color: #111111;
-    font-size: 1.35rem;
     line-height: 1;
+}
+
+.mrt-journey-wizard__timetable .mrt-train-symbol {
+    display: block;
+    width: 2.15rem;
+    height: 0.95rem;
+    color: #111111;
+}
+
+.mrt-journey-wizard__timetable .mrt-train-symbol--steam {
+    width: 2.35rem;
+}
+
+.mrt-journey-wizard__timetable .mrt-train-symbol--railbus {
+    width: 2.2rem;
 }
 
 .mrt-journey-wizard__timetable .mrt-grid-cell .mrt-train-type,
@@ -540,13 +554,156 @@
     background: var(--mrt-print-yellow) !important;
 }
 
+.mrt-journey-wizard__timetable .mrt-service-thuns.mrt-grid-cell {
+    box-shadow: inset 0.42rem 0 0 var(--mrt-print-yellow);
+}
+
 .mrt-journey-wizard__timetable .mrt-service-bus.mrt-grid-cell,
 .mrt-journey-wizard__timetable .mrt-service-bus.mrt-grid-cell.mrt-time-cell {
+    background: inherit;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-split-arrival-row > .mrt-grid-cell {
+    border-bottom: 3px solid #111111;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-split-departure-row > .mrt-grid-cell {
+    border-top: 3px solid #111111;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-transfer-inline-row > .mrt-grid-cell {
+    min-height: 1.9rem;
+    border-top: 3px solid #111111;
+    border-bottom: 3px solid #111111;
+    background: #ffffff !important;
+    font-size: 0.74rem;
+    line-height: 1.05;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-transfer-inline-row > .mrt-station-col {
+    justify-content: flex-end;
+    background: var(--mrt-print-station) !important;
+    font-size: 0.82rem;
+    text-align: right;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-transfer-inline-cell {
+    flex-direction: column;
+    gap: 0.05rem;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-transfer-inline-cell:empty::before {
+    content: none;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-transfer-inline-type,
+.mrt-journey-wizard__timetable .mrt-print-transfer-inline-number {
+    display: block;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-bus-notice-row {
+    display: contents;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-bus-notice-label,
+.mrt-journey-wizard__timetable .mrt-print-bus-notice-message {
+    min-height: 2.1rem;
     background: var(--mrt-print-blue) !important;
+    border-top: 3px solid #111111;
+    border-bottom: 3px solid #111111;
+    color: #111111;
+    font-size: 0.92rem;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-bus-notice-label {
+    white-space: normal;
+}
+
+.mrt-journey-wizard__timetable .mrt-print-bus-notice-message {
+    grid-column: 2 / -1;
+    justify-content: center;
+    text-align: center;
 }
 
 .mrt-journey-wizard__timetable .mrt-timetable-separator {
     display: none;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key {
+    box-sizing: border-box;
+    width: min(100%, 58.5rem);
+    margin: 2.4rem auto 0;
+    color: #111111;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__title {
+    margin: 0 0 0.65rem;
+    color: #111111;
+    font-size: clamp(1.55rem, 4vw, 2.1rem);
+    line-height: 1;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__grid {
+    display: grid;
+    grid-template-columns: 5.8rem minmax(0, 1fr) 5.8rem minmax(0, 1fr);
+    border: 1px solid var(--mrt-print-grid);
+    background: #ffffff;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__mark,
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__text {
+    min-height: 2.8rem;
+    border-right: 1px solid var(--mrt-print-grid);
+    border-bottom: 1px solid var(--mrt-print-grid);
+    padding: 0.45rem 0.55rem;
+    font-size: 0.9rem;
+    line-height: 1.15;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.45rem;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__text {
+    font-weight: 500;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__text strong {
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__mark--bus,
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__text--bus {
+    background: var(--mrt-print-blue);
+    font-size: 0.88rem;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__mark--express,
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__text--express {
+    background: var(--mrt-print-yellow);
+    font-size: 0.86rem;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__grid > :nth-child(4n) {
+    border-right: 0;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__grid > :nth-last-child(-n + 4) {
+    border-bottom: 0;
+}
+
+.mrt-journey-wizard__timetable .mrt-timetable-print-key__reservation {
+    margin: 1.2rem 0 0;
+    text-align: right;
+    font-size: 0.92rem;
 }
 
 .mrt-journey-wizard__cta,
@@ -1100,5 +1257,18 @@
     .mrt-journey-wizard__passed-toggle,
     .mrt-journey-wizard__transfer-block {
         margin-left: 5.2rem;
+    }
+
+    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid {
+        grid-template-columns: 5.8rem minmax(18rem, 1fr);
+        overflow-x: auto;
+    }
+
+    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid > :nth-child(4n) {
+        border-right: 1px solid var(--mrt-print-grid);
+    }
+
+    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid > :nth-child(even) {
+        border-right: 0;
     }
 }
