@@ -15,6 +15,7 @@ define('MRT_POST_TYPE_SERVICE', 'mrt_service');
 define('MRT_POST_TYPE_TIMETABLE', 'mrt_timetable');
 
 require_once __DIR__ . '/wp-stubs.php';
+require_once __DIR__ . '/JourneyTestFixtures.php';
 
 if (!isset($GLOBALS['wpdb'])) {
     $GLOBALS['wpdb'] = new class {
