@@ -1,6 +1,6 @@
 # JavaScript – Granskning mot Style Guide
 
-Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
+Granskning av `assets/*.js` mot STYLE_GUIDE.md.
 
 **Senast analyserad:** 2026-03-27 (dokumentationsgenomgång)
 
@@ -17,7 +17,7 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 | **Prefix** | `mrtAdmin`, `mrtFrontend` för lokaliserade strängar |
 | **Nonces** | Alla AJAX-anrop skickar nonce (admin + frontend) |
 | **Felhantering** | Alla AJAX-anrop har success/error eller .fail() |
-| **CSS-klasser** | Använder `.mrt-*` enligt COMPONENT_LIBRARY |
+| **CSS-klasser** | Använder `.mrt-*` enligt STYLE_GUIDE |
 | **XSS** | `escapeHtml()`, `.text()`, `textContent`, `document.createElement` |
 | **Clean Code** | Funktioner under ~50 rader, uppdelade moduler |
 
@@ -61,5 +61,5 @@ Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 ## Sammanfattning
 
-- **Struktur och grund:** Bra – följer STYLE_GUIDE och COMPONENT_LIBRARY
+- **Struktur och grund:** Bra – följer STYLE_GUIDE
 - **Alla förbättringar genomförda** – inga återstående observationer

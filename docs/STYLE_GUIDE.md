@@ -70,8 +70,6 @@ Kodstandarder och clean code-principer för projektet.
 - **Variabler** – CSS custom properties med `--mrt-` prefix
 
 ### Struktur
-- **Design system** – Se `DESIGN_SYSTEM.md` för tokens
-- **Komponentbibliotek** – Se `COMPONENT_LIBRARY.md` för återanvändbara komponenter (btn, form, badge, card m.fl.)
 - **CSS-variabler** i `:root` för färger, spacing, borders
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar
 - **Inga inline styles** – All styling i CSS-filer
@@ -141,7 +139,7 @@ Kodstandarder och clean code-principer för projektet.
 museum-railway-timetable/
 ├── museum-railway-timetable.php   # Huvudfil
 ├── uninstall.php
-├── docs/                          # Dokumentation (STYLE_GUIDE, COMPONENT_LIBRARY, etc.)
+├── docs/                          # Dokumentation (STYLE_GUIDE, mockup-planer, m.m.)
 ├── scripts/                       # deploy, validate, lint
 ├── inc/
 │   ├── functions/                 # Helper-funktioner (helpers-*.php, timetable-view/)
@@ -182,8 +180,8 @@ museum-railway-timetable/
 
 ## 8. Referenser
 
-- **COMPONENT_LIBRARY.md** – Komponenter och utilities
-- **DESIGN_SYSTEM.md** – Tokens och base components
+- **UI_MOCKUP_PLAN.md** – Mockup-förankrad UI-plan
+- **mockup-analys-funktionella-krav-user-stories.md** – Mockup-analys, krav och UI-observationer
 - **assets/CSS_STRUCTURE.md** – CSS-filstruktur
 - [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)

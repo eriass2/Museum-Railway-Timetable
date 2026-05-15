@@ -32,13 +32,13 @@ composer plugin-check
 |----------|----------|
 | [docs/README.md](README.md) | Fullständigt index över alla `.md`-filer |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |
-| [COMPONENT_LIBRARY.md](COMPONENT_LIBRARY.md) | UI-komponenter (.mrt-btn, .mrt-form, etc.) |
-| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Design tokens |
+| [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md) | Mockup-förankrad UI-plan för publik bokningsvy |
+| [mockup-analys-funktionella-krav-user-stories.md](mockup-analys-funktionella-krav-user-stories.md) | Mockup-analys, funktionella krav och user stories |
 | [DATA_MODEL.md](DATA_MODEL.md) | Datamodell, relationer, post types |
 | [REFACTORING_PLAN.md](REFACTORING_PLAN.md) | Filstruktur, genomförd uppdelning |
 | [VALIDATION.md](VALIDATION.md) | Checklista före deploy |
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
-| [PHP_STYLE_REVIEW.md](PHP_STYLE_REVIEW.md) / [JS_STYLE_REVIEW.md](JS_STYLE_REVIEW.md) / [CSS_STYLE_REVIEW.md](CSS_STYLE_REVIEW.md) | Granskningar mot style guide |
+| [PHP_STYLE_REVIEW.md](PHP_STYLE_REVIEW.md) / [JS_STYLE_REVIEW.md](JS_STYLE_REVIEW.md) | Granskningar mot style guide |
 | [FUTURE_WORK.md](FUTURE_WORK.md) | Idéer för framtida förbättringar |
 | [PROJECT_HEALTH.md](PROJECT_HEALTH.md) | CI, Dependabot, vilka kommandon som körs |
 | [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md) | CSS-moduler och `@import` |

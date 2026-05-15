@@ -73,8 +73,8 @@
 | Område | Status |
 |-------|--------|
 | **Filstruktur** | Mappar (inc/, docs/, scripts/), loaders |
-| **Style guides** | STYLE_GUIDE, COMPONENT_LIBRARY, DESIGN_SYSTEM |
-| **Granskningar** | PHP_STYLE_REVIEW, JS_STYLE_REVIEW, CSS_STYLE_REVIEW |
+| **Style guides** | STYLE_GUIDE samt mockup-förankrade UI-dokument |
+| **Granskningar** | PHP_STYLE_REVIEW, JS_STYLE_REVIEW |
 | **Datamodell** | DATA_MODEL.md med UML |
 | **Validering** | `composer plugin-check` (= `php scripts/validate.php`), validate.ps1 |
 | **CI** | `.github/workflows/ci.yml` (validate vid push/PR) |
