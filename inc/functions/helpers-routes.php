@@ -43,6 +43,31 @@ function MRT_get_route_stations( $route_id ) {
 }
 
 /**
+ * Get routes that include a station.
+ *
+ * @param int $station_id Station post ID
+ * @return array<int, WP_Post> Route posts
+ */
+function MRT_get_routes_using_station( $station_id ) {
+	$all_routes           = get_posts(
+		array(
+			'post_type'      => 'mrt_route',
+			'posts_per_page' => -1,
+			'fields'         => 'all',
+		)
+	);
+	$routes_using_station = array();
+	foreach ( $all_routes as $route ) {
+		$route_stations    = get_post_meta( $route->ID, 'mrt_route_stations', true );
+		$route_station_ids = is_array( $route_stations ) ? array_map( 'intval', $route_stations ) : array();
+		if ( in_array( (int) $station_id, $route_station_ids, true ) ) {
+			$routes_using_station[] = $route;
+		}
+	}
+	return $routes_using_station;
+}
+
+/**
  * Calculate direction based on route and end station
  *
  * @param int $route_id Route post ID

@@ -94,30 +94,6 @@ endif;
 }
 
 /**
- * Get routes that include a station
- *
- * @param int $sid Station post ID
- * @return array Route posts
- */
-function MRT_get_routes_using_station( int $sid ): array {
-	$all_routes           = get_posts(
-		array(
-			'post_type'      => 'mrt_route',
-			'posts_per_page' => -1,
-			'fields'         => 'all',
-		)
-	);
-	$routes_using_station = array();
-	foreach ( $all_routes as $route ) {
-		$route_stations = get_post_meta( $route->ID, 'mrt_route_stations', true );
-		if ( is_array( $route_stations ) && in_array( $sid, $route_stations, true ) ) {
-			$routes_using_station[] = $route;
-		}
-	}
-	return $routes_using_station;
-}
-
-/**
  * Render a single station overview row
  *
  * @param int    $sid         Station post ID

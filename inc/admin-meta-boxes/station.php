@@ -9,31 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
 /**
- * Routes that include this station (by station post ID).
- *
- * @return array<int, WP_Post>
- */
-if ( ! function_exists( 'MRT_get_routes_using_station' ) ) {
-	function MRT_get_routes_using_station( int $station_id ): array {
-		$all_routes           = get_posts(
-			array(
-				'post_type'      => 'mrt_route',
-				'posts_per_page' => -1,
-				'fields'         => 'all',
-			)
-		);
-		$routes_using_station = array();
-		foreach ( $all_routes as $route ) {
-			$route_stations = get_post_meta( $route->ID, 'mrt_route_stations', true );
-			if ( is_array( $route_stations ) && in_array( $station_id, $route_stations, true ) ) {
-				$routes_using_station[] = $route;
-			}
-		}
-		return $routes_using_station;
-	}
-}
-
-/**
  * Info box listing routes that use this station.
  */
 function MRT_render_station_meta_box_routes_list( int $station_id ): void {
