@@ -22,8 +22,9 @@
         "phpstan": "phpstan analyse --memory-limit=1G",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
+        "check": ["@plugin-check", "@phpstan", "@test", "@test:js"],
         "lint": ["@phpstan", "@phpcs"],
         "test": "phpunit",
-        "test:js": "node --test tests/js/"
+        "test:js": "node --test tests/js/*.mjs"
     }
 }
