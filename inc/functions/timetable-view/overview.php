@@ -172,22 +172,7 @@ function MRT_render_timetable_overview( $timetable_id, $dateYmd = null ) {
 		$dateYmd  = $datetime['date'];
 	}
 
-	$services = get_posts(
-		array(
-			'post_type'      => 'mrt_service',
-			'posts_per_page' => -1,
-			'meta_query'     => array(
-				array(
-					'key'     => 'mrt_service_timetable_id',
-					'value'   => $timetable_id,
-					'compare' => '=',
-				),
-			),
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-			'fields'         => 'all',
-		)
-	);
+	$services = MRT_get_services_for_timetable( $timetable_id );
 
 	if ( empty( $services ) ) {
 		return MRT_render_alert( __( 'No trips in this timetable.', 'museum-railway-timetable' ), 'info', 'mrt-empty' );
