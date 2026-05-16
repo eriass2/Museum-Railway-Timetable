@@ -108,8 +108,22 @@ function MRT_get_post_by_title( string $title, string $post_type ): ?WP_Post {
 	if ( empty( $title ) || empty( $post_type ) ) {
 		return null;
 	}
-	$post = get_page_by_title( sanitize_text_field( $title ), OBJECT, $post_type );
-	return $post ?: null;
+	$query = new WP_Query(
+		array(
+			'post_type'              => $post_type,
+			'title'                  => sanitize_text_field( $title ),
+			'post_status'            => 'any',
+			'posts_per_page'         => 1,
+			'no_found_rows'          => true,
+			'ignore_sticky_posts'    => true,
+			'update_post_term_cache' => false,
+			'update_post_meta_cache' => false,
+		)
+	);
+	if ( ! $query->have_posts() ) {
+		return null;
+	}
+	return $query->posts[0];
 }
 
 /**

@@ -68,7 +68,7 @@ function MRT_import_create_stations() {
 		$name       = $s[0];
 		$order      = $s[1];
 		$bus_suffix = isset( $s[2] ) && $s[2];
-		$existing   = get_page_by_title( $name, OBJECT, 'mrt_station' );
+		$existing   = MRT_get_post_by_title( $name, 'mrt_station' );
 		if ( $existing ) {
 			$station_ids[ $name ] = $existing->ID;
 			update_post_meta( $existing->ID, 'mrt_display_order', $order );
@@ -141,7 +141,7 @@ function MRT_import_create_routes( $station_ids ) {
 }
 
 function MRT_import_ensure_route( $title, $station_ids ) {
-	$route = get_page_by_title( $title, OBJECT, 'mrt_route' );
+	$route = MRT_get_post_by_title( $title, 'mrt_route' );
 	if ( ! $route ) {
 		$id = wp_insert_post(
 			array(
