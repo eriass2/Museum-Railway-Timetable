@@ -20,6 +20,22 @@ function MRT_assets_base_url(): string {
 }
 
 /**
+ * Enqueue shared train-type icon styles.
+ *
+ * @param array<int, string> $deps Style dependencies
+ * @return string Style handle
+ */
+function MRT_enqueue_train_type_icon_styles( array $deps = array() ): string {
+	wp_enqueue_style(
+		'mrt-train-type-icons',
+		MRT_assets_base_url() . 'train-type-icons.css',
+		$deps,
+		MRT_VERSION
+	);
+	return 'mrt-train-type-icons';
+}
+
+/**
  * Check if admin assets should be loaded for current page
  *
  * @param string $hook Current admin page hook
@@ -107,6 +123,7 @@ function MRT_enqueue_admin_css( string $hook ): void {
 	$meta_deps = array( 'mrt-admin-timetable' );
 	if ( MRT_should_load_admin_timetable_overview( $hook ) ) {
 		wp_enqueue_style( 'mrt-admin-timetable-overview', $base . 'admin-timetable-overview.css', array( 'mrt-admin-timetable' ), MRT_VERSION );
+		MRT_enqueue_train_type_icon_styles( array( 'mrt-admin-timetable-overview' ) );
 		$meta_deps[] = 'mrt-admin-timetable-overview';
 	}
 	wp_enqueue_style( 'mrt-admin-meta-boxes', $base . 'admin-meta-boxes.css', $meta_deps, MRT_VERSION );
@@ -332,10 +349,11 @@ function MRT_journey_wizard_script_localization(): array {
 	$cal = MRT_journey_wizard_calendar_i18n_arrays();
 	return array_merge(
 		array(
-			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-			'nonce'         => wp_create_nonce( 'mrt_frontend' ),
-			'monthNames'    => $cal['monthNames'],
-			'weekdayAbbrev' => $cal['weekdayAbbrev'],
+			'ajaxurl'         => admin_url( 'admin-ajax.php' ),
+			'nonce'           => wp_create_nonce( 'mrt_frontend' ),
+			'monthNames'      => $cal['monthNames'],
+			'weekdayAbbrev'   => $cal['weekdayAbbrev'],
+			'trainTypeIcons'  => MRT_train_type_icon_urls(),
 		),
 		MRT_journey_wizard_l10n_steps_and_trip(),
 		MRT_journey_wizard_l10n_table_calendar(),
@@ -429,6 +447,7 @@ function MRT_enqueue_frontend_overview_style_maybe( bool $has_overview_shortcode
 			array( 'mrt-frontend-timetable' ),
 			MRT_VERSION
 		);
+		MRT_enqueue_train_type_icon_styles( array( 'mrt-frontend-timetable-overview' ) );
 		$deps[] = 'mrt-frontend-timetable-overview';
 	}
 	return $deps;
@@ -518,7 +537,7 @@ function MRT_enqueue_journey_wizard_assets(): void {
 	wp_enqueue_style(
 		'mrt-journey-wizard',
 		$a . 'journey-wizard.css',
-		array( 'mrt-frontend-responsive' ),
+		array( MRT_enqueue_train_type_icon_styles( array( 'mrt-frontend-responsive' ) ) ),
 		MRT_VERSION
 	);
 	wp_enqueue_script(

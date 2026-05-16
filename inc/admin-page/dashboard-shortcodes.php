@@ -70,7 +70,7 @@ function MRT_render_dashboard_shortcodes_block_overview(): void {
 				<strong><?php esc_html_e( 'What it shows:', 'museum-railway-timetable' ); ?></strong><br>
 				• <?php esc_html_e( 'All trips (services) in the timetable', 'museum-railway-timetable' ); ?><br>
 				• <?php esc_html_e( 'Grouped by route and direction (e.g., "Från Uppsala Ö Till Marielund")', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'Train types with icons for each trip (🚂 Ångtåg, 🚌 Rälsbuss, 🚃 Dieseltåg)', 'museum-railway-timetable' ); ?><br>
+				• <?php esc_html_e( 'Train types with icons for each trip (ång, diesel, rälsbuss, buss)', 'museum-railway-timetable' ); ?><br>
 				• <?php esc_html_e( 'Train numbers displayed prominently (or service ID as fallback)', 'museum-railway-timetable' ); ?><br>
 				• <?php esc_html_e( 'Arrival/departure times in HH.MM format for each station', 'museum-railway-timetable' ); ?><br>
 				• <?php esc_html_e( 'Symbols: P (pickup only), A (dropoff only), X (no time), | (passes without stopping)', 'museum-railway-timetable' ); ?><br>
