@@ -119,14 +119,15 @@ function MRT_render_route_station_row( $index, $station_id, $station_count ) {
 	if ( ! $station ) {
 		return;
 	}
+	$station_id_attr = (string) $station_id;
 	?>
-	<tr class="mrt-row-hover" data-station-id="<?php echo esc_attr( $station_id ); ?>">
+	<tr class="mrt-row-hover" data-station-id="<?php echo esc_attr( $station_id_attr ); ?>">
 		<td><?php echo esc_html( (string) ( $index + 1 ) ); ?></td>
 		<td><?php echo esc_html( $station->post_title ); ?></td>
 		<td>
-			<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="<?php echo esc_attr( $station_id ); ?>" title="<?php esc_attr_e( 'Move up', 'museum-railway-timetable' ); ?>" <?php echo $index === 0 ? 'disabled' : ''; ?>>↑</button>
-			<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="<?php echo esc_attr( $station_id ); ?>" title="<?php esc_attr_e( 'Move down', 'museum-railway-timetable' ); ?>" <?php echo $index === $station_count - 1 ? 'disabled' : ''; ?>>↓</button>
-			<button type="button" class="button button-small mrt-remove-route-station" data-station-id="<?php echo esc_attr( $station_id ); ?>"><?php esc_html_e( 'Remove', 'museum-railway-timetable' ); ?></button>
+			<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="<?php echo esc_attr( $station_id_attr ); ?>" title="<?php esc_attr_e( 'Move up', 'museum-railway-timetable' ); ?>" <?php echo $index === 0 ? 'disabled' : ''; ?>>↑</button>
+			<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="<?php echo esc_attr( $station_id_attr ); ?>" title="<?php esc_attr_e( 'Move down', 'museum-railway-timetable' ); ?>" <?php echo $index === $station_count - 1 ? 'disabled' : ''; ?>>↓</button>
+			<button type="button" class="button button-small mrt-remove-route-station" data-station-id="<?php echo esc_attr( $station_id_attr ); ?>"><?php esc_html_e( 'Remove', 'museum-railway-timetable' ); ?></button>
 		</td>
 	</tr>
 	<?php
