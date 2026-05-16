@@ -17,9 +17,9 @@ composer plugin-check
 
 Skriptet kontrollerar bland annat: obligatoriska filer, PHP-syntax, ABSPATH, inline styles (utom CSS-variabler), plugin-header, text domain, CSS/JS-filer.
 
-Se även [DEVELOPER.md](DEVELOPER.md) för `composer lint` (PHPStan + PHPCS) och kända begränsningar.
+Se även [DEVELOPER.md](../DEVELOPER.md) för `composer lint` (PHPStan + PHPCS) och kända begränsningar.
 
-Efter större UI-/temaändringar: kör även den manuella checklistan i [RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md) (shortcodes + wizard + admin-fokus).
+Efter större UI-/temaändringar: kör även den manuella checklistan i [accessibility/RELEASE_A11Y_SMOKE.md](../accessibility/RELEASE_A11Y_SMOKE.md) (shortcodes + wizard + admin-fokus).
 
 ---
 
@@ -45,7 +45,7 @@ Efter större UI-/temaändringar: kör även den manuella checklistan i [RELEASE
 
 ## Kodkvalitet
 
-- [ ] Följ [STYLE_GUIDE.md](STYLE_GUIDE.md)
+- [ ] Följ [design/STYLE_GUIDE.md](../design/STYLE_GUIDE.md)
 - [ ] PHPDoc på nya publika funktioner
 - [ ] Text domain `museum-railway-timetable` konsekvent
 
@@ -62,5 +62,5 @@ Efter större UI-/temaändringar: kör även den manuella checklistan i [RELEASE
 
 ## Referenser
 
-- [DEVELOPER.md](DEVELOPER.md) – snabbstart och verktyg
-- [STYLE_GUIDE.md](STYLE_GUIDE.md) – kodstandard
+- [DEVELOPER.md](../DEVELOPER.md) – snabbstart och verktyg
+- [design/STYLE_GUIDE.md](../design/STYLE_GUIDE.md) – kodstandard

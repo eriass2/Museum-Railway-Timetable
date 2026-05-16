@@ -1,10 +1,12 @@
 # Plan: publikt reseflöde – funktioner först, sedan vyer
 
+> **Arkiverat (2026-05):** MVP är levererad. Använd [product/JOURNEY.md](../../product/JOURNEY.md) och [product/SHORTCODES_OVERVIEW.md](../../product/SHORTCODES_OVERVIEW.md) som levande dokumentation.
+
 Princip: **domänlogik och testbara PHP-funktioner** byggs och stabiliseras först; **HTML/CSS/JS (vyer)** kopplas sedan till samma API:er. Det minskar risk att UI låser in fel datamodell.
 
-**Underlag:** [USER_STORIES_DATA_GAP_ANALYSIS.md](USER_STORIES_DATA_GAP_ANALYSIS.md), [mockup-analys-funktionella-krav-user-stories.md](mockup-analys-funktionella-krav-user-stories.md), [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md), mockups i `docs/mockups/`.
+**Underlag:** [user-stories-data-gap-analysis.md](user-stories-data-gap-analysis.md), [mockup-requirements-and-stories.md](mockup-requirements-and-stories.md), [ui-mockup-plan.md](ui-mockup-plan.md), mockups i `docs/mockups/`.
 
-**Arkitektur (lager, testning, logik vs UI):** [ARCHITECTURE.md](ARCHITECTURE.md).
+**Arkitektur (lager, testning, logik vs UI):** [domain/ARCHITECTURE.md](../../domain/ARCHITECTURE.md).
 
 ---
 
@@ -23,7 +25,7 @@ MVP enligt denna plan (**domänfunktioner → AJAX → `[museum_journey_wizard]`
 
 **Parser/render-filer i repo:** `inc/admin-ajax/journey-parse.php` (POST-validering och `MRT_journey_ajax_parse_*`) och `inc/admin-ajax/journey-render.php` (`MRT_journey_render_search_results_html`) är **versionerade** och laddas från `inc/admin-ajax.php` tillsammans med `journey.php`.
 
-**Delade JS-moduler (frontend/admin):** `assets/mrt-string-utils.js` (`MRTStringUtils`), `assets/mrt-date-utils.js` (`MRTDateUtils`), `assets/mrt-frontend-api.js` (`MRTFrontendApi` + `mrtFrontend`), `admin-utils.js` (`MRTAdminUtils` inkl. `msg` för `mrtAdmin`). Se [STYLE_GUIDE.md](STYLE_GUIDE.md) §4.
+**Delade JS-moduler (frontend/admin):** `assets/mrt-string-utils.js` (`MRTStringUtils`), `assets/mrt-date-utils.js` (`MRTDateUtils`), `assets/mrt-frontend-api.js` (`MRTFrontendApi` + `mrtFrontend`), `admin-utils.js` (`MRTAdminUtils` inkl. `msg` för `mrtAdmin`). Se [STYLE_GUIDE.md](../../design/STYLE_GUIDE.md) §4.
 
 ---
 
@@ -43,7 +45,7 @@ MVP enligt denna plan (**domänfunktioner → AJAX → `[museum_journey_wizard]`
 | Priser | **I v1:** option `mrt_price_matrix`, `MRT_get_prices_for_context`, visning i wizard-sammanfattning. |
 | Trafikmeddelanden | **MVP:** post meta `mrt_service_notice`, `MRT_get_service_notice` i detalj/API. |
 
-Se även [ARCHITECTURE.md](ARCHITECTURE.md) för hur domänlogik hålls fri från UI.
+Se även [ARCHITECTURE.md](../../domain/ARCHITECTURE.md) för hur domänlogik hålls fri från UI.
 
 ---
 
@@ -145,7 +147,7 @@ Ingen ny skärm krävs för att **testa** – Postman eller en minimal admin-deb
 
 ## Del 3 – Vyer (i ordning enligt mockup-flöde)
 
-**Status:** **Slutfört (MVP).** Shortcode `[museum_journey_wizard]` med `assets/journey-wizard.js` + `journey-wizard.css` (laddas när shortcoden finns på sidan). Flöde: rutt + enkel/retur → kalender (`mrt_journey_calendar_month`) → utresa (`mrt_search_journey` single) → valfritt retur (`mrt_search_journey` return) → sammanfattning inkl. **prismatris** (`mrt_price_matrix`, rad enkel/retur markerad). Mellanliggande stopp: `mrt_journey_connection_detail`. WCAG: se [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md). Attribut: `ticket_url`, `hero_image`, `hero_subtitle`. `[museum_journey_planner]` är kvar som **en skärms enkel sökning** (samma AJAX-backend), se [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md).
+**Status:** **Slutfört (MVP).** Shortcode `[museum_journey_wizard]` med `assets/journey-wizard.js` + `journey-wizard.css` (laddas när shortcoden finns på sidan). Flöde: rutt + enkel/retur → kalender (`mrt_journey_calendar_month`) → utresa (`mrt_search_journey` single) → valfritt retur (`mrt_search_journey` return) → sammanfattning inkl. **prismatris** (`mrt_price_matrix`, rad enkel/retur markerad). Mellanliggande stopp: `mrt_journey_connection_detail`. WCAG: se [WCAG_JOURNEY_WIZARD.md](../../accessibility/WCAG_JOURNEY_WIZARD.md). Attribut: `ticket_url`, `hero_image`, `hero_subtitle`. `[museum_journey_planner]` är kvar som **en skärms enkel sökning** (samma AJAX-backend), se [WCAG_PUBLIC_SHORTCODES.md](../../accessibility/WCAG_PUBLIC_SHORTCODES.md).
 
 Bygg **efter** att Del 1.1–1.3 (minst) och API i Del 2 finns för motsvarande steg.
 
@@ -159,7 +161,7 @@ Bygg **efter** att Del 1.1–1.3 (minst) och API i Del 2 finns för motsvarande 
 
 **Tekniskt:** implementerat som `[museum_journey_wizard]` + `assets/journey-wizard.js` (beror på `mrt-frontend` för delad nonce/AJAX-URL). **Priser:** matris från `mrt_price_matrix` visas i sista steget (raden enkel/retur markeras). Ytterligare polish: hero-layout, djupare WCAG (Del 4).
 
-**Stil:** återanvänd tokens från [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md); bygg CSS i `assets/` med BEM-liknande klasser som redan används (`mrt-*`).
+**Stil:** återanvänd tokens från [ui-mockup-plan.md](ui-mockup-plan.md) / [DESIGN_SYSTEM.md](../../design/DESIGN_SYSTEM.md); bygg CSS i `assets/` med BEM-liknande klasser som redan används (`mrt-*`).
 
 ---
 
@@ -167,11 +169,11 @@ Bygg **efter** att Del 1.1–1.3 (minst) och API i Del 2 finns för motsvarande 
 
 **Status (löpande):**
 
-- **Tester (PHP):** `composer test` (PHPUnit) med minimal WP-bootstrap i `tests/`; CI kör `composer test` + `php scripts/validate.php`. Täcker bland annat datum/tid-hjälpare, prismatris, journey-normalize, POST-parser, kalender **kantfall** (utan DB), anslutningsrad. **Integrationstester** mot riktig databas / full WordPress-kärna: planerade vid behov (se [FUTURE_WORK.md](FUTURE_WORK.md)).
+- **Tester (PHP):** `composer test` (PHPUnit) med minimal WP-bootstrap i `tests/`; CI kör `composer test` + `php scripts/validate.php`. Täcker bland annat datum/tid-hjälpare, prismatris, journey-normalize, POST-parser, kalender **kantfall** (utan DB), anslutningsrad. **Integrationstester** mot riktig databas / full WordPress-kärna: planerade vid behov (se [FUTURE_WORK.md](../../guides/FUTURE_WORK.md)).
 - **Tester (JS, valfritt):** `composer test:js` eller `npm run test:js` kör Node inbyggda testrunner (`node --test`) mot `tests/js/*.test.mjs` – laddar `mrt-date-utils.js` och `mrt-string-utils.js` i en vm (ingen browser). Kräver **Node.js 18+** installerat och `node` i PATH.
-- **Tillgänglighet:** wizard enligt Del 3 och [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md) (regioner, `aria-live`, kalenderetiketter, tabellcaption, fokus); fortsatt manuell audit vid temabyte.
+- **Tillgänglighet:** wizard enligt Del 3 och [WCAG_JOURNEY_WIZARD.md](../../accessibility/WCAG_JOURNEY_WIZARD.md) (regioner, `aria-live`, kalenderetiketter, tabellcaption, fokus); fortsatt manuell audit vid temabyte.
 - **Översättning:** nya strängar via `__()` / `esc_html__()` med textdomain `museum-railway-timetable`.
-- **PR:** checklista kopplad till [ARCHITECTURE.md](ARCHITECTURE.md) (`.github/pull_request_template.md`).
+- **PR:** checklista kopplad till [ARCHITECTURE.md](../../domain/ARCHITECTURE.md) (`.github/pull_request_template.md`).
 
 ---
 
@@ -199,4 +201,4 @@ Vyer V1 → V2 → V3 → V4
 
 ---
 
-**Relaterade dokument:** [USER_STORIES_DATA_GAP_ANALYSIS.md](USER_STORIES_DATA_GAP_ANALYSIS.md) · [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md)
+**Relaterade dokument:** [user-stories-data-gap-analysis.md](user-stories-data-gap-analysis.md) · [ui-mockup-plan.md](ui-mockup-plan.md)

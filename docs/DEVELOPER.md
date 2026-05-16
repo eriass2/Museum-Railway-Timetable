@@ -30,16 +30,18 @@ composer plugin-check
 
 | Dokument | Innehåll |
 |----------|----------|
-| [docs/README.md](README.md) | Fullständigt index över alla `.md`-filer |
-| [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |
-| [COMPONENT_LIBRARY.md](COMPONENT_LIBRARY.md) | UI-komponenter (.mrt-btn, .mrt-form, etc.) |
-| [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md) | Design tokens |
-| [DATA_MODEL.md](DATA_MODEL.md) | Datamodell, relationer, post types |
-| [REFACTORING_PLAN.md](REFACTORING_PLAN.md) | Filstruktur, genomförd uppdelning |
-| [VALIDATION.md](VALIDATION.md) | Checklista före deploy |
-| [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
-| [PHP_STYLE_REVIEW.md](PHP_STYLE_REVIEW.md) / [JS_STYLE_REVIEW.md](JS_STYLE_REVIEW.md) / [CSS_STYLE_REVIEW.md](CSS_STYLE_REVIEW.md) | Granskningar mot style guide |
-| [FUTURE_WORK.md](FUTURE_WORK.md) | Idéer för framtida förbättringar |
+| [docs/README.md](README.md) | Index (undermappar per ämne) |
+| [design/STYLE_GUIDE.md](design/STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |
+| [design/COMPONENT_LIBRARY.md](design/COMPONENT_LIBRARY.md) | UI-komponenter (.mrt-btn, .mrt-form, etc.) |
+| [design/DESIGN_SYSTEM.md](design/DESIGN_SYSTEM.md) | Design tokens |
+| [domain/DATA_MODEL.md](domain/DATA_MODEL.md) | Datamodell, relationer, post types |
+| [domain/ARCHITECTURE.md](domain/ARCHITECTURE.md) | Lager, testning, filstruktur `inc/` |
+| [product/JOURNEY.md](product/JOURNEY.md) | Publikt reseflöde (wizard, planner) |
+| [product/SHORTCODES_OVERVIEW.md](product/SHORTCODES_OVERVIEW.md) | Shortcodes |
+| [guides/VALIDATION.md](guides/VALIDATION.md) | Checklista före deploy |
+| [guides/PHP_INSTALL_WINDOWS.md](guides/PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
+| [guides/FUTURE_WORK.md](guides/FUTURE_WORK.md) | Idéer för framtida förbättringar |
+| [archive/README.md](archive/README.md) | Arkiverade planer och granskningar |
 | [PROJECT_HEALTH.md](PROJECT_HEALTH.md) | CI, Dependabot, vilka kommandon som körs |
 | [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md) | CSS-moduler och `@import` |
 
@@ -47,7 +49,7 @@ composer plugin-check
 
 ## Krav
 
-- **PHP** 8.0+ – Se [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) om PHP saknas
+- **PHP** 8.0+ – Se [guides/PHP_INSTALL_WINDOWS.md](guides/PHP_INSTALL_WINDOWS.md) om PHP saknas
 - **Composer** – [getcomposer.org](https://getcomposer.org/download/)
 - **WordPress** 6.0+ (för testning)
 
@@ -82,7 +84,7 @@ Kontrollerar: obligatoriska filer, PHP-syntax, ABSPATH, inline styles, plugin he
 ### PHPStan och PHPCS (`composer lint`)
 
 - **PHPStan:** Använder **`szepeviktor/phpstan-wordpress`** (beror på `php-stubs/wordpress-stubs`) så att WordPress-API:er (`add_action`, `__`, `WP_Post`, m.m.) känns igen. Konfiguration: `phpstan.neon` + `phpstan-bootstrap.php` (plugin-konstanter). Vid nya varningar som är svåra att fixa direkt kan du lägga till **`phpstan-baseline.neon`** (`phpstan analyse --generate-baseline`). `treatPhpDocTypesAsCertain: false` minskar brus från osäkra docblock. Kör med `composer phpstan` (**PHPStan 2.x**, 1G minne, en worker på Windows för stabilitet).
-- **PHPCS:** Använder WordPress Coding Standards. Projektet använder prefixet `MRT_` för funktioner; vissa WPCS-regler kan flagga det – bedöm utifrån [STYLE_GUIDE.md](STYLE_GUIDE.md). `composer phpcbf` fixar formateringsbar kod där det passar.
+- **PHPCS:** Använder WordPress Coding Standards. Projektet använder prefixet `MRT_` för funktioner; vissa WPCS-regler kan flagga det – bedöm utifrån [design/STYLE_GUIDE.md](design/STYLE_GUIDE.md). `composer phpcbf` fixar formateringsbar kod där det passar.
 
 ### Pre-commit hooks
 

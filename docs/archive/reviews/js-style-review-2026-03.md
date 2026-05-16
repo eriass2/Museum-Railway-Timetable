@@ -1,5 +1,7 @@
 # JavaScript – Granskning mot Style Guide
 
+> **Arkiverat (2026-03):** Engångsgranskning. Följ [design/STYLE_GUIDE.md](../../design/STYLE_GUIDE.md).
+
 Granskning av `assets/*.js` mot STYLE_GUIDE.md och COMPONENT_LIBRARY.md.
 
 **Senast analyserad:** 2026-03-27 (dokumentationsgenomgång)

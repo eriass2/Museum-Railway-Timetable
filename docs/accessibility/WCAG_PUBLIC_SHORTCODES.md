@@ -2,7 +2,7 @@
 
 Mål: **WCAG 2.1 nivå AA** där det är tekniskt rimligt utan att duplicera temats ansvar. Detta dokument täcker **`[museum_journey_planner]`**, **`[museum_timetable_month]`** och **`[museum_timetable_overview]`** (PHP, tidtabellsrutnät, `assets/frontend.js`, CSS).
 
-**Relaterat:** [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md), [SHORTCODES_OVERVIEW.md](SHORTCODES_OVERVIEW.md), [ARCHITECTURE.md](ARCHITECTURE.md), [RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md).
+**Relaterat:** [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md), [product/SHORTCODES_OVERVIEW.md](../product/SHORTCODES_OVERVIEW.md), [domain/ARCHITECTURE.md](../domain/ARCHITECTURE.md), [RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md).
 
 ---
 

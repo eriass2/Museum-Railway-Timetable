@@ -1,8 +1,10 @@
 # UI-plan – bokningsflöde (mockup-referens)
 
+> **Arkiverat (2026-05):** Wizard-MVP är implementerad. Designreferens: [design/DESIGN_SYSTEM.md](../../design/DESIGN_SYSTEM.md), [product/JOURNEY.md](../../product/JOURNEY.md).
+
 Plan för att realisera skärmarna som beskrivs i **`docs/mockups/`**. Detta är en **målbild** för framtida frontend (shortcode, block eller temaintegration); nuvarande plugin fokuserar på tidtabeller i admin – planen binder ihop design och tekniska steg.
 
-**Jämför med:** [mockup-analys-funktionella-krav-user-stories.md](mockup-analys-funktionella-krav-user-stories.md) (funktionella krav, user stories och utökad stilanalys).
+**Jämför med:** [mockup-requirements-and-stories.md](mockup-requirements-and-stories.md) (funktionella krav, user stories och utökad stilanalys).
 
 **Mockup-filer**
 

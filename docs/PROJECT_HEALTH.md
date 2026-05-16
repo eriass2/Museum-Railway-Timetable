@@ -40,5 +40,5 @@ Du ser status under fliken **Actions** i repot.
 | Dokument | Innehåll |
 |----------|----------|
 | [DEVELOPER.md](DEVELOPER.md) | Snabbstart, verktyg, begränsningar |
-| [VALIDATION.md](VALIDATION.md) | Manuell checklista före release |
-| [FUTURE_WORK.md](FUTURE_WORK.md) | PHPUnit, PHPStan-stubs, CHANGELOG, m.m. |
+| [guides/VALIDATION.md](guides/VALIDATION.md) | Manuell checklista före release |
+| [guides/FUTURE_WORK.md](guides/FUTURE_WORK.md) | PHPUnit, PHPStan-stubs, CHANGELOG, m.m. |

@@ -2,7 +2,7 @@
 
 Kort checklista **före release** eller efter större tema-/CSS-ändringar. Automatiserat: `composer plugin-check` och `composer test`. Detta ersätter inte sidvis kontrastgranskning mot produktionstema.
 
-**Relaterat:** [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md), [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md), [VALIDATION.md](VALIDATION.md).
+**Relaterat:** [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md), [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md), [guides/VALIDATION.md](../guides/VALIDATION.md).
 
 ---
 
@@ -25,4 +25,4 @@ Kort checklista **före release** eller efter större tema-/CSS-ändringar. Auto
 
 ## Översättningar
 
-Efter nya strängar i kod: uppdatera `languages/*.po`, kompilera till `.mo` enligt [COMPILE_TRANSLATIONS.md](COMPILE_TRANSLATIONS.md).
+Efter nya strängar i kod: uppdatera `languages/*.po`, kompilera till `.mo` enligt [guides/COMPILE_TRANSLATIONS.md](../guides/COMPILE_TRANSLATIONS.md).

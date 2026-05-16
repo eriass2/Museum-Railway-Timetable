@@ -141,7 +141,7 @@ Kodstandarder och clean code-principer för projektet.
 museum-railway-timetable/
 ├── museum-railway-timetable.php   # Huvudfil
 ├── uninstall.php
-├── docs/                          # Dokumentation (STYLE_GUIDE, COMPONENT_LIBRARY, etc.)
+├── docs/                          # README, DEVELOPER; undermappar guides/, domain/, product/, design/, …
 ├── scripts/                       # deploy, validate, lint
 ├── inc/
 │   ├── functions/                 # Helper-funktioner (helpers-*.php, timetable-view/)

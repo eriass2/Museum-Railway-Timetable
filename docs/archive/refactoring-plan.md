@@ -1,5 +1,7 @@
 # Refactoring Plan – Museum Railway Timetable
 
+> **Arkiverat (2026-05):** Uppdelning genomförd. Aktuell filstruktur: [domain/ARCHITECTURE.md](../domain/ARCHITECTURE.md) §5.
+
 Översikt över genomförd uppdelning och eventuella framtida förbättringar.
 
 **Max metodlängd:** 50 rader (STYLE_GUIDE.md + .cursor/rules)

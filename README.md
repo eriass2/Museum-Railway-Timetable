@@ -230,7 +230,7 @@ museum-railway-timetable/
 ├─ uninstall.php                 # Uninstall hook
 ├─ composer.json                 # Dev tools (PHPStan, PHPCS)
 ├─ phpcs.xml, phpstan.neon       # Lint config
-├─ docs/                         # All developer docs (see docs/README.md)
+├─ docs/                         # Developer docs (see docs/README.md; subfolders by topic)
 ├─ local/                        # deploy.ps1, deploy.config (Local by Flywheel)
 ├─ scripts/                      # validate.php, lint.ps1
 ├─ inc/
@@ -265,7 +265,7 @@ museum-railway-timetable/
 
 ### Coding Standards
 
-Se [STYLE_GUIDE.md](docs/STYLE_GUIDE.md) för kodstandarder, clean code-principer och namnkonventioner.
+Se [STYLE_GUIDE.md](docs/design/STYLE_GUIDE.md) för kodstandarder, clean code-principer och namnkonventioner.
 
 ### Hooks and Filters
 
@@ -281,7 +281,7 @@ The plugin creates one custom table:
 ## Contributing
 
 1. Läs [docs/DEVELOPER.md](docs/DEVELOPER.md)
-2. Följ [STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
+2. Följ [STYLE_GUIDE.md](docs/design/STYLE_GUIDE.md)
 3. Add PHPDoc comments to all functions
 4. Ensure all output is properly escaped
 5. Test your changes thoroughly

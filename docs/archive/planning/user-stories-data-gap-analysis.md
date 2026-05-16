@@ -1,10 +1,12 @@
 # User stories vs datamodell och metoder – gap-analys
 
-Jämför kraven i [mockup-analys-funktionella-krav-user-stories.md](mockup-analys-funktionella-krav-user-stories.md) med pluginets faktiska data ([DATA_MODEL.md](DATA_MODEL.md)) och PHP-funktioner.
+> **Arkiverat (2026-05):** MVP levererad. Levande översikt: [product/JOURNEY.md](../../product/JOURNEY.md).
 
-**Föreslagen implementationsordning (funktioner → vyer):** [PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md](PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md). Syftet är att se **var vi redan har stöd**, **var det räcker delvis**, och **var ny struktur eller logik krävs**.
+Jämför kraven i [mockup-requirements-and-stories.md](mockup-requirements-and-stories.md) med pluginets faktiska data ([domain/DATA_MODEL.md](../../domain/DATA_MODEL.md)) och PHP-funktioner.
 
-> **Uppdatering 2026-04:** MVP enligt planen (tur/retur, kalender per sträcka, AJAX, wizard, prismatris, notis per tjänst, enkel planner) är **levererad** – se tabellen *Leveransstatus* i [PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md](PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md). Avsnitt **1–6 nedan** är en **djupare krav- och mockup-jämförelse**; enskilda rader kan fortfarande beskriva **nice-to-have** eller skillnad mot full mockup (t.ex. flerben i UI, autocomplete).
+**Föreslagen implementationsordning (funktioner → vyer):** [public-journey-implementation-plan.md](public-journey-implementation-plan.md). Syftet är att se **var vi redan har stöd**, **var det räcker delvis**, och **var ny struktur eller logik krävs**.
+
+> **Uppdatering 2026-04:** MVP enligt planen (tur/retur, kalender per sträcka, AJAX, wizard, prismatris, notis per tjänst, enkel planner) är **levererad** – se tabellen *Leveransstatus* i [public-journey-implementation-plan.md](public-journey-implementation-plan.md). Avsnitt **1–6 nedan** är en **djupare krav- och mockup-jämförelse**; enskilda rader kan fortfarande beskriva **nice-to-have** eller skillnad mot full mockup (t.ex. flerben i UI, autocomplete).
 
 **Kärnfunktioner i kodbasen (referens):**
 
@@ -143,6 +145,6 @@ Affärslogik (minsta bytestid, vistelsetid, samma dag) – **ingen** motsvarighe
 
 ---
 
-**Relaterade dokument:** [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md), [mockup-analys-funktionella-krav-user-stories.md](mockup-analys-funktionella-krav-user-stories.md).
+**Relaterade dokument:** [ui-mockup-plan.md](ui-mockup-plan.md), [mockup-requirements-and-stories.md](mockup-requirements-and-stories.md).
 
 *Skapad som underlag för jämförelse mellan krav och implementation (2026).*

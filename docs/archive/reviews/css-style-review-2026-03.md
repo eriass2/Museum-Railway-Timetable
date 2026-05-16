@@ -1,5 +1,7 @@
 # CSS – Granskning mot Style Guide
 
+> **Arkiverat (2026-03):** Engångsgranskning. Följ [design/STYLE_GUIDE.md](../../design/STYLE_GUIDE.md) och [assets/CSS_STRUCTURE.md](../../../assets/CSS_STRUCTURE.md).
+
 Granskning av `assets/*.css` mot STYLE_GUIDE.md (sektion 3. CSS), DESIGN_SYSTEM.md och COMPONENT_LIBRARY.md.
 
 **Senast analyserad:** 2026-03-27 (dokumentationsgenomgång)

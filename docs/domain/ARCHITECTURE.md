@@ -2,7 +2,7 @@
 
 Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydligt, kod kan testas, och **affärskritisk logik** inte låses in i presentation.
 
-**Relaterat:** [PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md](PUBLIC_JOURNEY_IMPLEMENTATION_PLAN.md) (reseflöde funktioner → vyer), [STYLE_GUIDE.md](STYLE_GUIDE.md), [WCAG_JOURNEY_WIZARD.md](WCAG_JOURNEY_WIZARD.md) (tillgänglighet wizard), [WCAG_PUBLIC_SHORTCODES.md](WCAG_PUBLIC_SHORTCODES.md) (planner + månad + översikt), [RELEASE_A11Y_SMOKE.md](RELEASE_A11Y_SMOKE.md) (manuell checklista). **Pull requests:** checklista i [`.github/pull_request_template.md`](../.github/pull_request_template.md).
+**Relaterat:** [product/JOURNEY.md](../product/JOURNEY.md) (publikt reseflöde), [design/STYLE_GUIDE.md](../design/STYLE_GUIDE.md), [accessibility/WCAG_JOURNEY_WIZARD.md](../accessibility/WCAG_JOURNEY_WIZARD.md) (tillgänglighet wizard), [accessibility/WCAG_PUBLIC_SHORTCODES.md](../accessibility/WCAG_PUBLIC_SHORTCODES.md) (planner + månad + översikt), [accessibility/RELEASE_A11Y_SMOKE.md](../accessibility/RELEASE_A11Y_SMOKE.md) (manuell checklista). **Pull requests:** checklista i [`.github/pull_request_template.md`](../../.github/pull_request_template.md).
 
 ---
 
@@ -41,3 +41,22 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 ## 4. Varför det spelar roll
 
 Lös koppling mellan domän och UI gör det möjligt att byta tema, shortcode-layout eller API-format utan att röra kärnreglerna, och tvärtom att testa regler utan webbläsare.
+
+---
+
+## 5. Filstruktur (`inc/`)
+
+Max **50 rader per funktion** (se [design/STYLE_GUIDE.md](../design/STYLE_GUIDE.md)). Loaders i rot av `inc/` (`admin-ajax.php`, `shortcodes.php`, …) `require_once` undermappar.
+
+```
+inc/
+├── admin-ajax/           # stoptimes, timetable-services, route-*, journey (+ parse/render), timetable-frontend
+├── admin-meta-boxes/     # station, route, timetable, service, hooks, …
+├── admin-page/           # dashboard, clear-db, admin-list
+├── shortcodes/           # month, overview, journey, journey-wizard
+├── cpt/                  # cpt-register, cpt-admin
+├── import-lennakatten/   # import-data, import-run, loader
+└── functions/            # helpers-*, services, journey-*, timetable-view/
+```
+
+Historisk refaktoreringslogg: [archive/refactoring-plan.md](../archive/refactoring-plan.md).

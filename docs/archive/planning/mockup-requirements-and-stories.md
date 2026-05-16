@@ -1,5 +1,7 @@
 # Analys av mockups – funktionella krav och user stories
 
+> **Arkiverat (2026-05):** Kravunderlag före MVP. Se [product/JOURNEY.md](../../product/JOURNEY.md).
+
 ## Syfte
 
 Detta dokument sammanfattar två delar utifrån mockuperna för Lennakatten:
@@ -9,7 +11,7 @@ Detta dokument sammanfattar två delar utifrån mockuperna för Lennakatten:
 
 Målet är att beskriva vilken funktionalitet gränssnittet verkar behöva för att stödja sökning, val av datum, val av utresa och återresa samt visning av pris- och trafikdetaljer.
 
-**Jämför med:** [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md) (teknisk UI-plan: komponenter, design tokens, faser).
+**Jämför med:** [ui-mockup-plan.md](ui-mockup-plan.md) (teknisk UI-plan: komponenter, design tokens, faser).
 
 ---
 

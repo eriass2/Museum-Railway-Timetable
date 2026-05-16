@@ -16,13 +16,10 @@
 
 **Nästa steg (valfritt):** Lägg till `composer phpcs` (eller hela `composer lint`) när WPCS-varningar är hanterbara – idag kan PHPCS ge många träffar (radslut, prefix `MRT_`, m.m.).
 
-### 1.3 Uppdatera REFACTORING_PLAN
-**Status:** ✅ Genomförd uppdelning dokumenterad i REFACTORING_PLAN.md (2026).
-
-### 1.4 PHPStan + WordPress-stubs
+### 1.3 PHPStan + WordPress-stubs
 **Status:** ✅ PHPStan **2.x** + `phpstan-wordpress` **2.x**; `composer phpstan` är grön utan baseline (nivå 5).
 
-**Se:** [DEVELOPER.md](DEVELOPER.md) (avsnitt PHPStan).
+**Se:** [DEVELOPER.md](../DEVELOPER.md) (avsnitt PHPStan).
 
 ---
 
@@ -74,13 +71,13 @@
 |-------|--------|
 | **Filstruktur** | Mappar (inc/, docs/, scripts/), loaders |
 | **Style guides** | STYLE_GUIDE, COMPONENT_LIBRARY, DESIGN_SYSTEM |
-| **Granskningar** | PHP_STYLE_REVIEW, JS_STYLE_REVIEW, CSS_STYLE_REVIEW |
+| **Style guides** | STYLE_GUIDE, COMPONENT_LIBRARY, DESIGN_SYSTEM (mars 2026-granskningar i [archive/reviews/](archive/reviews/)) |
 | **Datamodell** | DATA_MODEL.md med UML |
 | **Validering** | `composer plugin-check` (= `php scripts/validate.php`), validate.ps1 |
 | **CI** | `.github/workflows/ci.yml` (validate vid push/PR) |
 | **Tillgänglighet (dokumenterat)** | WCAG_JOURNEY_WIZARD, WCAG_PUBLIC_SHORTCODES (inkl. overview-grid), RELEASE_A11Y_SMOKE för manuell rökning |
 | **Dependabot** | `.github/dependabot.yml` (Composer månadsvis) |
-| **Överblick** | [PROJECT_HEALTH.md](PROJECT_HEALTH.md) |
+| **Överblick** | [PROJECT_HEALTH.md](../PROJECT_HEALTH.md) |
 | **Lint** | PHPStan, PHPCS, scripts/lint.ps1 |
 | **Deploy** | local/deploy.ps1 för Local |
 | **Dokumentation** | docs/ med README som index |
@@ -93,14 +90,14 @@
 2. `composer install`
 3. Kopiera `local/deploy.config.example.json` → `local/deploy.config.json`, sätt Local-sökväg
 4. `.\local\deploy.ps1 -OpenBrowser`
-5. Läs docs/DEVELOPER.md och docs/STYLE_GUIDE.md
+5. Läs docs/DEVELOPER.md och docs/design/STYLE_GUIDE.md
 6. Vid ändringar: `composer plugin-check` (och vid behov `composer lint`)
 
 ---
 
 ## 6. Sammanfattning
 
-**Gör först:** ~~CI~~ ✅ `.github/workflows/ci.yml`, ~~DEVELOPER~~ ✅, REFACTORING ✅.
+**Gör först:** ~~CI~~ ✅, ~~DEVELOPER~~ ✅, ~~filuppdelning~~ ✅ (se [domain/ARCHITECTURE.md](../domain/ARCHITECTURE.md)).
 
 **Gör sedan:** Enhetstester för kritiska helpers, PHPStan WordPress-stubs, integrera valfri lint i validate.
 

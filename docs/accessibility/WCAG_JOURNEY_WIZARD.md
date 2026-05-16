@@ -2,7 +2,7 @@
 
 Mål: **WCAG 2.1 nivå AA** där det är tekniskt rimligt utan att duplicera temats ansvar. Detta dokument beskriver **vad som är implementerat** och **vad som bör testas manuellt** vid varje större ändring.
 
-**Relaterat:** [UI_MOCKUP_PLAN.md](UI_MOCKUP_PLAN.md), [ARCHITECTURE.md](ARCHITECTURE.md).
+**Relaterat:** [product/JOURNEY.md](../product/JOURNEY.md), [domain/ARCHITECTURE.md](../domain/ARCHITECTURE.md).
 
 ---
 

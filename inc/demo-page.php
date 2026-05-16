@@ -64,7 +64,7 @@ function MRT_demo_lennakatten_timetable_title() {
  */
 function MRT_get_components_demo_mockup_legend_html() {
 	$items = array(
-		__( 'Journey wizard — mockup flow V1–V5 (route → date → trips → summary, see PUBLIC_JOURNEY_IMPLEMENTATION_PLAN).', 'museum-railway-timetable' ),
+		__( 'Journey wizard — route → date → trips → summary (see docs/product/JOURNEY.md).', 'museum-railway-timetable' ),
 		__( 'Month calendar & timetable overview — timetable/mockup views (not the full “book a trip” flow).', 'museum-railway-timetable' ),
 		__( 'Journey planner — simple one-screen search; not the multi-step mockup wizard.', 'museum-railway-timetable' ),
 	);
