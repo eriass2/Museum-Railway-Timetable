@@ -103,11 +103,17 @@ if (!function_exists('get_the_title')) {
 
 if (!function_exists('get_post')) {
     /**
+     * Test overrides via $GLOBALS['mrt_test_posts'][ post_id ].
+     *
      * @param int $post
-     * @return null
+     * @return object|null
      */
     function get_post($post = null, $output = 'OBJECT', $filter = 'raw') {
-        unset($output, $filter, $post);
+        unset($output, $filter);
+        $id = is_object($post) ? (int) $post->ID : (int) $post;
+        if (isset($GLOBALS['mrt_test_posts']) && is_array($GLOBALS['mrt_test_posts']) && array_key_exists($id, $GLOBALS['mrt_test_posts'])) {
+            return $GLOBALS['mrt_test_posts'][$id];
+        }
 
         return null;
     }
