@@ -114,23 +114,34 @@
         });
     }
 
+    function collectNewStoptimePayload($row, nonce) {
+        return {
+            action: 'mrt_add_stoptime',
+            nonce: nonce,
+            service_id: $row.data('service-id'),
+            station_id: $row.find('[data-field="station"] select').val(),
+            sequence: $row.find('[data-field="sequence"] input').val(),
+            arrival: $row.find('[data-field="arrival"] input').val(),
+            departure: $row.find('[data-field="departure"] input').val(),
+            pickup: $row.find('[data-field="pickup"] input[type="checkbox"]').is(':checked') ? 1 : 0,
+            dropoff: $row.find('[data-field="dropoff"] input[type="checkbox"]').is(':checked') ? 1 : 0
+        };
+    }
+
+    function applyAddedStoptimeToRow($container, $row, state, st) {
+        $row.data('stoptime-id', st.id);
+        $row.data('id', st.id);
+        $row.removeClass('mrt-new-row');
+        applyStoptimeToRow($row, st);
+        exitEditMode($row, state);
+        showStoptimeSuccess($container, u.msg('stopTimeAddedSuccessfully', 'Stop time added successfully.'));
+    }
+
     function bindAdd($container, nonce, state) {
         $container.on('click', '.mrt-add-stoptime', function(e) {
             e.stopPropagation();
             var $row = $(this).closest('.mrt-stoptime-row');
-            var serviceId = $row.data('service-id');
-
-            var data = {
-                action: 'mrt_add_stoptime',
-                nonce: nonce,
-                service_id: serviceId,
-                station_id: $row.find('[data-field="station"] select').val(),
-                sequence: $row.find('[data-field="sequence"] input').val(),
-                arrival: $row.find('[data-field="arrival"] input').val(),
-                departure: $row.find('[data-field="departure"] input').val(),
-                pickup: $row.find('[data-field="pickup"] input[type="checkbox"]').is(':checked') ? 1 : 0,
-                dropoff: $row.find('[data-field="dropoff"] input[type="checkbox"]').is(':checked') ? 1 : 0
-            };
+            var data = collectNewStoptimePayload($row, nonce);
 
             if (!data.station_id || !data.sequence) {
                 alert(u.msg('pleaseFillStationAndSequence', 'Please fill in Station and Sequence.'));
@@ -142,21 +153,12 @@
             $btn.prop('disabled', true).text(u.msg('adding', 'Adding...'));
 
             $.post(u.getAjaxUrl(), data, function(response) {
-                if (response.success) {
-                    if (response.data) {
-                        var st = response.data;
-                        $row.data('stoptime-id', st.id);
-                        $row.data('id', st.id);
-                        $row.removeClass('mrt-new-row');
-                        applyStoptimeToRow($row, st);
-                        exitEditMode($row, state);
-                        var successMsg = u.msg('stopTimeAddedSuccessfully', 'Stop time added successfully.');
-                        showStoptimeSuccess($container, successMsg);
-                    }
-                } else {
-                    alert(response.data.message || u.msg('errorAddingStopTime', 'Error adding stop time.'));
-                    $btn.prop('disabled', false).text(originalText);
+                if (response.success && response.data) {
+                    applyAddedStoptimeToRow($container, $row, state, response.data);
+                    return;
                 }
+                alert((response.data && response.data.message) || u.msg('errorAddingStopTime', 'Error adding stop time.'));
+                $btn.prop('disabled', false).text(originalText);
             }).fail(function() {
                 alert(u.msg('networkError', 'Network error. Please try again.'));
                 $btn.prop('disabled', false).text(originalText);
