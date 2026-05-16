@@ -486,16 +486,42 @@
         return html;
     }
 
+    function mrtWizardShowDetailError($cell, $btn, cfg) {
+        $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
+        $cell.find('.mrt-alert').text(cfg.errorGeneric);
+        $btn.attr('aria-expanded', 'true');
+        $cell.removeAttr('hidden');
+    }
+
+    function mrtWizardMultiLegSegmentHtml(res, leg, title, cfg, expanded) {
+        var detail = res.data.detail || {};
+        var notice = res.data.notice || '';
+        var html = '<div class="mrt-journey-wizard__detail-segment mrt-mb-sm">';
+        html += '<h4 class="mrt-journey-wizard__detail-title">' + SU.escapeHtml(title) + '</h4>';
+        html += mrtWizardBuildStopsDetailHtml(detail, notice, cfg, leg, expanded);
+        return html + '</div>';
+    }
+
+    function mrtWizardMultiLegTransferHtml(legIndex, conn, cfg) {
+        if (legIndex >= conn.legs.length - 1) {
+            return '';
+        }
+        return '<div class="mrt-journey-wizard__transfer-block">' + SU.escapeHtml(cfg.transferTrip || 'Byte') + '</div>';
+    }
+
+    function mrtWizardFinishMultiLegDetail($cell, $btn, html) {
+        $cell.html(html + '</div>');
+        $btn.attr('aria-expanded', 'true');
+        $cell.removeAttr('hidden');
+    }
+
     function mrtWizardLoadMultiLegDetailRows(conn, $cell, $btn, cfg, ajaxPost, expanded) {
         var legTpl = cfg.legSegmentLabel || 'Train %d';
         var multiHtml = '<div class="mrt-journey-wizard__detail mrt-journey-wizard__detail--multi">';
         var legIndex = 0;
         function loadNextLeg() {
             if (legIndex >= conn.legs.length) {
-                multiHtml += '</div>';
-                $cell.html(multiHtml);
-                $btn.attr('aria-expanded', 'true');
-                $cell.removeAttr('hidden');
+                mrtWizardFinishMultiLegDetail($cell, $btn, multiHtml);
                 return;
             }
             var leg = conn.legs[legIndex];
@@ -506,27 +532,15 @@
                 service_id: leg.service_id
             }).done(function(res) {
                 if (!res || !res.success || !res.data) {
-                    $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
-                    $cell.find('.mrt-alert').text(cfg.errorGeneric);
-                    $btn.attr('aria-expanded', 'true');
+                    mrtWizardShowDetailError($cell, $btn, cfg);
                     return;
                 }
-                var detail = res.data.detail || {};
-                var notice = res.data.notice || '';
-                multiHtml += '<div class="mrt-journey-wizard__detail-segment mrt-mb-sm">';
-                multiHtml += '<h4 class="mrt-journey-wizard__detail-title">' + SU.escapeHtml(title) + '</h4>';
-                multiHtml += mrtWizardBuildStopsDetailHtml(detail, notice, cfg, leg, expanded);
-                multiHtml += '</div>';
-                if (legIndex < conn.legs.length - 1) {
-                    multiHtml += '<div class="mrt-journey-wizard__transfer-block">' + SU.escapeHtml(cfg.transferTrip || 'Byte') + '</div>';
-                }
+                multiHtml += mrtWizardMultiLegSegmentHtml(res, leg, title, cfg, expanded);
+                multiHtml += mrtWizardMultiLegTransferHtml(legIndex, conn, cfg);
                 legIndex += 1;
                 loadNextLeg();
             }).fail(function() {
-                $cell.html('<div class="mrt-alert mrt-alert-error"></div>');
-                $cell.find('.mrt-alert').text(cfg.errorGeneric);
-                $btn.attr('aria-expanded', 'true');
-                $cell.removeAttr('hidden');
+                mrtWizardShowDetailError($cell, $btn, cfg);
             });
         }
         loadNextLeg();
