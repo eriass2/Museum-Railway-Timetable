@@ -100,6 +100,84 @@ function MRT_filter_services_verified_for_date( $service_ids, $timetable_ids, $d
 }
 
 /**
+ * Service IDs linked to any of the given timetables.
+ *
+ * @param array<int> $timetable_ids Timetable post IDs
+ * @return array<int>
+ */
+function MRT_query_service_ids_for_timetables( array $timetable_ids ) {
+	if ( $timetable_ids === array() ) {
+		return array();
+	}
+
+	return get_posts(
+		array(
+			'post_type'      => 'mrt_service',
+			'posts_per_page' => -1,
+			'fields'         => 'ids',
+			'meta_query'     => array(
+				array(
+					'key'     => 'mrt_service_timetable_id',
+					'value'   => $timetable_ids,
+					'compare' => 'IN',
+				),
+			),
+		)
+	);
+}
+
+/**
+ * Keep only services whose post title matches exactly.
+ *
+ * @param array<int> $service_ids Candidate service IDs
+ * @param string     $title Exact service title
+ * @return array<int>
+ */
+function MRT_filter_service_ids_by_exact_title( array $service_ids, string $title ) {
+	if ( $title === '' ) {
+		return $service_ids;
+	}
+
+	$post = MRT_get_post_by_title( $title, 'mrt_service' );
+	if ( ! $post ) {
+		return array();
+	}
+
+	return array_values( array_intersect( $service_ids, array( (int) $post->ID ) ) );
+}
+
+/**
+ * Filter service IDs by train type taxonomy slug.
+ *
+ * @param array<int> $service_ids Candidate service IDs
+ * @param string     $train_type_slug Taxonomy slug
+ * @return array<int>
+ */
+function MRT_filter_service_ids_by_train_type_slug( array $service_ids, string $train_type_slug ) {
+	if ( $train_type_slug === '' || $service_ids === array() ) {
+		return $service_ids;
+	}
+
+	$q = new WP_Query(
+		array(
+			'post_type' => 'mrt_service',
+			'post__in'  => $service_ids,
+			'fields'    => 'ids',
+			'nopaging'  => true,
+			'tax_query' => array(
+				array(
+					'taxonomy' => 'mrt_train_type',
+					'field'    => 'slug',
+					'terms'    => sanitize_title( $train_type_slug ),
+				),
+			),
+		)
+	);
+
+	return $q->posts;
+}
+
+/**
  * Resolve which services run on a given date (using Timetables)
  *
  * @param string $dateYmd Date in YYYY-MM-DD format
@@ -117,54 +195,19 @@ function MRT_services_running_on_date( $dateYmd, $train_type_slug = '', $service
 		return array();
 	}
 
-	$service_ids = get_posts(
-		array(
-			'post_type'      => 'mrt_service',
-			'posts_per_page' => -1,
-			'fields'         => 'ids',
-			'meta_query'     => array(
-				array(
-					'key'     => 'mrt_service_timetable_id',
-					'value'   => $timetables,
-					'compare' => 'IN',
-				),
-			),
-		)
-	);
-
+	$service_ids       = MRT_query_service_ids_for_timetables( $timetables );
 	$valid_service_ids = MRT_filter_services_verified_for_date( $service_ids, $timetables, $dateYmd );
 	if ( empty( $valid_service_ids ) ) {
 		return array();
 	}
 
-	if ( $service_title_exact !== '' ) {
-		$post = MRT_get_post_by_title( $service_title_exact, 'mrt_service' );
-		if ( ! $post ) {
-			return array();
-		}
-		$valid_service_ids = array_values( array_intersect( $valid_service_ids, array( intval( $post->ID ) ) ) );
-		if ( empty( $valid_service_ids ) ) {
-			return array();
-		}
+	$valid_service_ids = MRT_filter_service_ids_by_exact_title( $valid_service_ids, $service_title_exact );
+	if ( empty( $valid_service_ids ) ) {
+		return array();
 	}
 
 	if ( $train_type_slug ) {
-		$q = new WP_Query(
-			array(
-				'post_type' => 'mrt_service',
-				'post__in'  => $valid_service_ids,
-				'fields'    => 'ids',
-				'nopaging'  => true,
-				'tax_query' => array(
-					array(
-						'taxonomy' => 'mrt_train_type',
-						'field'    => 'slug',
-						'terms'    => sanitize_title( $train_type_slug ),
-					),
-				),
-			)
-		);
-		return $q->posts;
+		return MRT_filter_service_ids_by_train_type_slug( $valid_service_ids, $train_type_slug );
 	}
 
 	return array_values( array_unique( $valid_service_ids ) );

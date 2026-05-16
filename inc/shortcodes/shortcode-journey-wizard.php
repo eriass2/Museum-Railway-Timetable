@@ -348,25 +348,18 @@ function MRT_journey_wizard_step_element_ids( string $u ): array {
 }
 
 /**
- * Render [museum_journey_wizard]
+ * Render journey wizard outer shell and step panels.
  *
- * @param array|string $atts Shortcode attributes
+ * @param string                $uid Unique element id prefix
+ * @param array<string, string> $ids Step element ids
+ * @param array<int>            $stations Station post IDs
+ * @param array<string, mixed>  $hero Hero settings
+ * @param int                   $timetable_id Optional timetable ID
+ * @param string                $ticket_url Ticket purchase URL
+ * @param string                $hero_attr Hero background HTML attributes
  * @return string HTML
  */
-function MRT_render_shortcode_journey_wizard( $atts ) {
-	$parsed     = MRT_journey_wizard_parse_shortcode_atts( $atts );
-	$ticket_url = $parsed['ticket_url'];
-	$hero       = $parsed['hero'];
-	$timetable_id = isset( $parsed['timetable_id'] ) ? intval( $parsed['timetable_id'] ) : 0;
-	$hero_image = isset( $hero['image'] ) && is_string( $hero['image'] ) ? trim( $hero['image'] ) : '';
-	$hero_attr  = MRT_journey_wizard_hero_bg_attr( $hero_image );
-
-	$stations = MRT_get_all_stations();
-	if ( empty( $stations ) ) {
-		return '<p class="mrt-alert mrt-alert-info">' . esc_html__( 'No stations are available.', 'museum-railway-timetable' ) . '</p>';
-	}
-	$u   = wp_unique_id( 'mrtjw' );
-	$ids = MRT_journey_wizard_step_element_ids( $u );
+function MRT_render_journey_wizard_shell( $uid, array $ids, array $stations, array $hero, $timetable_id, $ticket_url, $hero_attr ) {
 	ob_start();
 	?>
 	<div
@@ -379,7 +372,7 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 				<noscript>
 					<p class="mrt-alert mrt-alert-info"><?php esc_html_e( 'This planner needs JavaScript enabled.', 'museum-railway-timetable' ); ?></p>
 				</noscript>
-				<div id="<?php echo esc_attr( $u ); ?>-errors" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive" aria-relevant="additions text"></div>
+				<div id="<?php echo esc_attr( $uid ); ?>-errors" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive" aria-relevant="additions text"></div>
 				<nav class="mrt-journey-wizard__nav" aria-label="<?php esc_attr_e( 'Trip planner steps', 'museum-railway-timetable' ); ?>">
 					<ol class="mrt-journey-wizard__steps" data-wizard-steps></ol>
 				</nav>
@@ -408,4 +401,28 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 	</div>
 	<?php
 	return (string) ob_get_clean();
+}
+
+/**
+ * Render [museum_journey_wizard]
+ *
+ * @param array|string $atts Shortcode attributes
+ * @return string HTML
+ */
+function MRT_render_shortcode_journey_wizard( $atts ) {
+	$parsed     = MRT_journey_wizard_parse_shortcode_atts( $atts );
+	$ticket_url = $parsed['ticket_url'];
+	$hero       = $parsed['hero'];
+	$timetable_id = isset( $parsed['timetable_id'] ) ? intval( $parsed['timetable_id'] ) : 0;
+	$hero_image = isset( $hero['image'] ) && is_string( $hero['image'] ) ? trim( $hero['image'] ) : '';
+	$hero_attr  = MRT_journey_wizard_hero_bg_attr( $hero_image );
+
+	$stations = MRT_get_all_stations();
+	if ( empty( $stations ) ) {
+		return '<p class="mrt-alert mrt-alert-info">' . esc_html__( 'No stations are available.', 'museum-railway-timetable' ) . '</p>';
+	}
+	$uid = wp_unique_id( 'mrtjw' );
+	$ids = MRT_journey_wizard_step_element_ids( $uid );
+
+	return MRT_render_journey_wizard_shell( $uid, $ids, $stations, $hero, $timetable_id, $ticket_url, $hero_attr );
 }

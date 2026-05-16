@@ -315,6 +315,51 @@ function MRT_render_service_train_types_by_date_row( $post, $timetable_id, $all_
 }
 
 /**
+ * Load posts and meta for the service meta box.
+ *
+ * @param WP_Post $post Current post object
+ * @return array<string, mixed>
+ */
+function MRT_get_service_meta_box_context( $post ) {
+	$timetable_id = get_post_meta( $post->ID, 'mrt_service_timetable_id', true );
+	if ( empty( $timetable_id ) && isset( $_GET['timetable_id'] ) ) {
+		$timetable_id = intval( $_GET['timetable_id'] );
+	}
+
+	return array(
+		'timetable_id'           => $timetable_id,
+		'route_id'               => get_post_meta( $post->ID, 'mrt_service_route_id', true ),
+		'end_station_id'         => get_post_meta( $post->ID, 'mrt_service_end_station_id', true ),
+		'timetables'             => get_posts(
+			array(
+				'post_type'      => 'mrt_timetable',
+				'posts_per_page' => -1,
+				'orderby'        => 'date',
+				'order'          => 'DESC',
+				'fields'         => 'all',
+			)
+		),
+		'routes'                 => get_posts(
+			array(
+				'post_type'      => 'mrt_route',
+				'posts_per_page' => -1,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'fields'         => 'all',
+			)
+		),
+		'train_types'            => wp_get_post_terms( $post->ID, 'mrt_train_type', array( 'fields' => 'ids' ) ),
+		'all_train_types'        => get_terms(
+			array(
+				'taxonomy'   => 'mrt_train_type',
+				'hide_empty' => false,
+			)
+		),
+		'editing_from_timetable' => isset( $_GET['timetable_id'] ) && intval( $_GET['timetable_id'] ) === intval( $timetable_id ),
+	);
+}
+
+/**
  * Render service meta box
  *
  * @param WP_Post $post Current post object
@@ -322,42 +367,9 @@ function MRT_render_service_train_types_by_date_row( $post, $timetable_id, $all_
 function MRT_render_service_meta_box( $post ) {
 	wp_nonce_field( 'mrt_save_service_meta', 'mrt_service_meta_nonce' );
 
-	$timetable_id = get_post_meta( $post->ID, 'mrt_service_timetable_id', true );
-	if ( empty( $timetable_id ) && isset( $_GET['timetable_id'] ) ) {
-		$timetable_id = intval( $_GET['timetable_id'] );
-	}
-	$route_id       = get_post_meta( $post->ID, 'mrt_service_route_id', true );
-	$end_station_id = get_post_meta( $post->ID, 'mrt_service_end_station_id', true );
-
-	$timetables             = get_posts(
-		array(
-			'post_type'      => 'mrt_timetable',
-			'posts_per_page' => -1,
-			'orderby'        => 'date',
-			'order'          => 'DESC',
-			'fields'         => 'all',
-		)
-	);
-	$routes                 = get_posts(
-		array(
-			'post_type'      => 'mrt_route',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-			'fields'         => 'all',
-		)
-	);
-	$train_types            = wp_get_post_terms( $post->ID, 'mrt_train_type', array( 'fields' => 'ids' ) );
-	$all_train_types        = get_terms(
-		array(
-			'taxonomy'   => 'mrt_train_type',
-			'hide_empty' => false,
-		)
-	);
-	$editing_from_timetable = isset( $_GET['timetable_id'] ) && intval( $_GET['timetable_id'] ) === intval( $timetable_id );
-
-	if ( $editing_from_timetable && $timetable_id ) {
-		MRT_service_meta_box_setup_editing_from_timetable( $timetable_id );
+	$ctx = MRT_get_service_meta_box_context( $post );
+	if ( $ctx['editing_from_timetable'] && $ctx['timetable_id'] ) {
+		MRT_service_meta_box_setup_editing_from_timetable( $ctx['timetable_id'] );
 	}
 
 	MRT_render_service_info_box();
@@ -366,13 +378,13 @@ function MRT_render_service_meta_box( $post ) {
 		<h3 class="mrt-heading mrt-mt-0"><?php esc_html_e( 'Trip Details', 'museum-railway-timetable' ); ?></h3>
 		<table class="form-table">
 			<?php
-			MRT_render_service_timetable_row( $timetable_id, $timetables, $editing_from_timetable );
-			MRT_render_service_route_row( $routes, $route_id );
-			MRT_render_service_train_type_row( $train_types, $all_train_types );
+			MRT_render_service_timetable_row( $ctx['timetable_id'], $ctx['timetables'], $ctx['editing_from_timetable'] );
+			MRT_render_service_route_row( $ctx['routes'], $ctx['route_id'] );
+			MRT_render_service_train_type_row( $ctx['train_types'], $ctx['all_train_types'] );
 			MRT_render_service_number_row( $post );
 			MRT_render_service_notice_row( $post );
-			MRT_render_service_train_types_by_date_row( $post, $timetable_id, $all_train_types );
-			MRT_render_service_destination_field( $route_id, $end_station_id );
+			MRT_render_service_train_types_by_date_row( $post, $ctx['timetable_id'], $ctx['all_train_types'] );
+			MRT_render_service_destination_field( $ctx['route_id'], $ctx['end_station_id'] );
 			?>
 		</table>
 	</div>

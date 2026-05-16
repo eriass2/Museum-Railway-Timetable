@@ -108,6 +108,56 @@ function MRT_render_route_end_stations_section( $all_stations, $route_start_stat
 }
 
 /**
+ * Render one existing station row in the route stations table.
+ *
+ * @param int   $index Row index (0-based)
+ * @param int   $station_id Station post ID
+ * @param int   $station_count Total stations on route
+ */
+function MRT_render_route_station_row( $index, $station_id, $station_count ) {
+	$station = get_post( $station_id );
+	if ( ! $station ) {
+		return;
+	}
+	?>
+	<tr class="mrt-row-hover" data-station-id="<?php echo esc_attr( $station_id ); ?>">
+		<td><?php echo esc_html( (string) ( $index + 1 ) ); ?></td>
+		<td><?php echo esc_html( $station->post_title ); ?></td>
+		<td>
+			<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="<?php echo esc_attr( $station_id ); ?>" title="<?php esc_attr_e( 'Move up', 'museum-railway-timetable' ); ?>" <?php echo $index === 0 ? 'disabled' : ''; ?>>↑</button>
+			<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="<?php echo esc_attr( $station_id ); ?>" title="<?php esc_attr_e( 'Move down', 'museum-railway-timetable' ); ?>" <?php echo $index === $station_count - 1 ? 'disabled' : ''; ?>>↓</button>
+			<button type="button" class="button button-small mrt-remove-route-station" data-station-id="<?php echo esc_attr( $station_id ); ?>"><?php esc_html_e( 'Remove', 'museum-railway-timetable' ); ?></button>
+		</td>
+	</tr>
+	<?php
+}
+
+/**
+ * Render the "add station" row in the route stations table.
+ *
+ * @param array $route_stations Station IDs already on route
+ * @param array $all_stations All station posts
+ */
+function MRT_render_route_station_new_row( $route_stations, $all_stations ) {
+	?>
+	<tr class="mrt-new-route-station-row mrt-new-row">
+		<td><?php echo esc_html( (string) ( count( $route_stations ) + 1 ) ); ?></td>
+		<td>
+			<select id="mrt-new-route-station" class="mrt-input mrt-input--meta">
+				<option value=""><?php esc_html_e( '— Select Station —', 'museum-railway-timetable' ); ?></option>
+				<?php foreach ( $all_stations as $station ) : ?>
+					<option value="<?php echo esc_attr( $station->ID ); ?>" <?php selected( in_array( $station->ID, $route_stations, true ) ); ?>><?php echo esc_html( $station->post_title ); ?></option>
+				<?php endforeach; ?>
+			</select>
+		</td>
+		<td>
+			<button type="button" class="button button-primary button-small" id="mrt-add-route-station"><?php esc_html_e( 'Add', 'museum-railway-timetable' ); ?></button>
+		</td>
+	</tr>
+	<?php
+}
+
+/**
  * Render route stations table (stations on route)
  *
  * @param array $route_stations Array of station IDs
@@ -127,39 +177,13 @@ function MRT_render_route_stations_table( $route_stations, $all_stations ) {
 				</tr>
 			</thead>
 			<tbody id="mrt-route-stations-tbody">
-				<?php if ( ! empty( $route_stations ) ) : ?>
-					<?php
-					foreach ( $route_stations as $index => $station_id ) :
-						$station = get_post( $station_id );
-						if ( ! $station ) {
-							continue;
-						}
-						?>
-						<tr class="mrt-row-hover" data-station-id="<?php echo esc_attr( $station_id ); ?>">
-							<td><?php echo esc_html( (string) ( $index + 1 ) ); ?></td>
-							<td><?php echo esc_html( $station->post_title ); ?></td>
-							<td>
-								<button type="button" class="button button-small mrt-move-route-station-up" data-station-id="<?php echo esc_attr( $station_id ); ?>" title="<?php esc_attr_e( 'Move up', 'museum-railway-timetable' ); ?>" <?php echo $index === 0 ? 'disabled' : ''; ?>>↑</button>
-								<button type="button" class="button button-small mrt-move-route-station-down" data-station-id="<?php echo esc_attr( $station_id ); ?>" title="<?php esc_attr_e( 'Move down', 'museum-railway-timetable' ); ?>" <?php echo $index === count( $route_stations ) - 1 ? 'disabled' : ''; ?>>↓</button>
-								<button type="button" class="button button-small mrt-remove-route-station" data-station-id="<?php echo esc_attr( $station_id ); ?>"><?php esc_html_e( 'Remove', 'museum-railway-timetable' ); ?></button>
-							</td>
-						</tr>
-					<?php endforeach; ?>
-				<?php endif; ?>
-				<tr class="mrt-new-route-station-row mrt-new-row">
-					<td><?php echo esc_html( (string) ( count( $route_stations ) + 1 ) ); ?></td>
-					<td>
-						<select id="mrt-new-route-station" class="mrt-input mrt-input--meta">
-							<option value=""><?php esc_html_e( '— Select Station —', 'museum-railway-timetable' ); ?></option>
-							<?php foreach ( $all_stations as $station ) : ?>
-								<option value="<?php echo esc_attr( $station->ID ); ?>" <?php selected( in_array( $station->ID, $route_stations ) ); ?>><?php echo esc_html( $station->post_title ); ?></option>
-							<?php endforeach; ?>
-						</select>
-					</td>
-					<td>
-						<button type="button" class="button button-primary button-small" id="mrt-add-route-station"><?php esc_html_e( 'Add', 'museum-railway-timetable' ); ?></button>
-					</td>
-				</tr>
+				<?php
+				$station_count = count( $route_stations );
+				foreach ( $route_stations as $index => $station_id ) {
+					MRT_render_route_station_row( $index, (int) $station_id, $station_count );
+				}
+				MRT_render_route_station_new_row( $route_stations, $all_stations );
+				?>
 			</tbody>
 		</table>
 		<input type="hidden" name="mrt_route_stations" id="mrt_route_stations" value="<?php echo esc_attr( implode( ',', $route_stations ) ); ?>" />
