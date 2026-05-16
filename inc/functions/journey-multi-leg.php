@@ -128,20 +128,33 @@ function MRT_journey_append_transfer_options( array &$results, array &$seen, $fr
 				if ( isset( $seen[ $key ] ) ) {
 					continue;
 				}
-				$seen[ $key ] = true;
-				$leg1         = MRT_journey_build_leg_segment( (int) $s1, $from_station_id, $xfer_id, $dateYmd );
-				$leg2         = MRT_journey_leg_from_connection_row( $c2, $dateYmd, $xfer_id, $to_station_id );
-				if ( $leg1 === null ) {
-					continue;
+				$transfer = MRT_journey_transfer_option( (int) $s1, $from_station_id, $xfer_id, $to_station_id, $dateYmd, $c2 );
+				if ( $transfer !== null ) {
+					$seen[ $key ] = true;
+					$results[]    = $transfer;
 				}
-				$results[] = array(
-					'connection_type'     => 'transfer',
-					'transfer_station_id' => $xfer_id,
-					'legs'                => array( $leg1, $leg2 ),
-				);
 			}
 		}
 	}
+}
+
+/**
+ * Build one transfer option from two service legs.
+ *
+ * @param array<string, mixed> $connection Second-leg connection row
+ * @return array<string, mixed>|null
+ */
+function MRT_journey_transfer_option( int $first_service_id, $from_station_id, int $transfer_station_id, $to_station_id, string $dateYmd, array $connection ): ?array {
+	$leg1 = MRT_journey_build_leg_segment( $first_service_id, $from_station_id, $transfer_station_id, $dateYmd );
+	if ( $leg1 === null ) {
+		return null;
+	}
+	$leg2 = MRT_journey_leg_from_connection_row( $connection, $dateYmd, $transfer_station_id, $to_station_id );
+	return array(
+		'connection_type'     => 'transfer',
+		'transfer_station_id' => $transfer_station_id,
+		'legs'                => array( $leg1, $leg2 ),
+	);
 }
 
 /**
