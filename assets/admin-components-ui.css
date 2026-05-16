@@ -32,32 +32,9 @@ input.mrt-btn:focus-visible {
     background: var(--mrt-wp-blue-darker);
 }
 
-.mrt-btn--danger {
-    background: var(--mrt-danger-bg);
-    color: var(--mrt-text-white);
-    border-color: var(--mrt-danger-border);
-}
-
 .mrt-btn--block {
     width: 100%;
     text-align: center;
-}
-
-.mrt-btn--action {
-    text-align: left;
-    height: auto;
-    padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
-}
-
-.mrt-btn--action strong {
-    display: block;
-}
-
-.mrt-btn--action span {
-    font-size: var(--mrt-font-base);
-    opacity: var(--mrt-opacity-85);
-    display: block;
-    margin-top: var(--mrt-spacing-xs);
 }
 
 .mrt-badge {
@@ -111,11 +88,6 @@ input.mrt-btn:focus-visible {
 
 .mrt-card--center {
     text-align: center;
-}
-
-.mrt-card--warning {
-    background: var(--mrt-warning-bg);
-    border-color: var(--mrt-warning-border);
 }
 
 .mrt-card--compact {

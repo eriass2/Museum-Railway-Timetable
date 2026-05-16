@@ -147,7 +147,7 @@ function MRT_render_service_destination_field( $route_id, $end_station_id ) {
 			<select name="mrt_service_end_station_id" id="mrt_service_end_station_id" class="mrt-input mrt-input--meta">
 				<option value=""><?php esc_html_e( '— Select Destination —', 'museum-railway-timetable' ); ?></option>
 				<?php foreach ( $stations as $sid => $sname ) : ?>
-					<option value="<?php echo esc_attr( $sid ); ?>" <?php selected( $end_station_id, $sid ); ?>><?php echo esc_html( $sname ); ?></option>
+					<option value="<?php echo esc_attr( (string) $sid ); ?>" <?php selected( $end_station_id, $sid ); ?>><?php echo esc_html( $sname ); ?></option>
 				<?php endforeach; ?>
 			</select>
 			<p class="description"><?php esc_html_e( 'Select the destination station for this trip. The direction will be calculated automatically based on the route and destination.', 'museum-railway-timetable' ); ?></p>
