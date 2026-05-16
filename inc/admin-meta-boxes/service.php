@@ -81,32 +81,65 @@ function MRT_get_service_available_end_stations( $route_id ) {
 }
 
 /**
+ * Destination station options for a service (route end stations or all stations).
+ *
+ * @param int $route_id Route ID
+ * @return array<int, string> Station ID => title
+ */
+function MRT_get_service_destination_station_options( $route_id ) {
+	$stations = MRT_get_service_available_end_stations( $route_id );
+	if ( ! empty( $stations ) ) {
+		return $stations;
+	}
+	$all_stations = get_posts(
+		array(
+			'post_type'      => 'mrt_station',
+			'posts_per_page' => -1,
+			'orderby'        => array(
+				'meta_value_num' => 'ASC',
+				'title'          => 'ASC',
+			),
+			'meta_key'       => 'mrt_display_order',
+			'fields'         => 'all',
+		)
+	);
+	$options = array();
+	foreach ( $all_stations as $station ) {
+		$options[ $station->ID ] = $station->post_title;
+	}
+	return $options;
+}
+
+/**
+ * Calculated direction hint below destination select.
+ *
+ * @param int $route_id Route ID
+ * @param int $end_station_id Selected end station ID
+ */
+function MRT_render_service_destination_direction_hint( $route_id, $end_station_id ) {
+	if ( ! $end_station_id || ! $route_id ) {
+		return;
+	}
+	$calculated_direction = MRT_calculate_direction_from_end_station( $route_id, $end_station_id );
+	if ( ! $calculated_direction ) {
+		return;
+	}
+	?>
+	<p class="description mrt-mt-sm mrt-text-tertiary">
+		<strong><?php esc_html_e( 'Calculated direction:', 'museum-railway-timetable' ); ?></strong>
+		<?php echo $calculated_direction === 'dit' ? esc_html__( 'Dit', 'museum-railway-timetable' ) : esc_html__( 'Från', 'museum-railway-timetable' ); ?>
+	</p>
+	<?php
+}
+
+/**
  * Render destination station field for service meta box
  *
  * @param int $route_id Route ID
  * @param int $end_station_id Selected end station ID
  */
 function MRT_render_service_destination_field( $route_id, $end_station_id ) {
-	$available_end_stations = MRT_get_service_available_end_stations( $route_id );
-	if ( empty( $available_end_stations ) ) {
-		$all_stations           = get_posts(
-			array(
-				'post_type'      => 'mrt_station',
-				'posts_per_page' => -1,
-				'orderby'        => array(
-					'meta_value_num' => 'ASC',
-					'title'          => 'ASC',
-				),
-				'meta_key'       => 'mrt_display_order',
-				'fields'         => 'all',
-			)
-		);
-		$available_end_stations = array();
-		foreach ( $all_stations as $s ) {
-			$available_end_stations[ $s->ID ] = $s->post_title;
-		}
-	}
-	$stations = $available_end_stations;
+	$stations = MRT_get_service_destination_station_options( $route_id );
 	?>
 	<tr>
 		<th><label for="mrt_service_end_station_id"><?php esc_html_e( 'Destination Station', 'museum-railway-timetable' ); ?></label></th>
@@ -118,19 +151,7 @@ function MRT_render_service_destination_field( $route_id, $end_station_id ) {
 				<?php endforeach; ?>
 			</select>
 			<p class="description"><?php esc_html_e( 'Select the destination station for this trip. The direction will be calculated automatically based on the route and destination.', 'museum-railway-timetable' ); ?></p>
-			<?php
-			if ( $end_station_id && $route_id ) :
-				$calculated_direction = MRT_calculate_direction_from_end_station( $route_id, $end_station_id );
-				if ( $calculated_direction ) :
-					?>
-				<p class="description mrt-mt-sm mrt-text-tertiary">
-					<strong><?php esc_html_e( 'Calculated direction:', 'museum-railway-timetable' ); ?></strong>
-					<?php echo $calculated_direction === 'dit' ? esc_html__( 'Dit', 'museum-railway-timetable' ) : esc_html__( 'Från', 'museum-railway-timetable' ); ?>
-				</p>
-					<?php
-				endif;
-			endif;
-			?>
+			<?php MRT_render_service_destination_direction_hint( $route_id, $end_station_id ); ?>
 		</td>
 	</tr>
 	<?php
