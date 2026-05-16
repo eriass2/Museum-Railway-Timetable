@@ -104,6 +104,7 @@ function MRT_enqueue_admin_meta_box_styles( string $hook, string $base ): array 
 	$meta_deps = array( 'mrt-admin-timetable' );
 	if ( MRT_should_load_admin_timetable_overview( $hook ) ) {
 		wp_enqueue_style( 'mrt-admin-timetable-overview', $base . 'admin-timetable-overview.css', array( 'mrt-admin-timetable' ), MRT_VERSION );
+		MRT_enqueue_train_type_icon_styles( array( 'mrt-admin-timetable-overview' ) );
 		$meta_deps[] = 'mrt-admin-timetable-overview';
 	}
 	wp_enqueue_style( 'mrt-admin-meta-boxes', $base . 'admin-meta-boxes.css', $meta_deps, MRT_VERSION );

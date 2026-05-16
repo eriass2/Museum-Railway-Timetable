@@ -161,8 +161,110 @@ function MRT_log_error( string $message ): void {
 }
 
 /**
- * Get icon for train type
- * Returns emoji or HTML based on train type name/slug
+ * Supported train-type icon keys (assets/icons/train-types/{key}.png).
+ *
+ * @return array<int, string>
+ */
+function MRT_train_type_icon_keys(): array {
+	return array( 'steam', 'diesel', 'railbus', 'bus' );
+}
+
+/**
+ * Public URL for a train-type icon PNG.
+ *
+ * @param string $key steam|diesel|railbus|bus
+ */
+function MRT_train_type_icon_url( string $key ): string {
+	if ( ! in_array( $key, MRT_train_type_icon_keys(), true ) ) {
+		$key = 'diesel';
+	}
+	$relative = 'icons/train-types/' . $key . '.png';
+	if ( ! file_exists( MRT_PATH . 'assets/' . $relative ) ) {
+		$relative = 'icons/train-types/diesel.png';
+	}
+	return MRT_URL . 'assets/' . $relative;
+}
+
+/**
+ * Icon URLs keyed by symbol (for script localization).
+ *
+ * @return array<string, string>
+ */
+function MRT_train_type_icon_urls(): array {
+	$urls = array();
+	foreach ( MRT_train_type_icon_keys() as $key ) {
+		$urls[ $key ] = MRT_train_type_icon_url( $key );
+	}
+	return $urls;
+}
+
+/**
+ * Resolve icon key from train type name and slug.
+ */
+function MRT_resolve_train_type_symbol_key( string $name, string $slug ): string {
+	$name_lower = strtolower( $name );
+	$slug_lower = strtolower( $slug );
+
+	if ( str_contains( $name_lower, 'rälsbuss' ) || str_contains( $name_lower, 'railbus' ) || str_contains( $slug_lower, 'ralsbuss' ) ) {
+		return 'railbus';
+	}
+	if ( $slug_lower === 'buss' || $name_lower === 'buss' ) {
+		return 'bus';
+	}
+	if ( str_contains( $name_lower, 'ång' ) || str_contains( $slug_lower, 'steam' ) || str_contains( $slug_lower, 'ang' ) ) {
+		return 'steam';
+	}
+	if ( str_contains( $name_lower, 'diesel' ) || str_contains( $slug_lower, 'diesel' ) ) {
+		return 'diesel';
+	}
+	if ( str_contains( $name_lower, 'elektrisk' ) || str_contains( $name_lower, 'electric' ) || str_contains( $slug_lower, 'electric' ) ) {
+		return 'diesel';
+	}
+
+	return 'diesel';
+}
+
+/**
+ * Icon key for a train type term.
+ */
+function MRT_get_train_type_symbol_key( ?WP_Term $train_type ): string {
+	if ( ! $train_type ) {
+		return '';
+	}
+	return MRT_resolve_train_type_symbol_key( $train_type->name, $train_type->slug );
+}
+
+/**
+ * Icon key from a free-text label (e.g. journey results).
+ */
+function MRT_get_train_type_symbol_key_from_label( string $label ): string {
+	if ( $label === '' ) {
+		return 'diesel';
+	}
+	return MRT_resolve_train_type_symbol_key( $label, sanitize_title( $label ) );
+}
+
+/**
+ * <img> markup for a train-type icon.
+ *
+ * @param string $key    steam|diesel|railbus|bus
+ * @param string $alt    Accessible label (empty when decorative)
+ */
+function MRT_train_type_icon_img( string $key, string $alt = '' ): string {
+	if ( $key === '' ) {
+		return '';
+	}
+	$class = 'mrt-train-type-icon-img mrt-train-type-icon-img--' . sanitize_html_class( $key );
+	return sprintf(
+		'<img src="%s" class="%s" width="48" height="24" decoding="async" alt="%s" />',
+		esc_url( MRT_train_type_icon_url( $key ) ),
+		esc_attr( $class ),
+		esc_attr( $alt )
+	);
+}
+
+/**
+ * Icon HTML for a train type term (timetable grids, admin).
  *
  * @param WP_Term|null $train_type Train type term object
  * @return string Icon HTML or empty string
@@ -171,39 +273,8 @@ function MRT_get_train_type_icon( ?WP_Term $train_type ): string {
 	if ( ! $train_type ) {
 		return '';
 	}
-
-	$name_lower = strtolower( $train_type->name );
-	$slug_lower = strtolower( $train_type->slug );
-
-	// Match common train types
-	if ( strpos( $name_lower, 'ång' ) !== false || strpos( $slug_lower, 'steam' ) !== false || strpos( $slug_lower, 'ang' ) !== false ) {
-		return MRT_train_type_symbol_svg( 'steam' );
-	} elseif ( strpos( $name_lower, 'diesel' ) !== false || strpos( $slug_lower, 'diesel' ) !== false ) {
-		return MRT_train_type_symbol_svg( 'diesel' );
-	} elseif ( strpos( $name_lower, 'elektrisk' ) !== false || strpos( $name_lower, 'electric' ) !== false || strpos( $slug_lower, 'electric' ) !== false ) {
-		return MRT_train_type_symbol_svg( 'diesel' );
-	} elseif ( strpos( $name_lower, 'rälsbuss' ) !== false || strpos( $name_lower, 'railbus' ) !== false || strpos( $slug_lower, 'bus' ) !== false || strpos( $slug_lower, 'buss' ) !== false ) {
-		return MRT_train_type_symbol_svg( 'railbus' );
-	}
-
-	return MRT_train_type_symbol_svg( 'diesel' );
-}
-
-/**
- * Printed timetable train symbol SVG.
- *
- * @param string $type steam|diesel|railbus
- */
-function MRT_train_type_symbol_svg( string $type ): string {
-	if ( $type === 'railbus' ) {
-		return '<svg class="mrt-train-symbol mrt-train-symbol--railbus" aria-hidden="true" viewBox="0 0 64 24" focusable="false"><path d="M11 8h40c4 0 7 3 7 7v2H6v-4c0-3 2-5 5-5Z" fill="currentColor"/><path d="M18 4h24c5 0 9 3 11 7H8c2-4 5-7 10-7Z" fill="currentColor"/><circle cx="18" cy="19" r="4" fill="currentColor"/><circle cx="47" cy="19" r="4" fill="currentColor"/><rect x="18" y="7" width="8" height="4" fill="#fff"/><rect x="30" y="7" width="8" height="4" fill="#fff"/></svg>';
-	}
-
-	if ( $type === 'steam' ) {
-		return '<svg class="mrt-train-symbol mrt-train-symbol--steam" aria-hidden="true" viewBox="0 0 64 24" focusable="false"><path d="M8 12h27v7H8z" fill="currentColor"/><path d="M36 8h9l5 4h6v7H36z" fill="currentColor"/><rect x="14" y="6" width="5" height="6" fill="currentColor"/><rect x="23" y="4" width="4" height="8" fill="currentColor"/><path d="M27 2h8v4h-8z" fill="currentColor"/><circle cx="14" cy="20" r="3" fill="currentColor"/><circle cx="26" cy="20" r="3" fill="currentColor"/><circle cx="44" cy="20" r="3" fill="currentColor"/><circle cx="55" cy="20" r="3" fill="currentColor"/></svg>';
-	}
-
-	return '<svg class="mrt-train-symbol mrt-train-symbol--diesel" aria-hidden="true" viewBox="0 0 64 24" focusable="false"><path d="M9 7h46c3 0 5 2 5 5v6H4v-6c0-3 2-5 5-5Z" fill="currentColor"/><rect x="14" y="3" width="10" height="4" fill="currentColor"/><rect x="30" y="3" width="12" height="4" fill="currentColor"/><rect x="13" y="10" width="8" height="4" fill="#fff"/><rect x="25" y="10" width="8" height="4" fill="#fff"/><rect x="37" y="10" width="8" height="4" fill="#fff"/><circle cx="18" cy="20" r="3" fill="currentColor"/><circle cx="46" cy="20" r="3" fill="currentColor"/></svg>';
+	$key = MRT_get_train_type_symbol_key( $train_type );
+	return MRT_train_type_icon_img( $key, $train_type->name );
 }
 
 /**

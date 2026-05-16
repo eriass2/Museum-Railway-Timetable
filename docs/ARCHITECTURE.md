@@ -50,6 +50,7 @@ Max **50 rader per funktion** (se [STYLE_GUIDE.md](STYLE_GUIDE.md)). Loaders i r
 
 ```
 inc/
+├── assets/               # admin.php, frontend.php (enqueue; loader: inc/assets.php)
 ├── admin-ajax/           # stoptimes, timetable-services, route-*, journey (+ parse/render), timetable-frontend
 ├── admin-meta-boxes/     # station, route, timetable, service, hooks, …
 ├── admin-page/           # dashboard, clear-db, admin-list

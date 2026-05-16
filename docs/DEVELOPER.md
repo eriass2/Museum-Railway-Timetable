@@ -90,7 +90,8 @@ Kör detta efter `docker compose up -d --build` när ändringen påverkar admin,
 - Kontrollera att menyn **Railway Timetable** syns och att pluginet är aktivt.
 - Skapa minst två stationer, en rutt, en tidtabell och en trip/service.
 - Lägg in stopptider för trippen och spara utan felmeddelanden.
-- Skapa eller öppna en sida med relevant shortcode, till exempel `[museum_journey_planner]`.
+- Skapa eller öppna en sida med relevant shortcode, till exempel `[museum_journey_wizard]` eller `[museum_journey_planner]`.
+- Vid behov: **Import demo data** på dashboard eller **Component demo page** för alla shortcodes.
 - Kontrollera frontend: formulär/tabell visas, sökning går att köra och inga PHP-fel syns.
 - Kontrollera loggar vid fel: `docker compose logs wordpress`.
 

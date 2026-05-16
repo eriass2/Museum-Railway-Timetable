@@ -286,23 +286,35 @@
 
     function mrtWizardVehicleClass(label) {
         var s = String(label || '').toLowerCase();
-        if (s.indexOf('räls') !== -1 || s.indexOf('rail') !== -1 || s.indexOf('buss') !== -1) {
+        if (s.indexOf('rälsbuss') !== -1 || s.indexOf('ralsbuss') !== -1 || s.indexOf('railbus') !== -1) {
             return 'railbus';
         }
-        if (s.indexOf('diesel') !== -1) {
-            return 'diesel';
+        if (s === 'buss') {
+            return 'bus';
         }
-        if (s.indexOf('ång') !== -1 || s.indexOf('steam') !== -1) {
+        if (s.indexOf('ång') !== -1 || s.indexOf('steam') !== -1 || s.indexOf('ang') !== -1) {
             return 'steam';
         }
-        return 'train';
+        if (s.indexOf('diesel') !== -1 || s.indexOf('elektrisk') !== -1 || s.indexOf('electric') !== -1) {
+            return 'diesel';
+        }
+        return 'diesel';
+    }
+
+    function mrtWizardVehicleIconHtml(kind) {
+        var icons = (typeof mrtJourneyWizard !== 'undefined' && mrtJourneyWizard.trainTypeIcons) || {};
+        var url = icons[kind] || icons.diesel || '';
+        if (!url) {
+            return '<span class="mrt-journey-wizard__vehicle-mark" aria-hidden="true"></span>';
+        }
+        return '<img src="' + SU.escapeHtml(url) + '" class="mrt-journey-wizard__vehicle-icon" width="48" height="24" decoding="async" alt="" />';
     }
 
     function mrtWizardVehicleBadge(label, serviceName) {
         var text = label || serviceName || '';
         var kind = mrtWizardVehicleClass(text);
         return '<span class="mrt-journey-wizard__vehicle mrt-journey-wizard__vehicle--' + kind + '">' +
-            '<span class="mrt-journey-wizard__vehicle-mark" aria-hidden="true"></span>' +
+            mrtWizardVehicleIconHtml(kind) +
             '<span>' + SU.escapeHtml(text || 'Tåg') + '</span>' +
             '</span>';
     }

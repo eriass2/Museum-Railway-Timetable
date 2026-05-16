@@ -1,0 +1,29 @@
+/**
+ * Train type PNG icons (timetable grid, journey wizard)
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-train-type-icon-img {
+    display: block;
+    width: auto;
+    height: 1.35rem;
+    max-width: 2.75rem;
+    margin: 0 auto var(--mrt-spacing-xs, 0.25rem);
+    object-fit: contain;
+}
+
+.mrt-journey-wizard__vehicle-icon {
+    display: block;
+    width: auto;
+    height: 0.85rem;
+    max-width: 2.1rem;
+    flex-shrink: 0;
+    object-fit: contain;
+}
+
+.mrt-journey-wizard__timetable .mrt-train-type-icon-img {
+    height: 0.95rem;
+    max-width: 2.15rem;
+    margin-bottom: 0.08rem;
+}

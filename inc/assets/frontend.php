@@ -125,10 +125,11 @@ function MRT_journey_wizard_script_localization(): array {
 	$cal = MRT_journey_wizard_calendar_i18n_arrays();
 	return array_merge(
 		array(
-			'ajaxurl'       => admin_url( 'admin-ajax.php' ),
-			'nonce'         => wp_create_nonce( 'mrt_frontend' ),
-			'monthNames'    => $cal['monthNames'],
-			'weekdayAbbrev' => $cal['weekdayAbbrev'],
+			'ajaxurl'        => admin_url( 'admin-ajax.php' ),
+			'nonce'          => wp_create_nonce( 'mrt_frontend' ),
+			'monthNames'     => $cal['monthNames'],
+			'weekdayAbbrev'  => $cal['weekdayAbbrev'],
+			'trainTypeIcons' => MRT_train_type_icon_urls(),
 		),
 		MRT_journey_wizard_l10n_steps_and_trip(),
 		MRT_journey_wizard_l10n_table_calendar(),
@@ -218,6 +219,7 @@ function MRT_enqueue_frontend_overview_style_maybe( bool $has_overview_shortcode
 			array( 'mrt-frontend-timetable' ),
 			MRT_VERSION
 		);
+		MRT_enqueue_train_type_icon_styles( array( 'mrt-frontend-timetable-overview' ) );
 		$deps[] = 'mrt-frontend-timetable-overview';
 	}
 	return $deps;
@@ -281,7 +283,12 @@ function MRT_frontend_script_localization(): array {
 function MRT_enqueue_journey_wizard_assets(): void {
 	$a = MRT_assets_base_url();
 	wp_register_script( 'mrt-date-utils', $a . 'mrt-date-utils.js', array(), MRT_VERSION, true );
-	wp_enqueue_style( 'mrt-journey-wizard', $a . 'journey-wizard.css', array( 'mrt-frontend-responsive' ), MRT_VERSION );
+	wp_enqueue_style(
+		'mrt-journey-wizard',
+		$a . 'journey-wizard.css',
+		array( MRT_enqueue_train_type_icon_styles( array( 'mrt-frontend-responsive' ) ) ),
+		MRT_VERSION
+	);
 	wp_enqueue_script(
 		'mrt-journey-wizard',
 		$a . 'journey-wizard.js',

@@ -9,7 +9,7 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 - **Shortcodes**: Display timetables on the frontend
   - Month calendar view
   - Complete timetable overview
-  - **Journey Planner**: Search for connections between stations
+  - **Journey Planner** and **Journey Wizard**: Search for connections (single-page or multi-step with return trips and prices)
 - **Admin Interface**: 
   - Inline editing for Stop Times directly in Service edit pages
   - Streamlined menu structure
@@ -22,7 +22,7 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 ## Requirements
 
 - WordPress 6.0 or higher
-- PHP 8.0 or higher
+- PHP 8.2 or higher (recommended; matches CI)
 
 ## Installation
 
@@ -50,6 +50,7 @@ Display a calendar showing service days for a month:
 - `legend` - Show legend (0 or 1, default: 1)
 - `show_counts` - Show service count per day (0 or 1, default: 1)
 - `start_monday` - Start week on Monday (0 or 1, default: 1)
+- `nav` - Show previous/next month links (0 or 1, default: 1)
 
 #### 2. Timetable Overview
 Display a complete timetable overview grouped by route and direction (like traditional printed timetables):
@@ -64,12 +65,21 @@ Display a complete timetable overview grouped by route and direction (like tradi
 
 **Features:**
 - Groups trips by route and direction (e.g., "Från Uppsala Ö Till Marielund")
-- Shows train types (Ångtåg, Rälsbuss, Dieseltåg) for each trip
+- Shows train types with PNG icons (steam, diesel, railbus, bus) for each trip
 - Displays times for each station, with "X" for null/unspecified times
 - Perfect for displaying complete timetables on pages
 
-#### 3. Journey Planner
-Display a journey planner where users can search for connections between two stations on a specific date:
+#### 3. Journey Wizard (recommended)
+Multi-step booking flow with calendar, outbound/return selection, train-type icons, and price summary:
+
+```
+[museum_journey_wizard ticket_url="https://example.com/tickets"]
+```
+
+**Parameters:** `ticket_url`, `hero_image`, `hero_subtitle`, `timetable_id`, `timetable` (optional printed overview under step 1). See [docs/SHORTCODES.md](docs/SHORTCODES.md).
+
+#### 4. Journey Planner (single page)
+Simple search form and results table on one page (same backend as the wizard):
 
 ```
 [museum_journey_planner]
@@ -79,20 +89,7 @@ Display a journey planner where users can search for connections between two sta
 - `default_date` - Default date in YYYY-MM-DD format (optional, defaults to today)
 
 **Features:**
-- Dropdown to select departure station (From)
-- Dropdown to select arrival station (To)
-- Date picker (defaults to today's date)
-- Search button to find connections
-- Results table showing all available connections with:
-  - Departure and arrival times
-  - Train types
-  - Route information
-  - Service details
-- Automatically finds services that:
-  - Run on the selected date
-  - Stop at both departure and arrival stations
-  - Have the departure station before the arrival station in the route sequence
-  - Allow pickup at departure station and dropoff at arrival station
+- Finds direct trips and one-transfer connections on the selected date
 - Results sorted by departure time
 
 **Example:**
@@ -119,9 +116,9 @@ Services can be managed in two ways:
    - In the **Trips (Services)** meta box on the Timetable edit screen, you can directly add trips
    - Select a **Route** (required)
    - Select a **Train Type** (optional)
-   - Select a **Direction** (optional: "Dit" or "Från")
+   - Select a **Destination** (end station on the route)
    - Click **"Add Trip"** - the trip will be automatically created and linked to this timetable
-   - Trips are automatically named based on Route + Direction
+   - Trip titles are generated from the route and destination
 4. **Edit Trips:**
    - Click **"Edit"** on any trip in the timetable to configure Stop Times
    - Or go to **Railway Timetable > Services** to edit trips directly
@@ -137,22 +134,11 @@ Services can be managed in two ways:
 
 The following features are planned for future releases:
 
-1. **End Stations on Routes**
-   - Introduce end stations (terminus) on routes
-   - Routes will have a final destination instead of "hit och dit" (to and from) as direction
-
-2. **Approximate Departure Times**
+1. **Approximate Departure Times**
    - Ability to mark departures as approximate (e.g., "ca. 10:00" or "~10:00")
    - Useful for services with flexible timing
 
-3. **Stop Type Indicators**
-   - Create unique indicators for stop behavior:
-     - Train does not stop (passes through)
-     - Train only drops off passengers (no pickup)
-     - Train only picks up passengers (no dropoff)
-     - Train stops for both pickup and dropoff
-
-4. **Symbol Legend**
+2. **Symbol Legend** (extended)
    - Add a legend explaining all symbols used in timetables
    - Will help users understand the various indicators and markings
 
@@ -242,10 +228,11 @@ museum-railway-timetable/
 │   ├─ admin-page/               # dashboard, clear-db, admin-list
 │   ├─ admin-meta-boxes/         # station, route, timetable, service, …
 │   ├─ admin-ajax/               # stoptimes, timetable-services, journey, …
-│   ├─ shortcodes/               # shortcode-month, overview, journey
+│   ├─ shortcodes/               # month, overview, journey, journey-wizard
 │   ├─ cpt/                        # cpt-register, cpt-admin
 │   ├─ import-lennakatten/       # import-data, import-run, loader
-│   ├─ assets.php                # Asset enqueuing
+│   ├─ assets/                   # admin.php, frontend.php (enqueue helpers)
+│   ├─ assets.php                # Asset loader (requires assets/*)
 │   ├─ admin-page.php            # Loader
 │   ├─ admin-meta-boxes.php      # Loader
 │   ├─ admin-ajax.php            # Loader
@@ -259,7 +246,9 @@ museum-railway-timetable/
 │   ├─ admin-stoptimes-ui.js
 │   ├─ admin-timetable-services-ui.js
 │   ├─ admin-service-edit.js     # Service edit (route, stoptimes form)
-│   └─ frontend.js               # Shortcodes (month, journey, etc.)
+│   ├─ journey-wizard.js         # [museum_journey_wizard]
+│   ├─ icons/train-types/        # PNG train type symbols
+│   └─ frontend.js               # Month view, journey planner AJAX
 └─ languages/                    # .pot / .po
 ```
 
