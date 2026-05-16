@@ -15,7 +15,7 @@ function MRT_render_dashboard_dev_tools() {
 	?>
 	<div class="mrt-section">
 		<h2><?php esc_html_e( 'Plugin data and demo tools', 'museum-railway-timetable' ); ?></h2>
-		<p><?php esc_html_e( 'Use these admin tools to reset plugin data, import test data, and create a page showing every public shortcode.', 'museum-railway-timetable' ); ?></p>
+		<p><?php esc_html_e( 'Use these tools to reset plugin data, import Lennakatten test data, or create a draft page with all public shortcodes. The same import is also available under Railway Timetable → Import Lennakatten.', 'museum-railway-timetable' ); ?></p>
 		<?php MRT_render_dashboard_clear_db_button(); ?>
 		<?php MRT_render_dashboard_import_demo_button(); ?>
 		<?php MRT_render_dashboard_create_demo_page_button(); ?>
@@ -49,7 +49,7 @@ function MRT_render_dashboard_import_demo_button(): void {
 		<input type="hidden" name="mrt_action" value="import_demo_data" />
 		<p>
 			<button type="submit" class="button button-primary"><?php esc_html_e( 'Import demo data', 'museum-railway-timetable' ); ?></button>
-			<span class="description"><?php esc_html_e( 'Creates Lennakatten test stations, routes, train types, timetable, trips, and stop times.', 'museum-railway-timetable' ); ?></span>
+			<span class="description"><?php esc_html_e( 'Creates Lennakatten test stations, two routes, train types, GRÖN and GUL timetables, trips, and stop times.', 'museum-railway-timetable' ); ?></span>
 		</p>
 	</form>
 	<?php
@@ -65,7 +65,7 @@ function MRT_render_dashboard_create_demo_page_button(): void {
 		<input type="hidden" name="mrt_action" value="create_demo_page" />
 		<p>
 			<button type="submit" class="button button-secondary"><?php esc_html_e( 'Create demo page', 'museum-railway-timetable' ); ?></button>
-			<span class="description"><?php esc_html_e( 'Creates or updates a draft page showing all public plugin shortcodes.', 'museum-railway-timetable' ); ?></span>
+			<span class="description"><?php esc_html_e( 'Creates or updates a draft page with all public shortcodes. Open Railway Timetable → Component demo page for edit and preview links.', 'museum-railway-timetable' ); ?></span>
 		</p>
 	</form>
 	<?php
