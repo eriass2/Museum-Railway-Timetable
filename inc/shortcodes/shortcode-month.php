@@ -260,7 +260,13 @@ function MRT_month_shortcode_resolve_month_start( array $atts, int $now_ts ): in
 	return strtotime( date( 'Y-m-01', $now_ts ) );
 }
 
-function MRT_render_shortcode_month( $atts ) {
+/**
+ * Parse shortcode atts and build month view render context.
+ *
+ * @param array|string $atts Shortcode attributes
+ * @return array<string, mixed>|string Context array, or error HTML string
+ */
+function MRT_month_shortcode_build_context( $atts ) {
 	$atts = shortcode_atts(
 		array(
 			'month'        => '',
@@ -292,22 +298,32 @@ function MRT_render_shortcode_month( $atts ) {
 		return MRT_render_alert( __( 'Invalid date.', 'museum-railway-timetable' ), 'error' );
 	}
 
-	$weekdayFirst = (int) date( 'N', $first_ts );
-	$startMonday  = ! empty( $atts['start_monday'] );
+	return array(
+		'first_ts'      => $first_ts,
+		'atts'          => $atts,
+		'dates'         => MRT_month_shortcode_collect_day_meta( $year, $month, $daysInMonth, $atts ),
+		'daysInMonth'   => $daysInMonth,
+		'weekdayFirst'  => (int) date( 'N', $first_ts ),
+		'startMonday'   => ! empty( $atts['start_monday'] ),
+		'month_uid'     => wp_unique_id( 'mrtmonth' ),
+		'month_title'   => date_i18n( 'F Y', $first_ts ),
+	);
+}
 
-	$dates = MRT_month_shortcode_collect_day_meta( $year, $month, $daysInMonth, $atts );
-
-	$month_uid   = wp_unique_id( 'mrtmonth' );
-	$month_title = date_i18n( 'F Y', $first_ts );
+function MRT_render_shortcode_month( $atts ) {
+	$context = MRT_month_shortcode_build_context( $atts );
+	if ( is_string( $context ) ) {
+		return $context;
+	}
 
 	return MRT_month_shortcode_render_full(
-		$first_ts,
-		$atts,
-		$dates,
-		$daysInMonth,
-		$weekdayFirst,
-		$startMonday,
-		$month_uid,
-		$month_title
+		$context['first_ts'],
+		$context['atts'],
+		$context['dates'],
+		$context['daysInMonth'],
+		$context['weekdayFirst'],
+		$context['startMonday'],
+		$context['month_uid'],
+		$context['month_title']
 	);
 }
