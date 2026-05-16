@@ -81,41 +81,52 @@ function MRT_calculate_direction_from_end_station( $route_id, $end_station_id ) 
 
 	$end_stations   = MRT_get_route_end_stations( $route_id );
 	$route_stations = MRT_get_route_stations( $route_id );
-
 	if ( empty( $route_stations ) ) {
 		return '';
 	}
+	$explicit_direction = MRT_route_direction_from_configured_endpoints( $end_stations, $end_station_id );
+	if ( $explicit_direction !== '' ) {
+		return $explicit_direction;
+	}
+	return MRT_route_direction_from_station_order( $route_stations, $end_stations, $end_station_id );
+}
 
-	// If end station is the route's end station, direction is 'dit' (towards)
+/**
+ * Direction from explicitly configured route endpoints.
+ *
+ * @param array{start:int,end:int} $end_stations End station config
+ * @param int                      $end_station_id Destination station
+ */
+function MRT_route_direction_from_configured_endpoints( array $end_stations, $end_station_id ): string {
 	if ( $end_stations['end'] == $end_station_id ) {
 		return 'dit';
 	}
-
-	// If end station is the route's start station, direction is 'från' (from)
 	if ( $end_stations['start'] == $end_station_id ) {
 		return 'från';
 	}
+	return '';
+}
 
-	// Check position in route stations array
+/**
+ * Direction inferred from station order.
+ *
+ * @param array<int,int>           $route_stations Route station IDs
+ * @param array{start:int,end:int} $end_stations End station config
+ * @param int                      $end_station_id Destination station
+ */
+function MRT_route_direction_from_station_order( array $route_stations, array $end_stations, $end_station_id ): string {
 	$end_station_index       = array_search( $end_station_id, $route_stations );
 	$start_station_index     = array_search( $end_stations['start'], $route_stations );
 	$route_end_station_index = array_search( $end_stations['end'], $route_stations );
-
 	if ( $end_station_index === false ) {
 		return '';
 	}
-
-	// If end station is closer to route's end station, direction is 'dit'
 	if ( $route_end_station_index !== false && $end_station_index > $route_end_station_index ) {
 		return 'dit';
 	}
-
-	// If end station is closer to route's start station, direction is 'från'
 	if ( $start_station_index !== false && $end_station_index < $start_station_index ) {
 		return 'från';
 	}
-
-	// Default: if end station is after middle point, assume 'dit', otherwise 'från'
 	$middle = count( $route_stations ) / 2;
 	return $end_station_index >= $middle ? 'dit' : 'från';
 }
@@ -218,42 +229,62 @@ function MRT_get_route_label( $route, $direction, $services_list = array(), $sta
 
 	$route_id    = $route->ID;
 	$route_label = $route->post_title;
-
-	// Check if services have end stations set
-	$end_station_ids = array();
-	if ( ! empty( $services_list ) ) {
-		foreach ( $services_list as $service_data ) {
-			$service = is_array( $service_data ) && isset( $service_data['service'] )
-				? $service_data['service']
-				: ( is_object( $service_data ) ? $service_data : null );
-
-			if ( ! $service ) {
-				continue;
-			}
-
-			$end_station_id = get_post_meta( $service->ID, 'mrt_service_end_station_id', true );
-			if ( $end_station_id ) {
-				$end_station_ids[] = $end_station_id;
-			}
-		}
-	}
-
-	// Try to get label from end stations first
-	if ( ! empty( $end_station_ids ) ) {
-		$unique_end_stations = array_unique( $end_station_ids );
-		if ( count( $unique_end_stations ) === 1 ) {
-			$label = MRT_get_route_label_from_end_station( $route_id, reset( $unique_end_stations ) );
-			if ( ! empty( $label ) ) {
-				return $label;
-			}
-		}
-	}
-
-	// Fallback to direction-based label
-	$label = MRT_get_route_label_from_direction( $route_id, $direction, $station_posts );
-	if ( ! empty( $label ) ) {
+	$label       = MRT_get_route_label_from_services_end_station( $route_id, $services_list );
+	if ( $label !== '' ) {
 		return $label;
 	}
 
-	return $route_label;
+	$direction_label = MRT_get_route_label_from_direction( $route_id, $direction, $station_posts );
+	return $direction_label !== '' ? $direction_label : $route_label;
+}
+
+/**
+ * Route label based on a shared service end station.
+ *
+ * @param int   $route_id Route post ID
+ * @param array $services_list Service data rows
+ */
+function MRT_get_route_label_from_services_end_station( $route_id, array $services_list ): string {
+	$end_station_ids = array();
+	foreach ( $services_list as $service_data ) {
+		$service = MRT_route_label_service_object( $service_data );
+		if ( ! $service ) {
+			continue;
+		}
+		$end_station_id = get_post_meta( $service->ID, 'mrt_service_end_station_id', true );
+		if ( $end_station_id ) {
+			$end_station_ids[] = $end_station_id;
+		}
+	}
+	return MRT_get_route_label_from_unique_end_station( $route_id, $end_station_ids );
+}
+
+/**
+ * Resolve service object from route service list row.
+ *
+ * @param mixed $service_data Service row or object
+ * @return object|null
+ */
+function MRT_route_label_service_object( $service_data ) {
+	if ( is_array( $service_data ) && isset( $service_data['service'] ) && is_object( $service_data['service'] ) ) {
+		return $service_data['service'];
+	}
+	return is_object( $service_data ) ? $service_data : null;
+}
+
+/**
+ * Route label when every service has the same end station.
+ *
+ * @param int   $route_id Route post ID
+ * @param array $end_station_ids End station IDs
+ */
+function MRT_get_route_label_from_unique_end_station( $route_id, array $end_station_ids ): string {
+	if ( empty( $end_station_ids ) ) {
+		return '';
+	}
+	$unique_end_stations = array_unique( $end_station_ids );
+	if ( count( $unique_end_stations ) !== 1 ) {
+		return '';
+	}
+	return MRT_get_route_label_from_end_station( $route_id, reset( $unique_end_stations ) );
 }
