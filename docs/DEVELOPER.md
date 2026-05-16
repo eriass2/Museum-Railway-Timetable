@@ -42,7 +42,7 @@ composer check
 | `composer test:js` | Node-baserade JS-tester för delade assets |
 | `composer phpstan` / `phpcs` / `lint` | Statisk analys + WPCS |
 
-GitHub Actions (`.github/workflows/ci.yml`): validate, phpstan, test vid push/PR. Dependabot uppdaterar Composer månadsvis.
+GitHub Actions (`.github/workflows/ci.yml`) kör `composer check` vid push/PR. Dependabot uppdaterar Composer månadsvis.
 
 **PHPStan:** `phpstan-wordpress`, config `phpstan.neon`. **PHPCS:** WPCS; prefix `MRT_` kan flaggas – bedöm mot [STYLE_GUIDE.md](STYLE_GUIDE.md). `composer phpcbf` fixar formatering där det går.
 
