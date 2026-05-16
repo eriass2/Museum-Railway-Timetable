@@ -1,4 +1,4 @@
-# Kör validering vid push och pull request (samma som lokalt: php scripts/validate.php)
+# Kör samma snabbkontroll som lokalt: composer check.
 name: CI
 
 on:
@@ -19,14 +19,13 @@ jobs:
           extensions: mbstring, xml
           coverage: none
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
       - name: Install Composer dependencies
         run: composer install --no-interaction --prefer-dist
 
-      - name: Validate plugin structure and PHP syntax
-        run: php scripts/validate.php
-
-      - name: PHPStan
-        run: composer phpstan
-
-      - name: PHPUnit
-        run: composer test
+      - name: Run local quick checks
+        run: composer check

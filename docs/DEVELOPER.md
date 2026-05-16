@@ -6,18 +6,12 @@ En ingång för utvecklare. Läs detta först.
 
 ## Snabbstart
 
-```powershell
+```sh
 git clone <repo>
 cd Museum-Railway-Timetable
 composer install
 
-copy local\deploy.config.example.json local\deploy.config.json
-# Redigera localPath / localUrl
-
-.\local\deploy.ps1 -OpenBrowser
-
-composer plugin-check    # obligatoriskt före commit
-# valfritt: composer lint
+composer check
 ```
 
 ---
@@ -42,11 +36,13 @@ composer plugin-check    # obligatoriskt före commit
 
 | Kommando | Vad det gör |
 |----------|-------------|
+| `composer check` | Kör lokal snabbkontroll: plugin-check, PHPStan, PHPUnit och JS-tester |
 | `composer plugin-check` | `php scripts/validate.php` – filer, syntax, ABSPATH, text domain |
 | `composer test` | PHPUnit |
+| `composer test:js` | Node-baserade JS-tester för delade assets |
 | `composer phpstan` / `phpcs` / `lint` | Statisk analys + WPCS |
 
-GitHub Actions (`.github/workflows/ci.yml`): validate, phpstan, test vid push/PR. Dependabot uppdaterar Composer månadsvis.
+GitHub Actions (`.github/workflows/ci.yml`) kör `composer check` vid push/PR. Dependabot uppdaterar Composer månadsvis.
 
 **PHPStan:** `phpstan-wordpress`, config `phpstan.neon`. **PHPCS:** WPCS; prefix `MRT_` kan flaggas – bedöm mot [STYLE_GUIDE.md](STYLE_GUIDE.md). `composer phpcbf` fixar formatering där det går.
 
@@ -54,13 +50,59 @@ GitHub Actions (`.github/workflows/ci.yml`): validate, phpstan, test vid push/PR
 
 ---
 
+## Lokala testlägen
+
+### Snabbtest utan WordPress
+
+Kör detta för ren PHP/JS-logik och statisk kontroll. Det kräver bara PHP 8.2+, Composer och Node:
+
+```sh
+composer install
+composer check
+```
+
+### Full WordPress-testning
+
+Använd Docker när du behöver klicka i admin, prova shortcodes eller testa dataflöden i en riktig WordPress-installation:
+
+```sh
+docker compose up -d --build
+```
+
+- Webbplats: <http://localhost:8080>
+- Admin: <http://localhost:8080/wp-admin>
+- Login: `admin` / `admin`
+
+Kör Composer-kommandon i Docker om datorn saknar lokal PHP/Composer:
+
+```sh
+docker compose run --rm composer install
+docker compose run --rm composer check
+```
+
+Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
+
+### Manuell smoke-checklista i WordPress
+
+Kör detta efter `docker compose up -d --build` när ändringen påverkar admin, shortcodes eller dataflöden:
+
+- Logga in på <http://localhost:8080/wp-admin> med `admin` / `admin`.
+- Kontrollera att menyn **Railway Timetable** syns och att pluginet är aktivt.
+- Skapa minst två stationer, en rutt, en tidtabell och en trip/service.
+- Lägg in stopptider för trippen och spara utan felmeddelanden.
+- Skapa eller öppna en sida med relevant shortcode, till exempel `[museum_journey_planner]`.
+- Kontrollera frontend: formulär/tabell visas, sökning går att köra och inga PHP-fel syns.
+- Kontrollera loggar vid fel: `docker compose logs wordpress`.
+
+---
+
 ## Checklista före deploy
 
-- [ ] `composer plugin-check` och `composer test` gröna
-- [ ] Manuellt i WordPress: stationer, rutter, tidtabell, shortcodes
+- [ ] `composer check` grönt
+- [ ] Manuell smoke-checklista i WordPress är genomförd vid UI/dataflödesändringar
 - [ ] [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort rökning vid UI-ändringar
 - [ ] Nya strängar: `languages/*.po` → kompilera `.mo` (Poedit eller `msgfmt … -o …/sv_SE.mo`)
-- [ ] `.\local\deploy.ps1` om du testar i Local
+- [ ] `docker compose up -d --build` eller `.\local\deploy.ps1` om du testar i full WordPress
 
 ---
 
