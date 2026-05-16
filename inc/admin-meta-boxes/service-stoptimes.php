@@ -78,45 +78,95 @@ function MRT_render_stoptimes_table( $stations, $stoptimes_by_station, $post_id 
 	?>
 	<div class="mrt-box mrt-stoptimes-box mrt-my-1">
 		<table class="widefat striped mrt-stoptimes-table mrt-mt-1">
-				<thead>
-					<tr>
-						<th class="mrt-w-40"><?php esc_html_e( 'Order', 'museum-railway-timetable' ); ?></th>
-						<th><?php esc_html_e( 'Station', 'museum-railway-timetable' ); ?></th>
-						<th class="mrt-w-100"><?php esc_html_e( 'Stops here', 'museum-railway-timetable' ); ?></th>
-						<th class="mrt-w-100"><?php esc_html_e( 'Arrival', 'museum-railway-timetable' ); ?></th>
-						<th class="mrt-w-100"><?php esc_html_e( 'Departure', 'museum-railway-timetable' ); ?></th>
-						<th class="mrt-w-80"><?php esc_html_e( 'Pickup', 'museum-railway-timetable' ); ?></th>
-						<th class="mrt-w-80"><?php esc_html_e( 'Dropoff', 'museum-railway-timetable' ); ?></th>
-					</tr>
-				</thead>
-				<tbody id="mrt-stoptimes-tbody">
-					<?php if ( ! empty( $stations ) ) : ?>
-						<?php
-						foreach ( $stations as $index => $station ) :
-							$st = $stoptimes_by_station[ $station->ID ] ?? null;
-							echo MRT_render_stoptime_row( $station, $st, $index, $post_id );
-						endforeach;
-						?>
-					<?php else : ?>
-						<tr>
-							<td colspan="7" class="mrt-empty">
-								<?php esc_html_e( 'No route selected. Select a route in Service Details above to configure stop times.', 'museum-railway-timetable' ); ?>
-							</td>
-						</tr>
-					<?php endif; ?>
-				</tbody>
-			</table>
-		</div>
+			<?php MRT_render_stoptimes_table_head(); ?>
+			<?php MRT_render_stoptimes_table_body( $stations, $stoptimes_by_station, $post_id ); ?>
+		</table>
+	</div>
+	<?php MRT_render_stoptimes_save_action( $stations, $post_id ); ?>
+	<?php
+}
+
+/**
+ * Render stop times table header.
+ */
+function MRT_render_stoptimes_table_head(): void {
+	?>
+	<thead>
+		<tr>
+			<th class="mrt-w-40"><?php esc_html_e( 'Order', 'museum-railway-timetable' ); ?></th>
+			<th><?php esc_html_e( 'Station', 'museum-railway-timetable' ); ?></th>
+			<th class="mrt-w-100"><?php esc_html_e( 'Stops here', 'museum-railway-timetable' ); ?></th>
+			<th class="mrt-w-100"><?php esc_html_e( 'Arrival', 'museum-railway-timetable' ); ?></th>
+			<th class="mrt-w-100"><?php esc_html_e( 'Departure', 'museum-railway-timetable' ); ?></th>
+			<th class="mrt-w-80"><?php esc_html_e( 'Pickup', 'museum-railway-timetable' ); ?></th>
+			<th class="mrt-w-80"><?php esc_html_e( 'Dropoff', 'museum-railway-timetable' ); ?></th>
+		</tr>
+	</thead>
+	<?php
+}
+
+/**
+ * Render stop times table body.
+ *
+ * @param array $stations Station posts
+ * @param array $stoptimes_by_station Stop times keyed by station ID
+ */
+function MRT_render_stoptimes_table_body( array $stations, array $stoptimes_by_station, int $post_id ): void {
+	?>
+	<tbody id="mrt-stoptimes-tbody">
 		<?php if ( ! empty( $stations ) ) : ?>
-		<p class="mrt-mt-1">
-			<button type="button" id="mrt-save-all-stoptimes" class="button button-primary" data-service-id="<?php echo esc_attr( (string) $post_id ); ?>">
-				<?php esc_html_e( 'Save Stop Times', 'museum-railway-timetable' ); ?>
-			</button>
-			<span class="description mrt-ml-1">
-				<?php esc_html_e( 'Configure which stations the train stops at, then click "Save Stop Times" to save all changes.', 'museum-railway-timetable' ); ?>
-			</span>
-		</p>
+			<?php MRT_render_stoptimes_station_rows( $stations, $stoptimes_by_station, $post_id ); ?>
+		<?php else : ?>
+			<?php MRT_render_stoptimes_empty_row(); ?>
 		<?php endif; ?>
+	</tbody>
+	<?php
+}
+
+/**
+ * Render station rows for the stop times table.
+ *
+ * @param array $stations Station posts
+ * @param array $stoptimes_by_station Stop times keyed by station ID
+ */
+function MRT_render_stoptimes_station_rows( array $stations, array $stoptimes_by_station, int $post_id ): void {
+	foreach ( $stations as $index => $station ) {
+		$st = $stoptimes_by_station[ $station->ID ] ?? null;
+		echo MRT_render_stoptime_row( $station, $st, $index, $post_id );
+	}
+}
+
+/**
+ * Render empty stop times row.
+ */
+function MRT_render_stoptimes_empty_row(): void {
+	?>
+	<tr>
+		<td colspan="7" class="mrt-empty">
+			<?php esc_html_e( 'No route selected. Select a route in Service Details above to configure stop times.', 'museum-railway-timetable' ); ?>
+		</td>
+	</tr>
+	<?php
+}
+
+/**
+ * Render save button for stop times.
+ *
+ * @param array $stations Station posts
+ */
+function MRT_render_stoptimes_save_action( array $stations, int $post_id ): void {
+	if ( empty( $stations ) ) {
+		return;
+	}
+	?>
+	<p class="mrt-mt-1">
+		<button type="button" id="mrt-save-all-stoptimes" class="button button-primary" data-service-id="<?php echo esc_attr( (string) $post_id ); ?>">
+			<?php esc_html_e( 'Save Stop Times', 'museum-railway-timetable' ); ?>
+		</button>
+		<span class="description mrt-ml-1">
+			<?php esc_html_e( 'Configure which stations the train stops at, then click "Save Stop Times" to save all changes.', 'museum-railway-timetable' ); ?>
+		</span>
+	</p>
 	<?php
 }
 

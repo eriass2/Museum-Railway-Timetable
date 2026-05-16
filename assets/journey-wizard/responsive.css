@@ -1,0 +1,67 @@
+@media (max-width: 48rem) {
+    .mrt-journey-wizard__hero {
+        padding: 1rem;
+    }
+
+    .mrt-journey-wizard__panel,
+    .mrt-journey-wizard__search-panel {
+        width: 100%;
+        padding: 1.2rem;
+    }
+
+    .mrt-journey-wizard__hero-title,
+    .mrt-journey-wizard__step-title {
+        font-size: 1.8rem;
+    }
+
+    .mrt-journey-wizard__calendar-nav {
+        flex-wrap: wrap;
+        padding: 0.9rem 0.9rem 0;
+    }
+
+    .mrt-journey-wizard__calendar,
+    .mrt-journey-wizard__legend {
+        padding-inline: 0.9rem;
+    }
+
+    .mrt-journey-wizard__calendar th {
+        font-size: 1rem;
+    }
+
+    .mrt-journey-wizard__day {
+        min-height: 2.4rem;
+        font-size: 1.2rem;
+    }
+
+    .mrt-journey-wizard__trip-main,
+    .mrt-journey-wizard__selected-card {
+        grid-template-columns: 1fr;
+    }
+
+    .mrt-journey-wizard__trip-side {
+        justify-items: start;
+    }
+
+    .mrt-journey-wizard__timeline-row {
+        grid-template-columns: 4.2rem 1.4rem minmax(0, 1fr);
+    }
+
+    .mrt-journey-wizard__timeline-leg,
+    .mrt-journey-wizard__passed-toggle,
+    .mrt-journey-wizard__transfer-block {
+        margin-left: 5.2rem;
+    }
+
+    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid {
+        grid-template-columns: 5.8rem minmax(18rem, 1fr);
+        overflow-x: auto;
+    }
+
+    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid > :nth-child(4n) {
+        border-right: 1px solid var(--mrt-print-grid);
+    }
+
+    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid > :nth-child(even) {
+        border-right: 0;
+    }
+}

@@ -16,46 +16,47 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_render_dashboard_stats( $stats ) {
 	?>
 	<div class="mrt-grid mrt-grid-auto mrt-my-lg">
-		<div class="mrt-card mrt-card--center">
-			<div class="mrt-text-2xl mrt-font-bold mrt-text-link"><?php echo esc_html( $stats['stations_count'] ); ?></div>
-			<div class="mrt-text-muted mrt-mt-sm">
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=mrt_station' ) ); ?>">
-					<?php esc_html_e( 'Stations', 'museum-railway-timetable' ); ?>
-				</a>
-			</div>
+		<?php MRT_render_dashboard_stat_card( $stats['stations_count'], __( 'Stations', 'museum-railway-timetable' ), admin_url( 'edit.php?post_type=mrt_station' ) ); ?>
+		<?php MRT_render_dashboard_stat_card( $stats['routes_count'], __( 'Routes', 'museum-railway-timetable' ), admin_url( 'edit.php?post_type=mrt_route' ) ); ?>
+		<?php MRT_render_dashboard_stat_card( $stats['timetables_count'], __( 'Timetables', 'museum-railway-timetable' ), admin_url( 'edit.php?post_type=mrt_timetable' ) ); ?>
+		<?php MRT_render_dashboard_services_stat_card( $stats['services_count'] ); ?>
+		<?php MRT_render_dashboard_stat_card( $stats['train_types_count'], __( 'Train Types', 'museum-railway-timetable' ), admin_url( 'edit-tags.php?taxonomy=mrt_train_type&post_type=mrt_service' ) ); ?>
+	</div>
+	<?php
+}
+
+/**
+ * Render one linked dashboard statistic card.
+ *
+ * @param int|string $count Statistic count
+ * @param string     $label Label
+ * @param string     $url Admin URL
+ */
+function MRT_render_dashboard_stat_card( $count, string $label, string $url ): void {
+	?>
+	<div class="mrt-card mrt-card--center">
+		<div class="mrt-text-2xl mrt-font-bold mrt-text-link"><?php echo esc_html( (string) $count ); ?></div>
+		<div class="mrt-text-muted mrt-mt-sm">
+			<a href="<?php echo esc_url( $url ); ?>"><?php echo esc_html( $label ); ?></a>
 		</div>
-		<div class="mrt-card mrt-card--center">
-			<div class="mrt-stat-number"><?php echo esc_html( $stats['routes_count'] ); ?></div>
-			<div class="mrt-stat-label mrt-mt-sm">
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=mrt_route' ) ); ?>">
-					<?php esc_html_e( 'Routes', 'museum-railway-timetable' ); ?>
-				</a>
-			</div>
-		</div>
-		<div class="mrt-card mrt-card--center">
-			<div class="mrt-text-2xl mrt-font-bold mrt-text-link"><?php echo esc_html( $stats['timetables_count'] ); ?></div>
-			<div class="mrt-text-muted mrt-mt-sm">
-				<a href="<?php echo esc_url( admin_url( 'edit.php?post_type=mrt_timetable' ) ); ?>">
-					<?php esc_html_e( 'Timetables', 'museum-railway-timetable' ); ?>
-				</a>
-			</div>
-		</div>
-		<div class="mrt-card mrt-card--center">
-			<div class="mrt-text-2xl mrt-font-bold mrt-text-link"><?php echo esc_html( $stats['services_count'] ); ?></div>
-			<div class="mrt-text-muted mrt-mt-sm">
-				<?php esc_html_e( 'Trips (Services)', 'museum-railway-timetable' ); ?>
-				<span class="mrt-block mrt-text-small mrt-mt-xs mrt-opacity-85">
-					<?php esc_html_e( 'Managed via Timetables', 'museum-railway-timetable' ); ?>
-				</span>
-			</div>
-		</div>
-		<div class="mrt-card mrt-card--center">
-			<div class="mrt-text-2xl mrt-font-bold mrt-text-link"><?php echo esc_html( $stats['train_types_count'] ); ?></div>
-			<div class="mrt-text-muted mrt-mt-sm">
-				<a href="<?php echo esc_url( admin_url( 'edit-tags.php?taxonomy=mrt_train_type&post_type=mrt_service' ) ); ?>">
-					<?php esc_html_e( 'Train Types', 'museum-railway-timetable' ); ?>
-				</a>
-			</div>
+	</div>
+	<?php
+}
+
+/**
+ * Render services statistic card.
+ *
+ * @param int|string $count Service count
+ */
+function MRT_render_dashboard_services_stat_card( $count ): void {
+	?>
+	<div class="mrt-card mrt-card--center">
+		<div class="mrt-text-2xl mrt-font-bold mrt-text-link"><?php echo esc_html( (string) $count ); ?></div>
+		<div class="mrt-text-muted mrt-mt-sm">
+			<?php esc_html_e( 'Trips (Services)', 'museum-railway-timetable' ); ?>
+			<span class="mrt-block mrt-text-small mrt-mt-xs mrt-opacity-85">
+				<?php esc_html_e( 'Managed via Timetables', 'museum-railway-timetable' ); ?>
+			</span>
 		</div>
 	</div>
 	<?php

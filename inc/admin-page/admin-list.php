@@ -105,7 +105,6 @@ function MRT_render_stations_overview_row( $sid, $train_type ) {
 	$order                = intval( get_post_meta( $sid, 'mrt_display_order', true ) );
 	$routes_using_station = MRT_get_routes_using_station( $sid );
 	$services             = MRT_get_services_for_station( $sid );
-	$count                = count( $services );
 	$next                 = MRT_next_running_day_for_station( $sid, $train_type );
 	$edit_link            = get_edit_post_link( $sid, '' );
 	?>
@@ -113,37 +112,64 @@ function MRT_render_stations_overview_row( $sid, $train_type ) {
 		<td><?php echo esc_html( $title ?: ( '#' . $sid ) ); ?></td>
 		<td><?php echo esc_html( $type ?: '' ); ?></td>
 		<td><?php echo esc_html( (string) $order ); ?></td>
-		<td>
-			<?php if ( ! empty( $routes_using_station ) ) : ?>
-				<?php
-				$route_names = array();
-				foreach ( $routes_using_station as $route ) {
-					$route_names[] = '<a href="' . esc_url( get_edit_post_link( $route->ID ) ) . '">' . esc_html( $route->post_title ) . '</a>';
-				}
-				echo implode( ', ', $route_names );
-				?>
-			<?php else : ?>
-				<span class="description"><?php echo esc_html__( 'None', 'museum-railway-timetable' ); ?></span>
-			<?php endif; ?>
-		</td>
-		<td><?php echo esc_html( (string) $count ); ?></td>
-		<td>
-			<?php
-			if ( $next ) {
-				$datetime = MRT_get_current_datetime();
-				echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $next, $datetime['timestamp'] ) ) );
-			} else {
-				echo '<span class="mrt-opacity-70">' . esc_html__( '— none within range —', 'museum-railway-timetable' ) . '</span>';
-			}
-			?>
-		</td>
-		<td>
-			<?php if ( $edit_link ) : ?>
-				<a class="button button-small" href="<?php echo esc_url( $edit_link ); ?>"><?php echo esc_html__( 'Edit', 'museum-railway-timetable' ); ?></a>
-			<?php endif; ?>
-		</td>
+		<td><?php MRT_render_station_overview_routes_cell( $routes_using_station ); ?></td>
+		<td><?php echo esc_html( (string) count( $services ) ); ?></td>
+		<td><?php MRT_render_station_overview_next_day_cell( $next ); ?></td>
+		<td><?php MRT_render_station_overview_actions_cell( $edit_link ); ?></td>
 	</tr>
 	<?php
+}
+
+/**
+ * Render station overview routes cell.
+ *
+ * @param array<int, WP_Post> $routes_using_station Routes
+ */
+function MRT_render_station_overview_routes_cell( array $routes_using_station ): void {
+	if ( empty( $routes_using_station ) ) {
+		echo '<span class="description">' . esc_html__( 'None', 'museum-railway-timetable' ) . '</span>';
+		return;
+	}
+	echo wp_kses_post( implode( ', ', MRT_station_overview_route_links( $routes_using_station ) ) );
+}
+
+/**
+ * Route links for station overview.
+ *
+ * @param array<int, WP_Post> $routes Routes
+ * @return array<int, string>
+ */
+function MRT_station_overview_route_links( array $routes ): array {
+	$route_names = array();
+	foreach ( $routes as $route ) {
+		$route_names[] = '<a href="' . esc_url( get_edit_post_link( $route->ID ) ) . '">' . esc_html( $route->post_title ) . '</a>';
+	}
+	return $route_names;
+}
+
+/**
+ * Render next running day cell.
+ *
+ * @param string|false|null $next Next date
+ */
+function MRT_render_station_overview_next_day_cell( $next ): void {
+	if ( ! $next ) {
+		echo '<span class="mrt-opacity-70">' . esc_html__( '— none within range —', 'museum-railway-timetable' ) . '</span>';
+		return;
+	}
+	$datetime = MRT_get_current_datetime();
+	echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $next, $datetime['timestamp'] ) ) );
+}
+
+/**
+ * Render station overview actions cell.
+ *
+ * @param string|false|null $edit_link Edit URL
+ */
+function MRT_render_station_overview_actions_cell( $edit_link ): void {
+	if ( $edit_link ) {
+		echo '<a class="button button-small" href="' . esc_url( $edit_link ) . '">' . esc_html__( 'Edit', 'museum-railway-timetable' ) . '</a>';
+	}
 }
 
 /**
