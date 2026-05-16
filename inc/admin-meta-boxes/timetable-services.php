@@ -83,42 +83,54 @@ function MRT_render_timetable_new_service_row( $routes, $all_train_types, $timet
 }
 
 /**
+ * Load services, routes, and train types for the timetable services meta box.
+ *
+ * @param WP_Post $post Timetable post
+ * @return array{services: array, routes: array, all_train_types: array}
+ */
+function MRT_get_timetable_services_box_data( $post ) {
+	return array(
+		'services'        => get_posts(
+			array(
+				'post_type'      => 'mrt_service',
+				'posts_per_page' => -1,
+				'meta_query'     => array(
+					array(
+						'key'     => 'mrt_service_timetable_id',
+						'value'   => $post->ID,
+						'compare' => '=',
+					),
+				),
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'fields'         => 'all',
+			)
+		),
+		'routes'          => get_posts(
+			array(
+				'post_type'      => 'mrt_route',
+				'posts_per_page' => -1,
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+				'fields'         => 'all',
+			)
+		),
+		'all_train_types' => get_terms(
+			array(
+				'taxonomy'   => 'mrt_train_type',
+				'hide_empty' => false,
+			)
+		),
+	);
+}
+
+/**
  * Render timetable services meta box (to manage trips within timetable)
  *
  * @param WP_Post $post Current post object (Timetable)
  */
 function MRT_render_timetable_services_box( $post ) {
-	$services        = get_posts(
-		array(
-			'post_type'      => 'mrt_service',
-			'posts_per_page' => -1,
-			'meta_query'     => array(
-				array(
-					'key'     => 'mrt_service_timetable_id',
-					'value'   => $post->ID,
-					'compare' => '=',
-				),
-			),
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-			'fields'         => 'all',
-		)
-	);
-	$routes          = get_posts(
-		array(
-			'post_type'      => 'mrt_route',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-			'fields'         => 'all',
-		)
-	);
-	$all_train_types = get_terms(
-		array(
-			'taxonomy'   => 'mrt_train_type',
-			'hide_empty' => false,
-		)
-	);
+	$data = MRT_get_timetable_services_box_data( $post );
 	?>
 	<div id="mrt-timetable-services-container" class="mrt-box mrt-timetable-services-box mrt-my-1">
 		<?php wp_nonce_field( 'mrt_timetable_services_nonce', 'mrt_timetable_services_nonce' ); ?>
@@ -136,11 +148,11 @@ function MRT_render_timetable_services_box( $post ) {
 			</thead>
 			<tbody id="mrt-timetable-services-tbody">
 				<?php
-				foreach ( $services as $service ) {
+				foreach ( $data['services'] as $service ) {
 					MRT_render_timetable_service_row( $service, $post->ID );
 				}
 				?>
-				<?php MRT_render_timetable_new_service_row( $routes, $all_train_types, $post->ID ); ?>
+				<?php MRT_render_timetable_new_service_row( $data['routes'], $data['all_train_types'], $post->ID ); ?>
 			</tbody>
 		</table>
 	</div>
