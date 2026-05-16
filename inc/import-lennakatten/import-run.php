@@ -14,23 +14,51 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string Success/error message
  */
 function MRT_run_lennakatten_import() {
-	global $wpdb;
-
 	$station_ids    = MRT_import_create_stations();
 	$train_type_ids = MRT_import_create_train_types();
 	list($route_id, $route_rev_id, $route_station_ids, $route_rev_station_ids) = MRT_import_create_routes( $station_ids );
-	$timetable_id      = MRT_import_create_timetable();
-	$created_services  = MRT_import_create_services_out( $route_id, $route_station_ids, $station_ids, $timetable_id, $train_type_ids );
-	$created_services += MRT_import_create_services_in( $route_rev_id, $route_rev_station_ids, $station_ids, $timetable_id, $train_type_ids );
-
-	$dates_count = count( MRT_get_timetable_dates( $timetable_id ) );
+	$result = MRT_import_create_timetables_and_services(
+		$route_id,
+		$route_rev_id,
+		$route_station_ids,
+		$route_rev_station_ids,
+		$station_ids,
+		$train_type_ids
+	);
 	return sprintf(
-		__( 'Import complete. Stations: %1$d, Routes: 2, Train types: %2$d, Timetable: GRÖN (ID %3$d, %4$d dates), Services created: %5$d.', 'museum-railway-timetable' ),
+		__( 'Import complete. Stations: %1$d, Routes: 2, Train types: %2$d, Timetables: %3$s, Services created: %4$d.', 'museum-railway-timetable' ),
 		count( $station_ids ),
 		count( $train_type_ids ),
-		$timetable_id,
-		$dates_count,
-		$created_services
+		$result['summary'],
+		$result['created_services']
+	);
+}
+
+/**
+ * Create all configured timetable datasets and their services.
+ *
+ * @return array{summary: string, created_services: int}
+ */
+function MRT_import_create_timetables_and_services( $route_id, $route_rev_id, $route_station_ids, $route_rev_station_ids, $station_ids, $train_type_ids ): array {
+	$summaries = array();
+	$created   = 0;
+	foreach ( MRT_import_get_timetable_definitions() as $type => $definition ) {
+		$timetable_id = MRT_import_create_timetable_from_definition( (string) $type, $definition );
+		$created     += MRT_import_create_definition_services(
+			$definition,
+			$route_id,
+			$route_rev_id,
+			$route_station_ids,
+			$route_rev_station_ids,
+			$station_ids,
+			$train_type_ids,
+			$timetable_id
+		);
+		$summaries[] = MRT_import_timetable_summary( $definition, $timetable_id );
+	}
+	return array(
+		'summary'          => implode( ', ', $summaries ),
+		'created_services' => $created,
 	);
 }
 
@@ -137,52 +165,100 @@ function MRT_import_ensure_route( $title, $station_ids ) {
 }
 
 function MRT_import_create_timetable() {
-	$timetable_dates = array_slice( MRT_import_get_timetable_dates(), 0, 20 );
+	return MRT_import_create_timetable_from_definition(
+		'green',
+		array(
+			'title' => 'GRÖN TIDTABELL 2026',
+			'dates' => MRT_import_get_timetable_dates(),
+		)
+	);
+}
+
+/**
+ * Create or update a timetable from static import definition.
+ *
+ * @param string               $type Timetable type key
+ * @param array<string, mixed> $definition Import definition
+ * @return int
+ */
+function MRT_import_create_timetable_from_definition( string $type, array $definition ): int {
+	$timetable_dates = array_values( (array) ( $definition['dates'] ?? array() ) );
+	$title           = (string) ( $definition['title'] ?? strtoupper( $type ) );
 	$existing        = get_posts(
 		array(
 			'post_type'      => 'mrt_timetable',
 			'posts_per_page' => 1,
 			'meta_key'       => 'mrt_timetable_type',
-			'meta_value'     => 'green',
+			'meta_value'     => $type,
 		)
 	);
 	if ( empty( $existing ) ) {
 		$id = wp_insert_post(
 			array(
 				'post_type'   => 'mrt_timetable',
-				'post_title'  => 'GRÖN TIDTABELL 2026',
+				'post_title'  => $title,
 				'post_status' => 'publish',
 			)
 		);
 		if ( $id && ! ( $id instanceof \WP_Error ) ) {
 			update_post_meta( $id, 'mrt_timetable_dates', $timetable_dates );
-			update_post_meta( $id, 'mrt_timetable_type', 'green' );
+			update_post_meta( $id, 'mrt_timetable_type', $type );
 			return $id;
 		}
 		return 0;
 	}
 	$id = $existing[0]->ID;
 	update_post_meta( $id, 'mrt_timetable_dates', $timetable_dates );
-	update_post_meta( $id, 'mrt_timetable_type', 'green' );
+	update_post_meta( $id, 'mrt_timetable_type', $type );
 	return $id;
 }
 
-function MRT_import_create_services_out( $route_id, $route_station_ids, $station_ids, $timetable_id, $train_type_ids ) {
-	global $wpdb;
-	$table   = $wpdb->prefix . 'mrt_stoptimes';
-	$created = 0;
-	foreach ( MRT_import_get_services_out() as $svc ) {
-		$created += MRT_import_insert_service( $svc, "Uppsala Östra – Faringe {$svc[0]}", $route_id, $route_station_ids, $station_ids['Faringe'] ?? 0, $timetable_id, $table, $train_type_ids );
-	}
+/**
+ * Create services for one import definition.
+ *
+ * @param array<string, mixed> $definition Import definition
+ */
+function MRT_import_create_definition_services( array $definition, $route_id, $route_rev_id, $route_station_ids, $route_rev_station_ids, $station_ids, $train_type_ids, $timetable_id ): int {
+	$created  = MRT_import_create_services_for_direction( (array) $definition['services_out'], 'Uppsala Östra – Faringe', $route_id, $route_station_ids, $station_ids['Faringe'] ?? 0, $timetable_id, $train_type_ids );
+	$created += MRT_import_create_services_for_direction( (array) $definition['services_in'], 'Faringe – Uppsala Östra', $route_rev_id, $route_rev_station_ids, $station_ids['Uppsala Östra'] ?? 0, $timetable_id, $train_type_ids );
 	return $created;
 }
 
+/**
+ * Human-readable timetable import summary.
+ *
+ * @param array<string, mixed> $definition Import definition
+ */
+function MRT_import_timetable_summary( array $definition, int $timetable_id ): string {
+	$label = (string) ( $definition['label'] ?? $definition['title'] ?? $timetable_id );
+	return sprintf(
+		'%1$s (ID %2$d, %3$d dates)',
+		$label,
+		$timetable_id,
+		count( MRT_get_timetable_dates( $timetable_id ) )
+	);
+}
+
+function MRT_import_create_services_out( $route_id, $route_station_ids, $station_ids, $timetable_id, $train_type_ids ) {
+	return MRT_import_create_services_for_direction( MRT_import_get_services_out(), 'Uppsala Östra – Faringe', $route_id, $route_station_ids, $station_ids['Faringe'] ?? 0, $timetable_id, $train_type_ids );
+}
+
 function MRT_import_create_services_in( $route_rev_id, $route_rev_station_ids, $station_ids, $timetable_id, $train_type_ids ) {
+	return MRT_import_create_services_for_direction( MRT_import_get_services_in(), 'Faringe – Uppsala Östra', $route_rev_id, $route_rev_station_ids, $station_ids['Uppsala Östra'] ?? 0, $timetable_id, $train_type_ids );
+}
+
+/**
+ * Create a set of services in one direction.
+ *
+ * @param array<int, array<int, mixed>> $services Services
+ * @param array<int, int>               $station_ids Route station IDs
+ */
+function MRT_import_create_services_for_direction( array $services, string $title_prefix, $route_id, array $station_ids, $end_station_id, $timetable_id, array $train_type_ids ): int {
 	global $wpdb;
 	$table   = $wpdb->prefix . 'mrt_stoptimes';
 	$created = 0;
-	foreach ( MRT_import_get_services_in() as $svc ) {
-		$created += MRT_import_insert_service( $svc, "Faringe – Uppsala Östra {$svc[0]}", $route_rev_id, $route_rev_station_ids, $station_ids['Uppsala Östra'] ?? 0, $timetable_id, $table, $train_type_ids );
+	foreach ( $services as $svc ) {
+		$created += MRT_import_insert_service( $svc, "{$title_prefix} {$svc[0]}", $route_id, $station_ids, $end_station_id, $timetable_id, $table, $train_type_ids );
 	}
 	return $created;
 }
