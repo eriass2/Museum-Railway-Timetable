@@ -106,6 +106,34 @@ function MRT_ajax_get_route_stations_for_stoptimes() {
 }
 
 /**
+ * Persist one route terminus station meta value.
+ *
+ * @param int    $route_id Route post ID
+ * @param int    $station_id Station post ID (0 clears)
+ * @param string $meta_key Meta key
+ */
+function MRT_update_route_terminus_station_meta( int $route_id, int $station_id, string $meta_key ): void {
+	if ( $station_id > 0 ) {
+		update_post_meta( $route_id, $meta_key, $station_id );
+		return;
+	}
+	delete_post_meta( $route_id, $meta_key );
+}
+
+/**
+ * Station post title or empty string.
+ *
+ * @param int $station_id Station post ID
+ */
+function MRT_get_station_post_title( int $station_id ): string {
+	if ( $station_id <= 0 ) {
+		return '';
+	}
+	$post = get_post( $station_id );
+	return ( $post && is_string( $post->post_title ) ) ? $post->post_title : '';
+}
+
+/**
  * Save route end stations via AJAX
  *
  * @return void Sends JSON response via wp_send_json_success/wp_send_json_error
@@ -124,38 +152,14 @@ function MRT_ajax_save_route_end_stations() {
 	}
 	MRT_verify_ajax_edit_post_permission( $route_id );
 
-	if ( $start_station > 0 ) {
-		update_post_meta( $route_id, 'mrt_route_start_station', $start_station );
-	} else {
-		delete_post_meta( $route_id, 'mrt_route_start_station' );
-	}
-
-	if ( $end_station > 0 ) {
-		update_post_meta( $route_id, 'mrt_route_end_station', $end_station );
-	} else {
-		delete_post_meta( $route_id, 'mrt_route_end_station' );
-	}
-
-	$start_station_name = '';
-	$end_station_name   = '';
-	if ( $start_station > 0 ) {
-		$start_post = get_post( $start_station );
-		if ( $start_post ) {
-			$start_station_name = $start_post->post_title;
-		}
-	}
-	if ( $end_station > 0 ) {
-		$end_post = get_post( $end_station );
-		if ( $end_post ) {
-			$end_station_name = $end_post->post_title;
-		}
-	}
+	MRT_update_route_terminus_station_meta( $route_id, $start_station, 'mrt_route_start_station' );
+	MRT_update_route_terminus_station_meta( $route_id, $end_station, 'mrt_route_end_station' );
 
 	wp_send_json_success(
 		array(
 			'message'            => __( 'End stations saved successfully.', 'museum-railway-timetable' ),
-			'start_station_name' => $start_station_name,
-			'end_station_name'   => $end_station_name,
+			'start_station_name' => MRT_get_station_post_title( $start_station ),
+			'end_station_name'   => MRT_get_station_post_title( $end_station ),
 		)
 	);
 }
