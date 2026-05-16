@@ -4,6 +4,7 @@ Officiella tidtabellsunderlag (Lennakatten / museijärnväg) som källa när tes
 
 | Fil | Beskrivning |
 |-----|-------------|
+| `Gron-tdt-buss-vard.pdf` | Grön tidtabell, buss ersätter tåg vardag |
 | `Gron-tidtabell-lor.pdf` | Grön tidtabell, lördag |
 | `Gul-tidtabell-fre.pdf` | Gul tidtabell, fredag |
 | `Tidtabellsboken-del-B.pdf` | Tidtabellsboken del B |
