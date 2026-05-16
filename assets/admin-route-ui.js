@@ -102,51 +102,64 @@
         });
     }
 
+    function routeEndStationsPayload(routeId, nonce) {
+        return {
+            action: 'mrt_save_route_end_stations',
+            nonce: nonce,
+            route_id: routeId,
+            start_station: $('#mrt-route-start-station').val() || 0,
+            end_station: $('#mrt-route-end-station').val() || 0
+        };
+    }
+
+    function routeEndStationsCell() {
+        return $('#mrt-route-end-station').closest('td');
+    }
+
+    function showRouteEndStationsSaved() {
+        var savedText = u.msg('saved', '✓ Saved');
+        var $indicator = $('<span class="mrt-save-indicator mrt-text-success mrt-ml-sm"></span>').text(savedText);
+        routeEndStationsCell().find('.mrt-save-indicator').remove();
+        routeEndStationsCell().append($indicator);
+        setTimeout(function() {
+            $indicator.fadeOut(300, function() { $(this).remove(); });
+        }, 2000);
+    }
+
+    function showRouteEndStationsError() {
+        var errMsg = u.msg('networkError', 'Network error. Please try again.');
+        var $err = $('<div class="mrt-alert mrt-alert-error mrt-mt-sm">' + u.escapeHtml(errMsg) + '</div>');
+        routeEndStationsCell().find('.mrt-save-indicator, .mrt-alert').remove();
+        routeEndStationsCell().append($err);
+        setTimeout(function() {
+            $err.fadeOut(300, function() { $(this).remove(); });
+        }, 3000);
+    }
+
+    function saveRouteEndStations(routeId, nonce) {
+        $.ajax({
+            url: window.MRTAdminUtils.getAjaxUrl(),
+            type: 'POST',
+            data: routeEndStationsPayload(routeId, nonce),
+            success: function(response) {
+                if (response.success) {
+                    showRouteEndStationsSaved();
+                }
+            },
+            error: showRouteEndStationsError
+        });
+    }
+
     function bindEndStationsChange() {
         var endStationsSaveTimeout;
         $('#mrt-route-start-station, #mrt-route-end-station').on('change', function() {
             var routeId = $('#post_ID').val();
-            if (!routeId) return;
+            var nonce = $('#mrt_route_meta_nonce').val();
+            if (!routeId || !nonce) return;
 
             clearTimeout(endStationsSaveTimeout);
             endStationsSaveTimeout = setTimeout(function() {
-                var startStation = $('#mrt-route-start-station').val();
-                var endStation = $('#mrt-route-end-station').val();
-                var nonce = $('#mrt_route_meta_nonce').val();
-
-                if (!nonce) return;
-
-                $.ajax({
-                    url: window.MRTAdminUtils.getAjaxUrl(),
-                    type: 'POST',
-                    data: {
-                        action: 'mrt_save_route_end_stations',
-                        nonce: nonce,
-                        route_id: routeId,
-                        start_station: startStation || 0,
-                        end_station: endStation || 0
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            var savedText = u.msg('saved', '✓ Saved');
-                            var $indicator = $('<span class="mrt-save-indicator mrt-text-success mrt-ml-sm"></span>').text(savedText);
-                            $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
-                            $('#mrt-route-end-station').closest('td').append($indicator);
-                            setTimeout(function() {
-                                $indicator.fadeOut(300, function() { $(this).remove(); });
-                            }, 2000);
-                        }
-                    },
-                    error: function() {
-                        var errMsg = u.msg('networkError', 'Network error. Please try again.');
-                        var safeMsg = u.escapeHtml(errMsg);
-                        var $err = $('<div class="mrt-alert mrt-alert-error mrt-mt-sm">' + safeMsg + '</div>');
-                        $('#mrt-route-end-station').closest('td').find('.mrt-save-indicator').remove();
-                        $('#mrt-route-end-station').closest('td').find('.mrt-alert').remove();
-                        $('#mrt-route-end-station').closest('td').append($err);
-                        setTimeout(function() { $err.fadeOut(300, function() { $(this).remove(); }); }, 3000);
-                    }
-                });
+                saveRouteEndStations(routeId, nonce);
             }, 1000);
         });
     }

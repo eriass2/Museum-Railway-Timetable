@@ -168,6 +168,54 @@
         return $btn;
     }
 
+    function mrtWizardCalendarTable(cfg, startOfWeek) {
+        var $table = $('<table></table>')
+            .attr('role', 'grid')
+            .attr('aria-label', cfg.calendarGridLabel || '');
+        var $thead = $('<tr></tr>');
+        mrtWizardOrderedWeekdayHeaders(cfg, startOfWeek).forEach(function(ab) {
+            $thead.append($('<th scope="col"></th>').text(ab));
+        });
+        return $table.append($('<thead></thead>').append($thead));
+    }
+
+    function mrtWizardPadCalendarRow($row, col) {
+        while (col > 0 && col < 7) {
+            $row.append($('<td></td>'));
+            col++;
+        }
+    }
+
+    function mrtWizardAppendCalendarDay($row, col, dayNum, args) {
+        var ymd = window.MRTDateUtils.ymdFromParts(args.year, args.month, dayNum);
+        var st = args.daysMap[ymd] || 'none';
+        var $td = $('<td></td>');
+        $td.append(mrtWizardCalendarDayButton(ymd, dayNum, st, args.cfg, args.selectedDateYmd, args.$cal, args.onSelectOkDay));
+        $row.append($td);
+        return col + 1;
+    }
+
+    function mrtWizardAppendCalendarDays($tb, args) {
+        var col = 0;
+        var $row = $('<tr></tr>');
+        var d;
+        var pad;
+        for (pad = 0; pad < args.startCol; pad++) {
+            $row.append($('<td></td>'));
+            col++;
+        }
+        for (d = 1; d <= args.lastDay; d++) {
+            if (col >= 7) {
+                $tb.append($row);
+                $row = $('<tr></tr>');
+                col = 0;
+            }
+            col = mrtWizardAppendCalendarDay($row, col, d, args);
+        }
+        mrtWizardPadCalendarRow($row, col);
+        $tb.append($row);
+    }
+
     function mrtWizardRenderCalendarGrid($root, year, month, daysMap, cfg, startOfWeek, selectedDateYmd, onSelectOkDay) {
         var DU = window.MRTDateUtils;
         var $cal = $root.find('[data-wizard-calendar]');
@@ -176,43 +224,19 @@
 
         var lastDay = DU.daysInMonth(year, month);
         var startCol = DU.monthStartColumn(year, month, startOfWeek);
-
-        var $table = $('<table></table>')
-            .attr('role', 'grid')
-            .attr('aria-label', cfg.calendarGridLabel || '');
-        var $thead = $('<tr></tr>');
-        mrtWizardOrderedWeekdayHeaders(cfg, startOfWeek).forEach(function(ab) {
-            $thead.append($('<th scope="col"></th>').text(ab));
-        });
-        $table.append($('<thead></thead>').append($thead));
-
+        var $table = mrtWizardCalendarTable(cfg, startOfWeek);
         var $tb = $('<tbody></tbody>');
-        var col = 0;
-        var $row = $('<tr></tr>');
-        var d;
-        var pad;
-        for (pad = 0; pad < startCol; pad++) {
-            $row.append($('<td></td>'));
-            col++;
-        }
-        for (d = 1; d <= lastDay; d++) {
-            if (col >= 7) {
-                $tb.append($row);
-                $row = $('<tr></tr>');
-                col = 0;
-            }
-            var ymd = DU.ymdFromParts(year, month, d);
-            var st = daysMap[ymd] || 'none';
-            var $td = $('<td></td>');
-            $td.append(mrtWizardCalendarDayButton(ymd, d, st, cfg, selectedDateYmd, $cal, onSelectOkDay));
-            $row.append($td);
-            col++;
-        }
-        while (col > 0 && col < 7) {
-            $row.append($('<td></td>'));
-            col++;
-        }
-        $tb.append($row);
+        mrtWizardAppendCalendarDays($tb, {
+            year: year,
+            month: month,
+            daysMap: daysMap,
+            cfg: cfg,
+            startCol: startCol,
+            lastDay: lastDay,
+            selectedDateYmd: selectedDateYmd,
+            $cal: $cal,
+            onSelectOkDay: onSelectOkDay
+        });
         $table.append($tb);
         $cal.append($table);
     }

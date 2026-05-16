@@ -51,27 +51,53 @@
         history.pushState({}, '', url);
     }
 
+    function journeyPlannerFormValues($form) {
+        return {
+            fromStation: $form.find('#mrt_from').val(),
+            toStation: $form.find('#mrt_to').val(),
+            date: $form.find('#mrt_date').val()
+        };
+    }
+
+    function journeyPlannerValidateValues(values, $results) {
+        if (!values.fromStation || !values.toStation || !values.date) {
+            return false;
+        }
+        if (values.fromStation !== values.toStation) {
+            return true;
+        }
+        showError($results, api.msg('errorSameStations', 'Please select different stations for departure and arrival.'));
+        focusJourneyResultsHeading($results);
+        return false;
+    }
+
+    function journeyPlannerSetSearchLoading($results, $searchBtn) {
+        $searchBtn.prop('disabled', true).attr('aria-busy', 'true').text(api.msg('searching', 'Searching...'));
+        $results.attr('aria-busy', 'true');
+        $results.html('<div class="mrt-empty mrt-empty--loading">' + api.msg('loading', 'Loading...') + '</div>');
+    }
+
+    function journeyPlannerHandleSearchSuccess(response, values, $results) {
+        if (response.success) {
+            $results.html(response.data.html);
+            $results.attr('aria-busy', 'false');
+            focusJourneyResultsHeading($results);
+            journeyPlannerPushUrlParams(values.fromStation, values.toStation, values.date);
+            return;
+        }
+        showError($results, response.data.message || api.msg('errorSearching', 'Error searching for connections.'));
+        focusJourneyResultsHeading($results);
+    }
+
     /**
      * Run journey search: validate, POST mrt_search_journey, update UI.
      */
     function journeyPlannerRunSearch($form, $results, $searchBtn) {
-        var fromStation = $form.find('#mrt_from').val();
-        var toStation = $form.find('#mrt_to').val();
-        var date = $form.find('#mrt_date').val();
-
-        if (!fromStation || !toStation || !date) {
+        var values = journeyPlannerFormValues($form);
+        if (!journeyPlannerValidateValues(values, $results)) {
             return;
         }
-
-        if (fromStation === toStation) {
-            showError($results, api.msg('errorSameStations', 'Please select different stations for departure and arrival.'));
-            focusJourneyResultsHeading($results);
-            return;
-        }
-
-        $searchBtn.prop('disabled', true).attr('aria-busy', 'true').text(api.msg('searching', 'Searching...'));
-        $results.attr('aria-busy', 'true');
-        $results.html('<div class="mrt-empty mrt-empty--loading">' + api.msg('loading', 'Loading...') + '</div>');
+        journeyPlannerSetSearchLoading($results, $searchBtn);
 
         $.ajax({
             url: api.getAjaxUrl(),
@@ -79,22 +105,13 @@
             data: {
                 action: 'mrt_search_journey',
                 nonce: api.getNonce(),
-                from_station: fromStation,
-                to_station: toStation,
-                date: date
+                from_station: values.fromStation,
+                to_station: values.toStation,
+                date: values.date
             },
             success: function(response) {
                 journeyPlannerResetSearchButton($searchBtn);
-
-                if (response.success) {
-                    $results.html(response.data.html);
-                    $results.attr('aria-busy', 'false');
-                    focusJourneyResultsHeading($results);
-                    journeyPlannerPushUrlParams(fromStation, toStation, date);
-                } else {
-                    showError($results, response.data.message || api.msg('errorSearching', 'Error searching for connections.'));
-                    focusJourneyResultsHeading($results);
-                }
+                journeyPlannerHandleSearchSuccess(response, values, $results);
             },
             error: function() {
                 journeyPlannerResetSearchButton($searchBtn);
