@@ -345,11 +345,7 @@
         return (state.fromTitle || '') + ' → ' + (state.toTitle || '');
     }
 
-    function mrtWizardCardHtml(conn, idx, ctx, legFrom, legTo, cfg, state) {
-        var dep = departureFromOrigin(conn) || '—';
-        var arr = arrivalAtDestination(conn) || '—';
-        var duration = mrtWizardFormatDuration(conn.duration_minutes, cfg);
-        var detailId = 'mrt-jw-detail-' + ctx + '-' + idx;
+    function mrtWizardCardBadgesHtml(conn) {
         var legs = mrtWizardConnectionLegs(conn);
         var badges = '';
         legs.forEach(function(leg) {
@@ -358,36 +354,58 @@
         if (!badges) {
             badges = mrtWizardVehicleBadge(conn.train_type, conn.service_name);
         }
+        return badges;
+    }
+
+    function mrtWizardCardNoticeDotHtml(notice, cfg) {
+        return notice ? '<span class="mrt-journey-wizard__notice-dot" aria-label="' + SU.escapeHtml(cfg.noticeLabel || '') + '">!</span>' : '';
+    }
+
+    function mrtWizardCardCopyHtml(conn, dep, arr, ctx, cfg, state) {
         var notice = conn.notice || '';
-        var html = '<article class="mrt-journey-wizard__trip-card" data-wizard-card="' + SU.escapeHtml(ctx) + '-' + idx + '">';
-        html += '<div class="mrt-journey-wizard__trip-main">';
-        html += '<div class="mrt-journey-wizard__trip-copy">';
+        var html = '<div class="mrt-journey-wizard__trip-copy">';
         html += '<p class="mrt-journey-wizard__trip-time">' + SU.escapeHtml(dep) + '→' + SU.escapeHtml(arr);
-        if (notice) {
-            html += '<span class="mrt-journey-wizard__notice-dot" aria-label="' + SU.escapeHtml(cfg.noticeLabel || '') + '">!</span>';
-        }
+        html += mrtWizardCardNoticeDotHtml(notice, cfg);
         html += '</p>';
         if (notice) {
             html += '<p class="mrt-journey-wizard__notice">' + SU.escapeHtml(notice) + '</p>';
         }
         html += '<p class="mrt-journey-wizard__trip-route">' + SU.escapeHtml(mrtWizardCardRouteText(state, ctx)) + '</p>';
-        html += '<div class="mrt-journey-wizard__vehicle-row">' + badges + '</div>';
-        html += '</div>';
-        html += '<div class="mrt-journey-wizard__trip-side">';
+        html += '<div class="mrt-journey-wizard__vehicle-row">' + mrtWizardCardBadgesHtml(conn) + '</div>';
+        return html + '</div>';
+    }
+
+    function mrtWizardCardSideHtml(conn, idx, ctx, dep, arr, cfg) {
+        var duration = mrtWizardFormatDuration(conn.duration_minutes, cfg);
+        var html = '<div class="mrt-journey-wizard__trip-side">';
         if (duration) {
             html += '<span class="mrt-journey-wizard__duration">' + SU.escapeHtml(duration) + '</span>';
         }
         html += '<button type="button" class="mrt-journey-wizard__btn-select" aria-label="' +
             SU.escapeHtml(mrtWizardAriaChooseTrip(conn, dep, arr, cfg)) + '" data-ctx="' + SU.escapeHtml(ctx) +
             '" data-idx="' + String(idx) + '">' + SU.escapeHtml(cfg.selectTrip || 'Välj →') + '</button>';
-        html += '</div>';
-        html += '</div>';
-        html += '<button type="button" class="mrt-journey-wizard__btn-detail" aria-label="' +
+        return html + '</div>';
+    }
+
+    function mrtWizardCardDetailButtonHtml(conn, idx, ctx, legFrom, legTo, detailId, cfg) {
+        var html = '<button type="button" class="mrt-journey-wizard__btn-detail" aria-label="' +
             SU.escapeHtml((cfg.btnShowStopsAria || '').replace('%s', conn.service_name || mrtWizardConnectionMeta(conn, cfg))) +
             '" aria-expanded="false" aria-controls="' + detailId + '" data-ctx="' + SU.escapeHtml(ctx) +
             '" data-idx="' + String(idx) + '" data-leg-from="' + String(legFrom) + '" data-leg-to="' + String(legTo) + '">';
         html += '<span>' + SU.escapeHtml(mrtWizardConnectionMeta(conn, cfg)) + '</span><span class="mrt-journey-wizard__chevron" aria-hidden="true"></span>';
-        html += '</button>';
+        return html + '</button>';
+    }
+
+    function mrtWizardCardHtml(conn, idx, ctx, legFrom, legTo, cfg, state) {
+        var dep = departureFromOrigin(conn) || '—';
+        var arr = arrivalAtDestination(conn) || '—';
+        var detailId = 'mrt-jw-detail-' + ctx + '-' + idx;
+        var html = '<article class="mrt-journey-wizard__trip-card" data-wizard-card="' + SU.escapeHtml(ctx) + '-' + idx + '">';
+        html += '<div class="mrt-journey-wizard__trip-main">';
+        html += mrtWizardCardCopyHtml(conn, dep, arr, ctx, cfg, state);
+        html += mrtWizardCardSideHtml(conn, idx, ctx, dep, arr, cfg);
+        html += '</div>';
+        html += mrtWizardCardDetailButtonHtml(conn, idx, ctx, legFrom, legTo, detailId, cfg);
         html += '<div class="mrt-journey-wizard__detail" id="' + detailId + '" hidden></div>';
         html += '</article>';
         return html;
