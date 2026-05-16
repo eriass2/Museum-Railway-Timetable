@@ -160,7 +160,7 @@ These features will enhance the flexibility and clarity of timetable displays, m
 
 ## Development
 
-**Utvecklare:** Se [docs/DEVELOPER.md](docs/DEVELOPER.md) och [docs/PROJECT_HEALTH.md](docs/PROJECT_HEALTH.md) (CI, `composer plugin-check`). Bidrag: [CONTRIBUTING.md](CONTRIBUTING.md).
+**Utvecklare:** Se [docs/DEVELOPER.md](docs/DEVELOPER.md) (`composer plugin-check`, CI). Bidrag: [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Docker WordPress Development
 
@@ -265,7 +265,7 @@ museum-railway-timetable/
 
 ### Coding Standards
 
-Se [STYLE_GUIDE.md](docs/design/STYLE_GUIDE.md) för kodstandarder, clean code-principer och namnkonventioner.
+Se [STYLE_GUIDE.md](docs/STYLE_GUIDE.md) för kodstandarder, clean code-principer och namnkonventioner.
 
 ### Hooks and Filters
 
@@ -281,7 +281,7 @@ The plugin creates one custom table:
 ## Contributing
 
 1. Läs [docs/DEVELOPER.md](docs/DEVELOPER.md)
-2. Följ [STYLE_GUIDE.md](docs/design/STYLE_GUIDE.md)
+2. Följ [STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
 3. Add PHPDoc comments to all functions
 4. Ensure all output is properly escaped
 5. Test your changes thoroughly

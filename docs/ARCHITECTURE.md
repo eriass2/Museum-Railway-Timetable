@@ -2,7 +2,7 @@
 
 Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydligt, kod kan testas, och **affärskritisk logik** inte låses in i presentation.
 
-**Relaterat:** [product/JOURNEY.md](../product/JOURNEY.md) (publikt reseflöde), [design/STYLE_GUIDE.md](../design/STYLE_GUIDE.md), [accessibility/WCAG_JOURNEY_WIZARD.md](../accessibility/WCAG_JOURNEY_WIZARD.md) (tillgänglighet wizard), [accessibility/WCAG_PUBLIC_SHORTCODES.md](../accessibility/WCAG_PUBLIC_SHORTCODES.md) (planner + månad + översikt), [accessibility/RELEASE_A11Y_SMOKE.md](../accessibility/RELEASE_A11Y_SMOKE.md) (manuell checklista). **Pull requests:** checklista i [`.github/pull_request_template.md`](../../.github/pull_request_template.md).
+**Relaterat:** [SHORTCODES.md](SHORTCODES.md), [STYLE_GUIDE.md](STYLE_GUIDE.md), [ACCESSIBILITY.md](ACCESSIBILITY.md). **Pull requests:** [`.github/pull_request_template.md`](../.github/pull_request_template.md).
 
 ---
 
@@ -46,7 +46,7 @@ Lös koppling mellan domän och UI gör det möjligt att byta tema, shortcode-la
 
 ## 5. Filstruktur (`inc/`)
 
-Max **50 rader per funktion** (se [design/STYLE_GUIDE.md](../design/STYLE_GUIDE.md)). Loaders i rot av `inc/` (`admin-ajax.php`, `shortcodes.php`, …) `require_once` undermappar.
+Max **50 rader per funktion** (se [STYLE_GUIDE.md](STYLE_GUIDE.md)). Loaders i rot av `inc/` (`admin-ajax.php`, `shortcodes.php`, …) `require_once` undermappar.
 
 ```
 inc/
@@ -59,4 +59,3 @@ inc/
 └── functions/            # helpers-*, services, journey-*, timetable-view/
 ```
 
-Historisk refaktoreringslogg: [archive/refactoring-plan.md](../archive/refactoring-plan.md).

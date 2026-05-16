@@ -7,21 +7,17 @@ En ingång för utvecklare. Läs detta först.
 ## Snabbstart
 
 ```powershell
-# 1. Klona och installera
 git clone <repo>
 cd Museum-Railway-Timetable
 composer install
 
-# 2. Deploy till Local (första gången: kopiera config)
 copy local\deploy.config.example.json local\deploy.config.json
-# Redigera local/deploy.config.json med din Local-sökväg
+# Redigera localPath / localUrl
 
 .\local\deploy.ps1 -OpenBrowser
 
-# 3. Vid kodändringar – validera innan commit
-composer plugin-check
-# (samma som: php scripts\validate.php)
-# Valfritt: composer lint (phpstan + phpcs – se nedan)
+composer plugin-check    # obligatoriskt före commit
+# valfritt: composer lint
 ```
 
 ---
@@ -30,99 +26,53 @@ composer plugin-check
 
 | Dokument | Innehåll |
 |----------|----------|
-| [docs/README.md](README.md) | Index (undermappar per ämne) |
-| [design/STYLE_GUIDE.md](design/STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |
-| [design/COMPONENT_LIBRARY.md](design/COMPONENT_LIBRARY.md) | UI-komponenter (.mrt-btn, .mrt-form, etc.) |
-| [design/DESIGN_SYSTEM.md](design/DESIGN_SYSTEM.md) | Design tokens |
-| [domain/DATA_MODEL.md](domain/DATA_MODEL.md) | Datamodell, relationer, post types |
-| [domain/ARCHITECTURE.md](domain/ARCHITECTURE.md) | Lager, testning, filstruktur `inc/` |
-| [product/JOURNEY.md](product/JOURNEY.md) | Publikt reseflöde (wizard, planner) |
-| [product/SHORTCODES_OVERVIEW.md](product/SHORTCODES_OVERVIEW.md) | Shortcodes |
-| [guides/VALIDATION.md](guides/VALIDATION.md) | Checklista före deploy |
-| [guides/PHP_INSTALL_WINDOWS.md](guides/PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
-| [guides/FUTURE_WORK.md](guides/FUTURE_WORK.md) | Idéer för framtida förbättringar |
-| [archive/README.md](archive/README.md) | Arkiverade planer och granskningar |
-| [PROJECT_HEALTH.md](PROJECT_HEALTH.md) | CI, Dependabot, vilka kommandon som körs |
-| [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md) | CSS-moduler och `@import` |
+| [README.md](README.md) | Index |
+| [STYLE_GUIDE.md](STYLE_GUIDE.md) | PHP, CSS, JS, `.mrt-*` |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, testning, `inc/`-struktur |
+| [DATA_MODEL.md](DATA_MODEL.md) | Post types, relationer |
+| [SHORTCODES.md](SHORTCODES.md) | Alla shortcodes |
+| [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG + release-rökning |
+| [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i admin |
+| [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP/Composer på Windows |
+| [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md) | CSS-moduler |
+
+---
+
+## Kommandon och CI
+
+| Kommando | Vad det gör |
+|----------|-------------|
+| `composer plugin-check` | `php scripts/validate.php` – filer, syntax, ABSPATH, text domain |
+| `composer test` | PHPUnit |
+| `composer phpstan` / `phpcs` / `lint` | Statisk analys + WPCS |
+
+GitHub Actions (`.github/workflows/ci.yml`): validate, phpstan, test vid push/PR. Dependabot uppdaterar Composer månadsvis.
+
+**PHPStan:** `phpstan-wordpress`, config `phpstan.neon`. **PHPCS:** WPCS; prefix `MRT_` kan flaggas – bedöm mot [STYLE_GUIDE.md](STYLE_GUIDE.md). `composer phpcbf` fixar formatering där det går.
+
+**Pre-commit:** kräver bash (WSL/Git Bash på Windows) – `pre-commit install`.
+
+---
+
+## Checklista före deploy
+
+- [ ] `composer plugin-check` och `composer test` gröna
+- [ ] Manuellt i WordPress: stationer, rutter, tidtabell, shortcodes
+- [ ] [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort rökning vid UI-ändringar
+- [ ] Nya strängar: `languages/*.po` → kompilera `.mo` (Poedit eller `msgfmt … -o …/sv_SE.mo`)
+- [ ] `.\local\deploy.ps1` om du testar i Local
 
 ---
 
 ## Krav
 
-- **PHP** 8.0+ – Se [guides/PHP_INSTALL_WINDOWS.md](guides/PHP_INSTALL_WINDOWS.md) om PHP saknas
-- **Composer** – [getcomposer.org](https://getcomposer.org/download/)
-- **WordPress** 6.0+ (för testning)
+- PHP 8.2+ (plugin), Composer, WordPress 6.0+
+- Windows utan PHP: [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md)
 
 ---
 
-## Kodkvalitet
+## Konstanter (`inc/constants.php`)
 
-### Lint (PHPStan + PHPCS)
+`MRT_TEXT_DOMAIN`, `MRT_POST_TYPE_*`, `MRT_TAXONOMY_TRAIN_TYPE`, `MRT_POST_TYPES`.
 
-```bash
-composer install
-composer phpstan    # Statisk analys
-composer phpcs      # Kodstil (WordPress)
-composer lint       # Båda
-```
-
-**Windows (PowerShell):**
-```powershell
-.\scripts\lint.ps1
-```
-
-### Validering
-
-Kör från **projektroten**:
-
-```powershell
-php scripts\validate.php
-```
-
-Kontrollerar: obligatoriska filer, PHP-syntax, ABSPATH, inline styles, plugin header, text domain, CSS/JS.
-
-### PHPStan och PHPCS (`composer lint`)
-
-- **PHPStan:** Använder **`szepeviktor/phpstan-wordpress`** (beror på `php-stubs/wordpress-stubs`) så att WordPress-API:er (`add_action`, `__`, `WP_Post`, m.m.) känns igen. Konfiguration: `phpstan.neon` + `phpstan-bootstrap.php` (plugin-konstanter). Vid nya varningar som är svåra att fixa direkt kan du lägga till **`phpstan-baseline.neon`** (`phpstan analyse --generate-baseline`). `treatPhpDocTypesAsCertain: false` minskar brus från osäkra docblock. Kör med `composer phpstan` (**PHPStan 2.x**, 1G minne, en worker på Windows för stabilitet).
-- **PHPCS:** Använder WordPress Coding Standards. Projektet använder prefixet `MRT_` för funktioner; vissa WPCS-regler kan flagga det – bedöm utifrån [design/STYLE_GUIDE.md](design/STYLE_GUIDE.md). `composer phpcbf` fixar formateringsbar kod där det passar.
-
-### Pre-commit hooks
-
-```bash
-pip install pre-commit
-pre-commit install
-```
-
-Kör manuellt: `pre-commit run --all-files`
-
-**OBS:** Kräver bash (WSL eller Git Bash på Windows).
-
----
-
-## Deploy till Local
-
-1. Kopiera `local/deploy.config.example.json` → `local/deploy.config.json`
-2. Sätt `localPath` och `localUrl` till din Local-site
-3. Kör: `.\local\deploy.ps1` eller `.\local\deploy.ps1 -OpenBrowser`
-
----
-
-## Konstanter
-
-| Konstant | Användning |
-|----------|------------|
-| `MRT_TEXT_DOMAIN` | Text domain för översättningar |
-| `MRT_POST_TYPE_STATION` | Station post type |
-| `MRT_POST_TYPE_ROUTE` | Route post type |
-| `MRT_POST_TYPE_TIMETABLE` | Timetable post type |
-| `MRT_POST_TYPE_SERVICE` | Service post type |
-| `MRT_TAXONOMY_TRAIN_TYPE` | Train type taxonomy |
-| `MRT_POST_TYPES` | Array med alla post types |
-
-Definieras i `inc/constants.php`.
-
----
-
-## Typning
-
-PHP-filer använder `declare(strict_types=1)` och type hints där det är möjligt.
+PHP: `declare(strict_types=1)` där det passar.

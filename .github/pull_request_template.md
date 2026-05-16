@@ -4,7 +4,7 @@
 
 ## Checklista (arkitektur)
 
-Se [docs/domain/ARCHITECTURE.md](docs/domain/ARCHITECTURE.md) för bakgrund.
+Se [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) för bakgrund.
 
 - [ ] **Affärslogik** ligger i `inc/functions/` (eller tydlig domänfil), inte gömd i templates/JS där det går att undvika
 - [ ] **Shortcode / AJAX** är tunt: input → `MRT_*` / domän → output
