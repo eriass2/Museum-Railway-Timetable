@@ -12,6 +12,6 @@
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i WordPress-admin |
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
 
-Designreferens i kod: `assets/admin-base-tokens.css`, [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md). Mockup-PNG: `docs/mockups/`.
+Designreferens i kod: `assets/admin-base-tokens.css`, [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md). Tågtypsikoner: `assets/icons/train-types/`. Mockup-PNG: `docs/mockups/`.
 
 Bidrag: [../CONTRIBUTING.md](../CONTRIBUTING.md).

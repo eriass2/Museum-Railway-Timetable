@@ -76,7 +76,7 @@ För att skapa en fungerande tidtabell behöver du:
 2. Klicka på **"Add New Train Type"**
 3. Fyll i:
    - **Name**: T.ex. "Ånglok", "Diesellok", "Elektrisk"
-   - **Slug**: Skapas automatiskt från namnet (t.ex. "steam", "diesel")
+   - **Slug**: Skapas automatiskt från namnet (t.ex. `angtag`, `dieseltag`, `ralsbuss`)
 4. Klicka **"Add New Train Type"**
 
 **Tips:**
@@ -117,10 +117,10 @@ För att skapa en fungerande tidtabell behöver du:
 2. Öppna eller skapa en timetable
 3. I **"Trips (Services)"** meta box:
    - **Route**: Välj en route (obligatoriskt)
-   - **Train Type**: Välj tågtyp (valfritt, t.ex. "Ånglok", "Diesellok")
-   - **Direction**: Välj riktning (valfritt: "Dit" eller "Från")
+   - **Train Type**: Välj tågtyp (valfritt, t.ex. "Ångtåg", "Dieseltåg")
+   - **Destination**: Välj slutstation på rutten (obligatoriskt för att skapa turen)
    - Klicka **"Add Trip"** - turen skapas automatiskt och kopplas till timetable
-4. **Turen får automatiskt ett namn** baserat på Route + Direction (t.ex. "Hultsfred → Västervik - Dit")
+4. **Turen får automatiskt ett namn** baserat på route och vald destination
 5. Klicka **"Edit"** på en tur för att konfigurera Stop Times
 
 **Tips:**
@@ -237,8 +237,8 @@ Låt oss säga att du vill skapa en säsongstidtabell för juni–augusti med:
 2. Lägg till stations i ordning: Hultsfred Museum, Västervik, Oskarshamn
 
 ### Steg 3: Skapa Train Types
-1. Skapa "Ånglok" (slug: "steam")
-2. Skapa "Diesellok" (slug: "diesel")
+1. Skapa "Ångtåg" (slug: `angtag`)
+2. Skapa "Dieseltåg" (slug: `dieseltag`)
 
 ### Steg 4: Skapa Timetables
 1. Skapa "Vardagar i juni-augusti" med datum: 2025-06-01, 2025-06-02, ... (alla vardagar)
@@ -246,9 +246,10 @@ Låt oss säga att du vill skapa en säsongstidtabell för juni–augusti med:
 3. Skapa "4 juli" med datum: 2025-07-04
 
 ### Steg 5: Skapa Services
-1. Skapa "09:00 Avgång" (Timetable: "Vardagar i juni-augusti", Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Dit)
-2. Skapa "10:00 Avgång" (Timetable: "Helger i juni-augusti", Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Dit)
-3. Skapa "14:00 Avgång" (Timetable: "4 juli", Route: "Hultsfred → Västervik", Train Type: Ånglok, Direction: Dit)
+1. Lägg till tur i "Vardagar i juni-augusti" (Route: "Hultsfred → Västervik", Train Type: Ångtåg, Destination: sista stationen)
+2. Lägg till tur i "Helger i juni-augusti" (samma route, annan tidtabell)
+3. Lägg till tur i "4 juli"
+4. Redigera varje tur och ange tågnummer samt stopptider
 
 ### Steg 6: Konfigurera Stop Times
 

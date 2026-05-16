@@ -489,7 +489,7 @@ WHERE p.post_type = 'mrt_service'
 3. **Timetables** → Created via admin interface (`mrt_timetable` posts with dates array)
 4. **Services** → Created via admin interface (`mrt_service` posts linked to timetable and route)
    - Can be created directly from Timetable edit screen (recommended workflow)
-   - Automatically named based on Route + Direction
+   - Automatically named from route and destination (end station); legacy `mrt_direction` is deprecated
 5. **Stop Times** → Created via admin interface (inserts into `mrt_stoptimes` table)
 
 ### Timetable Overview View
@@ -497,7 +497,7 @@ WHERE p.post_type = 'mrt_service'
 The plugin provides a visual overview of timetables that groups services (trips) by route and direction, similar to traditional printed timetables. This view:
 
 - **Groups trips** by route and direction (e.g., "Från Uppsala Ö Till Marielund")
-- **Displays train types** (Ångtåg, Rälsbuss, Dieseltåg) for each trip
+- **Displays train types** with PNG icons (`assets/icons/train-types/`) for each trip
 - **Shows times** for each station, with "X" indicating null/unspecified times
 - **Available in admin** as a preview meta box on Timetable edit screens
 - **Rendered by** `MRT_render_timetable_overview()` function in `inc/functions/timetable-view.php`
