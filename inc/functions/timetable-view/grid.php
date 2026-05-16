@@ -57,9 +57,13 @@ function MRT_sort_timetable_services_by_first_station_time( array $services_list
 }
 
 /**
- * Render a single timetable group (route)
+ * Prepare station posts, labels, and service metadata for one timetable group.
+ *
+ * @param array  $group Route group from MRT_group_services_by_route
+ * @param string $dateYmd Date in YYYY-MM-DD format
+ * @return array<string, mixed>
  */
-function MRT_render_timetable_group( $group, $dateYmd ) {
+function MRT_prepare_timetable_group_view( $group, $dateYmd ) {
 	$route         = $group['route'];
 	$direction     = $group['direction'];
 	$stations      = $group['stations'];
@@ -85,13 +89,38 @@ function MRT_render_timetable_group( $group, $dateYmd ) {
 		$services_list = MRT_sort_timetable_services_by_first_station_time( $services_list, (int) $from_station->ID );
 	}
 
-	$prepared        = MRT_prepare_service_info( $services_list, $dateYmd );
-	$service_classes = $prepared['service_classes'];
-	$service_info    = $prepared['service_info'];
-	$all_connections = $prepared['all_connections'];
+	$prepared = MRT_prepare_service_info( $services_list, $dateYmd );
 
-	$service_count    = count( $services_list );
-	$group_heading_id = wp_unique_id( 'mrtgrh' );
+	return array(
+		'route_label'       => $route_label,
+		'from_station'      => $from_station,
+		'to_station'        => $to_station,
+		'station_posts'     => $station_posts,
+		'services_list'     => $services_list,
+		'service_classes'   => $prepared['service_classes'],
+		'service_info'      => $prepared['service_info'],
+		'all_connections'   => $prepared['all_connections'],
+		'service_count'     => count( $services_list ),
+		'group_heading_id'  => wp_unique_id( 'mrtgrh' ),
+	);
+}
+
+/**
+ * Render a single timetable group (route)
+ */
+function MRT_render_timetable_group( $group, $dateYmd ) {
+	$view = MRT_prepare_timetable_group_view( $group, $dateYmd );
+
+	$route_label       = $view['route_label'];
+	$from_station      = $view['from_station'];
+	$to_station        = $view['to_station'];
+	$station_posts     = $view['station_posts'];
+	$services_list     = $view['services_list'];
+	$service_classes   = $view['service_classes'];
+	$service_info      = $view['service_info'];
+	$all_connections   = $view['all_connections'];
+	$service_count     = $view['service_count'];
+	$group_heading_id  = $view['group_heading_id'];
 	ob_start();
 	?>
 	<div class="mrt-timetable-group">
