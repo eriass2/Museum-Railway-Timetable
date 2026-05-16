@@ -82,12 +82,24 @@ docker compose run --rm composer check
 
 Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
 
+### Manuell smoke-checklista i WordPress
+
+Kör detta efter `docker compose up -d --build` när ändringen påverkar admin, shortcodes eller dataflöden:
+
+- Logga in på <http://localhost:8080/wp-admin> med `admin` / `admin`.
+- Kontrollera att menyn **Railway Timetable** syns och att pluginet är aktivt.
+- Skapa minst två stationer, en rutt, en tidtabell och en trip/service.
+- Lägg in stopptider för trippen och spara utan felmeddelanden.
+- Skapa eller öppna en sida med relevant shortcode, till exempel `[museum_journey_planner]`.
+- Kontrollera frontend: formulär/tabell visas, sökning går att köra och inga PHP-fel syns.
+- Kontrollera loggar vid fel: `docker compose logs wordpress`.
+
 ---
 
 ## Checklista före deploy
 
 - [ ] `composer check` grönt
-- [ ] Manuellt i WordPress: stationer, rutter, tidtabell, shortcodes
+- [ ] Manuell smoke-checklista i WordPress är genomförd vid UI/dataflödesändringar
 - [ ] [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort rökning vid UI-ändringar
 - [ ] Nya strängar: `languages/*.po` → kompilera `.mo` (Poedit eller `msgfmt … -o …/sv_SE.mo`)
 - [ ] `docker compose up -d --build` eller `.\local\deploy.ps1` om du testar i full WordPress
