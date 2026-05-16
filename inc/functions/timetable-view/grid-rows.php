@@ -88,14 +88,50 @@ function MRT_render_grid_from_row( $first_station, $services_list, $service_clas
 }
 
 /**
+ * Render one regular (non-split) station row in the timetable grid.
+ *
+ * @param WP_Post $station Station post
+ * @param array   $services_list Services with stop times
+ * @param array   $service_classes CSS classes per column
+ * @param array   $service_info Service metadata per column
+ * @return string HTML
+ */
+function MRT_render_grid_simple_station_row( $station, $services_list, $service_classes, $service_info ) {
+	$station_id        = $station->ID;
+	$station_row_label = $station->post_title;
+	ob_start();
+	?>
+	<div class="mrt-grid-row">
+		<div class="mrt-grid-cell mrt-station-col">
+		<?php echo esc_html( $station->post_title ); ?>
+		</div>
+	<?php
+	foreach ( $services_list as $idx => $service_data ) :
+		$stop_time    = $service_data['stop_times'][ $station_id ] ?? null;
+		$time_display = MRT_format_stop_time_display( $stop_time );
+		$label_parts  = MRT_get_service_label_parts( $service_info[ $idx ] );
+		$cell_aria    = MRT_overview_grid_cell_aria_label( $station_row_label, $label_parts, $time_display );
+		?>
+			<div class="mrt-grid-cell mrt-time-cell <?php echo esc_attr( implode( ' ', $service_classes[ $idx ] ) ); ?>"
+				data-service-number="<?php echo esc_attr( $service_info[ $idx ]['service_number'] ); ?>"
+				data-service-label="<?php echo esc_attr( implode( ' ', $label_parts ) ); ?>"
+				aria-label="<?php echo esc_attr( $cell_aria ); ?>">
+			<?php echo esc_html( $time_display ); ?>
+			</div>
+		<?php endforeach; ?>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
  * Render regular station rows (middle stations)
  */
 function MRT_render_grid_regular_station_rows( $regular_stations, $services_list, $service_classes, $service_info ) {
 	$html      = '';
 	$direction = MRT_timetable_grid_direction( $regular_stations );
 	foreach ( $regular_stations as $station ) {
-		$station_id        = $station->ID;
-		$station_row_label = $station->post_title;
+		$station_id = $station->ID;
 		if ( MRT_station_row_has_arrival_departure_split( $station_id, $services_list ) ) {
 			$html .= MRT_render_grid_station_time_row(
 				$station,
@@ -118,29 +154,7 @@ function MRT_render_grid_regular_station_rows( $regular_stations, $services_list
 			);
 			continue;
 		}
-		ob_start();
-		?>
-		<div class="mrt-grid-row">
-			<div class="mrt-grid-cell mrt-station-col">
-			<?php echo esc_html( $station->post_title ); ?>
-			</div>
-		<?php
-		foreach ( $services_list as $idx => $service_data ) :
-			$stop_time    = $service_data['stop_times'][ $station_id ] ?? null;
-			$time_display = MRT_format_stop_time_display( $stop_time );
-			$label_parts  = MRT_get_service_label_parts( $service_info[ $idx ] );
-			$cell_aria    = MRT_overview_grid_cell_aria_label( $station_row_label, $label_parts, $time_display );
-			?>
-				<div class="mrt-grid-cell mrt-time-cell <?php echo esc_attr( implode( ' ', $service_classes[ $idx ] ) ); ?>"
-					data-service-number="<?php echo esc_attr( $service_info[ $idx ]['service_number'] ); ?>"
-					data-service-label="<?php echo esc_attr( implode( ' ', $label_parts ) ); ?>"
-					aria-label="<?php echo esc_attr( $cell_aria ); ?>">
-				<?php echo esc_html( $time_display ); ?>
-				</div>
-			<?php endforeach; ?>
-		</div>
-		<?php
-		$html .= ob_get_clean();
+		$html .= MRT_render_grid_simple_station_row( $station, $services_list, $service_classes, $service_info );
 		if ( MRT_should_render_print_bus_notice_after_station( $station, $direction ) ) {
 			$html .= MRT_render_print_bus_notice_row( $direction );
 		}
@@ -324,10 +338,9 @@ function MRT_render_grid_to_row( $last_station, $services_list, $service_classes
 }
 
 /**
- * Render "Tågbyte:" transfer rows (2 rows: train types + train numbers)
+ * Render transfer row showing connecting train types.
  */
-function MRT_render_grid_transfer_rows( $services_list, $service_classes, $all_connections, $service_info ) {
-	$transfer_prefix = __( 'Tågbyte:', 'museum-railway-timetable' );
+function MRT_render_grid_transfer_type_row( $services_list, $service_classes, $all_connections, $service_info, $transfer_prefix ) {
 	ob_start();
 	?>
 	<div class="mrt-grid-row mrt-transfer-row">
@@ -353,6 +366,16 @@ function MRT_render_grid_transfer_rows( $services_list, $service_classes, $all_c
 		endforeach;
 		?>
 	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * Render transfer row showing connecting service numbers.
+ */
+function MRT_render_grid_transfer_number_row( $services_list, $service_classes, $all_connections, $service_info, $transfer_prefix ) {
+	ob_start();
+	?>
 	<div class="mrt-grid-row mrt-transfer-row">
 		<div class="mrt-grid-cell mrt-station-col-empty" aria-hidden="true"></div>
 		<?php
@@ -376,4 +399,14 @@ function MRT_render_grid_transfer_rows( $services_list, $service_classes, $all_c
 	</div>
 	<?php
 	return ob_get_clean();
+}
+
+/**
+ * Render "Tågbyte:" transfer rows (2 rows: train types + train numbers)
+ */
+function MRT_render_grid_transfer_rows( $services_list, $service_classes, $all_connections, $service_info ) {
+	$transfer_prefix = __( 'Tågbyte:', 'museum-railway-timetable' );
+
+	return MRT_render_grid_transfer_type_row( $services_list, $service_classes, $all_connections, $service_info, $transfer_prefix )
+		. MRT_render_grid_transfer_number_row( $services_list, $service_classes, $all_connections, $service_info, $transfer_prefix );
 }
