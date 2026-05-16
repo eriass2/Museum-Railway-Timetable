@@ -55,7 +55,47 @@ function MRT_import_get_train_types() {
  * @return array
  */
 function MRT_import_get_timetable_dates() {
+	return MRT_import_get_green_timetable_dates();
+}
+
+/**
+ * Get timetable dates for GRÖN (lördagar).
+ *
+ * @return array<int, string>
+ */
+function MRT_import_get_green_timetable_dates(): array {
 	$dates = array( '2026-05-30', '2026-05-31', '2026-06-06', '2026-06-13', '2026-06-20', '2026-07-04', '2026-07-11', '2026-07-18', '2026-08-01', '2026-08-08', '2026-08-15', '2026-09-05', '2026-09-12', '2026-09-19', '2026-09-26' );
+	sort( $dates );
+	return $dates;
+}
+
+/**
+ * Get timetable dates for GUL (fredagar, lågtrafik).
+ *
+ * Based on traffic-day codes C and D in Tidtabellsboken del B.
+ *
+ * @return array<int, string>
+ */
+function MRT_import_get_yellow_timetable_dates(): array {
+	$dates = array(
+		'2026-05-29',
+		'2026-06-05',
+		'2026-06-12',
+		'2026-06-26',
+		'2026-07-03',
+		'2026-07-10',
+		'2026-07-17',
+		'2026-07-24',
+		'2026-07-31',
+		'2026-08-07',
+		'2026-08-14',
+		'2026-08-21',
+		'2026-08-28',
+		'2026-09-04',
+		'2026-09-11',
+		'2026-09-18',
+		'2026-09-25',
+	);
 	sort( $dates );
 	return $dates;
 }
@@ -88,5 +128,56 @@ function MRT_import_get_services_in() {
 		array( '62', 'Dieseltåg', array( array( 12, 27 ), array( 12, 34 ), array( 12, 41 ), array( 12, 54 ), array( 12, 56 ), array( 13, 1 ), array( 13, 4 ), array( 13, 7, 13, 15 ), array( 13, 20 ), array( 13, 23 ), array( 13, 30 ), array( 13, 34 ), array( 13, 36 ), array( 13, 47 ) ), array( 'X', 'X', '', '', '', 'X', 'X', '', 'X', '', '', 'X', 'X', '' ) ),
 		array( '96', 'Rälsbuss', array( array( 14, 25 ), array( 14, 31 ), array( 14, 36 ), array( 14, 46 ), array( 14, 47 ), array( 14, 52 ), array( 14, 55 ), array( 14, 58, 15, 5 ), array( 15, 10 ), array( 15, 13 ), array( 15, 20 ), array( 15, 24 ), array( 15, 26 ), array( 15, 37 ) ), array( 'X', 'X', '', 'X', 'X', 'X', 'X', '', 'X', '', '', '', 'X', '' ) ),
 		array( '78', 'Ång/diesel', array( array( 16, 13 ), array( 16, 20 ), array( 16, 28 ), array( 16, 41 ), array( 16, 43 ), array( 16, 48 ), array( 16, 51 ), array( 16, 55, 17, 15 ), array( 17, 20 ), array( 17, 23 ), array( 17, 30 ), array( 17, 34 ), array( 17, 36 ), array( 17, 47 ) ), array( 'X', 'X', '', 'X', 'X', 'X', 'X', '', 'X', '', '', '', 'X', '' ) ),
+	);
+}
+
+/**
+ * Get GUL Friday services Uppsala → Faringe.
+ *
+ * @return array<int, array<int, mixed>>
+ */
+function MRT_import_get_yellow_services_out(): array {
+	return array(
+		array( '101', 'Rälsbuss', array( array( 16, 45 ), array( 16, 48 ), array( 16, 50 ), array( 16, 53 ), array( 17, 3 ), array( 17, 4 ), array( 17, 10 ), array( 17, 11 ), array( 17, 14 ), array( 17, 17 ), array( 17, 23 ), array( 17, 33 ), array( 17, 36 ), array( 17, 45 ) ), array( 'P', 'P', 'P', 'X', '', 'X', 'X', 'X', 'X', 'X', '', '', 'X', '' ) ),
+		array( '103', 'Rälsbuss', array( array( 21, 35 ), array( 21, 38 ), array( 21, 40 ), array( 21, 43 ), array( 21, 50 ), array( 21, 51 ), array( 21, 58 ), array( 21, 59 ), array( 22, 2 ), array( 22, 5 ), array( 22, 8 ), array( 22, 18 ), array( 22, 21 ), array( 22, 32 ) ), array( 'P', 'P', 'P', 'X', '', 'X', 'X', 'X', 'X', 'X', 'X', '', 'X', '' ) ),
+	);
+}
+
+/**
+ * Get GUL Friday services Faringe → Uppsala.
+ *
+ * @return array<int, array<int, mixed>>
+ */
+function MRT_import_get_yellow_services_in(): array {
+	return array(
+		array( '100', 'Rälsbuss', array( array( 15, 30 ), array( 15, 36 ), array( 15, 42 ), array( 15, 52 ), array( 15, 53 ), array( 15, 57 ), array( 16, 0 ), array( 16, 3 ), array( 16, 8 ), array( 16, 10 ), array( 16, 16 ), array( 16, 19 ), array( 16, 21 ), array( 16, 30 ) ), array( 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', '', 'X', 'X', 'X', '' ) ),
+		array( '102', 'Rälsbuss', array( array( 20, 10 ), array( 20, 16 ), array( 20, 22 ), array( 20, 37 ), array( 20, 38 ), array( 20, 42 ), array( 20, 45 ), array( 20, 47 ), array( 20, 51 ), array( 20, 54 ), array( 21, 0 ), array( 21, 3 ), array( 21, 5 ), array( 21, 15 ) ), array( 'X', 'X', 'X', '', 'X', 'X', 'X', 'X', 'X', '', 'X', 'X', 'X', '' ) ),
+	);
+}
+
+/**
+ * Get importable timetable definitions.
+ *
+ * New reference PDFs in the same shape should generally become another item here:
+ * type, title, dates, outbound services, inbound services.
+ *
+ * @return array<string, array<string, mixed>>
+ */
+function MRT_import_get_timetable_definitions(): array {
+	return array(
+		'green'  => array(
+			'title'        => 'GRÖN TIDTABELL 2026',
+			'label'        => __( 'GRÖN', 'museum-railway-timetable' ),
+			'dates'        => MRT_import_get_green_timetable_dates(),
+			'services_out' => MRT_import_get_services_out(),
+			'services_in'  => MRT_import_get_services_in(),
+		),
+		'yellow' => array(
+			'title'        => 'GUL TIDTABELL 2026',
+			'label'        => __( 'GUL', 'museum-railway-timetable' ),
+			'dates'        => MRT_import_get_yellow_timetable_dates(),
+			'services_out' => MRT_import_get_yellow_services_out(),
+			'services_in'  => MRT_import_get_yellow_services_in(),
+		),
 	);
 }
