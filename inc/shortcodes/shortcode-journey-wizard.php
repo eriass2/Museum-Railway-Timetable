@@ -240,6 +240,85 @@ function MRT_render_journey_wizard_step_date( $title_id, $panel_id ) {
 }
 
 /**
+ * Outbound step panel (filled by JS).
+ *
+ * @param string $title_id Heading id
+ * @param string $panel_id Panel id
+ */
+function MRT_render_journey_wizard_outbound_panel( $title_id, $panel_id ) {
+	?>
+	<div
+		class="mrt-journey-wizard__panel"
+		id="<?php echo esc_attr( $panel_id ); ?>"
+		data-wizard-step="outbound"
+		role="region"
+		aria-labelledby="<?php echo esc_attr( $title_id ); ?>"
+		hidden
+	>
+		<?php MRT_render_journey_wizard_step_context_header( 'outbound' ); ?>
+		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
+			<?php esc_html_e( 'Välj utresa', 'museum-railway-timetable' ); ?>
+		</h3>
+		<div data-wizard-outbound></div>
+	</div>
+	<?php
+}
+
+/**
+ * Return step panel (filled by JS).
+ *
+ * @param string $title_id Heading id
+ * @param string $panel_id Panel id
+ */
+function MRT_render_journey_wizard_return_panel( $title_id, $panel_id ) {
+	?>
+	<div
+		class="mrt-journey-wizard__panel"
+		id="<?php echo esc_attr( $panel_id ); ?>"
+		data-wizard-step="return"
+		role="region"
+		aria-labelledby="<?php echo esc_attr( $title_id ); ?>"
+		hidden
+	>
+		<?php MRT_render_journey_wizard_step_context_header( 'return' ); ?>
+		<div data-wizard-return-summary class="mrt-journey-wizard__selected-trip"></div>
+		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
+			<?php esc_html_e( 'Välj återresa', 'museum-railway-timetable' ); ?>
+		</h3>
+		<div data-wizard-return></div>
+	</div>
+	<?php
+}
+
+/**
+ * Summary step panel (filled by JS).
+ *
+ * @param string $title_id Heading id
+ * @param string $panel_id Panel id
+ */
+function MRT_render_journey_wizard_summary_panel( $title_id, $panel_id ) {
+	?>
+	<div
+		class="mrt-journey-wizard__panel"
+		id="<?php echo esc_attr( $panel_id ); ?>"
+		data-wizard-step="summary"
+		role="region"
+		aria-labelledby="<?php echo esc_attr( $title_id ); ?>"
+		hidden
+	>
+		<?php MRT_render_journey_wizard_step_context_header( 'summary' ); ?>
+		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
+			<?php esc_html_e( 'Din resa', 'museum-railway-timetable' ); ?>
+		</h3>
+		<div data-wizard-summary></div>
+		<p class="mrt-mt-sm" data-wizard-ticket-wrap hidden>
+			<a href="#" class="mrt-btn mrt-btn--primary mrt-journey-wizard__cta" data-wizard-ticket><?php esc_html_e( 'Fortsätt till biljetter', 'museum-railway-timetable' ); ?></a>
+		</p>
+	</div>
+	<?php
+}
+
+/**
  * Steps 3–5: outbound, return, summary (filled by JS)
  *
  * @param string $title_out  Outbound heading id
@@ -251,54 +330,9 @@ function MRT_render_journey_wizard_step_date( $title_id, $panel_id ) {
  * @return void
  */
 function MRT_render_journey_wizard_step_placeholders( $title_out, $panel_out, $title_ret, $panel_ret, $title_sum, $panel_sum ) {
-	?>
-	<div
-		class="mrt-journey-wizard__panel"
-		id="<?php echo esc_attr( $panel_out ); ?>"
-		data-wizard-step="outbound"
-		role="region"
-		aria-labelledby="<?php echo esc_attr( $title_out ); ?>"
-		hidden
-	>
-		<?php MRT_render_journey_wizard_step_context_header( 'outbound' ); ?>
-		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_out ); ?>">
-			<?php esc_html_e( 'Välj utresa', 'museum-railway-timetable' ); ?>
-		</h3>
-		<div data-wizard-outbound></div>
-	</div>
-	<div
-		class="mrt-journey-wizard__panel"
-		id="<?php echo esc_attr( $panel_ret ); ?>"
-		data-wizard-step="return"
-		role="region"
-		aria-labelledby="<?php echo esc_attr( $title_ret ); ?>"
-		hidden
-	>
-		<?php MRT_render_journey_wizard_step_context_header( 'return' ); ?>
-		<div data-wizard-return-summary class="mrt-journey-wizard__selected-trip"></div>
-		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_ret ); ?>">
-			<?php esc_html_e( 'Välj återresa', 'museum-railway-timetable' ); ?>
-		</h3>
-		<div data-wizard-return></div>
-	</div>
-	<div
-		class="mrt-journey-wizard__panel"
-		id="<?php echo esc_attr( $panel_sum ); ?>"
-		data-wizard-step="summary"
-		role="region"
-		aria-labelledby="<?php echo esc_attr( $title_sum ); ?>"
-		hidden
-	>
-		<?php MRT_render_journey_wizard_step_context_header( 'summary' ); ?>
-		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_sum ); ?>">
-			<?php esc_html_e( 'Din resa', 'museum-railway-timetable' ); ?>
-		</h3>
-		<div data-wizard-summary></div>
-		<p class="mrt-mt-sm" data-wizard-ticket-wrap hidden>
-			<a href="#" class="mrt-btn mrt-btn--primary mrt-journey-wizard__cta" data-wizard-ticket><?php esc_html_e( 'Fortsätt till biljetter', 'museum-railway-timetable' ); ?></a>
-		</p>
-	</div>
-	<?php
+	MRT_render_journey_wizard_outbound_panel( $title_out, $panel_out );
+	MRT_render_journey_wizard_return_panel( $title_ret, $panel_ret );
+	MRT_render_journey_wizard_summary_panel( $title_sum, $panel_sum );
 }
 
 /**
