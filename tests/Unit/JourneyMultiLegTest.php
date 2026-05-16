@@ -10,9 +10,16 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 final class JourneyMultiLegTest extends TestCase {
+    use MRT_Journey_Test_Fixture;
+
+    private const DATE = '2026-06-01';
+    private const A = 101;
+    private const X = 202;
+    private const B = 303;
+    private const OTHER_X = 204;
 
     protected function tearDown(): void {
-        unset($GLOBALS['mrt_test_post_meta']);
+        $this->mrt_reset_journey_fixture();
         parent::tearDown();
     }
 
@@ -93,5 +100,151 @@ final class JourneyMultiLegTest extends TestCase {
         MRT_journey_append_transfer_options($results, $seen, 1, 2, '2026-06-01', 5);
         self::assertSame([], $results);
         self::assertSame([], $seen);
+    }
+
+    public function test_find_multi_leg_returns_direct_connection(): void {
+        $this->mrt_use_journey_fixture([
+            11 => [
+                $this->mrt_stop(11, self::A, 1, null, '09:00'),
+                $this->mrt_stop(11, self::B, 2, '10:00', null),
+            ],
+        ], [900 => [self::DATE]]);
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE);
+
+        self::assertSame('direct', $results[0]['connection_type']);
+        self::assertNull($results[0]['transfer_station_id']);
+        self::assertSame(11, $results[0]['legs'][0]['service_id']);
+        self::assertSame('09:00', $results[0]['legs'][0]['from_departure']);
+        self::assertSame('10:00', $results[0]['legs'][0]['to_arrival']);
+    }
+
+    public function test_find_multi_leg_returns_transfer_at_shared_station(): void {
+        $this->mrt_use_journey_fixture($this->transferRows('10:10'), [900 => [self::DATE]]);
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
+
+        self::assertCount(1, $results);
+        self::assertSame('transfer', $results[0]['connection_type']);
+        self::assertSame(self::X, $results[0]['transfer_station_id']);
+        self::assertSame([11, 22], array_column($results[0]['legs'], 'service_id'));
+    }
+
+    public function test_find_multi_leg_rejects_transfer_before_minimum_time(): void {
+        $this->mrt_use_journey_fixture($this->transferRows('10:04'), [900 => [self::DATE]]);
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
+
+        self::assertSame([], $results);
+    }
+
+    public function test_find_multi_leg_accepts_transfer_at_minimum_time(): void {
+        $this->mrt_use_journey_fixture($this->transferRows('10:05'), [900 => [self::DATE]]);
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
+
+        self::assertCount(1, $results);
+        self::assertSame('10:05', $results[0]['legs'][1]['from_departure']);
+    }
+
+    public function test_find_multi_leg_returns_empty_without_common_station(): void {
+        $this->mrt_use_journey_fixture([
+            11 => [
+                $this->mrt_stop(11, self::A, 1, null, '09:00'),
+                $this->mrt_stop(11, self::X, 2, '10:00', null),
+            ],
+            22 => [
+                $this->mrt_stop(22, self::OTHER_X, 1, null, '10:10'),
+                $this->mrt_stop(22, self::B, 2, '11:00', null),
+            ],
+        ], [900 => [self::DATE]]);
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
+
+        self::assertSame([], $results);
+    }
+
+    public function test_find_multi_leg_requires_same_station_id_for_transfer(): void {
+        $this->mrt_use_journey_fixture($this->sameNamedDifferentStationRows(), [900 => [self::DATE]]);
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
+
+        self::assertSame([], $results);
+    }
+
+    public function test_find_return_connections_filters_after_outbound_arrival(): void {
+        $this->mrt_use_journey_fixture([
+            31 => [
+                $this->mrt_stop(31, self::B, 1, null, '09:50'),
+                $this->mrt_stop(31, self::A, 2, '10:45', null),
+            ],
+            32 => [
+                $this->mrt_stop(32, self::B, 1, null, '10:10'),
+                $this->mrt_stop(32, self::A, 2, '11:00', null),
+            ],
+        ], [900 => [self::DATE]]);
+
+        $results = MRT_find_return_connections(self::A, self::B, self::DATE, '10:00', 5);
+
+        self::assertCount(1, $results);
+        self::assertSame(32, $results[0]['service_id']);
+        self::assertSame('10:10', $results[0]['from_departure']);
+    }
+
+    public function test_journey_calendar_month_marks_ok_traffic_without_match_and_none(): void {
+        $this->mrt_use_journey_fixture([
+            11 => [
+                $this->mrt_stop(11, self::A, 1, null, '09:00'),
+                $this->mrt_stop(11, self::B, 2, '10:00', null),
+            ],
+            22 => [
+                $this->mrt_stop(22, self::A, 1, null, '09:00'),
+                $this->mrt_stop(22, self::X, 2, '10:00', null),
+            ],
+        ], [
+            900 => ['2026-06-01'],
+            901 => ['2026-06-02'],
+        ], [
+            11 => 900,
+            22 => 901,
+        ]);
+
+        $month = MRT_get_journey_calendar_month(self::A, self::B, 2026, 6);
+
+        self::assertSame('ok', $month['2026-06-01']);
+        self::assertSame('traffic_no_match', $month['2026-06-02']);
+        self::assertSame('none', $month['2026-06-03']);
+    }
+
+    /**
+     * @return array<int, array<int, array<string, mixed>>>
+     */
+    private function transferRows(string $secondDeparture): array {
+        return [
+            11 => [
+                $this->mrt_stop(11, self::A, 1, null, '09:00'),
+                $this->mrt_stop(11, self::X, 2, '10:00', null),
+            ],
+            22 => [
+                $this->mrt_stop(22, self::X, 1, null, $secondDeparture),
+                $this->mrt_stop(22, self::B, 2, '11:00', null),
+            ],
+        ];
+    }
+
+    /**
+     * @return array<int, array<int, array<string, mixed>>>
+     */
+    private function sameNamedDifferentStationRows(): array {
+        return [
+            11 => [
+                $this->mrt_stop(11, self::A, 1, null, '09:00'),
+                $this->mrt_stop(11, self::X, 2, '10:00', null),
+            ],
+            22 => [
+                $this->mrt_stop(22, self::OTHER_X, 1, null, '10:10'),
+                $this->mrt_stop(22, self::B, 2, '11:00', null),
+            ],
+        ];
     }
 }
