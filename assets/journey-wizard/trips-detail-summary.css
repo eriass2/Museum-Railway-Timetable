@@ -1,0 +1,312 @@
+.mrt-journey-wizard__trip-list {
+    display: grid;
+    gap: 1.15rem;
+}
+
+.mrt-journey-wizard__trip-card {
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
+}
+
+.mrt-journey-wizard__trip-card.is-expanded > .mrt-journey-wizard__trip-main {
+    background: #d6d6d6;
+}
+
+.mrt-journey-wizard__trip-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 0.65rem 0.8rem;
+}
+
+.mrt-journey-wizard__trip-time {
+    margin: 0;
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    line-height: 1.05;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__trip-route {
+    margin: 0.2rem 0 0.6rem;
+    font-size: 1.2rem;
+}
+
+.mrt-journey-wizard__trip-side {
+    display: grid;
+    align-content: start;
+    justify-items: end;
+    gap: 0.35rem;
+}
+
+.mrt-journey-wizard__duration {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #3f3f3f;
+    white-space: nowrap;
+}
+
+.mrt-journey-wizard__btn-detail {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border: 0;
+    padding: 0 0.8rem 0.6rem;
+    background: transparent;
+    color: #151515;
+    cursor: pointer;
+}
+
+.mrt-journey-wizard__chevron {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-right: 3px solid #151515;
+    border-bottom: 3px solid #151515;
+    transform: rotate(45deg);
+}
+
+.mrt-journey-wizard__trip-card.is-expanded .mrt-journey-wizard__chevron {
+    transform: rotate(225deg);
+}
+
+.mrt-journey-wizard__vehicle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+}
+
+.mrt-journey-wizard__vehicle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    color: #151515;
+    font-size: 1.12rem;
+    line-height: 1;
+}
+
+.mrt-journey-wizard__vehicle-mark {
+    width: 2.2rem;
+    height: 0.7rem;
+    border-radius: 0.45rem 0.45rem 0.15rem 0.15rem;
+    background: var(--mrt-jw-green-dark);
+    box-shadow: 0 0.38rem 0 -0.18rem currentColor;
+}
+
+.mrt-journey-wizard__vehicle--railbus .mrt-journey-wizard__vehicle-mark {
+    background: var(--mrt-jw-orange);
+}
+
+.mrt-journey-wizard__vehicle--diesel .mrt-journey-wizard__vehicle-mark,
+.mrt-journey-wizard__vehicle--train .mrt-journey-wizard__vehicle-mark {
+    background: #0d6d17;
+}
+
+.mrt-journey-wizard__vehicle--steam .mrt-journey-wizard__vehicle-mark {
+    background: #151515;
+}
+
+.mrt-journey-wizard__detail {
+    padding: 1.2rem 0.8rem 1rem;
+    background: var(--mrt-jw-surface);
+}
+
+.mrt-journey-wizard__detail[hidden] {
+    display: none;
+}
+
+.mrt-journey-wizard__detail-title {
+    margin: 0 0 0.6rem;
+    color: var(--mrt-jw-text);
+    font-size: 1rem;
+}
+
+.mrt-journey-wizard__timeline-leg {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    align-items: center;
+    margin: 0 0 0.55rem 6.6rem;
+}
+
+.mrt-journey-wizard__towards {
+    font-size: 1.05rem;
+}
+
+.mrt-journey-wizard__timeline {
+    display: grid;
+    gap: 0;
+}
+
+.mrt-journey-wizard__timeline-row {
+    display: grid;
+    grid-template-columns: 5.4rem 1.6rem minmax(0, 1fr);
+    gap: 0.65rem;
+    min-height: 2.7rem;
+    align-items: start;
+}
+
+.mrt-journey-wizard__timeline-time {
+    text-align: right;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.mrt-journey-wizard__timeline-node {
+    position: relative;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.1rem;
+    border: 0.35rem solid #151515;
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.mrt-journey-wizard__timeline-node::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0.85rem;
+    width: 0.35rem;
+    height: 2.1rem;
+    background: #151515;
+    transform: translateX(-50%);
+}
+
+.mrt-journey-wizard__timeline-row:last-of-type .mrt-journey-wizard__timeline-node::after {
+    display: none;
+}
+
+.mrt-journey-wizard__timeline-station {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.mrt-journey-wizard__timeline-row:not(.is-terminal) .mrt-journey-wizard__timeline-station,
+.mrt-journey-wizard__timeline-row:not(.is-terminal) .mrt-journey-wizard__timeline-time {
+    font-weight: 500;
+}
+
+.mrt-journey-wizard__passed-toggle {
+    justify-self: start;
+    margin: 0.3rem 0 0.6rem 6.6rem;
+    border: 0;
+    padding: 0;
+    background: transparent;
+    color: var(--mrt-jw-olive);
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
+.mrt-journey-wizard__transfer-block {
+    margin: 0.45rem 0 0.8rem 6.6rem;
+    color: #333333;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.mrt-journey-wizard__notice,
+.mrt-journey-wizard__price-note {
+    margin: 0.2rem 0 0.4rem;
+    color: #151515;
+    font-size: 0.95rem;
+}
+
+.mrt-journey-wizard__notice-dot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-left: 0.35rem;
+    border-radius: 50%;
+    background: #fff100;
+    color: #d45500;
+    font-size: 0.95rem;
+    vertical-align: middle;
+}
+
+.mrt-journey-wizard__selected-trip {
+    margin: 1.4rem 0 1.6rem;
+}
+
+.mrt-journey-wizard__selected-label {
+    margin-bottom: 0.4rem;
+    color: var(--mrt-jw-yellow);
+    font-weight: 800;
+}
+
+.mrt-journey-wizard__selected-card {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.45rem 1rem;
+    padding: 0.65rem;
+    border: 2px solid #ffffff;
+    color: #ffffff;
+}
+
+.mrt-journey-wizard__selected-card .mrt-journey-wizard__vehicle {
+    color: #ffffff;
+}
+
+.mrt-journey-wizard__selected-card .mrt-journey-wizard__vehicle-mark {
+    background: #ffffff;
+}
+
+.mrt-journey-wizard__prices {
+    margin-top: 1.4rem;
+    border-top: 2px solid #bdbdbd;
+    padding-top: 1rem;
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
+}
+
+.mrt-journey-wizard__prices h4,
+.mrt-journey-wizard__prices .mrt-heading {
+    margin: 0 0 0.35rem;
+    color: var(--mrt-jw-text);
+    font-size: 1.35rem;
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__prices-scroll {
+    overflow-x: auto;
+}
+
+.mrt-journey-wizard__price-table {
+    width: 100%;
+    min-width: 35rem;
+    border-collapse: collapse;
+    color: var(--mrt-jw-text);
+}
+
+.mrt-journey-wizard__price-table th,
+.mrt-journey-wizard__price-table td {
+    padding: 0.25rem 0.45rem;
+    text-align: left;
+    border: 0;
+    font-size: 1.05rem;
+}
+
+.mrt-journey-wizard__price-table tbody tr:nth-child(odd) {
+    background: #d2d2d2;
+}
+
+.mrt-journey-wizard__price-table th[scope="row"] {
+    font-weight: 900;
+}
+
+.mrt-journey-wizard__summary-card {
+    margin-bottom: 1rem;
+    padding: 0.9rem;
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
+}
+
+.mrt-demo-mockup-list {
+    margin: 0.5rem 0 0 1.25rem;
+}
+
+.mrt-demo-mockup-caption {
+    font-size: 0.875rem;
+}
