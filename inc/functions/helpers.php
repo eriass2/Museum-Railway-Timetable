@@ -13,9 +13,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $helpers_dir = __DIR__ . '/';
 
-require_once $helpers_dir . 'helpers-datetime.php';
-require_once $helpers_dir . 'helpers-stations.php';
-require_once $helpers_dir . 'helpers-routes.php';
+require_once MRT_PATH . 'inc/domain/datetime/datetime.php';
+require_once MRT_PATH . 'inc/domain/station/stations.php';
+require_once MRT_PATH . 'inc/domain/route/routes.php';
 require_once $helpers_dir . 'helpers-utils.php';
-require_once $helpers_dir . 'helpers-services.php';
-require_once $helpers_dir . 'helpers-connections.php';
+require_once MRT_PATH . 'inc/domain/service/stop-times.php';
+require_once MRT_PATH . 'inc/domain/service/connections.php';

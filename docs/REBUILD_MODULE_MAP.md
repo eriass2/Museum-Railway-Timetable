@@ -147,6 +147,8 @@ inc/
 
 **Minsta tester:** stop order, null/fixed times, pickup/dropoff semantics for `P`/`X`.
 
+**Nuvarande start:** service logic ligger i `inc/domain/service/services.php`, stopptidshelpers i `inc/domain/service/stop-times.php`, och connection helpers i `inc/domain/service/connections.php`; gamla `inc/functions/*`-filer är loaders under övergången.
+
 ### `domain/journey`
 
 **Ansvar:** journey search, direct trips, one-transfer trips, return filtering, connection detail, normalization.
@@ -160,6 +162,8 @@ inc/
 **Får inte:** build HTML cards or read browser state.
 
 **Minsta tester:** direct trip, transfer via shared station, min transfer time, return after arrival, invalid station pair, no traffic.
+
+**Nuvarande start:** journey-modulerna ligger i `inc/domain/journey/`; `inc/functions/journey-loader.php` laddar dem direkt under övergången.
 
 ### `domain/pricing`
 
@@ -195,6 +199,8 @@ inc/
 
 **Minsta tester:** tågnummer, tågtyp, date count, row length per route.
 
+**Nuvarande start:** referensdata ligger i `inc/import/lennakatten/reference-data.php`; gamla import-datafilen är loader under övergången.
+
 ### `import/lennakatten/importer`
 
 **Ansvar:** convert reference data into domain objects/repositories.
@@ -208,6 +214,8 @@ inc/
 **Får inte:** render admin forms.
 
 **Minsta tester:** idempotent import, expected counts, train type assignment.
+
+**Nuvarande start:** importern ligger i `inc/import/lennakatten/importer.php`; gamla import-runfilen är loader under övergången.
 
 ---
 

@@ -9,4 +9,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once dirname( __DIR__ ) . '/domain/station/stations.php';
+require_once MRT_PATH . 'inc/domain/station/stations.php';

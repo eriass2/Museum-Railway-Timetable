@@ -9,4 +9,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once ABSPATH . 'inc/domain/pricing/prices.php';
+require_once MRT_PATH . 'inc/domain/pricing/prices.php';

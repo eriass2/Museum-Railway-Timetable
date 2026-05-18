@@ -8,13 +8,13 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-$journey_dir = __DIR__ . '/';
+$journey_dir = MRT_PATH . 'inc/domain/journey/';
 
 require_once $journey_dir . 'journey-detail.php';
 require_once $journey_dir . 'journey-calendar.php';
 require_once $journey_dir . 'journey-return.php';
 require_once $journey_dir . 'journey-multi-leg.php';
-require_once $journey_dir . 'journey-prices.php';
+require_once MRT_PATH . 'inc/domain/pricing/prices.php';
 require_once $journey_dir . 'journey-notice.php';
 require_once $journey_dir . 'journey-connections-table.php';
 require_once $journey_dir . 'journey-normalize.php';
