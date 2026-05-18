@@ -21,6 +21,8 @@ Statusnycklar:
 | `docs/REBUILD_RULES.md` | `keep` | Nya regler för kod, design och kvalitet. |
 | `tests/` | `keep/move` | Testerna ska styra rebuild; flyttas/uppdateras när moduler flyttas. |
 
+Viktigt: `docs/mockups/` är referensmaterial och ska sparas. Nuvarande implementation av utseende/styling ska däremot rensas i purge-steget.
+
 ---
 
 ## 2. Dokumentation
@@ -136,15 +138,26 @@ inc/
 
 | Område | Status | Kommentar |
 |--------|--------|-----------|
-| `assets/icons/train-types/` | `keep` | Tågtypsikoner är produktdata/designasset. |
-| `assets/train-type-icons.css` | `keep/move` | Behåll, eventuellt flytta till public/timetable assets. |
-| `assets/journey-wizard/` + `assets/journey-wizard.css` | `rewrite` | Behåll som bas, men frontend ska styras hårdare av mockup. |
-| `assets/journey-wizard.js` | `rewrite` | Viktig, men lång; bör delas i moduler/state/render/api. |
-| `assets/frontend.js` | `rewrite` | Behåll delade public-interaktioner; kan minska om legacy planner tas bort. |
-| `assets/mrt-string-utils.js`, `assets/mrt-date-utils.js`, `assets/mrt-frontend-api.js` | `keep/move` | Bra delade helpers. |
+| `assets/icons/train-types/` | `delete` | Nuvarande ikon-/utseendeimplementation ska bort i purge. Nya ikoner får skapas senare från ny designriktning. |
+| `assets/train-type-icons.css` | `delete` | Tillhör nuvarande utseendeimplementation. |
+| `assets/journey-wizard/` + `assets/journey-wizard.css` | `delete/rewrite` | Ta bort nuvarande styling. Ny frontend-CSS byggs senare från mockups. |
+| `assets/frontend.js` | `rewrite` | Behåll bara beteende som behövs; separera från nuvarande styling/legacy planner. |
+| `assets/mrt-string-utils.js`, `assets/mrt-date-utils.js`, `assets/mrt-frontend-api.js` | `keep/move` | Beteende-/API-helpers, inte utseende. |
 | `assets/admin-*.js` | `rewrite` | Behåll där adminflöden kvarstår, men flytta per adminmodul. |
-| `assets/admin-*.css` | `rewrite/delete` | Admin ska bli mer WP-native; minska egen CSS. |
-| `assets/CSS_STRUCTURE.md` | `rewrite/delete` | Behövs bara om CSS-modulerna finns kvar. |
+| `assets/admin-*.css` | `delete/rewrite` | Ta bort nuvarande admin-utseendeimplementation. Ny admin ska luta på WordPress-native CSS och endast ha minimal egen CSS. |
+| `assets/CSS_STRUCTURE.md` | `delete` | Nuvarande CSS-struktur försvinner när utseendeimplementationen purgas. |
+
+### Utseendepurge
+
+När purge-steget körs ska följande tas bort eller tömmas till minimal ny grund:
+
+- nuvarande CSS-filer och CSS-modulstruktur
+- nuvarande train type-ikoner och ikon-CSS
+- frontend-styling som inte kommer direkt från ny mockupbaserad implementation
+- admin-styling som ersätts av WordPress-native UI
+- dokumentation som beskriver gammalt utseende eller gammal CSS-struktur
+
+Det som ska sparas är referenserna: mockups, tidtabells-PDF:er och reglerna i `REBUILD_RULES.md`.
 
 ---
 
@@ -169,9 +182,10 @@ Rekommenderat första cleanup-scope:
 
 1. Skapa `inc/bootstrap.php`.
 2. Skapa tom ny målstruktur (`domain`, `import`, `admin`, `public`, `infrastructure`).
-3. Flytta endast loaders/enkla rena helpers först.
-4. Låt gamla filer samexistera tills motsvarande tester pekar på ny modul.
-5. Radera bara dokumentationsdubbletter som helt ersätts av `REBUILD_*`.
+3. Purga nuvarande utseendeimplementation enligt avsnittet `Utseendepurge`.
+4. Flytta endast loaders/enkla rena helpers först.
+5. Låt gamla icke-utseende-filer samexistera tills motsvarande tester pekar på ny modul.
+6. Radera bara dokumentationsdubbletter som helt ersätts av `REBUILD_*`.
 
 Undvik i första cleanup-PR:
 
