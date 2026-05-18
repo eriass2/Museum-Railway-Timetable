@@ -8,7 +8,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-$timetable_view_dir = __DIR__ . '/timetable-view/';
+$timetable_view_dir = MRT_PATH . 'inc/domain/timetable/view/';
 require_once $timetable_view_dir . 'prepare.php';
 require_once $timetable_view_dir . 'grid.php';
 require_once $timetable_view_dir . 'overview.php';

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$journey_wizard_dir = __DIR__ . '/journey-wizard/';
+$journey_wizard_dir = MRT_PATH . 'inc/public/journey-wizard/';
 require_once $journey_wizard_dir . 'attributes.php';
 require_once $journey_wizard_dir . 'fields.php';
 require_once $journey_wizard_dir . 'timetable.php';

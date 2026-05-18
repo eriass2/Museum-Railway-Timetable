@@ -133,6 +133,8 @@ inc/
 
 **Minsta tester:** date parsing/sorting, traffic/no-traffic status, grouping by route/direction.
 
+**Nuvarande start:** timetable view helpers ligger i `inc/domain/timetable/view/`; gamla `inc/functions/timetable-view/*`-filer är loaders under övergången.
+
 ### `domain/service`
 
 **Ansvar:** trips/services, service number, stop times, pickup/dropoff flags, service notice.
@@ -309,6 +311,8 @@ inc/
 
 **Minsta tester:** render smoke, JS utility tests, AJAX/domain tests.
 
+**Nuvarande start:** shortcode-renderingen ligger i `inc/public/journey-wizard/`; den gamla shortcodefilen är loader under övergången.
+
 ### `public/timetable-overview`
 
 **Ansvar:** printed-style timetable display.
@@ -323,6 +327,8 @@ inc/
 
 **Minsta tester:** grouping/render data, empty timetable.
 
+**Nuvarande start:** `inc/public/timetable-overview/shortcode.php`; den gamla shortcodefilen är loader under övergången.
+
 ### `public/month-calendar`
 
 **Ansvar:** public monthly traffic calendar.
@@ -336,6 +342,24 @@ inc/
 **Får inte:** duplicate journey calendar domain rules.
 
 **Minsta tester:** month navigation, status classes, filtering.
+
+**Nuvarande start:** `inc/public/month-calendar/shortcode.php`; den gamla shortcodefilen är loader under övergången.
+
+### `public/journey-planner`
+
+**Ansvar:** enkel legacy-reseplanerare om den överlever MVP-beslutet.
+
+**Input:** from/to/date.
+
+**Output:** shortcode HTML och resultatcontainer.
+
+**Stöder:** enkel test-/fallbackvy för journey backend.
+
+**Får inte:** duplicera wizardens domänregler.
+
+**Minsta tester:** render smoke och station/date input.
+
+**Nuvarande start:** `inc/public/journey-planner/shortcode.php`; kan tas bort senare om MVP väljer wizard-only.
 
 ---
 

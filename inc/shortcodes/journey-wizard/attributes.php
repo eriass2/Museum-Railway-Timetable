@@ -1,6 +1,6 @@
 <?php
 /**
- * Journey wizard shortcode helpers.
+ * Compatibility loader for attributes.
  *
  * @package Museum_Railway_Timetable
  */
@@ -9,17 +9,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Optional hero background: CSS custom property for future mockup-based styling.
- *
- * @param string $hero_image Attachment URL or empty
- * @return string Safe HTML attributes for the opening tag (leading space when non-empty; escaped).
- */
-function MRT_journey_wizard_hero_bg_attr( $hero_image ) {
-	$hero_image = is_string( $hero_image ) ? trim( $hero_image ) : '';
-	if ( $hero_image === '' ) {
-		return '';
-	}
-	$u = esc_url( $hero_image );
-	return ' data-has-hero-bg="1" style="' . esc_attr( '--mrt-hero-image: url("' . $u . '")' ) . '"';
-}
+require_once MRT_PATH . 'inc/public/journey-wizard/attributes.php';

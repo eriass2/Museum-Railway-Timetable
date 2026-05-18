@@ -91,7 +91,7 @@ inc/
 | `inc/functions/journey-*.php` | `move/rewrite` | `inc/domain/journey/` | Flyttade till domain; legacyfiler är loaders där de behövs. Skriv om gränssnitt senare. |
 | `inc/functions/journey-prices.php` | `move` | `inc/domain/pricing/prices.php` | Flyttad; legacyfilen är loader tills resten av rebuilden använder ny väg direkt. |
 | `inc/data/price-matrix-builtin.php` | `move` | `inc/domain/pricing/price-matrix-builtin.php` | Flyttad seed/reference data. |
-| `inc/functions/timetable-view/*` | `move/rewrite` | `inc/domain/timetable/` + `inc/public/timetable/` | Dela dataförberedelse från rendering. |
+| `inc/functions/timetable-view/*` | `move/rewrite` | `inc/domain/timetable/view/` | Flyttad. Dela dataförberedelse från rendering i senare rewrite. |
 | `inc/functions/services.php` | `move/rewrite` | `inc/domain/service/services.php` | Flyttad; separera queries, mapping, connection search senare. |
 | `inc/functions/helpers-services.php` | `move/rewrite` | `inc/domain/service/stop-times.php` | Flyttad; behåll stopptidshelpers, rensa WP-adapterdelar senare. |
 | `inc/functions/helpers-connections.php` | `move/rewrite` | `inc/domain/service/connections.php` | Flyttad; connection helper för service/transfer-info. |
@@ -120,10 +120,10 @@ inc/
 
 | Nuvarande område | Status | Ny plats | Kommentar |
 |------------------|--------|----------|-----------|
-| `inc/shortcodes/shortcode-month.php` | `rewrite` | `inc/public/month/` | Behåll om MVP behöver månadsvy. |
-| `inc/shortcodes/shortcode-overview.php` | `rewrite` | `inc/public/timetable/` | Behåll tidtabellsöversikt. |
-| `inc/shortcodes/shortcode-journey-wizard.php` + `inc/shortcodes/journey-wizard/` | `rewrite` | `inc/public/journey-wizard/` | Primär frontend enligt mockup. |
-| `inc/shortcodes/shortcode-journey.php` | `delete/rewrite` | `inc/public/journey-planner/` om behövs | Legacy one-page planner; behåll bara om MVP kräver den. |
+| `inc/shortcodes/shortcode-month.php` | `rewrite` | `inc/public/month-calendar/shortcode.php` | Flyttad. Behåll om MVP behöver månadsvy. |
+| `inc/shortcodes/shortcode-overview.php` | `rewrite` | `inc/public/timetable-overview/shortcode.php` | Flyttad. Behåll tidtabellsöversikt. |
+| `inc/shortcodes/shortcode-journey-wizard.php` + `inc/shortcodes/journey-wizard/` | `rewrite` | `inc/public/journey-wizard/` | Flyttad. Primär frontend enligt mockup. |
+| `inc/shortcodes/shortcode-journey.php` | `delete/rewrite` | `inc/public/journey-planner/shortcode.php` | Flyttad. Legacy one-page planner; behåll bara om MVP kräver den. |
 | `inc/demo-page.php` | `rewrite` | `inc/admin/tools/demo-page.php` | Behövs som demo/testverktyg men ska vara admin tool. |
 
 ### Loaders
