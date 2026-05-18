@@ -8,9 +8,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-require_once MRT_PATH . 'inc/shortcodes/shortcode-month.php';
-require_once MRT_PATH . 'inc/shortcodes/shortcode-overview.php';
-require_once MRT_PATH . 'inc/shortcodes/shortcode-journey.php';
+require_once MRT_PATH . 'inc/public/month-calendar/shortcode.php';
+require_once MRT_PATH . 'inc/public/timetable-overview/shortcode.php';
+require_once MRT_PATH . 'inc/public/journey-planner/shortcode.php';
 require_once MRT_PATH . 'inc/shortcodes/shortcode-journey-wizard.php';
 
 add_shortcode( 'museum_timetable_month', 'MRT_render_shortcode_month' );
