@@ -6,6 +6,7 @@
 |----------|----------|
 | [REBUILD_SKETCH.md](REBUILD_SKETCH.md) | Målbild, MVP och cleanup-plan för kontrollerad omstart |
 | [REBUILD_RULES.md](REBUILD_RULES.md) | Kod-, design- och kvalitetsregler för rebuild |
+| [REBUILD_CLEANUP_INVENTORY.md](REBUILD_CLEANUP_INVENTORY.md) | Klassning av filer/mappar inför cleanup (`keep`, `move`, `rewrite`, `delete`) |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, testning, `inc/`-struktur |
 | [DATA_MODEL.md](DATA_MODEL.md) | Post types, relationer, tabeller |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |

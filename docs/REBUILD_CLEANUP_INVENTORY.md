@@ -1,0 +1,190 @@
+# Rebuild cleanup inventory
+
+Syfte: klassificera nuvarande filer inför nästa rebuild-steg. Detta dokument är en plan för rensning och flytt, inte en radering i sig.
+
+Statusnycklar:
+
+- `keep` – ska behållas i nuvarande form tills vidare
+- `move` – ska behållas men flyttas till ny struktur
+- `rewrite` – funktionen behövs, men implementationen bör byggas om
+- `delete` – kan tas bort när ersättning/ny struktur finns
+
+---
+
+## 1. Källor som alltid ska sparas
+
+| Område | Status | Kommentar |
+|--------|--------|-----------|
+| `testdata/reference-pdfs/` | `keep` | Referenskälla för trafikdagar, tågtyper, tider och specialnoteringar. |
+| `docs/mockups/` | `keep` | Mockups styr frontendflöde och designprioritering. |
+| `docs/REBUILD_SKETCH.md` | `keep` | Produkt- och cleanup-målbild. |
+| `docs/REBUILD_RULES.md` | `keep` | Nya regler för kod, design och kvalitet. |
+| `tests/` | `keep/move` | Testerna ska styra rebuild; flyttas/uppdateras när moduler flyttas. |
+
+---
+
+## 2. Dokumentation
+
+| Fil/område | Status | Kommentar |
+|------------|--------|-----------|
+| `docs/REBUILD_SKETCH.md` | `keep` | Primär målbild. |
+| `docs/REBUILD_RULES.md` | `keep` | Primär regelbok. |
+| `docs/REBUILD_CLEANUP_INVENTORY.md` | `keep` | Detta dokument. |
+| `docs/README.md` | `rewrite` | Ska bli kort index för rebuild-dokument och aktiv dokumentation. |
+| `docs/DEVELOPER.md` | `rewrite` | Behåll setup/testkommandon, ta bort historisk brus. |
+| `docs/ARCHITECTURE.md` | `rewrite` | Synka med ny struktur (`domain`, `admin`, `public`, `infrastructure`). |
+| `docs/STYLE_GUIDE.md` | `rewrite` | Ersätt med/peka mot `REBUILD_RULES.md`; undvik dubbla kodregler. |
+| `docs/DATA_MODEL.md` | `move/rewrite` | Behåll datamodellidéer, skriv om efter faktisk rebuild-modell. |
+| `docs/SHORTCODES.md` | `rewrite` | Behåll bara shortcodes som ingår i MVP. |
+| `docs/ADMIN_WORKFLOW.md` | `rewrite` | Behåll arbetsflöde efter ny adminstruktur. |
+| `docs/ACCESSIBILITY.md` | `keep/rewrite` | Behåll WCAG-krav, uppdatera efter ny frontend. |
+| `docs/PHP_INSTALL_WINDOWS.md` | `keep` | Praktisk setupinfo, låg risk. |
+
+Första dokument-cleanup bör ta bort duplicerade regler efter att `REBUILD_RULES.md` är etablerad som källa.
+
+---
+
+## 3. Root och infrastruktur
+
+| Fil/område | Status | Kommentar |
+|------------|--------|-----------|
+| `museum-railway-timetable.php` | `rewrite` | Ska bli minimal bootstrap som laddar ny struktur. |
+| `composer.json`, `composer.lock` | `keep` | Test-/analysverktyg behövs. |
+| `phpunit.xml.dist`, `phpstan.neon`, `phpstan-bootstrap.php`, `phpcs.xml` | `keep` | Kvalitetsgrindar. |
+| `.github/workflows/ci.yml` | `keep` | CI ska fortsätta vara gate. |
+| `.github/dependabot.yml` | `keep` | Dependency-underhåll. |
+| `.github/pull_request_template.md` | `rewrite` | Synka med rebuild DoD och manual smoke-krav. |
+| `README.md` | `rewrite` | Ska beskriva ny produkt, inte historik. |
+| `CONTRIBUTING.md` | `rewrite` | Peka mot rebuild-regler. |
+| `uninstall.php` | `rewrite` | Säkerställ att ny datamodell städas korrekt. |
+| `local/` | `keep` | Utvecklarhjälp. |
+| `docker-compose.yml`, `Dockerfile`, `docker/` | `keep` | Lokal WP-testmiljö. |
+
+---
+
+## 4. Ny föreslagen kodstruktur
+
+Målet är att flytta fungerande delar hit stegvis:
+
+```text
+inc/
+├── domain/
+├── import/
+├── admin/
+├── public/
+├── assets/
+├── infrastructure/
+└── bootstrap.php
+```
+
+---
+
+## 5. Nuvarande `inc/` klassning
+
+### Behåll/flytta som domän
+
+| Nuvarande område | Status | Ny plats | Kommentar |
+|------------------|--------|----------|-----------|
+| `inc/functions/helpers-datetime.php` | `move` | `inc/domain/datetime.php` | Ren datum/tid-logik. |
+| `inc/functions/journey-*.php` | `move/rewrite` | `inc/domain/journey/` | Behåll algoritmer, skriv om gränssnitt där behövs. |
+| `inc/functions/journey-prices.php` | `move` | `inc/domain/pricing/` | Prislogik behövs för wizard. |
+| `inc/data/price-matrix-builtin.php` | `move` | `inc/domain/pricing/` eller `inc/import/seed/` | Seed/reference data. |
+| `inc/functions/timetable-view/*` | `move/rewrite` | `inc/domain/timetable/` + `inc/public/timetable/` | Dela dataförberedelse från rendering. |
+| `inc/functions/services.php` | `rewrite` | `inc/domain/services/` | Viktig men stor; separera queries, mapping, connection search. |
+| `inc/functions/helpers-services.php` | `move/rewrite` | `inc/domain/services/` | Behåll stopptidshelpers, rensa WP-adapterdelar. |
+| `inc/functions/helpers-routes.php` | `move/rewrite` | `inc/domain/routes/` | Behåll route label/direction, separera WP queries. |
+| `inc/functions/helpers-stations.php` | `move` | `inc/domain/stations/` | Stationhelpers. |
+| `inc/functions/helpers-utils.php` | `split` | `inc/domain/shared/` + `inc/infrastructure/` | Innehåller blandade helpers. |
+
+### Behåll/flytta som import
+
+| Nuvarande område | Status | Ny plats | Kommentar |
+|------------------|--------|----------|-----------|
+| `inc/import-lennakatten/import-data.php` | `move` | `inc/import/lennakatten/reference-data.php` | Referensdata från PDF. |
+| `inc/import-lennakatten/import-run.php` | `rewrite` | `inc/import/lennakatten/importer.php` | Dela upp runner, repository, mapper. |
+| `inc/import-lennakatten/loader.php` | `rewrite` | `inc/admin/tools/import-page.php` | UI-adapter för import. |
+
+### Behåll/flytta som admin
+
+| Nuvarande område | Status | Ny plats | Kommentar |
+|------------------|--------|----------|-----------|
+| `inc/admin-page/*` | `rewrite` | `inc/admin/dashboard/` | Behåll verktyg, gör WordPress-native och mindre. |
+| `inc/admin-meta-boxes/*` | `rewrite` | `inc/admin/meta-boxes/` | Behåll dataflöden, dela större service/timetable-filer. |
+| `inc/admin-ajax/*` | `rewrite` | `inc/infrastructure/ajax/` | Tunna endpoints som delegerar till domain. |
+| `inc/cpt/*` | `move/rewrite` | `inc/infrastructure/post-types/` | Registrering av CPT/taxonomies. |
+
+### Behåll/flytta som public
+
+| Nuvarande område | Status | Ny plats | Kommentar |
+|------------------|--------|----------|-----------|
+| `inc/shortcodes/shortcode-month.php` | `rewrite` | `inc/public/month/` | Behåll om MVP behöver månadsvy. |
+| `inc/shortcodes/shortcode-overview.php` | `rewrite` | `inc/public/timetable/` | Behåll tidtabellsöversikt. |
+| `inc/shortcodes/shortcode-journey-wizard.php` + `inc/shortcodes/journey-wizard/` | `rewrite` | `inc/public/journey-wizard/` | Primär frontend enligt mockup. |
+| `inc/shortcodes/shortcode-journey.php` | `delete/rewrite` | `inc/public/journey-planner/` om behövs | Legacy one-page planner; behåll bara om MVP kräver den. |
+| `inc/demo-page.php` | `rewrite` | `inc/admin/tools/demo-page.php` | Behövs som demo/testverktyg men ska vara admin tool. |
+
+### Loaders
+
+| Fil | Status | Kommentar |
+|-----|--------|-----------|
+| `inc/assets.php` | `move` | Loader för `inc/assets/`. |
+| `inc/admin-page.php`, `inc/admin-meta-boxes.php`, `inc/admin-ajax.php`, `inc/cpt.php`, `inc/shortcodes.php` | `delete/rewrite` | Ersätt med `inc/bootstrap.php` och modul-loaders i ny struktur. |
+
+---
+
+## 6. Nuvarande `assets/` klassning
+
+| Område | Status | Kommentar |
+|--------|--------|-----------|
+| `assets/icons/train-types/` | `keep` | Tågtypsikoner är produktdata/designasset. |
+| `assets/train-type-icons.css` | `keep/move` | Behåll, eventuellt flytta till public/timetable assets. |
+| `assets/journey-wizard/` + `assets/journey-wizard.css` | `rewrite` | Behåll som bas, men frontend ska styras hårdare av mockup. |
+| `assets/journey-wizard.js` | `rewrite` | Viktig, men lång; bör delas i moduler/state/render/api. |
+| `assets/frontend.js` | `rewrite` | Behåll delade public-interaktioner; kan minska om legacy planner tas bort. |
+| `assets/mrt-string-utils.js`, `assets/mrt-date-utils.js`, `assets/mrt-frontend-api.js` | `keep/move` | Bra delade helpers. |
+| `assets/admin-*.js` | `rewrite` | Behåll där adminflöden kvarstår, men flytta per adminmodul. |
+| `assets/admin-*.css` | `rewrite/delete` | Admin ska bli mer WP-native; minska egen CSS. |
+| `assets/CSS_STRUCTURE.md` | `rewrite/delete` | Behövs bara om CSS-modulerna finns kvar. |
+
+---
+
+## 7. Tester
+
+| Område | Status | Kommentar |
+|--------|--------|-----------|
+| `tests/Unit/ImportDataTest.php` | `keep` | Styr referensdataimport. |
+| `tests/Unit/Journey*` | `keep/move` | Styr journey-domänlogik. |
+| `tests/Unit/JourneyMultiLegTest.php` | `keep` | Viktig för byte/gemensam station. |
+| `tests/Unit/JourneyPricesTest.php` | `keep` | Prislogik. |
+| `tests/Unit/TrainTypeIconTest.php` | `keep` | Tågtypsikon-regler. |
+| `tests/Unit/RefactoredHelpersTest.php` | `keep/rewrite` | Behåll relevanta assertions, flytta när helpers byter namn. |
+| `tests/JourneyTestFixtures.php`, `tests/wp-stubs.php` | `move/rewrite` | Ny testinfrastruktur bör vara tydligare moduliserad. |
+| `tests/js/*` | `keep` | Behåll delade JS-utiltester. |
+
+---
+
+## 8. Första faktiska cleanup-PR efter denna inventering
+
+Rekommenderat första cleanup-scope:
+
+1. Skapa `inc/bootstrap.php`.
+2. Skapa tom ny målstruktur (`domain`, `import`, `admin`, `public`, `infrastructure`).
+3. Flytta endast loaders/enkla rena helpers först.
+4. Låt gamla filer samexistera tills motsvarande tester pekar på ny modul.
+5. Radera bara dokumentationsdubbletter som helt ersätts av `REBUILD_*`.
+
+Undvik i första cleanup-PR:
+
+- att radera fungerande import
+- att radera testdata
+- att radera journey-domänlogik
+- att byta datamodell och UI samtidigt
+
+---
+
+## 9. Beslutsfrågor före radering
+
+- Ska `[museum_journey_planner]` överleva som legacy/simple mode, eller ersättas helt av wizard?
+- Ska månadsvyn vara fristående shortcode eller bara en del av wizard/tidtabellsöversikt?
+- Ska admin fortsatt stödja manuell datainmatning, eller primärt import + korrigering?
+- Ska ny struktur införas stegvis i nuvarande plugin eller byggas i parallell `inc-next/` först?
