@@ -20,13 +20,7 @@ $required_files = @(
     "inc/cpt.php",
     "inc/functions/helpers.php",
     "inc/functions/services.php",
-    "assets/admin-base.css",
-    "assets/admin-timetable.css",
-    "assets/admin-timetable-overview.css",
-    "assets/admin-meta-boxes.css",
-    "assets/admin-dashboard.css",
-    "assets/admin-ui.css",
-    "assets/admin-responsive.css",
+    "assets/train-type-icons.css",
     "assets/admin.js",
     "languages/museum-railway-timetable.pot",
     "languages/museum-railway-timetable-sv_SE.po"
@@ -115,13 +109,7 @@ if (Test-Path "museum-railway-timetable.php") {
 # 5. Check CSS files
 Write-Host "`n5. Checking CSS files..." -ForegroundColor Yellow
 $cssFiles = @(
-    "assets/admin-base.css",
-    "assets/admin-timetable.css",
-    "assets/admin-timetable-overview.css",
-    "assets/admin-meta-boxes.css",
-    "assets/admin-dashboard.css",
-    "assets/admin-ui.css",
-    "assets/admin-responsive.css"
+    "assets/train-type-icons.css"
 )
 foreach ($cssFile in $cssFiles) {
     $checks++

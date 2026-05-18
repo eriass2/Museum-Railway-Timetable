@@ -70,17 +70,17 @@ Kodstandarder och clean code-principer för projektet.
 - **Variabler** – CSS custom properties med `--mrt-` prefix
 
 ### Struktur
-- **Tokens och komponenter** – `assets/admin-base-tokens.css`, `assets/admin-components-*.css`; struktur i [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md)
-- **UI-klasser** – `.mrt-btn`, `.mrt-form`, `.mrt-card`, `.mrt-badge` m.fl. (BEM-liknande, prefix `mrt-`)
-- **CSS-variabler** i `:root` för färger, spacing, borders
-- **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar
-- **Inga inline styles** – All styling i CSS-filer
+- **Rebuild-status** – Nuvarande utseendeimplementation är purgad. Ny CSS ska byggas från mockups enligt `REBUILD_RULES.md`.
+- **UI-klasser** – Nya klasser ska använda `.mrt-*` och vara BEM-liknande där det behövs.
+- **CSS-variabler** – Använd semantiska `--mrt-*` tokens när ny design byggs upp.
+- **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
+- **Inga inline styles** – All styling i CSS-filer.
 
 ### Exempel
 ```html
-<button class="button mrt-btn mrt-btn--primary">Spara</button>
-<div class="mrt-card mrt-card--center">...</div>
-<div class="mrt-input mrt-input--meta mrt-mt-1">...</div>
+<button class="mrt-button mrt-button--primary">Spara</button>
+<div class="mrt-card">...</div>
+<div class="mrt-form-field">...</div>
 ```
 
 ---
@@ -182,7 +182,7 @@ museum-railway-timetable/
 
 ## 8. Referenser
 
-- **assets/CSS_STRUCTURE.md** – CSS-filstruktur och moduler
+- **REBUILD_RULES.md** – Rebuild-regler för kod, design och kvalitet
 - [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
 - [Clean Code (Robert C. Martin)](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)

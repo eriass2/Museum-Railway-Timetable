@@ -239,7 +239,6 @@ museum-railway-timetable/
 │   ├─ cpt.php                   # Loader
 │   └─ shortcodes.php            # Loader
 ├─ assets/
-│   ├─ admin-base.css … admin-responsive.css   # See assets/CSS_STRUCTURE.md
 │   ├─ admin.js                  # Admin entry (depends on modules below)
 │   ├─ admin-utils.js
 │   ├─ admin-route-ui.js
@@ -248,6 +247,7 @@ museum-railway-timetable/
 │   ├─ admin-service-edit.js     # Service edit (route, stoptimes form)
 │   ├─ journey-wizard.js         # [museum_journey_wizard]
 │   ├─ icons/train-types/        # PNG train type symbols
+│   ├─ train-type-icons.css      # Minimal icon mapping retained during rebuild
 │   └─ frontend.js               # Month view, journey planner AJAX
 └─ languages/                    # .pot / .po
 ```

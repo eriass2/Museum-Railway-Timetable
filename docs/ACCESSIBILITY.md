@@ -28,9 +28,9 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 | Kalender | Region, `aria-busy`, dagknappar med `aria-label` + `aria-pressed` |
 | Tabeller | `caption`, `scope="col"`; dold Actions-kolumn med `.mrt-sr-only` |
 | Fokus | Vid stegbyte fokus på rubrik (`tabindex="-1"`, tas bort vid blur) |
-| Rörelse | `prefers-reduced-motion: reduce` i `journey-wizard.css` |
+| Rörelse | Ska hanteras i ny mockupbaserad CSS när frontend-styling byggs upp igen |
 
-**Filer:** `shortcode-journey-wizard.php`, `journey-wizard.js`, `journey-wizard.css`.
+**Filer:** `shortcode-journey-wizard.php`, `journey-wizard.js`, kommande mockupbaserad CSS.
 
 ---
 

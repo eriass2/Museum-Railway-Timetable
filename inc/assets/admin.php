@@ -55,74 +55,11 @@ function MRT_admin_screen_post_type_allowed( bool $is_edit_page, bool $is_list_p
 }
 
 /**
- * Check if timetable overview CSS should load in admin.
- */
-function MRT_should_load_admin_timetable_overview( string $hook ): bool {
-	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-	if ( ! $screen ) {
-		return false;
-	}
-	if ( in_array( $hook, array( 'post.php', 'post-new.php' ), true ) && $screen->post_type === MRT_POST_TYPE_TIMETABLE ) {
-		return true;
-	}
-	if ( $screen->id !== 'edit-' . MRT_POST_TYPE_STATION ) {
-		return false;
-	}
-	$mrt_view = isset( $_GET['mrt_view'] ) ? sanitize_text_field( wp_unslash( $_GET['mrt_view'] ) ) : '';
-	return $mrt_view === 'overview';
-}
-
-/**
- * Check if dashboard CSS should load in admin.
- */
-function MRT_should_load_admin_dashboard( string $hook ): bool {
-	return $hook === 'toplevel_page_mrt_settings';
-}
-
-/**
  * Enqueue admin CSS files.
  */
 function MRT_enqueue_admin_css( string $hook ): void {
-	$base = MRT_assets_base_url();
-	wp_enqueue_style( 'mrt-admin-base', $base . 'admin-base.css', array(), MRT_VERSION );
-	wp_enqueue_style( 'mrt-admin-components', $base . 'admin-components.css', array( 'mrt-admin-base' ), MRT_VERSION );
-	wp_enqueue_style( 'mrt-admin-timetable', $base . 'admin-timetable.css', array( 'mrt-admin-components' ), MRT_VERSION );
-
-	$meta_deps = MRT_enqueue_admin_meta_box_styles( $hook, $base );
-	$ui_deps   = MRT_enqueue_admin_dashboard_styles( $hook, $base, $meta_deps );
-
-	wp_enqueue_style( 'mrt-admin-ui', $base . 'admin-ui.css', $ui_deps, MRT_VERSION );
-	wp_enqueue_style( 'mrt-admin-responsive', $base . 'admin-responsive.css', array( 'mrt-admin-ui' ), MRT_VERSION );
-}
-
-/**
- * Enqueue admin meta-box styles and return dependencies for the UI layer.
- *
- * @return array<int, string>
- */
-function MRT_enqueue_admin_meta_box_styles( string $hook, string $base ): array {
-	$meta_deps = array( 'mrt-admin-timetable' );
-	if ( MRT_should_load_admin_timetable_overview( $hook ) ) {
-		wp_enqueue_style( 'mrt-admin-timetable-overview', $base . 'admin-timetable-overview.css', array( 'mrt-admin-timetable' ), MRT_VERSION );
-		MRT_enqueue_train_type_icon_styles( array( 'mrt-admin-timetable-overview' ) );
-		$meta_deps[] = 'mrt-admin-timetable-overview';
-	}
-	wp_enqueue_style( 'mrt-admin-meta-boxes', $base . 'admin-meta-boxes.css', $meta_deps, MRT_VERSION );
-	return array( 'mrt-admin-meta-boxes' );
-}
-
-/**
- * Enqueue dashboard styles when needed and return dependencies for the UI layer.
- *
- * @param array<int, string> $ui_deps Base UI dependencies
- * @return array<int, string>
- */
-function MRT_enqueue_admin_dashboard_styles( string $hook, string $base, array $ui_deps ): array {
-	if ( MRT_should_load_admin_dashboard( $hook ) ) {
-		wp_enqueue_style( 'mrt-admin-dashboard', $base . 'admin-dashboard.css', array( 'mrt-admin-meta-boxes' ), MRT_VERSION );
-		$ui_deps[] = 'mrt-admin-dashboard';
-	}
-	return $ui_deps;
+	unset( $hook );
+	MRT_enqueue_train_type_icon_styles();
 }
 
 /**

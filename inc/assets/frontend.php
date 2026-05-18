@@ -199,43 +199,16 @@ function MRT_frontend_shortcode_flags_from_content( string $content ): array {
  * Base + components + timetable (frontend mirrors admin stack).
  */
 function MRT_enqueue_frontend_style_admin_triplet(): void {
-	$a = MRT_assets_base_url();
-	wp_enqueue_style( 'mrt-frontend-base', $a . 'admin-base.css', array(), MRT_VERSION );
-	wp_enqueue_style( 'mrt-frontend-components', $a . 'admin-components.css', array( 'mrt-frontend-base' ), MRT_VERSION );
-	wp_enqueue_style( 'mrt-frontend-timetable', $a . 'admin-timetable.css', array( 'mrt-frontend-components' ), MRT_VERSION );
+	MRT_enqueue_train_type_icon_styles();
 }
 
 /**
- * Optional overview layer; returns dependency list for meta-boxes handle.
- *
- * @return array<int, string>
+ * Optional overview layer.
  */
-function MRT_enqueue_frontend_overview_style_maybe( bool $has_overview_shortcode ): array {
-	$deps = array( 'mrt-frontend-timetable' );
+function MRT_enqueue_frontend_overview_style_maybe( bool $has_overview_shortcode ): void {
 	if ( $has_overview_shortcode ) {
-		wp_enqueue_style(
-			'mrt-frontend-timetable-overview',
-			MRT_assets_base_url() . 'admin-timetable-overview.css',
-			array( 'mrt-frontend-timetable' ),
-			MRT_VERSION
-		);
-		MRT_enqueue_train_type_icon_styles( array( 'mrt-frontend-timetable-overview' ) );
-		$deps[] = 'mrt-frontend-timetable-overview';
+		MRT_enqueue_train_type_icon_styles();
 	}
-	return $deps;
-}
-
-/**
- * Meta-boxes, dashboard, UI, responsive (depends on meta deps array).
- *
- * @param array<int, string> $meta_box_deps
- */
-function MRT_enqueue_frontend_style_upper_stack( array $meta_box_deps ): void {
-	$a = MRT_assets_base_url();
-	wp_enqueue_style( 'mrt-frontend-meta-boxes', $a . 'admin-meta-boxes.css', $meta_box_deps, MRT_VERSION );
-	wp_enqueue_style( 'mrt-frontend-dashboard', $a . 'admin-dashboard.css', array( 'mrt-frontend-meta-boxes' ), MRT_VERSION );
-	wp_enqueue_style( 'mrt-frontend-ui', $a . 'admin-ui.css', array( 'mrt-frontend-dashboard' ), MRT_VERSION );
-	wp_enqueue_style( 'mrt-frontend-responsive', $a . 'admin-responsive.css', array( 'mrt-frontend-ui' ), MRT_VERSION );
 }
 
 /**
@@ -243,8 +216,7 @@ function MRT_enqueue_frontend_style_upper_stack( array $meta_box_deps ): void {
  */
 function MRT_enqueue_frontend_shortcode_styles( bool $has_overview_shortcode ): void {
 	MRT_enqueue_frontend_style_admin_triplet();
-	$meta_deps = MRT_enqueue_frontend_overview_style_maybe( $has_overview_shortcode );
-	MRT_enqueue_frontend_style_upper_stack( $meta_deps );
+	MRT_enqueue_frontend_overview_style_maybe( $has_overview_shortcode );
 }
 
 /**
@@ -283,12 +255,7 @@ function MRT_frontend_script_localization(): array {
 function MRT_enqueue_journey_wizard_assets(): void {
 	$a = MRT_assets_base_url();
 	wp_register_script( 'mrt-date-utils', $a . 'mrt-date-utils.js', array(), MRT_VERSION, true );
-	wp_enqueue_style(
-		'mrt-journey-wizard',
-		$a . 'journey-wizard.css',
-		array( MRT_enqueue_train_type_icon_styles( array( 'mrt-frontend-responsive' ) ) ),
-		MRT_VERSION
-	);
+	MRT_enqueue_train_type_icon_styles();
 	wp_enqueue_script(
 		'mrt-journey-wizard',
 		$a . 'journey-wizard.js',
