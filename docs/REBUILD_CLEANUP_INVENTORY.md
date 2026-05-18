@@ -89,8 +89,8 @@ inc/
 |------------------|--------|----------|-----------|
 | `inc/functions/helpers-datetime.php` | `move` | `inc/domain/datetime.php` | Ren datum/tid-logik. |
 | `inc/functions/journey-*.php` | `move/rewrite` | `inc/domain/journey/` | Behåll algoritmer, skriv om gränssnitt där behövs. |
-| `inc/functions/journey-prices.php` | `move` | `inc/domain/pricing/` | Prislogik behövs för wizard. |
-| `inc/data/price-matrix-builtin.php` | `move` | `inc/domain/pricing/` eller `inc/import/seed/` | Seed/reference data. |
+| `inc/functions/journey-prices.php` | `move` | `inc/domain/pricing/prices.php` | Flyttad; legacyfilen är loader tills resten av rebuilden använder ny väg direkt. |
+| `inc/data/price-matrix-builtin.php` | `move` | `inc/domain/pricing/price-matrix-builtin.php` | Flyttad seed/reference data. |
 | `inc/functions/timetable-view/*` | `move/rewrite` | `inc/domain/timetable/` + `inc/public/timetable/` | Dela dataförberedelse från rendering. |
 | `inc/functions/services.php` | `rewrite` | `inc/domain/services/` | Viktig men stor; separera queries, mapping, connection search. |
 | `inc/functions/helpers-services.php` | `move/rewrite` | `inc/domain/services/` | Behåll stopptidshelpers, rensa WP-adapterdelar. |

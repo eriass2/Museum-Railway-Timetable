@@ -152,6 +152,8 @@ inc/
 
 **Minsta tester:** zone span, empty price matrix, single/return/day ticket rows.
 
+**Nuvarande start:** pricing-logiken ligger i `inc/domain/pricing/prices.php`; den gamla `inc/functions/journey-prices.php` är en loader under övergången.
+
 ---
 
 ## 4. Import modules
