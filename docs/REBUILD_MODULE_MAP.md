@@ -92,7 +92,7 @@ inc/
 
 **Stöder:** PDF train type rows, timetable overview, journey cards.
 
-**Får inte:** hardcode UI markup in domain.
+**Får inte:** hardcode UI markup in domain. Tågikonerna är assets och får användas via icon key.
 
 **Minsta tester:** `Ångtåg`, `Dieseltåg`, `Rälsbuss`, `Buss`, fallback.
 
