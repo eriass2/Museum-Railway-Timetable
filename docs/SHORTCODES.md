@@ -134,9 +134,10 @@ Shortcodes kan dock användas i widgets genom att lägga till dem i text-widgets
 ## Frontend Assets
 
 Vid användning på webbplatsen laddar plugin relevanta filer via `inc/assets.php` (loader som inkluderar `inc/assets/admin.php` och `inc/assets/frontend.php`), bland annat:
-- Gemensam bas: `admin-base.css`, komponenter, tidtabell-CSS, m.m.
+- Beteende-JS för publika interaktioner.
+- Tågtypsikoner via `assets/train-type-icons.css`.
 - **Månad / översikt / enkel planner:** `assets/frontend.js` (AJAX)
-- **Wizard:** `assets/journey-wizard.css` + `assets/journey-wizard.js` + `assets/train-type-icons.css` (när `[museum_journey_wizard]` finns i innehållet)
+- **Wizard:** `assets/journey-wizard.js` (när `[museum_journey_wizard]` finns i innehållet)
 
 Assets köas när motsvarande shortcode finns på sidan (eller via filter `mrt_should_enqueue_frontend_assets`).
 

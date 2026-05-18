@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Optional hero background: CSS custom property for cover image (see journey-wizard.css).
+ * Optional hero background: CSS custom property for future mockup-based styling.
  *
  * @param string $hero_image Attachment URL or empty
  * @return string Safe HTML attributes for the opening tag (leading space when non-empty; escaped).

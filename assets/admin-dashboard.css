@@ -1,9 +1,0 @@
-/**
- * Dashboard and Admin UI Components
- * Importerar: guide, misc
- *
- * @package Museum_Railway_Timetable
- */
-
-@import url('admin-dashboard-guide.css');
-@import url('admin-dashboard-misc.css');

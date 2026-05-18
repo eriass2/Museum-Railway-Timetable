@@ -28,7 +28,6 @@ composer check
 | [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG + release-rökning |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i admin |
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP/Composer på Windows |
-| [assets/CSS_STRUCTURE.md](../assets/CSS_STRUCTURE.md) | CSS-moduler |
 
 ---
 
