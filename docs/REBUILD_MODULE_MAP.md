@@ -23,6 +23,7 @@ Syfte: definiera vilka moduler den nya rebuild-versionen ska bestå av innan kod
 ```text
 inc/
 ├── domain/
+│   ├── datetime/
 │   ├── station/
 │   ├── route/
 │   ├── train-type/
@@ -54,6 +55,22 @@ inc/
 
 ## 3. Domain modules
 
+### `domain/datetime`
+
+**Ansvar:** datum- och tidsvalidering, HH:MM-parsing, jämförelser och duration.
+
+**Input:** datumsträngar, HH:MM-strängar, minutjusteringar.
+
+**Output:** valideringsresultat, minuter, jämförelser, formaterade tidvärden.
+
+**Stöder:** stopptider, journey search, kalenderstatus, returfiltrering.
+
+**Får inte:** läsa WordPress request-data eller rendera HTML.
+
+**Minsta tester:** giltigt/ogiltigt datum, HH:MM-validering, duration, jämförelse, minutaddition.
+
+**Nuvarande start:** datetime-logiken ligger i `inc/domain/datetime/datetime.php`; den gamla `inc/functions/helpers-datetime.php` är en loader under övergången.
+
 ### `domain/station`
 
 **Ansvar:** stationer, display order, bus suffix, station title lookup, station collections.
@@ -67,6 +84,8 @@ inc/
 **Får inte:** rendera HTML, läsa `$_POST`, göra admin redirects.
 
 **Minsta tester:** station ordering, missing station handling, bus suffix flag.
+
+**Nuvarande start:** stationhelpers ligger i `inc/domain/station/stations.php`; den gamla `inc/functions/helpers-stations.php` är en loader under övergången.
 
 ### `domain/route`
 
@@ -82,6 +101,8 @@ inc/
 
 **Minsta tester:** route direction, shared end station label, missing route stations.
 
+**Nuvarande start:** routehelpers ligger i `inc/domain/route/routes.php`; den gamla `inc/functions/helpers-routes.php` är en loader under övergången.
+
 ### `domain/train-type`
 
 **Ansvar:** train type taxonomy semantics and icon mapping rules.
@@ -95,6 +116,8 @@ inc/
 **Får inte:** hardcode UI markup in domain. Tågikonerna är assets och får användas via icon key.
 
 **Minsta tester:** `Ångtåg`, `Dieseltåg`, `Rälsbuss`, `Buss`, fallback.
+
+**Nuvarande start:** train-type icon helpers ligger i `inc/domain/train-type/icons.php`; `helpers-utils.php` laddar dem under övergången.
 
 ### `domain/timetable`
 
@@ -369,7 +392,7 @@ inc/
 ## 9. First implementation order
 
 1. `infrastructure/wordpress` + `infrastructure/database`
-2. `domain/station`, `domain/route`, `domain/train-type`
+2. `domain/datetime`, `domain/station`, `domain/route`, `domain/train-type`
 3. `domain/timetable`, `domain/service`
 4. `import/lennakatten/reference-data` + `import/lennakatten/importer`
 5. `admin/tools`
