@@ -102,6 +102,7 @@ Presentation får rendera HTML men ska inte innehålla affärsregler. JS får h�
 - CSS ska delas i moduler när filen passerar cirka 300 rader.
 - Använd `mrt-` prefix.
 - Använd CSS-variabler för färg, spacing och semantiska tokens.
+- Tågikonerna i `assets/icons/train-types/` ska behållas som produktassets om inte ny design uttryckligen ersätter dem.
 - Behåll tillgänglig fokusindikering.
 - Responsivt beteende ska vara mobile-first.
 

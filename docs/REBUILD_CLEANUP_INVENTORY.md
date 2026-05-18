@@ -138,8 +138,8 @@ inc/
 
 | Område | Status | Kommentar |
 |--------|--------|-----------|
-| `assets/icons/train-types/` | `delete` | Nuvarande ikon-/utseendeimplementation ska bort i purge. Nya ikoner får skapas senare från ny designriktning. |
-| `assets/train-type-icons.css` | `delete` | Tillhör nuvarande utseendeimplementation. |
+| `assets/icons/train-types/` | `keep/move` | Tågikonerna ska behållas som produktassets och flyttas till ny assetstruktur. |
+| `assets/train-type-icons.css` | `rewrite` | Behåll ikonmappningen som krav, men skriv om CSS efter ny designstruktur. |
 | `assets/journey-wizard/` + `assets/journey-wizard.css` | `delete/rewrite` | Ta bort nuvarande styling. Ny frontend-CSS byggs senare från mockups. |
 | `assets/frontend.js` | `rewrite` | Behåll bara beteende som behövs; separera från nuvarande styling/legacy planner. |
 | `assets/mrt-string-utils.js`, `assets/mrt-date-utils.js`, `assets/mrt-frontend-api.js` | `keep/move` | Beteende-/API-helpers, inte utseende. |
@@ -152,12 +152,12 @@ inc/
 När purge-steget körs ska följande tas bort eller tömmas till minimal ny grund:
 
 - nuvarande CSS-filer och CSS-modulstruktur
-- nuvarande train type-ikoner och ikon-CSS
+- nuvarande ikon-CSS som stylingimplementation
 - frontend-styling som inte kommer direkt från ny mockupbaserad implementation
 - admin-styling som ersätts av WordPress-native UI
 - dokumentation som beskriver gammalt utseende eller gammal CSS-struktur
 
-Det som ska sparas är referenserna: mockups, tidtabells-PDF:er och reglerna i `REBUILD_RULES.md`.
+Det som ska sparas är referenserna: mockups, tidtabells-PDF:er, tågikonerna i `assets/icons/train-types/` och reglerna i `REBUILD_RULES.md`.
 
 ---
 
