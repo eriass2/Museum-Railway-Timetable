@@ -9,8 +9,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-require_once MRT_PATH . 'inc/import-lennakatten/import-data.php';
-require_once MRT_PATH . 'inc/import-lennakatten/import-run.php';
+require_once MRT_PATH . 'inc/import/lennakatten/reference-data.php';
+require_once MRT_PATH . 'inc/import/lennakatten/importer.php';
 
 add_action(
 	'admin_menu',

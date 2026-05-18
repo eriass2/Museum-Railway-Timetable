@@ -88,12 +88,13 @@ inc/
 | Nuvarande område | Status | Ny plats | Kommentar |
 |------------------|--------|----------|-----------|
 | `inc/functions/helpers-datetime.php` | `move` | `inc/domain/datetime/datetime.php` | Flyttad; legacyfilen är loader tills resten av rebuilden använder ny väg direkt. |
-| `inc/functions/journey-*.php` | `move/rewrite` | `inc/domain/journey/` | Behåll algoritmer, skriv om gränssnitt där behövs. |
+| `inc/functions/journey-*.php` | `move/rewrite` | `inc/domain/journey/` | Flyttade till domain; legacyfiler är loaders där de behövs. Skriv om gränssnitt senare. |
 | `inc/functions/journey-prices.php` | `move` | `inc/domain/pricing/prices.php` | Flyttad; legacyfilen är loader tills resten av rebuilden använder ny väg direkt. |
 | `inc/data/price-matrix-builtin.php` | `move` | `inc/domain/pricing/price-matrix-builtin.php` | Flyttad seed/reference data. |
 | `inc/functions/timetable-view/*` | `move/rewrite` | `inc/domain/timetable/` + `inc/public/timetable/` | Dela dataförberedelse från rendering. |
-| `inc/functions/services.php` | `rewrite` | `inc/domain/services/` | Viktig men stor; separera queries, mapping, connection search. |
-| `inc/functions/helpers-services.php` | `move/rewrite` | `inc/domain/services/` | Behåll stopptidshelpers, rensa WP-adapterdelar. |
+| `inc/functions/services.php` | `move/rewrite` | `inc/domain/service/services.php` | Flyttad; separera queries, mapping, connection search senare. |
+| `inc/functions/helpers-services.php` | `move/rewrite` | `inc/domain/service/stop-times.php` | Flyttad; behåll stopptidshelpers, rensa WP-adapterdelar senare. |
+| `inc/functions/helpers-connections.php` | `move/rewrite` | `inc/domain/service/connections.php` | Flyttad; connection helper för service/transfer-info. |
 | `inc/functions/helpers-routes.php` | `move/rewrite` | `inc/domain/route/routes.php` | Flyttad; legacyfilen är loader. Separera WP queries senare. |
 | `inc/functions/helpers-stations.php` | `move` | `inc/domain/station/stations.php` | Flyttad; legacyfilen är loader. |
 | `inc/functions/helpers-utils.php` | `split` | `inc/domain/shared/`, `inc/domain/train-type/`, `inc/infrastructure/` | Train-type icon helpers är flyttade; resten är blandat. |
@@ -102,8 +103,8 @@ inc/
 
 | Nuvarande område | Status | Ny plats | Kommentar |
 |------------------|--------|----------|-----------|
-| `inc/import-lennakatten/import-data.php` | `move` | `inc/import/lennakatten/reference-data.php` | Referensdata från PDF. |
-| `inc/import-lennakatten/import-run.php` | `rewrite` | `inc/import/lennakatten/importer.php` | Dela upp runner, repository, mapper. |
+| `inc/import-lennakatten/import-data.php` | `move` | `inc/import/lennakatten/reference-data.php` | Flyttad referensdata från PDF. |
+| `inc/import-lennakatten/import-run.php` | `rewrite` | `inc/import/lennakatten/importer.php` | Flyttad; dela upp runner, repository, mapper senare. |
 | `inc/import-lennakatten/loader.php` | `rewrite` | `inc/admin/tools/import-page.php` | UI-adapter för import. |
 
 ### Behåll/flytta som admin

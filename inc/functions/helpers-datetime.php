@@ -9,4 +9,4 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once dirname( __DIR__ ) . '/domain/datetime/datetime.php';
+require_once MRT_PATH . 'inc/domain/datetime/datetime.php';
