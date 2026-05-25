@@ -196,27 +196,46 @@ function MRT_frontend_shortcode_flags_from_content( string $content ): array {
 }
 
 /**
- * Base + components + timetable (frontend mirrors admin stack).
+ * Shared public CSS for planner, month calendar, tables, and alerts.
+ *
+ * @return string Style handle
  */
-function MRT_enqueue_frontend_style_admin_triplet(): void {
-	MRT_enqueue_train_type_icon_styles();
+function MRT_enqueue_frontend_public_styles(): string {
+	$a           = MRT_assets_base_url();
+	$icon_handle = MRT_enqueue_train_type_icon_styles();
+	wp_enqueue_style(
+		'mrt-frontend-public',
+		$a . 'frontend-public.css',
+		array( $icon_handle ),
+		MRT_VERSION
+	);
+	return 'mrt-frontend-public';
 }
 
 /**
- * Optional overview layer.
+ * Timetable overview grid styles (overview shortcode and wizard timetable drawer).
  */
-function MRT_enqueue_frontend_overview_style_maybe( bool $has_overview_shortcode ): void {
-	if ( $has_overview_shortcode ) {
-		MRT_enqueue_train_type_icon_styles();
-	}
+function MRT_enqueue_frontend_overview_styles( string $public_handle ): void {
+	$a = MRT_assets_base_url();
+	wp_enqueue_style(
+		'mrt-frontend-overview',
+		$a . 'frontend-overview.css',
+		array( $public_handle ),
+		MRT_VERSION
+	);
 }
 
 /**
  * Enqueue stacked frontend CSS (shared shortcode bundle).
+ *
+ * @return string Public bundle handle for dependent styles (e.g. wizard).
  */
-function MRT_enqueue_frontend_shortcode_styles( bool $has_overview_shortcode ): void {
-	MRT_enqueue_frontend_style_admin_triplet();
-	MRT_enqueue_frontend_overview_style_maybe( $has_overview_shortcode );
+function MRT_enqueue_frontend_shortcode_styles( bool $has_overview_shortcode ): string {
+	$public_handle = MRT_enqueue_frontend_public_styles();
+	if ( $has_overview_shortcode ) {
+		MRT_enqueue_frontend_overview_styles( $public_handle );
+	}
+	return $public_handle;
 }
 
 /**
@@ -251,14 +270,15 @@ function MRT_frontend_script_localization(): array {
 
 /**
  * Enqueue journey wizard CSS/JS and localization (depends on frontend bundle).
+ *
+ * @param string $public_handle Enqueued public shortcode styles.
  */
-function MRT_enqueue_journey_wizard_assets(): void {
+function MRT_enqueue_journey_wizard_assets( string $public_handle ): void {
 	$a = MRT_assets_base_url();
-	$icon_handle = MRT_enqueue_train_type_icon_styles();
 	wp_enqueue_style(
 		'mrt-journey-wizard',
 		$a . 'journey-wizard.css',
-		array( $icon_handle ),
+		array( $public_handle ),
 		MRT_VERSION
 	);
 	wp_register_script( 'mrt-date-utils', $a . 'mrt-date-utils.js', array(), MRT_VERSION, true );
@@ -280,10 +300,10 @@ function MRT_enqueue_frontend_assets(): void {
 	if ( ! $flags['has_any'] ) {
 		return;
 	}
-	MRT_enqueue_frontend_shortcode_styles( $flags['has_overview'] );
+	$public_handle = MRT_enqueue_frontend_shortcode_styles( $flags['has_overview'] );
 	MRT_enqueue_frontend_base_scripts();
 	if ( $flags['has_journey_wizard'] ) {
-		MRT_enqueue_journey_wizard_assets();
+		MRT_enqueue_journey_wizard_assets( $public_handle );
 	}
 }
 add_action( 'wp_enqueue_scripts', 'MRT_enqueue_frontend_assets' );
