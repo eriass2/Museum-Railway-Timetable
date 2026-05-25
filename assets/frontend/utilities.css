@@ -72,7 +72,7 @@
 .mrt-list-indent { margin: var(--mrt-spacing-sm) 0 0 var(--mrt-spacing-lg); line-height: 1.6; }
 .mrt-leading-relaxed { line-height: 1.8; }
 
-/* Admin Page Headers */
-.wrap h1 {
+/* Admin page headers only (avoid affecting theme .wrap on the public site). */
+body.wp-admin .wrap h1 {
     color: var(--mrt-text-primary);
 }

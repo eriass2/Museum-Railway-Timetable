@@ -2,8 +2,7 @@
 /**
  * Shortcode: multi-step journey wizard [museum_journey_wizard]
  *
- * Attributes: ticket_url, hero_image (cover URL for step 1), hero_subtitle (optional line under title),
- * timetable_id / timetable (optional printed timetable shown below the search form).
+ * Legacy entry path; modules are also loaded from inc/shortcodes.php.
  *
  * @package Museum_Railway_Timetable
  */

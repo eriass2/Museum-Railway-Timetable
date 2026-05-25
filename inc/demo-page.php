@@ -173,6 +173,18 @@ function MRT_get_components_demo_page_content() {
 }
 
 /**
+ * Insert or refresh the demo page (CLI: runs as user ID 1).
+ *
+ * @return int|WP_Error Post ID or error
+ */
+function MRT_ensure_components_demo_page_cli() {
+	$admin = get_user_by( 'login', 'admin' );
+	$user_id = ( $admin instanceof WP_User ) ? (int) $admin->ID : 1;
+	wp_set_current_user( $user_id );
+	return MRT_ensure_components_demo_page();
+}
+
+/**
  * Insert or refresh the demo page
  *
  * @return int|WP_Error Post ID or error

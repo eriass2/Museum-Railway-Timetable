@@ -71,19 +71,5 @@ function MRT_deactivate() {
 	// No-op: keep data on deactivation; uninstall.php will remove options
 }
 
-// Load helper functions first
-require_once MRT_PATH . 'inc/functions/helpers.php';
-require_once MRT_PATH . 'inc/functions/services.php';
-require_once MRT_PATH . 'inc/functions/journey-loader.php';
-require_once MRT_PATH . 'inc/functions/timetable-view.php';
-
-// Load assets (CSS/JS enqueuing)
-require_once MRT_PATH . 'inc/assets.php';
-
-// Admin and features
-require_once MRT_PATH . 'inc/admin-page.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes.php';
-require_once MRT_PATH . 'inc/admin-ajax.php';
-require_once MRT_PATH . 'inc/import-lennakatten/loader.php';
-require_once MRT_PATH . 'inc/cpt.php';
-require_once MRT_PATH . 'inc/shortcodes.php';
+require_once MRT_PATH . 'inc/bootstrap.php';
+MRT_bootstrap_load();
