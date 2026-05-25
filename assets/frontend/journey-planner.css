@@ -1,0 +1,35 @@
+/**
+ * Journey planner (legacy single-page search).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-planner {
+    max-width: 52rem;
+}
+
+.mrt-journey-planner .mrt-journey-form .mrt-form-fields {
+    display: grid;
+    gap: var(--mrt-spacing-md);
+}
+
+@media (min-width: 36rem) {
+    .mrt-journey-planner .mrt-journey-form .mrt-form-field:nth-child(1),
+    .mrt-journey-planner .mrt-journey-form .mrt-form-field:nth-child(2) {
+        display: inline-block;
+        width: calc(50% - var(--mrt-spacing-sm));
+        vertical-align: top;
+    }
+
+    .mrt-journey-planner .mrt-journey-form .mrt-form-field:nth-child(1) {
+        margin-right: var(--mrt-spacing-md);
+    }
+}
+
+.mrt-journey-planner .mrt-journey-results {
+    margin-top: var(--mrt-spacing-lg);
+}
+
+.mrt-journey-planner .mrt-journey-table-container {
+    margin-top: var(--mrt-spacing-sm);
+}

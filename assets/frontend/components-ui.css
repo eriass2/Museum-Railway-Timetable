@@ -13,6 +13,29 @@ input.mrt-btn:focus-visible {
     outline-offset: 2px;
 }
 
+.mrt-btn {
+    display: inline-block;
+    box-sizing: border-box;
+    font-size: var(--mrt-font-md);
+    line-height: 1.4;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.mrt-btn--secondary {
+    background: var(--mrt-bg-lighter);
+    color: var(--mrt-text-secondary);
+    border: 1px solid var(--mrt-border-default);
+    padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
+    border-radius: var(--mrt-radius-sm);
+    font-weight: 600;
+}
+
+.mrt-btn--secondary:hover {
+    background: var(--mrt-bg-light);
+    color: var(--mrt-text-primary);
+}
+
 .mrt-btn--primary {
     background: var(--mrt-wp-blue);
     color: var(--mrt-text-white);
