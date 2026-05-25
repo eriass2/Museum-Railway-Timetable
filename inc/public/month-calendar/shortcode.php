@@ -247,8 +247,9 @@ function MRT_month_shortcode_render_full( $first_ts, array $atts, array $dates, 
  * Resolve calendar month start timestamp from shortcode atts.
  *
  * @param array<string, mixed> $atts
+ * @return int|false
  */
-function MRT_month_shortcode_resolve_month_start( array $atts, int $now_ts ): int|false {
+function MRT_month_shortcode_resolve_month_start( array $atts, int $now_ts ) {
 	if ( ! empty( $atts['month'] ) && preg_match( '/^\d{4}-\d{2}$/', (string) $atts['month'] ) ) {
 		$firstDay = $atts['month'] . '-01';
 		$first_ts = strtotime( $firstDay . ' 00:00:00', $now_ts );

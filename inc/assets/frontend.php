@@ -254,8 +254,14 @@ function MRT_frontend_script_localization(): array {
  */
 function MRT_enqueue_journey_wizard_assets(): void {
 	$a = MRT_assets_base_url();
+	$icon_handle = MRT_enqueue_train_type_icon_styles();
+	wp_enqueue_style(
+		'mrt-journey-wizard',
+		$a . 'journey-wizard.css',
+		array( $icon_handle ),
+		MRT_VERSION
+	);
 	wp_register_script( 'mrt-date-utils', $a . 'mrt-date-utils.js', array(), MRT_VERSION, true );
-	MRT_enqueue_train_type_icon_styles();
 	wp_enqueue_script(
 		'mrt-journey-wizard',
 		$a . 'journey-wizard.js',
