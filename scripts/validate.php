@@ -27,6 +27,7 @@ $required_files = [
     'scripts/docker-dev-reset.ps1',
     'inc/admin/tools/import-lennakatten.php',
     'inc/infrastructure/wordpress/environment.php',
+    'inc/infrastructure/wordpress/plugin-settings.php',
     'inc/assets/loader.php',
     'inc/shortcodes.php',
     'inc/infrastructure/post-types.php',

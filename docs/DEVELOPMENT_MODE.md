@@ -31,7 +31,7 @@ Block-tema med enbart Site Editor-navigation kan kräva manuell länk tills vida
 
 | Funktion | Kommentar |
 |----------|-----------|
-| Dashboard, statistik, inställningar | `WP_DEBUG` av |
+| Dashboard, statistik, inställningar (inkl. min/max bytestid) | `WP_DEBUG` av |
 | Stationer, rutter, tidtabeller, turer, meta boxes | Manuell redigering |
 | Prismatris (inställningar) | Publik resa |
 | Alla shortcodes på valfria sidor | Redaktör lägger in shortcode |

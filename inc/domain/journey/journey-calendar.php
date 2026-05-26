@@ -25,7 +25,7 @@ function MRT_journey_calendar_day_status( $from_station_id, $to_station_id, $ymd
 	if ( empty( $services_cache[ $ymd ] ) ) {
 		return 'none';
 	}
-	$min_xfer = (int) apply_filters( 'mrt_min_transfer_minutes', 5 );
+	$min_xfer = MRT_journey_min_transfer_minutes();
 	$options  = MRT_find_multi_leg_connections(
 		$from_station_id,
 		$to_station_id,

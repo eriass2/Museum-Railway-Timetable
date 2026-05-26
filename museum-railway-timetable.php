@@ -58,8 +58,9 @@ function MRT_activate() {
 
 	dbDelta( $sql );
 
+	require_once MRT_PATH . 'inc/infrastructure/wordpress/plugin-settings.php';
 	if ( get_option( 'mrt_settings' ) === false ) {
-		add_option( 'mrt_settings', array( 'enabled' => true ) );
+		add_option( 'mrt_settings', MRT_default_plugin_settings() );
 	}
 }
 

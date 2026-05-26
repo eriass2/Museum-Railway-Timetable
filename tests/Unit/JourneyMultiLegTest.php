@@ -191,6 +191,49 @@ final class JourneyMultiLegTest extends TestCase {
         self::assertSame('10:10', $results[0]['from_departure']);
     }
 
+    public function test_journey_transfer_wait_rejects_long_hub_wait(): void {
+        self::assertFalse(MRT_journey_transfer_wait_is_valid('10:00', '14:00'));
+        self::assertTrue(MRT_journey_transfer_wait_is_valid('10:00', '10:30'));
+    }
+
+    public function test_find_multi_leg_rejects_transfer_above_max_wait(): void {
+        $this->mrt_use_journey_fixture($this->transferRows('12:30'), [900 => [self::DATE]]);
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
+
+        self::assertSame([], $results);
+    }
+
+    public function test_find_multi_leg_prefers_bus_hub_transfer_station(): void {
+        $hub = 250;
+        $other = 251;
+        $this->mrt_use_journey_fixture([
+            11 => [
+                $this->mrt_stop(11, self::A, 1, null, '09:00'),
+                $this->mrt_stop(11, $other, 2, '10:00', null),
+            ],
+            12 => [
+                $this->mrt_stop(12, self::A, 1, null, '09:00'),
+                $this->mrt_stop(12, $hub, 2, '10:00', null),
+            ],
+            21 => [
+                $this->mrt_stop(21, $other, 1, null, '10:20'),
+                $this->mrt_stop(21, self::B, 2, '11:00', null),
+            ],
+            22 => [
+                $this->mrt_stop(22, $hub, 1, null, '10:10'),
+                $this->mrt_stop(22, self::B, 2, '11:00', null),
+            ],
+        ], [900 => [self::DATE]], [], [
+            $hub => ['mrt_station_bus_suffix' => '1'],
+        ]);
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
+
+        self::assertGreaterThanOrEqual(2, count($results));
+        self::assertSame($hub, $results[0]['transfer_station_id']);
+    }
+
     public function test_journey_calendar_month_marks_ok_traffic_without_match_and_none(): void {
         $this->mrt_use_journey_fixture([
             11 => [

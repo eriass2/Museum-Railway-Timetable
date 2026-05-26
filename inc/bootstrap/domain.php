@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_load_journey_domain_modules(): void {
 	$journey_dir = MRT_PATH . 'inc/domain/journey/';
 	require_once $journey_dir . 'journey-detail.php';
+	require_once $journey_dir . 'journey-transfer-rules.php';
 	require_once $journey_dir . 'journey-calendar.php';
 	require_once $journey_dir . 'journey-return.php';
 	require_once $journey_dir . 'journey-multi-leg.php';

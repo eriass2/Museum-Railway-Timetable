@@ -110,6 +110,7 @@ Visar en reseplanerare där användare kan söka efter anslutningar mellan två 
 
 **Funktioner:**
 - Söker direktresor och enkelbyte som kör på datumet, respekterar stoppordning och pickup/dropoff
+- Byte: min/max väntetid på bytesstation — **Railway Timetable → Settings** → *Journey search — transfers* (standard 5 / 120 min). Filter `mrt_min_transfer_minutes` / `mrt_max_transfer_minutes` kan fortfarande överstyra. Prioriterar byteshubbar (station med *Bus stop marker*, t.ex. Selknä).
 - Resultat sorteras efter avgångstid
 - För flerstegsflöde med retur och priser: använd `[museum_journey_wizard]`
 

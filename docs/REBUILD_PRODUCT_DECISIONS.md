@@ -62,6 +62,7 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 - Resesök hittar **direkt buss** Selknä–Fjällnora och **byte** (tåg till Selknä + buss till Fjällnora).
 - Tider i importen är **anslutningstider** (~8 min, avgång efter tåg vid Selknä) – justera mot PDF vid behov.
 - Tidtabellsöversikt visar inte längre raden ”INGA BUSSANSLUTNINGAR…” (ersatt av riktiga bussturer).
+- **Byte:** min 5 min, max **120 min** väntetid (`mrt_min_transfer_minutes` / `mrt_max_transfer_minutes`). Bytesstationer med **Bus stop marker** (t.ex. Selknä) prioriteras före andra hållplatser på samma resa.
 
 **Efter ändring:** Kör **Import Lennakatten** igen (eller rensa + import) så rutter/turer skapas i databasen.
 

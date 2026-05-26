@@ -100,7 +100,7 @@ function MRT_find_return_connections(
 	if ( ! MRT_return_journey_inputs_valid( $from_station_id, $to_station_id, $dateYmd, $outbound_arrival_hhmm ) ) {
 		return array();
 	}
-	$min_xfer = (int) apply_filters( 'mrt_min_transfer_minutes', 5 );
+	$min_xfer = MRT_journey_min_transfer_minutes();
 	$raw      = MRT_find_multi_leg_connections(
 		(int) $to_station_id,
 		(int) $from_station_id,

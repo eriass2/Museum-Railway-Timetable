@@ -17,23 +17,20 @@ require_once MRT_PATH . 'inc/admin/dashboard/dashboard-dev-tools.php';
 require_once MRT_PATH . 'inc/admin/dashboard/dashboard-prices.php';
 
 /**
- * Sanitize plugin settings input
+ * Sanitize plugin settings input (Settings API callback).
  *
- * @param array $input Raw input array
- * @return array Sanitized settings array
+ * @param array<string, mixed> $input Raw input array
+ * @return array<string, mixed>
  */
 function MRT_sanitize_settings( $input ) {
-	return array(
-		'enabled' => ! empty( $input['enabled'] ),
-		'note'    => isset( $input['note'] ) ? sanitize_text_field( $input['note'] ) : '',
-	);
+	return MRT_sanitize_plugin_settings( $input );
 }
 
 /**
  * Render the enabled checkbox field
  */
 function MRT_render_enabled_field() {
-	$opts = get_option( 'mrt_settings' );
+	$opts = MRT_get_plugin_settings();
 	echo '<input type="checkbox" name="mrt_settings[enabled]" value="1" ' . checked( ! empty( $opts['enabled'] ), true, false ) . ' />';
 }
 
@@ -41,7 +38,7 @@ function MRT_render_enabled_field() {
  * Render the note text field
  */
 function MRT_render_note_field() {
-	$opts = get_option( 'mrt_settings' );
+	$opts = MRT_get_plugin_settings();
 	echo '<input type="text" name="mrt_settings[note]" value="' . esc_attr( $opts['note'] ?? '' ) . '" class="regular-text" />';
 }
 
