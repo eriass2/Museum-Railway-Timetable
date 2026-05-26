@@ -12,6 +12,13 @@
 	var vehicle = JW.vehicle;
 	var ctxApi = JW.context;
 
+	function formatTripClock(time) {
+		if (!time) {
+			return '—';
+		}
+		return String(time).replace(':', '.');
+	}
+
 	function formatDuration(minutes, cfg) {
 		var m = parseInt(minutes, 10);
 		if (isNaN(m) || m < 0) {
@@ -59,14 +66,16 @@
 
 	function cardBadgesHtml(conn) {
 		var legs = connectionLegs(conn);
-		var badges = '';
+		var parts = [];
 		legs.forEach(function (leg) {
-			badges += vehicle.legVehicleBadge(leg);
+			parts.push(vehicle.legVehicleBadge(leg));
 		});
-		if (!badges) {
-			badges = vehicle.vehicleBadge(conn.train_type, conn.service_name, conn.train_type_slug, conn.train_type_icon);
+		if (!parts.length) {
+			parts.push(
+				vehicle.vehicleBadge(conn.train_type, conn.service_name, conn.train_type_slug, conn.train_type_icon)
+			);
 		}
-		return badges;
+		return parts.join('<span class="mrt-journey-wizard__vehicle-sep" aria-hidden="true">→</span>');
 	}
 
 	function cardNoticeDotHtml(notice, cfg) {
@@ -76,7 +85,7 @@
 	function cardCopyHtml(conn, dep, arr, legCtx, cfg, state) {
 		var notice = conn.notice || '';
 		var html = '<div class="mrt-journey-wizard__trip-copy">';
-		html += '<p class="mrt-journey-wizard__trip-time">' + SU.escapeHtml(dep) + '→' + SU.escapeHtml(arr);
+		html += '<p class="mrt-journey-wizard__trip-time">' + SU.escapeHtml(dep) + ' → ' + SU.escapeHtml(arr);
 		html += cardNoticeDotHtml(notice, cfg);
 		html += '</p>';
 		if (notice) {
@@ -109,8 +118,8 @@
 	}
 
 	function cardHtml(conn, idx, legCtx, legFrom, legTo, cfg, state) {
-		var dep = connApi.departureFromOrigin(conn) || '—';
-		var arr = connApi.arrivalAtDestination(conn) || '—';
+		var dep = formatTripClock(connApi.departureFromOrigin(conn));
+		var arr = formatTripClock(connApi.arrivalAtDestination(conn));
 		var detailId = 'mrt-jw-detail-' + legCtx + '-' + idx;
 		var html = '<article class="mrt-journey-wizard__trip-card" data-wizard-card="' + SU.escapeHtml(legCtx) + '-' + idx + '">';
 		html += '<div class="mrt-journey-wizard__trip-main">';

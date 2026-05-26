@@ -18,8 +18,9 @@
 }
 
 .mrt-journey-wizard__btn-select {
-    background: var(--mrt-jw-green-dark);
-    color: var(--mrt-jw-yellow);
+    min-width: 6.5rem;
+    background: var(--mrt-jw-yellow);
+    color: #151515;
     text-transform: none;
 }
 

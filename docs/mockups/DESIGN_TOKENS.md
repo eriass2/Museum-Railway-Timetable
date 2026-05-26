@@ -35,5 +35,9 @@ Se `assets/journey-wizard/controls-calendar.css`.
 
 ## Utresa / återresa
 
+- Vit turkort med skugga på grön panel (`trips-detail-summary.css`)
+- **Välj →**: gul knapp (`controls-calendar.css` `.mrt-journey-wizard__btn-select`)
+- Tider med punkt: `10.00 → 10.57` (`trip-card.js` `formatTripClock`)
+- Byte: fordon badges med `→` mellan (`mrt-journey-wizard__vehicle-sep`)
 - Vald utresa-kort på retursteget: gul kant, mörkgrön bakgrund (`steps-outbound-return.css`)
 - Aktivt steg i steglistan: gul bakgrund + fokusring vid `aria-current="step"`

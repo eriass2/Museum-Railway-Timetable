@@ -32,9 +32,17 @@
     background: rgba(21, 83, 11, 0.45);
 }
 
+.mrt-journey-wizard__panel[data-wizard-step="outbound"] .mrt-journey-wizard__step-head,
+.mrt-journey-wizard__panel[data-wizard-step="return"] .mrt-journey-wizard__step-head {
+    margin-bottom: 0.15rem;
+}
+
 .mrt-journey-wizard__panel[data-wizard-step="outbound"] .mrt-journey-wizard__step-title,
 .mrt-journey-wizard__panel[data-wizard-step="return"] .mrt-journey-wizard__step-title {
     margin-top: 0.25rem;
+    margin-bottom: 1.5rem;
+    font-size: clamp(2.1rem, 4.5vw, 3rem);
+    font-weight: 900;
 }
 
 .mrt-journey-wizard__steps li[aria-current="step"] {
