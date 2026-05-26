@@ -19,10 +19,17 @@ Filter: `mrt_is_development_mode` kan tvinga läge vid behov.
 | **Set up development menu** | Dashboard + Component demo page |
 | Admin-undermeny Component demo page | Railway Timetable |
 
-**Set up development menu** skapar/uppdaterar två sidor och lägger länkar i sajtens **klassiska** nav-meny (primary om ingen finns, annars befintlig primary – inga dubbletter):
+**Set up development menu** skapar/uppdaterar sidor och lägger länkar i sajtens **klassiska** nav-meny (primary om ingen finns, annars befintlig primary – inga dubbletter):
 
-1. **Component demo** – månad, översikt, wizard (tre block)  
-2. **Wizard smoke test** – `[museum_journey_wizard]`
+| Sida | Innehåll |
+|------|----------|
+| **Component demo** | Månad + översikt + wizard (tre block) |
+| **Wizard smoke test** | Full wizard utan fixture |
+| **Debug: Month** | Endast månadskalender (import-datum) |
+| **Debug: Overview** | Endast tidtabellsöversikt (GRÖN) |
+| **Debug: Wizard date / outbound / return / summary** | Wizard med `debug="…"` och hårdkodad fixture-data |
+
+Wizard-debug kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Presets: `inc/public/journey-wizard/debug-fixtures.php`, `assets/journey-wizard/debug.js`.
 
 Gamla planner smoke-sidor (om de fanns) tas bort vid setup.
 

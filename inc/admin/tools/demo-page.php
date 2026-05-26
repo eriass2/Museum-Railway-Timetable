@@ -296,6 +296,8 @@ function MRT_render_components_demo_admin_page() {
 		</form>
 		<?php MRT_render_demo_page_admin_links( $post ); ?>
 		<?php if ( MRT_is_development_mode() ) : ?>
+			<h2><?php esc_html_e( 'Component debug pages', 'museum-railway-timetable' ); ?></h2>
+			<?php MRT_render_component_debug_page_admin_links(); ?>
 			<h2><?php esc_html_e( 'Front-end menu (development)', 'museum-railway-timetable' ); ?></h2>
 			<?php MRT_render_setup_dev_navigation_button( 'components_demo' ); ?>
 		<?php endif; ?>

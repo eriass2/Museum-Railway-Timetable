@@ -15,12 +15,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array<int>          $stations Station IDs
  * @param string              $title_id Heading id (aria-labelledby target)
  * @param string              $panel_id Panel wrapper id
- * @param array<string,mixed> $hero Optional keys: image (url), subtitle (string)
- * @param int               $timetable_id Optional timetable overview post ID
+ * @param string $hero_subtitle Optional line under the step 1 title
+ * @param int    $timetable_id Optional timetable overview post ID
  * @return void
  */
-function MRT_render_journey_wizard_step_route( array $stations, $title_id, $panel_id, array $hero = array(), int $timetable_id = 0 ) {
-	$hero_subtitle = isset( $hero['subtitle'] ) && is_string( $hero['subtitle'] ) ? trim( $hero['subtitle'] ) : '';
+function MRT_render_journey_wizard_step_route( array $stations, $title_id, $panel_id, $hero_subtitle = '', int $timetable_id = 0 ) {
+	$hero_subtitle = is_string( $hero_subtitle ) ? trim( $hero_subtitle ) : '';
 	$panel_class   = 'mrt-journey-wizard__panel mrt-journey-wizard__panel--active mrt-journey-wizard__search-panel';
 	if ( $timetable_id > 0 ) {
 		$panel_class .= ' mrt-journey-wizard__search-panel--with-timetable';

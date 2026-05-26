@@ -1,6 +1,6 @@
 /**
  * Frontend JavaScript for Museum Railway Timetable
- * Month calendar AJAX (journey search lives in journey-wizard.js).
+ * Month calendar AJAX (journey search lives in assets/journey-wizard/).
  */
 
 (function($) {

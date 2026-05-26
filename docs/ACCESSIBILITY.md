@@ -30,7 +30,7 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 | Rörelse | `prefers-reduced-motion` i `assets/journey-wizard/base.css` |
 | Ikoner | Dekorativa `<img alt="">` i resekort; tidtabell i drawer använder samma PNG som översikt |
 
-**Filer:** `inc/public/journey-wizard/` (shell, steps, fields), `assets/journey-wizard.js`, `assets/journey-wizard/*.css`.
+**Filer:** `inc/public/journey-wizard/` (shell, steps, fields), `assets/journey-wizard/*.js`, `assets/journey-wizard/*.css`.
 
 ---
 

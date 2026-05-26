@@ -115,10 +115,25 @@ function MRT_ensure_dev_smoke_pages(): array {
 		$page_ids[] = (int) $result;
 	}
 
+	$debug_pages = MRT_ensure_component_debug_pages();
+	foreach ( $debug_pages['errors'] as $error ) {
+		$errors[] = $error;
+	}
+	$page_ids = array_merge( $page_ids, $debug_pages['page_ids'] );
+
 	return array(
 		'page_ids' => $page_ids,
 		'errors'   => $errors,
 	);
+}
+
+/**
+ * All smoke + debug page specs for nav menu links.
+ *
+ * @return array<int, array{option: string, title: string, menu_label: string, content: string|callable(): string}>
+ */
+function MRT_dev_all_front_page_specs(): array {
+	return array_merge( MRT_dev_smoke_page_specs(), MRT_component_debug_page_specs() );
 }
 
 /**
@@ -175,7 +190,7 @@ function MRT_nav_menu_contains_page( int $menu_id, int $page_id ): bool {
  */
 function MRT_append_smoke_pages_to_nav_menu( int $menu_id ): int {
 	$added = 0;
-	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
+	foreach ( MRT_dev_all_front_page_specs() as $spec ) {
 		$page_id = (int) get_option( $spec['option'], 0 );
 		if ( $page_id <= 0 || ! get_post( $page_id ) ) {
 			continue;
@@ -354,7 +369,7 @@ function MRT_render_setup_dev_navigation_button( string $redirect_page = 'dashbo
 				<?php esc_html_e( 'Set up development menu', 'museum-railway-timetable' ); ?>
 			</button>
 			<span class="description">
-				<?php esc_html_e( 'Creates or updates two smoke pages (component demo, wizard) and adds them to your site menu when missing.', 'museum-railway-timetable' ); ?>
+				<?php esc_html_e( 'Creates smoke + per-component debug pages and adds them to your site menu when missing.', 'museum-railway-timetable' ); ?>
 			</span>
 		</p>
 	</form>

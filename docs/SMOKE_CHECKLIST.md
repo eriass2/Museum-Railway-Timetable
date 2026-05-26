@@ -17,7 +17,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 
 Login: `admin` / `admin`
 
-**Meny (utveckling):** Railway Timetable → dashboard eller Component demo page → **Set up development menu** (kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`). Lägger till Component demo och Wizard smoke test i sajtmenyn. Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+**Meny (utveckling):** Railway Timetable → Component demo page → **Set up development menu** (kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`). Skapar smoke-sidor + **Debug: Month / Overview / Wizard (date|outbound|return|summary)** med ifylld data. Wizard-debug använder fixture utan AJAX. Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 
 ## Kommandon
 

@@ -49,19 +49,11 @@
     min-height: 0;
     box-sizing: border-box;
     padding: clamp(3rem, 8vw, 7rem) 1rem clamp(2rem, 5vw, 3rem);
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(17, 17, 17, 0.22)),
-        linear-gradient(135deg, #7ca7d8 0%, #d6e7f6 52%, #8a3d24 53%, #2d1c17 100%);
-    background-size: cover;
-    background-position: center;
+    background: var(--mrt-jw-green-dark);
 }
 
 .mrt-journey-wizard__hero:has([data-wizard-step="route"]:not([hidden])) {
-    min-height: 76dvh;
-}
-
-.mrt-journey-wizard__hero[data-has-hero-bg="1"] {
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(17, 17, 17, 0.16)),
-        var(--mrt-hero-image);
+    min-height: 0;
 }
 
 .mrt-journey-wizard__hero-inner {
@@ -304,6 +296,8 @@
     width: 100%;
     max-width: 100%;
     padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.75rem) clamp(2rem, 5vw, 3rem);
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
 }
 
 .mrt-journey-wizard--embedded .mrt-journey-wizard__hero:has([data-wizard-step="route"]:not([hidden])) {

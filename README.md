@@ -76,7 +76,7 @@ Multi-step booking flow with calendar, outbound/return selection, train-type ico
 [museum_journey_wizard ticket_url="https://example.com/tickets"]
 ```
 
-**Parameters:** `ticket_url`, `hero_image`, `hero_subtitle`, `timetable_id`, `timetable` (optional printed overview under step 1). See [docs/SHORTCODES.md](docs/SHORTCODES.md).
+**Parameters:** `ticket_url`, `hero_subtitle`, `timetable_id`, `timetable` (optional printed overview under step 1). See [docs/SHORTCODES.md](docs/SHORTCODES.md).
 
 ### Managing Services
 
@@ -217,7 +217,7 @@ museum-railway-timetable/
 │   ├─ admin-stoptimes-ui.js
 │   ├─ admin-timetable-services-ui.js
 │   ├─ admin-service-edit.js     # Service edit (route, stoptimes form)
-│   ├─ journey-wizard.js         # [museum_journey_wizard]
+│   ├─ journey-wizard/           # [museum_journey_wizard] JS modules
 │   ├─ icons/train-types/        # PNG train type symbols
 │   ├─ train-type-icons.css      # Minimal icon mapping retained during rebuild
 │   └─ frontend.js               # Month calendar AJAX

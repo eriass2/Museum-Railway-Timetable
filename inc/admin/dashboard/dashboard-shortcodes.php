@@ -48,7 +48,6 @@ function MRT_render_dashboard_shortcodes_block_wizard(): void {
 			<p class="description mrt-mt-sm">
 				<strong><?php esc_html_e( 'Parameters:', 'museum-railway-timetable' ); ?></strong><br>
 				• <code>ticket_url</code> – <?php esc_html_e( 'URL for the “Continue to tickets” button (optional)', 'museum-railway-timetable' ); ?><br>
-				• <code>hero_image</code> – <?php esc_html_e( 'Background image URL for step 1 (optional)', 'museum-railway-timetable' ); ?><br>
 				• <code>hero_subtitle</code> – <?php esc_html_e( 'Optional subtitle line under the title on step 1', 'museum-railway-timetable' ); ?><br>
 				• <code>timetable_id</code> – <?php esc_html_e( 'Show a collapsible full timetable overview under the search form on step 1 (optional)', 'museum-railway-timetable' ); ?><br>
 				• <code>timetable</code> – <?php esc_html_e( 'Same as timetable_id but by exact timetable title (optional)', 'museum-railway-timetable' ); ?>

@@ -98,7 +98,7 @@ Rese-UI är endast wizard; `[museum_journey_planner]` finns inte längre (se [RE
 
 ### Journey AJAX
 
-`inc/infrastructure/ajax/journey.php`, `journey-parse.php` – JSON till `assets/journey-wizard.js` (`mrt_search_journey`, kalender, connection detail).
+`inc/infrastructure/ajax/journey.php`, `journey-parse.php` – JSON till `assets/journey-wizard/` (`mrt_search_journey`, kalender, connection detail).
 
 ---
 

@@ -12,7 +12,7 @@ require_once MRT_PATH . 'inc/public/month-calendar/shortcode.php';
 require_once MRT_PATH . 'inc/public/timetable-overview/shortcode.php';
 
 $mrt_journey_wizard_dir = MRT_PATH . 'inc/public/journey-wizard/';
-require_once $mrt_journey_wizard_dir . 'attributes.php';
+require_once $mrt_journey_wizard_dir . 'debug-fixtures.php';
 require_once $mrt_journey_wizard_dir . 'fields.php';
 require_once $mrt_journey_wizard_dir . 'timetable.php';
 require_once $mrt_journey_wizard_dir . 'steps.php';
