@@ -96,6 +96,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.p
 
 `-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo` och `pages.wizard`.
 
+På grenen `experiment/vue-public-ui`: reset bygger även Vue (`docker compose --profile tools run --rm vue`), sätter `MRT_VUE_FRONTEND`, och laddar publik CSS via Vite-bundeln — se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md).
+
 ### Automatiserad Docker-smoke
 
 ```powershell

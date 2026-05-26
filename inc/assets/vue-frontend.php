@@ -105,11 +105,11 @@ function MRT_render_vue_mount( string $app, array $config ): string {
 }
 
 /**
- * Enqueue Vite-built Vue bundle when manifest exists.
+ * Enqueue Vite-built Vue bundle (JS + bundled public CSS).
  *
- * @param string $public_handle Base public CSS handle.
+ * Legacy handles mrt-frontend-public / mrt-journey-wizard are not loaded in Vue mode.
  */
-function MRT_enqueue_vue_frontend_assets( string $public_handle ): void {
+function MRT_enqueue_vue_frontend_assets(): void {
 	$manifest = MRT_vue_read_manifest();
 	if ( null === $manifest ) {
 		return;
@@ -126,7 +126,7 @@ function MRT_enqueue_vue_frontend_assets( string $public_handle ): void {
 		wp_enqueue_style(
 			'mrt-vue-public-' . $i,
 			$base_url . $file,
-			array( $public_handle ),
+			array(),
 			MRT_VERSION
 		);
 	}

@@ -351,11 +351,13 @@ function MRT_enqueue_frontend_assets(): void {
 	if ( ! $flags['has_any'] ) {
 		return;
 	}
-	$public_handle = MRT_enqueue_frontend_shortcode_styles( $flags['has_overview'] );
 	if ( MRT_use_vue_frontend() ) {
-		MRT_enqueue_vue_frontend_assets( $public_handle );
+		if ( $flags['has_any'] ) {
+			MRT_enqueue_vue_frontend_assets();
+		}
 		return;
 	}
+	$public_handle = MRT_enqueue_frontend_shortcode_styles( $flags['has_overview'] );
 	MRT_enqueue_frontend_base_scripts();
 	if ( $flags['has_journey_wizard'] ) {
 		MRT_enqueue_journey_wizard_assets( $public_handle );

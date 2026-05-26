@@ -7,6 +7,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   plugins: [vue()],
+  resolve: {
+    alias: {
+      '@mrt-assets': path.resolve(__dirname, '../../assets'),
+    },
+  },
   build: {
     manifest: true,
     outDir: path.resolve(__dirname, '../../assets/dist/vue'),

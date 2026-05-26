@@ -11,13 +11,11 @@ Filter: `mrt_is_development_mode` kan tvinga läge vid behov.
 
 ## Vue-experiment (branch `experiment/vue-public-ui`)
 
-Aktivera alla tre publika shortcodes som Vue-mounts (se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md)):
+Docker dev sätter `MRT_VUE_FRONTEND` och bygger Vue automatiskt via `docker-dev-reset.ps1` (service `vue`).
 
-```php
-define( 'MRT_VUE_FRONTEND', true );
-```
+Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` → `assets/dist/vue/`), inte från `journey-wizard.css` / `frontend-public.css` i WP.
 
-Bygg: `cd frontend/vue && npm install && npm run build`. Utan build visas varning på sidan.
+Se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md). Bygg manuellt: `composer vue:build` eller `docker compose --profile tools run --rm vue`.
 
 ## Endast utveckling (döljs i typisk produktion)
 

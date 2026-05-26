@@ -10,9 +10,26 @@ Branch `experiment/vue-public-ui` replaces the three public shortcodes with Vue 
 
 Legacy PHP/HTML and jQuery wizard modules are **not** loaded in Vue mode.
 
+## CSS
+
+Public styles are **bundled by Vite**, not enqueued from WordPress:
+
+- Source entry: `frontend/vue/src/styles/mrt-public.css`
+- Imports (unchanged on disk): `assets/train-type-icons.css`, `frontend-public.css`, `frontend-overview.css`, `journey-wizard.css`
+- Vue-only shell: `frontend/vue/src/styles/vue-shell.css`
+
+In Vue mode, `mrt-frontend-public`, `mrt-frontend-overview`, and `mrt-journey-wizard` handles are **not** registered.
+
 ## Enable on a site
 
-In `wp-config.php` (or Docker env):
+Docker dev (`docker compose up` / `docker-dev-reset.ps1`) sets:
+
+```php
+define( 'MRT_VUE_FRONTEND', true );
+define( 'MRT_DEVELOPMENT', true );
+```
+
+Manually in `wp-config.php`:
 
 ```php
 define( 'MRT_VUE_FRONTEND', true );
@@ -26,15 +43,23 @@ add_filter( 'mrt_use_vue_frontend', '__return_true' );
 
 ## Build
 
+Local:
+
 ```bash
-cd frontend/vue
-npm install
-npm run build
+composer vue:build
+# or
+cd frontend/vue && npm ci && npm run build
 ```
 
-Output: `assets/dist/vue/` (committed on this branch so Docker works without Node).
+Docker (tools profile):
 
-Dev server (optional, for component work only — still needs WP for shortcodes):
+```bash
+docker compose --profile tools run --rm vue
+```
+
+Output: `assets/dist/vue/` (commit after CSS/JS changes so hosts without Node still work).
+
+Dev server (component work only — WP still serves shortcodes):
 
 ```bash
 cd frontend/vue
@@ -43,14 +68,14 @@ npm run dev
 
 ## PHP integration
 
-- `inc/assets/vue-frontend.php` — flag, enqueue, mount HTML
+- `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS, mount HTML
 - `inc/public/vue-shortcode-config.php` — JSON config per shortcode
 - Shortcodes branch early to `MRT_render_vue_mount()` when `MRT_use_vue_frontend()`
 
 ## Current scope
 
-Placeholder shells show received config. Port UI step by step; reuse existing AJAX actions from `MRTFrontendApi` via `fetch` + `config.ajaxurl` / `config.nonce`.
+Placeholder shells show received config. Port UI step by step; reuse existing AJAX actions via `fetch` + `config.ajaxurl` / `config.nonce`.
 
 ## Switch back
 
-Remove `MRT_VUE_FRONTEND` or return `false` from the filter. No code changes on `main` required.
+Remove `MRT_VUE_FRONTEND` or return `false` from the filter. Legacy enqueue path in `inc/assets/frontend.php` loads PHP CSS again.

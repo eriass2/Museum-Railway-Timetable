@@ -25,6 +25,7 @@
         "check": ["@plugin-check", "@phpstan", "@test", "@test:js"],
         "lint": ["@phpstan", "@phpcs"],
         "test": "phpunit",
-        "test:js": "node --test tests/js/*.mjs"
+        "test:js": "node --test tests/js/*.mjs",
+        "vue:build": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run build"
     }
 }

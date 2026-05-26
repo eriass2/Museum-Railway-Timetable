@@ -3,7 +3,7 @@ import MonthCalendarApp from './apps/MonthCalendarApp.vue';
 import TimetableOverviewApp from './apps/TimetableOverviewApp.vue';
 import JourneyWizardApp from './apps/JourneyWizardApp.vue';
 import { parseMountConfig, type MrtVueApp, type MrtVueConfig } from './useMrtConfig';
-import './style.css';
+import './styles/mrt-public.css';
 
 const apps: Record<MrtVueApp, Component<{ config: MrtVueConfig }>> = {
   month: MonthCalendarApp,

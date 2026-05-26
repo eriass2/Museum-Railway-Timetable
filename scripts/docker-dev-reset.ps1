@@ -22,9 +22,14 @@ if (-not $SkipCompose) {
     Start-Sleep -Seconds 12
 }
 
-Write-Host "`n--- Enable WP_DEBUG (required for fixture debug pages) ---" -ForegroundColor Cyan
+Write-Host "`n--- Build Vue public bundle (CSS + JS) ---" -ForegroundColor Cyan
+docker compose --profile tools run --rm vue 2>&1 | ForEach-Object { Write-Host $_ }
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+Write-Host "`n--- Enable WP_DEBUG + Vue frontend (experiment) ---" -ForegroundColor Cyan
 docker compose run --rm --user root wordpress-init wp --allow-root config set WP_DEBUG true --raw 2>&1 | ForEach-Object { Write-Host $_ }
 docker compose run --rm --user root wordpress-init wp --allow-root config set WP_DEBUG_LOG true --raw 2>&1 | ForEach-Object { Write-Host $_ }
+docker compose run --rm --user root wordpress-init wp --allow-root config set MRT_VUE_FRONTEND true --raw 2>&1 | ForEach-Object { Write-Host $_ }
 
 Write-Host "`n--- Reset and import ---" -ForegroundColor Cyan
 $eval = "if (!function_exists('MRT_dev_reset_and_import_cli')) { fwrite(STDERR, 'Plugin not active or dev-cli not loaded'.PHP_EOL); exit(1); } MRT_dev_reset_and_import_cli();"
