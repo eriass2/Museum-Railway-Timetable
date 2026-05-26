@@ -126,7 +126,7 @@ Kör detta efter `docker compose up -d --build` när ändringen påverkar admin,
 - [ ] `composer check` grönt
 - [ ] Manuell smoke-checklista i WordPress är genomförd vid UI/dataflödesändringar
 - [ ] [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort rökning vid UI-ändringar
-- [ ] Nya strängar: `languages/*.po` → kompilera `.mo` (Poedit eller `msgfmt … -o …/sv_SE.mo`)
+- [ ] Översättningar: kör `powershell -File .\scripts\make-i18n.ps1` efter nya `__()`-strängar; fyll i tomma `msgstr` i `languages/museum-railway-timetable-sv_SE.po` vid behov
 - [ ] `docker compose up -d --build` eller `.\local\deploy.ps1` om du testar i full WordPress
 
 ---

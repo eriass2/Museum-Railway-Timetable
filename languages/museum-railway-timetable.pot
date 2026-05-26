@@ -1,687 +1,1737 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2025
+# Copyright (C) 2026 Erik
 # This file is distributed under the same license as the Museum Railway Timetable plugin.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: Museum Railway Timetable 0.3.0\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-27 12:00:00+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/museum-railway-timetable\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: \n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: ChatGPT POT builder\n"
+"POT-Creation-Date: 2026-05-26T12:46:01+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: museum-railway-timetable\n"
 
-#: plugin
+#. Plugin Name of the plugin
+#: museum-railway-timetable.php
+#: inc/admin/dashboard.php:88
+#: inc/admin/menu.php:77
 msgid "Museum Railway Timetable"
 msgstr ""
 
-#: plugin
-msgid "Railway Timetable"
+#. Description of the plugin
+#: museum-railway-timetable.php
+msgid "A calendar displaying train timetables for a museum railway."
 msgstr ""
 
-#: plugin
-msgid "General Settings"
+#. Author of the plugin
+#: museum-railway-timetable.php
+msgid "Erik"
 msgstr ""
 
-#: plugin
-msgid "Configure timetable display."
+#: inc/admin/admin-list.php:33
+msgid "Overview"
 msgstr ""
 
-#: plugin
-msgid "Enable Plugin"
-msgstr ""
-
-#: plugin
-msgid "Note"
-msgstr ""
-
-#: plugin
-msgid "Stations"
-msgstr ""
-
-#: plugin
-msgid "Station"
-msgstr ""
-
-#: plugin
-msgid "Routes"
-msgstr ""
-
-#: plugin
-msgid "Route"
-msgstr ""
-
-#: plugin
-msgid "Services"
-msgstr ""
-
-#: plugin
-msgid "Service"
-msgstr ""
-
-#: plugin
-msgid "Train Types"
-msgstr ""
-
-#: plugin
-msgid "Train Type"
-msgstr ""
-
-#: plugin
-msgid "No upcoming departures."
-msgstr ""
-
-#: plugin
-msgid "Service"
-msgstr ""
-
-#: plugin
-msgid "Arrives"
-msgstr ""
-
-#: plugin
-msgid "Departs"
-msgstr ""
-
-#: plugin
-msgid "Direction"
-msgstr ""
-
-#: plugin
-msgid "No services today."
-msgstr ""
-
-#: plugin
-msgid "Select station"
-msgstr ""
-
-#: plugin
-msgid "Station"
-msgstr ""
-
-#: plugin
-msgid "Mon"
-msgstr ""
-
-#: plugin
-msgid "Tue"
-msgstr ""
-
-#: plugin
-msgid "Wed"
-msgstr ""
-
-#: plugin
-msgid "Thu"
-msgstr ""
-
-#: plugin
-msgid "Fri"
-msgstr ""
-
-#: plugin
-msgid "Sat"
-msgstr ""
-
-#: plugin
-msgid "Sun"
-msgstr ""
-
-#: plugin
-msgid "Service day"
-msgstr ""
-
-#: plugin
-msgid "count per day"
-msgstr ""
-
-#: plugin
-msgid "Services running"
-msgstr ""
-
-#: plugin
-msgid "Station not found."
-msgstr ""
-
-#: plugin
-msgid "Invalid date."
-msgstr ""
-
-#: plugin
-msgid "Stations Overview"
-msgstr ""
-
-#: plugin
+#: inc/admin/admin-list.php:76
 msgid "Train type:"
 msgstr ""
 
-#: plugin
+#: inc/admin/admin-list.php:78
 msgid "All types"
 msgstr ""
 
-#: plugin
+#: inc/admin/admin-list.php:89
 msgid "Filter"
 msgstr ""
 
-#: plugin
+#: inc/admin/admin-list.php:90
 msgid "Reset"
 msgstr ""
 
-#: plugin
-msgid "Type"
-msgstr ""
-
-#: plugin
-msgid "Display order"
-msgstr ""
-
-#: plugin
-msgid "Services (count)"
-msgstr ""
-
-#: plugin
-msgid "Next running day"
-msgstr ""
-
-#: plugin
-msgid "Actions"
-msgstr ""
-
-#: plugin
-msgid "No stations found."
-msgstr ""
-
-#: plugin
-msgid "— none within range —"
-msgstr ""
-
-#: plugin
-msgid "Edit station"
-msgstr ""
-
-#: plugin
-msgid "Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug."
-msgstr ""
-
-#: plugin
-msgid "Station Details"
-msgstr ""
-
-#: plugin
-msgid "— Select —"
-msgstr ""
-
-#: plugin
-msgid "Latitude"
-msgstr ""
-
-#: plugin
-msgid "Longitude"
-msgstr ""
-
-#: plugin
-msgid "Latitude coordinate (e.g., 57.486). Optional."
-msgstr ""
-
-#: plugin
-msgid "Longitude coordinate (e.g., 15.842). Optional."
-msgstr ""
-
-#: plugin
-msgid "Order for sorting in lists (lower numbers appear first)."
-msgstr ""
-
-#: plugin
-msgid "Type of station (station, halt, depot, or museum)."
-msgstr ""
-
-#: plugin
-msgid "Service Details"
-msgstr ""
-
-#: plugin
-msgid "Direction of the service (e.g., \"Northbound\", \"Southbound\"). Optional."
-msgstr ""
-
-#: plugin
-msgid "Add New Station"
-msgstr ""
-
-#: plugin
-msgid "Add New Service"
-msgstr ""
-
-#: plugin
-msgid "Add New Route"
-msgstr ""
-
-#: plugin
-msgid "Stop Times"
-msgstr ""
-
-#: plugin
-msgid "Calendar (Service Schedule)"
-msgstr ""
-
-#: plugin
-msgid "Seq"
-msgstr ""
-
-#: plugin
-msgid "Arrival"
-msgstr ""
-
-#: plugin
-msgid "Departure"
-msgstr ""
-
-#: plugin
-msgid "Pickup"
-msgstr ""
-
-#: plugin
-msgid "Dropoff"
-msgstr ""
-
-#: plugin
-msgid "Actions"
-msgstr ""
-
-#: plugin
-msgid "No stop times defined. Add one below."
-msgstr ""
-
-#: plugin
-msgid "Add Stop Time"
-msgstr ""
-
-#: plugin
-msgid "— Select Station —"
-msgstr ""
-
-#: plugin
-msgid "Sequence"
-msgstr ""
-
-#: plugin
-msgid "Order along the route (1, 2, 3...)."
-msgstr ""
-
-#: plugin
-msgid "Arrival Time"
-msgstr ""
-
-#: plugin
-msgid "HH:MM format. Leave empty for first stop."
-msgstr ""
-
-#: plugin
-msgid "Departure Time"
-msgstr ""
-
-#: plugin
-msgid "HH:MM format. Leave empty for last stop."
-msgstr ""
-
-#: plugin
-msgid "Options"
-msgstr ""
-
-#: plugin
-msgid "Pickup allowed"
-msgstr ""
-
-#: plugin
-msgid "Dropoff allowed"
-msgstr ""
-
-#: plugin
-msgid "Date Range"
-msgstr ""
-
-#: plugin
-msgid "Days"
-msgstr ""
-
-#: plugin
-msgid "Include Dates"
-msgstr ""
-
-#: plugin
-msgid "Exclude Dates"
-msgstr ""
-
-#: plugin
-msgid "No calendar entries defined. Add one below."
-msgstr ""
-
-#: plugin
-msgid "Add Calendar Entry"
-msgstr ""
-
-#: plugin
-msgid "Start Date"
-msgstr ""
-
-#: plugin
-msgid "End Date"
-msgstr ""
-
-#: plugin
-msgid "Days of Week"
-msgstr ""
-
-#: plugin
-msgid "Monday"
-msgstr ""
-
-#: plugin
-msgid "Tuesday"
-msgstr ""
-
-#: plugin
-msgid "Wednesday"
-msgstr ""
-
-#: plugin
-msgid "Thursday"
-msgstr ""
-
-#: plugin
-msgid "Friday"
-msgstr ""
-
-#: plugin
-msgid "Saturday"
-msgstr ""
-
-#: plugin
-msgid "Sunday"
-msgstr ""
-
-#: plugin
-msgid "Comma-separated dates to include (overrides weekdays)."
-msgstr ""
-
-#: plugin
-msgid "Comma-separated dates to exclude."
-msgstr ""
-
-#: plugin
-msgid "Mon"
-msgstr ""
-
-#: plugin
-msgid "Tue"
-msgstr ""
-
-#: plugin
-msgid "Wed"
-msgstr ""
-
-#: plugin
-msgid "Thu"
-msgstr ""
-
-#: plugin
-msgid "Fri"
-msgstr ""
-
-#: plugin
-msgid "Sat"
-msgstr ""
-
-#: plugin
-msgid "Sun"
-msgstr ""
-
-#: plugin
+#: inc/admin/admin-list.php:130
 msgid "None"
 msgstr ""
 
-#: plugin
-msgid "Permission denied."
+#: inc/admin/admin-list.php:157
+msgid "— none within range —"
 msgstr ""
 
-#: plugin
-msgid "Invalid input."
+#: inc/admin/admin-list.php:171
+#: inc/admin/dashboard/dashboard-routes.php:93
+#: inc/admin/meta-boxes/timetable-services.php:32
+msgid "Edit"
 msgstr ""
 
-#: plugin
-msgid "Invalid arrival time format. Use HH:MM."
+#: inc/admin/admin-list.php:198
+#: inc/admin/meta-boxes/route.php:176
+#: inc/admin/meta-boxes/service-stoptimes.php:97
+#: inc/admin/meta-boxes/station.php:42
+#: inc/domain/timetable/view/grid-rows.php:19
+msgid "Station"
 msgstr ""
 
-#: plugin
-msgid "Invalid departure time format. Use HH:MM."
+#: inc/admin/admin-list.php:199
+msgid "Type"
 msgstr ""
 
-#: plugin
-msgid "Failed to add stop time."
+#: inc/admin/admin-list.php:200
+msgid "Display order"
 msgstr ""
 
-#: plugin
-msgid "Failed to update stop time."
+#: inc/admin/admin-list.php:201
+#: inc/admin/dashboard/dashboard-guide.php:25
+#: inc/admin/dashboard/dashboard-stats.php:20
+#: inc/admin/menu.php:34
+#: inc/admin/menu.php:35
+msgid "Routes"
 msgstr ""
 
-#: plugin
-msgid "Failed to delete stop time."
+#: inc/admin/admin-list.php:202
+msgid "Services (count)"
 msgstr ""
 
-#: plugin
-msgid "Invalid ID."
+#: inc/admin/admin-list.php:203
+msgid "Next running day"
 msgstr ""
 
-#: plugin
-msgid "Stop time not found."
+#: inc/admin/admin-list.php:204
+#: inc/admin/dashboard/dashboard-routes.php:121
+#: inc/admin/meta-boxes/route.php:177
+#: inc/admin/meta-boxes/timetable-services.php:146
+msgid "Actions"
 msgstr ""
 
-#: plugin
-msgid "Start date must be before end date."
+#: inc/admin/admin-list.php:209
+msgid "No stations found."
 msgstr ""
 
-#: plugin
-msgid "Failed to add calendar entry."
+#: inc/admin/admin-list.php:246
+#: inc/admin/dashboard/dashboard-quick-actions.php:23
+msgid "Stations Overview"
 msgstr ""
 
-#: plugin
-msgid "Failed to update calendar entry."
+#: inc/admin/admin-list.php:253
+msgid "Note: Next running day looks ahead up to 60 days. Use the filter above to limit by train type slug."
 msgstr ""
 
-#: plugin
-msgid "Failed to delete calendar entry."
+#: inc/admin/dashboard.php:95
+msgid "Settings"
 msgstr ""
 
-#: plugin
-msgid "Calendar entry not found."
+#: inc/admin/dashboard/dashboard-dev-tools.php:20
+msgid "Development tools"
 msgstr ""
 
-#: plugin
-msgid "Update Stop Time"
+#: inc/admin/dashboard/dashboard-dev-tools.php:22
+msgid "Only shown when WP_DEBUG is on or MRT_DEVELOPMENT is defined. Not available on a typical production site."
 msgstr ""
 
-#: plugin
-msgid "Update Calendar Entry"
+#: inc/admin/dashboard/dashboard-dev-tools.php:24
+msgid "Reset data, import Lennakatten test data, create smoke pages, and add menu links for local QA."
 msgstr ""
 
-#: plugin
-msgid "Please fill in Station and Sequence."
+#: inc/admin/dashboard/dashboard-dev-tools.php:38
+msgid "Are you sure you want to delete ALL plugin data? This cannot be undone!"
 msgstr ""
 
-#: plugin
-msgid "Error adding stop time."
+#: inc/admin/dashboard/dashboard-dev-tools.php:42
+msgid "Clear plugin database"
 msgstr ""
 
-#: plugin
-msgid "Error updating stop time."
+#: inc/admin/dashboard/dashboard-dev-tools.php:43
+msgid "Deletes stations, routes, timetables, trips, train types, stop times, settings, and demo page."
 msgstr ""
 
-#: plugin
-msgid "Are you sure you want to delete this stop time?"
+#: inc/admin/dashboard/dashboard-dev-tools.php:58
+msgid "Import demo data"
 msgstr ""
 
-#: plugin
-msgid "Error deleting stop time."
+#: inc/admin/dashboard/dashboard-dev-tools.php:59
+msgid "Creates Lennakatten test stations, two routes, train types, GRÖN and GUL timetables, trips, and stop times."
 msgstr ""
 
-#: plugin
-msgid "Please fill in Start Date and End Date."
+#: inc/admin/dashboard/dashboard-dev-tools.php:74
+msgid "Create demo page"
 msgstr ""
 
-#: plugin
-msgid "Error adding calendar entry."
+#: inc/admin/dashboard/dashboard-dev-tools.php:75
+msgid "Creates or updates a published demo page with all public shortcodes."
 msgstr ""
 
-#: plugin
-msgid "Error updating calendar entry."
+#: inc/admin/dashboard/dashboard-guide.php:18
+msgid "📖 Quick Start Guide"
 msgstr ""
 
-#: plugin
-msgid "Are you sure you want to delete this calendar entry?"
+#: inc/admin/dashboard/dashboard-guide.php:19
+msgid "Click to expand"
 msgstr ""
 
-#: plugin
-msgid "Error deleting calendar entry."
+#: inc/admin/dashboard/dashboard-guide.php:22
+msgid "Recommended workflow:"
 msgstr ""
 
-#: plugin
-msgid "Cancel"
+#: inc/admin/dashboard/dashboard-guide.php:24
+#: inc/admin/dashboard/dashboard-routes.php:119
+#: inc/admin/dashboard/dashboard-stats.php:19
+#: inc/admin/menu.php:26
+#: inc/admin/menu.php:27
+msgid "Stations"
 msgstr ""
 
-#: plugin
-msgid "Save"
+#: inc/admin/dashboard/dashboard-guide.php:24
+msgid "Create all stations where trains stop"
 msgstr ""
 
-#: plugin
-msgid "Add"
+#: inc/admin/dashboard/dashboard-guide.php:25
+msgid "Create routes and add stations in order (use ↑ ↓ buttons to reorder)"
 msgstr ""
 
-#: plugin
-msgid "Click on any row to edit. Click \"Add New\" to add a new stop time."
+#: inc/admin/dashboard/dashboard-guide.php:26
+#: inc/admin/dashboard/dashboard-stats.php:23
+#: inc/admin/menu.php:42
+#: inc/admin/menu.php:43
+msgid "Train Types"
 msgstr ""
 
-#: plugin
-msgid "Click on any row to edit. Click \"Add New\" to add a new calendar entry."
+#: inc/admin/dashboard/dashboard-guide.php:26
+msgid "Optional but recommended: create terms such as Ångtåg, Dieseltåg, Rälsbuss (used for icons and filters)"
 msgstr ""
 
-#: plugin
+#: inc/admin/dashboard/dashboard-guide.php:27
+#: inc/admin/dashboard/dashboard-stats.php:21
+#: inc/admin/menu.php:18
+#: inc/admin/menu.php:19
+msgid "Timetables"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:27
+msgid "Create timetables and add dates (YYYY-MM-DD) when they apply"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:28
+msgid "Add Trips"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:28
+msgid "On the timetable edit screen, open \"Trips (Services)\". Select Route, Train Type, and Destination (end station), then click \"Add Trip\"."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:29
+msgid "Set Train Number"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:29
+msgid "When editing a trip (Service), enter the train number (e.g., 71, 91, 73) in the \"Train Number\" field. This will be displayed in timetables instead of the service ID."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:30
+msgid "Configure Stop Times"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:30
+msgid "Click \"Edit\" on any trip to set arrival/departure times per station. Restrict pickup/dropoff with P/A; leave both times empty while the train still stops to show X; use | when the train does not stop."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:33
+msgid "💡 Tip:"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-guide.php:33
+msgid "Trip titles are generated from the route and service data—you normally do not type a trip name yourself."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-prices.php:20
+msgid "Ticket type"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-prices.php:26
+msgid "Zones"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-prices.php:79
+msgid "Prices in SEK by ticket type, passenger category, and number of zones. Boundary stations count as either adjacent zone."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-quick-actions.php:17
+msgid "Quick Actions"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-quick-actions.php:18
+msgid "Create core timetable content or review existing station data."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-quick-actions.php:20
+msgid "Add Station"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-quick-actions.php:21
+msgid "Add Route"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-quick-actions.php:22
+msgid "Add Timetable"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-routes.php:70
+msgid "stations"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-routes.php:79
+msgid "No stations added"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-routes.php:85
+msgid "trip(s)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-routes.php:88
+msgid "Not used yet"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-routes.php:111
+msgid "Routes Overview"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-routes.php:113
+msgid "Routes define which stations trains travel between and in what order. When creating a trip, you select a route to automatically get all its stations."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-routes.php:118
+#: inc/infrastructure/post-types/admin.php:25
+#: inc/infrastructure/post-types/admin.php:109
+msgid "Route Name"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-routes.php:120
+msgid "Used by Trips"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:17
+msgid "Month View"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:20
+msgid "Displays a calendar month view showing which days have services running."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:21
+#: inc/admin/dashboard/dashboard-shortcodes.php:49
+#: inc/admin/dashboard/dashboard-shortcodes.php:86
+msgid "Parameters:"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:22
+msgid "Month in YYYY-MM format (default: current month)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:23
+msgid "Filter by train type slug (optional)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:24
+msgid "Filter by exact service title (optional)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:25
+msgid "Show legend (0 or 1, default: 1)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:26
+msgid "Show service count per day (0 or 1, default: 1)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:27
+msgid "Start week on Monday (0 or 1, default: 1)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:28
+msgid "Show previous/next month links (0 or 1, default: 1)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:30
+#: inc/admin/dashboard/dashboard-shortcodes.php:56
+msgid "Example:"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:32
+msgid "Use the train type slug from Railway Timetable → Train Types (demo import: angtag, ralsbuss, dieseltag, buss)."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:43
+msgid "Journey wizard (multi-step)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:46
+msgid "Full mockup-style flow: route and trip type (one way / return), calendar with traffic-day states, outbound and optional return trips (direct and transfers), summary with price matrix and train-type icons. Requires JavaScript."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:50
+msgid "URL for the “Continue to tickets” button (optional)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:51
+msgid "Background image URL for step 1 (optional)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:52
+msgid "Optional subtitle line under the title on step 1"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:53
+msgid "Show a collapsible full timetable overview under the search form on step 1 (optional)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:54
+msgid "Same as timetable_id but by exact timetable title (optional)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:68
+#: inc/admin/meta-boxes.php:57
+msgid "Timetable Overview"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:71
+msgid "Displays a complete timetable overview grouped by route and direction, showing all trips with train types and times. Similar to traditional printed timetables."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:74
+msgid "What it shows:"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:75
+msgid "All trips (services) in the timetable"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:76
+msgid "Grouped by route and direction (e.g., \"Från Uppsala Ö Till Marielund\")"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:77
+msgid "Train types with icons for each trip (ång, diesel, rälsbuss, buss)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:78
+msgid "Train numbers displayed prominently (or service ID as fallback)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:79
+msgid "Arrival/departure times in HH.MM format for each station"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:80
+msgid "Symbols: P (pickup only), A (dropoff only), X (no time), | (passes without stopping)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:81
+msgid "Transfer information showing connecting trains at destination stations"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:82
+msgid "Direction arrows (↓) for first and last stations"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:83
+msgid "Yellow highlight for named express services (when train type or trip title contains “express”, e.g. Thun’s-expressen)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:87
+msgid "Timetable post ID (recommended)."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:88
+msgid "How to find it:"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:89
+msgid "Go to Railway Timetable → Timetables"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:90
+msgid "Look in the \"ID\" column - the number is displayed there"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:91
+msgid "Or click \"Edit\" and look at the URL - the number after \"post=\" is the ID"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:92
+msgid "Timetable name (alternative to timetable_id). Use the exact title of the timetable."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:94
+msgid "Examples:"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:97
+msgid "Or use the timetable name:"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:101
+msgid "Tip:"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:101
+msgid "You can preview how the timetable will look in the \"Timetable Overview\" meta box when editing a timetable in the admin."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:113
+msgid "Shortcodes"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-shortcodes.php:114
+msgid "Use these shortcodes to display timetables on your pages and posts."
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-stats.php:56
+#: inc/admin/meta-boxes.php:48
+msgid "Trips (Services)"
+msgstr ""
+
+#: inc/admin/dashboard/dashboard-stats.php:58
+msgid "Managed via Timetables"
+msgstr ""
+
+#: inc/admin/menu.php:59
+#: inc/admin/menu.php:60
+#: inc/admin/tools/demo-page.php:283
+msgid "Component demo page"
+msgstr ""
+
+#: inc/admin/menu.php:78
+msgid "Railway Timetable"
+msgstr ""
+
+#: inc/admin/meta-boxes.php:30
+#: inc/admin/meta-boxes/station.php:104
+msgid "Station Details"
+msgstr ""
+
+#: inc/admin/meta-boxes.php:39
+msgid "Timetable Details"
+msgstr ""
+
+#: inc/admin/meta-boxes.php:71
 msgid "Route Details"
 msgstr ""
 
-#: plugin
-msgid "Define which stations are on this route, in order. The route works in both directions."
+#: inc/admin/meta-boxes.php:80
+msgid "Service Details"
 msgstr ""
 
-#: plugin
-msgid "Order"
+#: inc/admin/meta-boxes.php:89
+msgid "Stop Times"
 msgstr ""
 
-#: plugin
+#: inc/admin/meta-boxes/hooks.php:47
+msgid "Example route name: \"Hultsfred - Västervik\" or \"Main Line\"."
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:34
+msgid "This route is used by the following trips:"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:41
+#: inc/admin/meta-boxes/service.php:169
+#: inc/admin/meta-boxes/service.php:195
+msgid "Timetable"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:44
+msgid "in"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:49
+msgid "Related Trips:"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:56
+msgid "A route defines which stations trains travel between and in what order. When you create a trip (service), you select a route and a destination station, and all stations on that route become available for configuring stop times."
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:57
+msgid "How to use:"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:59
+msgid "Give your route a descriptive name, e.g., \"Hultsfred → Västervik\" or \"Main Line\""
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:60
+msgid "Set the start and end stations (terminus) for this route below"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:61
+msgid "Add stations in the order they appear on the route using the dropdown below"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:62
+msgid "Use ↑ ↓ buttons to reorder stations if needed"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:63
+msgid "When creating a trip in a Timetable, select this route and choose a destination station"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:65
+msgid "💡 What is a Route?"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:78
+msgid "End Stations (Terminus)"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:79
+msgid "Define the start and end stations for this route. These are the terminus stations where trains can start or end their journey."
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:82
+msgid "Start Station"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:85
+msgid "— Select Start Station —"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:90
+msgid "The starting point (origin) of this route."
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:94
+msgid "End Station"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:97
+msgid "— Select End Station —"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:102
+msgid "The ending point (destination/terminus) of this route."
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:128
+msgid "Move up"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:129
+msgid "Move down"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:130
+#: inc/admin/meta-boxes/timetable-services.php:36
+#: inc/admin/meta-boxes/timetable.php:101
 msgid "Remove"
 msgstr ""
 
-#: plugin
-msgid "Example route name: \"Hultsfred - Västervik\" or \"Main Line\". Add stations in the order they appear on the route."
+#: inc/admin/meta-boxes/route.php:148
+msgid "— Select Station —"
 msgstr ""
 
-#: plugin
+#: inc/admin/meta-boxes/route.php:155
+msgid "Add"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:170
+msgid "Stations on Route"
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:171
+msgid "Add stations in the order they appear on the route. Use ↑ ↓ to reorder."
+msgstr ""
+
+#: inc/admin/meta-boxes/route.php:175
+#: inc/admin/meta-boxes/service-stoptimes.php:96
+msgid "Order"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-save.php:142
+#: inc/admin/meta-boxes/service.php:221
+#: inc/admin/meta-boxes/timetable-services.php:143
+#: inc/infrastructure/ajax/timetable-services.php:52
 msgid "Route"
 msgstr ""
 
-#: plugin
+#: inc/admin/meta-boxes/service-stoptimes.php:32
+#: inc/admin/meta-boxes/service-stoptimes.php:36
+msgid "HH:MM"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:33
+#: inc/admin/meta-boxes/service-stoptimes.php:37
+msgid "Leave empty if train stops but time is not fixed"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:42
+#: inc/admin/meta-boxes/service-stoptimes.php:101
+msgid "Pickup"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:48
+#: inc/admin/meta-boxes/service-stoptimes.php:102
+msgid "Dropoff"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:61
+msgid "Check \"Stops here\" for each station where the train stops"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:62
+msgid "Fill in Arrival and/or Departure times (HH:MM format, e.g., 09:15)"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:63
+msgid "Times can be left empty if the train stops but the time is not fixed"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:64
+msgid "Select Pickup/Dropoff if passengers can board/alight"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:65
+msgid "Click \"Save Stop Times\" at the bottom to save all changes"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:67
+msgid "💡 How to configure Stop Times:"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:98
+msgid "Stops here"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:99
+msgid "Arrival"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:100
+msgid "Departure"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:146
+msgid "No route selected. Select a route in Service Details above to configure stop times."
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:164
+msgid "Save Stop Times"
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:167
+msgid "Configure which stations the train stops at, then click \"Save Stop Times\" to save all changes."
+msgstr ""
+
+#: inc/admin/meta-boxes/service-stoptimes.php:206
+msgid "Please select a Route in Service Details above first. Then you can configure which stations this service stops at."
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:35
+msgid "Back to Timetable"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:36
+msgid "This trip belongs to a timetable. The title is automatically generated from Route + Destination."
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:63
+#: inc/infrastructure/ajax/route-destinations.php:36
+msgid "Start"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:69
+#: inc/infrastructure/ajax/route-destinations.php:45
+msgid "End"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:129
+msgid "Calculated direction:"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:130
+#: inc/domain/service/stop-times.php:68
+#: inc/infrastructure/ajax/timetable-services.php:58
+#: inc/infrastructure/ajax/timetable-services.php:84
+#: inc/infrastructure/ajax/timetable-services.php:94
+msgid "Dit"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:130
+#: inc/domain/service/stop-times.php:70
+#: inc/infrastructure/ajax/timetable-services.php:60
+#: inc/infrastructure/ajax/timetable-services.php:86
+#: inc/infrastructure/ajax/timetable-services.php:94
+#: inc/public/journey-wizard/fields.php:48
+msgid "Från"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:145
+msgid "Destination Station"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:148
+#: inc/admin/meta-boxes/timetable-services.php:71
+msgid "— Select Destination —"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:153
+msgid "Select the destination station for this trip. The direction will be calculated automatically based on the route and destination."
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:174
+msgid "more"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:184
+msgid "💡 What is a Trip (Service)?"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:185
+msgid "A trip represents one train journey. It belongs to a Timetable (which defines which days it runs) and uses a Route (which defines which stations are available). After selecting a Route, you can configure Stop Times to set arrival/departure times for each station."
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:200
+msgid "This trip belongs to the timetable you are editing. To change the timetable, go back to the timetable and remove this trip, then add it to another timetable."
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:203
+msgid "— Select Timetable —"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:208
+msgid "⚠️ Required: Select the timetable this trip belongs to. The timetable defines which days (dates) the trip runs."
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:224
+#: inc/admin/meta-boxes/timetable-services.php:55
 msgid "— Select Route —"
 msgstr ""
 
-#: plugin
-msgid "Select the route this service runs on. Stations will be available from the selected route."
+#: inc/admin/meta-boxes/service.php:229
+msgid "⚠️ Required: Select the route this trip runs on. After selecting a route and saving, you can configure Stop Times below. Example: \"Hultsfred - Västervik\" or \"Main Line\"."
 msgstr ""
 
-#: plugin
-msgid "Route selected: Stations are limited to those on the route."
+#: inc/admin/meta-boxes/service.php:241
+#: inc/admin/meta-boxes/timetable-services.php:144
+msgid "Train Type"
 msgstr ""
 
-#: plugin
-msgid "No route selected. Select a route in Service Details to limit stations to the route."
+#: inc/admin/meta-boxes/service.php:244
+msgid "— Select Train Type —"
 msgstr ""
 
-#: plugin
-msgid "Development Tools"
+#: inc/admin/meta-boxes/service.php:249
+msgid "Select the default train type for this service. You can override this for specific dates below. Example: \"Steam\", \"Diesel\", \"Electric\"."
 msgstr ""
 
-#: plugin
-msgid "These tools are only available when WP_DEBUG is enabled."
+#: inc/admin/meta-boxes/service.php:262
+msgid "Train Number"
 msgstr ""
 
-#: plugin
-msgid "Clear All Timetable Data"
+#: inc/admin/meta-boxes/service.php:264
+msgid "e.g., 71, 91, 73"
 msgstr ""
 
-#: plugin
-msgid "Are you sure you want to delete ALL timetable data? This cannot be undone!"
+#: inc/admin/meta-boxes/service.php:265
+msgid "Enter the train number displayed in timetables (e.g., 71, 91, 73). If left empty, the service ID will be used as fallback."
 msgstr ""
 
-#: plugin
-msgid "This will delete all Stations, Services, Routes, Stop Times, and Calendar entries. Use with caution!"
+#: inc/admin/meta-boxes/service.php:283
+msgid "Public notice"
 msgstr ""
 
-#: plugin
-msgid "All timetable data has been cleared."
+#: inc/admin/meta-boxes/service.php:286
+msgid "Optional message for this trip (e.g. replaced locomotive). Shown in public journey data."
 msgstr ""
 
-#: plugin
+#: inc/admin/meta-boxes/service.php:304
+msgid "Date-Specific Train Types"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:306
+msgid "Override the default train type for specific dates. Leave empty to use the default train type."
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:309
+msgid "⚠️ Please select a timetable first to see available dates."
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:324
+msgid "— Use Default —"
+msgstr ""
+
+#: inc/admin/meta-boxes/service.php:399
+msgid "Trip Details"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:19
+msgid "This station is used in the following routes:"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:25
+msgid "Used in Routes:"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:38
+msgid "Station Type"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:41
+#: inc/admin/meta-boxes/timetable-services.php:63
+msgid "— Select —"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:43
+msgid "Halt"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:44
+msgid "Depot"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:45
+msgid "Museum"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:47
+msgid "Type of station (station, halt, depot, or museum)."
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:51
+msgid "Bus stop marker"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:55
+msgid "Show asterisk (*) in timetable (e.g. \"Från Selknä*\" for bus connections)"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:73
+msgid "Latitude"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:75
+msgid "e.g., 57.486"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:76
+msgid "Latitude coordinate (e.g., 57.486). Optional."
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:80
+msgid "Longitude"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:82
+msgid "e.g., 15.842"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:83
+msgid "Longitude coordinate (e.g., 15.842). Optional."
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:87
+msgid "Display Order"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:89
+msgid "e.g., 1, 2, 3"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:90
+msgid "Order for sorting in lists (lower numbers appear first). Example: 1, 2, 3..."
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:124
+msgid "💡 What is a Station?"
+msgstr ""
+
+#: inc/admin/meta-boxes/station.php:125
+msgid "A station is a physical location where trains can stop. Stations are used in Routes and Stop Times to define where trains travel and when they arrive/depart."
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable-overview.php:20
+msgid "Preview of how the timetable will look when displayed. Services are grouped by route and destination."
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable-services.php:72
+msgid "Select a route first"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable-services.php:74
+msgid "Select route first to see available destinations"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable-services.php:78
+msgid "Add Trip"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable-services.php:138
+msgid "Manage trips (services) for this timetable. Add, edit, or remove trips directly here."
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable-services.php:145
+msgid "Destination"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:23
+msgid "Timetable type"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:26
+msgid "— None —"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:27
+msgid "Grön (Green)"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:28
+msgid "Röd (Red)"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:29
+msgid "Gul (Yellow)"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:30
+msgid "Orange"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:32
+msgid "Shows as \"GRÖN TIDTABELL\", \"RÖD TIDTABELL\" etc. in the timetable overview."
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:45
+#: inc/admin/meta-boxes/timetable.php:72
+msgid "Add Dates from Pattern"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:46
+msgid "Select a day of the week and a date range to automatically add all matching dates."
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:49
+msgid "Day of Week"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:52
+msgid "— Select Day —"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:53
+msgid "Monday"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:54
+msgid "Tuesday"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:55
+msgid "Wednesday"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:56
+msgid "Thursday"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:57
+msgid "Friday"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:58
+msgid "Saturday"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:59
+msgid "Sunday"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:64
+msgid "From Date"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:68
+msgid "To Date"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:75
+msgid "Add Single Date"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:76
+msgid "Add a specific date manually."
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:79
+msgid "Add Date"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:93
+msgid "Selected Dates"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:94
+msgid "All dates when this timetable applies. Click \"Remove\" to remove individual dates."
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:106
+msgid "No dates selected. Add dates using patterns or single date selection above."
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:149
+msgid "💡 What is a Timetable?"
+msgstr ""
+
+#: inc/admin/meta-boxes/timetable.php:150
+msgid "A timetable defines which days (dates) trains run. You can add dates using patterns (e.g., all Wednesdays in June-September) or add specific dates. You can also remove individual dates from patterns."
+msgstr ""
+
+#: inc/admin/settings.php:28
+msgid "General Settings"
+msgstr ""
+
+#: inc/admin/settings.php:30
+msgid "Configure timetable display."
+msgstr ""
+
+#: inc/admin/settings.php:37
+msgid "Enable Plugin"
+msgstr ""
+
+#: inc/admin/settings.php:45
+msgid "Note"
+msgstr ""
+
+#: inc/admin/settings.php:58
+msgid "Journey search — transfers"
+msgstr ""
+
+#: inc/admin/settings.php:60
+msgid "Minimum and maximum waiting time at a transfer station (journey wizard). Bus hub stations (Bus stop marker) are preferred over other stops on the same route."
+msgstr ""
+
+#: inc/admin/settings.php:70
+msgid "Min transfer wait (minutes)"
+msgstr ""
+
+#: inc/admin/settings.php:78
+msgid "Max transfer wait (minutes)"
+msgstr ""
+
+#: inc/admin/settings.php:92
+msgid "Earliest departure on leg 2 after arrival at transfer (default 5)."
+msgstr ""
+
+#: inc/admin/settings.php:102
+msgid "Longer waits are hidden from search results (default 120). Must be ≥ min."
+msgstr ""
+
+#: inc/admin/settings.php:121
+msgid "Public journey — price matrix"
+msgstr ""
+
+#: inc/admin/settings.php:123
+msgid "Optional prices for passenger categories (display/API)."
+msgstr ""
+
+#: inc/admin/settings.php:130
+msgid "Prices (SEK)"
+msgstr ""
+
+#: inc/admin/tools/clear-db.php:55
+msgid "Import is not available."
+msgstr ""
+
+#: inc/admin/tools/clear-db.php:67
+msgid "Demo page creation is not available."
+msgstr ""
+
+#: inc/admin/tools/clear-db.php:82
+#: inc/infrastructure/ajax/route-destinations.php:70
+#: inc/infrastructure/ajax/route-stations.php:144
 msgid "Security check failed."
 msgstr ""
 
-#: inc/functions/timetable-view/overview.php
-msgid "Timetable overview: %s"
+#: inc/admin/tools/clear-db.php:188
+msgid "All plugin timetable data, demo page, train types, stop times, and settings have been cleared."
 msgstr ""
 
-#: inc/functions/timetable-view/grid-helpers.php
+#: inc/admin/tools/clear-db.php:189
+msgid "Demo/test data has been imported."
+msgstr ""
+
+#: inc/admin/tools/clear-db.php:190
+msgid "Demo page has been created or updated."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:67
+msgid "Journey wizard — route → date → trips → summary (see docs/SHORTCODES.md)."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:68
+msgid "Month calendar & timetable overview — timetable/mockup views (not the full “book a trip” flow)."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:71
+msgid "Mockup alignment"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:103
+msgid "Trying the journey wizard"
+msgstr ""
+
+#. translators: %s: timetable title e.g. GRÖN TIDTABELL 2026
+#: inc/admin/tools/demo-page.php:107
+#, php-format
+msgid "Run %s from the Railway Timetable admin menu so stations, routes, and services exist."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:110
+msgid "In the wizard, choose stations on the same line (e.g. From: Uppsala Östra, To: Faringe). If either station is missing, the import did not finish."
+msgstr ""
+
+#. translators: %1$s: example YYYY-MM-DD, %2$s: list of sample dates
+#: inc/admin/tools/demo-page.php:116
+#, php-format
+msgid "Pick a traffic day: the GRÖN import includes dates such as %2$s. Example first day: %1$s. Use the wizard calendar’s previous/next month buttons until that month appears, then choose a green (available) day for your pair."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:123
+msgid "If you see “No connections on this date”, the pair or date has no matching service — try the example stations and a listed traffic day."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:127
+msgid "The month calendar in section 1 has Previous month / Next month links (?mrt_month= in the URL)."
+msgstr ""
+
+#. translators: %s: timetable title after Lennakatten import
+#: inc/admin/tools/demo-page.php:145
+#, php-format
+msgid "This page lists all public timetable shortcodes. For realistic data, run Import Lennakatten (Railway Timetable menu). The timetable overview expects a timetable titled \"%s\"."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:155
+msgid "1. Month calendar"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:156
+msgid "Mockup: calendar / traffic days (timetable context, not the journey booking flow)."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:158
+msgid "2. Timetable overview"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:159
+msgid "Mockup: printed-style overview (routes, directions, times)."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:161
+msgid "3. Journey wizard (multi-step)"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:162
+msgid "Mockup-based: full journey flow (V1–V5) with calendar, legs, optional return, prices in summary)."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:190
+#: inc/admin/tools/dev-navigation.php:73
+#: inc/admin/tools/dev-navigation.php:254
+#: inc/infrastructure/ajax/timetable-services.php:29
+msgid "Permission denied."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:192
+#: inc/admin/tools/dev-navigation.php:34
+msgid "Museum Railway Timetable – component demo"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:226
+msgid "Demo page"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:237
+msgid "View page"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:240
+msgid "Edit page"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:244
+msgid "Preview draft"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:258
+msgid "You do not have permission to access this page."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:261
+msgid "Component demo tools require development mode (WP_DEBUG or MRT_DEVELOPMENT)."
+msgstr ""
+
+#. translators: %d: WordPress page ID
+#: inc/admin/tools/demo-page.php:274
+#, php-format
+msgid "Demo page saved successfully (page ID %d). Use View page below."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:284
+msgid "Creates or updates a published page with every public shortcode for local testing and QA."
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:293
+msgid "Create or update demo page"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:299
+msgid "Front-end menu (development)"
+msgstr ""
+
+#: inc/admin/tools/dev-navigation.php:35
+msgid "Component demo"
+msgstr ""
+
+#: inc/admin/tools/dev-navigation.php:42
+#: inc/admin/tools/dev-navigation.php:43
+msgid "Wizard smoke test"
+msgstr ""
+
+#: inc/admin/tools/dev-navigation.php:215
+msgid "Museum Railway (development)"
+msgstr ""
+
+#: inc/admin/tools/dev-navigation.php:250
+msgid "Development navigation is only available in development mode (WP_DEBUG or MRT_DEVELOPMENT) or WP-CLI."
+msgstr ""
+
+#: inc/admin/tools/dev-navigation.php:354
+msgid "Set up development menu"
+msgstr ""
+
+#: inc/admin/tools/dev-navigation.php:357
+msgid "Creates or updates two smoke pages (component demo, wizard) and adds them to your site menu when missing."
+msgstr ""
+
+#. translators: %d: number of new menu items
+#: inc/admin/tools/dev-navigation.php:375
+#, php-format
+msgid "Development menu updated. %d new link(s) added. Open the front page to verify."
+msgstr ""
+
+#: inc/admin/tools/dev-navigation.php:378
+msgid "Development menu is up to date (smoke pages exist; menu links already present)."
+msgstr ""
+
+#: inc/admin/tools/import-lennakatten.php:24
+#: inc/admin/tools/import-lennakatten.php:25
+msgid "Import Lennakatten"
+msgstr ""
+
+#: inc/admin/tools/import-lennakatten.php:48
+msgid "Import Lennakatten 2026 Test Data"
+msgstr ""
+
+#: inc/admin/tools/import-lennakatten.php:49
+msgid "This imports test data from the Lennakatten reference PDFs: stations, routes, train types, GRÖN and GUL timetables with services and stop times."
+msgstr ""
+
+#: inc/admin/tools/import-lennakatten.php:56
+msgid "Run Import"
+msgstr ""
+
+#. translators: 1: first service name, 2: transfer station name, 3: second service name
+#: inc/domain/journey/journey-normalize.php:72
+#, php-format
+msgid "%1$s · Change at %2$s · %3$s"
+msgstr ""
+
+#: inc/domain/pricing/prices.php:254
+msgid "Single ticket"
+msgstr ""
+
+#: inc/domain/pricing/prices.php:255
+msgid "Return ticket"
+msgstr ""
+
+#: inc/domain/pricing/prices.php:256
+msgid "Day pass"
+msgstr ""
+
+#: inc/domain/pricing/prices.php:267
+msgid "Adult"
+msgstr ""
+
+#: inc/domain/pricing/prices.php:268
+msgid "Child 7–15"
+msgstr ""
+
+#: inc/domain/pricing/prices.php:269
+msgid "Child 0–6"
+msgstr ""
+
+#: inc/domain/pricing/prices.php:270
+msgid "Student / senior 65+"
+msgstr ""
+
+#: inc/domain/route/routes.php:154
+#: inc/domain/route/routes.php:202
+#: inc/domain/route/routes.php:209
+#, php-format
+msgid "Från %1$s Till %2$s"
+msgstr ""
+
+#: inc/domain/route/routes.php:160
+#, php-format
+msgid "Route to %s"
+msgstr ""
+
+#. translators: 1: station row, 2: train/service label, 3: time or symbol
+#: inc/domain/timetable/view/grid-helpers.php:25
+#, php-format
 msgid "%1$s. %2$s: %3$s"
 msgstr ""
 
-#: inc/functions/journey-connections-table.php
-msgid "Train connections from %1$s to %2$s on %3$s"
+#: inc/domain/timetable/view/grid-rows.php:57
+#: inc/domain/timetable/view/grid-rows.php:64
+#: inc/domain/timetable/view/grid-rows.php:152
+#: inc/domain/timetable/view/grid.php:131
+#, php-format
+msgid "Från %s"
 msgstr ""
 
-#: inc/functions/journey-connections-table.php
-msgid "Return train connections from %1$s to %2$s on %3$s"
+#: inc/domain/timetable/view/grid-rows.php:142
+#: inc/domain/timetable/view/grid-rows.php:289
+#: inc/domain/timetable/view/grid-rows.php:296
+#: inc/domain/timetable/view/grid.php:133
+#, php-format
+msgid "Till %s"
 msgstr ""
 
-#: inc/shortcodes/shortcode-journey.php
-msgid "Journey planner"
+#: inc/domain/timetable/view/grid-rows.php:265
+#: inc/domain/timetable/view/grid-rows.php:326
+#: inc/domain/timetable/view/grid-rows.php:386
+msgid "Tågbyte:"
 msgstr ""
 
-#: inc/shortcodes/shortcode-journey.php
-msgid "Connection search results"
+#: inc/domain/timetable/view/overview.php:131
+#: inc/domain/timetable/view/overview.php:132
+msgid "Förklaringar"
 msgstr ""
 
-#: inc/shortcodes/shortcode-month.php
-msgid "Timetable month view, %s"
+#: inc/domain/timetable/view/overview.php:136
+msgid "Tåget stannar endast om det finns av- eller påstigande passagerare. Vill du stiga på, ställ dig tydligt så att föraren ser dig och stannar tåget. Vill du stiga av, säg till konduktören i god tid. Observera att avgångstiden är ungefärlig."
 msgstr ""
 
-#: inc/shortcodes/shortcode-month.php
-msgid "Month navigation"
+#: inc/domain/timetable/view/overview.php:140
+msgid "Tåget stannar endast om det finns påstigande passagerare. Vill du stiga på, ställ dig tydligt så att föraren ser dig och stannar tåget. Observera att avgångstiden är ungefärlig."
 msgstr ""
 
-#: inc/shortcodes/shortcode-month.php
-msgid "Operating days for %s"
+#: inc/domain/timetable/view/overview.php:144
+msgid "Inga anslutningsbussar går denna dag."
 msgstr ""
 
-#: inc/shortcodes/shortcode-month.php
+#: inc/domain/timetable/view/overview.php:148
+msgid "Thun’s-expressen tar dig till och från klädvaruhuset Thun’s i Faringe."
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:151
+msgid "Med reservation för ändring av tågtyp."
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:167
+#: inc/infrastructure/ajax/timetable-services.php:23
+msgid "Invalid timetable."
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:178
+msgid "No trips in this timetable."
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:184
+msgid "No valid trips in this timetable."
+msgstr ""
+
+#. translators: %s: timetable post title
+#: inc/domain/timetable/view/overview.php:195
+#, php-format
+msgid "Timetable overview: %s"
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:216
+#: inc/public/month-calendar/shortcode.php:292
+#: inc/public/month-calendar/shortcode.php:299
+msgid "Invalid date."
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:222
+msgid "No services running on this date."
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:228
+msgid "No services found."
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:234
+msgid "No valid services found for this date."
+msgstr ""
+
+#: inc/domain/timetable/view/overview.php:246
+#, php-format
+msgid "Timetable for %s"
+msgstr ""
+
+#. translators: 1: station count, 2: train type count, 3: timetable summaries, 4: services created
+#: inc/import/lennakatten/importer.php:23
+#, php-format
+msgid "Import complete. Stations: %1$d, Routes: 4 (2 rail + 2 bus), Train types: %2$d, Timetables: %3$s, Services created: %4$d."
+msgstr ""
+
+#: inc/import/lennakatten/reference-data.php:222
+msgid "GRÖN"
+msgstr ""
+
+#: inc/import/lennakatten/reference-data.php:231
+msgid "GUL"
+msgstr ""
+
+#: inc/infrastructure/ajax/journey-parse.php:24
+msgid "Please select both departure and arrival stations."
+msgstr ""
+
+#: inc/infrastructure/ajax/journey-parse.php:30
+msgid "Please select different stations for departure and arrival."
+msgstr ""
+
+#: inc/infrastructure/ajax/journey-parse.php:80
+#: inc/infrastructure/ajax/timetable-frontend.php:25
+msgid "Please select a valid date."
+msgstr ""
+
+#: inc/infrastructure/ajax/journey-parse.php:106
+msgid "Please provide a valid outbound arrival time for return search."
+msgstr ""
+
+#: inc/infrastructure/ajax/journey-parse.php:132
+msgid "Please select a valid month."
+msgstr ""
+
+#: inc/infrastructure/ajax/journey-parse.php:158
+#: inc/infrastructure/ajax/timetable-services.php:158
+msgid "Invalid service."
+msgstr ""
+
+#: inc/infrastructure/ajax/journey.php:54
+#: inc/infrastructure/ajax/journey.php:87
+#: inc/infrastructure/ajax/journey.php:121
+#: inc/infrastructure/ajax/timetable-frontend.php:19
+#: inc/infrastructure/ajax/timetable-services.php:18
+msgid "Security check failed. Please refresh the page."
+msgstr ""
+
+#: inc/infrastructure/ajax/route-destinations.php:75
+#: inc/infrastructure/ajax/route-stations.php:85
+#: inc/infrastructure/ajax/route-stations.php:151
+msgid "Invalid route."
+msgstr ""
+
+#: inc/infrastructure/ajax/route-stations.php:160
+msgid "End stations saved successfully."
+msgstr ""
+
+#: inc/infrastructure/ajax/timetable-services.php:26
+msgid "Route is required."
+msgstr ""
+
+#: inc/infrastructure/ajax/timetable-services.php:120
+msgid "Failed to create trip: "
+msgstr ""
+
+#: inc/infrastructure/ajax/timetable-services.php:169
+msgid "Trip removed from timetable."
+msgstr ""
+
+#: inc/infrastructure/post-types/admin.php:15
+#: inc/infrastructure/post-types/admin.php:103
+msgid "Station Name"
+msgstr ""
+
+#: inc/infrastructure/post-types/admin.php:35
+#: inc/infrastructure/post-types/admin.php:115
+msgid "Trip Name"
+msgstr ""
+
+#: inc/infrastructure/post-types/admin.php:48
+msgid "ID"
+msgstr ""
+
+#: inc/infrastructure/post-types/admin.php:72
+#: inc/infrastructure/post-types/admin.php:81
+msgid "Enter station name"
+msgstr ""
+
+#: inc/infrastructure/post-types/admin.php:74
+#: inc/infrastructure/post-types/admin.php:83
+msgid "Enter route name"
+msgstr ""
+
+#: inc/infrastructure/post-types/admin.php:76
+#: inc/infrastructure/post-types/admin.php:85
+msgid "Trip name (auto-generated from Route + Direction)"
+msgstr ""
+
+#: inc/public/journey-wizard/fields.php:51
+msgid "Var börjar du din resa?"
+msgstr ""
+
+#: inc/public/journey-wizard/fields.php:55
+msgid "Till"
+msgstr ""
+
+#: inc/public/journey-wizard/fields.php:58
+msgid "Vart vill du resa?"
+msgstr ""
+
+#: inc/public/journey-wizard/fields.php:62
+msgid "Restyp"
+msgstr ""
+
+#: inc/public/journey-wizard/fields.php:67
+msgid "Enkel"
+msgstr ""
+
+#: inc/public/journey-wizard/fields.php:72
+msgid "Tur och retur"
+msgstr ""
+
+#: inc/public/journey-wizard/fields.php:78
+msgid "Sök resa"
+msgstr ""
+
+#: inc/public/journey-wizard/shell.php:99
+msgid "This planner needs JavaScript enabled."
+msgstr ""
+
+#: inc/public/journey-wizard/shell.php:102
+msgid "Trip planner steps"
+msgstr ""
+
+#: inc/public/journey-wizard/shell.php:149
+msgid "No stations are available."
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:38
+msgid "Sök din resa med Lennakatten"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:62
+msgid "← Tillbaka"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:88
+msgid "Välj datum"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:91
+msgid "Calendar month navigation"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:92
+#: inc/public/month-calendar/shortcode.php:170
+msgid "Previous month"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:94
+#: inc/public/month-calendar/shortcode.php:175
+msgid "Next month"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:96
+msgid "Denna månad"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:103
+msgid "Travel dates calendar"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:105
+msgid "Calendar legend"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:106
+msgid "Lennakatten trafikerar den valda resan"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:107
+msgid "Lennakatten trafikerar, men ej den valda resan"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:108
+msgid "Ingen trafik"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:133
+msgid "Välj utresa"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:159
+msgid "Välj återresa"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:184
+msgid "Din resa"
+msgstr ""
+
+#: inc/public/journey-wizard/steps.php:188
+msgid "Fortsätt till biljetter"
+msgstr ""
+
+#: inc/public/journey-wizard/timetable.php:43
+msgid "Visa tidtabell"
+msgstr ""
+
+#. translators: 1: formatted date, 2: number of services
+#: inc/public/month-calendar/shortcode.php:81
+#, php-format
 msgid "Show timetable for %1$s, %2$d services"
 msgstr ""
 
-#: inc/shortcodes/shortcode-month.php
+#: inc/public/month-calendar/shortcode.php:83
+#, php-format
 msgid "Show timetable for %s"
 msgstr ""
 
-#: inc/shortcodes/shortcode-month.php
+#: inc/public/month-calendar/shortcode.php:167
+msgid "Month navigation"
+msgstr ""
+
+#. translators: %s: month and year, e.g. April 2026
+#: inc/public/month-calendar/shortcode.php:201
+#, php-format
+msgid "Timetable month view, %s"
+msgstr ""
+
+#. translators: %s: month and year
+#: inc/public/month-calendar/shortcode.php:210
+#, php-format
+msgid "Operating days for %s"
+msgstr ""
+
+#: inc/public/month-calendar/shortcode.php:227
+msgid "Service day"
+msgstr ""
+
+#: inc/public/month-calendar/shortcode.php:229
+msgid "count per day"
+msgstr ""
+
+#: inc/public/month-calendar/shortcode.php:231
+msgid "Click to view timetable"
+msgstr ""
+
+#: inc/public/month-calendar/shortcode.php:234
 msgid "Selected day timetable"
 msgstr ""
 
+#: inc/public/timetable-overview/shortcode.php:36
+msgid "Timetable not found."
+msgstr ""

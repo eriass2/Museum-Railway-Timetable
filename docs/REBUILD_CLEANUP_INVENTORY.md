@@ -31,6 +31,7 @@ Statusnycklar:
 | Produktbeslut | `docs/REBUILD_PRODUCT_DECISIONS.md`. |
 | A11y rökning | `docs/ACCESSIBILITY_SMOKE.md` + statiska kontroller i `validate.php`. |
 | Fysisk rensning §7 (2026-05-25) | Sista kvarvarande dubbletter borttagna: `inc/admin-meta-boxes/`, `inc/admin-ajax/`, `inc/import-lennakatten/`. `php scripts/validate.php` grönt. |
+| Översättningar (2026-05-26) | `.pot` regenererad från `inc/`; `.po` mergad (orphan journey-planner-strängar borta); `scripts/make-i18n.ps1`. |
 
 ---
 

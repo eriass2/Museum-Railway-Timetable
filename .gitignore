@@ -54,5 +54,8 @@ COMMIT_MESSAGE.txt
 # Composer
 /vendor/
 
+# gettext merge backups
+*.po~
+
 # Deploy config (user-specific Local path)
 local/deploy.config.json
