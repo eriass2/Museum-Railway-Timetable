@@ -34,11 +34,9 @@ php scripts/validate.php
 - Lokal PHP 7.4 kör inte full `composer install`; använd Docker för PHPUnit/PHPStan.
 - Mockup-PNG finns inte i repot; wizard-stil är återställd från pre-purge CSS.
 
-## Nästa steg (main, utan PR-krav)
+## Nästa steg
 
-- ~~Legacy `inc/functions/*`-loaders~~ — borttagna; `inc/bootstrap/domain.php`.
-- ~~`inc/admin-page/`~~ — `inc/admin/` (`dashboard/`, `tools/`, `meta-boxes/`).
-- ~~`inc/admin-meta-boxes/`~~, ~~`inc/admin-ajax/`~~, ~~`inc/cpt/`~~ — `inc/admin/meta-boxes/`, `inc/infrastructure/ajax/`, `inc/infrastructure/post-types/`.
-- Wizard utresa/retur: `steps-outbound-return.css`; designreferens i `docs/mockups/DESIGN_TOKENS.md`.
-- [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-logg; statiska markörer i `validate.php`.
-- [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) – MVP-beslut (wizard, månad, import).
+- Manuell rökning: wizard hela flödet (steg 3–4, byte t.ex. Uppsala Östra → Fjällnora via Selknä).
+- Frontend-polish mot mockup (§8.6 i [REBUILD_SKETCH.md](REBUILD_SKETCH.md)); designreferens i `docs/mockups/DESIGN_TOKENS.md`.
+- [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-logg.
+- Dokumentationssynk: [REBUILD_CLEANUP_INVENTORY.md](REBUILD_CLEANUP_INVENTORY.md) avsnitt 2 (`ARCHITECTURE.md`, `DEVELOPER.md`, …).

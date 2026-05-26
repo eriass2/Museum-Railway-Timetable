@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for price matrix helpers (production code: inc/functions/journey-prices.php).
+ * Tests for price matrix helpers (production code: inc/domain/pricing/prices.php).
  *
  * @package Museum_Railway_Timetable
  */
@@ -10,7 +10,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 /**
- * Global MRT_* functions from inc/functions/journey-prices.php (no namespace).
+ * Global MRT_* functions from inc/domain/pricing/prices.php (no namespace).
  */
 final class JourneyPricesTest extends TestCase {
 

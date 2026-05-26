@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for connection row helpers (inc/functions/services.php).
+ * Tests for connection row helpers (inc/domain/service/services.php).
  *
  * @package Museum_Railway_Timetable
  */

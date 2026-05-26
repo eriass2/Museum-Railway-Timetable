@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for return-journey helpers (inc/functions/journey-return.php).
+ * Tests for return-journey helpers (inc/domain/journey/journey-return.php).
  *
  * @package Museum_Railway_Timetable
  */

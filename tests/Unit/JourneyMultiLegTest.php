@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for multi-leg journey helpers (inc/functions/journey-multi-leg.php, journey-detail.php).
+ * Tests for multi-leg journey helpers (inc/domain/journey/journey-multi-leg.php, journey-detail.php).
  *
  * @package Museum_Railway_Timetable
  */

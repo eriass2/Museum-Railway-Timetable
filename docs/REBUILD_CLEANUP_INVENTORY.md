@@ -30,6 +30,7 @@ Statusnycklar:
 | Mockups | `docs/mockups/README.md`, `DESIGN_TOKENS.md`. |
 | Produktbeslut | `docs/REBUILD_PRODUCT_DECISIONS.md`. |
 | A11y rökning | `docs/ACCESSIBILITY_SMOKE.md` + statiska kontroller i `validate.php`. |
+| Fysisk rensning §7 (2026-05-25) | Sista kvarvarande dubbletter borttagna: `inc/admin-meta-boxes/`, `inc/admin-ajax/`, `inc/import-lennakatten/`. `php scripts/validate.php` grönt. |
 
 ---
 
@@ -203,21 +204,16 @@ Det som ska sparas är referenserna: mockups, tidtabells-PDF:er, tågikonerna i 
 
 ## 8. Första faktiska cleanup-PR efter denna inventering
 
-Rekommenderat första cleanup-scope:
+**Status:** Genomfört i `main` (bootstrap, målstruktur, flytt av loaders/helpers, borttag av legacy-träd och journey planner). Kvar enligt avsnitt 2: skriv om `README.md`/`ARCHITECTURE.md` m.fl. så de pekar på rebuild-dokument utan dubbla regler.
 
-1. Skapa `inc/bootstrap.php`.
-2. Skapa tom ny målstruktur (`domain`, `import`, `admin`, `public`, `infrastructure`).
-3. Purga nuvarande utseendeimplementation enligt avsnittet `Utseendepurge`.
-4. Flytta endast loaders/enkla rena helpers först.
-5. Låt gamla icke-utseende-filer samexistera tills motsvarande tester pekar på ny modul.
-6. Radera bara dokumentationsdubbletter som helt ersätts av `REBUILD_*`.
+Tidigare rekommenderat scope (referens):
 
-Undvik i första cleanup-PR:
-
-- att radera fungerande import
-- att radera testdata
-- att radera journey-domänlogik
-- att byta datamodell och UI samtidigt
+1. ~~Skapa `inc/bootstrap.php`.~~
+2. ~~Skapa målstruktur (`domain`, `import`, `admin`, `public`, `infrastructure`).~~
+3. Utseendepurge – delvis; wizard/CSS återställd, mockup-PNG saknas i repo.
+4. ~~Flytta loaders/helpers.~~
+5. ~~Legacy samexisterar inte längre.~~
+6. Dokumentationsdubbletter – pågående (`docs/README.md` som index).
 
 ---
 
