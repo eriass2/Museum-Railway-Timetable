@@ -284,18 +284,30 @@
         });
     }
 
-    function mrtWizardVehicleClass(label) {
+    function mrtWizardVehicleIconKey(label, slug, iconKey) {
+        if (iconKey) {
+            return iconKey;
+        }
+        var cfg = typeof mrtJourneyWizard !== 'undefined' ? mrtJourneyWizard : {};
+        var slugMap = cfg.trainTypeSlugIcons || {};
+        var slugLower = String(slug || '').toLowerCase();
+        if (slugLower && slugMap[slugLower]) {
+            return slugMap[slugLower];
+        }
         var s = String(label || '').toLowerCase();
         if (s.indexOf('rälsbuss') !== -1 || s.indexOf('ralsbuss') !== -1 || s.indexOf('railbus') !== -1) {
             return 'railbus';
         }
-        if (s === 'buss') {
+        if (s === 'buss' || slugLower === 'buss') {
             return 'bus';
         }
-        if (s.indexOf('ång') !== -1 || s.indexOf('steam') !== -1 || s.indexOf('ang') !== -1) {
+        if (slugLower === 'ang-diesel' || (s.indexOf('ång') !== -1 && s.indexOf('diesel') !== -1)) {
+            return 'diesel';
+        }
+        if (s.indexOf('ång') !== -1 || s.indexOf('steam') !== -1 || slugLower === 'angtag') {
             return 'steam';
         }
-        if (s.indexOf('diesel') !== -1 || s.indexOf('elektrisk') !== -1 || s.indexOf('electric') !== -1) {
+        if (s.indexOf('diesel') !== -1 || s.indexOf('elektrisk') !== -1 || s.indexOf('electric') !== -1 || slugLower === 'dieseltag') {
             return 'diesel';
         }
         return 'diesel';
@@ -307,12 +319,12 @@
         if (!url) {
             return '<span class="mrt-journey-wizard__vehicle-mark" aria-hidden="true"></span>';
         }
-        return '<img src="' + SU.escapeHtml(url) + '" class="mrt-journey-wizard__vehicle-icon" width="48" height="24" decoding="async" alt="" />';
+        return '<img src="' + SU.escapeHtml(url) + '" class="mrt-journey-wizard__vehicle-icon mrt-train-type-icon-img mrt-train-type-icon-img--' + SU.escapeHtml(kind) + '" width="48" height="24" decoding="async" alt="" />';
     }
 
-    function mrtWizardVehicleBadge(label, serviceName) {
+    function mrtWizardVehicleBadge(label, serviceName, slug, iconKey) {
         var text = label || serviceName || '';
-        var kind = mrtWizardVehicleClass(text);
+        var kind = mrtWizardVehicleIconKey(text, slug, iconKey);
         return '<span class="mrt-journey-wizard__vehicle mrt-journey-wizard__vehicle--' + kind + '">' +
             mrtWizardVehicleIconHtml(kind) +
             '<span>' + SU.escapeHtml(text || 'Tåg') + '</span>' +
@@ -320,10 +332,10 @@
     }
 
     function mrtWizardLegVehicleBadge(leg) {
-        var service = leg.service_name || (leg.service_id ? String(leg.service_id) : '');
+        var service = leg.service_name || leg.service_number || (leg.service_id ? String(leg.service_id) : '');
         var train = leg.train_type || '';
         var label = train && service ? (train + ' ' + service) : (train || service);
-        return mrtWizardVehicleBadge(label, service);
+        return mrtWizardVehicleBadge(label, service, leg.train_type_slug, leg.train_type_icon);
     }
 
     function mrtWizardConnectionLegs(conn) {
@@ -364,7 +376,7 @@
             badges += mrtWizardLegVehicleBadge(leg);
         });
         if (!badges) {
-            badges = mrtWizardVehicleBadge(conn.train_type, conn.service_name);
+            badges = mrtWizardVehicleBadge(conn.train_type, conn.service_name, conn.train_type_slug, conn.train_type_icon);
         }
         return badges;
     }
@@ -434,7 +446,7 @@
         if (duration) {
             html += '<strong>' + SU.escapeHtml(duration) + '</strong>';
         }
-        html += '<div class="mrt-journey-wizard__vehicle-row">' + mrtWizardVehicleBadge(conn.train_type, conn.service_name) + '</div>';
+        html += '<div class="mrt-journey-wizard__vehicle-row">' + mrtWizardCardBadgesHtml(conn) + '</div>';
         html += '</div>';
         return html;
     }
@@ -985,7 +997,7 @@
                     SU.escapeHtml(window.MRTDateUtils.formatYmdForDisplay(state.date, cfg)) + '<br><span class="mrt-journey-wizard__trip-time">' +
                     SU.escapeHtml(departureFromOrigin(ob)) + '→' +
                     SU.escapeHtml(arrivalAtDestination(ob)) + '</span><div class="mrt-journey-wizard__vehicle-row">' +
-                    mrtWizardVehicleBadge(ob.train_type, ob.service_name) + '</div>' +
+                    mrtWizardCardBadgesHtml(ob) + '</div>' +
                     '</div>');
             }
             if (state.tripType === 'return' && state.inbound) {
@@ -995,7 +1007,7 @@
                     SU.escapeHtml(window.MRTDateUtils.formatYmdForDisplay(state.date, cfg)) + '<br><span class="mrt-journey-wizard__trip-time">' +
                     SU.escapeHtml(departureFromOrigin(ib)) + '→' +
                     SU.escapeHtml(arrivalAtDestination(ib)) + '</span><div class="mrt-journey-wizard__vehicle-row">' +
-                    mrtWizardVehicleBadge(ib.train_type, ib.service_name) + '</div>' +
+                    mrtWizardCardBadgesHtml(ib) + '</div>' +
                     '</div>');
             }
             $box.html(parts.join('') + mrtWizardBuildPriceSection(

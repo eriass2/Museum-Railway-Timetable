@@ -37,6 +37,7 @@ function MRT_journey_build_leg_segment( $service_id, $from_station_id, $to_stati
 		'to_arrival'      => $arr,
 		'train_type'      => $tt ? $tt->name : '',
 		'train_type_slug' => $tt ? $tt->slug : '',
+		'train_type_icon' => $tt ? MRT_get_train_type_symbol_key( $tt ) : '',
 		'service_number'  => $num !== '' && $num !== null ? (string) $num : (string) $service_id,
 	);
 }
@@ -62,6 +63,7 @@ function MRT_journey_leg_from_connection_row( array $conn, $dateYmd, $from_stati
 		'to_arrival'      => $conn['to_arrival'] ? (string) $conn['to_arrival'] : (string) ( $conn['to_departure'] ?? '' ),
 		'train_type'      => $tt ? $tt->name : (string) ( $conn['train_type'] ?? '' ),
 		'train_type_slug' => $tt ? $tt->slug : '',
+		'train_type_icon' => $tt ? MRT_get_train_type_symbol_key( $tt ) : MRT_get_train_type_symbol_key_from_label( (string) ( $conn['train_type'] ?? '' ) ),
 		'service_number'  => $num !== '' && $num !== null ? (string) $num : (string) $sid,
 	);
 }

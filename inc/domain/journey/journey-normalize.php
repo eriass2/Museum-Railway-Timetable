@@ -232,6 +232,7 @@ function MRT_normalize_connection_for_api( $item, $dateYmd, $from_station_id, $t
 	$sid   = intval( $conn['service_id'] ?? 0 );
 	$dep   = MRT_connection_row_departure_at_from( $conn );
 	$arr   = ! empty( $conn['to_arrival'] ) ? (string) $conn['to_arrival'] : (string) ( $conn['to_departure'] ?? '' );
+	$tt    = $sid > 0 ? MRT_get_service_train_type_for_date( $sid, $dateYmd ) : null;
 	$extra = MRT_normalize_segments_single_service( $sid, $from_station_id, $to_station_id, $dateYmd );
 	$dur   = $extra['duration_minutes'];
 	if ( $dur === null ) {
@@ -247,7 +248,11 @@ function MRT_normalize_connection_for_api( $item, $dateYmd, $from_station_id, $t
 		'from_departure'      => $dep,
 		'to_arrival'          => $arr,
 		'duration_minutes'    => $dur,
-		'train_type'          => (string) ( $conn['train_type'] ?? '' ),
+		'train_type'          => $tt ? $tt->name : (string) ( $conn['train_type'] ?? '' ),
+		'train_type_slug'     => $tt ? $tt->slug : '',
+		'train_type_icon'     => $tt
+			? MRT_get_train_type_symbol_key( $tt )
+			: MRT_get_train_type_symbol_key_from_label( (string) ( $conn['train_type'] ?? '' ) ),
 		'service_name'        => (string) ( $conn['service_name'] ?? '' ),
 		'route_name'          => (string) ( $conn['route_name'] ?? '' ),
 		'destination'         => (string) ( $conn['destination'] ?? '' ),
