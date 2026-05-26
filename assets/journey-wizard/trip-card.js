@@ -1,5 +1,5 @@
 /**
- * Trip cards for outbound / return steps (valj-utresa mockup).
+ * Trip cards for outbound / return / summary (uses JW.render components).
  *
  * @package Museum_Railway_Timetable
  */
@@ -8,37 +8,11 @@
 
 	var JW = global.MRTJourneyWizard;
 	var SU = global.MRTStringUtils;
+	var R = JW.render;
+	var C = R.C;
 	var connApi = JW.connection;
 	var vehicle = JW.vehicle;
 	var ctxApi = JW.context;
-
-	function formatTripClock(time) {
-		if (!time) {
-			return '—';
-		}
-		return String(time).replace(':', '.');
-	}
-
-	function formatDuration(minutes, cfg) {
-		var m = parseInt(minutes, 10);
-		if (isNaN(m) || m < 0) {
-			return '';
-		}
-		if (m >= 60) {
-			var h = Math.floor(m / 60);
-			var rest = m % 60;
-			return rest ? (h + ' tim ' + rest + ' min') : (h + ' tim');
-		}
-		return (cfg.durationMinutes || '%d min').replace('%d', String(m));
-	}
-
-	function ariaChooseTrip(conn, dep, arr, cfg) {
-		var s = cfg.btnChooseTripAria || '';
-		return s
-			.replace('%1$s', conn.service_name || '')
-			.replace('%2$s', dep)
-			.replace('%3$s', arr);
-	}
 
 	function connectionLegs(conn) {
 		if (conn.legs && conn.legs.length) {
@@ -75,145 +49,74 @@
 				vehicle.vehicleBadge(conn.train_type, conn.service_name, conn.train_type_slug, conn.train_type_icon)
 			);
 		}
-		return parts.join('<span class="mrt-journey-wizard__vehicle-sep" aria-hidden="true">→</span>');
+		return parts.join(R.vehicleSepHtml());
 	}
 
-	function isWarningNotice(notice) {
-		var n = String(notice || '').toLowerCase();
-		return n.indexOf('brand') !== -1 || n.indexOf('ersatt') !== -1 || n.indexOf('varning') !== -1;
+	function ariaChooseTrip(conn, dep, arr, cfg) {
+		var s = cfg.btnChooseTripAria || '';
+		return s
+			.replace('%1$s', conn.service_name || '')
+			.replace('%2$s', dep)
+			.replace('%3$s', arr);
 	}
 
-	function cardNoticeDotHtml(notice, cfg) {
-		if (!notice) {
-			return '';
-		}
-		if (isWarningNotice(notice)) {
-			return '<span class="mrt-journey-wizard__notice-warn" role="img" aria-label="' +
-				SU.escapeHtml(cfg.noticeLabel || '') + '">⚠</span>';
-		}
-		return '<span class="mrt-journey-wizard__notice-dot" aria-label="' +
-			SU.escapeHtml(cfg.noticeLabel || '') + '">!</span>';
-	}
-
-	function cardCopyHtml(conn, dep, arr, legCtx, cfg, state) {
-		var notice = conn.notice || '';
-		var html = '<div class="mrt-journey-wizard__trip-copy">';
-		html += '<p class="mrt-journey-wizard__trip-time">' + SU.escapeHtml(dep) + ' → ' + SU.escapeHtml(arr);
-		html += cardNoticeDotHtml(notice, cfg);
-		html += '</p>';
-		if (notice) {
-			html += '<p class="mrt-journey-wizard__notice' + (isWarningNotice(notice) ? ' mrt-journey-wizard__notice--warning' : '') +
-				'">' + SU.escapeHtml(notice) + '</p>';
-		}
-		html += '<p class="mrt-journey-wizard__trip-route">' + SU.escapeHtml(ctxApi.cardRouteText(state, legCtx)) + '</p>';
-		html += '<div class="mrt-journey-wizard__vehicle-row">' + cardBadgesHtml(conn) + '</div>';
-		return html + '</div>';
-	}
-
-	function cardSideHtml(conn, idx, legCtx, dep, arr, cfg) {
-		var duration = formatDuration(conn.duration_minutes, cfg);
-		var html = '<div class="mrt-journey-wizard__trip-side">';
-		if (duration) {
-			html += '<span class="mrt-journey-wizard__duration">' + SU.escapeHtml(duration) + '</span>';
-		}
-		html += '<button type="button" class="mrt-journey-wizard__btn-select" aria-label="' +
+	function selectButtonHtml(conn, idx, legCtx, dep, arr, cfg) {
+		return '<button type="button" class="' + C.btnSelect + ' mrt-journey-wizard__btn-select" aria-label="' +
 			SU.escapeHtml(ariaChooseTrip(conn, dep, arr, cfg)) + '" data-ctx="' + SU.escapeHtml(legCtx) +
 			'" data-idx="' + String(idx) + '">' + SU.escapeHtml(cfg.selectTrip || 'Välj →') + '</button>';
-		return html + '</div>';
 	}
 
-	function cardDetailButtonHtml(conn, idx, legCtx, legFrom, legTo, detailId, cfg) {
-		var html = '<button type="button" class="mrt-journey-wizard__btn-detail" aria-label="' +
-			SU.escapeHtml((cfg.btnShowStopsAria || '').replace('%s', conn.service_name || connectionMeta(conn, cfg))) +
-			'" aria-expanded="false" aria-controls="' + detailId + '" data-ctx="' + SU.escapeHtml(legCtx) +
-			'" data-idx="' + String(idx) + '" data-leg-from="' + String(legFrom) + '" data-leg-to="' + String(legTo) + '">';
-		html += '<span>' + SU.escapeHtml(connectionMeta(conn, cfg)) + '</span><span class="mrt-journey-wizard__chevron" aria-hidden="true"></span>';
-		return html + '</button>';
+	function legTripHead(conn, dep, arr, routeText, dateText, cfg, sideExtra) {
+		var notice = conn.notice || '';
+		return R.tripHeadHtml({
+			dep: dep,
+			arr: arr,
+			route: routeText,
+			date: dateText || '',
+			noticeMarker: R.noticeMarkerHtml(notice, cfg),
+			noticeBlock: R.noticeBlockHtml(notice),
+			vehiclesHtml: cardBadgesHtml(conn),
+			duration: R.formatDuration(conn.duration_minutes, cfg),
+			sideExtra: sideExtra || '',
+		});
 	}
 
 	function cardHtml(conn, idx, legCtx, legFrom, legTo, cfg, state) {
-		var dep = formatTripClock(connApi.departureFromOrigin(conn));
-		var arr = formatTripClock(connApi.arrivalAtDestination(conn));
+		var dep = R.formatTripClock(connApi.departureFromOrigin(conn));
+		var arr = R.formatTripClock(connApi.arrivalAtDestination(conn));
 		var detailId = 'mrt-jw-detail-' + legCtx + '-' + idx;
-		var html = '<article class="mrt-journey-wizard__trip-card" data-wizard-card="' + SU.escapeHtml(legCtx) + '-' + idx + '">';
-		html += '<div class="mrt-journey-wizard__trip-main">';
-		html += cardCopyHtml(conn, dep, arr, legCtx, cfg, state);
-		html += cardSideHtml(conn, idx, legCtx, dep, arr, cfg);
-		html += '</div>';
-		html += cardDetailButtonHtml(conn, idx, legCtx, legFrom, legTo, detailId, cfg);
-		html += '<div class="mrt-journey-wizard__detail" id="' + detailId + '" hidden></div>';
-		html += '</article>';
-		return html;
+		var attrs = 'aria-expanded="false" aria-controls="' + detailId + '" data-ctx="' + SU.escapeHtml(legCtx) +
+			'" data-idx="' + String(idx) + '" data-leg-from="' + String(legFrom) + '" data-leg-to="' + String(legTo) + '"';
+		var html = '<article class="' + C.cardTrip + ' mrt-journey-wizard__trip-card" data-wizard-card="' +
+			SU.escapeHtml(legCtx) + '-' + idx + '">';
+		html += legTripHead(conn, dep, arr, ctxApi.cardRouteText(state, legCtx), '', cfg, selectButtonHtml(conn, idx, legCtx, dep, arr, cfg));
+		html += R.expandButtonHtml(connectionMeta(conn, cfg), attrs);
+		html += '<div class="' + C.detail + ' mrt-journey-wizard__detail" id="' + detailId + '" hidden></div>';
+		return html + '</article>';
 	}
 
-	/**
-	 * Summary step leg card (Utresa / Återresa).
-	 *
-	 * @param {string} heading Section title
-	 * @param {object} conn Connection
-	 * @param {string} routeText Station pair for this leg
-	 * @param {string} dateText Formatted travel date
-	 * @param {object} cfg Wizard l10n
-	 */
 	function summaryLegCardHtml(heading, conn, routeText, dateText, cfg) {
-		var dep = formatTripClock(connApi.departureFromOrigin(conn));
-		var arr = formatTripClock(connApi.arrivalAtDestination(conn));
-		var duration = formatDuration(conn.duration_minutes, cfg);
-		var notice = conn.notice || '';
-		var html = '<article class="mrt-journey-wizard__summary-card">';
-		html += '<h4 class="mrt-journey-wizard__summary-heading">' + SU.escapeHtml(heading) + '</h4>';
-		html += '<div class="mrt-journey-wizard__summary-main">';
-		html += '<div class="mrt-journey-wizard__summary-copy">';
-		html += '<p class="mrt-journey-wizard__trip-time">' + SU.escapeHtml(dep) + ' → ' + SU.escapeHtml(arr);
-		html += cardNoticeDotHtml(notice, cfg);
-		html += '</p>';
-		if (notice) {
-			html += '<p class="mrt-journey-wizard__notice' + (isWarningNotice(notice) ? ' mrt-journey-wizard__notice--warning' : '') +
-				'">' + SU.escapeHtml(notice) + '</p>';
-		}
-		html += '<p class="mrt-journey-wizard__trip-route">' + SU.escapeHtml(routeText) + '</p>';
-		if (dateText) {
-			html += '<p class="mrt-journey-wizard__summary-date">' + SU.escapeHtml(dateText) + '</p>';
-		}
-		html += '<div class="mrt-journey-wizard__vehicle-row">' + cardBadgesHtml(conn) + '</div>';
-		html += '</div>';
-		html += '<div class="mrt-journey-wizard__summary-side">';
-		if (duration) {
-			html += '<span class="mrt-journey-wizard__duration">' + SU.escapeHtml(duration) + '</span>';
-		}
-		html += '</div></div></article>';
-		return html;
+		var dep = R.formatTripClock(connApi.departureFromOrigin(conn));
+		var arr = R.formatTripClock(connApi.arrivalAtDestination(conn));
+		var html = '<article class="' + C.cardSummary + ' mrt-journey-wizard__summary-card">';
+		html += '<h4 class="' + C.summaryHeading + ' mrt-journey-wizard__summary-heading">' + SU.escapeHtml(heading) + '</h4>';
+		html += legTripHead(conn, dep, arr, routeText, dateText, cfg, '');
+		return html + '</article>';
 	}
 
 	function selectedTripHtml(conn, cfg, state) {
-		var dep = formatTripClock(connApi.departureFromOrigin(conn));
-		var arr = formatTripClock(connApi.arrivalAtDestination(conn));
-		var duration = formatDuration(conn.duration_minutes, cfg);
-		var notice = conn.notice || '';
-		var html = '<div class="mrt-journey-wizard__selected-label">' + SU.escapeHtml(cfg.selectedOutbound || 'Vald utresa') + '</div>';
-		html += '<div class="mrt-journey-wizard__selected-card">';
-		html += '<div class="mrt-journey-wizard__selected-main">';
-		html += '<div class="mrt-journey-wizard__selected-copy">';
-		html += '<p class="mrt-journey-wizard__trip-time">' + SU.escapeHtml(dep) + ' → ' + SU.escapeHtml(arr);
-		html += cardNoticeDotHtml(notice, cfg);
-		html += '</p>';
-		if (notice) {
-			html += '<p class="mrt-journey-wizard__notice' + (isWarningNotice(notice) ? ' mrt-journey-wizard__notice--warning' : '') +
-				'">' + SU.escapeHtml(notice) + '</p>';
-		}
-		html += '<p class="mrt-journey-wizard__trip-route">' + SU.escapeHtml(ctxApi.cardRouteText(state, 'outbound')) + '</p>';
-		html += '<div class="mrt-journey-wizard__vehicle-row">' + cardBadgesHtml(conn) + '</div>';
-		html += '</div>';
-		html += '<div class="mrt-journey-wizard__selected-side">';
-		if (duration) {
-			html += '<span class="mrt-journey-wizard__duration">' + SU.escapeHtml(duration) + '</span>';
-		}
-		html += '</div></div></div>';
-		return html;
+		var dep = R.formatTripClock(connApi.departureFromOrigin(conn));
+		var arr = R.formatTripClock(connApi.arrivalAtDestination(conn));
+		var html = '<div class="' + C.selectedLabel + ' mrt-journey-wizard__selected-label">' +
+			SU.escapeHtml(cfg.selectedOutbound || 'Vald utresa') + '</div>';
+		html += '<div class="' + C.cardSelected + ' mrt-journey-wizard__selected-card">';
+		html += legTripHead(conn, dep, arr, ctxApi.cardRouteText(state, 'outbound'), '', cfg, '');
+		return html + '</div>';
 	}
 
 	function renderConnectionCards($target, list, legCtx, legFrom, legTo, cfg, state) {
-		var html = '<div class="mrt-journey-wizard__trip-list" data-wizard-conn-context="' + SU.escapeHtml(legCtx) + '">';
+		var html = '<div class="' + C.tripList + ' mrt-journey-wizard__trip-list" data-wizard-conn-context="' +
+			SU.escapeHtml(legCtx) + '">';
 		list.forEach(function (conn, idx) {
 			html += cardHtml(conn, idx, legCtx, legFrom, legTo, cfg, state);
 		});

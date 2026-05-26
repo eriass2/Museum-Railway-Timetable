@@ -1,5 +1,5 @@
 /**
- * Expandable stop timeline on trip cards.
+ * Expandable stop timeline on trip cards (mrt-jw-timeline).
  *
  * @package Museum_Railway_Timetable
  */
@@ -8,18 +8,13 @@
 
 	var JW = global.MRTJourneyWizard;
 	var SU = global.MRTStringUtils;
+	var R = JW.render;
+	var C = R.C;
 	var tripCard = JW.tripCard;
 	var vehicle = JW.vehicle;
 
-	function formatTripClock(time) {
-		if (!time) {
-			return '';
-		}
-		return String(time).replace(':', '.');
-	}
-
 	function stationTime(s) {
-		return formatTripClock(s.departure_time || s.arrival_time || '');
+		return R.formatTripClock(s.departure_time || s.arrival_time || '');
 	}
 
 	function timelineStopsHtml(stops, cfg, expanded) {
@@ -29,18 +24,18 @@
 		});
 		visibleStops.forEach(function (stop, i) {
 			var isTerminal = i === 0 || i === visibleStops.length - 1;
-			html += '<div class="mrt-journey-wizard__timeline-row' + (isTerminal ? ' is-terminal' : '') + '">';
-			html += '<time class="mrt-journey-wizard__timeline-time">' + SU.escapeHtml(stationTime(stop)) + '</time>';
-			html += '<span class="mrt-journey-wizard__timeline-node" aria-hidden="true"></span>';
-			html += '<span class="mrt-journey-wizard__timeline-station">' + SU.escapeHtml(stop.station_title || '') + '</span>';
+			html += '<div class="' + C.timelineRow + ' mrt-journey-wizard__timeline-row' + (isTerminal ? ' is-terminal' : '') + '">';
+			html += '<time class="' + C.timelineTime + ' mrt-journey-wizard__timeline-time">' + SU.escapeHtml(stationTime(stop)) + '</time>';
+			html += '<span class="' + C.timelineNode + ' mrt-journey-wizard__timeline-node" aria-hidden="true"></span>';
+			html += '<span class="' + C.timelineStation + ' mrt-journey-wizard__timeline-station">' + SU.escapeHtml(stop.station_title || '') + '</span>';
 			html += '</div>';
 		});
 		if (!expanded && stops.length > 2) {
-			html += '<button type="button" class="mrt-journey-wizard__passed-toggle" data-wizard-passed-toggle>' +
+			html += '<button type="button" class="' + C.btnPassed + ' mrt-journey-wizard__passed-toggle" data-wizard-passed-toggle>' +
 				'∨ ' + SU.escapeHtml(cfg.showStops || 'visa passerade stationer') +
 				'</button>';
 		} else if (expanded && stops.length > 2) {
-			html += '<button type="button" class="mrt-journey-wizard__passed-toggle" data-wizard-passed-toggle>' +
+			html += '<button type="button" class="' + C.btnPassed + ' mrt-journey-wizard__passed-toggle" data-wizard-passed-toggle>' +
 				'∧ ' + SU.escapeHtml(cfg.hideStops || 'dölj passerade stationer') +
 				'</button>';
 		}
@@ -50,24 +45,24 @@
 	function buildStopsDetailHtml(detail, notice, cfg, leg, expanded) {
 		var html = '';
 		if (notice) {
-			html += '<p class="mrt-journey-wizard__notice"><strong>' + SU.escapeHtml(cfg.noticeLabel) + ':</strong> ' + SU.escapeHtml(notice) + '</p>';
+			html += '<p class="' + C.notice + ' mrt-journey-wizard__notice"><strong>' + SU.escapeHtml(cfg.noticeLabel) + ':</strong> ' + SU.escapeHtml(notice) + '</p>';
 		}
 		if (leg) {
-			html += '<div class="mrt-journey-wizard__timeline-leg">';
+			html += '<div class="' + C.timelineLeg + ' mrt-journey-wizard__timeline-leg">';
 			if (leg.duration_minutes) {
-				html += '<span class="mrt-journey-wizard__leg-duration">' +
+				html += '<span class="' + C.legDuration + ' mrt-journey-wizard__leg-duration">' +
 					SU.escapeHtml((cfg.durationMinutes || '%d min').replace('%d', String(leg.duration_minutes))) +
 					'</span>';
 			}
 			html += vehicle.legVehicleBadge(leg);
 			if (leg.destination || leg.direction) {
-				html += '<span class="mrt-journey-wizard__towards">' +
+				html += '<span class="' + C.towards + ' mrt-journey-wizard__towards">' +
 					SU.escapeHtml((cfg.towards || 'mot %s').replace('%s', leg.destination || leg.direction)) +
 					'</span>';
 			}
 			html += '</div>';
 		}
-		html += '<div class="mrt-journey-wizard__timeline">';
+		html += '<div class="' + C.timeline + ' mrt-journey-wizard__timeline">';
 		html += timelineStopsHtml(detail.stops || [], cfg, Boolean(expanded));
 		html += '</div>';
 		return html;
@@ -98,7 +93,7 @@
 		if (wait !== null && wait !== undefined && wait !== '') {
 			label = (cfg.transferWait || '%d min byte').replace('%d', String(wait));
 		}
-		return '<div class="mrt-journey-wizard__transfer-block">' + SU.escapeHtml(label) + '</div>';
+		return '<div class="' + C.timelineTransfer + ' mrt-journey-wizard__transfer-block">' + SU.escapeHtml(label) + '</div>';
 	}
 
 	function detailPricesHtml(wctx, legCtx) {
@@ -118,7 +113,7 @@
 
 	function loadMultiLegDetailRows(conn, $cell, $btn, cfg, ajaxPost, expanded, wctx, legCtx) {
 		var legTpl = cfg.legSegmentLabel || 'Train %d';
-		var multiHtml = '<div class="mrt-journey-wizard__detail mrt-journey-wizard__detail--multi">';
+		var multiHtml = '<div class="' + C.detail + ' mrt-journey-wizard__detail mrt-journey-wizard__detail--multi">';
 		var legIndex = 0;
 		function loadNextLeg() {
 			if (legIndex >= conn.legs.length) {
@@ -147,6 +142,10 @@
 		loadNextLeg();
 	}
 
+	function findTripCard($btn) {
+		return $btn.closest('.mrt-jw-card--trip, .mrt-journey-wizard__trip-card');
+	}
+
 	function loadDetailIntoCard(wctx, $btn, expanded) {
 		var cfg = wctx.cfg;
 		var legCtx = $btn.attr('data-ctx');
@@ -158,8 +157,8 @@
 		if (!conn) {
 			return;
 		}
-		var $card = $btn.closest('.mrt-journey-wizard__trip-card');
-		var $detail = $card.find('.mrt-journey-wizard__detail').first();
+		var $card = findTripCard($btn);
+		var $detail = $card.find('.mrt-jw-card__detail, .mrt-journey-wizard__detail').first();
 		$detail.removeAttr('hidden');
 		$detail.toggleClass('is-passed-expanded', Boolean(expanded));
 		$detail.html('<p class="mrt-empty">' + SU.escapeHtml(cfg.loading) + '</p>');
@@ -193,8 +192,8 @@
 	}
 
 	function toggleDetailRow(wctx, $btn) {
-		var $card = $btn.closest('.mrt-journey-wizard__trip-card');
-		var $detail = $card.find('.mrt-journey-wizard__detail').first();
+		var $card = findTripCard($btn);
+		var $detail = $card.find('.mrt-jw-card__detail, .mrt-journey-wizard__detail').first();
 		if ($detail.html()) {
 			var nextExpanded = $detail.is('[hidden]');
 			$detail.prop('hidden', !nextExpanded);

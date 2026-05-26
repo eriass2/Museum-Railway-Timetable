@@ -32,24 +32,24 @@
 	}
 
 	function calendarDayButton(ymd, dayNum, st, cfg, selectedDateYmd, $cal, onSelectOkDay) {
-		var $btn = $('<button type="button" class="mrt-journey-wizard__day"></button>');
+		var $btn = $('<button type="button" class="mrt-jw-btn mrt-jw-btn--day mrt-journey-wizard__day"></button>');
 		$btn.text(String(dayNum));
 		$btn.attr('aria-label', dayButtonAriaLabel(ymd, st, cfg));
 		if (st === 'ok') {
-			$btn.addClass('mrt-journey-wizard__day--ok');
+			$btn.addClass('mrt-jw-btn--day-ok mrt-journey-wizard__day--ok');
 			$btn.attr('aria-pressed', selectedDateYmd === ymd ? 'true' : 'false');
 			$btn.on('click', function () {
-				$cal.find('.mrt-journey-wizard__day--ok').each(function () {
+				$cal.find('.mrt-jw-btn--day-ok, .mrt-journey-wizard__day--ok').each(function () {
 					$(this).attr('aria-pressed', 'false').removeClass('is-selected');
 				});
 				$btn.attr('aria-pressed', 'true').addClass('is-selected');
 				onSelectOkDay(ymd);
 			});
 		} else if (st === 'traffic_no_match') {
-			$btn.addClass('mrt-journey-wizard__day--traffic');
+			$btn.addClass('mrt-jw-btn--day-traffic mrt-journey-wizard__day--traffic');
 			$btn.attr('disabled', 'disabled');
 		} else {
-			$btn.addClass('mrt-journey-wizard__day--none');
+			$btn.addClass('mrt-jw-btn--day-none mrt-journey-wizard__day--none');
 			$btn.attr('disabled', 'disabled');
 		}
 		if (selectedDateYmd === ymd && st === 'ok') {

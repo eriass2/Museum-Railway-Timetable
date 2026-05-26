@@ -65,17 +65,17 @@
 	function bindDetailAndSelect(wctx) {
 		var $root = wctx.$root;
 		var state = wctx.state;
-		$root.on('click', '.mrt-journey-wizard__btn-detail', function () {
+		$root.on('click', '.mrt-jw-btn--expand, .mrt-journey-wizard__btn-detail', function () {
 			detail.toggleDetailRow(wctx, $(this));
 		});
 		$root.on('click', '[data-wizard-passed-toggle]', function () {
-			var $detail = $(this).closest('.mrt-journey-wizard__detail');
-			var $card = $(this).closest('.mrt-journey-wizard__trip-card');
-			var $btn = $card.find('.mrt-journey-wizard__btn-detail').first();
+			var $detail = $(this).closest('.mrt-jw-card__detail, .mrt-journey-wizard__detail');
+			var $card = $(this).closest('.mrt-jw-card--trip, .mrt-journey-wizard__trip-card');
+			var $btn = $card.find('.mrt-jw-btn--expand, .mrt-journey-wizard__btn-detail').first();
 			var expandPassed = !$detail.hasClass('is-passed-expanded');
 			detail.loadDetailIntoCard(wctx, $btn, expandPassed);
 		});
-		$root.on('click', '.mrt-journey-wizard__btn-select', function () {
+		$root.on('click', '.mrt-jw-btn--select, .mrt-journey-wizard__btn-select', function () {
 			var legCtx = $(this).attr('data-ctx');
 			var idx = parseInt($(this).attr('data-idx'), 10);
 			var list = legCtx === 'return' ? wctx.lastReturnList : wctx.lastOutboundList;

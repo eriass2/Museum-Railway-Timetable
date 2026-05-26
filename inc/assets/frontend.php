@@ -285,6 +285,7 @@ function MRT_register_journey_wizard_script_modules( string $assets_url ): strin
 	$modules = array(
 		'mrt-jw-namespace' => 'namespace.js',
 		'mrt-jw-constants' => 'constants.js',
+		'mrt-jw-render'    => 'render.js',
 		'mrt-jw-connection' => 'connection.js',
 		'mrt-jw-context'   => 'context.js',
 		'mrt-jw-prices'    => 'prices.js',

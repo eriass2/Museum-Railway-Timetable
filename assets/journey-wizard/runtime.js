@@ -77,14 +77,14 @@
 		wctx.showPanel = function (name) {
 			var $visible = null;
 			ctxApi.updateContext($root, wctx.state, wctx.cfg);
-			$root.find('.mrt-journey-wizard__panel').each(function () {
+			$root.find('.mrt-jw-panel, .mrt-journey-wizard__panel').each(function () {
 				var $p = $(this);
 				var step = $p.attr('data-wizard-step');
 				if (step === name) {
-					$p.removeAttr('hidden').addClass('mrt-journey-wizard__panel--active');
+					$p.removeAttr('hidden').addClass('mrt-jw-panel--active mrt-journey-wizard__panel--active');
 					$visible = $p;
 				} else {
-					$p.attr('hidden', 'hidden').removeClass('mrt-journey-wizard__panel--active');
+					$p.attr('hidden', 'hidden').removeClass('mrt-jw-panel--active mrt-journey-wizard__panel--active');
 				}
 			});
 			wctx.updateStepNav(name);

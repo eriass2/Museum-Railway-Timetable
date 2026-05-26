@@ -1,5 +1,5 @@
 /**
- * Train type icons and vehicle badges on trip cards.
+ * Train type icons and vehicle badges (mrt-jw-vehicle).
  *
  * @package Museum_Railway_Timetable
  */
@@ -8,10 +8,11 @@
 
 	var JW = global.MRTJourneyWizard;
 	var SU = global.MRTStringUtils;
+	var C = JW.render.C;
 
-	function iconKey(label, slug, iconKey) {
-		if (iconKey) {
-			return iconKey;
+	function iconKey(label, slug, iconKeyArg) {
+		if (iconKeyArg) {
+			return iconKeyArg;
 		}
 		var cfg = typeof mrtJourneyWizard !== 'undefined' ? mrtJourneyWizard : {};
 		var slugMap = cfg.trainTypeSlugIcons || {};
@@ -42,15 +43,16 @@
 		var icons = (typeof mrtJourneyWizard !== 'undefined' && mrtJourneyWizard.trainTypeIcons) || {};
 		var url = icons[kind] || icons.diesel || '';
 		if (!url) {
-			return '<span class="mrt-journey-wizard__vehicle-mark" aria-hidden="true"></span>';
+			return '<span class="' + C.vehicleMark + ' mrt-journey-wizard__vehicle-mark" aria-hidden="true"></span>';
 		}
-		return '<img src="' + SU.escapeHtml(url) + '" class="mrt-journey-wizard__vehicle-icon mrt-train-type-icon-img mrt-train-type-icon-img--' + SU.escapeHtml(kind) + '" width="48" height="24" decoding="async" alt="" />';
+		return '<img src="' + SU.escapeHtml(url) + '" class="mrt-journey-wizard__vehicle-icon mrt-train-type-icon-img mrt-train-type-icon-img--' +
+			SU.escapeHtml(kind) + '" width="48" height="24" decoding="async" alt="" />';
 	}
 
 	function vehicleBadge(label, serviceName, slug, trainIconKey) {
 		var text = label || serviceName || '';
 		var kind = iconKey(text, slug, trainIconKey);
-		return '<span class="mrt-journey-wizard__vehicle mrt-journey-wizard__vehicle--' + kind + '">' +
+		return '<span class="' + C.vehicle + ' mrt-jw-vehicle--' + kind + ' mrt-journey-wizard__vehicle mrt-journey-wizard__vehicle--' + kind + '">' +
 			iconHtml(kind) +
 			'<span>' + SU.escapeHtml(text || 'Tåg') + '</span>' +
 			'</span>';

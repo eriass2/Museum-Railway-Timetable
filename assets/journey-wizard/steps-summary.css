@@ -1,5 +1,6 @@
 /**
- * Journey wizard – Din resa (summary step).
+ * Journey wizard – summary step contextual overrides.
+ * Components: components.css (mrt-jw-*).
  *
  * @package Museum_Railway_Timetable
  */
@@ -8,10 +9,12 @@
     width: min(100%, 54rem);
 }
 
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-jw-step-head,
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__step-head {
     margin-bottom: 0.15rem;
 }
 
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-jw-typo--step-title,
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__step-title {
     margin-top: 0.25rem;
     margin-bottom: 1.5rem;
@@ -19,61 +22,27 @@
     font-weight: 900;
 }
 
-.mrt-journey-wizard__summary-list {
-    display: grid;
-    gap: 1.25rem;
-    margin-bottom: 1.5rem;
-}
-
-.mrt-journey-wizard__summary-card {
-    margin-bottom: 0;
-    padding: 0.85rem 0.95rem;
-    background: var(--mrt-jw-surface);
-    color: var(--mrt-jw-text);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
-}
-
-.mrt-journey-wizard__summary-heading {
-    margin: 0 0 0.65rem;
-    color: var(--mrt-jw-green-dark);
-    font-size: 1rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-.mrt-journey-wizard__summary-main {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 1rem;
-    align-items: start;
-}
-
-.mrt-journey-wizard__summary-date {
-    margin: 0.2rem 0 0.55rem;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #3f3f3f;
-}
-
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-jw-prices,
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__prices {
     margin-top: 0;
     border-top: 2px solid rgba(255, 255, 255, 0.35);
     padding-top: 1.25rem;
     background: transparent;
-    color: var(--mrt-jw-text);
 }
 
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-jw-prices h4,
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__prices h4,
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__prices .mrt-heading {
     color: #ffffff;
 }
 
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-jw-prices__scroll,
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__prices-scroll {
     background: var(--mrt-jw-surface);
     padding: 0.5rem 0.65rem 0.75rem;
 }
 
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-jw-prices__note,
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__price-note {
     color: rgba(255, 255, 255, 0.88);
 }
@@ -83,6 +52,7 @@
     text-align: center;
 }
 
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-jw-btn--cta,
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__cta {
     display: inline-flex;
     min-width: min(100%, 22rem);

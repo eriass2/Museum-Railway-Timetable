@@ -57,11 +57,11 @@ function MRT_render_journey_wizard_step_route( array $stations, $title_id, $pane
  */
 function MRT_render_journey_wizard_step_context_header( string $back_step ): void {
 	?>
-	<header class="mrt-journey-wizard__step-head">
-		<button type="button" class="mrt-journey-wizard__back" data-wizard-back="<?php echo esc_attr( $back_step ); ?>">
+	<header class="mrt-jw-step-head mrt-journey-wizard__step-head">
+		<button type="button" class="mrt-jw-btn mrt-jw-btn--back mrt-journey-wizard__back" data-wizard-back="<?php echo esc_attr( $back_step ); ?>">
 			<?php esc_html_e( '← Tillbaka', 'museum-railway-timetable' ); ?>
 		</button>
-		<p class="mrt-journey-wizard__context" data-wizard-context></p>
+		<p class="mrt-jw-step-head__context mrt-journey-wizard__context" data-wizard-context></p>
 	</header>
 	<?php
 }
@@ -76,7 +76,7 @@ function MRT_render_journey_wizard_step_context_header( string $back_step ): voi
 function MRT_render_journey_wizard_step_date( $title_id, $panel_id ) {
 	?>
 	<div
-		class="mrt-journey-wizard__panel"
+		class="mrt-jw-panel mrt-journey-wizard__panel"
 		id="<?php echo esc_attr( $panel_id ); ?>"
 		data-wizard-step="date"
 		role="region"
@@ -84,28 +84,28 @@ function MRT_render_journey_wizard_step_date( $title_id, $panel_id ) {
 		hidden
 	>
 		<?php MRT_render_journey_wizard_step_context_header( 'date' ); ?>
-		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
+		<h3 class="mrt-jw-typo mrt-jw-typo--step-title mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
 			<?php esc_html_e( 'Välj datum', 'museum-railway-timetable' ); ?>
 		</h3>
-		<div class="mrt-journey-wizard__calendar-card">
-			<div class="mrt-journey-wizard__calendar-nav" aria-label="<?php esc_attr_e( 'Calendar month navigation', 'museum-railway-timetable' ); ?>">
-				<button type="button" class="mrt-journey-wizard__cal-prev" aria-label="<?php esc_attr_e( 'Previous month', 'museum-railway-timetable' ); ?>">‹</button>
-				<span class="mrt-journey-wizard__cal-title" aria-live="polite"></span>
-				<button type="button" class="mrt-journey-wizard__cal-next" aria-label="<?php esc_attr_e( 'Next month', 'museum-railway-timetable' ); ?>">›</button>
-				<button type="button" class="mrt-journey-wizard__cal-today" data-wizard-current-month>
+		<div class="mrt-jw-card mrt-jw-card--calendar mrt-journey-wizard__calendar-card">
+			<div class="mrt-jw-calendar__nav mrt-journey-wizard__calendar-nav" aria-label="<?php esc_attr_e( 'Calendar month navigation', 'museum-railway-timetable' ); ?>">
+				<button type="button" class="mrt-jw-btn mrt-jw-btn--cal-nav mrt-journey-wizard__cal-prev" aria-label="<?php esc_attr_e( 'Previous month', 'museum-railway-timetable' ); ?>">‹</button>
+				<span class="mrt-jw-typo mrt-jw-typo--cal-title mrt-journey-wizard__cal-title" aria-live="polite"></span>
+				<button type="button" class="mrt-jw-btn mrt-jw-btn--cal-nav mrt-journey-wizard__cal-next" aria-label="<?php esc_attr_e( 'Next month', 'museum-railway-timetable' ); ?>">›</button>
+				<button type="button" class="mrt-jw-btn mrt-jw-btn--cal-today mrt-journey-wizard__cal-today" data-wizard-current-month>
 					<?php esc_html_e( 'Denna månad', 'museum-railway-timetable' ); ?>
 				</button>
 			</div>
 			<div
-				class="mrt-journey-wizard__calendar"
+				class="mrt-jw-calendar__grid mrt-journey-wizard__calendar"
 				data-wizard-calendar
 				role="region"
 				aria-label="<?php esc_attr_e( 'Travel dates calendar', 'museum-railway-timetable' ); ?>"
 			></div>
-			<ul class="mrt-journey-wizard__legend" aria-label="<?php esc_attr_e( 'Calendar legend', 'museum-railway-timetable' ); ?>">
-				<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--ok" aria-hidden="true"></span> <?php esc_html_e( 'Lennakatten trafikerar den valda resan', 'museum-railway-timetable' ); ?></li>
-				<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--traffic" aria-hidden="true"></span> <?php esc_html_e( 'Lennakatten trafikerar, men ej den valda resan', 'museum-railway-timetable' ); ?></li>
-				<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--none" aria-hidden="true"></span> <?php esc_html_e( 'Ingen trafik', 'museum-railway-timetable' ); ?></li>
+			<ul class="mrt-jw-calendar__legend mrt-journey-wizard__legend" aria-label="<?php esc_attr_e( 'Calendar legend', 'museum-railway-timetable' ); ?>">
+				<li><span class="mrt-jw-calendar__swatch mrt-jw-calendar__swatch--ok mrt-journey-wizard__swatch mrt-journey-wizard__swatch--ok" aria-hidden="true"></span> <?php esc_html_e( 'Lennakatten trafikerar den valda resan', 'museum-railway-timetable' ); ?></li>
+				<li><span class="mrt-jw-calendar__swatch mrt-jw-calendar__swatch--traffic mrt-journey-wizard__swatch mrt-journey-wizard__swatch--traffic" aria-hidden="true"></span> <?php esc_html_e( 'Lennakatten trafikerar, men ej den valda resan', 'museum-railway-timetable' ); ?></li>
+				<li><span class="mrt-jw-calendar__swatch mrt-jw-calendar__swatch--none mrt-journey-wizard__swatch mrt-journey-wizard__swatch--none" aria-hidden="true"></span> <?php esc_html_e( 'Ingen trafik', 'museum-railway-timetable' ); ?></li>
 			</ul>
 		</div>
 	</div>
@@ -121,7 +121,7 @@ function MRT_render_journey_wizard_step_date( $title_id, $panel_id ) {
 function MRT_render_journey_wizard_outbound_panel( $title_id, $panel_id ) {
 	?>
 	<div
-		class="mrt-journey-wizard__panel"
+		class="mrt-jw-panel mrt-journey-wizard__panel"
 		id="<?php echo esc_attr( $panel_id ); ?>"
 		data-wizard-step="outbound"
 		role="region"
@@ -129,7 +129,7 @@ function MRT_render_journey_wizard_outbound_panel( $title_id, $panel_id ) {
 		hidden
 	>
 		<?php MRT_render_journey_wizard_step_context_header( 'outbound' ); ?>
-		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
+		<h3 class="mrt-jw-typo mrt-jw-typo--step-title mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
 			<?php esc_html_e( 'Välj utresa', 'museum-railway-timetable' ); ?>
 		</h3>
 		<div data-wizard-outbound></div>
@@ -146,7 +146,7 @@ function MRT_render_journey_wizard_outbound_panel( $title_id, $panel_id ) {
 function MRT_render_journey_wizard_return_panel( $title_id, $panel_id ) {
 	?>
 	<div
-		class="mrt-journey-wizard__panel"
+		class="mrt-jw-panel mrt-journey-wizard__panel"
 		id="<?php echo esc_attr( $panel_id ); ?>"
 		data-wizard-step="return"
 		role="region"
@@ -155,7 +155,7 @@ function MRT_render_journey_wizard_return_panel( $title_id, $panel_id ) {
 	>
 		<?php MRT_render_journey_wizard_step_context_header( 'return' ); ?>
 		<div data-wizard-return-summary class="mrt-journey-wizard__selected-trip"></div>
-		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
+		<h3 class="mrt-jw-typo mrt-jw-typo--step-title mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
 			<?php esc_html_e( 'Välj återresa', 'museum-railway-timetable' ); ?>
 		</h3>
 		<div data-wizard-return></div>
@@ -172,7 +172,7 @@ function MRT_render_journey_wizard_return_panel( $title_id, $panel_id ) {
 function MRT_render_journey_wizard_summary_panel( $title_id, $panel_id ) {
 	?>
 	<div
-		class="mrt-journey-wizard__panel"
+		class="mrt-jw-panel mrt-journey-wizard__panel"
 		id="<?php echo esc_attr( $panel_id ); ?>"
 		data-wizard-step="summary"
 		role="region"
@@ -180,12 +180,12 @@ function MRT_render_journey_wizard_summary_panel( $title_id, $panel_id ) {
 		hidden
 	>
 		<?php MRT_render_journey_wizard_step_context_header( 'summary' ); ?>
-		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
+		<h3 class="mrt-jw-typo mrt-jw-typo--step-title mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
 			<?php esc_html_e( 'Din resa', 'museum-railway-timetable' ); ?>
 		</h3>
 		<div data-wizard-summary></div>
 		<p class="mrt-mt-sm" data-wizard-ticket-wrap hidden>
-			<a href="#" class="mrt-btn mrt-btn--primary mrt-journey-wizard__cta" data-wizard-ticket><?php esc_html_e( 'Fortsätt till biljetter', 'museum-railway-timetable' ); ?></a>
+			<a href="#" class="mrt-jw-btn mrt-jw-btn--cta mrt-btn mrt-btn--primary mrt-journey-wizard__cta" data-wizard-ticket><?php esc_html_e( 'Fortsätt till biljetter', 'museum-railway-timetable' ); ?></a>
 		</p>
 	</div>
 	<?php

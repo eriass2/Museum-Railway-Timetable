@@ -84,13 +84,14 @@
 		if (!matrix || !matrixHasAnyPrice(matrix)) {
 			return '';
 		}
+		var C = JW.render.C;
 		var tickets = cfg.priceTickets || {};
 		var cats = cfg.priceCategories || {};
 		var activeType = tripType === 'return' ? 'return' : 'single';
 		var zoneText = (cfg.priceZoneLabel || '%d zones').replace('%d', String(zones || 4));
-		var priceClass = 'mrt-journey-wizard__prices mrt-mt-lg';
+		var priceClass = C.prices + ' mrt-journey-wizard__prices mrt-mt-lg';
 		if (options.compactTitle) {
-			priceClass += ' mrt-journey-wizard__prices--card';
+			priceClass += ' ' + C.pricesCard + ' mrt-journey-wizard__prices--card';
 		}
 		var html = '<div class="' + priceClass + '">';
 		if (options.compactTitle) {
@@ -99,8 +100,8 @@
 			html += '<h4 class="mrt-heading mrt-heading--md">' + SU.escapeHtml(cfg.priceTitle || '') + ' <span>(' +
 				SU.escapeHtml(zoneText) + ')</span></h4>';
 		}
-		html += '<div class="mrt-journey-wizard__prices-scroll mrt-overflow-x-auto">';
-		html += '<table class="mrt-table mrt-journey-wizard__price-table"><thead><tr><th scope="col"><span class="mrt-sr-only">' +
+		html += '<div class="' + C.pricesScroll + ' mrt-journey-wizard__prices-scroll mrt-overflow-x-auto">';
+		html += '<table class="mrt-table ' + C.priceTable + ' mrt-journey-wizard__price-table"><thead><tr><th scope="col"><span class="mrt-sr-only">' +
 			SU.escapeHtml(cfg.priceTableTypeColumn || '') + '</span></th>';
 		PRICE_CAT_KEYS.forEach(function (ck) {
 			html += '<th scope="col">' + SU.escapeHtml(cats[ck] || ck) + '</th>';
@@ -108,7 +109,7 @@
 		html += '</tr></thead><tbody>';
 		PRICE_TYPE_KEYS.forEach(function (tk) {
 			var row = matrix[tk] || {};
-			var rowClass = tk === activeType ? ' class="mrt-journey-wizard__price-row--active"' : '';
+			var rowClass = tk === activeType ? ' class="' + C.priceRowActive + ' mrt-journey-wizard__price-row--active"' : '';
 			html += '<tr' + rowClass + '><th scope="row">' + SU.escapeHtml(tickets[tk] || tk) + '</th>';
 			PRICE_CAT_KEYS.forEach(function (ck) {
 				html += '<td>' + SU.escapeHtml(formatPriceCell(row[ck], cfg)) + '</td>';
@@ -117,7 +118,7 @@
 		});
 		html += '</tbody></table></div>';
 		if (cfg.priceNote) {
-			html += '<p class="mrt-text-secondary mrt-journey-wizard__price-note mrt-mt-sm">' +
+			html += '<p class="mrt-text-secondary ' + C.priceNote + ' mrt-journey-wizard__price-note mrt-mt-sm">' +
 				SU.escapeHtml(cfg.priceNote) + '</p>';
 		}
 		html += '</div>';

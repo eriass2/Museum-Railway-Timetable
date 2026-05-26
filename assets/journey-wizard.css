@@ -5,6 +5,7 @@
  */
 
 @import url("journey-wizard/base.css");
+@import url("journey-wizard/components.css");
 @import url("journey-wizard/timetable.css");
 @import url("journey-wizard/controls-calendar.css");
 @import url("journey-wizard/trips-detail-summary.css");
