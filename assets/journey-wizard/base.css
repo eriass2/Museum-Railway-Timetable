@@ -46,13 +46,17 @@
     margin-right: calc(50% - 50vw);
     width: 100vw;
     max-width: 100vw;
-    min-height: 76dvh;
+    min-height: 0;
     box-sizing: border-box;
-    padding: clamp(3rem, 8vw, 7rem) 1rem;
+    padding: clamp(3rem, 8vw, 7rem) 1rem clamp(2rem, 5vw, 3rem);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(17, 17, 17, 0.22)),
         linear-gradient(135deg, #7ca7d8 0%, #d6e7f6 52%, #8a3d24 53%, #2d1c17 100%);
     background-size: cover;
     background-position: center;
+}
+
+.mrt-journey-wizard__hero:has([data-wizard-step="route"]:not([hidden])) {
+    min-height: 76dvh;
 }
 
 .mrt-journey-wizard__hero[data-has-hero-bg="1"] {
@@ -276,7 +280,7 @@
     color: var(--mrt-jw-text);
 }
 
-.mrt-journey-wizard .mrt-text-secondary {
+.mrt-journey-wizard__panel > .mrt-text-secondary {
     color: rgba(255, 255, 255, 0.85);
 }
 
@@ -286,4 +290,53 @@
 
 .mrt-journey-wizard .mrt-mt-lg {
     margin-top: 1.5rem;
+}
+
+/* Embedded in page content (e.g. components demo) — no full-bleed hero, more padding */
+.mrt-journey-wizard--embedded {
+    margin-top: clamp(2rem, 4vw, 3rem);
+    margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.75rem) clamp(2rem, 5vw, 3rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero:has([data-wizard-step="route"]:not([hidden])) {
+    min-height: auto;
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__nav {
+    margin-bottom: clamp(1.25rem, 3vw, 2rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero-head {
+    margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__search-panel {
+    margin-top: clamp(1rem, 2.5vw, 1.75rem);
+    padding-block: clamp(2rem, 4vw, 3.25rem);
+    padding-inline: clamp(1.75rem, 4vw, 3rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__search-panel .mrt-form-field {
+    margin-bottom: 1.35rem;
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__trip-type {
+    margin-bottom: clamp(1.75rem, 4vw, 2.25rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__actions {
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+    padding-bottom: 0.35rem;
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__timetable {
+    margin-top: clamp(2rem, 4vw, 2.75rem);
 }

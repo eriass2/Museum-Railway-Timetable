@@ -309,4 +309,5 @@
 
 .mrt-demo-mockup-caption {
     font-size: 0.875rem;
+    margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
 }

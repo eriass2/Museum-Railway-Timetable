@@ -19,9 +19,14 @@
         padding: 0.9rem 0.9rem 0;
     }
 
+    .mrt-journey-wizard__calendar-nav,
     .mrt-journey-wizard__calendar,
     .mrt-journey-wizard__legend {
         padding-inline: 0.9rem;
+    }
+
+    .mrt-journey-wizard__legend {
+        padding-bottom: 1.2rem;
     }
 
     .mrt-journey-wizard__calendar th {

@@ -23,3 +23,7 @@ body.mrt-has-shortcodes .wp-block-post-content {
     width: max-content;
     min-width: min(100%, max-content);
 }
+
+.mrt-demo-mockup-caption + .mrt-journey-wizard--embedded {
+    margin-top: clamp(1.25rem, 3vw, 2rem);
+}

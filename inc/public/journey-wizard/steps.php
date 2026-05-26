@@ -87,25 +87,27 @@ function MRT_render_journey_wizard_step_date( $title_id, $panel_id ) {
 		<h3 class="mrt-journey-wizard__step-title" id="<?php echo esc_attr( $title_id ); ?>">
 			<?php esc_html_e( 'Välj datum', 'museum-railway-timetable' ); ?>
 		</h3>
-		<div class="mrt-journey-wizard__calendar-nav mrt-mb-sm" aria-label="<?php esc_attr_e( 'Calendar month navigation', 'museum-railway-timetable' ); ?>">
-			<button type="button" class="mrt-journey-wizard__cal-prev" aria-label="<?php esc_attr_e( 'Previous month', 'museum-railway-timetable' ); ?>">‹</button>
-			<span class="mrt-journey-wizard__cal-title" aria-live="polite"></span>
-			<button type="button" class="mrt-journey-wizard__cal-next" aria-label="<?php esc_attr_e( 'Next month', 'museum-railway-timetable' ); ?>">›</button>
-			<button type="button" class="mrt-journey-wizard__cal-today" data-wizard-current-month>
-				<?php esc_html_e( 'Denna månad', 'museum-railway-timetable' ); ?>
-			</button>
+		<div class="mrt-journey-wizard__calendar-card">
+			<div class="mrt-journey-wizard__calendar-nav" aria-label="<?php esc_attr_e( 'Calendar month navigation', 'museum-railway-timetable' ); ?>">
+				<button type="button" class="mrt-journey-wizard__cal-prev" aria-label="<?php esc_attr_e( 'Previous month', 'museum-railway-timetable' ); ?>">‹</button>
+				<span class="mrt-journey-wizard__cal-title" aria-live="polite"></span>
+				<button type="button" class="mrt-journey-wizard__cal-next" aria-label="<?php esc_attr_e( 'Next month', 'museum-railway-timetable' ); ?>">›</button>
+				<button type="button" class="mrt-journey-wizard__cal-today" data-wizard-current-month>
+					<?php esc_html_e( 'Denna månad', 'museum-railway-timetable' ); ?>
+				</button>
+			</div>
+			<div
+				class="mrt-journey-wizard__calendar"
+				data-wizard-calendar
+				role="region"
+				aria-label="<?php esc_attr_e( 'Travel dates calendar', 'museum-railway-timetable' ); ?>"
+			></div>
+			<ul class="mrt-journey-wizard__legend" aria-label="<?php esc_attr_e( 'Calendar legend', 'museum-railway-timetable' ); ?>">
+				<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--ok" aria-hidden="true"></span> <?php esc_html_e( 'Lennakatten trafikerar den valda resan', 'museum-railway-timetable' ); ?></li>
+				<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--traffic" aria-hidden="true"></span> <?php esc_html_e( 'Lennakatten trafikerar, men ej den valda resan', 'museum-railway-timetable' ); ?></li>
+				<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--none" aria-hidden="true"></span> <?php esc_html_e( 'Ingen trafik', 'museum-railway-timetable' ); ?></li>
+			</ul>
 		</div>
-		<div
-			class="mrt-journey-wizard__calendar mrt-mb-sm"
-			data-wizard-calendar
-			role="region"
-			aria-label="<?php esc_attr_e( 'Travel dates calendar', 'museum-railway-timetable' ); ?>"
-		></div>
-		<ul class="mrt-journey-wizard__legend mrt-text-secondary mrt-mb-sm" aria-label="<?php esc_attr_e( 'Calendar legend', 'museum-railway-timetable' ); ?>">
-			<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--ok" aria-hidden="true"></span> <?php esc_html_e( 'Lennakatten trafikerar den valda resan', 'museum-railway-timetable' ); ?></li>
-			<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--traffic" aria-hidden="true"></span> <?php esc_html_e( 'Lennakatten trafikerar, men ej den valda resan', 'museum-railway-timetable' ); ?></li>
-			<li><span class="mrt-journey-wizard__swatch mrt-journey-wizard__swatch--none" aria-hidden="true"></span> <?php esc_html_e( 'Ingen trafik', 'museum-railway-timetable' ); ?></li>
-		</ul>
 	</div>
 	<?php
 }

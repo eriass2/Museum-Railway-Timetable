@@ -10,7 +10,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @return array{ticket_url: string, hero: array{image: string, subtitle: string}, timetable_id: int}
+ * @param mixed $value Shortcode boolean attribute.
+ */
+function MRT_journey_wizard_shortcode_bool( $value ): bool {
+	if ( is_bool( $value ) ) {
+		return $value;
+	}
+	$normalized = strtolower( trim( (string) $value ) );
+	return in_array( $normalized, array( '1', 'true', 'yes', 'on' ), true );
+}
+
+/**
+ * @return array{ticket_url: string, hero: array{image: string, subtitle: string}, timetable_id: int, embedded: bool}
  */
 function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 	$atts = shortcode_atts(
@@ -20,6 +31,7 @@ function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 			'hero_subtitle' => '',
 			'timetable_id'  => '',
 			'timetable'     => '',
+			'embedded'      => '',
 		),
 		(array) $atts,
 		'museum_journey_wizard'
@@ -34,6 +46,7 @@ function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 			'subtitle' => is_string( $atts['hero_subtitle'] ) ? $atts['hero_subtitle'] : '',
 		),
 		'timetable_id' => $timetable_id,
+		'embedded'     => MRT_journey_wizard_shortcode_bool( $atts['embedded'] ),
 	);
 }
 
@@ -65,13 +78,18 @@ function MRT_journey_wizard_step_element_ids( string $u ): array {
  * @param int                   $timetable_id Optional timetable ID
  * @param string                $ticket_url Ticket purchase URL
  * @param string                $hero_attr Hero background HTML attributes
+ * @param bool                  $embedded Compact layout inside page content (no full-bleed hero).
  * @return string HTML
  */
-function MRT_render_journey_wizard_shell( $uid, array $ids, array $stations, array $hero, $timetable_id, $ticket_url, $hero_attr ) {
+function MRT_render_journey_wizard_shell( $uid, array $ids, array $stations, array $hero, $timetable_id, $ticket_url, $hero_attr, $embedded = false ) {
+	$root_class = 'mrt-journey-wizard mrt-my-lg';
+	if ( $embedded ) {
+		$root_class .= ' mrt-journey-wizard--embedded';
+	}
 	ob_start();
 	?>
 	<div
-		class="mrt-journey-wizard mrt-my-lg"
+		class="<?php echo esc_attr( $root_class ); ?>"
 		data-ticket-url="<?php echo $ticket_url ? esc_attr( $ticket_url ) : ''; ?>"
 		data-start-of-week="<?php echo esc_attr( (string) (int) get_option( 'start_of_week', '1' ) ); ?>"
 	>
@@ -122,8 +140,9 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 	$ticket_url = $parsed['ticket_url'];
 	$hero       = $parsed['hero'];
 	$timetable_id = isset( $parsed['timetable_id'] ) ? intval( $parsed['timetable_id'] ) : 0;
-	$hero_image = isset( $hero['image'] ) && is_string( $hero['image'] ) ? trim( $hero['image'] ) : '';
-	$hero_attr  = MRT_journey_wizard_hero_bg_attr( $hero_image );
+	$embedded     = ! empty( $parsed['embedded'] );
+	$hero_image   = isset( $hero['image'] ) && is_string( $hero['image'] ) ? trim( $hero['image'] ) : '';
+	$hero_attr    = MRT_journey_wizard_hero_bg_attr( $hero_image );
 
 	$stations = MRT_get_all_stations();
 	if ( empty( $stations ) ) {
@@ -132,5 +151,5 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 	$uid = wp_unique_id( 'mrtjw' );
 	$ids = MRT_journey_wizard_step_element_ids( $uid );
 
-	return MRT_render_journey_wizard_shell( $uid, $ids, $stations, $hero, $timetable_id, $ticket_url, $hero_attr );
+	return MRT_render_journey_wizard_shell( $uid, $ids, $stations, $hero, $timetable_id, $ticket_url, $hero_attr, $embedded );
 }
