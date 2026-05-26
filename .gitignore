@@ -54,6 +54,9 @@ COMMIT_MESSAGE.txt
 # Composer
 /vendor/
 
+# Vue experiment (keep built assets/dist/vue in repo)
+frontend/vue/node_modules/
+
 # gettext merge backups
 *.po~
 

@@ -161,6 +161,23 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 	if ( empty( $stations ) ) {
 		return '<p class="mrt-alert mrt-alert-info">' . esc_html__( 'No stations are available.', 'museum-railway-timetable' ) . '</p>';
 	}
+
+	if ( MRT_use_vue_frontend() ) {
+		return MRT_render_vue_mount(
+			'wizard',
+			MRT_vue_wizard_config(
+				$stations,
+				array(
+					'ticket_url'    => $ticket_url,
+					'hero_subtitle' => $hero_subtitle,
+					'timetable_id'  => $timetable_id,
+					'embedded'      => $embedded,
+					'debug'         => $debug,
+				)
+			)
+		);
+	}
+
 	$uid = wp_unique_id( 'mrtjw' );
 	$ids = MRT_journey_wizard_step_element_ids( $uid );
 

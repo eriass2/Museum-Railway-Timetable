@@ -317,6 +317,10 @@ function MRT_render_shortcode_month( $atts ) {
 		return $context;
 	}
 
+	if ( MRT_use_vue_frontend() ) {
+		return MRT_render_vue_mount( 'month', MRT_vue_month_config( $context ) );
+	}
+
 	return MRT_month_shortcode_render_full(
 		$context['first_ts'],
 		$context['atts'],

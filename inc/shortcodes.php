@@ -17,6 +17,7 @@ require_once $mrt_journey_wizard_dir . 'fields.php';
 require_once $mrt_journey_wizard_dir . 'timetable.php';
 require_once $mrt_journey_wizard_dir . 'steps.php';
 require_once $mrt_journey_wizard_dir . 'shell.php';
+require_once MRT_PATH . 'inc/public/vue-shortcode-config.php';
 
 add_shortcode( 'museum_timetable_month', 'MRT_render_shortcode_month' );
 add_shortcode( 'museum_timetable_overview', 'MRT_render_shortcode_overview' );

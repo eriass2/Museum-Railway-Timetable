@@ -1,0 +1,11 @@
+{
+  "src/main.ts": {
+    "file": "assets/main-Dz3zRy31.js",
+    "name": "main",
+    "src": "src/main.ts",
+    "isEntry": true,
+    "css": [
+      "assets/main-BAFvwmxk.css"
+    ]
+  }
+}

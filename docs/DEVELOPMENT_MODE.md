@@ -9,6 +9,16 @@
 
 Filter: `mrt_is_development_mode` kan tvinga läge vid behov.
 
+## Vue-experiment (branch `experiment/vue-public-ui`)
+
+Aktivera alla tre publika shortcodes som Vue-mounts (se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md)):
+
+```php
+define( 'MRT_VUE_FRONTEND', true );
+```
+
+Bygg: `cd frontend/vue && npm install && npm run build`. Utan build visas varning på sidan.
+
 ## Endast utveckling (döljs i typisk produktion)
 
 | Verktyg | Var |
