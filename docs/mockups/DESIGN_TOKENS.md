@@ -43,6 +43,13 @@ Se `assets/journey-wizard/controls-calendar.css`.
 - Aktivt steg i steglistan: gul bakgrund + fokusring vid `aria-current="step"`
 - Expanderat kort: tidslinje med punkt-tider, `∨ visa passerade stationer`, **Priser**-tabell i kortet (`connection-detail.js`, `prices.js` `compactTitle`)
 
+## Sammanfattning (`Din resa`)
+
+- Vit **Utresa** / **Återresa**-kort i lista (`summaryLegCardHtml`, `steps-summary.css`)
+- **Priser** på grön panel: vit rubrik, vit tabell-yta, markerad tur/retur-rad
+- Prisceller med `kr`-suffix
+- Gul **Fortsätt till biljetter**-CTA centrerad under tabellen
+
 ## Återresa (`valj-aterresa.png`)
 
 - **Vald utresa:** vit kort med gul kant ovanför listan (`steps-outbound-return.css`, `selectedTripHtml`)

@@ -344,12 +344,7 @@
     font-weight: 900;
 }
 
-.mrt-journey-wizard__summary-card {
-    margin-bottom: 1rem;
-    padding: 0.9rem;
-    background: var(--mrt-jw-surface);
-    color: var(--mrt-jw-text);
-}
+/* Summary cards: see steps-summary.css (.mrt-journey-wizard__summary-list) */
 
 .mrt-demo-mockup-list {
     margin: 0.5rem 0 0 1.25rem;

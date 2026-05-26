@@ -146,6 +146,45 @@
 		return html;
 	}
 
+	/**
+	 * Summary step leg card (Utresa / Återresa).
+	 *
+	 * @param {string} heading Section title
+	 * @param {object} conn Connection
+	 * @param {string} routeText Station pair for this leg
+	 * @param {string} dateText Formatted travel date
+	 * @param {object} cfg Wizard l10n
+	 */
+	function summaryLegCardHtml(heading, conn, routeText, dateText, cfg) {
+		var dep = formatTripClock(connApi.departureFromOrigin(conn));
+		var arr = formatTripClock(connApi.arrivalAtDestination(conn));
+		var duration = formatDuration(conn.duration_minutes, cfg);
+		var notice = conn.notice || '';
+		var html = '<article class="mrt-journey-wizard__summary-card">';
+		html += '<h4 class="mrt-journey-wizard__summary-heading">' + SU.escapeHtml(heading) + '</h4>';
+		html += '<div class="mrt-journey-wizard__summary-main">';
+		html += '<div class="mrt-journey-wizard__summary-copy">';
+		html += '<p class="mrt-journey-wizard__trip-time">' + SU.escapeHtml(dep) + ' → ' + SU.escapeHtml(arr);
+		html += cardNoticeDotHtml(notice, cfg);
+		html += '</p>';
+		if (notice) {
+			html += '<p class="mrt-journey-wizard__notice' + (isWarningNotice(notice) ? ' mrt-journey-wizard__notice--warning' : '') +
+				'">' + SU.escapeHtml(notice) + '</p>';
+		}
+		html += '<p class="mrt-journey-wizard__trip-route">' + SU.escapeHtml(routeText) + '</p>';
+		if (dateText) {
+			html += '<p class="mrt-journey-wizard__summary-date">' + SU.escapeHtml(dateText) + '</p>';
+		}
+		html += '<div class="mrt-journey-wizard__vehicle-row">' + cardBadgesHtml(conn) + '</div>';
+		html += '</div>';
+		html += '<div class="mrt-journey-wizard__summary-side">';
+		if (duration) {
+			html += '<span class="mrt-journey-wizard__duration">' + SU.escapeHtml(duration) + '</span>';
+		}
+		html += '</div></div></article>';
+		return html;
+	}
+
 	function selectedTripHtml(conn, cfg, state) {
 		var dep = formatTripClock(connApi.departureFromOrigin(conn));
 		var arr = formatTripClock(connApi.arrivalAtDestination(conn));
@@ -187,5 +226,6 @@
 		cardBadgesHtml: cardBadgesHtml,
 		renderConnectionCards: renderConnectionCards,
 		selectedTripHtml: selectedTripHtml,
+		summaryLegCardHtml: summaryLegCardHtml,
 	};
 })(window, jQuery);

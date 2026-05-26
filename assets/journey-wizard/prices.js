@@ -36,7 +36,11 @@
 		if (v === null || v === undefined || v === '') {
 			return cfg.priceDash || '—';
 		}
-		return String(v);
+		var s = String(v).trim();
+		if (/^\d+$/.test(s)) {
+			return s + ' kr';
+		}
+		return s;
 	}
 
 	function zonesForStationPair(fromId, toId, cfg) {

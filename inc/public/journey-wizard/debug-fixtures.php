@@ -251,8 +251,8 @@ function MRT_journey_wizard_debug_presets(): array {
 			'fromTitle' => $pair['from_title'],
 			'toTitle'   => $pair['to_title'],
 			'date'      => $date,
-			'outbound'  => $direct,
-			'inbound'   => $return,
+			'outbound'  => $outbound_xfer,
+			'inbound'   => $xfer,
 		),
 	);
 }

@@ -39,11 +39,13 @@
     }
 
     .mrt-journey-wizard__trip-main,
-    .mrt-journey-wizard__selected-card {
+    .mrt-journey-wizard__selected-card,
+    .mrt-journey-wizard__summary-main {
         grid-template-columns: 1fr;
     }
 
-    .mrt-journey-wizard__trip-side {
+    .mrt-journey-wizard__trip-side,
+    .mrt-journey-wizard__summary-side {
         justify-items: start;
     }
 
