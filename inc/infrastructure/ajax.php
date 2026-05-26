@@ -18,6 +18,7 @@ require_once $ajax_dir . 'route-stations.php';
 require_once $ajax_dir . 'journey-parse.php';
 require_once $ajax_dir . 'journey.php';
 require_once $ajax_dir . 'timetable-frontend.php';
+require_once $ajax_dir . 'timetable-overview-public.php';
 
 add_action( 'wp_ajax_mrt_add_stoptime', 'MRT_ajax_add_stoptime' );
 add_action( 'wp_ajax_mrt_update_stoptime', 'MRT_ajax_update_stoptime' );
