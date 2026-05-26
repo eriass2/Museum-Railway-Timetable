@@ -51,25 +51,41 @@ function MRT_train_type_icon_urls(): array {
 }
 
 /**
+ * Lennakatten / standard train type slug → icon file key.
+ *
+ * @return array<string, string>
+ */
+function MRT_train_type_slug_icon_map(): array {
+	return array(
+		'angtag'     => 'steam',
+		'ralsbuss'   => 'railbus',
+		'dieseltag'  => 'diesel',
+		'buss'       => 'bus',
+		'ang-diesel' => 'diesel',
+	);
+}
+
+/**
  * Resolve icon key from train type name and slug.
  */
 function MRT_resolve_train_type_symbol_key( string $name, string $slug ): string {
-	$name_lower = strtolower( $name );
 	$slug_lower = strtolower( $slug );
+	$map        = MRT_train_type_slug_icon_map();
+	if ( isset( $map[ $slug_lower ] ) ) {
+		return $map[ $slug_lower ];
+	}
 
-	if ( str_contains( $name_lower, 'rälsbuss' ) || str_contains( $name_lower, 'railbus' ) || str_contains( $slug_lower, 'ralsbuss' ) ) {
+	$name_lower = strtolower( $name );
+	if ( str_contains( $name_lower, 'rälsbuss' ) || str_contains( $name_lower, 'railbus' ) ) {
 		return 'railbus';
 	}
-	if ( $slug_lower === 'buss' || $name_lower === 'buss' ) {
+	if ( $name_lower === 'buss' || $slug_lower === 'buss' ) {
 		return 'bus';
 	}
-	if ( str_contains( $name_lower, 'ång' ) || str_contains( $slug_lower, 'steam' ) || str_contains( $slug_lower, 'ang' ) ) {
+	if ( str_contains( $name_lower, 'ång' ) && ! str_contains( $name_lower, 'diesel' ) ) {
 		return 'steam';
 	}
-	if ( str_contains( $name_lower, 'diesel' ) || str_contains( $slug_lower, 'diesel' ) ) {
-		return 'diesel';
-	}
-	if ( str_contains( $name_lower, 'elektrisk' ) || str_contains( $name_lower, 'electric' ) || str_contains( $slug_lower, 'electric' ) ) {
+	if ( str_contains( $name_lower, 'diesel' ) || str_contains( $name_lower, 'elektrisk' ) ) {
 		return 'diesel';
 	}
 

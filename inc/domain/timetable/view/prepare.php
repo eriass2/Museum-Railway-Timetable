@@ -29,7 +29,7 @@ function MRT_prepare_service_train_display( WP_Post $service, $train_type ): arr
 	if ( $train_type ) {
 		$train_type_slug       = $train_type->slug;
 		$train_type_name_lower = strtolower( $train_type->name );
-		if ( strpos( $train_type_name_lower, 'buss' ) !== false || strpos( $train_type_slug, 'bus' ) !== false ) {
+		if ( $train_type_slug === 'buss' ) {
 			$classes[] = 'mrt-service-bus';
 		} elseif ( strpos( $train_type_name_lower, 'express' ) !== false || strpos( $service->post_title, 'express' ) !== false ) {
 			$classes[]  = 'mrt-service-special';

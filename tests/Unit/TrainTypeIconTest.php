@@ -25,6 +25,14 @@ final class TrainTypeIconTest extends TestCase {
 	public function test_resolve_steam_and_diesel(): void {
 		self::assertSame( 'steam', MRT_resolve_train_type_symbol_key( 'Ångtåg', 'angtag' ) );
 		self::assertSame( 'diesel', MRT_resolve_train_type_symbol_key( 'Dieseltåg', 'dieseltag' ) );
+		self::assertSame( 'diesel', MRT_resolve_train_type_symbol_key( 'Ång/diesel', 'ang-diesel' ) );
+	}
+
+	public function test_slug_map_matches_import(): void {
+		$map = MRT_train_type_slug_icon_map();
+		self::assertSame( 'steam', $map['angtag'] );
+		self::assertSame( 'railbus', $map['ralsbuss'] );
+		self::assertSame( 'bus', $map['buss'] );
 	}
 
 	public function test_icon_url_contains_key(): void {
