@@ -6,6 +6,10 @@
  * @return array<string, array<string, array<int, int|null>>>
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 return array(
 	'single' => array(
 		'adult'          => array(

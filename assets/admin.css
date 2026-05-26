@@ -1,0 +1,21 @@
+/**
+ * Admin styles for Museum Railway Timetable (dashboard, meta boxes, lists).
+ *
+ * Reuses shared tokens/components from the public frontend bundle modules.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+@import url("frontend/tokens.css");
+@import url("frontend/utilities.css");
+@import url("frontend/components-base.css");
+@import url("frontend/components-ui.css");
+@import url("frontend/components-form.css");
+@import url("frontend/tables.css");
+@import url("frontend/overview-layout.css");
+@import url("frontend/overview-cells.css");
+@import url("frontend/overview-components.css");
+@import url("admin/layout-width.css");
+@import url("admin/meta-boxes-fields.css");
+@import url("admin/meta-boxes-edit.css");
+@import url("admin/responsive.css");

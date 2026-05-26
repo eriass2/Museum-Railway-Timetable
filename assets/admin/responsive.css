@@ -1,0 +1,185 @@
+﻿/**
+ * Responsive design for Museum Railway Timetable
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+/* ==========================================================================
+   Responsive Design - Tablets and Small Screens
+   ========================================================================== */
+
+@media screen and (max-width: 782px) {
+    .mrt-month-table th,
+    .mrt-month-table td {
+        height: 60px;
+        padding: var(--mrt-spacing-xs);
+        font-size: var(--mrt-font-sm);
+    }
+
+    .mrt-month-table .mrt-daynum {
+        font-size: var(--mrt-font-xs);
+    }
+
+    .mrt-table {
+        font-size: var(--mrt-font-base);
+    }
+
+    .mrt-timetable-group {
+        border-radius: 0;
+    }
+
+    .mrt-overview-grid {
+        font-size: var(--mrt-font-sm);
+        grid-template-columns: minmax(120px, auto) repeat(var(--service-count, 6), minmax(75px, 1fr));
+    }
+
+    .mrt-grid-cell {
+        padding: var(--mrt-cell-padding);
+    }
+
+    .mrt-station-col,
+    .mrt-station-col-header {
+        min-width: 120px;
+        padding: var(--mrt-spacing-xs) var(--mrt-spacing-sm);
+    }
+
+    .mrt-service-number {
+        font-size: var(--mrt-font-base);
+    }
+
+    .mrt-train-type {
+        font-size: var(--mrt-font-xs);
+    }
+
+    .mrt-time-cell {
+        font-size: var(--mrt-font-sm);
+        padding: var(--mrt-cell-padding);
+    }
+}
+
+/* ==========================================================================
+   Responsive Design - Mobile (Card Layout)
+   ========================================================================== */
+
+@media screen and (max-width: 768px) {
+    .mrt-timetable-group {
+        overflow-x: visible;
+    }
+
+    .mrt-overview-grid {
+        display: block;
+        border: none;
+    }
+
+    .mrt-grid-header {
+        display: none;
+    }
+
+    .mrt-grid-row {
+        display: block;
+        margin-bottom: var(--mrt-spacing-md);
+        border: 1px solid var(--mrt-border-default);
+        border-radius: var(--mrt-radius-sm);
+        background: var(--mrt-bg-white);
+        box-shadow: var(--mrt-shadow-sm);
+        overflow: hidden;
+    }
+
+    .mrt-grid-row > .mrt-grid-cell {
+        display: block;
+        border: none;
+        border-bottom: 1px dashed var(--mrt-border-light);
+        padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
+    }
+
+    .mrt-grid-row > .mrt-grid-cell:last-child {
+        border-bottom: none;
+    }
+
+    .mrt-grid-row > .mrt-station-col {
+        background: var(--mrt-green-primary);
+        color: var(--mrt-text-white);
+        font-size: var(--mrt-font-lg);
+        font-weight: 600;
+        padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
+        position: static;
+        box-shadow: none;
+        border-bottom: 2px solid var(--mrt-green-dark);
+    }
+
+    .mrt-grid-row > .mrt-time-cell {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: var(--mrt-spacing-xs) var(--mrt-spacing-md);
+        background: var(--mrt-bg-lightest);
+    }
+
+    .mrt-grid-row > .mrt-time-cell::before {
+        content: attr(data-service-label);
+        font-weight: 600;
+        color: var(--mrt-text-secondary);
+        flex-shrink: 0;
+        margin-right: var(--mrt-spacing-sm);
+    }
+
+    .mrt-grid-row > .mrt-time-cell {
+        text-align: right;
+        font-weight: 600;
+    }
+}
+
+/* Better mobile layout: Modern card-based design */
+@media screen and (max-width: 768px) {
+    .mrt-timetable-group {
+        border-radius: var(--mrt-radius-lg);
+        overflow: visible;
+    }
+
+    .mrt-route-header {
+        border-radius: var(--mrt-radius-lg) var(--mrt-radius-lg) 0 0;
+        padding: var(--mrt-spacing-lg);
+    }
+
+    .mrt-route-header-main {
+        font-size: var(--mrt-font-lg);
+    }
+
+    .mrt-route-header-details {
+        font-size: var(--mrt-font-sm);
+        margin-top: var(--mrt-spacing-sm);
+    }
+
+    .mrt-overview-grid {
+        border-radius: 0 0 var(--mrt-radius-lg) var(--mrt-radius-lg);
+        border: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .mrt-month-table th,
+    .mrt-month-table td {
+        height: 50px;
+        font-size: var(--mrt-font-xs);
+    }
+
+    .mrt-legend {
+        font-size: var(--mrt-font-xs);
+    }
+
+    .mrt-legend-item {
+        margin-right: var(--mrt-spacing-sm);
+    }
+
+    .mrt-route-header {
+        padding: var(--mrt-spacing-sm) var(--mrt-spacing-md);
+    }
+
+    .mrt-route-header-main {
+        font-size: var(--mrt-font-base);
+    }
+
+    .mrt-route-header-details {
+        font-size: var(--mrt-font-xs);
+    }
+}

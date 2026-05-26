@@ -1,0 +1,14 @@
+/**
+ * Shared public shortcode styles (planner, month, tables, alerts).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+@import url("frontend/tokens.css");
+@import url("frontend/utilities.css");
+@import url("frontend/components-base.css");
+@import url("frontend/components-ui.css");
+@import url("frontend/components-form.css");
+@import url("frontend/tables.css");
+@import url("frontend/month-calendar.css");
+@import url("frontend/journey-planner.css");

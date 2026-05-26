@@ -59,7 +59,14 @@ function MRT_admin_screen_post_type_allowed( bool $is_edit_page, bool $is_list_p
  */
 function MRT_enqueue_admin_css( string $hook ): void {
 	unset( $hook );
-	MRT_enqueue_train_type_icon_styles();
+	$a           = MRT_assets_base_url();
+	$icon_handle = MRT_enqueue_train_type_icon_styles();
+	wp_enqueue_style(
+		'mrt-admin',
+		$a . 'admin.css',
+		array( $icon_handle ),
+		MRT_VERSION
+	);
 }
 
 /**

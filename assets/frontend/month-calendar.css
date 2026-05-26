@@ -1,0 +1,145 @@
+﻿/**
+ * Month Calendar Component
+ * Importeras av admin-timetable.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-month-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mrt-spacing-sm);
+    margin-bottom: var(--mrt-spacing-md);
+}
+
+.mrt-month-nav__title {
+    flex: 1 1 10rem;
+    margin: 0;
+    min-width: 0;
+    text-align: center;
+}
+
+.mrt-month-nav__prev,
+.mrt-month-nav__next {
+    flex-shrink: 0;
+}
+
+.mrt-month-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.mrt-month-table th,
+.mrt-month-table td {
+    border: 1px solid var(--mrt-border-light);
+    width: 14.285%;
+    vertical-align: top;
+    height: 72px;
+    padding: var(--mrt-spacing-xs);
+}
+
+.mrt-month-table thead th {
+    background: var(--mrt-bg-lightest);
+    font-weight: 600;
+}
+
+.mrt-month-table__caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    padding: var(--mrt-spacing-xs) 0;
+}
+
+.mrt-day-cell--inactive {
+    background: var(--mrt-bg-lightest);
+    color: var(--mrt-text-tertiary);
+}
+
+.mrt-day-cell--inactive .mrt-daynum {
+    font-size: var(--mrt-font-base);
+    opacity: var(--mrt-opacity-85);
+}
+
+.mrt-day-cell--running {
+    padding: 0;
+    vertical-align: stretch;
+}
+
+.mrt-day {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 70px;
+    height: 100%;
+    margin: 0;
+    padding: var(--mrt-spacing-xs);
+    border: none;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    background: var(--mrt-bg-success);
+}
+
+.mrt-daynum {
+    font-size: var(--mrt-font-base);
+    opacity: var(--mrt-opacity-85);
+}
+
+.mrt-dot {
+    position: absolute;
+    right: var(--mrt-spacing-sm);
+    bottom: var(--mrt-spacing-xs);
+    font-size: var(--mrt-font-sm);
+}
+
+.mrt-running {
+    background: var(--mrt-bg-success);
+}
+
+.mrt-day-clickable {
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mrt-day-clickable:hover {
+    background-color: var(--mrt-green-hover) !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mrt-day-clickable:hover {
+        transform: scale(1.05);
+    }
+}
+
+.mrt-day-clickable:focus-visible {
+    outline: 2px solid var(--mrt-blue-primary);
+    outline-offset: 2px;
+    z-index: 1;
+}
+
+.mrt-day-clickable.mrt-day-active {
+    background-color: var(--mrt-blue-primary) !important;
+    box-shadow: var(--mrt-shadow-focus-ring);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mrt-day-clickable {
+        transition: none;
+    }
+}
+
+/* mrt-day-timetable = mrt-my-1 */
+.mrt-day-timetable {
+    margin: var(--mrt-spacing-md) 0;
+}
+
+.mrt-day-timetable-container {
+    margin-top: var(--mrt-spacing-xl);
+}
+
+.mrt-empty {
+    background: var(--mrt-bg-lightest);
+}

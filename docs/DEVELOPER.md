@@ -81,6 +81,14 @@ docker compose run --rm composer check
 
 Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
 
+### Automatiserad Docker-smoke
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
+```
+
+Se även [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) för manuell granskning imorgon.
+
 ### Manuell smoke-checklista i WordPress
 
 Kör detta efter `docker compose up -d --build` när ändringen påverkar admin, shortcodes eller dataflöden:
