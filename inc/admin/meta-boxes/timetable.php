@@ -8,7 +8,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-require_once MRT_PATH . 'inc/admin-meta-boxes/timetable-dates-script.php';
+require_once MRT_PATH . 'inc/admin/meta-boxes/timetable-dates-script.php';
 
 /**
  * Timetable colour type field.

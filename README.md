@@ -226,16 +226,17 @@ museum-railway-timetable/
 │   │   ├─ services.php          # Service-related functions
 │   │   └─ timetable-view/       # prepare, grid, overview
 │   ├─ admin/                    # dashboard/, tools/, admin-list
-│   ├─ admin-meta-boxes/         # station, route, timetable, service, …
-│   ├─ admin-ajax/               # stoptimes, timetable-services, journey, …
+│   ├─ admin/meta-boxes/         # station, route, timetable, service, …
+│   ├─ infrastructure/ajax/      # stoptimes, journey, timetable, route-*
+│   ├─ infrastructure/post-types/
 │   ├─ shortcodes/               # month, overview, journey, journey-wizard
 │   ├─ cpt/                        # cpt-register, cpt-admin
 │   ├─ import-lennakatten/       # import-data, import-run, loader
 │   ├─ assets/                   # admin.php, frontend.php (enqueue helpers)
 │   ├─ assets.php                # Asset loader (requires assets/*)
 │   ├─ admin.php                 # Admin loader
-│   ├─ admin-meta-boxes.php      # Loader
-│   ├─ admin-ajax.php            # Loader
+│   ├─ infrastructure/ajax.php
+│   ├─ infrastructure/post-types.php
 │   ├─ cpt.php                   # Loader
 │   └─ shortcodes.php            # Loader
 ├─ assets/

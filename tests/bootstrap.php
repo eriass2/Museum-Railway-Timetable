@@ -53,5 +53,5 @@ if (!function_exists('__')) {
 
 require_once ABSPATH . 'inc/bootstrap/domain.php';
 MRT_load_domain_modules();
-require_once ABSPATH . 'inc/admin-ajax/journey-parse.php';
-require_once ABSPATH . 'inc/admin-ajax/stoptimes.php';
+require_once ABSPATH . 'inc/infrastructure/ajax/journey-parse.php';
+require_once ABSPATH . 'inc/infrastructure/ajax/stoptimes.php';

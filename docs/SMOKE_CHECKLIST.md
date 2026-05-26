@@ -42,6 +42,7 @@ php scripts/validate.php
 ## Nästa steg (main, utan PR-krav)
 
 - ~~Legacy `inc/functions/*`-loaders~~ — borttagna; `inc/bootstrap/domain.php`.
-- ~~`inc/admin-page/`~~ — flyttat till `inc/admin/` (`dashboard/`, `tools/`).
+- ~~`inc/admin-page/`~~ — `inc/admin/` (`dashboard/`, `tools/`, `meta-boxes/`).
+- ~~`inc/admin-meta-boxes/`~~, ~~`inc/admin-ajax/`~~, ~~`inc/cpt/`~~ — `inc/admin/meta-boxes/`, `inc/infrastructure/ajax/`, `inc/infrastructure/post-types/`.
 - Wizard utresa/retur: grund-CSS i `steps-outbound-return.css`; finpolish mot mockup när PNG finns i `docs/mockups/`.
 - [ACCESSIBILITY.md](ACCESSIBILITY.md) – manuell rökning (checklista oförändrad).

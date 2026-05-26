@@ -239,6 +239,8 @@ inc/
 
 **Nuvarande start:** `inc/admin/dashboard.php` + `inc/admin/dashboard/*`; laddas via `inc/admin.php`.
 
+**Nuvarande start:** `inc/admin/meta-boxes/` (timetable, service, route, station) via `inc/admin/meta-boxes.php`.
+
 ### `admin/timetable-editor`
 
 **Ansvar:** edit timetable dates and trips/services linked to timetable.
@@ -398,6 +400,8 @@ inc/
 **Output:** JSON/HTML response.
 
 **Får inte:** implement domain rules inline.
+
+**Nuvarande start:** `inc/infrastructure/ajax/*.php` via `inc/infrastructure/ajax.php` (admin + publika `wp_ajax_*`).
 
 ---
 

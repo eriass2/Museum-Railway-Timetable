@@ -132,9 +132,9 @@ Kodstandarder och clean code-principer för projektet.
 ## 6. Filstruktur
 
 ### Mappar
-- **Använd mappar** – Organisera kod i mappar efter ansvar (admin-ajax, admin-meta-boxes, shortcodes m.fl.)
+- **Använd mappar** – Organisera kod efter ansvar (`inc/domain/`, `inc/admin/`, `inc/infrastructure/`, `inc/public/`)
 - **En fil per ansvar** – Varje mapp innehåller filer med tydligt, sammanhörande ansvar
-- **Loader-filer** – En huvudfil (t.ex. `admin-ajax.php`) kan require:a moduler från undermappar
+- **Loader-filer** – Tunna loaders (`inc/infrastructure/ajax.php`, `inc/admin/meta-boxes.php`) require:ar undermappar
 
 ### Struktur
 ```
@@ -145,8 +145,8 @@ museum-railway-timetable/
 ├── scripts/                       # deploy, validate, lint
 ├── inc/
 │   ├── functions/                 # Helper-funktioner (helpers-*.php, timetable-view/)
-│   ├── admin-ajax/                # AJAX-handlers (stoptimes, journey, timetable, route-*)
-│   ├── admin-meta-boxes/          # Meta boxes (station, route, timetable, service)
+│   ├── infrastructure/ajax/         # AJAX-handlers (stoptimes, journey, timetable, route-*)
+│   ├── admin/meta-boxes/          # Meta boxes (station, route, timetable, service)
 │   ├── admin/                     # dashboard/, tools/, admin-list
 │   ├── cpt/                       # Custom post types, taxonomier
 │   ├── public/                    # shortcode modules (month, overview, planner, wizard)

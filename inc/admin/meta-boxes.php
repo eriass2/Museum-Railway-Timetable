@@ -1,22 +1,25 @@
 <?php
 /**
- * Custom meta boxes for Stations and Services
+ * Meta box registration and module loading.
  *
  * @package Museum_Railway_Timetable
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+	exit;
+}
 
-require_once MRT_PATH . 'inc/admin-meta-boxes/station.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes/route.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes/timetable.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes/timetable-services.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes/timetable-overview.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes/service.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes/service-save.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes/service-stoptimes.php';
-require_once MRT_PATH . 'inc/admin-meta-boxes/hooks.php';
+$meta_boxes_dir = MRT_PATH . 'inc/admin/meta-boxes/';
+
+require_once $meta_boxes_dir . 'station.php';
+require_once $meta_boxes_dir . 'route.php';
+require_once $meta_boxes_dir . 'timetable.php';
+require_once $meta_boxes_dir . 'timetable-services.php';
+require_once $meta_boxes_dir . 'timetable-overview.php';
+require_once $meta_boxes_dir . 'service.php';
+require_once $meta_boxes_dir . 'service-save.php';
+require_once $meta_boxes_dir . 'service-stoptimes.php';
+require_once $meta_boxes_dir . 'hooks.php';
 
 /**
  * Meta boxes: station + timetable post type.
@@ -92,7 +95,7 @@ function MRT_register_meta_boxes_route_and_service(): void {
 }
 
 /**
- * Add meta boxes for stations and services
+ * Add meta boxes for stations and services.
  */
 function MRT_register_all_plugin_meta_boxes(): void {
 	MRT_register_meta_boxes_station_and_timetable();

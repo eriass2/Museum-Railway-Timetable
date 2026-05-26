@@ -1,25 +1,25 @@
 <?php
 /**
- * AJAX handlers for Stop Times and Timetable management
+ * AJAX action registration and handlers.
  *
  * @package Museum_Railway_Timetable
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+	exit;
+}
 
-require_once MRT_PATH . 'inc/admin-ajax/stoptimes.php';
-require_once MRT_PATH . 'inc/admin-ajax/timetable-services.php';
-require_once MRT_PATH . 'inc/admin-ajax/route-destinations.php';
-require_once MRT_PATH . 'inc/admin-ajax/route-stations.php';
-require_once MRT_PATH . 'inc/admin-ajax/journey-parse.php';
-require_once MRT_PATH . 'inc/admin-ajax/journey-render.php';
-require_once MRT_PATH . 'inc/admin-ajax/journey.php';
-require_once MRT_PATH . 'inc/admin-ajax/timetable-frontend.php';
+$ajax_dir = MRT_PATH . 'inc/infrastructure/ajax/';
 
-/**
- * Register AJAX actions
- */
+require_once $ajax_dir . 'stoptimes.php';
+require_once $ajax_dir . 'timetable-services.php';
+require_once $ajax_dir . 'route-destinations.php';
+require_once $ajax_dir . 'route-stations.php';
+require_once $ajax_dir . 'journey-parse.php';
+require_once $ajax_dir . 'journey-render.php';
+require_once $ajax_dir . 'journey.php';
+require_once $ajax_dir . 'timetable-frontend.php';
+
 add_action( 'wp_ajax_mrt_add_stoptime', 'MRT_ajax_add_stoptime' );
 add_action( 'wp_ajax_mrt_update_stoptime', 'MRT_ajax_update_stoptime' );
 add_action( 'wp_ajax_mrt_delete_stoptime', 'MRT_ajax_delete_stoptime' );

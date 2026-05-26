@@ -46,17 +46,19 @@ Lös koppling mellan domän och UI gör det möjligt att byta tema, shortcode-la
 
 ## 5. Filstruktur (`inc/`)
 
-Max **50 rader per funktion** (se [STYLE_GUIDE.md](STYLE_GUIDE.md)). Loaders i rot av `inc/` (`admin-ajax.php`, `shortcodes.php`, …) `require_once` undermappar.
+Max **50 rader per funktion** (se [STYLE_GUIDE.md](STYLE_GUIDE.md)). `inc/bootstrap.php` laddar domän och app; tunna loaders i `inc/admin.php`, `inc/infrastructure/*.php`, `inc/shortcodes.php`.
 
 ```
 inc/
-├── assets/               # admin.php, frontend.php (enqueue; loader: inc/assets.php)
-├── admin-ajax/           # stoptimes, timetable-services, route-*, journey (+ parse/render), timetable-frontend
-├── admin-meta-boxes/     # station, route, timetable, service, hooks, …
-├── admin/                # dashboard/, tools/ (clear-db, demo-page), admin-list
-├── shortcodes/           # month, overview, journey, journey-wizard
-├── cpt/                  # cpt-register, cpt-admin
-├── import-lennakatten/   # loader → domain import
-└── functions/            # helpers-*, services, journey-*, timetable-view/
+├── bootstrap/            # domain.php
+├── domain/               # journey, service, timetable, station, route, pricing, …
+├── infrastructure/       # post-types/, ajax/, wordpress/helpers-utils.php
+├── admin/                # dashboard/, meta-boxes/, tools/, meta-boxes.php
+├── public/               # shortcode modules (month, overview, planner, wizard)
+├── import/               # lennakatten reference + importer
+├── import-lennakatten/   # admin import UI loader
+├── assets/               # enqueue (loader: inc/assets.php)
+├── admin.php             # menu, settings, dashboard, tools
+└── shortcodes.php        # shortcode registration
 ```
 

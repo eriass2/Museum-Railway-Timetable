@@ -21,6 +21,9 @@ Statusnycklar:
 | `inc/admin-page/*` | → `inc/admin/dashboard/`, `inc/admin/tools/`, `inc/admin/admin-list.php`. |
 | `inc/admin-page.php` | → `inc/admin.php` (bootstrap anropar). |
 | `inc/demo-page.php` | → `inc/admin/tools/demo-page.php`. |
+| `inc/admin-meta-boxes/*` | → `inc/admin/meta-boxes/` + `inc/admin/meta-boxes.php`. |
+| `inc/admin-ajax/*` | → `inc/infrastructure/ajax/` + `inc/infrastructure/ajax.php`. |
+| `inc/cpt/*` | → `inc/infrastructure/post-types/`. |
 | Publik tidtabellsöversikt | CSS grid-fix + bredare demosida (`public-layout.css`, `overview-special-rows.css`). |
 
 ---
@@ -126,9 +129,9 @@ inc/
 | Nuvarande område | Status | Ny plats | Kommentar |
 |------------------|--------|----------|-----------|
 | `inc/admin-page/*` | `done` | `inc/admin/dashboard/`, `inc/admin/tools/` | Flyttat; vidare förenkling valfritt. |
-| `inc/admin-meta-boxes/*` | `rewrite` | `inc/admin/meta-boxes/` | Behåll dataflöden, dela större service/timetable-filer. |
-| `inc/admin-ajax/*` | `rewrite` | `inc/infrastructure/ajax/` | Tunna endpoints som delegerar till domain. |
-| `inc/cpt/*` | `move/rewrite` | `inc/infrastructure/post-types/` | Registrering av CPT/taxonomies. |
+| `inc/admin-meta-boxes/*` | `done` | `inc/admin/meta-boxes/` | Flyttat. |
+| `inc/admin-ajax/*` | `done` | `inc/infrastructure/ajax/` | Flyttat. |
+| `inc/cpt/*` | `done` | `inc/infrastructure/post-types/` | Flyttat. |
 
 ### Behåll/flytta som public
 
@@ -146,7 +149,8 @@ inc/
 |-----|--------|-----------|
 | `inc/assets.php` | `move` | Loader för `inc/assets/`. |
 | `inc/admin-page.php` | `done` | `inc/admin.php` + `inc/bootstrap.php` | Ersatt. |
-| `inc/admin-meta-boxes.php`, `inc/admin-ajax.php`, `inc/cpt.php`, `inc/shortcodes.php` | `rewrite` | Delvis via bootstrap; meta-boxes/ajax kan flyttas senare. |
+| `inc/admin-meta-boxes.php`, `inc/admin-ajax.php`, `inc/cpt.php` | `done` | Ersatta av `inc/admin/meta-boxes.php`, `inc/infrastructure/ajax.php`, `inc/infrastructure/post-types.php`. |
+| `inc/shortcodes.php` | `rewrite` | Registrerar `inc/public/*`; kan förenklas senare. |
 
 ---
 
