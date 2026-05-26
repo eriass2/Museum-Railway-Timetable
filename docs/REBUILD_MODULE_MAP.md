@@ -381,6 +381,12 @@ inc/
 
 **Får inte:** contain domain algorithms.
 
+### `infrastructure/post-types`
+
+**Ansvar:** CPT/taxonomy registration and admin list tweaks.
+
+**Nuvarande start:** `inc/infrastructure/post-types/register.php`, `admin.php`.
+
 ### `infrastructure/database`
 
 **Ansvar:** custom table creation, DB repositories and `$wpdb` access.
