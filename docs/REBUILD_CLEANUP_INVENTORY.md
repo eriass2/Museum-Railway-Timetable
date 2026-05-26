@@ -55,17 +55,17 @@ Viktigt: `docs/mockups/` är referensmaterial och ska sparas. Nuvarande implemen
 | `docs/REBUILD_SKETCH.md` | `keep` | Primär målbild. |
 | `docs/REBUILD_RULES.md` | `keep` | Primär regelbok. |
 | `docs/REBUILD_CLEANUP_INVENTORY.md` | `keep` | Detta dokument. |
-| `docs/README.md` | `rewrite` | Ska bli kort index för rebuild-dokument och aktiv dokumentation. |
-| `docs/DEVELOPER.md` | `rewrite` | Behåll setup/testkommandon, ta bort historisk brus. |
-| `docs/ARCHITECTURE.md` | `rewrite` | Synka med ny struktur (`domain`, `admin`, `public`, `infrastructure`). |
-| `docs/STYLE_GUIDE.md` | `rewrite` | Ersätt med/peka mot `REBUILD_RULES.md`; undvik dubbla kodregler. |
-| `docs/DATA_MODEL.md` | `move/rewrite` | Behåll datamodellidéer, skriv om efter faktisk rebuild-modell. |
-| `docs/SHORTCODES.md` | `rewrite` | Behåll bara shortcodes som ingår i MVP. |
-| `docs/ADMIN_WORKFLOW.md` | `rewrite` | Behåll arbetsflöde efter ny adminstruktur. |
-| `docs/ACCESSIBILITY.md` | `keep/rewrite` | Behåll WCAG-krav, uppdatera efter ny frontend. |
+| `docs/README.md` | `done` | Index: rebuild + daglig utveckling; pekar på `REBUILD_RULES`. |
+| `docs/DEVELOPER.md` | `done` | Setup/test; länkar rebuild och smoke. |
+| `docs/ARCHITECTURE.md` | `done` | Bootstrap, `inc/`-karta, tre shortcodes. |
+| `docs/STYLE_GUIDE.md` | `done` | Konventioner; design/arkitektur → `REBUILD_RULES`. |
+| `docs/DATA_MODEL.md` | `done` | Datamodell + kodkarta till `inc/domain/`. |
+| `docs/SHORTCODES.md` | `done` | Tre MVP-shortcodes (wizard-only för resa). |
+| `docs/ADMIN_WORKFLOW.md` | `done` | Arbetsflöde + `inc/admin/`-referens. |
+| `docs/ACCESSIBILITY.md` | `done` | WCAG per wizard/månad/översikt. |
 | `docs/PHP_INSTALL_WINDOWS.md` | `keep` | Praktisk setupinfo, låg risk. |
 
-Första dokument-cleanup bör ta bort duplicerade regler efter att `REBUILD_RULES.md` är etablerad som källa.
+**Regel:** `REBUILD_RULES.md` styr arkitektur och design; `STYLE_GUIDE.md` styr kodkonventioner.
 
 ---
 
@@ -204,7 +204,7 @@ Det som ska sparas är referenserna: mockups, tidtabells-PDF:er, tågikonerna i 
 
 ## 8. Första faktiska cleanup-PR efter denna inventering
 
-**Status:** Genomfört i `main` (bootstrap, målstruktur, flytt av loaders/helpers, borttag av legacy-träd och journey planner). Kvar enligt avsnitt 2: skriv om `README.md`/`ARCHITECTURE.md` m.fl. så de pekar på rebuild-dokument utan dubbla regler.
+**Status:** Genomfört i `main` (bootstrap, målstruktur, legacy-träd borta, journey planner borta, dokumentationssynk avsnitt 2). Kvar: §8.6 frontend-polish mot mockups.
 
 Tidigare rekommenderat scope (referens):
 

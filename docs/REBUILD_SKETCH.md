@@ -132,7 +132,7 @@ Cleanup ska göras efter att denna skiss är godkänd.
 5. Radera kod som saknar plats i MVP.
 6. Lägg tillbaka funktioner stegvis med tester.
 
-**Status 2026-05:** Genomfört enligt [REBUILD_CLEANUP_INVENTORY.md](REBUILD_CLEANUP_INVENTORY.md) avsnitt 0. Legacy-träd (`inc/functions/`, `inc/shortcodes/`, `inc/admin-page/`, m.fl.) finns inte kvar i repot; bootstrap laddar endast `domain`, `admin`, `public`, `infrastructure`, `import`. Journey planner shortcode och tillhörande kod borttagen; wizard är enda rese-UI. Kvar: dokumentationssynk (avsnitt 2 i inventeringen) och §8.6 frontend-polish mot mockups.
+**Status 2026-05:** Genomfört enligt [REBUILD_CLEANUP_INVENTORY.md](REBUILD_CLEANUP_INVENTORY.md) avsnitt 0–2. Legacy-träd borta; bootstrap laddar `domain`, `admin`, `public`, `infrastructure`, `import`. Wizard är enda rese-UI. Dokumentation: [docs/README.md](README.md). Kvar: §8.6 frontend-polish mot mockups.
 
 ---
 

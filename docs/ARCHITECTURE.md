@@ -2,7 +2,7 @@
 
 Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydligt, kod kan testas, och **affärskritisk logik** inte låses in i presentation.
 
-**Relaterat:** [SHORTCODES.md](SHORTCODES.md), [STYLE_GUIDE.md](STYLE_GUIDE.md), [ACCESSIBILITY.md](ACCESSIBILITY.md). **Pull requests:** [`.github/pull_request_template.md`](../.github/pull_request_template.md).
+**Relaterat:** [REBUILD_RULES.md](REBUILD_RULES.md) (primär regelbok), [SHORTCODES.md](SHORTCODES.md), [STYLE_GUIDE.md](STYLE_GUIDE.md), [ACCESSIBILITY.md](ACCESSIBILITY.md). **Pull requests:** [`.github/pull_request_template.md`](../.github/pull_request_template.md).
 
 ---
 
@@ -10,54 +10,98 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 
 | Lager | Roll | Exempel |
 |--------|------|---------|
-| **Domän / affärslogik** | Regler oberoende av WordPress och UI | Prismatris, datum/tid-validering, normalisering av connections, kalenderstatus per dag |
-| **Applikation / WP-adapter** | I/O: `$wpdb`, `get_option`, AJAX som validerar och delegerar | `MRT_ajax_*`, tunn mappning från `$_POST` till parametrar |
-| **Presentation** | Shortcode/HTML; JS för tillstånd och anrop | `shortcode-*.php`, `assets/*-wizard.js` (inga dolda affärsregler utöver visning) |
+| **Domän** | Regler oberoende av WordPress och UI | Prismatris, datum/tid, connection-sökning, normalisering, tidtabellsrutnät |
+| **Infrastruktur** | WP-adapters: CPT, AJAX, inställningar, helpers | `MRT_ajax_*`, `inc/infrastructure/post-types/` |
+| **Admin / public** | Meta boxes, dashboard, shortcodes, enqueue | `inc/admin/meta-boxes/`, `inc/public/journey-wizard/` |
 
-**Vid ändringar:** Om en funktion kan beskrivas och testas utan `echo` och utan `$_POST` ska den ligga i **`inc/domain/`** eller **`inc/infrastructure/`** (prefix `MRT_*`), inte i template-strängar.
-
----
-
-## 2. Testning
-
-- **Enhetstester (PHPUnit):** Ren PHP i `tests/` mot produktionskod i `inc/`; se `phpunit.xml.dist` och `composer test`.
-- **Utökning:** Ny eller ändrad affärsregel bör följa med test i samma leverans, när logiken är ren nog.
-- **Integration:** Väljs när domänlogik måste verifieras mot databas eller full WordPress; då WP test suite eller riktade tester – inte ersättning för enhetstest av rena funktioner.
-- **CI:** Pipeline kör `composer test` tillsammans med befintlig validering (se `.github/workflows/ci.yml`).
-- **Refaktor:** Flytta validering som inte behöver `$_POST` till namngivna `MRT_*`-funktioner (t.ex. `MRT_journey_validate_station_pair_ids` i `journey-parse.php`) så samma regler kan testas utan HTTP.
+**Vid ändringar:** Om en funktion kan beskrivas och testas utan `echo` och utan `$_POST` ska den ligga i **`inc/domain/`** (prefix `MRT_*`), inte i template-strängar eller JS.
 
 ---
 
-## 3. Affärskritisk kod och UI
+## 2. Bootstrap och laddning
 
-- **PHP:** Shortcode och AJAX ska **samla input → anropa domänfunktion → rendera**; undvik långa grenar av affärslogik inline i HTML.
-- **JavaScript:** Servern är sanning för sökning, priser och giltiga datum; klienten visar svar och fel. Duplicera inte samma regler i JS.
-- **Gemensam regel** (admin + publikt): **en** implementation i PHP, inte copy-paste mellan lager.
+`museum-railway-timetable.php` → `inc/bootstrap.php`:
 
-**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` där det går (3) Tunnt lager i shortcode/AJAX (4) UI endast visar och skickar parametrar.
+1. **`MRT_bootstrap_load_domain()`** – `inc/bootstrap/domain.php` laddar domänmoduler (journey, timetable view, service, route, station, pricing, datetime).
+2. **`MRT_bootstrap_load_app()`** – miljö, inställningar, CPT, assets, admin, AJAX, shortcodes.
+
+Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootstrap.
 
 ---
 
-## 4. Varför det spelar roll
+## 3. Testning
 
-Lös koppling mellan domän och UI gör det möjligt att byta tema, shortcode-layout eller API-format utan att röra kärnreglerna, och tvärtom att testa regler utan webbläsare.
+- **Enhetstester (PHPUnit):** Ren PHP i `tests/Unit/` mot `inc/domain/`; se `phpunit.xml.dist` och `composer test`.
+- **Ny affärsregel:** Lägg test i samma leverans när logiken är ren nog.
+- **CI:** `.github/workflows/ci.yml` kör `composer check` (validate, PHPStan, PHPUnit, JS-tester).
+- **Refaktor:** Validering som inte behöver `$_POST` ska vara namngivna `MRT_*`-funktioner (t.ex. `MRT_journey_validate_station_pair_ids` i `journey-parse.php`).
+
+---
+
+## 4. Affärskritisk kod och UI
+
+- **PHP:** Shortcode och AJAX ska **samla input → anropa domän → rendera**.
+- **JavaScript:** Servern är sanning för sökning, priser och giltiga datum; klienten visar svar och fel.
+- **Gemensam regel:** En implementation i PHP, inte copy-paste mellan admin och publikt.
+
+**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` (3) Tunt lager i shortcode/AJAX (4) UI visar och skickar parametrar.
 
 ---
 
 ## 5. Filstruktur (`inc/`)
 
-Max **50 rader per funktion** (se [STYLE_GUIDE.md](STYLE_GUIDE.md)). `inc/bootstrap.php` laddar domän och app; tunna loaders i `inc/admin.php`, `inc/infrastructure/*.php`, `inc/shortcodes.php`.
+Max **50 rader per funktion** (se [STYLE_GUIDE.md](STYLE_GUIDE.md)).
 
 ```
 inc/
-├── bootstrap/            # domain.php
-├── domain/               # journey, service, timetable, station, route, pricing, …
-├── infrastructure/       # post-types/, ajax/, wordpress/helpers-utils.php
-├── admin/                # dashboard/, meta-boxes/, tools/, meta-boxes.php
-├── public/               # shortcode modules (month, overview, wizard)
-├── import/               # lennakatten reference + importer
-├── assets/               # enqueue (inc/assets.php → inc/assets/loader.php)
-├── admin.php             # menu, settings, dashboard, tools
-└── shortcodes.php        # shortcode registration
+├── bootstrap.php           # MRT_bootstrap_load()
+├── bootstrap/domain.php    # MRT_load_domain_modules()
+├── constants.php
+├── domain/
+│   ├── datetime/
+│   ├── journey/            # sökning, byte, kalender, normalisering, visningshjälpare
+│   ├── pricing/
+│   ├── route/
+│   ├── service/            # services, stop-times, connections
+│   ├── station/
+│   ├── timetable/view/     # prepare, grid, overview
+│   └── train-type/         # ikon-slugs
+├── infrastructure/
+│   ├── post-types/         # CPT + taxonomier
+│   ├── ajax/               # journey, stoptimes, timetable, route, …
+│   └── wordpress/          # environment, plugin-settings, helpers-utils
+├── admin/
+│   ├── dashboard/
+│   ├── meta-boxes/
+│   ├── tools/              # demo, import, clear-db, dev-navigation
+│   ├── menu.php, settings.php, admin-list.php
+│   └── meta-boxes.php      # loader för meta-box-filer
+├── public/
+│   ├── month-calendar/
+│   ├── timetable-overview/
+│   └── journey-wizard/
+├── import/lennakatten/     # referensdata + importer
+├── assets/                 # enqueue (anropas från inc/assets.php)
+├── admin.php               # admin-bootstrap
+└── shortcodes.php          # registrerar tre shortcodes
 ```
 
+### Publika shortcodes
+
+| Shortcode | Modul |
+|-----------|--------|
+| `[museum_timetable_month]` | `inc/public/month-calendar/` |
+| `[museum_timetable_overview]` | `inc/public/timetable-overview/` |
+| `[museum_journey_wizard]` | `inc/public/journey-wizard/` |
+
+Rese-UI är endast wizard; `[museum_journey_planner]` finns inte längre (se [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md)).
+
+### Journey AJAX
+
+`inc/infrastructure/ajax/journey.php`, `journey-parse.php` – JSON till `assets/journey-wizard.js` (`mrt_search_journey`, kalender, connection detail).
+
+---
+
+## 6. Varför det spelar roll
+
+Lös koppling mellan domän och UI gör det möjligt att byta layout eller API-format utan att röra kärnreglerna, och tvärtom att testa regler utan webbläsare.

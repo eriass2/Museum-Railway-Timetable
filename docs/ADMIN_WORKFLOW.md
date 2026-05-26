@@ -2,6 +2,8 @@
 
 Detta dokument beskriver det rekommenderade arbetsflödet för att skapa en komplett tidtabell i admin-gränssnittet.
 
+**Kod:** Dashboard och meta boxes ligger under `inc/admin/` (menyn via `inc/admin/menu.php`). Demo-import: **Railway Timetable → Import demo data** (`inc/admin/tools/import-lennakatten.php`). Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) för component demo-sida.
+
 ## Översikt
 
 För att skapa en fungerande tidtabell behöver du:

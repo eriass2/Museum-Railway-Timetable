@@ -200,25 +200,16 @@ museum-railway-timetable/
 ├─ local/                        # deploy.ps1, deploy.config (Local by Flywheel)
 ├─ scripts/                      # validate.php, lint.ps1
 ├─ inc/
-│   ├─ constants.php             # MRT_* constants
-│   ├─ functions/
-│   │   ├─ helpers.php           # Loader + helpers-*.php
-│   │   ├─ services.php          # Service-related functions
-│   │   └─ timetable-view/       # prepare, grid, overview
-│   ├─ admin/                    # dashboard/, tools/, admin-list
-│   ├─ admin/meta-boxes/         # station, route, timetable, service, …
-│   ├─ infrastructure/ajax/      # stoptimes, journey, timetable, route-*
-│   ├─ infrastructure/post-types/
-│   ├─ shortcodes/               # month, overview, journey, journey-wizard
-│   ├─ cpt/                        # cpt-register, cpt-admin
-│   ├─ import/lennakatten/       # reference-data, importer (domain)
-│   ├─ assets/                   # admin.php, frontend.php (enqueue helpers)
-│   ├─ assets.php                # Asset loader (requires assets/*)
-│   ├─ admin.php                 # Admin loader
-│   ├─ infrastructure/ajax.php
-│   ├─ infrastructure/post-types.php
-│   ├─ cpt.php                   # Loader
-│   └─ shortcodes.php            # Loader
+│   ├─ bootstrap.php             # Loads domain + app
+│   ├─ bootstrap/domain.php
+│   ├─ constants.php
+│   ├─ domain/                   # journey, service, timetable, pricing, …
+│   ├─ admin/                    # dashboard/, meta-boxes/, tools/
+│   ├─ public/                   # month-calendar, timetable-overview, journey-wizard
+│   ├─ infrastructure/           # post-types/, ajax/, wordpress/
+│   ├─ import/lennakatten/
+│   ├─ assets/                   # enqueue helpers
+│   ├─ assets.php, admin.php, shortcodes.php
 ├─ assets/
 │   ├─ admin.js                  # Admin entry (depends on modules below)
 │   ├─ admin-utils.js
@@ -235,7 +226,7 @@ museum-railway-timetable/
 
 ### Coding Standards
 
-Se [STYLE_GUIDE.md](docs/STYLE_GUIDE.md) för kodstandarder, clean code-principer och namnkonventioner.
+Se [docs/REBUILD_RULES.md](docs/REBUILD_RULES.md) och [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md). Översikt: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ### Hooks and Filters
 
@@ -250,8 +241,8 @@ The plugin creates one custom table:
 
 ## Contributing
 
-1. Läs [docs/DEVELOPER.md](docs/DEVELOPER.md)
-2. Följ [STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
+1. Läs [docs/DEVELOPER.md](docs/DEVELOPER.md) och [docs/README.md](docs/README.md)
+2. Följ [docs/REBUILD_RULES.md](docs/REBUILD_RULES.md) och [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md)
 3. Add PHPDoc comments to all functions
 4. Ensure all output is properly escaped
 5. Test your changes thoroughly

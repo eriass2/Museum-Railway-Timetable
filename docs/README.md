@@ -1,23 +1,34 @@
 # Dokumentation
 
-**[DEVELOPER.md](DEVELOPER.md)** – snabbstart, kommandon, deploy-checklista.
+**[DEVELOPER.md](DEVELOPER.md)** – snabbstart, Docker, kommandon, deploy-checklista.
+
+## Produkt och rebuild
 
 | Dokument | Innehåll |
 |----------|----------|
-| [REBUILD_SKETCH.md](REBUILD_SKETCH.md) | Målbild, MVP och cleanup-plan för kontrollerad omstart |
-| [REBUILD_RULES.md](REBUILD_RULES.md) | Kod-, design- och kvalitetsregler för rebuild |
-| [REBUILD_MODULE_MAP.md](REBUILD_MODULE_MAP.md) | Föreslagen moduluppdelning, ansvar och testkrav för rebuild |
-| [REBUILD_CLEANUP_INVENTORY.md](REBUILD_CLEANUP_INVENTORY.md) | Klassning av filer/mappar inför cleanup (`keep`, `move`, `rewrite`, `delete`) |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, testning, `inc/`-struktur |
-| [DATA_MODEL.md](DATA_MODEL.md) | Post types, relationer, tabeller |
-| [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |
-| [SHORTCODES.md](SHORTCODES.md) | Shortcodes (månad, översikt, wizard) |
-| [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG, manuell release-rökning |
+| [REBUILD_SKETCH.md](REBUILD_SKETCH.md) | Målbild, MVP, cleanup-status |
+| [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) | Beslut: wizard-only, shortcodes, import |
+| [REBUILD_RULES.md](REBUILD_RULES.md) | **Primär regelbok** – arkitektur, design, kvalitet vid ny kod |
+| [REBUILD_MODULE_MAP.md](REBUILD_MODULE_MAP.md) | Modulansvar och testkrav |
+| [REBUILD_CLEANUP_INVENTORY.md](REBUILD_CLEANUP_INVENTORY.md) | Filklassning (`keep` / `move` / `done`) |
+
+Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Tågtypsikoner: `assets/icons/train-types/`.
+
+## Daglig utveckling
+
+| Dokument | Innehåll |
+|----------|----------|
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, bootstrap, `inc/`-struktur, testning |
+| [STYLE_GUIDE.md](STYLE_GUIDE.md) | PHP/CSS/JS-konventioner (`.mrt-*`, `MRT_*`, säkerhet) |
+| [DATA_MODEL.md](DATA_MODEL.md) | Post types, meta, `mrt_stoptimes`, relationer |
+| [SHORTCODES.md](SHORTCODES.md) | Tre shortcodes: månad, översikt, wizard |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i WordPress-admin |
-| [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsläge vs live, smoke-meny |
+| [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsmeny, component demo, import |
 | [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning i Docker |
+| [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG-krav per modul |
+| [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) | Manuell release-logg |
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
 
-Designreferens: mockups i `docs/mockups/`. Tågtypsikoner sparas som produktassets i `assets/icons/train-types/`.
+**Kodregler:** Följ [REBUILD_RULES.md](REBUILD_RULES.md) för arkitektur och frontend-design; [STYLE_GUIDE.md](STYLE_GUIDE.md) för namngivning, escape/sanitize och filkonventioner.
 
 Bidrag: [../CONTRIBUTING.md](../CONTRIBUTING.md).

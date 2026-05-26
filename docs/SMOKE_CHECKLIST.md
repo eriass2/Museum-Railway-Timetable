@@ -39,4 +39,3 @@ php scripts/validate.php
 - Manuell rökning: wizard hela flödet (steg 3–4, byte t.ex. Uppsala Östra → Fjällnora via Selknä).
 - Frontend-polish mot mockup (§8.6 i [REBUILD_SKETCH.md](REBUILD_SKETCH.md)); designreferens i `docs/mockups/DESIGN_TOKENS.md`.
 - [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-logg.
-- Dokumentationssynk: [REBUILD_CLEANUP_INVENTORY.md](REBUILD_CLEANUP_INVENTORY.md) avsnitt 2 (`ARCHITECTURE.md`, `DEVELOPER.md`, …).

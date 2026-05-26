@@ -1,6 +1,8 @@
 # Style Guide – Museum Railway Timetable
 
-Kodstandarder och clean code-principer för projektet.
+Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
+
+**Arkitektur och rebuild-design:** [REBUILD_RULES.md](REBUILD_RULES.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Denna guide fokuserar på namngivning, säkerhet och filkonventioner så att regler inte dupliceras.
 
 ---
 
@@ -137,29 +139,31 @@ Kodstandarder och clean code-principer för projektet.
 - **Loader-filer** – Tunna loaders (`inc/infrastructure/ajax.php`, `inc/admin/meta-boxes.php`) require:ar undermappar
 
 ### Struktur
+
+Se [ARCHITECTURE.md](ARCHITECTURE.md) för full `inc/`-karta. Kort:
+
 ```
 museum-railway-timetable/
-├── museum-railway-timetable.php   # Huvudfil
+├── museum-railway-timetable.php   # Huvudfil → inc/bootstrap.php
 ├── uninstall.php
-├── docs/                          # README, DEVELOPER, STYLE_GUIDE, …
-├── scripts/                       # deploy, validate, lint
+├── docs/                          # Index: docs/README.md
+├── scripts/                       # validate.php, docker-dev-reset.ps1, …
 ├── inc/
-│   ├── functions/                 # Helper-funktioner (helpers-*.php, timetable-view/)
-│   ├── infrastructure/ajax/         # AJAX-handlers (stoptimes, journey, timetable, route-*)
-│   ├── admin/meta-boxes/          # Meta boxes (station, route, timetable, service)
-│   ├── admin/                     # dashboard/, tools/, admin-list
-│   ├── cpt/                       # Custom post types, taxonomier
-│   ├── public/                    # shortcode modules (month, overview, wizard)
-│   ├── assets.php
-│   └── ...
+│   ├── bootstrap/                 # domain loader
+│   ├── domain/                    # affärslogik (journey, service, timetable, …)
+│   ├── infrastructure/            # CPT, ajax/, wordpress/
+│   ├── admin/                     # dashboard/, meta-boxes/, tools/
+│   ├── public/                    # month-calendar, timetable-overview, journey-wizard
+│   ├── import/lennakatten/
+│   ├── assets/                    # enqueue-hjälpare
+│   ├── admin.php, shortcodes.php, assets.php
+│   └── constants.php
 ├── assets/
-│   ├── admin-*.css                # Uppdelad CSS (base, timetable, meta-boxes, dashboard, ui)
-│   ├── admin.js
-│   ├── mrt-string-utils.js        # MRTStringUtils.escapeHtml
-│   ├── mrt-date-utils.js          # MRTDateUtils (datum/tid)
-│   ├── mrt-frontend-api.js        # MRTFrontendApi (AJAX + mrtFrontend-meddelanden)
-│   ├── admin-*.js                 # Moduler (utils, route-ui, stoptimes-ui, timetable-services-ui)
-│   └── frontend.js
+│   ├── admin.css, admin.js, admin-*.js
+│   ├── frontend.js, frontend-public.css, frontend-overview.css
+│   ├── journey-wizard.js, journey-wizard.css, journey-wizard/
+│   ├── mrt-string-utils.js, mrt-date-utils.js, mrt-frontend-api.js
+│   └── icons/train-types/
 └── languages/
 ```
 

@@ -2,6 +2,20 @@
 
 This document describes all data objects in the Museum Railway Timetable plugin and their relationships.
 
+**Plugin code:** Data is read and written via `inc/domain/` (business rules) and `inc/infrastructure/` (WordPress adapters). Admin UI: `inc/admin/meta-boxes/`. See [ARCHITECTURE.md](ARCHITECTURE.md).
+
+## Code map (where logic lives)
+
+| Area | Location |
+|------|----------|
+| Post types & taxonomies | `inc/infrastructure/post-types/` |
+| Stop times (custom table) | `inc/domain/service/stop-times.php` |
+| Services & connections | `inc/domain/service/services.php`, `connections.php` |
+| Routes & stations | `inc/domain/route/routes.php`, `inc/domain/station/stations.php` |
+| Timetable overview grid | `inc/domain/timetable/view/` |
+| Journey search & prices | `inc/domain/journey/`, `inc/domain/pricing/prices.php` |
+| Lennakatten import | `inc/import/lennakatten/`, admin UI `inc/admin/tools/import-lennakatten.php` |
+
 ## Overview
 
 The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom Database Tables, and Post Meta to manage timetable data.

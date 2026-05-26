@@ -2,7 +2,7 @@
 
 Se **[docs/DEVELOPER.md](docs/DEVELOPER.md)** för snabbstart, kodstandarder och hur du kör `composer plugin-check` innan du öppnar en pull request.
 
-Kort: följ [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md) och [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) (lager, testning, logik vs UI), kör validering och testa manuellt i WordPress.
+Kort: följ [docs/REBUILD_RULES.md](docs/REBUILD_RULES.md), [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md) och [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md), kör validering och testa manuellt i WordPress. Dokumentationsindex: [docs/README.md](docs/README.md).
 
 ## Pull requests
 

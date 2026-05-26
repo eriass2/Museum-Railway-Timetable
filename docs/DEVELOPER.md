@@ -18,14 +18,19 @@ composer check
 
 ## Dokumentation
 
+Fullständigt index: **[README.md](README.md)**.
+
 | Dokument | Innehåll |
 |----------|----------|
-| [README.md](README.md) | Index |
-| [STYLE_GUIDE.md](STYLE_GUIDE.md) | PHP, CSS, JS, `.mrt-*` |
-| [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, testning, `inc/`-struktur |
-| [DATA_MODEL.md](DATA_MODEL.md) | Post types, relationer |
-| [SHORTCODES.md](SHORTCODES.md) | Alla shortcodes |
-| [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG + release-rökning |
+| [REBUILD_RULES.md](REBUILD_RULES.md) | Arkitektur, design, kvalitet (primär vid ny kod) |
+| [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, bootstrap, `inc/`-struktur |
+| [STYLE_GUIDE.md](STYLE_GUIDE.md) | PHP/CSS/JS, `.mrt-*`, säkerhet |
+| [DATA_MODEL.md](DATA_MODEL.md) | Post types, meta, tabeller |
+| [SHORTCODES.md](SHORTCODES.md) | Månad, översikt, wizard |
+| [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) | MVP-beslut (wizard-only m.m.) |
+| [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Dev-meny, component demo |
+| [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning |
+| [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG per modul |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i admin |
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP/Composer på Windows |
 
@@ -43,7 +48,7 @@ composer check
 
 GitHub Actions (`.github/workflows/ci.yml`) kör `composer check` vid push/PR. Dependabot uppdaterar Composer månadsvis.
 
-**PHPStan:** `phpstan-wordpress`, config `phpstan.neon`. **PHPCS:** WPCS; prefix `MRT_` kan flaggas – bedöm mot [STYLE_GUIDE.md](STYLE_GUIDE.md). `composer phpcbf` fixar formatering där det går.
+**PHPStan:** `phpstan-wordpress`, config `phpstan.neon`. **PHPCS:** WPCS; prefix `MRT_` kan flaggas – bedöm mot [STYLE_GUIDE.md](STYLE_GUIDE.md) och [REBUILD_RULES.md](REBUILD_RULES.md). `composer phpcbf` fixar formatering där det går.
 
 **Pre-commit:** kräver bash (WSL/Git Bash på Windows) – `pre-commit install`.
 
