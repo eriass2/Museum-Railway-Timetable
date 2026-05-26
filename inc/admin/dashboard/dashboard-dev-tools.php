@@ -65,7 +65,7 @@ function MRT_render_dashboard_create_demo_page_button(): void {
 		<input type="hidden" name="mrt_action" value="create_demo_page" />
 		<p>
 			<button type="submit" class="button button-secondary"><?php esc_html_e( 'Create demo page', 'museum-railway-timetable' ); ?></button>
-			<span class="description"><?php esc_html_e( 'Creates or updates a draft page with all public shortcodes. Open Railway Timetable → Component demo page for edit and preview links.', 'museum-railway-timetable' ); ?></span>
+			<span class="description"><?php esc_html_e( 'Creates or updates a published demo page with all public shortcodes.', 'museum-railway-timetable' ); ?></span>
 		</p>
 	</form>
 	<?php

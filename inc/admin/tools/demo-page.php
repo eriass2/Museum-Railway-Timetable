@@ -198,7 +198,7 @@ function MRT_ensure_components_demo_page() {
 	$post_id = (int) get_option( MRT_OPTION_COMPONENTS_DEMO_PAGE_ID, 0 );
 	$postarr = array(
 		'post_type'    => 'page',
-		'post_status'  => 'draft',
+		'post_status'  => 'publish',
 		'post_title'   => $title,
 		'post_content' => $content,
 	);
@@ -231,15 +231,19 @@ function MRT_render_demo_page_admin_links( $post ) {
 		<?php echo esc_html( get_the_title( $post ) ); ?>
 		(<?php echo esc_html( $post->post_status ); ?>)
 	</p>
+	<?php
+	$view_url = $post->post_status === 'publish'
+		? get_permalink( $post )
+		: get_preview_post_link( $post );
+	?>
 	<p>
+		<a class="button button-primary" href="<?php echo esc_url( $view_url ); ?>">
+			<?php esc_html_e( 'View page', 'museum-railway-timetable' ); ?>
+		</a>
 		<a class="button" href="<?php echo esc_url( get_edit_post_link( $post->ID, 'raw' ) ); ?>">
 			<?php esc_html_e( 'Edit page', 'museum-railway-timetable' ); ?>
 		</a>
-		<?php if ( $post->post_status === 'publish' ) : ?>
-			<a class="button" href="<?php echo esc_url( get_permalink( $post ) ); ?>">
-				<?php esc_html_e( 'View page', 'museum-railway-timetable' ); ?>
-			</a>
-		<?php else : ?>
+		<?php if ( $post->post_status !== 'publish' ) : ?>
 			<a class="button" href="<?php echo esc_url( get_preview_post_link( $post ) ); ?>">
 				<?php esc_html_e( 'Preview draft', 'museum-railway-timetable' ); ?>
 			</a>
@@ -268,7 +272,7 @@ function MRT_render_components_demo_admin_page() {
 			$notice_type = 'success';
 			$notice      = sprintf(
 				/* translators: %d: WordPress page ID */
-				__( 'Demo page saved successfully (page ID %d). Use the links below to edit or preview.', 'museum-railway-timetable' ),
+				__( 'Demo page saved successfully (page ID %d). Use View page below.', 'museum-railway-timetable' ),
 				(int) $res
 			);
 		}
@@ -278,7 +282,7 @@ function MRT_render_components_demo_admin_page() {
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Component demo page', 'museum-railway-timetable' ); ?></h1>
-		<p><?php esc_html_e( 'Creates or updates a draft page that includes every public shortcode, so you can preview components in one place.', 'museum-railway-timetable' ); ?></p>
+		<p><?php esc_html_e( 'Creates or updates a published page with every public shortcode for local testing and QA.', 'museum-railway-timetable' ); ?></p>
 		<?php if ( $notice !== '' ) : ?>
 			<?php $cls = ( $notice_type === 'success' ) ? 'notice-success' : 'notice-error'; ?>
 			<div class="notice <?php echo esc_attr( $cls ); ?> is-dismissible"><p><?php echo esc_html( $notice ); ?></p></div>
