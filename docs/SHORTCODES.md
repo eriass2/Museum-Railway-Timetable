@@ -125,7 +125,7 @@ Shortcodes kan dock användas i widgets genom att lägga till dem i text-widgets
 
 ## Journey – backend (wizard / planner)
 
-- **Domän:** `inc/functions/journey-*.php`
+- **Domän:** `inc/domain/journey/`
 - **AJAX:** `inc/admin-ajax/journey.php`, `journey-parse.php`, `journey-render.php`
 - **Delade JS:** `mrt-string-utils.js`, `mrt-date-utils.js`, `mrt-frontend-api.js` (se [STYLE_GUIDE.md](STYLE_GUIDE.md) §4)
 

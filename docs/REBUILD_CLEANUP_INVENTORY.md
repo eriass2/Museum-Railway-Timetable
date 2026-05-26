@@ -8,6 +8,20 @@ Statusnycklar:
 - `move` – ska behållas men flyttas till ny struktur
 - `rewrite` – funktionen behövs, men implementationen bör byggas om
 - `delete` – kan tas bort när ersättning/ny struktur finns
+- `done` – genomfört i `main` (se avsnitt 0)
+
+---
+
+## 0. Genomfört i main
+
+| Område | Resultat |
+|--------|----------|
+| `inc/functions/*`, `inc/shortcodes/*` | Borttagna; laddning via `inc/bootstrap/domain.php`. |
+| `inc/import-lennakatten/import-data.php`, `import-run.php` | Borttagna; domain-import via `loader.php`. |
+| `inc/admin-page/*` | → `inc/admin/dashboard/`, `inc/admin/tools/`, `inc/admin/admin-list.php`. |
+| `inc/admin-page.php` | → `inc/admin.php` (bootstrap anropar). |
+| `inc/demo-page.php` | → `inc/admin/tools/demo-page.php`. |
+| Publik tidtabellsöversikt | CSS grid-fix + bredare demosida (`public-layout.css`, `overview-special-rows.css`). |
 
 ---
 
@@ -87,31 +101,31 @@ inc/
 
 | Nuvarande område | Status | Ny plats | Kommentar |
 |------------------|--------|----------|-----------|
-| `inc/functions/helpers-datetime.php` | `move` | `inc/domain/datetime/datetime.php` | Flyttad; legacyfilen är loader tills resten av rebuilden använder ny väg direkt. |
-| `inc/functions/journey-*.php` | `move/rewrite` | `inc/domain/journey/` | Flyttade till domain; legacyfiler är loaders där de behövs. Skriv om gränssnitt senare. |
-| `inc/functions/journey-prices.php` | `move` | `inc/domain/pricing/prices.php` | Flyttad; legacyfilen är loader tills resten av rebuilden använder ny väg direkt. |
+| `inc/functions/helpers-datetime.php` | `done` | `inc/domain/datetime/datetime.php` | Legacy loaders borttagna. |
+| `inc/functions/journey-*.php` | `done` | `inc/domain/journey/` | Legacy loaders borttagna. |
+| `inc/functions/journey-prices.php` | `done` | `inc/domain/pricing/prices.php` | Legacy loaders borttagna. |
 | `inc/data/price-matrix-builtin.php` | `move` | `inc/domain/pricing/price-matrix-builtin.php` | Flyttad seed/reference data. |
-| `inc/functions/timetable-view/*` | `move/rewrite` | `inc/domain/timetable/view/` | Flyttad. Dela dataförberedelse från rendering i senare rewrite. |
-| `inc/functions/services.php` | `move/rewrite` | `inc/domain/service/services.php` | Flyttad; separera queries, mapping, connection search senare. |
-| `inc/functions/helpers-services.php` | `move/rewrite` | `inc/domain/service/stop-times.php` | Flyttad; behåll stopptidshelpers, rensa WP-adapterdelar senare. |
-| `inc/functions/helpers-connections.php` | `move/rewrite` | `inc/domain/service/connections.php` | Flyttad; connection helper för service/transfer-info. |
-| `inc/functions/helpers-routes.php` | `move/rewrite` | `inc/domain/route/routes.php` | Flyttad; legacyfilen är loader. Separera WP queries senare. |
-| `inc/functions/helpers-stations.php` | `move` | `inc/domain/station/stations.php` | Flyttad; legacyfilen är loader. |
-| `inc/functions/helpers-utils.php` | `split` | `inc/domain/shared/`, `inc/domain/train-type/`, `inc/infrastructure/` | Train-type icon helpers är flyttade; resten är blandat. |
+| `inc/functions/timetable-view/*` | `done` | `inc/domain/timetable/view/` | Loaders borttagna; ev. rewrite data/rendering senare. |
+| `inc/functions/services.php` | `done` | `inc/domain/service/services.php` | Loaders borttagna. |
+| `inc/functions/helpers-services.php` | `done` | `inc/domain/service/stop-times.php` | Loaders borttagna. |
+| `inc/functions/helpers-connections.php` | `done` | `inc/domain/service/connections.php` | Loaders borttagna. |
+| `inc/functions/helpers-routes.php` | `done` | `inc/domain/route/routes.php` | Loaders borttagna. |
+| `inc/functions/helpers-stations.php` | `done` | `inc/domain/station/stations.php` | Loaders borttagna. |
+| `inc/functions/helpers-utils.php` | `done` | `inc/infrastructure/wordpress/helpers-utils.php` | WP-meta/helpers; train-type i domain. |
 
 ### Behåll/flytta som import
 
 | Nuvarande område | Status | Ny plats | Kommentar |
 |------------------|--------|----------|-----------|
-| `inc/import-lennakatten/import-data.php` | `move` | `inc/import/lennakatten/reference-data.php` | Flyttad referensdata från PDF. |
-| `inc/import-lennakatten/import-run.php` | `rewrite` | `inc/import/lennakatten/importer.php` | Flyttad; dela upp runner, repository, mapper senare. |
+| `inc/import-lennakatten/import-data.php` | `done` | `inc/import/lennakatten/reference-data.php` | Loader borttagen. |
+| `inc/import-lennakatten/import-run.php` | `done` | `inc/import/lennakatten/importer.php` | Loader borttagen. |
 | `inc/import-lennakatten/loader.php` | `rewrite` | `inc/admin/tools/import-page.php` | UI-adapter för import. |
 
 ### Behåll/flytta som admin
 
 | Nuvarande område | Status | Ny plats | Kommentar |
 |------------------|--------|----------|-----------|
-| `inc/admin-page/*` | `rewrite` | `inc/admin/dashboard/` | Behåll verktyg, gör WordPress-native och mindre. |
+| `inc/admin-page/*` | `done` | `inc/admin/dashboard/`, `inc/admin/tools/` | Flyttat; vidare förenkling valfritt. |
 | `inc/admin-meta-boxes/*` | `rewrite` | `inc/admin/meta-boxes/` | Behåll dataflöden, dela större service/timetable-filer. |
 | `inc/admin-ajax/*` | `rewrite` | `inc/infrastructure/ajax/` | Tunna endpoints som delegerar till domain. |
 | `inc/cpt/*` | `move/rewrite` | `inc/infrastructure/post-types/` | Registrering av CPT/taxonomies. |
@@ -120,18 +134,19 @@ inc/
 
 | Nuvarande område | Status | Ny plats | Kommentar |
 |------------------|--------|----------|-----------|
-| `inc/shortcodes/shortcode-month.php` | `rewrite` | `inc/public/month-calendar/shortcode.php` | Flyttad. Behåll om MVP behöver månadsvy. |
-| `inc/shortcodes/shortcode-overview.php` | `rewrite` | `inc/public/timetable-overview/shortcode.php` | Flyttad. Behåll tidtabellsöversikt. |
-| `inc/shortcodes/shortcode-journey-wizard.php` + `inc/shortcodes/journey-wizard/` | `rewrite` | `inc/public/journey-wizard/` | Flyttad. Primär frontend enligt mockup. |
-| `inc/shortcodes/shortcode-journey.php` | `delete/rewrite` | `inc/public/journey-planner/shortcode.php` | Flyttad. Legacy one-page planner; behåll bara om MVP kräver den. |
-| `inc/demo-page.php` | `rewrite` | `inc/admin/tools/demo-page.php` | Behövs som demo/testverktyg men ska vara admin tool. |
+| `inc/shortcodes/shortcode-month.php` | `done` | `inc/public/month-calendar/shortcode.php` | Legacy shortcode-träd borttaget. |
+| `inc/shortcodes/shortcode-overview.php` | `done` | `inc/public/timetable-overview/shortcode.php` | Legacy shortcode-träd borttaget. |
+| `inc/shortcodes/shortcode-journey-wizard.php` + `inc/shortcodes/journey-wizard/` | `done` | `inc/public/journey-wizard/` | Legacy shortcode-träd borttaget. |
+| `inc/shortcodes/shortcode-journey.php` | `done` | `inc/public/journey-planner/shortcode.php` | Legacy shortcode-träd borttaget. |
+| `inc/demo-page.php` | `done` | `inc/admin/tools/demo-page.php` | Flyttad. |
 
 ### Loaders
 
 | Fil | Status | Kommentar |
 |-----|--------|-----------|
 | `inc/assets.php` | `move` | Loader för `inc/assets/`. |
-| `inc/admin-page.php`, `inc/admin-meta-boxes.php`, `inc/admin-ajax.php`, `inc/cpt.php`, `inc/shortcodes.php` | `delete/rewrite` | Ersätt med `inc/bootstrap.php` och modul-loaders i ny struktur. |
+| `inc/admin-page.php` | `done` | `inc/admin.php` + `inc/bootstrap.php` | Ersatt. |
+| `inc/admin-meta-boxes.php`, `inc/admin-ajax.php`, `inc/cpt.php`, `inc/shortcodes.php` | `rewrite` | Delvis via bootstrap; meta-boxes/ajax kan flyttas senare. |
 
 ---
 

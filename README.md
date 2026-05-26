@@ -225,7 +225,7 @@ museum-railway-timetable/
 │   │   ├─ helpers.php           # Loader + helpers-*.php
 │   │   ├─ services.php          # Service-related functions
 │   │   └─ timetable-view/       # prepare, grid, overview
-│   ├─ admin-page/               # dashboard, clear-db, admin-list
+│   ├─ admin/                    # dashboard/, tools/, admin-list
 │   ├─ admin-meta-boxes/         # station, route, timetable, service, …
 │   ├─ admin-ajax/               # stoptimes, timetable-services, journey, …
 │   ├─ shortcodes/               # month, overview, journey, journey-wizard
@@ -233,7 +233,7 @@ museum-railway-timetable/
 │   ├─ import-lennakatten/       # import-data, import-run, loader
 │   ├─ assets/                   # admin.php, frontend.php (enqueue helpers)
 │   ├─ assets.php                # Asset loader (requires assets/*)
-│   ├─ admin-page.php            # Loader
+│   ├─ admin.php                 # Admin loader
 │   ├─ admin-meta-boxes.php      # Loader
 │   ├─ admin-ajax.php            # Loader
 │   ├─ cpt.php                   # Loader

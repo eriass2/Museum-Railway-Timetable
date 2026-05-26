@@ -53,10 +53,10 @@ inc/
 ├── assets/               # admin.php, frontend.php (enqueue; loader: inc/assets.php)
 ├── admin-ajax/           # stoptimes, timetable-services, route-*, journey (+ parse/render), timetable-frontend
 ├── admin-meta-boxes/     # station, route, timetable, service, hooks, …
-├── admin-page/           # dashboard, clear-db, admin-list
+├── admin/                # dashboard/, tools/ (clear-db, demo-page), admin-list
 ├── shortcodes/           # month, overview, journey, journey-wizard
 ├── cpt/                  # cpt-register, cpt-admin
-├── import-lennakatten/   # import-data, import-run, loader
+├── import-lennakatten/   # loader → domain import
 └── functions/            # helpers-*, services, journey-*, timetable-view/
 ```
 

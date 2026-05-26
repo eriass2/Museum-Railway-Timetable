@@ -1,0 +1,54 @@
+/**
+ * Journey wizard – utresa/återresa panels (layout polish).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-wizard__panel--active {
+    box-shadow: 0 0 0 3px var(--mrt-jw-focus);
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="outbound"],
+.mrt-journey-wizard__panel[data-wizard-step="return"] {
+    width: min(100%, 54rem);
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-label {
+    color: #ffffff;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-card {
+    border-color: var(--mrt-jw-yellow);
+    background: rgba(21, 83, 11, 0.45);
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="outbound"] .mrt-journey-wizard__step-title,
+.mrt-journey-wizard__panel[data-wizard-step="return"] .mrt-journey-wizard__step-title {
+    margin-top: 0.25rem;
+}
+
+.mrt-journey-wizard__steps li[aria-current="step"] {
+    box-shadow: 0 0 0 2px var(--mrt-jw-focus);
+}
+
+.mrt-journey-wizard__steps li.is-done {
+    border-color: var(--mrt-jw-yellow);
+}
+
+.mrt-journey-wizard__cal-prev:focus-visible,
+.mrt-journey-wizard__cal-next:focus-visible,
+.mrt-journey-wizard__back:focus-visible,
+.mrt-journey-wizard__cta:focus-visible,
+.mrt-journey-wizard__btn-select:focus-visible {
+    outline: 3px solid var(--mrt-jw-focus);
+    outline-offset: 3px;
+}

@@ -147,9 +147,9 @@ museum-railway-timetable/
 │   ├── functions/                 # Helper-funktioner (helpers-*.php, timetable-view/)
 │   ├── admin-ajax/                # AJAX-handlers (stoptimes, journey, timetable, route-*)
 │   ├── admin-meta-boxes/          # Meta boxes (station, route, timetable, service)
-│   ├── admin-page/                # Dashboard, clear-db, stats, routes
+│   ├── admin/                     # dashboard/, tools/, admin-list
 │   ├── cpt/                       # Custom post types, taxonomier
-│   ├── shortcodes/                # shortcode-month, shortcode-journey, shortcode-overview
+│   ├── public/                    # shortcode modules (month, overview, planner, wizard)
 │   ├── assets.php
 │   └── ...
 ├── assets/

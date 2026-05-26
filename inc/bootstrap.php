@@ -25,7 +25,7 @@ function MRT_bootstrap_load_domain(): void {
  */
 function MRT_bootstrap_load_app(): void {
 	require_once MRT_PATH . 'inc/assets.php';
-	require_once MRT_PATH . 'inc/admin-page.php';
+	require_once MRT_PATH . 'inc/admin.php';
 	require_once MRT_PATH . 'inc/admin-meta-boxes.php';
 	require_once MRT_PATH . 'inc/admin-ajax.php';
 	require_once MRT_PATH . 'inc/import-lennakatten/loader.php';

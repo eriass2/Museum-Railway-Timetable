@@ -27,20 +27,20 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 | Fel | `role="alert"`, `aria-live="assertive"` |
 | Kalender | Region, `aria-busy`, dagknappar med `aria-label` + `aria-pressed` |
 | Tabeller | `caption`, `scope="col"`; dold Actions-kolumn med `.mrt-sr-only` |
-| Fokus | Vid stegbyte fokus på rubrik (`tabindex="-1"`, tas bort vid blur) |
-| Rörelse | Ska hanteras i ny mockupbaserad CSS när frontend-styling byggs upp igen |
+| Fokus | Vid stegbyte fokus på rubrik (`tabindex="-1"`, tas bort vid blur); `:focus-visible` på knappar (se `assets/journey-wizard/base.css`, `steps-outbound-return.css`) |
+| Rörelse | `prefers-reduced-motion` i `assets/journey-wizard/base.css` |
 
-**Filer:** `shortcode-journey-wizard.php`, `journey-wizard.js`, kommande mockupbaserad CSS.
+**Filer:** `inc/public/journey-wizard/` (shell, steps, fields), `assets/journey-wizard.js`, `assets/journey-wizard/*.css`.
 
 ---
 
 ## Planner, månad, översikt
 
-**Planner:** region + `aria-live` på resultat; tabell via `journey-connections-table.php`; `frontend.js`.
+**Planner:** region + `aria-live` på resultat; tabell via `inc/domain/journey/journey-connections-table.php`; `assets/frontend.js`.
 
-**Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid AJAX. Filer: `shortcode-month.php`, `frontend.js`.
+**Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid AJAX. Filer: `inc/public/month-calendar/shortcode.php`, `assets/frontend.js`.
 
-**Översikt:** CSS Grid (inte `<table>`) – `role="region"`, `h3` per rutt, `aria-label` på celler via `MRT_overview_grid_cell_aria_label`. Filer: `timetable-view/overview.php`, `grid*.php`.
+**Översikt:** CSS Grid (inte `<table>`) – `role="region"`, `h3` per rutt, `aria-label` på celler via `MRT_overview_grid_cell_aria_label`. Filer: `inc/domain/timetable/view/overview.php`, `grid*.php`.
 
 ---
 

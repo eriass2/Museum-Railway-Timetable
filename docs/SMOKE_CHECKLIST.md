@@ -39,8 +39,9 @@ php scripts/validate.php
 - Lokal PHP 7.4 kör inte full `composer install`; använd Docker för PHPUnit/PHPStan.
 - Mockup-PNG finns inte i repot; wizard-stil är återställd från pre-purge CSS.
 
-## Efter merge (nästa steg)
+## Nästa steg (main, utan PR-krav)
 
-- ~~Legacy `inc/functions/*`-loaders~~ — borttagna; laddning via `inc/bootstrap/domain.php`.
-- Wizard utresa/retur finpolish om mockups läggs i `docs/mockups/`.
-- [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort manuell rökning.
+- ~~Legacy `inc/functions/*`-loaders~~ — borttagna; `inc/bootstrap/domain.php`.
+- ~~`inc/admin-page/`~~ — flyttat till `inc/admin/` (`dashboard/`, `tools/`).
+- Wizard utresa/retur: grund-CSS i `steps-outbound-return.css`; finpolish mot mockup när PNG finns i `docs/mockups/`.
+- [ACCESSIBILITY.md](ACCESSIBILITY.md) – manuell rökning (checklista oförändrad).

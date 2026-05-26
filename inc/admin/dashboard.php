@@ -8,13 +8,13 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-require_once MRT_PATH . 'inc/admin-page/dashboard-stats.php';
-require_once MRT_PATH . 'inc/admin-page/dashboard-routes.php';
-require_once MRT_PATH . 'inc/admin-page/dashboard-quick-actions.php';
-require_once MRT_PATH . 'inc/admin-page/dashboard-guide.php';
-require_once MRT_PATH . 'inc/admin-page/dashboard-shortcodes.php';
-require_once MRT_PATH . 'inc/admin-page/dashboard-dev-tools.php';
-require_once MRT_PATH . 'inc/admin-page/dashboard-prices.php';
+require_once MRT_PATH . 'inc/admin/dashboard/dashboard-stats.php';
+require_once MRT_PATH . 'inc/admin/dashboard/dashboard-routes.php';
+require_once MRT_PATH . 'inc/admin/dashboard/dashboard-quick-actions.php';
+require_once MRT_PATH . 'inc/admin/dashboard/dashboard-guide.php';
+require_once MRT_PATH . 'inc/admin/dashboard/dashboard-shortcodes.php';
+require_once MRT_PATH . 'inc/admin/dashboard/dashboard-dev-tools.php';
+require_once MRT_PATH . 'inc/admin/dashboard/dashboard-prices.php';
 
 /**
  * Sanitize plugin settings input

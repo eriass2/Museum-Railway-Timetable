@@ -69,7 +69,7 @@ inc/
 
 **Minsta tester:** giltigt/ogiltigt datum, HH:MM-validering, duration, jämförelse, minutaddition.
 
-**Nuvarande start:** datetime-logiken ligger i `inc/domain/datetime/datetime.php`; den gamla `inc/functions/helpers-datetime.php` är en loader under övergången.
+**Nuvarande start:** `inc/domain/datetime/datetime.php` (via `inc/bootstrap/domain.php`).
 
 ### `domain/station`
 
@@ -85,7 +85,7 @@ inc/
 
 **Minsta tester:** station ordering, missing station handling, bus suffix flag.
 
-**Nuvarande start:** stationhelpers ligger i `inc/domain/station/stations.php`; den gamla `inc/functions/helpers-stations.php` är en loader under övergången.
+**Nuvarande start:** `inc/domain/station/stations.php`.
 
 ### `domain/route`
 
@@ -101,7 +101,7 @@ inc/
 
 **Minsta tester:** route direction, shared end station label, missing route stations.
 
-**Nuvarande start:** routehelpers ligger i `inc/domain/route/routes.php`; den gamla `inc/functions/helpers-routes.php` är en loader under övergången.
+**Nuvarande start:** `inc/domain/route/routes.php`.
 
 ### `domain/train-type`
 
@@ -117,7 +117,7 @@ inc/
 
 **Minsta tester:** `Ångtåg`, `Dieseltåg`, `Rälsbuss`, `Buss`, fallback.
 
-**Nuvarande start:** train-type icon helpers ligger i `inc/domain/train-type/icons.php`; `helpers-utils.php` laddar dem under övergången.
+**Nuvarande start:** `inc/domain/train-type/icons.php`; WP-meta/helpers i `inc/infrastructure/wordpress/helpers-utils.php`.
 
 ### `domain/timetable`
 
@@ -133,7 +133,7 @@ inc/
 
 **Minsta tester:** date parsing/sorting, traffic/no-traffic status, grouping by route/direction.
 
-**Nuvarande start:** timetable view helpers ligger i `inc/domain/timetable/view/`; gamla `inc/functions/timetable-view/*`-filer är loaders under övergången.
+**Nuvarande start:** `inc/domain/timetable/view/`.
 
 ### `domain/service`
 
@@ -149,7 +149,7 @@ inc/
 
 **Minsta tester:** stop order, null/fixed times, pickup/dropoff semantics for `P`/`X`.
 
-**Nuvarande start:** service logic ligger i `inc/domain/service/services.php`, stopptidshelpers i `inc/domain/service/stop-times.php`, och connection helpers i `inc/domain/service/connections.php`; gamla `inc/functions/*`-filer är loaders under övergången.
+**Nuvarande start:** `inc/domain/service/services.php`, `stop-times.php`, `connections.php`.
 
 ### `domain/journey`
 
@@ -165,7 +165,7 @@ inc/
 
 **Minsta tester:** direct trip, transfer via shared station, min transfer time, return after arrival, invalid station pair, no traffic.
 
-**Nuvarande start:** journey-modulerna ligger i `inc/domain/journey/`; `inc/functions/journey-loader.php` laddar dem direkt under övergången.
+**Nuvarande start:** `inc/domain/journey/` (ordnad laddning i `inc/bootstrap/domain.php`).
 
 ### `domain/pricing`
 
@@ -181,7 +181,7 @@ inc/
 
 **Minsta tester:** zone span, empty price matrix, single/return/day ticket rows.
 
-**Nuvarande start:** pricing-logiken ligger i `inc/domain/pricing/prices.php`; den gamla `inc/functions/journey-prices.php` är en loader under övergången.
+**Nuvarande start:** `inc/domain/pricing/prices.php`.
 
 ---
 
@@ -201,7 +201,7 @@ inc/
 
 **Minsta tester:** tågnummer, tågtyp, date count, row length per route.
 
-**Nuvarande start:** referensdata ligger i `inc/import/lennakatten/reference-data.php`; gamla import-datafilen är loader under övergången.
+**Nuvarande start:** `inc/import/lennakatten/reference-data.php`.
 
 ### `import/lennakatten/importer`
 
@@ -217,7 +217,7 @@ inc/
 
 **Minsta tester:** idempotent import, expected counts, train type assignment.
 
-**Nuvarande start:** importern ligger i `inc/import/lennakatten/importer.php`; gamla import-runfilen är loader under övergången.
+**Nuvarande start:** `inc/import/lennakatten/importer.php` (UI via `inc/import-lennakatten/loader.php`).
 
 ---
 
@@ -236,6 +236,8 @@ inc/
 **Får inte:** contain import/search business logic.
 
 **Minsta tester:** smoke/manual, capability visibility for tools.
+
+**Nuvarande start:** `inc/admin/dashboard.php` + `inc/admin/dashboard/*`; laddas via `inc/admin.php`.
 
 ### `admin/timetable-editor`
 
@@ -292,6 +294,8 @@ inc/
 **Får inte:** bypass nonce/capability.
 
 **Minsta tester:** capability/nonce, clear/import/create actions.
+
+**Nuvarande start:** `inc/admin/tools/clear-db.php`, `inc/admin/tools/demo-page.php`.
 
 ---
 

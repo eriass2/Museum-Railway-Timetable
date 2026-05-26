@@ -500,7 +500,7 @@ The plugin provides a visual overview of timetables that groups services (trips)
 - **Displays train types** with PNG icons (`assets/icons/train-types/`) for each trip
 - **Shows times** for each station, with "X" indicating null/unspecified times
 - **Available in admin** as a preview meta box on Timetable edit screens
-- **Rendered by** `MRT_render_timetable_overview()` function in `inc/functions/timetable-view.php`
+- **Rendered by** `MRT_render_timetable_overview()` in `inc/domain/timetable/view/overview.php`
 
 ### Display Flow
 1. **Shortcode** → Queries timetables for a specific date
