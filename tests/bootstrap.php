@@ -51,16 +51,7 @@ if (!function_exists('__')) {
     }
 }
 
-require_once ABSPATH . 'inc/functions/helpers-datetime.php';
-require_once ABSPATH . 'inc/functions/helpers-utils.php';
-require_once ABSPATH . 'inc/functions/services.php';
-require_once ABSPATH . 'inc/functions/helpers-services.php';
-require_once ABSPATH . 'inc/functions/journey-notice.php';
-require_once ABSPATH . 'inc/functions/journey-detail.php';
-require_once ABSPATH . 'inc/functions/journey-multi-leg.php';
-require_once ABSPATH . 'inc/functions/journey-calendar.php';
-require_once ABSPATH . 'inc/functions/journey-normalize.php';
-require_once ABSPATH . 'inc/functions/journey-return.php';
-require_once ABSPATH . 'inc/functions/journey-prices.php';
+require_once ABSPATH . 'inc/bootstrap/domain.php';
+MRT_load_domain_modules();
 require_once ABSPATH . 'inc/admin-ajax/journey-parse.php';
 require_once ABSPATH . 'inc/admin-ajax/stoptimes.php';

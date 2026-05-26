@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require_once dirname(__DIR__, 2) . '/inc/functions/helpers-utils.php';
+require_once dirname(__DIR__, 2) . '/inc/infrastructure/wordpress/helpers-utils.php';
 
 final class TrainTypeIconTest extends TestCase {
 

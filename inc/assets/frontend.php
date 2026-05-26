@@ -306,4 +306,18 @@ function MRT_enqueue_frontend_assets(): void {
 		MRT_enqueue_journey_wizard_assets( $public_handle );
 	}
 }
+/**
+ * Widen theme content area on pages that use plugin shortcodes.
+ *
+ * @param string[] $classes Body classes.
+ * @return string[]
+ */
+function MRT_frontend_body_class( array $classes ): array {
+	$flags = MRT_frontend_shortcode_flags_from_post();
+	if ( $flags['has_any'] ) {
+		$classes[] = 'mrt-has-shortcodes';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'MRT_frontend_body_class' );
 add_action( 'wp_enqueue_scripts', 'MRT_enqueue_frontend_assets' );

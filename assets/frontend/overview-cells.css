@@ -18,9 +18,7 @@
     justify-content: flex-start;
 }
 
-.mrt-station-col-empty {
-    display: none;
-}
+/* Placement handled in overview-special-rows.css (visibility:hidden keeps grid column). */
 
 .mrt-from-row > .mrt-grid-cell,
 .mrt-to-row > .mrt-grid-cell {
