@@ -1,6 +1,6 @@
 # Översikt över Shortcodes och Komponenter
 
-## Shortcodes (4 st)
+## Shortcodes (3 st)
 
 ### 1. `[museum_timetable_month]` - Månadsvy
 Visar en kalendermånadsvy som visar vilka dagar som har turer.
@@ -24,7 +24,7 @@ Visar en kalendermånadsvy som visar vilka dagar som har turer.
 [museum_timetable_month month="2025-06" train_type="angtag" show_counts="1"]
 ```
 
-Använd train type-slug från **Railway Timetable → Train Types** (demo-import: `angtag`, `ralsbuss`, `dieseltag`, `buss`).
+Använd train type-slug från **Railway Timetable → Train Types** (demo-import: `angtag`, `ralsbuss`, `dieseltag`, `buss`, `ang-diesel`).
 
 **Funktioner:**
 - Klickbara dagar som visar tidtabell för vald dag
@@ -64,8 +64,8 @@ Visar en komplett tidtabell-översikt grupperad per route och riktning.
 
 ---
 
-### 3. `[museum_journey_wizard]` - Reseplanerare (flerssteg)
-Mockup-liknande flöde: rutt → datum (kalender med trafiklägen) → utresa → ev. retur → sammanfattning med prismatris. Direktresor och byte. Tågtypsikoner i resultat. Samma AJAX som plannern (`mrt_search_journey`, `mrt_journey_calendar_month`, `mrt_journey_connection_detail`). Kräver JavaScript.
+### 3. `[museum_journey_wizard]` - Reseplanerare (flersteg)
+Mockup-liknande flöde: rutt → datum (kalender med trafiklägen) → utresa → ev. retur → sammanfattning med prismatris. Direktresor och byte. Tågtypsikoner i resultat. Kräver JavaScript.
 
 **Användning:**
 ```
@@ -78,41 +78,11 @@ Mockup-liknande flöde: rutt → datum (kalender med trafiklägen) → utresa �
 - `hero_subtitle` – Underrubrik steg 1 (valfritt)
 - `timetable_id` – Visar utfällbar tidtabellsöversikt under sökformuläret på steg 1 (valfritt)
 - `timetable` – Samma som `timetable_id` men med exakt tidtabellstitel (valfritt)
+- `embedded` – `1` / `true` för kompakt layout inuti sidinnehåll (t.ex. component demo), utan fullbredds-hero
+
+**Backend (AJAX):** `mrt_search_journey`, `mrt_journey_calendar_month`, `mrt_journey_connection_detail` (se [Journey – backend](#journey--backend)).
 
 **Se även:** [ACCESSIBILITY.md](ACCESSIBILITY.md) (WCAG, release-rökning)
-
----
-
-### 4. `[museum_journey_planner]` - Reseplanerare (en skärm)
-Visar en reseplanerare där användare kan söka efter anslutningar mellan två stationer på **en sida** (formulär + resultat). Samma backend som wizard.
-
-**Användning:**
-```
-[museum_journey_planner]
-```
-
-**Parametrar:**
-- `default_date` - Förvalt datum i YYYY-MM-DD format (valfritt, standard: idag)
-
-**Vad den visar:**
-- Dropdown för att välja avgångsstation (From)
-- Dropdown för att välja ankomststation (To)
-- Datumväljare (standard: dagens datum)
-- Sökknapp för att hitta anslutningar
-- Resultattabell med direktresor och anslutningar med ett byte (när giltigt)
-- Avgångs-/ankomsttider, tågtyp och tågnummer per delsträcka
-
-**Exempel:**
-```
-[museum_journey_planner]
-[museum_journey_planner default_date="2025-06-15"]
-```
-
-**Funktioner:**
-- Söker direktresor och enkelbyte som kör på datumet, respekterar stoppordning och pickup/dropoff
-- Byte: min/max väntetid på bytesstation — **Railway Timetable → Settings** → *Journey search — transfers* (standard 5 / 120 min). Filter `mrt_min_transfer_minutes` / `mrt_max_transfer_minutes` kan fortfarande överstyra. Prioriterar byteshubbar (station med *Bus stop marker*, t.ex. Selknä).
-- Resultat sorteras efter avgångstid
-- För flerstegsflöde med retur och priser: använd `[museum_journey_wizard]`
 
 ---
 
@@ -120,33 +90,48 @@ Visar en reseplanerare där användare kan söka efter anslutningar mellan två 
 
 **Inga widgets är för närvarande registrerade.**
 
-Shortcodes kan dock användas i widgets genom att lägga till dem i text-widgets eller custom HTML-widgets.
+Shortcodes kan användas i widgets genom text-widgets eller custom HTML-widgets.
 
 ---
 
-## Journey – backend (wizard / planner)
+## Journey – backend
+
+Delad journey-domän och AJAX (används av wizarden):
 
 - **Domän:** `inc/domain/journey/`
-- **AJAX:** `inc/infrastructure/ajax/journey.php`, `journey-parse.php`, `journey-render.php`
-- **Delade JS:** `mrt-string-utils.js`, `mrt-date-utils.js`, `mrt-frontend-api.js` (se [STYLE_GUIDE.md](STYLE_GUIDE.md) §4)
+- **AJAX:** `inc/infrastructure/ajax/journey.php`, `journey-parse.php`
+- **Delade JS:** `mrt-string-utils.js`, `mrt-date-utils.js`, `mrt-frontend-api.js`, `assets/journey-wizard.js`
 
 ---
 
 ## Frontend Assets
 
-Vid användning på webbplatsen laddar plugin relevanta filer via `inc/assets.php` (loader som inkluderar `inc/assets/admin.php` och `inc/assets/frontend.php`), bland annat:
-- Beteende-JS för publika interaktioner.
-- Tågtypsikoner via `assets/train-type-icons.css`.
-- **Månad / översikt / enkel planner:** `assets/frontend.js` (AJAX)
-- **Wizard:** `assets/journey-wizard.js` (när `[museum_journey_wizard]` finns i innehållet)
+Vid användning på webbplatsen laddar plugin relevanta filer via `inc/assets.php`, bland annat:
+
+- **Månad:** `assets/frontend.js` (kalender-AJAX)
+- **Wizard:** `assets/journey-wizard.js` + `assets/journey-wizard.css`
+- **Tågtypsikoner:** `assets/train-type-icons.css`
 
 Assets köas när motsvarande shortcode finns på sidan (eller via filter `mrt_should_enqueue_frontend_assets`).
+
+---
+
+## Component demo (utveckling)
+
+**Railway Timetable → Component demo page** (eller `docker-dev-reset.ps1`) skapar en sida med tre block:
+
+1. Månadskalender  
+2. Tidtabellsöversikt (GRÖN efter Lennakatten-import)  
+3. Journey wizard (`embedded="1"`)
+
+Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 
 ---
 
 ## Framtida Förbättringar
 
 Möjliga framtida tillägg:
+
 - WordPress Widgets för varje shortcode-typ
 - Gutenberg Blocks för varje shortcode-typ
 - Mer avancerade filter- och sorteringsalternativ

@@ -2,7 +2,7 @@
 
 Använd tillsammans med [ACCESSIBILITY.md](ACCESSIBILITY.md). Kryssa av efter genomgång i Docker-demo (`admin` / `admin`).
 
-**Miljö:** http://localhost:8080 — demosida med alla shortcodes.
+**Miljö:** http://localhost:8080 — **Component demo** (tre block: månad, översikt, wizard) eller **Wizard smoke test**.
 
 ---
 
@@ -22,18 +22,13 @@ Valideringen inkluderar statiska a11y-markörer i publika moduler (region, aria-
 
 ### Wizard `[museum_journey_wizard]`
 
-- [ ] Tab genom steg 1→5; synlig fokus på knappar/länkar/select
+- [ ] Tab genom steg 1→4; synlig fokus på knappar/länkar/select
 - [ ] Steglista: aktivt steg hörs/ser (`aria-current="step"`)
 - [ ] Kalender: dagknappar med begripligt `aria-label`; `aria-pressed` byts vid val
 - [ ] Felmeddelande läses upp (`role="alert"`)
-- [ ] Resultattabell: `caption` + `scope="col"` där tabell används
-- [ ] Zoom 200 % – inget horisontellt klipp i hero/panel
-
-### Planner `[museum_journey_planner]`
-
-- [ ] Region märkt ”Journey planner”
-- [ ] Efter sök: fokus/announce i resultatregion (`aria-live="polite"`)
-- [ ] Tabell har caption i skärmläsare
+- [ ] Resultatkort / tabell: `caption` + `scope="col"` där tabell används
+- [ ] Tågtypsikoner stämmer (ång, diesel, rälsbuss, buss) per ben
+- [ ] Zoom 200 % – inget horisontellt klipp i hero/panel (embedded-läge på demo)
 
 ### Månad `[museum_timetable_month]`
 
@@ -45,6 +40,7 @@ Valideringen inkluderar statiska a11y-markörer i publika moduler (region, aria-
 
 - [ ] Varje rutt: region + rubrik (`h3`)
 - [ ] Tidsceller har beskrivande `aria-label` (station + tåg + tid)
+- [ ] Tågtypsikoner syns i rutnätet
 
 ### Admin
 

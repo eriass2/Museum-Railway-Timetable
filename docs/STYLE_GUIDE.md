@@ -149,7 +149,7 @@ museum-railway-timetable/
 │   ├── admin/meta-boxes/          # Meta boxes (station, route, timetable, service)
 │   ├── admin/                     # dashboard/, tools/, admin-list
 │   ├── cpt/                       # Custom post types, taxonomier
-│   ├── public/                    # shortcode modules (month, overview, planner, wizard)
+│   ├── public/                    # shortcode modules (month, overview, wizard)
 │   ├── assets.php
 │   └── ...
 ├── assets/

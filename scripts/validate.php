@@ -217,7 +217,6 @@ echo "\n7. Checking accessibility markers in public modules...\n";
 $a11y_markers = array(
 	'inc/public/journey-wizard/shell.php'       => array( 'role="alert"', 'aria-live="assertive"' ),
 	'inc/public/journey-wizard/steps.php'       => array( 'role="region"', 'aria-labelledby' ),
-	'inc/public/journey-planner/shortcode.php'  => array( 'aria-live="polite"', 'role="region"' ),
 	'inc/public/month-calendar/shortcode.php'   => array( 'aria-pressed', 'role="region"' ),
 	'assets/frontend/components-ui.css'         => array( ':focus-visible' ),
 );

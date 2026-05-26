@@ -39,8 +39,7 @@ Projektet har vuxit fram stegvis och innehåller nu fungerande delar, men också
 
 - `[museum_timetable_month]` – månadskalender.
 - `[museum_timetable_overview]` – komplett tidtabell.
-- `[museum_journey_planner]` – enkel reseplanerare.
-- `[museum_journey_wizard]` – mockup-liknande flerstegsflöde med datum, utresa, retur och priser.
+- `[museum_journey_wizard]` – enda publika reseflöde (mockup: datum, utresa, retur, priser).
 
 ### Kodkvalitet
 

@@ -43,7 +43,7 @@ function MRT_dev_cli_set_admin_user(): void {
 /**
  * Permalinks for dev smoke pages after setup.
  *
- * @return array<string, string> Keys: component_demo, wizard, planner
+ * @return array<string, string> Keys: component_demo, wizard
  */
 function MRT_dev_smoke_page_permalinks(): array {
 	$out = array();

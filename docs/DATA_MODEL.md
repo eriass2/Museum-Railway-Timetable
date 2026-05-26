@@ -562,21 +562,19 @@ The plugin provides a visual overview of timetables that groups services (trips)
 
 ---
 
-#### 9.2 Reseplanerare (Journey Planner)
-**Description:** Funktion för att planera resor mellan stationer med anslutningar och rekommendationer.
+#### 9.2 Reseplanerare (Journey search)
 
-**Potential Implementation:**
-- Ny shortcode: `[mrt_journey_planner]` med parametrar för startstation, slutstation, datum, tid
-- Algoritm för att hitta rutter med anslutningar
-- Beräkning av restid och antal byten
-- Visning av anslutningstider och varningar för korta anslutningar
-- Filtrering baserat på tågtyp (t.ex. endast ånglok)
+**Implementerat (2026-05):**
 
-**Use Cases:**
-- Besökare vill resa från Station A till Station B
-- Hitta alla möjliga rutter för en dag
-- Visa snabbaste resväg eller mest sceniska rutt
-- Planera dagsturer med flera stopp
+- **`[museum_journey_wizard]`** – publikt flöde (rutt, datum, utresa, retur, priser). Domän: `inc/domain/journey/`, AJAX i `inc/infrastructure/ajax/`.
+- Direktresor och enkelbyte; min/max bytestid via inställningar och filter.
+- Tågtypsikoner via `inc/domain/train-type/icons.php`.
+
+**Use Cases (täcks av wizard):**
+
+- Resa mellan två stationer på ett datum
+- Byte vid hub (t.ex. Selknä)
+- Tur och retur med prissammanfattning
 
 ---
 

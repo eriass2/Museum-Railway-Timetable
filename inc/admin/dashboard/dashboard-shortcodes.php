@@ -105,48 +105,6 @@ function MRT_render_dashboard_shortcodes_block_overview(): void {
 }
 
 /**
- * Journey planner shortcode docs.
- */
-function MRT_render_dashboard_shortcodes_block_planner(): void {
-	?>
-		<div class="mrt-mt-1">
-			<h3>4. <?php esc_html_e( 'Journey Planner (Reseplanerare)', 'museum-railway-timetable' ); ?></h3>
-			<p><code>[museum_journey_planner]</code></p>
-			<p class="description">
-				<?php esc_html_e( 'Displays a journey planner where users can search for connections between two stations on a specific date.', 'museum-railway-timetable' ); ?><br>
-				<strong><?php esc_html_e( 'What it shows:', 'museum-railway-timetable' ); ?></strong><br>
-				• <?php esc_html_e( 'Dropdown to select departure station (From)', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'Dropdown to select arrival station (To)', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'Date picker (defaults to today\'s date)', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'Search button to find connections', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'Results table with direct trips and connections with one transfer (when valid)', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'Departure/arrival times, train types, and service numbers per leg', 'museum-railway-timetable' ); ?>
-			</p>
-			<p class="description mrt-mt-sm">
-				<strong><?php esc_html_e( 'Parameters:', 'museum-railway-timetable' ); ?></strong><br>
-				• <code>default_date</code> - <?php esc_html_e( 'Default date in YYYY-MM-DD format (optional, defaults to today)', 'museum-railway-timetable' ); ?>
-			</p>
-			<p class="description mrt-mt-sm">
-				<strong><?php esc_html_e( 'How it works:', 'museum-railway-timetable' ); ?></strong><br>
-				• <?php esc_html_e( 'Users select departure and arrival stations and a date', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'Search returns direct services and one-transfer connections that run on the date, respect stop order, and allow pickup/dropoff at the chosen stations', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'Results are sorted by departure time', 'museum-railway-timetable' ); ?><br>
-				• <?php esc_html_e( 'For the full step-by-step booking UI with return trips and prices, use [museum_journey_wizard] instead', 'museum-railway-timetable' ); ?>
-			</p>
-			<p><strong><?php esc_html_e( 'Example:', 'museum-railway-timetable' ); ?></strong></p>
-			<pre class="mrt-box mrt-code-block">[museum_journey_planner]</pre>
-			<p class="description mrt-mt-sm">
-				<?php esc_html_e( 'Or with a default date:', 'museum-railway-timetable' ); ?>
-			</p>
-			<pre class="mrt-box mrt-code-block">[museum_journey_planner default_date="2025-06-15"]</pre>
-			<p class="description mrt-mt-sm mrt-alert mrt-alert-warning">
-				<strong><?php esc_html_e( 'Tip:', 'museum-railway-timetable' ); ?></strong> <?php esc_html_e( 'The journey planner automatically shows today\'s date by default, but users can select any date to check future connections. Make sure you have created timetables with dates and services with stop times for the dates you want to support.', 'museum-railway-timetable' ); ?>
-			</p>
-		</div>
-	<?php
-}
-
-/**
  * Render shortcodes documentation section
  */
 function MRT_render_dashboard_shortcodes(): void {
@@ -158,7 +116,6 @@ function MRT_render_dashboard_shortcodes(): void {
 		MRT_render_dashboard_shortcodes_block_month();
 		MRT_render_dashboard_shortcodes_block_wizard();
 		MRT_render_dashboard_shortcodes_block_overview();
-		MRT_render_dashboard_shortcodes_block_planner();
 		?>
 	</div>
 	<?php

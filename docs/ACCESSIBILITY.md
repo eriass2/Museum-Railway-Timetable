@@ -8,8 +8,7 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 
 ## Release-rökning (ca 15–30 min)
 
-- [ ] **`[museum_journey_wizard]`** – Tabba igenom steg; kalender och fel; zoom 200 %.
-- [ ] **`[museum_journey_planner]`** – Sök resa; fokus efter AJAX på resultatrubrik; tabell-caption i skärmläsare.
+- [ ] **`[museum_journey_wizard]`** – Tabba igenom steg; kalender och fel; zoom 200 %; tågtypsikoner i resultat.
 - [ ] **`[museum_timetable_month]`** – Månadsnav; trafikdag med `aria-pressed`; panel under kalendern.
 - [ ] **`[museum_timetable_overview]`** – Region per rutt; `h3` + beskrivande namn på tidsceller i rutnät.
 - [ ] **Admin** – Synlig `:focus-visible` på minst en sida med `mrt-btn`.
@@ -29,14 +28,13 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 | Tabeller | `caption`, `scope="col"`; dold Actions-kolumn med `.mrt-sr-only` |
 | Fokus | Vid stegbyte fokus på rubrik (`tabindex="-1"`, tas bort vid blur); `:focus-visible` på knappar (se `assets/journey-wizard/base.css`, `steps-outbound-return.css`) |
 | Rörelse | `prefers-reduced-motion` i `assets/journey-wizard/base.css` |
+| Ikoner | Dekorativa `<img alt="">` i resekort; tidtabell i drawer använder samma PNG som översikt |
 
 **Filer:** `inc/public/journey-wizard/` (shell, steps, fields), `assets/journey-wizard.js`, `assets/journey-wizard/*.css`.
 
 ---
 
-## Planner, månad, översikt
-
-**Planner:** region + `aria-live` på resultat; tabell via `inc/domain/journey/journey-connections-table.php`; `assets/frontend.js`.
+## Månad och översikt
 
 **Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid AJAX. Filer: `inc/public/month-calendar/shortcode.php`, `assets/frontend.js`.
 

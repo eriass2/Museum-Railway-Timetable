@@ -351,24 +351,6 @@ inc/
 
 **Nuvarande start:** `inc/public/month-calendar/shortcode.php`; den gamla shortcodefilen är loader under övergången.
 
-### `public/journey-planner`
-
-**Ansvar:** enkel legacy-reseplanerare om den överlever MVP-beslutet.
-
-**Input:** from/to/date.
-
-**Output:** shortcode HTML och resultatcontainer.
-
-**Stöder:** enkel test-/fallbackvy för journey backend.
-
-**Får inte:** duplicera wizardens domänregler.
-
-**Minsta tester:** render smoke och station/date input.
-
-**Nuvarande start:** `inc/public/journey-planner/shortcode.php`; kan tas bort senare om MVP väljer wizard-only.
-
----
-
 ## 7. Infrastructure modules
 
 ### `infrastructure/wordpress`

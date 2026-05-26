@@ -1,6 +1,6 @@
 /**
  * Frontend JavaScript for Museum Railway Timetable
- * Handles AJAX interactions for shortcodes
+ * Month calendar AJAX (journey search lives in journey-wizard.js).
  */
 
 (function($) {
@@ -17,125 +17,6 @@
         $div.text(message);
         $container.html($div);
         $container.attr('aria-busy', 'false');
-    }
-
-    function focusJourneyResultsHeading($results) {
-        var $h = $results.find('#mrt-journey-results-heading');
-        if ($h.length) {
-            $h.attr('tabindex', '-1');
-            $h.trigger('focus');
-            $h.one('blur', function() {
-                $(this).removeAttr('tabindex');
-            });
-        } else {
-            $results.attr('tabindex', '-1');
-            $results.trigger('focus');
-            $results.one('blur', function() {
-                $(this).removeAttr('tabindex');
-            });
-        }
-    }
-
-    function journeyPlannerResetSearchButton($searchBtn) {
-        $searchBtn.prop('disabled', false).attr('aria-busy', 'false').text(api.msg('search', 'Search'));
-    }
-
-    function journeyPlannerPushUrlParams(fromStation, toStation, date) {
-        if (!history.pushState) {
-            return;
-        }
-        var url = new URL(window.location);
-        url.searchParams.set('mrt_from', fromStation);
-        url.searchParams.set('mrt_to', toStation);
-        url.searchParams.set('mrt_date', date);
-        history.pushState({}, '', url);
-    }
-
-    function journeyPlannerFormValues($form) {
-        return {
-            fromStation: $form.find('#mrt_from').val(),
-            toStation: $form.find('#mrt_to').val(),
-            date: $form.find('#mrt_date').val()
-        };
-    }
-
-    function journeyPlannerValidateValues(values, $results) {
-        if (!values.fromStation || !values.toStation || !values.date) {
-            return false;
-        }
-        if (values.fromStation !== values.toStation) {
-            return true;
-        }
-        showError($results, api.msg('errorSameStations', 'Please select different stations for departure and arrival.'));
-        focusJourneyResultsHeading($results);
-        return false;
-    }
-
-    function journeyPlannerSetSearchLoading($results, $searchBtn) {
-        $searchBtn.prop('disabled', true).attr('aria-busy', 'true').text(api.msg('searching', 'Searching...'));
-        $results.attr('aria-busy', 'true');
-        $results.html('<div class="mrt-empty mrt-empty--loading">' + api.msg('loading', 'Loading...') + '</div>');
-    }
-
-    function journeyPlannerHandleSearchSuccess(response, values, $results) {
-        if (response.success) {
-            $results.html(response.data.html);
-            $results.attr('aria-busy', 'false');
-            focusJourneyResultsHeading($results);
-            journeyPlannerPushUrlParams(values.fromStation, values.toStation, values.date);
-            return;
-        }
-        showError($results, response.data.message || api.msg('errorSearching', 'Error searching for connections.'));
-        focusJourneyResultsHeading($results);
-    }
-
-    /**
-     * Run journey search: validate, POST mrt_search_journey, update UI.
-     */
-    function journeyPlannerRunSearch($form, $results, $searchBtn) {
-        var values = journeyPlannerFormValues($form);
-        if (!journeyPlannerValidateValues(values, $results)) {
-            return;
-        }
-        journeyPlannerSetSearchLoading($results, $searchBtn);
-
-        $.ajax({
-            url: api.getAjaxUrl(),
-            type: 'POST',
-            data: {
-                action: 'mrt_search_journey',
-                nonce: api.getNonce(),
-                from_station: values.fromStation,
-                to_station: values.toStation,
-                date: values.date
-            },
-            success: function(response) {
-                journeyPlannerResetSearchButton($searchBtn);
-                journeyPlannerHandleSearchSuccess(response, values, $results);
-            },
-            error: function() {
-                journeyPlannerResetSearchButton($searchBtn);
-                showError($results, api.msg('networkError', 'Network error. Please try again.'));
-                focusJourneyResultsHeading($results);
-            }
-        });
-    }
-
-    /**
-     * Initialize Journey Planner AJAX
-     */
-    function initJourneyPlanner() {
-        var $planner = $('.mrt-journey-planner');
-        if (!$planner.length) return;
-
-        var $form = $planner.find('.mrt-journey-form');
-        var $results = $planner.find('.mrt-journey-results');
-        var $searchBtn = $form.find('button[type="submit"]');
-
-        $form.on('submit', function(e) {
-            e.preventDefault();
-            journeyPlannerRunSearch($form, $results, $searchBtn);
-        });
     }
 
     function monthCalendarRevealContainer($container, wasHidden) {
@@ -193,9 +74,9 @@
             e.preventDefault();
             var $day = $(this);
             var date = $day.data('date');
-
-            if (!date) return;
-
+            if (!date) {
+                return;
+            }
             var trainType = $month.data('train-type') || '';
 
             $month.find('.mrt-day-clickable').removeClass('mrt-day-active').attr('aria-pressed', 'false');
@@ -207,18 +88,11 @@
         });
     }
 
-    /**
-     * Initialize all frontend features
-     */
     function init() {
-        initJourneyPlanner();
         initMonthCalendar();
     }
 
-    // Initialize when DOM is ready
     $(document).ready(init);
-
-    // Also initialize for dynamically loaded content (e.g., AJAX-loaded pages)
     $(document).on('mrt_reinit', init);
 
 })(jQuery);

@@ -23,7 +23,7 @@ function MRT_load_journey_domain_modules(): void {
 	require_once $journey_dir . 'journey-multi-leg.php';
 	require_once MRT_PATH . 'inc/domain/pricing/prices.php';
 	require_once $journey_dir . 'journey-notice.php';
-	require_once $journey_dir . 'journey-connections-table.php';
+	require_once $journey_dir . 'journey-connection-display.php';
 	require_once $journey_dir . 'journey-normalize.php';
 }
 

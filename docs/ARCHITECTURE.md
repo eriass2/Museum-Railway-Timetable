@@ -54,7 +54,7 @@ inc/
 ├── domain/               # journey, service, timetable, station, route, pricing, …
 ├── infrastructure/       # post-types/, ajax/, wordpress/helpers-utils.php
 ├── admin/                # dashboard/, meta-boxes/, tools/, meta-boxes.php
-├── public/               # shortcode modules (month, overview, planner, wizard)
+├── public/               # shortcode modules (month, overview, wizard)
 ├── import/               # lennakatten reference + importer
 ├── assets/               # enqueue (inc/assets.php → inc/assets/loader.php)
 ├── admin.php             # menu, settings, dashboard, tools

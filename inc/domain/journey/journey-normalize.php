@@ -79,47 +79,6 @@ function MRT_journey_multi_leg_service_label( array $item, array $legs ) {
 }
 
 /**
- * Map normalized API connection to legacy table row (HTML planner / shortcode table)
- *
- * @param array<string, mixed> $n Output from MRT_normalize_connection_for_api
- * @return array<string, mixed>
- */
-function MRT_journey_normalized_to_planner_row( array $n ) {
-	if ( ( $n['connection_type'] ?? '' ) === 'transfer' && ! empty( $n['legs'] ) && is_array( $n['legs'] ) ) {
-		$legs     = $n['legs'];
-		$last_sid = (int) ( $legs[ count( $legs ) - 1 ]['service_id'] ?? 0 );
-		$dest     = $last_sid > 0 ? MRT_get_service_destination( $last_sid ) : array(
-			'destination' => '',
-			'direction'   => '',
-		);
-		return array(
-			'service_id'     => (int) ( $n['service_id'] ?? 0 ),
-			'service_name'   => (string) ( $n['service_name'] ?? '' ),
-			'route_name'     => '',
-			'train_type'     => (string) ( $n['train_type'] ?? '' ),
-			'from_departure' => (string) ( $n['from_departure'] ?? $n['departure'] ?? '' ),
-			'from_arrival'   => '',
-			'to_arrival'     => (string) ( $n['to_arrival'] ?? $n['arrival'] ?? '' ),
-			'to_departure'   => '',
-			'destination'    => (string) ( $dest['destination'] ?? '' ),
-			'direction'      => (string) ( $dest['direction'] ?? '' ),
-		);
-	}
-	return array(
-		'service_id'     => (int) ( $n['service_id'] ?? 0 ),
-		'service_name'   => (string) ( $n['service_name'] ?? '' ),
-		'route_name'     => (string) ( $n['route_name'] ?? '' ),
-		'train_type'     => (string) ( $n['train_type'] ?? '' ),
-		'from_departure' => (string) ( $n['from_departure'] ?? $n['departure'] ?? '' ),
-		'from_arrival'   => '',
-		'to_arrival'     => (string) ( $n['to_arrival'] ?? $n['arrival'] ?? '' ),
-		'to_departure'   => '',
-		'destination'    => (string) ( $n['destination'] ?? '' ),
-		'direction'      => (string) ( $n['direction'] ?? '' ),
-	);
-}
-
-/**
  * Build segments / notice for one service connection
  *
  * @param int    $service_id Service
@@ -263,11 +222,11 @@ function MRT_normalize_connection_for_api( $item, $dateYmd, $from_station_id, $t
 }
 
 /**
- * One-way journey search: normalized API connections + planner table rows (shared by AJAX + shortcode SSR).
+ * One-way journey search: normalized API connections for wizard AJAX.
  *
- * @return array{normalized: array<int, array<string, mixed>>, planner_rows: array<int, mixed>}
+ * @return array<int, array<string, mixed>>
  */
-function MRT_journey_single_trip_normalized_and_planner_rows( int $from_station_id, int $to_station_id, string $dateYmd ): array {
+function MRT_journey_find_normalized_connections( int $from_station_id, int $to_station_id, string $dateYmd ): array {
 	$min_xfer   = MRT_journey_min_transfer_minutes();
 	$raw_multi  = MRT_find_multi_leg_connections(
 		$from_station_id,
@@ -285,10 +244,6 @@ function MRT_journey_single_trip_normalized_and_planner_rows( int $from_station_
 			$to_station_id
 		);
 	}
-	$planner_rows = array_map( 'MRT_journey_normalized_to_planner_row', $normalized );
 
-	return array(
-		'normalized'   => $normalized,
-		'planner_rows' => $planner_rows,
-	);
+	return $normalized;
 }

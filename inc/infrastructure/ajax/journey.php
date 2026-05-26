@@ -15,13 +15,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return void
  */
 function MRT_journey_ajax_send_no_services_response( $trip_type ) {
-	$html = MRT_render_alert(
-		__( 'No services are running on the selected date.', 'museum-railway-timetable' ),
-		'error'
-	);
 	wp_send_json_success(
 		array(
-			'html'        => $html,
 			'trip_type'   => $trip_type,
 			'connections' => array(),
 		)
@@ -29,43 +24,26 @@ function MRT_journey_ajax_send_no_services_response( $trip_type ) {
 }
 
 /**
- * Planner rows + labels for AJAX search (single vs return).
+ * Normalized connections for AJAX search (single vs return).
  *
  * @param array<string, mixed> $params From MRT_journey_ajax_parse_trip_search_params
- * @return array{connections: array<int, mixed>, rows_for_html: array<int, mixed>, from_name: string, to_name: string, is_return: bool}
+ * @return array<int, array<string, mixed>>
  */
-function MRT_journey_ajax_build_planner_result( array $params ): array {
+function MRT_journey_ajax_find_connections( array $params ): array {
 	if ( $params['trip_type'] === 'return' ) {
-		$connections   = MRT_find_return_connections(
+		return MRT_find_return_connections(
 			(int) $params['from'],
 			(int) $params['to'],
 			$params['date'],
 			$params['outbound_arrival'],
 			(int) $params['min_turnaround_minutes']
 		);
-		$rows_for_html = array_map( 'MRT_journey_normalized_to_planner_row', $connections );
-
-		return array(
-			'connections'   => $connections,
-			'rows_for_html' => $rows_for_html,
-			'from_name'     => get_the_title( $params['to'] ),
-			'to_name'       => get_the_title( $params['from'] ),
-			'is_return'     => true,
-		);
 	}
 
-	$bundle = MRT_journey_single_trip_normalized_and_planner_rows(
+	return MRT_journey_find_normalized_connections(
 		(int) $params['from'],
 		(int) $params['to'],
 		$params['date']
-	);
-
-	return array(
-		'connections'   => $bundle['normalized'],
-		'rows_for_html' => $bundle['planner_rows'],
-		'from_name'     => get_the_title( $params['from'] ),
-		'to_name'       => get_the_title( $params['to'] ),
-		'is_return'     => false,
 	);
 }
 
@@ -86,19 +64,11 @@ function MRT_ajax_search_journey() {
 		MRT_journey_ajax_send_no_services_response( $params['trip_type'] );
 	}
 
-	$built = MRT_journey_ajax_build_planner_result( $params );
-	$html  = MRT_journey_render_search_results_html(
-		$built['rows_for_html'],
-		$built['from_name'],
-		$built['to_name'],
-		$params['date'],
-		$built['is_return']
-	);
+	$connections = MRT_journey_ajax_find_connections( $params );
 	wp_send_json_success(
 		array(
-			'html'        => $html,
 			'trip_type'   => $params['trip_type'],
-			'connections' => $built['connections'],
+			'connections' => $connections,
 		)
 	);
 }

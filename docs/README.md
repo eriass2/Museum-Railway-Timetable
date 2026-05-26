@@ -11,7 +11,7 @@
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, testning, `inc/`-struktur |
 | [DATA_MODEL.md](DATA_MODEL.md) | Post types, relationer, tabeller |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | Kodstandarder, PHP/CSS/JS |
-| [SHORTCODES.md](SHORTCODES.md) | Shortcodes (månad, översikt, wizard, planner) |
+| [SHORTCODES.md](SHORTCODES.md) | Shortcodes (månad, översikt, wizard) |
 | [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG, manuell release-rökning |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i WordPress-admin |
 | [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsläge vs live, smoke-meny |

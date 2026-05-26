@@ -66,7 +66,6 @@ function MRT_get_components_demo_mockup_legend_html() {
 	$items = array(
 		__( 'Journey wizard — route → date → trips → summary (see docs/SHORTCODES.md).', 'museum-railway-timetable' ),
 		__( 'Month calendar & timetable overview — timetable/mockup views (not the full “book a trip” flow).', 'museum-railway-timetable' ),
-		__( 'Journey planner — simple one-screen search; not the multi-step mockup wizard.', 'museum-railway-timetable' ),
 	);
 	$out   = '<div class="mrt-alert mrt-alert-info mrt-mb-lg"><p><strong>' .
 		esc_html__( 'Mockup alignment', 'museum-railway-timetable' ) .
@@ -159,10 +158,7 @@ function MRT_get_components_demo_page_content() {
 		'<h2>' . esc_html__( '2. Timetable overview', 'museum-railway-timetable' ) . '</h2>',
 		MRT_demo_mockup_caption( __( 'Mockup: printed-style overview (routes, directions, times).', 'museum-railway-timetable' ) ),
 		sprintf( '[museum_timetable_overview timetable="%s"]', esc_attr( $tt ) ),
-		'<h2>' . esc_html__( '3. Journey planner (simple search)', 'museum-railway-timetable' ) . '</h2>',
-		MRT_demo_mockup_caption( __( 'Not mockup-based: single form + results table (legacy shortcut).', 'museum-railway-timetable' ) ),
-		'[museum_journey_planner]',
-		'<h2>' . esc_html__( '4. Journey wizard (multi-step)', 'museum-railway-timetable' ) . '</h2>',
+		'<h2>' . esc_html__( '3. Journey wizard (multi-step)', 'museum-railway-timetable' ) . '</h2>',
 		MRT_demo_mockup_caption( __( 'Mockup-based: full journey flow (V1–V5) with calendar, legs, optional return, prices in summary).', 'museum-railway-timetable' ) ),
 		sprintf(
 			'[museum_journey_wizard timetable="%s" embedded="1" hero_subtitle="Step 1 — route and trip type (mockup: sok-din-resa)."]',

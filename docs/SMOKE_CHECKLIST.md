@@ -1,30 +1,23 @@
-# Smoke-checklista (imorgon)
+# Smoke-checklista
 
-Snabb genomgång efter frontend-rebuild PR:erna. Kör automatiskt:
+Snabb genomgång efter ändringar i frontend, shortcodes eller import. Kör automatiskt:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 ```
-
-## Branches att granska (merge-ordning)
-
-1. `cursor/frontend-wizard-base-99eb` – journey wizard CSS
-2. `cursor/frontend-shared-base-99eb` – planner, månad, översikt, knappar
-3. `cursor/frontend-admin-minimal-99eb` – admin + bootstrap + smoke-script
 
 ## Manuellt i webbläsaren
 
 | Vad | URL | Förväntat |
 |-----|-----|-----------|
 | Admin dashboard | http://localhost:8080/wp-admin/admin.php?page=mrt_settings | Kort, rutnät, sektioner med `admin.css` |
-| Wizard | Sida med `[museum_journey_wizard]` eller demo | Grön hero, steg 1–2, kalenderfärger |
-| Planner | `[museum_journey_planner]` | Formulär + sök, resultattabell |
+| Wizard | Sida med `[museum_journey_wizard]` eller demo | Grön hero, steg 1–4, kalenderfärger, ikoner |
 | Månad | `[museum_timetable_month]` | Kalender, klickbar trafikdag |
 | Översikt | `[museum_timetable_overview]` | Rutnät per rutt |
 
 Login: `admin` / `admin`
 
-**Meny (utveckling):** Railway Timetable → dashboard eller Component demo page → **Set up development menu** (kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`). Lägger till Component demo, Wizard smoke test, Planner smoke test i sajtmenyn. Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+**Meny (utveckling):** Railway Timetable → dashboard eller Component demo page → **Set up development menu** (kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`). Lägger till Component demo och Wizard smoke test i sajtmenyn. Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 
 ## Kommandon
 
@@ -48,4 +41,4 @@ php scripts/validate.php
 - ~~`inc/admin-meta-boxes/`~~, ~~`inc/admin-ajax/`~~, ~~`inc/cpt/`~~ — `inc/admin/meta-boxes/`, `inc/infrastructure/ajax/`, `inc/infrastructure/post-types/`.
 - Wizard utresa/retur: `steps-outbound-return.css`; designreferens i `docs/mockups/DESIGN_TOKENS.md`.
 - [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-logg; statiska markörer i `validate.php`.
-- [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) – MVP-beslut (planner, månad, import).
+- [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) – MVP-beslut (wizard, månad, import).

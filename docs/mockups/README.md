@@ -21,4 +21,4 @@ PNG-mockups för journey wizard (V1–V5) finns **inte** i repot ännu. Tills de
 
 - [REBUILD_SKETCH.md](../REBUILD_SKETCH.md) – MVP och wizard som primärt flöde
 - [ACCESSIBILITY.md](../ACCESSIBILITY.md) – WCAG-rökning
-- [SHORTCODES.md](../SHORTCODES.md) – `[museum_journey_wizard]`
+- [SHORTCODES.md](../SHORTCODES.md) – `[museum_journey_wizard]` (enda publika rese-shortcode)

@@ -9,7 +9,7 @@ A WordPress plugin for displaying train timetables for a museum railway. This pl
 - **Shortcodes**: Display timetables on the frontend
   - Month calendar view
   - Complete timetable overview
-  - **Journey Planner** and **Journey Wizard**: Search for connections (single-page or multi-step with return trips and prices)
+  - **Journey Wizard**: Multi-step journey search with return trips and prices
 - **Admin Interface**: 
   - Inline editing for Stop Times directly in Service edit pages
   - Streamlined menu structure
@@ -77,26 +77,6 @@ Multi-step booking flow with calendar, outbound/return selection, train-type ico
 ```
 
 **Parameters:** `ticket_url`, `hero_image`, `hero_subtitle`, `timetable_id`, `timetable` (optional printed overview under step 1). See [docs/SHORTCODES.md](docs/SHORTCODES.md).
-
-#### 4. Journey Planner (single page)
-Simple search form and results table on one page (same backend as the wizard):
-
-```
-[museum_journey_planner]
-```
-
-**Parameters:**
-- `default_date` - Default date in YYYY-MM-DD format (optional, defaults to today)
-
-**Features:**
-- Finds direct trips and one-transfer connections on the selected date
-- Results sorted by departure time
-
-**Example:**
-```
-[museum_journey_planner]
-[museum_journey_planner default_date="2025-06-15"]
-```
 
 ### Managing Services
 
@@ -249,7 +229,7 @@ museum-railway-timetable/
 │   ├─ journey-wizard.js         # [museum_journey_wizard]
 │   ├─ icons/train-types/        # PNG train type symbols
 │   ├─ train-type-icons.css      # Minimal icon mapping retained during rebuild
-│   └─ frontend.js               # Month view, journey planner AJAX
+│   └─ frontend.js               # Month calendar AJAX
 └─ languages/                    # .pot / .po
 ```
 
@@ -282,8 +262,13 @@ This plugin is provided as-is for use with WordPress.
 
 ## Changelog
 
+### Unreleased
+- **Journey planner removed**: use `[museum_journey_wizard]` only for public journey search
+- **Component demo**: three blocks (month, overview, wizard with `embedded="1"`)
+- **Dev menu**: component demo + wizard smoke test only
+
 ### 0.4.0
-- **Journey Planner**: New shortcode `[museum_journey_planner]` for searching connections between stations
+- **Journey Planner**: New shortcode `[museum_journey_planner]` for searching connections between stations (removed in favor of wizard)
 - **Admin Documentation**: Comprehensive documentation for all shortcodes including journey planner
 - **Enhanced Help**: Improved admin page with detailed shortcode usage instructions
 

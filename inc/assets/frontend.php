@@ -180,7 +180,7 @@ function MRT_empty_frontend_shortcode_flags(): array {
  */
 function MRT_frontend_shortcode_flags_from_content( string $content ): array {
 	$flags      = MRT_empty_frontend_shortcode_flags();
-	$shortcodes = array( 'museum_timetable_month', 'museum_timetable_overview', 'museum_journey_planner', 'museum_journey_wizard' );
+	$shortcodes = array( 'museum_timetable_month', 'museum_timetable_overview', 'museum_journey_wizard' );
 	foreach ( $shortcodes as $shortcode ) {
 		if ( ! has_shortcode( $content, $shortcode ) ) {
 			continue;
@@ -197,7 +197,7 @@ function MRT_frontend_shortcode_flags_from_content( string $content ): array {
 }
 
 /**
- * Shared public CSS for planner, month calendar, tables, and alerts.
+ * Shared public CSS for month calendar, tables, and alerts.
  *
  * @return string Style handle
  */

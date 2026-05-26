@@ -6,14 +6,12 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 
 ---
 
-## 1. `[museum_journey_planner]` vs wizard
+## 1. Publikt reseflöde
 
-**Beslut:** Behåll **båda**.
+**Beslut:** Endast **`[museum_journey_wizard]`**.
 
-- **`[museum_journey_wizard]`** – primärt publikt bokningsflöde (mockup-led).
-- **`[museum_journey_planner]`** – enkel sökform + resultattabell (legacy/”snabb sök”), kvar på demosidan tills vidare.
-
-**Motivering:** Låg underhållskostnad; användbart för enkel integration och test. Ta bort planner först när produkt uttryckligen vill wizard-only.
+- Flerstegsflöde enligt mockup (rutt, datum, utresa, retur, priser).
+- Den tidigare enkelsidiga shortcoden `[museum_journey_planner]` är **borttagen** (ej live ännu).
 
 ---
 
@@ -49,8 +47,7 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 | Shortcode | Status |
 |-----------|--------|
 | `[museum_timetable_overview]` | Behåll – tryckt tidtabellsöversikt |
-| `[museum_journey_wizard]` | Behåll – primär resa |
-| `[museum_journey_planner]` | Behåll – enkel sök |
+| `[museum_journey_wizard]` | Behåll – enda publika resa |
 | `[museum_timetable_month]` | Behåll – månad/kalender |
 
 ---
@@ -59,26 +56,20 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 
 **Beslut:** Modellera som **egen bussrutt** (`Selknä – Fjällnora` / retur) med turer typ `Buss` i importen (`reference-data.php`).
 
-- Resesök hittar **direkt buss** Selknä–Fjällnora och **byte** (tåg till Selknä + buss till Fjällnora).
-- Tider i importen är **anslutningstider** (~8 min, avgång efter tåg vid Selknä) – justera mot PDF vid behov.
-- Tidtabellsöversikt visar inte längre raden ”INGA BUSSANSLUTNINGAR…” (ersatt av riktiga bussturer).
-- **Byte:** min 5 min, max **120 min** väntetid (`mrt_min_transfer_minutes` / `mrt_max_transfer_minutes`). Bytesstationer med **Bus stop marker** (t.ex. Selknä) prioriteras före andra hållplatser på samma resa.
+Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 
-**Efter ändring:** Kör **Import Lennakatten** igen (eller rensa + import) så rutter/turer skapas i databasen.
+---
 
-## 7. Utvecklingsläge vs live
+## 7. Utvecklingsverktyg
 
-**Beslut:** Verktyg för testdata, clear DB, demosidor och front-meny styrs av `MRT_is_development_mode()` (`WP_DEBUG` eller `MRT_DEVELOPMENT`).
+**Beslut:** Dev-only via `MRT_is_development_mode()` / `WP_DEBUG`.
 
-- **Utveckling:** import Lennakatten, development tools på dashboard, *Set up development menu*.
-- **Live:** shortcodes, CPT, inställningar, manuell data – inga automatiska smoke-menyer.
-
-Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+- Component demo (3 block), wizard smoke test, Lennakatten-import, clear DB.
+- Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 
 ---
 
 ## 8. Öppna punkter (ej blockerande)
 
 - Wizard finpolish mot PNG i `docs/mockups/` när designfiler finns.
-- Planner wizard-only: om beslut tas, uppdatera demosida och SHORTCODES.md.
 - [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-genomgång före ”live”.

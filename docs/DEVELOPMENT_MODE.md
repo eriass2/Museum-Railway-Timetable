@@ -19,11 +19,12 @@ Filter: `mrt_is_development_mode` kan tvinga läge vid behov.
 | **Set up development menu** | Dashboard + Component demo page |
 | Admin-undermeny Component demo page | Railway Timetable |
 
-**Set up development menu** skapar/uppdaterar tre sidor och lägger länkar i sajtens **klassiska** nav-meny (primary om ingen finns, annars befintlig primary – inga dubbletter):
+**Set up development menu** skapar/uppdaterar två sidor och lägger länkar i sajtens **klassiska** nav-meny (primary om ingen finns, annars befintlig primary – inga dubbletter):
 
-1. **Component demo** – alla shortcodes  
-2. **Wizard smoke test** – `[museum_journey_wizard]`  
-3. **Planner smoke test** – `[museum_journey_planner]`
+1. **Component demo** – månad, översikt, wizard (tre block)  
+2. **Wizard smoke test** – `[museum_journey_wizard]`
+
+Gamla planner smoke-sidor (om de fanns) tas bort vid setup.
 
 Block-tema med enbart Site Editor-navigation kan kräva manuell länk tills vidare.
 
@@ -51,7 +52,7 @@ Snabbare om containrarna redan kör:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1 -SkipCompose
 ```
 
-Gör samma sak som dashboard **Clear plugin database** → **Import demo data** → **Set up development menu**, och skriver JSON med sid-URL:er.
+Gör samma sak som dashboard **Clear plugin database** → **Import demo data** → **Set up development menu**, och skriver JSON med `pages.component_demo` och `pages.wizard`.
 
 Linux/macOS: `./scripts/docker-dev-reset.sh`
 
@@ -60,8 +61,8 @@ Kräver `WP_DEBUG` eller `MRT_DEVELOPMENT` (Docker har `WORDPRESS_DEBUG=1`).
 ## Röktest efter setup
 
 1. Kör `docker-dev-reset.ps1` **eller** manuellt: meny-knapp + import  
-2. Öppna front-sidan – menyn ska visa tre smoke-länkar  
-3. **Component demo** – scrolla igenom alla fyra block  
+2. Öppna front-sidan – menyn ska visa två smoke-länkar  
+3. **Component demo** – scrolla igenom alla tre block  
 
 Se [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md).
 

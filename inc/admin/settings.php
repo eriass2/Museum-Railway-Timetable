@@ -58,7 +58,7 @@ function MRT_register_settings_journey_transfers(): void {
 		__( 'Journey search — transfers', 'museum-railway-timetable' ),
 		static function (): void {
 			echo '<p>' . esc_html__(
-				'Minimum and maximum waiting time at a transfer station (planner and wizard). Bus hub stations (Bus stop marker) are preferred over other stops on the same route.',
+				'Minimum and maximum waiting time at a transfer station (journey wizard). Bus hub stations (Bus stop marker) are preferred over other stops on the same route.',
 				'museum-railway-timetable'
 			) . '</p>';
 		},

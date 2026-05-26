@@ -10,7 +10,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 require_once ABSPATH . 'inc/domain/route/routes.php';
-require_once ABSPATH . 'inc/domain/journey/journey-connections-table.php';
+require_once ABSPATH . 'inc/domain/journey/journey-connection-display.php';
 
 final class RefactoredHelpersTest extends TestCase {
 

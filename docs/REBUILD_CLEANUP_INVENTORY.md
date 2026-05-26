@@ -145,7 +145,7 @@ inc/
 | `inc/shortcodes/shortcode-month.php` | `done` | `inc/public/month-calendar/shortcode.php` | Legacy shortcode-träd borttaget. |
 | `inc/shortcodes/shortcode-overview.php` | `done` | `inc/public/timetable-overview/shortcode.php` | Legacy shortcode-träd borttaget. |
 | `inc/shortcodes/shortcode-journey-wizard.php` + `inc/shortcodes/journey-wizard/` | `done` | `inc/public/journey-wizard/` | Legacy shortcode-träd borttaget. |
-| `inc/shortcodes/shortcode-journey.php` | `done` | `inc/public/journey-planner/shortcode.php` | Legacy shortcode-träd borttaget. |
+| `inc/shortcodes/shortcode-journey.php` | `done` | — | Legacy journey-planner shortcode borttagen; wizard kvar. |
 | `inc/demo-page.php` | `done` | `inc/admin/tools/demo-page.php` | Flyttad. |
 
 ### Loaders
@@ -225,7 +225,7 @@ Undvik i första cleanup-PR:
 
 **Besvarade** i [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) (2026-05):
 
-- Planner **behålls** bredvid wizard (wizard primär).
+- Journey planner shortcode **borttagen**; wizard är enda publika rese-UI (2026-05).
 - Månadsvy **fristående** shortcode kvar.
 - Admin: **import + manuell** korrigering.
 - Struktur **stegvis i nuvarande plugin** (ej `inc-next/`).

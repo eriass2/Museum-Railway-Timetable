@@ -316,7 +316,7 @@ Låt oss säga att du vill skapa en säsongstidtabell för juni–augusti med:
 
 När du har skapat din tidtabell kan du:
 
-1. **Visa den på frontend** - Använd shortcodes (se README.md)
-2. **Kontrollera Stations Overview** - Se översikt över alla stations
-3. **Testa shortcodes** - Verifiera att allt fungerar korrekt
+1. **Visa den på frontend** – shortcodes i [SHORTCODES.md](SHORTCODES.md): månad, översikt, **`[museum_journey_wizard]`** (resa)
+2. **Kontrollera Stations Overview** – översikt över alla stationer i admin
+3. **Utveckling** – [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) (component demo med tre block, Lennakatten-import)
 

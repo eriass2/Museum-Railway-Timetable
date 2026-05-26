@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Option: wizard-only smoke page ID */
 define( 'MRT_OPTION_WIZARD_SMOKE_PAGE_ID', 'mrt_wizard_smoke_page_id' );
 
-/** Option: planner-only smoke page ID */
+/** Option: legacy planner smoke page ID (removed; option cleared on dev setup) */
 define( 'MRT_OPTION_PLANNER_SMOKE_PAGE_ID', 'mrt_planner_smoke_page_id' );
 
 /** Option: nav menu ID used for dev links (may match site primary) */
@@ -46,13 +46,18 @@ function MRT_dev_smoke_page_specs(): array {
 				esc_attr( $tt )
 			),
 		),
-		array(
-			'option'     => MRT_OPTION_PLANNER_SMOKE_PAGE_ID,
-			'title'      => __( 'Planner smoke test', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Planner smoke test', 'museum-railway-timetable' ),
-			'content'    => '[museum_journey_planner]',
-		),
 	);
+}
+
+/**
+ * Remove deprecated planner smoke page and stored option.
+ */
+function MRT_remove_deprecated_planner_smoke_page(): void {
+	$page_id = (int) get_option( MRT_OPTION_PLANNER_SMOKE_PAGE_ID, 0 );
+	if ( $page_id > 0 && get_post( $page_id ) && get_post_type( $page_id ) === 'page' ) {
+		wp_delete_post( $page_id, true );
+	}
+	delete_option( MRT_OPTION_PLANNER_SMOKE_PAGE_ID );
 }
 
 /**
@@ -98,6 +103,8 @@ function MRT_ensure_dev_smoke_page( string $option_key, string $title, $content 
 function MRT_ensure_dev_smoke_pages(): array {
 	$page_ids = array();
 	$errors   = array();
+
+	MRT_remove_deprecated_planner_smoke_page();
 
 	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
 		$result = MRT_ensure_dev_smoke_page( $spec['option'], $spec['title'], $spec['content'] );
@@ -273,7 +280,7 @@ function MRT_setup_development_navigation() {
 }
 
 /**
- * Delete plugin-owned smoke pages (component demo + wizard + planner).
+ * Delete plugin-owned smoke pages (component demo + wizard; legacy planner if present).
  */
 function MRT_clear_dev_smoke_pages(): void {
 	$keys = array(
@@ -347,7 +354,7 @@ function MRT_render_setup_dev_navigation_button( string $redirect_page = 'dashbo
 				<?php esc_html_e( 'Set up development menu', 'museum-railway-timetable' ); ?>
 			</button>
 			<span class="description">
-				<?php esc_html_e( 'Creates or updates three smoke pages (component demo, wizard, planner) and adds them to your site menu when missing.', 'museum-railway-timetable' ); ?>
+				<?php esc_html_e( 'Creates or updates two smoke pages (component demo, wizard) and adds them to your site menu when missing.', 'museum-railway-timetable' ); ?>
 			</span>
 		</p>
 	</form>

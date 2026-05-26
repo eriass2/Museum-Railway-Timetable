@@ -16,7 +16,6 @@ require_once $ajax_dir . 'timetable-services.php';
 require_once $ajax_dir . 'route-destinations.php';
 require_once $ajax_dir . 'route-stations.php';
 require_once $ajax_dir . 'journey-parse.php';
-require_once $ajax_dir . 'journey-render.php';
 require_once $ajax_dir . 'journey.php';
 require_once $ajax_dir . 'timetable-frontend.php';
 
