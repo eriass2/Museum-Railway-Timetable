@@ -56,8 +56,7 @@ inc/
 ├── admin/                # dashboard/, meta-boxes/, tools/, meta-boxes.php
 ├── public/               # shortcode modules (month, overview, planner, wizard)
 ├── import/               # lennakatten reference + importer
-├── import-lennakatten/   # admin import UI loader
-├── assets/               # enqueue (loader: inc/assets.php)
+├── assets/               # enqueue (inc/assets.php → inc/assets/loader.php)
 ├── admin.php             # menu, settings, dashboard, tools
 └── shortcodes.php        # shortcode registration
 ```

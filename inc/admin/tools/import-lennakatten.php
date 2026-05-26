@@ -1,35 +1,37 @@
 <?php
 /**
- * Import Lennakatten 2026 test data from PDF
- * Creates stations, routes, train types, timetables and services
+ * Admin: Import Lennakatten reference data (PDF-derived test data).
  *
  * @package Museum_Railway_Timetable
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+	exit;
+}
 
 require_once MRT_PATH . 'inc/import/lennakatten/reference-data.php';
 require_once MRT_PATH . 'inc/import/lennakatten/importer.php';
 
-add_action(
-	'admin_menu',
-	function () {
-		add_submenu_page(
-			'mrt_settings',
-			__( 'Import Lennakatten', 'museum-railway-timetable' ),
-			__( 'Import Lennakatten', 'museum-railway-timetable' ),
-			'manage_options',
-			'mrt_import_lennakatten',
-			'MRT_render_import_page'
-		);
-	}
-);
+/**
+ * Register Import Lennakatten submenu under Railway Timetable.
+ */
+function MRT_register_import_lennakatten_admin_menu(): void {
+	add_submenu_page(
+		'mrt_settings',
+		__( 'Import Lennakatten', 'museum-railway-timetable' ),
+		__( 'Import Lennakatten', 'museum-railway-timetable' ),
+		'manage_options',
+		'mrt_import_lennakatten',
+		'MRT_render_import_lennakatten_admin_page'
+	);
+}
+
+add_action( 'admin_menu', 'MRT_register_import_lennakatten_admin_menu' );
 
 /**
- * Render import page
+ * Render import page.
  */
-function MRT_render_import_page() {
+function MRT_render_import_lennakatten_admin_page(): void {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}

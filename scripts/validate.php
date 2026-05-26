@@ -20,7 +20,8 @@ $required_files = [
     'inc/admin/admin-list.php',
     'inc/admin/tools/clear-db.php',
     'inc/admin/tools/demo-page.php',
-    'inc/import-lennakatten/loader.php',
+    'inc/admin/tools/import-lennakatten.php',
+    'inc/assets/loader.php',
     'inc/shortcodes.php',
     'inc/infrastructure/post-types.php',
     'inc/infrastructure/ajax.php',
@@ -202,6 +203,43 @@ foreach ($admin_js_files as $js_file) {
         $errors[] = "JS file missing: $js_file";
         echo "  ❌ $js_file missing\n";
     }
+}
+
+// Accessibility markers in public UI (static smoke)
+echo "\n7. Checking accessibility markers in public modules...\n";
+$a11y_markers = array(
+	'inc/public/journey-wizard/shell.php'       => array( 'role="alert"', 'aria-live="assertive"' ),
+	'inc/public/journey-wizard/steps.php'       => array( 'role="region"', 'aria-labelledby' ),
+	'inc/public/journey-planner/shortcode.php'  => array( 'aria-live="polite"', 'role="region"' ),
+	'inc/public/month-calendar/shortcode.php'   => array( 'aria-pressed', 'role="region"' ),
+	'assets/frontend/components-ui.css'         => array( ':focus-visible' ),
+);
+
+foreach ( $a11y_markers as $file => $needles ) {
+	$checks++;
+	if ( ! file_exists( $file ) ) {
+		$errors[] = "A11y check file missing: $file";
+		echo "  ❌ Missing: $file\n";
+		continue;
+	}
+	$contents = file_get_contents( $file );
+	if ( false === $contents ) {
+		$errors[] = "Cannot read: $file";
+		echo "  ❌ Unreadable: $file\n";
+		continue;
+	}
+	$missing = array();
+	foreach ( $needles as $needle ) {
+		if ( strpos( $contents, $needle ) === false ) {
+			$missing[] = $needle;
+		}
+	}
+	if ( $missing !== array() ) {
+		$errors[] = "A11y markers missing in $file: " . implode( ', ', $missing );
+		echo '  ❌ ' . $file . ' missing: ' . implode( ', ', $missing ) . "\n";
+	} else {
+		echo "  ✅ $file\n";
+	}
 }
 
 // Summary

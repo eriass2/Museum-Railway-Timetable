@@ -44,5 +44,6 @@ php scripts/validate.php
 - ~~Legacy `inc/functions/*`-loaders~~ — borttagna; `inc/bootstrap/domain.php`.
 - ~~`inc/admin-page/`~~ — `inc/admin/` (`dashboard/`, `tools/`, `meta-boxes/`).
 - ~~`inc/admin-meta-boxes/`~~, ~~`inc/admin-ajax/`~~, ~~`inc/cpt/`~~ — `inc/admin/meta-boxes/`, `inc/infrastructure/ajax/`, `inc/infrastructure/post-types/`.
-- Wizard utresa/retur: grund-CSS i `steps-outbound-return.css`; finpolish mot mockup när PNG finns i `docs/mockups/`.
-- [ACCESSIBILITY.md](ACCESSIBILITY.md) – manuell rökning (checklista oförändrad).
+- Wizard utresa/retur: `steps-outbound-return.css`; designreferens i `docs/mockups/DESIGN_TOKENS.md`.
+- [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-logg; statiska markörer i `validate.php`.
+- [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) – MVP-beslut (planner, månad, import).

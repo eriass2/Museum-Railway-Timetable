@@ -217,7 +217,7 @@ inc/
 
 **Minsta tester:** idempotent import, expected counts, train type assignment.
 
-**Nuvarande start:** `inc/import/lennakatten/importer.php` (UI via `inc/import-lennakatten/loader.php`).
+**Nuvarande start:** `inc/import/lennakatten/importer.php` (UI: `inc/admin/tools/import-lennakatten.php`).
 
 ---
 

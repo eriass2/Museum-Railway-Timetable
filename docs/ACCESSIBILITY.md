@@ -2,7 +2,7 @@
 
 Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell rökning** vid release eller större tema-/CSS-ändringar.
 
-**Relaterat:** [SHORTCODES.md](SHORTCODES.md), [ARCHITECTURE.md](ARCHITECTURE.md).
+**Relaterat:** [SHORTCODES.md](SHORTCODES.md), [ARCHITECTURE.md](ARCHITECTURE.md), [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) (manuell logg).
 
 ---
 

@@ -231,7 +231,7 @@ museum-railway-timetable/
 │   ├─ infrastructure/post-types/
 │   ├─ shortcodes/               # month, overview, journey, journey-wizard
 │   ├─ cpt/                        # cpt-register, cpt-admin
-│   ├─ import-lennakatten/       # import-data, import-run, loader
+│   ├─ import/lennakatten/       # reference-data, importer (domain)
 │   ├─ assets/                   # admin.php, frontend.php (enqueue helpers)
 │   ├─ assets.php                # Asset loader (requires assets/*)
 │   ├─ admin.php                 # Admin loader

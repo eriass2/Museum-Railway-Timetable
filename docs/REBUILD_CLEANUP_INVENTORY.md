@@ -17,7 +17,7 @@ Statusnycklar:
 | Område | Resultat |
 |--------|----------|
 | `inc/functions/*`, `inc/shortcodes/*` | Borttagna; laddning via `inc/bootstrap/domain.php`. |
-| `inc/import-lennakatten/import-data.php`, `import-run.php` | Borttagna; domain-import via `loader.php`. |
+| `inc/import-lennakatten/import-data.php`, `import-run.php`, `loader.php` | Borttagna/flyttade; domain i `inc/import/lennakatten/`, UI i `inc/admin/tools/import-lennakatten.php`. |
 | `inc/admin-page/*` | → `inc/admin/dashboard/`, `inc/admin/tools/`, `inc/admin/admin-list.php`. |
 | `inc/admin-page.php` | → `inc/admin.php` (bootstrap anropar). |
 | `inc/demo-page.php` | → `inc/admin/tools/demo-page.php`. |
@@ -25,6 +25,11 @@ Statusnycklar:
 | `inc/admin-ajax/*` | → `inc/infrastructure/ajax/` + `inc/infrastructure/ajax.php`. |
 | `inc/cpt/*` | → `inc/infrastructure/post-types/`. |
 | Publik tidtabellsöversikt | CSS grid-fix + bredare demosida (`public-layout.css`, `overview-special-rows.css`). |
+| Import UI | `inc/admin/tools/import-lennakatten.php`. |
+| Assets loader | `inc/assets/loader.php`. |
+| Mockups | `docs/mockups/README.md`, `DESIGN_TOKENS.md`. |
+| Produktbeslut | `docs/REBUILD_PRODUCT_DECISIONS.md`. |
+| A11y rökning | `docs/ACCESSIBILITY_SMOKE.md` + statiska kontroller i `validate.php`. |
 
 ---
 
@@ -122,7 +127,7 @@ inc/
 |------------------|--------|----------|-----------|
 | `inc/import-lennakatten/import-data.php` | `done` | `inc/import/lennakatten/reference-data.php` | Loader borttagen. |
 | `inc/import-lennakatten/import-run.php` | `done` | `inc/import/lennakatten/importer.php` | Loader borttagen. |
-| `inc/import-lennakatten/loader.php` | `rewrite` | `inc/admin/tools/import-page.php` | UI-adapter för import. |
+| `inc/import-lennakatten/loader.php` | `done` | `inc/admin/tools/import-lennakatten.php` | Flyttad. |
 
 ### Behåll/flytta som admin
 
@@ -147,7 +152,7 @@ inc/
 
 | Fil | Status | Kommentar |
 |-----|--------|-----------|
-| `inc/assets.php` | `move` | Loader för `inc/assets/`. |
+| `inc/assets.php` | `done` | Tunn entry; logik i `inc/assets/loader.php`. |
 | `inc/admin-page.php` | `done` | `inc/admin.php` + `inc/bootstrap.php` | Ersatt. |
 | `inc/admin-meta-boxes.php`, `inc/admin-ajax.php`, `inc/cpt.php` | `done` | Ersatta av `inc/admin/meta-boxes.php`, `inc/infrastructure/ajax.php`, `inc/infrastructure/post-types.php`. |
 | `inc/shortcodes.php` | `rewrite` | Registrerar `inc/public/*`; kan förenklas senare. |
@@ -218,7 +223,9 @@ Undvik i första cleanup-PR:
 
 ## 9. Beslutsfrågor före radering
 
-- Ska `[museum_journey_planner]` överleva som legacy/simple mode, eller ersättas helt av wizard?
-- Ska månadsvyn vara fristående shortcode eller bara en del av wizard/tidtabellsöversikt?
-- Ska admin fortsatt stödja manuell datainmatning, eller primärt import + korrigering?
-- Ska ny struktur införas stegvis i nuvarande plugin eller byggas i parallell `inc-next/` först?
+**Besvarade** i [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) (2026-05):
+
+- Planner **behålls** bredvid wizard (wizard primär).
+- Månadsvy **fristående** shortcode kvar.
+- Admin: **import + manuell** korrigering.
+- Struktur **stegvis i nuvarande plugin** (ej `inc-next/`).
