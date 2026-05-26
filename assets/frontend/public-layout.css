@@ -1,0 +1,25 @@
+/**
+ * Public page layout when plugin shortcodes are present.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+body.mrt-has-shortcodes .entry-content,
+body.mrt-has-shortcodes .wp-block-post-content {
+    max-width: min(96vw, 80rem);
+}
+
+.mrt-timetable-overview {
+    width: 100%;
+    max-width: 100%;
+}
+
+.mrt-timetable-group {
+    width: 100%;
+    max-width: 100%;
+}
+
+.mrt-overview-grid {
+    width: max-content;
+    min-width: min(100%, max-content);
+}
