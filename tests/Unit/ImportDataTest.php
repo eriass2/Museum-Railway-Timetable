@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require_once ABSPATH . 'inc/import-lennakatten/import-data.php';
+require_once ABSPATH . 'inc/import/lennakatten/reference-data.php';
 
 final class ImportDataTest extends TestCase {
 

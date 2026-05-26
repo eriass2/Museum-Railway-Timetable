@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin bootstrap – incremental module loading for rebuild.
+ * Plugin bootstrap – module loading for rebuild.
  *
  * @package Museum_Railway_Timetable
  */
@@ -11,14 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/bootstrap/domain.php';
+
 /**
- * Domain helpers and view logic (loaders may point at inc/domain/).
+ * Domain helpers and view logic.
  */
 function MRT_bootstrap_load_domain(): void {
-	require_once MRT_PATH . 'inc/functions/helpers.php';
-	require_once MRT_PATH . 'inc/functions/services.php';
-	require_once MRT_PATH . 'inc/functions/journey-loader.php';
-	require_once MRT_PATH . 'inc/functions/timetable-view.php';
+	MRT_load_domain_modules();
 }
 
 /**

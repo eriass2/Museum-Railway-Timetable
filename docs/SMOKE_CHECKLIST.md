@@ -41,6 +41,6 @@ php scripts/validate.php
 
 ## Efter merge (nästa steg)
 
-- Legacy `inc/functions/*`-loaders → ta bort när allt pekar på `inc/domain/`.
+- ~~Legacy `inc/functions/*`-loaders~~ — borttagna; laddning via `inc/bootstrap/domain.php`.
 - Wizard utresa/retur finpolish om mockups läggs i `docs/mockups/`.
 - [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort manuell rökning.

@@ -14,7 +14,7 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 | **Applikation / WP-adapter** | I/O: `$wpdb`, `get_option`, AJAX som validerar och delegerar | `MRT_ajax_*`, tunn mappning från `$_POST` till parametrar |
 | **Presentation** | Shortcode/HTML; JS för tillstånd och anrop | `shortcode-*.php`, `assets/*-wizard.js` (inga dolda affärsregler utöver visning) |
 
-**Vid ändringar:** Om en funktion kan beskrivas och testas utan `echo` och utan `$_POST` ska den ligga i **`inc/functions/`** (prefix `MRT_*`), inte i template-strängar.
+**Vid ändringar:** Om en funktion kan beskrivas och testas utan `echo` och utan `$_POST` ska den ligga i **`inc/domain/`** eller **`inc/infrastructure/`** (prefix `MRT_*`), inte i template-strängar.
 
 ---
 
@@ -34,7 +34,7 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 - **JavaScript:** Servern är sanning för sökning, priser och giltiga datum; klienten visar svar och fel. Duplicera inte samma regler i JS.
 - **Gemensam regel** (admin + publikt): **en** implementation i PHP, inte copy-paste mellan lager.
 
-**Checklista för ny funktion:** (1) Logik i `inc/functions/…` (2) Tester i `tests/Unit/` där det går (3) Tunnt lager i shortcode/AJAX (4) UI endast visar och skickar parametrar.
+**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` där det går (3) Tunnt lager i shortcode/AJAX (4) UI endast visar och skickar parametrar.
 
 ---
 
