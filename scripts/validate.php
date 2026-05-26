@@ -215,9 +215,8 @@ foreach ($admin_js_files as $js_file) {
 // Accessibility markers in public UI (static smoke)
 echo "\n7. Checking accessibility markers in public modules...\n";
 $a11y_markers = array(
-	'inc/public/journey-wizard/shell.php'       => array( 'role="alert"', 'aria-live="assertive"' ),
-	'inc/public/journey-wizard/steps.php'       => array( 'role="region"', 'aria-labelledby' ),
-	'inc/public/month-calendar/shortcode.php'   => array( 'aria-pressed', 'role="region"' ),
+	'inc/public/journey-wizard/shell.php'       => array( 'MRT_render_vue_mount', 'museum_journey_wizard' ),
+	'inc/public/month-calendar/shortcode.php'   => array( 'MRT_render_vue_mount', 'museum_timetable_month' ),
 	'assets/frontend/components-ui.css'         => array( ':focus-visible' ),
 );
 

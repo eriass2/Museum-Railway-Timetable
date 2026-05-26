@@ -244,18 +244,7 @@ function MRT_enqueue_frontend_shortcode_styles( bool $has_overview_shortcode ): 
 }
 
 /**
- * Enqueue shared frontend JS and mrtFrontend localization.
- */
-function MRT_enqueue_frontend_base_scripts(): void {
-	$a = MRT_assets_base_url();
-	wp_register_script( 'mrt-string-utils', $a . 'mrt-string-utils.js', array(), MRT_VERSION, true );
-	wp_register_script( 'mrt-frontend-api', $a . 'mrt-frontend-api.js', array( 'jquery' ), MRT_VERSION, true );
-	wp_enqueue_script( 'mrt-frontend', $a . 'frontend.js', array( 'jquery', 'mrt-string-utils', 'mrt-frontend-api' ), MRT_VERSION, true );
-	wp_localize_script( 'mrt-frontend', 'mrtFrontend', MRT_frontend_script_localization() );
-}
-
-/**
- * Localized strings for the shared frontend script.
+ * Localized strings for the Vue public frontend (AJAX).
  *
  * @return array<string, string>
  */
@@ -274,94 +263,14 @@ function MRT_frontend_script_localization(): array {
 }
 
 /**
- * Register journey wizard JS modules (load order = dependency chain).
- *
- * @param string $assets_url Plugin assets base URL.
- * @return string Handle of the bootstrap script (last in chain).
- */
-function MRT_register_journey_wizard_script_modules( string $assets_url ): string {
-	$dir     = $assets_url . 'journey-wizard/';
-	$shared  = array( 'jquery', 'mrt-string-utils', 'mrt-date-utils', 'mrt-frontend-api' );
-	$modules = array(
-		'mrt-jw-namespace' => 'namespace.js',
-		'mrt-jw-constants' => 'constants.js',
-		'mrt-jw-render'    => 'render.js',
-		'mrt-jw-connection' => 'connection.js',
-		'mrt-jw-context'   => 'context.js',
-		'mrt-jw-prices'    => 'prices.js',
-		'mrt-jw-vehicle'   => 'vehicle.js',
-		'mrt-jw-calendar'  => 'calendar.js',
-		'mrt-jw-trip-card' => 'trip-card.js',
-		'mrt-jw-detail'    => 'connection-detail.js',
-		'mrt-jw-summary'   => 'summary.js',
-		'mrt-jw-runtime'   => 'runtime.js',
-		'mrt-jw-events'    => 'events.js',
-	);
-	$prev    = $shared;
-	foreach ( $modules as $handle => $file ) {
-		wp_register_script( $handle, $dir . $file, $prev, MRT_VERSION, true );
-		$prev = array( $handle );
-	}
-	wp_register_script(
-		'mrt-journey-wizard',
-		$dir . 'bootstrap.js',
-		array( 'mrt-jw-events', 'mrt-frontend' ),
-		MRT_VERSION,
-		true
-	);
-	return 'mrt-journey-wizard';
-}
-
-/**
- * Enqueue journey wizard CSS/JS and localization (depends on frontend bundle).
- *
- * @param string $public_handle Enqueued public shortcode styles.
- */
-function MRT_enqueue_journey_wizard_assets( string $public_handle ): void {
-	$a = MRT_assets_base_url();
-	wp_enqueue_style(
-		'mrt-journey-wizard',
-		$a . 'journey-wizard.css',
-		array( $public_handle ),
-		MRT_VERSION
-	);
-	wp_register_script( 'mrt-date-utils', $a . 'mrt-date-utils.js', array(), MRT_VERSION, true );
-	$wizard_handle = MRT_register_journey_wizard_script_modules( $a );
-	if ( MRT_is_development_mode() ) {
-		wp_register_script(
-			'mrt-jw-debug',
-			$a . 'journey-wizard/debug.js',
-			array( 'mrt-journey-wizard' ),
-			MRT_VERSION,
-			true
-		);
-	}
-	wp_enqueue_script( $wizard_handle );
-	if ( MRT_is_development_mode() ) {
-		wp_enqueue_script( 'mrt-jw-debug' );
-	}
-	wp_localize_script( $wizard_handle, 'mrtJourneyWizard', MRT_journey_wizard_script_localization() );
-}
-
-/**
- * Enqueue frontend assets for shortcodes.
+ * Enqueue frontend assets for shortcodes (Vue bundle only).
  */
 function MRT_enqueue_frontend_assets(): void {
 	$flags = MRT_frontend_shortcode_flags_from_post();
 	if ( ! $flags['has_any'] ) {
 		return;
 	}
-	if ( MRT_use_vue_frontend() ) {
-		if ( $flags['has_any'] ) {
-			MRT_enqueue_vue_frontend_assets();
-		}
-		return;
-	}
-	$public_handle = MRT_enqueue_frontend_shortcode_styles( $flags['has_overview'] );
-	MRT_enqueue_frontend_base_scripts();
-	if ( $flags['has_journey_wizard'] ) {
-		MRT_enqueue_journey_wizard_assets( $public_handle );
-	}
+	MRT_enqueue_vue_frontend_assets();
 }
 /**
  * Widen theme content area on pages that use plugin shortcodes.

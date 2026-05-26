@@ -1,6 +1,6 @@
 <?php
 /**
- * Journey wizard shortcode helpers.
+ * Journey wizard timetable attribute resolution.
  *
  * @package Museum_Railway_Timetable
  */
@@ -28,23 +28,4 @@ function MRT_journey_wizard_resolve_timetable_id( array $atts ): int {
 
 	$timetable_post = MRT_get_post_by_title( $timetable_title, 'mrt_timetable' );
 	return $timetable_post ? intval( $timetable_post->ID ) : 0;
-}
-
-/**
- * Optional full timetable block for the wizard first step.
- */
-function MRT_render_journey_wizard_timetable_drawer( int $timetable_id ): void {
-	if ( $timetable_id <= 0 ) {
-		return;
-	}
-	?>
-	<details class="mrt-journey-wizard__timetable">
-		<summary class="mrt-journey-wizard__timetable-summary">
-			<?php esc_html_e( 'Visa tidtabell', 'museum-railway-timetable' ); ?>
-		</summary>
-		<div class="mrt-journey-wizard__timetable-body">
-			<?php echo MRT_render_timetable_overview( $timetable_id ); ?>
-		</div>
-	</details>
-	<?php
 }

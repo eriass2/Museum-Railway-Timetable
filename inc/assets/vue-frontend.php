@@ -16,13 +16,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Whether shortcodes should mount the Vue experiment instead of legacy HTML/JS.
+ * Public shortcodes always use the Vue frontend on this branch.
  */
 function MRT_use_vue_frontend(): bool {
-	if ( defined( 'MRT_VUE_FRONTEND' ) && MRT_VUE_FRONTEND ) {
-		return true;
-	}
-	return (bool) apply_filters( 'mrt_use_vue_frontend', false );
+	return (bool) apply_filters( 'mrt_use_vue_frontend', true );
 }
 
 /**
