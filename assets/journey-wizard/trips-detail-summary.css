@@ -206,7 +206,10 @@
     padding: 0;
     background: transparent;
     color: var(--mrt-jw-olive);
-    font-size: 1.1rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
     cursor: pointer;
 }
 
@@ -271,6 +274,17 @@
     padding-top: 1rem;
     background: var(--mrt-jw-surface);
     color: var(--mrt-jw-text);
+}
+
+.mrt-journey-wizard__trip-card .mrt-journey-wizard__prices--card {
+    margin-top: 0.85rem;
+    padding-top: 0.85rem;
+}
+
+.mrt-journey-wizard__price-row--active th,
+.mrt-journey-wizard__price-row--active td {
+    font-weight: 900;
+    background: #ebe4a8;
 }
 
 .mrt-journey-wizard__prices h4,

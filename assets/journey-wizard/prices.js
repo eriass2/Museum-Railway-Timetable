@@ -74,7 +74,8 @@
 		return out;
 	}
 
-	function buildPriceSection(tripType, cfg, zones) {
+	function buildPriceSection(tripType, cfg, zones, options) {
+		options = options || {};
 		var matrix = matrixForZone(cfg, zones);
 		if (!matrix || !matrixHasAnyPrice(matrix)) {
 			return '';
@@ -83,9 +84,17 @@
 		var cats = cfg.priceCategories || {};
 		var activeType = tripType === 'return' ? 'return' : 'single';
 		var zoneText = (cfg.priceZoneLabel || '%d zones').replace('%d', String(zones || 4));
-		var html = '<div class="mrt-journey-wizard__prices mrt-mt-lg">';
-		html += '<h4 class="mrt-heading mrt-heading--md">' + SU.escapeHtml(cfg.priceTitle || '') + ' <span>(' +
-			SU.escapeHtml(zoneText) + ')</span></h4>';
+		var priceClass = 'mrt-journey-wizard__prices mrt-mt-lg';
+		if (options.compactTitle) {
+			priceClass += ' mrt-journey-wizard__prices--card';
+		}
+		var html = '<div class="' + priceClass + '">';
+		if (options.compactTitle) {
+			html += '<h4 class="mrt-heading mrt-heading--md">' + SU.escapeHtml(cfg.priceTitle || 'Priser') + '</h4>';
+		} else {
+			html += '<h4 class="mrt-heading mrt-heading--md">' + SU.escapeHtml(cfg.priceTitle || '') + ' <span>(' +
+				SU.escapeHtml(zoneText) + ')</span></h4>';
+		}
 		html += '<div class="mrt-journey-wizard__prices-scroll mrt-overflow-x-auto">';
 		html += '<table class="mrt-table mrt-journey-wizard__price-table"><thead><tr><th scope="col"><span class="mrt-sr-only">' +
 			SU.escapeHtml(cfg.priceTableTypeColumn || '') + '</span></th>';

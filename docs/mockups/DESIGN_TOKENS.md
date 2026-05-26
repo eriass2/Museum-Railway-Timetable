@@ -41,3 +41,4 @@ Se `assets/journey-wizard/controls-calendar.css`.
 - Byte: fordon badges med `→` mellan (`mrt-journey-wizard__vehicle-sep`)
 - Vald utresa-kort på retursteget: gul kant, mörkgrön bakgrund (`steps-outbound-return.css`)
 - Aktivt steg i steglistan: gul bakgrund + fokusring vid `aria-current="step"`
+- Expanderat kort: tidslinje med punkt-tider, `∨ visa passerade stationer`, **Priser**-tabell i kortet (`connection-detail.js`, `prices.js` `compactTitle`)

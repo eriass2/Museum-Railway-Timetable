@@ -11,8 +11,15 @@
 	var tripCard = JW.tripCard;
 	var vehicle = JW.vehicle;
 
+	function formatTripClock(time) {
+		if (!time) {
+			return '';
+		}
+		return String(time).replace(':', '.');
+	}
+
 	function stationTime(s) {
-		return s.departure_time || s.arrival_time || '';
+		return formatTripClock(s.departure_time || s.arrival_time || '');
 	}
 
 	function timelineStopsHtml(stops, cfg, expanded) {
@@ -30,11 +37,11 @@
 		});
 		if (!expanded && stops.length > 2) {
 			html += '<button type="button" class="mrt-journey-wizard__passed-toggle" data-wizard-passed-toggle>' +
-				'⌄ ' + SU.escapeHtml(cfg.showStops || 'Visa passerade stationer') +
+				'∨ ' + SU.escapeHtml(cfg.showStops || 'visa passerade stationer') +
 				'</button>';
 		} else if (expanded && stops.length > 2) {
 			html += '<button type="button" class="mrt-journey-wizard__passed-toggle" data-wizard-passed-toggle>' +
-				'⌃ ' + SU.escapeHtml(cfg.hideStops || 'Dölj passerade stationer') +
+				'∧ ' + SU.escapeHtml(cfg.hideStops || 'dölj passerade stationer') +
 				'</button>';
 		}
 		return html;
@@ -84,19 +91,28 @@
 		return '<div class="mrt-journey-wizard__transfer-block">' + SU.escapeHtml(cfg.transferTrip || 'Byte') + '</div>';
 	}
 
-	function finishMultiLegDetail($cell, $btn, html) {
-		$cell.html(html + '</div>');
+	function detailPricesHtml(wctx, legCtx) {
+		var state = wctx.state;
+		var cfg = wctx.cfg;
+		var fromId = legCtx === 'return' ? state.to : state.from;
+		var toId = legCtx === 'return' ? state.from : state.to;
+		var zones = JW.prices.zonesForStationPair(fromId, toId, cfg);
+		return JW.prices.buildPriceSection(state.tripType, cfg, zones, { compactTitle: true });
+	}
+
+	function finishMultiLegDetail($cell, $btn, html, wctx, legCtx) {
+		$cell.html(html + detailPricesHtml(wctx, legCtx) + '</div>');
 		$btn.attr('aria-expanded', 'true');
 		$cell.removeAttr('hidden');
 	}
 
-	function loadMultiLegDetailRows(conn, $cell, $btn, cfg, ajaxPost, expanded) {
+	function loadMultiLegDetailRows(conn, $cell, $btn, cfg, ajaxPost, expanded, wctx, legCtx) {
 		var legTpl = cfg.legSegmentLabel || 'Train %d';
 		var multiHtml = '<div class="mrt-journey-wizard__detail mrt-journey-wizard__detail--multi">';
 		var legIndex = 0;
 		function loadNextLeg() {
 			if (legIndex >= conn.legs.length) {
-				finishMultiLegDetail($cell, $btn, multiHtml);
+				finishMultiLegDetail($cell, $btn, multiHtml, wctx, legCtx);
 				return;
 			}
 			var leg = conn.legs[legIndex];
@@ -140,7 +156,7 @@
 		$card.addClass('is-expanded');
 
 		if (conn.legs && conn.legs.length > 1) {
-			loadMultiLegDetailRows(conn, $detail, $btn, cfg, wctx.ajaxPost, expanded);
+			loadMultiLegDetailRows(conn, $detail, $btn, cfg, wctx.ajaxPost, expanded, wctx, legCtx);
 			return;
 		}
 
@@ -157,7 +173,7 @@
 			var detail = res.data.detail || {};
 			var notice = res.data.notice || '';
 			var html = buildStopsDetailHtml(detail, notice, cfg, tripCard.connectionLegs(conn)[0], expanded);
-			$detail.html(html);
+			$detail.html(html + detailPricesHtml(wctx, legCtx));
 			$btn.attr('aria-expanded', 'true');
 		}).fail(function () {
 			$detail.html('<div class="mrt-alert mrt-alert-error"></div>');

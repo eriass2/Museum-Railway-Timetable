@@ -133,12 +133,12 @@
 	}
 
 	function selectedTripHtml(conn, cfg, state) {
-		var dep = connApi.departureFromOrigin(conn) || '—';
-		var arr = connApi.arrivalAtDestination(conn) || '—';
+		var dep = formatTripClock(connApi.departureFromOrigin(conn));
+		var arr = formatTripClock(connApi.arrivalAtDestination(conn));
 		var duration = formatDuration(conn.duration_minutes, cfg);
 		var html = '<div class="mrt-journey-wizard__selected-label">' + SU.escapeHtml(cfg.selectedOutbound || 'Vald utresa') + '</div>';
 		html += '<div class="mrt-journey-wizard__selected-card">';
-		html += '<div><strong>' + SU.escapeHtml(dep) + '→' + SU.escapeHtml(arr) + '</strong>';
+		html += '<div><strong>' + SU.escapeHtml(dep) + ' → ' + SU.escapeHtml(arr) + '</strong>';
 		html += '<span> • ' + SU.escapeHtml(state.fromTitle || '') + ' → ' + SU.escapeHtml(state.toTitle || '') + '</span></div>';
 		if (duration) {
 			html += '<strong>' + SU.escapeHtml(duration) + '</strong>';
