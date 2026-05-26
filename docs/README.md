@@ -14,6 +14,8 @@
 | [SHORTCODES.md](SHORTCODES.md) | Shortcodes (månad, översikt, wizard, planner) |
 | [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG, manuell release-rökning |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i WordPress-admin |
+| [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsläge vs live, smoke-meny |
+| [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning i Docker |
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP och Composer på Windows |
 
 Designreferens: mockups i `docs/mockups/`. Tågtypsikoner sparas som produktassets i `assets/icons/train-types/`.

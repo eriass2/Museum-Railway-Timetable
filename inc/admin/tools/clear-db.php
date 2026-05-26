@@ -20,6 +20,10 @@ function MRT_handle_dashboard_tool_actions(): void {
 	}
 
 	$action = sanitize_key( wp_unslash( $_POST['mrt_action'] ) );
+	$dev_only = array( 'clear_db', 'import_demo_data', 'create_demo_page' );
+	if ( in_array( $action, $dev_only, true ) && ! MRT_is_development_mode() ) {
+		return;
+	}
 	if ( $action === 'clear_db' ) {
 		MRT_handle_clear_db_action();
 	}
@@ -38,10 +42,7 @@ add_action( 'admin_init', 'MRT_handle_dashboard_tool_actions' );
  */
 function MRT_handle_clear_db_action(): void {
 	MRT_verify_dashboard_action_nonce( 'mrt_clear_db', 'mrt_clear_db_nonce' );
-	MRT_clear_plugin_posts();
-	MRT_clear_plugin_terms();
-	MRT_clear_plugin_tables();
-	MRT_clear_plugin_options();
+	MRT_clear_all_plugin_data();
 	MRT_redirect_dashboard_notice( array( 'mrt_cleared' => '1' ) );
 }
 
@@ -98,7 +99,11 @@ function MRT_clear_plugin_posts(): void {
 			wp_delete_post( (int) $id, true );
 		}
 	}
-	MRT_clear_demo_page_post();
+	if ( function_exists( 'MRT_clear_dev_smoke_pages' ) ) {
+		MRT_clear_dev_smoke_pages();
+	} else {
+		MRT_clear_demo_page_post();
+	}
 }
 
 /**
@@ -143,9 +148,10 @@ function MRT_clear_plugin_tables(): void {
 function MRT_clear_plugin_options(): void {
 	delete_option( 'mrt_settings' );
 	delete_option( 'mrt_price_matrix' );
-	if ( defined( 'MRT_OPTION_COMPONENTS_DEMO_PAGE_ID' ) ) {
-		delete_option( MRT_OPTION_COMPONENTS_DEMO_PAGE_ID );
-	}
+	delete_option( 'mrt_components_demo_page_id' );
+	delete_option( 'mrt_wizard_smoke_page_id' );
+	delete_option( 'mrt_planner_smoke_page_id' );
+	delete_option( 'mrt_dev_nav_menu_id' );
 }
 
 /**

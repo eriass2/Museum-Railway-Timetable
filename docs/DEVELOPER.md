@@ -81,13 +81,25 @@ docker compose run --rm composer check
 
 Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
 
+### Dev reset (clear + import + smoke menu)
+
+Efter ändringar i import, rutter eller demosidor – ett kommando för agent/utvecklare:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1
+```
+
+`-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo`, `pages.wizard`, `pages.planner`.
+
 ### Automatiserad Docker-smoke
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 ```
 
-Se även [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) för manuell granskning imorgon.
+(`docker-smoke` kör import + demo men **rensar inte**; använd `docker-dev-reset` för full omstart.)
+
+Se även [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 
 ### Manuell smoke-checklista i WordPress
 

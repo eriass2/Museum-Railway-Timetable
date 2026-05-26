@@ -1,0 +1,375 @@
+<?php
+/**
+ * Development smoke pages and front-end navigation setup.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+/** Option: wizard-only smoke page ID */
+define( 'MRT_OPTION_WIZARD_SMOKE_PAGE_ID', 'mrt_wizard_smoke_page_id' );
+
+/** Option: planner-only smoke page ID */
+define( 'MRT_OPTION_PLANNER_SMOKE_PAGE_ID', 'mrt_planner_smoke_page_id' );
+
+/** Option: nav menu ID used for dev links (may match site primary) */
+define( 'MRT_OPTION_DEV_NAV_MENU_ID', 'mrt_dev_nav_menu_id' );
+
+/**
+ * Smoke page definitions (content callback for component demo).
+ *
+ * @return array<int, array{option: string, title: string, menu_label: string, content: string|callable}>
+ */
+function MRT_dev_smoke_page_specs(): array {
+	$tt = function_exists( 'MRT_demo_lennakatten_timetable_title' )
+		? MRT_demo_lennakatten_timetable_title()
+		: 'GRÖN TIDTABELL 2026';
+
+	return array(
+		array(
+			'option'     => MRT_OPTION_COMPONENTS_DEMO_PAGE_ID,
+			'title'      => __( 'Museum Railway Timetable – component demo', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Component demo', 'museum-railway-timetable' ),
+			'content'    => static function (): string {
+				return MRT_get_components_demo_page_content();
+			},
+		),
+		array(
+			'option'     => MRT_OPTION_WIZARD_SMOKE_PAGE_ID,
+			'title'      => __( 'Wizard smoke test', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Wizard smoke test', 'museum-railway-timetable' ),
+			'content'    => sprintf(
+				'[museum_journey_wizard timetable="%s"]',
+				esc_attr( $tt )
+			),
+		),
+		array(
+			'option'     => MRT_OPTION_PLANNER_SMOKE_PAGE_ID,
+			'title'      => __( 'Planner smoke test', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Planner smoke test', 'museum-railway-timetable' ),
+			'content'    => '[museum_journey_planner]',
+		),
+	);
+}
+
+/**
+ * Create or update a single smoke page.
+ *
+ * @param string               $option_key Option storing post ID.
+ * @param string               $title      Page title.
+ * @param string|callable(): string $content Page content or callback.
+ * @return int|WP_Error Post ID or error.
+ */
+function MRT_ensure_dev_smoke_page( string $option_key, string $title, $content ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return new WP_Error( 'mrt_cap', __( 'Permission denied.', 'museum-railway-timetable' ) );
+	}
+
+	$body = is_callable( $content ) ? (string) call_user_func( $content ) : (string) $content;
+	$post_id = (int) get_option( $option_key, 0 );
+	$postarr = array(
+		'post_type'    => 'page',
+		'post_status'  => 'publish',
+		'post_title'   => $title,
+		'post_content' => $body,
+	);
+
+	if ( $post_id > 0 && get_post( $post_id ) && get_post_type( $post_id ) === 'page' ) {
+		$postarr['ID'] = $post_id;
+		$result        = wp_update_post( wp_slash( $postarr ), true );
+	} else {
+		$result = wp_insert_post( wp_slash( $postarr ), true );
+		if ( ! is_wp_error( $result ) ) {
+			update_option( $option_key, (int) $result );
+		}
+	}
+
+	return $result;
+}
+
+/**
+ * Create or update all development smoke pages.
+ *
+ * @return array{page_ids: int[], errors: WP_Error[]}
+ */
+function MRT_ensure_dev_smoke_pages(): array {
+	$page_ids = array();
+	$errors   = array();
+
+	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
+		$result = MRT_ensure_dev_smoke_page( $spec['option'], $spec['title'], $spec['content'] );
+		if ( is_wp_error( $result ) ) {
+			$errors[] = $result;
+			continue;
+		}
+		$page_ids[] = (int) $result;
+	}
+
+	return array(
+		'page_ids' => $page_ids,
+		'errors'   => $errors,
+	);
+}
+
+/**
+ * Theme location slugs to try for the site menu (classic themes).
+ *
+ * @return string[]
+ */
+function MRT_dev_nav_location_candidates(): array {
+	return array( 'primary', 'menu-1', 'header', 'main' );
+}
+
+/**
+ * Nav menu ID assigned to the first matching theme location.
+ *
+ * @return int 0 if none.
+ */
+function MRT_get_assigned_nav_menu_id_for_theme(): int {
+	$locations = get_nav_menu_locations();
+	if ( ! is_array( $locations ) ) {
+		return 0;
+	}
+	foreach ( MRT_dev_nav_location_candidates() as $loc ) {
+		if ( ! empty( $locations[ $loc ] ) ) {
+			return (int) $locations[ $loc ];
+		}
+	}
+	return 0;
+}
+
+/**
+ * Whether a nav menu already links to a page.
+ *
+ * @param int $menu_id Nav menu term ID.
+ * @param int $page_id Page ID.
+ */
+function MRT_nav_menu_contains_page( int $menu_id, int $page_id ): bool {
+	$items = wp_get_nav_menu_items( $menu_id );
+	if ( ! is_array( $items ) ) {
+		return false;
+	}
+	foreach ( $items as $item ) {
+		if ( $item->object === 'page' && (int) $item->object_id === $page_id ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * Append smoke pages to a nav menu (idempotent).
+ *
+ * @param int $menu_id Nav menu term ID.
+ * @return int Number of items added.
+ */
+function MRT_append_smoke_pages_to_nav_menu( int $menu_id ): int {
+	$added = 0;
+	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
+		$page_id = (int) get_option( $spec['option'], 0 );
+		if ( $page_id <= 0 || ! get_post( $page_id ) ) {
+			continue;
+		}
+		if ( MRT_nav_menu_contains_page( $menu_id, $page_id ) ) {
+			continue;
+		}
+		$result = wp_update_nav_menu_item(
+			$menu_id,
+			0,
+			array(
+				'menu-item-title'     => $spec['menu_label'],
+				'menu-item-object'    => 'page',
+				'menu-item-object-id' => $page_id,
+				'menu-item-type'      => 'post_type',
+				'menu-item-status'    => 'publish',
+			)
+		);
+		if ( ! is_wp_error( $result ) ) {
+			++$added;
+		}
+	}
+	return $added;
+}
+
+/**
+ * Create a dev nav menu and assign it to primary when no menu is assigned.
+ *
+ * @return int|WP_Error Menu term ID.
+ */
+function MRT_get_or_create_dev_nav_menu() {
+	$stored = (int) get_option( MRT_OPTION_DEV_NAV_MENU_ID, 0 );
+	if ( $stored > 0 && wp_get_nav_menu_object( $stored ) ) {
+		return $stored;
+	}
+
+	$menu_name = __( 'Museum Railway (development)', 'museum-railway-timetable' );
+	$menu_id   = wp_create_nav_menu( $menu_name );
+	if ( is_wp_error( $menu_id ) ) {
+		return $menu_id;
+	}
+	update_option( MRT_OPTION_DEV_NAV_MENU_ID, (int) $menu_id );
+	return (int) $menu_id;
+}
+
+/**
+ * Assign menu to primary theme location when empty.
+ *
+ * @param int $menu_id Nav menu term ID.
+ */
+function MRT_assign_dev_menu_to_primary_if_unassigned( int $menu_id ): void {
+	if ( MRT_get_assigned_nav_menu_id_for_theme() > 0 ) {
+		return;
+	}
+	$locations = get_nav_menu_locations();
+	if ( ! is_array( $locations ) ) {
+		$locations = array();
+	}
+	$locations['primary'] = $menu_id;
+	set_theme_mod( 'nav_menu_locations', $locations );
+}
+
+/**
+ * Ensure smoke pages exist and add them to the site navigation menu.
+ *
+ * @return array{menu_id: int, added: int, page_ids: int[]}|WP_Error
+ */
+function MRT_setup_development_navigation() {
+	if ( ! MRT_dev_cli_allowed() ) {
+		return new WP_Error(
+			'mrt_not_dev',
+			__( 'Development navigation is only available in development mode (WP_DEBUG or MRT_DEVELOPMENT) or WP-CLI.', 'museum-railway-timetable' )
+		);
+	}
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return new WP_Error( 'mrt_cap', __( 'Permission denied.', 'museum-railway-timetable' ) );
+	}
+
+	$pages = MRT_ensure_dev_smoke_pages();
+	if ( $pages['errors'] !== array() ) {
+		return $pages['errors'][0];
+	}
+
+	$menu_id = MRT_get_assigned_nav_menu_id_for_theme();
+	if ( $menu_id <= 0 ) {
+		$created = MRT_get_or_create_dev_nav_menu();
+		if ( is_wp_error( $created ) ) {
+			return $created;
+		}
+		$menu_id = (int) $created;
+		MRT_assign_dev_menu_to_primary_if_unassigned( $menu_id );
+	}
+
+	$added = MRT_append_smoke_pages_to_nav_menu( $menu_id );
+	update_option( MRT_OPTION_DEV_NAV_MENU_ID, $menu_id );
+
+	return array(
+		'menu_id'  => $menu_id,
+		'added'    => $added,
+		'page_ids' => $pages['page_ids'],
+	);
+}
+
+/**
+ * Delete plugin-owned smoke pages (component demo + wizard + planner).
+ */
+function MRT_clear_dev_smoke_pages(): void {
+	$keys = array(
+		MRT_OPTION_COMPONENTS_DEMO_PAGE_ID,
+		MRT_OPTION_WIZARD_SMOKE_PAGE_ID,
+		MRT_OPTION_PLANNER_SMOKE_PAGE_ID,
+	);
+	foreach ( $keys as $key ) {
+		$page_id = (int) get_option( $key, 0 );
+		if ( $page_id > 0 && get_post( $page_id ) && get_post_type( $page_id ) === 'page' ) {
+			wp_delete_post( $page_id, true );
+		}
+		delete_option( $key );
+	}
+}
+
+/**
+ * Handle dashboard / demo-page dev navigation actions.
+ */
+function MRT_handle_dev_navigation_actions(): void {
+	if ( ! isset( $_POST['mrt_action'] ) || ! MRT_is_development_mode() ) {
+		return;
+	}
+	if ( ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+
+	$action = sanitize_key( wp_unslash( $_POST['mrt_action'] ) );
+	if ( $action !== 'setup_dev_navigation' ) {
+		return;
+	}
+
+	MRT_verify_dashboard_action_nonce( 'mrt_dev_navigation', 'mrt_dev_navigation_nonce' );
+	$result = MRT_setup_development_navigation();
+	if ( is_wp_error( $result ) ) {
+		wp_die( esc_html( $result->get_error_message() ) );
+	}
+
+	$redirect = admin_url( 'admin.php?page=mrt_settings' );
+	if ( isset( $_POST['mrt_redirect_page'] ) && sanitize_key( wp_unslash( $_POST['mrt_redirect_page'] ) ) === 'components_demo' ) {
+		$redirect = admin_url( 'admin.php?page=' . rawurlencode( MRT_components_demo_menu_slug() ) );
+	}
+	wp_safe_redirect(
+		add_query_arg(
+			array(
+				'mrt_dev_nav' => 1,
+				'mrt_added'   => (int) $result['added'],
+			),
+			$redirect
+		)
+	);
+	exit;
+}
+
+add_action( 'admin_init', 'MRT_handle_dev_navigation_actions' );
+
+/**
+ * Render button to set up development front-end menu links.
+ */
+function MRT_render_setup_dev_navigation_button( string $redirect_page = 'dashboard' ): void {
+	if ( ! MRT_is_development_mode() ) {
+		return;
+	}
+	?>
+	<form method="post" class="mrt-dev-nav-form">
+		<?php wp_nonce_field( 'mrt_dev_navigation', 'mrt_dev_navigation_nonce' ); ?>
+		<input type="hidden" name="mrt_action" value="setup_dev_navigation" />
+		<input type="hidden" name="mrt_redirect_page" value="<?php echo esc_attr( $redirect_page ); ?>" />
+		<p>
+			<button type="submit" class="button button-secondary">
+				<?php esc_html_e( 'Set up development menu', 'museum-railway-timetable' ); ?>
+			</button>
+			<span class="description">
+				<?php esc_html_e( 'Creates or updates three smoke pages (component demo, wizard, planner) and adds them to your site menu when missing.', 'museum-railway-timetable' ); ?>
+			</span>
+		</p>
+	</form>
+	<?php
+}
+
+/**
+ * Dashboard notice after dev navigation setup.
+ */
+function MRT_render_dev_navigation_admin_notice(): void {
+	if ( ! isset( $_GET['mrt_dev_nav'] ) || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$added = isset( $_GET['mrt_added'] ) ? (int) $_GET['mrt_added'] : 0;
+	$msg   = $added > 0
+		? sprintf(
+			/* translators: %d: number of new menu items */
+			__( 'Development menu updated. %d new link(s) added. Open the front page to verify.', 'museum-railway-timetable' ),
+			$added
+		)
+		: __( 'Development menu is up to date (smoke pages exist; menu links already present).', 'museum-railway-timetable' );
+	echo '<div class="notice notice-success is-dismissible"><p>' . esc_html( $msg ) . '</p></div>';
+}
+
+add_action( 'admin_notices', 'MRT_render_dev_navigation_admin_notice' );

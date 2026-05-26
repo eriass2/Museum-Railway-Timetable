@@ -169,6 +169,15 @@ function MRT_enqueue_admin_assets( string $hook ): void {
 	}
 	MRT_enqueue_admin_css( $hook );
 	MRT_enqueue_admin_js();
-	wp_localize_script( 'mrt-admin', 'mrtAdmin', MRT_admin_script_localization() );
+	$l10n = MRT_admin_script_localization();
+	if ( MRT_allow_script_debug() ) {
+		$l10n['developmentMode'] = '1';
+	}
+	wp_localize_script( 'mrt-admin', 'mrtAdmin', $l10n );
+	wp_add_inline_script(
+		'mrt-admin',
+		'window.mrtDebug = !!(window.mrtAdmin && window.mrtAdmin.developmentMode);',
+		'before'
+	);
 }
 add_action( 'admin_enqueue_scripts', 'MRT_enqueue_admin_assets' );

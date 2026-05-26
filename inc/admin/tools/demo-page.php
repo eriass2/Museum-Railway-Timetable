@@ -261,6 +261,9 @@ function MRT_render_components_demo_admin_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( esc_html__( 'You do not have permission to access this page.', 'museum-railway-timetable' ) );
 	}
+	if ( ! MRT_is_development_mode() ) {
+		wp_die( esc_html__( 'Component demo tools require development mode (WP_DEBUG or MRT_DEVELOPMENT).', 'museum-railway-timetable' ) );
+	}
 	$notice      = '';
 	$notice_type = '';
 	if ( isset( $_POST['mrt_create_demo_page'] ) && check_admin_referer( 'mrt_components_demo', 'mrt_components_demo_nonce' ) ) {
@@ -296,6 +299,10 @@ function MRT_render_components_demo_admin_page() {
 			</p>
 		</form>
 		<?php MRT_render_demo_page_admin_links( $post ); ?>
+		<?php if ( MRT_is_development_mode() ) : ?>
+			<h2><?php esc_html_e( 'Front-end menu (development)', 'museum-railway-timetable' ); ?></h2>
+			<?php MRT_render_setup_dev_navigation_button( 'components_demo' ); ?>
+		<?php endif; ?>
 	</div>
 	<?php
 }

@@ -12,13 +12,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Render dashboard tool actions.
  */
 function MRT_render_dashboard_dev_tools() {
+	if ( ! MRT_is_development_mode() ) {
+		return;
+	}
 	?>
-	<div class="mrt-section">
-		<h2><?php esc_html_e( 'Plugin data and demo tools', 'museum-railway-timetable' ); ?></h2>
-		<p><?php esc_html_e( 'Use these tools to reset plugin data, import Lennakatten test data, or create a draft page with all public shortcodes. The same import is also available under Railway Timetable → Import Lennakatten.', 'museum-railway-timetable' ); ?></p>
+	<div class="mrt-section mrt-section-dev">
+		<h2><?php esc_html_e( 'Development tools', 'museum-railway-timetable' ); ?></h2>
+		<p class="description">
+			<?php esc_html_e( 'Only shown when WP_DEBUG is on or MRT_DEVELOPMENT is defined. Not available on a typical production site.', 'museum-railway-timetable' ); ?>
+		</p>
+		<p><?php esc_html_e( 'Reset data, import Lennakatten test data, create smoke pages, and add menu links for local QA.', 'museum-railway-timetable' ); ?></p>
 		<?php MRT_render_dashboard_clear_db_button(); ?>
 		<?php MRT_render_dashboard_import_demo_button(); ?>
 		<?php MRT_render_dashboard_create_demo_page_button(); ?>
+		<?php MRT_render_setup_dev_navigation_button( 'dashboard' ); ?>
 	</div>
 	<?php
 }

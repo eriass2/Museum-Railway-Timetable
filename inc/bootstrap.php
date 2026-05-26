@@ -24,6 +24,7 @@ function MRT_bootstrap_load_domain(): void {
  * WordPress adapters: assets, admin, import, CPT, public shortcodes.
  */
 function MRT_bootstrap_load_app(): void {
+	require_once MRT_PATH . 'inc/infrastructure/wordpress/environment.php';
 	require_once MRT_PATH . 'inc/infrastructure/post-types.php';
 	require_once MRT_PATH . 'inc/assets.php';
 	require_once MRT_PATH . 'inc/admin.php';

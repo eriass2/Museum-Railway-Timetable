@@ -50,6 +50,9 @@ function MRT_register_admin_menu_cpt_submenus(): void {
  * Component demo submenu + hook fallback.
  */
 function MRT_register_admin_menu_demo_submenu(): void {
+	if ( ! MRT_is_development_mode() ) {
+		return;
+	}
 	$demo_slug = MRT_components_demo_menu_slug();
 	add_submenu_page(
 		'mrt_settings',

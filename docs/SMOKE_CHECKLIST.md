@@ -24,6 +24,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 
 Login: `admin` / `admin`
 
+**Meny (utveckling):** Railway Timetable → dashboard eller Component demo page → **Set up development menu** (kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`). Lägger till Component demo, Wizard smoke test, Planner smoke test i sajtmenyn. Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+
 ## Kommandon
 
 ```powershell

@@ -16,6 +16,9 @@ require_once MRT_PATH . 'inc/import/lennakatten/importer.php';
  * Register Import Lennakatten submenu under Railway Timetable.
  */
 function MRT_register_import_lennakatten_admin_menu(): void {
+	if ( ! MRT_is_development_mode() ) {
+		return;
+	}
 	add_submenu_page(
 		'mrt_settings',
 		__( 'Import Lennakatten', 'museum-railway-timetable' ),

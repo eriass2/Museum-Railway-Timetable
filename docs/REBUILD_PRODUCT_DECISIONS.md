@@ -65,7 +65,18 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 
 **Efter ändring:** Kör **Import Lennakatten** igen (eller rensa + import) så rutter/turer skapas i databasen.
 
-## 7. Öppna punkter (ej blockerande)
+## 7. Utvecklingsläge vs live
+
+**Beslut:** Verktyg för testdata, clear DB, demosidor och front-meny styrs av `MRT_is_development_mode()` (`WP_DEBUG` eller `MRT_DEVELOPMENT`).
+
+- **Utveckling:** import Lennakatten, development tools på dashboard, *Set up development menu*.
+- **Live:** shortcodes, CPT, inställningar, manuell data – inga automatiska smoke-menyer.
+
+Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+
+---
+
+## 8. Öppna punkter (ej blockerande)
 
 - Wizard finpolish mot PNG i `docs/mockups/` när designfiler finns.
 - Planner wizard-only: om beslut tas, uppdatera demosida och SHORTCODES.md.
