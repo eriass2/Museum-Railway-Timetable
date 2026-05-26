@@ -55,7 +55,17 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 
 ---
 
-## 6. Öppna punkter (ej blockerande)
+## 6. Buss Selknä* ↔ Fjällnora* (reseplanerare)
+
+**Beslut:** Modellera som **egen bussrutt** (`Selknä – Fjällnora` / retur) med turer typ `Buss` i importen (`reference-data.php`).
+
+- Resesök hittar **direkt buss** Selknä–Fjällnora och **byte** (tåg till Selknä + buss till Fjällnora).
+- Tider i importen är **anslutningstider** (~8 min, avgång efter tåg vid Selknä) – justera mot PDF vid behov.
+- Tidtabellsöversikt visar inte längre raden ”INGA BUSSANSLUTNINGAR…” (ersatt av riktiga bussturer).
+
+**Efter ändring:** Kör **Import Lennakatten** igen (eller rensa + import) så rutter/turer skapas i databasen.
+
+## 7. Öppna punkter (ej blockerande)
 
 - Wizard finpolish mot PNG i `docs/mockups/` när designfiler finns.
 - Planner wizard-only: om beslut tas, uppdatera demosida och SHORTCODES.md.

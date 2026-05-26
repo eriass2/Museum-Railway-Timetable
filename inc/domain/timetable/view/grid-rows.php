@@ -155,9 +155,6 @@ function MRT_render_grid_regular_station_rows( $regular_stations, $services_list
 			continue;
 		}
 		$html .= MRT_render_grid_simple_station_row( $station, $services_list, $service_classes, $service_info );
-		if ( MRT_should_render_print_bus_notice_after_station( $station, $direction ) ) {
-			$html .= MRT_render_print_bus_notice_row( $direction );
-		}
 	}
 	return $html;
 }
@@ -278,25 +275,6 @@ function MRT_render_print_mid_transfer_row( $station, array $services_list, arra
 				<?php endif; ?>
 			</div>
 		<?php endforeach; ?>
-	</div>
-	<?php
-	return ob_get_clean();
-}
-
-function MRT_should_render_print_bus_notice_after_station( $station, string $direction ): bool {
-	$name = $station->post_title ?? '';
-	return ( $direction === 'outbound' && $name === 'Selknä' ) || ( $direction === 'inbound' && $name === 'Löt' );
-}
-
-function MRT_render_print_bus_notice_row( string $direction ): string {
-	$label = $direction === 'inbound'
-		? __( 'Från Fjällnora* Till Selknä*', 'museum-railway-timetable' )
-		: __( 'Från Selknä* Till Fjällnora*', 'museum-railway-timetable' );
-	ob_start();
-	?>
-	<div class="mrt-grid-row mrt-print-bus-notice-row">
-		<div class="mrt-grid-cell mrt-station-col mrt-print-bus-notice-label"><?php echo esc_html( $label ); ?></div>
-		<div class="mrt-grid-cell mrt-print-bus-notice-message"><?php esc_html_e( 'INGA BUSSANSLUTNINGAR TILL/FRÅN FJÄLLNORA', 'museum-railway-timetable' ); ?></div>
 	</div>
 	<?php
 	return ob_get_clean();

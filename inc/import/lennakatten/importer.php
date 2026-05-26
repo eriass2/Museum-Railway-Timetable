@@ -16,17 +16,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_run_lennakatten_import() {
 	$station_ids    = MRT_import_create_stations();
 	$train_type_ids = MRT_import_create_train_types();
-	list($route_id, $route_rev_id, $route_station_ids, $route_rev_station_ids) = MRT_import_create_routes( $station_ids );
-	$result = MRT_import_create_timetables_and_services(
-		$route_id,
-		$route_rev_id,
-		$route_station_ids,
-		$route_rev_station_ids,
-		$station_ids,
-		$train_type_ids
-	);
+	$routes = MRT_import_create_routes( $station_ids );
+	$result = MRT_import_create_timetables_and_services( $routes, $station_ids, $train_type_ids );
 	return sprintf(
-		__( 'Import complete. Stations: %1$d, Routes: 2, Train types: %2$d, Timetables: %3$s, Services created: %4$d.', 'museum-railway-timetable' ),
+		/* translators: 1: station count, 2: train type count, 3: timetable summaries, 4: services created */
+		__( 'Import complete. Stations: %1$d, Routes: 4 (2 rail + 2 bus), Train types: %2$d, Timetables: %3$s, Services created: %4$d.', 'museum-railway-timetable' ),
 		count( $station_ids ),
 		count( $train_type_ids ),
 		$result['summary'],
@@ -39,17 +33,14 @@ function MRT_run_lennakatten_import() {
  *
  * @return array{summary: string, created_services: int}
  */
-function MRT_import_create_timetables_and_services( $route_id, $route_rev_id, $route_station_ids, $route_rev_station_ids, $station_ids, $train_type_ids ): array {
+function MRT_import_create_timetables_and_services( array $routes, array $station_ids, array $train_type_ids ): array {
 	$summaries = array();
 	$created   = 0;
 	foreach ( MRT_import_get_timetable_definitions() as $type => $definition ) {
 		$timetable_id = MRT_import_create_timetable_from_definition( (string) $type, $definition );
 		$created     += MRT_import_create_definition_services(
 			$definition,
-			$route_id,
-			$route_rev_id,
-			$route_station_ids,
-			$route_rev_station_ids,
+			$routes,
 			$station_ids,
 			$train_type_ids,
 			$timetable_id
@@ -137,7 +128,32 @@ function MRT_import_create_routes( $station_ids ) {
 	$route_rev_station_ids = array_reverse( $route_station_ids );
 	$route_rev_id          = MRT_import_ensure_route( 'Faringe – Uppsala Östra', $route_rev_station_ids );
 
-	return array( $route_id, $route_rev_id, $route_station_ids, $route_rev_station_ids );
+	$bus_station_ids = array_values(
+		array_filter(
+			array(
+				$station_ids['Selknä'] ?? 0,
+				$station_ids['Fjällnora'] ?? 0,
+			)
+		)
+	);
+	$bus_rev_station_ids = array_reverse( $bus_station_ids );
+	$bus_route_id        = MRT_import_ensure_route( 'Selknä – Fjällnora', $bus_station_ids );
+	$bus_route_rev_id    = MRT_import_ensure_route( 'Fjällnora – Selknä', $bus_rev_station_ids );
+
+	return array(
+		'rail' => array(
+			'out_id'       => $route_id,
+			'in_id'        => $route_rev_id,
+			'out_stations' => $route_station_ids,
+			'in_stations'  => $route_rev_station_ids,
+		),
+		'bus'  => array(
+			'out_id'       => $bus_route_id,
+			'in_id'        => $bus_route_rev_id,
+			'out_stations' => $bus_station_ids,
+			'in_stations'  => $bus_rev_station_ids,
+		),
+	);
 }
 
 function MRT_import_ensure_route( $title, $station_ids ) {
@@ -218,9 +234,22 @@ function MRT_import_create_timetable_from_definition( string $type, array $defin
  *
  * @param array<string, mixed> $definition Import definition
  */
-function MRT_import_create_definition_services( array $definition, $route_id, $route_rev_id, $route_station_ids, $route_rev_station_ids, $station_ids, $train_type_ids, $timetable_id ): int {
-	$created  = MRT_import_create_services_for_direction( (array) $definition['services_out'], 'Uppsala Östra – Faringe', $route_id, $route_station_ids, $station_ids['Faringe'] ?? 0, $timetable_id, $train_type_ids );
-	$created += MRT_import_create_services_for_direction( (array) $definition['services_in'], 'Faringe – Uppsala Östra', $route_rev_id, $route_rev_station_ids, $station_ids['Uppsala Östra'] ?? 0, $timetable_id, $train_type_ids );
+function MRT_import_create_definition_services( array $definition, array $routes, array $station_ids, array $train_type_ids, int $timetable_id ): int {
+	$rail = $routes['rail'];
+	$bus  = $routes['bus'];
+
+	$created  = MRT_import_create_services_for_direction( (array) $definition['services_out'], 'Uppsala Östra – Faringe', $rail['out_id'], $rail['out_stations'], $station_ids['Faringe'] ?? 0, $timetable_id, $train_type_ids );
+	$created += MRT_import_create_services_for_direction( (array) $definition['services_in'], 'Faringe – Uppsala Östra', $rail['in_id'], $rail['in_stations'], $station_ids['Uppsala Östra'] ?? 0, $timetable_id, $train_type_ids );
+
+	$bus_out = (array) ( $definition['bus_services_out'] ?? array() );
+	$bus_in  = (array) ( $definition['bus_services_in'] ?? array() );
+	if ( $bus_out !== array() && $bus['out_id'] > 0 ) {
+		$created += MRT_import_create_services_for_direction( $bus_out, 'Selknä – Fjällnora', $bus['out_id'], $bus['out_stations'], $station_ids['Fjällnora'] ?? 0, $timetable_id, $train_type_ids );
+	}
+	if ( $bus_in !== array() && $bus['in_id'] > 0 ) {
+		$created += MRT_import_create_services_for_direction( $bus_in, 'Fjällnora – Selknä', $bus['in_id'], $bus['in_stations'], $station_ids['Selknä'] ?? 0, $timetable_id, $train_type_ids );
+	}
+
 	return $created;
 }
 
