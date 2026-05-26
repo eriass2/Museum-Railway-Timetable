@@ -54,6 +54,11 @@
 		}
 		if (leg) {
 			html += '<div class="mrt-journey-wizard__timeline-leg">';
+			if (leg.duration_minutes) {
+				html += '<span class="mrt-journey-wizard__leg-duration">' +
+					SU.escapeHtml((cfg.durationMinutes || '%d min').replace('%d', String(leg.duration_minutes))) +
+					'</span>';
+			}
 			html += vehicle.legVehicleBadge(leg);
 			if (leg.destination || leg.direction) {
 				html += '<span class="mrt-journey-wizard__towards">' +
@@ -85,10 +90,15 @@
 	}
 
 	function multiLegTransferHtml(legIndex, conn, cfg) {
-		if (legIndex >= conn.legs.length - 1) {
+		if (!conn.legs || legIndex >= conn.legs.length - 1) {
 			return '';
 		}
-		return '<div class="mrt-journey-wizard__transfer-block">' + SU.escapeHtml(cfg.transferTrip || 'Byte') + '</div>';
+		var wait = conn.transfer_wait_minutes;
+		var label = cfg.transferTrip || 'Byte';
+		if (wait !== null && wait !== undefined && wait !== '') {
+			label = (cfg.transferWait || '%d min byte').replace('%d', String(wait));
+		}
+		return '<div class="mrt-journey-wizard__transfer-block">' + SU.escapeHtml(label) + '</div>';
 	}
 
 	function detailPricesHtml(wctx, legCtx) {

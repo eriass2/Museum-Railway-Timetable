@@ -42,3 +42,10 @@ Se `assets/journey-wizard/controls-calendar.css`.
 - Vald utresa-kort på retursteget: gul kant, mörkgrön bakgrund (`steps-outbound-return.css`)
 - Aktivt steg i steglistan: gul bakgrund + fokusring vid `aria-current="step"`
 - Expanderat kort: tidslinje med punkt-tider, `∨ visa passerade stationer`, **Priser**-tabell i kortet (`connection-detail.js`, `prices.js` `compactTitle`)
+
+## Återresa (`valj-aterresa.png`)
+
+- **Vald utresa:** vit kort med gul kant ovanför listan (`steps-outbound-return.css`, `selectedTripHtml`)
+- Returkort: samma som utresa
+- **Byte i detalj:** `%d min byte` från `transfer_wait_minutes` (API)
+- **Varning:** `⚠` + fet text vid t.ex. brandrisk (`notice--warning`)

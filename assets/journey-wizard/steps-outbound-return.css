@@ -15,8 +15,8 @@
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] {
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
+    margin: 0 0 1.5rem;
+    padding-bottom: 1.35rem;
     border-bottom: 2px solid rgba(255, 255, 255, 0.35);
 }
 
@@ -25,11 +25,38 @@
     font-size: 1rem;
     text-transform: uppercase;
     letter-spacing: 0.04em;
+    font-weight: 800;
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-card {
-    border-color: var(--mrt-jw-yellow);
-    background: rgba(21, 83, 11, 0.45);
+    border: 3px solid var(--mrt-jw-yellow);
+    background: var(--mrt-jw-surface);
+    color: var(--mrt-jw-text);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    padding: 0.75rem 0.9rem;
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-main {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: start;
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__trip-time {
+    color: var(--mrt-jw-text);
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__trip-route {
+    color: var(--mrt-jw-text);
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__vehicle {
+    color: #151515;
+}
+
+.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__duration {
+    color: #3f3f3f;
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="outbound"] .mrt-journey-wizard__step-head,

@@ -216,7 +216,7 @@
 .mrt-journey-wizard__transfer-block {
     margin: 0.45rem 0 0.8rem 6.6rem;
     color: #333333;
-    font-size: 1.05rem;
+    font-size: 1.1rem;
     font-weight: 700;
 }
 
@@ -239,6 +239,28 @@
     color: #d45500;
     font-size: 0.95rem;
     vertical-align: middle;
+}
+
+.mrt-journey-wizard__notice-warn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    margin-left: 0.35rem;
+    font-size: 1rem;
+    line-height: 1;
+    vertical-align: middle;
+}
+
+.mrt-journey-wizard__notice--warning {
+    font-weight: 700;
+}
+
+.mrt-journey-wizard__leg-duration {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #3f3f3f;
 }
 
 .mrt-journey-wizard__selected-trip {

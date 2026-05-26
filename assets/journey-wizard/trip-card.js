@@ -78,8 +78,21 @@
 		return parts.join('<span class="mrt-journey-wizard__vehicle-sep" aria-hidden="true">→</span>');
 	}
 
+	function isWarningNotice(notice) {
+		var n = String(notice || '').toLowerCase();
+		return n.indexOf('brand') !== -1 || n.indexOf('ersatt') !== -1 || n.indexOf('varning') !== -1;
+	}
+
 	function cardNoticeDotHtml(notice, cfg) {
-		return notice ? '<span class="mrt-journey-wizard__notice-dot" aria-label="' + SU.escapeHtml(cfg.noticeLabel || '') + '">!</span>' : '';
+		if (!notice) {
+			return '';
+		}
+		if (isWarningNotice(notice)) {
+			return '<span class="mrt-journey-wizard__notice-warn" role="img" aria-label="' +
+				SU.escapeHtml(cfg.noticeLabel || '') + '">⚠</span>';
+		}
+		return '<span class="mrt-journey-wizard__notice-dot" aria-label="' +
+			SU.escapeHtml(cfg.noticeLabel || '') + '">!</span>';
 	}
 
 	function cardCopyHtml(conn, dep, arr, legCtx, cfg, state) {
@@ -89,7 +102,8 @@
 		html += cardNoticeDotHtml(notice, cfg);
 		html += '</p>';
 		if (notice) {
-			html += '<p class="mrt-journey-wizard__notice">' + SU.escapeHtml(notice) + '</p>';
+			html += '<p class="mrt-journey-wizard__notice' + (isWarningNotice(notice) ? ' mrt-journey-wizard__notice--warning' : '') +
+				'">' + SU.escapeHtml(notice) + '</p>';
 		}
 		html += '<p class="mrt-journey-wizard__trip-route">' + SU.escapeHtml(ctxApi.cardRouteText(state, legCtx)) + '</p>';
 		html += '<div class="mrt-journey-wizard__vehicle-row">' + cardBadgesHtml(conn) + '</div>';
@@ -136,15 +150,26 @@
 		var dep = formatTripClock(connApi.departureFromOrigin(conn));
 		var arr = formatTripClock(connApi.arrivalAtDestination(conn));
 		var duration = formatDuration(conn.duration_minutes, cfg);
+		var notice = conn.notice || '';
 		var html = '<div class="mrt-journey-wizard__selected-label">' + SU.escapeHtml(cfg.selectedOutbound || 'Vald utresa') + '</div>';
 		html += '<div class="mrt-journey-wizard__selected-card">';
-		html += '<div><strong>' + SU.escapeHtml(dep) + ' → ' + SU.escapeHtml(arr) + '</strong>';
-		html += '<span> • ' + SU.escapeHtml(state.fromTitle || '') + ' → ' + SU.escapeHtml(state.toTitle || '') + '</span></div>';
-		if (duration) {
-			html += '<strong>' + SU.escapeHtml(duration) + '</strong>';
+		html += '<div class="mrt-journey-wizard__selected-main">';
+		html += '<div class="mrt-journey-wizard__selected-copy">';
+		html += '<p class="mrt-journey-wizard__trip-time">' + SU.escapeHtml(dep) + ' → ' + SU.escapeHtml(arr);
+		html += cardNoticeDotHtml(notice, cfg);
+		html += '</p>';
+		if (notice) {
+			html += '<p class="mrt-journey-wizard__notice' + (isWarningNotice(notice) ? ' mrt-journey-wizard__notice--warning' : '') +
+				'">' + SU.escapeHtml(notice) + '</p>';
 		}
+		html += '<p class="mrt-journey-wizard__trip-route">' + SU.escapeHtml(ctxApi.cardRouteText(state, 'outbound')) + '</p>';
 		html += '<div class="mrt-journey-wizard__vehicle-row">' + cardBadgesHtml(conn) + '</div>';
 		html += '</div>';
+		html += '<div class="mrt-journey-wizard__selected-side">';
+		if (duration) {
+			html += '<span class="mrt-journey-wizard__duration">' + SU.escapeHtml(duration) + '</span>';
+		}
+		html += '</div></div></div>';
 		return html;
 	}
 

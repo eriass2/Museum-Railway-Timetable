@@ -153,9 +153,17 @@ function MRT_normalize_multi_leg_for_api( array $item, $dateYmd ) {
 	$last      = count( $legs ) - 1;
 	$dep_first = (string) ( $legs[0]['from_departure'] ?? '' );
 	$arr_last  = (string) ( $legs[ $last ]['to_arrival'] ?? '' );
+	$transfer_wait = null;
+	if ( count( $legs ) > 1 ) {
+		$transfer_wait = MRT_journey_transfer_wait_minutes(
+			(string) ( $legs[0]['to_arrival'] ?? '' ),
+			(string) ( $legs[1]['from_departure'] ?? '' )
+		);
+	}
 	return array(
 		'connection_type'     => $item['connection_type'] ?? 'transfer',
 		'transfer_station_id' => $item['transfer_station_id'] ?? null,
+		'transfer_wait_minutes' => $transfer_wait,
 		'legs'                => $legs,
 		'duration_minutes'    => $duration,
 		'segments'            => array(),
