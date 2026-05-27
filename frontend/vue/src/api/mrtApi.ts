@@ -1,5 +1,4 @@
 import type { MrtAjaxConfig } from '../config/types';
-import { resolveMrtString } from '../utils/mrtStrings';
 
 export type MrtAjaxResponse<T> = {
   success: boolean;
@@ -56,7 +55,3 @@ export async function mrtPost<T>(
   return { success: true, data: json.data };
 }
 
-/** @deprecated Use resolveMrtString from utils/mrtStrings */
-export function msg(config: MrtAjaxConfig, key: string, fallback = ''): string {
-  return resolveMrtString(config, key, fallback);
-}

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, nextTick, onMounted, provide, ref, watch } from 'vue';
 import { applyWizardDebugPreset } from '../wizard/composables/useWizardDebug';
+import { loadOverviewHtml } from '../composables/useTimetableHtml';
 import type { WizardVueConfig } from '../config/types';
-import { useMrtAjax } from '../composables/useMrtAjax';
 import { createWizardStore } from '../wizard/store/createWizardStore';
 import { wizardKey } from '../wizard/injection';
 import WizardStepNav from '../wizard/components/WizardStepNav.vue';
@@ -29,8 +29,6 @@ const timetableHtml = ref('');
 const showTimetable = computed(() => timetableId > 0 && Boolean(timetableHtml.value));
 const panelsRef = ref<HTMLElement | null>(null);
 
-const { run: fetchOverview } = useMrtAjax(props.config);
-
 watch(
   () => store.step,
   async () => {
@@ -50,14 +48,8 @@ onMounted(async () => {
   if (debug) {
     applyWizardDebugPreset(wizardCtx, debug);
   }
-  if (timetableId <= 0) {
-    return;
-  }
-  const res = await fetchOverview<{ html: string }>('mrt_timetable_overview_html', {
-    timetable_id: timetableId,
-  });
-  if (res.success && res.data?.html) {
-    timetableHtml.value = res.data.html;
+  if (timetableId > 0) {
+    timetableHtml.value = await loadOverviewHtml(props.config, timetableId);
   }
 });
 </script>
