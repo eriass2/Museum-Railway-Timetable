@@ -1,23 +1,8 @@
 {
-  "src/apps/JourneyWizardApp.vue": {
-    "file": "assets/JourneyWizardApp-Bs0bece1.js",
-    "name": "JourneyWizardApp",
-    "src": "src/apps/JourneyWizardApp.vue",
-    "isDynamicEntry": true,
-    "imports": [
-      "src/main.ts"
-    ]
-  },
   "src/main.ts": {
-    "file": "assets/main-DMbvrPJt.js",
+    "file": "assets/main-DKDWuQys.js",
     "name": "main",
     "src": "src/main.ts",
-    "isEntry": true,
-    "dynamicImports": [
-      "src/apps/JourneyWizardApp.vue"
-    ],
-    "css": [
-      "assets/main-ASkH7R8B.css"
-    ]
+    "isEntry": true
   }
 }

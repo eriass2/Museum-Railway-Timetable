@@ -57,7 +57,7 @@ Docker (tools profile):
 docker compose --profile tools run --rm vue
 ```
 
-Output: `assets/dist/vue/` (commit after CSS/JS changes so hosts without Node still work). Entry chunk `main-*.js` plus async chunk `JourneyWizardApp-*.js` when wizard shortcode is used.
+Output: `assets/dist/vue/` (commit after CSS/JS changes so hosts without Node still work). Single entry `assets/main-*.js` (IIFE).
 
 Dev server (component work only — WP still serves shortcodes):
 
@@ -68,7 +68,7 @@ npm run dev
 
 ## PHP integration
 
-- `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS (`type="module"`), mount HTML
+- `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS (IIFE build for classic `<script>`), mount HTML
 - `inc/public/vue-shortcode-config.php` — JSON config per shortcode
 - Shortcodes branch early to `MRT_render_vue_mount()` when `MRT_use_vue_frontend()`
 

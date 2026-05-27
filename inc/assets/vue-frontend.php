@@ -169,6 +169,25 @@ function MRT_enqueue_vue_frontend_assets(): void {
 		MRT_VERSION,
 		true
 	);
-	// Vite outputs ES modules (incl. dynamic import chunks for the wizard).
-	wp_script_add_data( 'mrt-vue-public', 'type', 'module' );
 }
+
+/**
+ * Ensure Vite ES-module builds load with type="module" when used (legacy path).
+ *
+ * @param string $tag    Script tag HTML.
+ * @param string $handle Script handle.
+ * @param string $src    Script URL.
+ * @return string
+ */
+function MRT_vue_script_loader_tag( string $tag, string $handle, string $src ): string {
+	unset( $src );
+	if ( 'mrt-vue-public' !== $handle || str_contains( $tag, 'type=' ) ) {
+		return $tag;
+	}
+	$extra = wp_scripts()->get_data( $handle, 'type' );
+	if ( 'module' === $extra ) {
+		return str_replace( '<script ', '<script type="module" ', $tag );
+	}
+	return $tag;
+}
+add_filter( 'script_loader_tag', 'MRT_vue_script_loader_tag', 10, 3 );

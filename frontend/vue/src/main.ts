@@ -1,8 +1,7 @@
-import { createApp, defineAsyncComponent, type Component } from 'vue';
+import { createApp, type Component } from 'vue';
 import MonthCalendarApp from './apps/MonthCalendarApp.vue';
 import TimetableOverviewApp from './apps/TimetableOverviewApp.vue';
-
-const JourneyWizardApp = defineAsyncComponent(() => import('./apps/JourneyWizardApp.vue'));
+import JourneyWizardApp from './apps/JourneyWizardApp.vue';
 import { parseMountConfig, type MrtVueApp, type MrtVueConfig } from './useMrtConfig';
 import './styles/mrt-public.css';
 
