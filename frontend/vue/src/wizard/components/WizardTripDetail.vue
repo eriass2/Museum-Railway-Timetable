@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, type MaybeRef, unref } from 'vue';
 import { mrtPost } from '../../api/mrtApi';
-import type { MrtVueConfig } from '../../useMrtConfig';
+import type { WizardVueConfig } from '../../config/types';
 import type { ConnectionDetailPayload, JourneyConnection, JourneyLeg, TimelineStop } from '../types';
 import type { WizardCfg } from '../utils/wizardLabels';
 import { cfgStr } from '../utils/wizardLabels';
@@ -18,16 +18,14 @@ type LegSegment = {
 };
 
 const props = defineProps<{
-  config: MrtVueConfig;
+  config: WizardVueConfig;
   cfg: MaybeRef<WizardCfg>;
   connection: JourneyConnection;
   legFrom: MaybeRef<number>;
   legTo: MaybeRef<number>;
-  expanded: boolean;
 }>();
 
 const cfg = computed(() => unref(props.cfg));
-
 const loading = ref(false);
 const error = ref('');
 const segments = ref<LegSegment[]>([]);
@@ -91,7 +89,7 @@ async function loadDetail(): Promise<void> {
   loaded.value = true;
 }
 
-function transferLabel(index: number): string {
+function transferLabel(): string {
   const wait = props.connection.transfer_wait_minutes;
   if (wait !== null && wait !== undefined && !Number.isNaN(Number(wait))) {
     return cfgStr(cfg.value, 'transferWait', '%d min byte').replace('%d', String(wait));
@@ -110,24 +108,24 @@ defineExpose({ ensureLoaded });
 
 <template>
   <div
-    class="mrt-jw-card__detail mrt-journey-wizard__detail"
-    :class="{ 'mrt-journey-wizard__detail--multi': isMulti, 'is-passed-expanded': expanded }"
+    class="mrt-journey-wizard__detail"
+    :class="{ 'mrt-journey-wizard__detail--multi': isMulti }"
   >
     <p v-if="loading" class="mrt-empty">{{ cfgStr(cfg, 'loading', 'Loading...') }}</p>
     <p v-else-if="error" class="mrt-alert mrt-alert-error">{{ error }}</p>
     <template v-else-if="loaded">
       <div v-for="(seg, si) in segments" :key="si" class="mrt-journey-wizard__detail-segment mrt-mb-sm">
         <h4 v-if="seg.title" class="mrt-journey-wizard__detail-title">{{ seg.title }}</h4>
-        <p v-if="seg.notice" class="mrt-jw-notice mrt-journey-wizard__notice">
+        <p v-if="seg.notice" class="mrt-journey-wizard__notice">
           <strong>{{ cfgStr(cfg, 'noticeLabel', 'Notice') }}:</strong> {{ seg.notice }}
         </p>
-        <div v-if="seg.leg" class="mrt-jw-timeline__leg mrt-journey-wizard__timeline-leg">
-          <span v-if="seg.leg.duration_minutes" class="mrt-jw-timeline__leg-duration">
+        <div v-if="seg.leg" class="mrt-journey-wizard__timeline-leg">
+          <span v-if="seg.leg.duration_minutes" class="mrt-journey-wizard__leg-duration">
             {{ formatDuration(seg.leg.duration_minutes, cfg) }}
           </span>
           <span
-            class="mrt-jw-vehicle mrt-journey-wizard__vehicle"
-            :class="`mrt-jw-vehicle--${legVehicleKind(seg.leg, cfg)}`"
+            class="mrt-journey-wizard__vehicle"
+            :class="`mrt-journey-wizard__vehicle--${legVehicleKind(seg.leg, cfg)}`"
           >
             <img
               v-if="trainIconUrl(legVehicleKind(seg.leg, cfg), cfg)"
@@ -140,12 +138,12 @@ defineExpose({ ensureLoaded });
             <span>{{ legVehicleLabel(seg.leg) }}</span>
           </span>
         </div>
-        <WizardTimeline :cfg="cfg" :stops="seg.stops" :start-expanded="expanded" />
+        <WizardTimeline :cfg="cfg" :stops="seg.stops" :start-expanded="false" />
         <div
           v-if="isMulti && si < segments.length - 1"
-          class="mrt-jw-timeline__transfer mrt-journey-wizard__transfer-block"
+          class="mrt-journey-wizard__transfer-block"
         >
-          {{ transferLabel(si) }}
+          {{ transferLabel() }}
         </div>
       </div>
     </template>

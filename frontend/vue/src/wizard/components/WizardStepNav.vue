@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { computed, inject } from 'vue';
-import { wizardKey } from '../injection';
+import { computed } from 'vue';
+import { useWizardContext } from '../../composables/useWizardContext';
 import { cfgStr } from '../utils/wizardLabels';
 
-const wizard = inject(wizardKey)!;
+const { store, cfg } = useWizardContext();
 
 const items = computed(() =>
-  wizard.stepSequence.value.map((key, i) => ({
+  store.stepSequence.map((key, i) => ({
     key,
-    label: `${i + 1}. ${wizard.stepLabels.value[key]}`,
-    active: wizard.step.value === key,
-    done: wizard.stepSequence.value.indexOf(wizard.step.value) > i,
+    label: `${i + 1}. ${store.stepLabels[key]}`,
+    active: store.step === key,
+    done: store.stepSequence.indexOf(store.step) > i,
   })),
 );
 </script>
 
 <template>
-  <nav class="mrt-journey-wizard__nav" :aria-label="cfgStr(wizard.cfg, 'stepNavAria', 'Trip planner steps')">
+  <nav class="mrt-journey-wizard__nav" :aria-label="cfgStr(cfg, 'stepNavAria', 'Trip planner steps')">
     <ol class="mrt-journey-wizard__steps">
       <li
         v-for="item in items"

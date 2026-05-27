@@ -1,10 +1,10 @@
 import type { MaybeRef } from 'vue';
 import { unref } from 'vue';
-import type { MrtVueConfig } from '../../useMrtConfig';
+import type { WizardVueConfig } from '../../config/types';
 
 export type WizardCfg = Record<string, unknown>;
 
-export function wizardCfg(config: MrtVueConfig): WizardCfg {
+export function wizardCfg(config: WizardVueConfig): WizardCfg {
   const wizard = (config.wizard || {}) as WizardCfg;
   const labels = (config.labels || {}) as WizardCfg;
   return { ...wizard, ...labels };

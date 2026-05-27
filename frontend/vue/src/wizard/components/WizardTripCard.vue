@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, type MaybeRef, unref } from 'vue';
-import type { MrtVueConfig } from '../../useMrtConfig';
+import type { WizardVueConfig } from '../../config/types';
 import type { JourneyConnection } from '../types';
 import type { WizardCfg } from '../utils/wizardLabels';
 import { cfgStr } from '../utils/wizardLabels';
@@ -15,7 +15,7 @@ import { legVehicleKind, legVehicleLabel, trainIconUrl } from '../utils/vehicle'
 import WizardTripDetail from './WizardTripDetail.vue';
 
 const props = defineProps<{
-  config: MrtVueConfig;
+  config: WizardVueConfig;
   cfg: MaybeRef<WizardCfg>;
   connection: JourneyConnection;
   legCtx: 'outbound' | 'return';
@@ -25,7 +25,6 @@ const props = defineProps<{
 }>();
 
 const cfg = computed(() => unref(props.cfg));
-
 const emit = defineEmits<{ select: [] }>();
 
 const expanded = ref(false);
@@ -54,28 +53,28 @@ async function toggleDetail(): Promise<void> {
 </script>
 
 <template>
-  <article class="mrt-jw-card mrt-jw-card--trip mrt-journey-wizard__trip-card" :class="{ 'is-expanded': expanded }">
-    <div class="mrt-jw-trip-head mrt-journey-wizard__trip-head">
-      <div class="mrt-jw-trip-head__copy mrt-journey-wizard__trip-copy">
-        <p class="mrt-jw-typo mrt-jw-typo--time mrt-journey-wizard__trip-time">
+  <article class="mrt-journey-wizard__trip-card" :class="{ 'is-expanded': expanded }">
+    <div class="mrt-journey-wizard__trip-head">
+      <div class="mrt-journey-wizard__trip-copy">
+        <p class="mrt-journey-wizard__trip-time">
           <span>{{ dep }}</span> – <span>{{ arr }}</span>
         </p>
-        <p class="mrt-jw-typo mrt-jw-typo--route mrt-journey-wizard__trip-route">{{ routeText }}</p>
+        <p class="mrt-journey-wizard__trip-route">{{ routeText }}</p>
         <p
           v-if="connection.notice"
-          class="mrt-jw-notice mrt-journey-wizard__notice"
-          :class="{ 'mrt-jw-notice--warn': isWarningNotice(connection.notice || '') }"
+          class="mrt-journey-wizard__notice"
+          :class="{ 'mrt-journey-wizard__notice--warn': isWarningNotice(connection.notice || '') }"
         >
           {{ connection.notice }}
         </p>
       </div>
-      <div class="mrt-jw-trip-head__side mrt-journey-wizard__trip-side">
-        <div class="mrt-jw-vehicle-row mrt-journey-wizard__vehicle-row">
+      <div class="mrt-journey-wizard__trip-side">
+        <div class="mrt-journey-wizard__vehicle-row">
           <span
             v-for="(leg, li) in legs"
             :key="li"
-            class="mrt-jw-vehicle mrt-journey-wizard__vehicle"
-            :class="`mrt-jw-vehicle--${vehicleKind(leg)} mrt-journey-wizard__vehicle--${vehicleKind(leg)}`"
+            class="mrt-journey-wizard__vehicle"
+            :class="`mrt-journey-wizard__vehicle--${vehicleKind(leg)}`"
           >
             <img
               v-if="trainIconUrl(vehicleKind(leg), cfg)"
@@ -86,29 +85,25 @@ async function toggleDetail(): Promise<void> {
               decoding="async"
               alt=""
             >
-            <span v-else class="mrt-jw-vehicle__mark mrt-journey-wizard__vehicle-mark" aria-hidden="true" />
+            <span v-else class="mrt-journey-wizard__vehicle-mark" aria-hidden="true" />
             <span>{{ legVehicleLabel(leg) }}</span>
           </span>
         </div>
-        <p v-if="connection.duration_minutes" class="mrt-jw-typo mrt-jw-typo--duration mrt-journey-wizard__duration">
+        <p v-if="connection.duration_minutes" class="mrt-journey-wizard__duration">
           {{ formatDuration(connection.duration_minutes, cfg) }}
         </p>
-        <button
-          type="button"
-          class="mrt-jw-btn mrt-jw-btn--select mrt-journey-wizard__btn-select"
-          @click="emit('select')"
-        >
+        <button type="button" class="mrt-journey-wizard__btn-select" @click="emit('select')">
           {{ cfgStr(cfg, 'selectTrip', 'Välj →') }}
         </button>
       </div>
     </div>
     <button
       type="button"
-      class="mrt-jw-expand mrt-journey-wizard__expand"
+      class="mrt-journey-wizard__expand"
       :aria-expanded="expanded"
       @click="toggleDetail"
     >
-      <span class="mrt-jw-expand__chevron mrt-journey-wizard__expand-chevron" aria-hidden="true" />
+      <span class="mrt-journey-wizard__expand-chevron" aria-hidden="true" />
       {{ meta }}
     </button>
     <WizardTripDetail
@@ -119,7 +114,6 @@ async function toggleDetail(): Promise<void> {
       :connection="connection"
       :leg-from="legFrom"
       :leg-to="legTo"
-      :expanded="false"
     />
   </article>
 </template>

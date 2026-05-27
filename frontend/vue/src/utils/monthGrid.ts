@@ -1,8 +1,6 @@
-export type MonthDayMeta = {
-  ymd: string;
-  count: number;
-  running: boolean;
-};
+import type { MonthDayMeta } from '../config/types';
+
+export type { MonthDayMeta };
 
 export type MonthGridCell =
   | { kind: 'empty' }

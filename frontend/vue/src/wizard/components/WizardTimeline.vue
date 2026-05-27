@@ -26,21 +26,21 @@ function stationTime(s: TimelineStop): string {
 </script>
 
 <template>
-  <div class="mrt-jw-timeline mrt-journey-wizard__timeline">
+  <div class="mrt-journey-wizard__timeline">
     <div
       v-for="(stop, i) in visibleStops"
       :key="i"
-      class="mrt-jw-timeline__row mrt-journey-wizard__timeline-row"
+      class="mrt-journey-wizard__timeline-row"
       :class="{ 'is-terminal': i === 0 || i === visibleStops.length - 1 }"
     >
-      <time class="mrt-jw-timeline__time mrt-journey-wizard__timeline-time">{{ stationTime(stop) }}</time>
-      <span class="mrt-jw-timeline__node mrt-journey-wizard__timeline-node" aria-hidden="true" />
-      <span class="mrt-jw-timeline__station mrt-journey-wizard__timeline-station">{{ stop.station_title }}</span>
+      <time class="mrt-journey-wizard__timeline-time">{{ stationTime(stop) }}</time>
+      <span class="mrt-journey-wizard__timeline-node" aria-hidden="true" />
+      <span class="mrt-journey-wizard__timeline-station">{{ stop.station_title }}</span>
     </div>
     <button
       v-if="stops.length > 2"
       type="button"
-      class="mrt-jw-btn mrt-jw-btn--passed mrt-journey-wizard__passed-toggle"
+      class="mrt-journey-wizard__passed-toggle"
       @click="showAllStops = !showAllStops"
     >
       {{ showAllStops ? '∧ ' + cfgStr(cfg, 'hideStops', 'Hide') : '∨ ' + cfgStr(cfg, 'showStops', 'Show stops') }}

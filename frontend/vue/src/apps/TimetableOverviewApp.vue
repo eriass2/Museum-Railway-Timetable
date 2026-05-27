@@ -1,32 +1,28 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
-import type { MrtVueConfig } from '../useMrtConfig';
-import { mrtPost, msg } from '../api/mrtApi';
+import type { OverviewVueConfig } from '../config/types';
+import { useMrtAjax } from '../composables/useMrtAjax';
+import { msg } from '../api/mrtApi';
 
-const props = defineProps<{ config: MrtVueConfig }>();
+const props = defineProps<{ config: OverviewVueConfig }>();
 
 const html = ref('');
-const loading = ref(true);
-const error = ref('');
+const { loading, error, run } = useMrtAjax(props.config);
 
 onMounted(async () => {
-  const id = Number(props.config.timetableId);
+  const id = props.config.timetableId;
   if (!id) {
     error.value = msg(props.config, 'errorLoading', 'Timetable not found.');
-    loading.value = false;
     return;
   }
 
-  const res = await mrtPost<{ html: string }>(props.config, 'mrt_timetable_overview_html', {
+  const res = await run<{ html: string }>('mrt_timetable_overview_html', {
     timetable_id: id,
   });
 
-  loading.value = false;
-  if (!res.success || !res.data?.html) {
-    error.value = res.message || msg(props.config, 'errorLoading', 'Error loading timetable.');
-    return;
+  if (res.success && res.data?.html) {
+    html.value = res.data.html;
   }
-  html.value = res.data.html;
 });
 </script>
 

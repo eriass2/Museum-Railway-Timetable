@@ -1,48 +1,39 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { MrtVueConfig } from '../useMrtConfig';
-import { buildMonthGrid, type MonthDayMeta } from '../utils/monthGrid';
-import { mrtPost, msg } from '../api/mrtApi';
+import type { MonthDayMeta, MonthVueConfig } from '../config/types';
+import { buildMonthGrid } from '../utils/monthGrid';
+import { chunkWeekRows } from '../utils/calendarGrid';
+import { useMrtAjax } from '../composables/useMrtAjax';
+import { msg } from '../api/mrtApi';
 
-const props = defineProps<{ config: MrtVueConfig }>();
+const props = defineProps<{ config: MonthVueConfig }>();
 
-const atts = computed(() => (props.config.atts || {}) as Record<string, unknown>);
+const atts = computed(() => props.config.atts || {});
 const showCounts = computed(() => Boolean(atts.value.show_counts));
 const showLegend = computed(() => Boolean(atts.value.legend));
 const showNav = computed(() => Boolean(atts.value.nav));
 const trainType = computed(() => String(atts.value.train_type || ''));
 
-const dates = computed(
-  () => (props.config.dates || {}) as Record<number, MonthDayMeta>,
-);
+const dates = computed(() => props.config.dates || {});
 const cells = computed(() =>
   buildMonthGrid(
     Number(props.config.daysInMonth) || 0,
     Number(props.config.weekdayFirst) || 1,
     Number(props.config.weekdayFirstSunday) || 0,
     Boolean(props.config.startMonday),
-    dates.value,
+    dates.value as Record<number, MonthDayMeta>,
   ),
 );
 
-const cellRows = computed(() => {
-  const rows: typeof cells.value[] = [];
-  const list = cells.value;
-  for (let i = 0; i < list.length; i += 7) {
-    rows.push(list.slice(i, i + 7));
-  }
-  return rows;
-});
+const cellRows = computed(() => chunkWeekRows(cells.value));
 
 const selectedYmd = ref('');
 const dayHtml = ref('');
-const dayLoading = ref(false);
-const dayError = ref('');
 const panelVisible = ref(false);
 
-const weekdayHeaders = computed(
-  () => (props.config.weekdayHeaders as string[]) || [],
-);
+const { loading: dayLoading, error: dayError, run } = useMrtAjax(props.config);
+
+const weekdayHeaders = computed(() => props.config.weekdayHeaders || []);
 
 async function onDayClick(ymd: string) {
   if (!ymd) {
@@ -50,21 +41,16 @@ async function onDayClick(ymd: string) {
   }
   selectedYmd.value = ymd;
   panelVisible.value = true;
-  dayLoading.value = true;
-  dayError.value = '';
   dayHtml.value = '';
 
-  const res = await mrtPost<{ html: string }>(props.config, 'mrt_get_timetable_for_date', {
+  const res = await run<{ html: string }>('mrt_get_timetable_for_date', {
     date: ymd,
     train_type: trainType.value,
   });
 
-  dayLoading.value = false;
-  if (!res.success || !res.data?.html) {
-    dayError.value = res.message || msg(props.config, 'errorLoading', 'Error loading timetable.');
-    return;
+  if (res.success && res.data?.html) {
+    dayHtml.value = res.data.html;
   }
-  dayHtml.value = res.data.html;
 }
 </script>
 
@@ -72,28 +58,28 @@ async function onDayClick(ymd: string) {
   <div
     class="mrt-month mrt-my-1"
     role="region"
-    :aria-label="String(config.monthAriaLabel || '')"
+    :aria-label="config.monthAriaLabel || ''"
     :data-train-type="trainType"
   >
     <div v-if="showNav" class="mrt-month-nav" role="navigation">
-      <a class="mrt-btn mrt-btn--secondary mrt-month-nav__prev" :href="String(config.prevMonthUrl || '#')">
+      <a class="mrt-btn mrt-btn--secondary mrt-month-nav__prev" :href="config.prevMonthUrl || '#'">
         <span class="mrt-month-nav__chev" aria-hidden="true">‹</span>
-        {{ String(config.stringsPrevMonth || 'Previous month') }}
+        {{ config.stringsPrevMonth || 'Previous month' }}
       </a>
       <h2 class="mrt-month-nav__title mrt-heading mrt-heading--lg mrt-font-semibold">
-        {{ String(config.monthTitle || '') }}
+        {{ config.monthTitle || '' }}
       </h2>
-      <a class="mrt-btn mrt-btn--secondary mrt-month-nav__next" :href="String(config.nextMonthUrl || '#')">
-        {{ String(config.stringsNextMonth || 'Next month') }}
+      <a class="mrt-btn mrt-btn--secondary mrt-month-nav__next" :href="config.nextMonthUrl || '#'">
+        {{ config.stringsNextMonth || 'Next month' }}
         <span class="mrt-month-nav__chev" aria-hidden="true">›</span>
       </a>
     </div>
     <div v-else class="mrt-heading mrt-heading--lg mrt-font-semibold">
-      {{ String(config.monthTitle || '') }}
+      {{ config.monthTitle || '' }}
     </div>
 
     <table class="mrt-month-table">
-      <caption class="mrt-month-table__caption">{{ String(config.tableCaption || '') }}</caption>
+      <caption class="mrt-month-table__caption">{{ config.tableCaption || '' }}</caption>
       <thead>
         <tr>
           <th v-for="(h, i) in weekdayHeaders" :key="i" scope="col">{{ h }}</th>
@@ -115,7 +101,7 @@ async function onDayClick(ymd: string) {
                 class="mrt-day mrt-running mrt-day-clickable mrt-cursor-pointer"
                 :class="{ 'mrt-day-active': selectedYmd === cell.info.ymd }"
                 :aria-pressed="selectedYmd === cell.info.ymd"
-                @click="onDayClick(cell.info.ymd)"
+                @click="onDayClick(cell.info.ymd || '')"
               >
                 <span class="mrt-daynum" aria-hidden="true">{{ cell.day }}</span>
                 <span class="mrt-dot" aria-hidden="true">{{
@@ -131,13 +117,13 @@ async function onDayClick(ymd: string) {
     <div v-if="showLegend" class="mrt-legend mrt-text-base mrt-text-primary mrt-mt-sm">
       <span class="mrt-legend-item mrt-inline-flex mrt-items-center mrt-gap-xs mrt-mr-sm">
         <span class="mrt-dot mrt-dot--green" aria-hidden="true" />
-        {{ String(config.legendServiceDay || '') }}
+        {{ config.legendServiceDay || '' }}
       </span>
       <span v-if="showCounts" class="mrt-text-small mrt-opacity-85">
-        ({{ String(config.legendCountHint || '') }})
+        ({{ config.legendCountHint || '' }})
       </span>
       <span class="mrt-text-tertiary mrt-text-small">
-        ({{ String(config.legendClickHint || '') }})
+        ({{ config.legendClickHint || '' }})
       </span>
     </div>
 

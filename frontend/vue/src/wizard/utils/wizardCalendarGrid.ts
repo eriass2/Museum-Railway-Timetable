@@ -1,3 +1,4 @@
+import { chunkWeekRows } from '../../utils/calendarGrid';
 import type { CalendarDayStatus } from '../types';
 import { monthStartColumn, daysInMonth, ymdFromParts } from './wizardDate';
 
@@ -24,17 +25,7 @@ export function buildWizardCalendarGrid(
   while (flat.length % 7 !== 0) {
     flat.push({ kind: 'pad' });
   }
-  const rows: WizardCalCell[][] = [];
-  for (let i = 0; i < flat.length; i += 7) {
-    rows.push(flat.slice(i, i + 7));
-  }
-  return rows;
+  return chunkWeekRows(flat);
 }
 
-export function orderedWeekdayHeaders(abbrev: string[], startOfWeek: number): string[] {
-  const out: string[] = [];
-  for (let i = 0; i < 7; i++) {
-    out.push(abbrev[(startOfWeek + i) % 7] || '');
-  }
-  return out;
-}
+export { orderedWeekdayHeaders } from '../../utils/calendarGrid';

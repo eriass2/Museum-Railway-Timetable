@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, watch } from 'vue';
-import { mrtPost } from '../../api/mrtApi';
-import { wizardKey } from '../injection';
+import { computed, onMounted, ref, watch } from 'vue';
+import { useWizardContext } from '../../composables/useWizardContext';
+import { useMrtAjax } from '../../composables/useMrtAjax';
+import MrtStepShell from '../../components/MrtStepShell.vue';
+import WizardCalendarGrid from './WizardCalendarGrid.vue';
+import WizardCalendarLegend from './WizardCalendarLegend.vue';
 import type { CalendarDayStatus } from '../types';
 import { cfgStr } from '../utils/wizardLabels';
 import {
@@ -12,43 +15,40 @@ import {
 } from '../utils/wizardDate';
 import { buildWizardCalendarGrid, orderedWeekdayHeaders } from '../utils/wizardCalendarGrid';
 
-const wizard = inject(wizardKey)!;
+const { store, cfg, config } = useWizardContext();
+const { loading, run } = useMrtAjax(config);
 
-const startOfWeek = Number(wizard.config.startOfWeek ?? 1);
-const loading = ref(false);
+const startOfWeek = Number(config.startOfWeek ?? 1);
 const daysMap = ref<Record<string, CalendarDayStatus>>({});
 
-const monthNames = computed(() => wizard.cfg.value.monthNames as string[] | undefined);
-const weekdayAbbrev = computed(() => (wizard.cfg.value.weekdayAbbrev as string[]) || []);
-const selectedYmd = computed(() => wizard.dateYmd.value);
+const monthNames = computed(() => cfg.value.monthNames as string[] | undefined);
+const weekdayAbbrev = computed(() => (cfg.value.weekdayAbbrev as string[]) || []);
 
 const monthTitle = computed(() =>
-  calendarMonthTitle(wizard.calYear.value, wizard.calMonth.value, monthNames.value),
+  calendarMonthTitle(store.calYear, store.calMonth, monthNames.value),
 );
 
 const weekdayHeaders = computed(() => orderedWeekdayHeaders(weekdayAbbrev.value, startOfWeek));
 
 const gridRows = computed(() =>
-  buildWizardCalendarGrid(wizard.calYear.value, wizard.calMonth.value, startOfWeek, daysMap.value),
+  buildWizardCalendarGrid(store.calYear, store.calMonth, startOfWeek, daysMap.value),
 );
 
+const stepTitle = computed(() => cfgStr(cfg, 'stepDate', 'Välj datum'));
+
 async function loadCalendar(year: number, month: number): Promise<void> {
-  wizard.calYear.value = year;
-  wizard.calMonth.value = month;
-  if (wizard.debugCalendarDays.value) {
-    daysMap.value = wizard.debugCalendarDays.value;
-    loading.value = false;
+  store.calYear = year;
+  store.calMonth = month;
+  if (store.debugCalendarDays) {
+    daysMap.value = store.debugCalendarDays;
     return;
   }
-  loading.value = true;
-  const res = await mrtPost<{ year: number; month: number; days: Record<string, CalendarDayStatus> }>(
-    wizard.config,
+  const res = await run<{ year: number; month: number; days: Record<string, CalendarDayStatus> }>(
     'mrt_journey_calendar_month',
-    { from_station: wizard.fromId.value, to_station: wizard.toId.value, year, month },
+    { from_station: store.fromId, to_station: store.toId, year, month },
   );
-  loading.value = false;
   if (!res.success || !res.data) {
-    wizard.showError(cfgStr(wizard.cfg, 'errorGeneric', 'Something went wrong.'));
+    store.showError(cfgStr(cfg, 'errorGeneric', 'Something went wrong.'));
     return;
   }
   daysMap.value = res.data.days || {};
@@ -57,26 +57,26 @@ async function loadCalendar(year: number, month: number): Promise<void> {
 function dayAria(ymd: string, status: CalendarDayStatus): string {
   const human = formatYmdForDisplay(ymd, monthNames.value);
   if (status === 'ok') {
-    return cfgStr(wizard.cfg, 'dayDateOk', human).replace('%s', human);
+    return cfgStr(cfg, 'dayDateOk', human).replace('%s', human);
   }
   if (status === 'traffic_no_match') {
-    return cfgStr(wizard.cfg, 'dayDateTraffic', human).replace('%s', human);
+    return cfgStr(cfg, 'dayDateTraffic', human).replace('%s', human);
   }
-  return cfgStr(wizard.cfg, 'dayDateNone', human).replace('%s', human);
+  return cfgStr(cfg, 'dayDateNone', human).replace('%s', human);
 }
 
 function onPickDate(ymd: string): void {
-  wizard.dateYmd.value = ymd;
-  wizard.goTo('outbound');
+  store.dateYmd = ymd;
+  store.goTo('outbound');
 }
 
 function onBack(): void {
-  wizard.dateYmd.value = '';
-  wizard.goTo('route');
+  store.dateYmd = '';
+  store.goTo('route');
 }
 
 function shiftMonth(delta: number): void {
-  const cm = addCalendarMonths(wizard.calYear.value, wizard.calMonth.value, delta);
+  const cm = addCalendarMonths(store.calYear, store.calMonth, delta);
   void loadCalendar(cm.year, cm.month);
 }
 
@@ -86,122 +86,61 @@ function goToday(): void {
 }
 
 onMounted(() => {
-  if (!wizard.calYear.value) {
+  if (!store.calYear) {
     const now = todayYearMonth();
     void loadCalendar(now.year, now.month);
   } else {
-    void loadCalendar(wizard.calYear.value, wizard.calMonth.value);
+    void loadCalendar(store.calYear, store.calMonth);
   }
 });
 
 watch(
-  () => wizard.step.value,
+  () => store.step,
   (s) => {
-    if (s === 'date' && wizard.calYear.value) {
-      void loadCalendar(wizard.calYear.value, wizard.calMonth.value);
+    if (s === 'date' && store.calYear) {
+      void loadCalendar(store.calYear, store.calMonth);
     }
   },
 );
 </script>
 
 <template>
-  <div class="mrt-jw-panel mrt-journey-wizard__panel mrt-jw-panel--active mrt-journey-wizard__panel--active" role="region">
-    <header class="mrt-jw-step-head mrt-journey-wizard__step-head">
-      <button type="button" class="mrt-jw-btn mrt-jw-btn--back mrt-journey-wizard__back" @click="onBack">
-        {{ cfgStr(wizard.cfg, 'back', '← Tillbaka') }}
-      </button>
-      <p class="mrt-jw-step-head__context mrt-journey-wizard__context">{{ wizard.contextLine }}</p>
-    </header>
-    <h3 class="mrt-jw-typo mrt-jw-typo--step-title mrt-journey-wizard__step-title">
-      {{ cfgStr(wizard.cfg, 'stepDate', 'Välj datum') }}
-    </h3>
-    <div class="mrt-jw-card mrt-jw-card--calendar mrt-journey-wizard__calendar-card">
-      <div class="mrt-jw-calendar__nav mrt-journey-wizard__calendar-nav">
+  <div class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active" role="region">
+    <MrtStepShell :cfg="cfg" :context-line="store.contextLine" :title="stepTitle" @back="onBack" />
+    <div class="mrt-journey-wizard__calendar-card">
+      <div class="mrt-journey-wizard__calendar-nav">
         <button
           type="button"
-          class="mrt-jw-btn mrt-jw-btn--cal-nav mrt-journey-wizard__cal-prev"
+          class="mrt-journey-wizard__cal-prev"
           aria-label="Previous month"
           @click="shiftMonth(-1)"
         >
           ‹
         </button>
-        <span class="mrt-jw-typo mrt-jw-typo--cal-title mrt-journey-wizard__cal-title" aria-live="polite">{{ monthTitle }}</span>
+        <span class="mrt-journey-wizard__cal-title" aria-live="polite">{{ monthTitle }}</span>
         <button
           type="button"
-          class="mrt-jw-btn mrt-jw-btn--cal-nav mrt-journey-wizard__cal-next"
+          class="mrt-journey-wizard__cal-next"
           aria-label="Next month"
           @click="shiftMonth(1)"
         >
           ›
         </button>
-        <button
-          type="button"
-          class="mrt-jw-btn mrt-jw-btn--cal-today mrt-journey-wizard__cal-today"
-          @click="goToday"
-        >
-          {{ cfgStr(wizard.cfg, 'thisMonth', 'Denna månad') }}
+        <button type="button" class="mrt-journey-wizard__cal-today" @click="goToday">
+          {{ cfgStr(cfg, 'thisMonth', 'Denna månad') }}
         </button>
       </div>
-      <div class="mrt-jw-calendar__grid mrt-journey-wizard__calendar" role="region" :aria-busy="loading">
-        <p v-if="loading" class="mrt-empty">{{ cfgStr(wizard.cfg, 'loading', 'Loading...') }}</p>
-        <table v-else role="grid" :aria-label="cfgStr(wizard.cfg, 'calendarGridLabel', '')">
-          <thead>
-            <tr>
-              <th v-for="(h, i) in weekdayHeaders" :key="i" scope="col">{{ h }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(row, ri) in gridRows" :key="ri">
-              <td v-for="(cell, ci) in row" :key="`${ri}-${ci}`">
-                <template v-if="cell.kind === 'pad'" />
-                <button
-                  v-else-if="cell.status === 'ok'"
-                  type="button"
-                  class="mrt-jw-btn mrt-jw-btn--day mrt-jw-btn--day-ok mrt-journey-wizard__day mrt-journey-wizard__day--ok"
-                  :class="{ 'is-selected': selectedYmd === cell.ymd }"
-                  :aria-label="dayAria(cell.ymd, cell.status)"
-                  :aria-pressed="selectedYmd === cell.ymd"
-                  @click="onPickDate(cell.ymd)"
-                >
-                  {{ cell.day }}
-                </button>
-                <button
-                  v-else-if="cell.status === 'traffic_no_match'"
-                  type="button"
-                  class="mrt-jw-btn mrt-jw-btn--day mrt-jw-btn--day-traffic mrt-journey-wizard__day mrt-journey-wizard__day--traffic"
-                  disabled
-                  :aria-label="dayAria(cell.ymd, cell.status)"
-                >
-                  {{ cell.day }}
-                </button>
-                <button
-                  v-else
-                  type="button"
-                  class="mrt-jw-btn mrt-jw-btn--day mrt-jw-btn--day-none mrt-journey-wizard__day mrt-journey-wizard__day--none"
-                  disabled
-                  :aria-label="dayAria(cell.ymd, cell.status)"
-                >
-                  {{ cell.day }}
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <ul class="mrt-jw-calendar__legend mrt-journey-wizard__legend">
-        <li>
-          <span class="mrt-jw-calendar__swatch mrt-jw-calendar__swatch--ok mrt-journey-wizard__swatch mrt-journey-wizard__swatch--ok" aria-hidden="true" />
-          {{ cfgStr(wizard.cfg, 'legendOk', '') }}
-        </li>
-        <li>
-          <span class="mrt-jw-calendar__swatch mrt-jw-calendar__swatch--traffic mrt-journey-wizard__swatch mrt-journey-wizard__swatch--traffic" aria-hidden="true" />
-          {{ cfgStr(wizard.cfg, 'legendTraffic', '') }}
-        </li>
-        <li>
-          <span class="mrt-jw-calendar__swatch mrt-jw-calendar__swatch--none mrt-journey-wizard__swatch mrt-journey-wizard__swatch--none" aria-hidden="true" />
-          {{ cfgStr(wizard.cfg, 'legendNone', '') }}
-        </li>
-      </ul>
+      <WizardCalendarGrid
+        :loading="loading"
+        :weekday-headers="weekdayHeaders"
+        :grid-rows="gridRows"
+        :selected-ymd="store.dateYmd"
+        :grid-label="cfgStr(cfg, 'calendarGridLabel', '')"
+        :loading-label="cfgStr(cfg, 'loading', 'Loading...')"
+        :day-aria="dayAria"
+        @pick="onPickDate"
+      />
+      <WizardCalendarLegend :cfg="cfg" />
     </div>
   </div>
 </template>
