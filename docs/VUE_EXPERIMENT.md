@@ -68,7 +68,7 @@ npm run dev
 
 ## PHP integration
 
-- `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS, mount HTML
+- `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS (`type="module"`), mount HTML
 - `inc/public/vue-shortcode-config.php` — JSON config per shortcode
 - Shortcodes branch early to `MRT_render_vue_mount()` when `MRT_use_vue_frontend()`
 

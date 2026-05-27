@@ -169,4 +169,6 @@ function MRT_enqueue_vue_frontend_assets(): void {
 		MRT_VERSION,
 		true
 	);
+	// Vite outputs ES modules (incl. dynamic import chunks for the wizard).
+	wp_script_add_data( 'mrt-vue-public', 'type', 'module' );
 }
