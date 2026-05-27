@@ -65,6 +65,7 @@ onMounted(async () => {
 <template>
   <div
     class="mrt-journey-wizard mrt-my-lg"
+    :data-step="store.step"
     :class="{
       'mrt-journey-wizard--embedded': embedded,
       'mrt-journey-wizard--debug': debug !== '',

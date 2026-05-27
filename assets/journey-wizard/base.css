@@ -52,7 +52,7 @@
     background: var(--mrt-jw-green-dark);
 }
 
-.mrt-journey-wizard__hero:has([data-wizard-step="route"]:not([hidden])) {
+.mrt-journey-wizard[data-step="route"] .mrt-journey-wizard__hero {
     min-height: 0;
 }
 
@@ -300,7 +300,7 @@
     color: var(--mrt-jw-text);
 }
 
-.mrt-journey-wizard--embedded .mrt-journey-wizard__hero:has([data-wizard-step="route"]:not([hidden])) {
+.mrt-journey-wizard--embedded[data-step="route"] .mrt-journey-wizard__hero {
     min-height: auto;
 }
 
