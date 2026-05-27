@@ -23,34 +23,75 @@ if (!jsRel) {
   process.exit(1);
 }
 
-const wizardConfig = {
-  app: 'wizard',
-  ajaxurl: '/wp-admin/admin-ajax.php',
-  nonce: 'e2e-test',
-  stations: [
-    { id: 1, title: 'Uppsala' },
-    { id: 2, title: 'Märsta' },
-  ],
-  ticketUrl: '',
-  timetableId: 0,
-  embedded: true,
-  debug: '',
-  heroSubtitle: 'E2E fixture',
-  startOfWeek: 1,
-  wizard: {
-    stepRoute: 'Sök resa',
-    stepDate: 'Datum',
-    from: 'Från',
-    to: 'Till',
-    searchTrip: 'Sök resa',
-  },
-  labels: {
-    routeTitle: 'Sök din resa',
-    back: '← Tillbaka',
-  },
-};
+function buildWizardConfig(requestUrl) {
+  const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
+  const debug = params.get('debug') || '';
 
-const indexHtml = `<!DOCTYPE html>
+  const config = {
+    app: 'wizard',
+    ajaxurl: '/wp-admin/admin-ajax.php',
+    nonce: 'e2e-test',
+    stations: [
+      { id: 1, title: 'Uppsala' },
+      { id: 2, title: 'Märsta' },
+    ],
+    ticketUrl: '',
+    timetableId: 0,
+    embedded: true,
+    debug,
+    heroSubtitle: 'E2E fixture',
+    startOfWeek: 1,
+    wizard: {
+      stepRoute: 'Sök resa',
+      stepDate: 'Välj datum',
+      from: 'Från',
+      to: 'Till',
+      searchTrip: 'Sök resa',
+      monthNames: [
+        'januari',
+        'februari',
+        'mars',
+        'april',
+        'maj',
+        'juni',
+        'juli',
+        'augusti',
+        'september',
+        'oktober',
+        'november',
+        'december',
+      ],
+      weekdayAbbrev: ['mån', 'tis', 'ons', 'tors', 'fre', 'lör', 'sön'],
+    },
+    labels: {
+      routeTitle: 'Sök din resa',
+      back: '← Tillbaka',
+      stepDate: 'Välj datum',
+    },
+  };
+
+  if (debug === 'date') {
+    config.wizard.debugPresets = {
+      date: {
+        step: 'date',
+        tripType: 'single',
+        from: 1,
+        to: 2,
+        fromTitle: 'Uppsala',
+        toTitle: 'Märsta',
+        calendarYear: 2026,
+        calendarMonth: 5,
+        calendarDays: { '2026-05-15': 'ok', '2026-05-16': 'none' },
+      },
+    };
+  }
+
+  return config;
+}
+
+function renderWizardHtml(requestUrl) {
+  const wizardConfig = buildWizardConfig(requestUrl);
+  return `<!DOCTYPE html>
 <html lang="sv">
 <head>
   <meta charset="utf-8" />
@@ -63,6 +104,7 @@ const indexHtml = `<!DOCTYPE html>
   <script src="/${jsRel}"></script>
 </body>
 </html>`;
+}
 
 const mime = {
   '.js': 'application/javascript',
@@ -74,13 +116,14 @@ const port = Number(process.env.MRT_E2E_PORT || 5199);
 
 http
   .createServer((req, res) => {
-    const url = req.url?.split('?')[0] || '/';
-    if (url === '/' || url === '/wizard') {
+    const rawUrl = req.url || '/';
+    const pathOnly = rawUrl.split('?')[0] || '/';
+    if (pathOnly === '/' || pathOnly === '/wizard') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(indexHtml);
+      res.end(renderWizardHtml(rawUrl));
       return;
     }
-    const rel = url.replace(/^\//, '');
+    const rel = pathOnly.replace(/^\//, '');
     const filePath = join(distDir, rel);
     if (!filePath.startsWith(distDir) || !existsSync(filePath)) {
       res.writeHead(404);
