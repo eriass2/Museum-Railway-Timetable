@@ -23,6 +23,30 @@ function MRT_use_vue_frontend(): bool {
 }
 
 /**
+ * Mark that a Vue shortcode rendered (for late asset enqueue).
+ */
+function MRT_vue_shortcode_mark_used(): void {
+	$GLOBALS['mrt_vue_shortcode_used'] = true;
+}
+
+/**
+ * @return bool
+ */
+function MRT_vue_shortcode_was_used(): bool {
+	return ! empty( $GLOBALS['mrt_vue_shortcode_used'] );
+}
+
+/**
+ * Enqueue Vue bundle once (idempotent).
+ */
+function MRT_enqueue_vue_frontend_assets_if_needed(): void {
+	if ( wp_script_is( 'mrt-vue-public', 'enqueued' ) || wp_script_is( 'mrt-vue-public', 'done' ) ) {
+		return;
+	}
+	MRT_enqueue_vue_frontend_assets();
+}
+
+/**
  * Path to built Vue manifest (Vite).
  */
 function MRT_vue_dist_dir(): string {
@@ -85,6 +109,11 @@ function MRT_render_vue_mount( string $app, array $config ): string {
 	if ( ! is_string( $json ) ) {
 		$json = '{}';
 	}
+	// Prevent </script> breaking the inline JSON block.
+	$json = str_replace( '</', '<\\/', $json );
+
+	MRT_vue_shortcode_mark_used();
+	MRT_enqueue_vue_frontend_assets_if_needed();
 
 	$notice = '';
 	if ( null === MRT_vue_read_manifest() ) {
@@ -95,9 +124,9 @@ function MRT_render_vue_mount( string $app, array $config ): string {
 	}
 
 	return $notice . sprintf(
-		'<div class="mrt-vue-root" data-mrt-vue-app="%1$s" data-mrt-config="%2$s"></div>',
+		'<div class="mrt-vue-root" data-mrt-vue-app="%1$s"><script type="application/json" class="mrt-vue-config">%2$s</script></div>',
 		esc_attr( $app ),
-		esc_attr( $json )
+		$json
 	);
 }
 

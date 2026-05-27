@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import $ from '../jquery-globals';
 
 type WizardCfg = Record<string, unknown> & {
   ajaxurl?: string;
@@ -23,9 +23,6 @@ type WizardContext = {
   buildStepNav: () => void;
   updateStepNav: (step: string) => void;
 };
-
-window.jQuery = $;
-window.$ = $;
 
 import '../lib/mrt-string-utils.js';
 import '../lib/mrt-date-utils.js';

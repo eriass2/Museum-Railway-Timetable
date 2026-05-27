@@ -267,10 +267,18 @@ function MRT_frontend_script_localization(): array {
  */
 function MRT_enqueue_frontend_assets(): void {
 	$flags = MRT_frontend_shortcode_flags_from_post();
-	if ( ! $flags['has_any'] ) {
-		return;
+	if ( $flags['has_any'] ) {
+		MRT_enqueue_vue_frontend_assets_if_needed();
 	}
-	MRT_enqueue_vue_frontend_assets();
+}
+
+/**
+ * Enqueue Vue assets when shortcodes rendered after wp_enqueue_scripts (e.g. block themes).
+ */
+function MRT_enqueue_frontend_assets_late(): void {
+	if ( MRT_vue_shortcode_was_used() ) {
+		MRT_enqueue_vue_frontend_assets_if_needed();
+	}
 }
 /**
  * Widen theme content area on pages that use plugin shortcodes.
@@ -287,3 +295,4 @@ function MRT_frontend_body_class( array $classes ): array {
 }
 add_filter( 'body_class', 'MRT_frontend_body_class' );
 add_action( 'wp_enqueue_scripts', 'MRT_enqueue_frontend_assets' );
+add_action( 'wp_footer', 'MRT_enqueue_frontend_assets_late', 1 );

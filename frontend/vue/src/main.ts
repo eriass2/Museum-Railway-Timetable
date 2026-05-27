@@ -21,4 +21,12 @@ function mountRoot(el: HTMLElement): void {
   createApp(App, { config }).mount(el);
 }
 
-document.querySelectorAll<HTMLElement>('[data-mrt-vue-app]').forEach(mountRoot);
+function bootVueApps(): void {
+  document.querySelectorAll<HTMLElement>('[data-mrt-vue-app]').forEach(mountRoot);
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', bootVueApps);
+} else {
+  bootVueApps();
+}

@@ -9,7 +9,8 @@ export type MrtVueConfig = {
 };
 
 export function parseMountConfig(el: HTMLElement): MrtVueConfig | null {
-  const raw = el.getAttribute('data-mrt-config');
+  const script = el.querySelector('script.mrt-vue-config');
+  const raw = script?.textContent?.trim() || el.getAttribute('data-mrt-config');
   if (!raw) {
     return null;
   }
