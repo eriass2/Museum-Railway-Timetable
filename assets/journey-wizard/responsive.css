@@ -38,14 +38,12 @@
         font-size: 1.2rem;
     }
 
-    .mrt-jw-trip-head,
     .mrt-journey-wizard__trip-main,
     .mrt-journey-wizard__selected-card,
     .mrt-journey-wizard__summary-main {
         grid-template-columns: 1fr;
     }
 
-    .mrt-jw-trip-head__side,
     .mrt-journey-wizard__trip-side,
     .mrt-journey-wizard__summary-side {
         justify-items: start;

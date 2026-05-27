@@ -16,44 +16,34 @@
     border-bottom: 2px solid rgba(255, 255, 255, 0.35);
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-jw-selected-label,
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-label {
     color: #ffffff;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-jw-card--selected,
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-card {
     border: 3px solid var(--mrt-jw-yellow);
     background: var(--mrt-jw-surface);
     color: var(--mrt-jw-text);
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-jw-typo--time,
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__trip-time,
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-jw-typo--route,
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__trip-route {
     color: var(--mrt-jw-text);
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-jw-vehicle,
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__vehicle {
     color: #151515;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-jw-typo--duration,
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__duration {
     color: #3f3f3f;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="outbound"] .mrt-jw-step-head,
-.mrt-journey-wizard__panel[data-wizard-step="return"] .mrt-jw-step-head,
 .mrt-journey-wizard__panel[data-wizard-step="outbound"] .mrt-journey-wizard__step-head,
 .mrt-journey-wizard__panel[data-wizard-step="return"] .mrt-journey-wizard__step-head {
     margin-bottom: 0.15rem;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="outbound"] .mrt-jw-typo--step-title,
-.mrt-journey-wizard__panel[data-wizard-step="return"] .mrt-jw-typo--step-title,
 .mrt-journey-wizard__panel[data-wizard-step="outbound"] .mrt-journey-wizard__step-title,
 .mrt-journey-wizard__panel[data-wizard-step="return"] .mrt-journey-wizard__step-title {
     margin-top: 0.25rem;
@@ -72,11 +62,8 @@
 
 .mrt-journey-wizard__cal-prev:focus-visible,
 .mrt-journey-wizard__cal-next:focus-visible,
-.mrt-jw-btn--back:focus-visible,
 .mrt-journey-wizard__back:focus-visible,
-.mrt-jw-btn--cta:focus-visible,
 .mrt-journey-wizard__cta:focus-visible,
-.mrt-jw-btn--select:focus-visible,
 .mrt-journey-wizard__btn-select:focus-visible {
     outline: 3px solid var(--mrt-jw-focus);
     outline-offset: 3px;

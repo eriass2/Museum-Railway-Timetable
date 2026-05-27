@@ -1,6 +1,8 @@
-# Journey wizard (frontend modules)
+# Journey wizard styles
 
-Modular JS for `[museum_journey_wizard]`. Loaded in order via `MRT_register_journey_wizard_script_modules()` in `inc/assets/frontend.php`.
+**Vue mode** (`MRT_VUE_FRONTEND`): styles ship via Vite (`assets/journey-wizard/*.css` imported from `frontend/vue`). Templates use `.mrt-journey-wizard__*` only.
+
+**Legacy jQuery mode** (optional): modular JS below, loaded via `MRT_register_journey_wizard_script_modules()` in `inc/assets/frontend.php`.
 
 | Module | Responsibility |
 |--------|----------------|
