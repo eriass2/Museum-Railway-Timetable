@@ -139,11 +139,31 @@
     font-weight: 800;
 }
 
+.mrt-journey-wizard__hero-title:focus,
+.mrt-journey-wizard__step-title:focus {
+    outline: none;
+}
+
+.mrt-journey-wizard__hero-title:focus-visible,
+.mrt-journey-wizard__step-title:focus-visible {
+    outline: 3px solid var(--mrt-wizard-focus);
+    outline-offset: 4px;
+}
+
 .mrt-journey-wizard__station-input:focus-visible,
 .mrt-journey-wizard__trip-type-btn:focus-visible,
 .mrt-journey-wizard button:focus-visible,
 .mrt-journey-wizard a:focus-visible,
 .mrt-journey-wizard select:focus-visible {
+    outline: 3px solid var(--mrt-wizard-focus);
+    outline-offset: 3px;
+}
+
+.mrt-journey-wizard__back:focus {
+    outline: none;
+}
+
+.mrt-journey-wizard__back:focus-visible {
     outline: 3px solid var(--mrt-wizard-focus);
     outline-offset: 3px;
 }

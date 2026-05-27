@@ -69,7 +69,7 @@ function MRT_component_debug_page_specs(): array {
 			'option'     => 'mrt_debug_page_wizard_outbound_id',
 			'title'      => __( 'Debug – Wizard (outbound)', 'museum-railway-timetable' ),
 			'menu_label' => __( 'Debug: Wizard outbound', 'museum-railway-timetable' ),
-			'content'    => '[museum_journey_wizard embedded="1" debug="outbound" hero_subtitle="Fixture: trip cards (direct + transfer)"]',
+			'content'    => '[museum_journey_wizard embedded="1" debug="outbound"]',
 		),
 		array(
 			'option'     => 'mrt_debug_page_wizard_return_id',

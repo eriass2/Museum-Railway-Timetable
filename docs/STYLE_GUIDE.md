@@ -4,7 +4,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 
 **Arkitektur och rebuild-design:** [REBUILD_RULES.md](REBUILD_RULES.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Denna guide fokuserar på namngivning, säkerhet och filkonventioner så att regler inte dupliceras.
 
-**Visuell design (färger):** [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) — tokens i `assets/mrt-color-tokens.css`. Använd CSS-variabler, inte hårdkodad hex i nya komponenter.
+**Visuell design (färger):** [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) — tokens i `assets/mrt-color-tokens.css`. **Wizard mot produktion:** [PRODUCTION_WIZARD.md](PRODUCTION_WIZARD.md). Mockups i `docs/mockups/` är arkiverad referens.
 
 ---
 

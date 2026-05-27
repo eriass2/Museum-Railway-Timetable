@@ -14,10 +14,6 @@
     box-sizing: border-box;
 }
 
-.mrt-journey-wizard__panel--active {
-    box-shadow: 0 0 0 3px var(--mrt-wizard-focus);
-}
-
 /* 8. Typography */
 .mrt-journey-wizard__hero-title {
     margin: 0;

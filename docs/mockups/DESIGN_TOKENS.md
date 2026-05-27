@@ -35,9 +35,11 @@ Wizard-CSS använder `--mrt-wizard-*` som pekar på `--mrt-color-*` i token-file
 
 ## Kalender (steg datum)
 
-- Grön = trafik för vald resa (`--ok`)
-- Gul/orange traffic = trafik men ej vald resa
-- Grå = ingen trafik
+- Vit **kalenderkort** på grön panel (`__calendar-card` i `controls-calendar.css`)
+- **Guld** (`accent-600`) = trafik för vald resa (`--day--ok`), vit siffra
+- **Ljusgrå** = trafik men ej vald resa (`--day--traffic`)
+- **Vit + grå text** = ingen trafik (`--day--none`)
+- Månadspilar: platta, gröna — inte 3D-grå chevrons
 
 Se `assets/journey-wizard/controls-calendar.css`.
 

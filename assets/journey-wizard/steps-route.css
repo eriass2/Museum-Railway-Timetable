@@ -151,6 +151,7 @@
     color: var(--mrt-color-on-dark);
 }
 
+.mrt-journey-wizard__search-panel .mrt-journey-wizard__accent-btn,
 .mrt-journey-wizard__search-panel .mrt-journey-wizard__cta,
 .mrt-journey-wizard__search-panel .mrt-btn.mrt-btn--primary.mrt-journey-wizard__cta {
     min-width: 12rem;
