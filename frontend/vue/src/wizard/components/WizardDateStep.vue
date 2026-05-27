@@ -2,10 +2,11 @@
 import { computed } from 'vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useWizardCalendar } from '../composables/useWizardCalendar';
-import MrtStepShell from '../../components/MrtStepShell.vue';
 import WizardCalendarGrid from './WizardCalendarGrid.vue';
 import WizardCalendarLegend from './WizardCalendarLegend.vue';
 import WizardCalendarNav from './WizardCalendarNav.vue';
+import WizardStepHeader from './WizardStepHeader.vue';
+import WizardSurfaceCard from './WizardSurfaceCard.vue';
 import { cfgStr } from '../utils/wizardLabels';
 
 const { store, cfg, config } = useWizardContext();
@@ -16,13 +17,14 @@ const {
   weekdayHeaders,
   gridRows,
   dayAria,
+  hasBookableDays,
   onPickDate,
   shiftMonth,
   goToday,
 } = useWizardCalendar(store, config, cfg);
 
-const stepTitle = computed(() => cfgStr(cfg, 'stepDate', 'Välj datum'));
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
+const showEmptyMonth = computed(() => !loading.value && !hasBookableDays.value);
 
 function onBack(): void {
   store.dateYmd = '';
@@ -35,14 +37,11 @@ function onBack(): void {
     data-wizard-step="date"
     class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
     role="region"
+    :aria-label="cfgStr(cfg, 'stepDate', 'Välj datum')"
   >
-    <MrtStepShell
-      :back-label="backLabel"
-      :context-line="store.contextLine"
-      :title="stepTitle"
-      @back="onBack"
-    />
-    <div class="mrt-journey-wizard__calendar-card">
+    <WizardStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
+
+    <WizardSurfaceCard class="mrt-journey-wizard__calendar-card">
       <WizardCalendarNav
         :cfg="cfg"
         :month-title="monthTitle"
@@ -60,7 +59,13 @@ function onBack(): void {
         :day-aria="dayAria"
         @pick="onPickDate"
       />
+      <p v-if="showEmptyMonth" class="mrt-journey-wizard__calendar-empty" role="status">
+        {{ cfgStr(cfg, 'calendarEmptyMonth', 'Inga bokningsbara dagar denna månad för din resa.') }}
+        <span class="mrt-journey-wizard__calendar-empty-hint">
+          {{ cfgStr(cfg, 'calendarEmptyHint', 'Byt månad med pilarna ovan.') }}
+        </span>
+      </p>
       <WizardCalendarLegend :cfg="cfg" />
-    </div>
+    </WizardSurfaceCard>
   </div>
 </template>

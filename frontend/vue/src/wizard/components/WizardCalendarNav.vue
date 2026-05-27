@@ -35,7 +35,7 @@ const emit = defineEmits<{
       ›
     </button>
     <button type="button" class="mrt-journey-wizard__cal-today" @click="emit('today')">
-      {{ cfgStr(cfg, 'thisMonth', 'Denna månad') }}
+      {{ cfgStr(cfg, 'goToToday', 'Idag') }}
     </button>
   </div>
 </template>

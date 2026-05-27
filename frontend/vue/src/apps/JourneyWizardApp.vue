@@ -4,7 +4,7 @@ import { applyWizardDebugPreset } from '../wizard/composables/useWizardDebug';
 import type { WizardVueConfig } from '../config/types';
 import { createWizardStore } from '../wizard/store/createWizardStore';
 import { wizardKey } from '../wizard/injection';
-import WizardStepNav from '../wizard/components/WizardStepNav.vue';
+import WizardProgress from '../wizard/components/WizardProgress.vue';
 import WizardRouteStep from '../wizard/components/WizardRouteStep.vue';
 import WizardDateStep from '../wizard/components/WizardDateStep.vue';
 import WizardTripStep from '../wizard/components/WizardTripStep.vue';
@@ -69,7 +69,7 @@ onMounted(() => {
         <div v-if="store.error" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive">
           <div class="mrt-alert mrt-alert-error">{{ store.error }}</div>
         </div>
-        <WizardStepNav />
+        <WizardProgress />
         <div ref="panelsRef" class="mrt-journey-wizard__panels">
           <WizardRouteStep
             v-if="store.step === 'route'"

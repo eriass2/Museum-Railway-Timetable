@@ -2,7 +2,8 @@
 import { computed, onMounted, watch } from 'vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useTripConnections } from '../composables/useTripConnections';
-import MrtStepShell from '../../components/MrtStepShell.vue';
+import WizardStepHeader from './WizardStepHeader.vue';
+import WizardSurfaceCard from './WizardSurfaceCard.vue';
 import { cfgStr } from '../utils/wizardLabels';
 import WizardTripCard from './WizardTripCard.vue';
 import { formatTripClock } from '../utils/format';
@@ -18,22 +19,13 @@ const { loading, error, connections, loadConnections } = useTripConnections(
   props.legCtx,
 );
 
-const title = computed(() =>
+const stepLabel = computed(() =>
   props.legCtx === 'outbound'
     ? cfgStr(cfg, 'stepOutbound', 'Välj utresa')
     : cfgStr(cfg, 'stepReturn', 'Välj återresa'),
 );
 
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
-
-const routeText = computed(() =>
-  props.legCtx === 'return'
-    ? `${store.toTitle} → ${store.fromTitle}`
-    : `${store.fromTitle} → ${store.toTitle}`,
-);
-
-const legFrom = computed(() => (props.legCtx === 'return' ? store.toId : store.fromId));
-const legTo = computed(() => (props.legCtx === 'return' ? store.fromId : store.toId));
 
 function onBack(): void {
   store.clearError();
@@ -64,13 +56,11 @@ watch(
     :data-wizard-step="legCtx"
     class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
     role="region"
+    :aria-label="stepLabel"
   >
-    <MrtStepShell
-      :back-label="backLabel"
-      :context-line="store.contextLine"
-      :title="title"
-      @back="onBack"
-    >
+    <WizardStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
+
+    <WizardSurfaceCard>
       <div
         v-if="legCtx === 'return' && store.outbound"
         data-wizard-return-summary
@@ -102,6 +92,6 @@ watch(
           @select="legCtx === 'outbound' ? store.selectOutbound(conn) : store.selectInbound(conn)"
         />
       </div>
-    </MrtStepShell>
+    </WizardSurfaceCard>
   </div>
 </template>

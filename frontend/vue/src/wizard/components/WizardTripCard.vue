@@ -11,6 +11,7 @@ import {
 } from '../utils/connection';
 import { formatDuration, formatTripClock, isWarningNotice } from '../utils/format';
 import { legVehicleKind, legVehicleLabel, trainIconUrl } from '../utils/vehicle';
+import WizardAccentButton from './WizardAccentButton.vue';
 import WizardTripDetail from './WizardTripDetail.vue';
 
 const props = defineProps<{
@@ -94,9 +95,9 @@ async function toggleDetail(): Promise<void> {
         <p v-if="connection.duration_minutes" class="mrt-journey-wizard__duration">
           {{ formatDuration(connection.duration_minutes, cfg) }}
         </p>
-        <button type="button" class="mrt-journey-wizard__btn-select" @click="emit('select')">
+        <WizardAccentButton variant="select" type="button" @click="emit('select')">
           {{ cfgStr(cfg, 'selectTrip', 'Välj →') }}
-        </button>
+        </WizardAccentButton>
       </div>
     </div>
     <button
