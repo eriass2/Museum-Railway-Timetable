@@ -4,14 +4,17 @@ import type { WizardVueConfig } from '../../config/types';
 import type { WizardStore } from '../store/createWizardStore';
 import type { CalendarDayStatus } from '../types';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
-import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
-import {
-  addCalendarMonths,
-  calendarMonthTitle,
-  formatYmdForDisplay,
-  todayYearMonth,
-} from '../utils/wizardDate';
+import { cfgStringArray } from '../utils/wizardLabels';
+import { calendarMonthTitle } from '../utils/wizardDate';
 import { buildWizardCalendarGrid, orderedWeekdayHeaders } from '../utils/wizardCalendarGrid';
+import {
+  goWizardCalendarToday,
+  initWizardCalendar,
+  loadWizardCalendarMonth,
+  pickWizardCalendarDate,
+  shiftWizardCalendarMonth,
+  wizardCalendarDayAria,
+} from './wizardCalendarLoad';
 
 export function useWizardCalendar(
   store: WizardStore,
@@ -37,64 +40,31 @@ export function useWizardCalendar(
     buildWizardCalendarGrid(store.calYear, store.calMonth, startOfWeek, daysMap.value),
   );
 
-  async function loadCalendar(year: number, month: number): Promise<void> {
-    store.calYear = year;
-    store.calMonth = month;
-    if (store.debugCalendarDays) {
-      daysMap.value = store.debugCalendarDays;
-      return;
-    }
-    const res = await run<{ year: number; month: number; days: Record<string, CalendarDayStatus> }>(
-      'mrt_journey_calendar_month',
-      { from_station: store.fromId, to_station: store.toId, year, month },
-    );
-    if (!res.success || !res.data) {
-      store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel.'));
-      return;
-    }
-    daysMap.value = res.data.days || {};
-  }
-
   function dayAria(ymd: string, status: CalendarDayStatus): string {
-    const human = formatYmdForDisplay(ymd, monthNames.value);
-    if (status === 'ok') {
-      return cfgStr(cfg, 'dayDateOk', human).replace('%s', human);
-    }
-    if (status === 'traffic_no_match') {
-      return cfgStr(cfg, 'dayDateTraffic', human).replace('%s', human);
-    }
-    return cfgStr(cfg, 'dayDateNone', human).replace('%s', human);
+    return wizardCalendarDayAria(ymd, status, cfg);
   }
 
   function onPickDate(ymd: string): void {
-    store.dateYmd = ymd;
-    store.goTo('outbound');
+    pickWizardCalendarDate(store, ymd);
   }
 
   function shiftMonth(delta: number): void {
-    const cm = addCalendarMonths(store.calYear, store.calMonth, delta);
-    void loadCalendar(cm.year, cm.month);
+    shiftWizardCalendarMonth(store, cfg, daysMap, run, delta);
   }
 
   function goToday(): void {
-    const now = todayYearMonth();
-    void loadCalendar(now.year, now.month);
+    goWizardCalendarToday(store, cfg, daysMap, run);
   }
 
   onMounted(() => {
-    if (!store.calYear) {
-      const now = todayYearMonth();
-      void loadCalendar(now.year, now.month);
-    } else {
-      void loadCalendar(store.calYear, store.calMonth);
-    }
+    initWizardCalendar(store, config, cfg, daysMap, run);
   });
 
   watch(
     () => store.step,
     (s) => {
       if (s === 'date' && store.calYear) {
-        void loadCalendar(store.calYear, store.calMonth);
+        void loadWizardCalendarMonth(store, cfg, daysMap, run, store.calYear, store.calMonth);
       }
     },
   );

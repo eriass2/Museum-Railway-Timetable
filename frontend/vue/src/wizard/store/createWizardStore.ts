@@ -1,11 +1,14 @@
 import { computed, reactive, type ComputedRef } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
 import type { CalendarDayStatus, JourneyConnection, TripType, WizardStep } from '../types';
-import { cfgStr, cfgStringArray, wizardCfg, type WizardCfg } from '../utils/wizardLabels';
-import { formatYmdForDisplay } from '../utils/wizardDate';
-import { buildStepLabels, buildStepSequence } from './wizardSteps';
-import { resetRouteSelections, validateWizardRoute } from './wizardRoute';
+import { wizardCfg, type WizardCfg } from '../utils/wizardLabels';
+import { resetRouteSelections, validateWizardRoute, goToStep } from './wizardRoute';
 import { applyInboundSelection, applyOutboundSelection } from './wizardSelections';
+import {
+  wizardContextLine,
+  wizardStepLabels,
+  wizardStepSequence,
+} from './wizardStoreGetters';
 
 export type WizardStore = {
   config: WizardVueConfig;
@@ -70,22 +73,13 @@ export function createWizardStore(config: WizardVueConfig): WizardInjection {
     debugReturnConnections: null as JourneyConnection[] | null,
 
     get stepSequence(): WizardStep[] {
-      return buildStepSequence(this.tripType);
+      return wizardStepSequence(this.tripType);
     },
     get stepLabels(): Record<WizardStep, string> {
-      return buildStepLabels(cfg.value);
+      return wizardStepLabels(cfg.value);
     },
     get contextLine(): string {
-      const trip =
-        this.tripType === 'return'
-          ? cfgStr(cfg.value, 'tripTypeReturn', 'Tur- och retur')
-          : cfgStr(cfg.value, 'tripTypeSingle', 'Enkel');
-      const route = `${this.fromTitle} → ${this.toTitle} | ${trip}`;
-      if (!this.dateYmd) {
-        return route;
-      }
-      const human = formatYmdForDisplay(this.dateYmd, cfgStringArray(cfg.value, 'monthNames'));
-      return `${route}\n${human}`;
+      return wizardContextLine(this, cfg.value);
     },
 
     clearError(): void {
@@ -95,8 +89,7 @@ export function createWizardStore(config: WizardVueConfig): WizardInjection {
       this.error = message;
     },
     goTo(next: WizardStep): void {
-      this.clearError();
-      this.step = next;
+      goToStep(this, next);
     },
     validateRoute(fromId?: number, toId?: number): boolean {
       return validateWizardRoute(
