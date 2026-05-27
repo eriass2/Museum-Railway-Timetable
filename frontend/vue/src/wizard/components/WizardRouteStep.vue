@@ -98,6 +98,7 @@ function onSearch(): void {
       <summary class="mrt-journey-wizard__timetable-summary">
         {{ cfgStr(cfg, 'showTimetable', 'Visa tidtabell') }}
       </summary>
+      <!-- Trusted server HTML — see frontend/vue/TRUSTED_HTML.md -->
       <div class="mrt-journey-wizard__timetable-body" v-html="timetableHtml" />
     </details>
   </div>

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import type { MonthDayMeta, MonthVueConfig } from '../config/types';
+import type { MonthVueConfig } from '../config/types';
 import { buildMonthGrid } from '../utils/monthGrid';
 import { chunkWeekRows } from '../utils/calendarGrid';
-import { useMrtAjax } from '../composables/useMrtAjax';
+import { useTimetableHtml } from '../composables/useTimetableHtml';
 import { resolveMrtString } from '../utils/mrtStrings';
 
 const props = defineProps<{ config: MonthVueConfig }>();
@@ -28,29 +28,20 @@ const cells = computed(() =>
 const cellRows = computed(() => chunkWeekRows(cells.value));
 
 const selectedYmd = ref('');
-const dayHtml = ref('');
 const panelVisible = ref(false);
 
-const { loading: dayLoading, error: dayError, run } = useMrtAjax(props.config);
+const { html: dayHtml, loading: dayLoading, error: dayError, fetchDayHtml } =
+  useTimetableHtml(props.config);
 
 const weekdayHeaders = computed(() => props.config.weekdayHeaders || []);
 
-async function onDayClick(ymd: string) {
+async function onDayClick(ymd: string): Promise<void> {
   if (!ymd) {
     return;
   }
   selectedYmd.value = ymd;
   panelVisible.value = true;
-  dayHtml.value = '';
-
-  const res = await run<{ html: string }>('mrt_get_timetable_for_date', {
-    date: ymd,
-    train_type: trainType.value,
-  });
-
-  if (res.success && res.data?.html) {
-    dayHtml.value = res.data.html;
-  }
+  await fetchDayHtml(ymd, trainType.value);
 }
 </script>
 
@@ -138,6 +129,7 @@ async function onDayClick(ymd: string) {
         {{ resolveMrtString(config, 'loading', 'Laddar...') }}
       </p>
       <div v-else-if="dayError" class="mrt-alert mrt-alert-error" role="alert">{{ dayError }}</div>
+      <!-- Trusted server HTML — see frontend/vue/TRUSTED_HTML.md -->
       <div v-else v-html="dayHtml" />
     </div>
   </div>

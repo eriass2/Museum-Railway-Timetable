@@ -50,4 +50,4 @@ From repo root: `composer vue:check`
 | `npm run e2e` | Playwright smoke (static wizard mount; run `build` first) |
 | `npm run e2e:install` | Install Chromium for Playwright (once) |
 
-See [TESTING.md](./TESTING.md) for manual WP regression.
+See [TESTING.md](./TESTING.md) for manual WP regression. Server HTML via `v-html`: [TRUSTED_HTML.md](./TRUSTED_HTML.md).

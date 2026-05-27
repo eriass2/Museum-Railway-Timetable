@@ -1,28 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { onMounted } from 'vue';
 import type { OverviewVueConfig } from '../config/types';
-import { useMrtAjax } from '../composables/useMrtAjax';
+import { useTimetableHtml } from '../composables/useTimetableHtml';
 import { resolveMrtString } from '../utils/mrtStrings';
 
 const props = defineProps<{ config: OverviewVueConfig }>();
 
-const html = ref('');
-const { loading, error, run } = useMrtAjax(props.config);
+const { html, loading, error, fetchOverviewHtml } = useTimetableHtml(props.config);
 
-onMounted(async () => {
-  const id = props.config.timetableId;
-  if (!id) {
-    error.value = resolveMrtString(props.config, 'errorLoading', 'Tidtabell hittades inte.');
-    return;
-  }
-
-  const res = await run<{ html: string }>('mrt_timetable_overview_html', {
-    timetable_id: id,
-  });
-
-  if (res.success && res.data?.html) {
-    html.value = res.data.html;
-  }
+onMounted(() => {
+  void fetchOverviewHtml(props.config.timetableId);
 });
 </script>
 
@@ -32,6 +19,7 @@ onMounted(async () => {
       {{ resolveMrtString(config, 'loading', 'Laddar...') }}
     </p>
     <div v-else-if="error" class="mrt-alert mrt-alert-error" role="alert">{{ error }}</div>
+    <!-- Trusted server HTML — see frontend/vue/TRUSTED_HTML.md -->
     <div v-else v-html="html" />
   </div>
 </template>
