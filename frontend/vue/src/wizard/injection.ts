@@ -1,4 +1,4 @@
 import type { InjectionKey } from 'vue';
-import type { WizardContext } from './composables/useWizard';
+import type { WizardInjection } from './store/createWizardStore';
 
-export const wizardKey: InjectionKey<WizardContext> = Symbol('mrtWizard');
+export const wizardKey: InjectionKey<WizardInjection> = Symbol('mrtWizard');

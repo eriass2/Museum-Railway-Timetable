@@ -1,6 +1,6 @@
-import { unref } from 'vue';
 import type { CalendarDayStatus, JourneyConnection, WizardStep } from '../types';
-import type { WizardContext } from './useWizard';
+import type { WizardInjection } from '../store/createWizardStore';
+
 type DebugPreset = {
   step?: WizardStep;
   tripType?: string;
@@ -18,35 +18,36 @@ type DebugPreset = {
   returnConnections?: JourneyConnection[];
 };
 
-export function applyWizardDebugPreset(wizard: WizardContext, debugKey: string): void {
-  const presets = unref(wizard.cfg).debugPresets as Record<string, DebugPreset> | undefined;
+export function applyWizardDebugPreset(ctx: WizardInjection, debugKey: string): void {
+  const { store, cfg } = ctx;
+  const presets = cfg.value.debugPresets as Record<string, DebugPreset> | undefined;
   const preset = presets?.[debugKey];
   if (!preset) {
     return;
   }
 
-  wizard.tripType.value = preset.tripType === 'return' ? 'return' : 'single';
-  wizard.fromId.value = preset.from || 0;
-  wizard.toId.value = preset.to || 0;
-  wizard.fromTitle.value = preset.fromTitle || '';
-  wizard.toTitle.value = preset.toTitle || '';
-  wizard.dateYmd.value = preset.date || '';
-  wizard.outbound.value = preset.outbound || null;
-  wizard.inbound.value = preset.inbound || null;
+  store.tripType = preset.tripType === 'return' ? 'return' : 'single';
+  store.fromId = preset.from || 0;
+  store.toId = preset.to || 0;
+  store.fromTitle = preset.fromTitle || '';
+  store.toTitle = preset.toTitle || '';
+  store.dateYmd = preset.date || '';
+  store.outbound = preset.outbound || null;
+  store.inbound = preset.inbound || null;
 
   if (preset.calendarYear && preset.calendarMonth) {
-    wizard.calYear.value = preset.calendarYear;
-    wizard.calMonth.value = preset.calendarMonth;
+    store.calYear = preset.calendarYear;
+    store.calMonth = preset.calendarMonth;
   }
   if (preset.calendarDays) {
-    wizard.debugCalendarDays.value = preset.calendarDays;
+    store.debugCalendarDays = preset.calendarDays;
   }
   if (preset.outboundConnections?.length) {
-    wizard.debugOutboundConnections.value = preset.outboundConnections;
+    store.debugOutboundConnections = preset.outboundConnections;
   }
   if (preset.returnConnections?.length) {
-    wizard.debugReturnConnections.value = preset.returnConnections;
+    store.debugReturnConnections = preset.returnConnections;
   }
 
-  wizard.goTo(preset.step || 'route');
+  store.goTo(preset.step || 'route');
 }

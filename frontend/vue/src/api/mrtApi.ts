@@ -1,4 +1,4 @@
-import type { MrtVueConfig } from '../useMrtConfig';
+import type { MrtAjaxConfig } from '../config/types';
 
 export type MrtAjaxResponse<T> = {
   success: boolean;
@@ -6,16 +6,16 @@ export type MrtAjaxResponse<T> = {
   message?: string;
 };
 
-function ajaxUrl(config: MrtVueConfig): string {
-  return (config.ajaxurl as string) || '/wp-admin/admin-ajax.php';
+function ajaxUrl(config: MrtAjaxConfig): string {
+  return config.ajaxurl || '/wp-admin/admin-ajax.php';
 }
 
-function nonce(config: MrtVueConfig): string {
-  return (config.nonce as string) || '';
+function nonce(config: MrtAjaxConfig): string {
+  return config.nonce || '';
 }
 
 export async function mrtPost<T>(
-  config: MrtVueConfig,
+  config: MrtAjaxConfig,
   action: string,
   data: Record<string, string | number> = {},
 ): Promise<MrtAjaxResponse<T>> {
@@ -45,24 +45,23 @@ export async function mrtPost<T>(
   };
 
   if (!json.success) {
-    const msg =
+    const failMsg =
       json.data && typeof json.data === 'object' && 'message' in json.data
         ? String((json.data as { message: string }).message)
         : json.message || 'Request failed';
-    return { success: false, message: msg };
+    return { success: false, message: failMsg };
   }
 
   return { success: true, data: json.data };
 }
 
-export function msg(config: MrtVueConfig, key: string, fallback = ''): string {
-  const strings = config.strings as Record<string, string> | undefined;
-  if (strings && strings[key]) {
-    return strings[key];
+export function msg(config: MrtAjaxConfig, key: string, fallback = ''): string {
+  if (config.strings?.[key]) {
+    return config.strings[key];
   }
-  const wizard = config.wizard as Record<string, string> | undefined;
-  if (wizard && wizard[key]) {
-    return wizard[key];
+  const wizard = config as { wizard?: Record<string, string> };
+  if (wizard.wizard?.[key]) {
+    return wizard.wizard[key];
   }
   return fallback;
 }
