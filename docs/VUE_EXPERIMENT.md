@@ -41,14 +41,11 @@ Or via filter:
 add_filter( 'mrt_use_vue_frontend', '__return_true' );
 ```
 
-## Build
-
-Local:
+## Build and check
 
 ```bash
-composer vue:build
-# or
-cd frontend/vue && npm ci && npm run build
+composer vue:check   # typecheck + vitest + build + bundle smoke test
+composer vue:build   # build only
 ```
 
 Docker (tools profile):
@@ -57,35 +54,35 @@ Docker (tools profile):
 docker compose --profile tools run --rm vue
 ```
 
-Output: `assets/dist/vue/` (commit after CSS/JS changes so hosts without Node still work). Single entry `assets/main-*.js` (IIFE).
+Output: `assets/dist/vue/` (commit after CSS/JS changes). Single IIFE entry `assets/main-*.js`.
 
-Dev server (component work only — WP still serves shortcodes):
-
-```bash
-cd frontend/vue
-npm run dev
-```
+Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 ## PHP integration
 
-- `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS (IIFE build for classic `<script>`), mount HTML
+- `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS (IIFE), mount HTML
 - `inc/public/vue-shortcode-config.php` — JSON config per shortcode
 - Shortcodes branch early to `MRT_render_vue_mount()` when `MRT_use_vue_frontend()`
 
 ## Current scope
 
-- **Month calendar** and **timetable overview**: Vue SFCs (`MonthCalendarApp`, `TimetableOverviewApp`).
-- **Journey wizard**: Vue step flow (`wizard/components/*`, `useWizard` composable). Same AJAX actions as legacy (`mrt_journey_calendar_month`, `mrt_search_journey`, `mrt_journey_connection_detail`).
-- Journey wizard is **lazy-loaded** (`defineAsyncComponent`) so month/overview pages avoid the wizard chunk.
-- Legacy jQuery modules were removed from `frontend/vue/`; behaviour lives in `wizard/components/` and `wizard/utils/`.
+- **Month calendar** and **timetable overview**: Vue SFCs with typed config (`src/config/types.ts`).
+- **Journey wizard**: reactive store (`wizard/store/createWizardStore.ts`), step SFCs, `useWizardContext()`.
+- Same AJAX actions as before (`mrt_journey_calendar_month`, `mrt_search_journey`, `mrt_journey_connection_detail`).
+- Wizard panels set `data-wizard-step` for step-scoped CSS in `assets/journey-wizard/`.
 
 ## Wizard Vue layout
 
 ```
-frontend/vue/src/wizard/
-  composables/useWizard.ts   — step state, route/date/trip selection
-  components/                — one SFC per wizard step
-  utils/                     — dates, connections, prices, vehicle icons
+frontend/vue/src/
+  config/                    # parseMountConfig, typed configs per app
+  composables/               # useMrtAjax, useWizardContext
+  components/MrtStepShell.vue
+  wizard/
+    store/                   # createWizardStore, route/steps/selections
+    composables/             # useTripConnections, useWizardDebug
+    components/              # step SFCs
+    utils/
 ```
 
 ## Switch back

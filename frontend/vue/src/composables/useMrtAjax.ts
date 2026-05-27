@@ -15,7 +15,7 @@ export function useMrtAjax(config: MrtAjaxConfig) {
     const res = await mrtPost<T>(config, action, data);
     loading.value = false;
     if (!res.success) {
-      error.value = res.message || 'Request failed';
+      error.value = res.message || 'Begäran misslyckades';
     }
     return res;
   }

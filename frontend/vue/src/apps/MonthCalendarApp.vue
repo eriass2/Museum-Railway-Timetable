@@ -64,13 +64,13 @@ async function onDayClick(ymd: string) {
     <div v-if="showNav" class="mrt-month-nav" role="navigation">
       <a class="mrt-btn mrt-btn--secondary mrt-month-nav__prev" :href="config.prevMonthUrl || '#'">
         <span class="mrt-month-nav__chev" aria-hidden="true">‹</span>
-        {{ config.stringsPrevMonth || 'Previous month' }}
+        {{ config.stringsPrevMonth || 'Föregående månad' }}
       </a>
       <h2 class="mrt-month-nav__title mrt-heading mrt-heading--lg mrt-font-semibold">
         {{ config.monthTitle || '' }}
       </h2>
       <a class="mrt-btn mrt-btn--secondary mrt-month-nav__next" :href="config.nextMonthUrl || '#'">
-        {{ config.stringsNextMonth || 'Next month' }}
+        {{ config.stringsNextMonth || 'Nästa månad' }}
         <span class="mrt-month-nav__chev" aria-hidden="true">›</span>
       </a>
     </div>
@@ -135,7 +135,7 @@ async function onDayClick(ymd: string) {
       tabindex="-1"
     >
       <p v-if="dayLoading" class="mrt-empty mrt-empty--loading">
-        {{ msg(config, 'loading', 'Loading...') }}
+        {{ msg(config, 'loading', 'Laddar...') }}
       </p>
       <div v-else-if="dayError" class="mrt-alert mrt-alert-error" role="alert">{{ dayError }}</div>
       <div v-else v-html="dayHtml" />

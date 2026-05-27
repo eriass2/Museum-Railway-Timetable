@@ -35,7 +35,7 @@ export async function mrtPost<T>(
   });
 
   if (!res.ok) {
-    return { success: false, message: 'Network error' };
+    return { success: false, message: 'Nätverksfel' };
   }
 
   const json = (await res.json()) as {
@@ -48,7 +48,7 @@ export async function mrtPost<T>(
     const failMsg =
       json.data && typeof json.data === 'object' && 'message' in json.data
         ? String((json.data as { message: string }).message)
-        : json.message || 'Request failed';
+        : json.message || 'Begäran misslyckades';
     return { success: false, message: failMsg };
   }
 

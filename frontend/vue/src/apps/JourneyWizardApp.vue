@@ -26,7 +26,7 @@ const ticketUrl = String(props.config.ticketUrl || '');
 const heroSubtitle = String(props.config.heroSubtitle || '');
 const timetableId = Number(props.config.timetableId) || 0;
 const timetableHtml = ref('');
-const showTimetable = ref(false);
+const showTimetable = computed(() => timetableId > 0 && Boolean(timetableHtml.value));
 const panelsRef = ref<HTMLElement | null>(null);
 
 const { run: fetchOverview } = useMrtAjax(props.config);
@@ -77,7 +77,7 @@ onMounted(async () => {
       <div class="mrt-journey-wizard__hero-inner">
         <noscript>
           <p class="mrt-alert mrt-alert-info">
-            {{ cfgStr(cfg, 'needsJs', 'This planner needs JavaScript.') }}
+            {{ cfgStr(cfg, 'needsJs', 'Reseplaneraren kräver JavaScript.') }}
           </p>
         </noscript>
         <div v-if="store.error" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive">

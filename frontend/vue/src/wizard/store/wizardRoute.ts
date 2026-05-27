@@ -18,12 +18,12 @@ export function validateWizardRoute(
   toId: number,
 ): boolean {
   if (!fromId || !toId) {
-    state.showError(cfgStr(cfg, 'pleaseStations', 'Please select both stations.'));
+    state.showError(cfgStr(cfg, 'pleaseStations', 'Välj både avrese- och ankomststation.'));
     return false;
   }
   if (fromId === toId) {
     state.showError(
-      msg(config, 'errorSameStations', cfgStr(cfg, 'errorGeneric', 'Invalid stations.')),
+      msg(config, 'errorSameStations', cfgStr(cfg, 'errorGeneric', 'Ogiltiga stationer.')),
     );
     return false;
   }
