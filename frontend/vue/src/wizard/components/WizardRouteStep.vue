@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { todayYearMonth } from '../utils/wizardDate';
 import { cfgStr } from '../utils/wizardLabels';
@@ -15,12 +15,18 @@ const props = defineProps<{
 
 const { store, cfg } = useWizardContext();
 
-const fromId = ref(0);
-const toId = ref(0);
-const tripType = ref<TripType>('single');
+const fromId = ref(store.fromId || 0);
+const toId = ref(store.toId || 0);
+const tripType = ref<TripType>(store.tripType || 'single');
+
+watch([fromId, toId, tripType], () => {
+  if (store.error) {
+    store.clearError();
+  }
+});
 
 function onSearch(): void {
-  if (!store.validateRoute()) {
+  if (!store.validateRoute(fromId.value, toId.value)) {
     return;
   }
   const fromStation = props.stations.find((s) => s.id === fromId.value);

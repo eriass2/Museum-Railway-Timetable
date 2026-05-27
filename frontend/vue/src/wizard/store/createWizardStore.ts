@@ -30,7 +30,7 @@ export type WizardStore = {
   clearError: () => void;
   showError: (message: string) => void;
   goTo: (next: WizardStep) => void;
-  validateRoute: () => boolean;
+  validateRoute: (fromId?: number, toId?: number) => boolean;
   setRoute: (
     from: number,
     to: number,
@@ -101,8 +101,14 @@ export function createWizardStore(config: WizardVueConfig): WizardInjection {
       this.clearError();
       this.step = next;
     },
-    validateRoute(): boolean {
-      return validateWizardRoute(this, config, cfg.value);
+    validateRoute(fromId?: number, toId?: number): boolean {
+      return validateWizardRoute(
+        this,
+        config,
+        cfg.value,
+        fromId ?? this.fromId,
+        toId ?? this.toId,
+      );
     },
     setRoute(
       from: number,

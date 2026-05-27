@@ -14,12 +14,14 @@ export function validateWizardRoute(
   state: WizardRouteState,
   config: WizardVueConfig,
   cfg: WizardCfg,
+  fromId: number,
+  toId: number,
 ): boolean {
-  if (!state.fromId || !state.toId) {
+  if (!fromId || !toId) {
     state.showError(cfgStr(cfg, 'pleaseStations', 'Please select both stations.'));
     return false;
   }
-  if (state.fromId === state.toId) {
+  if (fromId === toId) {
     state.showError(
       msg(config, 'errorSameStations', cfgStr(cfg, 'errorGeneric', 'Invalid stations.')),
     );
