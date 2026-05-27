@@ -47,6 +47,7 @@ function onSearch(): void {
 
 <template>
   <div
+    data-wizard-step="route"
     class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active mrt-journey-wizard__search-panel"
     :class="{ 'mrt-journey-wizard__search-panel--with-timetable': showTimetable }"
     role="region"

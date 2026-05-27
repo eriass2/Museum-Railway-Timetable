@@ -43,7 +43,7 @@ function stationTime(s: TimelineStop): string {
       class="mrt-journey-wizard__passed-toggle"
       @click="showAllStops = !showAllStops"
     >
-      {{ showAllStops ? '∧ ' + cfgStr(cfg, 'hideStops', 'Hide') : '∨ ' + cfgStr(cfg, 'showStops', 'Show stops') }}
+      {{ showAllStops ? '∧ ' + cfgStr(cfg, 'hideStops', 'Dölj') : '∨ ' + cfgStr(cfg, 'showStops', 'Visa hållplatser') }}
     </button>
   </div>
 </template>

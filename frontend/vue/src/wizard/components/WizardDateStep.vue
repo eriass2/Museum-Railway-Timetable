@@ -48,7 +48,7 @@ async function loadCalendar(year: number, month: number): Promise<void> {
     { from_station: store.fromId, to_station: store.toId, year, month },
   );
   if (!res.success || !res.data) {
-    store.showError(cfgStr(cfg, 'errorGeneric', 'Something went wrong.'));
+    store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel.'));
     return;
   }
   daysMap.value = res.data.days || {};
@@ -105,14 +105,18 @@ watch(
 </script>
 
 <template>
-  <div class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active" role="region">
+  <div
+    data-wizard-step="date"
+    class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
+    role="region"
+  >
     <MrtStepShell :cfg="cfg" :context-line="store.contextLine" :title="stepTitle" @back="onBack" />
     <div class="mrt-journey-wizard__calendar-card">
       <div class="mrt-journey-wizard__calendar-nav">
         <button
           type="button"
           class="mrt-journey-wizard__cal-prev"
-          aria-label="Previous month"
+          :aria-label="cfgStr(cfg, 'calPrevAria', 'Föregående månad')"
           @click="shiftMonth(-1)"
         >
           ‹
@@ -136,7 +140,7 @@ watch(
         :grid-rows="gridRows"
         :selected-ymd="store.dateYmd"
         :grid-label="cfgStr(cfg, 'calendarGridLabel', '')"
-        :loading-label="cfgStr(cfg, 'loading', 'Loading...')"
+        :loading-label="cfgStr(cfg, 'loading', 'Laddar...')"
         :day-aria="dayAria"
         @pick="onPickDate"
       />

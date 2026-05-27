@@ -154,6 +154,7 @@
 }
 
 .mrt-journey-wizard__trip-card.is-expanded > .mrt-jw-trip-head,
+.mrt-journey-wizard__trip-card.is-expanded > .mrt-journey-wizard__trip-head,
 .mrt-journey-wizard__trip-card.is-expanded > .mrt-journey-wizard__trip-main {
     background: #d6d6d6;
 }
@@ -193,6 +194,7 @@
 
 /* 1. Trip head */
 .mrt-jw-trip-head,
+.mrt-journey-wizard__trip-head,
 .mrt-journey-wizard__trip-main,
 .mrt-journey-wizard__summary-main,
 .mrt-journey-wizard__selected-main {
@@ -315,6 +317,7 @@
 }
 
 .mrt-jw-notice--warning,
+.mrt-journey-wizard__notice--warn,
 .mrt-journey-wizard__notice--warning {
     font-weight: 700;
 }
@@ -496,6 +499,7 @@
 /* 9. Expand */
 .mrt-jw-btn--expand,
 .mrt-jw-expand,
+.mrt-journey-wizard__expand,
 .mrt-journey-wizard__btn-detail {
     display: flex;
     align-items: center;
@@ -512,6 +516,7 @@
 }
 
 .mrt-jw-expand__chevron,
+.mrt-journey-wizard__expand-chevron,
 .mrt-journey-wizard__chevron {
     width: 1.1rem;
     height: 1.1rem;
@@ -521,6 +526,7 @@
 }
 
 .mrt-jw-card--expanded .mrt-jw-expand__chevron,
+.mrt-journey-wizard__trip-card.is-expanded .mrt-journey-wizard__expand-chevron,
 .mrt-journey-wizard__trip-card.is-expanded .mrt-journey-wizard__chevron {
     transform: rotate(225deg);
 }

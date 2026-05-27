@@ -59,7 +59,7 @@ async function loadDetail(): Promise<void> {
       const leg = legs.value[i];
       const data = await loadLegDetail(leg);
       if (!data) {
-        error.value = cfgStr(cfg.value, 'errorGeneric', 'Error');
+        error.value = cfgStr(cfg.value, 'errorGeneric', 'Något gick fel.');
         loading.value = false;
         return;
       }
@@ -73,7 +73,7 @@ async function loadDetail(): Promise<void> {
   } else {
     const data = await loadLegDetail(legs.value[0]);
     if (!data) {
-      error.value = cfgStr(cfg.value, 'errorGeneric', 'Error');
+      error.value = cfgStr(cfg.value, 'errorGeneric', 'Något gick fel.');
       loading.value = false;
       return;
     }
@@ -111,13 +111,13 @@ defineExpose({ ensureLoaded });
     class="mrt-journey-wizard__detail"
     :class="{ 'mrt-journey-wizard__detail--multi': isMulti }"
   >
-    <p v-if="loading" class="mrt-empty">{{ cfgStr(cfg, 'loading', 'Loading...') }}</p>
+    <p v-if="loading" class="mrt-empty">{{ cfgStr(cfg, 'loading', 'Laddar...') }}</p>
     <p v-else-if="error" class="mrt-alert mrt-alert-error">{{ error }}</p>
     <template v-else-if="loaded">
       <div v-for="(seg, si) in segments" :key="si" class="mrt-journey-wizard__detail-segment mrt-mb-sm">
         <h4 v-if="seg.title" class="mrt-journey-wizard__detail-title">{{ seg.title }}</h4>
         <p v-if="seg.notice" class="mrt-journey-wizard__notice">
-          <strong>{{ cfgStr(cfg, 'noticeLabel', 'Notice') }}:</strong> {{ seg.notice }}
+          <strong>{{ cfgStr(cfg, 'noticeLabel', 'Notis') }}:</strong> {{ seg.notice }}
         </p>
         <div v-if="seg.leg" class="mrt-journey-wizard__timeline-leg">
           <span v-if="seg.leg.duration_minutes" class="mrt-journey-wizard__leg-duration">

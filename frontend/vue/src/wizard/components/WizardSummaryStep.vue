@@ -25,8 +25,12 @@ function onBack(): void {
 </script>
 
 <template>
-  <div class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active" role="region">
-    <MrtStepShell :cfg="cfg" :context-line="store.contextLine" :title="stepTitle" @back="onBack" />
+  <div
+    data-wizard-step="summary"
+    class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
+    role="region"
+  >
+    <MrtStepShell :cfg="cfg" :context-line="store.contextLine" :title="stepTitle" @back="onBack">
 
     <div class="mrt-journey-wizard__summary-list">
       <article v-if="store.outbound" class="mrt-journey-wizard__summary-card">
@@ -38,7 +42,7 @@ function onBack(): void {
           {{ formatTripClock(arrivalAtDestination(store.outbound)) }}
         </p>
         <p class="mrt-journey-wizard__trip-route">{{ store.fromTitle }} → {{ store.toTitle }}</p>
-        <p class="mrt-journey-wizard__trip-date">{{ dateText }}</p>
+        <p class="mrt-journey-wizard__summary-date">{{ dateText }}</p>
       </article>
 
       <article
@@ -53,7 +57,7 @@ function onBack(): void {
           {{ formatTripClock(arrivalAtDestination(store.inbound)) }}
         </p>
         <p class="mrt-journey-wizard__trip-route">{{ store.toTitle }} → {{ store.fromTitle }}</p>
-        <p class="mrt-journey-wizard__trip-date">{{ dateText }}</p>
+        <p class="mrt-journey-wizard__summary-date">{{ dateText }}</p>
       </article>
     </div>
 
@@ -64,10 +68,11 @@ function onBack(): void {
       :to-id="store.toId"
     />
 
-    <p v-if="ticketUrl" class="mrt-mt-sm">
-      <a :href="ticketUrl" class="mrt-btn mrt-btn--primary mrt-journey-wizard__cta">
-        {{ cfgStr(cfg, 'ticketCta', 'Fortsätt till biljetter') }}
-      </a>
-    </p>
+      <p v-if="ticketUrl" data-wizard-ticket-wrap class="mrt-mt-sm">
+        <a :href="ticketUrl" class="mrt-btn mrt-btn--primary mrt-journey-wizard__cta">
+          {{ cfgStr(cfg, 'ticketCta', 'Fortsätt till biljetter') }}
+        </a>
+      </p>
+    </MrtStepShell>
   </div>
 </template>

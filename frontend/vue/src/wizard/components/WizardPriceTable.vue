@@ -1,3 +1,31 @@
+<script setup lang="ts">
+import { computed, type MaybeRef, unref } from 'vue';
+import type { TripType } from '../types';
+import type { WizardCfg } from '../utils/wizardLabels';
+import { cfgStr } from '../utils/wizardLabels';
+import {
+  PRICE_CAT_KEYS,
+  PRICE_TYPE_KEYS,
+  formatPriceCell,
+  priceMatrixForTrip,
+  zonesForStationPair,
+} from '../utils/prices';
+
+const props = defineProps<{
+  cfg: MaybeRef<WizardCfg>;
+  tripType: MaybeRef<TripType>;
+  fromId: MaybeRef<number>;
+  toId: MaybeRef<number>;
+  compactTitle?: boolean;
+}>();
+
+const cfg = computed(() => unref(props.cfg));
+const zones = computed(() => zonesForStationPair(unref(props.fromId), unref(props.toId), cfg.value));
+const priceData = computed(() => priceMatrixForTrip(unref(props.tripType), cfg.value, zones.value));
+const tickets = computed(() => (cfg.value.priceTickets || {}) as Record<string, string>);
+const cats = computed(() => (cfg.value.priceCategories || {}) as Record<string, string>);
+</script>
+
 <template>
   <div
     v-if="priceData"
@@ -6,7 +34,7 @@
   >
     <h4 class="mrt-heading mrt-heading--md">
       {{ cfgStr(cfg, 'priceTitle', 'Priser') }}
-      <span v-if="!compactTitle">({{ cfgStr(cfg, 'priceZoneLabel', '%d zones').replace('%d', String(zones)) }})</span>
+      <span v-if="!compactTitle">({{ cfgStr(cfg, 'priceZoneLabel', '%d zoner').replace('%d', String(zones)) }})</span>
     </h4>
     <div class="mrt-journey-wizard__prices-scroll mrt-overflow-x-auto">
       <table class="mrt-table mrt-journey-wizard__price-table">
@@ -37,31 +65,3 @@
     </p>
   </div>
 </template>
-
-<script setup lang="ts">
-import { computed, type MaybeRef, unref } from 'vue';
-import type { TripType } from '../types';
-import type { WizardCfg } from '../utils/wizardLabels';
-import { cfgStr } from '../utils/wizardLabels';
-import {
-  PRICE_CAT_KEYS,
-  PRICE_TYPE_KEYS,
-  formatPriceCell,
-  priceMatrixForTrip,
-  zonesForStationPair,
-} from '../utils/prices';
-
-const props = defineProps<{
-  cfg: MaybeRef<WizardCfg>;
-  tripType: MaybeRef<TripType>;
-  fromId: MaybeRef<number>;
-  toId: MaybeRef<number>;
-  compactTitle?: boolean;
-}>();
-
-const cfg = computed(() => unref(props.cfg));
-const zones = computed(() => zonesForStationPair(unref(props.fromId), unref(props.toId), cfg.value));
-const priceData = computed(() => priceMatrixForTrip(unref(props.tripType), cfg.value, zones.value));
-const tickets = computed(() => (cfg.value.priceTickets || {}) as Record<string, string>);
-const cats = computed(() => (cfg.value.priceCategories || {}) as Record<string, string>);
-</script>

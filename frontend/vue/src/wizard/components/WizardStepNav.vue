@@ -16,7 +16,7 @@ const items = computed(() =>
 </script>
 
 <template>
-  <nav class="mrt-journey-wizard__nav" :aria-label="cfgStr(cfg, 'stepNavAria', 'Trip planner steps')">
+  <nav class="mrt-journey-wizard__nav" :aria-label="cfgStr(cfg, 'stepNavAria', 'Steg i reseplaneraren')">
     <ol class="mrt-journey-wizard__steps">
       <li
         v-for="item in items"

@@ -58,42 +58,48 @@ watch(
 </script>
 
 <template>
-  <div class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active" role="region">
-    <MrtStepShell :cfg="cfg" :context-line="store.contextLine" @back="onBack" />
-
-    <div v-if="legCtx === 'return' && store.outbound" class="mrt-journey-wizard__selected-trip">
-      <div class="mrt-journey-wizard__selected-label">
-        {{ cfgStr(cfg, 'selectedOutbound', 'Vald utresa') }}
+  <div
+    :data-wizard-step="legCtx"
+    class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
+    role="region"
+  >
+    <MrtStepShell :cfg="cfg" :context-line="store.contextLine" :title="title" @back="onBack">
+      <div
+        v-if="legCtx === 'return' && store.outbound"
+        data-wizard-return-summary
+        class="mrt-journey-wizard__selected-trip"
+      >
+        <div class="mrt-journey-wizard__selected-label">
+          {{ cfgStr(cfg, 'selectedOutbound', 'Vald utresa') }}
+        </div>
+        <div class="mrt-journey-wizard__selected-card">
+          <p class="mrt-journey-wizard__trip-time">
+            {{ formatTripClock(store.outbound.from_departure || '') }} –
+            {{ formatTripClock(store.outbound.to_arrival || '') }}
+          </p>
+          <p class="mrt-journey-wizard__trip-route">{{ store.fromTitle }} → {{ store.toTitle }}</p>
+        </div>
       </div>
-      <div class="mrt-journey-wizard__selected-card">
-        <p class="mrt-journey-wizard__trip-time">
-          {{ formatTripClock(store.outbound.from_departure || '') }} –
-          {{ formatTripClock(store.outbound.to_arrival || '') }}
-        </p>
-        <p class="mrt-journey-wizard__trip-route">{{ store.fromTitle }} → {{ store.toTitle }}</p>
+
+      <p v-if="loading" class="mrt-empty">{{ cfgStr(cfg, 'loading', 'Laddar...') }}</p>
+      <div v-else-if="error" class="mrt-alert mrt-alert-error" role="alert">{{ error }}</div>
+      <div v-else-if="!connections.length" class="mrt-alert mrt-alert-info">
+        <p>{{ cfgStr(cfg, 'noConnections', 'Inga anslutningar hittades.') }}</p>
       </div>
-    </div>
-
-    <h3 class="mrt-journey-wizard__step-title">{{ title }}</h3>
-
-    <p v-if="loading" class="mrt-empty">{{ cfgStr(cfg, 'loading', 'Loading...') }}</p>
-    <div v-else-if="error" class="mrt-alert mrt-alert-error" role="alert">{{ error }}</div>
-    <div v-else-if="!connections.length" class="mrt-alert mrt-alert-info">
-      <p>{{ cfgStr(cfg, 'noConnections', 'No connections.') }}</p>
-    </div>
-    <div v-else class="mrt-journey-wizard__trip-list">
-      <WizardTripCard
-        v-for="(conn, idx) in connections"
-        :key="idx"
-        :config="config"
-        :cfg="cfg"
-        :connection="conn"
-        :leg-ctx="legCtx"
-        :leg-from="legFrom"
-        :leg-to="legTo"
-        :route-text="routeText"
-        @select="legCtx === 'outbound' ? store.selectOutbound(conn) : store.selectInbound(conn)"
-      />
-    </div>
+      <div v-else class="mrt-journey-wizard__trip-list">
+        <WizardTripCard
+          v-for="(conn, idx) in connections"
+          :key="idx"
+          :config="config"
+          :cfg="cfg"
+          :connection="conn"
+          :leg-ctx="legCtx"
+          :leg-from="legFrom"
+          :leg-to="legTo"
+          :route-text="routeText"
+          @select="legCtx === 'outbound' ? store.selectOutbound(conn) : store.selectInbound(conn)"
+        />
+      </div>
+    </MrtStepShell>
   </div>
 </template>
