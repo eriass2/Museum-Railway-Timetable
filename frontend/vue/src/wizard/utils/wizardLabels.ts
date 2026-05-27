@@ -1,3 +1,5 @@
+import type { MaybeRef } from 'vue';
+import { unref } from 'vue';
 import type { MrtVueConfig } from '../../useMrtConfig';
 
 export type WizardCfg = Record<string, unknown>;
@@ -8,7 +10,7 @@ export function wizardCfg(config: MrtVueConfig): WizardCfg {
   return { ...wizard, ...labels };
 }
 
-export function cfgStr(cfg: WizardCfg, key: string, fallback = ''): string {
-  const v = cfg[key];
+export function cfgStr(cfg: MaybeRef<WizardCfg>, key: string, fallback = ''): string {
+  const v = unref(cfg)[key];
   return typeof v === 'string' ? v : fallback;
 }

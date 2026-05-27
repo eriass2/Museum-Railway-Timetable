@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, type MaybeRef, unref } from 'vue';
 import type { MrtVueConfig } from '../../useMrtConfig';
 import type { JourneyConnection } from '../types';
 import type { WizardCfg } from '../utils/wizardLabels';
@@ -16,13 +16,15 @@ import WizardTripDetail from './WizardTripDetail.vue';
 
 const props = defineProps<{
   config: MrtVueConfig;
-  cfg: WizardCfg;
+  cfg: MaybeRef<WizardCfg>;
   connection: JourneyConnection;
   legCtx: 'outbound' | 'return';
-  legFrom: number;
-  legTo: number;
-  routeText: string;
+  legFrom: MaybeRef<number>;
+  legTo: MaybeRef<number>;
+  routeText: MaybeRef<string>;
 }>();
+
+const cfg = computed(() => unref(props.cfg));
 
 const emit = defineEmits<{ select: [] }>();
 
@@ -33,14 +35,14 @@ const dep = computed(() => formatTripClock(departureFromOrigin(props.connection)
 const arr = computed(() => formatTripClock(arrivalAtDestination(props.connection)));
 const meta = computed(() =>
   isTransfer(props.connection)
-    ? cfgStr(props.cfg, 'transferTrip', 'Byte')
-    : cfgStr(props.cfg, 'directTrip', 'Direktresa'),
+    ? cfgStr(cfg.value, 'transferTrip', 'Byte')
+    : cfgStr(cfg.value, 'directTrip', 'Direktresa'),
 );
 
 const legs = computed(() => connectionLegs(props.connection));
 
 function vehicleKind(leg: (typeof legs.value)[0]): string {
-  return legVehicleKind(leg, props.cfg);
+  return legVehicleKind(leg, cfg.value);
 }
 
 async function toggleDetail(): Promise<void> {

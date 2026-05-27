@@ -6,7 +6,7 @@ import { cfgStr, wizardCfg } from '../utils/wizardLabels';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 
 export function useWizard(config: MrtVueConfig) {
-  const cfg = computed(() => wizardStrings(config));
+  const cfg = computed(() => wizardCfg(config));
   const step = ref<WizardStep>('route');
   const fromId = ref(0);
   const toId = ref(0);
@@ -68,7 +68,7 @@ export function useWizard(config: MrtVueConfig) {
 
   function validateRoute(): boolean {
     if (!fromId.value || !toId.value) {
-      showError(cfg.value.pleaseStations || 'Please select both stations.');
+      showError(cfgStr(cfg.value, 'pleaseStations', 'Please select both stations.'));
       return false;
     }
     if (fromId.value === toId.value) {

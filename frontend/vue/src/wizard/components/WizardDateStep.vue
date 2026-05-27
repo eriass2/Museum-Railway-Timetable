@@ -12,22 +12,21 @@ import {
 } from '../utils/wizardDate';
 import { buildWizardCalendarGrid, orderedWeekdayHeaders } from '../utils/wizardCalendarGrid';
 
-const wizard = inject(wizardKey);
-if (!wizard) {
-  throw new Error('WizardDateStep requires wizard context');
-}
+const wizard = inject(wizardKey)!;
 
 const startOfWeek = Number(wizard.config.startOfWeek ?? 1);
 const loading = ref(false);
 const daysMap = ref<Record<string, CalendarDayStatus>>({});
 
+const monthNames = computed(() => wizard.cfg.value.monthNames as string[] | undefined);
+const weekdayAbbrev = computed(() => (wizard.cfg.value.weekdayAbbrev as string[]) || []);
+const selectedYmd = computed(() => wizard.dateYmd.value);
+
 const monthTitle = computed(() =>
-  calendarMonthTitle(wizard.calYear.value, wizard.calMonth.value, wizard.cfg.monthNames as string[]),
+  calendarMonthTitle(wizard.calYear.value, wizard.calMonth.value, monthNames.value),
 );
 
-const weekdayHeaders = computed(() =>
-  orderedWeekdayHeaders((wizard.cfg.weekdayAbbrev as string[]) || [], startOfWeek),
-);
+const weekdayHeaders = computed(() => orderedWeekdayHeaders(weekdayAbbrev.value, startOfWeek));
 
 const gridRows = computed(() =>
   buildWizardCalendarGrid(wizard.calYear.value, wizard.calMonth.value, startOfWeek, daysMap.value),
@@ -56,7 +55,7 @@ async function loadCalendar(year: number, month: number): Promise<void> {
 }
 
 function dayAria(ymd: string, status: CalendarDayStatus): string {
-  const human = formatYmdForDisplay(ymd, wizard.cfg.monthNames as string[] | undefined);
+  const human = formatYmdForDisplay(ymd, monthNames.value);
   if (status === 'ok') {
     return cfgStr(wizard.cfg, 'dayDateOk', human).replace('%s', human);
   }
@@ -159,9 +158,9 @@ watch(
                   v-else-if="cell.status === 'ok'"
                   type="button"
                   class="mrt-jw-btn mrt-jw-btn--day mrt-jw-btn--day-ok mrt-journey-wizard__day mrt-journey-wizard__day--ok"
-                  :class="{ 'is-selected': wizard.dateYmd === cell.ymd }"
+                  :class="{ 'is-selected': selectedYmd === cell.ymd }"
                   :aria-label="dayAria(cell.ymd, cell.status)"
-                  :aria-pressed="wizard.dateYmd === cell.ymd"
+                  :aria-pressed="selectedYmd === cell.ymd"
                   @click="onPickDate(cell.ymd)"
                 >
                   {{ cell.day }}

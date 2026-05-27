@@ -9,13 +9,14 @@ import WizardPriceTable from './WizardPriceTable.vue';
 
 const props = defineProps<{ ticketUrl: string }>();
 
-const wizard = inject(wizardKey);
-if (!wizard) {
-  throw new Error('WizardSummaryStep requires wizard context');
-}
+const wizard = inject(wizardKey)!;
+
+const outbound = computed(() => wizard.outbound.value);
+const inbound = computed(() => wizard.inbound.value);
+const tripType = computed(() => wizard.tripType.value);
 
 const dateText = computed(() =>
-  formatYmdForDisplay(wizard.dateYmd.value, wizard.cfg.monthNames as string[] | undefined),
+  formatYmdForDisplay(wizard.dateYmd.value, wizard.cfg.value.monthNames as string[] | undefined),
 );
 
 function onBack(): void {
@@ -41,28 +42,28 @@ function onBack(): void {
     </h3>
 
     <div class="mrt-journey-wizard__summary-list">
-      <article v-if="wizard.outbound" class="mrt-jw-card mrt-jw-card--summary mrt-journey-wizard__summary-card">
+      <article v-if="outbound" class="mrt-jw-card mrt-jw-card--summary mrt-journey-wizard__summary-card">
         <h4 class="mrt-jw-card__section-title mrt-journey-wizard__summary-heading">
           {{ cfgStr(wizard.cfg, 'outboundHeading', 'Utresa') }}
         </h4>
         <p class="mrt-jw-typo mrt-jw-typo--time">
-          {{ formatTripClock(departureFromOrigin(wizard.outbound)) }} –
-          {{ formatTripClock(arrivalAtDestination(wizard.outbound)) }}
+          {{ formatTripClock(departureFromOrigin(outbound)) }} –
+          {{ formatTripClock(arrivalAtDestination(outbound)) }}
         </p>
         <p class="mrt-jw-typo mrt-jw-typo--route">{{ wizard.fromTitle }} → {{ wizard.toTitle }}</p>
         <p class="mrt-jw-typo mrt-jw-typo--date">{{ dateText }}</p>
       </article>
 
       <article
-        v-if="wizard.tripType === 'return' && wizard.inbound"
+        v-if="tripType === 'return' && inbound"
         class="mrt-jw-card mrt-jw-card--summary mrt-journey-wizard__summary-card"
       >
         <h4 class="mrt-jw-card__section-title mrt-journey-wizard__summary-heading">
           {{ cfgStr(wizard.cfg, 'returnHeading', 'Återresa') }}
         </h4>
         <p class="mrt-jw-typo mrt-jw-typo--time">
-          {{ formatTripClock(departureFromOrigin(wizard.inbound)) }} –
-          {{ formatTripClock(arrivalAtDestination(wizard.inbound)) }}
+          {{ formatTripClock(departureFromOrigin(inbound)) }} –
+          {{ formatTripClock(arrivalAtDestination(inbound)) }}
         </p>
         <p class="mrt-jw-typo mrt-jw-typo--route">{{ wizard.toTitle }} → {{ wizard.fromTitle }}</p>
         <p class="mrt-jw-typo mrt-jw-typo--date">{{ dateText }}</p>
@@ -71,7 +72,7 @@ function onBack(): void {
 
     <WizardPriceTable
       :cfg="wizard.cfg"
-      :trip-type="wizard.tripType"
+      :trip-type="tripType"
       :from-id="wizard.fromId"
       :to-id="wizard.toId"
     />

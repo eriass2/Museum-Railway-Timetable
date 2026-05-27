@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, type MaybeRef, unref } from 'vue';
 import { mrtPost } from '../../api/mrtApi';
 import type { MrtVueConfig } from '../../useMrtConfig';
 import type { ConnectionDetailPayload, JourneyConnection, JourneyLeg, TimelineStop } from '../types';
@@ -19,12 +19,14 @@ type LegSegment = {
 
 const props = defineProps<{
   config: MrtVueConfig;
-  cfg: WizardCfg;
+  cfg: MaybeRef<WizardCfg>;
   connection: JourneyConnection;
-  legFrom: number;
-  legTo: number;
+  legFrom: MaybeRef<number>;
+  legTo: MaybeRef<number>;
   expanded: boolean;
 }>();
+
+const cfg = computed(() => unref(props.cfg));
 
 const loading = ref(false);
 const error = ref('');
@@ -33,11 +35,11 @@ const loaded = ref(false);
 
 const legs = computed(() => connectionLegs(props.connection));
 const isMulti = computed(() => legs.value.length > 1);
-const legTpl = computed(() => cfgStr(props.cfg, 'legSegmentLabel', 'Delsträcka %d'));
+const legTpl = computed(() => cfgStr(cfg.value, 'legSegmentLabel', 'Delsträcka %d'));
 
 async function loadLegDetail(leg: JourneyLeg): Promise<ConnectionDetailPayload | null> {
-  const from = leg.from_station_id || props.legFrom;
-  const to = leg.to_station_id || props.legTo;
+  const from = leg.from_station_id || unref(props.legFrom);
+  const to = leg.to_station_id || unref(props.legTo);
   const res = await mrtPost<ConnectionDetailPayload>(props.config, 'mrt_journey_connection_detail', {
     from_station: from,
     to_station: to,
@@ -59,7 +61,7 @@ async function loadDetail(): Promise<void> {
       const leg = legs.value[i];
       const data = await loadLegDetail(leg);
       if (!data) {
-        error.value = cfgStr(props.cfg, 'errorGeneric', 'Error');
+        error.value = cfgStr(cfg.value, 'errorGeneric', 'Error');
         loading.value = false;
         return;
       }
@@ -73,7 +75,7 @@ async function loadDetail(): Promise<void> {
   } else {
     const data = await loadLegDetail(legs.value[0]);
     if (!data) {
-      error.value = cfgStr(props.cfg, 'errorGeneric', 'Error');
+      error.value = cfgStr(cfg.value, 'errorGeneric', 'Error');
       loading.value = false;
       return;
     }
@@ -92,9 +94,9 @@ async function loadDetail(): Promise<void> {
 function transferLabel(index: number): string {
   const wait = props.connection.transfer_wait_minutes;
   if (wait !== null && wait !== undefined && !Number.isNaN(Number(wait))) {
-    return cfgStr(props.cfg, 'transferWait', '%d min byte').replace('%d', String(wait));
+    return cfgStr(cfg.value, 'transferWait', '%d min byte').replace('%d', String(wait));
   }
-  return cfgStr(props.cfg, 'transferTrip', 'Byte');
+  return cfgStr(cfg.value, 'transferTrip', 'Byte');
 }
 
 async function ensureLoaded(): Promise<void> {

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, type MaybeRef, unref } from 'vue';
 import type { TripType } from '../types';
 import type { WizardCfg } from '../utils/wizardLabels';
 import { cfgStr } from '../utils/wizardLabels';
@@ -12,17 +12,18 @@ import {
 } from '../utils/prices';
 
 const props = defineProps<{
-  cfg: WizardCfg;
-  tripType: TripType;
-  fromId: number;
-  toId: number;
+  cfg: MaybeRef<WizardCfg>;
+  tripType: MaybeRef<TripType>;
+  fromId: MaybeRef<number>;
+  toId: MaybeRef<number>;
   compactTitle?: boolean;
 }>();
 
-const zones = computed(() => zonesForStationPair(props.fromId, props.toId, props.cfg));
-const priceData = computed(() => priceMatrixForTrip(props.tripType, props.cfg, zones.value));
-const tickets = computed(() => (props.cfg.priceTickets || {}) as Record<string, string>);
-const cats = computed(() => (props.cfg.priceCategories || {}) as Record<string, string>);
+const cfg = computed(() => unref(props.cfg));
+const zones = computed(() => zonesForStationPair(unref(props.fromId), unref(props.toId), cfg.value));
+const priceData = computed(() => priceMatrixForTrip(unref(props.tripType), cfg.value, zones.value));
+const tickets = computed(() => (cfg.value.priceTickets || {}) as Record<string, string>);
+const cats = computed(() => (cfg.value.priceCategories || {}) as Record<string, string>);
 </script>
 
 <template>

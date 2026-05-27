@@ -12,10 +12,7 @@ const props = defineProps<{
   showTimetable: boolean;
 }>();
 
-const wizard = inject(wizardKey);
-if (!wizard) {
-  throw new Error('WizardRouteStep requires wizard context');
-}
+const wizard = inject(wizardKey)!;
 
 const fromId = ref(0);
 const toId = ref(0);

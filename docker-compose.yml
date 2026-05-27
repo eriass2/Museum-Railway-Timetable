@@ -81,7 +81,7 @@ services:
     working_dir: /app/frontend/vue
     volumes:
       - ./:/app
-    command: sh -c "npm ci && npm run build"
+    command: sh -c "npm ci && npm run check"
 
 volumes:
   db_data:

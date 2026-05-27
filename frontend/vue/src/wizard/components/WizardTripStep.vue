@@ -12,10 +12,7 @@ const props = defineProps<{
   legCtx: 'outbound' | 'return';
 }>();
 
-const wizard = inject(wizardKey);
-if (!wizard) {
-  throw new Error('WizardTripStep requires wizard context');
-}
+const wizard = inject(wizardKey)!;
 
 const loading = ref(false);
 const error = ref('');

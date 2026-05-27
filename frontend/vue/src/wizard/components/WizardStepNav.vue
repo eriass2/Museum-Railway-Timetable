@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { computed, inject } from 'vue';
 import { wizardKey } from '../injection';
+import { cfgStr } from '../utils/wizardLabels';
 
-const wizard = inject(wizardKey);
-if (!wizard) {
-  throw new Error('WizardStepNav requires wizard context');
-}
+const wizard = inject(wizardKey)!;
 
 const items = computed(() =>
   wizard.stepSequence.value.map((key, i) => ({
@@ -18,7 +16,7 @@ const items = computed(() =>
 </script>
 
 <template>
-  <nav class="mrt-journey-wizard__nav" :aria-label="String(wizard.cfg.stepNavAria || 'Trip planner steps')">
+  <nav class="mrt-journey-wizard__nav" :aria-label="cfgStr(wizard.cfg, 'stepNavAria', 'Trip planner steps')">
     <ol class="mrt-journey-wizard__steps">
       <li
         v-for="item in items"

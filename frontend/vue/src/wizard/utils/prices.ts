@@ -27,7 +27,7 @@ export function zonesForStationPair(fromId: number, toId: number, cfg: WizardCfg
   return Math.max(1, Math.min(4, best));
 }
 
-function matrixForZone(cfg: WizardStrings, zones: number): PriceMatrix {
+function matrixForZone(cfg: WizardCfg, zones: number): PriceMatrix {
   const byZone = cfg.priceMatrixByZone as Record<string, Record<string, Record<string, unknown>>> | undefined;
   const zoneKey = String(Math.max(1, Math.min(4, zones || 4)));
   if (!byZone) {

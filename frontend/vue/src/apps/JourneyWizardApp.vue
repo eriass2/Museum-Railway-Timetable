@@ -17,6 +17,9 @@ const props = defineProps<{ config: MrtVueConfig }>();
 const wizard = useWizard(props.config);
 provide(wizardKey, wizard);
 
+const step = computed(() => wizard.step.value);
+const wizardError = computed(() => wizard.error.value);
+
 const stations = computed(() => (props.config.stations || []) as { id: number; title: string }[]);
 const embedded = computed(() => Boolean(props.config.embedded));
 const debug = computed(() => String(props.config.debug || ''));
@@ -78,22 +81,22 @@ onMounted(async () => {
             {{ cfgStr(wizard.cfg, 'needsJs', 'This planner needs JavaScript.') }}
           </p>
         </noscript>
-        <div v-if="wizard.error" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive">
-          <div class="mrt-alert mrt-alert-error">{{ wizard.error }}</div>
+        <div v-if="wizardError" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive">
+          <div class="mrt-alert mrt-alert-error">{{ wizardError }}</div>
         </div>
         <WizardStepNav />
         <div ref="panelsRef" class="mrt-journey-wizard__panels">
           <WizardRouteStep
-            v-if="wizard.step === 'route'"
+            v-if="step === 'route'"
             :stations="stations"
             :hero-subtitle="heroSubtitle"
             :timetable-html="timetableHtml"
             :show-timetable="showTimetable"
           />
-          <WizardDateStep v-else-if="wizard.step === 'date'" />
-          <WizardTripStep v-else-if="wizard.step === 'outbound'" leg-ctx="outbound" />
-          <WizardTripStep v-else-if="wizard.step === 'return'" leg-ctx="return" />
-          <WizardSummaryStep v-else-if="wizard.step === 'summary'" :ticket-url="ticketUrl" />
+          <WizardDateStep v-else-if="step === 'date'" />
+          <WizardTripStep v-else-if="step === 'outbound'" leg-ctx="outbound" />
+          <WizardTripStep v-else-if="step === 'return'" leg-ctx="return" />
+          <WizardSummaryStep v-else-if="step === 'summary'" :ticket-url="ticketUrl" />
         </div>
       </div>
     </section>

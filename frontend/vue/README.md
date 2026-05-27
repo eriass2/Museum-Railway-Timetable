@@ -25,3 +25,20 @@ AJAX uses `src/api/mrtApi.ts` (`fetch` + `config.nonce`).
 npm ci && npm run build
 # or from repo root: composer vue:build
 ```
+
+### Local check (no WordPress)
+
+```bash
+cd frontend/vue
+npm ci
+npm run check    # typecheck + build + verify bundle (IIFE, no wizardStrings, smoke load in Node)
+```
+
+From repo root: `composer vue:check`
+
+| Script | What it does |
+|--------|----------------|
+| `npm run typecheck` | `vue-tsc` — catches typos like undefined imports |
+| `npm run build` | Vite production build → `assets/dist/vue/` |
+| `npm run verify` | Asserts manifest, IIFE shape, forbidden tokens, Node smoke load |
+| `npm run check` | All of the above |
