@@ -1,6 +1,6 @@
 # Museum Railway – public Vue frontend
 
-Builds to `assets/dist/vue/` and is enqueued when `MRT_VUE_FRONTEND` is enabled.
+Builds to `assets/dist/vue/` as a **single IIFE bundle** (classic WordPress `<script>` enqueue).
 
 ## Apps (`src/apps/`)
 
@@ -8,16 +8,20 @@ Builds to `assets/dist/vue/` and is enqueued when `MRT_VUE_FRONTEND` is enabled.
 |--------------------------|-----------|
 | `month` | `MonthCalendarApp.vue` |
 | `overview` | `TimetableOverviewApp.vue` |
-| `wizard` | `JourneyWizardApp.vue` (async chunk) |
+| `wizard` | `JourneyWizardApp.vue` |
 
-## Wizard (`src/wizard/`)
+## Structure
 
-- `composables/useWizard.ts` – step state machine
-- `composables/useWizardDebug.ts` – dev presets from PHP `debugPresets`
-- `components/` – one SFC per wizard step
-- `utils/` – dates, prices, vehicle icons, calendar grid
-
-AJAX uses `src/api/mrtApi.ts` (`fetch` + `config.nonce`).
+```
+src/
+  config/       # Typed mount config + parseMountConfig
+  api/          # mrtPost
+  composables/  # useMrtAjax, useWizardContext
+  components/   # Shared UI (MrtStepShell)
+  apps/
+  wizard/       # Store, steps, utils
+  utils/        # calendarGrid, monthGrid
+```
 
 ## Commands
 
@@ -31,14 +35,17 @@ npm ci && npm run build
 ```bash
 cd frontend/vue
 npm ci
-npm run check    # typecheck + build + verify bundle (IIFE, no wizardStrings, smoke load in Node)
+npm run check    # typecheck + test + build + verify
 ```
 
 From repo root: `composer vue:check`
 
 | Script | What it does |
 |--------|----------------|
-| `npm run typecheck` | `vue-tsc` — catches typos like undefined imports |
-| `npm run build` | Vite production build → `assets/dist/vue/` |
-| `npm run verify` | Asserts manifest, IIFE shape, forbidden tokens, Node smoke load |
+| `npm run typecheck` | `vue-tsc` |
+| `npm test` | Vitest (pure utils) |
+| `npm run build` | Vite → `assets/dist/vue/` |
+| `npm run verify` | IIFE smoke load in Node |
 | `npm run check` | All of the above |
+
+See [TESTING.md](./TESTING.md) for manual WP regression.
