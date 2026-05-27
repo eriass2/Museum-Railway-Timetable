@@ -36,6 +36,11 @@ const gridRows = computed(() =>
 async function loadCalendar(year: number, month: number): Promise<void> {
   wizard.calYear.value = year;
   wizard.calMonth.value = month;
+  if (wizard.debugCalendarDays.value) {
+    daysMap.value = wizard.debugCalendarDays.value;
+    loading.value = false;
+    return;
+  }
   loading.value = true;
   const res = await mrtPost<{ year: number; month: number; days: Record<string, CalendarDayStatus> }>(
     wizard.config,

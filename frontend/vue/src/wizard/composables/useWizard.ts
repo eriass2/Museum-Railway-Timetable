@@ -1,7 +1,7 @@
 import { computed, ref } from 'vue';
 import type { MrtVueConfig } from '../../useMrtConfig';
 import { msg } from '../../api/mrtApi';
-import type { JourneyConnection, TripType, WizardStep } from '../types';
+import type { CalendarDayStatus, JourneyConnection, TripType, WizardStep } from '../types';
 import { cfgStr, wizardCfg } from '../utils/wizardLabels';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 
@@ -19,6 +19,9 @@ export function useWizard(config: MrtVueConfig) {
   const outbound = ref<JourneyConnection | null>(null);
   const inbound = ref<JourneyConnection | null>(null);
   const error = ref('');
+  const debugCalendarDays = ref<Record<string, CalendarDayStatus> | null>(null);
+  const debugOutboundConnections = ref<JourneyConnection[] | null>(null);
+  const debugReturnConnections = ref<JourneyConnection[] | null>(null);
 
   const stepSequence = computed((): WizardStep[] => {
     const seq: WizardStep[] = ['route', 'date', 'outbound'];
@@ -116,6 +119,9 @@ export function useWizard(config: MrtVueConfig) {
     outbound,
     inbound,
     error,
+    debugCalendarDays,
+    debugOutboundConnections,
+    debugReturnConnections,
     stepSequence,
     stepLabels,
     contextLine,

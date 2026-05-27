@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { computed, onMounted, provide, ref } from 'vue';
+import { computed, nextTick, onMounted, provide, ref, watch } from 'vue';
+import { applyWizardDebugPreset } from '../wizard/composables/useWizardDebug';
 import type { MrtVueConfig } from '../useMrtConfig';
 import { mrtPost } from '../api/mrtApi';
 import { useWizard } from '../wizard/composables/useWizard';
@@ -24,8 +25,29 @@ const heroSubtitle = computed(() => String(props.config.heroSubtitle || ''));
 const timetableId = computed(() => Number(props.config.timetableId) || 0);
 const timetableHtml = ref('');
 const showTimetable = computed(() => timetableId.value > 0 && Boolean(timetableHtml.value));
+const panelsRef = ref<HTMLElement | null>(null);
+
+watch(
+  () => wizard.step.value,
+  async () => {
+    await nextTick();
+    const panel = panelsRef.value?.querySelector(
+      '.mrt-jw-panel--active, .mrt-journey-wizard__panel--active',
+    );
+    const heading = panel?.querySelector('h2, h3') as HTMLElement | null;
+    if (!heading) {
+      return;
+    }
+    heading.setAttribute('tabindex', '-1');
+    heading.focus();
+    heading.addEventListener('blur', () => heading.removeAttribute('tabindex'), { once: true });
+  },
+);
 
 onMounted(async () => {
+  if (debug.value) {
+    applyWizardDebugPreset(wizard, debug.value);
+  }
   if (timetableId.value <= 0) {
     return;
   }
@@ -60,7 +82,7 @@ onMounted(async () => {
           <div class="mrt-alert mrt-alert-error">{{ wizard.error }}</div>
         </div>
         <WizardStepNav />
-        <div class="mrt-journey-wizard__panels">
+        <div ref="panelsRef" class="mrt-journey-wizard__panels">
           <WizardRouteStep
             v-if="wizard.step === 'route'"
             :stations="stations"

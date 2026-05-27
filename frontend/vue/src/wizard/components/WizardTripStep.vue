@@ -43,6 +43,16 @@ async function loadConnections(): Promise<void> {
   error.value = '';
   connections.value = [];
 
+  const mock =
+    props.legCtx === 'outbound'
+      ? wizard.debugOutboundConnections.value
+      : wizard.debugReturnConnections.value;
+  if (mock?.length) {
+    connections.value = mock;
+    loading.value = false;
+    return;
+  }
+
   const payload: Record<string, string | number> = {
     from_station: wizard.fromId.value,
     to_station: wizard.toId.value,
