@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { countBookableDaysInMonth } from '../src/wizard/utils/wizardCalendarGrid';
 import {
   addCalendarMonths,
   daysInMonth,
@@ -27,13 +28,23 @@ describe('wizardDate', () => {
     expect(daysInMonth(2025, 2)).toBe(28);
   });
 
-  it('formatYmdForDisplay uses month names', () => {
-    const names = ['Jan', 'Feb', 'Mar'];
-    expect(formatYmdForDisplay('2026-03-15', names)).toBe('Mar 15, 2026');
+  it('formatYmdForDisplay uses Swedish day month year order', () => {
+    const names = ['januari', 'februari', 'mars'];
+    expect(formatYmdForDisplay('2026-03-15', names)).toBe('15 mars 2026');
   });
 
   it('monthStartColumn respects startOfWeek', () => {
     expect(monthStartColumn(2026, 5, 1)).toBeGreaterThanOrEqual(0);
     expect(monthStartColumn(2026, 5, 1)).toBeLessThan(7);
+  });
+
+  it('countBookableDaysInMonth counts ok days in month only', () => {
+    const map = {
+      '2026-05-01': 'none' as const,
+      '2026-05-10': 'ok' as const,
+      '2026-05-20': 'ok' as const,
+      '2026-06-01': 'ok' as const,
+    };
+    expect(countBookableDaysInMonth(2026, 5, map)).toBe(2);
   });
 });

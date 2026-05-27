@@ -39,7 +39,7 @@ export function formatYmdForDisplay(
   const mo = parseInt(p[1], 10);
   const day = parseInt(p[2], 10);
   if (monthNames && monthNames[mo - 1]) {
-    return `${monthNames[mo - 1]} ${day}, ${p[0]}`;
+    return `${day} ${monthNames[mo - 1]} ${p[0]}`;
   }
   return ymd;
 }

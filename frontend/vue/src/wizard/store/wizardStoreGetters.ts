@@ -22,8 +22,8 @@ export function wizardStepLabels(cfg: WizardCfg): Record<WizardStep, string> {
 export function wizardContextLine(state: WizardContextState, cfg: WizardCfg): string {
   const trip =
     state.tripType === 'return'
-      ? cfgStr(cfg, 'tripTypeReturn', 'Tur- och retur')
-      : cfgStr(cfg, 'tripTypeSingle', 'Enkel');
+      ? cfgStr(cfg, 'tripReturn', 'Tur och retur')
+      : cfgStr(cfg, 'tripSingle', 'Enkel resa');
   const route = `${state.fromTitle} → ${state.toTitle} | ${trip}`;
   if (!state.dateYmd) {
     return route;

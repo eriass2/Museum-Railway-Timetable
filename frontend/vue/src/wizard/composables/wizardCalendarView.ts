@@ -4,7 +4,11 @@ import type { CalendarDayStatus } from '../types';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStringArray } from '../utils/wizardLabels';
 import { calendarMonthTitle } from '../utils/wizardDate';
-import { buildWizardCalendarGrid, orderedWeekdayHeaders } from '../utils/wizardCalendarGrid';
+import {
+  buildWizardCalendarGrid,
+  countBookableDaysInMonth,
+  orderedWeekdayHeaders,
+} from '../utils/wizardCalendarGrid';
 import { wizardCalendarDayAria } from './wizardCalendarLoad';
 
 export function useWizardCalendarView(
@@ -28,9 +32,15 @@ export function useWizardCalendarView(
     buildWizardCalendarGrid(store.calYear, store.calMonth, startOfWeek, daysMap.value),
   );
 
+  const bookableDaysInMonth = computed(() =>
+    countBookableDaysInMonth(store.calYear, store.calMonth, daysMap.value),
+  );
+
+  const hasBookableDays = computed(() => bookableDaysInMonth.value > 0);
+
   function dayAria(ymd: string, status: CalendarDayStatus): string {
     return wizardCalendarDayAria(ymd, status, cfg);
   }
 
-  return { monthTitle, weekdayHeaders, gridRows, dayAria };
+  return { monthTitle, weekdayHeaders, gridRows, dayAria, hasBookableDays };
 }

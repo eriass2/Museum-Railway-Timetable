@@ -6,6 +6,21 @@ export type WizardCalCell =
   | { kind: 'pad' }
   | { kind: 'day'; day: number; ymd: string; status: CalendarDayStatus };
 
+export function countBookableDaysInMonth(
+  year: number,
+  month: number,
+  daysMap: Record<string, CalendarDayStatus>,
+): number {
+  const prefix = `${year}-${String(month).padStart(2, '0')}`;
+  let count = 0;
+  for (const [ymd, status] of Object.entries(daysMap)) {
+    if (ymd.startsWith(prefix) && status === 'ok') {
+      count += 1;
+    }
+  }
+  return count;
+}
+
 export function buildWizardCalendarGrid(
   year: number,
   month: number,

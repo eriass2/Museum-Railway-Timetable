@@ -18,18 +18,30 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array{monthNames: array<int, string>, weekdayAbbrev: array<int, string>}
  */
 function MRT_journey_wizard_calendar_i18n_arrays(): array {
-	$month_names = array();
-	for ( $m = 1; $m <= 12; $m++ ) {
-		$month_names[] = date_i18n( 'F', mktime( 0, 0, 0, $m, 15, 2020 ) );
-	}
-	$weekday_abbrev = array();
-	$sun            = strtotime( '2024-01-07 UTC' );
-	for ( $d = 0; $d < 7; $d++ ) {
-		$weekday_abbrev[] = date_i18n( 'D', $sun + $d * DAY_IN_SECONDS );
-	}
 	return array(
-		'monthNames'    => $month_names,
-		'weekdayAbbrev' => $weekday_abbrev,
+		'monthNames'    => array(
+			__( 'januari', MRT_TEXT_DOMAIN ),
+			__( 'februari', MRT_TEXT_DOMAIN ),
+			__( 'mars', MRT_TEXT_DOMAIN ),
+			__( 'april', MRT_TEXT_DOMAIN ),
+			__( 'maj', MRT_TEXT_DOMAIN ),
+			__( 'juni', MRT_TEXT_DOMAIN ),
+			__( 'juli', MRT_TEXT_DOMAIN ),
+			__( 'augusti', MRT_TEXT_DOMAIN ),
+			__( 'september', MRT_TEXT_DOMAIN ),
+			__( 'oktober', MRT_TEXT_DOMAIN ),
+			__( 'november', MRT_TEXT_DOMAIN ),
+			__( 'december', MRT_TEXT_DOMAIN ),
+		),
+		'weekdayAbbrev' => array(
+			__( 'sön', MRT_TEXT_DOMAIN ),
+			__( 'mån', MRT_TEXT_DOMAIN ),
+			__( 'tis', MRT_TEXT_DOMAIN ),
+			__( 'ons', MRT_TEXT_DOMAIN ),
+			__( 'tor', MRT_TEXT_DOMAIN ),
+			__( 'fre', MRT_TEXT_DOMAIN ),
+			__( 'lör', MRT_TEXT_DOMAIN ),
+		),
 	);
 }
 
@@ -57,8 +69,8 @@ function MRT_journey_wizard_l10n_steps_and_trip(): array {
 		'returnHeading'    => __( 'Återresa', MRT_TEXT_DOMAIN ),
 		'onDate'           => __( 'den %s', MRT_TEXT_DOMAIN ),
 		'pleaseStations'   => __( 'Välj både avrese- och ankomststation.', MRT_TEXT_DOMAIN ),
-		'tripTypeSingle'   => __( 'Enkel', MRT_TEXT_DOMAIN ),
-		'tripTypeReturn'   => __( 'Tur- och retur', MRT_TEXT_DOMAIN ),
+		'tripTypeSingle'   => __( 'Enkel resa', MRT_TEXT_DOMAIN ),
+		'tripTypeReturn'   => __( 'Tur och retur', MRT_TEXT_DOMAIN ),
 		'routeContext'     => __( '%1$s → %2$s | %3$s', MRT_TEXT_DOMAIN ),
 		'routeDateContext' => __( '%1$s → %2$s | %3$s\n%4$s', MRT_TEXT_DOMAIN ),
 		'directTrip'       => __( 'Direktresa', MRT_TEXT_DOMAIN ),
