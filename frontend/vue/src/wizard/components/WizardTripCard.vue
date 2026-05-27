@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, type MaybeRef, unref } from 'vue';
-import type { WizardVueConfig } from '../../config/types';
+import { computed, ref } from 'vue';
+import { useWizardContext } from '../../composables/useWizardContext';
 import type { JourneyConnection } from '../types';
-import type { WizardCfg } from '../utils/wizardLabels';
 import { cfgStr } from '../utils/wizardLabels';
 import {
   arrivalAtDestination,
@@ -15,27 +14,30 @@ import { legVehicleKind, legVehicleLabel, trainIconUrl } from '../utils/vehicle'
 import WizardTripDetail from './WizardTripDetail.vue';
 
 const props = defineProps<{
-  config: WizardVueConfig;
-  cfg: MaybeRef<WizardCfg>;
   connection: JourneyConnection;
   legCtx: 'outbound' | 'return';
-  legFrom: MaybeRef<number>;
-  legTo: MaybeRef<number>;
-  routeText: MaybeRef<string>;
 }>();
 
-const cfg = computed(() => unref(props.cfg));
+const { store, cfg } = useWizardContext();
 const emit = defineEmits<{ select: [] }>();
 
 const expanded = ref(false);
 const detailRef = ref<InstanceType<typeof WizardTripDetail> | null>(null);
 
+const legFrom = computed(() => (props.legCtx === 'return' ? store.toId : store.fromId));
+const legTo = computed(() => (props.legCtx === 'return' ? store.fromId : store.toId));
+const routeText = computed(() =>
+  props.legCtx === 'return'
+    ? `${store.toTitle} → ${store.fromTitle}`
+    : `${store.fromTitle} → ${store.toTitle}`,
+);
+
 const dep = computed(() => formatTripClock(departureFromOrigin(props.connection)));
 const arr = computed(() => formatTripClock(arrivalAtDestination(props.connection)));
 const meta = computed(() =>
   isTransfer(props.connection)
-    ? cfgStr(cfg.value, 'transferTrip', 'Byte')
-    : cfgStr(cfg.value, 'directTrip', 'Direktresa'),
+    ? cfgStr(cfg, 'transferTrip', 'Byte')
+    : cfgStr(cfg, 'directTrip', 'Direktresa'),
 );
 
 const legs = computed(() => connectionLegs(props.connection));
@@ -109,11 +111,8 @@ async function toggleDetail(): Promise<void> {
     <WizardTripDetail
       v-show="expanded"
       ref="detailRef"
-      :config="config"
-      :cfg="cfg"
       :connection="connection"
-      :leg-from="legFrom"
-      :leg-to="legTo"
+      :leg-ctx="legCtx"
     />
   </article>
 </template>

@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import type { MaybeRef } from 'vue';
-import type { WizardVueConfig } from '../../config/types';
+import { computed } from 'vue';
+import { useWizardContext } from '../../composables/useWizardContext';
 import type { JourneyConnection } from '../types';
-import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStr } from '../utils/wizardLabels';
 import { useConnectionDetail } from '../composables/useConnectionDetail';
 import WizardDetailSegment from './WizardDetailSegment.vue';
 
 const props = defineProps<{
-  config: WizardVueConfig;
-  cfg: MaybeRef<WizardCfg>;
   connection: JourneyConnection;
-  legFrom: MaybeRef<number>;
-  legTo: MaybeRef<number>;
+  legCtx: 'outbound' | 'return';
 }>();
 
+const { store, cfg, config } = useWizardContext();
+
+const legFrom = computed(() => (props.legCtx === 'return' ? store.toId : store.fromId));
+const legTo = computed(() => (props.legCtx === 'return' ? store.fromId : store.toId));
+
 const {
-  cfg,
   loading,
   error,
   segments,
@@ -24,7 +24,13 @@ const {
   isMulti,
   transferLabel,
   ensureLoaded,
-} = useConnectionDetail(props);
+} = useConnectionDetail({
+  config,
+  cfg,
+  connection: props.connection,
+  legFrom,
+  legTo,
+});
 
 defineExpose({ ensureLoaded });
 </script>

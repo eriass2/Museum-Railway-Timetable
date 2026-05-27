@@ -12,7 +12,7 @@ const props = defineProps<{
 }>();
 
 const wizardCtx = useWizardContext();
-const { store, cfg, config } = wizardCtx;
+const { store, cfg } = wizardCtx;
 const { loading, error, connections, loadConnections } = useTripConnections(
   wizardCtx,
   props.legCtx,
@@ -97,13 +97,8 @@ watch(
         <WizardTripCard
           v-for="(conn, idx) in connections"
           :key="idx"
-          :config="config"
-          :cfg="cfg"
           :connection="conn"
           :leg-ctx="legCtx"
-          :leg-from="legFrom"
-          :leg-to="legTo"
-          :route-text="routeText"
           @select="legCtx === 'outbound' ? store.selectOutbound(conn) : store.selectInbound(conn)"
         />
       </div>
