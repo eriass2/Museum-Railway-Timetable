@@ -21,6 +21,7 @@ Run after `npm run check` and hard-refresh in the browser (Ctrl+F5).
 
 ## Journey wizard (`wizard`)
 
+- [ ] Route step: hero is compact (root has `data-step="route"`)
 - [ ] Step nav shows 1–4 (or 5 for return)
 - [ ] Route: select from/to, single vs return, search
 - [ ] Date: calendar loads, pick day → outbound

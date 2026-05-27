@@ -1,20 +1,20 @@
 # Journey wizard styles
 
-**Vue mode** (`MRT_VUE_FRONTEND`): styles ship via Vite (`assets/journey-wizard/*.css` imported from `frontend/vue`). Templates use `.mrt-journey-wizard__*` only.
+**Vue mode** (`MRT_VUE_FRONTEND`): styles ship via Vite (`assets/journey-wizard/*.css` imported from `frontend/vue`). Templates use `.mrt-journey-wizard__*` and `data-wizard-step` on panels. The wizard root exposes `data-step` for hero layout (route step uses a shorter hero).
 
-**Legacy jQuery mode** (optional): modular JS below, loaded via `MRT_register_journey_wizard_script_modules()` in `inc/assets/frontend.php`.
+**Legacy jQuery mode** (when Vue is off): modular JS below is loaded from `inc/assets/frontend.php`.
 
 | Module | Responsibility |
 |--------|----------------|
 | `namespace.js` | `window.MRTJourneyWizard` |
 | `constants.js` | Price matrix keys |
-| `render.js` | `JW.render` helpers + `mrt-jw-*` class map |
+| `render.js` | `JW.render` helpers |
 | `connection.js` | Departure/arrival time helpers |
 | `context.js` | Route context line in step headers |
 | `prices.js` | Price table HTML (summary) |
 | `vehicle.js` | Train type icons on cards |
 | `calendar.js` | Step 2 calendar grid |
-| `trip-card.js` | Outbound/return trip cards (mockup: valj-utresa) |
+| `trip-card.js` | Outbound/return trip cards |
 | `connection-detail.js` | Expandable stop timeline |
 | `summary.js` | Summary step |
 | `runtime.js` | Step nav, panels, AJAX loaders |
@@ -23,24 +23,6 @@
 
 Entry handle for WordPress: `mrt-journey-wizard` → `bootstrap.js`. Config: `mrtJourneyWizard` (localized).
 
-Regenerate after string changes: not required (strings come from PHP). For structural work, smoke-test wizard in Docker.
+Regenerate Vue bundle after TS/CSS changes: `composer vue:build` from repo root.
 
-**UI components (`mrt-jw-*`)**
-
-Shared building blocks in `components.css` + `render.js` (`JW.render`):
-
-| # | Component | Classes |
-|---|-----------|---------|
-| 1 | Trip head | `mrt-jw-trip-head`, `__copy`, `__side` |
-| 2 | Prices | `mrt-jw-prices`, `__table`, `__row--active` |
-| 3 | Notice | `mrt-jw-notice`, `__dot`, `__warn` |
-| 4 | Step head | `mrt-jw-step-head`, `__context` |
-| 5 | Timeline | `mrt-jw-timeline`, `__row`, `__transfer` |
-| 6 | Calendar | `mrt-jw-calendar__*`, `mrt-jw-btn--day` |
-| 7 | Panel | `mrt-jw-panel` (alias: `mrt-journey-wizard__panel`) |
-| 8 | Typography | `mrt-jw-typo--time`, `--route`, `--step-title`, … |
-| 9 | Expand | `mrt-jw-expand`, `mrt-jw-btn--expand` |
-
-Legacy `mrt-journey-wizard__*` classes remain on markup for compatibility.
-
-**Development debug pages** (one component per page): Railway Timetable → Component demo page → list after **Set up development menu**. Shortcode attribute `debug="date|outbound|return|summary"` loads fixture trips without AJAX (see `debug.js`, `debug-fixtures.php`).
+CSS variables still use the `--mrt-jw-*` prefix in `base.css` (historical name); class selectors are `.mrt-journey-wizard__*` only.

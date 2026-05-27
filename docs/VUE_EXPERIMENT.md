@@ -69,7 +69,7 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 - **Month calendar** and **timetable overview**: Vue SFCs with typed config (`src/config/types.ts`).
 - **Journey wizard**: reactive store (`wizard/store/createWizardStore.ts`), step SFCs, `useWizardContext()`.
 - Same AJAX actions as before (`mrt_journey_calendar_month`, `mrt_search_journey`, `mrt_journey_connection_detail`).
-- Wizard panels set `data-wizard-step` for step-scoped CSS in `assets/journey-wizard/`.
+- Wizard root sets `data-step` for hero layout; panels set `data-wizard-step` for step-scoped CSS in `assets/journey-wizard/`.
 
 ## Wizard Vue layout
 
@@ -78,9 +78,10 @@ frontend/vue/src/
   config/                    # parseMountConfig, typed configs per app
   composables/               # useMrtAjax, useWizardContext
   components/MrtStepShell.vue
+  utils/mrtStrings.ts        # resolveMrtString (strings / wizard / labels)
   wizard/
-    store/                   # createWizardStore, route/steps/selections
-    composables/             # useTripConnections, useWizardDebug
+    store/                   # createWizardStore, wizardStoreGetters, route/steps/selections
+    composables/             # useTripConnections, useWizardCalendar, useConnectionDetail, useWizardDebug
     components/              # step SFCs
     utils/
 ```

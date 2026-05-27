@@ -17,10 +17,10 @@ src/
   config/       # Typed mount config + parseMountConfig
   api/          # mrtPost
   composables/  # useMrtAjax, useWizardContext
+  utils/        # calendarGrid, monthGrid, mrtStrings (resolveMrtString)
   components/   # Shared UI (MrtStepShell)
   apps/
   wizard/       # store/, composables/, components/, utils/ (typed WizardCfg)
-  utils/        # calendarGrid, monthGrid
 ```
 
 ## Commands
@@ -43,7 +43,7 @@ From repo root: `composer vue:check`
 | Script | What it does |
 |--------|----------------|
 | `npm run typecheck` | `vue-tsc` |
-| `npm test` | Vitest (pure utils) |
+| `npm test` | Vitest (12 files: utils, store, parseMount) |
 | `npm run build` | Vite → `assets/dist/vue/` |
 | `npm run verify` | IIFE smoke load in Node |
 | `npm run check` | All of the above |

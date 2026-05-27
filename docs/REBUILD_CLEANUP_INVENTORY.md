@@ -167,7 +167,7 @@ inc/
 |--------|--------|-----------|
 | `assets/icons/train-types/` | `keep/move` | Tågikonerna ska behållas som produktassets och flyttas till ny assetstruktur. |
 | `assets/train-type-icons.css` | `rewrite` | Behåll ikonmappningen som krav, men skriv om CSS efter ny designstruktur. |
-| `assets/journey-wizard/` + `assets/journey-wizard.css` | `delete/rewrite` | Ta bort nuvarande styling. Ny frontend-CSS byggs senare från mockups. |
+| `assets/journey-wizard/` + `assets/journey-wizard.css` | `done` (Vue) | Modulär CSS i `assets/journey-wizard/`; bundlas via Vite i Vue-läge. jQuery-moduler kvar för legacy. |
 | `assets/frontend.js` | `rewrite` | Behåll bara beteende som behövs; separera från nuvarande styling/legacy planner. |
 | `assets/mrt-string-utils.js`, `assets/mrt-date-utils.js`, `assets/mrt-frontend-api.js` | `keep/move` | Beteende-/API-helpers, inte utseende. |
 | `assets/admin-*.js` | `rewrite` | Behåll där adminflöden kvarstår, men flytta per adminmodul. |

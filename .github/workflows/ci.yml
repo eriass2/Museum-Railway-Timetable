@@ -29,3 +29,6 @@ jobs:
 
       - name: Run local quick checks
         run: composer check
+
+      - name: Vue frontend check
+        run: composer vue:check

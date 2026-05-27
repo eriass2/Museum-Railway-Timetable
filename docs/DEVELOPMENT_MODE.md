@@ -17,7 +17,9 @@ Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` �
 
 Se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md). Bygg manuellt: `composer vue:build` eller `docker compose --profile tools run --rm vue`.
 
-Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
+Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). Samma kommando körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
+
+Utan `MRT_VUE_FRONTEND` laddas fortfarande jQuery-modulerna under `assets/journey-wizard/*.js` (legacy). Vue-bundeln används inte då.
 
 ## Endast utveckling (döljs i typisk produktion)
 
