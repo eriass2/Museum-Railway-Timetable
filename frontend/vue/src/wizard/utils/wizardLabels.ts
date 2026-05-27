@@ -1,7 +1,7 @@
 import type { MaybeRef } from 'vue';
 import { unref } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
-import type { WizardCfg } from './wizardCfgTypes';
+import type { WizardCfg, WizardCfgStringKey } from './wizardCfgTypes';
 
 export type { WizardCfg, DebugPreset, PriceMatrix, L10nMap } from './wizardCfgTypes';
 
@@ -11,8 +11,12 @@ export function wizardCfg(config: WizardVueConfig): WizardCfg {
   return { ...wizard, ...labels } as WizardCfg;
 }
 
-export function cfgStr(cfg: MaybeRef<WizardCfg>, key: string, fallback = ''): string {
-  const v = unref(cfg)[key as keyof WizardCfg];
+export function cfgStr(
+  cfg: MaybeRef<WizardCfg>,
+  key: WizardCfgStringKey,
+  fallback = '',
+): string {
+  const v = unref(cfg)[key];
   return typeof v === 'string' ? v : fallback;
 }
 

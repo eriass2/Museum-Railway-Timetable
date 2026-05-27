@@ -24,6 +24,8 @@ const title = computed(() =>
     : cfgStr(cfg, 'stepReturn', 'Välj återresa'),
 );
 
+const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
+
 const routeText = computed(() =>
   props.legCtx === 'return'
     ? `${store.toTitle} → ${store.fromTitle}`
@@ -63,7 +65,12 @@ watch(
     class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
     role="region"
   >
-    <MrtStepShell :cfg="cfg" :context-line="store.contextLine" :title="title" @back="onBack">
+    <MrtStepShell
+      :back-label="backLabel"
+      :context-line="store.contextLine"
+      :title="title"
+      @back="onBack"
+    >
       <div
         v-if="legCtx === 'return' && store.outbound"
         data-wizard-return-summary

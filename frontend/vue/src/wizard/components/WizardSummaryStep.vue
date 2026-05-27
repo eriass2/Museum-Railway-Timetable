@@ -17,6 +17,7 @@ const dateText = computed(() =>
 );
 
 const stepTitle = computed(() => cfgStr(cfg, 'stepSummary', 'Din resa'));
+const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
 
 function onBack(): void {
   store.clearError();
@@ -30,7 +31,12 @@ function onBack(): void {
     class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
     role="region"
   >
-    <MrtStepShell :cfg="cfg" :context-line="store.contextLine" :title="stepTitle" @back="onBack">
+    <MrtStepShell
+      :back-label="backLabel"
+      :context-line="store.contextLine"
+      :title="stepTitle"
+      @back="onBack"
+    >
 
     <div class="mrt-journey-wizard__summary-list">
       <article v-if="store.outbound" class="mrt-journey-wizard__summary-card">

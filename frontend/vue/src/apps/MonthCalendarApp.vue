@@ -4,7 +4,7 @@ import type { MonthDayMeta, MonthVueConfig } from '../config/types';
 import { buildMonthGrid } from '../utils/monthGrid';
 import { chunkWeekRows } from '../utils/calendarGrid';
 import { useMrtAjax } from '../composables/useMrtAjax';
-import { msg } from '../api/mrtApi';
+import { resolveMrtString } from '../utils/mrtStrings';
 
 const props = defineProps<{ config: MonthVueConfig }>();
 
@@ -135,7 +135,7 @@ async function onDayClick(ymd: string) {
       tabindex="-1"
     >
       <p v-if="dayLoading" class="mrt-empty mrt-empty--loading">
-        {{ msg(config, 'loading', 'Laddar...') }}
+        {{ resolveMrtString(config, 'loading', 'Laddar...') }}
       </p>
       <div v-else-if="dayError" class="mrt-alert mrt-alert-error" role="alert">{{ dayError }}</div>
       <div v-else v-html="dayHtml" />

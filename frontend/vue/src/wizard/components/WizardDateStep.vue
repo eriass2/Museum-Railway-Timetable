@@ -22,6 +22,7 @@ const {
 } = useWizardCalendar(store, config, cfg);
 
 const stepTitle = computed(() => cfgStr(cfg, 'stepDate', 'Välj datum'));
+const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
 
 function onBack(): void {
   store.dateYmd = '';
@@ -35,7 +36,12 @@ function onBack(): void {
     class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
     role="region"
   >
-    <MrtStepShell :cfg="cfg" :context-line="store.contextLine" :title="stepTitle" @back="onBack" />
+    <MrtStepShell
+      :back-label="backLabel"
+      :context-line="store.contextLine"
+      :title="stepTitle"
+      @back="onBack"
+    />
     <div class="mrt-journey-wizard__calendar-card">
       <WizardCalendarNav
         :cfg="cfg"

@@ -27,8 +27,80 @@ export type DebugPreset = {
   returnConnections?: JourneyConnection[];
 };
 
+/** Known wizard/labels string keys from PHP l10n. */
+export type WizardCfgStringKey =
+  | 'stepRoute'
+  | 'stepDate'
+  | 'stepOutbound'
+  | 'stepReturn'
+  | 'stepSummary'
+  | 'loading'
+  | 'errorGeneric'
+  | 'errorSameStations'
+  | 'noConnections'
+  | 'showStops'
+  | 'hideStops'
+  | 'selectTrip'
+  | 'noticeLabel'
+  | 'durationMinutes'
+  | 'outboundHeading'
+  | 'returnHeading'
+  | 'onDate'
+  | 'pleaseStations'
+  | 'tripTypeSingle'
+  | 'tripTypeReturn'
+  | 'routeContext'
+  | 'routeDateContext'
+  | 'directTrip'
+  | 'transferTrip'
+  | 'selectedOutbound'
+  | 'towards'
+  | 'changeAt'
+  | 'transferWait'
+  | 'passedStations'
+  | 'colService'
+  | 'colTrainType'
+  | 'colDeparture'
+  | 'colArrival'
+  | 'colStation'
+  | 'colActions'
+  | 'calendarGridLabel'
+  | 'dayDateOk'
+  | 'dayDateTraffic'
+  | 'dayDateNone'
+  | 'tripsCaptionOutbound'
+  | 'tripsCaptionReturn'
+  | 'btnChooseTripAria'
+  | 'btnShowStopsAria'
+  | 'legSegmentLabel'
+  | 'priceTableTypeColumn'
+  | 'priceTitle'
+  | 'priceNote'
+  | 'priceDash'
+  | 'priceZoneLabel'
+  | 'needsJs'
+  | 'stepNavAria'
+  | 'routeTitle'
+  | 'from'
+  | 'to'
+  | 'fromPlaceholder'
+  | 'toPlaceholder'
+  | 'tripTypeLegend'
+  | 'tripSingle'
+  | 'tripReturn'
+  | 'searchTrip'
+  | 'showTimetable'
+  | 'back'
+  | 'thisMonth'
+  | 'legendOk'
+  | 'legendTraffic'
+  | 'legendNone'
+  | 'ticketCta'
+  | 'calPrevAria'
+  | 'calNextAria';
+
 /** Merged PHP wizard + labels JSON for the journey wizard UI. */
-export type WizardCfg = {
+export type WizardCfg = Partial<Record<WizardCfgStringKey, string>> & {
   monthNames?: string[];
   weekdayAbbrev?: string[];
   priceStationZones?: PriceStationZones;
@@ -39,5 +111,4 @@ export type WizardCfg = {
   trainTypeIcons?: L10nMap;
   trainTypeSlugIcons?: L10nMap;
   debugPresets?: Record<string, DebugPreset>;
-  [key: string]: unknown;
 };

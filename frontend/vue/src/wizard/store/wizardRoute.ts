@@ -1,6 +1,6 @@
-import { msg } from '../../api/mrtApi';
 import type { WizardVueConfig } from '../../config/types';
-import type { WizardStep } from '../types';
+import { resolveMrtString } from '../../utils/mrtStrings';
+import type { JourneyConnection, WizardStep } from '../types';
 import { cfgStr, type WizardCfg } from '../utils/wizardLabels';
 
 export type WizardRouteState = {
@@ -23,7 +23,11 @@ export function validateWizardRoute(
   }
   if (fromId === toId) {
     state.showError(
-      msg(config, 'errorSameStations', cfgStr(cfg, 'errorGeneric', 'Ogiltiga stationer.')),
+      resolveMrtString(
+        config,
+        'errorSameStations',
+        cfgStr(cfg, 'errorGeneric', 'Ogiltiga stationer.'),
+      ),
     );
     return false;
   }
@@ -32,8 +36,8 @@ export function validateWizardRoute(
 
 export function resetRouteSelections(state: {
   dateYmd: string;
-  outbound: unknown;
-  inbound: unknown;
+  outbound: JourneyConnection | null;
+  inbound: JourneyConnection | null;
 }): void {
   state.dateYmd = '';
   state.outbound = null;
