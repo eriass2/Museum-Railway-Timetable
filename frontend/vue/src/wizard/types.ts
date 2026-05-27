@@ -36,6 +36,7 @@ export type JourneyConnection = {
   connection_type?: string;
   notice?: string;
   legs?: JourneyLeg[];
+  transfer_wait_minutes?: number;
 };
 
 export type TimelineStop = {
