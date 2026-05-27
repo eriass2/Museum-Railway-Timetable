@@ -1,6 +1,6 @@
 /**
  * Journey wizard – summary step contextual overrides.
- * Components: components.css (mrt-jw-*).
+ * Components: components.css (mrt-journey-wizard__*).
  *
  * @package Museum_Railway_Timetable
  */
@@ -33,7 +33,7 @@
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__prices-scroll {
-    background: var(--mrt-jw-surface);
+    background: var(--mrt-wizard-surface);
     padding: 0.5rem 0.65rem 0.75rem;
 }
 

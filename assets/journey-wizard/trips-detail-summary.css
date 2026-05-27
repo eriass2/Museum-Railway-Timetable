@@ -1,5 +1,5 @@
-﻿/**
- * Journey wizard – detail segments and demo helpers.
+/**
+ * Journey wizard � detail segments and demo helpers.
  * Shared trip/summary/price styles: components.css.
  *
  * @package Museum_Railway_Timetable
@@ -7,7 +7,7 @@
 
 .mrt-journey-wizard__detail-title {
     margin: 0 0 0.6rem;
-    color: var(--mrt-jw-text);
+    color: var(--mrt-wizard-text);
     font-size: 1rem;
 }
 

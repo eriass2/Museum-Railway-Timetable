@@ -1,6 +1,6 @@
 /**
  * Journey wizard – utresa/återresa step overrides.
- * Components: components.css (mrt-jw-*).
+ * Components: components.css (mrt-journey-wizard__*).
  *
  * @package Museum_Railway_Timetable
  */
@@ -21,14 +21,14 @@
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-card {
-    border: 3px solid var(--mrt-jw-yellow);
-    background: var(--mrt-jw-surface);
-    color: var(--mrt-jw-text);
+    border: 3px solid var(--mrt-wizard-yellow);
+    background: var(--mrt-wizard-surface);
+    color: var(--mrt-wizard-text);
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__trip-time,
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__trip-route {
-    color: var(--mrt-jw-text);
+    color: var(--mrt-wizard-text);
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__vehicle {
@@ -53,11 +53,11 @@
 }
 
 .mrt-journey-wizard__steps li[aria-current="step"] {
-    box-shadow: 0 0 0 2px var(--mrt-jw-focus);
+    box-shadow: 0 0 0 2px var(--mrt-wizard-focus);
 }
 
 .mrt-journey-wizard__steps li.is-done {
-    border-color: var(--mrt-jw-yellow);
+    border-color: var(--mrt-wizard-yellow);
 }
 
 .mrt-journey-wizard__cal-prev:focus-visible,
@@ -65,6 +65,6 @@
 .mrt-journey-wizard__back:focus-visible,
 .mrt-journey-wizard__cta:focus-visible,
 .mrt-journey-wizard__btn-select:focus-visible {
-    outline: 3px solid var(--mrt-jw-focus);
+    outline: 3px solid var(--mrt-wizard-focus);
     outline-offset: 3px;
 }

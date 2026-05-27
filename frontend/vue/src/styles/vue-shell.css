@@ -8,9 +8,9 @@
   max-width: 46rem;
   margin: 1.5rem auto;
   padding: 1.25rem 1.5rem;
-  background: var(--mrt-jw-green-dark, #1f4d2e);
+  background: var(--mrt-wizard-green-dark, #1f4d2e);
   color: #fff;
-  border: 2px dashed var(--mrt-jw-yellow, #f5d020);
+  border: 2px dashed var(--mrt-wizard-yellow, #f5d020);
   box-sizing: border-box;
 }
 
@@ -18,7 +18,7 @@
   display: inline-block;
   margin: 0 0 0.5rem;
   padding: 0.15rem 0.5rem;
-  background: var(--mrt-jw-yellow, #f5d020);
+  background: var(--mrt-wizard-yellow, #f5d020);
   color: #151515;
   font-size: 0.75rem;
   font-weight: 800;

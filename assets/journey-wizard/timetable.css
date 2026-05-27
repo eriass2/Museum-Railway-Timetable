@@ -1,4 +1,4 @@
-﻿.mrt-journey-wizard__timetable .mrt-timetable-overview {
+.mrt-journey-wizard__timetable .mrt-timetable-overview {
     --mrt-print-green: #118326;
     --mrt-print-green-dark: #0b5d15;
     --mrt-print-station: #c9ddbc;
@@ -150,7 +150,7 @@
 }
 
 .mrt-journey-wizard__timetable .mrt-station-col-header::before {
-    content: "T├Ñgnummer:";
+    content: "T+�gnummer:";
     font-size: 0.92rem;
 }
 

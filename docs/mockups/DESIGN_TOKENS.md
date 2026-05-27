@@ -6,13 +6,13 @@ Extraherat från `assets/journey-wizard/base.css` och relaterade moduler. Uppdat
 
 | Token | Värde | Användning |
 |-------|--------|------------|
-| `--mrt-jw-green` | `#1c650f` | Primär grön |
-| `--mrt-jw-green-dark` | `#15530b` | Panelbakgrund |
-| `--mrt-jw-yellow` | `#e3d449` | Accent, aktivt steg, CTA |
-| `--mrt-jw-orange` | `#f39813` | (reserverad accent) |
-| `--mrt-jw-surface` | `#ffffff` | Ljusa ytor i steg |
-| `--mrt-jw-text` | `#141414` | Brödtext på ljus yta |
-| `--mrt-jw-focus` | `#fff4a3` | Fokusring |
+| `--mrt-wizard-green` | `#1c650f` | Primär grön |
+| `--mrt-wizard-green-dark` | `#15530b` | Panelbakgrund |
+| `--mrt-wizard-yellow` | `#e3d449` | Accent, aktivt steg, CTA |
+| `--mrt-wizard-orange` | `#f39813` | (reserverad accent) |
+| `--mrt-wizard-surface` | `#ffffff` | Ljusa ytor i steg |
+| `--mrt-wizard-text` | `#141414` | Brödtext på ljus yta |
+| `--mrt-wizard-focus` | `#fff4a3` | Fokusring |
 
 ## Typografi
 
@@ -37,22 +37,22 @@ Se `assets/journey-wizard/controls-calendar.css`.
 
 - Vit turkort med skugga på grön panel (`trips-detail-summary.css`)
 - **Välj →**: gul knapp (`controls-calendar.css` `.mrt-journey-wizard__btn-select`)
-- Tider med punkt: `10.00 → 10.57` (`trip-card.js` `formatTripClock`)
+- Tider med punkt: `10.00 → 10.57`
 - Byte: fordon badges med `→` mellan (`mrt-journey-wizard__vehicle-sep`)
 - Vald utresa-kort på retursteget: gul kant, mörkgrön bakgrund (`steps-outbound-return.css`)
 - Aktivt steg i steglistan: gul bakgrund + fokusring vid `aria-current="step"`
-- Expanderat kort: tidslinje med punkt-tider, `∨ visa passerade stationer`, **Priser**-tabell i kortet (`connection-detail.js`, `prices.js` `compactTitle`)
+- Expanderat kort: tidslinje med punkt-tider, visa/dölj hållplatser, **Priser**-tabell i kortet
 
 ## Sammanfattning (`Din resa`)
 
-- Vit **Utresa** / **Återresa**-kort i lista (`summaryLegCardHtml`, `steps-summary.css`)
+- Vit **Utresa** / **Återresa**-kort i lista (`steps-summary.css`)
 - **Priser** på grön panel: vit rubrik, vit tabell-yta, markerad tur/retur-rad
 - Prisceller med `kr`-suffix
 - Gul **Fortsätt till biljetter**-CTA centrerad under tabellen
 
 ## Återresa (`valj-aterresa.png`)
 
-- **Vald utresa:** vit kort med gul kant ovanför listan (`steps-outbound-return.css`, `selectedTripHtml`)
+- **Vald utresa:** vit kort med gul kant ovanför listan
 - Returkort: samma som utresa
 - **Byte i detalj:** `%d min byte` från `transfer_wait_minutes` (API)
 - **Varning:** `⚠` + fet text vid t.ex. brandrisk (`notice--warning`)
