@@ -21,7 +21,7 @@ const cells = computed(() =>
     Number(props.config.weekdayFirst) || 1,
     Number(props.config.weekdayFirstSunday) || 0,
     Boolean(props.config.startMonday),
-    dates.value as Record<number, MonthDayMeta>,
+    dates.value,
   ),
 );
 

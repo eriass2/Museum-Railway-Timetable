@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { TimelineStop } from '../types';
-import type { WizardCfg } from '../utils/wizardLabels';
+import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStr } from '../utils/wizardLabels';
 import { formatTripClock } from '../utils/format';
 

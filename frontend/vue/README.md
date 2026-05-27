@@ -19,7 +19,7 @@ src/
   composables/  # useMrtAjax, useWizardContext
   components/   # Shared UI (MrtStepShell)
   apps/
-  wizard/       # Store, steps, utils
+  wizard/       # store/, composables/, components/, utils/ (typed WizardCfg)
   utils/        # calendarGrid, monthGrid
 ```
 

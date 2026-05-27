@@ -1,4 +1,4 @@
-import type { WizardCfg } from './wizardLabels';
+import type { WizardCfg } from './wizardCfgTypes';
 import { cfgStr } from './wizardLabels';
 
 export function formatTripClock(time: string): string {

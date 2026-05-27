@@ -1,7 +1,7 @@
 import { computed, reactive, type ComputedRef } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
 import type { CalendarDayStatus, JourneyConnection, TripType, WizardStep } from '../types';
-import { cfgStr, wizardCfg, type WizardCfg } from '../utils/wizardLabels';
+import { cfgStr, cfgStringArray, wizardCfg, type WizardCfg } from '../utils/wizardLabels';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 import { buildStepLabels, buildStepSequence } from './wizardSteps';
 import { resetRouteSelections, validateWizardRoute } from './wizardRoute';
@@ -84,10 +84,7 @@ export function createWizardStore(config: WizardVueConfig): WizardInjection {
       if (!this.dateYmd) {
         return route;
       }
-      const human = formatYmdForDisplay(
-        this.dateYmd,
-        cfg.value.monthNames as string[] | undefined,
-      );
+      const human = formatYmdForDisplay(this.dateYmd, cfgStringArray(cfg.value, 'monthNames'));
       return `${route}\n${human}`;
     },
 

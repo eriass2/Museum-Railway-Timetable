@@ -1,15 +1,12 @@
 import type { TripType } from '../types';
-import type { WizardCfg } from './wizardLabels';
+import type { PriceMatrix, WizardCfg } from './wizardCfgTypes';
 import { cfgStr } from './wizardLabels';
 
 export const PRICE_TYPE_KEYS = ['single', 'return', 'day'] as const;
 export const PRICE_CAT_KEYS = ['adult', 'child_4_15', 'child_0_3', 'student_senior'] as const;
 
-type PriceMatrix = Record<string, Record<string, string | number | null>>;
-
 export function zonesForStationPair(fromId: number, toId: number, cfg: WizardCfg): number {
-  const raw = cfg.priceStationZones;
-  const map = typeof raw === 'object' && raw ? (raw as Record<string, number[]>) : {};
+  const map = cfg.priceStationZones ?? {};
   const fromZones = map[String(fromId)] || [];
   const toZones = map[String(toId)] || [];
   let best = 4;
@@ -28,16 +25,16 @@ export function zonesForStationPair(fromId: number, toId: number, cfg: WizardCfg
 }
 
 function matrixForZone(cfg: WizardCfg, zones: number): PriceMatrix {
-  const byZone = cfg.priceMatrixByZone as Record<string, Record<string, Record<string, unknown>>> | undefined;
+  const byZone = cfg.priceMatrixByZone;
   const zoneKey = String(Math.max(1, Math.min(4, zones || 4)));
   if (!byZone) {
-    return (cfg.priceMatrix as PriceMatrix) || {};
+    return cfg.priceMatrix ?? {};
   }
   const out: PriceMatrix = {};
   PRICE_TYPE_KEYS.forEach((tk) => {
     out[tk] = {};
     PRICE_CAT_KEYS.forEach((ck) => {
-      out[tk][ck] = (byZone[tk]?.[ck]?.[zoneKey] as string | number | null) ?? null;
+      out[tk][ck] = byZone[tk]?.[ck]?.[zoneKey] ?? null;
     });
   });
   return out;

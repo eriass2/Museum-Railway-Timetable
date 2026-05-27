@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, type MaybeRef, unref } from 'vue';
 import type { TripType } from '../types';
-import type { WizardCfg } from '../utils/wizardLabels';
-import { cfgStr } from '../utils/wizardLabels';
+import type { WizardCfg } from '../utils/wizardCfgTypes';
+import { cfgRecord, cfgStr } from '../utils/wizardLabels';
 import {
   PRICE_CAT_KEYS,
   PRICE_TYPE_KEYS,
@@ -22,8 +22,8 @@ const props = defineProps<{
 const cfg = computed(() => unref(props.cfg));
 const zones = computed(() => zonesForStationPair(unref(props.fromId), unref(props.toId), cfg.value));
 const priceData = computed(() => priceMatrixForTrip(unref(props.tripType), cfg.value, zones.value));
-const tickets = computed(() => (cfg.value.priceTickets || {}) as Record<string, string>);
-const cats = computed(() => (cfg.value.priceCategories || {}) as Record<string, string>);
+const tickets = computed(() => cfgRecord(cfg.value, 'priceTickets'));
+const cats = computed(() => cfgRecord(cfg.value, 'priceCategories'));
 </script>
 
 <template>

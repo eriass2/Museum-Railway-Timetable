@@ -1,5 +1,5 @@
 import type { JourneyLeg } from '../types';
-import type { WizardCfg } from './wizardLabels';
+import type { WizardCfg } from './wizardCfgTypes';
 
 export function trainIconKey(
   label: string,
@@ -10,7 +10,7 @@ export function trainIconKey(
   if (iconKeyArg) {
     return iconKeyArg;
   }
-  const slugMap = (cfg.trainTypeSlugIcons || {}) as Record<string, string>;
+  const slugMap = cfg.trainTypeSlugIcons ?? {};
   const slugLower = slug.toLowerCase();
   if (slugLower && slugMap[slugLower]) {
     return slugMap[slugLower];
@@ -32,7 +32,7 @@ export function trainIconKey(
 }
 
 export function trainIconUrl(kind: string, cfg: WizardCfg): string {
-  const icons = (cfg.trainTypeIcons || {}) as Record<string, string>;
+  const icons = cfg.trainTypeIcons ?? {};
   return icons[kind] || icons.diesel || '';
 }
 

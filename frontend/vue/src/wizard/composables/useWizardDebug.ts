@@ -1,27 +1,10 @@
-import type { CalendarDayStatus, JourneyConnection, WizardStep } from '../types';
 import type { WizardInjection } from '../store/createWizardStore';
-
-type DebugPreset = {
-  step?: WizardStep;
-  tripType?: string;
-  from?: number;
-  to?: number;
-  fromTitle?: string;
-  toTitle?: string;
-  date?: string;
-  outbound?: JourneyConnection | null;
-  inbound?: JourneyConnection | null;
-  calendarDays?: Record<string, CalendarDayStatus>;
-  calendarYear?: number;
-  calendarMonth?: number;
-  outboundConnections?: JourneyConnection[];
-  returnConnections?: JourneyConnection[];
-};
+import type { DebugPreset } from '../utils/wizardCfgTypes';
 
 export function applyWizardDebugPreset(ctx: WizardInjection, debugKey: string): void {
   const { store, cfg } = ctx;
-  const presets = cfg.value.debugPresets as Record<string, DebugPreset> | undefined;
-  const preset = presets?.[debugKey];
+  const presets = cfg.value.debugPresets;
+  const preset: DebugPreset | undefined = presets?.[debugKey];
   if (!preset) {
     return;
   }

@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import MrtStepShell from '../../components/MrtStepShell.vue';
-import { cfgStr } from '../utils/wizardLabels';
+import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
 import { formatTripClock } from '../utils/format';
@@ -13,7 +13,7 @@ const { ticketUrl } = defineProps<{ ticketUrl: string }>();
 const { store, cfg } = useWizardContext();
 
 const dateText = computed(() =>
-  formatYmdForDisplay(store.dateYmd, cfg.value.monthNames as string[] | undefined),
+  formatYmdForDisplay(store.dateYmd, cfgStringArray(cfg.value, 'monthNames')),
 );
 
 const stepTitle = computed(() => cfgStr(cfg, 'stepSummary', 'Din resa'));
