@@ -74,7 +74,18 @@ npm run dev
 
 ## Current scope
 
-Placeholder shells show received config. Port UI step by step; reuse existing AJAX actions via `fetch` + `config.ajaxurl` / `config.nonce`.
+- **Month calendar** and **timetable overview**: Vue SFCs (`MonthCalendarApp`, `TimetableOverviewApp`).
+- **Journey wizard**: Vue step flow (`wizard/components/*`, `useWizard` composable). Same AJAX actions as legacy (`mrt_journey_calendar_month`, `mrt_search_journey`, `mrt_journey_connection_detail`).
+- Legacy jQuery modules under `frontend/vue/src/wizard/legacy/` are **not** bundled; kept for reference until removed.
+
+## Wizard Vue layout
+
+```
+frontend/vue/src/wizard/
+  composables/useWizard.ts   — step state, route/date/trip selection
+  components/                — one SFC per wizard step
+  utils/                     — dates, connections, prices, vehicle icons
+```
 
 ## Switch back
 
