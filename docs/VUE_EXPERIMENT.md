@@ -57,7 +57,7 @@ Docker (tools profile):
 docker compose --profile tools run --rm vue
 ```
 
-Output: `assets/dist/vue/` (commit after CSS/JS changes so hosts without Node still work).
+Output: `assets/dist/vue/` (commit after CSS/JS changes so hosts without Node still work). Entry chunk `main-*.js` plus async chunk `JourneyWizardApp-*.js` when wizard shortcode is used.
 
 Dev server (component work only — WP still serves shortcodes):
 
@@ -76,7 +76,8 @@ npm run dev
 
 - **Month calendar** and **timetable overview**: Vue SFCs (`MonthCalendarApp`, `TimetableOverviewApp`).
 - **Journey wizard**: Vue step flow (`wizard/components/*`, `useWizard` composable). Same AJAX actions as legacy (`mrt_journey_calendar_month`, `mrt_search_journey`, `mrt_journey_connection_detail`).
-- Legacy jQuery modules under `frontend/vue/src/wizard/legacy/` are **not** bundled; kept for reference until removed.
+- Journey wizard is **lazy-loaded** (`defineAsyncComponent`) so month/overview pages avoid the wizard chunk.
+- Legacy jQuery modules were removed from `frontend/vue/`; behaviour lives in `wizard/components/` and `wizard/utils/`.
 
 ## Wizard Vue layout
 

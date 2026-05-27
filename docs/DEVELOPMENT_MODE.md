@@ -37,7 +37,7 @@ Se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md). Bygg manuellt: `composer vue:build` e
 | **Debug: Overview** | Endast tidtabellsöversikt (GRÖN) |
 | **Debug: Wizard date / outbound / return / summary** | Wizard med `debug="…"` och hårdkodad fixture-data |
 
-Wizard-debug kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Presets: `inc/public/journey-wizard/debug-fixtures.php`, `assets/journey-wizard/debug.js`.
+Wizard-debug kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Presets: `inc/public/journey-wizard/debug-fixtures.php`, appliceras i Vue via `useWizardDebug.ts` (`debug="date|outbound|return|summary"`).
 
 Gamla planner smoke-sidor (om de fanns) tas bort vid setup.
 

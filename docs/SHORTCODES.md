@@ -99,19 +99,18 @@ Delad journey-domän och AJAX (används av wizarden):
 
 - **Domän:** `inc/domain/journey/`
 - **AJAX:** `inc/infrastructure/ajax/journey.php`, `journey-parse.php`
-- **Delade JS:** `mrt-string-utils.js`, `mrt-date-utils.js`, `mrt-frontend-api.js`, `assets/journey-wizard/` (moduler, se README där)
+- **Publik frontend (Vue):** `frontend/vue/` → `assets/dist/vue/` (se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md))
 
 ---
 
 ## Frontend Assets
 
-Vid användning på webbplatsen laddar plugin relevanta filer via `inc/assets.php`, bland annat:
+Med `MRT_VUE_FRONTEND` laddar plugin **en** Vite-bundel (`assets/dist/vue/`) som innehåller CSS (importerad från `assets/*.css`) och Vue-appar för alla tre shortcodes. Wizard laddas som async chunk endast när wizarden mountas.
 
-- **Månad:** `assets/frontend.js` (kalender-AJAX)
-- **Wizard:** `assets/journey-wizard/*.js` + `assets/journey-wizard.css`
-- **Tågtypsikoner:** `assets/train-type-icons.css`
+- **Enqueue:** `inc/assets/vue-frontend.php`, `inc/assets/frontend.php`
+- **Tågtypsikoner:** bundlade via `frontend/vue/src/styles/mrt-public.css`
 
-Assets köas när motsvarande shortcode finns på sidan (eller via filter `mrt_should_enqueue_frontend_assets`).
+Assets köas när motsvarande shortcode finns i sidans innehåll (eller när shortcode renderas / filter `mrt_should_enqueue_frontend_assets`).
 
 ---
 

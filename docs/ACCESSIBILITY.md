@@ -30,13 +30,13 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 | Rörelse | `prefers-reduced-motion` i `assets/journey-wizard/base.css` |
 | Ikoner | Dekorativa `<img alt="">` i resekort; tidtabell i drawer använder samma PNG som översikt |
 
-**Filer:** `inc/public/journey-wizard/` (shell, steps, fields), `assets/journey-wizard/*.js`, `assets/journey-wizard/*.css`.
+**Filer:** `inc/public/journey-wizard/` (shell, config), `frontend/vue/src/wizard/components/`, `assets/journey-wizard/*.css` (bundlad i Vite).
 
 ---
 
 ## Månad och översikt
 
-**Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid AJAX. Filer: `inc/public/month-calendar/shortcode.php`, `assets/frontend.js`.
+**Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid AJAX. Filer: `inc/public/month-calendar/`, `frontend/vue/src/apps/MonthCalendarApp.vue`.
 
 **Översikt:** CSS Grid (inte `<table>`) – `role="region"`, `h3` per rutt, `aria-label` på celler via `MRT_overview_grid_cell_aria_label`. Filer: `inc/domain/timetable/view/overview.php`, `grid*.php`.
 
