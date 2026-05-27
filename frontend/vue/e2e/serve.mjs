@@ -39,7 +39,6 @@ function buildWizardConfig(requestUrl) {
     timetableId: 0,
     embedded: true,
     debug,
-    heroSubtitle: 'E2E fixture',
     startOfWeek: 1,
     wizard: {
       stepRoute: 'Sök resa',
@@ -64,7 +63,10 @@ function buildWizardConfig(requestUrl) {
       weekdayAbbrev: ['mån', 'tis', 'ons', 'tors', 'fre', 'lör', 'sön'],
     },
     labels: {
-      routeTitle: 'Sök din resa',
+      routeTitle: 'Planera resa med Lennakatten',
+      routeIntro: 'Välj avgång, ankomst och restyp.',
+      tripSingle: 'Enkel resa',
+      tripReturn: 'Tur och retur',
       back: '← Tillbaka',
       stepDate: 'Välj datum',
     },

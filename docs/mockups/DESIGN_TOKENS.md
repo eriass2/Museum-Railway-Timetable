@@ -1,18 +1,20 @@
-# Journey wizard – design tokens (från nuvarande CSS)
+# Journey wizard – design tokens
 
-Extraherat från `assets/journey-wizard/base.css` och relaterade moduler. Uppdatera när mockup-PNG finns i `docs/mockups/`.
+Komponent-specifika tokens. **Färgpalett (källa):** [docs/design/COLOR_PALETTE.md](../design/COLOR_PALETTE.md) och `assets/mrt-color-tokens.css`.
 
-## Färger
+## Färger (alias)
 
-| Token | Värde | Användning |
-|-------|--------|------------|
-| `--mrt-wizard-green` | `#1c650f` | Primär grön |
-| `--mrt-wizard-green-dark` | `#15530b` | Panelbakgrund |
-| `--mrt-wizard-yellow` | `#e3d449` | Accent, aktivt steg, CTA |
-| `--mrt-wizard-orange` | `#f39813` | (reserverad accent) |
-| `--mrt-wizard-surface` | `#ffffff` | Ljusa ytor i steg |
-| `--mrt-wizard-text` | `#141414` | Brödtext på ljus yta |
-| `--mrt-wizard-focus` | `#fff4a3` | Fokusring |
+Wizard-CSS använder `--mrt-wizard-*` som pekar på `--mrt-color-*` i token-filen.
+
+| Token | Mappar till | Användning |
+|-------|-------------|------------|
+| `--mrt-wizard-green` | `green-600` | Varumärkesgrön |
+| `--mrt-wizard-green-dark` | `green-700` | Hero / mörk panel |
+| `--mrt-wizard-yellow` | `accent-600` | CTA, aktivt steg (svart text) |
+| `--mrt-wizard-yellow-bright` | `accent-500` | Highlight på mörk bakgrund |
+| `--mrt-wizard-surface` | `neutral-100` | Formulärfält |
+| `--mrt-wizard-text` | `neutral-900` | Brödtext på ljus yta |
+| `--mrt-wizard-focus` | `focus-ring` | Fokusring |
 
 ## Typografi
 

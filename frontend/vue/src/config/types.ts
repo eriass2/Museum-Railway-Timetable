@@ -49,6 +49,8 @@ export type WizardVueConfig = MrtAjaxConfig & {
   stations?: WizardStation[];
   ticketUrl?: string;
   timetableId?: number;
+  /** Optional URL to a dedicated timetable page (external link on route step). */
+  timetablePageUrl?: string;
   embedded?: boolean;
   debug?: string;
   heroSubtitle?: string;

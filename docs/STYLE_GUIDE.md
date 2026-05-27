@@ -4,6 +4,8 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 
 **Arkitektur och rebuild-design:** [REBUILD_RULES.md](REBUILD_RULES.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Denna guide fokuserar på namngivning, säkerhet och filkonventioner så att regler inte dupliceras.
 
+**Visuell design (färger):** [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) — tokens i `assets/mrt-color-tokens.css`. Använd CSS-variabler, inte hårdkodad hex i nya komponenter.
+
 ---
 
 ## 1. Clean Code – Generella regler
@@ -72,9 +74,9 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Variabler** – CSS custom properties med `--mrt-` prefix
 
 ### Struktur
-- **Rebuild-status** – Nuvarande utseendeimplementation är purgad. Ny CSS ska byggas från mockups enligt `REBUILD_RULES.md`.
+- **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
 - **UI-klasser** – Nya klasser ska använda `.mrt-*` och vara BEM-liknande där det behövs.
-- **CSS-variabler** – Använd semantiska `--mrt-*` tokens när ny design byggs upp.
+- **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
 - **Inga inline styles** – All styling i CSS-filer.
 

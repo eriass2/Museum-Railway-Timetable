@@ -38,7 +38,7 @@
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__price-note {
-    color: rgba(255, 255, 255, 0.88);
+    color: var(--mrt-color-on-dark-muted);
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="summary"] [data-wizard-ticket-wrap] {

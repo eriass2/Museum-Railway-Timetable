@@ -63,7 +63,7 @@ function MRT_component_debug_page_specs(): array {
 			'option'     => 'mrt_debug_page_wizard_date_id',
 			'title'      => __( 'Debug – Wizard (date)', 'museum-railway-timetable' ),
 			'menu_label' => __( 'Debug: Wizard date', 'museum-railway-timetable' ),
-			'content'    => '[museum_journey_wizard embedded="1" debug="date" hero_subtitle="Fixture: calendar step"]',
+			'content'    => '[museum_journey_wizard embedded="1" debug="date"]',
 		),
 		array(
 			'option'     => 'mrt_debug_page_wizard_outbound_id',
@@ -75,13 +75,13 @@ function MRT_component_debug_page_specs(): array {
 			'option'     => 'mrt_debug_page_wizard_return_id',
 			'title'      => __( 'Debug – Wizard (return)', 'museum-railway-timetable' ),
 			'menu_label' => __( 'Debug: Wizard return', 'museum-railway-timetable' ),
-			'content'    => '[museum_journey_wizard embedded="1" debug="return" hero_subtitle="Fixture: return step"]',
+			'content'    => '[museum_journey_wizard embedded="1" debug="return"]',
 		),
 		array(
 			'option'     => 'mrt_debug_page_wizard_summary_id',
 			'title'      => __( 'Debug – Wizard (summary)', 'museum-railway-timetable' ),
 			'menu_label' => __( 'Debug: Wizard summary', 'museum-railway-timetable' ),
-			'content'    => '[museum_journey_wizard embedded="1" debug="summary" ticket_url="https://example.com/biljetter" hero_subtitle="Fixture: summary + prices"]',
+			'content'    => '[museum_journey_wizard embedded="1" debug="summary" ticket_url="https://example.com/biljetter"]',
 		),
 	);
 }

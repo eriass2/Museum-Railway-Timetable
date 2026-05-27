@@ -4,7 +4,9 @@
  * @package Museum_Railway_Timetable
  */
 
+@import url("mrt-color-tokens.css");
 @import url("journey-wizard/base.css");
+@import url("journey-wizard/steps-route.css");
 @import url("journey-wizard/components.css");
 @import url("journey-wizard/timetable.css");
 @import url("journey-wizard/controls-calendar.css");

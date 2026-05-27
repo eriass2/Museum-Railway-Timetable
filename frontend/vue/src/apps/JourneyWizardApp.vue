@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, provide, ref, watch } from 'vue';
+import { nextTick, onMounted, provide, ref, watch } from 'vue';
 import { applyWizardDebugPreset } from '../wizard/composables/useWizardDebug';
-import { loadOverviewHtml } from '../composables/useTimetableHtml';
 import type { WizardVueConfig } from '../config/types';
 import { createWizardStore } from '../wizard/store/createWizardStore';
 import { wizardKey } from '../wizard/injection';
@@ -23,10 +22,7 @@ const stations = props.config.stations || [];
 const embedded = Boolean(props.config.embedded);
 const debug = String(props.config.debug || '');
 const ticketUrl = String(props.config.ticketUrl || '');
-const heroSubtitle = String(props.config.heroSubtitle || '');
-const timetableId = Number(props.config.timetableId) || 0;
-const timetableHtml = ref('');
-const showTimetable = computed(() => timetableId > 0 && Boolean(timetableHtml.value));
+const timetablePageUrl = String(props.config.timetablePageUrl || '');
 const panelsRef = ref<HTMLElement | null>(null);
 
 watch(
@@ -44,12 +40,9 @@ watch(
   },
 );
 
-onMounted(async () => {
+onMounted(() => {
   if (debug) {
     applyWizardDebugPreset(wizardCtx, debug);
-  }
-  if (timetableId > 0) {
-    timetableHtml.value = await loadOverviewHtml(props.config, timetableId);
   }
 });
 </script>
@@ -81,9 +74,7 @@ onMounted(async () => {
           <WizardRouteStep
             v-if="store.step === 'route'"
             :stations="stations"
-            :hero-subtitle="heroSubtitle"
-            :timetable-html="timetableHtml"
-            :show-timetable="showTimetable"
+            :timetable-page-url="timetablePageUrl"
           />
           <WizardDateStep v-else-if="store.step === 'date'" />
           <WizardTripStep v-else-if="store.step === 'outbound'" leg-ctx="outbound" />

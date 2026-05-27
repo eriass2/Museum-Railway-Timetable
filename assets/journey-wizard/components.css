@@ -86,25 +86,38 @@
 
 .mrt-journey-wizard__cta {
     background: var(--mrt-wizard-yellow);
-    color: #151515;
+    color: var(--mrt-color-on-accent);
     text-transform: uppercase;
 }
 
 .mrt-journey-wizard__btn-select {
     min-width: 6.5rem;
     background: var(--mrt-wizard-yellow);
-    color: #151515;
+    color: var(--mrt-color-on-accent);
     text-transform: none;
+}
+
+/* Override global .mrt-btn--primary when combined with wizard CTA */
+.mrt-journey-wizard .mrt-btn--primary.mrt-journey-wizard__cta {
+    background: var(--mrt-wizard-yellow);
+    color: var(--mrt-color-on-accent);
+    border: 0;
 }
 
 .mrt-journey-wizard__back {
     justify-self: start;
     padding: 0;
     background: transparent;
-    color: var(--mrt-wizard-yellow);
+    color: var(--mrt-color-on-dark);
     font-size: 1.35rem;
     font-weight: 800;
     min-height: 0;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
+.mrt-journey-wizard__back:hover {
+    color: var(--mrt-color-on-dark-link);
 }
 
 .mrt-journey-wizard__cta:active,
@@ -207,7 +220,10 @@
 }
 
 .mrt-journey-wizard__vehicle-sep {
-    font-size: 1.1rem;
+    display: inline-flex;
+    align-items: center;
+    align-self: center;
+    font-size: 1.25rem;
     font-weight: 900;
     color: #3f3f3f;
     line-height: 1;
@@ -592,7 +608,7 @@
 
 .mrt-journey-wizard__selected-label {
     margin-bottom: 0.4rem;
-    color: var(--mrt-wizard-yellow);
+    color: var(--mrt-color-on-dark-link);
     font-weight: 800;
     font-size: 1rem;
     text-transform: uppercase;

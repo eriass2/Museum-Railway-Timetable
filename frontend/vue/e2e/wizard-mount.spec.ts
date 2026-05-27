@@ -7,8 +7,9 @@ test.describe('Journey wizard (static mount)', () => {
     await expect(root).toBeVisible();
     await expect(root).toHaveAttribute('data-step', 'route');
     await expect(page.locator('.mrt-journey-wizard__nav')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /Sök din resa/i })).toBeVisible();
-    await expect(page.locator('#mrt_wizard_from')).toBeVisible();
+    await expect(page.getByRole('heading', { name: /Planera resa/i })).toBeVisible();
+    await expect(page.locator('#mrt_wizard_from')).toHaveAttribute('role', 'combobox');
     await expect(page.locator('#mrt_wizard_to')).toBeVisible();
+    await expect(page.locator('.mrt-journey-wizard__trip-type-segmented')).toBeVisible();
   });
 });

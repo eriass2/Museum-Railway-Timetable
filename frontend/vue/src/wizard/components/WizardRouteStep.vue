@@ -5,12 +5,11 @@ import { todayYearMonth } from '../utils/wizardDate';
 import { cfgStr } from '../utils/wizardLabels';
 import type { TripType } from '../types';
 import type { WizardStation } from '../../config/types';
+import WizardStationField from './WizardStationField.vue';
 
 const props = defineProps<{
   stations: WizardStation[];
-  heroSubtitle: string;
-  timetableHtml: string;
-  showTimetable: boolean;
+  timetablePageUrl: string;
 }>();
 
 const { store, cfg } = useWizardContext();
@@ -49,57 +48,80 @@ function onSearch(): void {
   <div
     data-wizard-step="route"
     class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active mrt-journey-wizard__search-panel"
-    :class="{ 'mrt-journey-wizard__search-panel--with-timetable': showTimetable }"
     role="region"
   >
     <header class="mrt-journey-wizard__hero-head">
       <h2 class="mrt-journey-wizard__hero-title">
-        {{ cfgStr(cfg, 'routeTitle', 'Sök din resa med Lennakatten') }}
+        {{ cfgStr(cfg, 'routeTitle', 'Planera resa med Lennakatten') }}
       </h2>
-      <p v-if="heroSubtitle" class="mrt-journey-wizard__hero-lede">{{ heroSubtitle }}</p>
     </header>
-    <div class="mrt-form-fields mrt-journey-wizard__route">
-      <div class="mrt-form-field">
-        <label for="mrt_wizard_from">{{ cfgStr(cfg, 'from', 'Från') }}</label>
-        <select id="mrt_wizard_from" v-model.number="fromId" required>
-          <option :value="0">{{ cfgStr(cfg, 'fromPlaceholder', '') }}</option>
-          <option v-for="s in stations" :key="s.id" :value="s.id">{{ s.title }}</option>
-        </select>
+
+    <div class="mrt-journey-wizard__route">
+      <div class="mrt-journey-wizard__route-stations">
+        <WizardStationField
+          id="mrt_wizard_from"
+          v-model="fromId"
+          :label="cfgStr(cfg, 'from', 'Från')"
+          :placeholder="cfgStr(cfg, 'fromPlaceholder', 'Sök station…')"
+          :search-aria="cfgStr(cfg, 'stationSearchAria', 'Sök avgångsstation')"
+          :stations="stations"
+          :exclude-id="toId"
+        />
+        <WizardStationField
+          id="mrt_wizard_to"
+          v-model="toId"
+          :label="cfgStr(cfg, 'to', 'Till')"
+          :placeholder="cfgStr(cfg, 'toPlaceholder', 'Sök station…')"
+          :search-aria="cfgStr(cfg, 'stationSearchAriaTo', 'Sök ankomststation')"
+          :stations="stations"
+          :exclude-id="fromId"
+        />
       </div>
-      <div class="mrt-form-field">
-        <label for="mrt_wizard_to">{{ cfgStr(cfg, 'to', 'Till') }}</label>
-        <select id="mrt_wizard_to" v-model.number="toId" required>
-          <option :value="0">{{ cfgStr(cfg, 'toPlaceholder', '') }}</option>
-          <option v-for="s in stations" :key="'t-' + s.id" :value="s.id">{{ s.title }}</option>
-        </select>
-      </div>
-      <fieldset class="mrt-form-field mrt-journey-wizard__trip-type">
-        <legend class="mrt-sr-only">{{ cfgStr(cfg, 'tripTypeLegend', 'Restyp') }}</legend>
-        <div class="mrt-journey-wizard__trip-type-toggle">
-          <label class="mrt-journey-wizard__radio-label">
-            <input v-model="tripType" type="radio" value="single">
-            <span class="mrt-journey-wizard__radio-text" aria-hidden="true">→</span>
-            <span class="mrt-journey-wizard__radio-text">{{ cfgStr(cfg, 'tripSingle', 'Enkel') }}</span>
-          </label>
-          <label class="mrt-journey-wizard__radio-label">
-            <input v-model="tripType" type="radio" value="return">
-            <span class="mrt-journey-wizard__radio-text" aria-hidden="true">↔</span>
-            <span class="mrt-journey-wizard__radio-text">{{ cfgStr(cfg, 'tripReturn', 'Tur- och retur') }}</span>
-          </label>
+
+      <fieldset class="mrt-journey-wizard__trip-type">
+        <legend>{{ cfgStr(cfg, 'tripTypeLegend', 'Restyp') }}</legend>
+        <div class="mrt-journey-wizard__trip-type-segmented" role="radiogroup">
+          <button
+            type="button"
+            class="mrt-journey-wizard__trip-type-btn"
+            role="radio"
+            :aria-checked="tripType === 'single'"
+            :class="{ 'is-active': tripType === 'single' }"
+            @click="tripType = 'single'"
+          >
+            <span class="mrt-journey-wizard__trip-type-icon" aria-hidden="true">→</span>
+            {{ cfgStr(cfg, 'tripSingle', 'Enkel resa') }}
+          </button>
+          <button
+            type="button"
+            class="mrt-journey-wizard__trip-type-btn"
+            role="radio"
+            :aria-checked="tripType === 'return'"
+            :class="{ 'is-active': tripType === 'return' }"
+            @click="tripType = 'return'"
+          >
+            <span class="mrt-journey-wizard__trip-type-icon" aria-hidden="true">↔</span>
+            {{ cfgStr(cfg, 'tripReturn', 'Tur och retur') }}
+          </button>
         </div>
       </fieldset>
-      <div class="mrt-form-field mrt-journey-wizard__actions">
+
+      <div class="mrt-journey-wizard__actions">
         <button type="button" class="mrt-btn mrt-btn--primary mrt-journey-wizard__cta" @click="onSearch">
           {{ cfgStr(cfg, 'searchTrip', 'Sök resa') }}
         </button>
       </div>
+
+      <p v-if="timetablePageUrl" class="mrt-journey-wizard__timetable-link-wrap">
+        <a
+          class="mrt-journey-wizard__timetable-link"
+          :href="timetablePageUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {{ cfgStr(cfg, 'timetablePageLink', 'Visa hela tidtabellen') }}
+        </a>
+      </p>
     </div>
-    <details v-if="showTimetable && timetableHtml" class="mrt-journey-wizard__timetable">
-      <summary class="mrt-journey-wizard__timetable-summary">
-        {{ cfgStr(cfg, 'showTimetable', 'Visa tidtabell') }}
-      </summary>
-      <!-- Trusted server HTML — see frontend/vue/TRUSTED_HTML.md -->
-      <div class="mrt-journey-wizard__timetable-body" v-html="timetableHtml" />
-    </details>
   </div>
 </template>

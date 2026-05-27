@@ -1,0 +1,68 @@
+/**
+ * Museum Railway – shared color tokens (public UI).
+ * Source of truth for Vue bundle and journey wizard CSS.
+ *
+ * Contrast targets: WCAG 2.1 AA (4.5:1 body, 3:1 large UI type).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+:root {
+    /* Brand greens */
+    --mrt-color-green-900: #0a2e06;
+    --mrt-color-green-800: #0f3d08;
+    --mrt-color-green-700: #15530b;
+    --mrt-color-green-600: #1c650f;
+    --mrt-color-green-500: #2a7a1c;
+    --mrt-color-green-400: #3d9430;
+
+    /* Accent (warm gold / CTA) */
+    --mrt-color-accent-700: #9a7614;
+    --mrt-color-accent-600: #c9a02a;
+    --mrt-color-accent-500: #dbb83a;
+    --mrt-color-accent-400: #e8cc5c;
+
+    /* Neutrals */
+    --mrt-color-neutral-900: #141414;
+    --mrt-color-neutral-700: #3d3d3d;
+    --mrt-color-neutral-600: #525252;
+    --mrt-color-neutral-500: #6b6b6b;
+    --mrt-color-neutral-200: #e5e5e5;
+    --mrt-color-neutral-100: #ffffff;
+
+    /* Semantic secondary */
+    --mrt-color-olive-600: #6b6f0f;
+    --mrt-color-orange-600: #c9740c;
+    --mrt-color-error-bg: #fde8e8;
+    --mrt-color-error-text: #7a1212;
+
+    /* Text on dark green surfaces (solid colors for reliable AA contrast) */
+    --mrt-color-on-dark: #ffffff;
+    --mrt-color-on-dark-muted: #e4efe2;
+    --mrt-color-on-dark-link: #ffecb8;
+
+    /* Text on gold/accent fills (buttons, active step, selected segment) */
+    --mrt-color-on-accent: #ffffff;
+
+    /* Surfaces & borders */
+    --mrt-color-placeholder: var(--mrt-color-neutral-600);
+    --mrt-color-border-on-surface: #767676;
+    --mrt-color-border-on-dark: rgba(255, 255, 255, 0.62);
+
+    /* Focus */
+    --mrt-color-focus-ring: #fff4d6;
+    --mrt-color-focus-offset: var(--mrt-color-green-700);
+
+    /* Wizard aliases (map legacy --mrt-wizard-* names) */
+    --mrt-wizard-green: var(--mrt-color-green-600);
+    --mrt-wizard-green-dark: var(--mrt-color-green-700);
+    --mrt-wizard-olive: var(--mrt-color-olive-600);
+    --mrt-wizard-yellow: var(--mrt-color-accent-600);
+    --mrt-wizard-yellow-bright: var(--mrt-color-accent-500);
+    --mrt-wizard-orange: var(--mrt-color-orange-600);
+    --mrt-wizard-surface: var(--mrt-color-neutral-100);
+    --mrt-wizard-surface-muted: var(--mrt-color-neutral-200);
+    --mrt-wizard-text: var(--mrt-color-neutral-900);
+    --mrt-wizard-border: #c5c5c5;
+    --mrt-wizard-focus: var(--mrt-color-focus-ring);
+}
