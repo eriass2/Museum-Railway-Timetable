@@ -114,8 +114,8 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 		'startOfWeek'  => (int) get_option( 'start_of_week', 1 ),
 		'wizard'       => $wizard_l10n,
 		'labels'       => array(
-			'needsJs'         => __( 'This planner needs JavaScript enabled.', 'museum-railway-timetable' ),
-			'stepNavAria'     => __( 'Trip planner steps', 'museum-railway-timetable' ),
+			'needsJs'         => __( 'Reseplaneraren kräver JavaScript.', 'museum-railway-timetable' ),
+			'stepNavAria'     => __( 'Steg i reseplaneraren', 'museum-railway-timetable' ),
 			'routeTitle'      => __( 'Sök din resa med Lennakatten', 'museum-railway-timetable' ),
 			'from'            => __( 'Från', 'museum-railway-timetable' ),
 			'to'              => __( 'Till', 'museum-railway-timetable' ),
