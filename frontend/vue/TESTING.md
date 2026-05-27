@@ -5,7 +5,18 @@ Run after `npm run check` and hard-refresh in the browser (Ctrl+F5).
 ## Environment
 
 - Demo page: `http://localhost:8080/?page_id=569` (or your local demosida)
-- `MRT_VUE_FRONTEND` enabled; plugin active
+- Plugin active; Vue bundle built (`composer vue:build`)
+
+### Automated E2E (no WordPress)
+
+```bash
+cd frontend/vue
+npm run build
+npm run e2e:install   # first time
+npm run e2e
+```
+
+Optional against Docker demo: `MRT_E2E_WP_URL=http://127.0.0.1:8080/?page_id=569 npm run e2e`
 
 ## Month calendar (`data-mrt-vue-app="month"`)
 

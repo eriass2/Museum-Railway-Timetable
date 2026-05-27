@@ -8,7 +8,7 @@ Branch `experiment/vue-public-ui` replaces the three public shortcodes with Vue 
 | `[museum_timetable_overview]` | `TimetableOverviewApp.vue` |
 | `[museum_journey_wizard]` | `JourneyWizardApp.vue` |
 
-Legacy PHP/HTML and jQuery wizard modules are **not** loaded in Vue mode.
+Legacy jQuery wizard is **removed** on this branch; all three public shortcodes use the Vue bundle only.
 
 ## CSS
 
@@ -62,7 +62,7 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 - `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS (IIFE), mount HTML
 - `inc/public/vue-shortcode-config.php` — JSON config per shortcode
-- Shortcodes branch early to `MRT_render_vue_mount()` when `MRT_use_vue_frontend()`
+- Shortcodes render via `MRT_render_vue_mount()` (Vue-only)
 
 ## Current scope
 
@@ -86,6 +86,17 @@ frontend/vue/src/
     utils/
 ```
 
-## Switch back
+## E2E (Playwright)
 
-Remove `MRT_VUE_FRONTEND` or return `false` from the filter. Legacy enqueue path in `inc/assets/frontend.php` loads PHP CSS again.
+```bash
+cd frontend/vue
+npm run build
+npm run e2e:install   # once per machine
+npm run e2e           # static wizard mount on :5199
+```
+
+Optional WordPress demo (Docker):
+
+```bash
+MRT_E2E_WP_URL=http://127.0.0.1:8080/?page_id=569 npm run e2e
+```

@@ -47,5 +47,7 @@ From repo root: `composer vue:check`
 | `npm run build` | Vite → `assets/dist/vue/` |
 | `npm run verify` | IIFE smoke load in Node |
 | `npm run check` | All of the above |
+| `npm run e2e` | Playwright smoke (static wizard mount; run `build` first) |
+| `npm run e2e:install` | Install Chromium for Playwright (once) |
 
 See [TESTING.md](./TESTING.md) for manual WP regression.

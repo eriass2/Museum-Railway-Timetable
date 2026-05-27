@@ -19,7 +19,7 @@ Se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md). Bygg manuellt: `composer vue:build` e
 
 Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). Samma kommando körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
-Utan `MRT_VUE_FRONTEND` laddas fortfarande jQuery-modulerna under `assets/journey-wizard/*.js` (legacy). Vue-bundeln används inte då.
+På denna gren är publikt UI **Vue-only** (jQuery-wizard-moduler är borttagna). `MRT_use_vue_frontend()` finns kvar som filter-hook men alla shortcodes mountar Vue direkt.
 
 ## Endast utveckling (döljs i typisk produktion)
 

@@ -3,10 +3,9 @@
 declare(strict_types=1);
 
 /**
- * Optional Vue bundle for public shortcodes (experiment branch).
+ * Vue bundle for public shortcodes (month, overview, journey wizard).
  *
- * Enable with define( 'MRT_VUE_FRONTEND', true ); in wp-config.php
- * or filter mrt_use_vue_frontend.
+ * Filter `mrt_use_vue_frontend` can disable mounting (no legacy fallback on this branch).
  *
  * @package Museum_Railway_Timetable
  */
@@ -16,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Public shortcodes always use the Vue frontend on this branch.
+ * Whether public shortcodes should use Vue (default true; no jQuery fallback).
  */
 function MRT_use_vue_frontend(): bool {
 	return (bool) apply_filters( 'mrt_use_vue_frontend', true );
@@ -133,7 +132,7 @@ function MRT_render_vue_mount( string $app, array $config ): string {
 /**
  * Enqueue Vite-built Vue bundle (JS + bundled public CSS).
  *
- * Legacy handles mrt-frontend-public / mrt-journey-wizard are not loaded in Vue mode.
+ * Bundled CSS replaces separate mrt-frontend-public / mrt-journey-wizard handles.
  */
 function MRT_enqueue_vue_frontend_assets(): void {
 	$manifest = MRT_vue_read_manifest();
