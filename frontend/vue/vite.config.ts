@@ -9,6 +9,7 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
+      '@': path.resolve(__dirname, 'src'),
       '@mrt-assets': path.resolve(__dirname, '../../assets'),
     },
   },
@@ -19,7 +20,6 @@ export default defineConfig({
     rollupOptions: {
       input: path.resolve(__dirname, 'src/main.ts'),
       output: {
-        // WordPress enqueues a classic <script> (no type="module"); IIFE avoids export syntax errors.
         format: 'iife',
         name: 'MRTVuePublic',
         inlineDynamicImports: true,
