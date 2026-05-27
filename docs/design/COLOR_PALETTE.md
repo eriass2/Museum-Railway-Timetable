@@ -21,10 +21,10 @@ Vit text på `--mrt-color-green-700` uppfyller AA för normal text (~7:1+).
 
 | Token | Hex | Användning |
 |-------|-----|------------|
-| `--mrt-color-accent-700` | `#9a7614` | Tryckt/hover på guld-CTA |
-| `--mrt-color-accent-600` | `#c9a02a` | **Knappar, aktivt steg** (varm guld) |
-| `--mrt-color-accent-500` | `#dbb83a` | Highlight, “klar” steg i steglistan |
-| `--mrt-color-accent-400` | `#e8cc5c` | Ljus guldmarkering |
+| `--mrt-color-accent-700` | `#c49a10` | Tryckt/hover på guld-CTA |
+| `--mrt-color-accent-600` | `#e0b820` | **Knappar, aktivt steg** (mättad varmgul) |
+| `--mrt-color-accent-500` | `#e8c838` | Highlight, “klar” steg i steglistan |
+| `--mrt-color-accent-400` | `#f0d858` | Ljus guldmarkering |
 | `--mrt-color-on-accent` | `#ffffff` | Text på guldfyll (knappar, aktivt steg) |
 
 Använd **`accent-600` + `--mrt-color-on-accent`** på knappar, aktivt steg och vald restyp — inte mörk text på guld.
@@ -55,7 +55,7 @@ Använd **`accent-600` + `--mrt-color-on-accent`** på knappar, aktivt steg och 
 |-------|--------|------------|
 | `--mrt-color-on-dark` | `#ffffff` | Rubriker, etiketter |
 | `--mrt-color-on-dark-muted` | `#e4efe2` | Sekundärtext |
-| `--mrt-color-on-dark-link` | `#fff6c8` | Länkar |
+| `--mrt-color-on-dark-link` | `#ffecb8` | Länkar |
 
 ## Kantlinjer & placeholder
 
@@ -71,7 +71,7 @@ Använd **solid** färger på grön bakgrund — undvik `rgba()` för brödtext 
 
 | Token | Värde |
 |-------|--------|
-| `--mrt-color-focus-ring` | `#fff8c4` |
+| `--mrt-color-focus-ring` | `#fff4d6` |
 | `--mrt-color-focus-offset` | `var(--mrt-color-green-700)` |
 
 ## Wizard-alias

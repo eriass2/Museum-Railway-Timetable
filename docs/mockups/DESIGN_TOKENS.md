@@ -10,11 +10,17 @@ Wizard-CSS använder `--mrt-wizard-*` som pekar på `--mrt-color-*` i token-file
 |-------|-------------|------------|
 | `--mrt-wizard-green` | `green-600` | Varumärkesgrön |
 | `--mrt-wizard-green-dark` | `green-700` | Hero / mörk panel |
-| `--mrt-wizard-yellow` | `accent-600` | CTA, aktivt steg (svart text) |
-| `--mrt-wizard-yellow-bright` | `accent-500` | Highlight på mörk bakgrund |
+| `--mrt-wizard-yellow` | `accent-600` (`#e0b820`) | CTA, aktivt steg, vald restyp — **vit text** |
+| `--mrt-wizard-yellow-bright` | `accent-500` | Highlight / klara steg på mörk bakgrund |
 | `--mrt-wizard-surface` | `neutral-100` | Formulärfält |
 | `--mrt-wizard-text` | `neutral-900` | Brödtext på ljus yta |
 | `--mrt-wizard-focus` | `focus-ring` | Fokusring |
+
+## Restyp (steg 1)
+
+- Segmentknappar: `steps-route.css` (`.mrt-journey-wizard__trip-type-segmented`)
+- Ikoner: `frontend/vue/src/wizard/components/WizardTripTypeIcon.vue` — SVG, `currentColor` (enkel = pil höger, tur/retur = pilar båda håll)
+- Storlek: ~1,85 rem, vertikalt centrerad i knappen (`.mrt-journey-wizard__trip-type-icon`)
 
 ## Typografi
 

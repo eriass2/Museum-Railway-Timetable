@@ -80,6 +80,12 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
 - **Inga inline styles** – All styling i CSS-filer.
 
+### Publik UI (wizard m.fl.)
+- **Primär accent:** `--mrt-color-accent-600` (`#e0b820`) — mättad varmgul för CTA, aktivt steg och vald restyp.
+- **Text på guld:** `--mrt-color-on-accent` (vit), inte mörk text på gul bakgrund.
+- **Vue-bundle:** Wizard-CSS importeras via `frontend/vue/src/styles/mrt-public.css`. Efter ändring i `assets/` eller tokens: kör `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
+- **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i `assets/journey-wizard/steps-route.css`.
+
 ### Exempel
 ```html
 <button class="mrt-button mrt-button--primary">Spara</button>

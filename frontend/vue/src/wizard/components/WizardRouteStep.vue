@@ -6,6 +6,7 @@ import { cfgStr } from '../utils/wizardLabels';
 import type { TripType } from '../types';
 import type { WizardStation } from '../../config/types';
 import WizardStationField from './WizardStationField.vue';
+import WizardTripTypeIcon from './WizardTripTypeIcon.vue';
 
 const props = defineProps<{
   stations: WizardStation[];
@@ -89,7 +90,7 @@ function onSearch(): void {
             :class="{ 'is-active': tripType === 'single' }"
             @click="tripType = 'single'"
           >
-            <span class="mrt-journey-wizard__trip-type-icon" aria-hidden="true">→</span>
+            <WizardTripTypeIcon variant="single" />
             {{ cfgStr(cfg, 'tripSingle', 'Enkel resa') }}
           </button>
           <button
@@ -100,7 +101,7 @@ function onSearch(): void {
             :class="{ 'is-active': tripType === 'return' }"
             @click="tripType = 'return'"
           >
-            <span class="mrt-journey-wizard__trip-type-icon" aria-hidden="true">↔</span>
+            <WizardTripTypeIcon variant="return" />
             {{ cfgStr(cfg, 'tripReturn', 'Tur och retur') }}
           </button>
         </div>

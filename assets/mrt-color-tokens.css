@@ -16,11 +16,11 @@
     --mrt-color-green-500: #2a7a1c;
     --mrt-color-green-400: #3d9430;
 
-    /* Accent (warm gold / CTA) */
-    --mrt-color-accent-700: #9a7614;
-    --mrt-color-accent-600: #c9a02a;
-    --mrt-color-accent-500: #dbb83a;
-    --mrt-color-accent-400: #e8cc5c;
+    /* Accent (warm saturated gold – mockup / “Enkel resa” yellow) */
+    --mrt-color-accent-700: #c49a10;
+    --mrt-color-accent-600: #e0b820;
+    --mrt-color-accent-500: #e8c838;
+    --mrt-color-accent-400: #f0d858;
 
     /* Neutrals */
     --mrt-color-neutral-900: #141414;
