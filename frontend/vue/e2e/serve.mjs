@@ -106,14 +106,54 @@ function buildMonthConfig() {
     startMonday: true,
     atts: { legend: true, show_counts: true, nav: false },
     dates: {
+      5: { running: false, count: 0, ymd: '2026-05-05' },
       10: { running: true, count: 2, ymd: '2026-05-10' },
       17: { running: true, count: 1, ymd: '2026-05-17' },
     },
-    strings: { loading: 'Laddar...' },
+    strings: { loading: 'Laddar...', errorGeneric: 'Kunde inte ladda tidtabellen.' },
     legendServiceDay: 'Trafikdag',
     legendCountHint: 'antal per dag',
     legendClickHint: 'Klicka för att visa tidtabell',
   };
+}
+
+function buildOverviewConfig() {
+  return {
+    app: 'overview',
+    ajaxurl: '/wp-admin/admin-ajax.php',
+    nonce: 'e2e-test',
+    timetableId: 1,
+    strings: { loading: 'Laddar...', errorGeneric: 'Kunde inte ladda översikten.' },
+  };
+}
+
+function readRequestBody(req) {
+  return new Promise((resolve) => {
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => resolve(Buffer.concat(chunks).toString('utf8')));
+  });
+}
+
+async function handleAjaxPost(req, res, requestUrl) {
+  const query = new URL(requestUrl, 'http://127.0.0.1').searchParams;
+  const body = await readRequestBody(req);
+  const form = new URLSearchParams(body);
+  const action = form.get('action') || '';
+
+  if (query.get('fail') === 'ajax') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ success: false, data: { message: 'AJAX-fel (e2e)' } }));
+    return;
+  }
+
+  const html =
+    action === 'mrt_timetable_overview_html'
+      ? '<p>Översikt tidtabell (e2e)</p>'
+      : '<p>Tidtabell för vald dag</p>';
+
+  res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify({ success: true, data: { html } }));
 }
 
 function renderAppHtml(app, config) {
@@ -136,8 +176,17 @@ function renderWizardHtml(requestUrl) {
   return renderAppHtml('wizard', buildWizardConfig(requestUrl));
 }
 
-function renderMonthHtml() {
-  return renderAppHtml('month', buildMonthConfig());
+function renderMonthHtml(requestUrl) {
+  const config = buildMonthConfig();
+  const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
+  if (params.get('fail') === 'ajax') {
+    config.ajaxurl = '/wp-admin/admin-ajax.php?fail=ajax';
+  }
+  return renderAppHtml('month', config);
+}
+
+function renderOverviewHtml() {
+  return renderAppHtml('overview', buildOverviewConfig());
 }
 
 const mime = {
@@ -159,17 +208,16 @@ http
     }
     if (pathOnly === '/month') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
-      res.end(renderMonthHtml());
+      res.end(renderMonthHtml(rawUrl));
+      return;
+    }
+    if (pathOnly === '/overview') {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(renderOverviewHtml());
       return;
     }
     if (pathOnly === '/wp-admin/admin-ajax.php' && req.method === 'POST') {
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      res.end(
-        JSON.stringify({
-          success: true,
-          data: { html: '<p>Tidtabell för vald dag</p>' },
-        }),
-      );
+      handleAjaxPost(req, res, rawUrl);
       return;
     }
     const rel = pathOnly.replace(/^\//, '');

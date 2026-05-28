@@ -14,10 +14,13 @@ Shared primitives for wizard, month calendar, and overview. Styles: `assets/fron
 | `MrtStepProgress` | `mrt-step-progress` | Journey wizard |
 | `MrtCalendarNav` | `mrt-calendar-nav` | Wizard date, month shortcode |
 | `MrtCalendarGrid` | `mrt-calendar-grid` | Wizard date (`WizardCalendarGrid`), month table |
-| `MrtLegend` | `mrt-legend-list` | Wizard date, month |
+| `MrtMonthDayCell` | `mrt-day`, `is-selected` | Month calendar running days |
+| `MrtLegend` | `mrt-legend-list`, `mrt-legend__hint` | Wizard date, month |
+| `MrtTimeline` | `mrt-timeline` | Wizard detail (`WizardTimeline` wrapper) |
+| `MrtTripCard` | `mrt-trip-card` | Wizard trip list (`WizardTripCard` wrapper) |
 | `MrtHeading` | `mrt-heading` | Month title, wizard route/summary/detail, price block |
 | `MrtStatusMessage` | `mrt-status-message` | Wizard empty calendar month |
-| `MrtPriceTable` | `mrt-price-block` | Wizard summary (prices from `shared/prices.ts`) |
+| `MrtPriceTable` | `mrt-price-block` | Wizard summary (`shared/prices.ts` + `PriceTableLabels` props) |
 | `MrtSegmentedControl` | `mrt-segmented` | Route trip type |
 | `MrtFieldGroup` + `MrtCombobox` | `mrt-field`, `mrt-combobox` | Station search |
 | `MrtTripSummary` | `mrt-trip-summary` | Trip cards, summary |
