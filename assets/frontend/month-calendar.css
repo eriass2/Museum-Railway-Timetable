@@ -120,7 +120,7 @@
     z-index: 1;
 }
 
-.mrt-day-clickable.mrt-day-active {
+.mrt-day-clickable.is-selected {
     background-color: var(--mrt-blue-primary) !important;
     box-shadow: var(--mrt-shadow-focus-ring);
 }
