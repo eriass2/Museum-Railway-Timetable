@@ -7,6 +7,7 @@ import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useWizardCalendar } from '../composables/useWizardCalendar';
 import WizardCalendarGrid from './WizardCalendarGrid.vue';
+import MrtStatusMessage from '../../components/ui/MrtStatusMessage.vue';
 import WizardPanel from './WizardPanel.vue';
 import { cfgStr } from '../utils/wizardLabels';
 
@@ -49,7 +50,7 @@ function onBack(): void {
 </script>
 
 <template>
-  <WizardPanel step="date" :aria-label="cfgStr(cfg, 'stepDate', 'Välj datum')">
+  <WizardPanel step="date" :ariaLabel="cfgStr(cfg, 'stepDate', 'Välj datum')">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard flush>
@@ -72,12 +73,11 @@ function onBack(): void {
         :day-aria="dayAria"
         @pick="onPickDate"
       />
-      <p v-if="showEmptyMonth" class="mrt-status-message" role="status">
-        {{ cfgStr(cfg, 'calendarEmptyMonth', 'Inga bokningsbara dagar denna månad för din resa.') }}
-        <span class="mrt-status-message__hint">
-          {{ cfgStr(cfg, 'calendarEmptyHint', 'Byt månad med pilarna ovan.') }}
-        </span>
-      </p>
+      <MrtStatusMessage
+        v-if="showEmptyMonth"
+        :message="cfgStr(cfg, 'calendarEmptyMonth', 'Inga bokningsbara dagar denna månad för din resa.')"
+        :hint="cfgStr(cfg, 'calendarEmptyHint', 'Byt månad med pilarna ovan.')"
+      />
       <MrtLegend :items="legendItems" />
     </MrtSurfaceCard>
   </WizardPanel>
