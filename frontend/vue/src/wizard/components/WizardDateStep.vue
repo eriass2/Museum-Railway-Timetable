@@ -7,6 +7,7 @@ import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useWizardCalendar } from '../composables/useWizardCalendar';
 import WizardCalendarGrid from './WizardCalendarGrid.vue';
+import WizardPanel from './WizardPanel.vue';
 import { cfgStr } from '../utils/wizardLabels';
 
 const { store, cfg, config } = useWizardContext();
@@ -48,12 +49,7 @@ function onBack(): void {
 </script>
 
 <template>
-  <div
-    data-wizard-step="date"
-    class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
-    role="region"
-    :aria-label="cfgStr(cfg, 'stepDate', 'Välj datum')"
-  >
+  <WizardPanel step="date" :aria-label="cfgStr(cfg, 'stepDate', 'Välj datum')">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard flush>
@@ -84,5 +80,5 @@ function onBack(): void {
       </p>
       <MrtLegend :items="legendItems" />
     </MrtSurfaceCard>
-  </div>
+  </WizardPanel>
 </template>

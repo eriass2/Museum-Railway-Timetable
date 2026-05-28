@@ -4,6 +4,10 @@
  * @package Museum_Railway_Timetable
  */
 
+.mrt-journey-wizard__panel--wide {
+    width: min(100%, 54rem);
+}
+
 .mrt-journey-wizard .mrt-step-header__back {
     color: var(--mrt-color-accent-500);
 }

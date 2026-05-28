@@ -5,10 +5,6 @@
  * @package Museum_Railway_Timetable
  */
 
-.mrt-journey-wizard__panel[data-wizard-step="summary"] {
-    width: min(100%, 54rem);
-}
-
 .mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__step-head {
     margin-bottom: 0.15rem;
 }

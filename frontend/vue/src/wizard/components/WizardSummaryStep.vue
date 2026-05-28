@@ -9,6 +9,7 @@ import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
 import { formatTripClock } from '../utils/format';
+import WizardPanel from './WizardPanel.vue';
 import WizardPriceTable from './WizardPriceTable.vue';
 
 const { ticketUrl } = defineProps<{ ticketUrl: string }>();
@@ -32,12 +33,7 @@ function onBack(): void {
 </script>
 
 <template>
-  <div
-    data-wizard-step="summary"
-    class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
-    role="region"
-    :aria-label="cfgStr(cfg, 'stepSummary', 'Din resa')"
-  >
+  <WizardPanel step="summary" variant="wide" :aria-label="cfgStr(cfg, 'stepSummary', 'Din resa')">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard>
@@ -81,5 +77,5 @@ function onBack(): void {
         </MrtAccentButton>
       </p>
     </MrtSurfaceCard>
-  </div>
+  </WizardPanel>
 </template>

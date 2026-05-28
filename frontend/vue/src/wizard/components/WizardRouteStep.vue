@@ -9,6 +9,7 @@ import { todayYearMonth } from '../utils/wizardDate';
 import { cfgStr } from '../utils/wizardLabels';
 import type { TripType } from '../types';
 import type { WizardStation } from '../../config/types';
+import WizardPanel from './WizardPanel.vue';
 import WizardStationField from './WizardStationField.vue';
 import WizardTripTypeIcon from './WizardTripTypeIcon.vue';
 
@@ -55,10 +56,9 @@ function onSearch(): void {
 </script>
 
 <template>
-  <div
-    data-wizard-step="route"
-    class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active mrt-journey-wizard__search-panel"
-    role="region"
+  <WizardPanel
+    step="route"
+    variant="search"
     :aria-label="cfgStr(cfg, 'stepRoute', 'Sök resa')"
   >
     <MrtSurfaceCard>
@@ -121,5 +121,5 @@ function onSearch(): void {
         </p>
       </div>
     </MrtSurfaceCard>
-  </div>
+  </WizardPanel>
 </template>

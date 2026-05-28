@@ -7,6 +7,7 @@ import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useTripConnections } from '../composables/useTripConnections';
 import { cfgStr } from '../utils/wizardLabels';
+import WizardPanel from './WizardPanel.vue';
 import WizardTripCard from './WizardTripCard.vue';
 import { formatTripClock } from '../utils/format';
 
@@ -61,12 +62,7 @@ watch(
 </script>
 
 <template>
-  <div
-    :data-wizard-step="legCtx"
-    class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
-    role="region"
-    :aria-label="stepLabel"
-  >
+  <WizardPanel :step="legCtx" variant="wide" :aria-label="stepLabel">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard>
@@ -104,5 +100,5 @@ watch(
         </div>
       </MrtAsyncState>
     </MrtSurfaceCard>
-  </div>
+  </WizardPanel>
 </template>
