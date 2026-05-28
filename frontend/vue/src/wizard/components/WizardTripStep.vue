@@ -62,7 +62,7 @@ watch(
 </script>
 
 <template>
-  <WizardPanel :step="legCtx" variant="wide" :aria-label="stepLabel">
+  <WizardPanel :step="legCtx" variant="wide" :ariaLabel="stepLabel">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard>

@@ -33,7 +33,7 @@ function onBack(): void {
 </script>
 
 <template>
-  <WizardPanel step="summary" variant="wide" :aria-label="cfgStr(cfg, 'stepSummary', 'Din resa')">
+  <WizardPanel step="summary" variant="wide" :ariaLabel="cfgStr(cfg, 'stepSummary', 'Din resa')">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard>

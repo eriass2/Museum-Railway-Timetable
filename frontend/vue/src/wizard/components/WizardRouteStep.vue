@@ -59,7 +59,7 @@ function onSearch(): void {
   <WizardPanel
     step="route"
     variant="search"
-    :aria-label="cfgStr(cfg, 'stepRoute', 'Sök resa')"
+    :ariaLabel="cfgStr(cfg, 'stepRoute', 'Sök resa')"
   >
     <MrtSurfaceCard>
       <h2 class="mrt-surface-title">

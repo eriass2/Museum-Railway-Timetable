@@ -9,19 +9,10 @@
     margin-bottom: 0.15rem;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__prices {
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-price-block {
     margin-top: 1.25rem;
     padding-top: 1.25rem;
     border-top: 1px solid var(--mrt-color-neutral-200);
-}
-
-.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__prices h4,
-.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__prices .mrt-heading {
-    color: var(--mrt-wizard-text);
-}
-
-.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__price-note {
-    color: var(--mrt-color-neutral-600);
 }
 
 .mrt-journey-wizard__panel[data-wizard-step="summary"] [data-wizard-ticket-wrap] {

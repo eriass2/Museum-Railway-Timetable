@@ -62,18 +62,3 @@
     color: var(--mrt-wizard-text);
 }
 
-@media (max-width: 36rem) {
-    .mrt-journey-wizard__prices-scroll {
-        overflow-x: visible;
-    }
-
-    .mrt-journey-wizard__price-table {
-        width: 100%;
-        font-size: 0.875rem;
-    }
-
-    .mrt-journey-wizard__price-table th,
-    .mrt-journey-wizard__price-table td {
-        padding: 0.4rem 0.3rem;
-    }
-}
