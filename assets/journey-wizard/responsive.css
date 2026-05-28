@@ -19,7 +19,7 @@
     }
 
     .mrt-journey-wizard .mrt-calendar-nav,
-    .mrt-journey-wizard__calendar,
+    .mrt-calendar-grid--wizard,
     .mrt-journey-wizard .mrt-legend-list {
         padding-inline: 0.9rem;
     }
@@ -37,23 +37,21 @@
         font-size: 1.2rem;
     }
 
-    .mrt-journey-wizard__trip-main,
-    .mrt-journey-wizard__selected-card,
-    .mrt-journey-wizard__summary-main {
+    .mrt-trip-card__head,
+    .mrt-journey-wizard__selected-card {
         grid-template-columns: 1fr;
     }
 
-    .mrt-journey-wizard__trip-side,
-    .mrt-journey-wizard__summary-side {
+    .mrt-trip-card__side {
         justify-items: start;
     }
 
-    .mrt-journey-wizard__timeline-row {
+    .mrt-timeline__row {
         grid-template-columns: 4.2rem 1.4rem minmax(0, 1fr);
     }
 
     .mrt-journey-wizard__timeline-leg,
-    .mrt-journey-wizard__passed-toggle,
+    .mrt-timeline__expand,
     .mrt-journey-wizard__transfer-block {
         margin-left: 5.2rem;
     }

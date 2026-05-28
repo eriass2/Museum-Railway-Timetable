@@ -15,25 +15,6 @@
 }
 
 /* 8. Typography */
-.mrt-journey-wizard__trip-time {
-    margin: 0;
-    font-size: clamp(1.35rem, 3vw, 1.85rem);
-    line-height: 1.05;
-    font-weight: 900;
-}
-
-.mrt-journey-wizard__trip-route {
-    margin: 0.2rem 0 0.6rem;
-    font-size: 1.2rem;
-}
-
-.mrt-journey-wizard__summary-date {
-    margin: 0.2rem 0 0.55rem;
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #3f3f3f;
-}
-
 .mrt-journey-wizard__duration {
     font-size: 1.35rem;
     font-weight: 900;
@@ -41,27 +22,11 @@
     white-space: nowrap;
 }
 
-.mrt-journey-wizard__cal-title {
-    font-size: clamp(1.8rem, 4vw, 2.4rem);
-    line-height: 1;
-    font-weight: 900;
-}
-
 /* 3. Card */
-.mrt-journey-wizard__trip-card,
 .mrt-journey-wizard__summary-card {
     background: var(--mrt-wizard-surface);
     color: var(--mrt-wizard-text);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
-}
-
-.mrt-journey-wizard__trip-card.is-expanded > .mrt-journey-wizard__trip-head,
-.mrt-journey-wizard__trip-card.is-expanded > .mrt-journey-wizard__trip-main {
-    background: #d6d6d6;
-}
-
-.mrt-journey-wizard__calendar-card {
-    overflow: hidden;
 }
 
 .mrt-journey-wizard__selected-card {
@@ -86,31 +51,6 @@
 
 .mrt-journey-wizard__detail[hidden] {
     display: none;
-}
-
-/* 1. Trip head */
-.mrt-journey-wizard__trip-head,
-.mrt-journey-wizard__trip-main,
-.mrt-journey-wizard__summary-main,
-.mrt-journey-wizard__selected-main {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    gap: 1rem;
-    padding: 0.75rem 0.9rem;
-    align-items: start;
-}
-
-.mrt-journey-wizard__summary-card .mrt-journey-wizard__summary-main {
-    padding: 0;
-}
-
-.mrt-journey-wizard__trip-side,
-.mrt-journey-wizard__summary-side,
-.mrt-journey-wizard__selected-side {
-    display: grid;
-    align-content: start;
-    justify-items: end;
-    gap: 0.35rem;
 }
 
 .mrt-journey-wizard__trip-list {
@@ -157,7 +97,7 @@
     font-weight: 700;
 }
 
-/* 5. Timeline */
+/* 5. Detail segment */
 .mrt-journey-wizard__timeline-leg {
     display: flex;
     flex-wrap: wrap;
@@ -174,73 +114,6 @@
 
 .mrt-journey-wizard__towards {
     font-size: 1.05rem;
-}
-
-.mrt-journey-wizard__timeline {
-    display: grid;
-    gap: 0;
-}
-
-.mrt-journey-wizard__timeline-row {
-    display: grid;
-    grid-template-columns: 5.4rem 1.6rem minmax(0, 1fr);
-    gap: 0.65rem;
-    min-height: 2.7rem;
-    align-items: start;
-}
-
-.mrt-journey-wizard__timeline-time {
-    text-align: right;
-    font-size: 1.15rem;
-    font-weight: 700;
-}
-
-.mrt-journey-wizard__timeline-node {
-    position: relative;
-    width: 1.2rem;
-    height: 1.2rem;
-    margin-top: 0.1rem;
-    border: 0.35rem solid #151515;
-    border-radius: 50%;
-    background: #ffffff;
-}
-
-.mrt-journey-wizard__timeline-node::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: 0.85rem;
-    width: 0.35rem;
-    height: 2.1rem;
-    background: #151515;
-    transform: translateX(-50%);
-}
-
-.mrt-journey-wizard__timeline-row:last-of-type .mrt-journey-wizard__timeline-node::after {
-    display: none;
-}
-
-.mrt-journey-wizard__timeline-station {
-    font-size: 1.2rem;
-    font-weight: 800;
-}
-
-.mrt-journey-wizard__timeline-row:not(.is-terminal) .mrt-journey-wizard__timeline-station,
-.mrt-journey-wizard__timeline-row:not(.is-terminal) .mrt-journey-wizard__timeline-time {
-    font-weight: 500;
-}
-
-.mrt-journey-wizard__passed-toggle {
-    justify-self: start;
-    margin: 0.3rem 0 0.6rem 6.6rem;
-    padding: 0;
-    background: transparent;
-    color: var(--mrt-wizard-olive);
-    font-size: 1.05rem;
-    font-weight: 700;
-    text-decoration: underline;
-    text-underline-offset: 0.12em;
-    min-height: 0;
 }
 
 .mrt-journey-wizard__transfer-block {
