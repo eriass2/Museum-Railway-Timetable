@@ -123,30 +123,90 @@ function MRT_timetable_type_banner_html( string $timetable_type ): string {
 }
 
 /**
- * Printed timetable key matching the source PDF.
+ * One legend row for the overview print key table.
+ *
+ * @param string $mark     Symbol shown in the timetable.
+ * @param string $text     Localized explanation.
+ * @param string $modifier Optional BEM row modifier (bus, express).
+ */
+function MRT_timetable_print_key_row( string $mark, string $text, string $modifier = '' ): void {
+	$row_class = 'mrt-timetable-print-key__row';
+	if ( $modifier !== '' ) {
+		$row_class .= ' mrt-timetable-print-key__row--' . $modifier;
+	}
+	?>
+	<tr class="<?php echo esc_attr( $row_class ); ?>">
+		<th scope="row" class="mrt-timetable-print-key__symbol"><?php echo esc_html( $mark ); ?></th>
+		<td class="mrt-timetable-print-key__desc"><?php echo esc_html( $text ); ?></td>
+	</tr>
+	<?php
+}
+
+/**
+ * Body rows for the overview print key table.
+ */
+function MRT_timetable_print_key_table_body(): void {
+	MRT_timetable_print_key_row(
+		'X',
+		__(
+			'Stannar vid av- och påstigning när någon resenär ska på eller av.',
+			'museum-railway-timetable'
+		)
+	);
+	MRT_timetable_print_key_row(
+		'P',
+		__(
+			'Stannar endast vid påstigning när någon resenär ska på.',
+			'museum-railway-timetable'
+		)
+	);
+	MRT_timetable_print_key_row(
+		'*Buss',
+		__( 'Inga anslutningsbussar går denna dag.', 'museum-railway-timetable' ),
+		'bus'
+	);
+	MRT_timetable_print_key_row(
+		'Thun’s-expressen',
+		__(
+			'Thun’s-expressen tar dig till och från klädvaruhuset Thun’s i Faringe.',
+			'museum-railway-timetable'
+		),
+		'express'
+	);
+}
+
+/**
+ * Timetable symbol legend (overview footer).
  */
 function MRT_timetable_print_key_html(): string {
 	ob_start();
 	?>
 	<section class="mrt-timetable-print-key" aria-label="<?php esc_attr_e( 'Förklaringar', 'museum-railway-timetable' ); ?>">
 		<h3 class="mrt-timetable-print-key__title"><?php esc_html_e( 'Förklaringar', 'museum-railway-timetable' ); ?></h3>
-		<div class="mrt-timetable-print-key__grid">
-			<div class="mrt-timetable-print-key__mark">X</div>
-			<div class="mrt-timetable-print-key__text">
-				<?php esc_html_e( 'Tåget stannar endast om det finns av- eller påstigande passagerare. Vill du stiga på, ställ dig tydligt så att föraren ser dig och stannar tåget. Vill du stiga av, säg till konduktören i god tid. Observera att avgångstiden är ungefärlig.', 'museum-railway-timetable' ); ?>
-			</div>
-			<div class="mrt-timetable-print-key__mark">P</div>
-			<div class="mrt-timetable-print-key__text">
-				<?php esc_html_e( 'Tåget stannar endast om det finns påstigande passagerare. Vill du stiga på, ställ dig tydligt så att föraren ser dig och stannar tåget. Observera att avgångstiden är ungefärlig.', 'museum-railway-timetable' ); ?>
-			</div>
-			<div class="mrt-timetable-print-key__mark mrt-timetable-print-key__mark--bus">*Buss</div>
-			<div class="mrt-timetable-print-key__text mrt-timetable-print-key__text--bus">
-				<?php esc_html_e( 'Inga anslutningsbussar går denna dag.', 'museum-railway-timetable' ); ?>
-			</div>
-			<div class="mrt-timetable-print-key__mark mrt-timetable-print-key__mark--express">Thun’s-expressen</div>
-			<div class="mrt-timetable-print-key__text mrt-timetable-print-key__text--express">
-				<?php esc_html_e( 'Thun’s-expressen tar dig till och från klädvaruhuset Thun’s i Faringe.', 'museum-railway-timetable' ); ?>
-			</div>
+		<p class="mrt-timetable-print-key__lead">
+			<?php
+			esc_html_e(
+				'Tåget stannar endast vid behov. Stå tydligt vid påstigning så att föraren ser dig. Säg till konduktören i god tid om du ska stiga av. Avgångstider är ungefärliga.',
+				'museum-railway-timetable'
+			);
+			?>
+		</p>
+		<div class="mrt-timetable-print-key__table-wrap">
+			<table class="mrt-table mrt-timetable-print-key__table">
+				<thead>
+					<tr>
+						<th scope="col" class="mrt-timetable-print-key__col-symbol">
+							<?php esc_html_e( 'Tecken', 'museum-railway-timetable' ); ?>
+						</th>
+						<th scope="col" class="mrt-timetable-print-key__col-desc">
+							<?php esc_html_e( 'Betydelse', 'museum-railway-timetable' ); ?>
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php MRT_timetable_print_key_table_body(); ?>
+				</tbody>
+			</table>
 		</div>
 		<p class="mrt-timetable-print-key__reservation"><?php esc_html_e( 'Med reservation för ändring av tågtyp.', 'museum-railway-timetable' ); ?></p>
 	</section>
