@@ -1,25 +1,20 @@
 # Trusted HTML (`v-html`)
 
-Vue escapes `{{ }}` output by default. **`v-html` does not** — any script or event handlers in the string can run in the browser.
+Vue escapes `{{ }}` output by default. **`v-html` does not** — avoid it for timetable content.
 
-## Where we use `v-html`
+## Timetable (overview + month day panel)
 
-| Component | Source | AJAX action |
-|-----------|--------|-------------|
-| `TimetableOverviewApp.vue` | WordPress timetable overview | `mrt_timetable_overview_html` |
-| `MonthCalendarApp.vue` | Day panel | `mrt_get_timetable_for_date` |
-## Production / CSP
+Public timetable UIs use **JSON** from:
 
-- Enforce a **Content-Security-Policy** that blocks inline scripts; server HTML must not rely on `<script>` in AJAX responses.
-- After deploy, run `npm run build` in `frontend/vue` so `assets/dist/vue` matches the bundle referenced by WordPress.
+- `mrt_timetable_overview_data`
+- `mrt_get_timetable_for_date` (returns `{ overview: … }`)
 
-## Contract
+Rendered by `MrtTimetableOverviewView.vue` — no `v-html` for timetables.
 
-1. **PHP must sanitize** all HTML returned by these actions (`wp_kses_post` or equivalent).
-2. **Do not** pass user input into HTML generation without escaping on the server.
-3. **Do not** add new `v-html` bindings without updating this file and a security review.
+## Other `v-html`
 
-## Client helpers
+Do not add new `v-html` bindings without updating this file and a security review.
 
-- `useTimetableHtml` / `loadOverviewHtml` — fetch only; they do not sanitize HTML.
-- Prefer `{{ }}` for labels, errors, and station names from config.
+## PHP HTML
+
+Timetable **HTML** renderers (`MRT_render_timetable_*`) are for **wp-admin preview** only, not public AJAX.

@@ -16,15 +16,20 @@ describe('mrtPost', () => {
       'fetch',
       vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => ({ success: true, data: { html: '<p>ok</p>' } }),
+        json: async () => ({
+          success: true,
+          data: { overview: { scope: 'timetable', timetableId: 1, groups: [] } },
+        }),
       }),
     );
 
-    const res = await mrtPost<{ html: string }>(config, 'mrt_timetable_overview_html', {
-      timetable_id: 1,
-    });
+    const res = await mrtPost<{ overview: { timetableId: number } }>(
+      config,
+      'mrt_timetable_overview_data',
+      { timetable_id: 1 },
+    );
     expect(res.success).toBe(true);
-    expect(res.data?.html).toBe('<p>ok</p>');
+    expect(res.data?.overview.timetableId).toBe(1);
   });
 
   it('returns message on HTTP error', async () => {

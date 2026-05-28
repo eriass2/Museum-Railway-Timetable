@@ -211,13 +211,25 @@ async function handleAjaxPost(req, res, requestUrl) {
     return;
   }
 
-  const html =
-    action === 'mrt_timetable_overview_html'
-      ? '<p>Översikt tidtabell (e2e)</p>'
-      : '<p>Tidtabell för vald dag</p>';
+  const emptyOverview = {
+    scope: 'timetable',
+    timetableId: 1,
+    title: 'E2E',
+    dateYmd: '2026-05-25',
+    timetableType: 'green',
+    typeBanner: { label: 'GRÖN TIDTABELL' },
+    printKey: [],
+    iconUrls: {},
+    groups: [],
+  };
+
+  let data = { overview: emptyOverview };
+  if (action === 'mrt_get_timetable_for_date') {
+    data = { overview: { ...emptyOverview, scope: 'day', title: 'Tidtabell för vald dag' } };
+  }
 
   res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-  res.end(JSON.stringify({ success: true, data: { html } }));
+  res.end(JSON.stringify({ success: true, data }));
 }
 
 function renderAppHtml(app, config) {
