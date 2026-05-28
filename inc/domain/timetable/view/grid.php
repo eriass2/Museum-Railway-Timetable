@@ -1,7 +1,6 @@
 <?php
 /**
- * Timetable grid rendering (body, group)
- * Requires: grid-helpers.php, grid-rows.php
+ * Timetable grid HTML rendering (wp-admin preview). Public UI uses overview-data.php.
  *
  * @package Museum_Railway_Timetable
  */

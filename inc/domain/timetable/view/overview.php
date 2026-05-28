@@ -219,14 +219,17 @@ function MRT_timetable_print_key_html(): string {
 }
 
 /**
- * Render overview timetable view (like the green timetable image)
- * Groups services by route and direction, shows train types
+ * Render overview timetable HTML (wp-admin preview only).
  *
  * @param int         $timetable_id Timetable post ID
  * @param string|null $dateYmd Optional date in YYYY-MM-DD format to show date-specific train types
  * @return string HTML output
  */
 function MRT_render_timetable_overview( $timetable_id, $dateYmd = null ) {
+	if ( function_exists( 'MRT_timetable_allows_html_preview' ) && ! MRT_timetable_allows_html_preview() ) {
+		return '';
+	}
+
 	if ( ! $timetable_id || $timetable_id <= 0 ) {
 		return MRT_render_alert( __( 'Invalid timetable.', 'museum-railway-timetable' ), 'error' );
 	}
@@ -267,15 +270,17 @@ function MRT_render_timetable_overview( $timetable_id, $dateYmd = null ) {
 }
 
 /**
- * Render timetable for a specific date
- * Shows all services running on that date, grouped by route and direction
- * Uses the same component as timetable overview for consistency
+ * Render timetable HTML for one date (wp-admin only; public uses JSON).
  *
  * @param string $dateYmd Date in YYYY-MM-DD format
  * @param string $train_type_slug Optional train type filter
  * @return string HTML output
  */
 function MRT_render_timetable_for_date( $dateYmd, $train_type_slug = '' ) {
+	if ( function_exists( 'MRT_timetable_allows_html_preview' ) && ! MRT_timetable_allows_html_preview() ) {
+		return '';
+	}
+
 	if ( ! MRT_validate_date( $dateYmd ) ) {
 		return MRT_render_alert( __( 'Invalid date.', 'museum-railway-timetable' ), 'error' );
 	}
