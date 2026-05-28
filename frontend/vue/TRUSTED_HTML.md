@@ -9,7 +9,7 @@ Public timetable UIs use **JSON** from:
 - `mrt_timetable_overview_data`
 - `mrt_get_timetable_for_date` (returns `{ overview: … }`)
 
-Rendered by `MrtTimetableOverviewView.vue` — no `v-html` for timetables.
+Rendered by `components/overview/` (`MrtTimetableOverviewView.vue` and child SFCs) — no `v-html` for timetables.
 
 ## Other `v-html`
 
