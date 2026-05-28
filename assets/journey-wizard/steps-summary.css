@@ -1,25 +1,24 @@
 /**
  * Journey wizard – summary step contextual overrides.
- * Components: components.css (mrt-journey-wizard__*).
  *
  * @package Museum_Railway_Timetable
  */
 
-.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__step-head {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-journey-wizard__step-head {
     margin-bottom: 0.15rem;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-price-block {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-price-block {
     margin-top: 1.25rem;
     padding-top: 1.25rem;
     border-top: 1px solid var(--mrt-color-neutral-200);
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="summary"] [data-wizard-ticket-wrap] {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] [data-wizard-ticket-wrap] {
     margin-top: 1.75rem;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-accent-btn {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-accent-btn {
     display: inline-flex;
     min-width: min(100%, 22rem);
     min-height: 2.85rem;

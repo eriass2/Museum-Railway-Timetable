@@ -83,10 +83,6 @@ input.mrt-btn:focus-visible {
     margin: 0;
 }
 
-.mrt-heading--lg {
-    font-size: var(--mrt-font-lg);
-}
-
 .mrt-heading--xl {
     font-size: var(--mrt-font-xl);
     color: var(--mrt-text-secondary);

@@ -23,8 +23,3 @@
     object-fit: contain;
 }
 
-.mrt-journey-wizard__timetable .mrt-train-type-icon-img {
-    height: 0.95rem;
-    max-width: 2.15rem;
-    margin-bottom: 0.08rem;
-}

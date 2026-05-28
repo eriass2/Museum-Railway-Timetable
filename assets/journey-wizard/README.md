@@ -2,9 +2,11 @@
 
 Publik reseplanerare använder **Vue** (`frontend/vue`) och Vite-bundlad CSS från denna mapp.
 
-- Klasser: `.mrt-journey-wizard__*`
-- Design tokens: `--mrt-wizard-*` (definieras i `base.css`)
-- Paneler: `data-wizard-step`; rot: `data-step` för hero-layout
+- Shell: `.mrt-journey-wizard__hero`, `__panels` (Vue `JourneyWizardApp`)
+- Steg: `MrtStepPanel` (`mrt-step-panel`, `data-wizard-step`)
+- Delad UI-CSS: `assets/frontend/ui-components.css`
+- Design tokens: se `docs/DESIGN_TOKENS.md`
+- Inline tidtabell i wizard borttagen; route-steg länkar till `timetablePageUrl`
 
 Bygg om efter CSS/TS-ändringar: `composer vue:build` från repo-roten.
 

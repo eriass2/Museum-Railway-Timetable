@@ -61,12 +61,6 @@ const legendHints = computed(() => {
   return hints;
 });
 
-type MonthDayCell = Extract<MonthGridCell, { kind: 'day' }>;
-
-function monthDay(cell: MonthGridCell): MonthDayCell | null {
-  return cell.kind === 'day' ? cell : null;
-}
-
 function monthCellClass(cell: MonthGridCell): string | undefined {
   if (cell.kind === 'empty') {
     return 'mrt-empty';
@@ -127,14 +121,14 @@ watch([panelVisible, dayHtml, dayLoading], async ([visible, html, loading]) => {
       :grid-label="config.monthAriaLabel || ''"
       :cell-class="monthCellClass"
     >
-      <template #cell="{ cell: rawCell }">
-        <template v-if="(rawCell as MonthGridCell).kind === 'empty'" />
+      <template #cell="{ cell }">
+        <template v-if="cell.kind === 'empty'" />
         <MrtMonthDayCell
-          v-else-if="monthDay(rawCell as MonthGridCell)"
-          :day="monthDay(rawCell as MonthGridCell)!.day"
-          :info="monthDay(rawCell as MonthGridCell)!.info"
+          v-else
+          :day="cell.day"
+          :info="cell.info"
           :show-counts="showCounts"
-          :selected="selectedYmd === monthDay(rawCell as MonthGridCell)!.info.ymd"
+          :selected="selectedYmd === cell.info.ymd"
           @click="onDayClick"
         />
       </template>

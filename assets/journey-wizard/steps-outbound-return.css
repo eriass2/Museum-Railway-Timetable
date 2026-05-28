@@ -4,17 +4,17 @@
  * @package Museum_Railway_Timetable
  */
 
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="return"] .mrt-selected-trip[data-wizard-return-summary] {
     margin: 0 0 1.5rem;
     padding-bottom: 1.35rem;
     border-bottom: 2px solid rgba(255, 255, 255, 0.35);
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-label {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="return"] .mrt-selected-trip[data-wizard-return-summary] .mrt-selected-trip__label {
     color: #ffffff;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="return"] [data-wizard-return-summary] .mrt-journey-wizard__selected-card {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="return"] .mrt-selected-trip[data-wizard-return-summary] .mrt-selected-trip__card {
     border: 3px solid var(--mrt-wizard-yellow);
     background: var(--mrt-wizard-surface);
     color: var(--mrt-wizard-text);

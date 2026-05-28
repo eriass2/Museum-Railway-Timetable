@@ -8,7 +8,7 @@ import { useWizardContext } from '../../composables/useWizardContext';
 import { useWizardCalendar } from '../composables/useWizardCalendar';
 import WizardCalendarGrid from './WizardCalendarGrid.vue';
 import MrtStatusMessage from '../../components/ui/MrtStatusMessage.vue';
-import WizardPanel from './WizardPanel.vue';
+import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
 import { cfgStr } from '../utils/wizardLabels';
 
 const { store, cfg, config } = useWizardContext();
@@ -50,7 +50,7 @@ function onBack(): void {
 </script>
 
 <template>
-  <WizardPanel step="date" :ariaLabel="cfgStr(cfg, 'stepDate', 'Välj datum')">
+  <MrtStepPanel step="date" :ariaLabel="cfgStr(cfg, 'stepDate', 'Välj datum')">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard flush>
@@ -80,5 +80,5 @@ function onBack(): void {
       />
       <MrtLegend :items="legendItems" />
     </MrtSurfaceCard>
-  </WizardPanel>
+  </MrtStepPanel>
 </template>

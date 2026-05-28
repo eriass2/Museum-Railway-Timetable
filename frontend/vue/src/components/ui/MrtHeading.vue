@@ -5,10 +5,13 @@ withDefaults(
   defineProps<{
     level?: 'h2' | 'h3' | 'h4';
     size?: 'lg' | 'md' | 'xl';
+    /** Centered hero title on wizard route surface. */
+    variant?: 'default' | 'surface-title';
   }>(),
   {
     level: 'h2',
     size: 'lg',
+    variant: 'default',
   },
 );
 </script>
@@ -17,7 +20,10 @@ withDefaults(
   <component
     :is="level"
     class="mrt-heading"
-    :class="size !== 'lg' ? `mrt-heading--${size}` : undefined"
+    :class="[
+      size !== 'lg' ? `mrt-heading--${size}` : undefined,
+      variant === 'surface-title' ? 'mrt-heading--surface-title' : undefined,
+    ]"
     v-bind="$attrs"
   >
     <slot />

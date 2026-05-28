@@ -61,6 +61,16 @@ function buildWizardConfig(requestUrl) {
         'december',
       ],
       weekdayAbbrev: ['mån', 'tis', 'ons', 'tors', 'fre', 'lör', 'sön'],
+      priceTitle: 'Priser',
+      priceDash: '—',
+      priceZoneLabel: '%d zoner',
+      priceTickets: { adult: 'Vuxen' },
+      priceCategories: {},
+      priceMatrixByZone: {
+        single: { adult: { 2: 100 } },
+        return: { adult: { 2: 180 } },
+      },
+      priceStationZones: { 1: [1], 2: [2] },
     },
     labels: {
       routeTitle: 'Planera resa med Lennakatten',
@@ -70,6 +80,13 @@ function buildWizardConfig(requestUrl) {
       back: '← Tillbaka',
       stepDate: 'Välj datum',
     },
+  };
+
+  const mockConnection = {
+    service_id: 101,
+    from_departure: '09:00',
+    to_arrival: '10:30',
+    duration_minutes: 90,
   };
 
   if (debug === 'date') {
@@ -84,6 +101,53 @@ function buildWizardConfig(requestUrl) {
         calendarYear: 2026,
         calendarMonth: 5,
         calendarDays: { '2026-05-15': 'ok', '2026-05-16': 'none' },
+      },
+    };
+  }
+
+  if (debug === 'outbound') {
+    config.wizard.debugPresets = {
+      outbound: {
+        step: 'outbound',
+        tripType: 'return',
+        from: 1,
+        to: 2,
+        fromTitle: 'Uppsala',
+        toTitle: 'Märsta',
+        date: '2026-05-15',
+        outboundConnections: [mockConnection, { ...mockConnection, service_id: 102, from_departure: '11:00', to_arrival: '12:30' }],
+      },
+    };
+  }
+
+  if (debug === 'return') {
+    config.wizard.debugPresets = {
+      return: {
+        step: 'return',
+        tripType: 'return',
+        from: 1,
+        to: 2,
+        fromTitle: 'Uppsala',
+        toTitle: 'Märsta',
+        date: '2026-05-15',
+        outbound: mockConnection,
+        returnConnections: [{ ...mockConnection, service_id: 201, from_departure: '14:00', to_arrival: '15:30' }],
+      },
+    };
+  }
+
+  if (debug === 'summary') {
+    config.wizard.debugPresets = {
+      summary: {
+        step: 'summary',
+        tripType: 'return',
+        from: 1,
+        to: 2,
+        fromTitle: 'Uppsala',
+        toTitle: 'Märsta',
+        date: '2026-05-15',
+        outbound: mockConnection,
+        inbound: { ...mockConnection, service_id: 201, from_departure: '14:00', to_arrival: '15:30' },
       },
     };
   }

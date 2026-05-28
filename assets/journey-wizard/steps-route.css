@@ -1,8 +1,0 @@
-/**
- * Journey wizard — step 1 (route / search).
- */
-
-.mrt-journey-wizard__route {
-    width: min(100%, 36rem);
-    margin-inline: auto;
-}

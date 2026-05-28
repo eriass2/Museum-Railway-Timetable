@@ -3,11 +3,13 @@ import { computed, onMounted, watch } from 'vue';
 import MrtAsyncState from '../../components/ui/MrtAsyncState.vue';
 import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
 import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
+import MrtSelectedTrip from '../../components/ui/MrtSelectedTrip.vue';
+import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
+import MrtTripList from '../../components/ui/MrtTripList.vue';
 import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useTripConnections } from '../composables/useTripConnections';
 import { cfgStr } from '../utils/wizardLabels';
-import WizardPanel from './WizardPanel.vue';
 import WizardTripCard from './WizardTripCard.vue';
 import { formatTripClock } from '../utils/format';
 
@@ -62,25 +64,22 @@ watch(
 </script>
 
 <template>
-  <WizardPanel :step="legCtx" variant="wide" :ariaLabel="stepLabel">
+  <MrtStepPanel :step="legCtx" variant="wide" :ariaLabel="stepLabel">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard>
-      <div
+      <MrtSelectedTrip
         v-if="legCtx === 'return' && store.outbound"
-        data-wizard-return-summary
-        class="mrt-journey-wizard__selected-trip"
+        return-summary
       >
-        <div class="mrt-journey-wizard__selected-label">
+        <template #label>
           {{ cfgStr(cfg, 'selectedOutbound', 'Vald utresa') }}
-        </div>
-        <div class="mrt-journey-wizard__selected-card">
-          <MrtTripSummary
-            :time-range="selectedOutboundTime"
-            :route="`${store.fromTitle} → ${store.toTitle}`"
-          />
-        </div>
-      </div>
+        </template>
+        <MrtTripSummary
+          :time-range="selectedOutboundTime"
+          :route="`${store.fromTitle} → ${store.toTitle}`"
+        />
+      </MrtSelectedTrip>
 
       <MrtAsyncState
         :loading="loading"
@@ -89,7 +88,7 @@ watch(
         :empty="!connections.length"
         :empty-text="cfgStr(cfg, 'noConnections', 'Inga anslutningar hittades.')"
       >
-        <div class="mrt-journey-wizard__trip-list">
+        <MrtTripList>
           <WizardTripCard
             v-for="(conn, idx) in connections"
             :key="idx"
@@ -97,8 +96,8 @@ watch(
             :leg-ctx="legCtx"
             @select="legCtx === 'outbound' ? store.selectOutbound(conn) : store.selectInbound(conn)"
           />
-        </div>
+        </MrtTripList>
       </MrtAsyncState>
     </MrtSurfaceCard>
-  </WizardPanel>
+  </MrtStepPanel>
 </template>

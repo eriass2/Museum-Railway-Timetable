@@ -8,7 +8,10 @@ Vue escapes `{{ }}` output by default. **`v-html` does not** — any script or e
 |-----------|--------|-------------|
 | `TimetableOverviewApp.vue` | WordPress timetable overview | `mrt_timetable_overview_html` |
 | `MonthCalendarApp.vue` | Day panel | `mrt_get_timetable_for_date` |
-| `WizardRouteStep.vue` | Optional timetable drawer | `mrt_timetable_overview_html` |
+## Production / CSP
+
+- Enforce a **Content-Security-Policy** that blocks inline scripts; server HTML must not rely on `<script>` in AJAX responses.
+- After deploy, run `npm run build` in `frontend/vue` so `assets/dist/vue` matches the bundle referenced by WordPress.
 
 ## Contract
 

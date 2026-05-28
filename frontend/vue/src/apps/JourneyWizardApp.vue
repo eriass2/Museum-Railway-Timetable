@@ -40,9 +40,9 @@ watch(
   () => store.step,
   async () => {
     await nextTick();
-    const panel = panelsRef.value?.querySelector('.mrt-journey-wizard__panel--active');
+    const panel = panelsRef.value?.querySelector('.mrt-step-panel--active');
     const focusEl = panel?.querySelector(
-      '.mrt-step-progress__item.is-active, h2.mrt-surface-title',
+      '.mrt-step-progress__item.is-active, h2.mrt-heading--surface-title',
     ) as HTMLElement | null;
     if (!focusEl) {
       return;

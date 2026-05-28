@@ -38,7 +38,7 @@ defineExpose({ ensureLoaded });
 </script>
 
 <template>
-  <MrtDetailPanel :multi="isMulti">
+  <MrtDetailPanel :class="{ 'mrt-detail-panel--multi': isMulti }">
     <MrtAsyncState
       :loading="loading"
       :error="error"

@@ -4,16 +4,16 @@
  * @package Museum_Railway_Timetable
  */
 
-.mrt-journey-wizard__panel[data-wizard-step="date"] {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="date"] {
     padding-bottom: clamp(1rem, 3vw, 1.5rem);
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="date"] .mrt-step-header {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="date"] .mrt-step-header {
     gap: 0.5rem;
     margin-bottom: 0.25rem;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="date"] .mrt-step-header__context {
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="date"] .mrt-step-header__context {
     font-size: 1.05rem;
     color: var(--mrt-color-on-dark-muted);
 }

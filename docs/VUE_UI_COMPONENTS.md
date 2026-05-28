@@ -31,8 +31,12 @@ Shared primitives for wizard, month calendar, and overview. Styles: `assets/fron
 | `MrtExpandTrigger` | `mrt-expand-trigger` | Trip card detail toggle |
 | `MrtVehicleRow` | `mrt-vehicle-row` | Trip card, detail segment |
 | `MrtHtmlPanel` | `mrt-html-panel` | Month day timetable, overview |
+| `MrtStepPanel` | `mrt-step-panel` | Wizard step regions (`data-wizard-step`) |
+| `MrtRouteLayout` | `mrt-route-layout` | Route search form layout |
+| `MrtSelectedTrip` | `mrt-selected-trip` | Return step outbound recap |
+| `MrtTripList` | `mrt-trip-list` | Outbound/return connection list |
 
-Wizard-only layout/trip CSS remains under `assets/journey-wizard/`. Price matrix helpers live in `frontend/vue/src/shared/prices.ts`.
+Wizard shell CSS (hero, embedded, step overrides): `assets/journey-wizard/`. See [DESIGN_TOKENS.md](DESIGN_TOKENS.md). Alert naming: [ALERT_STYLES.md](ALERT_STYLES.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
 
 ## Rebuild
 

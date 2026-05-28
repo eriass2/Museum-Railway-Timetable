@@ -3,13 +3,13 @@
         padding: 1rem;
     }
 
-    .mrt-journey-wizard__panel,
-    .mrt-journey-wizard__search-panel {
+    .mrt-journey-wizard .mrt-step-panel,
+    .mrt-journey-wizard .mrt-step-panel--search {
         width: 100%;
         padding: 1.2rem;
     }
 
-    .mrt-surface-title {
+    .mrt-journey-wizard .mrt-heading--surface-title {
         font-size: 1.8rem;
     }
 
@@ -38,7 +38,7 @@
     }
 
     .mrt-trip-card__head,
-    .mrt-journey-wizard__selected-card {
+    .mrt-selected-trip__card {
         grid-template-columns: 1fr;
     }
 
@@ -56,16 +56,4 @@
         margin-left: 5.2rem;
     }
 
-    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid {
-        grid-template-columns: 5.8rem minmax(18rem, 1fr);
-        overflow-x: auto;
-    }
-
-    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid > :nth-child(4n) {
-        border-right: 1px solid var(--mrt-print-grid);
-    }
-
-    .mrt-journey-wizard__timetable .mrt-timetable-print-key__grid > :nth-child(even) {
-        border-right: 0;
-    }
 }

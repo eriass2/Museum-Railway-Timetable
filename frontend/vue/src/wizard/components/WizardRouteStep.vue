@@ -4,13 +4,14 @@ import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
 import MrtAlert from '../../components/ui/MrtAlert.vue';
 import MrtSegmentedControl from '../../components/ui/MrtSegmentedControl.vue';
 import MrtHeading from '../../components/ui/MrtHeading.vue';
+import MrtRouteLayout from '../../components/ui/MrtRouteLayout.vue';
+import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
 import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { todayYearMonth } from '../utils/wizardDate';
 import { cfgStr } from '../utils/wizardLabels';
 import type { TripType } from '../types';
 import type { WizardStation } from '../../config/types';
-import WizardPanel from './WizardPanel.vue';
 import WizardStationField from './WizardStationField.vue';
 import WizardTripTypeIcon from './WizardTripTypeIcon.vue';
 
@@ -57,18 +58,21 @@ function onSearch(): void {
 </script>
 
 <template>
-  <WizardPanel
+  <MrtStepPanel
     step="route"
     variant="search"
     :ariaLabel="cfgStr(cfg, 'stepRoute', 'Sök resa')"
   >
     <MrtSurfaceCard>
-      <MrtHeading level="h2" size="xl" class="mrt-surface-title">
+      <MrtHeading level="h2" size="xl" variant="surface-title">
         {{ cfgStr(cfg, 'routeTitle', 'Planera resa med Lennakatten') }}
       </MrtHeading>
 
-      <div class="mrt-journey-wizard__route">
-        <div class="mrt-journey-wizard__route-stations">
+      <MrtRouteLayout
+        :timetable-href="timetablePageUrl || undefined"
+        :timetable-label="cfgStr(cfg, 'timetablePageLink', 'Visa hela tidtabellen')"
+      >
+        <template #stations>
           <WizardStationField
             id="mrt_wizard_from"
             v-model="fromId"
@@ -87,7 +91,7 @@ function onSearch(): void {
             :stations="stations"
             :exclude-id="fromId"
           />
-        </div>
+        </template>
 
         <MrtSegmentedControl
           v-model="tripType"
@@ -109,18 +113,7 @@ function onSearch(): void {
             {{ cfgStr(cfg, 'searchTrip', 'Sök resa') }}
           </MrtAccentButton>
         </div>
-
-        <p v-if="timetablePageUrl" class="mrt-journey-wizard__timetable-link-wrap">
-          <a
-            class="mrt-journey-wizard__timetable-link"
-            :href="timetablePageUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ cfgStr(cfg, 'timetablePageLink', 'Visa hela tidtabellen') }}
-          </a>
-        </p>
-      </div>
+      </MrtRouteLayout>
     </MrtSurfaceCard>
-  </WizardPanel>
+  </MrtStepPanel>
 </template>

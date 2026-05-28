@@ -1,5 +1,5 @@
 <template>
-  <div class="mrt-detail-panel">
+  <div class="mrt-trip-list">
     <slot />
   </div>
 </template>

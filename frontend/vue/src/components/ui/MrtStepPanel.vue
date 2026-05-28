@@ -12,10 +12,10 @@ withDefaults(
 <template>
   <div
     :data-wizard-step="step"
-    class="mrt-journey-wizard__panel mrt-journey-wizard__panel--active"
+    class="mrt-step-panel mrt-step-panel--active"
     :class="{
-      'mrt-journey-wizard__search-panel': variant === 'search',
-      'mrt-journey-wizard__panel--wide': variant === 'wide',
+      'mrt-step-panel--search': variant === 'search',
+      'mrt-step-panel--wide': variant === 'wide',
     }"
     role="region"
     :aria-label="ariaLabel"

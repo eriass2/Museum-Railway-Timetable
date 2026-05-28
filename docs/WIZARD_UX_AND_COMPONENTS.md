@@ -5,7 +5,7 @@ Wizard domain code: `frontend/vue/src/wizard/`. Shared UI: `frontend/vue/src/com
 ## Wizard-specific pieces
 
 - `WizardRouteStep`, `WizardDateStep`, `WizardTripStep`, `WizardSummaryStep`
-- `WizardPanel` — step region wrapper (`data-wizard-step`, `ariaLabel`)
+- `MrtStepPanel` — step region wrapper (`data-wizard-step`, `ariaLabel`)
 - `WizardTripCard` (wraps `MrtTripCard`), `WizardTimeline` (wraps `MrtTimeline`), `WizardCalendarGrid` (wraps `MrtCalendarGrid`), `WizardStationField` (wraps `MrtCombobox`)
 - Summary prices via `MrtPriceTable` directly
 - `WizardTripTypeIcon`

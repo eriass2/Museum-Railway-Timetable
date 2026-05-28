@@ -56,7 +56,7 @@
     margin: 0 auto 0.75rem;
 }
 
-.mrt-journey-wizard__panel {
+.mrt-journey-wizard .mrt-step-panel {
     width: min(100%, 46rem);
     margin-inline: auto;
     padding: clamp(1.5rem, 4vw, 2.75rem);
@@ -65,7 +65,7 @@
     box-sizing: border-box;
 }
 
-.mrt-journey-wizard__search-panel {
+.mrt-journey-wizard .mrt-step-panel--search {
     width: min(100%, 54rem);
     margin-top: 1.5rem;
     padding-block: clamp(1.75rem, 4vw, 3rem);
@@ -81,7 +81,7 @@
     color: var(--mrt-color-on-dark-muted);
 }
 
-.mrt-journey-wizard__search-panel .mrt-form-field label {
+.mrt-journey-wizard .mrt-step-panel--search .mrt-form-field label {
     display: block;
     margin-bottom: 0.35rem;
     color: var(--mrt-color-on-dark);
@@ -89,11 +89,11 @@
     font-weight: 800;
 }
 
-.mrt-surface-title:focus {
+.mrt-journey-wizard .mrt-heading--surface-title:focus {
     outline: none;
 }
 
-.mrt-surface-title:focus-visible {
+.mrt-journey-wizard .mrt-heading--surface-title:focus-visible {
     outline: 3px solid var(--mrt-wizard-focus);
     outline-offset: 4px;
 }
@@ -116,54 +116,7 @@
     outline-offset: 3px;
 }
 
-
-.mrt-journey-wizard__timetable {
-    margin: 1.5rem auto 0;
-    max-width: 100%;
-    min-width: 0;
-    overflow: hidden;
-    background: #ffffff;
-    color: var(--mrt-wizard-text);
-}
-
-.mrt-journey-wizard__timetable-summary {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    min-height: 2.8rem;
-    padding: 0.5rem 0.9rem;
-    background: var(--mrt-wizard-yellow);
-    color: var(--mrt-color-on-accent);
-    font-size: 1.08rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    cursor: pointer;
-}
-
-.mrt-journey-wizard__timetable-summary::after {
-    content: "";
-    width: 0.75rem;
-    height: 0.75rem;
-    border-right: 3px solid currentColor;
-    border-bottom: 3px solid currentColor;
-    transform: rotate(45deg);
-}
-
-.mrt-journey-wizard__timetable[open] .mrt-journey-wizard__timetable-summary::after {
-    transform: rotate(225deg);
-}
-
-.mrt-journey-wizard__timetable-body {
-    max-width: 100%;
-    min-width: 0;
-    overflow-x: auto;
-    padding: 0.9rem;
-    background: #ffffff;
-    color: var(--mrt-wizard-text);
-}
-
-.mrt-journey-wizard__panel > .mrt-text-secondary {
+.mrt-journey-wizard .mrt-step-panel > .mrt-text-secondary {
     color: var(--mrt-color-on-dark-muted);
 }
 
@@ -203,13 +156,13 @@
     margin-bottom: clamp(1.75rem, 4vw, 2.5rem);
 }
 
-.mrt-journey-wizard--embedded .mrt-journey-wizard__search-panel {
+.mrt-journey-wizard--embedded .mrt-step-panel--search {
     margin-top: clamp(1rem, 2.5vw, 1.75rem);
     padding-block: clamp(2rem, 4vw, 3.25rem);
     padding-inline: clamp(1.75rem, 4vw, 3rem);
 }
 
-.mrt-journey-wizard--embedded .mrt-journey-wizard__search-panel .mrt-form-field {
+.mrt-journey-wizard--embedded .mrt-step-panel--search .mrt-form-field {
     margin-bottom: 1.35rem;
 }
 
@@ -222,6 +175,3 @@
     padding-bottom: 0.35rem;
 }
 
-.mrt-journey-wizard--embedded .mrt-journey-wizard__timetable {
-    margin-top: clamp(2rem, 4vw, 2.75rem);
-}

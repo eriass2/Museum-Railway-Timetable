@@ -7,7 +7,7 @@ test.describe('Journey wizard (static mount)', () => {
     await expect(root).toBeVisible();
     await expect(root).toHaveAttribute('data-step', 'route');
     await expect(page.locator('.mrt-step-nav')).toBeVisible();
-    await expect(page.locator('.mrt-surface-title')).toHaveText(/Planera resa/i);
+    await expect(page.locator('.mrt-heading--surface-title')).toHaveText(/Planera resa/i);
     await expect(page.locator('#mrt_wizard_from')).toHaveAttribute('role', 'combobox');
     await expect(page.locator('#mrt_wizard_to')).toBeVisible();
     await expect(page.locator('.mrt-segmented')).toBeVisible();

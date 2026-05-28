@@ -4,7 +4,7 @@
  * @package Museum_Railway_Timetable
  */
 
-.mrt-journey-wizard__panel--wide {
+.mrt-journey-wizard .mrt-step-panel--wide {
     width: min(100%, 54rem);
 }
 
@@ -16,49 +16,19 @@
     color: var(--mrt-color-on-dark);
 }
 
-.mrt-journey-wizard__search-panel .mrt-accent-btn--primary {
+.mrt-journey-wizard .mrt-step-panel--search .mrt-accent-btn--primary {
     min-width: 12rem;
     padding: 0.85rem 2rem;
     font-size: 1.05rem;
     letter-spacing: 0.04em;
 }
 
-.mrt-journey-wizard__timetable-link-wrap {
-    margin: 1.25rem 0 0;
-    text-align: center;
-}
-
-.mrt-journey-wizard__timetable-link {
-    color: var(--mrt-color-on-dark-link);
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-}
-
-.mrt-journey-wizard__timetable-link:hover {
-    color: var(--mrt-color-on-dark);
-}
-
-.mrt-journey-wizard__route-stations {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-}
-
-@media (min-width: 40rem) {
-    .mrt-journey-wizard__route-stations {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem 1.25rem;
-    }
-}
-
 .mrt-journey-wizard .mrt-segmented-field__legend {
     color: var(--mrt-wizard-text);
 }
 
-.mrt-journey-wizard__search-panel .mrt-surface .mrt-segmented-field__legend,
-.mrt-journey-wizard__search-panel .mrt-field__label {
+.mrt-journey-wizard .mrt-step-panel--search .mrt-surface .mrt-segmented-field__legend,
+.mrt-journey-wizard .mrt-step-panel--search .mrt-field__label {
     color: var(--mrt-wizard-text);
 }
 

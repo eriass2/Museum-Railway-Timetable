@@ -13,7 +13,7 @@ import { zonesForStationPair } from '../../shared/prices';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
 import { formatTripClock } from '../utils/format';
-import WizardPanel from './WizardPanel.vue';
+import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
 
 const { ticketUrl } = defineProps<{ ticketUrl: string }>();
 
@@ -41,7 +41,7 @@ function onBack(): void {
 </script>
 
 <template>
-  <WizardPanel step="summary" variant="wide" :ariaLabel="cfgStr(cfg, 'stepSummary', 'Din resa')">
+  <MrtStepPanel step="summary" variant="wide" :ariaLabel="cfgStr(cfg, 'stepSummary', 'Din resa')">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard>
@@ -80,5 +80,5 @@ function onBack(): void {
         </MrtAccentButton>
       </p>
     </MrtSurfaceCard>
-  </WizardPanel>
+  </MrtStepPanel>
 </template>
