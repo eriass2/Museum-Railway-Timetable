@@ -1,20 +1,20 @@
 <script setup lang="ts">
 import { computed, type MaybeRef, unref } from 'vue';
-import type { TripType } from '../../wizard/types';
-import type { WizardCfg } from '../../wizard/utils/wizardCfgTypes';
-import { cfgRecord, cfgStr } from '../../wizard/utils/wizardLabels';
+import type { PriceTripType } from '../../shared/prices';
 import {
   PRICE_CAT_KEYS,
   PRICE_TYPE_KEYS,
   formatPriceCell,
   priceMatrixForTrip,
   zonesForStationPair,
-} from '../../wizard/utils/prices';
+} from '../../shared/prices';
+import type { WizardCfg } from '../../wizard/utils/wizardCfgTypes';
+import { cfgRecord, cfgStr } from '../../wizard/utils/wizardLabels';
 import MrtHeading from './MrtHeading.vue';
 
 const props = defineProps<{
   cfg: MaybeRef<WizardCfg>;
-  tripType: MaybeRef<TripType>;
+  tripType: MaybeRef<PriceTripType>;
   fromId: MaybeRef<number>;
   toId: MaybeRef<number>;
   showZoneCount?: boolean;

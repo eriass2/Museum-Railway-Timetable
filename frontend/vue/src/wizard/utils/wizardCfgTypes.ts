@@ -1,12 +1,13 @@
 import type { CalendarDayStatus, JourneyConnection, WizardStep } from '../types';
 
-export type PriceStationZones = Record<string, number[]>;
+import type {
+  PriceMatrix,
+  PriceMatrixByZone,
+  PriceMatrixCell,
+  PriceStationZones,
+} from '../../shared/priceTypes';
 
-export type PriceMatrixCell = string | number | null;
-
-export type PriceMatrix = Record<string, Record<string, PriceMatrixCell>>;
-
-export type PriceMatrixByZone = Record<string, Record<string, Record<string, PriceMatrixCell>>>;
+export type { PriceMatrix, PriceMatrixByZone, PriceMatrixCell, PriceStationZones };
 
 export type L10nMap = Record<string, string>;
 

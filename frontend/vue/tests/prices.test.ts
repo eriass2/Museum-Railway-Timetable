@@ -4,7 +4,7 @@ import {
   formatPriceCell,
   matrixHasAnyPrice,
   priceMatrixForTrip,
-} from '../src/wizard/utils/prices';
+} from '../src/shared/prices';
 
 describe('zonesForStationPair', () => {
   it('returns 4 when zones unknown', () => {
