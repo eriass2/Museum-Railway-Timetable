@@ -80,7 +80,7 @@ async function toggleDetail(): Promise<void> {
     </template>
     <template #side>
       <MrtVehicleRow :items="vehicleItems" />
-      <p v-if="connection.duration_minutes" class="mrt-journey-wizard__duration">
+        <p v-if="connection.duration_minutes" class="mrt-trip-card__duration">
         {{ formatDuration(connection.duration_minutes, cfg) }}
       </p>
       <MrtAccentButton variant="select" type="button" @click="emit('select')">

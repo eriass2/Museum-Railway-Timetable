@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed, unref, type MaybeRef } from 'vue';
-import MrtHeading from '../../components/ui/MrtHeading.vue';
+import MrtDetailSegment from '../../components/ui/MrtDetailSegment.vue';
 import MrtVehicleRow from '../../components/ui/MrtVehicleRow.vue';
 import type { MrtVehicleItem } from '../../components/ui/types';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
@@ -35,27 +35,18 @@ const vehicleItems = computed((): MrtVehicleItem[] => {
 </script>
 
 <template>
-  <div class="mrt-journey-wizard__detail-segment mrt-mb-sm">
-    <MrtHeading
-      v-if="segment.title"
-      level="h4"
-      size="md"
-      class="mrt-journey-wizard__detail-title"
-    >
-      {{ segment.title }}
-    </MrtHeading>
-    <p v-if="segment.notice" class="mrt-journey-wizard__notice">
-      <strong>{{ cfgStr(cfg, 'noticeLabel', 'Notis') }}:</strong> {{ segment.notice }}
-    </p>
-    <div v-if="segment.leg" class="mrt-journey-wizard__timeline-leg">
-      <span v-if="segment.leg.duration_minutes" class="mrt-journey-wizard__leg-duration">
+  <MrtDetailSegment
+    :title="segment.title"
+    :notice="segment.notice"
+    :notice-label="cfgStr(cfg, 'noticeLabel', 'Notis')"
+    :transfer-text="showTransfer ? transferText : undefined"
+  >
+    <template v-if="segment.leg" #meta>
+      <span v-if="segment.leg.duration_minutes" class="mrt-detail-segment__duration">
         {{ formatDuration(segment.leg.duration_minutes, cfgRef) }}
       </span>
       <MrtVehicleRow :items="vehicleItems" />
-    </div>
+    </template>
     <WizardTimeline :cfg="cfgRef" :stops="segment.stops" :start-expanded="false" />
-    <div v-if="showTransfer" class="mrt-journey-wizard__transfer-block">
-      {{ transferText }}
-    </div>
-  </div>
+  </MrtDetailSegment>
 </template>

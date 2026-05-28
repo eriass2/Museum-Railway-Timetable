@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import MrtAsyncState from '../../components/ui/MrtAsyncState.vue';
+import MrtDetailPanel from '../../components/ui/MrtDetailPanel.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import type { JourneyConnection } from '../types';
 import { cfgStr } from '../utils/wizardLabels';
@@ -37,10 +38,7 @@ defineExpose({ ensureLoaded });
 </script>
 
 <template>
-  <div
-    class="mrt-journey-wizard__detail"
-    :class="{ 'mrt-journey-wizard__detail--multi': isMulti }"
-  >
+  <MrtDetailPanel :multi="isMulti">
     <MrtAsyncState
       :loading="loading"
       :error="error"
@@ -57,5 +55,5 @@ defineExpose({ ensureLoaded });
         />
       </template>
     </MrtAsyncState>
-  </div>
+  </MrtDetailPanel>
 </template>
