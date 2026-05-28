@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import MrtCalendarNav from '../../components/ui/MrtCalendarNav.vue';
+import MrtLegend from '../../components/ui/MrtLegend.vue';
+import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
+import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useWizardCalendar } from '../composables/useWizardCalendar';
 import WizardCalendarGrid from './WizardCalendarGrid.vue';
-import WizardCalendarLegend from './WizardCalendarLegend.vue';
-import WizardCalendarNav from './WizardCalendarNav.vue';
-import WizardStepHeader from './WizardStepHeader.vue';
-import WizardSurfaceCard from './WizardSurfaceCard.vue';
 import { cfgStr } from '../utils/wizardLabels';
 
 const { store, cfg, config } = useWizardContext();
@@ -26,6 +26,21 @@ const {
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
 const showEmptyMonth = computed(() => !loading.value && !hasBookableDays.value);
 
+const legendItems = computed(() => [
+  {
+    swatchClass: 'mrt-legend-swatch--ok',
+    label: cfgStr(cfg, 'legendOk', 'Kan bokas för din resa'),
+  },
+  {
+    swatchClass: 'mrt-legend-swatch--traffic',
+    label: cfgStr(cfg, 'legendTraffic', 'Trafik, ej din resa'),
+  },
+  {
+    swatchClass: 'mrt-legend-swatch--none',
+    label: cfgStr(cfg, 'legendNone', 'Ingen trafik'),
+  },
+]);
+
 function onBack(): void {
   store.dateYmd = '';
   store.goTo('route');
@@ -39,12 +54,14 @@ function onBack(): void {
     role="region"
     :aria-label="cfgStr(cfg, 'stepDate', 'Välj datum')"
   >
-    <WizardStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
+    <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
-    <WizardSurfaceCard class="mrt-journey-wizard__calendar-card">
-      <WizardCalendarNav
-        :cfg="cfg"
+    <MrtSurfaceCard flush>
+      <MrtCalendarNav
         :month-title="monthTitle"
+        :prev-aria="cfgStr(cfg, 'calPrevAria', 'Föregående månad')"
+        :next-aria="cfgStr(cfg, 'calNextAria', 'Nästa månad')"
+        :today-label="cfgStr(cfg, 'goToToday', 'Idag')"
         @prev="shiftMonth(-1)"
         @next="shiftMonth(1)"
         @today="goToday"
@@ -59,13 +76,13 @@ function onBack(): void {
         :day-aria="dayAria"
         @pick="onPickDate"
       />
-      <p v-if="showEmptyMonth" class="mrt-journey-wizard__calendar-empty" role="status">
+      <p v-if="showEmptyMonth" class="mrt-status-message" role="status">
         {{ cfgStr(cfg, 'calendarEmptyMonth', 'Inga bokningsbara dagar denna månad för din resa.') }}
-        <span class="mrt-journey-wizard__calendar-empty-hint">
+        <span class="mrt-status-message__hint">
           {{ cfgStr(cfg, 'calendarEmptyHint', 'Byt månad med pilarna ovan.') }}
         </span>
       </p>
-      <WizardCalendarLegend :cfg="cfg" />
-    </WizardSurfaceCard>
+      <MrtLegend :items="legendItems" />
+    </MrtSurfaceCard>
   </div>
 </template>

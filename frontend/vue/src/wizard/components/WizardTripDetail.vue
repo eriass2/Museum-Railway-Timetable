@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import MrtAsyncState from '../../components/ui/MrtAsyncState.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import type { JourneyConnection } from '../types';
 import { cfgStr } from '../utils/wizardLabels';
@@ -40,17 +41,21 @@ defineExpose({ ensureLoaded });
     class="mrt-journey-wizard__detail"
     :class="{ 'mrt-journey-wizard__detail--multi': isMulti }"
   >
-    <p v-if="loading" class="mrt-empty">{{ cfgStr(cfg, 'loading', 'Laddar...') }}</p>
-    <p v-else-if="error" class="mrt-alert mrt-alert-error">{{ error }}</p>
-    <template v-else-if="loaded">
-      <WizardDetailSegment
-        v-for="(seg, si) in segments"
-        :key="si"
-        :cfg="cfg"
-        :segment="seg"
-        :show-transfer="isMulti && si < segments.length - 1"
-        :transfer-text="transferLabel()"
-      />
-    </template>
+    <MrtAsyncState
+      :loading="loading"
+      :error="error"
+      :loading-text="cfgStr(cfg, 'loading', 'Laddar...')"
+    >
+      <template v-if="loaded">
+        <WizardDetailSegment
+          v-for="(seg, si) in segments"
+          :key="si"
+          :cfg="cfg"
+          :segment="seg"
+          :show-transfer="isMulti && si < segments.length - 1"
+          :transfer-text="transferLabel()"
+        />
+      </template>
+    </MrtAsyncState>
   </div>
 </template>

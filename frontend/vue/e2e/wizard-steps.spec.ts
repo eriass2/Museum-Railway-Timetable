@@ -5,6 +5,6 @@ test.describe('Journey wizard steps', () => {
     await page.goto('/wizard?debug=date');
     await expect(page.locator('.mrt-journey-wizard')).toHaveAttribute('data-step', 'date');
     await expect(page.locator('[data-wizard-step="date"]')).toBeVisible();
-    await expect(page.locator('.mrt-journey-wizard__calendar-card')).toBeVisible();
+    await expect(page.locator('.mrt-surface--flush')).toBeVisible();
   });
 });

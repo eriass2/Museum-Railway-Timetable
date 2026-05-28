@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue';
+import MrtAsyncState from '../../components/ui/MrtAsyncState.vue';
+import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
+import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
+import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useTripConnections } from '../composables/useTripConnections';
-import WizardStepHeader from './WizardStepHeader.vue';
-import WizardSurfaceCard from './WizardSurfaceCard.vue';
 import { cfgStr } from '../utils/wizardLabels';
 import WizardTripCard from './WizardTripCard.vue';
 import { formatTripClock } from '../utils/format';
@@ -26,6 +28,13 @@ const stepLabel = computed(() =>
 );
 
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
+
+const selectedOutboundTime = computed(() => {
+  if (!store.outbound) {
+    return '';
+  }
+  return `${formatTripClock(store.outbound.from_departure || '')} – ${formatTripClock(store.outbound.to_arrival || '')}`;
+});
 
 function onBack(): void {
   store.clearError();
@@ -58,9 +67,9 @@ watch(
     role="region"
     :aria-label="stepLabel"
   >
-    <WizardStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
+    <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
-    <WizardSurfaceCard>
+    <MrtSurfaceCard>
       <div
         v-if="legCtx === 'return' && store.outbound"
         data-wizard-return-summary
@@ -70,28 +79,30 @@ watch(
           {{ cfgStr(cfg, 'selectedOutbound', 'Vald utresa') }}
         </div>
         <div class="mrt-journey-wizard__selected-card">
-          <p class="mrt-journey-wizard__trip-time">
-            {{ formatTripClock(store.outbound.from_departure || '') }} –
-            {{ formatTripClock(store.outbound.to_arrival || '') }}
-          </p>
-          <p class="mrt-journey-wizard__trip-route">{{ store.fromTitle }} → {{ store.toTitle }}</p>
+          <MrtTripSummary
+            :time-range="selectedOutboundTime"
+            :route="`${store.fromTitle} → ${store.toTitle}`"
+          />
         </div>
       </div>
 
-      <p v-if="loading" class="mrt-empty">{{ cfgStr(cfg, 'loading', 'Laddar...') }}</p>
-      <div v-else-if="error" class="mrt-alert mrt-alert-error" role="alert">{{ error }}</div>
-      <div v-else-if="!connections.length" class="mrt-alert mrt-alert-info">
-        <p>{{ cfgStr(cfg, 'noConnections', 'Inga anslutningar hittades.') }}</p>
-      </div>
-      <div v-else class="mrt-journey-wizard__trip-list">
-        <WizardTripCard
-          v-for="(conn, idx) in connections"
-          :key="idx"
-          :connection="conn"
-          :leg-ctx="legCtx"
-          @select="legCtx === 'outbound' ? store.selectOutbound(conn) : store.selectInbound(conn)"
-        />
-      </div>
-    </WizardSurfaceCard>
+      <MrtAsyncState
+        :loading="loading"
+        :error="error"
+        :loading-text="cfgStr(cfg, 'loading', 'Laddar...')"
+        :empty="!connections.length"
+        :empty-text="cfgStr(cfg, 'noConnections', 'Inga anslutningar hittades.')"
+      >
+        <div class="mrt-journey-wizard__trip-list">
+          <WizardTripCard
+            v-for="(conn, idx) in connections"
+            :key="idx"
+            :connection="conn"
+            :leg-ctx="legCtx"
+            @select="legCtx === 'outbound' ? store.selectOutbound(conn) : store.selectInbound(conn)"
+          />
+        </div>
+      </MrtAsyncState>
+    </MrtSurfaceCard>
   </div>
 </template>

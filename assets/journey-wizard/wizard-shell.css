@@ -1,144 +1,61 @@
 /**
- * Journey wizard — shared shell (surface cards, progress, accent buttons).
+ * Journey wizard — overrides on shared ui-components.
  *
  * @package Museum_Railway_Timetable
  */
 
-.mrt-journey-wizard__nav {
-    pointer-events: none;
-    user-select: none;
+.mrt-journey-wizard .mrt-step-header__back {
+    color: var(--mrt-color-accent-500);
 }
 
-.mrt-journey-wizard__progress,
-.mrt-journey-wizard__steps {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.35rem;
-    justify-content: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-}
-
-.mrt-journey-wizard__progress-step,
-.mrt-journey-wizard__steps li {
-    padding: 0.25rem 0.55rem;
+.mrt-journey-wizard .mrt-step-header__back:hover {
     color: var(--mrt-color-on-dark);
-    background: var(--mrt-color-green-800);
-    border: 2px solid var(--mrt-color-border-on-dark);
-    font-size: 0.8125rem;
-    font-weight: 700;
 }
 
-.mrt-journey-wizard__progress-step.is-active,
-.mrt-journey-wizard__steps li.is-active {
-    color: var(--mrt-color-on-accent);
-    background: var(--mrt-wizard-yellow);
-    border-color: var(--mrt-color-accent-700);
+.mrt-journey-wizard__search-panel .mrt-accent-btn--primary {
+    min-width: 12rem;
+    padding: 0.85rem 2rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
 }
 
-.mrt-journey-wizard__progress-step.is-done,
-.mrt-journey-wizard__steps li.is-done {
+.mrt-journey-wizard__timetable-link-wrap {
+    margin: 1.25rem 0 0;
+    text-align: center;
+}
+
+.mrt-journey-wizard__timetable-link {
     color: var(--mrt-color-on-dark-link);
-    background: var(--mrt-color-green-800);
-    border-color: var(--mrt-color-accent-500);
-}
-
-.mrt-journey-wizard__surface,
-.mrt-journey-wizard__calendar-card {
-    margin-top: 0;
-    background: var(--mrt-wizard-surface);
-    color: var(--mrt-wizard-text);
-    border: 0;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
-    padding: clamp(1.25rem, 3vw, 2rem);
-    box-sizing: border-box;
-}
-
-.mrt-journey-wizard__calendar-card {
-    padding: 0;
-}
-
-.mrt-journey-wizard__surface .mrt-journey-wizard__hero-title {
-    margin: 0 0 1.25rem;
-    color: var(--mrt-color-green-700);
-    text-align: center;
-}
-
-.mrt-journey-wizard__surface .mrt-journey-wizard__trip-type legend,
-.mrt-journey-wizard__surface .mrt-form-field label {
-    color: var(--mrt-wizard-text);
-}
-
-.mrt-journey-wizard__step-header {
-    display: grid;
-    gap: 0.5rem;
-    margin-bottom: 0.85rem;
-}
-
-.mrt-journey-wizard__accent-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 2.45rem;
-    padding: 0.35rem 0.9rem;
-    border: 0;
-    border-radius: 0;
-    font-size: 1.08rem;
-    font-weight: 900;
-    line-height: 1;
-    text-decoration: none;
-    cursor: pointer;
-    background: var(--mrt-wizard-yellow);
-    color: var(--mrt-color-on-accent);
-}
-
-.mrt-journey-wizard__accent-btn--primary {
-    text-transform: uppercase;
-}
-
-.mrt-journey-wizard__accent-btn--select {
-    min-width: 6.5rem;
-    text-transform: none;
-}
-
-.mrt-journey-wizard__accent-btn:hover {
-    background: var(--mrt-color-accent-700);
-    color: var(--mrt-color-on-accent);
-}
-
-.mrt-journey-wizard__accent-btn:active {
-    transform: translateY(1px);
-}
-
-.mrt-journey-wizard__accent-btn:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-}
-
-.mrt-journey-wizard__calendar-empty {
-    margin: 0;
-    padding: 0.75rem 1.25rem 1rem;
-    color: var(--mrt-wizard-text);
     font-size: 0.95rem;
-    font-weight: 700;
-    text-align: center;
-    border-top: 1px solid var(--mrt-color-neutral-200);
-}
-
-.mrt-journey-wizard__calendar-empty-hint {
-    margin: 0.35rem 0 0;
-    font-size: 0.9rem;
     font-weight: 600;
-    color: var(--mrt-color-neutral-600);
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
 }
 
-.mrt-journey-wizard__expand {
-    background: var(--mrt-color-neutral-100);
+.mrt-journey-wizard__timetable-link:hover {
+    color: var(--mrt-color-on-dark);
 }
 
-.mrt-journey-wizard__expand:hover {
-    background: var(--mrt-color-neutral-200);
+.mrt-journey-wizard__route-stations {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+@media (min-width: 40rem) {
+    .mrt-journey-wizard__route-stations {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 1.25rem;
+    }
+}
+
+.mrt-journey-wizard .mrt-segmented-field__legend {
+    color: var(--mrt-wizard-text);
+}
+
+.mrt-journey-wizard__search-panel .mrt-surface .mrt-segmented-field__legend,
+.mrt-journey-wizard__search-panel .mrt-field__label {
+    color: var(--mrt-wizard-text);
 }
 
 @media (max-width: 36rem) {

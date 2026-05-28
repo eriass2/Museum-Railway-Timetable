@@ -9,6 +9,6 @@ test.describe('Journey wizard (WordPress)', () => {
     await page.goto(wpUrl!);
     const root = page.locator('.mrt-journey-wizard');
     await expect(root).toBeVisible({ timeout: 15_000 });
-    await expect(page.locator('.mrt-journey-wizard__nav')).toBeVisible();
+    await expect(page.locator('.mrt-step-nav')).toBeVisible();
   });
 });

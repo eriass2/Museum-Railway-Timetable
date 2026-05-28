@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
+import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
+import MrtAlert from '../../components/ui/MrtAlert.vue';
+import MrtSegmentedControl from '../../components/ui/MrtSegmentedControl.vue';
+import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { todayYearMonth } from '../utils/wizardDate';
 import { cfgStr } from '../utils/wizardLabels';
 import type { TripType } from '../types';
 import type { WizardStation } from '../../config/types';
-import WizardAccentButton from './WizardAccentButton.vue';
 import WizardStationField from './WizardStationField.vue';
-import WizardSurfaceCard from './WizardSurfaceCard.vue';
 import WizardTripTypeIcon from './WizardTripTypeIcon.vue';
 
 const props = defineProps<{
@@ -20,6 +22,11 @@ const { store, cfg } = useWizardContext();
 const fromId = ref(store.fromId || 0);
 const toId = ref(store.toId || 0);
 const tripType = ref<TripType>(store.tripType || 'single');
+
+const tripOptions = computed(() => [
+  { value: 'single' as const, label: cfgStr(cfg, 'tripSingle', 'Enkel resa') },
+  { value: 'return' as const, label: cfgStr(cfg, 'tripReturn', 'Tur och retur') },
+]);
 
 watch([fromId, toId, tripType], () => {
   if (store.error) {
@@ -54,8 +61,8 @@ function onSearch(): void {
     role="region"
     :aria-label="cfgStr(cfg, 'stepRoute', 'Sök resa')"
   >
-    <WizardSurfaceCard>
-      <h2 class="mrt-journey-wizard__hero-title">
+    <MrtSurfaceCard>
+      <h2 class="mrt-surface-title">
         {{ cfgStr(cfg, 'routeTitle', 'Planera resa med Lennakatten') }}
       </h2>
 
@@ -81,38 +88,25 @@ function onSearch(): void {
           />
         </div>
 
-        <fieldset class="mrt-journey-wizard__trip-type">
-          <legend>{{ cfgStr(cfg, 'tripTypeLegend', 'Restyp') }}</legend>
-          <div class="mrt-journey-wizard__trip-type-segmented" role="radiogroup">
-            <button
-              type="button"
-              class="mrt-journey-wizard__trip-type-btn"
-              role="radio"
-              :aria-checked="tripType === 'single'"
-              :class="{ 'is-active': tripType === 'single' }"
-              @click="tripType = 'single'"
-            >
-              <WizardTripTypeIcon variant="single" />
-              {{ cfgStr(cfg, 'tripSingle', 'Enkel resa') }}
-            </button>
-            <button
-              type="button"
-              class="mrt-journey-wizard__trip-type-btn"
-              role="radio"
-              :aria-checked="tripType === 'return'"
-              :class="{ 'is-active': tripType === 'return' }"
-              @click="tripType = 'return'"
-            >
-              <WizardTripTypeIcon variant="return" />
-              {{ cfgStr(cfg, 'tripReturn', 'Tur och retur') }}
-            </button>
-          </div>
-        </fieldset>
+        <MrtSegmentedControl
+          v-model="tripType"
+          :legend="cfgStr(cfg, 'tripTypeLegend', 'Restyp')"
+          :options="tripOptions"
+        >
+          <template #option="{ option }">
+            <WizardTripTypeIcon :variant="option.value" />
+            {{ option.label }}
+          </template>
+        </MrtSegmentedControl>
 
-        <div class="mrt-journey-wizard__actions">
-          <WizardAccentButton type="button" @click="onSearch">
+        <div v-if="store.error" class="mrt-field-error">
+          <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>
+        </div>
+
+        <div class="mrt-actions">
+          <MrtAccentButton type="button" @click="onSearch">
             {{ cfgStr(cfg, 'searchTrip', 'Sök resa') }}
-          </WizardAccentButton>
+          </MrtAccentButton>
         </div>
 
         <p v-if="timetablePageUrl" class="mrt-journey-wizard__timetable-link-wrap">
@@ -126,6 +120,6 @@ function onSearch(): void {
           </a>
         </p>
       </div>
-    </WizardSurfaceCard>
+    </MrtSurfaceCard>
   </div>
 </template>

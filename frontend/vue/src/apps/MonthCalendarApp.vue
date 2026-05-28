@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import MrtCalendarNav from '../components/ui/MrtCalendarNav.vue';
+import MrtHtmlPanel from '../components/ui/MrtHtmlPanel.vue';
+import MrtLegend from '../components/ui/MrtLegend.vue';
 import type { MonthVueConfig } from '../config/types';
 import { buildMonthGrid } from '../utils/monthGrid';
 import { chunkWeekRows } from '../utils/calendarGrid';
@@ -35,6 +38,13 @@ const { html: dayHtml, loading: dayLoading, error: dayError, fetchDayHtml } =
 
 const weekdayHeaders = computed(() => props.config.weekdayHeaders || []);
 
+const legendItems = computed(() => [
+  {
+    dotClass: 'mrt-dot--green',
+    label: props.config.legendServiceDay || '',
+  },
+]);
+
 async function onDayClick(ymd: string): Promise<void> {
   if (!ymd) {
     return;
@@ -52,22 +62,18 @@ async function onDayClick(ymd: string): Promise<void> {
     :aria-label="config.monthAriaLabel || ''"
     :data-train-type="trainType"
   >
-    <div v-if="showNav" class="mrt-month-nav" role="navigation">
-      <a class="mrt-btn mrt-btn--secondary mrt-month-nav__prev" :href="config.prevMonthUrl || '#'">
-        <span class="mrt-month-nav__chev" aria-hidden="true">‹</span>
-        {{ config.stringsPrevMonth || 'Föregående månad' }}
-      </a>
-      <h2 class="mrt-month-nav__title mrt-heading mrt-heading--lg mrt-font-semibold">
-        {{ config.monthTitle || '' }}
-      </h2>
-      <a class="mrt-btn mrt-btn--secondary mrt-month-nav__next" :href="config.nextMonthUrl || '#'">
-        {{ config.stringsNextMonth || 'Nästa månad' }}
-        <span class="mrt-month-nav__chev" aria-hidden="true">›</span>
-      </a>
-    </div>
-    <div v-else class="mrt-heading mrt-heading--lg mrt-font-semibold">
+    <MrtCalendarNav
+      v-if="showNav"
+      mode="links"
+      :month-title="config.monthTitle || ''"
+      :prev-href="config.prevMonthUrl || '#'"
+      :next-href="config.nextMonthUrl || '#'"
+      :prev-text="config.stringsPrevMonth || 'Föregående månad'"
+      :next-text="config.stringsNextMonth || 'Nästa månad'"
+    />
+    <h2 v-else class="mrt-heading mrt-heading--lg mrt-font-semibold">
       {{ config.monthTitle || '' }}
-    </div>
+    </h2>
 
     <table class="mrt-month-table">
       <caption class="mrt-month-table__caption">{{ config.tableCaption || '' }}</caption>
@@ -105,12 +111,9 @@ async function onDayClick(ymd: string): Promise<void> {
       </tbody>
     </table>
 
-    <div v-if="showLegend" class="mrt-legend mrt-text-base mrt-text-primary mrt-mt-sm">
-      <span class="mrt-legend-item mrt-inline-flex mrt-items-center mrt-gap-xs mrt-mr-sm">
-        <span class="mrt-dot mrt-dot--green" aria-hidden="true" />
-        {{ config.legendServiceDay || '' }}
-      </span>
-      <span v-if="showCounts" class="mrt-text-small mrt-opacity-85">
+    <div v-if="showLegend" class="mrt-mt-sm">
+      <MrtLegend :items="legendItems" />
+      <span v-if="showCounts" class="mrt-text-small mrt-opacity-85 mrt-ml-sm">
         ({{ config.legendCountHint || '' }})
       </span>
       <span class="mrt-text-tertiary mrt-text-small">
@@ -118,19 +121,16 @@ async function onDayClick(ymd: string): Promise<void> {
       </span>
     </div>
 
-    <div
-      class="mrt-box mrt-day-timetable-container mrt-mt-xl"
-      :class="{ 'mrt-hidden': !panelVisible }"
-      role="region"
-      aria-live="polite"
-      tabindex="-1"
+    <MrtHtmlPanel
+      :visible="panelVisible"
+      surface
+      box
+      :loading="dayLoading"
+      :error="dayError"
+      :loading-text="resolveMrtString(config, 'loading', 'Laddar...')"
     >
-      <p v-if="dayLoading" class="mrt-empty mrt-empty--loading">
-        {{ resolveMrtString(config, 'loading', 'Laddar...') }}
-      </p>
-      <div v-else-if="dayError" class="mrt-alert mrt-alert-error" role="alert">{{ dayError }}</div>
       <!-- Trusted server HTML — see frontend/vue/TRUSTED_HTML.md -->
-      <div v-else v-html="dayHtml" />
-    </div>
+      <div v-html="dayHtml" />
+    </MrtHtmlPanel>
   </div>
 </template>

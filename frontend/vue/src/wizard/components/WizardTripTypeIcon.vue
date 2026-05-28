@@ -5,11 +5,9 @@ defineProps<{
 </script>
 
 <template>
-  <span class="mrt-journey-wizard__trip-type-icon" aria-hidden="true">
-    <!-- Enkel resa: en pil åt höger -->
+  <span class="mrt-trip-type-icon" aria-hidden="true">
     <svg
       v-if="variant === 'single'"
-      class="mrt-journey-wizard__trip-type-svg"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +29,6 @@ defineProps<{
     <!-- Tur och retur: pilar åt båda håll -->
     <svg
       v-else
-      class="mrt-journey-wizard__trip-type-svg"
       viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

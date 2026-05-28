@@ -18,7 +18,7 @@ src/
   api/          # mrtPost
   composables/  # useMrtAjax, useWizardContext
   utils/        # calendarGrid, monthGrid, mrtStrings (resolveMrtString)
-  components/   # Shared UI (MrtStepShell)
+  components/ui/   # Shared UI primitives (MrtAlert, MrtSurfaceCard, …)
   apps/
   wizard/       # store/, composables/, components/, utils/ (typed WizardCfg)
 ```

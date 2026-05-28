@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { nextTick, onMounted, provide, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, provide, ref, watch } from 'vue';
+import MrtAlert from '../components/ui/MrtAlert.vue';
+import MrtStepProgress from '../components/ui/MrtStepProgress.vue';
 import { applyWizardDebugPreset } from '../wizard/composables/useWizardDebug';
 import type { WizardVueConfig } from '../config/types';
 import { createWizardStore } from '../wizard/store/createWizardStore';
 import { wizardKey } from '../wizard/injection';
-import WizardProgress from '../wizard/components/WizardProgress.vue';
 import WizardRouteStep from '../wizard/components/WizardRouteStep.vue';
 import WizardDateStep from '../wizard/components/WizardDateStep.vue';
 import WizardTripStep from '../wizard/components/WizardTripStep.vue';
@@ -25,18 +26,30 @@ const ticketUrl = String(props.config.ticketUrl || '');
 const timetablePageUrl = String(props.config.timetablePageUrl || '');
 const panelsRef = ref<HTMLElement | null>(null);
 
+const progressItems = computed(() => {
+  const currentIndex = store.stepSequence.indexOf(store.step);
+  return store.stepSequence.map((key, i) => ({
+    key,
+    label: `${i + 1}. ${store.stepLabels[key]}`,
+    active: store.step === key,
+    done: currentIndex > i,
+  }));
+});
+
 watch(
   () => store.step,
   async () => {
     await nextTick();
     const panel = panelsRef.value?.querySelector('.mrt-journey-wizard__panel--active');
-    const heading = panel?.querySelector('h2, h3') as HTMLElement | null;
-    if (!heading) {
+    const focusEl = panel?.querySelector(
+      '.mrt-step-progress__item.is-active, h2.mrt-surface-title',
+    ) as HTMLElement | null;
+    if (!focusEl) {
       return;
     }
-    heading.setAttribute('tabindex', '-1');
-    heading.focus();
-    heading.addEventListener('blur', () => heading.removeAttribute('tabindex'), { once: true });
+    focusEl.setAttribute('tabindex', '-1');
+    focusEl.focus();
+    focusEl.addEventListener('blur', () => focusEl.removeAttribute('tabindex'), { once: true });
   },
 );
 
@@ -62,14 +75,17 @@ onMounted(() => {
     <section class="mrt-journey-wizard__hero">
       <div class="mrt-journey-wizard__hero-inner">
         <noscript>
-          <p class="mrt-alert mrt-alert-info">
+          <MrtAlert variant="info">
             {{ cfgStr(cfg, 'needsJs', 'Reseplaneraren kräver JavaScript.') }}
-          </p>
+          </MrtAlert>
         </noscript>
-        <div v-if="store.error" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive">
-          <div class="mrt-alert mrt-alert-error">{{ store.error }}</div>
+        <div v-if="store.error && store.step !== 'route'" class="mrt-journey-wizard__errors">
+          <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>
         </div>
-        <WizardProgress />
+        <MrtStepProgress
+          :items="progressItems"
+          :nav-aria-label="cfgStr(cfg, 'stepNavAria', 'Steg i reseplaneraren')"
+        />
         <div ref="panelsRef" class="mrt-journey-wizard__panels">
           <WizardRouteStep
             v-if="store.step === 'route'"

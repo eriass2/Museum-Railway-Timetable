@@ -6,10 +6,10 @@ test.describe('Journey wizard (static mount)', () => {
     const root = page.locator('.mrt-journey-wizard');
     await expect(root).toBeVisible();
     await expect(root).toHaveAttribute('data-step', 'route');
-    await expect(page.locator('.mrt-journey-wizard__nav')).toBeVisible();
-    await expect(page.getByRole('heading', { name: /Planera resa/i })).toBeVisible();
+    await expect(page.locator('.mrt-step-nav')).toBeVisible();
+    await expect(page.locator('.mrt-surface-title')).toHaveText(/Planera resa/i);
     await expect(page.locator('#mrt_wizard_from')).toHaveAttribute('role', 'combobox');
     await expect(page.locator('#mrt_wizard_to')).toBeVisible();
-    await expect(page.locator('.mrt-journey-wizard__trip-type-segmented')).toBeVisible();
+    await expect(page.locator('.mrt-segmented')).toBeVisible();
   });
 });

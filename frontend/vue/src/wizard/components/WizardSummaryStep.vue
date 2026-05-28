@@ -1,9 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
+import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
+import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
+import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
-import WizardAccentButton from './WizardAccentButton.vue';
-import WizardStepHeader from './WizardStepHeader.vue';
-import WizardSurfaceCard from './WizardSurfaceCard.vue';
 import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
@@ -20,6 +21,10 @@ const dateText = computed(() =>
 
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
 
+function legTimeRange(conn: NonNullable<typeof store.outbound>): string {
+  return `${formatTripClock(departureFromOrigin(conn))} – ${formatTripClock(arrivalAtDestination(conn))}`;
+}
+
 function onBack(): void {
   store.clearError();
   store.goTo(store.tripType === 'return' ? 'return' : 'outbound');
@@ -33,20 +38,19 @@ function onBack(): void {
     role="region"
     :aria-label="cfgStr(cfg, 'stepSummary', 'Din resa')"
   >
-    <WizardStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
+    <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
-    <WizardSurfaceCard>
+    <MrtSurfaceCard>
       <div class="mrt-journey-wizard__summary-list">
         <article v-if="store.outbound" class="mrt-journey-wizard__summary-card">
           <h4 class="mrt-journey-wizard__summary-heading">
             {{ cfgStr(cfg, 'outboundHeading', 'Utresa') }}
           </h4>
-          <p class="mrt-journey-wizard__trip-time">
-            {{ formatTripClock(departureFromOrigin(store.outbound)) }} –
-            {{ formatTripClock(arrivalAtDestination(store.outbound)) }}
-          </p>
-          <p class="mrt-journey-wizard__trip-route">{{ store.fromTitle }} → {{ store.toTitle }}</p>
-          <p class="mrt-journey-wizard__summary-date">{{ dateText }}</p>
+          <MrtTripSummary
+            :time-range="legTimeRange(store.outbound)"
+            :route="`${store.fromTitle} → ${store.toTitle}`"
+            :date="dateText"
+          />
         </article>
 
         <article
@@ -56,12 +60,11 @@ function onBack(): void {
           <h4 class="mrt-journey-wizard__summary-heading">
             {{ cfgStr(cfg, 'returnHeading', 'Återresa') }}
           </h4>
-          <p class="mrt-journey-wizard__trip-time">
-            {{ formatTripClock(departureFromOrigin(store.inbound)) }} –
-            {{ formatTripClock(arrivalAtDestination(store.inbound)) }}
-          </p>
-          <p class="mrt-journey-wizard__trip-route">{{ store.toTitle }} → {{ store.fromTitle }}</p>
-          <p class="mrt-journey-wizard__summary-date">{{ dateText }}</p>
+          <MrtTripSummary
+            :time-range="legTimeRange(store.inbound)"
+            :route="`${store.toTitle} → ${store.fromTitle}`"
+            :date="dateText"
+          />
         </article>
       </div>
 
@@ -72,11 +75,11 @@ function onBack(): void {
         :to-id="store.toId"
       />
 
-      <p v-if="ticketUrl" data-wizard-ticket-wrap class="mrt-mt-sm mrt-journey-wizard__actions">
-        <WizardAccentButton :href="ticketUrl">
+      <p v-if="ticketUrl" data-wizard-ticket-wrap class="mrt-mt-sm mrt-actions">
+        <MrtAccentButton :href="ticketUrl">
           {{ cfgStr(cfg, 'ticketCta', 'Fortsätt till biljetter') }}
-        </WizardAccentButton>
+        </MrtAccentButton>
       </p>
-    </WizardSurfaceCard>
+    </MrtSurfaceCard>
   </div>
 </template>

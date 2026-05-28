@@ -30,10 +30,9 @@
 
 .mrt-journey-wizard__panel[data-wizard-step="summary"] [data-wizard-ticket-wrap] {
     margin-top: 1.75rem;
-    text-align: center;
 }
 
-.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-journey-wizard__cta {
+.mrt-journey-wizard__panel[data-wizard-step="summary"] .mrt-accent-btn {
     display: inline-flex;
     min-width: min(100%, 22rem);
     min-height: 2.85rem;
