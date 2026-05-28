@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MrtCalendarGrid from '../../components/ui/MrtCalendarGrid.vue';
+import MrtWizardCalendarDayCell from '../../components/ui/MrtWizardCalendarDayCell.vue';
 import type { CalendarDayStatus } from '../types';
 import type { WizardCalCell } from '../utils/wizardCalendarGrid';
 
@@ -33,35 +34,15 @@ function asDay(cell: WizardCalCell): WizardDayCell | null {
   >
     <template #cell="{ cell }">
       <template v-if="(cell as WizardCalCell).kind !== 'day'" />
-      <button
-        v-else-if="asDay(cell as WizardCalCell)?.status === 'ok'"
-        type="button"
-        class="mrt-calendar-day mrt-calendar-day--ok"
-        :class="{ 'is-selected': selectedYmd === asDay(cell as WizardCalCell)!.ymd }"
-        :aria-label="dayAria(asDay(cell as WizardCalCell)!.ymd, asDay(cell as WizardCalCell)!.status)"
-        :aria-pressed="selectedYmd === asDay(cell as WizardCalCell)!.ymd"
-        @click="emit('pick', asDay(cell as WizardCalCell)!.ymd)"
-      >
-        {{ asDay(cell as WizardCalCell)!.day }}
-      </button>
-      <button
-        v-else-if="asDay(cell as WizardCalCell)?.status === 'traffic_no_match'"
-        type="button"
-        class="mrt-calendar-day mrt-calendar-day--traffic"
-        disabled
-        :aria-label="dayAria(asDay(cell as WizardCalCell)!.ymd, asDay(cell as WizardCalCell)!.status)"
-      >
-        {{ asDay(cell as WizardCalCell)!.day }}
-      </button>
-      <button
+      <MrtWizardCalendarDayCell
         v-else-if="asDay(cell as WizardCalCell)"
-        type="button"
-        class="mrt-calendar-day mrt-calendar-day--none"
-        disabled
-        :aria-label="dayAria(asDay(cell as WizardCalCell)!.ymd, asDay(cell as WizardCalCell)!.status)"
-      >
-        {{ asDay(cell as WizardCalCell)!.day }}
-      </button>
+        :day="asDay(cell as WizardCalCell)!.day"
+        :ymd="asDay(cell as WizardCalCell)!.ymd"
+        :status="asDay(cell as WizardCalCell)!.status"
+        :selected="selectedYmd === asDay(cell as WizardCalCell)!.ymd"
+        :ariaLabel="dayAria(asDay(cell as WizardCalCell)!.ymd, asDay(cell as WizardCalCell)!.status)"
+        @pick="emit('pick', $event)"
+      />
     </template>
   </MrtCalendarGrid>
 </template>
