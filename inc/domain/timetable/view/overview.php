@@ -14,6 +14,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array<string, mixed> $grouped_services From MRT_group_services_by_route
  */
 function MRT_render_timetable_groups_inner_html( array $grouped_services, string $dateYmd ): string {
+	require_once MRT_PATH . 'inc/domain/timetable/view/grid-merge.php';
+	$grouped_services = MRT_timetable_groups_link_branch_pairs( $grouped_services );
 	usort( $grouped_services, 'MRT_sort_timetable_groups_source_order' );
 	$group_count = count( $grouped_services );
 	$group_index = 0;
@@ -161,9 +163,11 @@ function MRT_timetable_print_key_table_body(): void {
 		)
 	);
 	MRT_timetable_print_key_row(
-		'*Buss',
-		__( 'Inga anslutningsbussar går denna dag.', 'museum-railway-timetable' ),
-		'bus'
+		'*',
+		__(
+			'Busshållplats; anslutande bussar visas i egen tabell i tidtabellen.',
+			'museum-railway-timetable'
+		)
 	);
 	MRT_timetable_print_key_row(
 		'Thun’s-expressen',

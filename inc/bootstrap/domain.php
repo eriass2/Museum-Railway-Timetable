@@ -35,6 +35,7 @@ function MRT_load_timetable_view_domain_modules(): void {
 	require_once $view_dir . 'prepare.php';
 	require_once $view_dir . 'grid.php';
 	require_once $view_dir . 'overview.php';
+	require_once $view_dir . 'overview-data.php';
 }
 
 /**

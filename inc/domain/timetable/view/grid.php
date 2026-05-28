@@ -12,18 +12,34 @@ if ( ! defined( 'ABSPATH' ) ) {
 $grid_dir = MRT_PATH . 'inc/domain/timetable/view/';
 require_once $grid_dir . 'grid-helpers.php';
 require_once $grid_dir . 'grid-rows.php';
+require_once $grid_dir . 'grid-connections.php';
 
 /**
  * Render timetable grid body using CSS Grid
  */
-function MRT_render_timetable_table_body( $station_posts, $services_list, $service_classes, $service_info, $all_connections ) {
+function MRT_render_timetable_table_body(
+	$station_posts,
+	$services_list,
+	$service_classes,
+	$service_info,
+	$all_connections,
+	?array $connection_data = null
+) {
 	$regular_stations = ! empty( $station_posts ) ? array_slice( $station_posts, 1, -1 ) : array();
 
 	$html = '<div class="mrt-grid-body">';
 	if ( ! empty( $station_posts ) ) {
-		$html .= MRT_render_grid_from_row( $station_posts[0], $services_list, $service_classes, $service_info );
+		$first = $station_posts[0];
+		$html .= MRT_render_grid_from_row( $first, $services_list, $service_classes, $service_info );
+		$html .= MRT_maybe_render_bus_transfer_row( $first, $services_list, $service_classes, $service_info, $connection_data );
 	}
-	$html .= MRT_render_grid_regular_station_rows( $regular_stations, $services_list, $service_classes, $service_info );
+	$html .= MRT_render_grid_regular_station_rows(
+		$regular_stations,
+		$services_list,
+		$service_classes,
+		$service_info,
+		$connection_data
+	);
 	if ( ! empty( $station_posts ) ) {
 		$html .= MRT_render_grid_to_row( end( $station_posts ), $services_list, $service_classes, $service_info );
 	}
@@ -92,16 +108,16 @@ function MRT_prepare_timetable_group_view( $group, $dateYmd ) {
 	$prepared = MRT_prepare_service_info( $services_list, $dateYmd );
 
 	return array(
-		'route_label'       => $route_label,
-		'from_station'      => $from_station,
-		'to_station'        => $to_station,
-		'station_posts'     => $station_posts,
-		'services_list'     => $services_list,
-		'service_classes'   => $prepared['service_classes'],
-		'service_info'      => $prepared['service_info'],
-		'all_connections'   => $prepared['all_connections'],
-		'service_count'     => count( $services_list ),
-		'group_heading_id'  => wp_unique_id( 'mrtgrh' ),
+		'route_label'      => $route_label,
+		'from_station'     => $from_station,
+		'to_station'       => $to_station,
+		'station_posts'    => $station_posts,
+		'services_list'    => $services_list,
+		'service_classes'  => $prepared['service_classes'],
+		'service_info'     => $prepared['service_info'],
+		'all_connections'  => $prepared['all_connections'],
+		'service_count'    => count( $services_list ),
+		'group_heading_id' => wp_unique_id( 'mrtgrh' ),
 	);
 }
 
@@ -109,18 +125,29 @@ function MRT_prepare_timetable_group_view( $group, $dateYmd ) {
  * Render a single timetable group (route)
  */
 function MRT_render_timetable_group( $group, $dateYmd ) {
+	if ( MRT_timetable_group_is_branch_shuttle( $group ) ) {
+		require_once MRT_PATH . 'inc/domain/timetable/view/grid-branch.php';
+		return MRT_render_timetable_group_branch( $group, $dateYmd );
+	}
+
 	$view = MRT_prepare_timetable_group_view( $group, $dateYmd );
 
-	$route_label       = $view['route_label'];
-	$from_station      = $view['from_station'];
-	$to_station        = $view['to_station'];
-	$station_posts     = $view['station_posts'];
-	$services_list     = $view['services_list'];
-	$service_classes   = $view['service_classes'];
-	$service_info      = $view['service_info'];
-	$all_connections   = $view['all_connections'];
-	$service_count     = $view['service_count'];
-	$group_heading_id  = $view['group_heading_id'];
+	$route_label      = $view['route_label'];
+	$from_station     = $view['from_station'];
+	$to_station       = $view['to_station'];
+	$station_posts    = $view['station_posts'];
+	$services_list    = $view['services_list'];
+	$service_classes  = $view['service_classes'];
+	$service_info     = $view['service_info'];
+	$all_connections  = $view['all_connections'];
+	$service_count    = $view['service_count'];
+	$group_heading_id = $view['group_heading_id'];
+
+	$connection_data = null;
+	if ( ! empty( $group['paired_branch'] ) ) {
+		$connection_data = MRT_build_rail_bus_connection_data( $group, $group['paired_branch'] );
+	}
+
 	ob_start();
 	?>
 	<div class="mrt-timetable-group">
@@ -137,7 +164,7 @@ function MRT_render_timetable_group( $group, $dateYmd ) {
 
 		<div class="mrt-overview-grid" style="--service-count: <?php echo (int) $service_count; ?>;" role="group" aria-labelledby="<?php echo esc_attr( $group_heading_id ); ?>">
 			<?php echo MRT_render_timetable_table_header( $services_list, $service_classes, $service_info ); ?>
-			<?php echo MRT_render_timetable_table_body( $station_posts, $services_list, $service_classes, $service_info, $all_connections ); ?>
+			<?php echo MRT_render_timetable_table_body( $station_posts, $services_list, $service_classes, $service_info, $all_connections, $connection_data ); ?>
 		</div>
 	</div>
 	<?php

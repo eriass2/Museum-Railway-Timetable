@@ -1,0 +1,29 @@
+import { ref } from 'vue';
+import type { MrtAjaxConfig } from '../config/types';
+import type { TimetableOverviewPayload } from '../types/timetableOverview';
+import { resolveMrtString } from '../utils/mrtStrings';
+import { useMrtAjax } from './useMrtAjax';
+
+export function useTimetableOverview(config: MrtAjaxConfig) {
+  const overview = ref<TimetableOverviewPayload | null>(null);
+  const { loading, error, run, clearError } = useMrtAjax(config);
+
+  async function fetchOverview(timetableId: number): Promise<boolean> {
+    if (timetableId <= 0) {
+      error.value = resolveMrtString(config, 'errorLoading', 'Tidtabell hittades inte.');
+      return false;
+    }
+    clearError();
+    overview.value = null;
+    const res = await run<{ overview: TimetableOverviewPayload }>('mrt_timetable_overview_data', {
+      timetable_id: timetableId,
+    });
+    if (res.success && res.data?.overview) {
+      overview.value = res.data.overview;
+      return true;
+    }
+    return false;
+  }
+
+  return { overview, loading, error, fetchOverview };
+}

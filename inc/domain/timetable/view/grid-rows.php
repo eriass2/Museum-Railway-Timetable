@@ -8,6 +8,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
+require_once MRT_PATH . 'inc/domain/timetable/view/grid-transfer-inline.php';
+
 /**
  * Render timetable grid header (2 rows: train types and train numbers)
  */
@@ -103,7 +105,7 @@ function MRT_render_grid_simple_station_row( $station, $services_list, $service_
 	?>
 	<div class="mrt-grid-row">
 		<div class="mrt-grid-cell mrt-station-col">
-		<?php echo esc_html( $station->post_title ); ?>
+		<?php echo esc_html( MRT_get_station_display_name( $station ) ); ?>
 		</div>
 	<?php
 	foreach ( $services_list as $idx => $service_data ) :
@@ -127,9 +129,14 @@ function MRT_render_grid_simple_station_row( $station, $services_list, $service_
 /**
  * Render regular station rows (middle stations)
  */
-function MRT_render_grid_regular_station_rows( $regular_stations, $services_list, $service_classes, $service_info ) {
-	$html      = '';
-	$direction = MRT_timetable_grid_direction( $regular_stations );
+function MRT_render_grid_regular_station_rows(
+	$regular_stations,
+	$services_list,
+	$service_classes,
+	$service_info,
+	?array $connection_data = null
+) {
+	$html = '';
 	foreach ( $regular_stations as $station ) {
 		$station_id = $station->ID;
 		if ( MRT_station_row_has_arrival_departure_split( $station_id, $services_list ) ) {
@@ -155,6 +162,7 @@ function MRT_render_grid_regular_station_rows( $regular_stations, $services_list
 			continue;
 		}
 		$html .= MRT_render_grid_simple_station_row( $station, $services_list, $service_classes, $service_info );
+		$html .= MRT_maybe_render_bus_transfer_row( $station, $services_list, $service_classes, $service_info, $connection_data );
 	}
 	return $html;
 }
@@ -269,10 +277,16 @@ function MRT_render_print_mid_transfer_row( $station, array $services_list, arra
 			$transfer = $map[ $service_number ] ?? null;
 			?>
 			<div class="mrt-grid-cell mrt-time-cell mrt-print-transfer-inline-cell <?php echo esc_attr( implode( ' ', $service_classes[ $idx ] ) ); ?>">
-				<?php if ( $transfer ) : ?>
-					<span class="mrt-print-transfer-inline-type"><?php echo esc_html( $transfer['type'] ); ?></span>
-					<span class="mrt-print-transfer-inline-number"><?php echo esc_html( $transfer['service'] ); ?></span>
-				<?php endif; ?>
+				<?php
+				if ( $transfer ) {
+					$term = MRT_get_train_type_term_by_label( $transfer['type'] );
+					echo MRT_render_transfer_vehicle_block_html(
+						$term,
+						$transfer['type'],
+						$transfer['service']
+					);
+				}
+				?>
 			</div>
 		<?php endforeach; ?>
 	</div>

@@ -7,6 +7,7 @@
 @import '@mrt-assets/train-type-icons.css';
 @import '@mrt-assets/frontend-public.css';
 @import '@mrt-assets/frontend/ui-components.css';
-@import '@mrt-assets/frontend-overview.css';
+/* Timetable overview: styled in Vue (MrtTimetableOverviewView.vue). Legacy PHP overview CSS kept for admin preview. */
+/* @import '@mrt-assets/frontend-overview.css'; */
 @import '@mrt-assets/journey-wizard.css';
 @import './vue-shell.css';

@@ -144,3 +144,34 @@ function MRT_get_train_type_icon( ?WP_Term $train_type ): string {
 	$key = MRT_get_train_type_symbol_key( $train_type );
 	return MRT_train_type_icon_img( $key, $train_type->name );
 }
+
+/**
+ * @return WP_Term|null
+ */
+function MRT_get_train_type_term_by_slug( string $slug ): ?WP_Term {
+	$term = get_term_by( 'slug', $slug, 'mrt_train_type' );
+	if ( ! $term || is_wp_error( $term ) ) {
+		return null;
+	}
+	return $term;
+}
+
+/**
+ * Resolve a printed label (e.g. Dieseltåg) to a train type term.
+ *
+ * @return WP_Term|null
+ */
+function MRT_get_train_type_term_by_label( string $label ): ?WP_Term {
+	$slug_map = array(
+		'Dieseltåg'  => 'dieseltag',
+		'Rälsbuss'   => 'ralsbuss',
+		'Ångtåg'     => 'angtag',
+		'Ång/diesel' => 'ang-diesel',
+		'Buss'       => 'buss',
+	);
+	$slug = $slug_map[ $label ] ?? '';
+	if ( $slug === '' ) {
+		return null;
+	}
+	return MRT_get_train_type_term_by_slug( $slug );
+}

@@ -1,16 +1,17 @@
 <script setup lang="ts">
 import { onMounted } from 'vue';
 import MrtHtmlPanel from '../components/ui/MrtHtmlPanel.vue';
+import MrtTimetableOverviewView from '../components/overview/MrtTimetableOverviewView.vue';
 import type { OverviewVueConfig } from '../config/types';
-import { useTimetableHtml } from '../composables/useTimetableHtml';
+import { useTimetableOverview } from '../composables/useTimetableOverview';
 import { resolveMrtString } from '../utils/mrtStrings';
 
 const props = defineProps<{ config: OverviewVueConfig }>();
 
-const { html, loading, error, fetchOverviewHtml } = useTimetableHtml(props.config);
+const { overview, loading, error, fetchOverview } = useTimetableOverview(props.config);
 
 onMounted(() => {
-  void fetchOverviewHtml(props.config.timetableId);
+  void fetchOverview(props.config.timetableId);
 });
 </script>
 
@@ -24,8 +25,7 @@ onMounted(() => {
       :error="error"
       :loading-text="resolveMrtString(config, 'loading', 'Laddar...')"
     >
-      <!-- Trusted server HTML — see frontend/vue/TRUSTED_HTML.md -->
-      <div v-html="html" />
+      <MrtTimetableOverviewView v-if="overview" :data="overview" />
     </MrtHtmlPanel>
   </div>
 </template>
