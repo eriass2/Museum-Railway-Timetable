@@ -14,113 +14,16 @@
     box-sizing: border-box;
 }
 
-/* 8. Typography */
-.mrt-journey-wizard__duration {
-    font-size: 1.35rem;
-    font-weight: 900;
-    color: #3f3f3f;
-    white-space: nowrap;
-}
-
 /* 3. Card */
-.mrt-journey-wizard__summary-card {
-    background: var(--mrt-wizard-surface);
-    color: var(--mrt-wizard-text);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
-}
-
 .mrt-journey-wizard__selected-card {
     border: 3px solid var(--mrt-wizard-yellow);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
     padding: 0.75rem 0.9rem;
 }
 
-.mrt-journey-wizard__summary-heading {
-    margin: 0 0 0.65rem;
-    color: var(--mrt-wizard-green-dark);
-    font-size: 1rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-
-.mrt-journey-wizard__detail {
-    padding: 1.2rem 0.8rem 1rem;
-    background: var(--mrt-wizard-surface);
-}
-
-.mrt-journey-wizard__detail[hidden] {
-    display: none;
-}
-
 .mrt-journey-wizard__trip-list {
     display: grid;
     gap: 1.35rem;
-}
-
-/* 2. Notice */
-.mrt-journey-wizard__notice,
-.mrt-journey-wizard__price-note {
-    margin: 0.2rem 0 0.4rem;
-    color: #151515;
-    font-size: 0.95rem;
-}
-
-.mrt-journey-wizard__notice-dot {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-left: 0.35rem;
-    border-radius: 50%;
-    background: #fff100;
-    color: #d45500;
-    font-size: 0.95rem;
-    vertical-align: middle;
-}
-
-.mrt-journey-wizard__notice-warn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.35rem;
-    height: 1.35rem;
-    margin-left: 0.35rem;
-    font-size: 1rem;
-    line-height: 1;
-    vertical-align: middle;
-}
-
-.mrt-journey-wizard__notice--warn,
-.mrt-journey-wizard__notice--warning {
-    font-weight: 700;
-}
-
-/* 5. Detail segment */
-.mrt-journey-wizard__timeline-leg {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem 0.8rem;
-    align-items: center;
-    margin: 0 0 0.55rem 6.6rem;
-}
-
-.mrt-journey-wizard__leg-duration {
-    font-size: 1.05rem;
-    font-weight: 900;
-    color: #3f3f3f;
-}
-
-.mrt-journey-wizard__towards {
-    font-size: 1.05rem;
-}
-
-.mrt-journey-wizard__transfer-block {
-    margin: 0.45rem 0 0.8rem 6.6rem;
-    color: #333333;
-    font-size: 1.1rem;
-    font-weight: 700;
 }
 
 .mrt-journey-wizard__selected-label {

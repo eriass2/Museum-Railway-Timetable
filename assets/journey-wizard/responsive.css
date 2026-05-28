@@ -50,9 +50,9 @@
         grid-template-columns: 4.2rem 1.4rem minmax(0, 1fr);
     }
 
-    .mrt-journey-wizard__timeline-leg,
+    .mrt-detail-segment__meta,
     .mrt-timeline__expand,
-    .mrt-journey-wizard__transfer-block {
+    .mrt-detail-segment__transfer {
         margin-left: 5.2rem;
     }
 
