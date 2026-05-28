@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
 import MrtExpandTrigger from '../../components/ui/MrtExpandTrigger.vue';
+import MrtTripCard from '../../components/ui/MrtTripCard.vue';
 import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import MrtVehicleRow from '../../components/ui/MrtVehicleRow.vue';
 import type { MrtVehicleItem } from '../../components/ui/types';
@@ -68,32 +69,32 @@ async function toggleDetail(): Promise<void> {
 </script>
 
 <template>
-  <article class="mrt-journey-wizard__trip-card" :class="{ 'is-expanded': expanded }">
-    <div class="mrt-journey-wizard__trip-head">
-      <div class="mrt-journey-wizard__trip-copy">
-        <MrtTripSummary
-          :time-range="timeRange"
-          :route="routeText"
-          :notice="connection.notice"
-          :notice-warn="isWarningNotice(connection.notice || '')"
-        />
-      </div>
-      <div class="mrt-journey-wizard__trip-side">
-        <MrtVehicleRow :items="vehicleItems" />
-        <p v-if="connection.duration_minutes" class="mrt-journey-wizard__duration">
-          {{ formatDuration(connection.duration_minutes, cfg) }}
-        </p>
-        <MrtAccentButton variant="select" type="button" @click="emit('select')">
-          {{ cfgStr(cfg, 'selectTrip', 'Välj →') }}
-        </MrtAccentButton>
-      </div>
-    </div>
-    <MrtExpandTrigger :expanded="expanded" :label="meta" @toggle="toggleDetail" />
+  <MrtTripCard :expanded="expanded">
+    <template #copy>
+      <MrtTripSummary
+        :time-range="timeRange"
+        :route="routeText"
+        :notice="connection.notice"
+        :notice-warn="isWarningNotice(connection.notice || '')"
+      />
+    </template>
+    <template #side>
+      <MrtVehicleRow :items="vehicleItems" />
+      <p v-if="connection.duration_minutes" class="mrt-journey-wizard__duration">
+        {{ formatDuration(connection.duration_minutes, cfg) }}
+      </p>
+      <MrtAccentButton variant="select" type="button" @click="emit('select')">
+        {{ cfgStr(cfg, 'selectTrip', 'Välj →') }}
+      </MrtAccentButton>
+    </template>
+    <template #actions>
+      <MrtExpandTrigger :expanded="expanded" :label="meta" @toggle="toggleDetail" />
+    </template>
     <WizardTripDetail
       v-show="expanded"
       ref="detailRef"
       :connection="connection"
       :leg-ctx="legCtx"
     />
-  </article>
+  </MrtTripCard>
 </template>
