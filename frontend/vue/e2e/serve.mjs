@@ -91,21 +91,53 @@ function buildWizardConfig(requestUrl) {
   return config;
 }
 
-function renderWizardHtml(requestUrl) {
-  const wizardConfig = buildWizardConfig(requestUrl);
+function buildMonthConfig() {
+  return {
+    app: 'month',
+    ajaxurl: '/wp-admin/admin-ajax.php',
+    nonce: 'e2e-test',
+    monthTitle: 'maj 2026',
+    monthAriaLabel: 'Månadskalender, maj 2026',
+    tableCaption: 'Trafikdagar för maj 2026',
+    weekdayHeaders: ['mån', 'tis', 'ons', 'tors', 'fre', 'lör', 'sön'],
+    weekdayFirst: 5,
+    weekdayFirstSunday: 0,
+    daysInMonth: 31,
+    startMonday: true,
+    atts: { legend: true, show_counts: true, nav: false },
+    dates: {
+      10: { running: true, count: 2, ymd: '2026-05-10' },
+      17: { running: true, count: 1, ymd: '2026-05-17' },
+    },
+    strings: { loading: 'Laddar...' },
+    legendServiceDay: 'Trafikdag',
+    legendCountHint: 'antal per dag',
+    legendClickHint: 'Klicka för att visa tidtabell',
+  };
+}
+
+function renderAppHtml(app, config) {
   return `<!DOCTYPE html>
 <html lang="sv">
 <head>
   <meta charset="utf-8" />
-  <title>MRT wizard e2e</title>
+  <title>MRT ${app} e2e</title>
 </head>
 <body>
-  <div class="mrt-vue-root" data-mrt-vue-app="wizard">
-    <script type="application/json" class="mrt-vue-config">${JSON.stringify(wizardConfig)}</script>
+  <div class="mrt-vue-root" data-mrt-vue-app="${app}">
+    <script type="application/json" class="mrt-vue-config">${JSON.stringify(config)}</script>
   </div>
   <script src="/${jsRel}"></script>
 </body>
 </html>`;
+}
+
+function renderWizardHtml(requestUrl) {
+  return renderAppHtml('wizard', buildWizardConfig(requestUrl));
+}
+
+function renderMonthHtml() {
+  return renderAppHtml('month', buildMonthConfig());
 }
 
 const mime = {
@@ -123,6 +155,21 @@ http
     if (pathOnly === '/' || pathOnly === '/wizard') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(renderWizardHtml(rawUrl));
+      return;
+    }
+    if (pathOnly === '/month') {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(renderMonthHtml());
+      return;
+    }
+    if (pathOnly === '/wp-admin/admin-ajax.php' && req.method === 'POST') {
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(
+        JSON.stringify({
+          success: true,
+          data: { html: '<p>Tidtabell för vald dag</p>' },
+        }),
+      );
       return;
     }
     const rel = pathOnly.replace(/^\//, '');
