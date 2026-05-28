@@ -1,0 +1,197 @@
+/**
+ * Public timetable overview (Vue) — replaces assets/frontend/overview-*.css for shortcodes.
+ */
+
+.mrt-ov {
+  --mrt-ov-green: #2d6a4f;
+  --mrt-ov-highlight: #e8f4fc;
+  --mrt-ov-transfer: #fff9c4;
+  --mrt-ov-transfer-label: #fff59d;
+  font-size: 0.95rem;
+}
+
+.mrt-ov-banner {
+  margin: 0 0 1rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, var(--mrt-ov-green), #1b4332);
+  color: #fff;
+  font-weight: 700;
+  text-align: center;
+}
+
+.mrt-ov-day-title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
+.mrt-ov-group {
+  margin-bottom: 1.5rem;
+}
+
+.mrt-ov-route-header {
+  padding: 0.75rem 1rem;
+  background: linear-gradient(135deg, var(--mrt-ov-green), #1b4332);
+  color: #fff;
+}
+
+.mrt-ov-route-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.1rem;
+}
+
+.mrt-ov-route-ends,
+.mrt-ov-branch-note {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.95;
+}
+
+.mrt-ov-branch-note {
+  font-weight: 600;
+}
+
+.mrt-ov-route-arrow {
+  margin: 0 0.35rem;
+}
+
+.mrt-ov-grid {
+  overflow-x: auto;
+  background: #fff;
+}
+
+.mrt-ov-grid-row {
+  display: grid;
+  grid-template-columns: minmax(7rem, 10rem) repeat(var(--mrt-ov-cols, 4), minmax(4.5rem, 1fr));
+}
+
+.mrt-ov-station-col {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #ddd;
+  font-weight: 600;
+}
+
+.mrt-ov-station-col--empty {
+  visibility: hidden;
+  min-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-color: transparent;
+}
+
+.mrt-ov-col-head {
+  padding: 0.35rem 0.25rem;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+.mrt-ov-icon {
+  width: 2rem;
+  height: auto;
+  object-fit: contain;
+}
+
+.mrt-ov-grid-row--from .mrt-ov-station-col,
+.mrt-ov-grid-row--from .mrt-ov-time-cell,
+.mrt-ov-grid-row--to .mrt-ov-station-col,
+.mrt-ov-grid-row--to .mrt-ov-time-cell {
+  background: var(--mrt-ov-highlight);
+}
+
+.mrt-ov-grid-row--transfer .mrt-ov-station-col,
+.mrt-ov-grid-row--transfer .mrt-ov-transfer-cell {
+  background: var(--mrt-ov-transfer);
+}
+
+.mrt-ov-grid-row--transfer .mrt-ov-station-col {
+  background: var(--mrt-ov-transfer-label);
+}
+
+.mrt-ov-time-cell,
+.mrt-ov-transfer-cell {
+  padding: 0.35rem 0.25rem;
+  border: 1px solid #ddd;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+.mrt-ov-transfer-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+}
+
+.mrt-ov-vehicle {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+}
+
+.mrt-ov-vehicle + .mrt-ov-vehicle {
+  margin-top: 0.25rem;
+  padding-top: 0.25rem;
+  border-top: 1px dashed #bbb;
+}
+
+.mrt-ov-vehicle-type,
+.mrt-ov-vehicle-num {
+  font-weight: 700;
+}
+
+.mrt-ov-special {
+  display: block;
+  font-size: 0.75rem;
+}
+
+.mrt-ov-branch-table {
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 1rem 1rem;
+  border-collapse: collapse;
+}
+
+.mrt-ov-branch-table th,
+.mrt-ov-branch-table td {
+  border: 1px solid #ddd;
+  padding: 0.4rem 0.6rem;
+  text-align: left;
+}
+
+.mrt-ov-branch-table thead th {
+  background: var(--mrt-ov-highlight);
+}
+
+.mrt-ov-branch-train {
+  display: block;
+}
+
+.mrt-ov-separator {
+  height: 1px;
+  margin: 1.5rem 0;
+  background: #ccc;
+}
+
+.mrt-ov-print-key {
+  margin-top: 1.5rem;
+  padding: 1rem;
+}
+
+.mrt-ov-print-key-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mrt-ov-print-key-table th,
+.mrt-ov-print-key-table td {
+  border: 1px solid #ddd;
+  padding: 0.35rem 0.5rem;
+}
