@@ -18,12 +18,12 @@
     color: var(--mrt-color-on-dark-muted);
 }
 
-.mrt-journey-wizard__calendar {
+.mrt-calendar-grid--wizard {
     padding: 0.5rem 1.25rem 1rem;
     color: var(--mrt-wizard-text);
 }
 
-.mrt-journey-wizard__calendar th {
+.mrt-calendar-grid--wizard .mrt-calendar-grid__table th {
     padding: 0.4rem 0.25rem;
     color: var(--mrt-wizard-text);
     background: transparent;
@@ -32,13 +32,13 @@
     font-weight: 800;
 }
 
-.mrt-journey-wizard__calendar td {
+.mrt-calendar-grid--wizard .mrt-calendar-grid__table td {
     height: 3rem;
     vertical-align: middle;
     border-color: var(--mrt-color-neutral-200);
 }
 
-.mrt-journey-wizard__day {
+.mrt-calendar-grid--wizard .mrt-calendar-day {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -57,28 +57,28 @@
     padding: 0;
 }
 
-.mrt-journey-wizard__day--ok {
+.mrt-calendar-grid--wizard .mrt-calendar-day--ok {
     background: var(--mrt-wizard-yellow);
     color: var(--mrt-color-on-accent);
 }
 
-.mrt-journey-wizard__day--ok:hover {
+.mrt-calendar-grid--wizard .mrt-calendar-day--ok:hover {
     background: var(--mrt-color-accent-700);
     color: var(--mrt-color-on-accent);
 }
 
-.mrt-journey-wizard__day--traffic {
+.mrt-calendar-grid--wizard .mrt-calendar-day--traffic {
     background: var(--mrt-color-neutral-200);
     color: var(--mrt-color-neutral-700);
     cursor: not-allowed;
 }
 
-.mrt-journey-wizard__day--none {
+.mrt-calendar-grid--wizard .mrt-calendar-day--none {
     background: transparent;
     color: var(--mrt-color-neutral-500);
     cursor: not-allowed;
 }
 
-.mrt-journey-wizard__day.is-selected {
+.mrt-calendar-grid--wizard .mrt-calendar-day.is-selected {
     box-shadow: inset 0 0 0 3px var(--mrt-color-accent-700);
 }

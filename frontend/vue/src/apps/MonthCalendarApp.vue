@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import MrtCalendarGrid from '../components/ui/MrtCalendarGrid.vue';
 import MrtCalendarNav from '../components/ui/MrtCalendarNav.vue';
 import MrtHeading from '../components/ui/MrtHeading.vue';
 import MrtHtmlPanel from '../components/ui/MrtHtmlPanel.vue';
 import MrtLegend from '../components/ui/MrtLegend.vue';
 import type { MonthVueConfig } from '../config/types';
+import type { MonthGridCell } from '../utils/monthGrid';
 import { buildMonthGrid } from '../utils/monthGrid';
 import { chunkWeekRows } from '../utils/calendarGrid';
 import { useTimetableHtml } from '../composables/useTimetableHtml';
@@ -46,6 +48,25 @@ const legendItems = computed(() => [
   },
 ]);
 
+type MonthDayCell = Extract<MonthGridCell, { kind: 'day' }>;
+
+function monthDay(cell: MonthGridCell): MonthDayCell | null {
+  return cell.kind === 'day' ? cell : null;
+}
+
+function monthCellClass(cell: MonthGridCell): string | undefined {
+  if (cell.kind === 'empty') {
+    return 'mrt-empty';
+  }
+  if (cell.kind === 'day' && !cell.info.running) {
+    return 'mrt-day-cell mrt-day-cell--inactive';
+  }
+  if (cell.kind === 'day') {
+    return 'mrt-day-cell mrt-day-cell--running';
+  }
+  return undefined;
+}
+
 async function onDayClick(ymd: string): Promise<void> {
   if (!ymd) {
     return;
@@ -76,41 +97,34 @@ async function onDayClick(ymd: string): Promise<void> {
       {{ config.monthTitle || '' }}
     </MrtHeading>
 
-    <table class="mrt-month-table">
-      <caption class="mrt-month-table__caption">{{ config.tableCaption || '' }}</caption>
-      <thead>
-        <tr>
-          <th v-for="(h, i) in weekdayHeaders" :key="i" scope="col">{{ h }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, ri) in cellRows" :key="ri">
-          <template v-for="(cell, ci) in row" :key="`${ri}-${ci}`">
-            <td v-if="cell.kind === 'empty'" class="mrt-empty" />
-            <td
-              v-else-if="cell.kind === 'day' && !cell.info.running"
-              class="mrt-day-cell mrt-day-cell--inactive"
-            >
-              <span class="mrt-daynum">{{ cell.day }}</span>
-            </td>
-            <td v-else-if="cell.kind === 'day'" class="mrt-day-cell mrt-day-cell--running">
-              <button
-                type="button"
-                class="mrt-day mrt-running mrt-day-clickable mrt-cursor-pointer"
-                :class="{ 'mrt-day-active': selectedYmd === cell.info.ymd }"
-                :aria-pressed="selectedYmd === cell.info.ymd"
-                @click="onDayClick(cell.info.ymd || '')"
-              >
-                <span class="mrt-daynum" aria-hidden="true">{{ cell.day }}</span>
-                <span class="mrt-dot" aria-hidden="true">{{
-                  showCounts ? cell.info.count : '•'
-                }}</span>
-              </button>
-            </td>
-          </template>
-        </tr>
-      </tbody>
-    </table>
+    <MrtCalendarGrid
+      variant="month"
+      :weekday-headers="weekdayHeaders"
+      :rows="cellRows"
+      :caption="config.tableCaption || ''"
+      :grid-label="config.monthAriaLabel || ''"
+      :cell-class="monthCellClass"
+    >
+      <template #cell="{ cell: rawCell }">
+        <template v-if="(rawCell as MonthGridCell).kind === 'empty'" />
+        <template v-else-if="monthDay(rawCell as MonthGridCell) && !monthDay(rawCell as MonthGridCell)!.info.running">
+          <span class="mrt-daynum">{{ monthDay(rawCell as MonthGridCell)!.day }}</span>
+        </template>
+        <button
+          v-else-if="monthDay(rawCell as MonthGridCell)"
+          type="button"
+          class="mrt-day mrt-running mrt-day-clickable mrt-cursor-pointer"
+          :class="{ 'mrt-day-active': selectedYmd === monthDay(rawCell as MonthGridCell)!.info.ymd }"
+          :aria-pressed="selectedYmd === monthDay(rawCell as MonthGridCell)!.info.ymd"
+          @click="onDayClick(monthDay(rawCell as MonthGridCell)!.info.ymd || '')"
+        >
+          <span class="mrt-daynum" aria-hidden="true">{{ monthDay(rawCell as MonthGridCell)!.day }}</span>
+          <span class="mrt-dot" aria-hidden="true">{{
+            showCounts ? monthDay(rawCell as MonthGridCell)!.info.count : '•'
+          }}</span>
+        </button>
+      </template>
+    </MrtCalendarGrid>
 
     <div v-if="showLegend" class="mrt-mt-sm">
       <MrtLegend :items="legendItems" />

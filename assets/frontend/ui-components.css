@@ -577,6 +577,28 @@
     color: var(--mrt-color-neutral-600, #555);
 }
 
+/* —— Headings —— */
+.mrt-heading {
+    margin: 0;
+}
+
+.mrt-heading--md {
+    font-size: 1.35rem;
+    font-weight: 900;
+}
+
+.mrt-heading--xl {
+    font-size: clamp(2rem, 4vw, 2.6rem);
+    line-height: 1.08;
+    font-weight: 800;
+}
+
+/* —— Calendar grid shell —— */
+.mrt-calendar-grid__table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
 /* —— Price table —— */
 .mrt-price-block {
     color: var(--mrt-wizard-text, #151515);

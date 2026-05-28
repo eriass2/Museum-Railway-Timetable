@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import MrtAsyncState from '../../components/ui/MrtAsyncState.vue';
+import MrtCalendarGrid from '../../components/ui/MrtCalendarGrid.vue';
 import type { CalendarDayStatus } from '../types';
 import type { WizardCalCell } from '../utils/wizardCalendarGrid';
+
+type WizardDayCell = Extract<WizardCalCell, { kind: 'day' }>;
 
 defineProps<{
   loading: boolean;
@@ -14,54 +16,52 @@ defineProps<{
 }>();
 
 const emit = defineEmits<{ pick: [ymd: string] }>();
+
+function asDay(cell: WizardCalCell): WizardDayCell | null {
+  return cell.kind === 'day' ? cell : null;
+}
 </script>
 
 <template>
-  <div class="mrt-journey-wizard__calendar" role="region" :aria-busy="loading">
-    <MrtAsyncState :loading="loading" :loading-text="loadingLabel">
-      <table role="grid" :aria-label="gridLabel">
-        <thead>
-          <tr>
-            <th v-for="(h, i) in weekdayHeaders" :key="i" scope="col">{{ h }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, ri) in gridRows" :key="ri">
-            <td v-for="(cell, ci) in row" :key="`${ri}-${ci}`">
-              <template v-if="cell.kind === 'pad'" />
-              <button
-                v-else-if="cell.status === 'ok'"
-                type="button"
-                class="mrt-journey-wizard__day mrt-journey-wizard__day--ok"
-                :class="{ 'is-selected': selectedYmd === cell.ymd }"
-                :aria-label="dayAria(cell.ymd, cell.status)"
-                :aria-pressed="selectedYmd === cell.ymd"
-                @click="emit('pick', cell.ymd)"
-              >
-                {{ cell.day }}
-              </button>
-              <button
-                v-else-if="cell.status === 'traffic_no_match'"
-                type="button"
-                class="mrt-journey-wizard__day mrt-journey-wizard__day--traffic"
-                disabled
-                :aria-label="dayAria(cell.ymd, cell.status)"
-              >
-                {{ cell.day }}
-              </button>
-              <button
-                v-else
-                type="button"
-                class="mrt-journey-wizard__day mrt-journey-wizard__day--none"
-                disabled
-                :aria-label="dayAria(cell.ymd, cell.status)"
-              >
-                {{ cell.day }}
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </MrtAsyncState>
-  </div>
+  <MrtCalendarGrid
+    variant="wizard"
+    :weekday-headers="weekdayHeaders"
+    :rows="gridRows"
+    :grid-label="gridLabel"
+    :loading="loading"
+    :loading-label="loadingLabel"
+  >
+    <template #cell="{ cell }">
+      <template v-if="(cell as WizardCalCell).kind !== 'day'" />
+      <button
+        v-else-if="asDay(cell as WizardCalCell)?.status === 'ok'"
+        type="button"
+        class="mrt-calendar-day mrt-calendar-day--ok"
+        :class="{ 'is-selected': selectedYmd === asDay(cell as WizardCalCell)!.ymd }"
+        :aria-label="dayAria(asDay(cell as WizardCalCell)!.ymd, asDay(cell as WizardCalCell)!.status)"
+        :aria-pressed="selectedYmd === asDay(cell as WizardCalCell)!.ymd"
+        @click="emit('pick', asDay(cell as WizardCalCell)!.ymd)"
+      >
+        {{ asDay(cell as WizardCalCell)!.day }}
+      </button>
+      <button
+        v-else-if="asDay(cell as WizardCalCell)?.status === 'traffic_no_match'"
+        type="button"
+        class="mrt-calendar-day mrt-calendar-day--traffic"
+        disabled
+        :aria-label="dayAria(asDay(cell as WizardCalCell)!.ymd, asDay(cell as WizardCalCell)!.status)"
+      >
+        {{ asDay(cell as WizardCalCell)!.day }}
+      </button>
+      <button
+        v-else-if="asDay(cell as WizardCalCell)"
+        type="button"
+        class="mrt-calendar-day mrt-calendar-day--none"
+        disabled
+        :aria-label="dayAria(asDay(cell as WizardCalCell)!.ymd, asDay(cell as WizardCalCell)!.status)"
+      >
+        {{ asDay(cell as WizardCalCell)!.day }}
+      </button>
+    </template>
+  </MrtCalendarGrid>
 </template>

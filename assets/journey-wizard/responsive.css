@@ -28,11 +28,11 @@
         padding-bottom: 1.2rem;
     }
 
-    .mrt-journey-wizard__calendar th {
+    .mrt-calendar-grid--wizard .mrt-calendar-grid__table th {
         font-size: 1rem;
     }
 
-    .mrt-journey-wizard__day {
+    .mrt-calendar-grid--wizard .mrt-calendar-day {
         min-height: 2.4rem;
         font-size: 1.2rem;
     }
