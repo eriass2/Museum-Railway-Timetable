@@ -76,21 +76,6 @@
     text-align: center;
 }
 
-.mrt-journey-wizard__hero-title,
-.mrt-journey-wizard__step-title {
-    margin: 0;
-    color: var(--mrt-color-on-dark);
-    font-size: clamp(2rem, 4vw, 2.6rem);
-    line-height: 1.08;
-    font-weight: 800;
-    letter-spacing: 0;
-}
-
-.mrt-journey-wizard__step-title {
-    margin: 1.4rem 0 1.3rem;
-    text-align: left;
-}
-
 .mrt-journey-wizard__hero-lede {
     margin: 0.55rem 0 0;
     color: var(--mrt-color-on-dark-muted);
@@ -104,19 +89,17 @@
     font-weight: 800;
 }
 
-.mrt-journey-wizard__hero-title:focus,
-.mrt-journey-wizard__step-title:focus {
+.mrt-surface-title:focus {
     outline: none;
 }
 
-.mrt-journey-wizard__hero-title:focus-visible,
-.mrt-journey-wizard__step-title:focus-visible {
+.mrt-surface-title:focus-visible {
     outline: 3px solid var(--mrt-wizard-focus);
     outline-offset: 4px;
 }
 
-.mrt-journey-wizard__station-input:focus-visible,
-.mrt-journey-wizard__trip-type-btn:focus-visible,
+.mrt-journey-wizard .mrt-combobox__input:focus-visible,
+.mrt-journey-wizard .mrt-segmented__option:focus-visible,
 .mrt-journey-wizard button:focus-visible,
 .mrt-journey-wizard a:focus-visible,
 .mrt-journey-wizard select:focus-visible {

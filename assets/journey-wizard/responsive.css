@@ -9,23 +9,22 @@
         padding: 1.2rem;
     }
 
-    .mrt-journey-wizard__hero-title,
-    .mrt-journey-wizard__step-title {
+    .mrt-surface-title {
         font-size: 1.8rem;
     }
 
-    .mrt-journey-wizard__calendar-nav {
+    .mrt-journey-wizard .mrt-calendar-nav {
         flex-wrap: wrap;
         padding: 0.9rem 0.9rem 0;
     }
 
-    .mrt-journey-wizard__calendar-nav,
+    .mrt-journey-wizard .mrt-calendar-nav,
     .mrt-journey-wizard__calendar,
-    .mrt-journey-wizard__legend {
+    .mrt-journey-wizard .mrt-legend-list {
         padding-inline: 0.9rem;
     }
 
-    .mrt-journey-wizard__legend {
+    .mrt-journey-wizard .mrt-legend-list {
         padding-bottom: 1.2rem;
     }
 
