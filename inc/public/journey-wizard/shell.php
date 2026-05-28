@@ -77,9 +77,6 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 	$debug         = isset( $parsed['debug'] ) ? (string) $parsed['debug'] : '';
 
 	$stations = MRT_get_all_stations();
-	if ( empty( $stations ) ) {
-		return '<p class="mrt-alert mrt-alert-info">' . esc_html__( 'No stations are available.', 'museum-railway-timetable' ) . '</p>';
-	}
 
 	return MRT_render_vue_mount(
 		'wizard',

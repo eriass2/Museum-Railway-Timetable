@@ -20,6 +20,7 @@ provide(wizardKey, wizardCtx);
 const { store, cfg } = wizardCtx;
 
 const stations = props.config.stations || [];
+const hasStations = stations.length > 0;
 const embedded = Boolean(props.config.embedded);
 const debug = String(props.config.debug || '');
 const ticketUrl = String(props.config.ticketUrl || '');
@@ -79,9 +80,13 @@ onMounted(() => {
             {{ cfgStr(cfg, 'needsJs', 'Reseplaneraren kräver JavaScript.') }}
           </MrtAlert>
         </noscript>
-        <div v-if="store.error && store.step !== 'route'" class="mrt-journey-wizard__errors">
+        <MrtAlert v-if="!hasStations" variant="info">
+          {{ cfgStr(cfg, 'noStations', 'Inga stationer är tillgängliga.') }}
+        </MrtAlert>
+        <div v-else-if="store.error && store.step !== 'route'" class="mrt-journey-wizard__errors">
           <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>
         </div>
+        <template v-if="hasStations">
         <MrtStepProgress
           :items="progressItems"
           :nav-aria-label="cfgStr(cfg, 'stepNavAria', 'Steg i reseplaneraren')"
@@ -97,6 +102,7 @@ onMounted(() => {
           <WizardTripStep v-else-if="store.step === 'return'" leg-ctx="return" />
           <WizardSummaryStep v-else-if="store.step === 'summary'" :ticket-url="ticketUrl" />
         </div>
+        </template>
       </div>
     </section>
   </div>

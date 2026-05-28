@@ -123,6 +123,7 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 		'startOfWeek'  => (int) get_option( 'start_of_week', 1 ),
 		'wizard'       => $wizard_l10n,
 		'labels'       => array(
+			'noStations'      => __( 'No stations are available.', 'museum-railway-timetable' ),
 			'needsJs'         => __( 'Reseplaneraren kräver JavaScript.', 'museum-railway-timetable' ),
 			'stepNavAria'     => __( 'Steg i reseplaneraren', 'museum-railway-timetable' ),
 			'routeTitle'         => __( 'Planera resa med Lennakatten', 'museum-railway-timetable' ),

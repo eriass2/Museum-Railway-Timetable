@@ -80,6 +80,7 @@ export type WizardCfgStringKey =
   | 'priceDash'
   | 'priceZoneLabel'
   | 'needsJs'
+  | 'noStations'
   | 'stepNavAria'
   | 'routeTitle'
   | 'routeIntro'
