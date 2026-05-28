@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
 import MrtAlert from '../../components/ui/MrtAlert.vue';
 import MrtSegmentedControl from '../../components/ui/MrtSegmentedControl.vue';
+import MrtHeading from '../../components/ui/MrtHeading.vue';
 import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { todayYearMonth } from '../utils/wizardDate';
@@ -62,9 +63,9 @@ function onSearch(): void {
     :ariaLabel="cfgStr(cfg, 'stepRoute', 'Sök resa')"
   >
     <MrtSurfaceCard>
-      <h2 class="mrt-surface-title">
+      <MrtHeading level="h2" size="xl" class="mrt-surface-title">
         {{ cfgStr(cfg, 'routeTitle', 'Planera resa med Lennakatten') }}
-      </h2>
+      </MrtHeading>
 
       <div class="mrt-journey-wizard__route">
         <div class="mrt-journey-wizard__route-stations">

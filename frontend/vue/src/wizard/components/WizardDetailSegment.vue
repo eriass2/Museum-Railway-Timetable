@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, unref, type MaybeRef } from 'vue';
+import MrtHeading from '../../components/ui/MrtHeading.vue';
 import MrtVehicleRow from '../../components/ui/MrtVehicleRow.vue';
 import type { MrtVehicleItem } from '../../components/ui/types';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
@@ -35,7 +36,14 @@ const vehicleItems = computed((): MrtVehicleItem[] => {
 
 <template>
   <div class="mrt-journey-wizard__detail-segment mrt-mb-sm">
-    <h4 v-if="segment.title" class="mrt-journey-wizard__detail-title">{{ segment.title }}</h4>
+    <MrtHeading
+      v-if="segment.title"
+      level="h4"
+      size="md"
+      class="mrt-journey-wizard__detail-title"
+    >
+      {{ segment.title }}
+    </MrtHeading>
     <p v-if="segment.notice" class="mrt-journey-wizard__notice">
       <strong>{{ cfgStr(cfg, 'noticeLabel', 'Notis') }}:</strong> {{ segment.notice }}
     </p>

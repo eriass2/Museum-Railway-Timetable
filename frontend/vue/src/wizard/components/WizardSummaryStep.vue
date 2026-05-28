@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
+import MrtHeading from '../../components/ui/MrtHeading.vue';
+import MrtPriceTable from '../../components/ui/MrtPriceTable.vue';
 import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
 import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
@@ -10,7 +12,6 @@ import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
 import { formatTripClock } from '../utils/format';
 import WizardPanel from './WizardPanel.vue';
-import WizardPriceTable from './WizardPriceTable.vue';
 
 const { ticketUrl } = defineProps<{ ticketUrl: string }>();
 
@@ -39,9 +40,9 @@ function onBack(): void {
     <MrtSurfaceCard>
       <div class="mrt-journey-wizard__summary-list">
         <article v-if="store.outbound" class="mrt-journey-wizard__summary-card">
-          <h4 class="mrt-journey-wizard__summary-heading">
+          <MrtHeading level="h4" size="md" class="mrt-journey-wizard__summary-heading">
             {{ cfgStr(cfg, 'outboundHeading', 'Utresa') }}
-          </h4>
+          </MrtHeading>
           <MrtTripSummary
             :time-range="legTimeRange(store.outbound)"
             :route="`${store.fromTitle} → ${store.toTitle}`"
@@ -53,9 +54,9 @@ function onBack(): void {
           v-if="store.tripType === 'return' && store.inbound"
           class="mrt-journey-wizard__summary-card"
         >
-          <h4 class="mrt-journey-wizard__summary-heading">
+          <MrtHeading level="h4" size="md" class="mrt-journey-wizard__summary-heading">
             {{ cfgStr(cfg, 'returnHeading', 'Återresa') }}
-          </h4>
+          </MrtHeading>
           <MrtTripSummary
             :time-range="legTimeRange(store.inbound)"
             :route="`${store.toTitle} → ${store.fromTitle}`"
@@ -64,7 +65,7 @@ function onBack(): void {
         </article>
       </div>
 
-      <WizardPriceTable
+      <MrtPriceTable
         :cfg="cfg"
         :trip-type="store.tripType"
         :from-id="store.fromId"
