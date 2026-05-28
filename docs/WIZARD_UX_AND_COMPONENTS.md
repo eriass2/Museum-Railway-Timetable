@@ -5,7 +5,9 @@ Wizard domain code: `frontend/vue/src/wizard/`. Shared UI: `frontend/vue/src/com
 ## Wizard-specific pieces
 
 - `WizardRouteStep`, `WizardDateStep`, `WizardTripStep`, `WizardSummaryStep`
-- `WizardTripCard`, `WizardCalendarGrid`, `WizardPriceTable`, `WizardStationField` (wraps `MrtCombobox`)
+- `WizardPanel` — step region wrapper (`data-wizard-step`, `ariaLabel`)
+- `WizardTripCard`, `WizardCalendarGrid` (wraps `MrtCalendarGrid`), `WizardStationField` (wraps `MrtCombobox`)
+- Summary prices via `MrtPriceTable` directly
 - `WizardTripTypeIcon`
 
 Step titles live in `MrtStepProgress` only. Swedish calendar strings from `MRT_journey_wizard_calendar_i18n_arrays()` in PHP.

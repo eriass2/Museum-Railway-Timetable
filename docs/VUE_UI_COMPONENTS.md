@@ -13,15 +13,19 @@ Shared primitives for wizard, month calendar, and overview. Styles: `assets/fron
 | `MrtStepHeader` | `mrt-step-header` | Wizard steps 2–4 |
 | `MrtStepProgress` | `mrt-step-progress` | Journey wizard |
 | `MrtCalendarNav` | `mrt-calendar-nav` | Wizard date, month shortcode |
+| `MrtCalendarGrid` | `mrt-calendar-grid` | Wizard date (`WizardCalendarGrid`), month table |
 | `MrtLegend` | `mrt-legend-list` | Wizard date, month |
+| `MrtHeading` | `mrt-heading` | Month title, wizard route/summary/detail, price block |
+| `MrtStatusMessage` | `mrt-status-message` | Wizard empty calendar month |
+| `MrtPriceTable` | `mrt-price-block` | Wizard summary (prices from `shared/prices.ts`) |
 | `MrtSegmentedControl` | `mrt-segmented` | Route trip type |
 | `MrtFieldGroup` + `MrtCombobox` | `mrt-field`, `mrt-combobox` | Station search |
 | `MrtTripSummary` | `mrt-trip-summary` | Trip cards, summary |
 | `MrtExpandTrigger` | `mrt-expand-trigger` | Trip card detail toggle |
-| `MrtVehicleRow` | `mrt-vehicle-row` | Trip card |
+| `MrtVehicleRow` | `mrt-vehicle-row` | Trip card, detail segment |
 | `MrtHtmlPanel` | `mrt-html-panel` | Month day timetable, overview |
 
-Wizard-only layout/trip CSS remains under `assets/journey-wizard/`.
+Wizard-only layout/trip CSS remains under `assets/journey-wizard/`. Price matrix helpers live in `frontend/vue/src/shared/prices.ts`.
 
 ## Rebuild
 
