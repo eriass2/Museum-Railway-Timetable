@@ -1,4 +1,6 @@
 <script setup lang="ts">
+defineOptions({ inheritAttrs: false });
+
 defineProps<{
   expanded: boolean;
   label: string;
@@ -13,6 +15,7 @@ defineEmits<{ toggle: [] }>();
     class="mrt-expand-trigger"
     :class="{ 'is-expanded': expanded }"
     :aria-expanded="expanded"
+    v-bind="$attrs"
     @click="$emit('toggle')"
   >
     {{ label }}
