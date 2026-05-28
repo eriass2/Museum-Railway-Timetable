@@ -13,45 +13,53 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * Swedish weekday abbreviations for month calendar (Mon–Sun or Sun–Sat order).
+ *
+ * @return array<int, string>
+ */
+function MRT_vue_month_swedish_weekday_headers( bool $start_monday ): array {
+	$weekdays = array(
+		__( 'sön', 'museum-railway-timetable' ),
+		__( 'mån', 'museum-railway-timetable' ),
+		__( 'tis', 'museum-railway-timetable' ),
+		__( 'ons', 'museum-railway-timetable' ),
+		__( 'tor', 'museum-railway-timetable' ),
+		__( 'fre', 'museum-railway-timetable' ),
+		__( 'lör', 'museum-railway-timetable' ),
+	);
+	if ( $start_monday ) {
+		return array( $weekdays[1], $weekdays[2], $weekdays[3], $weekdays[4], $weekdays[5], $weekdays[6], $weekdays[0] );
+	}
+	return $weekdays;
+}
+
+/**
  * @param array<string, mixed> $context From MRT_month_shortcode_build_context().
  * @return array<string, mixed>
  */
 function MRT_vue_month_config( array $context ): array {
-	$first_ts      = (int) ( $context['first_ts'] ?? 0 );
-	$start_monday  = ! empty( $context['startMonday'] );
-	$month_title   = (string) ( $context['month_title'] ?? '' );
-	$nav_urls      = MRT_month_shortcode_nav_link_urls( $first_ts ?: false );
-	$weekday_heads = $start_monday
-		? array(
-			__( 'Mon', 'museum-railway-timetable' ),
-			__( 'Tue', 'museum-railway-timetable' ),
-			__( 'Wed', 'museum-railway-timetable' ),
-			__( 'Thu', 'museum-railway-timetable' ),
-			__( 'Fri', 'museum-railway-timetable' ),
-			__( 'Sat', 'museum-railway-timetable' ),
-			__( 'Sun', 'museum-railway-timetable' ),
-		)
-		: array(
-			__( 'Sun', 'museum-railway-timetable' ),
-			__( 'Mon', 'museum-railway-timetable' ),
-			__( 'Tue', 'museum-railway-timetable' ),
-			__( 'Wed', 'museum-railway-timetable' ),
-			__( 'Thu', 'museum-railway-timetable' ),
-			__( 'Fri', 'museum-railway-timetable' ),
-			__( 'Sat', 'museum-railway-timetable' ),
-		);
+	$first_ts     = (int) ( $context['first_ts'] ?? 0 );
+	$start_monday = ! empty( $context['startMonday'] );
+	$nav_urls     = MRT_month_shortcode_nav_link_urls( $first_ts ?: false );
+	$cal          = MRT_journey_wizard_calendar_i18n_arrays();
+	$month_title  = (string) ( $context['month_title'] ?? '' );
+	if ( $first_ts > 0 && ! empty( $cal['monthNames'] ) ) {
+		$mo_index    = (int) date( 'n', $first_ts ) - 1;
+		$month_title = $cal['monthNames'][ $mo_index ] . ' ' . date( 'Y', $first_ts );
+	}
+	$weekday_heads = MRT_vue_month_swedish_weekday_headers( $start_monday );
 
 	return array(
 		'monthUid'           => (string) ( $context['month_uid'] ?? '' ),
 		'monthTitle'         => $month_title,
 		'monthAriaLabel'     => sprintf(
 			/* translators: %s: month and year */
-			__( 'Timetable month view, %s', 'museum-railway-timetable' ),
+			__( 'Månadskalender, %s', 'museum-railway-timetable' ),
 			$month_title
 		),
 		'tableCaption'       => sprintf(
 			/* translators: %s: month and year */
-			__( 'Operating days for %s', 'museum-railway-timetable' ),
+			__( 'Trafikdagar för %s', 'museum-railway-timetable' ),
 			$month_title
 		),
 		'prevMonthUrl'       => $nav_urls[0],
@@ -65,11 +73,11 @@ function MRT_vue_month_config( array $context ): array {
 		'startMonday'        => $start_monday,
 		'atts'               => isset( $context['atts'] ) && is_array( $context['atts'] ) ? $context['atts'] : array(),
 		'dates'              => isset( $context['dates'] ) && is_array( $context['dates'] ) ? $context['dates'] : array(),
-		'stringsPrevMonth'   => __( 'Previous month', 'museum-railway-timetable' ),
-		'stringsNextMonth'   => __( 'Next month', 'museum-railway-timetable' ),
-		'legendServiceDay'   => __( 'Service day', 'museum-railway-timetable' ),
-		'legendCountHint'    => __( 'count per day', 'museum-railway-timetable' ),
-		'legendClickHint'    => __( 'Click to view timetable', 'museum-railway-timetable' ),
+		'stringsPrevMonth'   => __( 'Föregående månad', 'museum-railway-timetable' ),
+		'stringsNextMonth'   => __( 'Nästa månad', 'museum-railway-timetable' ),
+		'legendServiceDay'   => __( 'Trafikdag', 'museum-railway-timetable' ),
+		'legendCountHint'    => __( 'antal per dag', 'museum-railway-timetable' ),
+		'legendClickHint'    => __( 'Klicka för att visa tidtabell', 'museum-railway-timetable' ),
 	);
 }
 
