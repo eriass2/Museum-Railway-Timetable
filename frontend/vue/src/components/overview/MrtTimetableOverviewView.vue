@@ -37,7 +37,10 @@ function rowClass(row: TimetableOverviewRow): string {
 
 <template>
   <div class="mrt-ov" role="region" :aria-label="data.title">
-    <p v-if="data.typeBanner?.label" class="mrt-ov-banner">{{ data.typeBanner.label }}</p>
+    <p v-if="data.scope !== 'day' && data.typeBanner?.label" class="mrt-ov-banner">
+      {{ data.typeBanner.label }}
+    </p>
+    <h2 v-else-if="data.scope === 'day'" class="mrt-ov-day-title">{{ data.title }}</h2>
 
     <template v-for="(group, gi) in data.groups" :key="gi">
       <section v-if="group.kind === 'rail'" class="mrt-ov-group">
@@ -196,6 +199,12 @@ function rowClass(row: TimetableOverviewRow): string {
   color: #fff;
   font-weight: 700;
   text-align: center;
+}
+
+.mrt-ov-day-title {
+  margin: 0 0 1rem;
+  font-size: 1.25rem;
+  font-weight: 700;
 }
 
 .mrt-ov-group {

@@ -10,7 +10,8 @@ import type { MonthVueConfig } from '../config/types';
 import type { MonthGridCell } from '../utils/monthGrid';
 import { buildMonthGrid } from '../utils/monthGrid';
 import { chunkWeekRows } from '../utils/calendarGrid';
-import { useTimetableHtml } from '../composables/useTimetableHtml';
+import MrtTimetableOverviewView from '../components/overview/MrtTimetableOverviewView.vue';
+import { useTimetableOverview } from '../composables/useTimetableOverview';
 import { resolveMrtString } from '../utils/mrtStrings';
 
 const props = defineProps<{ config: MonthVueConfig }>();
@@ -38,8 +39,8 @@ const selectedYmd = ref('');
 const panelVisible = ref(false);
 const panelRef = ref<InstanceType<typeof MrtHtmlPanel> | null>(null);
 
-const { html: dayHtml, loading: dayLoading, error: dayError, fetchDayHtml } =
-  useTimetableHtml(props.config);
+const { overview: dayOverview, loading: dayLoading, error: dayError, fetchDayOverview } =
+  useTimetableOverview(props.config);
 
 const weekdayHeaders = computed(() => props.config.weekdayHeaders || []);
 
@@ -80,11 +81,11 @@ async function onDayClick(ymd: string): Promise<void> {
   }
   selectedYmd.value = ymd;
   panelVisible.value = true;
-  await fetchDayHtml(ymd, trainType.value);
+  await fetchDayOverview(ymd, trainType.value);
 }
 
-watch([panelVisible, dayHtml, dayLoading], async ([visible, html, loading]) => {
-  if (!visible || loading || !html) {
+watch([panelVisible, dayOverview, dayLoading], async ([visible, overview, loading]) => {
+  if (!visible || loading || !overview) {
     return;
   }
   await nextTick();
@@ -147,8 +148,7 @@ watch([panelVisible, dayHtml, dayLoading], async ([visible, html, loading]) => {
       :error="dayError"
       :loading-text="resolveMrtString(config, 'loading', 'Laddar...')"
     >
-      <!-- Trusted server HTML — see frontend/vue/TRUSTED_HTML.md -->
-      <div v-html="dayHtml" />
+      <MrtTimetableOverviewView v-if="dayOverview" :data="dayOverview" />
     </MrtHtmlPanel>
   </div>
 </template>

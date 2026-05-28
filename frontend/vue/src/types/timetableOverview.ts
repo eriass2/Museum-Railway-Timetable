@@ -69,6 +69,7 @@ export type TimetableBranchGroup = {
 export type TimetableOverviewGroup = TimetableRailGroup | TimetableBranchGroup;
 
 export type TimetableOverviewPayload = {
+  scope: 'timetable' | 'day';
   timetableId: number;
   title: string;
   dateYmd: string;
