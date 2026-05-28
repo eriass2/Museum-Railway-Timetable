@@ -122,7 +122,7 @@ function MRT_journey_wizard_l10n_price(): array {
 		'priceMatrix'          => MRT_price_matrix_for_zone( MRT_get_price_matrix(), 4 ),
 		'priceMatrixByZone'    => MRT_get_price_matrix(),
 		'priceStationZones'    => MRT_get_station_price_zones_map(),
-		'priceZoneLabel'       => __( '%d zones', MRT_TEXT_DOMAIN ),
+		'priceZoneLabel'       => __( '%d zoner', MRT_TEXT_DOMAIN ),
 		'priceTickets'         => MRT_price_ticket_type_labels(),
 		'priceCategories'      => MRT_price_category_labels(),
 	);

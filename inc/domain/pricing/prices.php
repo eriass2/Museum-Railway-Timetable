@@ -251,9 +251,9 @@ function MRT_price_zones_for_station_pair( int $from_station_id, int $to_station
  */
 function MRT_price_ticket_type_labels() {
 	return array(
-		'single' => __( 'Single ticket', 'museum-railway-timetable' ),
-		'return' => __( 'Return ticket', 'museum-railway-timetable' ),
-		'day'    => __( 'Day pass', 'museum-railway-timetable' ),
+		'single' => __( 'Enkelbiljett', 'museum-railway-timetable' ),
+		'return' => __( 'Returbiljett', 'museum-railway-timetable' ),
+		'day'    => __( 'Dagskort', 'museum-railway-timetable' ),
 	);
 }
 
@@ -264,9 +264,9 @@ function MRT_price_ticket_type_labels() {
  */
 function MRT_price_category_labels() {
 	return array(
-		'adult'          => __( 'Adult', 'museum-railway-timetable' ),
-		'child_4_15'     => __( 'Child 7–15', 'museum-railway-timetable' ),
-		'child_0_3'      => __( 'Child 0–6', 'museum-railway-timetable' ),
-		'student_senior' => __( 'Student / senior 65+', 'museum-railway-timetable' ),
+		'adult'          => __( 'Vuxen', 'museum-railway-timetable' ),
+		'child_4_15'     => __( 'Barn 7–15', 'museum-railway-timetable' ),
+		'child_0_3'      => __( 'Barn 0–6', 'museum-railway-timetable' ),
+		'student_senior' => __( 'Student / pensionär 65+', 'museum-railway-timetable' ),
 	);
 }
