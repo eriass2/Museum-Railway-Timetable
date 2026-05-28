@@ -77,7 +77,7 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 frontend/vue/src/
   config/                    # parseMountConfig, typed configs per app
   composables/               # useMrtAjax, useWizardContext
-  components/MrtStepShell.vue
+  components/ui/             # shared Mrt* primitives (see VUE_UI_COMPONENTS.md)
   utils/mrtStrings.ts        # resolveMrtString (strings / wizard / labels)
   wizard/
     store/                   # createWizardStore, wizardStoreGetters, route/steps/selections
