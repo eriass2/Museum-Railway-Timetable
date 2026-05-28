@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import MrtCalendarNav from '../components/ui/MrtCalendarNav.vue';
+import MrtHeading from '../components/ui/MrtHeading.vue';
 import MrtHtmlPanel from '../components/ui/MrtHtmlPanel.vue';
 import MrtLegend from '../components/ui/MrtLegend.vue';
 import type { MonthVueConfig } from '../config/types';
@@ -71,9 +72,9 @@ async function onDayClick(ymd: string): Promise<void> {
       :prev-text="config.stringsPrevMonth || 'Föregående månad'"
       :next-text="config.stringsNextMonth || 'Nästa månad'"
     />
-    <h2 v-else class="mrt-heading mrt-heading--lg mrt-font-semibold">
+    <MrtHeading v-else level="h2" size="lg">
       {{ config.monthTitle || '' }}
-    </h2>
+    </MrtHeading>
 
     <table class="mrt-month-table">
       <caption class="mrt-month-table__caption">{{ config.tableCaption || '' }}</caption>
