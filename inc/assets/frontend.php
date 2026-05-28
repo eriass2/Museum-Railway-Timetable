@@ -117,7 +117,7 @@ function MRT_journey_wizard_l10n_price(): array {
 	return array(
 		'priceTableTypeColumn' => __( 'Biljettyp', MRT_TEXT_DOMAIN ),
 		'priceTitle'           => __( 'Priser', MRT_TEXT_DOMAIN ),
-		'priceNote'            => __( 'Priset bygger på lägsta giltiga zontal för den valda resan.', MRT_TEXT_DOMAIN ),
+		'priceNote'            => __( 'Priset bygger på lägsta giltiga zontal för den valda resan. Pensionär gäller från 65 år.', MRT_TEXT_DOMAIN ),
 		'priceDash'            => '—',
 		'priceMatrix'          => MRT_price_matrix_for_zone( MRT_get_price_matrix(), 4 ),
 		'priceMatrixByZone'    => MRT_get_price_matrix(),

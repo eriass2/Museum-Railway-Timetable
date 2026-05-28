@@ -32,7 +32,7 @@ test.describe('Journey wizard steps', () => {
     await expect(page.locator('.mrt-summary-list')).toBeVisible();
     await expect(page.locator('.mrt-summary-card')).toHaveCount(2);
     await expect(page.locator('.mrt-trip-summary')).toHaveCount(2);
-    await expect(page.locator('.mrt-price-block')).toBeVisible();
-    await expect(page.locator('.mrt-price-block')).toContainText('180 kr');
+    await expect(page.locator('.mrt-price-list')).toBeVisible();
+    await expect(page.locator('.mrt-price-list')).toContainText('180 kr');
   });
 });

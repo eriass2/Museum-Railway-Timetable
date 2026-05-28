@@ -45,6 +45,10 @@ const visibleTypes = computed(() => {
   return PRICE_TYPE_KEYS.filter((tk) => tk === priceData.value!.activeType);
 });
 
+const useListLayout = computed(() => !props.showAllTypes && visibleTypes.value.length === 1);
+
+const listTicketType = computed(() => visibleTypes.value[0] ?? priceData.value?.activeType ?? 'single');
+
 const selectedTypeLabel = computed(() => {
   if (!priceData.value || props.showAllTypes) {
     return '';
@@ -52,6 +56,13 @@ const selectedTypeLabel = computed(() => {
   const key = priceData.value.activeType;
   return labels.value.tickets[key] || key;
 });
+
+function priceForCategory(catKey: string, ticketType: string): string {
+  if (!priceData.value) {
+    return '';
+  }
+  return formatPriceCell(priceData.value.matrix[ticketType]?.[catKey], cellCfg.value);
+}
 </script>
 
 <template>
@@ -65,7 +76,15 @@ const selectedTypeLabel = computed(() => {
         {{ labels.titleSuffix }}
       </span>
     </MrtHeading>
-    <div class="mrt-price-block__table-wrap">
+
+    <dl v-if="useListLayout" class="mrt-price-list">
+      <div v-for="ck in PRICE_CAT_KEYS" :key="ck" class="mrt-price-list__row">
+        <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
+        <dd class="mrt-price-list__value">{{ priceForCategory(ck, listTicketType) }}</dd>
+      </div>
+    </dl>
+
+    <div v-else class="mrt-price-block__table-wrap">
       <table class="mrt-table mrt-price-block__table">
         <thead>
           <tr>
@@ -89,12 +108,13 @@ const selectedTypeLabel = computed(() => {
               :key="ck"
               :data-label="labels.categories[ck] || ck"
             >
-              {{ formatPriceCell(priceData.matrix[tk]?.[ck], cellCfg) }}
+              {{ priceForCategory(ck, tk) }}
             </td>
           </tr>
         </tbody>
       </table>
     </div>
+
     <p v-if="labels.note" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
       {{ labels.note }}
     </p>
