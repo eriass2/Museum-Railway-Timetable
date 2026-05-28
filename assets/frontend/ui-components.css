@@ -483,6 +483,65 @@
     gap: 0.35rem;
 }
 
+.mrt-trip-card__duration {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #3f3f3f;
+    white-space: nowrap;
+}
+
+/* —— Summary —— */
+.mrt-summary-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.mrt-summary-card {
+    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-wizard-text, #151515);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    padding: 0.75rem 0.9rem;
+}
+
+.mrt-summary-card__heading {
+    color: var(--mrt-wizard-green-dark, #1f4d2e);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* —— Connection detail —— */
+.mrt-detail-panel {
+    padding: 1.2rem 0.8rem 1rem;
+    background: var(--mrt-wizard-surface, #fff);
+}
+
+.mrt-detail-segment__notice {
+    margin: 0.2rem 0 0.4rem;
+    color: #151515;
+    font-size: 0.95rem;
+}
+
+.mrt-detail-segment__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    align-items: center;
+    margin: 0 0 0.55rem 6.6rem;
+}
+
+.mrt-detail-segment__duration {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #3f3f3f;
+}
+
+.mrt-detail-segment__transfer {
+    margin: 0.45rem 0 0.8rem 6.6rem;
+    color: #333333;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
 /* —— Timeline —— */
 .mrt-timeline {
     display: grid;

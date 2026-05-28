@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
-import MrtHeading from '../../components/ui/MrtHeading.vue';
 import MrtPriceTable from '../../components/ui/MrtPriceTable.vue';
 import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
+import MrtSummaryCard from '../../components/ui/MrtSummaryCard.vue';
 import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
@@ -45,31 +45,25 @@ function onBack(): void {
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard>
-      <div class="mrt-journey-wizard__summary-list">
-        <article v-if="store.outbound" class="mrt-journey-wizard__summary-card">
-          <MrtHeading level="h4" size="md" class="mrt-journey-wizard__summary-heading">
-            {{ cfgStr(cfg, 'outboundHeading', 'Utresa') }}
-          </MrtHeading>
+      <div class="mrt-summary-list">
+        <MrtSummaryCard v-if="store.outbound" :heading="cfgStr(cfg, 'outboundHeading', 'Utresa')">
           <MrtTripSummary
             :time-range="legTimeRange(store.outbound)"
             :route="`${store.fromTitle} → ${store.toTitle}`"
             :date="dateText"
           />
-        </article>
+        </MrtSummaryCard>
 
-        <article
+        <MrtSummaryCard
           v-if="store.tripType === 'return' && store.inbound"
-          class="mrt-journey-wizard__summary-card"
+          :heading="cfgStr(cfg, 'returnHeading', 'Återresa')"
         >
-          <MrtHeading level="h4" size="md" class="mrt-journey-wizard__summary-heading">
-            {{ cfgStr(cfg, 'returnHeading', 'Återresa') }}
-          </MrtHeading>
           <MrtTripSummary
             :time-range="legTimeRange(store.inbound)"
             :route="`${store.toTitle} → ${store.fromTitle}`"
             :date="dateText"
           />
-        </article>
+        </MrtSummaryCard>
       </div>
 
       <MrtPriceTable
