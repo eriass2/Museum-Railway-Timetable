@@ -78,10 +78,3 @@ function MRT_csv_run_import( array $package ): array {
 	}
 	return $stats;
 }
-
-/**
- * Default Lennakatten fixture path.
- */
-function MRT_csv_lennakatten_fixture_path(): string {
-	return MRT_PATH . 'testdata/fixtures/lennakatten';
-}

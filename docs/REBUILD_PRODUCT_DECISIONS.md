@@ -54,7 +54,7 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 
 ## 6. Buss Selknä* ↔ Fjällnora* (reseplanerare)
 
-**Beslut:** Modellera som **egen bussrutt** (`Selknä – Fjällnora` / retur) med turer typ `Buss` i importen (`reference-data.php`).
+**Beslut:** Modellera som **egen bussrutt** (`Selknä – Fjällnora` / retur) med turer typ `Buss` i Lennakatten CSV-fixturen (`testdata/fixtures/lennakatten/`).
 
 Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 

@@ -44,7 +44,6 @@ Fullständigt index: **[README.md](README.md)**.
 | `composer plugin-check` | `php scripts/validate.php` – filer, syntax, ABSPATH, text domain |
 | `composer test` | PHPUnit |
 | `composer csv:validate -- <path>` | Validera CSV-paket utan WordPress |
-| `composer csv:fixture` | Generera om Lennakatten-fixturen |
 | `composer test:js` | Node-baserade JS-tester för delade assets |
 | `composer phpstan` / `phpcs` / `lint` | Statisk analys + WPCS |
 

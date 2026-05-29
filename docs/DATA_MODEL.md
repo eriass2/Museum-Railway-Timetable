@@ -14,7 +14,7 @@ This document describes all data objects in the Museum Railway Timetable plugin 
 | Routes & stations | `inc/domain/route/routes.php`, `inc/domain/station/stations.php` |
 | Timetable overview grid | `inc/domain/timetable/view/` |
 | Journey search & prices | `inc/domain/journey/`, `inc/domain/pricing/prices.php` |
-| Lennakatten import | `inc/import/lennakatten/`, admin UI `inc/admin/tools/import-lennakatten.php` |
+| Lennakatten import | `testdata/fixtures/lennakatten/`, `inc/import/csv/`, admin UI `inc/admin/tools/import-lennakatten.php` |
 
 ## Overview
 

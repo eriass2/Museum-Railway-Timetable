@@ -8,6 +8,8 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
+require_once MRT_PATH . 'inc/import/csv/fixture-read.php';
+
 /** Option key for stored demo page post ID */
 define( 'MRT_OPTION_COMPONENTS_DEMO_PAGE_ID', 'mrt_components_demo_page_id' );
 
@@ -54,7 +56,8 @@ add_action( 'admin_init', 'MRT_redirect_components_demo_admin_canonical_url', 0 
  * @return string
  */
 function MRT_demo_lennakatten_timetable_title() {
-	return 'GRÖN TIDTABELL 2026';
+	$title = MRT_csv_fixture_timetable_title( 'green' );
+	return $title !== '' ? $title : 'GRÖN TIDTABELL 2026';
 }
 
 /**
@@ -93,7 +96,7 @@ function MRT_demo_mockup_caption( $label ) {
  * @return string HTML
  */
 function MRT_get_components_demo_journey_test_data_html() {
-	$dates     = function_exists( 'MRT_import_get_timetable_dates' ) ? MRT_import_get_timetable_dates() : array();
+	$dates     = MRT_csv_fixture_green_dates();
 	$example   = ! empty( $dates[0] ) ? $dates[0] : '2026-05-30';
 	$date_list = ! empty( $dates ) ? implode( ', ', array_slice( $dates, 0, 5 ) ) : $example;
 	if ( count( $dates ) > 5 ) {
