@@ -67,6 +67,70 @@ function MRT_journey_transfer_station_priority( int $station_id ): int {
 }
 
 /**
+ * Station IDs that are route termini (start/end); cached per request.
+ *
+ * @return array<int, true>
+ */
+function MRT_journey_route_terminus_station_ids(): array {
+	static $ids = null;
+	if ( is_array( $ids ) ) {
+		return $ids;
+	}
+	$ids    = array();
+	$routes = get_posts(
+		array(
+			'post_type'      => 'mrt_route',
+			'posts_per_page' => -1,
+			'post_status'    => 'publish',
+			'fields'         => 'ids',
+		)
+	);
+	foreach ( $routes as $route_id ) {
+		MRT_journey_register_route_terminus_ids( $ids, (int) $route_id );
+	}
+	return $ids;
+}
+
+/**
+ * @param array<int, true> $ids
+ */
+function MRT_journey_register_route_terminus_ids( array &$ids, int $route_id ): void {
+	$ends = MRT_get_route_end_stations( $route_id );
+	foreach ( array( 'start', 'end' ) as $key ) {
+		$station_id = (int) ( $ends[ $key ] ?? 0 );
+		if ( $station_id > 0 ) {
+			$ids[ $station_id ] = true;
+		}
+	}
+	$stations = MRT_get_route_stations( $route_id );
+	if ( $stations === array() ) {
+		return;
+	}
+	$ids[ (int) reset( $stations ) ] = true;
+	$ids[ (int) end( $stations ) ]     = true;
+}
+
+/**
+ * Whether passengers may change trains at this station in journey search.
+ */
+function MRT_journey_station_allows_transfer( int $station_id ): bool {
+	if ( $station_id <= 0 ) {
+		return false;
+	}
+	if ( get_post_meta( $station_id, 'mrt_station_bus_suffix', true ) === '1' ) {
+		return true;
+	}
+	$custom = get_post_meta( $station_id, 'mrt_transfer_priority', true );
+	if ( $custom !== '' && $custom !== false && is_numeric( $custom ) ) {
+		return true;
+	}
+	if ( isset( MRT_journey_route_terminus_station_ids()[ $station_id ] ) ) {
+		return true;
+	}
+	return (bool) apply_filters( 'mrt_journey_station_allows_transfer', false, $station_id );
+}
+
+/**
  * Compare two transfer candidates for stable sort (priority, wait, departure).
  *
  * @param array{priority: int, wait: int, departure: string} $a

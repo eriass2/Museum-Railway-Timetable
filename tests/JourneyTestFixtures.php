@@ -167,6 +167,14 @@ trait MRT_Journey_Test_Fixture {
 		unset( $GLOBALS['mrt_test_post_meta'], $GLOBALS['mrt_test_get_posts'] );
 	}
 
+	protected function mrt_hub_station_meta( int ...$station_ids ): array {
+		$meta = array();
+		foreach ( $station_ids as $station_id ) {
+			$meta[ (int) $station_id ] = array( 'mrt_transfer_priority' => '10' );
+		}
+		return $meta;
+	}
+
 	protected function mrt_stop( int $service_id, int $station_id, int $sequence, ?string $arrival, ?string $departure ): array {
 		return array(
 			'service_post_id' => $service_id,

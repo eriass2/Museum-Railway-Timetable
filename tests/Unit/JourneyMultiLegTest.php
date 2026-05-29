@@ -120,7 +120,7 @@ final class JourneyMultiLegTest extends TestCase {
     }
 
     public function test_find_multi_leg_returns_transfer_at_shared_station(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('10:10'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('10:10'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
@@ -131,7 +131,7 @@ final class JourneyMultiLegTest extends TestCase {
     }
 
     public function test_find_multi_leg_rejects_transfer_before_minimum_time(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('10:04'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('10:04'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
@@ -139,7 +139,7 @@ final class JourneyMultiLegTest extends TestCase {
     }
 
     public function test_find_multi_leg_accepts_transfer_at_minimum_time(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('10:05'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('10:05'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
@@ -197,7 +197,7 @@ final class JourneyMultiLegTest extends TestCase {
     }
 
     public function test_find_multi_leg_rejects_transfer_above_max_wait(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('12:30'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('12:30'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
@@ -230,8 +230,56 @@ final class JourneyMultiLegTest extends TestCase {
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
-        self::assertGreaterThanOrEqual(2, count($results));
+        self::assertCount(1, $results);
         self::assertSame($hub, $results[0]['transfer_station_id']);
+    }
+
+    public function test_find_multi_leg_skips_transfer_at_non_hub_intermediate_stop(): void {
+        $mid = 252;
+        $this->mrt_use_journey_fixture(
+            array(
+                11 => array(
+                    $this->mrt_stop( 11, self::A, 1, null, '09:00' ),
+                    $this->mrt_stop( 11, $mid, 2, '09:30', null ),
+                    $this->mrt_stop( 11, self::B, 3, '10:30', null ),
+                ),
+                22 => array(
+                    $this->mrt_stop( 22, $mid, 1, null, '09:45' ),
+                    $this->mrt_stop( 22, self::B, 2, '10:00', null ),
+                ),
+            ),
+            array( 900 => array( self::DATE ) )
+        );
+
+        $results = MRT_find_multi_leg_connections( self::A, self::B, self::DATE, 5, false );
+
+        self::assertSame( array(), $results );
+    }
+
+    public function test_find_multi_leg_allows_transfer_at_marked_hub_stop(): void {
+        $mid = 252;
+        $this->mrt_use_journey_fixture(
+            array(
+                11 => array(
+                    $this->mrt_stop( 11, self::A, 1, null, '09:00' ),
+                    $this->mrt_stop( 11, $mid, 2, '09:30', null ),
+                    $this->mrt_stop( 11, self::B, 3, '10:30', null ),
+                ),
+                22 => array(
+                    $this->mrt_stop( 22, $mid, 1, null, '09:45' ),
+                    $this->mrt_stop( 22, self::B, 2, '10:00', null ),
+                ),
+            ),
+            array( 900 => array( self::DATE ) ),
+            array(),
+            $this->mrt_hub_station_meta( $mid )
+        );
+
+        $results = MRT_find_multi_leg_connections( self::A, self::B, self::DATE, 5, false );
+
+        self::assertCount( 1, $results );
+        self::assertSame( 'transfer', $results[0]['connection_type'] );
+        self::assertSame( $mid, $results[0]['transfer_station_id'] );
     }
 
     public function test_journey_calendar_month_marks_ok_traffic_without_match_and_none(): void {

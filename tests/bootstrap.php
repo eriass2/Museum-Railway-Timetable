@@ -51,6 +51,7 @@ if (!function_exists('__')) {
     }
 }
 
+require_once ABSPATH . 'inc/infrastructure/wordpress/plugin-settings.php';
 require_once ABSPATH . 'inc/bootstrap/domain.php';
 MRT_load_domain_modules();
 require_once ABSPATH . 'inc/infrastructure/ajax/journey-parse.php';

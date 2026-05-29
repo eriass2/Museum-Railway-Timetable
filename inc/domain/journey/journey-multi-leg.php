@@ -177,6 +177,9 @@ function MRT_journey_collect_transfer_at_stop(
 	if ( $xfer_id === (int) $to_station_id ) {
 		return;
 	}
+	if ( ! MRT_journey_station_allows_transfer( $xfer_id ) ) {
+		return;
+	}
 	$xfer_arr = MRT_stop_effective_arrival( $stop_row );
 	if ( $xfer_arr === '' || ! MRT_validate_time_hhmm( $xfer_arr ) ) {
 		return;

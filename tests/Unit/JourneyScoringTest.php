@@ -60,7 +60,7 @@ final class JourneyScoringTest extends TestCase {
         );
     }
 
-    public function test_sort_outbound_orders_by_score(): void {
+    public function test_sort_outbound_orders_by_departure(): void {
         $connections = array(
             $this->connection('08:00', '10:30', 'direct'),
             $this->connection('09:00', '10:05', 'transfer', 5),
@@ -132,7 +132,7 @@ final class JourneyScoringTest extends TestCase {
     }
 
     public function test_transfer_without_direct_is_not_penalized_in_sort(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('10:20'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('10:20'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_journey_find_normalized_connections(self::A, self::B, self::DATE);
 

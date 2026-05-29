@@ -165,4 +165,52 @@ final class JourneyNormalizeTest extends TestCase {
         self::assertSame('Test Service', $out['service_name']);
     }
 
+    public function test_filter_wizard_drops_transfer_when_direct_same_departure(): void {
+        $connections = array(
+            array(
+                'connection_type' => 'direct',
+                'from_departure' => '10:03',
+                'to_arrival' => '11:10',
+                'departure' => '10:03',
+                'arrival' => '11:10',
+            ),
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '10:03',
+                'to_arrival' => '11:54',
+                'departure' => '10:03',
+                'arrival' => '11:54',
+            ),
+        );
+
+        $filtered = MRT_journey_filter_wizard_connections( $connections );
+
+        self::assertCount( 1, $filtered );
+        self::assertSame( 'direct', $filtered[0]['connection_type'] );
+    }
+
+    public function test_filter_wizard_keeps_fastest_transfer_per_departure(): void {
+        $connections = array(
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '09:14',
+                'to_arrival' => '11:54',
+                'departure' => '09:14',
+                'arrival' => '11:54',
+            ),
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '09:14',
+                'to_arrival' => '11:10',
+                'departure' => '09:14',
+                'arrival' => '11:10',
+            ),
+        );
+
+        $filtered = MRT_journey_filter_wizard_connections( $connections );
+
+        self::assertCount( 1, $filtered );
+        self::assertSame( '11:10', $filtered[0]['to_arrival'] );
+    }
+
 }

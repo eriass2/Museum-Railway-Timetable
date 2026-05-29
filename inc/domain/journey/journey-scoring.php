@@ -193,18 +193,12 @@ function MRT_journey_score_return_connection(
 }
 
 /**
- * Compare two outbound connections for descending score sort.
+ * Compare two outbound connections: earlier departure first.
  *
  * @param array<string, mixed> $a Normalized API connection
  * @param array<string, mixed> $b Normalized API connection
  */
-function MRT_journey_compare_outbound_connections( array $a, array $b, bool $has_direct ): int {
-	$score_a = MRT_journey_score_outbound_connection( $a, $has_direct );
-	$score_b = MRT_journey_score_outbound_connection( $b, $has_direct );
-	$cmp     = MRT_journey_compare_nullable_scores( $score_a, $score_b );
-	if ( $cmp !== 0 ) {
-		return $cmp;
-	}
+function MRT_journey_compare_outbound_connections( array $a, array $b ): int {
 	return MRT_journey_compare_departure_tie_break( $a, $b );
 }
 
@@ -270,7 +264,9 @@ function MRT_journey_compare_departure_tie_break( array $a, array $b ): int {
 }
 
 /**
- * Sort outbound connections by score (best first).
+ * Sort outbound connections by departure time (earliest first).
+ *
+ * Search already filters invalid transfers and wait times; scoring is not used for order.
  *
  * @param array<int, array<string, mixed>> $connections Normalized API connections
  * @return array<int, array<string, mixed>>
@@ -284,11 +280,11 @@ function MRT_journey_sort_outbound_connections(
 	if ( $connections === array() ) {
 		return $connections;
 	}
-	$has_direct = MRT_journey_search_has_direct_connections( $from_station_id, $to_station_id, $dateYmd );
+	unset( $from_station_id, $to_station_id, $dateYmd );
 	usort(
 		$connections,
-		static function ( array $a, array $b ) use ( $has_direct ): int {
-			return MRT_journey_compare_outbound_connections( $a, $b, $has_direct );
+		static function ( array $a, array $b ): int {
+			return MRT_journey_compare_outbound_connections( $a, $b );
 		}
 	);
 	return $connections;

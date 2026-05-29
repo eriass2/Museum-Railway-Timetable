@@ -122,6 +122,7 @@ function MRT_find_return_connections(
 		(int) $from_station_id,
 		$earliest
 	);
+	$normalized = MRT_journey_filter_wizard_connections( $normalized );
 	return MRT_journey_sort_return_connections(
 		$normalized,
 		(int) $to_station_id,

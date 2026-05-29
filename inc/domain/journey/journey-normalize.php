@@ -230,6 +230,67 @@ function MRT_normalize_connection_for_api( $item, $dateYmd, $from_station_id, $t
 }
 
 /**
+ * Reduce wizard results: hub transfers only, drop redundant options.
+ *
+ * @param array<int, array<string, mixed>> $connections Normalized API connections
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_journey_filter_wizard_connections( array $connections ): array {
+	if ( $connections === array() ) {
+		return $connections;
+	}
+	$directs     = array();
+	$transfers   = array();
+	$direct_deps = array();
+	foreach ( $connections as $conn ) {
+		if ( (string) ( $conn['connection_type'] ?? '' ) === 'direct' ) {
+			$directs[] = $conn;
+			$dep       = MRT_journey_normalized_departure_hhmm( $conn );
+			if ( $dep !== '' ) {
+				$direct_deps[ $dep ] = true;
+			}
+			continue;
+		}
+		$transfers[] = $conn;
+	}
+	$kept = MRT_journey_filter_transfer_connections( $transfers, $direct_deps );
+	$out  = array_merge( $directs, $kept );
+	return (array) apply_filters( 'mrt_journey_wizard_connections', $out, $connections );
+}
+
+/**
+ * @param array<int, array<string, mixed>> $transfers
+ * @param array<string, true>              $direct_deps
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_journey_filter_transfer_connections( array $transfers, array $direct_deps ): array {
+	$kept        = array();
+	$best_by_dep = array();
+	foreach ( $transfers as $conn ) {
+		$dep = MRT_journey_normalized_departure_hhmm( $conn );
+		if ( $dep !== '' && isset( $direct_deps[ $dep ] ) ) {
+			continue;
+		}
+		$arr = MRT_journey_normalized_arrival_hhmm( $conn );
+		if ( $dep === '' || $arr === '' ) {
+			$kept[] = $conn;
+			continue;
+		}
+		if ( ! isset( $best_by_dep[ $dep ] ) ) {
+			$best_by_dep[ $dep ] = count( $kept );
+			$kept[]              = $conn;
+			continue;
+		}
+		$idx     = $best_by_dep[ $dep ];
+		$current = $kept[ $idx ];
+		if ( MRT_compare_hhmm( $arr, MRT_journey_normalized_arrival_hhmm( $current ) ) < 0 ) {
+			$kept[ $idx ] = $conn;
+		}
+	}
+	return $kept;
+}
+
+/**
  * One-way journey search: normalized API connections for wizard AJAX.
  *
  * @return array<int, array<string, mixed>>
@@ -252,6 +313,8 @@ function MRT_journey_find_normalized_connections( int $from_station_id, int $to_
 			$to_station_id
 		);
 	}
+
+	$normalized = MRT_journey_filter_wizard_connections( $normalized );
 
 	return MRT_journey_sort_outbound_connections(
 		$normalized,
