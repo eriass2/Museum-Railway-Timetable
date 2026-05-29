@@ -8,6 +8,5 @@
 @import '@mrt-assets/frontend-public.css';
 @import '@mrt-assets/frontend/ui-components.css';
 /* Timetable overview: frontend/vue/src/styles/timetable-overview.css (via MrtTimetableOverviewView). */
-/* Legacy assets/frontend/overview-*.css — wp-admin preview only. */
-@import '@mrt-assets/journey-wizard.css';
+/* Journey wizard: frontend/vue/src/styles/journey-wizard.css (via JourneyWizardApp). */
 @import './vue-shell.css';

@@ -3,6 +3,7 @@ import { computed, nextTick, onMounted, provide, ref, watch } from 'vue';
 import MrtAlert from '../components/ui/MrtAlert.vue';
 import MrtStepProgress from '../components/ui/MrtStepProgress.vue';
 import { applyWizardDebugPreset } from '../wizard/composables/useWizardDebug';
+import '../styles/journey-wizard.css';
 import type { WizardVueConfig } from '../config/types';
 import { createWizardStore } from '../wizard/store/createWizardStore';
 import { wizardKey } from '../wizard/injection';
