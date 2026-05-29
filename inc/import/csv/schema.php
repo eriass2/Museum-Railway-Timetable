@@ -83,6 +83,53 @@ function MRT_csv_required_columns(): array {
 }
 
 /**
+ * Full CSV column headers for export (matches Lennakatten fixture layout).
+ *
+ * @return array<string, array<int, string>>
+ */
+function MRT_csv_export_column_headers(): array {
+	return array(
+		'stations.csv'            => array(
+			'station_code',
+			'name',
+			'station_type',
+			'display_order',
+			'bus_stop_marker',
+			'lat',
+			'lng',
+		),
+		'train_types.csv'         => array( 'slug', 'name', 'icon_file' ),
+		'routes.csv'              => array( 'route_code', 'title', 'start_station_code', 'end_station_code' ),
+		'route_stations.csv'      => array( 'route_code', 'sequence', 'station_code' ),
+		'timetables.csv'          => array( 'timetable_code', 'title', 'colour_type' ),
+		'timetable_dates.csv'     => array( 'timetable_code', 'date' ),
+		'services.csv'            => array(
+			'service_code',
+			'timetable_code',
+			'route_code',
+			'service_number',
+			'end_station_code',
+			'title',
+			'highlight_label',
+			'highlight_color',
+			'highlight_note',
+		),
+		'service_train_types.csv' => array( 'service_code', 'train_type_slug' ),
+		'stoptimes.csv'           => array(
+			'service_code',
+			'sequence',
+			'station_code',
+			'arrival_time',
+			'departure_time',
+			'pickup_allowed',
+			'dropoff_allowed',
+		),
+		'settings.csv'            => array( 'key', 'value' ),
+		'prices.csv'              => array( 'ticket_type', 'category', 'zone', 'amount_sek' ),
+	);
+}
+
+/**
  * Post meta keys for stable CSV codes.
  *
  * @return array<string, string>

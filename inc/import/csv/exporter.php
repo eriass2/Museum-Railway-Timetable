@@ -48,9 +48,7 @@ function MRT_csv_export_package( string $target_dir, array $options = array() ) 
 	if ( ! MRT_csv_write_manifest( $target_dir, $manifest ) ) {
 		return new WP_Error( 'mrt_csv_export', 'Could not write manifest.' );
 	}
-	$headers = MRT_csv_required_columns();
-	$headers['settings.csv'] = array( 'key', 'value' );
-	$headers['prices.csv']   = array( 'ticket_type', 'category', 'zone', 'amount_sek' );
+	$headers = MRT_csv_export_column_headers();
 	foreach ( $tables as $file => $rows ) {
 		if ( ! MRT_csv_write_file( trailingslashit( $target_dir ) . $file, $headers[ $file ], $rows ) ) {
 			return new WP_Error( 'mrt_csv_export', "Could not write {$file}." );
