@@ -167,7 +167,6 @@ echo "\n7. Checking CSS files...\n";
 $css_files = [
     'assets/train-type-icons.css',
     'assets/frontend-public.css',
-    'assets/frontend-overview.css',
     'assets/journey-wizard.css',
     'assets/admin.css',
 ];

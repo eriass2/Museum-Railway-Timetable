@@ -172,7 +172,6 @@ function MRT_frontend_shortcode_flags_from_post(): array {
 	if ( $flags['has_journey_wizard'] ) {
 		$flags['has_overview'] = true;
 	}
-	$flags['has_overview'] = (bool) apply_filters( 'mrt_should_enqueue_frontend_overview_css', $flags['has_overview'] );
 	return $flags;
 }
 
@@ -227,32 +226,6 @@ function MRT_enqueue_frontend_public_styles(): string {
 		MRT_VERSION
 	);
 	return 'mrt-frontend-public';
-}
-
-/**
- * Timetable overview grid styles (overview shortcode and wizard timetable drawer).
- */
-function MRT_enqueue_frontend_overview_styles( string $public_handle ): void {
-	$a = MRT_assets_base_url();
-	wp_enqueue_style(
-		'mrt-frontend-overview',
-		$a . 'frontend-overview.css',
-		array( $public_handle ),
-		MRT_VERSION
-	);
-}
-
-/**
- * Enqueue stacked frontend CSS (shared shortcode bundle).
- *
- * @return string Public bundle handle for dependent styles (e.g. wizard).
- */
-function MRT_enqueue_frontend_shortcode_styles( bool $has_overview_shortcode ): string {
-	$public_handle = MRT_enqueue_frontend_public_styles();
-	if ( $has_overview_shortcode ) {
-		MRT_enqueue_frontend_overview_styles( $public_handle );
-	}
-	return $public_handle;
 }
 
 /**
