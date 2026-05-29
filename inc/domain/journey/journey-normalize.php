@@ -253,7 +253,7 @@ function MRT_journey_filter_wizard_connections( array $connections ): array {
 		}
 		$transfers[] = $conn;
 	}
-	$kept = MRT_journey_filter_transfer_connections( $transfers, $direct_deps );
+	$kept = MRT_journey_filter_transfer_connections( $transfers, $direct_deps, $directs );
 	$out  = array_merge( $directs, $kept );
 	return (array) apply_filters( 'mrt_journey_wizard_connections', $out, $connections );
 }
@@ -261,11 +261,13 @@ function MRT_journey_filter_wizard_connections( array $connections ): array {
 /**
  * @param array<int, array<string, mixed>> $transfers
  * @param array<string, true>              $direct_deps
+ * @param array<int, array<string, mixed>> $directs
  * @return array<int, array<string, mixed>>
  */
-function MRT_journey_filter_transfer_connections( array $transfers, array $direct_deps ): array {
-	$kept        = array();
-	$best_by_dep = array();
+function MRT_journey_filter_transfer_connections( array $transfers, array $direct_deps, array $directs ): array {
+	$earliest_direct = MRT_journey_earliest_departure_hhmm( $directs );
+	$kept            = array();
+	$best_by_dep     = array();
 	foreach ( $transfers as $conn ) {
 		$dep = MRT_journey_normalized_departure_hhmm( $conn );
 		if ( $dep !== '' && isset( $direct_deps[ $dep ] ) ) {
@@ -287,7 +289,66 @@ function MRT_journey_filter_transfer_connections( array $transfers, array $direc
 			$kept[ $idx ] = $conn;
 		}
 	}
-	return $kept;
+	return array_values(
+		array_filter(
+			$kept,
+			static function ( array $conn ) use ( $directs, $earliest_direct ): bool {
+				return ! MRT_journey_transfer_dominated_by_direct( $conn, $directs, $earliest_direct );
+			}
+		)
+	);
+}
+
+/**
+ * Earliest direct departure HH:MM, or empty when none.
+ *
+ * @param array<int, array<string, mixed>> $directs
+ */
+function MRT_journey_earliest_departure_hhmm( array $directs ): string {
+	$earliest = '';
+	foreach ( $directs as $direct ) {
+		$dep = MRT_journey_normalized_departure_hhmm( $direct );
+		if ( $dep === '' ) {
+			continue;
+		}
+		if ( $earliest === '' || MRT_compare_hhmm( $dep, $earliest ) < 0 ) {
+			$earliest = $dep;
+		}
+	}
+	return $earliest;
+}
+
+/**
+ * Transfer is redundant when a direct arrives same or earlier after a later departure.
+ */
+function MRT_journey_transfer_dominated_by_direct(
+	array $transfer,
+	array $directs,
+	string $earliest_direct_dep
+): bool {
+	$t_dep = MRT_journey_normalized_departure_hhmm( $transfer );
+	$t_arr = MRT_journey_normalized_arrival_hhmm( $transfer );
+	if ( $t_dep === '' || $t_arr === '' ) {
+		return false;
+	}
+	if ( $earliest_direct_dep !== '' && MRT_compare_hhmm( $t_dep, $earliest_direct_dep ) < 0 ) {
+		return false;
+	}
+	foreach ( $directs as $direct ) {
+		$d_dep = MRT_journey_normalized_departure_hhmm( $direct );
+		$d_arr = MRT_journey_normalized_arrival_hhmm( $direct );
+		if ( $d_dep === '' || $d_arr === '' ) {
+			continue;
+		}
+		if ( MRT_compare_hhmm( $d_arr, $t_arr ) > 0 ) {
+			continue;
+		}
+		if ( MRT_compare_hhmm( $d_dep, $t_dep ) <= 0 ) {
+			continue;
+		}
+		return true;
+	}
+	return false;
 }
 
 /**

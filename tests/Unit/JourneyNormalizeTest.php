@@ -213,4 +213,62 @@ final class JourneyNormalizeTest extends TestCase {
         self::assertSame( '11:10', $filtered[0]['to_arrival'] );
     }
 
+    public function test_filter_wizard_drops_transfer_when_direct_reaches_same_arrival_later(): void {
+        $connections = array(
+            array(
+                'connection_type' => 'direct',
+                'from_departure' => '10:03',
+                'to_arrival' => '11:10',
+                'departure' => '10:03',
+                'arrival' => '11:10',
+            ),
+            array(
+                'connection_type' => 'direct',
+                'from_departure' => '14:13',
+                'to_arrival' => '15:31',
+                'departure' => '14:13',
+                'arrival' => '15:31',
+            ),
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '13:36',
+                'to_arrival' => '15:31',
+                'departure' => '13:36',
+                'arrival' => '15:31',
+            ),
+        );
+
+        $filtered = MRT_journey_filter_wizard_connections( $connections );
+
+        self::assertCount( 2, $filtered );
+        $types = array_column( $filtered, 'connection_type' );
+        self::assertSame( array( 'direct', 'direct' ), $types );
+    }
+
+    public function test_filter_wizard_keeps_transfer_before_first_direct(): void {
+        $connections = array(
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '09:14',
+                'to_arrival' => '11:10',
+                'departure' => '09:14',
+                'arrival' => '11:10',
+            ),
+            array(
+                'connection_type' => 'direct',
+                'from_departure' => '10:03',
+                'to_arrival' => '11:10',
+                'departure' => '10:03',
+                'arrival' => '11:10',
+            ),
+        );
+
+        $filtered = MRT_journey_filter_wizard_connections( $connections );
+
+        self::assertCount( 2, $filtered );
+        $types = array_column( $filtered, 'connection_type' );
+        self::assertContains( 'transfer', $types );
+        self::assertContains( 'direct', $types );
+    }
+
 }
