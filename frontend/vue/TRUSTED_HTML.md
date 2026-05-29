@@ -17,4 +17,4 @@ Do not add new `v-html` bindings without updating this file and a security revie
 
 ## PHP HTML
 
-Timetable **HTML** renderers (`MRT_render_timetable_*`) are for **wp-admin preview** only, not public AJAX.
+Timetable HTML renderers have been removed; admin and public both use Vue + JSON (`MRT_get_timetable_overview_data`).
