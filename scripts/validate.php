@@ -167,7 +167,7 @@ echo "\n7. Checking CSS files...\n";
 $css_files = [
     'assets/train-type-icons.css',
     'assets/frontend-public.css',
-    'assets/journey-wizard.css',
+    'frontend/vue/src/styles/journey-wizard.css',
     'assets/admin.css',
 ];
 foreach ($css_files as $css_file) {

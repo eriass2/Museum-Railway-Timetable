@@ -37,9 +37,9 @@ Write-Host "`n--- HTTP checks ---" -ForegroundColor Cyan
 foreach ($p in $pages) {
     try {
         $r = Invoke-WebRequest -Uri $p.Url -UseBasicParsing -TimeoutSec 20
-        $wizardCss = $r.Content -match 'journey-wizard\.css'
-        $publicCss = $r.Content -match 'frontend-public\.css'
-        Write-Host ("  OK {0} ({1}) wizard-css={2} public-css={3}" -f $p.Name, $r.StatusCode, $wizardCss, $publicCss) -ForegroundColor Green
+        $vueBundle = $r.Content -match 'assets/dist/vue|mrt-vue-public'
+        $vueMount = $r.Content -match 'data-mrt-vue-app'
+        Write-Host ("  OK {0} ({1}) vue-bundle={2} vue-mount={3}" -f $p.Name, $r.StatusCode, $vueBundle, $vueMount) -ForegroundColor Green
     } catch {
         Write-Host ("  FAIL {0}: {1}" -f $p.Name, $_.Exception.Message) -ForegroundColor Red
     }
