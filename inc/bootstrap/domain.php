@@ -33,8 +33,10 @@ function MRT_load_journey_domain_modules(): void {
 function MRT_load_timetable_view_domain_modules(): void {
 	$view_dir = MRT_PATH . 'inc/domain/timetable/view/';
 	require_once $view_dir . 'prepare.php';
-	require_once $view_dir . 'grid.php';
-	require_once $view_dir . 'overview.php';
+	require_once $view_dir . 'group-view.php';
+	require_once $view_dir . 'grid-branch.php';
+	require_once $view_dir . 'grid-connections.php';
+	require_once $view_dir . 'grid-merge.php';
 	require_once $view_dir . 'overview-data.php';
 }
 

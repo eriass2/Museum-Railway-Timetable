@@ -63,7 +63,15 @@ function MRT_timetable_branch_junction_station_id( array $rail_group, array $bra
 	$rail_ids   = array_map( 'intval', (array) ( $rail_group['stations'] ?? array() ) );
 	$branch_ids = array_map( 'intval', (array) ( $branch_group['stations'] ?? array() ) );
 	$shared     = array_values( array_intersect( $rail_ids, $branch_ids ) );
-	return $shared !== array() ? (int) $shared[0] : 0;
+	if ( $shared === array() ) {
+		return 0;
+	}
+	foreach ( $shared as $station_id ) {
+		if ( get_post_meta( $station_id, 'mrt_station_bus_suffix', true ) === '1' ) {
+			return (int) $station_id;
+		}
+	}
+	return (int) $shared[0];
 }
 
 /**
@@ -345,6 +353,33 @@ function MRT_build_rail_bus_connection_data( array $rail_group, array $branch_gr
 		'train_to_bus'     => $train_to_bus,
 		'bus_to_train'     => $bus_to_train,
 	);
+}
+
+/**
+ * @param array<string, mixed> $connection_data
+ * @return array<int, array{service_number: string, time_display: string, destination: string}>
+ */
+function MRT_connection_buses_for_train_number( array $connection_data, string $train_number ): array {
+	foreach ( $connection_data['train_to_bus'] as $row ) {
+		if ( (string) $row['train']['service_number'] === $train_number ) {
+			return $row['buses'];
+		}
+	}
+	return array();
+}
+
+/**
+ * @param array{service_number: string, time_display: string, destination: string} $bus
+ */
+function MRT_bus_transfer_detail_line( array $bus ): string {
+	$parts = array();
+	if ( $bus['time_display'] !== '' && $bus['time_display'] !== '—' ) {
+		$parts[] = $bus['time_display'];
+	}
+	if ( ! empty( $bus['destination'] ) ) {
+		$parts[] = '→ ' . $bus['destination'];
+	}
+	return implode( ' ', $parts );
 }
 
 /**

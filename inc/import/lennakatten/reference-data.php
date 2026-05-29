@@ -162,48 +162,48 @@ function MRT_import_get_yellow_services_in(): array {
  */
 function MRT_import_get_green_bus_services_out(): array {
 	return array(
-		array( 'B1', 'Buss', array( array( 11, 52 ), array( 12, 0 ) ), array( 'P', 'X' ) ),
-		array( 'B2', 'Buss', array( array( 13, 42 ), array( 13, 50 ) ), array( 'P', 'X' ) ),
-		array( 'B3', 'Buss', array( array( 15, 8 ), array( 15, 16 ) ), array( 'P', 'X' ) ),
-		array( 'B4', 'Buss', array( array( 18, 58 ), array( 19, 6 ) ), array( 'P', 'X' ) ),
+		array( 'B1', 'Buss', array( array( 11, 52 ), array( 12, 0 ), array( 12, 28 ) ), array( 'P', 'X', 'X' ) ),
+		array( 'B2', 'Buss', array( array( 13, 42 ), array( 13, 50 ), array( 14, 18 ) ), array( 'P', 'X', 'X' ) ),
+		array( 'B3', 'Buss', array( array( 15, 8 ), array( 15, 16 ), array( 15, 44 ) ), array( 'P', 'X', 'X' ) ),
+		array( 'B4', 'Buss', array( array( 18, 58 ), array( 19, 6 ), array( 19, 34 ) ), array( 'P', 'X', 'X' ) ),
 	);
 }
 
 /**
- * Bus shuttle Fjällnora* → Selknä* (GRÖN).
+ * Bus shuttle Uppsala Östra → Fjällnora* → Selknä* (GRÖN).
  *
  * @return array<int, array<int, mixed>>
  */
 function MRT_import_get_green_bus_services_in(): array {
 	return array(
-		array( 'B5', 'Buss', array( array( 11, 32 ), array( 11, 40 ) ), array( 'P', 'X' ) ),
-		array( 'B6', 'Buss', array( array( 13, 22 ), array( 13, 30 ) ), array( 'P', 'X' ) ),
-		array( 'B7', 'Buss', array( array( 14, 48 ), array( 14, 56 ) ), array( 'P', 'X' ) ),
-		array( 'B8', 'Buss', array( array( 17, 38 ), array( 17, 46 ) ), array( 'P', 'X' ) ),
+		array( 'B5', 'Buss', array( array( 11, 5 ), array( 11, 32 ), array( 11, 40 ) ), array( 'P', 'X', 'X' ) ),
+		array( 'B6', 'Buss', array( array( 12, 55 ), array( 13, 22 ), array( 13, 30 ) ), array( 'P', 'X', 'X' ) ),
+		array( 'B7', 'Buss', array( array( 14, 21 ), array( 14, 48 ), array( 14, 56 ) ), array( 'P', 'X', 'X' ) ),
+		array( 'B8', 'Buss', array( array( 17, 11 ), array( 17, 38 ), array( 17, 46 ) ), array( 'P', 'X', 'X' ) ),
 	);
 }
 
 /**
- * Bus shuttle Selknä* → Fjällnora* (GUL fredagar).
+ * Bus shuttle Selknä* → Fjällnora* → Uppsala Östra (GUL fredagar).
  *
  * @return array<int, array<int, mixed>>
  */
 function MRT_import_get_yellow_bus_services_out(): array {
 	return array(
-		array( 'B1', 'Buss', array( array( 17, 22 ), array( 17, 30 ) ), array( 'P', 'X' ) ),
-		array( 'B2', 'Buss', array( array( 22, 14 ), array( 22, 22 ) ), array( 'P', 'X' ) ),
+		array( 'B1', 'Buss', array( array( 17, 22 ), array( 17, 30 ), array( 17, 58 ) ), array( 'P', 'X', 'X' ) ),
+		array( 'B2', 'Buss', array( array( 22, 14 ), array( 22, 22 ), array( 22, 50 ) ), array( 'P', 'X', 'X' ) ),
 	);
 }
 
 /**
- * Bus shuttle Fjällnora* → Selknä* (GUL fredagar).
+ * Bus shuttle Uppsala Östra → Fjällnora* → Selknä* (GUL fredagar).
  *
  * @return array<int, array<int, mixed>>
  */
 function MRT_import_get_yellow_bus_services_in(): array {
 	return array(
-		array( 'B3', 'Buss', array( array( 17, 0 ), array( 17, 8 ) ), array( 'P', 'X' ) ),
-		array( 'B4', 'Buss', array( array( 21, 52 ), array( 22, 0 ) ), array( 'P', 'X' ) ),
+		array( 'B3', 'Buss', array( array( 16, 33 ), array( 17, 0 ), array( 17, 8 ) ), array( 'P', 'X', 'X' ) ),
+		array( 'B4', 'Buss', array( array( 21, 25 ), array( 21, 52 ), array( 22, 0 ) ), array( 'P', 'X', 'X' ) ),
 	);
 }
 

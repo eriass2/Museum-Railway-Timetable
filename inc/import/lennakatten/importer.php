@@ -133,12 +133,13 @@ function MRT_import_create_routes( $station_ids ) {
 			array(
 				$station_ids['Selknä'] ?? 0,
 				$station_ids['Fjällnora'] ?? 0,
+				$station_ids['Uppsala Östra'] ?? 0,
 			)
 		)
 	);
 	$bus_rev_station_ids = array_reverse( $bus_station_ids );
-	$bus_route_id        = MRT_import_ensure_route( 'Selknä – Fjällnora', $bus_station_ids );
-	$bus_route_rev_id    = MRT_import_ensure_route( 'Fjällnora – Selknä', $bus_rev_station_ids );
+	$bus_route_id        = MRT_import_ensure_route( 'Selknä – Uppsala Östra', $bus_station_ids );
+	$bus_route_rev_id    = MRT_import_ensure_route( 'Uppsala Östra – Selknä', $bus_rev_station_ids );
 
 	return array(
 		'rail' => array(
@@ -244,10 +245,10 @@ function MRT_import_create_definition_services( array $definition, array $routes
 	$bus_out = (array) ( $definition['bus_services_out'] ?? array() );
 	$bus_in  = (array) ( $definition['bus_services_in'] ?? array() );
 	if ( $bus_out !== array() && $bus['out_id'] > 0 ) {
-		$created += MRT_import_create_services_for_direction( $bus_out, 'Selknä – Fjällnora', $bus['out_id'], $bus['out_stations'], $station_ids['Fjällnora'] ?? 0, $timetable_id, $train_type_ids );
+		$created += MRT_import_create_services_for_direction( $bus_out, 'Selknä – Uppsala Östra', $bus['out_id'], $bus['out_stations'], $station_ids['Uppsala Östra'] ?? 0, $timetable_id, $train_type_ids );
 	}
 	if ( $bus_in !== array() && $bus['in_id'] > 0 ) {
-		$created += MRT_import_create_services_for_direction( $bus_in, 'Fjällnora – Selknä', $bus['in_id'], $bus['in_stations'], $station_ids['Selknä'] ?? 0, $timetable_id, $train_type_ids );
+		$created += MRT_import_create_services_for_direction( $bus_in, 'Uppsala Östra – Selknä', $bus['in_id'], $bus['in_stations'], $station_ids['Selknä'] ?? 0, $timetable_id, $train_type_ids );
 	}
 
 	return $created;

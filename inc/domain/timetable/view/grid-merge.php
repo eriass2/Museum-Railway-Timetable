@@ -68,7 +68,7 @@ function MRT_timetable_find_main_group_for_branch( array $grouped_services, arra
 		}
 
 		$branch_start = $branch_station_ids[0] ?? 0;
-		$branch_end   = $branch_station_ids[1] ?? 0;
+		$branch_end   = (int) ( $branch_station_ids[ count( $branch_station_ids ) - 1 ] ?? 0 );
 		if ( ! in_array( $branch_start, $main_stations, true ) && ! in_array( $branch_end, $main_stations, true ) ) {
 			continue;
 		}

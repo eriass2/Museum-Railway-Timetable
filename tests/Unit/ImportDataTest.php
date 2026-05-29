@@ -48,4 +48,19 @@ final class ImportDataTest extends TestCase {
 		self::assertCount( 2, $definitions['yellow']['services_out'] );
 		self::assertCount( 2, $definitions['yellow']['services_in'] );
 	}
+
+	public function test_bus_services_have_three_stops_through_uppsala(): void {
+		$bus_sets = array(
+			MRT_import_get_green_bus_services_out(),
+			MRT_import_get_green_bus_services_in(),
+			MRT_import_get_yellow_bus_services_out(),
+			MRT_import_get_yellow_bus_services_in(),
+		);
+		foreach ( $bus_sets as $services ) {
+			foreach ( $services as $service ) {
+				self::assertCount( 3, $service[2], 'Each bus trip needs Selknä, Fjällnora, and Uppsala Östra.' );
+				self::assertCount( 3, $service[3], 'Each bus trip needs one stop symbol per station.' );
+			}
+		}
+	}
 }

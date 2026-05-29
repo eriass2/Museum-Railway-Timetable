@@ -55,6 +55,7 @@ export type TimetableBranchTrip = {
   trip: string;
   fromTime: string;
   toTime: string;
+  midTime?: string;
   connectingTrains: { serviceNumber: string; timeDisplay: string }[];
 };
 
@@ -63,6 +64,7 @@ export type TimetableBranchGroup = {
   routeLabel: string;
   fromLabel: string;
   toLabel: string;
+  midLabel?: string;
   trips: TimetableBranchTrip[];
 };
 

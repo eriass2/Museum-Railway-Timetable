@@ -22,6 +22,7 @@ defineProps<{
         <tr>
           <th>Tur</th>
           <th>{{ group.fromLabel }}</th>
+          <th v-if="group.midLabel">{{ group.midLabel }}</th>
           <th>{{ group.toLabel }}</th>
           <th>Anslutande tåg</th>
         </tr>
@@ -30,6 +31,7 @@ defineProps<{
         <tr v-for="trip in group.trips" :key="trip.trip">
           <th scope="row">{{ trip.trip }}</th>
           <td>{{ trip.fromTime }}</td>
+          <td v-if="group.midLabel">{{ trip.midTime || '—' }}</td>
           <td>{{ trip.toTime }}</td>
           <td>
             <template v-if="trip.connectingTrains.length">
