@@ -5,6 +5,7 @@ import http from 'node:http';
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { buildSampleOverviewPayload } from './fixtures/sample-overview-payload.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(root, '../../assets/dist/vue');
@@ -211,21 +212,9 @@ async function handleAjaxPost(req, res, requestUrl) {
     return;
   }
 
-  const emptyOverview = {
-    scope: 'timetable',
-    timetableId: 1,
-    title: 'E2E',
-    dateYmd: '2026-05-25',
-    timetableType: 'green',
-    typeBanner: { label: 'GRÖN TIDTABELL' },
-    printKey: [],
-    iconUrls: {},
-    groups: [],
-  };
-
-  let data = { overview: emptyOverview };
+  let data = { overview: buildSampleOverviewPayload('timetable') };
   if (action === 'mrt_get_timetable_for_date') {
-    data = { overview: { ...emptyOverview, scope: 'day', title: 'Tidtabell för vald dag' } };
+    data = { overview: buildSampleOverviewPayload('day') };
   }
 
   res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
