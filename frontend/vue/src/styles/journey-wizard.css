@@ -1,13 +1,13 @@
 /**
- * Journey wizard styles (Vue-owned entry; sources in assets/journey-wizard/).
+ * Journey wizard styles (Vue-owned).
  *
  * @package Museum_Railway_Timetable
  */
 
-@import '@mrt-assets/journey-wizard/base.css';
-@import '@mrt-assets/journey-wizard/wizard-shell.css';
-@import '@mrt-assets/journey-wizard/controls-calendar.css';
-@import '@mrt-assets/journey-wizard/trips-detail-summary.css';
-@import '@mrt-assets/journey-wizard/steps-outbound-return.css';
-@import '@mrt-assets/journey-wizard/steps-summary.css';
-@import '@mrt-assets/journey-wizard/responsive.css';
+@import './journey-wizard/base.css';
+@import './journey-wizard/wizard-shell.css';
+@import './journey-wizard/controls-calendar.css';
+@import './journey-wizard/trips-detail-summary.css';
+@import './journey-wizard/steps-outbound-return.css';
+@import './journey-wizard/steps-summary.css';
+@import './journey-wizard/responsive.css';
