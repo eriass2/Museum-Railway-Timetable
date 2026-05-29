@@ -10,7 +10,8 @@ Timetable codes in the CSV package:
 
 | Code | Meaning |
 |------|---------|
-| `green` | GRÖN rail services |
+| `green` | GRÖN rail – Saturdays |
+| `green-vard` | GRÖN rail – Wed/Thu summer (see `Gron-tdt-buss-vard.pdf`) |
 | `green-buss` | GRÖN Fjällnora connection buses (Jul–Aug) |
 | `yellow` / `yellow-buss` | GUL rail / connection buses |
 | `red` / `orange` | RÖD Sundays / ORANGE extra Friday trains |

@@ -21,20 +21,21 @@ CSV-fixturen (`testdata/fixtures/lennakatten/`) importerar **GRÖN** (tåg), **G
 
 | Fixture-kod | PDF-motsvarighet |
 |---------------|------------------|
-| `green` | GRÖN tidtabell – tåg (lördagar + sommar-ons/tors) |
-| `green-buss` | Blå anslutningsbussar (Fjällnora) 1/7–16/8 på gröna dagar |
+| `green` | GRÖN tidtabell – **lördagar** (`Gron-tidtabell-lor.pdf` / blad A) |
+| `green-vard` | GRÖN tidtabell – **onsdagar och torsdagar** 1/7–6/8 (`Gron-tdt-buss-vard.pdf`, blad B) |
+| `green-buss` | Anslutningsbussar Fjällnora 1/7–16/8 (på gröna dagar i fönstret) |
 | `yellow` | GUL tidtabell – fredagar |
 | `yellow-buss` | Gul anslutningsbuss på fredagar i samma sommarfönster |
 | `red` | RÖD tidtabell – söndagar 5/7–16/8 |
 | `orange` | ORANGE tidtabell – extra tåg fre 3/7–7/8 (utöver GUL) |
 
-`Gron-tdt-buss-vard.pdf` (buss ersätter tåg vardag) är **inte** en egen tidtabell i fixturen ännu – den skiljer sig från sommar-anslutningsbussarna.
+På **ons/tors** gäller `green-vard` (tåg) tillsammans med `green-buss` när anslutningar kör – samma innehåll som `Gron-tdt-buss-vard.pdf`. Lördagar utan buss använder bara `green`; lördagar med buss använder `green` + `green-buss`.
 
 ## Detaljtidtabeller (tidigare referenser)
 
 | Fil | Beskrivning |
 |-----|-------------|
-| `Gron-tdt-buss-vard.pdf` | Grön tidtabell, buss ersätter tåg vardag |
+| `Gron-tdt-buss-vard.pdf` | Grön tidtabell, ons/tors sommar (med bussanslutningar; blad B) |
 | `Gron-tidtabell-lor.pdf` | Grön tidtabell, lördag |
 | `Gul-tidtabell-fre.pdf` | Gul tidtabell, fredag |
 | `Tidtabellsboken-del-B.pdf` | Tidtabellsboken del B |

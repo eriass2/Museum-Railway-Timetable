@@ -58,22 +58,40 @@ final class CsvFixtureTest extends TestCase {
 	public function test_green_timetable_dates_match_anslagstidtabell_2026(): void {
 		$dates = MRT_csv_fixture_timetable_dates( 'green' );
 
-		self::assertCount( 24, $dates );
+		self::assertCount( 12, $dates );
 		self::assertSame( '2026-05-30', $dates[0] );
 		self::assertNotContains( '2026-05-31', $dates );
+		self::assertNotContains( '2026-07-01', $dates );
 		self::assertNotContains( '2026-06-20', $dates );
 		self::assertNotContains( '2026-09-12', $dates );
-		self::assertContains( '2026-07-01', $dates );
-		self::assertContains( '2026-08-06', $dates );
 		self::assertSame( '2026-09-26', $dates[ count( $dates ) - 1 ] );
+	}
+
+	public function test_green_vard_timetable_dates_match_buss_vard_pdf(): void {
+		$dates = MRT_csv_fixture_timetable_dates( 'green-vard' );
+
+		self::assertCount( 12, $dates );
+		self::assertSame( '2026-07-01', $dates[0] );
+		self::assertSame( '2026-08-06', $dates[ count( $dates ) - 1 ] );
+	}
+
+	public function test_green_vard_rail_services_mirror_green(): void {
+		$green = $this->fixture_services( 'green', 'uppsala-faringe' );
+		$vard  = $this->fixture_services( 'green-vard', 'uppsala-faringe' );
+		self::assertCount( count( $green ), $vard );
+		self::assertSame(
+			array_column( $green, 'service_number' ),
+			array_column( $vard, 'service_number' )
+		);
 	}
 
 	public function test_timetable_titles_in_fixture(): void {
 		$files = $this->fixture_files();
 		$titles = array_column( $files['timetables.csv'] ?? array(), 'title', 'timetable_code' );
-		self::assertSame( 'GRÖN TIDTABELL 2026', $titles['green'] ?? '' );
+		self::assertStringContainsString( 'GRÖN TIDTABELL 2026', $titles['green'] ?? '' );
+		self::assertStringContainsString( 'ons/tors', $titles['green-vard'] ?? '' );
 		self::assertSame( 'GUL TIDTABELL 2026', $titles['yellow'] ?? '' );
-		self::assertSame( 'GRÖN TIDTABELL 2026', MRT_csv_fixture_timetable_title( 'green' ) );
+		self::assertStringContainsString( 'GRÖN TIDTABELL 2026', MRT_csv_fixture_timetable_title( 'green' ) );
 	}
 
 	public function test_yellow_rail_services_are_railbus(): void {

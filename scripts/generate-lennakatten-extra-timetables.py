@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate red/orange + green-buss/yellow-buss rows for Lennakatten CSV fixture."""
+"""Generate Lennakatten fixture rows (red/orange, green-vard clone, bus split)."""
 
 from __future__ import annotations
 
@@ -98,6 +98,47 @@ def build_rail_block(prefix: str, timetable: str, out_map: dict, in_map: dict, t
     return services, stoptimes, train_types
 
 
+def clone_green_rail_to_vard(
+    services: list[str],
+    stoptimes: list[str],
+    train_types: list[str],
+) -> tuple[list[str], list[str], list[str]]:
+    """Duplicate green rail services for green-vard (Wed/Thu summer)."""
+    new_svc: list[str] = []
+    new_st: list[str] = []
+    new_tt: list[str] = []
+    code_map: dict[str, str] = {}
+
+    for line in services:
+        if not line.strip() or line.startswith("service_code"):
+            continue
+        parts = line.split(",")
+        code, timetable = parts[0], parts[1]
+        if timetable != "green" or "-bus-" in code:
+            continue
+        new_code = "green-vard-" + code.removeprefix("green-")
+        code_map[code] = new_code
+        parts[0] = new_code
+        parts[1] = "green-vard"
+        new_svc.append(",".join(parts))
+
+    for line in stoptimes:
+        if not line.strip() or line.startswith("service_code"):
+            continue
+        code, rest = line.split(",", 1)
+        if code in code_map:
+            new_st.append(f"{code_map[code]},{rest}")
+
+    for line in train_types:
+        if not line.strip() or line.startswith("service_code"):
+            continue
+        code, train_type = line.split(",", 1)
+        if code in code_map:
+            new_tt.append(f"{code_map[code]},{train_type}")
+
+    return new_svc, new_st, new_tt
+
+
 def main() -> None:
     services_path = ROOT / "services.csv"
     stoptimes_path = ROOT / "stoptimes.csv"
@@ -127,7 +168,7 @@ def main() -> None:
         if timetable == "yellow" and "-bus-" in code:
             kept_services.append(line.replace(",yellow,", ",yellow-buss,", 1))
             continue
-        if timetable in ("red", "orange"):
+        if timetable in ("red", "orange", "green-vard"):
             continue
         kept_services.append(line)
 
@@ -135,7 +176,7 @@ def main() -> None:
         if not line.strip():
             continue
         code = line.split(",", 1)[0]
-        if code.startswith("red-") or code.startswith("orange-"):
+        if code.startswith("red-") or code.startswith("orange-") or code.startswith("green-vard-"):
             continue
         kept_stoptimes.append(line)
 
@@ -143,17 +184,32 @@ def main() -> None:
         if not line.strip():
             continue
         code = line.split(",", 1)[0]
-        if code.startswith("red-") or code.startswith("orange-"):
+        if code.startswith("red-") or code.startswith("orange-") or code.startswith("green-vard-"):
             continue
         kept_train_types.append(line)
 
+    vard_svc, vard_st, vard_tt = clone_green_rail_to_vard(
+        kept_services, kept_stoptimes, kept_train_types
+    )
     red_svc, red_st, red_tt = build_rail_block("red", "red", RED_OUT, RED_IN, RED_TRAIN_TYPES)
     ora_svc, ora_st, ora_tt = build_rail_block("orange", "orange", ORANGE_OUT, ORANGE_IN, {n: "angtag" for n in list(ORANGE_OUT) + list(ORANGE_IN)})
 
-    services_path.write_text("\n".join(kept_services + red_svc + ora_svc) + "\n", encoding="utf-8")
-    stoptimes_path.write_text("\n".join(kept_stoptimes + red_st + ora_st) + "\n", encoding="utf-8")
-    train_types_path.write_text("\n".join(kept_train_types + red_tt + ora_tt) + "\n", encoding="utf-8")
-    print("Updated services, stoptimes, service_train_types")
+    services_path.write_text(
+        "\n".join(kept_services + vard_svc + red_svc + ora_svc) + "\n",
+        encoding="utf-8",
+    )
+    stoptimes_path.write_text(
+        "\n".join(kept_stoptimes + vard_st + red_st + ora_st) + "\n",
+        encoding="utf-8",
+    )
+    train_types_path.write_text(
+        "\n".join(kept_train_types + vard_tt + red_tt + ora_tt) + "\n",
+        encoding="utf-8",
+    )
+    print(
+        f"Updated fixture: +{len(vard_svc)} green-vard services, "
+        f"+{len(red_svc)} red, +{len(ora_svc)} orange"
+    )
 
 
 if __name__ == "__main__":

@@ -26,6 +26,17 @@ yellow-b1-bus-out,buss
 yellow-b2-bus-out,buss
 yellow-b3-bus-in,buss
 yellow-b4-bus-in,buss
+green-vard-71-out,angtag
+green-vard-93-out,ralsbuss
+green-vard-75-out,angtag
+green-vard-63-out,dieseltag
+green-vard-65-out,dieseltag
+green-vard-79-out,ang-diesel
+green-vard-70-in,angtag
+green-vard-60-in,dieseltag
+green-vard-62-in,dieseltag
+green-vard-96-in,ralsbuss
+green-vard-78-in,ang-diesel
 red-81-out,angtag
 red-91-out,ralsbuss
 red-83-out,angtag
