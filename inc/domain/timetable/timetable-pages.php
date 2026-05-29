@@ -52,6 +52,48 @@ function MRT_timetable_public_label( WP_Post $timetable ): string {
 }
 
 /**
+ * Traffic-day count and date span for index cards.
+ */
+function MRT_timetable_traffic_days_summary( int $timetable_id ): string {
+	$dates = MRT_get_timetable_dates( $timetable_id );
+	if ( $dates === array() ) {
+		return '';
+	}
+	sort( $dates );
+	$count = count( $dates );
+	$count_label = sprintf(
+		/* translators: %d: number of traffic days */
+		_n( '%d traffic day', '%d traffic days', $count, 'museum-railway-timetable' ),
+		$count
+	);
+	$first = date_i18n( get_option( 'date_format' ), strtotime( $dates[0] ) );
+	if ( $count === 1 ) {
+		return $count_label . ' · ' . $first;
+	}
+	$last = date_i18n( get_option( 'date_format' ), strtotime( $dates[ $count - 1 ] ) );
+	if ( $first === $last ) {
+		return $count_label . ' · ' . $first;
+	}
+	return $count_label . ' · ' . $first . ' – ' . $last;
+}
+
+/**
+ * Color modifier for index cards (green / yellow timetables).
+ */
+function MRT_timetable_index_color_modifier( int $timetable_id ): string {
+	$code = strtolower( (string) get_post_meta( $timetable_id, 'mrt_timetable_code', true ) );
+	$title = strtolower( get_the_title( $timetable_id ) );
+	$haystack = $code . ' ' . $title;
+	if ( str_contains( $haystack, 'green' ) || str_contains( $haystack, 'grön' ) || str_contains( $haystack, 'gron' ) ) {
+		return 'green';
+	}
+	if ( str_contains( $haystack, 'yellow' ) || str_contains( $haystack, 'gul' ) ) {
+		return 'yellow';
+	}
+	return '';
+}
+
+/**
  * URL slug for a single-timetable public page.
  */
 function MRT_timetable_public_page_slug( int $timetable_id, string $title ): string {
@@ -206,6 +248,11 @@ function MRT_sync_timetable_public_pages() {
 		MRT_append_timetables_index_to_nav_menu( (int) $index );
 	}
 
+	MRT_set_timetables_index_as_front_page( (int) $index );
+	if ( MRT_is_development_mode() ) {
+		MRT_remove_wordpress_starter_content();
+	}
+
 	return array(
 		'index_page_id'       => (int) $index,
 		'timetable_page_ids'  => $timetable_page_ids,
@@ -229,5 +276,39 @@ function MRT_clear_timetable_public_pages(): void {
 			wp_delete_post( $page_id, true );
 		}
 		delete_post_meta( (int) $timetable->ID, MRT_META_TIMETABLE_PAGE_ID );
+	}
+}
+
+/**
+ * Use the Tidtabeller index as the site front page.
+ */
+function MRT_set_timetables_index_as_front_page( int $index_page_id ): void {
+	if ( $index_page_id <= 0 || ! get_post( $index_page_id ) ) {
+		return;
+	}
+	update_option( 'show_on_front', 'page' );
+	update_option( 'page_on_front', $index_page_id );
+	update_option( 'page_for_posts', 0 );
+}
+
+/**
+ * Remove default WordPress posts/pages after a fresh install (development).
+ */
+function MRT_remove_wordpress_starter_content(): void {
+	$hello = get_posts(
+		array(
+			'post_type'      => 'post',
+			'name'           => 'hello-world',
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+		)
+	);
+	if ( isset( $hello[0] ) ) {
+		wp_delete_post( (int) $hello[0], true );
+	}
+
+	$sample = get_page_by_path( 'sample-page' );
+	if ( $sample instanceof WP_Post ) {
+		wp_delete_post( (int) $sample->ID, true );
 	}
 }

@@ -47,6 +47,19 @@ Gamla planner smoke-sidor (om de fanns) tas bort vid setup.
 
 Block-tema med enbart Site Editor-navigation kan kräva manuell länk tills vidare.
 
+## Publika tidtabellssidor
+
+Vid import/dev-reset synkas WordPress-sidor automatiskt:
+
+| Sida | Slug | Shortcode |
+|------|------|-----------|
+| **Tidtabeller** (index) | `tidtabeller` | `[museum_timetable_index]` |
+| En per publicerad tidtabell | `tidtabell-{kod}` | `[museum_timetable_overview timetable_id="…"]` |
+
+**Tidtabeller** sätts som sajtens **statiska startsida** (`page_on_front`). I utvecklingsläge tas WordPress standardinnehåll bort (Hello world, Sample Page).
+
+Menyn får en länk till index om dev-meny är uppsatt. Synka manuellt: `MRT_sync_timetable_public_pages()` (kräver admin; använd `MRT_dev_cli_set_admin_user()` i WP-CLI).
+
 ## Live / produktion (alltid tillgängligt)
 
 | Funktion | Kommentar |
@@ -77,11 +90,14 @@ Linux/macOS: `./scripts/docker-dev-reset.sh`
 
 Kräver `WP_DEBUG` eller `MRT_DEVELOPMENT` (Docker har `WORDPRESS_DEBUG=1`).
 
+WordPress i Docker är på **svenska** (`sv_SE`). Vid `docker compose up` installeras språkpaketet automatiskt; `docker-dev-reset` säkerställer locale även på befintliga volymer.
+
 ## Röktest efter setup
 
 1. Kör `docker-dev-reset.ps1` **eller** manuellt: meny-knapp + import  
-2. Öppna front-sidan – menyn ska visa **Component demo** och **Wizard smoke test** (inga Debug:-länkar)  
-3. **Component demo** – scrolla igenom alla tre block  
+2. Öppna **http://localhost:8080/** – startsidan ska vara **Tidtabeller** (inte bloggen Hello world)  
+3. Front-menyn ska visa **Component demo** och **Wizard smoke test** (inga Debug:-länkar)  
+4. **Component demo** – scrolla igenom alla tre block  
 
 Se [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md).
 

@@ -90,6 +90,30 @@ if (!function_exists('sanitize_key')) {
     }
 }
 
+if (!function_exists('_n')) {
+    /**
+     * @param string $single
+     * @param string $plural
+     * @param int    $number
+     * @param string $domain
+     */
+    function _n($single, $plural, $number, $domain = 'default') {
+        unset($domain);
+        return $number === 1 ? $single : $plural;
+    }
+}
+
+if (!function_exists('date_i18n')) {
+    /**
+     * @param string   $format
+     * @param int|bool $timestamp
+     */
+    function date_i18n($format, $timestamp = false) {
+        $ts = $timestamp === false ? time() : (int) $timestamp;
+        return date($format, $ts);
+    }
+}
+
 if (!function_exists('get_the_title')) {
     /**
      * @param int|WP_Post $post
@@ -133,6 +157,24 @@ if (!function_exists('get_option')) {
         }
 
         return $default;
+    }
+}
+
+if (!function_exists('update_option')) {
+    /**
+     * Test storage via $GLOBALS['mrt_test_options'][ option_name ]
+     *
+     * @param string $option
+     * @param mixed  $value
+     * @return bool
+     */
+    function update_option($option, $value) {
+        if (!isset($GLOBALS['mrt_test_options']) || !is_array($GLOBALS['mrt_test_options'])) {
+            $GLOBALS['mrt_test_options'] = [];
+        }
+        $GLOBALS['mrt_test_options'][$option] = $value;
+
+        return true;
     }
 }
 

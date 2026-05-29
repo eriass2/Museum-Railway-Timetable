@@ -149,6 +149,8 @@ Default admin login:
 - Username: `admin`
 - Password: `admin`
 
+Docker dev uses **Swedish** (`sv_SE`) for WordPress core and the admin user. Fresh installs get this automatically; on an existing volume run `docker compose run --rm wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh`.
+
 The repository is mounted into WordPress at:
 
 ```text

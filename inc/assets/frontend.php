@@ -182,9 +182,10 @@ function MRT_frontend_shortcode_flags_from_post(): array {
  */
 function MRT_empty_frontend_shortcode_flags(): array {
 	return array(
-		'has_any'            => false,
-		'has_overview'       => false,
-		'has_journey_wizard' => false,
+		'has_any'             => false,
+		'has_overview'        => false,
+		'has_journey_wizard'  => false,
+		'has_timetable_index' => false,
 	);
 }
 
@@ -195,9 +196,13 @@ function MRT_empty_frontend_shortcode_flags(): array {
  */
 function MRT_frontend_shortcode_flags_from_content( string $content ): array {
 	$flags      = MRT_empty_frontend_shortcode_flags();
-	$shortcodes = array( 'museum_timetable_month', 'museum_timetable_overview', 'museum_journey_wizard' );
+	$shortcodes = array( 'museum_timetable_month', 'museum_timetable_overview', 'museum_journey_wizard', 'museum_timetable_index' );
 	foreach ( $shortcodes as $shortcode ) {
 		if ( ! has_shortcode( $content, $shortcode ) ) {
+			continue;
+		}
+		if ( $shortcode === 'museum_timetable_index' ) {
+			$flags['has_timetable_index'] = true;
 			continue;
 		}
 		$flags['has_any'] = true;
@@ -229,6 +234,47 @@ function MRT_enqueue_frontend_public_styles(): string {
 }
 
 /**
+ * Styles for [museum_timetable_index] (PHP-only shortcode).
+ */
+function MRT_enqueue_timetable_index_styles(): void {
+	$a = MRT_assets_base_url();
+	wp_enqueue_style(
+		'mrt-color-tokens',
+		$a . 'mrt-color-tokens.css',
+		array(),
+		MRT_VERSION
+	);
+	wp_enqueue_style(
+		'mrt-frontend-base',
+		$a . 'frontend/components-base.css',
+		array( 'mrt-color-tokens' ),
+		MRT_VERSION
+	);
+	wp_enqueue_style(
+		'mrt-public-layout',
+		$a . 'frontend/public-layout.css',
+		array(),
+		MRT_VERSION
+	);
+	wp_enqueue_style(
+		'mrt-timetable-index',
+		$a . 'frontend/timetable-index.css',
+		array( 'mrt-color-tokens', 'mrt-frontend-base' ),
+		MRT_VERSION
+	);
+}
+
+/**
+ * Enqueue index styles once per request.
+ */
+function MRT_enqueue_timetable_index_styles_if_needed(): void {
+	if ( wp_style_is( 'mrt-timetable-index', 'enqueued' ) || wp_style_is( 'mrt-timetable-index', 'done' ) ) {
+		return;
+	}
+	MRT_enqueue_timetable_index_styles();
+}
+
+/**
  * Localized strings for the Vue public frontend (AJAX).
  *
  * @return array<string, string>
@@ -252,6 +298,9 @@ function MRT_frontend_script_localization(): array {
  */
 function MRT_enqueue_frontend_assets(): void {
 	$flags = MRT_frontend_shortcode_flags_from_post();
+	if ( $flags['has_timetable_index'] ) {
+		MRT_enqueue_timetable_index_styles_if_needed();
+	}
 	if ( $flags['has_any'] ) {
 		MRT_enqueue_vue_frontend_assets_if_needed();
 	}
@@ -264,6 +313,9 @@ function MRT_enqueue_frontend_assets_late(): void {
 	if ( MRT_vue_shortcode_was_used() ) {
 		MRT_enqueue_vue_frontend_assets_if_needed();
 	}
+	if ( function_exists( 'MRT_timetable_index_was_used' ) && MRT_timetable_index_was_used() ) {
+		MRT_enqueue_timetable_index_styles_if_needed();
+	}
 }
 /**
  * Widen theme content area on pages that use plugin shortcodes.
@@ -273,7 +325,7 @@ function MRT_enqueue_frontend_assets_late(): void {
  */
 function MRT_frontend_body_class( array $classes ): array {
 	$flags = MRT_frontend_shortcode_flags_from_post();
-	if ( $flags['has_any'] ) {
+	if ( $flags['has_any'] || $flags['has_timetable_index'] ) {
 		$classes[] = 'mrt-has-shortcodes';
 	}
 	return $classes;

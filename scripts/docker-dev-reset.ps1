@@ -30,6 +30,11 @@ $vueExit = $LASTEXITCODE
 $ErrorActionPreference = $prevEap
 if ($vueExit -ne 0) { exit $vueExit }
 
+Write-Host "`n--- Swedish locale (sv_SE) ---" -ForegroundColor Cyan
+$ErrorActionPreference = 'Continue'
+docker compose run --rm wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh 2>&1 | ForEach-Object { Write-Host $_ }
+$ErrorActionPreference = 'Stop'
+
 Write-Host "`n--- Enable WP_DEBUG + Vue frontend (experiment) ---" -ForegroundColor Cyan
 $ErrorActionPreference = 'Continue'
 docker compose run --rm --user root wordpress-init wp --allow-root config set WP_DEBUG true --raw 2>&1 | ForEach-Object { Write-Host $_ }

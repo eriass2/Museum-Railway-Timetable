@@ -29,4 +29,14 @@ final class TimetablePagesTest extends TestCase {
 		self::assertSame( 'tidtabell-green', MRT_timetable_public_page_slug( 7, 'GRÖN TIDTABELL 2026' ) );
 		unset( $GLOBALS['mrt_test_post_meta'] );
 	}
+
+	public function test_set_timetables_index_as_front_page_updates_options(): void {
+		$GLOBALS['mrt_test_posts']   = array( 99 => (object) array( 'ID' => 99 ) );
+		$GLOBALS['mrt_test_options'] = array();
+		MRT_set_timetables_index_as_front_page( 99 );
+		self::assertSame( 'page', get_option( 'show_on_front' ) );
+		self::assertSame( 99, (int) get_option( 'page_on_front' ) );
+		self::assertSame( 0, (int) get_option( 'page_for_posts' ) );
+		unset( $GLOBALS['mrt_test_posts'], $GLOBALS['mrt_test_options'] );
+	}
 }

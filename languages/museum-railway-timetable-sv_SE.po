@@ -210,9 +210,9 @@ msgstr ""
 
 #: inc/admin/dashboard/dashboard-guide.php:27
 #: inc/admin/dashboard/dashboard-stats.php:21 inc/admin/menu.php:18
-#: inc/admin/menu.php:19
+#: inc/admin/menu.php:19 inc/public/timetable-index/shortcode.php
 msgid "Timetables"
-msgstr ""
+msgstr "Tidtabeller"
 
 #: inc/admin/dashboard/dashboard-guide.php:27
 msgid "Create timetables and add dates (YYYY-MM-DD) when they apply"
@@ -1927,3 +1927,21 @@ msgstr "Tidtabell för vald dag"
 #: inc/public/timetable-overview/shortcode.php:36
 msgid "Timetable not found."
 msgstr ""
+
+#: inc/domain/timetable/timetable-pages.php
+msgid "%d traffic day"
+msgid_plural "%d traffic days"
+msgstr[0] "%d trafikdag"
+msgstr[1] "%d trafikdagar"
+
+#: inc/public/timetable-index/shortcode.php
+msgid "No timetables are published yet."
+msgstr "Inga tidtabeller är publicerade ännu."
+
+#: inc/public/timetable-index/shortcode.php
+msgid "Choose a timetable to see departures and traffic days."
+msgstr "Välj en tidtabell för att se avgångar och trafikdagar."
+
+#: inc/public/timetable-index/shortcode.php
+msgid "View timetable"
+msgstr "Visa tidtabell"
