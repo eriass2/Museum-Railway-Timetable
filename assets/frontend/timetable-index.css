@@ -76,6 +76,14 @@
   background: var(--mrt-color-accent-600, #e0b820);
 }
 
+.mrt-timetable-index__item--red .mrt-timetable-index__swatch {
+  background: #b42318;
+}
+
+.mrt-timetable-index__item--orange .mrt-timetable-index__swatch {
+  background: var(--mrt-color-orange-600, #c9740c);
+}
+
 .mrt-timetable-index__body {
   display: flex;
   flex-direction: column;

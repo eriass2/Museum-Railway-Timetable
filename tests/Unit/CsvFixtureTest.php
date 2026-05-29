@@ -55,6 +55,19 @@ final class CsvFixtureTest extends TestCase {
 		self::assertSame( '2026-09-25', $dates[ count( $dates ) - 1 ] );
 	}
 
+	public function test_green_timetable_dates_match_anslagstidtabell_2026(): void {
+		$dates = MRT_csv_fixture_timetable_dates( 'green' );
+
+		self::assertCount( 24, $dates );
+		self::assertSame( '2026-05-30', $dates[0] );
+		self::assertNotContains( '2026-05-31', $dates );
+		self::assertNotContains( '2026-06-20', $dates );
+		self::assertNotContains( '2026-09-12', $dates );
+		self::assertContains( '2026-07-01', $dates );
+		self::assertContains( '2026-08-06', $dates );
+		self::assertSame( '2026-09-26', $dates[ count( $dates ) - 1 ] );
+	}
+
 	public function test_timetable_titles_in_fixture(): void {
 		$files = $this->fixture_files();
 		$titles = array_column( $files['timetables.csv'] ?? array(), 'title', 'timetable_code' );
@@ -85,13 +98,35 @@ final class CsvFixtureTest extends TestCase {
 
 	public function test_bus_services_have_three_stops_through_uppsala(): void {
 		$bus_routes = array( 'selkna-uppsala-ostra', 'uppsala-ostra-selkna' );
-		foreach ( array( 'green', 'yellow' ) as $tt ) {
+		foreach ( array( 'green-buss', 'yellow-buss' ) as $tt ) {
 			foreach ( $bus_routes as $route ) {
 				foreach ( $this->fixture_services( $tt, $route ) as $row ) {
 					self::assertSame( 3, $this->fixture_stoptime_count( $row['service_code'] ) );
 				}
 			}
 		}
+	}
+
+	public function test_red_timetable_dates_match_anslagstidtabell_2026(): void {
+		$dates = MRT_csv_fixture_timetable_dates( 'red' );
+		self::assertCount( 7, $dates );
+		self::assertSame( '2026-07-05', $dates[0] );
+		self::assertSame( '2026-08-16', $dates[ count( $dates ) - 1 ] );
+	}
+
+	public function test_orange_timetable_dates_match_anslagstidtabell_2026(): void {
+		$dates = MRT_csv_fixture_timetable_dates( 'orange' );
+		self::assertCount( 6, $dates );
+		self::assertSame( '2026-07-03', $dates[0] );
+		self::assertSame( '2026-08-07', $dates[ count( $dates ) - 1 ] );
+	}
+
+	public function test_green_buss_dates_are_summer_connection_window(): void {
+		$dates = MRT_csv_fixture_timetable_dates( 'green-buss' );
+		self::assertCount( 18, $dates );
+		self::assertContains( '2026-07-01', $dates );
+		self::assertContains( '2026-08-15', $dates );
+		self::assertNotContains( '2026-05-30', $dates );
 	}
 
 	/**

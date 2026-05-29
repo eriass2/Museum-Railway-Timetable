@@ -161,6 +161,7 @@ function MRT_timetable_type_banner_text( string $type ): array {
 		'green'  => 'GRÖN TIDTABELL',
 		'red'    => 'RÖD TIDTABELL',
 		'yellow' => 'GUL TIDTABELL',
+		'orange' => 'ORANGE TIDTABELL',
 		'blue'   => 'BLÅ TIDTABELL',
 	);
 	$key    = strtolower( $type );

@@ -90,6 +90,12 @@ function MRT_timetable_index_color_modifier( int $timetable_id ): string {
 	if ( str_contains( $haystack, 'yellow' ) || str_contains( $haystack, 'gul' ) ) {
 		return 'yellow';
 	}
+	if ( str_contains( $haystack, 'orange' ) ) {
+		return 'orange';
+	}
+	if ( str_contains( $haystack, 'red' ) || str_contains( $haystack, 'röd' ) || str_contains( $haystack, 'rod' ) ) {
+		return 'red';
+	}
 	return '';
 }
 
