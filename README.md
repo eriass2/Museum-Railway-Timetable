@@ -173,9 +173,11 @@ Run Composer inside Docker:
 
 ```sh
 docker compose run --rm composer install
-docker compose run --rm composer test
+docker compose --profile tools run --rm php-test vendor/bin/phpunit
 docker compose run --rm composer lint
 ```
+
+Or on Windows: `.\scripts\test.ps1` (auto Docker when local PHP < 8.2).
 
 ### Deploy to Local (WordPress)
 

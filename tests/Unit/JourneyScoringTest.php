@@ -32,13 +32,13 @@ final class JourneyScoringTest extends TestCase {
         );
     }
 
-    public function test_outbound_score_faster_transfer_can_beat_slow_direct(): void {
+    public function test_outbound_score_slow_direct_beats_unnecessary_transfer(): void {
         $slow_direct = $this->connection('08:00', '10:30', 'direct');
         $fast_transfer = $this->connection('09:00', '10:05', 'transfer', 5);
 
         self::assertGreaterThan(
-            MRT_journey_score_outbound_connection($slow_direct, true),
-            MRT_journey_score_outbound_connection($fast_transfer, true)
+            MRT_journey_score_outbound_connection($fast_transfer, true),
+            MRT_journey_score_outbound_connection($slow_direct, true)
         );
     }
 
@@ -47,7 +47,7 @@ final class JourneyScoringTest extends TestCase {
         $with_direct = MRT_journey_score_outbound_connection($transfer, true);
         $without_direct = MRT_journey_score_outbound_connection($transfer, false);
 
-        self::assertSame(80, $without_direct - $with_direct);
+        self::assertSame(100, $without_direct - $with_direct);
     }
 
     public function test_return_score_prefers_departure_near_outbound_arrival(): void {
@@ -70,8 +70,8 @@ final class JourneyScoringTest extends TestCase {
         $sorted = MRT_journey_sort_outbound_connections($connections, self::A, self::B, self::DATE);
 
         self::assertSame('07:00', MRT_journey_normalized_departure_hhmm($sorted[0]));
-        self::assertSame('09:00', MRT_journey_normalized_departure_hhmm($sorted[1]));
-        self::assertSame('08:00', MRT_journey_normalized_departure_hhmm($sorted[2]));
+        self::assertSame('08:00', MRT_journey_normalized_departure_hhmm($sorted[1]));
+        self::assertSame('09:00', MRT_journey_normalized_departure_hhmm($sorted[2]));
     }
 
     public function test_sort_return_orders_early_departure_first(): void {

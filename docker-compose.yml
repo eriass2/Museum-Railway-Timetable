@@ -78,6 +78,17 @@ services:
       - ./:/app
     command: install
 
+  # PHPUnit with PHP 8.2 — matches CI (see scripts/test.ps1).
+  php-test:
+    image: php:8.2-cli
+    profiles:
+      - tools
+    working_dir: /app
+    volumes:
+      - ./:/app
+    entrypoint:
+      - php
+
   vue:
     image: node:22-alpine
     profiles:

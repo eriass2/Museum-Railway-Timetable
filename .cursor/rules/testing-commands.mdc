@@ -1,0 +1,24 @@
+---
+description: Run PHPUnit via Composer or Docker — never invoke vendor/bin/phpunit directly (Windows)
+alwaysApply: true
+---
+
+# Test commands (agents)
+
+On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly opens a "choose app" dialog instead of running tests.
+
+**Never** use `vendor/bin/phpunit` or `vendor\bin\phpunit` in shell commands.
+
+**Always** use one of:
+
+| Context | Command |
+|---------|---------|
+| Recommended (Windows) | `.\scripts\test.ps1` — auto Docker if local PHP &lt; 8.2 |
+| Single test file | `.\scripts\test.ps1 tests/Unit/SomeTest.php` |
+| Local PHP 8.2+ | `composer test` or `composer test -- tests/Unit/SomeTest.php` |
+| Docker (PHP 8.2, CI parity) | `docker compose --profile tools run --rm php-test vendor/bin/phpunit` |
+| Full composer check in Docker | `docker compose --profile tools run --rm composer check` |
+
+`scripts/test.ps1` picks local `composer test` when PHP ≥ 8.2, otherwise `php-test` (php:8.2-cli). Same codebase via volume mount.
+
+See `docs/PHP_INSTALL_WINDOWS.md` and `docs/DEVELOPER.md` for humans.

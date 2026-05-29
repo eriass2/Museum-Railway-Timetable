@@ -18,12 +18,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function MRT_journey_score_default_weights(): array {
 	return array(
-		'outbound_travel'              => 2,
-		'outbound_wait'                => 3,
+		'outbound_travel'              => 1,
+		'outbound_wait'                => 5,
 		'return_after_outbound'        => 3,
 		'return_travel'                => 1,
 		'direct_bonus'                 => 40,
-		'unnecessary_transfer_penalty' => 80,
+		'unnecessary_transfer_penalty' => 100,
 	);
 }
 

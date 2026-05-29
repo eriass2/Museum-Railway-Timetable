@@ -1,26 +1,82 @@
-# Run PHPUnit via Composer (never open vendor/bin/phpunit directly on Windows).
-# Requires: composer install, PHP >= 8.2 locally OR Docker (see below).
+# Run PHPUnit locally (PHP 8.2+) or in Docker php-test (PHP 8.2, CI parity).
+# Never invoke vendor\bin\phpunit directly on Windows.
+param(
+    [Parameter(ValueFromRemainingArguments = $true)]
+    [string[]]$Passthrough
+)
+
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot\..
 
-if (-not (Test-Path vendor)) {
-    Write-Host "Run 'composer install' first (or use Docker below)."
-    exit 1
+function Test-DockerAvailable {
+    & docker info 2>$null | Out-Null
+    return $LASTEXITCODE -eq 0
 }
 
-$phpVersion = & php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" 2>$null
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "PHP not found in PATH. Use Docker:" -ForegroundColor Yellow
-    Write-Host "  docker compose --profile tools run --rm composer test"
-    exit 1
+function Invoke-DockerPhpUnit {
+    param([string[]]$PhpUnitArgs)
+
+    Write-Host "Running PHPUnit in Docker (php:8.2-cli)..." -ForegroundColor Cyan
+    $dockerArgs = @(
+        'compose', '--profile', 'tools', 'run', '--rm', 'php-test',
+        'vendor/bin/phpunit'
+    )
+    if ($PhpUnitArgs.Count -gt 0) {
+        $dockerArgs += $PhpUnitArgs
+    }
+    & docker @dockerArgs
+    exit $LASTEXITCODE
 }
 
-if ([version]$phpVersion -lt [version]"8.2") {
-    Write-Host "Local PHP is $phpVersion; PHPUnit 11 needs PHP 8.2+. Use Docker:" -ForegroundColor Yellow
-    Write-Host "  docker compose --profile tools run --rm composer test"
-    exit 1
+function Ensure-Vendor {
+    if (Test-Path vendor) {
+        return
+    }
+    Write-Host "vendor/ missing." -ForegroundColor Yellow
+    if (-not (Test-DockerAvailable)) {
+        Write-Host "Run 'composer install' or start Docker and retry."
+        exit 1
+    }
+    Write-Host "Installing dependencies via Docker..."
+    & docker compose --profile tools run --rm composer install --no-interaction
+    if ($LASTEXITCODE -ne 0) {
+        exit $LASTEXITCODE
+    }
 }
 
-Write-Host "Running PHPUnit (composer test)..."
-& composer test
+Ensure-Vendor
+
+$useDocker = $false
+$phpVersion = $null
+
+& php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" 2>$null | ForEach-Object { $phpVersion = $_ }
+if ($LASTEXITCODE -ne 0 -or -not $phpVersion) {
+    $useDocker = $true
+} elseif ([version]$phpVersion -lt [version]"8.2") {
+    $useDocker = $true
+}
+
+if ($useDocker) {
+    if (-not (Test-DockerAvailable)) {
+        if ($phpVersion) {
+            Write-Host "Local PHP is $phpVersion; PHPUnit 11 needs PHP 8.2+. Docker is not running." -ForegroundColor Red
+        } else {
+            Write-Host "PHP not in PATH and Docker is not running." -ForegroundColor Red
+        }
+        exit 1
+    }
+    if ($phpVersion) {
+        Write-Host "Local PHP $phpVersion < 8.2 - using Docker." -ForegroundColor Yellow
+    } else {
+        Write-Host "PHP not in PATH - using Docker." -ForegroundColor Yellow
+    }
+    Invoke-DockerPhpUnit -PhpUnitArgs $Passthrough
+}
+
+Write-Host "Running PHPUnit locally (composer test)..."
+if ($Passthrough.Count -gt 0) {
+    & composer test -- @Passthrough
+} else {
+    & composer test
+}
 exit $LASTEXITCODE

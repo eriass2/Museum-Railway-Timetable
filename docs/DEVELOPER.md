@@ -43,6 +43,7 @@ Fullständigt index: **[README.md](README.md)**.
 | `composer check` | Kör lokal snabbkontroll: plugin-check, PHPStan, PHPUnit och JS-tester |
 | `composer plugin-check` | `php scripts/validate.php` – filer, syntax, ABSPATH, text domain |
 | `composer test` | PHPUnit (`php vendor/bin/phpunit` — kör i terminal, öppna inte `vendor\bin\phpunit` direkt på Windows) |
+| `.\scripts\test.ps1` | PHPUnit lokalt (PHP 8.2+) eller auto i Docker `php-test` (PHP 8.2) om lokal PHP saknas/är för gammal |
 | `composer csv:validate -- <path>` | Validera CSV-paket utan WordPress |
 | `composer test:js` | Node-baserade JS-tester för delade assets |
 | `composer phpstan` / `phpcs` / `lint` | Statisk analys + WPCS |
