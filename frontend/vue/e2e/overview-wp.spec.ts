@@ -1,13 +1,17 @@
 import { test, expect } from '@playwright/test';
-
-const wpOverviewUrl = process.env.MRT_E2E_WP_OVERVIEW_URL;
+import { wpDemoUrl } from './wp-demo-url';
 
 test.describe('Timetable overview (WordPress)', () => {
-  test.skip(!wpOverviewUrl, 'Set MRT_E2E_WP_OVERVIEW_URL to a page with the overview shortcode');
+  test.skip(!wpDemoUrl, 'Set MRT_E2E_WP_DEMO_URL (or legacy MRT_E2E_WP_OVERVIEW_URL)');
 
-  test('shortcode mounts overview panel', async ({ page }) => {
-    await page.goto(wpOverviewUrl!);
-    await expect(page.locator('.mrt-vue-overview')).toBeVisible({ timeout: 15_000 });
-    await expect(page.locator('.mrt-vue-overview .mrt-html-panel')).toBeVisible();
+  test('shortcode mounts Vue overview with timetable grid', async ({ page }) => {
+    await page.goto(wpDemoUrl!);
+    const section = page.locator('h2', { hasText: /timetable overview|tidtabellsöversikt/i });
+    if (await section.count()) {
+      await section.first().scrollIntoViewIfNeeded();
+    }
+    const overview = page.locator('.mrt-vue-overview').first();
+    await expect(overview).toBeVisible({ timeout: 20_000 });
+    await expect(overview.locator('.mrt-ov')).toBeVisible({ timeout: 20_000 });
   });
 });

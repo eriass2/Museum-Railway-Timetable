@@ -38,3 +38,16 @@ jobs:
 
       - name: Vue E2E smoke
         run: npm --prefix frontend/vue run e2e
+
+  e2e-wp:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: WordPress E2E (Docker + Playwright)
+        run: bash scripts/ci-e2e-wp.sh
