@@ -17,7 +17,7 @@ Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` �
 
 Se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md). Bygg manuellt: `composer vue:build` eller `docker compose --profile tools run --rm vue`.
 
-Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). Samma kommando körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
+Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). PHPUnit: `composer test` (kräver **PHP 8.2+** via `vendor/bin/phpunit`; på äldre system: `docker compose run --rm composer test`). Samma kedja körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 På denna gren är publikt UI **Vue-only** (jQuery-wizard-moduler är borttagna). `MRT_use_vue_frontend()` finns kvar som filter-hook men alla shortcodes mountar Vue direkt.
 

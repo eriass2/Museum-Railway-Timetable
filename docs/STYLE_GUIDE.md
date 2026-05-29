@@ -84,7 +84,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Primär accent:** `--mrt-color-accent-600` (`#e0b820`) — mättad varmgul för CTA, aktivt steg och vald restyp.
 - **Text på guld:** `--mrt-color-on-accent` (vit), inte mörk text på gul bakgrund.
 - **Vue-bundle:** Wizard-CSS importeras via `frontend/vue/src/styles/mrt-public.css`. Efter ändring i `assets/` eller tokens: kör `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
-- **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i `assets/journey-wizard/steps-route.css`.
+- **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i wizard CSS (`frontend/vue/src/styles/journey-wizard.css`).
 
 ### Exempel
 ```html
@@ -168,8 +168,8 @@ museum-railway-timetable/
 │   └── constants.php
 ├── assets/
 │   ├── admin.css, admin.js, admin-*.js
-│   ├── frontend.js, frontend-public.css, frontend-overview.css
-│   ├── journey-wizard.js, journey-wizard.css, journey-wizard/
+│   ├── frontend.js, frontend-public.css
+│   ├── journey-wizard.js, journey-wizard.css, journey-wizard/  # wizard CSS entry also in frontend/vue/src/styles/
 │   ├── mrt-string-utils.js, mrt-date-utils.js, mrt-frontend-api.js
 │   └── icons/train-types/
 └── languages/

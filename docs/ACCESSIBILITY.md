@@ -26,11 +26,11 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 | Fel | `role="alert"`, `aria-live="assertive"` |
 | Kalender | Region, `aria-busy`, dagknappar med `aria-label` + `aria-pressed` |
 | Tabeller | `caption`, `scope="col"`; dold Actions-kolumn med `.mrt-sr-only` |
-| Fokus | Vid stegbyte fokus på rubrik (`tabindex="-1"`, tas bort vid blur); `:focus-visible` på knappar (se `assets/journey-wizard/base.css`, `steps-outbound-return.css`) |
-| Rörelse | `prefers-reduced-motion` i `assets/journey-wizard/base.css` |
+| Fokus | Vid stegbyte fokus på rubrik (`tabindex="-1"`, tas bort vid blur); `:focus-visible` på knappar (se `frontend/vue/src/styles/journey-wizard.css`) |
+| Rörelse | `prefers-reduced-motion` i wizard base CSS (samma kedja) |
 | Ikoner | Dekorativa `<img alt="">` i resekort; tidtabell i drawer använder samma PNG som översikt |
 
-**Filer:** `inc/public/journey-wizard/` (shell, config), `frontend/vue/src/wizard/components/`, `assets/journey-wizard/*.css` (bundlad i Vite).
+**Filer:** `inc/public/journey-wizard/` (config), `frontend/vue/src/wizard/components/`, `frontend/vue/src/styles/journey-wizard.css`.
 
 ---
 
@@ -38,7 +38,7 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 
 **Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid AJAX. Filer: `inc/public/month-calendar/`, `frontend/vue/src/apps/MonthCalendarApp.vue`.
 
-**Översikt:** CSS Grid (inte `<table>`) – `role="region"`, `h3` per rutt, `aria-label` på celler via `MRT_overview_grid_cell_aria_label`. Filer: `inc/domain/timetable/view/overview.php`, `grid*.php`.
+**Översikt:** Vue-komponenter med `role="region"`, `h3` per rutt, semantisk tabell för branch-bussar. Filer: `inc/domain/timetable/view/overview-data.php`, `frontend/vue/src/components/overview/`.
 
 ---
 

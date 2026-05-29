@@ -16,7 +16,13 @@ npm run e2e:install   # first time
 npm run e2e
 ```
 
-Optional against Docker demo: `MRT_E2E_WP_URL=http://127.0.0.1:8080/?page_id=569 npm run e2e`
+Optional against Docker demo (all three shortcodes on one page):
+
+```bash
+MRT_E2E_WP_DEMO_URL=http://127.0.0.1:8080/?page_id=… npm run e2e -- e2e/*-wp.spec.ts
+```
+
+Or run the full WP stack script from repo root: `bash scripts/ci-e2e-wp.sh`
 
 ## Month calendar (`data-mrt-vue-app="month"`)
 
@@ -27,7 +33,7 @@ Optional against Docker demo: `MRT_E2E_WP_URL=http://127.0.0.1:8080/?page_id=569
 
 ## Timetable overview (`overview`)
 
-- [ ] Full timetable HTML loads
+- [ ] Full timetable JSON renders (`.mrt-ov` groups, branch table if buses imported)
 - [ ] No console errors
 
 ## Journey wizard (`wizard`)
