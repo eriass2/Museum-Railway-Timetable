@@ -123,9 +123,10 @@ function MRT_render_vue_mount( string $app, array $config ): string {
 	}
 
 	return $notice . sprintf(
-		'<div class="mrt-vue-root" data-mrt-vue-app="%1$s"><script type="application/json" class="mrt-vue-config">%2$s</script></div>',
+		'<div class="mrt-vue-root mrt-vue-root--%1$s%3$s" data-mrt-vue-app="%1$s"><script type="application/json" class="mrt-vue-config">%2$s</script></div>',
 		esc_attr( $app ),
-		$json
+		$json,
+		'overview' === $app || 'month' === $app ? ' alignwide' : ''
 	);
 }
 

@@ -3,6 +3,9 @@
  *
  * Tokens & naming: docs/STYLE_GUIDE.md §3, assets/frontend/tokens.css (--mrt-from-to-bg, --mrt-transfer-*).
  *
+ * Responsive: one shared grid per route (rows use display:contents); horizontal scroll
+ * when many train columns; sticky station column while scrolling.
+ *
  * @package Museum_Railway_Timetable
  */
 
@@ -14,6 +17,8 @@
   --mrt-ov-transfer: var(--mrt-transfer-bg, var(--mrt-special-bg, #fff9c4));
   --mrt-ov-transfer-label: var(--mrt-transfer-col-bg, #fff59d);
   --mrt-ov-stripe: var(--mrt-bg-lightest, #f7fbfd);
+  width: 100%;
+  max-width: 100%;
   font-size: var(--mrt-font-base, 0.95rem);
   line-height: 1.35;
 }
@@ -69,15 +74,24 @@
   margin: 0 0.35rem;
 }
 
-.mrt-ov-grid {
+.mrt-ov-grid-scroll {
+  width: 100%;
   overflow-x: auto;
-  background: #fff;
   -webkit-overflow-scrolling: touch;
 }
 
-.mrt-ov-grid-row {
+.mrt-ov-grid {
+  --mrt-ov-station-w: 11rem;
+  --mrt-ov-col-min: 3.75rem;
+  --mrt-ov-grid-min: calc(var(--mrt-ov-station-w) + var(--mrt-ov-cols, 4) * var(--mrt-ov-col-min));
   display: grid;
-  grid-template-columns: minmax(8rem, 11rem) repeat(var(--mrt-ov-cols, 4), minmax(4.75rem, 1fr));
+  grid-template-columns: var(--mrt-ov-station-w) repeat(var(--mrt-ov-cols, 4), minmax(var(--mrt-ov-col-min), 1fr));
+  width: max(100%, var(--mrt-ov-grid-min));
+  background: #fff;
+}
+
+.mrt-ov-grid-row {
+  display: contents;
 }
 
 .mrt-ov-grid-row--head .mrt-ov-station-col,
@@ -97,9 +111,18 @@
 }
 
 .mrt-ov-station-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
   padding: var(--mrt-cell-padding-md, 0.4rem 0.55rem);
   border: 1px solid var(--mrt-border-default, #ccc);
   font-weight: 600;
+  background: #fff;
+  border-right-width: 2px;
+}
+
+.mrt-ov-grid-row--head .mrt-ov-station-col {
+  z-index: 3;
 }
 
 .mrt-ov-station-col--empty {
@@ -108,6 +131,7 @@
   padding-top: 0;
   padding-bottom: 0;
   border-color: transparent;
+  box-shadow: none;
 }
 
 .mrt-ov-col-head {
@@ -120,6 +144,7 @@
   flex-direction: column;
   align-items: center;
   gap: 0.2rem;
+  min-width: 0;
 }
 
 .mrt-ov-icon {
@@ -141,7 +166,7 @@
 }
 
 .mrt-ov-grid-row--transfer .mrt-ov-station-col,
-.mrt-ov-grid-row--transfer .mrt-ov-transfer-cell {
+.mrt-ov-grid-row--transfer .mrt-ov-transfer-cell:not(.mrt-ov-transfer-cell--empty) {
   background: var(--mrt-ov-transfer);
 }
 
@@ -150,12 +175,19 @@
   font-weight: 700;
 }
 
+.mrt-ov-grid-row--transfer .mrt-ov-transfer-cell--empty {
+  background: #fff;
+  min-height: 0;
+  padding-block: 0.25rem;
+}
+
 .mrt-ov-time-cell,
 .mrt-ov-transfer-cell {
   padding: var(--mrt-cell-padding-md, 0.4rem 0.3rem);
   border: 1px solid var(--mrt-border-default, #ccc);
   text-align: center;
   font-variant-numeric: tabular-nums;
+  min-width: 0;
 }
 
 .mrt-ov-transfer-cell {
@@ -197,10 +229,13 @@
   font-weight: 600;
 }
 
+.mrt-ov-branch-scroll {
+  overflow-x: visible;
+  padding: 0 var(--mrt-spacing-md, 1rem) var(--mrt-spacing-md, 1rem);
+}
+
 .mrt-ov-branch-table {
   width: 100%;
-  max-width: 42rem;
-  margin: 0 1rem 1rem;
   border-collapse: collapse;
 }
 
@@ -214,11 +249,70 @@
 .mrt-ov-branch-table thead th {
   background: var(--mrt-ov-highlight-strong);
   font-weight: 800;
+  white-space: normal;
 }
 
 .mrt-ov-branch-train {
   display: block;
   font-size: 0.85rem;
+}
+
+.mrt-ov-branch-cards {
+  display: none;
+  margin: 0;
+  padding: 0 var(--mrt-spacing-md, 1rem) var(--mrt-spacing-md, 1rem);
+  list-style: none;
+}
+
+.mrt-ov-branch-card {
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--mrt-border-default, #ccc);
+  border-radius: var(--mrt-radius-sm, 4px);
+  background: #fff;
+}
+
+.mrt-ov-branch-card + .mrt-ov-branch-card {
+  margin-top: 0.65rem;
+}
+
+.mrt-ov-branch-card__trip {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+}
+
+.mrt-ov-branch-card__times {
+  margin: 0;
+}
+
+.mrt-ov-branch-card__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid var(--mrt-border-default, #e8e8e8);
+}
+
+.mrt-ov-branch-card__row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.mrt-ov-branch-card__row dt {
+  margin: 0;
+  flex: 1 1 55%;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mrt-color-neutral-700, #404040);
+}
+
+.mrt-ov-branch-card__row dd {
+  margin: 0;
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: right;
 }
 
 .mrt-ov-separator {
@@ -266,16 +360,86 @@
 }
 
 @media (max-width: 40rem) {
-  .mrt-ov-grid-row {
-    grid-template-columns: minmax(6.5rem, 8.5rem) repeat(var(--mrt-ov-cols, 4), minmax(3.75rem, 1fr));
+  .mrt-ov-banner {
+    font-size: 0.9rem;
+    padding-inline: 0.75rem;
+  }
+
+  .mrt-ov-day-title {
+    font-size: 1.1rem;
+  }
+
+  .mrt-ov-route-header {
+    padding-inline: 0.75rem;
   }
 
   .mrt-ov-route-title {
     font-size: 1.05rem;
   }
 
-  .mrt-ov-branch-table {
-    margin-inline: 0.5rem;
-    font-size: 0.9rem;
+  .mrt-ov-route-ends,
+  .mrt-ov-branch-note {
+    font-size: 0.85rem;
+  }
+
+  .mrt-ov-grid {
+    --mrt-ov-station-w: 8.5rem;
+    --mrt-ov-col-min: 3.25rem;
+  }
+
+  .mrt-ov-col-head {
+    font-size: 0.72rem;
+  }
+
+  .mrt-ov-icon {
+    width: 1.75rem;
+  }
+
+  .mrt-ov-branch-scroll {
+    display: none;
+  }
+
+  .mrt-ov-branch-cards {
+    display: block;
+  }
+
+  .mrt-ov-print-key {
+    padding-inline: 0.85rem;
+  }
+
+  .mrt-ov-print-key-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .mrt-ov-print-key-table tbody tr {
+    display: block;
+    margin-bottom: 0.65rem;
+    border: 1px solid var(--mrt-border-default, #ccc);
+    background: var(--mrt-wizard-surface, #fff);
+  }
+
+  .mrt-ov-print-key-table tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .mrt-ov-print-key-table td {
+    display: block;
+    border: 0;
+    padding: 0.45rem 0.65rem;
+  }
+
+  .mrt-ov-print-key-table td:first-child {
+    padding-bottom: 0.25rem;
+    font-weight: 800;
+    background: var(--mrt-bg-lightest, #fafafa);
+    border-bottom: 1px solid var(--mrt-border-default, #e8e8e8);
   }
 }

@@ -328,6 +328,9 @@ function MRT_frontend_body_class( array $classes ): array {
 	if ( $flags['has_any'] || $flags['has_timetable_index'] ) {
 		$classes[] = 'mrt-has-shortcodes';
 	}
+	if ( $flags['has_overview'] ) {
+		$classes[] = 'mrt-has-overview';
+	}
 	return $classes;
 }
 add_filter( 'body_class', 'MRT_frontend_body_class' );

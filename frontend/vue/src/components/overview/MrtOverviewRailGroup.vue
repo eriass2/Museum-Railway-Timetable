@@ -19,7 +19,8 @@ defineProps<{
       </p>
     </header>
 
-    <div class="mrt-ov-grid" :style="{ '--mrt-ov-cols': group.columns.length }">
+    <div class="mrt-ov-grid-scroll">
+      <div class="mrt-ov-grid" :style="{ '--mrt-ov-cols': group.columns.length }">
       <div class="mrt-ov-grid-row mrt-ov-grid-row--head">
         <div class="mrt-ov-station-col">Station</div>
         <div v-for="col in group.columns" :key="`type-${col.serviceNumber}`" class="mrt-ov-col-head">
@@ -60,7 +61,12 @@ defineProps<{
           </div>
         </template>
         <template v-else-if="isTransferRow(row)">
-          <div v-for="(cell, ci) in row.cells" :key="ci" class="mrt-ov-transfer-cell">
+          <div
+            v-for="(cell, ci) in row.cells"
+            :key="ci"
+            class="mrt-ov-transfer-cell"
+            :class="{ 'mrt-ov-transfer-cell--empty': !cell.vehicles.length }"
+          >
             <div v-for="(v, vi) in cell.vehicles" :key="vi" class="mrt-ov-vehicle">
               <img
                 v-if="trainTypeIconUrl(iconUrls, v.iconKey)"
@@ -77,6 +83,7 @@ defineProps<{
           </div>
         </template>
       </div>
+    </div>
     </div>
   </section>
 </template>
