@@ -147,6 +147,30 @@ final class CsvFixtureTest extends TestCase {
 		self::assertNotContains( '2026-05-30', $dates );
 	}
 
+	public function test_thuns_express_highlight_is_csv_driven_per_service(): void {
+		$green_out = $this->fixture_service_row( 'green-93-out' );
+		$green_in  = $this->fixture_service_row( 'green-96-in' );
+		$plain     = $this->fixture_service_row( 'green-71-out' );
+
+		self::assertSame( 'Thun\'s-expressen', $green_out['highlight_label'] ?? '' );
+		self::assertSame( '#fff9c4', $green_out['highlight_color'] ?? '' );
+		self::assertNotSame( '', $green_out['highlight_note'] ?? '' );
+		self::assertSame( 'Thun\'s-expressen', $green_in['highlight_label'] ?? '' );
+		self::assertSame( '', $plain['highlight_label'] ?? '' );
+	}
+
+	/**
+	 * @return array<string, string>
+	 */
+	private function fixture_service_row( string $service_code ): array {
+		foreach ( $this->fixture_files()['services.csv'] ?? array() as $row ) {
+			if ( ( $row['service_code'] ?? '' ) === $service_code ) {
+				return $row;
+			}
+		}
+		return array();
+	}
+
 	/**
 	 * @return array<int, array<string, string>>
 	 */

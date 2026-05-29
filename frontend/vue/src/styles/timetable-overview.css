@@ -154,15 +154,19 @@
 }
 
 .mrt-ov-grid-row--from .mrt-ov-station-col,
-.mrt-ov-grid-row--from .mrt-ov-time-cell,
+.mrt-ov-grid-row--from .mrt-ov-time-cell:not(.mrt-ov-cell--highlight),
 .mrt-ov-grid-row--to .mrt-ov-station-col,
-.mrt-ov-grid-row--to .mrt-ov-time-cell {
+.mrt-ov-grid-row--to .mrt-ov-time-cell:not(.mrt-ov-cell--highlight) {
   background: var(--mrt-ov-highlight);
 }
 
 .mrt-ov-grid-row--alt .mrt-ov-station-col,
-.mrt-ov-grid-row--alt .mrt-ov-time-cell {
+.mrt-ov-grid-row--alt .mrt-ov-time-cell:not(.mrt-ov-cell--highlight) {
   background: var(--mrt-ov-stripe);
+}
+
+.mrt-ov-cell--highlight {
+  background: var(--mrt-ov-cell-highlight, var(--mrt-special-bg, #fff9c4));
 }
 
 .mrt-ov-grid-row--transfer .mrt-ov-station-col,

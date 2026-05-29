@@ -49,7 +49,7 @@ function MRT_build_timetable_overview_payload( array $services, string $dateYmd,
 		'dateYmd'       => $dateYmd,
 		'timetableType' => $tt,
 		'typeBanner'    => is_array( $banner ) ? $banner : array( 'label' => '' ),
-		'printKey'      => MRT_timetable_print_key_data(),
+		'printKey'      => MRT_timetable_print_key_data( $services ),
 		'iconUrls'      => MRT_train_type_icon_urls(),
 		'groups'        => $groups,
 	);
@@ -118,9 +118,20 @@ function MRT_get_timetable_day_data( string $dateYmd, string $train_type_slug = 
 }
 
 /**
+ * @param array<int, WP_Post> $services
  * @return array<int, array{symbol: string, text: string}>
  */
-function MRT_timetable_print_key_data(): array {
+function MRT_timetable_print_key_data( array $services = array() ): array {
+	return array_merge(
+		MRT_timetable_print_key_base_rows(),
+		MRT_timetable_print_key_highlight_rows( $services )
+	);
+}
+
+/**
+ * @return array<int, array{symbol: string, text: string}>
+ */
+function MRT_timetable_print_key_base_rows(): array {
 	return array(
 		array(
 			'symbol' => 'X',
@@ -143,14 +154,31 @@ function MRT_timetable_print_key_data(): array {
 				'museum-railway-timetable'
 			),
 		),
-		array(
-			'symbol' => 'Thun’s-expressen',
-			'text'   => __(
-				'Thun’s-expressen tar dig till och från klädvaruhuset Thun’s i Faringe.',
-				'museum-railway-timetable'
-			),
-		),
 	);
+}
+
+/**
+ * @param array<int, WP_Post> $services
+ * @return array<int, array{symbol: string, text: string}>
+ */
+function MRT_timetable_print_key_highlight_rows( array $services ): array {
+	$rows = array();
+	$seen = array();
+	foreach ( $services as $service ) {
+		if ( ! $service instanceof WP_Post ) {
+			continue;
+		}
+		$highlight = MRT_get_service_highlight( (int) $service->ID );
+		if ( $highlight === null || isset( $seen[ $highlight['label'] ] ) ) {
+			continue;
+		}
+		$seen[ $highlight['label'] ] = true;
+		$rows[]                      = array(
+			'symbol' => $highlight['label'],
+			'text'   => $highlight['note'] !== '' ? $highlight['note'] : $highlight['label'],
+		);
+	}
+	return $rows;
 }
 
 /**
@@ -219,12 +247,13 @@ function MRT_timetable_overview_columns_json( array $view ): array {
 		$info = $view['service_info'][ $idx ];
 		$tt   = $info['train_type'] ?? null;
 		$columns[] = array(
-			'serviceNumber' => (string) ( $info['service_number'] ?? '' ),
-			'trainTypeName' => $tt ? $tt->name : '',
-			'trainTypeSlug' => $tt ? $tt->slug : '',
-			'iconKey'       => $tt ? MRT_get_train_type_symbol_key( $tt ) : 'diesel',
-			'isSpecial'     => ! empty( $info['is_special'] ),
-			'specialName'   => (string) ( $info['special_name'] ?? '' ),
+			'serviceNumber'  => (string) ( $info['service_number'] ?? '' ),
+			'trainTypeName'  => $tt ? $tt->name : '',
+			'trainTypeSlug'  => $tt ? $tt->slug : '',
+			'iconKey'        => $tt ? MRT_get_train_type_symbol_key( $tt ) : 'diesel',
+			'isSpecial'      => ! empty( $info['highlight_label'] ),
+			'specialName'    => (string) ( $info['highlight_label'] ?? '' ),
+			'highlightColor' => (string) ( $info['highlight_color'] ?? '' ),
 		);
 	}
 	return $columns;
@@ -343,10 +372,12 @@ function MRT_timetable_row_times_json(
 				$text = MRT_format_stop_time_display( $stop );
 			}
 		}
-		$special = (string) ( $info[ $idx ]['special_name'] ?? '' );
-		$cells[] = array(
-			'text'        => $text,
-			'specialName' => $special,
+		$highlight_label = (string) ( $info[ $idx ]['highlight_label'] ?? '' );
+		$highlight_color = (string) ( $info[ $idx ]['highlight_color'] ?? '' );
+		$cells[]         = array(
+			'text'           => $text,
+			'specialName'    => $highlight_label,
+			'highlightColor' => $highlight_color,
 		);
 	}
 

@@ -12,11 +12,13 @@ export type TimetableOverviewColumn = {
   iconKey: string;
   isSpecial: boolean;
   specialName: string;
+  highlightColor: string;
 };
 
 export type TimetableTimeCell = {
   text: string;
   specialName?: string;
+  highlightColor?: string;
 };
 
 export type TimetableVehicleCell = {

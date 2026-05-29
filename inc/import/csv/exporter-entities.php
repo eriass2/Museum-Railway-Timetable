@@ -161,6 +161,9 @@ function MRT_csv_export_services( array &$tables, array &$maps ): void {
 			'service_number'   => (string) get_post_meta( $post->ID, 'mrt_service_number', true ),
 			'end_station_code' => MRT_csv_id_to_station_code( $end_id, $maps ),
 			'title'            => $post->post_title,
+			'highlight_label'  => (string) get_post_meta( $post->ID, 'mrt_service_highlight_label', true ),
+			'highlight_color'  => (string) get_post_meta( $post->ID, 'mrt_service_highlight_color', true ),
+			'highlight_note'   => (string) get_post_meta( $post->ID, 'mrt_service_highlight_note', true ),
 		);
 		$terms = wp_get_object_terms( $post->ID, MRT_TAXONOMY_TRAIN_TYPE );
 		if ( ! is_wp_error( $terms ) ) {

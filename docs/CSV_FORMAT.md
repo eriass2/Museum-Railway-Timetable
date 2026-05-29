@@ -188,6 +188,11 @@ En rad per trafikdag. Vid uppdatering **ersätts** alla datum för tidtabellen.
 | `service_number` | nej | string | Tågnummer, t.ex. `71`, `B1` |
 | `end_station_code` | ja | string | Destination |
 | `title` | nej | string | Om tom: generera `{route title} {service_number}` |
+| `highlight_label` | nej | string | Markering i översikten (t.ex. `Thun's-expressen`). Tom = ingen markering. |
+| `highlight_color` | nej | string | Bakgrundsfärg för kolumnen, hex t.ex. `#fff9c4`. Standard `#fff9c4` om etikett finns. |
+| `highlight_note` | nej | string | Förklaringstext i tidtabellens nyckel (Förklaringar). |
+
+Markering styrs per tur och tidtabell via `timetable_code` — en tur utan `highlight_label` visas utan färgmarkering.
 
 ### 4.8 `service_train_types.csv`
 

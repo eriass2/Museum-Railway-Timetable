@@ -29,3 +29,13 @@ export function overviewRowClass(row: TimetableOverviewRow, rowIndex = 0): strin
 export function trainTypeIconUrl(iconUrls: Record<string, string>, key: string): string {
   return iconUrls[key] ?? iconUrls.diesel ?? '';
 }
+
+export function overviewHighlightStyle(color?: string): Record<string, string> | undefined {
+  if (!color) {
+    return undefined;
+  }
+  return {
+    backgroundColor: color,
+    '--mrt-ov-cell-highlight': color,
+  };
+}
