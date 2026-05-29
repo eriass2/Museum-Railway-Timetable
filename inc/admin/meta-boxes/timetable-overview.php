@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/admin/timetable-html-preview.php';
+require_once MRT_PATH . 'inc/admin/timetable-vue-preview.php';
 
 /**
  * Render timetable overview preview box
@@ -22,7 +22,7 @@ function MRT_render_timetable_overview_box( $post ) {
 		<p class="description">
 			<?php esc_html_e( 'Preview of how the timetable will look when displayed. Services are grouped by route and destination.', 'museum-railway-timetable' ); ?>
 		</p>
-		<?php echo MRT_admin_render_timetable_overview_preview( (int) $post->ID ); ?>
+		<?php echo MRT_admin_render_timetable_overview_vue_preview( (int) $post->ID ); ?>
 	</div>
 	<?php
 }

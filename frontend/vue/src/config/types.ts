@@ -37,9 +37,13 @@ export type MonthVueConfig = MrtAjaxConfig & {
   legendClickHint?: string;
 };
 
+import type { TimetableOverviewPayload } from '../types/timetableOverview';
+
 export type OverviewVueConfig = MrtAjaxConfig & {
   app: 'overview';
   timetableId: number;
+  overview?: TimetableOverviewPayload;
+  embedded?: boolean;
 };
 
 export type WizardStation = { id: number; title: string };
