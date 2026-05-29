@@ -13,6 +13,10 @@ echo "Waiting for WordPress..."
 sleep 12
 
 echo ""
+echo "--- Build Vue public bundle (CSS + JS) ---"
+docker compose --profile tools run --rm vue
+
+echo ""
 echo "--- Swedish locale (sv_SE) ---"
 docker compose run --rm wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh
 

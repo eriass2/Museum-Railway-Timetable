@@ -100,7 +100,7 @@ Delad journey-domän och AJAX (används av wizarden):
 
 - **Domän:** `inc/domain/journey/`
 - **AJAX:** `inc/infrastructure/ajax/journey.php`, `journey-parse.php`
-- **Publik frontend (Vue):** `frontend/vue/` → `assets/dist/vue/` (se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md))
+- **Publik frontend (Vue):** `frontend/vue/` → `assets/dist/vue/` (se [VUE_FRONTEND.md](VUE_FRONTEND.md))
 
 ---
 

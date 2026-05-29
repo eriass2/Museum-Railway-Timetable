@@ -114,7 +114,7 @@ inc/
 | `inc/functions/helpers-datetime.php` | `done` | `inc/domain/datetime/datetime.php` | Legacy loaders borttagna. |
 | `inc/functions/journey-*.php` | `done` | `inc/domain/journey/` | Legacy loaders borttagna. |
 | `inc/functions/journey-prices.php` | `done` | `inc/domain/pricing/prices.php` | Legacy loaders borttagna. |
-| `inc/data/price-matrix-builtin.php` | `move` | `inc/domain/pricing/price-matrix-builtin.php` | Flyttad seed/reference data. |
+| `inc/data/price-matrix-builtin.php` | `done` | `inc/domain/pricing/price-matrix-builtin.php` | Flyttad seed/reference data. |
 | `inc/functions/timetable-view/*` | `done` | `inc/domain/timetable/view/` | PHP HTML-grid borttagen; JSON i `overview-data.php`, Vue i `frontend/vue/`. |
 | `inc/functions/services.php` | `done` | `inc/domain/service/services.php` | Loaders borttagna. |
 | `inc/functions/helpers-services.php` | `done` | `inc/domain/service/stop-times.php` | Loaders borttagna. |
@@ -165,15 +165,16 @@ inc/
 
 | Område | Status | Kommentar |
 |--------|--------|-----------|
-| `assets/icons/train-types/` | `keep/move` | Tågikonerna ska behållas som produktassets och flyttas till ny assetstruktur. |
-| `assets/train-type-icons.css` | `rewrite` | Behåll ikonmappningen som krav, men skriv om CSS efter ny designstruktur. |
-| `frontend/vue/src/styles/journey-wizard/` | `done` (Vue) | Wizard-CSS flyttad från `assets/journey-wizard/`; bundlas via `JourneyWizardApp` och Vite. |
-| `assets/frontend-overview.css` + `assets/frontend/overview-*.css` | `done` (delete) | Ersatt av `frontend/vue/src/styles/timetable-overview.css` och Vue-komponenter. |
-| `assets/frontend.js` | `rewrite` | Behåll bara beteende som behövs; separera från nuvarande styling/legacy planner. |
-| `assets/mrt-string-utils.js`, `assets/mrt-date-utils.js`, `assets/mrt-frontend-api.js` | `keep/move` | Beteende-/API-helpers, inte utseende. |
-| `assets/admin-*.js` | `rewrite` | Behåll där adminflöden kvarstår, men flytta per adminmodul. |
-| `assets/admin-*.css` | `delete/rewrite` | Ta bort nuvarande admin-utseendeimplementation. Ny admin ska luta på WordPress-native CSS och endast ha minimal egen CSS. |
-| `assets/CSS_STRUCTURE.md` | `delete` | Nuvarande CSS-struktur försvinner när utseendeimplementationen purgas. |
+| `assets/icons/train-types/` | `keep` | Tågikonerna är produktassets (URL:er till Vue/admin). |
+| `assets/train-type-icons.css` | `keep` | Importeras i Vite-bundeln (`mrt-public.css`). |
+| `frontend/vue/src/styles/journey-wizard/` | `done` | Wizard-CSS; bundlas via `JourneyWizardApp` och Vite. |
+| `assets/frontend-overview.css` + `assets/frontend/overview-*.css` | `done` (delete) | Ersatt av `frontend/vue/src/styles/timetable-overview.css`. |
+| `assets/frontend.js` | `done` (delete) | Borttagen; publikt UI är Vue-only (`assets/dist/vue/`). |
+| `assets/mrt-frontend-api.js` | `done` (delete) | Borttagen; Vue anropar AJAX direkt. |
+| `assets/mrt-string-utils.js`, `assets/mrt-date-utils.js` | `keep` | Admin-utilities (enqueue via `admin-utils.js`). |
+| `assets/admin-*.js` | `rewrite` | Behåll där adminflöden kvarstår; ev. flytta per modul senare. |
+| `assets/admin-*.css` | `rewrite` | Minimal egen admin-CSS; WordPress-native där möjligt. |
+| `assets/CSS_STRUCTURE.md` | `done` (delete) | Filen finns inte längre i repot. |
 
 ### Utseendepurge
 
@@ -193,7 +194,8 @@ Det som ska sparas är referenserna: mockups, tidtabells-PDF:er, tågikonerna i 
 
 | Område | Status | Kommentar |
 |--------|--------|-----------|
-| `tests/Unit/ImportDataTest.php` | `keep` | Styr referensdataimport. |
+| `tests/Unit/CsvFixtureTest.php` | `keep` | Styr referensdataimport och fixture. |
+| `tests/Unit/CsvExportTest.php` | `keep` | Export manifest + CSV-kolumner. |
 | `tests/Unit/Journey*` | `keep/move` | Styr journey-domänlogik. |
 | `tests/Unit/JourneyMultiLegTest.php` | `keep` | Viktig för byte/gemensam station. |
 | `tests/Unit/JourneyPricesTest.php` | `keep` | Prislogik. |
@@ -206,7 +208,7 @@ Det som ska sparas är referenserna: mockups, tidtabells-PDF:er, tågikonerna i 
 
 ## 8. Första faktiska cleanup-PR efter denna inventering
 
-**Status:** Genomfört i `main` (bootstrap, målstruktur, legacy-träd borta, journey planner borta, dokumentationssynk avsnitt 2). Kvar: §8.6 frontend-polish mot mockups.
+**Status:** Genomfört i `main` (bootstrap, målstruktur, legacy-träd borta, journey planner borta, Vue-only frontend, dokumentationssynk). Kvar: produktionschecklistor (`PRODUCTION_WIZARD.md`, `ACCESSIBILITY_SMOKE.md`) och valfri admin-CSS-förenkling.
 
 Tidigare rekommenderat scope (referens):
 

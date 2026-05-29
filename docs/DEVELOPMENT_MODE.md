@@ -15,9 +15,9 @@ Docker dev bygger Vue automatiskt via `docker-dev-reset.ps1` (service `vue`).
 
 Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` → `assets/dist/vue/`), inte från separata WP-handles för `frontend-public.css`.
 
-Se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md). Bygg manuellt: `composer vue:build` eller `docker compose --profile tools run --rm vue`.
+Se [VUE_FRONTEND.md](VUE_FRONTEND.md). Bygg manuellt: `composer vue:build` eller `docker compose --profile tools run --rm vue`.
 
-Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). PHPUnit: `composer test` (kräver **PHP 8.2+** via `vendor/bin/phpunit`; på äldre system: `docker compose run --rm composer test`). Samma kedja körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
+Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). PHPUnit: `composer test` (kräver **PHP 8.2+**; på äldre system: `docker compose --profile tools run --rm composer test`). Samma kedja körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 Publikt UI är **Vue-only** (jQuery-wizard-moduler är borttagna). Månad, översikt och wizard mountar Vue via `assets/dist/vue/`.
 

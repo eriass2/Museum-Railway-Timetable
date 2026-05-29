@@ -95,7 +95,7 @@ Efter ändringar i import, rutter eller demosidor – ett kommando för agent/ut
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1
 ```
 
-`-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo` och `pages.wizard`. Reset bygger Vue (`docker compose --profile tools run --rm vue`) och laddar publik CSS via Vite-bundeln — se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md).
+`-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo` och `pages.wizard`. Reset bygger Vue (`docker compose --profile tools run --rm vue`) och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md).
 
 ### Automatiserad Docker-smoke
 

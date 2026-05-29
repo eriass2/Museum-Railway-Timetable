@@ -25,6 +25,7 @@ Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESI
 | [SHORTCODES.md](SHORTCODES.md) | Tre shortcodes: månad, översikt, wizard |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i WordPress-admin |
 | [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsmeny, component demo, import |
+| [VUE_FRONTEND.md](VUE_FRONTEND.md) | Publikt Vue-frontend (build, bundle, integration) |
 | [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning i Docker |
 | [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG-krav per modul |
 | [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) | Manuell release-logg |
