@@ -1,0 +1,373 @@
+# CSV import/export – format och beteende
+
+Specifikation för att flytta tidtabellsdata mellan sajter, redigera i Excel/LibreOffice och importera via WordPress-admin. Gäller **alla järnvägar** som använder pluginet — inte bara Lennakatten-testdata.
+
+**Relaterat:** [DATA_MODEL.md](DATA_MODEL.md) (datamodell), [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) (manuell admin), [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) (dev-reset med fixture).
+
+**Implementation (planerad):** `inc/import/csv/`, admin under Railway Timetable → Import / Export.
+
+---
+
+## 1. Paketstruktur
+
+Ett **exportpaket** är en mapp eller en `.zip` med samma innehåll.
+
+```
+mrt-export/
+├── manifest.json
+├── stations.csv
+├── train_types.csv
+├── routes.csv
+├── route_stations.csv
+├── timetables.csv
+├── timetable_dates.csv
+├── services.csv
+├── service_train_types.csv
+├── stoptimes.csv
+├── settings.csv          # valfritt
+├── prices.csv            # valfritt
+└── icons/                # valfritt, tågtypsikoner
+    └── angtag.svg
+```
+
+| Regel | Beskrivning |
+|-------|-------------|
+| **Formatversion** | `manifest.json` → `format_version` (nuvarande: `"1"`) |
+| **Teckenkodning** | UTF-8; BOM tolereras vid läsning |
+| **Separator** | Komma (`,`), citattecken vid behov (RFC 4180) |
+| **Zip** | Rekommenderat för admin-uppladdning; läsare accepterar zip eller uppackad mapp |
+| **Priser** | Ingår **inte** som standard; export/import är valfritt |
+| **Inställningar** | Samma — valfritt block |
+
+---
+
+## 2. Manifest (`manifest.json`)
+
+```json
+{
+  "format_version": "1",
+  "exported_at": "2026-05-29T12:00:00Z",
+  "plugin_version": "0.0.0",
+  "locale": "sv_SE",
+  "includes": [
+    "stations",
+    "train_types",
+    "routes",
+    "timetables",
+    "services",
+    "stoptimes"
+  ]
+}
+```
+
+| Fält | Beskrivning |
+|------|-------------|
+| `format_version` | Låser kolumnnamn och beteende. Okänd version → import avbryts. |
+| `includes` | Vilka entitetstyper som finns i paketet. Styr **override-scope** (se §6). |
+| `exported_at` | ISO 8601, informativt |
+| `plugin_version` | Plugin-version vid export, informativt |
+
+Tillåtna värden i `includes`: `stations`, `train_types`, `routes`, `timetables`, `services`, `stoptimes`, `settings`, `prices`.
+
+---
+
+## 3. Stabila nycklar (`*_code`)
+
+WordPress post-ID används **inte** i CSV. Alla kopplingar sker via stabila strängnycklar.
+
+### 3.1 Hybridmodell
+
+| Entitet | Primärnyckel | Om tom vid import |
+|---------|--------------|-------------------|
+| Station | `station_code` | Auto: `slugify(name)` |
+| Rutt | `route_code` | Auto: `slugify(title)` |
+| Tidtabell | `timetable_code` | Auto: `slugify(title)` |
+| Tur (service) | `service_code` | Auto: `{timetable_code}-{service_number}-{end_station_code}` |
+
+**Export skriver alltid ut codes** så round-trip (export → redigera → import) fungerar även om visningsnamn ändras.
+
+**Rekommendation för operatörer:**
+
+1. **Första import** — fyll namn/titlar/tider; lämna `*_code` tomma.
+2. **Efter första export** — använd codes i fortsatt redigering.
+3. **Avancerat** — egna codes (t.ex. `uk-ost`, `line-a`) vid kollisionsrisk.
+
+### 3.2 Slugify-regler
+
+- Normalisera Unicode (NFC).
+- Versaler → gemener.
+- Svenska tecken behålls där möjligt (`å` → `a` valfritt; konsekvent inom en import).
+- Mellanslag och interpunktion → bindestreck (`-`).
+- Flera bindestreck kollapsas; inledande/avslutande bindestreck tas bort.
+
+Exempel: `Uppsala Östra` → `uppsala-ostra`.
+
+### 3.3 Kollisioner
+
+| Situation | Beteende |
+|-----------|----------|
+| Auto-slug finns redan med **samma** namn | Uppdatera befintlig post |
+| Auto-slug finns med **annat** namn | Import **stoppas** med fel på radnivå |
+| Explicit `*_code` i CSV | Används som angivet; användaren ansvarar för unikhet |
+
+### 3.4 Tågtyper
+
+Identifieras via `slug` (WordPress taxonomy). Ingen separat `train_type_code`.
+
+---
+
+## 4. CSV-filer och kolumner
+
+### 4.1 `stations.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `station_code` | nej* | string | Stabil nyckel (*obligatorisk efter export; kan auto-genereras) |
+| `name` | ja | string | Visningsnamn (`post_title`) |
+| `station_type` | nej | enum | `station` \| `halt` \| `depot` \| `museum` |
+| `display_order` | nej | int | Sortering, default `0` |
+| `bus_stop_marker` | nej | 0\|1 | Asterisk i tidtabell (busshållplats) |
+| `lat` | nej | float | |
+| `lng` | nej | float | |
+
+### 4.2 `train_types.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `slug` | ja | string | t.ex. `angtag`, `buss` |
+| `name` | ja | string | t.ex. `Ångtåg` |
+| `icon_file` | nej | string | Relativ sökväg i paketet, t.ex. `icons/angtag.svg` |
+
+Saknas `icon_file` eller filen i zip → plugin-default för slug om den finns.
+
+### 4.3 `routes.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `route_code` | nej* | string | Stabil nyckel |
+| `title` | ja | string | Ruttens namn |
+| `start_station_code` | nej | string | Terminus (kan härledas från `route_stations`) |
+| `end_station_code` | nej | string | Terminus |
+
+### 4.4 `route_stations.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `route_code` | ja | string | FK → `routes.csv` |
+| `sequence` | ja | int | 1, 2, 3 … |
+| `station_code` | ja | string | FK → `stations.csv` |
+
+En rad per hållplats per rutt. Vid uppdatering av rutt **ersätts** hela stationslistan.
+
+### 4.5 `timetables.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `timetable_code` | nej* | string | Logiskt namn **utan år**, t.ex. `green`, `yellow` |
+| `title` | ja | string | t.ex. `GRÖN TIDTABELL` |
+| `colour_type` | nej | enum | `green` \| `yellow` \| `red` \| `orange` (översiktsrubrik) |
+
+År och säsong styrs av datum i `timetable_dates.csv`, inte av `timetable_code`.
+
+### 4.6 `timetable_dates.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `timetable_code` | ja | string | FK |
+| `date` | ja | date | `YYYY-MM-DD` |
+
+En rad per trafikdag. Vid uppdatering **ersätts** alla datum för tidtabellen.
+
+### 4.7 `services.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `service_code` | nej* | string | Stabil nyckel |
+| `timetable_code` | ja | string | FK |
+| `route_code` | ja | string | FK |
+| `service_number` | nej | string | Tågnummer, t.ex. `71`, `B1` |
+| `end_station_code` | ja | string | Destination |
+| `title` | nej | string | Om tom: generera `{route title} {service_number}` |
+
+### 4.8 `service_train_types.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `service_code` | ja | string | FK |
+| `train_type_slug` | ja | string | FK → `train_types.slug` |
+
+Flera rader per tur om flera tågtyper ska kopplas.
+
+### 4.9 `stoptimes.csv`
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `service_code` | ja | string | FK |
+| `sequence` | ja | int | 1-baserad ordning längs rutten |
+| `station_code` | ja | string | FK |
+| `arrival_time` | nej | time | `HH:MM` eller tomt |
+| `departure_time` | nej | time | `HH:MM` eller tomt |
+| `pickup_allowed` | ja | 0\|1 | Får stiga på |
+| `dropoff_allowed` | ja | 0\|1 | Får stiga av |
+
+Vid uppdatering av tur **ersätts** alla stoptider för den turen.
+
+**Hjälp vid avskrift från tryckt tabell (P/X):**
+
+| Symbol i PDF | `pickup_allowed` | `dropoff_allowed` |
+|--------------|------------------|-------------------|
+| P | 1 | 0 |
+| X | 1 | 1 |
+| (tom) | 1 | 1 |
+
+### 4.10 `settings.csv` (valfritt)
+
+| Kolumn | Oblig | Beskrivning |
+|--------|-------|-------------|
+| `key` | ja | `enabled`, `note`, `min_transfer_minutes`, `max_transfer_minutes` |
+| `value` | ja | Sträng, bool eller heltal enligt nyckel |
+
+### 4.11 `prices.csv` (valfritt)
+
+| Kolumn | Oblig | Beskrivning |
+|--------|-------|-------------|
+| `ticket_type` | ja | `single` \| `return` \| `day` |
+| `category` | ja | `adult` \| `child_4_15` \| `child_0_3` \| `student_senior` |
+| `zone` | ja | `1`–`4` |
+| `amount_sek` | nej | Heltal; tomt = ej tillgänglig |
+
+---
+
+## 5. Validering
+
+Validering körs **alltid före** någon databasändring.
+
+### 5.1 Schema och referenser
+
+- Alla obligatoriska kolumner finns.
+- FK (`station_code`, `route_code`, …) finns i refererad fil eller redan i databasen (vid delimport).
+- `sequence` unik per `service_code` respektive `route_code`.
+- `station_code` i `stoptimes` ingår i turens rutt.
+- Datum: giltigt `YYYY-MM-DD`.
+- Tider: giltigt `HH:MM` eller tomt.
+
+### 5.2 Delimport
+
+Om paketet **inte** innehåller `stations` / `routes` i `includes`:
+
+- Stationer och rutter som refereras måste **redan finnas** i databasen (match på `*_code`).
+- Saknas referens → valideringsfel, ingen import.
+
+### 5.3 Vid valideringsfel
+
+- **Ingen** databasändring (transaktion eller rollback per importkörning).
+- Felrapport med filnamn, radnummer och meddelande.
+
+### 5.4 Utan WordPress
+
+```sh
+composer csv:validate -- path/to/package
+```
+
+Samma regler som vid admin-import (utom kontroll mot befintlig DB vid delimport).
+
+---
+
+## 6. Importlägen (admin)
+
+Tillgängligt för alla med `manage_options` under **Railway Timetable → Import / Export**.
+
+### 6.1 Lägg till / uppdatera (merge)
+
+- Poster med matchande `*_code` **uppdateras**; barn (datum, route_stations, stoptimes) **ersätts** helt för den posten.
+- Poster i databasen som **saknas** i CSV **lämnas kvar**.
+
+### 6.2 Ersätt omfång (override)
+
+- Samma uppdatering som merge för allt i paketet.
+- Dessutom: poster av entitetstyper som listas i `manifest.includes` men vars `*_code` **inte** finns i CSV **tas bort** från plugin-databasen.
+
+**Override-scope:** Endast entitetstyper i `includes` — inte hela plugin-databasen om paketet bara innehåller t.ex. `timetables` + `services` + `stoptimes`.
+
+**Varning i UI:** Override kan radera tidtabeller/turer som inte finns i filen.
+
+### 6.3 Importordning
+
+```
+stations → train_types → routes + route_stations
+  → timetables + timetable_dates
+  → services + service_train_types
+  → stoptimes
+  → settings → prices
+```
+
+---
+
+## 7. Export (admin)
+
+- **Exportera tidtabellsdata** → nedladdning som `.zip`.
+- Checkboxar: ☐ Inkludera priser, ☐ Inkludera inställningar (default av).
+- `manifest.json` och `includes` speglar faktiskt innehåll.
+- Alla `*_code` fylls i.
+
+---
+
+## 8. Utvecklarflöde (Lennakatten)
+
+Dev-only auto-setup (rensa DB, smoke-meny) är **separat** från operatörens import.
+
+| Artefakt | Plats |
+|----------|-------|
+| Referens-PDF | `testdata/reference-pdfs/` |
+| CSV-fixture | `testdata/fixtures/lennakatten/` |
+| Dev-reset | `scripts/docker-dev-reset.ps1` |
+
+Dev-reset anropar import med **override** mot fixturen, sedan smoke-navigation. Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+
+Planerade kommandon:
+
+| Kommando | Syfte |
+|----------|--------|
+| `composer csv:validate -- <path>` | Validera utan WordPress |
+| `wp mrt csv validate <path>` | Validera i WP-miljö |
+| `wp mrt csv export <path>` | Exportera till mapp/zip |
+| `wp mrt csv import <path> --mode=merge\|override` | CLI-import |
+
+---
+
+## 9. Exempel
+
+### `route_stations.csv` (utdrag)
+
+```csv
+route_code,sequence,station_code
+uppsala-faringe,1,uppsala-ostra
+uppsala-faringe,2,fyrislund
+uppsala-faringe,14,faringe
+```
+
+### `stoptimes.csv` (utdrag)
+
+```csv
+service_code,sequence,station_code,arrival_time,departure_time,pickup_allowed,dropoff_allowed
+green-71-out,1,uppsala-ostra,,10:00,1,0
+green-71-out,2,fyrislund,10:03,10:03,1,0
+```
+
+### `train_types.csv`
+
+```csv
+slug,name,icon_file
+angtag,Ångtåg,icons/angtag.svg
+buss,Buss,icons/buss.svg
+```
+
+---
+
+## 10. Versionshistorik
+
+| `format_version` | Ändring |
+|------------------|---------|
+| `1` | Initial spec (2026-05) |
+
+Vid breaking changes: öka `format_version`; importör stödjer äldre versioner endast om explicit dokumenterat.

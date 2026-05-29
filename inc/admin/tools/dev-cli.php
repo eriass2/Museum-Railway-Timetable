@@ -73,14 +73,24 @@ function MRT_dev_reset_and_import() {
 			'Dev reset requires WP_DEBUG, MRT_DEVELOPMENT, or WP-CLI.'
 		);
 	}
-	if ( ! function_exists( 'MRT_run_lennakatten_import' ) ) {
-		return new WP_Error( 'mrt_missing', 'Lennakatten import is not loaded.' );
+	if ( ! function_exists( 'MRT_csv_import_package' ) ) {
+		require_once MRT_PATH . 'inc/import/csv/loader.php';
 	}
 
 	MRT_dev_cli_set_admin_user();
 	MRT_clear_all_plugin_data();
 
-	$import_message = MRT_run_lennakatten_import();
+	$import_result = MRT_csv_import_package( MRT_csv_lennakatten_fixture_path(), 'override' );
+	if ( is_wp_error( $import_result ) ) {
+		return $import_result;
+	}
+	$import_message = sprintf(
+		'Stations: %d, Routes: %d, Timetables: %d, Services: %d.',
+		(int) ( $import_result['stations'] ?? 0 ),
+		(int) ( $import_result['routes'] ?? 0 ),
+		(int) ( $import_result['timetables'] ?? 0 ),
+		(int) ( $import_result['services'] ?? 0 )
+	);
 
 	$nav_result = null;
 	if ( function_exists( 'MRT_setup_development_navigation' ) ) {

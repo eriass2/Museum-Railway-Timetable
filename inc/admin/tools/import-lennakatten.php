@@ -46,7 +46,7 @@ function MRT_render_import_lennakatten_admin_page(): void {
 	?>
 	<div class="wrap">
 		<h1><?php esc_html_e( 'Import Lennakatten 2026 Test Data', 'museum-railway-timetable' ); ?></h1>
-		<p><?php esc_html_e( 'This imports test data from the Lennakatten reference PDFs: stations, routes, train types, GRÖN and GUL timetables with services and stop times.', 'museum-railway-timetable' ); ?></p>
+		<p><?php esc_html_e( 'This imports Lennakatten test data from the CSV fixture (testdata/fixtures/lennakatten), derived from reference PDFs.', 'museum-railway-timetable' ); ?></p>
 		<?php if ( $message ) : ?>
 			<div class="notice notice-success"><p><?php echo wp_kses_post( $message ); ?></p></div>
 		<?php endif; ?>

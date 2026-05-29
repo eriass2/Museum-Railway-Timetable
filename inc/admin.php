@@ -18,5 +18,6 @@ require_once MRT_PATH . 'inc/admin/tools/demo-page.php';
 require_once MRT_PATH . 'inc/admin/tools/component-debug-pages.php';
 require_once MRT_PATH . 'inc/admin/tools/dev-navigation.php';
 require_once MRT_PATH . 'inc/admin/tools/dev-cli.php';
+require_once MRT_PATH . 'inc/admin/tools/import-export-csv.php';
 require_once MRT_PATH . 'inc/admin/tools/import-lennakatten.php';
 require_once MRT_PATH . 'inc/admin/meta-boxes.php';
