@@ -217,23 +217,6 @@ function MRT_frontend_shortcode_flags_from_content( string $content ): array {
 }
 
 /**
- * Shared public CSS for month calendar, tables, and alerts.
- *
- * @return string Style handle
- */
-function MRT_enqueue_frontend_public_styles(): string {
-	$a           = MRT_assets_base_url();
-	$icon_handle = MRT_enqueue_train_type_icon_styles();
-	wp_enqueue_style(
-		'mrt-frontend-public',
-		$a . 'frontend-public.css',
-		array( $icon_handle ),
-		MRT_VERSION
-	);
-	return 'mrt-frontend-public';
-}
-
-/**
  * Styles for [museum_timetable_index] (PHP-only shortcode).
  */
 function MRT_enqueue_timetable_index_styles(): void {

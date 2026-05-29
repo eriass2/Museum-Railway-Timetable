@@ -116,11 +116,15 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Delade util-moduler (`assets/mrt-*.js`)
 - **`mrt-string-utils.js`** – `window.MRTStringUtils.escapeHtml` (XSS-säker text i HTML-strängar). **`admin-utils.js`** `escapeHtml` delegerar hit.
 - **`mrt-date-utils.js`** – `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för `HH:MM`). **`admin-utils.js`** `validateTimeFormat` delegerar till `MRTDateUtils.validateHhMm`.
-- **`mrt-frontend-api.js`** – `window.MRTFrontendApi`: `getAjaxUrl`, `getNonce`, `msg` (strängar från `mrtFrontend`), `post` med valfri override av URL/nonce (t.ex. wizard). Laddas före `frontend.js`; används av `frontend.js` och kan användas av andra frontend-skript med samma beroenden.
-- **`admin-utils.js`** – `window.MRTAdminUtils.msg(key, fallback)` för strängar från `mrtAdmin` (samma mönster som `MRTFrontendApi.msg`). Använd i admin-moduler i stället för upprepade `typeof mrtAdmin`-tester.
+- **`admin-utils.js`** – `window.MRTAdminUtils.msg(key, fallback)` för strängar från `mrtAdmin`. Använd i admin-moduler i stället för upprepade `typeof mrtAdmin`-tester.
 - **Lägg ny återanvändbar logik** i rätt util-fil i stället för att duplicera i flera skript.
-- **Enqueue** – `inc/assets.php` laddar `inc/assets/loader.php` (admin + frontend enqueue) (admin: bl.a. `mrt-string-utils` före `mrt-admin-utils`; frontend: `mrt-string-utils` + `mrt-frontend-api` före `mrt-frontend`; wizard + tidtabellsöversikt även `train-type-icons.css`).
+- **Enqueue** – `inc/assets.php` → `inc/assets/loader.php`: admin (`mrt-string-utils`, `mrt-date-utils`, `admin-utils.js`, moduler); publikt Vue (`assets/dist/vue/`); index-shortcode (`frontend/timetable-index.css` via PHP).
 - **JS-tester (valfritt)** – `composer test:js` kör `node --test tests/js/` (Node 18+); täcker delade util-filer utan browser.
+
+### Publikt frontend (Vue)
+- **Ingen jQuery-frontend** – månad, översikt och wizard mountar Vue (`frontend/vue/`, byggt till `assets/dist/vue/`).
+- **AJAX** – Vue anropar `admin-ajax.php` med nonce från `mrtFrontend` (lokaliserad i `inc/assets/vue-frontend.php`).
+- **CSS** – Vite-bundel; källfiler under `frontend/vue/src/styles/` (se §3 CSS).
 
 ---
 
@@ -174,7 +178,7 @@ museum-railway-timetable/
 │   ├── dist/vue/                  # Vite bundle (JS + public CSS)
 │   ├── mrt-color-tokens.css       # Färgpalett (importeras av Vue mrt-public.css)
 │   ├── frontend-public.css        # shared shortcode primitives (imported by mrt-public.css)
-│   ├── mrt-string-utils.js, mrt-date-utils.js, mrt-frontend-api.js
+│   ├── mrt-string-utils.js, mrt-date-utils.js   # admin utils
 │   └── icons/train-types/
 ├── frontend/vue/src/styles/       # Vue-ägd publik CSS (se §3 CSS)
 │   ├── mrt-public.css             # tokens + assets primitives + vue-shell

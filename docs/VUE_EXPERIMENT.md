@@ -1,6 +1,6 @@
-# Vue experiment branch
+# Publikt Vue-frontend
 
-Branch `experiment/vue-public-ui` replaces the three public shortcodes with Vue mount points when enabled:
+De tre publika shortcodes mountar Vue-appar från `assets/dist/vue/`:
 
 | Shortcode | Vue app |
 |-----------|---------|
@@ -8,7 +8,7 @@ Branch `experiment/vue-public-ui` replaces the three public shortcodes with Vue 
 | `[museum_timetable_overview]` | `TimetableOverviewApp.vue` |
 | `[museum_journey_wizard]` | `JourneyWizardApp.vue` |
 
-Legacy jQuery wizard is **removed** on this branch; all three public shortcodes use the Vue bundle only.
+Legacy jQuery-frontend är borttagen; ingen PHP-toggle krävs.
 
 ## CSS
 
@@ -19,28 +19,11 @@ Public styles are **bundled by Vite**, not enqueued from WordPress:
 - Vue-owned: `frontend/vue/src/styles/timetable-overview.css`, `frontend/vue/src/styles/journey-wizard/`
 - Vue-only shell: `frontend/vue/src/styles/vue-shell.css`
 
-In Vue mode, `mrt-frontend-public` and legacy `mrt-journey-wizard` handles are **not** registered (styles ship in the Vite bundle).
+Styles ship in the Vite bundle (not separate `mrt-frontend-public` handles).
 
-## Enable on a site
+## Docker / utveckling
 
-Docker dev (`docker compose up` / `docker-dev-reset.ps1`) sets:
-
-```php
-define( 'MRT_VUE_FRONTEND', true );
-define( 'MRT_DEVELOPMENT', true );
-```
-
-Manually in `wp-config.php`:
-
-```php
-define( 'MRT_VUE_FRONTEND', true );
-```
-
-Or via filter:
-
-```php
-add_filter( 'mrt_use_vue_frontend', '__return_true' );
-```
+Docker dev (`docker compose up` / `docker-dev-reset.ps1`) sätter `MRT_DEVELOPMENT` och bygger Vue-bundeln.
 
 ## Build and check
 
@@ -61,7 +44,7 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 ## PHP integration
 
-- `inc/assets/vue-frontend.php` — flag, enqueue bundled CSS/JS (IIFE), mount HTML
+- `inc/assets/vue-frontend.php` — enqueue bundled CSS/JS (IIFE), mount HTML
 - `inc/public/vue-shortcode-config.php` — JSON config per shortcode
 - Shortcodes render via `MRT_render_vue_mount()` (Vue-only)
 

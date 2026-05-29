@@ -9,9 +9,9 @@
 
 Filter: `mrt_is_development_mode` kan tvinga läge vid behov.
 
-## Vue-experiment (branch `experiment/vue-public-ui`)
+## Publikt Vue-frontend
 
-Docker dev sätter `MRT_VUE_FRONTEND` och bygger Vue automatiskt via `docker-dev-reset.ps1` (service `vue`).
+Docker dev bygger Vue automatiskt via `docker-dev-reset.ps1` (service `vue`).
 
 Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` → `assets/dist/vue/`), inte från separata WP-handles för `frontend-public.css`.
 
@@ -19,7 +19,7 @@ Se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md). Bygg manuellt: `composer vue:build` e
 
 Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). PHPUnit: `composer test` (kräver **PHP 8.2+** via `vendor/bin/phpunit`; på äldre system: `docker compose run --rm composer test`). Samma kedja körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
-På denna gren är publikt UI **Vue-only** (jQuery-wizard-moduler är borttagna). `MRT_use_vue_frontend()` finns kvar som filter-hook men alla shortcodes mountar Vue direkt.
+Publikt UI är **Vue-only** (jQuery-wizard-moduler är borttagna). Månad, översikt och wizard mountar Vue via `assets/dist/vue/`.
 
 ## Endast utveckling (döljs i typisk produktion)
 
@@ -42,8 +42,6 @@ På denna gren är publikt UI **Vue-only** (jQuery-wizard-moduler är borttagna)
 Per-komponent debug-sidor skapas fortfarande vid setup men listas under **Railway Timetable → Component demo page** (inte i front-menyn). Kör **Set up development menu** igen för att ta bort gamla debug-länkar ur menyn.
 
 Wizard-debug kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Presets: `inc/public/journey-wizard/debug-fixtures.php`, appliceras i Vue via `useWizardDebug.ts` och `createWizardStore` (`debug="date|outbound|return|summary"`).
-
-Gamla planner smoke-sidor (om de fanns) tas bort vid setup.
 
 Block-tema med enbart Site Editor-navigation kan kräva manuell länk tills vidare.
 

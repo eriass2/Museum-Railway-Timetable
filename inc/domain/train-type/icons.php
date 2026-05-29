@@ -113,39 +113,6 @@ function MRT_get_train_type_symbol_key_from_label( string $label ): string {
 }
 
 /**
- * <img> markup for a train-type icon.
- *
- * @param string $key    steam|diesel|railbus|bus
- * @param string $alt    Accessible label (empty when decorative)
- */
-function MRT_train_type_icon_img( string $key, string $alt = '' ): string {
-	if ( $key === '' ) {
-		return '';
-	}
-	$class = 'mrt-train-type-icon-img mrt-train-type-icon-img--' . sanitize_html_class( $key );
-	return sprintf(
-		'<img src="%s" class="%s" width="48" height="24" decoding="async" alt="%s" />',
-		esc_url( MRT_train_type_icon_url( $key ) ),
-		esc_attr( $class ),
-		esc_attr( $alt )
-	);
-}
-
-/**
- * Icon HTML for a train type term (timetable grids, admin).
- *
- * @param WP_Term|null $train_type Train type term object
- * @return string Icon HTML or empty string
- */
-function MRT_get_train_type_icon( ?WP_Term $train_type ): string {
-	if ( ! $train_type ) {
-		return '';
-	}
-	$key = MRT_get_train_type_symbol_key( $train_type );
-	return MRT_train_type_icon_img( $key, $train_type->name );
-}
-
-/**
  * @return WP_Term|null
  */
 function MRT_get_train_type_term_by_slug( string $slug ): ?WP_Term {

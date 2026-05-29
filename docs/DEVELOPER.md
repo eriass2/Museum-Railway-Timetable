@@ -42,7 +42,7 @@ Fullständigt index: **[README.md](README.md)**.
 |----------|-------------|
 | `composer check` | Kör lokal snabbkontroll: plugin-check, PHPStan, PHPUnit och JS-tester |
 | `composer plugin-check` | `php scripts/validate.php` – filer, syntax, ABSPATH, text domain |
-| `composer test` | PHPUnit |
+| `composer test` | PHPUnit (`php vendor/bin/phpunit` — kör i terminal, öppna inte `vendor\bin\phpunit` direkt på Windows) |
 | `composer csv:validate -- <path>` | Validera CSV-paket utan WordPress |
 | `composer test:js` | Node-baserade JS-tester för delade assets |
 | `composer phpstan` / `phpcs` / `lint` | Statisk analys + WPCS |
@@ -95,9 +95,7 @@ Efter ändringar i import, rutter eller demosidor – ett kommando för agent/ut
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1
 ```
 
-`-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo` och `pages.wizard`.
-
-På grenen `experiment/vue-public-ui`: reset bygger även Vue (`docker compose --profile tools run --rm vue`), sätter `MRT_VUE_FRONTEND`, och laddar publik CSS via Vite-bundeln — se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md).
+`-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo` och `pages.wizard`. Reset bygger Vue (`docker compose --profile tools run --rm vue`) och laddar publik CSS via Vite-bundeln — se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md).
 
 ### Automatiserad Docker-smoke
 

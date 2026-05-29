@@ -151,18 +151,6 @@ function MRT_check_db_error( string $context = '' ): bool {
 }
 
 /**
- * Log error message if WP_DEBUG is enabled
- *
- * @param string $message Error message to log
- * @return void
- */
-function MRT_log_error( string $message ): void {
-	if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-		error_log( 'MRT: ' . $message );
-	}
-}
-
-/**
  * Convert time format from HH:MM to HH.MM
  *
  * @param string|null $time Time in HH:MM format or null

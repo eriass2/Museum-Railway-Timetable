@@ -106,7 +106,7 @@ Delad journey-domän och AJAX (används av wizarden):
 
 ## Frontend Assets
 
-Med `MRT_VUE_FRONTEND` laddar plugin **en** Vite-bundel (`assets/dist/vue/`) som innehåller CSS (importerad från `assets/*.css`) och Vue-appar för alla tre shortcodes. Wizard laddas som async chunk endast när wizarden mountas.
+Plugin laddar **en** Vite-bundel (`assets/dist/vue/`) med CSS (importerad från `assets/*.css`) och Vue-appar för månad, översikt och wizard. Wizard laddas som async chunk endast när wizarden mountas.
 
 - **Enqueue:** `inc/assets/vue-frontend.php`, `inc/assets/frontend.php`
 - **Tågtypsikoner:** bundlade via `frontend/vue/src/styles/mrt-public.css`

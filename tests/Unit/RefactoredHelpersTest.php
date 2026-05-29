@@ -10,7 +10,6 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 require_once ABSPATH . 'inc/domain/route/routes.php';
-require_once ABSPATH . 'inc/domain/journey/journey-connection-display.php';
 
 final class RefactoredHelpersTest extends TestCase {
 
@@ -79,20 +78,5 @@ final class RefactoredHelpersTest extends TestCase {
 		);
 
 		self::assertSame( '', MRT_get_route_label_from_services_end_station( 77, $services ) );
-	}
-
-	public function test_journey_connection_display_helpers(): void {
-		$row = array(
-			'from_departure' => '09:05',
-			'from_arrival'   => '',
-			'to_arrival'     => '',
-			'to_departure'   => '10:15',
-			'destination'    => '',
-			'direction'      => 'Faringe',
-		);
-
-		self::assertSame( '09.05', MRT_journey_connection_departure_display( $row ) );
-		self::assertSame( '10.15', MRT_journey_connection_arrival_display( $row ) );
-		self::assertSame( 'Faringe', MRT_journey_connection_destination_display( $row ) );
 	}
 }

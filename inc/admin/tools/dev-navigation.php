@@ -12,9 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Option: wizard-only smoke page ID */
 define( 'MRT_OPTION_WIZARD_SMOKE_PAGE_ID', 'mrt_wizard_smoke_page_id' );
 
-/** Option: legacy planner smoke page ID (removed; option cleared on dev setup) */
-define( 'MRT_OPTION_PLANNER_SMOKE_PAGE_ID', 'mrt_planner_smoke_page_id' );
-
 /** Option: nav menu ID used for dev links (may match site primary) */
 define( 'MRT_OPTION_DEV_NAV_MENU_ID', 'mrt_dev_nav_menu_id' );
 
@@ -47,17 +44,6 @@ function MRT_dev_smoke_page_specs(): array {
 			),
 		),
 	);
-}
-
-/**
- * Remove deprecated planner smoke page and stored option.
- */
-function MRT_remove_deprecated_planner_smoke_page(): void {
-	$page_id = (int) get_option( MRT_OPTION_PLANNER_SMOKE_PAGE_ID, 0 );
-	if ( $page_id > 0 && get_post( $page_id ) && get_post_type( $page_id ) === 'page' ) {
-		wp_delete_post( $page_id, true );
-	}
-	delete_option( MRT_OPTION_PLANNER_SMOKE_PAGE_ID );
 }
 
 /**
@@ -103,8 +89,6 @@ function MRT_ensure_dev_smoke_page( string $option_key, string $title, $content 
 function MRT_ensure_dev_smoke_pages(): array {
 	$page_ids = array();
 	$errors   = array();
-
-	MRT_remove_deprecated_planner_smoke_page();
 
 	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
 		$result = MRT_ensure_dev_smoke_page( $spec['option'], $spec['title'], $spec['content'] );
@@ -402,13 +386,12 @@ function MRT_setup_development_navigation() {
 }
 
 /**
- * Delete plugin-owned smoke + debug pages (legacy planner if present).
+ * Delete plugin-owned smoke + debug pages.
  */
 function MRT_clear_dev_smoke_pages(): void {
 	$keys = array(
 		MRT_OPTION_COMPONENTS_DEMO_PAGE_ID,
 		MRT_OPTION_WIZARD_SMOKE_PAGE_ID,
-		MRT_OPTION_PLANNER_SMOKE_PAGE_ID,
 	);
 	if ( function_exists( 'MRT_component_debug_page_specs' ) ) {
 		foreach ( MRT_component_debug_page_specs() as $spec ) {

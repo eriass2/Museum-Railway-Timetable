@@ -219,10 +219,13 @@ museum-railway-timetable/
 │   ├─ admin-stoptimes-ui.js
 │   ├─ admin-timetable-services-ui.js
 │   ├─ admin-service-edit.js     # Service edit (route, stoptimes form)
+│   ├─ mrt-string-utils.js       # Shared admin string helpers
+│   ├─ mrt-date-utils.js         # Shared admin date/time helpers
 │   ├─ dist/vue/                 # Vite bundle (public shortcode JS + CSS)
+│   ├─ frontend-public.css       # Shared primitives (imported by Vue mrt-public.css)
 │   ├─ icons/train-types/        # PNG train type symbols
-│   ├─ train-type-icons.css      # Minimal icon mapping retained during rebuild
-│   └─ frontend.js               # Month calendar AJAX (legacy; Vue mode uses dist/vue)
+│   └─ train-type-icons.css      # Icon sizing (imported by Vue bundle)
+├─ frontend/vue/                 # Vue source (month, overview, wizard)
 └─ languages/                    # .pot / .po
 ```
 
@@ -230,11 +233,24 @@ museum-railway-timetable/
 
 Se [docs/REBUILD_RULES.md](docs/REBUILD_RULES.md) och [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md). Översikt: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
+### Public shortcodes
+
+All three public shortcodes use **Vue** (`assets/dist/vue/`). Build after frontend changes: `composer vue:build` (see [docs/DEVELOPMENT_MODE.md](docs/DEVELOPMENT_MODE.md)).
+
+| Shortcode | Purpose |
+|-----------|---------|
+| `[museum_timetable_month]` | Month calendar with traffic days |
+| `[museum_timetable_overview]` | Full timetable grid |
+| `[museum_journey_wizard]` | Journey search (only public trip planner) |
+| `[museum_timetable_index]` | Timetable index page (PHP-rendered; separate CSS enqueue) |
+
+The legacy `[museum_journey_planner]` shortcode was removed in favor of the wizard.
+
 ### Hooks and Filters
 
 **Filters:**
 - `mrt_overview_days_ahead` - Number of days to look ahead in stations overview (default: 60)
-- `mrt_should_enqueue_frontend_assets` - Control frontend asset loading
+- `mrt_should_enqueue_frontend_assets` - Force Vue asset enqueue when shortcode is not in post content
 
 ### Database Tables
 

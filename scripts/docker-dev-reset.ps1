@@ -35,11 +35,10 @@ $ErrorActionPreference = 'Continue'
 docker compose run --rm wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh 2>&1 | ForEach-Object { Write-Host $_ }
 $ErrorActionPreference = 'Stop'
 
-Write-Host "`n--- Enable WP_DEBUG + Vue frontend (experiment) ---" -ForegroundColor Cyan
+Write-Host "`n--- Enable WP_DEBUG (development) ---" -ForegroundColor Cyan
 $ErrorActionPreference = 'Continue'
 docker compose run --rm --user root wordpress-init wp --allow-root config set WP_DEBUG true --raw 2>&1 | ForEach-Object { Write-Host $_ }
 docker compose run --rm --user root wordpress-init wp --allow-root config set WP_DEBUG_LOG true --raw 2>&1 | ForEach-Object { Write-Host $_ }
-docker compose run --rm --user root wordpress-init wp --allow-root config set MRT_VUE_FRONTEND true --raw 2>&1 | ForEach-Object { Write-Host $_ }
 $ErrorActionPreference = 'Stop'
 
 Write-Host "`n--- Reset and import ---" -ForegroundColor Cyan

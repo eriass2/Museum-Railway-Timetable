@@ -5,20 +5,11 @@ declare(strict_types=1);
 /**
  * Vue bundle for public shortcodes (month, overview, journey wizard).
  *
- * Filter `mrt_use_vue_frontend` can disable mounting (no legacy fallback on this branch).
- *
  * @package Museum_Railway_Timetable
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
-}
-
-/**
- * Whether public shortcodes should use Vue (default true; no jQuery fallback).
- */
-function MRT_use_vue_frontend(): bool {
-	return (bool) apply_filters( 'mrt_use_vue_frontend', true );
 }
 
 /**

@@ -381,30 +381,3 @@ function MRT_bus_transfer_detail_line( array $bus ): string {
 	}
 	return implode( ' ', $parts );
 }
-
-/**
- * @param array<int, array{service_number: string, time_display: string, destination?: string}> $items
- */
-function MRT_format_connection_service_list( array $items, string $kind ): string {
-	if ( $items === array() ) {
-		return '—';
-	}
-
-	$parts = array();
-	foreach ( $items as $item ) {
-		if ( $kind === 'buss' ) {
-			$chunk = sprintf( __( 'Buss %s', 'museum-railway-timetable' ), $item['service_number'] );
-		} else {
-			$chunk = sprintf( __( 'Tåg %s', 'museum-railway-timetable' ), $item['service_number'] );
-		}
-		if ( ! empty( $item['time_display'] ) && $item['time_display'] !== '—' ) {
-			$chunk .= ' ' . $item['time_display'];
-		}
-		if ( $kind === 'buss' && ! empty( $item['destination'] ) ) {
-			$chunk .= ' → ' . $item['destination'];
-		}
-		$parts[] = $chunk;
-	}
-
-	return implode( '; ', $parts );
-}
