@@ -1945,3 +1945,143 @@ msgstr "Välj en tidtabell för att se avgångar och trafikdagar."
 #: inc/public/timetable-index/shortcode.php
 msgid "View timetable"
 msgstr "Visa tidtabell"
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "Deviations by traffic day"
+msgstr "Avvikelser per trafikdag"
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "Add a replacement train type and/or message for a single traffic day (e.g. steam replaced by diesel). Only days with a deviation are listed."
+msgstr "Lägg till ersättningstågtyp och/eller meddelande för en trafikdag (t.ex. ånglok ersatt med diesel). Endast dagar med avvikelse visas."
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "Select a timetable with traffic days before adding deviations."
+msgstr "Välj en tidtabell med trafikdagar innan du lägger till avvikelser."
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "Traffic day for new deviation"
+msgstr "Trafikdag för ny avvikelse"
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "— Select traffic day —"
+msgstr "— Välj trafikdag —"
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "Add deviation"
+msgstr "Lägg till avvikelse"
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "All traffic days for this timetable already have a deviation row."
+msgstr "Alla trafikdagar för denna tidtabell har redan en avvikelserad."
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "Replacement train type for %s"
+msgstr "Ersättningstågtyp för %s"
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "— Default train type —"
+msgstr "— Standardtågtyp —"
+
+#: inc/admin/meta-boxes/service-deviations.php
+msgid "Message to travellers (e.g. steam loco replaced by diesel)"
+msgstr "Meddelande till resenärer (t.ex. ånglok ersatt med diesel)"
+
+#: inc/admin/meta-boxes/timetable-services.php
+msgid "Edit trip"
+msgstr "Redigera tur"
+
+#: inc/admin/meta-boxes/timetable-services.php
+msgid "Deviation"
+msgstr "Avvikelse"
+
+#: inc/admin/meta-boxes/timetable-services.php
+msgid "Deviation (%d)"
+msgstr "Avvikelse (%d)"
+
+#: inc/admin/meta-boxes/timetable-overview.php
+msgid "Preview how the timetable looks on the public site. Loaded on demand to keep this screen fast."
+msgstr "Förhandsgranska hur tidtabellen ser ut publikt. Laddas vid behov så att sidan hålls snabb."
+
+#: inc/admin/meta-boxes/timetable-overview.php
+msgid "No public page linked yet. Run timetable page sync from the dashboard or dev reset."
+msgstr "Ingen publik sida kopplad ännu. Kör synk av tidtabellssidor från dashboard eller dev-reset."
+
+#: inc/admin/meta-boxes/timetable-overview.php
+msgid "Show preview"
+msgstr "Visa förhandsgranskning"
+
+#: inc/admin/meta-boxes/timetable-overview.php
+msgid "Open public page"
+msgstr "Öppna publik sida"
+
+#: inc/admin/meta-boxes/timetable-overview.php
+msgid "Timetable preview"
+msgstr "Förhandsgranskning av tidtabell"
+
+#: inc/assets/admin.php
+msgid "Preview loaded"
+msgstr "Förhandsgranskning laddad"
+
+#: inc/admin/meta-boxes/timetable-workspace.php
+msgid "Traffic days"
+msgstr "Trafikdagar"
+
+#: inc/admin/meta-boxes/timetable-workspace.php
+msgid "Trips"
+msgstr "Turer"
+
+#: inc/admin/meta-boxes/timetable-workspace.php
+msgid "Deviations"
+msgstr "Avvikelser"
+
+#: inc/admin/meta-boxes/timetable-workspace.php
+msgid "Preview"
+msgstr "Förhandsgranskning"
+
+#: inc/admin/meta-boxes/timetable-workspace.php
+msgid "Define which calendar days this timetable applies. Use a weekday pattern or add single dates."
+msgstr "Ange vilka kalenderdagar tidtabellen gäller. Använd veckomönster eller lägg till enskilda datum."
+
+#: inc/admin/meta-boxes/timetable-deviations-panel.php
+msgid "Plan replacement train types or traveller messages per trip and traffic day. Save the timetable to apply changes."
+msgstr "Planera ersättningstågtyp och meddelanden per tur och trafikdag. Spara tidtabellen för att verkställa."
+
+#: inc/admin/meta-boxes/timetable-deviations-panel.php
+msgid "Add trips on the Trips tab before creating deviations."
+msgstr "Lägg till turer under fliken Turer innan du skapar avvikelser."
+
+#: inc/admin/meta-boxes/timetable-deviations-panel.php
+msgid "Add traffic days on the Traffic days tab before creating deviations."
+msgstr "Lägg till trafikdagar under fliken Trafikdagar innan du skapar avvikelser."
+
+#: inc/admin/meta-boxes/timetable-deviations-panel.php
+msgid "Trip"
+msgstr "Tur"
+
+#: inc/admin/meta-boxes/timetable-deviations-panel.php
+msgid "Replacement train type"
+msgstr "Ersättningstågtyp"
+
+#: inc/admin/meta-boxes/timetable-deviations-panel.php
+msgid "Message"
+msgstr "Meddelande"
+
+#: inc/admin/meta-boxes/timetable-deviations-panel.php
+msgid "Choose trip and traffic day, then click Add. Fill in replacement type and/or message in the table."
+msgstr "Välj tur och trafikdag, klicka Lägg till. Fyll i ersättningstågtyp och/eller meddelande i tabellen."
+
+#: inc/admin/meta-boxes/timetable-deviations-panel.php
+msgid "— Select trip —"
+msgstr "— Välj tur —"
+
+#: inc/admin/meta-boxes/service.php
+msgid "Deviations tab"
+msgstr "Fliken Avvikelser"
+
+#: inc/admin/meta-boxes/service.php
+msgid "Edit stop times here. Plan replacements on the timetable Deviations tab."
+msgstr "Redigera stopptider här. Planera ersättningar under tidtabellens flik Avvikelser."
+
+#: inc/admin/meta-boxes.php
+msgid "Timetable"
+msgstr "Tidtabell"

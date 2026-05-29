@@ -21,6 +21,10 @@
             window.MRTAdminServiceEdit.init();
         }
 
+        if (window.MRTAdminTimetableWorkspace && typeof window.MRTAdminTimetableWorkspace.init === 'function') {
+            window.MRTAdminTimetableWorkspace.init();
+        }
+
         if (typeof console !== 'undefined' && console.log && window.mrtDebug) {
             console.log('Museum Railway Timetable admin loaded.');
         }

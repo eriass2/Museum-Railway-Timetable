@@ -165,6 +165,7 @@ function MRT_clear_plugin_options(): void {
 	delete_option( 'mrt_debug_page_wizard_summary_id' );
 	delete_option( 'mrt_timetables_index_page_id' );
 	delete_option( 'mrt_dev_nav_menu_id' );
+	delete_option( 'mrt_dev_wp_navigation_id' );
 }
 
 /**

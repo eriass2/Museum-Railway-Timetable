@@ -17,6 +17,7 @@ add_action(
 		remove_post_type_support( 'mrt_station', 'editor' );
 		remove_post_type_support( 'mrt_service', 'editor' );
 		remove_post_type_support( 'mrt_route', 'editor' );
+		remove_post_type_support( 'mrt_timetable', 'editor' );
 	},
 	20
 );
@@ -27,7 +28,7 @@ add_action(
 add_filter(
 	'use_block_editor_for_post_type',
 	function ( $use_block_editor, $post_type ) {
-		if ( in_array( $post_type, array( 'mrt_station', 'mrt_service', 'mrt_route' ), true ) ) {
+		if ( in_array( $post_type, array( 'mrt_station', 'mrt_service', 'mrt_route', 'mrt_timetable' ), true ) ) {
 			return false;
 		}
 		return $use_block_editor;

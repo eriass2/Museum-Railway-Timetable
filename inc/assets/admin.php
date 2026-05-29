@@ -89,6 +89,8 @@ function MRT_enqueue_admin_feature_scripts( string $asset_url ): void {
 	wp_enqueue_script( 'mrt-admin-stoptimes-ui', $asset_url . 'admin-stoptimes-ui.js', array( 'mrt-admin-utils', 'jquery' ), MRT_VERSION, true );
 	wp_enqueue_script( 'mrt-admin-timetable-services', $asset_url . 'admin-timetable-services-ui.js', array( 'mrt-admin-utils', 'jquery' ), MRT_VERSION, true );
 	wp_enqueue_script( 'mrt-admin-service-edit', $asset_url . 'admin-service-edit.js', array( 'mrt-admin-utils', 'jquery' ), MRT_VERSION, true );
+	wp_enqueue_script( 'mrt-admin-timetable-preview', $asset_url . 'admin-timetable-preview.js', array( 'mrt-admin-utils', 'jquery' ), MRT_VERSION, true );
+	wp_enqueue_script( 'mrt-admin-timetable-workspace', $asset_url . 'admin-timetable-workspace.js', array( 'mrt-admin-utils', 'mrt-admin-timetable-preview', 'jquery' ), MRT_VERSION, true );
 }
 
 /**
@@ -104,6 +106,8 @@ function MRT_enqueue_admin_entry_script( string $asset_url ): void {
 			'mrt-admin-stoptimes-ui',
 			'mrt-admin-timetable-services',
 			'mrt-admin-service-edit',
+			'mrt-admin-timetable-preview',
+			'mrt-admin-timetable-workspace',
 			'jquery',
 		),
 		MRT_VERSION,
@@ -157,6 +161,11 @@ function MRT_admin_script_localization(): array {
 		'tripAdded'                    => __( 'Trip added successfully.', MRT_TEXT_DOMAIN ),
 		'tripRemoved'                  => __( 'Trip removed successfully.', MRT_TEXT_DOMAIN ),
 		'saved'                        => __( '✓ Saved', MRT_TEXT_DOMAIN ),
+		'defaultTrainType'             => __( '— Default train type —', MRT_TEXT_DOMAIN ),
+		'deviationNoticePlaceholder'   => __( 'Message to travellers (e.g. steam loco replaced by diesel)', MRT_TEXT_DOMAIN ),
+		'previewLoaded'                => __( 'Preview loaded', MRT_TEXT_DOMAIN ),
+		'selectTrafficDay'             => __( '— Select traffic day —', MRT_TEXT_DOMAIN ),
+		'deviationNoticeShort'         => __( 'Message to travellers', MRT_TEXT_DOMAIN ),
 	);
 }
 

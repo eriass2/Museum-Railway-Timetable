@@ -27,13 +27,21 @@ function MRT_service_meta_box_setup_editing_from_timetable( $timetable_id ) {
 	add_action(
 		'edit_form_top',
 		function () use ( $timetable_id ) {
-			global $post_type;
-			if ( $post_type === 'mrt_service' && isset( $_GET['timetable_id'] ) ) {
+			global $post_type, $post;
+			if ( $post_type === 'mrt_service' && isset( $_GET['timetable_id'] ) && $post instanceof WP_Post ) {
 				$timetable_edit_link = get_edit_post_link( $timetable_id );
 				if ( $timetable_edit_link ) {
 					echo '<div class="mrt-alert mrt-alert-info mrt-info-box mrt-mb-1">';
 					echo '<a href="' . esc_url( $timetable_edit_link ) . '" class="button mrt-mr-sm">← ' . esc_html__( 'Back to Timetable', 'museum-railway-timetable' ) . '</a>';
-					echo '<span class="description">' . esc_html__( 'This trip belongs to a timetable. The title is automatically generated from Route + Destination.', 'museum-railway-timetable' ) . '</span>';
+					$deviations_link = add_query_arg(
+						array(
+							'mrt_tab'     => 'deviations',
+							'mrt_service' => (int) $post->ID,
+						),
+						$timetable_edit_link
+					);
+					echo '<a href="' . esc_url( $deviations_link ) . '" class="button mrt-mr-sm">' . esc_html__( 'Deviations tab', 'museum-railway-timetable' ) . '</a>';
+					echo '<span class="description">' . esc_html__( 'Edit stop times here. Plan replacements on the timetable Deviations tab.', 'museum-railway-timetable' ) . '</span>';
 					echo '</div>';
 				}
 			}
@@ -290,88 +298,6 @@ function MRT_render_service_notice_row( $post ) {
 }
 
 /**
- * Render date-specific overrides (train type + notice) for service meta box
- */
-function MRT_render_service_train_types_by_date_row( $post, $timetable_id, $all_train_types ) {
-	$train_types_by_date = get_post_meta( $post->ID, 'mrt_service_train_types_by_date', true );
-	if ( ! is_array( $train_types_by_date ) ) {
-		$train_types_by_date = array();
-	}
-	$notices_by_date = get_post_meta( $post->ID, 'mrt_service_notices_by_date', true );
-	if ( ! is_array( $notices_by_date ) ) {
-		$notices_by_date = array();
-	}
-	$timetable_dates = $timetable_id ? MRT_get_timetable_dates( $timetable_id ) : array();
-	sort( $timetable_dates );
-	?>
-	<tr>
-		<th><label><?php esc_html_e( 'Date-Specific Overrides', 'museum-railway-timetable' ); ?></label></th>
-		<td>
-			<p class="description"><?php esc_html_e( 'Override train type and/or add a public notice for specific traffic days. Deviations are marked in timetables on the selected day.', 'museum-railway-timetable' ); ?></p>
-			<?php if ( empty( $timetable_dates ) ) : ?>
-				<p class="description mrt-text-error mrt-font-semibold">
-					<?php esc_html_e( '⚠️ Please select a timetable first to see available dates.', 'museum-railway-timetable' ); ?>
-				</p>
-			<?php else : ?>
-				<div id="mrt-train-types-by-date-container" class="mrt-mt-1">
-					<?php
-					foreach ( $timetable_dates as $date ) :
-						MRT_render_service_date_override_fields( $date, $train_types_by_date, $notices_by_date, $all_train_types );
-					endforeach;
-					?>
-				</div>
-			<?php endif; ?>
-		</td>
-	</tr>
-	<?php
-}
-
-/**
- * One traffic day: train-type override and optional notice.
- *
- * @param array<string, int>    $train_types_by_date
- * @param array<string, string> $notices_by_date
- * @param array<int, WP_Term>   $all_train_types
- */
-function MRT_render_service_date_override_fields( string $date, array $train_types_by_date, array $notices_by_date, array $all_train_types ): void {
-	$date_formatted = date_i18n( get_option( 'date_format' ), strtotime( $date ) );
-	$train_type_id  = isset( $train_types_by_date[ $date ] ) ? intval( $train_types_by_date[ $date ] ) : 0;
-	$notice         = isset( $notices_by_date[ $date ] ) ? (string) $notices_by_date[ $date ] : '';
-	?>
-	<div class="mrt-box mrt-box-sm mrt-train-type-date-row">
-		<label class="mrt-form-label mrt-form-label--inline">
-			<?php echo esc_html( $date_formatted ); ?>
-			<span class="mrt-form-label__hint">(<?php echo esc_html( $date ); ?>)</span>
-		</label>
-		<select name="mrt_train_types_by_date[<?php echo esc_attr( $date ); ?>]" class="mrt-input mrt-input--meta mrt-w-200 mrt-ml-sm">
-			<option value=""><?php esc_html_e( '— Use Default —', 'museum-railway-timetable' ); ?></option>
-			<?php foreach ( $all_train_types as $term ) : ?>
-				<option value="<?php echo esc_attr( (string) $term->term_id ); ?>" <?php selected( $train_type_id, $term->term_id ); ?>><?php echo esc_html( $term->name ); ?></option>
-			<?php endforeach; ?>
-		</select>
-		<label class="screen-reader-text" for="mrt_notice_by_date_<?php echo esc_attr( $date ); ?>">
-			<?php
-			echo esc_html(
-				sprintf(
-					/* translators: %s: formatted date */
-					__( 'Notice for %s', 'museum-railway-timetable' ),
-					$date_formatted
-				)
-			);
-			?>
-		</label>
-		<textarea
-			name="mrt_notices_by_date[<?php echo esc_attr( $date ); ?>]"
-			id="mrt_notice_by_date_<?php echo esc_attr( $date ); ?>"
-			class="large-text mrt-mt-sm"
-			rows="2"
-			placeholder="<?php esc_attr_e( 'Optional notice for this day (shown as deviation)', 'museum-railway-timetable' ); ?>"
-		><?php echo esc_textarea( $notice ); ?></textarea>
-	</div>
-	<?php
-}
-
-/**
  * Load posts and meta for the service meta box.
  *
  * @param WP_Post $post Current post object
@@ -440,7 +366,6 @@ function MRT_render_service_meta_box( $post ) {
 			MRT_render_service_train_type_row( $ctx['train_types'], $ctx['all_train_types'] );
 			MRT_render_service_number_row( $post );
 			MRT_render_service_notice_row( $post );
-			MRT_render_service_train_types_by_date_row( $post, $ctx['timetable_id'], $ctx['all_train_types'] );
 			MRT_render_service_destination_field( $ctx['route_id'], $ctx['end_station_id'] );
 			?>
 		</table>

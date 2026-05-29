@@ -32,3 +32,24 @@ function MRT_is_development_mode(): bool {
 function MRT_allow_script_debug(): bool {
 	return MRT_is_development_mode();
 }
+
+/**
+ * Use post-name permalinks in development when still on WordPress "plain" URLs.
+ *
+ * Without this, paths like /wizard-smoke-test/ are not resolved and the static
+ * front page (Tidtabeller) is shown instead.
+ *
+ * @return bool True when structure was updated and rewrite rules flushed.
+ */
+function MRT_ensure_pretty_permalinks(): bool {
+	if ( ! MRT_is_development_mode() ) {
+		return false;
+	}
+	$structure = (string) get_option( 'permalink_structure', '' );
+	if ( $structure !== '' ) {
+		return false;
+	}
+	update_option( 'permalink_structure', '/%postname%/' );
+	flush_rewrite_rules( true );
+	return true;
+}

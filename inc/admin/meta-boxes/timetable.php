@@ -122,37 +122,12 @@ function MRT_render_timetable_date_sections( WP_Post $post, array $dates ): void
 }
 
 /**
- * Render timetable meta box
+ * Render timetable meta box (legacy wrapper; workspace uses dates panel).
  *
  * @param WP_Post $post Current post object
  */
 function MRT_render_timetable_meta_box( $post ) {
-	wp_nonce_field( 'mrt_save_timetable_meta', 'mrt_timetable_meta_nonce' );
-
-	$dates = MRT_get_timetable_dates( $post->ID );
-	if ( ! is_array( $dates ) ) {
-		$dates = array();
-	}
-	$dates = array_values(
-		array_filter(
-			$dates,
-			function ( $d ) {
-				return ! empty( $d ) && MRT_validate_date( $d );
-			}
-		)
-	);
-
-	wp_enqueue_script( 'jquery' );
-	?>
-	<?php
-	MRT_render_info_box(
-		__( '💡 What is a Timetable?', 'museum-railway-timetable' ),
-		'<p>' . esc_html__( 'A timetable defines which days (dates) trains run. You can add dates using patterns (e.g., all Wednesdays in June-September) or add specific dates. You can also remove individual dates from patterns.', 'museum-railway-timetable' ) . '</p>'
-	);
-	?>
-	<?php MRT_render_timetable_date_sections( $post, $dates ); ?>
-	<?php MRT_render_timetable_dates_script( $dates ); ?>
-	<?php
+	MRT_render_timetable_dates_panel( $post );
 }
 
 /**
@@ -185,18 +160,16 @@ add_action(
 					$dates[] = $date;
 				}
 			}
-			// Remove duplicates and sort
 			$dates = array_unique( $dates );
 			sort( $dates );
-			if ( ! empty( $dates ) ) {
+			if ( $dates !== array() ) {
 				update_post_meta( $post_id, 'mrt_timetable_dates', $dates );
-				// Remove old single date field if it exists
 				delete_post_meta( $post_id, 'mrt_timetable_date' );
 			} else {
-				// Only delete if explicitly empty array was sent
-				// Don't delete if field wasn't sent at all (might be autosave or other issue)
 				delete_post_meta( $post_id, 'mrt_timetable_dates' );
 			}
 		}
+
+		MRT_save_timetable_deviations( (int) $post_id );
 	}
 );

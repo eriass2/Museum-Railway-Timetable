@@ -15,6 +15,9 @@ define( 'MRT_OPTION_WIZARD_SMOKE_PAGE_ID', 'mrt_wizard_smoke_page_id' );
 /** Option: nav menu ID used for dev links (may match site primary) */
 define( 'MRT_OPTION_DEV_NAV_MENU_ID', 'mrt_dev_nav_menu_id' );
 
+/** Option: block-theme navigation post (wp_navigation) synced from the dev menu */
+define( 'MRT_OPTION_DEV_WP_NAVIGATION_ID', 'mrt_dev_wp_navigation_id' );
+
 /**
  * Smoke page definitions (content callback for component demo).
  *
@@ -164,6 +167,154 @@ function MRT_nav_menu_contains_page( int $menu_id, int $page_id ): bool {
 		}
 	}
 	return false;
+}
+
+/**
+ * Remove classic menu links to pages that no longer exist (e.g. after dev reset).
+ *
+ * @param int $menu_id Nav menu term ID.
+ * @return int Items removed.
+ */
+function MRT_remove_broken_nav_menu_page_items( int $menu_id ): int {
+	$items = wp_get_nav_menu_items( $menu_id );
+	if ( ! is_array( $items ) ) {
+		return 0;
+	}
+	$removed = 0;
+	foreach ( $items as $item ) {
+		if ( $item->object !== 'page' ) {
+			continue;
+		}
+		$page_id = (int) $item->object_id;
+		if ( $page_id > 0 && get_post( $page_id ) ) {
+			continue;
+		}
+		if ( wp_delete_post( (int) $item->ID, true ) ) {
+			++$removed;
+		}
+	}
+	return $removed;
+}
+
+/**
+ * Serialized navigation-link block for block themes (Twenty Twenty-Five header).
+ */
+function MRT_build_navigation_link_block( int $page_id, string $label ): string {
+	$url = get_permalink( $page_id );
+	if ( ! is_string( $url ) || $url === '' ) {
+		return '';
+	}
+	$attrs = array(
+		'className'     => ' menu-item menu-item-type-post_type menu-item-object-page',
+		'description'   => '',
+		'id'            => (string) $page_id,
+		'kind'          => 'post-type',
+		'label'         => $label,
+		'opensInNewTab' => false,
+		'rel'           => null,
+		'title'         => '',
+		'type'          => 'page',
+		'url'           => $url,
+	);
+	$json = wp_json_encode( $attrs, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE );
+	return '<!-- wp:navigation-link ' . $json . ' /-->';
+}
+
+/**
+ * Build wp_navigation post content from a classic nav menu.
+ */
+function MRT_build_block_navigation_content_from_menu( int $menu_id ): string {
+	$items = wp_get_nav_menu_items( $menu_id, array( 'orderby' => 'menu_order' ) );
+	if ( ! is_array( $items ) ) {
+		return '';
+	}
+	$blocks = array();
+	foreach ( $items as $item ) {
+		if ( $item->type !== 'post_type' || $item->object !== 'page' ) {
+			continue;
+		}
+		$page_id = (int) $item->object_id;
+		if ( $page_id <= 0 || ! get_post( $page_id ) ) {
+			continue;
+		}
+		$block = MRT_build_navigation_link_block( $page_id, (string) $item->title );
+		if ( $block !== '' ) {
+			$blocks[] = $block;
+		}
+	}
+	return implode( '', $blocks );
+}
+
+/**
+ * @return int|WP_Error wp_navigation post ID.
+ */
+function MRT_get_or_create_dev_wp_navigation_post() {
+	$stored = (int) get_option( MRT_OPTION_DEV_WP_NAVIGATION_ID, 0 );
+	if ( $stored > 0 && get_post( $stored ) && get_post_type( $stored ) === 'wp_navigation' ) {
+		return $stored;
+	}
+
+	$existing = get_posts(
+		array(
+			'post_type'      => 'wp_navigation',
+			'name'           => 'museum-railway-development',
+			'posts_per_page' => 1,
+			'post_status'    => array( 'publish', 'draft' ),
+		)
+	);
+	if ( $existing !== array() ) {
+		$nav_id = (int) $existing[0]->ID;
+		update_option( MRT_OPTION_DEV_WP_NAVIGATION_ID, $nav_id );
+		return $nav_id;
+	}
+
+	$menu_name = __( 'Museum Railway (development)', 'museum-railway-timetable' );
+	$nav_id    = wp_insert_post(
+		wp_slash(
+			array(
+				'post_type'   => 'wp_navigation',
+				'post_status' => 'publish',
+				'post_title'  => $menu_name,
+				'post_name'   => 'museum-railway-development',
+				'post_content'=> '',
+			)
+		),
+		true
+	);
+	if ( is_wp_error( $nav_id ) ) {
+		return $nav_id;
+	}
+	update_option( MRT_OPTION_DEV_WP_NAVIGATION_ID, (int) $nav_id );
+	return (int) $nav_id;
+}
+
+/**
+ * Sync block-theme navigation (wp_navigation) from the classic dev menu.
+ *
+ * @return bool True when content was updated.
+ */
+function MRT_sync_block_navigation_from_menu( int $menu_id ): bool {
+	if ( $menu_id <= 0 || ! post_type_exists( 'wp_navigation' ) ) {
+		return false;
+	}
+	$content = MRT_build_block_navigation_content_from_menu( $menu_id );
+	if ( $content === '' ) {
+		return false;
+	}
+	$nav_post = MRT_get_or_create_dev_wp_navigation_post();
+	if ( is_wp_error( $nav_post ) ) {
+		return false;
+	}
+	$result = wp_update_post(
+		wp_slash(
+			array(
+				'ID'           => (int) $nav_post,
+				'post_content' => $content,
+			)
+		),
+		true
+	);
+	return ! is_wp_error( $result );
 }
 
 /**
@@ -356,6 +507,8 @@ function MRT_setup_development_navigation() {
 		return new WP_Error( 'mrt_cap', __( 'Permission denied.', 'museum-railway-timetable' ) );
 	}
 
+	MRT_ensure_pretty_permalinks();
+
 	$pages = MRT_ensure_dev_smoke_pages();
 	if ( $pages['errors'] !== array() ) {
 		return $pages['errors'][0];
@@ -372,10 +525,12 @@ function MRT_setup_development_navigation() {
 	}
 
 	$smoke_ids = MRT_dev_smoke_page_ids();
+	MRT_remove_broken_nav_menu_page_items( $menu_id );
 	MRT_remove_pages_from_nav_menu( $menu_id, MRT_debug_page_ids() );
 	MRT_dedupe_nav_menu_page_links( $menu_id, $smoke_ids );
 
 	$added = MRT_append_smoke_pages_to_nav_menu( $menu_id );
+	MRT_sync_block_navigation_from_menu( $menu_id );
 	update_option( MRT_OPTION_DEV_NAV_MENU_ID, $menu_id );
 
 	return array(

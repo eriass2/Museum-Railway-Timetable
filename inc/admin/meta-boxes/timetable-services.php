@@ -22,14 +22,38 @@ function MRT_render_timetable_service_row( $service, $timetable_id ) {
 	$train_type       = $train_type_id ? get_term( $train_type_id, 'mrt_train_type' ) : null;
 	$destination_data = MRT_get_service_destination( $service->ID );
 	$destination      = ! empty( $destination_data['destination'] ) ? $destination_data['destination'] : '—';
+	$deviation_count  = MRT_count_service_deviations( (int) $service->ID );
+	$edit_url         = add_query_arg( 'timetable_id', $timetable_id, get_edit_post_link( $service->ID ) );
+	$deviation_url    = add_query_arg(
+		array(
+			'mrt_tab'     => 'deviations',
+			'mrt_service' => (int) $service->ID,
+		),
+		get_edit_post_link( $timetable_id )
+	);
 	?>
 	<tr class="mrt-row-hover" data-service-id="<?php echo esc_attr( (string) $service->ID ); ?>">
 		<td><?php echo $route ? esc_html( $route->post_title ) : '—'; ?></td>
 		<td><?php echo $train_type ? esc_html( $train_type->name ) : '—'; ?></td>
 		<td><?php echo esc_html( $destination ); ?></td>
-		<td>
-			<a href="<?php echo esc_url( add_query_arg( 'timetable_id', $timetable_id, get_edit_post_link( $service->ID ) ) ); ?>" class="button button-small">
-				<?php esc_html_e( 'Edit', 'museum-railway-timetable' ); ?>
+		<td class="mrt-timetable-service-actions">
+			<a href="<?php echo esc_url( $edit_url ); ?>" class="button button-small">
+				<?php esc_html_e( 'Edit trip', 'museum-railway-timetable' ); ?>
+			</a>
+			<a href="<?php echo esc_url( $deviation_url ); ?>" class="button button-small">
+				<?php
+				if ( $deviation_count > 0 ) {
+					echo esc_html(
+						sprintf(
+							/* translators: %d: number of deviations */
+							__( 'Deviation (%d)', 'museum-railway-timetable' ),
+							$deviation_count
+						)
+					);
+				} else {
+					esc_html_e( 'Deviation', 'museum-railway-timetable' );
+				}
+				?>
 			</a>
 			<input type="hidden" name="mrt_service_timetable_id" value="<?php echo esc_attr( (string) $timetable_id ); ?>" />
 			<button type="button" class="button button-small mrt-delete-service-from-timetable" data-service-id="<?php echo esc_attr( (string) $service->ID ); ?>">
@@ -143,7 +167,7 @@ function MRT_render_timetable_services_box( $post ) {
 					<th><?php esc_html_e( 'Route', 'museum-railway-timetable' ); ?></th>
 					<th class="mrt-w-150"><?php esc_html_e( 'Train Type', 'museum-railway-timetable' ); ?></th>
 					<th class="mrt-w-150"><?php esc_html_e( 'Destination', 'museum-railway-timetable' ); ?></th>
-					<th class="mrt-w-150"><?php esc_html_e( 'Actions', 'museum-railway-timetable' ); ?></th>
+					<th class="mrt-w-220"><?php esc_html_e( 'Actions', 'museum-railway-timetable' ); ?></th>
 				</tr>
 			</thead>
 			<tbody id="mrt-timetable-services-tbody">

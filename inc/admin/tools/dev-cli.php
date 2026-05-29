@@ -78,6 +78,7 @@ function MRT_dev_reset_and_import() {
 	}
 
 	MRT_dev_cli_set_admin_user();
+	MRT_ensure_pretty_permalinks();
 	MRT_clear_all_plugin_data();
 
 	$import_result = MRT_run_lennakatten_import_package();

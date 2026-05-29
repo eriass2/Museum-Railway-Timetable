@@ -63,3 +63,51 @@
     font-style: italic;
     padding: var(--mrt-spacing-xl);
 }
+
+.mrt-deviation-row__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem;
+}
+
+.mrt-deviation-row__head .mrt-deviation-remove {
+    margin-left: auto;
+}
+
+.mrt-timetable-service-actions .button {
+    margin-bottom: 0.25rem;
+}
+
+.mrt-timetable-preview-frame {
+    width: 100%;
+    min-height: 480px;
+    border: 1px solid var(--mrt-border-color, #c3c4c7);
+    border-radius: 4px;
+    background: #fff;
+}
+
+#mrt-service-deviations.mrt-deviation-focus th,
+#mrt-service-deviations.mrt-deviation-focus td {
+    box-shadow: inset 0 0 0 2px var(--mrt-color-blue-500, #2271b1);
+}
+
+.mrt-timetable-workspace {
+    margin-top: 0.5rem;
+}
+
+.mrt-timetable-workspace-tabs {
+    margin-bottom: 1rem;
+}
+
+.mrt-timetable-workspace-panel[hidden] {
+    display: none;
+}
+
+.mrt-timetable-deviation-row--highlight td {
+    background: var(--mrt-light-yellow-bg, #fff9e6);
+}
+
+.mrt-timetable-deviation-add .mrt-input {
+    margin-bottom: 0.5rem;
+}

@@ -16,6 +16,9 @@ require_once $meta_boxes_dir . 'route.php';
 require_once $meta_boxes_dir . 'timetable.php';
 require_once $meta_boxes_dir . 'timetable-services.php';
 require_once $meta_boxes_dir . 'timetable-overview.php';
+require_once $meta_boxes_dir . 'timetable-deviations-panel.php';
+require_once $meta_boxes_dir . 'service-deviations.php';
+require_once $meta_boxes_dir . 'timetable-workspace.php';
 require_once $meta_boxes_dir . 'service.php';
 require_once $meta_boxes_dir . 'service-save.php';
 require_once $meta_boxes_dir . 'service-stoptimes.php';
@@ -35,30 +38,12 @@ function MRT_register_meta_boxes_station_and_timetable(): void {
 	);
 
 	add_meta_box(
-		'mrt_timetable_details',
-		__( 'Timetable Details', 'museum-railway-timetable' ),
-		'MRT_render_timetable_meta_box',
+		'mrt_timetable_workspace',
+		__( 'Timetable', 'museum-railway-timetable' ),
+		'MRT_render_timetable_workspace_box',
 		'mrt_timetable',
 		'normal',
 		'high'
-	);
-
-	add_meta_box(
-		'mrt_timetable_services',
-		__( 'Trips (Services)', 'museum-railway-timetable' ),
-		'MRT_render_timetable_services_box',
-		'mrt_timetable',
-		'normal',
-		'default'
-	);
-
-	add_meta_box(
-		'mrt_timetable_overview',
-		__( 'Timetable Overview', 'museum-railway-timetable' ),
-		'MRT_render_timetable_overview_box',
-		'mrt_timetable',
-		'normal',
-		'low'
 	);
 }
 

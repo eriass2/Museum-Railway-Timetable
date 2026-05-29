@@ -65,6 +65,7 @@ services:
         fi;
         sh /usr/local/bin/mrt-ensure-sv-locale.sh;
         wp --allow-root plugin activate museum-railway-timetable;
+        wp --allow-root rewrite structure '/%postname%/' --hard;
       '
 
   composer:
