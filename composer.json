@@ -24,9 +24,11 @@
         "phpcbf": "phpcbf",
         "check": ["@plugin-check", "@phpstan", "@test", "@test:js"],
         "lint": ["@phpstan", "@phpcs"],
-        "test": "phpunit",
+        "test": "@php vendor/bin/phpunit",
         "test:js": "node --test tests/js/*.mjs",
         "vue:build": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run build",
-        "vue:check": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run check"
+        "vue:check": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run check",
+        "csv:validate": "php scripts/csv-validate.php",
+        "csv:fixture": "php scripts/generate-lennakatten-fixture.php"
     }
 }
