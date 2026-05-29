@@ -73,14 +73,14 @@ function MRT_dev_reset_and_import() {
 			'Dev reset requires WP_DEBUG, MRT_DEVELOPMENT, or WP-CLI.'
 		);
 	}
-	if ( ! function_exists( 'MRT_csv_import_package' ) ) {
-		require_once MRT_PATH . 'inc/import/csv/loader.php';
+	if ( ! function_exists( 'MRT_run_lennakatten_import_package' ) ) {
+		require_once MRT_PATH . 'inc/import/lennakatten/importer.php';
 	}
 
 	MRT_dev_cli_set_admin_user();
 	MRT_clear_all_plugin_data();
 
-	$import_result = MRT_csv_import_package( MRT_csv_lennakatten_fixture_path(), 'override' );
+	$import_result = MRT_run_lennakatten_import_package();
 	if ( is_wp_error( $import_result ) ) {
 		return $import_result;
 	}
@@ -102,6 +102,13 @@ function MRT_dev_reset_and_import() {
 		$demo = MRT_ensure_components_demo_page_cli();
 		if ( is_wp_error( $demo ) ) {
 			return $demo;
+		}
+	}
+
+	if ( function_exists( 'MRT_sync_timetable_public_pages' ) ) {
+		$pages_result = MRT_sync_timetable_public_pages();
+		if ( is_wp_error( $pages_result ) ) {
+			return $pages_result;
 		}
 	}
 

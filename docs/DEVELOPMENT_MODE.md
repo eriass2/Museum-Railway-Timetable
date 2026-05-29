@@ -31,15 +31,15 @@ På denna gren är publikt UI **Vue-only** (jQuery-wizard-moduler är borttagna)
 | **Set up development menu** | Dashboard + Component demo page |
 | Admin-undermeny Component demo page | Railway Timetable |
 
-**Set up development menu** skapar/uppdaterar sidor och lägger länkar i sajtens **klassiska** nav-meny (primary om ingen finns, annars befintlig primary – inga dubbletter):
+**Set up development menu** skapar/uppdaterar sidor och lägger **två** länkar i sajtens **klassiska** nav-meny (primary om ingen finns, annars befintlig primary – inga dubbletter):
 
-| Sida | Innehåll |
-|------|----------|
-| **Component demo** | Månad + översikt + wizard (tre block) |
-| **Wizard smoke test** | Full wizard utan fixture |
-| **Debug: Month** | Endast månadskalender (import-datum) |
-| **Debug: Overview** | Endast tidtabellsöversikt (GRÖN) |
-| **Debug: Wizard date / outbound / return / summary** | Wizard med `debug="…"` och hårdkodad fixture-data |
+| Sida | I front-meny? | Innehåll |
+|------|---------------|----------|
+| **Component demo** | Ja | Månad + översikt + wizard (tre block) |
+| **Wizard smoke test** | Ja | Full wizard utan fixture |
+| **Debug: Month / Overview / Wizard …** | Nej (admin-länkar) | En shortcode per sida för snabb layout-debug |
+
+Per-komponent debug-sidor skapas fortfarande vid setup men listas under **Railway Timetable → Component demo page** (inte i front-menyn). Kör **Set up development menu** igen för att ta bort gamla debug-länkar ur menyn.
 
 Wizard-debug kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Presets: `inc/public/journey-wizard/debug-fixtures.php`, appliceras i Vue via `useWizardDebug.ts` och `createWizardStore` (`debug="date|outbound|return|summary"`).
 
@@ -80,7 +80,7 @@ Kräver `WP_DEBUG` eller `MRT_DEVELOPMENT` (Docker har `WORDPRESS_DEBUG=1`).
 ## Röktest efter setup
 
 1. Kör `docker-dev-reset.ps1` **eller** manuellt: meny-knapp + import  
-2. Öppna front-sidan – menyn ska visa två smoke-länkar  
+2. Öppna front-sidan – menyn ska visa **Component demo** och **Wizard smoke test** (inga Debug:-länkar)  
 3. **Component demo** – scrolla igenom alla tre block  
 
 Se [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md).

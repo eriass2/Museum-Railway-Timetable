@@ -83,8 +83,11 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Publik UI (wizard m.fl.)
 - **Primär accent:** `--mrt-color-accent-600` (`#e0b820`) — mättad varmgul för CTA, aktivt steg och vald restyp.
 - **Text på guld:** `--mrt-color-on-accent` (vit), inte mörk text på gul bakgrund.
-- **Vue-bundle:** Wizard-CSS importeras via `frontend/vue/src/styles/mrt-public.css`. Efter ändring i `assets/` eller tokens: kör `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
-- **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i wizard CSS (`frontend/vue/src/styles/journey-wizard.css`).
+- **Vue-bundle:** Publik CSS ligger under `frontend/vue/src/styles/` och byggs till `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + delade primitives); appar importerar egna moduler (`journey-wizard.css`, `timetable-overview.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
+- **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — `base.css`, `wizard-shell.css`, `controls-form.css` (sök steg), `controls-calendar.css`, `steps-*.css`, `responsive.css`. Importeras från `JourneyWizardApp.vue`.
+- **Tidtabellsöversikt-CSS:** `frontend/vue/src/styles/timetable-overview.css` — block `.mrt-ov-*`, importeras från `MrtTimetableOverviewView.vue`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
+- **Färgtokens:** `assets/mrt-color-tokens.css` importeras först i `mrt-public.css`. Se även [DESIGN_TOKENS.md](DESIGN_TOKENS.md) och [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
+- **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i `controls-form.css` (scoped under `.mrt-journey-wizard .mrt-surface`).
 
 ### Exempel
 ```html
@@ -169,9 +172,14 @@ museum-railway-timetable/
 ├── assets/
 │   ├── admin.css, admin.js, admin-*.js
 │   ├── dist/vue/                  # Vite bundle (JS + public CSS)
+│   ├── mrt-color-tokens.css       # Färgpalett (importeras av Vue mrt-public.css)
 │   ├── frontend-public.css        # shared shortcode primitives (imported by mrt-public.css)
 │   ├── mrt-string-utils.js, mrt-date-utils.js, mrt-frontend-api.js
 │   └── icons/train-types/
+├── frontend/vue/src/styles/       # Vue-ägd publik CSS (se §3 CSS)
+│   ├── mrt-public.css             # tokens + assets primitives + vue-shell
+│   ├── journey-wizard/            # wizard-moduler
+│   └── timetable-overview.css     # .mrt-ov-* tidtabell
 └── languages/
 ```
 
@@ -195,6 +203,10 @@ museum-railway-timetable/
 ## 8. Referenser
 
 - **REBUILD_RULES.md** – Rebuild-regler för kod, design och kvalitet
+- **DESIGN_TOKENS.md** – CSS custom properties för Vue UI
+- **design/COLOR_PALETTE.md** – Färgpalett och kontrast
+- **PRODUCTION_WIZARD.md** – Wizard mot produktion
+- **VUE_UI_COMPONENTS.md** – Vue-komponenter och CSS-klasser
 - [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
 - [Clean Code (Robert C. Martin)](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)

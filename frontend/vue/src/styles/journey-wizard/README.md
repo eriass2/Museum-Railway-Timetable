@@ -2,6 +2,16 @@
 
 Modular styles for `[museum_journey_wizard]`, imported from `JourneyWizardApp.vue` via `../styles/journey-wizard.css`.
 
-- Shell: `.mrt-journey-wizard__hero`, `__panels` (Vue `JourneyWizardApp`)
-- Steps: `controls-calendar.css`, `steps-outbound-return.css`, `steps-summary.css`
-- Shared tokens: `assets/mrt-color-tokens.css` (via bundled `mrt-public.css`)
+**Konventioner:** [docs/STYLE_GUIDE.md](../../../docs/STYLE_GUIDE.md) §3 CSS, [docs/DESIGN_TOKENS.md](../../../docs/DESIGN_TOKENS.md).
+
+| Modul | Innehåll |
+|-------|----------|
+| `base.css` | Shell, hero, embedded, fokus |
+| `wizard-shell.css` | Overrides på delade ui-components |
+| `controls-form.css` | Sök steg: stationer, restyp, combobox |
+| `controls-calendar.css` | Datumsteg, kalender |
+| `steps-outbound-return.css` | Utresa/återresa |
+| `steps-summary.css` | Sammanfattning |
+| `responsive.css` | Mobile-first breakpoints |
+
+Tokens: `assets/mrt-color-tokens.css` (via `mrt-public.css`).

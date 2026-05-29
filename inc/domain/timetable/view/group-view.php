@@ -113,6 +113,54 @@ function MRT_station_row_has_arrival_departure_split( int $station_id, array $se
 }
 
 /**
+ * Stop row for "Från" (departure time).
+ *
+ * @param array<string, mixed>|null $stop_time
+ * @return array<string, mixed>|null
+ */
+function MRT_get_from_row_display_stop_time( $stop_time ) {
+	if ( ! is_array( $stop_time ) || $stop_time === array() ) {
+		return null;
+	}
+	$time_to_show = ! empty( $stop_time['departure_time'] )
+		? (string) $stop_time['departure_time']
+		: (string) ( $stop_time['arrival_time'] ?? '' );
+	if ( $time_to_show === '' ) {
+		return $stop_time;
+	}
+	return array(
+		'arrival_time'    => '',
+		'departure_time'  => MRT_format_time_display( $time_to_show ),
+		'pickup_allowed'  => true,
+		'dropoff_allowed' => true,
+	);
+}
+
+/**
+ * Stop row for "Till" (arrival time).
+ *
+ * @param array<string, mixed>|null $stop_time
+ * @return array<string, mixed>|null
+ */
+function MRT_get_to_row_display_stop_time( $stop_time ) {
+	if ( ! is_array( $stop_time ) || $stop_time === array() ) {
+		return null;
+	}
+	$time_to_show = ! empty( $stop_time['arrival_time'] )
+		? (string) $stop_time['arrival_time']
+		: (string) ( $stop_time['departure_time'] ?? '' );
+	if ( $time_to_show === '' ) {
+		return $stop_time;
+	}
+	return array(
+		'arrival_time'    => MRT_format_time_display( $time_to_show ),
+		'departure_time'  => '',
+		'pickup_allowed'  => true,
+		'dropoff_allowed' => true,
+	);
+}
+
+/**
  * @param array<string, mixed> $group Route group from MRT_group_services_by_route.
  * @return array<string, mixed>
  */

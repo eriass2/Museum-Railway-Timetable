@@ -33,6 +33,9 @@ function MRT_handle_dashboard_tool_actions(): void {
 	if ( $action === 'create_demo_page' ) {
 		MRT_handle_create_demo_page_action();
 	}
+	if ( $action === 'sync_timetable_pages' ) {
+		MRT_handle_sync_timetable_pages_action();
+	}
 }
 
 add_action( 'admin_init', 'MRT_handle_dashboard_tool_actions' );
@@ -87,6 +90,9 @@ function MRT_verify_dashboard_action_nonce( string $action, string $field ): voi
  * Delete plugin custom post type content.
  */
 function MRT_clear_plugin_posts(): void {
+	if ( function_exists( 'MRT_clear_timetable_public_pages' ) ) {
+		MRT_clear_timetable_public_pages();
+	}
 	foreach ( MRT_POST_TYPES as $post_type ) {
 		$ids = get_posts(
 			array(
@@ -151,6 +157,13 @@ function MRT_clear_plugin_options(): void {
 	delete_option( 'mrt_components_demo_page_id' );
 	delete_option( 'mrt_wizard_smoke_page_id' );
 	delete_option( 'mrt_planner_smoke_page_id' );
+	delete_option( 'mrt_debug_page_month_id' );
+	delete_option( 'mrt_debug_page_overview_id' );
+	delete_option( 'mrt_debug_page_wizard_date_id' );
+	delete_option( 'mrt_debug_page_wizard_outbound_id' );
+	delete_option( 'mrt_debug_page_wizard_return_id' );
+	delete_option( 'mrt_debug_page_wizard_summary_id' );
+	delete_option( 'mrt_timetables_index_page_id' );
 	delete_option( 'mrt_dev_nav_menu_id' );
 }
 
@@ -185,8 +198,9 @@ add_action( 'admin_notices', 'MRT_render_dashboard_tool_notices' );
  */
 function MRT_dashboard_tool_notices(): array {
 	return array(
-		'mrt_cleared'   => __( 'All plugin timetable data, demo page, train types, stop times, and settings have been cleared.', 'museum-railway-timetable' ),
-		'mrt_imported'  => __( 'Demo/test data has been imported.', 'museum-railway-timetable' ),
-		'mrt_demo_page' => __( 'Demo page has been created or updated.', 'museum-railway-timetable' ),
+		'mrt_cleared'           => __( 'All plugin timetable data, demo page, train types, stop times, and settings have been cleared.', 'museum-railway-timetable' ),
+		'mrt_imported'          => __( 'Demo/test data has been imported.', 'museum-railway-timetable' ),
+		'mrt_demo_page'         => __( 'Demo page has been created or updated.', 'museum-railway-timetable' ),
+		'mrt_timetable_pages'   => __( 'Timetable pages have been created or updated.', 'museum-railway-timetable' ),
 	);
 }

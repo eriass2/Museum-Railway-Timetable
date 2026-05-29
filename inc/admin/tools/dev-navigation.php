@@ -183,14 +183,14 @@ function MRT_nav_menu_contains_page( int $menu_id, int $page_id ): bool {
 }
 
 /**
- * Append smoke pages to a nav menu (idempotent).
+ * Append smoke pages to a nav menu (idempotent). Debug pages stay admin-only.
  *
  * @param int $menu_id Nav menu term ID.
  * @return int Number of items added.
  */
 function MRT_append_smoke_pages_to_nav_menu( int $menu_id ): int {
 	$added = 0;
-	foreach ( MRT_dev_all_front_page_specs() as $spec ) {
+	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
 		$page_id = (int) get_option( $spec['option'], 0 );
 		if ( $page_id <= 0 || ! get_post( $page_id ) ) {
 			continue;
@@ -214,6 +214,109 @@ function MRT_append_smoke_pages_to_nav_menu( int $menu_id ): int {
 		}
 	}
 	return $added;
+}
+
+/**
+ * Page IDs for per-component debug screens (not linked in front menu).
+ *
+ * @return int[]
+ */
+function MRT_debug_page_ids(): array {
+	$ids = array();
+	if ( ! function_exists( 'MRT_component_debug_page_specs' ) ) {
+		return $ids;
+	}
+	foreach ( MRT_component_debug_page_specs() as $spec ) {
+		$page_id = (int) get_option( $spec['option'], 0 );
+		if ( $page_id > 0 && get_post( $page_id ) ) {
+			$ids[] = $page_id;
+		}
+	}
+	return $ids;
+}
+
+/**
+ * Remove nav menu items that point at given pages.
+ *
+ * @param int   $menu_id  Nav menu term ID.
+ * @param int[] $page_ids Page post IDs.
+ * @return int Items removed.
+ */
+function MRT_remove_pages_from_nav_menu( int $menu_id, array $page_ids ): int {
+	if ( $page_ids === array() ) {
+		return 0;
+	}
+	$lookup = array_fill_keys( array_map( 'intval', $page_ids ), true );
+	$items  = wp_get_nav_menu_items( $menu_id );
+	if ( ! is_array( $items ) ) {
+		return 0;
+	}
+	$removed = 0;
+	foreach ( $items as $item ) {
+		if ( $item->object !== 'page' ) {
+			continue;
+		}
+		if ( ! isset( $lookup[ (int) $item->object_id ] ) ) {
+			continue;
+		}
+		if ( wp_delete_post( (int) $item->ID, true ) ) {
+			++$removed;
+		}
+	}
+	return $removed;
+}
+
+/**
+ * Keep one menu item per page; drop duplicate links (e.g. after re-create).
+ *
+ * @param int   $menu_id  Nav menu term ID.
+ * @param int[] $page_ids Page post IDs.
+ * @return int Duplicates removed.
+ */
+function MRT_dedupe_nav_menu_page_links( int $menu_id, array $page_ids ): int {
+	if ( $page_ids === array() ) {
+		return 0;
+	}
+	$lookup = array_fill_keys( array_map( 'intval', $page_ids ), true );
+	$items  = wp_get_nav_menu_items( $menu_id );
+	if ( ! is_array( $items ) ) {
+		return 0;
+	}
+	$seen    = array();
+	$removed = 0;
+	foreach ( $items as $item ) {
+		if ( $item->object !== 'page' ) {
+			continue;
+		}
+		$page_id = (int) $item->object_id;
+		if ( ! isset( $lookup[ $page_id ] ) ) {
+			continue;
+		}
+		if ( isset( $seen[ $page_id ] ) ) {
+			if ( wp_delete_post( (int) $item->ID, true ) ) {
+				++$removed;
+			}
+			continue;
+		}
+		$seen[ $page_id ] = true;
+	}
+	return $removed;
+}
+
+/**
+ * Smoke page IDs used for front-menu sync.
+ *
+ * @return int[]
+ */
+function MRT_dev_smoke_page_ids(): array {
+	$ids = array();
+	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
+		$page_id = (int) get_option( $spec['option'], 0 );
+		if ( $page_id > 0 && get_post( $page_id ) ) {
+			$ids[] = $page_id;
+		}
+	}
+	return $ids;
 }
 
 /**
@@ -284,6 +387,10 @@ function MRT_setup_development_navigation() {
 		MRT_assign_dev_menu_to_primary_if_unassigned( $menu_id );
 	}
 
+	$smoke_ids = MRT_dev_smoke_page_ids();
+	MRT_remove_pages_from_nav_menu( $menu_id, MRT_debug_page_ids() );
+	MRT_dedupe_nav_menu_page_links( $menu_id, $smoke_ids );
+
 	$added = MRT_append_smoke_pages_to_nav_menu( $menu_id );
 	update_option( MRT_OPTION_DEV_NAV_MENU_ID, $menu_id );
 
@@ -295,7 +402,7 @@ function MRT_setup_development_navigation() {
 }
 
 /**
- * Delete plugin-owned smoke pages (component demo + wizard; legacy planner if present).
+ * Delete plugin-owned smoke + debug pages (legacy planner if present).
  */
 function MRT_clear_dev_smoke_pages(): void {
 	$keys = array(
@@ -303,6 +410,11 @@ function MRT_clear_dev_smoke_pages(): void {
 		MRT_OPTION_WIZARD_SMOKE_PAGE_ID,
 		MRT_OPTION_PLANNER_SMOKE_PAGE_ID,
 	);
+	if ( function_exists( 'MRT_component_debug_page_specs' ) ) {
+		foreach ( MRT_component_debug_page_specs() as $spec ) {
+			$keys[] = $spec['option'];
+		}
+	}
 	foreach ( $keys as $key ) {
 		$page_id = (int) get_option( $key, 0 );
 		if ( $page_id > 0 && get_post( $page_id ) && get_post_type( $page_id ) === 'page' ) {
@@ -369,7 +481,7 @@ function MRT_render_setup_dev_navigation_button( string $redirect_page = 'dashbo
 				<?php esc_html_e( 'Set up development menu', 'museum-railway-timetable' ); ?>
 			</button>
 			<span class="description">
-				<?php esc_html_e( 'Creates smoke + per-component debug pages and adds them to your site menu when missing.', 'museum-railway-timetable' ); ?>
+				<?php esc_html_e( 'Creates smoke pages (component demo + wizard), optional per-component debug pages (admin links only), and adds two smoke links to the site menu.', 'museum-railway-timetable' ); ?>
 			</span>
 		</p>
 	</form>

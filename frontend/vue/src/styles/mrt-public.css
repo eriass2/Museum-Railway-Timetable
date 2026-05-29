@@ -1,11 +1,15 @@
 /**
- * Public shortcode styles bundled for Vue mode (sources stay in assets/).
+ * Public shortcode styles bundled for Vue mode.
+ *
+ * See docs/STYLE_GUIDE.md §3 (CSS, Vue-bundle).
  *
  * @package Museum_Railway_Timetable
  */
 
+@import '@mrt-assets/mrt-color-tokens.css';
 @import '@mrt-assets/train-type-icons.css';
 @import '@mrt-assets/frontend-public.css';
+@import '@mrt-assets/frontend/timetable-index.css';
 @import '@mrt-assets/frontend/ui-components.css';
 /* Timetable overview: frontend/vue/src/styles/timetable-overview.css (via MrtTimetableOverviewView). */
 /* Journey wizard: frontend/vue/src/styles/journey-wizard.css (via JourneyWizardApp). */

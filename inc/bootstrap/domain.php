@@ -38,6 +38,7 @@ function MRT_load_timetable_view_domain_modules(): void {
 	require_once $view_dir . 'grid-connections.php';
 	require_once $view_dir . 'grid-merge.php';
 	require_once $view_dir . 'overview-data.php';
+	require_once MRT_PATH . 'inc/domain/timetable/timetable-pages.php';
 }
 
 /**

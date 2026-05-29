@@ -104,6 +104,21 @@ function MRT_render_dashboard_shortcodes_block_overview(): void {
 }
 
 /**
+ * Timetable index shortcode docs.
+ */
+function MRT_render_dashboard_shortcodes_block_index(): void {
+	?>
+		<div class="mrt-mt-1">
+			<h3>4. <?php esc_html_e( 'Timetables index', 'museum-railway-timetable' ); ?></h3>
+			<p><code>[museum_timetable_index]</code></p>
+			<p class="description">
+				<?php esc_html_e( 'Lists all published timetables with links to their public pages. Use Dashboard → Public timetable pages to generate the index and per-timetable pages automatically.', 'museum-railway-timetable' ); ?>
+			</p>
+		</div>
+	<?php
+}
+
+/**
  * Render shortcodes documentation section
  */
 function MRT_render_dashboard_shortcodes(): void {
@@ -115,6 +130,7 @@ function MRT_render_dashboard_shortcodes(): void {
 		MRT_render_dashboard_shortcodes_block_month();
 		MRT_render_dashboard_shortcodes_block_wizard();
 		MRT_render_dashboard_shortcodes_block_overview();
+		MRT_render_dashboard_shortcodes_block_index();
 		?>
 	</div>
 	<?php

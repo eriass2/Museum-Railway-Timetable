@@ -14,6 +14,7 @@ require_once MRT_PATH . 'inc/admin/dashboard/dashboard-quick-actions.php';
 require_once MRT_PATH . 'inc/admin/dashboard/dashboard-guide.php';
 require_once MRT_PATH . 'inc/admin/dashboard/dashboard-shortcodes.php';
 require_once MRT_PATH . 'inc/admin/dashboard/dashboard-dev-tools.php';
+require_once MRT_PATH . 'inc/admin/dashboard/dashboard-timetable-pages.php';
 require_once MRT_PATH . 'inc/admin/dashboard/dashboard-prices.php';
 
 /**
@@ -90,6 +91,7 @@ function MRT_render_admin_page() {
 		<?php MRT_render_dashboard_stats( $stats ); ?>
 		<?php MRT_render_dashboard_routes( $all_routes ); ?>
 		<?php MRT_render_dashboard_quick_actions(); ?>
+		<?php MRT_render_dashboard_timetable_pages(); ?>
 
 		<div class="mrt-section">
 			<h2><?php esc_html_e( 'Settings', 'museum-railway-timetable' ); ?></h2>

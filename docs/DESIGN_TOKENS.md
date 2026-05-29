@@ -23,3 +23,16 @@ CSS custom properties used across `ui-components.css` and wizard styles. Defined
 | `--mrt-wizard-focus` | Focus rings inside wizard |
 
 Prefer these tokens in new wizard CSS instead of hard-coded hex values.
+
+## Timetable overview (`.mrt-ov-*`)
+
+Defined in `frontend/vue/src/styles/timetable-overview.css` (imported by `MrtTimetableOverviewView.vue`).
+
+| Token / alias | Typical use |
+|---------------|-------------|
+| `--mrt-ov-green` / `--mrt-ov-green-dark` | Route header gradient |
+| `--mrt-ov-highlight` | Från/till-rader (`--mrt-from-to-bg`) |
+| `--mrt-ov-transfer` / `--mrt-ov-transfer-label` | Anslutningsbuss, tågbyte |
+| `--mrt-ov-stripe` | Alternerande stationsrader |
+
+Legacy row tokens in `assets/frontend/tokens.css`: `--mrt-from-to-bg`, `--mrt-transfer-bg`, `--mrt-transfer-col-bg`.

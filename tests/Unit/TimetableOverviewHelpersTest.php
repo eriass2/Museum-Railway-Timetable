@@ -67,6 +67,25 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertSame( 20, MRT_timetable_branch_junction_station_id( $rail_group, $bus_group ) );
 	}
 
+	public function test_from_and_to_row_display_stop_times(): void {
+		$stop = array(
+			'arrival_time'    => '10:15',
+			'departure_time'  => '10:20',
+			'pickup_allowed'  => true,
+			'dropoff_allowed' => true,
+		);
+
+		$from = MRT_get_from_row_display_stop_time( $stop );
+		self::assertIsArray( $from );
+		self::assertSame( '', $from['arrival_time'] );
+		self::assertSame( '10.20', $from['departure_time'] );
+
+		$to = MRT_get_to_row_display_stop_time( $stop );
+		self::assertIsArray( $to );
+		self::assertSame( '10.15', $to['arrival_time'] );
+		self::assertSame( '', $to['departure_time'] );
+	}
+
 	/**
 	 * @return array<string, mixed>
 	 */

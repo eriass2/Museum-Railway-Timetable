@@ -50,7 +50,7 @@ defineProps<{
         v-for="(row, ri) in group.rows"
         :key="ri"
         class="mrt-ov-grid-row"
-        :class="overviewRowClass(row)"
+        :class="overviewRowClass(row, ri)"
       >
         <div class="mrt-ov-station-col">{{ row.label }}</div>
         <template v-if="isTimeRow(row)">
