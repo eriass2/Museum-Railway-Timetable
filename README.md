@@ -217,10 +217,10 @@ museum-railway-timetable/
 │   ├─ admin-stoptimes-ui.js
 │   ├─ admin-timetable-services-ui.js
 │   ├─ admin-service-edit.js     # Service edit (route, stoptimes form)
-│   ├─ journey-wizard/           # [museum_journey_wizard] JS modules
+│   ├─ dist/vue/                 # Vite bundle (public shortcode JS + CSS)
 │   ├─ icons/train-types/        # PNG train type symbols
 │   ├─ train-type-icons.css      # Minimal icon mapping retained during rebuild
-│   └─ frontend.js               # Month calendar AJAX
+│   └─ frontend.js               # Month calendar AJAX (legacy; Vue mode uses dist/vue)
 └─ languages/                    # .pot / .po
 ```
 

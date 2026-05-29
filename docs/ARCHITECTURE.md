@@ -33,7 +33,7 @@ Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootst
 
 - **Enhetstester (PHPUnit):** Ren PHP i `tests/Unit/` mot `inc/domain/`; se `phpunit.xml.dist` och `composer test`.
 - **Ny affärsregel:** Lägg test i samma leverans när logiken är ren nog.
-- **CI:** `.github/workflows/ci.yml` kör `composer check` (validate, PHPStan, PHPUnit, JS-tester).
+- **CI:** `.github/workflows/ci.yml` kör `composer check`, `composer vue:check`, static Playwright E2E, och valfritt `e2e-wp` mot Docker-demosidan.
 - **Refaktor:** Validering som inte behöver `$_POST` ska vara namngivna `MRT_*`-funktioner (t.ex. `MRT_journey_validate_station_pair_ids` i `journey-parse.php`).
 
 ---
@@ -64,7 +64,7 @@ inc/
 │   ├── route/
 │   ├── service/            # services, stop-times, connections
 │   ├── station/
-│   ├── timetable/view/     # prepare, grid, overview
+│   ├── timetable/view/     # overview-data (JSON), group-view, grid-merge, grid-connections
 │   └── train-type/         # ikon-slugs
 ├── infrastructure/
 │   ├── post-types/         # CPT + taxonomier
@@ -98,7 +98,11 @@ Rese-UI är endast wizard; `[museum_journey_planner]` finns inte längre (se [RE
 
 ### Journey AJAX
 
-`inc/infrastructure/ajax/journey.php`, `journey-parse.php` – JSON till `assets/journey-wizard/` (`mrt_search_journey`, kalender, connection detail).
+`inc/infrastructure/ajax/journey.php`, `journey-parse.php` – JSON till Vue wizard (`mrt_search_journey`, kalender, connection detail). Publik presentation i `frontend/vue/src/wizard/` och `frontend/vue/src/styles/journey-wizard/`.
+
+### Timetable overview (Vue)
+
+`inc/domain/timetable/view/overview-data.php` bygger JSON (`MRT_get_timetable_overview_data`). Vue renderar i `frontend/vue/src/components/overview/`; admin meta box och shortcode mountar samma komponent (`inc/admin/timetable-vue-preview.php`).
 
 ---
 

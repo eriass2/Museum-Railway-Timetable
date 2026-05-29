@@ -13,7 +13,7 @@ Filter: `mrt_is_development_mode` kan tvinga läge vid behov.
 
 Docker dev sätter `MRT_VUE_FRONTEND` och bygger Vue automatiskt via `docker-dev-reset.ps1` (service `vue`).
 
-Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` → `assets/dist/vue/`), inte från `journey-wizard.css` / `frontend-public.css` i WP.
+Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` → `assets/dist/vue/`), inte från separata WP-handles för `frontend-public.css`.
 
 Se [VUE_EXPERIMENT.md](VUE_EXPERIMENT.md). Bygg manuellt: `composer vue:build` eller `docker compose --profile tools run --rm vue`.
 

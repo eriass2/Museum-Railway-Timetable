@@ -41,7 +41,7 @@ Wizard-CSS använder `--mrt-wizard-*` som pekar på `--mrt-color-*` i token-file
 - **Vit + grå text** = ingen trafik (`--day--none`)
 - Månadspilar: platta, gröna — inte 3D-grå chevrons
 
-Se `assets/journey-wizard/controls-calendar.css`.
+Se `frontend/vue/src/styles/journey-wizard/controls-calendar.css`.
 
 ## Utresa / återresa
 

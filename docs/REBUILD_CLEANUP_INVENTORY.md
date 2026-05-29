@@ -115,7 +115,7 @@ inc/
 | `inc/functions/journey-*.php` | `done` | `inc/domain/journey/` | Legacy loaders borttagna. |
 | `inc/functions/journey-prices.php` | `done` | `inc/domain/pricing/prices.php` | Legacy loaders borttagna. |
 | `inc/data/price-matrix-builtin.php` | `move` | `inc/domain/pricing/price-matrix-builtin.php` | Flyttad seed/reference data. |
-| `inc/functions/timetable-view/*` | `done` | `inc/domain/timetable/view/` | Loaders borttagna; ev. rewrite data/rendering senare. |
+| `inc/functions/timetable-view/*` | `done` | `inc/domain/timetable/view/` | PHP HTML-grid borttagen; JSON i `overview-data.php`, Vue i `frontend/vue/`. |
 | `inc/functions/services.php` | `done` | `inc/domain/service/services.php` | Loaders borttagna. |
 | `inc/functions/helpers-services.php` | `done` | `inc/domain/service/stop-times.php` | Loaders borttagna. |
 | `inc/functions/helpers-connections.php` | `done` | `inc/domain/service/connections.php` | Loaders borttagna. |
@@ -167,7 +167,8 @@ inc/
 |--------|--------|-----------|
 | `assets/icons/train-types/` | `keep/move` | Tågikonerna ska behållas som produktassets och flyttas till ny assetstruktur. |
 | `assets/train-type-icons.css` | `rewrite` | Behåll ikonmappningen som krav, men skriv om CSS efter ny designstruktur. |
-| `assets/journey-wizard/` + `assets/journey-wizard.css` | `done` (Vue) | Modulär CSS i `assets/journey-wizard/`; bundlas via Vite i Vue-läge. jQuery-moduler kvar för legacy. |
+| `frontend/vue/src/styles/journey-wizard/` | `done` (Vue) | Wizard-CSS flyttad från `assets/journey-wizard/`; bundlas via `JourneyWizardApp` och Vite. |
+| `assets/frontend-overview.css` + `assets/frontend/overview-*.css` | `done` (delete) | Ersatt av `frontend/vue/src/styles/timetable-overview.css` och Vue-komponenter. |
 | `assets/frontend.js` | `rewrite` | Behåll bara beteende som behövs; separera från nuvarande styling/legacy planner. |
 | `assets/mrt-string-utils.js`, `assets/mrt-date-utils.js`, `assets/mrt-frontend-api.js` | `keep/move` | Beteende-/API-helpers, inte utseende. |
 | `assets/admin-*.js` | `rewrite` | Behåll där adminflöden kvarstår, men flytta per adminmodul. |

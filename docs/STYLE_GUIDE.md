@@ -168,8 +168,8 @@ museum-railway-timetable/
 │   └── constants.php
 ├── assets/
 │   ├── admin.css, admin.js, admin-*.js
-│   ├── frontend.js, frontend-public.css
-│   ├── journey-wizard.js, journey-wizard.css, journey-wizard/  # wizard CSS entry also in frontend/vue/src/styles/
+│   ├── dist/vue/                  # Vite bundle (JS + public CSS)
+│   ├── frontend-public.css        # shared shortcode primitives (imported by mrt-public.css)
 │   ├── mrt-string-utils.js, mrt-date-utils.js, mrt-frontend-api.js
 │   └── icons/train-types/
 └── languages/

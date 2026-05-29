@@ -36,7 +36,7 @@ Shared primitives for wizard, month calendar, and overview. Styles: `assets/fron
 | `MrtSelectedTrip` | `mrt-selected-trip` | Return step outbound recap |
 | `MrtTripList` | `mrt-trip-list` | Outbound/return connection list |
 
-Wizard shell CSS (hero, embedded, step overrides): `assets/journey-wizard/`. See [DESIGN_TOKENS.md](DESIGN_TOKENS.md). Alert naming: [ALERT_STYLES.md](ALERT_STYLES.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
+Wizard shell CSS (hero, embedded, step overrides): `frontend/vue/src/styles/journey-wizard/`. See [DESIGN_TOKENS.md](DESIGN_TOKENS.md). Alert naming: [ALERT_STYLES.md](ALERT_STYLES.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
 
 ## Rebuild
 

@@ -15,7 +15,8 @@ Legacy jQuery wizard is **removed** on this branch; all three public shortcodes 
 Public styles are **bundled by Vite**, not enqueued from WordPress:
 
 - Source entry: `frontend/vue/src/styles/mrt-public.css`
-- Imports (unchanged on disk): `assets/train-type-icons.css`, `frontend-public.css`, `journey-wizard/` (via `frontend/vue/src/styles/journey-wizard.css`)
+- Imports (unchanged on disk): `assets/train-type-icons.css`, `frontend-public.css`
+- Vue-owned: `frontend/vue/src/styles/timetable-overview.css`, `frontend/vue/src/styles/journey-wizard/`
 - Vue-only shell: `frontend/vue/src/styles/vue-shell.css`
 
 In Vue mode, `mrt-frontend-public` and legacy `mrt-journey-wizard` handles are **not** registered (styles ship in the Vite bundle).

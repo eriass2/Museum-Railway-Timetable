@@ -1,6 +1,6 @@
 # Design tokens (public Vue UI)
 
-CSS custom properties used across `ui-components.css` and `journey-wizard/`. Defined in `assets/mrt-color-tokens.css` and wizard overrides in `assets/journey-wizard/base.css`.
+CSS custom properties used across `ui-components.css` and wizard styles. Defined in `assets/mrt-color-tokens.css` and wizard overrides in `frontend/vue/src/styles/journey-wizard/base.css`.
 
 ## Shared (`--mrt-color-*`, `--mrt-font-*`, `--mrt-spacing-*`)
 
