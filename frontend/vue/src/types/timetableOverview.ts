@@ -10,6 +10,9 @@ export type TimetableOverviewColumn = {
   trainTypeName: string;
   trainTypeSlug: string;
   iconKey: string;
+  plannedTrainTypeName?: string;
+  isDeviation?: boolean;
+  deviationNotice?: string;
   isSpecial: boolean;
   specialName: string;
   highlightColor: string;

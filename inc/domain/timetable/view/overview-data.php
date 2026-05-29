@@ -49,7 +49,7 @@ function MRT_build_timetable_overview_payload( array $services, string $dateYmd,
 		'dateYmd'       => $dateYmd,
 		'timetableType' => $tt,
 		'typeBanner'    => is_array( $banner ) ? $banner : array( 'label' => '' ),
-		'printKey'      => MRT_timetable_print_key_data( $services ),
+		'printKey'      => MRT_timetable_print_key_data( $services, $dateYmd ),
 		'iconUrls'      => MRT_train_type_icon_urls(),
 		'groups'        => $groups,
 	);
@@ -121,10 +121,11 @@ function MRT_get_timetable_day_data( string $dateYmd, string $train_type_slug = 
  * @param array<int, WP_Post> $services
  * @return array<int, array{symbol: string, text: string}>
  */
-function MRT_timetable_print_key_data( array $services = array() ): array {
+function MRT_timetable_print_key_data( array $services = array(), string $dateYmd = '' ): array {
 	return array_merge(
 		MRT_timetable_print_key_base_rows(),
-		MRT_timetable_print_key_highlight_rows( $services )
+		MRT_timetable_print_key_highlight_rows( $services ),
+		MRT_timetable_print_key_deviation_rows( $services, $dateYmd )
 	);
 }
 
@@ -179,6 +180,86 @@ function MRT_timetable_print_key_highlight_rows( array $services ): array {
 		);
 	}
 	return $rows;
+}
+
+/**
+ * Print-key rows for train-type deviations and date-specific notices.
+ *
+ * @param array<int, WP_Post> $services
+ * @return array<int, array{symbol: string, text: string}>
+ */
+function MRT_timetable_print_key_deviation_rows( array $services, string $dateYmd ): array {
+	if ( $dateYmd === '' || ! MRT_validate_date( $dateYmd ) || $services === array() ) {
+		return array();
+	}
+
+	$rows               = array();
+	$has_type_deviation = false;
+
+	foreach ( $services as $service ) {
+		if ( ! $service instanceof WP_Post ) {
+			continue;
+		}
+		$row = MRT_timetable_deviation_print_key_row( $service, $dateYmd );
+		if ( $row === null ) {
+			continue;
+		}
+		if ( ! empty( $row['has_type_deviation'] ) ) {
+			$has_type_deviation = true;
+		}
+		unset( $row['has_type_deviation'] );
+		$rows[] = $row;
+	}
+
+	if ( $has_type_deviation ) {
+		array_unshift(
+			$rows,
+			array(
+				'symbol' => '†',
+				'text'   => __(
+					'Deviation from planned train type on the selected day.',
+					'museum-railway-timetable'
+				),
+			)
+		);
+	}
+
+	return $rows;
+}
+
+/**
+ * @return array{symbol: string, text: string, has_type_deviation: bool}|null
+ */
+function MRT_timetable_deviation_print_key_row( WP_Post $service, string $dateYmd ): ?array {
+	$service_id   = (int) $service->ID;
+	$type_dev     = MRT_service_has_train_type_deviation( $service_id, $dateYmd );
+	$notice       = MRT_get_service_notice_for_date( $service_id, $dateYmd );
+	if ( ! $type_dev && $notice === '' ) {
+		return null;
+	}
+
+	$number = (string) get_post_meta( $service_id, 'mrt_service_number', true );
+	if ( $number === '' ) {
+		$number = (string) $service_id;
+	}
+
+	$parts = array();
+	if ( $type_dev ) {
+		$default   = MRT_get_service_default_train_type( $service_id );
+		$effective = MRT_get_service_train_type_for_date( $service_id, $dateYmd );
+		if ( $effective instanceof WP_Term ) {
+			$parts[] = MRT_format_train_type_deviation_text( $effective, $default );
+		}
+	}
+	if ( $notice !== '' ) {
+		$parts[] = $notice;
+	}
+
+	return array(
+		'symbol'              => $type_dev ? $number . '†' : $number,
+		'text'                => implode( ' ', $parts ),
+		'has_type_deviation'  => $type_dev,
+	);
 }
 
 /**
@@ -246,14 +327,18 @@ function MRT_timetable_overview_columns_json( array $view ): array {
 	foreach ( $view['services_list'] as $idx => $service_data ) {
 		$info = $view['service_info'][ $idx ];
 		$tt   = $info['train_type'] ?? null;
-		$columns[] = array(
-			'serviceNumber'  => (string) ( $info['service_number'] ?? '' ),
-			'trainTypeName'  => $tt ? $tt->name : '',
-			'trainTypeSlug'  => $tt ? $tt->slug : '',
-			'iconKey'        => $tt ? MRT_get_train_type_symbol_key( $tt ) : 'diesel',
-			'isSpecial'      => ! empty( $info['highlight_label'] ),
-			'specialName'    => (string) ( $info['highlight_label'] ?? '' ),
-			'highlightColor' => (string) ( $info['highlight_color'] ?? '' ),
+		$default_tt = $info['default_train_type'] ?? null;
+		$columns[]  = array(
+			'serviceNumber'        => (string) ( $info['service_number'] ?? '' ),
+			'trainTypeName'          => $tt ? $tt->name : '',
+			'trainTypeSlug'          => $tt ? $tt->slug : '',
+			'iconKey'                => $tt ? MRT_get_train_type_symbol_key( $tt ) : 'diesel',
+			'plannedTrainTypeName'   => $default_tt ? $default_tt->name : '',
+			'isDeviation'            => ! empty( $info['is_deviation'] ),
+			'deviationNotice'        => (string) ( $info['deviation_notice'] ?? '' ),
+			'isSpecial'              => ! empty( $info['highlight_label'] ),
+			'specialName'            => (string) ( $info['highlight_label'] ?? '' ),
+			'highlightColor'         => (string) ( $info['highlight_color'] ?? '' ),
 		);
 	}
 	return $columns;
@@ -372,12 +457,8 @@ function MRT_timetable_row_times_json(
 				$text = MRT_format_stop_time_display( $stop );
 			}
 		}
-		$highlight_label = (string) ( $info[ $idx ]['highlight_label'] ?? '' );
-		$highlight_color = (string) ( $info[ $idx ]['highlight_color'] ?? '' );
-		$cells[]         = array(
-			'text'           => $text,
-			'specialName'    => $highlight_label,
-			'highlightColor' => $highlight_color,
+		$cells[] = array(
+			'text' => $text,
 		);
 	}
 

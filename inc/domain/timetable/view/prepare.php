@@ -93,16 +93,23 @@ function MRT_prepare_service_info( array $services_list, string $dateYmd ): arra
 			$all_connections[ $idx ] = $connections;
 		}
 
+		$default_train_type = MRT_get_service_default_train_type( (int) $service->ID );
+		$is_deviation       = $dateYmd !== '' && MRT_service_has_train_type_deviation( (int) $service->ID, $dateYmd );
+		$deviation_notice   = $dateYmd !== '' ? MRT_get_service_notice_for_date( (int) $service->ID, $dateYmd ) : '';
+
 		$service_info[ $idx ] = array(
-			'service'          => $service,
-			'train_type'       => $train_type,
-			'service_number'   => $disp['service_number'],
-			'is_special'       => $disp['is_special'],
-			'special_name'     => $disp['special_name'],
-			'highlight_label'  => $disp['highlight_label'],
-			'highlight_color'  => $disp['highlight_color'],
-			'highlight_note'   => $disp['highlight_note'],
-			'destination'      => $destination_data['destination'] ?? '',
+			'service'                => $service,
+			'train_type'             => $train_type,
+			'default_train_type'     => $default_train_type,
+			'is_deviation'           => $is_deviation,
+			'deviation_notice'       => $deviation_notice,
+			'service_number'         => $disp['service_number'],
+			'is_special'             => $disp['is_special'],
+			'special_name'           => $disp['special_name'],
+			'highlight_label'        => $disp['highlight_label'],
+			'highlight_color'        => $disp['highlight_color'],
+			'highlight_note'         => $disp['highlight_note'],
+			'destination'            => $destination_data['destination'] ?? '',
 		);
 	}
 

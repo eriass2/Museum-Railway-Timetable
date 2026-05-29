@@ -83,10 +83,8 @@
 .mrt-ov-grid {
   --mrt-ov-station-w: 11rem;
   --mrt-ov-col-min: 3.75rem;
-  --mrt-ov-grid-min: calc(var(--mrt-ov-station-w) + var(--mrt-ov-cols, 4) * var(--mrt-ov-col-min));
   display: grid;
-  grid-template-columns: var(--mrt-ov-station-w) repeat(var(--mrt-ov-cols, 4), minmax(var(--mrt-ov-col-min), 1fr));
-  width: max(100%, var(--mrt-ov-grid-min));
+  width: max(100%, var(--mrt-ov-grid-min, 30rem));
   background: #fff;
 }
 
@@ -154,19 +152,53 @@
 }
 
 .mrt-ov-grid-row--from .mrt-ov-station-col,
-.mrt-ov-grid-row--from .mrt-ov-time-cell:not(.mrt-ov-cell--highlight),
+.mrt-ov-grid-row--from .mrt-ov-time-cell,
 .mrt-ov-grid-row--to .mrt-ov-station-col,
-.mrt-ov-grid-row--to .mrt-ov-time-cell:not(.mrt-ov-cell--highlight) {
+.mrt-ov-grid-row--to .mrt-ov-time-cell {
   background: var(--mrt-ov-highlight);
 }
 
 .mrt-ov-grid-row--alt .mrt-ov-station-col,
-.mrt-ov-grid-row--alt .mrt-ov-time-cell:not(.mrt-ov-cell--highlight) {
+.mrt-ov-grid-row--alt .mrt-ov-time-cell {
   background: var(--mrt-ov-stripe);
 }
 
-.mrt-ov-cell--highlight {
+.mrt-ov-highlight-stripe {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.35rem 0.2rem;
+  border: 1px solid var(--mrt-border-default, #ccc);
   background: var(--mrt-ov-cell-highlight, var(--mrt-special-bg, #fff9c4));
+  min-height: 2.5rem;
+}
+
+.mrt-ov-highlight-stripe--head {
+  min-height: 0;
+  padding: 0.25rem 0.1rem;
+}
+
+.mrt-ov-highlight-stripe--span {
+  align-self: stretch;
+  min-height: 0;
+  padding: 0.5rem 0.25rem;
+}
+
+.mrt-ov-highlight-stripe__label {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+.mrt-ov-highlight-stripe--span .mrt-ov-highlight-stripe__label {
+  font-size: clamp(0.82rem, 0.95rem, 1.05rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
 }
 
 .mrt-ov-grid-row--transfer .mrt-ov-station-col,
@@ -231,6 +263,22 @@
   display: block;
   font-size: 0.72rem;
   font-weight: 600;
+}
+
+.mrt-ov-deviation-mark {
+  margin-left: 0.15rem;
+  font-weight: 800;
+  text-decoration: none;
+  cursor: help;
+}
+
+.mrt-ov-deviation-note {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--mrt-color-warning-800, #7a4f01);
 }
 
 .mrt-ov-branch-scroll {

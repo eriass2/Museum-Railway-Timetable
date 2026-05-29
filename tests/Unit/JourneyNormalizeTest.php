@@ -87,6 +87,20 @@ final class JourneyNormalizeTest extends TestCase {
         self::assertSame("Delay", $out['notice']);
     }
 
+    public function test_normalize_multi_leg_uses_date_specific_notice(): void {
+        $GLOBALS['mrt_test_post_meta'] = [
+            '10|mrt_service_notice' => 'Global',
+            '10|mrt_service_notices_by_date' => ['2026-06-15' => 'Ersatt lok'],
+        ];
+        $item = [
+            'legs' => [
+                ['service_id' => 10, 'from_departure' => '08:00', 'to_arrival' => '08:20', 'train_type' => 'a'],
+            ],
+        ];
+        $out = MRT_normalize_multi_leg_for_api($item, '2026-06-15');
+        self::assertSame('Ersatt lok', $out['notice']);
+    }
+
     public function test_flatten_wrapped_direct_connection(): void {
         $GLOBALS['mrt_test_post_meta'] = [
             '42|mrt_service_route_id' => 99,

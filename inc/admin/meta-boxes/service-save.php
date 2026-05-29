@@ -26,6 +26,7 @@ function MRT_save_service_meta_box( $post_id ) {
 	MRT_save_service_number( $post_id );
 	MRT_save_service_notice( $post_id );
 	MRT_save_service_train_types_by_date( $post_id );
+	MRT_save_service_notices_by_date( $post_id );
 	MRT_save_service_end_station( $post_id );
 	MRT_save_service_direction_legacy( $post_id );
 }
@@ -120,6 +121,26 @@ function MRT_save_service_train_types_by_date( $post_id ) {
 		}
 	}
 	! empty( $by_date ) ? update_post_meta( $post_id, 'mrt_service_train_types_by_date', $by_date ) : delete_post_meta( $post_id, 'mrt_service_train_types_by_date' );
+}
+
+/**
+ * Save date-specific public notices from meta box
+ *
+ * @param int $post_id Post ID
+ */
+function MRT_save_service_notices_by_date( $post_id ) {
+	if ( ! isset( $_POST['mrt_notices_by_date'] ) || ! is_array( $_POST['mrt_notices_by_date'] ) ) {
+		return;
+	}
+	$by_date = array();
+	foreach ( $_POST['mrt_notices_by_date'] as $date => $text ) {
+		$date = sanitize_text_field( $date );
+		$text = sanitize_textarea_field( wp_unslash( $text ) );
+		if ( MRT_validate_date( $date ) && $text !== '' ) {
+			$by_date[ $date ] = $text;
+		}
+	}
+	! empty( $by_date ) ? update_post_meta( $post_id, 'mrt_service_notices_by_date', $by_date ) : delete_post_meta( $post_id, 'mrt_service_notices_by_date' );
 }
 
 /**

@@ -11,6 +11,40 @@ if (!defined('ARRAY_A')) {
     define('ARRAY_A', 'ARRAY_A');
 }
 
+if (!class_exists('WP_Term')) {
+    class WP_Term {
+        /** @var int */
+        public $term_id = 0;
+
+        /** @var string */
+        public $name = '';
+
+        /** @var string */
+        public $slug = '';
+    }
+}
+
+if (!class_exists('WP_Post')) {
+    class WP_Post {
+        /** @var int */
+        public $ID = 0;
+
+        /** @var string */
+        public $post_type = '';
+
+        /**
+         * @param object|array<string, mixed>|null $data
+         */
+        public function __construct($data = null) {
+            if (is_object($data)) {
+                foreach (get_object_vars($data) as $key => $value) {
+                    $this->$key = $value;
+                }
+            }
+        }
+    }
+}
+
 if (!class_exists('WP_Error')) {
     class WP_Error {
         /** @var array<string, array<int, string>> */
@@ -235,12 +269,13 @@ if (!function_exists('get_term')) {
     /**
      * @param int|string $term_id
      * @param string     $taxonomy
-     * @return null
+     * @return object|null
      */
     function get_term($term_id, $taxonomy = '') {
-        unset($term_id, $taxonomy);
-
-        return null;
+        unset($taxonomy);
+        $terms = $GLOBALS['mrt_test_terms'] ?? [];
+        $id = (int) $term_id;
+        return $terms[$id] ?? null;
     }
 }
 
@@ -252,9 +287,22 @@ if (!function_exists('wp_get_post_terms')) {
      * @return array<int, mixed>
      */
     function wp_get_post_terms($post_id, $taxonomy, $args = []) {
-        unset($post_id, $taxonomy, $args);
-
-        return [];
+        unset($taxonomy, $args);
+        $map = $GLOBALS['mrt_test_post_terms'] ?? [];
+        $key = (int) $post_id;
+        if (!isset($map[$key])) {
+            return [];
+        }
+        $term_ids = (array) $map[$key];
+        $terms = $GLOBALS['mrt_test_terms'] ?? [];
+        $out = [];
+        foreach ($term_ids as $tid) {
+            $tid = (int) $tid;
+            if (isset($terms[$tid])) {
+                $out[] = $terms[$tid];
+            }
+        }
+        return $out;
     }
 }
 
