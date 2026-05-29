@@ -25,6 +25,7 @@ function MRT_load_journey_domain_modules(): void {
 	require_once $journey_dir . 'journey-notice.php';
 	require_once $journey_dir . 'journey-connection-display.php';
 	require_once $journey_dir . 'journey-normalize.php';
+	require_once $journey_dir . 'journey-scoring.php';
 }
 
 /**

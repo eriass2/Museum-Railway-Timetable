@@ -253,5 +253,10 @@ function MRT_journey_find_normalized_connections( int $from_station_id, int $to_
 		);
 	}
 
-	return $normalized;
+	return MRT_journey_sort_outbound_connections(
+		$normalized,
+		$from_station_id,
+		$to_station_id,
+		$dateYmd
+	);
 }
