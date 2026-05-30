@@ -29,7 +29,7 @@ Beslut för MVP och produktinriktning. Uppdatera vid ändring.
 **Beslut:** **Import + Vue-admin för korrigering** (ersätter CPT/meta boxes).
 
 - Lennakatten-import och CSV kvar; dev-verktyg enligt [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
-- UI-plan: [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md). Meta boxes fasas ut Fas 2–7.
+- Vue-admin (klar 2026-05): [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), REST enligt [REST_API.md](REST_API.md).
 
 ---
 
@@ -80,19 +80,16 @@ Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 
 ## 9. Admin Vue (2026-05)
 
-**Beslut:** Vue **ersätter** WordPress CPT-admin. Dashboard först.
+**Beslut:** Vue **ersätter** WordPress CPT-admin. **Status: implementerat** (dashboard, tidtabeller, stationer/rutter, priser, import/export, dev-verktyg).
 
 | Punkt | Värde |
 |-------|--------|
-| Plan | [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) |
-| Fas 1 | Minimal dashboard (statistik, varningar, snabbstart, länkar) |
-| Design | WP-native skal + Vue-innehåll |
+| Arbetsflöde | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) |
+| API | [REST_API.md](REST_API.md) |
 | Routing | Hash (`#/dashboard`) under `admin.php?page=mrt_app` |
 | Behörighet | `manage_options` fullt; `edit_posts` begränsat (avvikelser, en avgångstid) |
-| Sparbeteende | Hybrid auto-save / explicit |
-| Mobil | Desktop-first; avvikelser + snabb avgångstid |
 | Språk | Svenska primärt |
-| E2E | Playwright från Fas 2 |
+| E2E | Playwright (CI + `frontend/vue/e2e/`) |
 
 ---
 

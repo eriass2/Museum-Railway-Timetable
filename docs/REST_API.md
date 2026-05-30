@@ -43,9 +43,9 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `POST /import/csv`, `GET /export/csv` | Import/export |
 | `POST /journey/search` | Resesökning (publikt) |
 | `GET /journey/calendar` | Trafikdagar (publikt) |
-| `GET /journey/connections/{id}` | Detalj (publikt) |
+| `GET /journey/connection-detail` | Detalj (publikt) |
 
-Exakta paths och payloads dokumenteras i [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) per fas.
+Implementation: `inc/infrastructure/rest/*.php`. Admin-klient: `frontend/vue/src/admin/api/adminRest.ts`.
 
 ---
 
@@ -93,6 +93,6 @@ Befintliga routes i tabellen ovan uppfyller detta (2026-05).
 
 ## Referenser
 
-- [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) — Vue-admin och faser
+- [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) — Vue-admin arbetsflöde
 - [ARCHITECTURE.md](ARCHITECTURE.md) — lager och adapters
 - [WordPress REST API Handbook](https://developer.wordpress.org/rest-api/)

@@ -44,7 +44,7 @@ Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootst
 - **JavaScript:** Servern är sanning för sökning, priser och giltiga datum; klienten visar svar och fel.
 - **Gemensam regel:** En implementation i PHP, inte copy-paste mellan admin och publikt.
 
-**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` (3) Tunt lager i shortcode/REST (4) UI visar och skickar parametrar. Se [REST_API.md](REST_API.md) och [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md).
+**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` (3) Tunt lager i shortcode/REST (4) UI visar och skickar parametrar. Se [REST_API.md](REST_API.md) och [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md).
 
 ---
 

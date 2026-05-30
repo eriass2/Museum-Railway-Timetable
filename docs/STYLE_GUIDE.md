@@ -4,7 +4,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 
 **Arkitektur och rebuild-design:** [REBUILD_RULES.md](REBUILD_RULES.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Denna guide fokuserar på namngivning, säkerhet och filkonventioner så att regler inte dupliceras.
 
-**Visuell design (färger):** [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) — tokens i `assets/mrt-color-tokens.css`. **Wizard mot produktion:** [PRODUCTION_WIZARD.md](PRODUCTION_WIZARD.md). Mockups i `docs/mockups/` är arkiverad referens.
+**Visuell design (färger):** [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) — tokens i `assets/mrt-color-tokens.css`. Mockups i `docs/mockups/` är arkiverad referens.
 
 ---
 
@@ -86,7 +86,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Vue-bundle:** Publik CSS ligger under `frontend/vue/src/styles/` och byggs till `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + delade primitives); appar importerar egna moduler (`journey-wizard.css`, `timetable-overview.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
 - **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — `base.css`, `wizard-shell.css`, `controls-form.css` (sök steg), `controls-calendar.css`, `steps-*.css`, `responsive.css`. Importeras från `JourneyWizardApp.vue`.
 - **Tidtabellsöversikt-CSS:** `frontend/vue/src/styles/timetable-overview.css` — block `.mrt-ov-*`, importeras från `MrtTimetableOverviewView.vue`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
-- **Färgtokens:** `assets/mrt-color-tokens.css` importeras först i `mrt-public.css`. Se även [DESIGN_TOKENS.md](DESIGN_TOKENS.md) och [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
+- **Färgtokens:** `assets/mrt-color-tokens.css` importeras först i `mrt-public.css`. Se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) och [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
 - **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i `controls-form.css` (scoped under `.mrt-journey-wizard .mrt-surface`).
 
 ### Exempel
@@ -207,10 +207,8 @@ museum-railway-timetable/
 ## 8. Referenser
 
 - **REBUILD_RULES.md** – Rebuild-regler för kod, design och kvalitet
-- **DESIGN_TOKENS.md** – CSS custom properties för Vue UI
+- **VUE_UI_COMPONENTS.md** – Vue-komponenter, tokens och alerts
 - **design/COLOR_PALETTE.md** – Färgpalett och kontrast
-- **PRODUCTION_WIZARD.md** – Wizard mot produktion
-- **VUE_UI_COMPONENTS.md** – Vue-komponenter och CSS-klasser
 - [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
 - [Clean Code (Robert C. Martin)](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)

@@ -2,7 +2,7 @@
 
 Modular styles for `[museum_journey_wizard]`, imported from `JourneyWizardApp.vue` via `../styles/journey-wizard.css`.
 
-**Konventioner:** [docs/STYLE_GUIDE.md](../../../docs/STYLE_GUIDE.md) §3 CSS, [docs/DESIGN_TOKENS.md](../../../docs/DESIGN_TOKENS.md).
+**Konventioner:** [docs/STYLE_GUIDE.md](../../../docs/STYLE_GUIDE.md) §3 CSS, [docs/VUE_UI_COMPONENTS.md](../../../docs/VUE_UI_COMPONENTS.md), [docs/mockups/DESIGN_TOKENS.md](../../../docs/mockups/DESIGN_TOKENS.md).
 
 | Modul | Innehåll |
 |-------|----------|

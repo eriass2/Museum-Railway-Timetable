@@ -1,6 +1,6 @@
 # Vue UI components (`frontend/vue/src/components/ui/`)
 
-Shared primitives for wizard, month calendar, and overview. Styles: `assets/frontend/ui-components.css` (also imported via `frontend-public.css`).
+Shared primitives for wizard, month calendar, and overview. Wizard-specific wrappers live in `frontend/vue/src/wizard/components/`. Styles: `assets/frontend/ui-components.css` (imported via `mrt-public.css`).
 
 ## Components
 
@@ -36,7 +36,28 @@ Shared primitives for wizard, month calendar, and overview. Styles: `assets/fron
 | `MrtSelectedTrip` | `mrt-selected-trip` | Return step outbound recap |
 | `MrtTripList` | `mrt-trip-list` | Outbound/return connection list |
 
-Wizard shell CSS (hero, embedded, step overrides): `frontend/vue/src/styles/journey-wizard/`. See [DESIGN_TOKENS.md](DESIGN_TOKENS.md). Alert naming: [ALERT_STYLES.md](ALERT_STYLES.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
+Wizard shell CSS: `frontend/vue/src/styles/journey-wizard/`. Visuell wizard-referens: [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
+
+## Alerts
+
+| Class | Where | Component |
+|-------|--------|-----------|
+| `mrt-ui-alert`, `mrt-ui-alert--error`, … | Public Vue apps | `MrtAlert` |
+| `mrt-alert`, `mrt-alert--error`, … | Legacy PHP templates | PHP (inga nya i Vue) |
+
+New Vue code must use **`MrtAlert`** (`mrt-ui-alert`).
+
+## Design tokens (CSS)
+
+Defined in `assets/mrt-color-tokens.css`; wizard overrides in `frontend/vue/src/styles/journey-wizard/base.css`. Prefer tokens over hard-coded hex.
+
+**Shared:** `--mrt-color-green-700`, `--mrt-color-accent-500/700`, `--mrt-color-on-dark`, `--mrt-color-neutral-*`, `--mrt-font-lg/xl`.
+
+**Wizard shell:** `--mrt-wizard-green-dark`, `--mrt-wizard-surface`, `--mrt-wizard-text`, `--mrt-wizard-yellow`, `--mrt-wizard-focus`.
+
+**Overview (`.mrt-ov-*`):** `frontend/vue/src/styles/timetable-overview.css` — `--mrt-ov-green`, `--mrt-ov-highlight`, `--mrt-ov-transfer`, `--mrt-ov-stripe`. Legacy aliases in `assets/frontend/tokens.css`.
+
+See also [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
 
 ## Rebuild
 

@@ -1,6 +1,6 @@
 # Färgpalett – Museum Railway (publik UI)
 
-Startpunkt för visuell style guide (mockup-fas avslutad). Källan i kod: `assets/mrt-color-tokens.css`. Vidare UI-arbete: [PRODUCTION_WIZARD.md](../PRODUCTION_WIZARD.md).
+Startpunkt för visuell style guide (mockup-fas avslutad). Källan i kod: `assets/mrt-color-tokens.css`. Vidare UI: [VUE_UI_COMPONENTS.md](../VUE_UI_COMPONENTS.md), [SMOKE_CHECKLIST.md](../SMOKE_CHECKLIST.md).
 
 Grönt är varumärkesfärg (Lennakatten). Guld/gul accent används för aktivt steg, CTA och markeringar.
 

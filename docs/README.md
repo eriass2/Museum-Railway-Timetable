@@ -20,11 +20,11 @@ Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESI
 | [DATA_MODEL.md](DATA_MODEL.md) | Post types, meta, `mrt_stoptimes`, relationer |
 | [CSV_FORMAT.md](CSV_FORMAT.md) | Import/export av tidtabellsdata (zip, kolumner, lägen) |
 | [SHORTCODES.md](SHORTCODES.md) | Tre shortcodes: månad, översikt, wizard |
-| [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) | **Vue-admin** – ersätter CPT-UI, faser, dashboard först |
-| [REST_API.md](REST_API.md) | **REST-only** – ingen AJAX i slutläge, migration |
+| [REST_API.md](REST_API.md) | REST-only API — admin och publikt frontend |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i Vue-admin (steg-för-steg) |
 | [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsmeny, component demo, import |
 | [VUE_FRONTEND.md](VUE_FRONTEND.md) | Publikt Vue-frontend (build, bundle, integration) |
+| [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) | Delade `Mrt*`-komponenter, tokens, alerts |
 | [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning i Docker |
 | [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG-krav per modul |
 | [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) | Manuell release-logg |

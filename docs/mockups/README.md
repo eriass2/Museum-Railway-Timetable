@@ -7,10 +7,10 @@ PNG-filer i denna mapp (`sok-din-resa.png`, `valj-datum.png`, m.fl.) dokumentera
 | Källa | Plats |
 |-------|--------|
 | Färgpalett & riktlinjer | [docs/design/COLOR_PALETTE.md](../design/COLOR_PALETTE.md) |
-| CSS-tokens | `assets/mrt-color-tokens.css` |
-| Verklighets-backlog | [docs/PRODUCTION_WIZARD.md](../PRODUCTION_WIZARD.md) |
-| Komponent-tokens (legacy namn) | [DESIGN_TOKENS.md](DESIGN_TOKENS.md) |
+| CSS-tokens & komponenter | [docs/VUE_UI_COMPONENTS.md](../VUE_UI_COMPONENTS.md), `assets/mrt-color-tokens.css` |
+| Wizard-layout (referens) | [DESIGN_TOKENS.md](DESIGN_TOKENS.md) |
 | Trafik & tider (sanning) | `testdata/reference-pdfs/`, importerad CPT-data |
+| Manuell rökning | [docs/SMOKE_CHECKLIST.md](../SMOKE_CHECKLIST.md) |
 
 ## Nya designbeslut
 Lägg till i `COLOR_PALETTE.md` och tokens — inte “juster mot PNG”. Testa mot riktig data och [TESTING.md](../../frontend/vue/TESTING.md).
