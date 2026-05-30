@@ -101,7 +101,7 @@ Vue-admin under `admin.php?page=mrt_app` (`frontend/vue/src/admin/`). REST via `
 
 ### Timetable overview (Vue)
 
-`inc/domain/timetable/view/overview-data.php` bygger JSON (`MRT_get_timetable_overview_data`). Vue renderar i `frontend/vue/src/components/overview/`; admin meta box och shortcode mountar samma komponent (`inc/admin/timetable-vue-preview.php`).
+`inc/domain/timetable/view/overview-data.php` bygger JSON (`MRT_get_timetable_overview_data`). Vue renderar i `frontend/vue/src/components/overview/`; admin editor och shortcode mountar samma komponent.
 
 ---
 

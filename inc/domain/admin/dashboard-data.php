@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/admin/dashboard-warnings.php';
+require_once MRT_PATH . 'inc/domain/admin/cancel-traffic.php';
 
 /**
  * Dashboard statistics.
@@ -102,6 +103,34 @@ function MRT_dashboard_next_traffic( int $limit = 5 ): array {
 }
 
 /**
+ * Traffic scheduled for today (for mobile ops CTAs).
+ *
+ * @return array<string, mixed>|null
+ */
+function MRT_dashboard_traffic_today(): ?array {
+	$datetime = MRT_get_current_datetime();
+	$today    = gmdate( 'Y-m-d', $datetime['timestamp'] );
+	$timetable_ids = MRT_get_timetables_for_date( $today );
+	if ( $timetable_ids === array() ) {
+		return null;
+	}
+	$primary_id = (int) $timetable_ids[0];
+	$post       = get_post( $primary_id );
+	$services   = MRT_services_running_on_date( $today );
+	$count      = count( $services );
+	$cancelled  = MRT_count_services_cancelled_on_date( $services, $today );
+
+	return array(
+		'date'             => $today,
+		'timetable_id'     => $primary_id,
+		'timetable_title'  => $post instanceof WP_Post ? (string) $post->post_title : '',
+		'services_count'   => $count,
+		'cancelled_count'  => $cancelled,
+		'all_cancelled'    => $count > 0 && $cancelled >= $count,
+	);
+}
+
+/**
  * Quick-start and external links for dashboard.
  *
  * @return array<string, string>
@@ -126,11 +155,12 @@ function MRT_dashboard_links(): array {
  */
 function MRT_get_dashboard_payload(): array {
 	return array(
-		'stats'        => MRT_dashboard_stats(),
-		'warnings'     => MRT_collect_dashboard_warnings(),
-		'next_traffic' => MRT_dashboard_next_traffic(),
-		'links'        => MRT_dashboard_links(),
-		'can_manage'   => current_user_can( 'manage_options' ),
-		'can_operate'  => current_user_can( 'manage_options' ) || current_user_can( 'edit_posts' ),
+		'stats'         => MRT_dashboard_stats(),
+		'warnings'      => MRT_collect_dashboard_warnings(),
+		'next_traffic'  => MRT_dashboard_next_traffic(),
+		'traffic_today' => MRT_dashboard_traffic_today(),
+		'links'         => MRT_dashboard_links(),
+		'can_manage'    => current_user_can( 'manage_options' ),
+		'can_operate'   => current_user_can( 'manage_options' ) || current_user_can( 'edit_posts' ),
 	);
 }

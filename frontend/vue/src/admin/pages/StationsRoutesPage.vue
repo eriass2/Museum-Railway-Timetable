@@ -127,6 +127,9 @@ async function saveStationMeta(st: StationRow) {
           <tr>
             <th>Namn</th>
             <th>Typ</th>
+            <th>Lat</th>
+            <th>Lng</th>
+            <th>Buss</th>
             <th>Ordning</th>
             <th v-if="cfg.canManage"></th>
           </tr>
@@ -146,6 +149,34 @@ async function saveStationMeta(st: StationRow) {
                 <option value="museum">Museum</option>
               </select>
               <span v-else>{{ st.station_type || '—' }}</span>
+            </td>
+            <td>
+              <input
+                v-if="cfg.canManage"
+                v-model="st.lat"
+                type="text"
+                class="small-text"
+                placeholder="57.48"
+              />
+              <span v-else>{{ st.lat || '—' }}</span>
+            </td>
+            <td>
+              <input
+                v-if="cfg.canManage"
+                v-model="st.lng"
+                type="text"
+                class="small-text"
+                placeholder="15.82"
+              />
+              <span v-else>{{ st.lng || '—' }}</span>
+            </td>
+            <td>
+              <input
+                v-if="cfg.canManage"
+                v-model="st.bus_suffix"
+                type="checkbox"
+              />
+              <span v-else>{{ st.bus_suffix ? 'Ja' : '—' }}</span>
             </td>
             <td>
               <input v-if="cfg.canManage" v-model.number="st.display_order" type="number" class="small-text" />

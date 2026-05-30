@@ -15,10 +15,20 @@ export type DashboardWarning = {
   route: string;
 };
 
+export type TrafficToday = {
+  date: string;
+  timetable_id: number;
+  timetable_title: string;
+  services_count: number;
+  cancelled_count: number;
+  all_cancelled: boolean;
+};
+
 export type DashboardPayload = {
   stats: Record<string, number>;
   warnings: DashboardWarning[];
   next_traffic: { date: string; timetable_id: number; title: string }[];
+  traffic_today: TrafficToday | null;
   links: Record<string, string>;
   can_manage: boolean;
   can_operate: boolean;

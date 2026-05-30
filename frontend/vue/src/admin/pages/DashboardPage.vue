@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
 import type { DashboardPayload } from '../types';
 import AdminNav from '../components/AdminNav.vue';
+import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 
 const router = useRouter();
@@ -45,6 +46,16 @@ function openRoute(hashRoute: string) {
     <p v-else-if="error" class="notice notice-error">{{ error }}</p>
 
     <template v-else-if="data">
+      <p v-if="data.can_operate && !data.can_manage" class="notice notice-info">
+        Begränsad behörighet: du kan ändra avvikelser och avgångstider, inte grunddata.
+      </p>
+
+      <TrafficTodayPanel
+        v-if="data.traffic_today"
+        :traffic="data.traffic_today"
+        :can-operate="data.can_operate"
+      />
+
       <div v-if="isMobile" class="mrt-admin-stat-grid" aria-label="Statistik">
         <div v-for="item in statItems" :key="item.key" class="mrt-admin-stat-card">
           <span class="mrt-admin-stat-card__value">{{ data.stats[item.key] }}</span>

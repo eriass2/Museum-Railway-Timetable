@@ -10,4 +10,3 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/infrastructure/post-types/register.php';
-require_once MRT_PATH . 'inc/infrastructure/post-types/admin.php';

@@ -38,6 +38,24 @@ const deviationRows = ref<
   { service_id: number; date: string; trip_label: string; train_type_id: number; notice: string }[]
 >([]);
 const saveMsg = ref('');
+const editTitle = ref('');
+const editType = ref('');
+
+const timetableTypes = [
+  { value: '', label: '— Ingen färgrubrik —' },
+  { value: 'green', label: 'Grön tidtabell' },
+  { value: 'yellow', label: 'Gul tidtabell' },
+  { value: 'red', label: 'Röd tidtabell' },
+  { value: 'orange', label: 'Orange tidtabell' },
+] as const;
+
+const trafficToday = computed(() => {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+});
 
 const desktopTabs = computed(() => {
   if (isMobile.value) return [];
@@ -55,6 +73,8 @@ async function loadDetail() {
   error.value = '';
   try {
     detail.value = await getTimetable(timetableId.value);
+    editTitle.value = detail.value.title;
+    editType.value = detail.value.type || '';
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Fel';
   } finally {
@@ -113,6 +133,17 @@ async function saveDates() {
   saveMsg.value = 'Trafikdagar sparade';
 }
 
+async function saveMeta() {
+  if (!detail.value || !cfg.canManage) return;
+  detail.value = await updateTimetable(timetableId.value, {
+    title: editTitle.value.trim(),
+    type: editType.value,
+  });
+  editTitle.value = detail.value.title;
+  editType.value = detail.value.type || '';
+  saveMsg.value = 'Namn och typ sparade';
+}
+
 function addDate() {
   if (!detail.value || !dateInput.value) return;
   if (!detail.value.dates.includes(dateInput.value)) {
@@ -162,18 +193,38 @@ function onMobileSaved(message: string) {
 
 <template>
   <div>
-    <h1 v-if="detail">{{ detail.title }}</h1>
-    <h1 v-else>Tidtabell</h1>
+    <h1 v-if="!detail">Tidtabell</h1>
     <AdminNav />
     <p v-if="loading" class="description">Laddar...</p>
     <p v-else-if="error" class="notice notice-error">{{ error }}</p>
     <p v-if="saveMsg" class="notice notice-success">{{ saveMsg }}</p>
+
+    <div v-if="detail && cfg.canManage" class="mrt-admin-panel mrt-admin-timetable-meta">
+      <h2 class="screen-reader-text">Tidtabell</h2>
+      <p>
+        <label for="mrt-tt-title">Titel</label>
+        <input id="mrt-tt-title" v-model="editTitle" type="text" class="regular-text" />
+      </p>
+      <p>
+        <label for="mrt-tt-type">Typ (färg i översikt)</label>
+        <select id="mrt-tt-type" v-model="editType">
+          <option v-for="opt in timetableTypes" :key="opt.value" :value="opt.value">
+            {{ opt.label }}
+          </option>
+        </select>
+      </p>
+      <p>
+        <button type="button" class="button button-primary" @click="saveMeta">Spara namn och typ</button>
+      </p>
+    </div>
+    <h1 v-else-if="detail">{{ detail.title }}</h1>
 
     <MobileTimetablePanel
       v-if="detail && isMobile"
       :timetable-id="timetableId"
       :detail="detail"
       :can-operate="cfg.canOperate"
+      :traffic-today="trafficToday"
       @saved="onMobileSaved"
     />
 

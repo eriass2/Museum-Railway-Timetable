@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { getDeviations, listTrainTypes, saveDeviations } from '../api/adminRest';
 import type { TimetableDetail, TrainTypeRow } from '../types';
 import MobileQuickDeparture from './MobileQuickDeparture.vue';
+import MobileCancelTraffic from './MobileCancelTraffic.vue';
 
 const props = defineProps<{
   timetableId: number;
   detail: TimetableDetail;
   canOperate: boolean;
+  trafficToday: string | null;
 }>();
 
 const emit = defineEmits<{ saved: [message: string] }>();
@@ -18,6 +20,43 @@ const deviationRows = ref<
 const trainTypes = ref<TrainTypeRow[]>([]);
 const loading = ref(true);
 const error = ref('');
+const cancelMsg = ref('');
+
+const showCancelToday = computed(
+  () =>
+    props.trafficToday !== null &&
+    props.detail.dates.includes(props.trafficToday),
+);
+
+const trafficTodayPayload = computed(() => {
+  if (!props.trafficToday) return null;
+  const today = props.trafficToday;
+  const cancelled = deviationRows.value.filter(
+    (row) =>
+      row.date === today &&
+      row.notice.toLowerCase().includes('inställd'),
+  ).length;
+  const total = props.detail.services.length;
+  return {
+    date: today,
+    timetable_id: props.timetableId,
+    timetable_title: props.detail.title,
+    services_count: total,
+    cancelled_count: cancelled,
+    all_cancelled: total > 0 && cancelled >= total,
+  };
+});
+
+function onCancelDone(message: string) {
+  cancelMsg.value = message;
+  emit('saved', message);
+  void reloadDeviations();
+}
+
+async function reloadDeviations() {
+  const deviations = await getDeviations(props.timetableId);
+  deviationRows.value = deviations.rows;
+}
 
 onMounted(async () => {
   try {
@@ -58,6 +97,15 @@ async function saveDeviationChanges() {
       :can-edit="canOperate"
       @saved="emit('saved', $event)"
     />
+
+    <MobileCancelTraffic
+      v-if="showCancelToday && trafficTodayPayload"
+      :traffic="trafficTodayPayload"
+      :can-operate="canOperate"
+      @done="onCancelDone"
+      @error="error = $event"
+    />
+    <p v-if="cancelMsg" class="notice notice-success">{{ cancelMsg }}</p>
 
     <div class="mrt-admin-mobile-deviations">
       <h3>Avvikelser</h3>

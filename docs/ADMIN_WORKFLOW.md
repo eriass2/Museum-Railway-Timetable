@@ -1,323 +1,127 @@
-# Admin arbetsflöde – skapa en tidtabell
+# Admin arbetsflöde – Vue-admin
 
-Steg-för-steg i **Vue-admin** under **Railway Timetable** (`admin.php?page=mrt_app`). Dev-verktyg: `#/dev-tools` (dev-läge).
+Steg-för-steg i **Vue-admin** under **Railway Timetable** (`admin.php?page=mrt_app`). Hash-routing: `#/dashboard`, `#/timetables/123`, osv. Dev-verktyg: `#/dev-tools` (endast dev-läge).
 
 ## Översikt
 
-För att skapa en fungerande tidtabell behöver du:
+För en fungerande tidtabell behöver du:
 
-1. **Stations** - Var tågen stannar
-2. **Routes** - Definiera sträckor med stations i ordning
-3. **Train Types** (valfritt) - Kategorisera tåg (t.ex. ånglok, diesellok)
-4. **Timetables** - Definiera dagar när tidtabellen gäller
-5. **Services** - Vilka tåg/turer som finns (kopplade till Timetables och Routes)
-6. **Stop Times** - Vilka stationer varje service stannar vid och när
-
----
-
-## Steg-för-steg Guide
-
-### Steg 1: Skapa Stations
-
-**Varför först?** Stations behövs innan du kan skapa Stop Times.
-
-**Så här gör du:**
-
-1. Gå till **Railway Timetable → Stationer & rutter** i admin-menyn
-2. Skapa en ny station via formuläret (titel, typ, koordinater, visningsordning)
-3. Spara
-
-**Fält:**
-   - **Titel**: Stationens namn (t.ex. "Hultsfred Museum")
-   - **Station Type**: Välj typ (Station, Halt, Depot, eller Museum)
-   - **Latitude/Longitude**: (valfritt) Koordinater för kartvisning
-   - **Display Order**: Ordning för sortering (lägre nummer = högre upp)
-
-**Tips:**
-- Du kan skapa alla stations på en gång, eller skapa dem när du behöver dem
-- **Display Order** används för att sortera stations i listor och dropdowns
+1. **Stationer** – var tågen stannar
+2. **Rutter** – sträckor med stationer i ordning
+3. **Tågtyper** (valfritt) – kategorisering och ikoner
+4. **Tidtabeller** – vilka dagar tidtabellen gäller
+5. **Turer** – tåg kopplade till tidtabell och rutt
+6. **Stopptider** – tider och hållplatser per tur
 
 ---
 
-### Steg 2: Skapa Routes
+## Steg 1: Stationer
 
-**Varför?** Routes definierar sträckor med stations i ordning. När du skapar en Service kan du välja en Route, och då visas alla stations på sträckan automatiskt så att du enkelt kan välja vilka stations tåget stannar vid.
+**Meny:** Railway Timetable → **Stationer & rutter** (`#/stations-routes`)
 
-**Så här gör du:**
-
-1. Gå till **Railway Timetable → Routes** i admin-menyn
-2. Klicka på **"Add New"**
-3. Fyll i:
-   - **Titel**: Route-namnet (t.ex. "Hultsfred - Västervik", "Main Line")
-   - Hjälptext visas direkt under title-fältet med exempel
-4. I **"Route Stations"** meta box:
-   - Välj en station från dropdown
-   - Klicka **"Add"** för att lägga till stationen
-   - Upprepa för varje station i ordning (första stationen först, sista sist)
-   - **Ordna stationer:** Använd ↑ (upp) och ↓ (ner) knapparna för att ändra ordningen
-   - **Ta bort station:** Klicka "Remove" för att ta bort en station från rutten
-5. Klicka **"Publish"** (eller "Update")
-
-**Tips:**
-- Skapa en Route för varje unik sträcka (t.ex. "Nordgående", "Sydgående", "Huvudlinje")
-- Stations ordning i Route är viktig - den används när du konfigurerar Stop Times
-- **Använd upp/ner-knapparna (↑ ↓) för att enkelt ändra ordningen** - mycket lättare än att ta bort och lägga till igen
-- Du kan ha flera Routes med samma stations men i olika ordning
-- Exempel: "Hultsfred → Västervik" och "Västervik → Hultsfred" kan vara två olika Routes
+1. Skriv stationsnamn i fältet **Ny station** och klicka **Lägg till**
+2. Redigera i tabellen: **Namn**, **Typ**, **Lat/Lng** (valfritt, för karta), **Buss** (suffix i visning), **Ordning**
+3. Klicka **Spara** på raden
 
 ---
 
-### Steg 3: Skapa Train Types (Valfritt men Rekommenderat)
+## Steg 2: Rutter
 
-**Varför?** Train Types låter dig kategorisera services (t.ex. "Ånglok", "Diesellok", "Elektrisk") och filtrera i shortcodes.
+**Samma sida** – panelen **Rutter**
 
-**Så här gör du:**
+1. Skapa rutt med **Ny rutt** → **Lägg till**
+2. Klicka **Redigera** på en rutt
+3. Lägg till stationer i ordning med dropdown **Lägg till station…** → **Lägg till**
+4. Ordna med **↑** / **↓**, ta bort med **×**
+5. **Spara rutt**
 
-1. Gå till **Railway Timetable → Train Types**
-2. Klicka på **"Add New Train Type"**
-3. Fyll i:
-   - **Name**: T.ex. "Ånglok", "Diesellok", "Elektrisk"
-   - **Slug**: Skapas automatiskt från namnet (t.ex. `angtag`, `dieseltag`, `ralsbuss`)
-4. Klicka **"Add New Train Type"**
-
-**Tips:**
-- Du kan lägga till Train Types när som helst
-- Services kan ha flera Train Types
-- Train Types används för filtrering i shortcodes
+Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 
 ---
 
-### Steg 4: Skapa Timetables
+## Steg 3: Tågtyper (valfritt)
 
-**Varför?** Timetables definierar vilka dagar tidtabellen gäller. En timetable kan gälla flera dagar och innehåller flera turer (services).
+**Meny:** **Tågtyper** (`#/train-types`)
 
-**Så här gör du:**
-
-1. Gå till **Railway Timetable → Timetables** i admin-menyn
-2. Klicka på **"Add New"**
-3. I **"Timetable Details"** meta box:
-   - **Dates**: Lägg till datum (YYYY-MM-DD) när denna tidtabell gäller
-   - Klicka **"Add Date"** för att lägga till fler datum
-   - En timetable kan gälla flera dagar (t.ex. alla lördagar i juni)
-4. Klicka **"Publish"** (eller "Update")
-
-**Tips:**
-- En timetable kan ha flera datum (t.ex. alla helger i en månad)
-- Services (turer) tillhör en timetable - de körs på de dagar som timetable definierar
-- Du kan skapa olika timetables för olika säsonger (sommar, vinter, helger, etc.)
+1. Fyll i namn, slug (valfritt) och ikon
+2. **Lägg till** eller **Spara** på befintlig rad
 
 ---
 
-### Steg 5: Lägg till Turer i Timetable (Rekommenderat)
+## Steg 4: Tidtabell
 
-**Varför?** Det enklaste sättet att hantera turer är direkt i tidtabellen. Varje tur representerar ett tåg med specifika tider.
+**Meny:** **Tidtabeller** (`#/timetables`)
 
-**Så här gör du:**
-
-1. Gå till **Railway Timetable → Timetables**
-2. Öppna eller skapa en timetable
-3. I **"Trips (Services)"** meta box:
-   - **Route**: Välj en route (obligatoriskt)
-   - **Train Type**: Välj tågtyp (valfritt, t.ex. "Ångtåg", "Dieseltåg")
-   - **Destination**: Välj slutstation på rutten (obligatoriskt för att skapa turen)
-   - Klicka **"Add Trip"** - turen skapas automatiskt och kopplas till timetable
-4. **Turen får automatiskt ett namn** baserat på route och vald destination
-5. Klicka **"Edit"** på en tur för att konfigurera Stop Times
-
-**Tips:**
-- **Route är obligatoriskt** - Du måste välja en Route innan du kan lägga till en tur
-- Du kan lägga till flera turer med olika tågtyper och riktningar på samma timetable
-- **Se översikten** i "Timetable Overview" meta box för att se hur tidtabellen ser ut
-- Turen tillhör automatiskt timetable - du behöver inte välja timetable separat
-
-### Alternativ: Skapa Services separat
-
-Om du föredrar att skapa services separat:
-
-1. Gå till **Railway Timetable → Services**
-2. Klicka på **"Add New"**
-3. Fyll i:
-   - **Timetable**: **VÄLJ EN TIMETABLE** (obligatoriskt) - Välj den timetable som denna service tillhör
-   - **Route**: **VÄLJ EN ROUTE** (obligatoriskt) - Välj den Route som denna service kör på
-   - **Train Type**: Välj tågtyp (t.ex. "Ånglok", "Diesellok")
-   - **End Station**: Välj slutstation/destination (valfritt, rekommenderat)
-   - **Train Number**: Ange tågnummer som visas i tidtabeller (valfritt, t.ex. "71", "91")
-4. Klicka **"Publish"** (eller "Update")
-
-**Tips:**
-- **Timetable är obligatoriskt** - Service tillhör en timetable (som definierar vilka dagar den körs)
-- **Route är obligatoriskt** - Du måste välja en Route innan du kan konfigurera Stop Times
-- Skapa en service för varje unik tur
-- Du kan skapa många services med olika tider på samma Route och Timetable
+1. Ange namn under **Ny tidtabell** → **Skapa**
+2. I editorn: **Titel** och **Typ (färg i översikt)** → **Spara namn och typ**
+3. Fliken **Trafikdagar**: lägg till datum → **Spara**
 
 ---
 
-### Steg 6: Se Timetable Overview
+## Steg 5: Turer
 
-**Vad är Timetable Overview?** En visuell förhandsvisning av hela tidtabellen, grupperad efter route och riktning.
+**Fliken Turer** i tidtabellseditorn
 
-**Så här gör du:**
-
-1. I **Timetable edit screen**, scrolla ner till **"Timetable Overview"** meta box
-2. Här ser du:
-   - Alla turer grupperade efter route och riktning (t.ex. "Från Uppsala Ö Till Marielund")
-   - Tågtyp för varje tur (Ångtåg, Rälsbuss, Dieseltåg)
-   - Tider för varje station
-   - "X" markerar tider som är null/ej specificerade
-
-**Tips:**
-- Översikten uppdateras automatiskt när du lägger till eller tar bort turer
-- Använd översikten för att snabbt kontrollera att allt ser rätt ut
-- Layouten liknar traditionella tryckta tidtabeller
+1. Välj **Rutt**, **Tågtyp** (valfritt) och **Destination**
+2. **Lägg till tur**
 
 ---
 
-### Steg 7: Konfigurera Stop Times för varje Service
+## Steg 6: Stopptider
 
-**Vad är Stop Times?** Detta definierar vilka stationer varje service stannar vid, i vilken ordning, och när (ankomst/avgångstider).
+**Fliken Stopptider**
 
-**Så här gör du:**
+- **Rutnät:** klicka i celler för att ändra tid, stannar och P/A (passagerare på/av)
+- **Tabellvy:** välj tur under *Tabellvy för en tur* → redigera → **Spara stopptider**
 
-1. Gå till **Railway Timetable → Services**
-2. Öppna en service för redigering (klicka på titeln)
-3. **VIKTIGT**: Kontrollera att du har valt en **Route** i "Service Details" meta box. Om inte, välj en Route och klicka "Update".
-4. Scrolla ner till **"Stop Times"** meta box
-5. Du ser nu alla stations på Route:n i en tabell:
-   - **Order**: Stationsordning på sträckan (1, 2, 3...)
-   - **Station**: Stationsnamn
-   - **Stops here**: Checkbox - kryssa i för varje station där tåget stannar
-   - **Arrival**: Ankomsttid (HH:MM) - lämna tomt om tåget stannar men tiden inte är fast
-   - **Departure**: Avgångstid (HH:MM) - lämna tomt om tåget stannar men tiden inte är fast
-   - **Pickup/Dropoff**: Kryssa i om passagerare kan gå på/av
-   - **Symboler i tidtabeller**: 
-     - **P**: Endast påstigning (pickup only)
-     - **A**: Endast avstigning (dropoff only)
-     - **X**: Tåget stannar men ingen tid angiven
-     - **|**: Tåget passerar utan att stanna (no pickup, no dropoff)
-6. För varje station där tåget stannar:
-   - Kryssa i **"Stops here"**
-   - Fyll i **Arrival** och/eller **Departure** tider
-   - Välj **Pickup** och/eller **Dropoff** om tillämpligt
-7. Klicka **"Save Stop Times"** längst ner för att spara alla ändringar
-
-**Tips:**
-- **Route måste väljas först** - Om ingen Route är vald visas ett meddelande
-- När du kryssar i "Stops here" aktiveras tidsfälten automatiskt
-- **Tider kan vara tomma** - Om tåget stannar men tiden inte är fast, lämna Arrival/Departure tomt
-- Du kan välja att tåget ska köra förbi vissa stations (lämna "Stops here" avkryssat)
-- Alla ändringar sparas på en gång när du klickar "Save Stop Times"
-
-**Exempel:**
-```
-Order | Station          | Stops | Arrival | Departure | Pickup | Dropoff
-------|------------------|-------|---------|-----------|--------|--------
-1     | Hultsfred Museum | ✓     | —       | 10:00     | ✓      | ✓
-2     | Västervik        | ✓     | 10:30   | 10:35     | ✓      | ✓
-3     | Oskarshamn       | ✓     | 11:00   | —         | ✓      | ✓
-4     | Kalmar           | —     | —       | —         | —      | —
-```
-
-I exemplet ovan stannar tåget vid de tre första stations men kör förbi Kalmar.
+**Fliken Förhandsvisning** visar samma översikt som på webbplatsen (read-only).
 
 ---
 
-## Komplett Exempel: Skapa en Säsongstidtabell
+## Avvikelser och drift
 
-Låt oss säga att du vill skapa en säsongstidtabell för juni–augusti med:
-- Vardagstidtabell (måndag–fredag)
-- Helgtidtabell (lördag–söndag)
-- Specialtidtabell för 4 juli
+**Fliken Avvikelser** (desktop) eller mobilpanelen i editorn:
 
-### Steg 1: Skapa Stations
-1. Skapa "Hultsfred Museum"
-2. Skapa "Västervik"
-3. Skapa "Oskarshamn"
+- Byt **tågtyp** eller **meddelande** för ett visst datum och tur
+- **Spara avvikelser**
 
-### Steg 2: Skapa Route
-1. Skapa Route "Hultsfred → Västervik"
-2. Lägg till stations i ordning: Hultsfred Museum, Västervik, Oskarshamn
+### Mobil drift
 
-### Steg 3: Skapa Train Types
-1. Skapa "Ångtåg" (slug: `angtag`)
-2. Skapa "Dieseltåg" (slug: `dieseltag`)
+På **Översikt** (`#/dashboard`) när det finns trafik idag:
 
-### Steg 4: Skapa Timetables
-1. Skapa "Vardagar i juni-augusti" med datum: 2025-06-01, 2025-06-02, ... (alla vardagar)
-2. Skapa "Helger i juni-augusti" med datum: 2025-06-07, 2025-06-08, ... (alla helger)
-3. Skapa "4 juli" med datum: 2025-07-04
+- **Inställ trafik idag** – sätter meddelandet «Inställd» på alla dagens turer
+- **Öppna tidtabell** / **Ändra avgångstid** – går till editorn
 
-### Steg 5: Skapa Services
-1. Lägg till tur i "Vardagar i juni-augusti" (Route: "Hultsfred → Västervik", Train Type: Ångtåg, Destination: sista stationen)
-2. Lägg till tur i "Helger i juni-augusti" (samma route, annan tidtabell)
-3. Lägg till tur i "4 juli"
-4. Redigera varje tur och ange tågnummer samt stopptider
+I mobil editor:
 
-### Steg 6: Konfigurera Stop Times
-
-**För "09:00 Avgång":**
-- Kryssa i "Stops here" för alla tre stations
-- Hultsfred Museum: Departure 09:00
-- Västervik: Arrival 09:30, Departure 09:35
-- Oskarshamn: Arrival 10:00
-- Klicka "Save Stop Times"
-
-**För "10:00 Avgång":**
-- Kryssa i "Stops here" för alla tre stations
-- Hultsfred Museum: Departure 10:00
-- Västervik: Arrival 10:30, Departure 10:35
-- Oskarshamn: Arrival 11:00
-- Klicka "Save Stop Times"
-
-**För "14:00 Avgång":**
-- Kryssa i "Stops here" för alla tre stations
-- Hultsfred Museum: Departure 14:00
-- Västervik: Arrival 14:30, Departure 14:35
-- Oskarshamn: Arrival 15:00
-- Klicka "Save Stop Times"
+- **Snabb avgångstid** – ändra avgång vid första hållplats
+- **Inställ trafik** – samma som ovan, om dagens datum finns i tidtabellen
 
 ---
 
-## Tips och Best Practices
+## Inställningar, priser, import
 
-1. **Börja med Stations** - De behövs för allt annat
-2. **Skapa Routes först** - Routes definierar sträckor och gör det enklare att konfigurera Services
-3. **Använd upp/ner-knapparna (↑ ↓)** - Mycket enklare att ordna stationer i Routes än att ta bort och lägga till igen
-4. **Använd Display Order** - Sortera stations logiskt (1, 2, 3...) i Stations
-5. **Skapa Timetables** - Definiera vilka dagar tidtabellen gäller
-6. **Tydliga Service-namn** - T.ex. "09:00 Avgång" istället för "Service 1"
-7. **Välj Timetable och Route** - Båda måste väljas innan du kan konfigurera Stop Times
-8. **Använd "Stops here" checkbox** - Enkelt att välja vilka stations tåget stannar vid
-9. **Tider kan vara tomma** - Om tåget stannar men tiden inte är fast, lämna Arrival/Departure tomt
-10. **Spara Stop Times på en gång** - Klicka "Save Stop Times" när du är klar med alla ändringar
-11. **Använd Train Types** - Gör det enklare att filtrera i shortcodes
-12. **Spara ofta** - Klicka "Update" efter varje större ändring
-13. **Skapa många Services** - Du kan skapa många services (t.ex. 12 avgångar) med olika tider på samma Route och Timetable
+| Sida | Route | Behörighet |
+|------|-------|------------|
+| Inställningar | `#/settings` | `manage_options` |
+| Priser | `#/prices` | `manage_options` |
+| Import/export | `#/import-export` | `manage_options` |
+
+Redaktörer (`edit_posts`) ser dashboard, tidtabeller och stationer, och kan **inte** ändra grunddata – bara avvikelser och snabb avgångstid.
+
+---
+
+## REST API
+
+All klient–server-kommunikation går via WordPress REST (`/wp-json/museum-railway-timetable/v1/…`). Se [REST_API.md](REST_API.md).
 
 ---
 
 ## Felsökning
 
-**Problem: Service visas inte i shortcode**
-- Kontrollera att Timetable innehåller rätt datum
-- Kontrollera att Service är kopplad till rätt Timetable
-- Kontrollera att Stop Times finns för servicen
-
-**Problem: Fel stationer visas**
-- Kontrollera att rätt Route är vald för servicen
-- Kontrollera att "Stops here" är ikryssat för rätt stations
-- Kontrollera stations ordning i Route:n (använd upp/ner-knapparna för att ändra)
-
-**Problem: Tider visas inte**
-- Kontrollera att Arrival/Departure-tider är korrekta (HH:MM-format)
-- Tider kan vara tomma om tåget stannar men tiden inte är fast
-
----
-
-## Nästa Steg
-
-När du har skapat din tidtabell kan du:
-
-1. **Visa den på frontend** – shortcodes i [SHORTCODES.md](SHORTCODES.md): månad, översikt, **`[museum_journey_wizard]`** (resa)
-2. **Kontrollera Stations Overview** – översikt över alla stationer i admin
-3. **Utveckling** – [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) (component demo med tre block, Lennakatten-import)
-
+| Problem | Kontroll |
+|---------|----------|
+| Varningar på dashboard | Följ länkarna under **Varningar** |
+| Tur utan tider | Stopptider-fliken; kontrollera att rutten har stationer |
+| Ingen trafik idag | Lägg till dagens datum under **Trafikdagar** |
+| Legacy CPT-URL | Redirectar automatiskt till Vue-admin |
