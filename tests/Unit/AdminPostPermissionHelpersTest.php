@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for target-specific AJAX permission helpers.
+ * Tests for admin post permission helpers (edit/delete).
  *
  * @package Museum_Railway_Timetable
  */
@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-final class AjaxPermissionHelpersTest extends TestCase {
+final class AdminPostPermissionHelpersTest extends TestCase {
 
     protected function tearDown(): void {
         unset($GLOBALS['mrt_test_current_user_can'], $GLOBALS['mrt_test_current_user_can_calls']);

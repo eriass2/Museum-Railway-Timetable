@@ -62,6 +62,14 @@ final class ServiceDeviationTest extends TestCase {
 		$GLOBALS['mrt_test_post_terms'] = array(
 			9 => array( 10 ),
 		);
+		$GLOBALS['mrt_test_terms'] = array(
+			10 => $this->make_term( 10, 'Ångtåg', 'ang' ),
+			20 => $this->make_term( 20, 'Dieseltåg', 'diesel' ),
+		);
+		self::assertTrue(
+			MRT_service_has_train_type_deviation( 9, '2026-08-01' ),
+			'Expected train type deviation for service 9'
+		);
 		$row = MRT_timetable_deviation_print_key_row( $service, '2026-08-01' );
 		self::assertNotNull( $row );
 		self::assertSame( '71†', $row['symbol'] );

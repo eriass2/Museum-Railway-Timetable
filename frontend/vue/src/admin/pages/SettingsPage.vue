@@ -3,9 +3,11 @@ import { onMounted, ref } from 'vue';
 import { getSettings, saveSettings } from '../api/adminRest';
 import type { SettingsPayload } from '../api/adminRest';
 import AdminNav from '../components/AdminNav.vue';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 const loading = ref(true);
 const error = ref('');
 const saved = ref('');
@@ -44,7 +46,7 @@ async function submit() {
 </script>
 
 <template>
-  <div>
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>Inställningar</h1>
     <AdminNav />
 

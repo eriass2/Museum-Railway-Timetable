@@ -11,9 +11,11 @@ import {
 import type { RouteRow, StationRow } from '../types';
 import AdminNav from '../components/AdminNav.vue';
 import RoutePreview from '../components/RoutePreview.vue';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 const stations = ref<StationRow[]>([]);
 const routes = ref<RouteRow[]>([]);
 const loading = ref(true);
@@ -107,7 +109,7 @@ async function saveStationMeta(st: StationRow) {
 </script>
 
 <template>
-  <div>
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>Stationer &amp; rutter</h1>
     <AdminNav />
     <p v-if="loading" class="description">Laddar...</p>
@@ -115,10 +117,11 @@ async function saveStationMeta(st: StationRow) {
 
     <div class="mrt-admin-panel">
       <h2>Stationer</h2>
-      <p v-if="cfg.canManage">
+      <p v-if="cfg.canManage" class="mrt-admin-create-form">
         <input v-model="newStationTitle" type="text" class="regular-text" placeholder="Ny station" />
         <button type="button" class="button button-primary" @click="addStation">Lägg till</button>
       </p>
+      <div class="mrt-admin-table-scroll">
       <table class="widefat striped">
         <thead>
           <tr>
@@ -154,14 +157,16 @@ async function saveStationMeta(st: StationRow) {
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
 
     <div class="mrt-admin-panel">
       <h2>Rutter</h2>
-      <p v-if="cfg.canManage">
+      <p v-if="cfg.canManage" class="mrt-admin-create-form">
         <input v-model="newRouteTitle" type="text" class="regular-text" placeholder="Ny rutt" />
         <button type="button" class="button button-primary" @click="addRoute">Lägg till</button>
       </p>
+      <div class="mrt-admin-table-scroll">
       <table class="widefat striped">
         <thead>
           <tr>
@@ -190,9 +195,10 @@ async function saveStationMeta(st: StationRow) {
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
 
-    <div v-if="editingRoute" class="mrt-admin-panel">
+    <div v-if="editingRoute" class="mrt-admin-panel mrt-admin-route-editor">
       <h2>Redigera rutt: {{ editingRoute.title }}</h2>
       <p>
         <input v-model="editingRoute.title" type="text" class="regular-text" />

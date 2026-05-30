@@ -1,6 +1,6 @@
 <?php
 /**
- * Meta box hooks (UI and save handlers removed — Vue admin + REST).
+ * Meta box module — CPT editor tweaks only (no meta box UI; Vue admin + REST).
  *
  * @package Museum_Railway_Timetable
  */

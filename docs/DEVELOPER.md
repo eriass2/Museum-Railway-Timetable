@@ -108,6 +108,26 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 
 Se även [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 
+### Playwright E2E (Vue)
+
+Lokal körning (kräver Node/npm):
+
+```powershell
+cd frontend/vue
+npm ci
+npm run e2e
+```
+
+**WordPress-integration** (Docker + riktig WP, valfritt lokalt):
+
+```powershell
+# Sätter demo-URL för month-wp.spec.ts m.m.
+$env:MRT_E2E_WP_DEMO_URL = 'http://localhost:8080/museum-railway-timetable-component-demo/'
+bash scripts/ci-e2e-wp.sh
+```
+
+CI kör `composer vue:check`, isolerade Vue-E2E och `scripts/ci-e2e-wp.sh` på pull requests — se [.github/workflows/ci.yml](../.github/workflows/ci.yml).
+
 ### Manuell smoke-checklista i WordPress
 
 Kör detta efter `docker compose up -d --build` när ändringen påverkar admin, shortcodes eller dataflöden:

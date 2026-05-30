@@ -209,4 +209,31 @@
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
+
+  .mrt-admin-route-editor select,
+  .mrt-admin-route-editor .button {
+    width: 100%;
+    margin-top: 6px;
+  }
+
+  .mrt-admin-route-editor label {
+    display: block;
+    margin-top: 8px;
+  }
+
+  .mrt-admin-page--mobile .form-table th,
+  .mrt-admin-page--mobile .form-table td {
+    display: block;
+    width: 100%;
+    padding: 4px 0;
+  }
+
+  .mrt-admin-page--mobile .form-table input[type='text'],
+  .mrt-admin-page--mobile .form-table input[type='number'] {
+    width: 100%;
+  }
+
+  .mrt-admin-page--mobile .form-table .button-primary {
+    width: 100%;
+  }
 }

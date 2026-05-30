@@ -2,7 +2,7 @@
 /**
  * Journey connection scoring and sort order for wizard search results.
  *
- * TODO: Factor service notices / disruptions into score when product rules are defined.
+ * TODO (produkt): Väg in avvikelser/störningar i poäng när regler är beslutade — se kommentar i docs/REBUILD_PRODUCT_DECISIONS.md (journey scoring).
  *
  * @package Museum_Railway_Timetable
  */

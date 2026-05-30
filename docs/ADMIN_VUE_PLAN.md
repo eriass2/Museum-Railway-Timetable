@@ -1,5 +1,7 @@
 # Admin Vue – plan och faser
 
+> **Status 2026-05:** Alla faser 0–7 är **klara**. Detta dokument är arkiverad referens (beslut, REST-karta, genomförd städning). Daglig utveckling: [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), [REST_API.md](REST_API.md).
+
 Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timetable**. Datamodellen (CPT, meta, `mrt_stoptimes`) behålls; UI och API byts ut.
 
 **Relaterat:** [REST_API.md](REST_API.md), [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), [VUE_FRONTEND.md](VUE_FRONTEND.md).
@@ -21,7 +23,7 @@ Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timeta
 | **6** Publikt REST | ✅ Klar | Wizard/month/overview via `mrtRest.ts`; AJAX borttaget |
 | **7** Städning | ✅ Klar | Legacy jQuery + PHP dashboard/settings borttagna; dev-verktyg via REST |
 
-**Kvar (valfritt):** mobil-UX utökad (fler fält utöver avvikelser/snabb avgång).
+**Kvar (valfritt):** utökad mobil-UX på stationer/rutter och inställningar (dashboard, lista och tidtabellseditor har mobilvy).
 
 ---
 

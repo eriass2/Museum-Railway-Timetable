@@ -1,5 +1,7 @@
 <?php
 /**
+ * Tests for journey request parameter parsing (REST body and legacy POST wrappers).
+ *
  * @package Museum_Railway_Timetable
  */
 
@@ -7,7 +9,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-final class JourneyAjaxParseTest extends TestCase {
+final class JourneyRequestParseTest extends TestCase {
 
     /** @var array<string, mixed> */
     private $postBackup = [];

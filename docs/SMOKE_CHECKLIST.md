@@ -1,6 +1,16 @@
 # Smoke-checklista
 
-Snabb genomgång efter ändringar i frontend, shortcodes eller import. Kör automatiskt:
+Snabb genomgång efter ändringar i frontend, shortcodes eller import.
+
+## Automatiskt (före manuell rökning)
+
+| Kommando | Täcker |
+|----------|--------|
+| `composer check` | validate.php, PHPStan, PHPUnit (175 tester), JS-enhetstester |
+| `composer vue:check` | Vue lint, Vitest, production build |
+| `.\scripts\docker-smoke.ps1` | Docker: import + demo (rensar inte DB) |
+
+## Docker-smoke
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1

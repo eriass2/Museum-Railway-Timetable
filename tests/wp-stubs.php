@@ -452,3 +452,80 @@ if ( ! function_exists( 'delete_term_meta' ) ) {
         return true;
     }
 }
+
+if ( ! function_exists( 'update_post_meta' ) ) {
+    function update_post_meta( int $post_id, string $key, $value ): bool {
+        if ( ! isset( $GLOBALS['mrt_test_post_meta'] ) || ! is_array( $GLOBALS['mrt_test_post_meta'] ) ) {
+            $GLOBALS['mrt_test_post_meta'] = array();
+        }
+        $GLOBALS['mrt_test_post_meta'][ (int) $post_id . '|' . $key ] = $value;
+        return true;
+    }
+}
+
+if ( ! function_exists( 'delete_post_meta' ) ) {
+    function delete_post_meta( int $post_id, string $key ): bool {
+        unset( $GLOBALS['mrt_test_post_meta'][ (int) $post_id . '|' . $key ] );
+        return true;
+    }
+}
+
+if ( ! function_exists( 'sanitize_textarea_field' ) ) {
+    function sanitize_textarea_field( string $str ): string {
+        return trim( wp_strip_all_tags( $str ) );
+    }
+}
+
+if ( ! function_exists( 'esc_attr' ) ) {
+    function esc_attr( string $text ): string {
+        return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+    }
+}
+
+if ( ! function_exists( 'esc_attr__' ) ) {
+    function esc_attr__( string $text, string $domain = 'default' ): string {
+        unset( $domain );
+        return esc_attr( $text );
+    }
+}
+
+if ( ! function_exists( 'esc_html__' ) ) {
+    function esc_html__( string $text, string $domain = 'default' ): string {
+        unset( $domain );
+        return esc_html( $text );
+    }
+}
+
+if ( ! function_exists( 'esc_html' ) ) {
+    function esc_html( string $text ): string {
+        return htmlspecialchars( $text, ENT_QUOTES, 'UTF-8' );
+    }
+}
+
+if ( ! function_exists( 'esc_url' ) ) {
+    function esc_url( string $url ): string {
+        return $url;
+    }
+}
+
+if ( ! class_exists( 'WP_Query' ) ) {
+    class WP_Query {
+        /** @var array<int, mixed> */
+        public array $posts = array();
+
+        /**
+         * @param array<string, mixed>|null $args
+         */
+        public function __construct( $args = null ) {
+            if ( isset( $GLOBALS['mrt_test_wp_query_posts'] ) && is_array( $GLOBALS['mrt_test_wp_query_posts'] ) ) {
+                $this->posts = $GLOBALS['mrt_test_wp_query_posts'];
+                return;
+            }
+            if ( isset( $GLOBALS['mrt_test_get_posts'] ) && is_callable( $GLOBALS['mrt_test_get_posts'] ) ) {
+                $this->posts = $GLOBALS['mrt_test_get_posts']( is_array( $args ) ? $args : array() );
+                return;
+            }
+            $this->posts = array();
+        }
+    }
+}

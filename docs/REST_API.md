@@ -70,14 +70,16 @@ Publika routes kräver `X-WP-Nonce` (`wp_rest`) i frontend-config (`restUrl` + `
 
 ---
 
-## Definition of done (per endpoint)
+## Definition of done (ny endpoint)
 
-- [ ] Route registrerad med `permission_callback` och input schema
-- [ ] Domänlogik anropas från befintlig `MRT_*`-funktion (ingen duplicering)
-- [ ] PHPUnit-test för controller + domän där det är meningsfullt
-- [ ] Vue/klient använder REST
-- [ ] Ingen kvarvarande referens till motsvarande AJAX action
-- [ ] `grep` på action-namnet i repo returnerar tomt
+Nya REST-endpoints ska uppfylla:
+
+- Route med `permission_callback` och input-validering
+- Domänlogik i befintlig `MRT_*`-funktion (ingen duplicering)
+- PHPUnit där beteendet är icke-trivialt
+- Vue/klient anropar REST — inga AJAX-actions
+
+Befintliga routes i tabellen ovan uppfyller detta (2026-05).
 
 ---
 
@@ -86,8 +88,6 @@ Publika routes kräver `X-WP-Nonce` (`wp_rest`) i frontend-config (`restUrl` + `
 - `add_action( 'wp_ajax_*' )` / `wp_ajax_nopriv_*`
 - `admin_url( 'admin-ajax.php' )` i enqueue/localize
 - `fetch( ajaxurl, { action: 'mrt_*' } )` i JS/TS
-
-Tillfälligt undantag under migration: befintliga handlers får leva tills REST-ersättaren är i produktion och tester är gröna.
 
 ---
 

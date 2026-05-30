@@ -1,8 +1,6 @@
-# Admin Arbetsflöde - Skapa en Tidtabell
+# Admin arbetsflöde – skapa en tidtabell
 
-Detta dokument beskriver det rekommenderade arbetsflödet för att skapa en komplett tidtabell i admin-gränssnittet.
-
-**Kod:** Vue-admin under **Railway Timetable** (`admin.php?page=mrt_app`). Dev-verktyg i Vue (`#/dev-tools`, dev-läge). Legacy `?page=mrt_settings` redirectar till Vue.
+Steg-för-steg i **Vue-admin** under **Railway Timetable** (`admin.php?page=mrt_app`). Dev-verktyg: `#/dev-tools` (dev-läge).
 
 ## Översikt
 
