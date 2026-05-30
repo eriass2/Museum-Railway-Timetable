@@ -307,3 +307,10 @@ export function devSetupNavigation() {
     method: 'POST',
   });
 }
+
+export function devSyncTimetablePages() {
+  return adminFetch<{ index_page_id: number; timetable_page_ids: Record<string, number> }>(
+    '/dev/sync-timetable-pages',
+    { method: 'POST' },
+  );
+}

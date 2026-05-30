@@ -70,6 +70,17 @@ function MRT_render_admin_app(): void {
 }
 
 /**
+ * Vue hash for a service CPT edit redirect.
+ */
+function MRT_admin_service_editor_hash( int $service_id ): string {
+	$timetable_id = (int) get_post_meta( $service_id, 'mrt_service_timetable_id', true );
+	if ( $timetable_id > 0 ) {
+		return '#/timetables/' . $timetable_id;
+	}
+	return '#/timetables';
+}
+
+/**
  * Redirect legacy CPT edit screens to Vue admin.
  */
 function MRT_admin_redirect_legacy_cpt_screens(): void {
@@ -87,16 +98,20 @@ function MRT_admin_redirect_legacy_cpt_screens(): void {
 	}
 	$targets = array(
 		MRT_POST_TYPE_TIMETABLE => array(
-			'page'  => 'mrt_app_timetables',
-			'hash'  => '#/timetables/' . $post_id,
+			'page' => 'mrt_app_timetables',
+			'hash' => '#/timetables/' . $post_id,
 		),
 		MRT_POST_TYPE_STATION   => array(
-			'page'  => 'mrt_app_stations_routes',
-			'hash'  => '#/stations-routes',
+			'page' => 'mrt_app_stations_routes',
+			'hash' => '#/stations-routes',
 		),
 		MRT_POST_TYPE_ROUTE     => array(
-			'page'  => 'mrt_app_stations_routes',
-			'hash'  => '#/stations-routes',
+			'page' => 'mrt_app_stations_routes',
+			'hash' => '#/stations-routes',
+		),
+		MRT_POST_TYPE_SERVICE   => array(
+			'page' => 'mrt_app_timetables',
+			'hash' => MRT_admin_service_editor_hash( $post_id ),
 		),
 	);
 	if ( ! isset( $targets[ $post->post_type ] ) ) {
@@ -122,6 +137,7 @@ function MRT_admin_redirect_legacy_cpt_lists(): void {
 		MRT_POST_TYPE_TIMETABLE => 'mrt_app_timetables',
 		MRT_POST_TYPE_STATION   => 'mrt_app_stations_routes',
 		MRT_POST_TYPE_ROUTE     => 'mrt_app_stations_routes',
+		MRT_POST_TYPE_SERVICE   => 'mrt_app_timetables',
 	);
 	if ( ! isset( $map[ $post_type ] ) ) {
 		return;

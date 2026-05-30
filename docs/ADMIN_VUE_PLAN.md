@@ -4,7 +4,7 @@ Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timeta
 
 **Relaterat:** [REST_API.md](REST_API.md), [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), [VUE_FRONTEND.md](VUE_FRONTEND.md).
 
-**Senast uppdaterad:** 2026-05-30 (Fas 4 route preview, Fas 7 städning, admin E2E i CI).
+**Senast uppdaterad:** 2026-05-30 (teknisk skuld: borttagen legacy PHP dashboard/settings).
 
 ---
 
@@ -19,7 +19,7 @@ Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timeta
 | **4** Stationer & rutter | ✅ Klar | `StationsRoutesPage`, tågtyper, `RoutePreview` |
 | **5** Priser & inställningar | ✅ Klar | Vue + REST; CSV via `ImportExportPage` |
 | **6** Publikt REST | ✅ Klar | Wizard/month/overview via `mrtRest.ts`; AJAX borttaget |
-| **7** Städning | ✅ Klar | Legacy jQuery-admin borttagen; admin E2E i CI; Vitest admin |
+| **7** Städning | ✅ Klar | Legacy jQuery + PHP dashboard/settings borttagna; dev-verktyg via REST |
 
 **Kvar (valfritt):** mobil-UX utökad (fler fält); `next_traffic[]` redan i REST.
 
@@ -70,10 +70,10 @@ Railway Timetable                    ← admin.php?page=mrt_app (Vue shell)
 ├── Priser                           ← #/prices (manage_options)
 ├── Tågtyper                         ← #/train-types (manage_options)
 ├── Import / export                  ← #/import-export (manage_options)
-└── Inställningar & verktyg (legacy) ← `?page=mrt_settings` redirectar till Vue dev-tools
+└── Dev tools (dev-läge)             ← #/dev-tools
 ```
 
-CPT-listor och `post.php`-skärmar **redirectar** till Vue (se `inc/admin/app.php`).
+Legacy `?page=mrt_settings` redirectar till Vue dashboard eller dev-tools. CPT-listor och `post.php`-skärmar **redirectar** till Vue (inkl. `mrt_service` → tidtabellseditor, se `inc/admin/app.php`).
 
 ---
 
@@ -92,6 +92,7 @@ CPT-listor och `post.php`-skärmar **redirectar** till Vue (se `inc/admin/app.ph
 | `settings-admin.php` | `GET|PATCH /settings`, `/settings/prices` |
 | `train-types.php` | `GET|POST /train-types`, `PATCH|DELETE /train-types/{id}` |
 | `import-export.php` | `POST /import/csv`, `GET /export/csv` |
+| `dev-tools.php` | `POST /dev/clear-db`, `/dev/import-lennakatten`, `/dev/demo-page`, `/dev/setup-navigation`, `/dev/sync-timetable-pages` (dev-läge) |
 | `journey-public.php` | Wizard/month: search, calendar, connection-detail, `GET /timetables/day` |
 
 Domänlogik i `inc/domain/` — REST-controllers är tunna adapters.
@@ -103,7 +104,7 @@ Domänlogik i `inc/domain/` — REST-controllers är tunna adapters.
 | Fil | Syfte |
 |-----|--------|
 | `inc/admin/app.php` | Mount `#mrt-admin-app`, legacy redirects |
-| `inc/admin/menu.php` | Vue-undermenyer + legacy `mrt_settings` |
+| `inc/admin/menu.php` | Vue-undermenyer + legacy `mrt_settings`-redirect |
 | `inc/assets/admin-vue.php` | Enqueue `assets/dist/vue/assets/admin.js` |
 | `inc/admin/meta-boxes.php` | Endast save-hooks + CPT editor-support (ingen meta box-UI) |
 
@@ -156,7 +157,7 @@ Domänlogik i `inc/domain/` — REST-controllers är tunna adapters.
 | Varningar (datakvalitet) | ✅ |
 | Snabbstart + länkar | ✅ |
 | Nästa trafik | ⏳ ej i dashboard-payload ännu |
-| Dev-only verktyg | ✅ kvar under legacy `mrt_settings` |
+| Dev-only verktyg | ✅ Vue `#/dev-tools` + REST `/dev/*` |
 
 ### REST
 

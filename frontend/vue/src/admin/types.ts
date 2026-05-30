@@ -6,6 +6,7 @@ export type AdminClientConfig = {
   canManage: boolean;
   canOperate: boolean;
   isDevMode: boolean;
+  componentDemoAdminUrl?: string;
 };
 
 export type DashboardWarning = {

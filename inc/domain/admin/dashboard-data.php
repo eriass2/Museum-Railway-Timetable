@@ -1,6 +1,6 @@
 <?php
 /**
- * Dashboard aggregate data for Vue admin.
+ * Dashboard aggregate data for Vue admin REST.
  *
  * @package Museum_Railway_Timetable
  */
@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once MRT_PATH . 'inc/domain/admin/dashboard-warnings.php';
 
 /**
- * Dashboard statistics (same counts as legacy PHP dashboard).
+ * Dashboard statistics.
  *
  * @return array<string, int>
  */

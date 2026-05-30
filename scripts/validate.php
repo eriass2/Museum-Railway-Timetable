@@ -18,7 +18,6 @@ $required_files = [
     'inc/assets.php',
     'inc/admin.php',
     'inc/admin/menu.php',
-    'inc/admin/settings.php',
     'inc/admin/admin-list.php',
     'inc/admin/tools/clear-db.php',
     'inc/admin/tools/demo-page.php',

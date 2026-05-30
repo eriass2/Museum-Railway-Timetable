@@ -20,10 +20,11 @@ function MRT_rest_register_dev_tools_routes(): void {
 	}
 
 	$routes = array(
-		'/dev/clear-db'          => 'MRT_rest_dev_clear_db_handler',
-		'/dev/import-lennakatten' => 'MRT_rest_dev_import_lennakatten_handler',
-		'/dev/demo-page'         => 'MRT_rest_dev_demo_page_handler',
-		'/dev/setup-navigation'  => 'MRT_rest_dev_setup_navigation_handler',
+		'/dev/clear-db'               => 'MRT_rest_dev_clear_db_handler',
+		'/dev/import-lennakatten'     => 'MRT_rest_dev_import_lennakatten_handler',
+		'/dev/demo-page'              => 'MRT_rest_dev_demo_page_handler',
+		'/dev/setup-navigation'       => 'MRT_rest_dev_setup_navigation_handler',
+		'/dev/sync-timetable-pages'   => 'MRT_rest_dev_sync_timetable_pages_handler',
 	);
 
 	foreach ( $routes as $path => $callback ) {
@@ -101,6 +102,26 @@ function MRT_rest_dev_setup_navigation_handler( WP_REST_Request $request ) {
 		array(
 			'menu_id' => (int) ( $result['menu_id'] ?? 0 ),
 			'added'   => (int) ( $result['added'] ?? 0 ),
+		)
+	);
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_dev_sync_timetable_pages_handler( WP_REST_Request $request ) {
+	unset( $request );
+	if ( ! function_exists( 'MRT_sync_timetable_public_pages' ) ) {
+		return new WP_Error( 'unavailable', __( 'Timetable page sync is not available.', MRT_TEXT_DOMAIN ), array( 'status' => 500 ) );
+	}
+	$result = MRT_sync_timetable_public_pages();
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	return rest_ensure_response(
+		array(
+			'index_page_id'      => (int) ( $result['index_page_id'] ?? 0 ),
+			'timetable_page_ids' => array_map( 'intval', (array) ( $result['timetable_page_ids'] ?? array() ) ),
 		)
 	);
 }

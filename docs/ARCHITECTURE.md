@@ -12,7 +12,7 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 |--------|------|---------|
 | **Domän** | Regler oberoende av WordPress och UI | Prismatris, datum/tid, connection-sökning, normalisering, tidtabellsrutnät |
 | **Infrastruktur** | WP-adapters: CPT, REST, inställningar, helpers | `inc/infrastructure/rest/`, `inc/infrastructure/post-types/` |
-| **Admin / public** | Vue-admin, legacy dev-verktyg, shortcodes, enqueue | `inc/admin/`, `frontend/vue/src/admin/`, `inc/public/journey-wizard/` |
+| **Admin / public** | Vue-admin, dev-verktyg (REST), shortcodes, enqueue | `inc/admin/`, `frontend/vue/src/admin/`, `inc/public/journey-wizard/` |
 
 **Vid ändringar:** Om en funktion kan beskrivas och testas utan `echo` och utan `$_POST` ska den ligga i **`inc/domain/`** (prefix `MRT_*`), inte i template-strängar eller JS.
 
@@ -65,16 +65,16 @@ inc/
 │   ├── service/            # services, stop-times, connections
 │   ├── station/
 │   ├── timetable/view/     # overview-data (JSON), group-view, grid-merge, grid-connections
-│   └── train-type/         # ikon-slugs
+│   ├── train-type/         # ikon-slugs
+│   └── admin/              # dashboard-data, deviations (REST backing)
 ├── infrastructure/
 │   ├── post-types/         # CPT + taxonomier
 │   ├── rest/               # admin + publikt REST
 │   └── wordpress/          # environment, plugin-settings, helpers-utils
 ├── admin/
-│   ├── app.php, menu.php   # Vue shell + legacy dev tools
-│   ├── dashboard/          # legacy PHP tools-sida (mrt_settings)
+│   ├── app.php, menu.php   # Vue shell + legacy redirects
 │   ├── meta-boxes/         # save-hooks (UI borttaget)
-│   └── tools/              # demo, import, clear-db, dev-navigation
+│   └── tools/              # demo, import, clear-db, dev-navigation, timetable-pages
 ├── public/
 │   ├── month-calendar/
 │   ├── timetable-overview/
@@ -97,7 +97,7 @@ Rese-UI är endast wizard; `[museum_journey_planner]` finns inte längre (se [RE
 
 ### Admin (Vue)
 
-Vue-admin under `admin.php?page=mrt_app` (`frontend/vue/src/admin/`). REST via `inc/infrastructure/rest/` och `adminRest.ts`. Legacy PHP-verktyg (clear DB, Lennakatten-import) kvar under `?page=mrt_settings`.
+Vue-admin under `admin.php?page=mrt_app` (`frontend/vue/src/admin/`). REST via `inc/infrastructure/rest/` och `adminRest.ts`. Dev-verktyg (clear DB, import, tidtabellssidor) i Vue `#/dev-tools` via `POST /dev/*` (dev-läge). Legacy `?page=mrt_settings` redirectar till Vue.
 
 ### Timetable overview (Vue)
 

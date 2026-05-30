@@ -5,6 +5,7 @@ import {
   devCreateDemoPage,
   devImportLennakatten,
   devSetupNavigation,
+  devSyncTimetablePages,
 } from '../api/adminRest';
 import AdminNav from '../components/AdminNav.vue';
 import { adminConfig } from '../types';
@@ -29,6 +30,7 @@ async function run(action: string, fn: () => Promise<unknown>) {
       import: 'Lennakatten-demo har importerats.',
       demo: 'Demosida skapad eller uppdaterad.',
       nav: 'Utvecklingsmeny uppdaterad.',
+      pages: 'Tidtabellssidor skapade eller uppdaterade.',
     };
     message.value = labels[action] || 'Klart.';
   } catch (e) {
@@ -92,6 +94,19 @@ async function run(action: string, fn: () => Promise<unknown>) {
           >
             Sätt upp utvecklingsmeny
           </button>
+        </p>
+        <p>
+          <button
+            type="button"
+            class="button"
+            :disabled="!!busy"
+            @click="run('pages', devSyncTimetablePages)"
+          >
+            Skapa/uppdatera tidtabellssidor
+          </button>
+        </p>
+        <p v-if="cfg.componentDemoAdminUrl" class="description">
+          <a :href="cfg.componentDemoAdminUrl">Komponentdemosida (PHP-admin)</a>
         </p>
       </div>
     </template>

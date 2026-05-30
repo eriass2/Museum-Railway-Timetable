@@ -301,8 +301,12 @@ function MRT_render_components_demo_admin_page() {
 		<?php if ( MRT_is_development_mode() ) : ?>
 			<h2><?php esc_html_e( 'Component debug pages', 'museum-railway-timetable' ); ?></h2>
 			<?php MRT_render_component_debug_page_admin_links(); ?>
-			<h2><?php esc_html_e( 'Front-end menu (development)', 'museum-railway-timetable' ); ?></h2>
-			<?php MRT_render_setup_dev_navigation_button( 'components_demo' ); ?>
+			<p class="description">
+				<?php esc_html_e( 'Front-end development menu:', 'museum-railway-timetable' ); ?>
+				<a href="<?php echo esc_url( admin_url( 'admin.php?page=mrt_app_dev_tools' ) ); ?>">
+					<?php esc_html_e( 'Dev tools', 'museum-railway-timetable' ); ?>
+				</a>
+			</p>
 		<?php endif; ?>
 	</div>
 	<?php
