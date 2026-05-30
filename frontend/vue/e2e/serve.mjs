@@ -6,6 +6,7 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSampleOverviewPayload } from './fixtures/sample-overview-payload.mjs';
+import { buildAdminRestResponse } from './fixtures/admin-rest.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(root, '../../assets/dist/vue');
@@ -21,6 +22,12 @@ const entry = manifest['src/main.ts'] || manifest['src/main.js'];
 const jsRel = String(entry?.file || '').replace(/^\//, '');
 if (!jsRel) {
   console.error('e2e/serve: manifest missing main entry');
+  process.exit(1);
+}
+
+const adminJsRel = 'assets/admin.js';
+if (!existsSync(join(distDir, adminJsRel))) {
+  console.error('e2e/serve: run npm run build (admin.js missing)');
   process.exit(1);
 }
 
@@ -207,11 +214,48 @@ function readRequestBody(req) {
   });
 }
 
+function buildAdminClientConfig() {
+  return {
+    restUrl: `http://127.0.0.1:${port}${REST_PREFIX}/`,
+    restNonce: 'e2e-test',
+    initialRoute: 'dashboard',
+    adminBase: `http://127.0.0.1:${port}/admin?page=mrt_app`,
+    canManage: true,
+    canOperate: true,
+    isDevMode: true,
+  };
+}
+
+function renderAdminHtml() {
+  const config = buildAdminClientConfig();
+  return `<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="utf-8" />
+  <title>MRT admin e2e</title>
+</head>
+<body class="wp-admin">
+  <div class="wrap mrt-admin-vue-wrap">
+    <div id="mrt-admin-app" data-mrt-admin-app="1"></div>
+  </div>
+  <script>window.mrtAdminVue = ${JSON.stringify(config)};</script>
+  <script src="/${adminJsRel}"></script>
+</body>
+</html>`;
+}
+
 async function handleRestRequest(req, res, pathOnly, requestUrl) {
   const query = new URL(requestUrl, 'http://127.0.0.1').searchParams;
   if (query.get('fail') === 'rest') {
     res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ message: 'REST-fel (e2e)' }));
+    return;
+  }
+
+  const adminPayload = buildAdminRestResponse(pathOnly, REST_PREFIX);
+  if (adminPayload !== null) {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify(adminPayload));
     return;
   }
 
@@ -280,6 +324,11 @@ http
     if (pathOnly === '/overview') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(renderOverviewHtml());
+      return;
+    }
+    if (pathOnly === '/admin') {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(renderAdminHtml());
       return;
     }
     if (pathOnly.startsWith(REST_PREFIX)) {

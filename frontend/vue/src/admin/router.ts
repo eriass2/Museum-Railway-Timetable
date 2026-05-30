@@ -54,7 +54,9 @@ export function createAdminRouter(initialRoute: string) {
     'dev-tools': '/dev-tools',
     help: '/help',
   };
-  const target = map[initialRoute] ?? '/dashboard';
+  const hashPath = window.location.hash.replace(/^#/, '');
+  const fromHash = hashPath && hashPath !== '/' ? hashPath : '';
+  const target = fromHash || map[initialRoute] || '/dashboard';
   void router.replace(target);
 
   return router;

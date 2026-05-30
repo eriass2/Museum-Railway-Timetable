@@ -13,7 +13,8 @@ Run after `npm run check` and hard-refresh in the browser (Ctrl+F5).
 cd frontend/vue
 npm run build
 npm run e2e:install   # first time
-npm run e2e
+npm run build         # required before e2e (serve uses dist/)
+npm run e2e           # includes admin-nav.spec.ts (static admin tabs)
 ```
 
 Optional against Docker demo (all three shortcodes on one page):
