@@ -2,15 +2,12 @@
 
 **[DEVELOPER.md](DEVELOPER.md)** – snabbstart, Docker, kommandon, deploy-checklista.
 
-## Produkt och rebuild
+## Produkt och regler
 
 | Dokument | Innehåll |
 |----------|----------|
-| [REBUILD_SKETCH.md](REBUILD_SKETCH.md) | Målbild, MVP, cleanup-status |
-| [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) | Beslut: wizard-only, shortcodes, import |
+| [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) | MVP-beslut: wizard-only, shortcodes, import |
 | [REBUILD_RULES.md](REBUILD_RULES.md) | **Primär regelbok** – arkitektur, design, kvalitet vid ny kod |
-| [REBUILD_MODULE_MAP.md](REBUILD_MODULE_MAP.md) | Modulansvar och testkrav |
-| [REBUILD_CLEANUP_INVENTORY.md](REBUILD_CLEANUP_INVENTORY.md) | Filklassning (`keep` / `move` / `done`) |
 
 Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Tågtypsikoner: `assets/icons/train-types/`.
 

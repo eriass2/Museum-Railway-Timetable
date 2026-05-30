@@ -1,12 +1,12 @@
 # Rebuild rules – code, design and quality
 
-Regler för nästa större ombyggnad av Museum Railway Timetable.
+Regler för utveckling av Museum Railway Timetable.
 
 ---
 
 ## 1. Produktregler
 
-- Bygg bara funktioner som stöder `REBUILD_SKETCH.md`.
+- Bygg bara funktioner som stöder [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md).
 - Referens-PDF:er och mockups styr beteende och UI-prioritet.
 - Varje ny feature ska kunna demonstreras med demo/testdata.
 - Admin ska göra datahantering enkel; frontend ska visa resenärsflödet.

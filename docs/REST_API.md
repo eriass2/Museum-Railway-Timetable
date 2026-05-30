@@ -1,6 +1,6 @@
-# REST API – policy och migration
+# REST API – policy
 
-Museum Railway Timetable ska använda **WordPress REST API** för all klient–server-kommunikation. **`admin-ajax.php` ska fasas ut helt** — inget i pluginet ska anropa eller registrera AJAX-actions i slutläget.
+Museum Railway Timetable använder **WordPress REST API** för all klient–server-kommunikation. **Ingen `admin-ajax.php` / `wp_ajax_*`** — pluginet registrerar inga AJAX-actions.
 
 ---
 
@@ -9,7 +9,7 @@ Museum Railway Timetable ska använda **WordPress REST API** för all klient–s
 | Beslut | Värde |
 |--------|--------|
 | Transport | WordPress REST API (`/wp-json/…`) |
-| AJAX | **Förbjudet i slutläge** — befintliga `wp_ajax_*` tas bort när REST-ersättare finns |
+| AJAX | **Förbjudet** — inga `wp_ajax_*` kvar |
 | Publikt frontend (Vue) | REST + cookie/nonce där användaren är inloggad; publika läs-endpoints utan auth |
 | Admin (Vue) | REST + `X-WP-Nonce` (`wp_rest`) + capability checks |
 | Domänlogik | Oförändrat i `inc/domain/` — REST-controllers är tunna adapters |

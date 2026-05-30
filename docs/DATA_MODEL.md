@@ -580,7 +580,7 @@ The plugin provides a visual overview of timetables that groups services (trips)
 
 **Implementerat (2026-05):**
 
-- **`[museum_journey_wizard]`** – publikt flöde (rutt, datum, utresa, retur, priser). Domän: `inc/domain/journey/`, AJAX i `inc/infrastructure/ajax/`.
+- **`[museum_journey_wizard]`** – publikt flöde (rutt, datum, utresa, retur, priser). Domän: `inc/domain/journey/`, REST i `inc/infrastructure/rest/journey-public.php`.
 - Direktresor och enkelbyte; min/max bytestid via inställningar och filter.
 - Tågtypsikoner via `inc/domain/train-type/icons.php`.
 

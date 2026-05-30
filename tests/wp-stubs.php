@@ -337,6 +337,24 @@ if ( ! function_exists( 'wp_verify_nonce' ) ) {
     }
 }
 
+if ( ! function_exists( 'current_time' ) ) {
+    /**
+     * @param string $type
+     * @return int|string
+     */
+    function current_time( $type ) {
+        if ( isset( $GLOBALS['mrt_test_current_timestamp'] ) ) {
+            $timestamp = (int) $GLOBALS['mrt_test_current_timestamp'];
+        } else {
+            $timestamp = time();
+        }
+        if ( $type === 'timestamp' ) {
+            return $timestamp;
+        }
+        return date( 'Y-m-d H:i:s', $timestamp );
+    }
+}
+
 if ( ! class_exists( 'WP_REST_Request' ) ) {
     class WP_REST_Request {
         /** @var array<string, string> */
@@ -345,12 +363,25 @@ if ( ! class_exists( 'WP_REST_Request' ) ) {
         /** @var array<string, mixed> */
         private array $params = array();
 
+        /** @var array<string, mixed> */
+        private array $json_params = array();
+
         public function __construct( string $method = 'GET', string $route = '' ) {
             unset( $method, $route );
         }
 
         public function set_header( string $key, string $value ): void {
             $this->headers[ $key ] = $value;
+        }
+
+        /** @param mixed $value */
+        public function set_param( string $key, $value ): void {
+            $this->params[ $key ] = $value;
+        }
+
+        /** @param array<string, mixed> $params */
+        public function set_json_params( array $params ): void {
+            $this->json_params = $params;
         }
 
         /** @return string|array<int, string>|null */
@@ -362,5 +393,62 @@ if ( ! class_exists( 'WP_REST_Request' ) ) {
         public function get_param( string $key ) {
             return $this->params[ $key ] ?? null;
         }
+
+        /** @return array<string, mixed> */
+        public function get_params(): array {
+            return $this->params;
+        }
+
+        /** @return array<string, mixed> */
+        public function get_json_params(): array {
+            return $this->json_params;
+        }
+    }
+}
+
+if ( ! function_exists( 'rest_ensure_response' ) ) {
+    /**
+     * @param mixed $data
+     * @return mixed
+     */
+    function rest_ensure_response( $data ) {
+        return $data;
+    }
+}
+
+if ( ! function_exists( 'sanitize_title' ) ) {
+    function sanitize_title( string $title ): string {
+        $title = strtolower( trim( $title ) );
+        return (string) preg_replace( '/[^a-z0-9]+/', '-', $title );
+    }
+}
+
+if ( ! function_exists( 'get_term_meta' ) ) {
+    /**
+     * @return mixed
+     */
+    function get_term_meta( int $term_id, string $key, bool $single = true ) {
+        $k = $term_id . '|' . $key;
+        if ( isset( $GLOBALS['mrt_test_term_meta'][ $k ] ) ) {
+            return $GLOBALS['mrt_test_term_meta'][ $k ];
+        }
+        return $single ? '' : array();
+    }
+}
+
+if ( ! function_exists( 'update_term_meta' ) ) {
+    function update_term_meta( int $term_id, string $key, $value ): bool {
+        if ( ! isset( $GLOBALS['mrt_test_term_meta'] ) || ! is_array( $GLOBALS['mrt_test_term_meta'] ) ) {
+            $GLOBALS['mrt_test_term_meta'] = array();
+        }
+        $GLOBALS['mrt_test_term_meta'][ $term_id . '|' . $key ] = $value;
+        return true;
+    }
+}
+
+if ( ! function_exists( 'delete_term_meta' ) ) {
+    function delete_term_meta( int $term_id, string $key ): bool {
+        unset( $GLOBALS['mrt_test_term_meta'][ $term_id . '|' . $key ] );
+        return true;
     }
 }

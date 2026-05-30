@@ -1,6 +1,6 @@
 # Produktbeslut (rebuild)
 
-Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid ändring.
+Beslut för MVP och produktinriktning. Uppdatera vid ändring.
 
 **Datum:** 2026-05 (arbete på `main`, stegvis i nuvarande plugin)
 
