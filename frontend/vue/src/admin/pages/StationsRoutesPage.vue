@@ -3,6 +3,8 @@ import { computed, onMounted, ref } from 'vue';
 import {
   createRoute,
   createStation,
+  deleteRoute,
+  deleteStation,
   listRoutes,
   listStations,
   updateRoute,
@@ -106,6 +108,33 @@ async function saveStationMeta(st: StationRow) {
   if (!cfg.canManage) return;
   await updateStation(st.id, st);
 }
+
+async function removeStation(st: StationRow) {
+  if (!cfg.canManage) return;
+  if (!window.confirm(`Ta bort stationen «${st.title}»?`)) return;
+  error.value = '';
+  try {
+    await deleteStation(st.id);
+    await load();
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Kunde inte ta bort station';
+  }
+}
+
+async function removeRoute(route: RouteRow) {
+  if (!cfg.canManage) return;
+  if (!window.confirm(`Ta bort rutten «${route.title}»?`)) return;
+  error.value = '';
+  try {
+    await deleteRoute(route.id);
+    if (editingRoute.value?.id === route.id) {
+      editingRoute.value = null;
+    }
+    await load();
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Kunde inte ta bort rutt';
+  }
+}
 </script>
 
 <template>
@@ -184,6 +213,9 @@ async function saveStationMeta(st: StationRow) {
             </td>
             <td v-if="cfg.canManage">
               <button type="button" class="button button-small" @click="saveStationMeta(st)">Spara</button>
+              <button type="button" class="button button-link-delete" @click="removeStation(st)">
+                Ta bort
+              </button>
             </td>
           </tr>
         </tbody>
@@ -221,6 +253,14 @@ async function saveStationMeta(st: StationRow) {
             <td>
               <button v-if="cfg.canManage" type="button" class="button button-small" @click="editRoute(route)">
                 Redigera
+              </button>
+              <button
+                v-if="cfg.canManage"
+                type="button"
+                class="button button-link-delete"
+                @click="removeRoute(route)"
+              >
+                Ta bort
               </button>
             </td>
           </tr>

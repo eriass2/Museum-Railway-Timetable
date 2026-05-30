@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/admin/delete-entities.php';
 
 /**
  * Register stations/routes routes.
@@ -37,9 +38,16 @@ function MRT_rest_register_stations_routes_routes(): void {
 		MRT_REST_NAMESPACE,
 		'/stations/(?P<id>\d+)',
 		array(
-			'methods'             => WP_REST_Server::EDITABLE,
-			'callback'            => 'MRT_rest_update_station_handler',
-			'permission_callback' => 'MRT_rest_can_manage',
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => 'MRT_rest_update_station_handler',
+				'permission_callback' => 'MRT_rest_can_manage',
+			),
+			array(
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => 'MRT_rest_delete_station_handler',
+				'permission_callback' => 'MRT_rest_can_manage',
+			),
 		)
 	);
 
@@ -64,9 +72,16 @@ function MRT_rest_register_stations_routes_routes(): void {
 		MRT_REST_NAMESPACE,
 		'/routes/(?P<id>\d+)',
 		array(
-			'methods'             => WP_REST_Server::EDITABLE,
-			'callback'            => 'MRT_rest_update_route_handler',
-			'permission_callback' => 'MRT_rest_can_manage',
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => 'MRT_rest_update_route_handler',
+				'permission_callback' => 'MRT_rest_can_manage',
+			),
+			array(
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => 'MRT_rest_delete_route_handler',
+				'permission_callback' => 'MRT_rest_can_manage',
+			),
 		)
 	);
 }
@@ -299,4 +314,28 @@ function MRT_rest_update_route_handler( WP_REST_Request $request ) {
 	MRT_rest_apply_route_meta( $id, $body );
 	$updated = get_post( $id );
 	return rest_ensure_response( MRT_rest_format_route( $updated instanceof WP_Post ? $updated : $post ) );
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_delete_station_handler( WP_REST_Request $request ) {
+	$id     = (int) $request['id'];
+	$result = MRT_delete_station_post( $id );
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	return rest_ensure_response( array( 'deleted' => true ) );
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_delete_route_handler( WP_REST_Request $request ) {
+	$id     = (int) $request['id'];
+	$result = MRT_delete_route_post( $id );
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	return rest_ensure_response( array( 'deleted' => true ) );
 }

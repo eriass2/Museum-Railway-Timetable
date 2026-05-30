@@ -26,7 +26,7 @@ Publikt UI är **Vue-only** (jQuery-wizard-moduler är borttagna). Månad, över
 | Verktyg | Var |
 |---------|-----|
 | Rensa plugin-data | Vue **Dev tools** (`#/dev-tools`) |
-| Import Lennakatten (test-PDF-data) | Dev tools + undermeny Import Lennakatten |
+| Import Lennakatten (test-PDF-data) | Vue **Utvecklingsverktyg** (`#/dev-tools`) |
 | Skapa demosida | Dev tools (+ Component demo page för manuell POST) |
 | **Set up development menu** | Dev tools |
 | Synka tidtabellssidor | Dev tools |

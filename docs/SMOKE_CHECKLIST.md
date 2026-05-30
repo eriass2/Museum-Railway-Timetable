@@ -27,7 +27,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 
 Login: `admin` / `admin`
 
-**Meny (utveckling):** Railway Timetable → **Dev tools** (`#/dev-tools`) — kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Importera demo, sätt upp utvecklingsmeny och synka tidtabellssidor. Komponentdemo finns under **Component demo page** (PHP-admin). Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+**Meny (utveckling):** Tidtabell → **Utvecklingsverktyg** (`#/dev-tools`) — kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Importera demo, sätt upp utvecklingsmeny och synka tidtabellssidor. Komponentdemo finns under **Komponentdemo** (PHP-admin). Legacy `?page=mrt_import_lennakatten` redirectar till Utvecklingsverktyg.
 
 ## Kommandon
 

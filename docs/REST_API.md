@@ -30,9 +30,9 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | Route (prefix `/museum-railway-timetable/v1`) | Syfte |
 |-----------------------------------------------|--------|
 | `GET /dashboard` | Status, varningar, snabbstatistik |
-| `GET|POST /stations`, `GET|PATCH /stations/{id}` | Stationer |
-| `GET|POST /routes`, `GET|PATCH /routes/{id}` | Rutter + stationordning |
-| `GET|POST /timetables`, `GET|PATCH /timetables/{id}` | Tidtabeller |
+| `GET|POST /stations`, `GET|PATCH|DELETE /stations/{id}` | Stationer |
+| `GET|POST /routes`, `GET|PATCH|DELETE /routes/{id}` | Rutter + stationordning |
+| `GET|POST /timetables`, `GET|PATCH|DELETE /timetables/{id}` | Tidtabeller |
 | `GET|POST /timetables/{id}/services` | Turer |
 | `GET|PUT /services/{id}/stop-times` | Stopptider |
 | `PUT /services/{id}/departure` | Snabb avgångstid (mobil) |

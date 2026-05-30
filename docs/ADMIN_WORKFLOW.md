@@ -109,6 +109,18 @@ I mobil editor:
 
 Redaktörer (`edit_posts`) ser dashboard, tidtabeller och stationer, och kan **inte** ändra grunddata – bara avvikelser och snabb avgångstid.
 
+### Radera
+
+| Entitet | Var | Villkor |
+|---------|-----|---------|
+| Tidtabell | Tidtabellslista / editor | Raderar alla turer och stopptider |
+| Tur | Editor → Turer | — |
+| Station | Stationer & rutter | Blockeras om station finns i rutt, tur eller stopptider |
+| Rutt | Stationer & rutter | Blockeras om turer använder rutten |
+| Tågtyp | Tågtyper | — |
+
+**Hjälp:** `#/help` — arbetsflöde och vanliga frågor i admin.
+
 ---
 
 ## REST API

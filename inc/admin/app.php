@@ -21,6 +21,7 @@ function MRT_admin_app_initial_routes(): array {
 		MRT_ADMIN_APP_SLUG             => 'dashboard',
 		'mrt_app_timetables'           => 'timetables',
 		'mrt_app_stations_routes'      => 'stations-routes',
+		'mrt_app_help'                 => 'help',
 		'mrt_app_settings'             => 'settings',
 		'mrt_app_prices'               => 'prices',
 		'mrt_app_train_types'          => 'train-types',

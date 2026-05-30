@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once MRT_PATH . 'inc/infrastructure/rest/timetables-data.php';
 require_once MRT_PATH . 'inc/domain/admin/timetable-deviations.php';
+require_once MRT_PATH . 'inc/domain/admin/delete-entities.php';
 
 /**
  * Register timetable routes.
@@ -47,6 +48,11 @@ function MRT_rest_register_timetable_routes(): void {
 			array(
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => 'MRT_rest_update_timetable_handler',
+				'permission_callback' => 'MRT_rest_can_manage',
+			),
+			array(
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => 'MRT_rest_delete_timetable_handler',
 				'permission_callback' => 'MRT_rest_can_manage',
 			),
 		)
@@ -182,11 +188,23 @@ function MRT_rest_add_timetable_service_handler( WP_REST_Request $request ) {
  */
 function MRT_rest_remove_timetable_service_handler( WP_REST_Request $request ) {
 	$service_id = (int) $request['service_id'];
-	if ( $service_id <= 0 ) {
-		return new WP_Error( 'invalid', __( 'Invalid service.', 'museum-railway-timetable' ), array( 'status' => 400 ) );
+	$result     = MRT_delete_service_post( $service_id );
+	if ( is_wp_error( $result ) ) {
+		return $result;
 	}
-	delete_post_meta( $service_id, 'mrt_service_timetable_id' );
 	return rest_ensure_response( array( 'removed' => true ) );
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_delete_timetable_handler( WP_REST_Request $request ) {
+	$id     = (int) $request['id'];
+	$result = MRT_delete_timetable_post( $id );
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	return rest_ensure_response( array( 'deleted' => true ) );
 }
 
 /**

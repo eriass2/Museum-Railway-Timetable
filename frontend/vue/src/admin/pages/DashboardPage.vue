@@ -120,6 +120,9 @@ function openRoute(hashRoute: string) {
           <button type="button" class="button" @click="router.push('/stations-routes')">
             Stationer &amp; rutter
           </button>
+          <button type="button" class="button" @click="router.push('/help')">
+            Hjälp &amp; FAQ
+          </button>
           <a
             v-if="data.links.front"
             class="button"

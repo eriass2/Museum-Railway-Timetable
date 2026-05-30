@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin: Import Lennakatten reference data (PDF-derived test data).
+ * Legacy Import Lennakatten admin URL → Vue dev tools.
  *
  * @package Museum_Railway_Timetable
  */
@@ -9,52 +9,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/import/lennakatten/importer.php';
+/** Legacy admin page slug (no menu item). */
+define( 'MRT_LEGACY_IMPORT_LENNAKATTEN_SLUG', 'mrt_import_lennakatten' );
 
 /**
- * Register Import Lennakatten submenu under Railway Timetable.
+ * Redirect old Import Lennakatten screen to Vue dev tools.
  */
-function MRT_register_import_lennakatten_admin_menu(): void {
+function MRT_admin_redirect_legacy_import_lennakatten_page(): void {
+	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( (string) $_GET['page'] ) ) : '';
+	if ( $page !== MRT_LEGACY_IMPORT_LENNAKATTEN_SLUG ) {
+		return;
+	}
 	if ( ! MRT_is_development_mode() ) {
-		return;
+		wp_safe_redirect( admin_url( 'admin.php?page=' . MRT_ADMIN_APP_SLUG ) );
+		exit;
 	}
-	add_submenu_page(
-		'mrt_app',
-		__( 'Import Lennakatten', 'museum-railway-timetable' ),
-		__( 'Import Lennakatten', 'museum-railway-timetable' ),
-		'manage_options',
-		'mrt_import_lennakatten',
-		'MRT_render_import_lennakatten_admin_page'
-	);
+	wp_safe_redirect( admin_url( 'admin.php?page=mrt_app_dev_tools' ) );
+	exit;
 }
 
-add_action( 'admin_menu', 'MRT_register_import_lennakatten_admin_menu' );
-
-/**
- * Render import page.
- */
-function MRT_render_import_lennakatten_admin_page(): void {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-
-	$message = '';
-	if ( isset( $_POST['mrt_import_lennakatten'] ) && check_admin_referer( 'mrt_import_lennakatten', 'mrt_import_nonce' ) ) {
-		$message = MRT_run_lennakatten_import();
-	}
-	?>
-	<div class="wrap">
-		<h1><?php esc_html_e( 'Import Lennakatten 2026 Test Data', 'museum-railway-timetable' ); ?></h1>
-		<p><?php esc_html_e( 'Re-imports Lennakatten test data from the CSV fixture (testdata/fixtures/lennakatten), derived from reference PDFs. Existing fixture entities are updated; other plugin stations, routes, timetables, and services are removed.', 'museum-railway-timetable' ); ?></p>
-		<?php if ( $message ) : ?>
-			<div class="notice notice-success"><p><?php echo wp_kses_post( $message ); ?></p></div>
-		<?php endif; ?>
-		<form method="post">
-			<?php wp_nonce_field( 'mrt_import_lennakatten', 'mrt_import_nonce' ); ?>
-			<p>
-				<input type="submit" name="mrt_import_lennakatten" class="button button-primary" value="<?php esc_attr_e( 'Re-import Lennakatten', 'museum-railway-timetable' ); ?>" />
-			</p>
-		</form>
-	</div>
-	<?php
-}
+add_action( 'admin_init', 'MRT_admin_redirect_legacy_import_lennakatten_page', 5 );

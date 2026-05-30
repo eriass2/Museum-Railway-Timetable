@@ -8,6 +8,7 @@ import PricesPage from './pages/PricesPage.vue';
 import TrainTypesPage from './pages/TrainTypesPage.vue';
 import ImportExportPage from './pages/ImportExportPage.vue';
 import DevToolsPage from './pages/DevToolsPage.vue';
+import HelpPage from './pages/HelpPage.vue';
 import { adminConfig } from './types';
 
 export function createAdminRouter(initialRoute: string) {
@@ -31,6 +32,7 @@ export function createAdminRouter(initialRoute: string) {
     { path: '/prices', component: PricesPage, name: 'prices' },
     { path: '/train-types', component: TrainTypesPage, name: 'train-types' },
     { path: '/import-export', component: ImportExportPage, name: 'import-export' },
+    { path: '/help', component: HelpPage, name: 'help' },
   ];
   if (cfg.isDevMode) {
     routes.push({ path: '/dev-tools', component: DevToolsPage, name: 'dev-tools' });
@@ -50,6 +52,7 @@ export function createAdminRouter(initialRoute: string) {
     'train-types': '/train-types',
     'import-export': '/import-export',
     'dev-tools': '/dev-tools',
+    help: '/help',
   };
   const target = map[initialRoute] ?? '/dashboard';
   void router.replace(target);

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { createTimetable, listTimetables } from '../api/adminRest';
+import { createTimetable, deleteTimetable, listTimetables } from '../api/adminRest';
 import type { TimetableListItem } from '../types';
 import AdminNav from '../components/AdminNav.vue';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
@@ -48,6 +48,20 @@ async function createNew() {
 function openEditor(id: number) {
   void router.push(`/timetables/${id}`);
 }
+
+async function removeTimetable(id: number, title: string) {
+  if (!cfg.canManage) return;
+  if (!window.confirm(`Ta bort tidtabellen «${title}» och alla dess turer? Detta går inte att ångra.`)) {
+    return;
+  }
+  error.value = '';
+  try {
+    await deleteTimetable(id);
+    await load();
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Kunde inte ta bort';
+  }
+}
 </script>
 
 <template>
@@ -74,6 +88,14 @@ function openEditor(id: number) {
         <button type="button" class="button button-primary" @click="openEditor(row.id)">
           Redigera
         </button>
+        <button
+          v-if="cfg.canManage"
+          type="button"
+          class="button button-link-delete"
+          @click="removeTimetable(row.id, row.title)"
+        >
+          Ta bort
+        </button>
       </li>
       <li v-if="!items.length" class="mrt-admin-card-list__empty">Inga tidtabeller.</li>
     </ul>
@@ -96,6 +118,14 @@ function openEditor(id: number) {
             <td>
               <button type="button" class="button button-small" @click="openEditor(row.id)">
                 Redigera
+              </button>
+              <button
+                v-if="cfg.canManage"
+                type="button"
+                class="button button-link-delete"
+                @click="removeTimetable(row.id, row.title)"
+              >
+                Ta bort
               </button>
             </td>
           </tr>

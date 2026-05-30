@@ -89,6 +89,10 @@ export function updateTimetable(
   });
 }
 
+export function deleteTimetable(id: number) {
+  return adminFetch<{ deleted: boolean }>(`/timetables/${id}`, { method: 'DELETE' });
+}
+
 export function getTimetableOverview(id: number) {
   return adminFetch<{ overview: import('../../types/timetableOverview').TimetableOverviewPayload }>(
     `/timetables/${id}/overview`,
@@ -166,6 +170,10 @@ export function updateStation(
   });
 }
 
+export function deleteStation(id: number) {
+  return adminFetch<{ deleted: boolean }>(`/stations/${id}`, { method: 'DELETE' });
+}
+
 export function listRoutes() {
   return adminFetch<{ items: import('../types').RouteRow[] }>('/routes');
 }
@@ -182,6 +190,10 @@ export function updateRoute(id: number, body: Partial<import('../types').RouteRo
     method: 'PATCH',
     body: JSON.stringify(body),
   });
+}
+
+export function deleteRoute(id: number) {
+  return adminFetch<{ deleted: boolean }>(`/routes/${id}`, { method: 'DELETE' });
 }
 
 export function getDeviations(timetableId: number) {

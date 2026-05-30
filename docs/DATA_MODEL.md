@@ -513,7 +513,7 @@ The plugin provides a visual overview of timetables that groups services (trips)
 - **Groups trips** by route and direction (e.g., "Från Uppsala Ö Till Marielund")
 - **Displays train types** with PNG icons (`assets/icons/train-types/`) for each trip
 - **Shows times** for each station, with inline bus connections at junction stations
-- **Available in admin** as a Vue preview meta box on Timetable edit screens
+- **Available in admin** via Vue editor preview tab (same component as public shortcode)
 - **Public + admin rendering** via JSON (`MRT_get_timetable_overview_data`) and `frontend/vue/src/components/overview/`
 
 ### Display Flow

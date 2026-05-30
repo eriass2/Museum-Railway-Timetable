@@ -12,6 +12,7 @@ const tabs = computed(() => {
     { to: '/dashboard', label: 'Översikt' },
     { to: '/timetables', label: 'Tidtabeller' },
     { to: '/stations-routes', label: 'Stationer & rutter' },
+    { to: '/help', label: 'Hjälp' },
   ];
   if (cfg.canManage) {
     base.push(

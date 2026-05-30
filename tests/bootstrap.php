@@ -14,6 +14,8 @@ define('MRT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 define('MRT_TEXT_DOMAIN', 'museum-railway-timetable');
 define('MRT_POST_TYPE_SERVICE', 'mrt_service');
 define('MRT_POST_TYPE_TIMETABLE', 'mrt_timetable');
+define('MRT_POST_TYPE_STATION', 'mrt_station');
+define('MRT_POST_TYPE_ROUTE', 'mrt_route');
 
 require_once __DIR__ . '/wp-stubs.php';
 require_once __DIR__ . '/JourneyTestFixtures.php';
@@ -37,6 +39,30 @@ if (!isset($GLOBALS['wpdb'])) {
          */
         public function get_results($query = null, $output = OBJECT) {
             return [];
+        }
+
+        /**
+         * @param string|null $query
+         * @param int         $x
+         * @param int         $y
+         */
+        public function get_var($query = null, $x = 0, $y = 0) {
+            if (isset($GLOBALS['mrt_test_wpdb_get_var']) && is_callable($GLOBALS['mrt_test_wpdb_get_var'])) {
+                return $GLOBALS['mrt_test_wpdb_get_var']($query, $x, $y);
+            }
+            return '0';
+        }
+
+        /**
+         * @param string       $table
+         * @param array<mixed> $data
+         * @param array<mixed> $where
+         * @param array<mixed> $format
+         * @param array<mixed> $where_format
+         */
+        public function delete($table, $data, $where_format = null, $where = null) {
+            unset($table, $data, $where_format, $where);
+            return 1;
         }
     };
 }

@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import {
   addTimetableService,
+  deleteTimetable,
   getDeviations,
   getRouteDestinations,
   getTimetable,
@@ -19,6 +20,9 @@ import MrtTimetableOverviewView from '../../components/overview/MrtTimetableOver
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps<{ id: string }>();
 const cfg = adminConfig();
@@ -144,6 +148,23 @@ async function saveMeta() {
   saveMsg.value = 'Namn och typ sparade';
 }
 
+async function removeTimetable() {
+  if (!detail.value || !cfg.canManage) return;
+  if (
+    !window.confirm(
+      `Ta bort «${detail.value.title}» och alla turer? Detta går inte att ångra.`,
+    )
+  ) {
+    return;
+  }
+  try {
+    await deleteTimetable(timetableId.value);
+    await router.push('/timetables');
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Kunde inte ta bort';
+  }
+}
+
 function addDate() {
   if (!detail.value || !dateInput.value) return;
   if (!detail.value.dates.includes(dateInput.value)) {
@@ -215,6 +236,9 @@ function onMobileSaved(message: string) {
       </p>
       <p>
         <button type="button" class="button button-primary" @click="saveMeta">Spara namn och typ</button>
+        <button type="button" class="button button-link-delete" @click="removeTimetable">
+          Ta bort tidtabell
+        </button>
       </p>
     </div>
     <h1 v-else-if="detail">{{ detail.title }}</h1>
