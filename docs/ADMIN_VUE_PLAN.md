@@ -4,7 +4,7 @@ Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timeta
 
 **Relaterat:** [REST_API.md](REST_API.md), [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), [VUE_FRONTEND.md](VUE_FRONTEND.md).
 
-**Senast uppdaterad:** 2026-05-30 (branch `experiment/vue-public-ui`, commit `ca690d1`).
+**Senast uppdaterad:** 2026-05-30 (Fas 4 route preview, Fas 7 städning, admin E2E i CI).
 
 ---
 
@@ -16,14 +16,14 @@ Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timeta
 | **1** Dashboard | ✅ Klar | Stats, varningar, snabbstart, länkar |
 | **2** Tidtabeller | ✅ Klar | Lista, editor (datum/turer/stopptider/avvikelser/preview) |
 | **3** Stopptider i overview | ✅ Klar | Editable grid i Stopptider-fliken; tabellvy kvar som fallback |
-| **4** Stationer & rutter | 🟡 Delvis | `StationsRoutesPage` + **tågtyper** — route preview saknas |
+| **4** Stationer & rutter | ✅ Klar | `StationsRoutesPage`, tågtyper, `RoutePreview` |
 | **5** Priser & inställningar | ✅ Klar | Vue + REST; CSV via `ImportExportPage` |
 | **6** Publikt REST | ✅ Klar | Wizard/month/overview via `mrtRest.ts`; AJAX borttaget |
-| **7** Städning | 🟡 Delvis | Meta box-UI bort, redirects, docs, admin E2E — **fysisk borttagning `assets/admin-*.js`** kvar |
+| **7** Städning | ✅ Klar | Legacy jQuery-admin borttagen; admin E2E i CI; Vitest admin |
 
-**Nästa rekommenderade steg:** Route preview (Fas 4) → radera legacy `assets/admin-*.js` (Fas 7).
+**Kvar (valfritt):** `next_traffic[]` i dashboard-payload; mobil-UX; meta box save-hooks kan städas senare.
 
-**Senast uppdaterad:** 2026-05-30 (backlog 1–3 implementerad).
+**Senast uppdaterad:** 2026-05-30.
 
 ---
 
@@ -121,6 +121,7 @@ Domänlogik i `inc/domain/` — REST-controllers är tunna adapters.
 | `pages/TrainTypesPage.vue` | ✅ |
 | `pages/ImportExportPage.vue` | ✅ |
 | `components/EditableTimetableOverview.vue` | ✅ overview-grid (admin) |
+| `components/RoutePreview.vue` | ✅ visuell stationskedja (rutter) |
 
 ### Vue publikt
 
@@ -168,7 +169,7 @@ Domänlogik i `inc/domain/` — REST-controllers är tunna adapters.
 - [x] Varningar med deep links till Vue-editor
 - [x] Dev-verktyg bara under legacy-sida / dev-läge
 - [x] PHPUnit `DashboardDataTest`
-- [ ] Vitest `DashboardPage` (ej tillagt)
+- [x] Vitest `dashboardPage.test.ts` (REST-klient)
 
 ---
 
@@ -181,41 +182,40 @@ Domänlogik i `inc/domain/` — REST-controllers är tunna adapters.
 | Preview (`MrtTimetableOverviewView`) | ✅ |
 | REST CRUD | ✅ |
 
-Stopptidsredigering i **overview-grid** → Fas 3.
-
 ---
 
-## Fas 3 – Stopptider i overview ⏳
+## Fas 3 – Stopptider i overview ✅
 
 | Leverans | Status |
 |----------|--------|
-| Editable overview-grid (klick cell → tid / stannar / P-A) | ❌ |
-| Tabell-`StopTimesEditor` per tur | ✅ (interim) |
+| Editable overview-grid (klick cell → tid / stannar / P-A) | ✅ |
+| Tabell-`StopTimesEditor` per tur | ✅ (fallback) |
 | REST `PUT /services/{id}/stop-times` | ✅ |
-| Ta bort jQuery `admin-stoptimes-ui.js` | 🟡 ej längre enqueued; filer kvar i `assets/` |
+| Ta bort jQuery `admin-stoptimes-ui.js` | ✅ borttagen |
 
 ---
 
-## Fas 4 – Stationer, rutter, tågtyper 🟡
+## Fas 4 – Stationer, rutter, tågtyper ✅
 
 | Leverans | Status |
 |----------|--------|
 | Samlad skärm stationer + rutter | ✅ |
 | Drag-ordning stationer på rutt | ✅ |
-| Route preview (visuell kedja) | ❌ |
-| Train types CRUD + ikon-slug | ❌ (WP taxonomy kvar) |
+| Route preview (visuell kedja) | ✅ `RoutePreview.vue` |
+| Train types CRUD + ikon-slug | ✅ `TrainTypesPage.vue` |
 
 ---
 
-## Fas 5 – Priser, import/export, inställningar 🟡
+## Fas 5 – Priser, import/export, inställningar ✅
 
 | Leverans | Status |
 |----------|--------|
 | Priser i Vue (`PricesPage`) | ✅ |
 | Inställningar (`SettingsPage`: enabled, note, transfer-tider) | ✅ |
 | REST `GET|PATCH /settings`, `/settings/prices` | ✅ |
-| CSV upload + export via REST | ❌ (legacy PHP under `mrt_settings`) |
-| `ImportExportPage.vue` | ❌ |
+| CSV upload + export via REST | ✅ |
+| `ImportExportPage.vue` | ✅ |
+| Legacy PHP CSV-meny | ✅ borttagen |
 
 ---
 
@@ -227,23 +227,23 @@ Stopptidsredigering i **overview-grid** → Fas 3.
 | Radera `inc/infrastructure/ajax/` | ✅ |
 | Sluta lokalisera `ajaxurl` | ✅ |
 | jQuery admin **ej längre enqueued** | ✅ |
-| Fysisk radering `assets/admin-*.js` | ❌ (filer kvar, oanvända) |
+| Fysisk radering `assets/admin-*.js` | ✅ |
 | Meta box renderers borttagna | ✅ (save-hooks kvar) |
 
 ---
 
-## Fas 7 – Städning 🟡
+## Fas 7 – Städning ✅
 
 | Leverans | Status |
 |----------|--------|
 | Meta box-UI borttaget | ✅ |
 | Redirect legacy CPT-URL:er | ✅ |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) uppdaterad | ✅ |
-| E2E Playwright admin (`e2e/admin-dashboard.spec.ts`) | ✅ tillagd |
-| E2E admin i CI | ❌ |
-| Radera oanvända `assets/admin-*.js` | ❌ |
-| Uppdatera [ARCHITECTURE.md](ARCHITECTURE.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) (AJAX-referenser) | ❌ |
-| Vitest admin-sidor | ❌ |
+| E2E Playwright admin (`e2e/admin-dashboard.spec.ts`) | ✅ |
+| E2E admin i CI (`scripts/ci-e2e-wp.sh`) | ✅ |
+| Radera oanvända `assets/admin-*.js` | ✅ |
+| Uppdatera [ARCHITECTURE.md](ARCHITECTURE.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) | ✅ |
+| Vitest admin (`dashboardPage.test.ts`, `routePreview.test.ts`) | ✅ |
 
 Verifiering: `grep wp_ajax_mrt` i repo → **tomt** ✅
 
@@ -267,18 +267,18 @@ Verifiering: `grep wp_ajax_mrt` i repo → **tomt** ✅
 | Dashboard REST | PHPUnit `DashboardDataTest` | Docker: `?page=mrt_app` |
 | Journey parse | PHPUnit `JourneyAjaxParseTest` | Wizard smoke |
 | Publikt REST | Vitest `mrtApi.test.ts` (REST) | Month/overview shortcodes |
-| Admin | Playwright `admin-dashboard.spec.ts` (kräver `MRT_E2E_WP_ADMIN_URL`) | Skapa tidtabell, tur, preview |
-| Fas 3 grid | — | Redigera tid i grid, preview matchar |
+| Admin | Playwright `admin-dashboard.spec.ts` (CI via `ci-e2e-wp.sh`) | Skapa tidtabell, tur, preview |
+| Route preview | Vitest `routePreview.test.ts` | Stationer & rutter-skärmen |
+| Fas 3 grid | Vitest overview-grid | Redigera tid i grid, preview matchar |
 | Slutstäd | `grep wp_ajax_mrt` tomt | [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) |
 
 ---
 
-## Kvar att göra (prioriterad backlog)
+## Kvar att göra (valfritt)
 
-1. **Fas 4** — Route preview-komponent på stations/rutter-skärmen
-2. **Fas 7** — Ta bort `assets/admin-*.js`, uppdatera architecture/style docs
-3. **Fas 7** — Playwright admin i CI; Vitest för admin-sidor
-4. **Fas 1** — `next_traffic[]` i dashboard-payload (valfritt)
+1. **Fas 1** — `next_traffic[]` i dashboard REST-payload
+2. **Mobil** — Begränsat admin-läge (avvikelser + snabb avgångstid)
+3. **Teknisk skuld** — Meta box save-hooks (`inc/admin/meta-boxes/`) kan tas bort när CPT-redigering inte behövs
 
 ---
 
@@ -292,11 +292,9 @@ gantt
   Fas 0 Fundament           :done, f0, 2026-05-01, 2026-05-15
   Fas 1 Dashboard           :done, f1, 2026-05-15, 2026-05-22
   Fas 2 Tidtabeller         :done, f2, 2026-05-22, 2026-05-28
+  Fas 3 Overview-grid       :done, f3, 2026-05-28, 2026-06-01
+  Fas 4 Stationer/rutter    :done, f4, 2026-05-25, 2026-06-01
+  Fas 5 Priser/inställningar :done, f5, 2026-05-29, 2026-06-01
   Fas 6 Publikt REST        :done, f6, 2026-05-28, 2026-05-30
-  section Delvis
-  Fas 4 Stationer/rutter    :active, f4, 2026-05-25, 2026-06-10
-  Fas 5 Priser/inställningar :active, f5, 2026-05-29, 2026-06-12
-  Fas 7 Städning            :active, f7, 2026-05-30, 2026-06-05
-  section Kvar
-  Fas 3 Overview-grid       :f3, 2026-06-01, 2026-06-15
+  Fas 7 Städning            :done, f7, 2026-05-30, 2026-06-01
 ```

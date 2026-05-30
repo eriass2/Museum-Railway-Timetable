@@ -25,7 +25,8 @@ $required_files = @(
     "inc/bootstrap/domain.php",
     "inc/infrastructure/wordpress/helpers-utils.php",
     "assets/train-type-icons.css",
-    "assets/admin.js",
+    "assets/mrt-string-utils.js",
+    "assets/mrt-date-utils.js",
     "languages/museum-railway-timetable.pot",
     "languages/museum-railway-timetable-sv_SE.po"
 )
@@ -134,11 +135,8 @@ foreach ($cssFile in $cssFiles) {
 # 6. Check JS files
 Write-Host "`n6. Checking JavaScript files..." -ForegroundColor Yellow
 $admin_js_files = @(
-    "assets/admin-utils.js",
-    "assets/admin-route-ui.js",
-    "assets/admin-stoptimes-ui.js",
-    "assets/admin-timetable-services-ui.js",
-    "assets/admin.js"
+    "assets/mrt-string-utils.js",
+    "assets/mrt-date-utils.js"
 )
 foreach ($jsFile in $admin_js_files) {
     $checks++

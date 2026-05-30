@@ -10,7 +10,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 
 | Vad | URL | Förväntat |
 |-----|-----|-----------|
-| Admin dashboard | http://localhost:8080/wp-admin/admin.php?page=mrt_settings | Kort, rutnät, sektioner med `admin.css` |
+| Admin dashboard | http://localhost:8080/wp-admin/admin.php?page=mrt_app | Vue-admin: statistik, varningar, navigation |
 | Wizard | Sida med `[museum_journey_wizard]` eller demo | Grön hero, steg 1–4, kalenderfärger, ikoner |
 | Månad | `[museum_timetable_month]` | Kalender, klickbar trafikdag |
 | Översikt | `[museum_timetable_overview]` | Rutnät per rutt |

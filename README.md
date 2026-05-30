@@ -210,20 +210,15 @@ museum-railway-timetable/
 │   ├─ domain/                   # journey, service, timetable, pricing, …
 │   ├─ admin/                    # dashboard/, meta-boxes/, tools/
 │   ├─ public/                   # month-calendar, timetable-overview, journey-wizard
-│   ├─ infrastructure/           # post-types/, ajax/, wordpress/
+│   ├─ infrastructure/           # post-types/, rest/, wordpress/
 │   ├─ import/lennakatten/
 │   ├─ assets/                   # enqueue helpers
 │   ├─ assets.php, admin.php, shortcodes.php
 ├─ assets/
-│   ├─ admin.js                  # Admin entry (depends on modules below)
-│   ├─ admin-utils.js
-│   ├─ admin-route-ui.js
-│   ├─ admin-stoptimes-ui.js
-│   ├─ admin-timetable-services-ui.js
-│   ├─ admin-service-edit.js     # Service edit (route, stoptimes form)
-│   ├─ mrt-string-utils.js       # Shared admin string helpers
-│   ├─ mrt-date-utils.js         # Shared admin date/time helpers
-│   ├─ dist/vue/                 # Vite bundle (public shortcode JS + CSS)
+│   ├─ admin.css                 # WP-admin shell styles
+│   ├─ mrt-string-utils.js       # Shared string helpers (tests in tests/js/)
+│   ├─ mrt-date-utils.js         # Shared date/time helpers
+│   ├─ dist/vue/                 # Vite bundle (public + admin JS + CSS)
 │   ├─ frontend-public.css       # Shared primitives (imported by Vue mrt-public.css)
 │   ├─ icons/train-types/        # PNG train type symbols
 │   └─ train-type-icons.css      # Icon sizing (imported by Vue bundle)

@@ -45,5 +45,5 @@ foreach ($p in $pages) {
     }
 }
 
-Write-Host "`nAdmin: http://localhost:8080/wp-admin/admin.php?page=mrt_settings (admin / admin)" -ForegroundColor Gray
+Write-Host "`nAdmin: http://localhost:8080/wp-admin/admin.php?page=mrt_app (admin / admin)" -ForegroundColor Gray
 Write-Host "Done.`n" -ForegroundColor Cyan

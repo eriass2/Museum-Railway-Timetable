@@ -11,8 +11,8 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 | Lager | Roll | Exempel |
 |--------|------|---------|
 | **Domän** | Regler oberoende av WordPress och UI | Prismatris, datum/tid, connection-sökning, normalisering, tidtabellsrutnät |
-| **Infrastruktur** | WP-adapters: CPT, REST, inställningar, helpers | `inc/infrastructure/rest/` (mål), `inc/infrastructure/ajax/` (fasas ut), `inc/infrastructure/post-types/` |
-| **Admin / public** | Meta boxes, dashboard, shortcodes, enqueue | `inc/admin/meta-boxes/`, `inc/public/journey-wizard/` |
+| **Infrastruktur** | WP-adapters: CPT, REST, inställningar, helpers | `inc/infrastructure/rest/`, `inc/infrastructure/post-types/` |
+| **Admin / public** | Vue-admin, legacy dev-verktyg, shortcodes, enqueue | `inc/admin/`, `frontend/vue/src/admin/`, `inc/public/journey-wizard/` |
 
 **Vid ändringar:** Om en funktion kan beskrivas och testas utan `echo` och utan `$_POST` ska den ligga i **`inc/domain/`** (prefix `MRT_*`), inte i template-strängar eller JS.
 
@@ -23,7 +23,7 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 `museum-railway-timetable.php` → `inc/bootstrap.php`:
 
 1. **`MRT_bootstrap_load_domain()`** – `inc/bootstrap/domain.php` laddar domänmoduler (journey, timetable view, service, route, station, pricing, datetime).
-2. **`MRT_bootstrap_load_app()`** – miljö, inställningar, CPT, assets, admin, REST (mål) / AJAX (legacy), shortcodes.
+2. **`MRT_bootstrap_load_app()`** – miljö, inställningar, CPT, assets, admin, REST, shortcodes.
 
 Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootstrap.
 
@@ -33,7 +33,7 @@ Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootst
 
 - **Enhetstester (PHPUnit):** Ren PHP i `tests/Unit/` mot `inc/domain/`; se `phpunit.xml.dist` och `composer test`.
 - **Ny affärsregel:** Lägg test i samma leverans när logiken är ren nog.
-- **CI:** `.github/workflows/ci.yml` kör `composer check`, `composer vue:check`, static Playwright E2E, och valfritt `e2e-wp` mot Docker-demosidan.
+- **CI:** `.github/workflows/ci.yml` kör `composer check`, `composer vue:check`, static Playwright E2E, och `e2e-wp` (publikt + Vue-admin mot Docker).
 - **Refaktor:** Validering som inte behöver `$_POST` ska vara namngivna `MRT_*`-funktioner (t.ex. `MRT_journey_validate_station_pair_ids` i `journey-parse.php`).
 
 ---
@@ -68,14 +68,13 @@ inc/
 │   └── train-type/         # ikon-slugs
 ├── infrastructure/
 │   ├── post-types/         # CPT + taxonomier
-│   ├── ajax/               # journey, stoptimes, timetable, route, …
+│   ├── rest/               # admin + publikt REST
 │   └── wordpress/          # environment, plugin-settings, helpers-utils
 ├── admin/
-│   ├── dashboard/
-│   ├── meta-boxes/
-│   ├── tools/              # demo, import, clear-db, dev-navigation
-│   ├── menu.php, settings.php, admin-list.php
-│   └── meta-boxes.php      # loader för meta-box-filer
+│   ├── app.php, menu.php   # Vue shell + legacy dev tools
+│   ├── dashboard/          # legacy PHP tools-sida (mrt_settings)
+│   ├── meta-boxes/         # save-hooks (UI borttaget)
+│   └── tools/              # demo, import, clear-db, dev-navigation
 ├── public/
 │   ├── month-calendar/
 │   ├── timetable-overview/
@@ -96,9 +95,9 @@ inc/
 
 Rese-UI är endast wizard; `[museum_journey_planner]` finns inte längre (se [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md)).
 
-### Journey AJAX
+### Admin (Vue)
 
-`inc/infrastructure/ajax/journey.php`, `journey-parse.php` – JSON till Vue wizard (`mrt_search_journey`, kalender, connection detail). Publik presentation i `frontend/vue/src/wizard/` och `frontend/vue/src/styles/journey-wizard/`.
+Vue-admin under `admin.php?page=mrt_app` (`frontend/vue/src/admin/`). REST via `inc/infrastructure/rest/` och `adminRest.ts`. Legacy PHP-verktyg (clear DB, Lennakatten-import) kvar under `?page=mrt_settings`.
 
 ### Timetable overview (Vue)
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import {
   createRoute,
   createStation,
@@ -10,6 +10,7 @@ import {
 } from '../api/adminRest';
 import type { RouteRow, StationRow } from '../types';
 import AdminNav from '../components/AdminNav.vue';
+import RoutePreview from '../components/RoutePreview.vue';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -21,6 +22,16 @@ const newStationTitle = ref('');
 const newRouteTitle = ref('');
 const editingRoute = ref<RouteRow | null>(null);
 const addStationToRoute = ref(0);
+
+const stationsById = computed(
+  () =>
+    new Map(
+      stations.value.map((st) => [
+        st.id,
+        { title: st.title, station_type: st.station_type },
+      ]),
+    ),
+);
 
 async function load() {
   loading.value = true;
@@ -162,7 +173,15 @@ async function saveStationMeta(st: StationRow) {
         <tbody>
           <tr v-for="route in routes" :key="route.id">
             <td>{{ route.title }}</td>
-            <td>{{ route.stations.map((s) => s.name).join(' → ') || '—' }}</td>
+            <td>
+              <RoutePreview
+                :station-ids="route.station_ids"
+                :stations-by-id="stationsById"
+                :start-station-id="route.start_station"
+                :end-station-id="route.end_station"
+                compact
+              />
+            </td>
             <td>
               <button v-if="cfg.canManage" type="button" class="button button-small" @click="editRoute(route)">
                 Redigera
@@ -190,6 +209,14 @@ async function saveStationMeta(st: StationRow) {
           <option v-for="st in stations" :key="st.id" :value="st.id">{{ st.title }}</option>
         </select>
       </p>
+      <RoutePreview
+        v-if="editingRoute"
+        :station-ids="editingRoute.station_ids"
+        :stations-by-id="stationsById"
+        :start-station-id="editingRoute.start_station"
+        :end-station-id="editingRoute.end_station"
+        label="Förhandsgranskning av rutt"
+      />
       <ol>
         <li v-for="(sid, idx) in editingRoute.station_ids" :key="sid">
           {{ stations.find((s) => s.id === sid)?.title || sid }}

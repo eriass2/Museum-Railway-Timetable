@@ -1,12 +1,19 @@
 import { test, expect } from '@playwright/test';
 import { wpDemoUrl } from './wp-demo-url';
+import { loginWpAdmin } from './wp-admin-login';
 
 const adminUrl =
   process.env.MRT_E2E_WP_ADMIN_URL ||
-  (wpDemoUrl ? `${wpDemoUrl.replace(/\/$/, '')}/wp-admin/admin.php?page=mrt_app` : '');
+  (wpDemoUrl
+    ? `${wpDemoUrl.match(/^(https?:\/\/[^/]+)/)?.[1] || ''}/wp-admin/admin.php?page=mrt_app`
+    : '');
 
 test.describe('Vue admin (WordPress)', () => {
   test.skip(!adminUrl, 'Set MRT_E2E_WP_ADMIN_URL or MRT_E2E_WP_DEMO_URL');
+
+  test.beforeEach(async ({ page }) => {
+    await loginWpAdmin(page);
+  });
 
   test('dashboard mounts with stats', async ({ page }) => {
     await page.goto(adminUrl);

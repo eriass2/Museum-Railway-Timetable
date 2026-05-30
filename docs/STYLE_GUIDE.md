@@ -114,16 +114,18 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Felhantering** – Hantera nätverksfel och visa användarvänliga meddelanden
 
 ### Delade util-moduler (`assets/mrt-*.js`)
-- **`mrt-string-utils.js`** – `window.MRTStringUtils.escapeHtml` (XSS-säker text i HTML-strängar). **`admin-utils.js`** `escapeHtml` delegerar hit.
-- **`mrt-date-utils.js`** – `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för `HH:MM`). **`admin-utils.js`** `validateTimeFormat` delegerar till `MRTDateUtils.validateHhMm`.
-- **`admin-utils.js`** – `window.MRTAdminUtils.msg(key, fallback)` för strängar från `mrtAdmin`. Använd i admin-moduler i stället för upprepade `typeof mrtAdmin`-tester.
-- **Lägg ny återanvändbar logik** i rätt util-fil i stället för att duplicera i flera skript.
-- **Enqueue** – `inc/assets.php` → `inc/assets/loader.php`: admin (`mrt-string-utils`, `mrt-date-utils`, `admin-utils.js`, moduler); publikt Vue (`assets/dist/vue/`); index-shortcode (`frontend/timetable-index.css` via PHP).
-- **JS-tester (valfritt)** – `composer test:js` kör `node --test tests/js/` (Node 18+); täcker delade util-filer utan browser.
+- **`mrt-string-utils.js`** – `window.MRTStringUtils.escapeHtml` (XSS-säker text i HTML-strängar).
+- **`mrt-date-utils.js`** – `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för `HH:MM`).
+- **JS-tester** – `composer test:js` kör `node --test tests/js/` (Node 18+).
+
+### Admin (Vue)
+- **Vue-admin** – `frontend/vue/src/admin/` byggt till `assets/dist/vue/assets/admin.js` (`vite.admin.config.ts`).
+- **REST** – `adminRest.ts` mot `inc/infrastructure/rest/`; nonce via `mrtAdminVue`.
+- **CSS** – `assets/admin.css` (WP-native skal) + `admin-shell.css` i Vue-bundeln.
 
 ### Publikt frontend (Vue)
 - **Ingen jQuery-frontend** – månad, översikt och wizard mountar Vue (`frontend/vue/`, byggt till `assets/dist/vue/`).
-- **AJAX** – Vue anropar `admin-ajax.php` med nonce från `mrtFrontend` (lokaliserad i `inc/assets/vue-frontend.php`).
+- **REST** – Vue anropar `wp-json/museum-railway-timetable/v1/` med nonce från mount-config.
 - **CSS** – Vite-bundel; källfiler under `frontend/vue/src/styles/` (se §3 CSS).
 
 ---
@@ -151,7 +153,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Mappar
 - **Använd mappar** – Organisera kod efter ansvar (`inc/domain/`, `inc/admin/`, `inc/infrastructure/`, `inc/public/`)
 - **En fil per ansvar** – Varje mapp innehåller filer med tydligt, sammanhörande ansvar
-- **Loader-filer** – Tunna loaders (`inc/infrastructure/ajax.php`, `inc/admin/meta-boxes.php`) require:ar undermappar
+- **Loader-filer** – Tunna loaders (`inc/infrastructure/rest/loader.php`, `inc/admin/meta-boxes.php`) require:ar undermappar
 
 ### Struktur
 
@@ -166,7 +168,7 @@ museum-railway-timetable/
 ├── inc/
 │   ├── bootstrap/                 # domain loader
 │   ├── domain/                    # affärslogik (journey, service, timetable, …)
-│   ├── infrastructure/            # CPT, ajax/, wordpress/
+│   ├── infrastructure/            # CPT, rest/, wordpress/
 │   ├── admin/                     # dashboard/, meta-boxes/, tools/
 │   ├── public/                    # month-calendar, timetable-overview, journey-wizard
 │   ├── import/lennakatten/
@@ -174,11 +176,9 @@ museum-railway-timetable/
 │   ├── admin.php, shortcodes.php, assets.php
 │   └── constants.php
 ├── assets/
-│   ├── admin.css, admin.js, admin-*.js
-│   ├── dist/vue/                  # Vite bundle (JS + public CSS)
-│   ├── mrt-color-tokens.css       # Färgpalett (importeras av Vue mrt-public.css)
-│   ├── frontend-public.css        # shared shortcode primitives (imported by mrt-public.css)
-│   ├── mrt-string-utils.js, mrt-date-utils.js   # admin utils
+│   ├── admin.css                  # WP-admin skal (Vue-admin)
+│   ├── dist/vue/                  # Vite bundle (public + admin JS/CSS)
+│   ├── mrt-string-utils.js, mrt-date-utils.js
 │   └── icons/train-types/
 ├── frontend/vue/src/styles/       # Vue-ägd publik CSS (se §3 CSS)
 │   ├── mrt-public.css             # tokens + assets primitives + vue-shell

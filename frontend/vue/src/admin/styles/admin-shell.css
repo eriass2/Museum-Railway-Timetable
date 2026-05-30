@@ -40,3 +40,59 @@
     width: 100%;
   }
 }
+
+.mrt-route-preview {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 6px;
+  margin: 4px 0;
+}
+
+.mrt-route-preview--compact {
+  max-width: 36em;
+}
+
+.mrt-route-preview__arrow {
+  color: #646970;
+  font-weight: 600;
+}
+
+.mrt-route-preview__node {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border: 1px solid #c3c4c7;
+  border-radius: 3px;
+  background: #f6f7f7;
+  font-size: 13px;
+}
+
+.mrt-route-preview__node--start,
+.mrt-route-preview__node--both {
+  border-color: #2271b1;
+  background: #f0f6fc;
+}
+
+.mrt-route-preview__node--end {
+  border-color: #3a6b1f;
+  background: #f0f6eb;
+}
+
+.mrt-route-preview__role {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #50575e;
+}
+
+.mrt-route-preview__type {
+  font-size: 11px;
+  color: #646970;
+}
+
+.mrt-route-preview__empty {
+  margin: 0;
+}

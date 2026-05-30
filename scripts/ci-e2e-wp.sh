@@ -40,8 +40,18 @@ fi
 echo "Demo URL: $DEMO_URL"
 export MRT_E2E_WP_DEMO_URL="$DEMO_URL"
 
+WP_SITE_BASE="$(echo "$DEMO_URL" | sed -E 's#^(https?://[^/]+).*#\1#')"
+export MRT_E2E_WP_ADMIN_URL="${WP_SITE_BASE}/wp-admin/admin.php?page=mrt_app"
+export MRT_E2E_WP_ADMIN_USER="${WORDPRESS_ADMIN_USER:-admin}"
+export MRT_E2E_WP_ADMIN_PASSWORD="${WORDPRESS_ADMIN_PASSWORD:-admin}"
+echo "Admin URL: $MRT_E2E_WP_ADMIN_URL"
+
 echo "=== ci-e2e-wp: Vue build + Playwright ==="
 npm --prefix frontend/vue ci
 npm --prefix frontend/vue run build
 npx --prefix frontend/vue playwright install chromium --with-deps
-npm --prefix frontend/vue run e2e -- e2e/overview-wp.spec.ts e2e/month-wp.spec.ts e2e/wizard-wp.spec.ts
+npm --prefix frontend/vue run e2e -- \
+  e2e/overview-wp.spec.ts \
+  e2e/month-wp.spec.ts \
+  e2e/wizard-wp.spec.ts \
+  e2e/admin-dashboard.spec.ts
