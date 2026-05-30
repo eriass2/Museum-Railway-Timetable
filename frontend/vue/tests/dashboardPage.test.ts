@@ -1,5 +1,6 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { getDashboard } from '../src/admin/api/adminRest';
+import type { AdminClientConfig } from '../src/admin/types';
 
 const dashboardPayload = {
   stats: {
@@ -17,14 +18,20 @@ const dashboardPayload = {
 };
 
 describe('admin REST dashboard', () => {
+  const adminWindow: { mrtAdminVue?: AdminClientConfig } = {};
+
+  beforeEach(() => {
+    vi.stubGlobal('window', adminWindow);
+  });
+
   afterEach(() => {
+    delete adminWindow.mrtAdminVue;
     vi.unstubAllGlobals();
-    delete (window as { mrtAdminVue?: unknown }).mrtAdminVue;
   });
 
   it('loads dashboard payload with REST nonce', async () => {
-    window.mrtAdminVue = {
-      restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1/',
+    adminWindow.mrtAdminVue = {
+      restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1',
       restNonce: 'test-nonce',
       initialRoute: '/dashboard',
       adminBase: 'https://example.test/wp-admin/admin.php?page=mrt_app',

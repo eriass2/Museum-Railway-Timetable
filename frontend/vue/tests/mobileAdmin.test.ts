@@ -1,15 +1,22 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { quickDeparture } from '../src/admin/api/adminRest';
+import type { AdminClientConfig } from '../src/admin/types';
 
 describe('quickDeparture REST', () => {
+  const adminWindow: { mrtAdminVue?: AdminClientConfig } = {};
+
+  beforeEach(() => {
+    vi.stubGlobal('window', adminWindow);
+  });
+
   afterEach(() => {
+    delete adminWindow.mrtAdminVue;
     vi.unstubAllGlobals();
-    delete (window as { mrtAdminVue?: unknown }).mrtAdminVue;
   });
 
   it('sends departure to quick-edit endpoint', async () => {
-    window.mrtAdminVue = {
-      restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1/',
+    adminWindow.mrtAdminVue = {
+      restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1',
       restNonce: 'nonce',
       initialRoute: '/dashboard',
       adminBase: 'https://example.test/wp-admin/admin.php?page=mrt_app',
