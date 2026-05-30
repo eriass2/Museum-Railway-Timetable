@@ -13,6 +13,7 @@ import {
 import type { TimetableDetail } from '../types';
 import AdminNav from '../components/AdminNav.vue';
 import StopTimesEditor from '../components/StopTimesEditor.vue';
+import EditableTimetableOverview from '../components/EditableTimetableOverview.vue';
 import MrtTimetableOverviewView from '../../components/overview/MrtTimetableOverviewView.vue';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
 import { adminConfig } from '../types';
@@ -68,11 +69,11 @@ watch(
 );
 
 watch(tab, async (t) => {
-  if (t === 'preview' && !overview.value) {
+  if ((t === 'preview' || t === 'stoptimes') && !overview.value) {
     try {
       await loadOverview();
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Preview fel';
+      error.value = e instanceof Error ? e.message : 'Overview fel';
     }
   }
   if (t === 'deviations' && deviationRows.value.length === 0) {
@@ -231,15 +232,24 @@ async function saveDeviationChanges() {
       </div>
     </div>
 
-    <div v-if="detail && tab === 'stoptimes'" class="mrt-admin-panel">
-      <p>
-        <label>Tur:</label>
-        <select v-model.number="selectedServiceId">
-          <option :value="0">— Välj tur —</option>
-          <option v-for="s in detail.services" :key="s.id" :value="s.id">{{ s.title }}</option>
-        </select>
-      </p>
-      <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
+    <div v-if="detail && tab === 'stoptimes'" class="mrt-admin-panel mrt-vue-root">
+      <p class="description">Klicka i rutorna för att ändra tid, stannar och P/A. Sparas automatiskt per tur.</p>
+      <EditableTimetableOverview
+        v-if="overview"
+        :data="overview"
+        :readonly="!cfg.canManage && !cfg.canOperate"
+      />
+      <details class="mrt-mt-sm">
+        <summary>Tabellvy för en tur</summary>
+        <p>
+          <label>Tur:</label>
+          <select v-model.number="selectedServiceId">
+            <option :value="0">— Välj tur —</option>
+            <option v-for="s in detail.services" :key="s.id" :value="s.id">{{ s.title }}</option>
+          </select>
+        </p>
+        <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
+      </details>
     </div>
 
     <div v-if="detail && tab === 'deviations'" class="mrt-admin-panel">

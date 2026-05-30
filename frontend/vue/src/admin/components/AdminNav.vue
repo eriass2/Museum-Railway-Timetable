@@ -15,8 +15,10 @@ const tabs = computed(() => {
   ];
   if (cfg.canManage) {
     base.push(
+      { to: '/train-types', label: 'Tågtyper' },
       { to: '/settings', label: 'Inställningar' },
       { to: '/prices', label: 'Priser' },
+      { to: '/import-export', label: 'Import/export' },
     );
   }
   return base;

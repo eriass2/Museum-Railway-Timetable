@@ -19,6 +19,8 @@ function MRT_register_admin_vue_submenus(): void {
 		'mrt_app_stations_routes' => __( 'Stations & routes', 'museum-railway-timetable' ),
 		'mrt_app_settings'        => __( 'Settings', 'museum-railway-timetable' ),
 		'mrt_app_prices'          => __( 'Prices', 'museum-railway-timetable' ),
+		'mrt_app_train_types'     => __( 'Train types', 'museum-railway-timetable' ),
+		'mrt_app_import_export'   => __( 'Import / export', 'museum-railway-timetable' ),
 	);
 	$first = true;
 	foreach ( $pages as $slug => $label ) {

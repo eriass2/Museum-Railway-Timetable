@@ -99,6 +99,10 @@ function MRT_get_train_type_symbol_key( ?WP_Term $train_type ): string {
 	if ( ! $train_type ) {
 		return '';
 	}
+	$stored = get_term_meta( (int) $train_type->term_id, 'mrt_icon_key', true );
+	if ( is_string( $stored ) && $stored !== '' && in_array( $stored, MRT_train_type_icon_keys(), true ) ) {
+		return $stored;
+	}
 	return MRT_resolve_train_type_symbol_key( $train_type->name, $train_type->slug );
 }
 

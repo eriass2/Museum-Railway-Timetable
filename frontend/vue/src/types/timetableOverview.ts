@@ -6,6 +6,7 @@ export type TimetablePrintKeyRow = {
 };
 
 export type TimetableOverviewColumn = {
+  serviceId?: number;
   serviceNumber: string;
   trainTypeName: string;
   trainTypeSlug: string;
@@ -18,10 +19,17 @@ export type TimetableOverviewColumn = {
   highlightColor: string;
 };
 
+export type TimetableTimeCellEdit = {
+  arrival: string;
+  departure: string;
+  stopsHere: boolean;
+  pickupAllowed: boolean;
+  dropoffAllowed: boolean;
+};
+
 export type TimetableTimeCell = {
   text: string;
-  specialName?: string;
-  highlightColor?: string;
+  edit?: TimetableTimeCellEdit;
 };
 
 export type TimetableVehicleCell = {
@@ -39,6 +47,7 @@ export type TimetableOverviewRow =
   | {
       kind: 'from' | 'to' | 'station' | 'arrival' | 'departure';
       label: string;
+      stationId?: number;
       cells: TimetableTimeCell[];
     }
   | {

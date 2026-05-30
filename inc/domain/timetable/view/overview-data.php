@@ -325,10 +325,12 @@ function MRT_timetable_rail_group_to_json( array $group, string $dateYmd ): arra
 function MRT_timetable_overview_columns_json( array $view ): array {
 	$columns = array();
 	foreach ( $view['services_list'] as $idx => $service_data ) {
-		$info = $view['service_info'][ $idx ];
-		$tt   = $info['train_type'] ?? null;
+		$info    = $view['service_info'][ $idx ];
+		$service = $service_data['service'] ?? null;
+		$tt      = $info['train_type'] ?? null;
 		$default_tt = $info['default_train_type'] ?? null;
 		$columns[]  = array(
+			'serviceId'              => $service instanceof WP_Post ? (int) $service->ID : 0,
 			'serviceNumber'        => (string) ( $info['service_number'] ?? '' ),
 			'trainTypeName'          => $tt ? $tt->name : '',
 			'trainTypeSlug'          => $tt ? $tt->slug : '',
@@ -444,29 +446,65 @@ function MRT_timetable_row_times_json(
 ): array {
 	$cells = array();
 	foreach ( $services as $idx => $service_data ) {
-		$stop = $service_data['stop_times'][ $station_id ] ?? null;
-		$text = '—';
-		if ( is_array( $stop ) ) {
-			if ( $use_from_display ) {
-				$display = MRT_get_from_row_display_stop_time( $stop );
-				$text    = MRT_format_stop_time_display( $display ?? $stop );
-			} elseif ( $use_to_display ) {
-				$display = MRT_get_to_row_display_stop_time( $stop );
-				$text    = MRT_format_stop_time_display( $display ?? $stop );
-			} else {
-				$text = MRT_format_stop_time_display( $stop );
-			}
-		}
-		$cells[] = array(
-			'text' => $text,
-		);
+		unset( $idx, $info );
+		$stop    = $service_data['stop_times'][ $station_id ] ?? null;
+		$cells[] = MRT_timetable_time_cell_json( $stop, $use_from_display, $use_to_display );
 	}
 
 	return array(
-		'kind'  => $kind,
-		'label' => $label,
-		'cells' => $cells,
+		'kind'       => $kind,
+		'label'      => $label,
+		'stationId'  => $station_id,
+		'cells'      => $cells,
 	);
+}
+
+/**
+ * @param array<string, mixed>|null $stop Stop row from service stop_times map.
+ * @return array<string, mixed>
+ */
+function MRT_timetable_time_cell_json( $stop, bool $use_from_display = false, bool $use_to_display = false ): array {
+	$cell = array( 'text' => MRT_timetable_time_cell_text( $stop, $use_from_display, $use_to_display ) );
+	if ( ! is_array( $stop ) ) {
+		$cell['edit'] = array(
+			'arrival'        => '',
+			'departure'      => '',
+			'stopsHere'      => false,
+			'pickupAllowed'  => true,
+			'dropoffAllowed' => true,
+		);
+		return $cell;
+	}
+	$cell['edit'] = array(
+		'arrival'        => (string) ( $stop['arrival_time'] ?? '' ),
+		'departure'      => (string) ( $stop['departure_time'] ?? '' ),
+		'stopsHere'      => true,
+		'pickupAllowed'  => ! empty( $stop['pickup_allowed'] ),
+		'dropoffAllowed' => ! empty( $stop['dropoff_allowed'] ),
+	);
+	return $cell;
+}
+
+/**
+ * Build display text for one overview time cell (legacy helper split out).
+ *
+ * @param array<string, mixed>|null $stop
+ * @param bool                      $use_from_display
+ * @param bool                      $use_to_display
+ */
+function MRT_timetable_time_cell_text( $stop, bool $use_from_display, bool $use_to_display ): string {
+	if ( ! is_array( $stop ) ) {
+		return '—';
+	}
+	if ( $use_from_display ) {
+		$display = MRT_get_from_row_display_stop_time( $stop );
+		return MRT_format_stop_time_display( $display ?? $stop );
+	}
+	if ( $use_to_display ) {
+		$display = MRT_get_to_row_display_stop_time( $stop );
+		return MRT_format_stop_time_display( $display ?? $stop );
+	}
+	return MRT_format_stop_time_display( $stop );
 }
 
 /**

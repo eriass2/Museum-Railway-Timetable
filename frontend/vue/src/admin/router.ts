@@ -5,6 +5,8 @@ import TimetableEditorPage from './pages/TimetableEditorPage.vue';
 import StationsRoutesPage from './pages/StationsRoutesPage.vue';
 import SettingsPage from './pages/SettingsPage.vue';
 import PricesPage from './pages/PricesPage.vue';
+import TrainTypesPage from './pages/TrainTypesPage.vue';
+import ImportExportPage from './pages/ImportExportPage.vue';
 
 export function createAdminRouter(initialRoute: string) {
   const router = createRouter({
@@ -26,6 +28,8 @@ export function createAdminRouter(initialRoute: string) {
       },
       { path: '/settings', component: SettingsPage, name: 'settings' },
       { path: '/prices', component: PricesPage, name: 'prices' },
+      { path: '/train-types', component: TrainTypesPage, name: 'train-types' },
+      { path: '/import-export', component: ImportExportPage, name: 'import-export' },
     ],
   });
 
@@ -35,6 +39,8 @@ export function createAdminRouter(initialRoute: string) {
     'stations-routes': '/stations-routes',
     settings: '/settings',
     prices: '/prices',
+    'train-types': '/train-types',
+    'import-export': '/import-export',
   };
   const target = map[initialRoute] ?? '/dashboard';
   void router.replace(target);

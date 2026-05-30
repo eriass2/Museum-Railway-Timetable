@@ -59,6 +59,8 @@ Exakta paths och payloads dokumenteras i [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) 
 | `mrt_get_timetable_for_date` | `GET /timetables/day?date=&train_type=` |
 | `mrt_timetable_overview_data` | `GET /timetables/{id}/overview` |
 | Admin stopptider/turer/rutter | Se tabellen ovan (admin routes) |
+| Tågtyper | `GET|POST /train-types`, `PATCH|DELETE /train-types/{id}` |
+| CSV | `POST /import/csv`, `GET /export/csv` |
 
 **Klient:** `frontend/vue/src/api/mrtRest.ts` (publikt); `frontend/vue/src/admin/api/adminRest.ts` (admin).
 

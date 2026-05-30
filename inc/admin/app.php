@@ -23,6 +23,8 @@ function MRT_admin_app_initial_routes(): array {
 		'mrt_app_stations_routes'      => 'stations-routes',
 		'mrt_app_settings'             => 'settings',
 		'mrt_app_prices'               => 'prices',
+		'mrt_app_train_types'          => 'train-types',
+		'mrt_app_import_export'        => 'import-export',
 	);
 }
 

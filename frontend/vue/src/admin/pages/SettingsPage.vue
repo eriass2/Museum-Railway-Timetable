@@ -88,8 +88,7 @@ async function submit() {
         <span v-if="saved" class="description mrt-ml-sm">{{ saved }}</span>
       </p>
       <p class="description">
-        CSV-import/export och databasverktyg finns kvar under
-        <a :href="`${cfg.adminBase.replace('page=mrt_app', 'page=mrt_settings')}`">Inställningar &amp; verktyg (legacy)</a>.
+        CSV-import/export finns under fliken Import/export i menyn.
       </p>
     </form>
   </div>

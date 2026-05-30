@@ -79,6 +79,13 @@ export type StopTimeRow = {
   dropoff_allowed: boolean;
 };
 
+export type TrainTypeRow = {
+  id: number;
+  name: string;
+  slug: string;
+  icon_key: string;
+};
+
 declare global {
   interface Window {
     mrtAdminVue?: AdminClientConfig;

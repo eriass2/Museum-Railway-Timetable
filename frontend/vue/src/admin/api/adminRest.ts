@@ -218,3 +218,67 @@ export function savePrices(matrix: PricesPayload['matrix']) {
     body: JSON.stringify({ matrix }),
   });
 }
+
+export function listTrainTypes() {
+  return adminFetch<{ items: import('../types').TrainTypeRow[]; icon_keys: string[] }>(
+    '/train-types',
+  );
+}
+
+export function createTrainType(body: { name: string; slug?: string; icon_key?: string }) {
+  return adminFetch<import('../types').TrainTypeRow>('/train-types', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+}
+
+export function updateTrainType(
+  id: number,
+  body: Partial<{ name: string; slug: string; icon_key: string }>,
+) {
+  return adminFetch<import('../types').TrainTypeRow>(`/train-types/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  });
+}
+
+export function deleteTrainType(id: number) {
+  return adminFetch<{ deleted: boolean }>(`/train-types/${id}`, { method: 'DELETE' });
+}
+
+export function exportCsv(options: { include_prices?: boolean; include_settings?: boolean }) {
+  const params = new URLSearchParams();
+  if (options.include_prices !== undefined) {
+    params.set('include_prices', options.include_prices ? '1' : '0');
+  }
+  if (options.include_settings !== undefined) {
+    params.set('include_settings', options.include_settings ? '1' : '0');
+  }
+  const qs = params.toString();
+  return adminFetch<{ filename: string; content_base64: string }>(
+    `/export/csv${qs ? `?${qs}` : ''}`,
+  );
+}
+
+export function importCsv(file: File, mode: 'merge' | 'override') {
+  const cfg = adminConfig();
+  const body = new FormData();
+  body.append('file', file);
+  body.append('mode', mode);
+  return fetch(`${cfg.restUrl}import/csv`, {
+    method: 'POST',
+    headers: { 'X-WP-Nonce': cfg.restNonce },
+    credentials: 'same-origin',
+    body,
+  }).then(async (res) => {
+    const json = await res.json().catch(() => null);
+    if (!res.ok) {
+      const msg =
+        json && typeof json === 'object' && 'message' in json
+          ? String((json as { message: string }).message)
+          : `HTTP ${res.status}`;
+      throw new AdminRestError(msg);
+    }
+    return json as { imported: boolean; stats: Record<string, number>; mode: string };
+  });
+}
