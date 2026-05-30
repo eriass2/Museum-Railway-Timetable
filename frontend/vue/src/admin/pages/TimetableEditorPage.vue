@@ -1,0 +1,277 @@
+<script setup lang="ts">
+import { computed, onMounted, ref, watch } from 'vue';
+import {
+  addTimetableService,
+  getDeviations,
+  getRouteDestinations,
+  getTimetable,
+  getTimetableOverview,
+  removeTimetableService,
+  saveDeviations,
+  updateTimetable,
+} from '../api/adminRest';
+import type { TimetableDetail } from '../types';
+import AdminNav from '../components/AdminNav.vue';
+import StopTimesEditor from '../components/StopTimesEditor.vue';
+import MrtTimetableOverviewView from '../../components/overview/MrtTimetableOverviewView.vue';
+import type { TimetableOverviewPayload } from '../../types/timetableOverview';
+import { adminConfig } from '../types';
+
+const props = defineProps<{ id: string }>();
+const cfg = adminConfig();
+const timetableId = computed(() => Number(props.id));
+
+const tab = ref<'dates' | 'trips' | 'stoptimes' | 'deviations' | 'preview'>('dates');
+const detail = ref<TimetableDetail | null>(null);
+const overview = ref<TimetableOverviewPayload | null>(null);
+const loading = ref(true);
+const error = ref('');
+const dateInput = ref('');
+const newTrip = ref({ route_id: 0, train_type_id: 0, end_station_id: 0 });
+const destinations = ref<{ id: number; name: string }[]>([]);
+const selectedServiceId = ref(0);
+const deviationRows = ref<
+  { service_id: number; date: string; trip_label: string; train_type_id: number; notice: string }[]
+>([]);
+const saveMsg = ref('');
+
+async function loadDetail() {
+  loading.value = true;
+  error.value = '';
+  try {
+    detail.value = await getTimetable(timetableId.value);
+  } catch (e) {
+    error.value = e instanceof Error ? e.message : 'Fel';
+  } finally {
+    loading.value = false;
+  }
+}
+
+async function loadOverview() {
+  overview.value = await getTimetableOverview(timetableId.value);
+}
+
+async function loadDeviations() {
+  const res = await getDeviations(timetableId.value);
+  deviationRows.value = res.rows;
+}
+
+onMounted(() => {
+  void loadDetail();
+});
+
+watch(
+  () => props.id,
+  () => {
+    void loadDetail();
+  },
+);
+
+watch(tab, async (t) => {
+  if (t === 'preview' && !overview.value) {
+    try {
+      await loadOverview();
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Preview fel';
+    }
+  }
+  if (t === 'deviations' && deviationRows.value.length === 0) {
+    try {
+      await loadDeviations();
+    } catch (e) {
+      error.value = e instanceof Error ? e.message : 'Avvikelser fel';
+    }
+  }
+});
+
+watch(
+  () => newTrip.value.route_id,
+  async (routeId) => {
+    newTrip.value.end_station_id = 0;
+    destinations.value = routeId ? (await getRouteDestinations(routeId)).destinations : [];
+  },
+);
+
+async function saveDates() {
+  if (!detail.value || !cfg.canManage) return;
+  detail.value = await updateTimetable(timetableId.value, { dates: detail.value.dates });
+  saveMsg.value = 'Trafikdagar sparade';
+}
+
+function addDate() {
+  if (!detail.value || !dateInput.value) return;
+  if (!detail.value.dates.includes(dateInput.value)) {
+    detail.value.dates = [...detail.value.dates, dateInput.value].sort();
+  }
+  dateInput.value = '';
+}
+
+function removeDate(d: string) {
+  if (!detail.value) return;
+  detail.value.dates = detail.value.dates.filter((x) => x !== d);
+}
+
+async function addTrip() {
+  if (!cfg.canManage) return;
+  await addTimetableService(timetableId.value, {
+    route_id: newTrip.value.route_id,
+    train_type_id: newTrip.value.train_type_id || undefined,
+    end_station_id: newTrip.value.end_station_id || undefined,
+  });
+  await loadDetail();
+}
+
+async function removeTrip(serviceId: number) {
+  if (!cfg.canManage) return;
+  await removeTimetableService(timetableId.value, serviceId);
+  await loadDetail();
+}
+
+async function saveDeviationChanges() {
+  const byService: Record<number, Record<string, { train_type?: number; notice?: string }>> = {};
+  for (const row of deviationRows.value) {
+    if (!byService[row.service_id]) byService[row.service_id] = {};
+    byService[row.service_id][row.date] = {
+      train_type: row.train_type_id || undefined,
+      notice: row.notice || undefined,
+    };
+  }
+  await saveDeviations(timetableId.value, byService);
+  saveMsg.value = 'Avvikelser sparade';
+}
+</script>
+
+<template>
+  <div>
+    <h1 v-if="detail">{{ detail.title }}</h1>
+    <h1 v-else>Tidtabell</h1>
+    <AdminNav />
+    <p v-if="loading" class="description">Laddar...</p>
+    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
+    <p v-if="saveMsg" class="notice notice-success">{{ saveMsg }}</p>
+
+    <nav v-if="detail" class="nav-tab-wrapper">
+      <a
+        v-for="t in [
+          ['dates', 'Trafikdagar'],
+          ['trips', 'Turer'],
+          ['stoptimes', 'Stopptider'],
+          ['deviations', 'Avvikelser'],
+          ['preview', 'Förhandsvisning'],
+        ]"
+        :key="t[0]"
+        href="#"
+        class="nav-tab"
+        :class="{ 'nav-tab-active': tab === t[0] }"
+        @click.prevent="tab = t[0] as typeof tab"
+      >
+        {{ t[1] }}
+      </a>
+    </nav>
+
+    <div v-if="detail && tab === 'dates'" class="mrt-admin-panel">
+      <p v-if="cfg.canManage">
+        <input v-model="dateInput" type="date" />
+        <button type="button" class="button" @click="addDate">Lägg till datum</button>
+        <button type="button" class="button button-primary" @click="saveDates">Spara</button>
+      </p>
+      <ul>
+        <li v-for="d in detail.dates" :key="d">
+          {{ d }}
+          <button v-if="cfg.canManage" type="button" class="button-link" @click="removeDate(d)">Ta bort</button>
+        </li>
+      </ul>
+    </div>
+
+    <div v-if="detail && tab === 'trips'" class="mrt-admin-panel">
+      <table class="widefat striped">
+        <thead>
+          <tr>
+            <th>Rutt</th>
+            <th>Tågtyp</th>
+            <th>Destination</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="s in detail.services" :key="s.id">
+            <td>{{ s.route_name }}</td>
+            <td>{{ s.train_type_name || '—' }}</td>
+            <td>{{ s.destination || '—' }}</td>
+            <td>
+              <button type="button" class="button button-small" @click="selectedServiceId = s.id; tab = 'stoptimes'">
+                Stopptider
+              </button>
+              <button
+                v-if="cfg.canManage"
+                type="button"
+                class="button button-small"
+                @click="removeTrip(s.id)"
+              >
+                Ta bort
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div v-if="cfg.canManage" class="mrt-admin-trip-form">
+        <select v-model.number="newTrip.route_id">
+          <option :value="0">— Rutt —</option>
+          <option v-for="r in detail.routes" :key="r.id" :value="r.id">{{ r.title }}</option>
+        </select>
+        <select v-model.number="newTrip.train_type_id">
+          <option :value="0">— Tågtyp —</option>
+          <option v-for="t in detail.train_types" :key="t.id" :value="t.id">{{ t.name }}</option>
+        </select>
+        <select v-model.number="newTrip.end_station_id">
+          <option :value="0">— Destination —</option>
+          <option v-for="d in destinations" :key="d.id" :value="d.id">{{ d.name }}</option>
+        </select>
+        <button type="button" class="button button-primary" @click="addTrip">Lägg till tur</button>
+      </div>
+    </div>
+
+    <div v-if="detail && tab === 'stoptimes'" class="mrt-admin-panel">
+      <p>
+        <label>Tur:</label>
+        <select v-model.number="selectedServiceId">
+          <option :value="0">— Välj tur —</option>
+          <option v-for="s in detail.services" :key="s.id" :value="s.id">{{ s.title }}</option>
+        </select>
+      </p>
+      <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
+    </div>
+
+    <div v-if="detail && tab === 'deviations'" class="mrt-admin-panel">
+      <table class="widefat striped">
+        <thead>
+          <tr>
+            <th>Datum</th>
+            <th>Tur</th>
+            <th>Tågtyp (ID)</th>
+            <th>Meddelande</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, idx) in deviationRows" :key="idx">
+            <td>{{ row.date }}</td>
+            <td>{{ row.trip_label }}</td>
+            <td>
+              <input v-model.number="row.train_type_id" type="number" min="0" class="small-text" />
+            </td>
+            <td>
+              <input v-model="row.notice" type="text" class="regular-text" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <p v-if="cfg.canOperate">
+        <button type="button" class="button button-primary" @click="saveDeviationChanges">Spara avvikelser</button>
+      </p>
+    </div>
+
+    <div v-if="tab === 'preview'" class="mrt-admin-panel mrt-vue-root">
+      <MrtTimetableOverviewView v-if="overview" :data="overview" />
+    </div>
+  </div>
+</template>

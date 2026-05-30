@@ -20,7 +20,7 @@ if (!existsSync(manifestPath)) {
 }
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-const entry = manifest['src/main.ts'] || manifest['src/main.js'];
+const entry = manifest['src/main.ts'] ?? manifest['src/main.js'];
 if (!entry?.file) {
   fail('manifest has no src/main.ts entry');
 }
@@ -77,4 +77,9 @@ try {
   fail(`bundle threw on load: ${message}`);
 }
 
-console.log(`vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB)`);
+const adminPath = join(distDir, 'assets/admin.js');
+if (!existsSync(adminPath)) {
+  fail('missing admin bundle assets/admin.js — run full npm run build');
+}
+
+console.log(`vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB; admin.js ${(readFileSync(adminPath, 'utf8').length / 1024).toFixed(1)} KiB)`);
