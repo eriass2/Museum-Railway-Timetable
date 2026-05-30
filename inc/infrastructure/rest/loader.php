@@ -20,6 +20,7 @@ require_once MRT_PATH . 'inc/infrastructure/rest/journey-public.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/settings-admin.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/train-types.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/import-export.php';
+require_once MRT_PATH . 'inc/infrastructure/rest/dev-tools.php';
 
 /**
  * Register all plugin REST routes.
@@ -33,6 +34,7 @@ function MRT_register_rest_routes(): void {
 	MRT_rest_register_settings_routes();
 	MRT_rest_register_train_type_routes();
 	MRT_rest_register_import_export_routes();
+	MRT_rest_register_dev_tools_routes();
 }
 
 add_action( 'rest_api_init', 'MRT_register_rest_routes' );

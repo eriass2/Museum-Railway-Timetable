@@ -71,42 +71,7 @@ function MRT_get_dashboard_stats() {
  * Render the main admin settings page (Dashboard)
  */
 function MRT_render_admin_page() {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return;
-	}
-
-	$stats      = MRT_get_dashboard_stats();
-	$all_routes = get_posts(
-		array(
-			'post_type'      => 'mrt_route',
-			'posts_per_page' => -1,
-			'orderby'        => 'title',
-			'order'          => 'ASC',
-		)
-	);
-	?>
-	<div class="wrap">
-		<h1><?php esc_html_e( 'Museum Railway Timetable', 'museum-railway-timetable' ); ?></h1>
-
-		<?php MRT_render_dashboard_stats( $stats ); ?>
-		<?php MRT_render_dashboard_routes( $all_routes ); ?>
-		<?php MRT_render_dashboard_quick_actions(); ?>
-		<?php MRT_render_dashboard_timetable_pages(); ?>
-
-		<div class="mrt-section">
-			<h2><?php esc_html_e( 'Settings', 'museum-railway-timetable' ); ?></h2>
-			<form method="post" action="options.php">
-				<?php
-				settings_fields( 'mrt_group' );
-				do_settings_sections( 'mrt_settings' );
-				submit_button();
-				?>
-			</form>
-		</div>
-
-		<?php MRT_render_dashboard_guide(); ?>
-		<?php MRT_render_dashboard_shortcodes(); ?>
-		<?php MRT_render_dashboard_dev_tools(); ?>
-	</div>
-	<?php
+	$target = MRT_is_development_mode() ? 'mrt_app_dev_tools' : MRT_ADMIN_APP_SLUG;
+	wp_safe_redirect( admin_url( 'admin.php?page=' . $target ) );
+	exit;
 }

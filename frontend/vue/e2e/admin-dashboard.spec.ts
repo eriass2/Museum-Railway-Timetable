@@ -29,4 +29,29 @@ test.describe('Vue admin (WordPress)', () => {
       timeout: 15_000,
     });
   });
+
+  test('stations routes shows route preview', async ({ page }) => {
+    await page.goto(adminUrl);
+    await page.locator('.mrt-admin-nav a', { hasText: 'Stationer' }).click();
+    await expect(page.getByRole('heading', { name: /stationer & rutter/i })).toBeVisible({
+      timeout: 15_000,
+    });
+    await expect(page.locator('.mrt-route-preview').first()).toBeVisible({ timeout: 15_000 });
+  });
+
+  test('mobile timetable editor shows quick departure panel', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(adminUrl);
+    await page.locator('.mrt-admin-nav a', { hasText: 'Tidtabeller' }).click();
+    await expect(page.getByRole('heading', { name: /tidtabeller/i })).toBeVisible({
+      timeout: 15_000,
+    });
+    const editBtn = page.getByRole('button', { name: 'Redigera' }).first();
+    if ((await editBtn.count()) === 0) {
+      test.skip(true, 'No timetables in database');
+    }
+    await editBtn.click();
+    await expect(page.locator('.mrt-admin-mobile-panel')).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole('heading', { name: /snabb avgångstid/i })).toBeVisible();
+  });
 });

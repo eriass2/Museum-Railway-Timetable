@@ -121,6 +121,13 @@ export function saveStopTimes(
   );
 }
 
+export function quickDeparture(serviceId: number, departure: string) {
+  return adminFetch<{ saved: boolean }>(`/services/${serviceId}/departure`, {
+    method: 'PUT',
+    body: JSON.stringify({ departure }),
+  });
+}
+
 export function listStations() {
   return adminFetch<{ items: import('../types').StationRow[] }>('/stations');
 }
@@ -280,5 +287,23 @@ export function importCsv(file: File, mode: 'merge' | 'override') {
       throw new AdminRestError(msg);
     }
     return json as { imported: boolean; stats: Record<string, number>; mode: string };
+  });
+}
+
+export function devClearDatabase() {
+  return adminFetch<{ cleared: boolean }>('/dev/clear-db', { method: 'POST' });
+}
+
+export function devImportLennakatten() {
+  return adminFetch<{ imported: boolean }>('/dev/import-lennakatten', { method: 'POST' });
+}
+
+export function devCreateDemoPage() {
+  return adminFetch<{ page_id: number }>('/dev/demo-page', { method: 'POST' });
+}
+
+export function devSetupNavigation() {
+  return adminFetch<{ menu_id: number; added: number }>('/dev/setup-navigation', {
+    method: 'POST',
   });
 }

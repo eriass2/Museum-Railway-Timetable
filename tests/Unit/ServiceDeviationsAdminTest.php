@@ -7,8 +7,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require_once ABSPATH . 'inc/admin/meta-boxes/service-deviations.php';
-require_once ABSPATH . 'inc/admin/meta-boxes/timetable-deviations-panel.php';
+require_once ABSPATH . 'inc/domain/admin/deviations-data.php';
 
 final class ServiceDeviationsAdminTest extends TestCase {
 

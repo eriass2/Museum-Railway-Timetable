@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/admin/meta-boxes/timetable-deviations-panel.php';
+require_once MRT_PATH . 'inc/domain/admin/deviations-data.php';
 
 /**
  * Apply deviation rows for all services on a timetable.

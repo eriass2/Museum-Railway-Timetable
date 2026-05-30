@@ -30,6 +30,7 @@ describe('admin REST dashboard', () => {
       adminBase: 'https://example.test/wp-admin/admin.php?page=mrt_app',
       canManage: true,
       canOperate: true,
+      isDevMode: false,
     };
 
     const fetchMock = vi.fn().mockResolvedValue({

@@ -21,9 +21,9 @@ Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timeta
 | **6** Publikt REST | ✅ Klar | Wizard/month/overview via `mrtRest.ts`; AJAX borttaget |
 | **7** Städning | ✅ Klar | Legacy jQuery-admin borttagen; admin E2E i CI; Vitest admin |
 
-**Kvar (valfritt):** `next_traffic[]` i dashboard-payload; mobil-UX; meta box save-hooks kan städas senare.
+**Kvar (valfritt):** mobil-UX utökad (fler fält); `next_traffic[]` redan i REST.
 
-**Senast uppdaterad:** 2026-05-30.
+**Senast uppdaterad:** 2026-05-30 (mobil-admin, dev-tools i Vue, meta boxes borttagna).
 
 ---
 
@@ -70,7 +70,7 @@ Railway Timetable                    ← admin.php?page=mrt_app (Vue shell)
 ├── Priser                           ← #/prices (manage_options)
 ├── Tågtyper                         ← #/train-types (manage_options)
 ├── Import / export                  ← #/import-export (manage_options)
-└── Inställningar & verktyg (legacy) ← admin.php?page=mrt_settings (dev, clear DB)
+└── Inställningar & verktyg (legacy) ← `?page=mrt_settings` redirectar till Vue dev-tools
 ```
 
 CPT-listor och `post.php`-skärmar **redirectar** till Vue (se `inc/admin/app.php`).
@@ -254,9 +254,10 @@ Verifiering: `grep wp_ajax_mrt` i repo → **tomt** ✅
 | Skärm | Desktop | Mobil |
 |-------|---------|-------|
 | Dashboard | Full | Read-only status + varningar |
-| Tidtabellseditor | Alla flikar | **Avvikelser** + **en avgångstid** per tur (REST `PUT …/departure` finns) |
-| Stopptidsgrid | Full redigering | Senare / begränsad |
-| Stationer/rutter | Full | Senare |
+| Tidtabellseditor | Alla flikar | **Avvikelser** + **snabb avgångstid** (`MobileTimetablePanel`) |
+| Stopptidsgrid | Full redigering | Dold (desktop-flikar) |
+| Stationer/rutter | Full | Read-only via nav |
+| Dev-verktyg | `#/dev-tools` (dev-läge) | Samma |
 
 ---
 
@@ -276,9 +277,8 @@ Verifiering: `grep wp_ajax_mrt` i repo → **tomt** ✅
 
 ## Kvar att göra (valfritt)
 
-1. **Fas 1** — `next_traffic[]` i dashboard REST-payload
-2. **Mobil** — Begränsat admin-läge (avvikelser + snabb avgångstid)
-3. **Teknisk skuld** — Meta box save-hooks (`inc/admin/meta-boxes/`) kan tas bort när CPT-redigering inte behövs
+1. **Mobil** — read-only dashboard på små skärmar; fler fält i mobil-läge
+2. **E2E** — full tidtabellsredigering (skapa tur, spara stopptid)
 
 ---
 

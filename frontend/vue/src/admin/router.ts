@@ -7,30 +7,38 @@ import SettingsPage from './pages/SettingsPage.vue';
 import PricesPage from './pages/PricesPage.vue';
 import TrainTypesPage from './pages/TrainTypesPage.vue';
 import ImportExportPage from './pages/ImportExportPage.vue';
+import DevToolsPage from './pages/DevToolsPage.vue';
+import { adminConfig } from './types';
 
 export function createAdminRouter(initialRoute: string) {
+  const cfg = adminConfig();
+  const routes = [
+    { path: '/', redirect: '/dashboard' },
+    { path: '/dashboard', component: DashboardPage, name: 'dashboard' },
+    { path: '/timetables', component: TimetableListPage, name: 'timetables' },
+    {
+      path: '/timetables/:id',
+      component: TimetableEditorPage,
+      name: 'timetable-edit',
+      props: true,
+    },
+    {
+      path: '/stations-routes',
+      component: StationsRoutesPage,
+      name: 'stations-routes',
+    },
+    { path: '/settings', component: SettingsPage, name: 'settings' },
+    { path: '/prices', component: PricesPage, name: 'prices' },
+    { path: '/train-types', component: TrainTypesPage, name: 'train-types' },
+    { path: '/import-export', component: ImportExportPage, name: 'import-export' },
+  ];
+  if (cfg.isDevMode) {
+    routes.push({ path: '/dev-tools', component: DevToolsPage, name: 'dev-tools' });
+  }
+
   const router = createRouter({
     history: createWebHashHistory(),
-    routes: [
-      { path: '/', redirect: '/dashboard' },
-      { path: '/dashboard', component: DashboardPage, name: 'dashboard' },
-      { path: '/timetables', component: TimetableListPage, name: 'timetables' },
-      {
-        path: '/timetables/:id',
-        component: TimetableEditorPage,
-        name: 'timetable-edit',
-        props: true,
-      },
-      {
-        path: '/stations-routes',
-        component: StationsRoutesPage,
-        name: 'stations-routes',
-      },
-      { path: '/settings', component: SettingsPage, name: 'settings' },
-      { path: '/prices', component: PricesPage, name: 'prices' },
-      { path: '/train-types', component: TrainTypesPage, name: 'train-types' },
-      { path: '/import-export', component: ImportExportPage, name: 'import-export' },
-    ],
+    routes,
   });
 
   const map: Record<string, string> = {
@@ -41,6 +49,7 @@ export function createAdminRouter(initialRoute: string) {
     prices: '/prices',
     'train-types': '/train-types',
     'import-export': '/import-export',
+    'dev-tools': '/dev-tools',
   };
   const target = map[initialRoute] ?? '/dashboard';
   void router.replace(target);

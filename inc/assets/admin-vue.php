@@ -17,11 +17,19 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return string[]
  */
 function MRT_admin_vue_page_slugs(): array {
-	return array(
+	$slugs = array(
 		MRT_ADMIN_APP_SLUG,
 		'mrt_app_timetables',
 		'mrt_app_stations_routes',
+		'mrt_app_settings',
+		'mrt_app_prices',
+		'mrt_app_train_types',
+		'mrt_app_import_export',
 	);
+	if ( MRT_is_development_mode() ) {
+		$slugs[] = 'mrt_app_dev_tools';
+	}
+	return $slugs;
 }
 
 /**
@@ -46,6 +54,7 @@ function MRT_admin_vue_client_config(): array {
 		'adminBase'    => admin_url( 'admin.php?page=' . MRT_ADMIN_APP_SLUG ),
 		'canManage'    => current_user_can( 'manage_options' ),
 		'canOperate'   => current_user_can( 'manage_options' ) || current_user_can( 'edit_posts' ),
+		'isDevMode'    => MRT_is_development_mode(),
 	);
 }
 

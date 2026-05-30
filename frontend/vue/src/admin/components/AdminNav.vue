@@ -21,6 +21,9 @@ const tabs = computed(() => {
       { to: '/import-export', label: 'Import/export' },
     );
   }
+  if (cfg.canManage && cfg.isDevMode) {
+    base.push({ to: '/dev-tools', label: 'Dev' });
+  }
   return base;
 });
 
@@ -43,13 +46,6 @@ function isActive(path: string): boolean {
       @click.prevent="router.push(tab.to)"
     >
       {{ tab.label }}
-    </a>
-    <a
-      v-if="cfg.canManage"
-      class="nav-tab mrt-admin-nav__tools"
-      :href="`${cfg.adminBase.replace('page=mrt_app', 'page=mrt_settings')}`"
-    >
-      Inställningar &amp; verktyg
     </a>
   </nav>
 </template>

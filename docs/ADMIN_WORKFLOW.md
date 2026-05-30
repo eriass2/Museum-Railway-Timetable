@@ -2,7 +2,7 @@
 
 Detta dokument beskriver det rekommenderade arbetsflödet för att skapa en komplett tidtabell i admin-gränssnittet.
 
-**Kod:** Vue-admin under **Railway Timetable** i WP-menyn (`admin.php?page=mrt_app`). Import/export, inställningar och priser finns i Vue; legacy PHP-verktyg (clear DB, Lennakatten-import) under **Inställningar & verktyg** (`?page=mrt_settings`). Se [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) och [REST_API.md](REST_API.md).
+**Kod:** Vue-admin under **Railway Timetable** (`admin.php?page=mrt_app`). Dev-verktyg i Vue (`#/dev-tools`, dev-läge). Legacy `?page=mrt_settings` redirectar till Vue.
 
 ## Översikt
 

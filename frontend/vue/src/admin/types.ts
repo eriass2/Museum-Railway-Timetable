@@ -5,6 +5,7 @@ export type AdminClientConfig = {
   adminBase: string;
   canManage: boolean;
   canOperate: boolean;
+  isDevMode: boolean;
 };
 
 export type DashboardWarning = {
@@ -97,5 +98,8 @@ export function adminConfig(): AdminClientConfig {
   if (!cfg?.restUrl) {
     throw new Error('mrtAdminVue config missing');
   }
-  return cfg;
+  return {
+    ...cfg,
+    isDevMode: cfg.isDevMode ?? false,
+  };
 }

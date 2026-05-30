@@ -22,6 +22,9 @@ function MRT_register_admin_vue_submenus(): void {
 		'mrt_app_train_types'     => __( 'Train types', 'museum-railway-timetable' ),
 		'mrt_app_import_export'   => __( 'Import / export', 'museum-railway-timetable' ),
 	);
+	if ( MRT_is_development_mode() ) {
+		$pages['mrt_app_dev_tools'] = __( 'Dev tools', 'museum-railway-timetable' );
+	}
 	$first = true;
 	foreach ( $pages as $slug => $label ) {
 		add_submenu_page(
@@ -73,22 +76,7 @@ function MRT_register_admin_menus(): void {
 	);
 
 	MRT_register_admin_vue_submenus();
-	MRT_register_admin_legacy_tools_submenu();
 	MRT_register_admin_menu_demo_submenu();
-}
-
-/**
- * Legacy PHP tools (settings, import) until fully migrated to Vue.
- */
-function MRT_register_admin_legacy_tools_submenu(): void {
-	add_submenu_page(
-		MRT_ADMIN_APP_SLUG,
-		__( 'Settings & tools', 'museum-railway-timetable' ),
-		__( 'Settings & tools', 'museum-railway-timetable' ),
-		'manage_options',
-		'mrt_settings',
-		'MRT_render_admin_page'
-	);
 }
 
 add_action( 'admin_menu', 'MRT_register_admin_menus' );
@@ -109,3 +97,21 @@ function MRT_admin_menu_legacy_redirect(): void {
 }
 
 add_action( 'admin_menu', 'MRT_admin_menu_legacy_redirect', 999 );
+
+/**
+ * Redirect legacy mrt_settings URL to Vue dev tools.
+ */
+function MRT_admin_redirect_legacy_settings_page(): void {
+	if ( ! is_admin() || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( (string) $_GET['page'] ) ) : '';
+	if ( $page !== 'mrt_settings' ) {
+		return;
+	}
+	$target = MRT_is_development_mode() ? 'mrt_app_dev_tools' : MRT_ADMIN_APP_SLUG;
+	wp_safe_redirect( admin_url( 'admin.php?page=' . $target ) );
+	exit;
+}
+
+add_action( 'admin_init', 'MRT_admin_redirect_legacy_settings_page', 5 );

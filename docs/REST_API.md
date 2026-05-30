@@ -35,6 +35,8 @@ Museum Railway Timetable ska använda **WordPress REST API** för all klient–s
 | `GET|POST /timetables`, `GET|PATCH /timetables/{id}` | Tidtabeller |
 | `GET|POST /timetables/{id}/services` | Turer |
 | `GET|PUT /services/{id}/stop-times` | Stopptider |
+| `PUT /services/{id}/departure` | Snabb avgångstid (mobil) |
+| `POST /dev/*` | Dev-verktyg (endast dev-läge) |
 | `GET|POST /timetables/{id}/deviations` | Avvikelser |
 | `GET /timetables/{id}/overview` | Overview-JSON (samma som idag) |
 | `GET|PUT /settings/prices` | Prismatris |

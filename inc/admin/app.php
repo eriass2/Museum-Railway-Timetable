@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @return array<string, string>
  */
 function MRT_admin_app_initial_routes(): array {
-	return array(
+	$routes = array(
 		MRT_ADMIN_APP_SLUG             => 'dashboard',
 		'mrt_app_timetables'           => 'timetables',
 		'mrt_app_stations_routes'      => 'stations-routes',
@@ -26,6 +26,10 @@ function MRT_admin_app_initial_routes(): array {
 		'mrt_app_train_types'          => 'train-types',
 		'mrt_app_import_export'        => 'import-export',
 	);
+	if ( MRT_is_development_mode() ) {
+		$routes['mrt_app_dev_tools'] = 'dev-tools';
+	}
+	return $routes;
 }
 
 /**

@@ -14,12 +14,15 @@ import type { TimetableDetail } from '../types';
 import AdminNav from '../components/AdminNav.vue';
 import StopTimesEditor from '../components/StopTimesEditor.vue';
 import EditableTimetableOverview from '../components/EditableTimetableOverview.vue';
+import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
 import MrtTimetableOverviewView from '../../components/overview/MrtTimetableOverviewView.vue';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
 
 const props = defineProps<{ id: string }>();
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 const timetableId = computed(() => Number(props.id));
 
 const tab = ref<'dates' | 'trips' | 'stoptimes' | 'deviations' | 'preview'>('dates');
@@ -35,6 +38,17 @@ const deviationRows = ref<
   { service_id: number; date: string; trip_label: string; train_type_id: number; notice: string }[]
 >([]);
 const saveMsg = ref('');
+
+const desktopTabs = computed(() => {
+  if (isMobile.value) return [];
+  return [
+    ['dates', 'Trafikdagar'],
+    ['trips', 'Turer'],
+    ['stoptimes', 'Stopptider'],
+    ['deviations', 'Avvikelser'],
+    ['preview', 'Förhandsvisning'],
+  ] as const;
+});
 
 async function loadDetail() {
   loading.value = true;
@@ -140,6 +154,10 @@ async function saveDeviationChanges() {
   await saveDeviations(timetableId.value, byService);
   saveMsg.value = 'Avvikelser sparade';
 }
+
+function onMobileSaved(message: string) {
+  saveMsg.value = message;
+}
 </script>
 
 <template>
@@ -151,26 +169,28 @@ async function saveDeviationChanges() {
     <p v-else-if="error" class="notice notice-error">{{ error }}</p>
     <p v-if="saveMsg" class="notice notice-success">{{ saveMsg }}</p>
 
-    <nav v-if="detail" class="nav-tab-wrapper">
+    <MobileTimetablePanel
+      v-if="detail && isMobile"
+      :timetable-id="timetableId"
+      :detail="detail"
+      :can-operate="cfg.canOperate"
+      @saved="onMobileSaved"
+    />
+
+    <nav v-if="detail && desktopTabs.length" class="nav-tab-wrapper">
       <a
-        v-for="t in [
-          ['dates', 'Trafikdagar'],
-          ['trips', 'Turer'],
-          ['stoptimes', 'Stopptider'],
-          ['deviations', 'Avvikelser'],
-          ['preview', 'Förhandsvisning'],
-        ]"
+        v-for="t in desktopTabs"
         :key="t[0]"
         href="#"
         class="nav-tab"
         :class="{ 'nav-tab-active': tab === t[0] }"
-        @click.prevent="tab = t[0] as typeof tab"
+        @click.prevent="tab = t[0]"
       >
         {{ t[1] }}
       </a>
     </nav>
 
-    <div v-if="detail && tab === 'dates'" class="mrt-admin-panel">
+    <div v-if="detail && !isMobile && tab === 'dates'" class="mrt-admin-panel">
       <p v-if="cfg.canManage">
         <input v-model="dateInput" type="date" />
         <button type="button" class="button" @click="addDate">Lägg till datum</button>
@@ -184,7 +204,7 @@ async function saveDeviationChanges() {
       </ul>
     </div>
 
-    <div v-if="detail && tab === 'trips'" class="mrt-admin-panel">
+    <div v-if="detail && !isMobile && tab === 'trips'" class="mrt-admin-panel">
       <table class="widefat striped">
         <thead>
           <tr>
@@ -232,7 +252,7 @@ async function saveDeviationChanges() {
       </div>
     </div>
 
-    <div v-if="detail && tab === 'stoptimes'" class="mrt-admin-panel mrt-vue-root">
+    <div v-if="detail && !isMobile && tab === 'stoptimes'" class="mrt-admin-panel mrt-vue-root">
       <p class="description">Klicka i rutorna för att ändra tid, stannar och P/A. Sparas automatiskt per tur.</p>
       <EditableTimetableOverview
         v-if="overview"
@@ -252,13 +272,13 @@ async function saveDeviationChanges() {
       </details>
     </div>
 
-    <div v-if="detail && tab === 'deviations'" class="mrt-admin-panel">
+    <div v-if="detail && !isMobile && tab === 'deviations'" class="mrt-admin-panel">
       <table class="widefat striped">
         <thead>
           <tr>
             <th>Datum</th>
             <th>Tur</th>
-            <th>Tågtyp (ID)</th>
+            <th>Tågtyp</th>
             <th>Meddelande</th>
           </tr>
         </thead>
@@ -267,10 +287,13 @@ async function saveDeviationChanges() {
             <td>{{ row.date }}</td>
             <td>{{ row.trip_label }}</td>
             <td>
-              <input v-model.number="row.train_type_id" type="number" min="0" class="small-text" />
+              <select v-model.number="row.train_type_id" :disabled="!cfg.canOperate">
+                <option :value="0">— Standard —</option>
+                <option v-for="t in detail.train_types" :key="t.id" :value="t.id">{{ t.name }}</option>
+              </select>
             </td>
             <td>
-              <input v-model="row.notice" type="text" class="regular-text" />
+              <input v-model="row.notice" type="text" class="regular-text" :disabled="!cfg.canOperate" />
             </td>
           </tr>
         </tbody>
@@ -280,7 +303,7 @@ async function saveDeviationChanges() {
       </p>
     </div>
 
-    <div v-if="tab === 'preview'" class="mrt-admin-panel mrt-vue-root">
+    <div v-if="!isMobile && tab === 'preview'" class="mrt-admin-panel mrt-vue-root">
       <MrtTimetableOverviewView v-if="overview" :data="overview" />
     </div>
   </div>
