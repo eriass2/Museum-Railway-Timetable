@@ -14,7 +14,6 @@ $required_files = @(
     "uninstall.php",
     "inc/assets.php",
     "inc/admin.php",
-    "inc/admin/admin-list.php",
     "inc/admin/tools/clear-db.php",
     "inc/admin/tools/import-lennakatten.php",
     "inc/assets/loader.php",

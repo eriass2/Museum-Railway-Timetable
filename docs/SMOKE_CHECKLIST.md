@@ -17,7 +17,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 
 Login: `admin` / `admin`
 
-**Meny (utveckling):** Railway Timetable → Component demo page → **Set up development menu** (kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`). Skapar smoke-sidor (två länkar i front-meny) + debug-sidor (admin-länkar). Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+**Meny (utveckling):** Railway Timetable → **Dev tools** (`#/dev-tools`) — kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Importera demo, sätt upp utvecklingsmeny och synka tidtabellssidor. Komponentdemo finns under **Component demo page** (PHP-admin). Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 
 ## Kommandon
 

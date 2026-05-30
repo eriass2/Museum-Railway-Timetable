@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once MRT_PATH . 'inc/admin/app.php';
 require_once MRT_PATH . 'inc/admin/menu.php';
 require_once MRT_PATH . 'inc/admin/tools/clear-db.php';
-require_once MRT_PATH . 'inc/admin/admin-list.php';
 require_once MRT_PATH . 'inc/admin/tools/demo-page.php';
 require_once MRT_PATH . 'inc/admin/tools/component-debug-pages.php';
 require_once MRT_PATH . 'inc/admin/tools/dev-navigation.php';

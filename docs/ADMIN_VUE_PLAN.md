@@ -4,7 +4,7 @@ Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timeta
 
 **Relaterat:** [REST_API.md](REST_API.md), [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), [VUE_FRONTEND.md](VUE_FRONTEND.md).
 
-**Senast uppdaterad:** 2026-05-30 (teknisk skuld: borttagen legacy PHP dashboard/settings).
+**Senast uppdaterad:** 2026-05-30 (admin-list borttagen, docs synk, mobil dashboard/lista).
 
 ---
 
@@ -21,9 +21,7 @@ Ersätter WordPress CPT/meta box-admin med en **Vue-app** under **Railway Timeta
 | **6** Publikt REST | ✅ Klar | Wizard/month/overview via `mrtRest.ts`; AJAX borttaget |
 | **7** Städning | ✅ Klar | Legacy jQuery + PHP dashboard/settings borttagna; dev-verktyg via REST |
 
-**Kvar (valfritt):** mobil-UX utökad (fler fält); `next_traffic[]` redan i REST.
-
-**Senast uppdaterad:** 2026-05-30 (mobil-admin, dev-tools i Vue, meta boxes borttagna).
+**Kvar (valfritt):** mobil-UX utökad (fler fält utöver avvikelser/snabb avgång).
 
 ---
 
@@ -156,19 +154,19 @@ Domänlogik i `inc/domain/` — REST-controllers är tunna adapters.
 | Status (antal entiteter) | ✅ |
 | Varningar (datakvalitet) | ✅ |
 | Snabbstart + länkar | ✅ |
-| Nästa trafik | ⏳ ej i dashboard-payload ännu |
+| Nästa trafik | ✅ i REST + `DashboardPage` |
 | Dev-only verktyg | ✅ Vue `#/dev-tools` + REST `/dev/*` |
 
 ### REST
 
-- `GET /museum-railway-timetable/v1/dashboard` → `{ stats, warnings[], links{} }`
+- `GET /museum-railway-timetable/v1/dashboard` → `{ stats, warnings[], next_traffic[], links{} }`
 
 ### Acceptance
 
 - [x] Dashboard laddas som Railway Timetable-startvy
 - [x] Inga AJAX-anrop
 - [x] Varningar med deep links till Vue-editor
-- [x] Dev-verktyg bara under legacy-sida / dev-läge
+- [x] Dev-verktyg bara i dev-läge via Vue `#/dev-tools`
 - [x] PHPUnit `DashboardDataTest`
 - [x] Vitest `dashboardPage.test.ts` (REST-klient)
 
@@ -278,7 +276,7 @@ Verifiering: `grep wp_ajax_mrt` i repo → **tomt** ✅
 
 ## Kvar att göra (valfritt)
 
-1. **Mobil** — read-only dashboard på små skärmar; fler fält i mobil-läge
+1. **Mobil** — fler redigeringsfält i mobil-läge (dashboard + listor förbättrade 2026-05-30)
 2. **E2E** — full tidtabellsredigering (skapa tur, spara stopptid)
 
 ---

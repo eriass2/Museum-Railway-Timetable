@@ -39,6 +39,30 @@ test.describe('Vue admin (WordPress)', () => {
     await expect(page.locator('.mrt-route-preview').first()).toBeVisible({ timeout: 15_000 });
   });
 
+  test('mobile dashboard shows stat cards', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(adminUrl);
+    await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
+    await expect(page.locator('.mrt-admin-stat-grid')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.mrt-admin-stat-card').first()).toBeVisible();
+  });
+
+  test('mobile timetable list shows cards', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(adminUrl);
+    await page.locator('.mrt-admin-nav a', { hasText: 'Tidtabeller' }).click();
+    await expect(page.getByRole('heading', { name: /tidtabeller/i })).toBeVisible({
+      timeout: 15_000,
+    });
+    const cards = page.locator('.mrt-admin-card-list__item');
+    const table = page.locator('table.widefat');
+    if ((await cards.count()) > 0) {
+      await expect(cards.first()).toBeVisible();
+    } else {
+      await expect(table.or(page.locator('.mrt-admin-card-list__empty'))).toBeVisible();
+    }
+  });
+
   test('mobile timetable editor shows quick departure panel', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(adminUrl);

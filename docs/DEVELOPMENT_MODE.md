@@ -25,10 +25,11 @@ Publikt UI är **Vue-only** (jQuery-wizard-moduler är borttagna). Månad, över
 
 | Verktyg | Var |
 |---------|-----|
-| Rensa plugin-data | Dashboard → Development tools |
-| Import Lennakatten (test-PDF-data) | Dashboard + undermeny Import Lennakatten |
-| Skapa demosida / component demo | Dashboard + Component demo page |
-| **Set up development menu** | Dashboard + Component demo page |
+| Rensa plugin-data | Vue **Dev tools** (`#/dev-tools`) |
+| Import Lennakatten (test-PDF-data) | Dev tools + undermeny Import Lennakatten |
+| Skapa demosida | Dev tools (+ Component demo page för manuell POST) |
+| **Set up development menu** | Dev tools |
+| Synka tidtabellssidor | Dev tools |
 | Admin-undermeny Component demo page | Railway Timetable |
 
 **Set up development menu** skapar/uppdaterar sidor och lägger **två** länkar i sajtens **klassiska** nav-meny (primary om ingen finns, annars befintlig primary – inga dubbletter):
@@ -62,8 +63,8 @@ Menyn får en länk till index om dev-meny är uppsatt. Synka manuellt: `MRT_syn
 
 | Funktion | Kommentar |
 |----------|-----------|
-| Dashboard, statistik, inställningar (inkl. min/max bytestid) | `WP_DEBUG` av |
-| Stationer, rutter, tidtabeller, turer, meta boxes | Manuell redigering |
+| Dashboard, statistik, inställningar (inkl. min/max bytestid) | Vue-admin; `WP_DEBUG` av |
+| Stationer, rutter, tidtabeller, turer | Vue-admin (CPT-skärmar redirectar) |
 | Prismatris (inställningar) | Publik resa |
 | Alla shortcodes på valfria sidor | Redaktör lägger in shortcode |
 | CPT-listor under Railway Timetable | Daglig drift |
@@ -82,7 +83,7 @@ Snabbare om containrarna redan kör:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1 -SkipCompose
 ```
 
-Gör samma sak som dashboard **Clear plugin database** → **Import demo data** → **Set up development menu**, och skriver JSON med `pages.component_demo` och `pages.wizard`.
+Gör samma sak som Dev tools **Rensa plugin-databas** → **Importera Lennakatten-demo** → **Sätt upp utvecklingsmeny**, och skriver JSON med `pages.component_demo` och `pages.wizard`.
 
 Linux/macOS: `./scripts/docker-dev-reset.sh`
 

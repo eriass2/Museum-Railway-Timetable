@@ -117,7 +117,7 @@ Kör detta efter `docker compose up -d --build` när ändringen påverkar admin,
 - Skapa minst två stationer, en rutt, en tidtabell och en trip/service.
 - Lägg in stopptider för trippen och spara utan felmeddelanden.
 - Skapa eller öppna en sida med `[museum_journey_wizard]` (reseflöde).
-- Vid behov: **Import demo data** på dashboard eller **Component demo page** (månad, översikt, wizard).
+- Vid behov: **Import demo data** via Vue **Dev tools** eller **Component demo page** (månad, översikt, wizard).
 - Kontrollera frontend: formulär/tabell visas, sökning går att köra och inga PHP-fel syns.
 - Kontrollera loggar vid fel: `docker compose logs wordpress`.
 

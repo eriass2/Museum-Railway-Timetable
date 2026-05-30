@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Museum Railway Timetable 0.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/museum-railway-"
 "timetable\n"
-"POT-Creation-Date: 2026-05-26T12:46:01+00:00\n"
+"POT-Creation-Date: 2026-05-30T17:16:30+00:00\n"
 "PO-Revision-Date: 2025-01-27 12:00:00+0000\n"
 "Last-Translator: Erik <info@bytex.se>\n"
 "Language-Team: Swedish\n"
@@ -15,8 +15,7 @@ msgstr ""
 "X-Domain: museum-railway-timetable\n"
 
 #. Plugin Name of the plugin
-#: museum-railway-timetable.php inc/admin/dashboard.php:88
-#: inc/admin/menu.php:77
+#: museum-railway-timetable.php inc/admin/menu.php:70
 msgid "Museum Railway Timetable"
 msgstr "Museijärnvägens tidtabell"
 
@@ -30,1327 +29,158 @@ msgstr ""
 msgid "Erik"
 msgstr ""
 
-#: inc/admin/admin-list.php:33
-msgid "Overview"
+#: inc/admin/app.php:57 inc/admin/tools/demo-page.php:261
+msgid "You do not have permission to access this page."
 msgstr ""
 
-#: inc/admin/admin-list.php:76
-msgid "Train type:"
-msgstr "Tågtyp:"
-
-#: inc/admin/admin-list.php:78
-msgid "All types"
-msgstr "Alla typer"
-
-#: inc/admin/admin-list.php:89
-msgid "Filter"
-msgstr "Filtrera"
-
-#: inc/admin/admin-list.php:90
-msgid "Reset"
-msgstr "Återställ"
-
-#: inc/admin/admin-list.php:130
-msgid "None"
-msgstr "Ingen"
-
-#: inc/admin/admin-list.php:157
-msgid "— none within range —"
-msgstr "— ingen inom intervallet —"
-
-#: inc/admin/admin-list.php:171 inc/admin/dashboard/dashboard-routes.php:93
-#: inc/admin/meta-boxes/timetable-services.php:32
-msgid "Edit"
-msgstr "Redigera"
-
-#: inc/admin/admin-list.php:198 inc/admin/meta-boxes/route.php:176
-#: inc/admin/meta-boxes/service-stoptimes.php:97
-#: inc/admin/meta-boxes/station.php:42
-#: inc/domain/timetable/view/grid-rows.php:19
-msgid "Station"
-msgstr "Station"
-
-#: inc/admin/admin-list.php:199
-msgid "Type"
-msgstr "Typ"
-
-#: inc/admin/admin-list.php:200
-msgid "Display order"
-msgstr "Visningsordning"
-
-#: inc/admin/admin-list.php:201 inc/admin/dashboard/dashboard-guide.php:25
-#: inc/admin/dashboard/dashboard-stats.php:20 inc/admin/menu.php:34
-#: inc/admin/menu.php:35
-msgid "Routes"
-msgstr "Sträckor"
-
-#: inc/admin/admin-list.php:202
-msgid "Services (count)"
-msgstr "Turer (antal)"
-
-#: inc/admin/admin-list.php:203
-msgid "Next running day"
-msgstr "Nästa kördag"
-
-#: inc/admin/admin-list.php:204 inc/admin/dashboard/dashboard-routes.php:121
-#: inc/admin/meta-boxes/route.php:177
-#: inc/admin/meta-boxes/timetable-services.php:146
-msgid "Actions"
-msgstr "Åtgärder"
-
-#: inc/admin/admin-list.php:209
-msgid "No stations found."
-msgstr "Inga stationer hittades."
-
-#: inc/admin/admin-list.php:246
-#: inc/admin/dashboard/dashboard-quick-actions.php:23
-msgid "Stations Overview"
-msgstr "Översikt över stationer"
-
-#: inc/admin/admin-list.php:253
-msgid ""
-"Note: Next running day looks ahead up to 60 days. Use the filter above to "
-"limit by train type slug."
-msgstr ""
-"Obs: Nästa kördag tittar framåt upp till 60 dagar. Använd filtret ovan för "
-"att begränsa efter tågtyps-slug."
-
-#: inc/admin/dashboard.php:95
-msgid "Settings"
-msgstr "Inställningar"
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:20
-msgid "Development tools"
+#: inc/admin/menu.php:17 inc/admin/menu.php:91 inc/admin/menu.php:92
+msgid "Dashboard"
 msgstr ""
 
-#: inc/admin/dashboard/dashboard-dev-tools.php:22
-msgid ""
-"Only shown when WP_DEBUG is on or MRT_DEVELOPMENT is defined. Not available "
-"on a typical production site."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:24
-msgid ""
-"Reset data, import Lennakatten test data, create smoke pages, and add menu "
-"links for local QA."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:38
-msgid "Are you sure you want to delete ALL plugin data? This cannot be undone!"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:42
-msgid "Clear plugin database"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:43
-msgid ""
-"Deletes stations, routes, timetables, trips, train types, stop times, "
-"settings, and demo page."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:58
-msgid "Import demo data"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:59
-msgid ""
-"Creates Lennakatten test stations, two routes, train types, GRÖN and GUL "
-"timetables, trips, and stop times."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:74
-msgid "Create demo page"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-dev-tools.php:75
-msgid "Creates or updates a published demo page with all public shortcodes."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-guide.php:18
-msgid "📖 Quick Start Guide"
-msgstr "📖 Snabbstartsguide"
-
-#: inc/admin/dashboard/dashboard-guide.php:19
-msgid "Click to expand"
-msgstr "Klicka för att expandera"
-
-#: inc/admin/dashboard/dashboard-guide.php:22
-msgid "Recommended workflow:"
-msgstr "Rekommenderat arbetsflöde:"
-
-#: inc/admin/dashboard/dashboard-guide.php:24
-#: inc/admin/dashboard/dashboard-routes.php:119
-#: inc/admin/dashboard/dashboard-stats.php:19 inc/admin/menu.php:26
-#: inc/admin/menu.php:27
-msgid "Stations"
-msgstr "Stationer"
-
-#: inc/admin/dashboard/dashboard-guide.php:24
-msgid "Create all stations where trains stop"
-msgstr "Skapa alla stationer där tåg stannar"
-
-#: inc/admin/dashboard/dashboard-guide.php:25
-msgid "Create routes and add stations in order (use ↑ ↓ buttons to reorder)"
-msgstr ""
-"Skapa sträckor och lägg till stationer i ordning (använd ↑ ↓ knappar för att "
-"ordna om)"
-
-#: inc/admin/dashboard/dashboard-guide.php:26
-#: inc/admin/dashboard/dashboard-stats.php:23 inc/admin/menu.php:42
-#: inc/admin/menu.php:43
-msgid "Train Types"
-msgstr "Tågtyper"
-
-#: inc/admin/dashboard/dashboard-guide.php:26
-msgid ""
-"Optional but recommended: create terms such as Ångtåg, Dieseltåg, Rälsbuss "
-"(used for icons and filters)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-guide.php:27
-#: inc/admin/dashboard/dashboard-stats.php:21 inc/admin/menu.php:18
-#: inc/admin/menu.php:19 inc/public/timetable-index/shortcode.php
+#: inc/admin/menu.php:18 inc/public/timetable-index/shortcode.php:95
 msgid "Timetables"
 msgstr "Tidtabeller"
 
-#: inc/admin/dashboard/dashboard-guide.php:27
-msgid "Create timetables and add dates (YYYY-MM-DD) when they apply"
-msgstr "Skapa tidtabeller och lägg till datum (ÅÅÅÅ-MM-DD) när de gäller"
-
-#: inc/admin/dashboard/dashboard-guide.php:28
-msgid "Add Trips"
-msgstr "Lägg till turer"
-
-#: inc/admin/dashboard/dashboard-guide.php:28
-msgid ""
-"On the timetable edit screen, open \"Trips (Services)\". Select Route, Train "
-"Type, and Destination (end station), then click \"Add Trip\"."
+#: inc/admin/menu.php:19
+msgid "Stations & routes"
 msgstr ""
 
-#: inc/admin/dashboard/dashboard-guide.php:29
-msgid "Set Train Number"
+#: inc/admin/menu.php:20
+msgid "Settings"
+msgstr "Inställningar"
+
+#: inc/admin/menu.php:21
+msgid "Prices"
 msgstr ""
 
-#: inc/admin/dashboard/dashboard-guide.php:29
-msgid ""
-"When editing a trip (Service), enter the train number (e.g., 71, 91, 73) in "
-"the \"Train Number\" field. This will be displayed in timetables instead of "
-"the service ID."
+#: inc/admin/menu.php:22
+msgid "Train types"
 msgstr ""
 
-#: inc/admin/dashboard/dashboard-guide.php:30
-msgid "Configure Stop Times"
-msgstr "Konfigurera hållplatstider"
-
-#: inc/admin/dashboard/dashboard-guide.php:30
-msgid ""
-"Click \"Edit\" on any trip to set arrival/departure times per station. "
-"Restrict pickup/dropoff with P/A; leave both times empty while the train "
-"still stops to show X; use | when the train does not stop."
+#: inc/admin/menu.php:23
+msgid "Import / export"
 msgstr ""
 
-#: inc/admin/dashboard/dashboard-guide.php:33
-msgid "💡 Tip:"
-msgstr "💡 Tips:"
-
-#: inc/admin/dashboard/dashboard-guide.php:33
-msgid ""
-"Trip titles are generated from the route and service data—you normally do "
-"not type a trip name yourself."
+#: inc/admin/menu.php:26 inc/admin/tools/demo-page.php:307
+msgid "Dev tools"
 msgstr ""
 
-#: inc/admin/dashboard/dashboard-prices.php:20
-msgid "Ticket type"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-prices.php:26
-msgid "Zones"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-prices.php:79
-msgid ""
-"Prices in SEK by ticket type, passenger category, and number of zones. "
-"Boundary stations count as either adjacent zone."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-quick-actions.php:17
-msgid "Quick Actions"
-msgstr "Snabbåtgärder"
-
-#: inc/admin/dashboard/dashboard-quick-actions.php:18
-msgid "Create core timetable content or review existing station data."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-quick-actions.php:20
-msgid "Add Station"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-quick-actions.php:21
-msgid "Add Route"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-quick-actions.php:22
-msgid "Add Timetable"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-routes.php:70
-msgid "stations"
-msgstr "stationer"
-
-#: inc/admin/dashboard/dashboard-routes.php:79
-msgid "No stations added"
-msgstr "Inga stationer tillagda"
-
-#: inc/admin/dashboard/dashboard-routes.php:85
-msgid "trip(s)"
-msgstr "tur(ar)"
-
-#: inc/admin/dashboard/dashboard-routes.php:88
-msgid "Not used yet"
-msgstr "Används inte ännu"
-
-#: inc/admin/dashboard/dashboard-routes.php:111
-msgid "Routes Overview"
-msgstr "Översikt över sträckor"
-
-#: inc/admin/dashboard/dashboard-routes.php:113
-msgid ""
-"Routes define which stations trains travel between and in what order. When "
-"creating a trip, you select a route to automatically get all its stations."
-msgstr ""
-"Sträckor definierar vilka stationer tåg reser mellan och i vilken ordning. "
-"När du skapar en tur väljer du en sträcka för att automatiskt få alla dess "
-"stationer."
-
-#: inc/admin/dashboard/dashboard-routes.php:118
-#: inc/infrastructure/post-types/admin.php:25
-#: inc/infrastructure/post-types/admin.php:109
-msgid "Route Name"
-msgstr "Sträcknamn"
-
-#: inc/admin/dashboard/dashboard-routes.php:120
-msgid "Used by Trips"
-msgstr "Används av turer"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:17
-msgid "Month View"
-msgstr "Månadsvy"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:20
-msgid ""
-"Displays a calendar month view showing which days have services running."
-msgstr ""
-"Visar en kalendermånadsvy som visar vilka dagar som har turer som körs."
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:21
-#: inc/admin/dashboard/dashboard-shortcodes.php:49
-#: inc/admin/dashboard/dashboard-shortcodes.php:86
-msgid "Parameters:"
-msgstr "Parametrar:"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:22
-msgid "Month in YYYY-MM format (default: current month)"
-msgstr "Månad i ÅÅÅÅ-MM format (standard: aktuell månad)"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:23
-msgid "Filter by train type slug (optional)"
-msgstr "Filtrera efter tågtyps-slug (valfritt)"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:24
-msgid "Filter by exact service title (optional)"
-msgstr "Filtrera efter exakt tur-titel (valfritt)"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:25
-msgid "Show legend (0 or 1, default: 1)"
-msgstr "Visa förklaring (0 eller 1, standard: 1)"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:26
-msgid "Show service count per day (0 or 1, default: 1)"
-msgstr "Visa antal turer per dag (0 eller 1, standard: 1)"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:27
-msgid "Start week on Monday (0 or 1, default: 1)"
-msgstr "Starta veckan på måndag (0 eller 1, standard: 1)"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:28
-msgid "Show previous/next month links (0 or 1, default: 1)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:30
-#: inc/admin/dashboard/dashboard-shortcodes.php:56
-msgid "Example:"
-msgstr "Exempel:"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:32
-msgid ""
-"Use the train type slug from Railway Timetable → Train Types (demo import: "
-"angtag, ralsbuss, dieseltag, buss)."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:43
-msgid "Journey wizard (multi-step)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:46
-msgid ""
-"Full mockup-style flow: route and trip type (one way / return), calendar "
-"with traffic-day states, outbound and optional return trips (direct and "
-"transfers), summary with price matrix and train-type icons. Requires "
-"JavaScript."
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:50
-msgid "URL for the “Continue to tickets” button (optional)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:51
-msgid "Background image URL for step 1 (optional)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:52
-msgid "Optional subtitle line under the title on step 1"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:53
-msgid ""
-"Show a collapsible full timetable overview under the search form on step 1 "
-"(optional)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:54
-msgid "Same as timetable_id but by exact timetable title (optional)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:68 inc/admin/meta-boxes.php:57
-msgid "Timetable Overview"
-msgstr "Tidtabellsöversikt"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:71
-msgid ""
-"Displays a complete timetable overview grouped by route and direction, "
-"showing all trips with train types and times. Similar to traditional printed "
-"timetables."
-msgstr ""
-"Visar en komplett tidtabellsöversikt grupperad efter sträcka och riktning, "
-"visar alla turer med tågtyper och tider. Liknande traditionella tryckta "
-"tidtabeller."
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:74
-msgid "What it shows:"
-msgstr "Vad den visar:"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:75
-msgid "All trips (services) in the timetable"
-msgstr "Alla turer (services) i tidtabellen"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:76
-msgid ""
-"Grouped by route and direction (e.g., \"Från Uppsala Ö Till Marielund\")"
-msgstr ""
-"Grupperade efter sträcka och riktning (t.ex. \"Från Uppsala Ö Till "
-"Marielund\")"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:77
-msgid "Train types with icons for each trip (ång, diesel, rälsbuss, buss)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:78
-msgid "Train numbers displayed prominently (or service ID as fallback)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:79
-msgid "Arrival/departure times in HH.MM format for each station"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:80
-msgid ""
-"Symbols: P (pickup only), A (dropoff only), X (no time), | (passes without "
-"stopping)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:81
-msgid "Transfer information showing connecting trains at destination stations"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:82
-msgid "Direction arrows (↓) for first and last stations"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:83
-msgid ""
-"Yellow highlight for named express services (when train type or trip title "
-"contains “express”, e.g. Thun’s-expressen)"
-msgstr ""
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:87
-msgid "Timetable post ID (recommended)."
-msgstr "Tidtabells post-ID (rekommenderas)."
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:88
-msgid "How to find it:"
-msgstr "Hur man hittar det:"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:89
-msgid "Go to Railway Timetable → Timetables"
-msgstr "Gå till Järnvägens tidtabell → Tidtabeller"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:90
-msgid "Look in the \"ID\" column - the number is displayed there"
-msgstr "Titta i \"ID\" kolumnen - numret visas där"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:91
-msgid ""
-"Or click \"Edit\" and look at the URL - the number after \"post=\" is the ID"
-msgstr ""
-"Eller klicka \"Redigera\" och titta på URL:en - numret efter \"post=\" är ID:"
-"et"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:92
-msgid ""
-"Timetable name (alternative to timetable_id). Use the exact title of the "
-"timetable."
-msgstr ""
-"Tidtabellsnamn (alternativ till timetable_id). Använd den exakta titeln på "
-"tidtabellen."
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:94
-msgid "Examples:"
-msgstr "Exempel:"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:97
-msgid "Or use the timetable name:"
-msgstr "Eller använd tidtabellsnamnet:"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:101
-msgid "Tip:"
-msgstr "Tips:"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:101
-msgid ""
-"You can preview how the timetable will look in the \"Timetable Overview\" "
-"meta box when editing a timetable in the admin."
-msgstr ""
-"Du kan förhandsgranska hur tidtabellen kommer att se ut i "
-"\"Tidtabellsöversikt\" meta box när du redigerar en tidtabell i admin."
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:113
-msgid "Shortcodes"
-msgstr "Shortcodes"
-
-#: inc/admin/dashboard/dashboard-shortcodes.php:114
-msgid "Use these shortcodes to display timetables on your pages and posts."
-msgstr ""
-"Använd dessa shortcodes för att visa tidtabeller på dina sidor och inlägg."
-
-# New translations for dashboard and UI improvements
-#: inc/admin/dashboard/dashboard-stats.php:56 inc/admin/meta-boxes.php:48
-msgid "Trips (Services)"
-msgstr "Turer (Services)"
-
-#: inc/admin/dashboard/dashboard-stats.php:58
-msgid "Managed via Timetables"
-msgstr "Hanteras via Tidtabeller"
-
-#: inc/admin/menu.php:59 inc/admin/menu.php:60
-#: inc/admin/tools/demo-page.php:283
+#: inc/admin/menu.php:52 inc/admin/menu.php:53
+#: inc/admin/tools/demo-page.php:286
 msgid "Component demo page"
 msgstr ""
 
-#: inc/admin/menu.php:78
+#: inc/admin/menu.php:71
 msgid "Railway Timetable"
 msgstr "Järnvägens tidtabell"
 
-#: inc/admin/meta-boxes.php:30 inc/admin/meta-boxes/station.php:104
-msgid "Station Details"
-msgstr "Stationdetaljer"
-
-#: inc/admin/meta-boxes.php:39
-msgid "Timetable Details"
-msgstr ""
-
-#: inc/admin/meta-boxes.php:71
-msgid "Route Details"
-msgstr "Sträckdetaljer"
-
-#: inc/admin/meta-boxes.php:80
-msgid "Service Details"
-msgstr "Turdetaljer"
-
-#: inc/admin/meta-boxes.php:89
-msgid "Stop Times"
-msgstr "Hållplatser"
-
-#: inc/admin/meta-boxes/hooks.php:47
+#: inc/admin/meta-boxes/hooks.php:48
 msgid "Example route name: \"Hultsfred - Västervik\" or \"Main Line\"."
 msgstr "Exempel på sträcknamn: \"Hultsfred - Västervik\" eller \"Huvudlinje\"."
 
-#: inc/admin/meta-boxes/route.php:34
-msgid "This route is used by the following trips:"
-msgstr "Denna sträcka används av följande turer:"
+#: inc/admin/timetable-vue-preview.php:19
+#: inc/domain/timetable/timetable-pages.php:198
+#: inc/domain/timetable/view/overview-data.php:63
+msgid "Invalid timetable."
+msgstr ""
 
-#: inc/admin/meta-boxes/route.php:41 inc/admin/meta-boxes/service.php:169
-#: inc/admin/meta-boxes/service.php:195
-msgid "Timetable"
-msgstr "Tidtabell"
+#: inc/admin/tools/component-debug-pages.php:17
+msgid "Development UI page"
+msgstr ""
 
-#: inc/admin/meta-boxes/route.php:44
-msgid "in"
-msgstr "i"
-
-#: inc/admin/meta-boxes/route.php:49
-msgid "Related Trips:"
-msgstr "Relaterade turer:"
-
-#: inc/admin/meta-boxes/route.php:56
+#: inc/admin/tools/component-debug-pages.php:19
 msgid ""
-"A route defines which stations trains travel between and in what order. When "
-"you create a trip (service), you select a route and a destination station, "
-"and all stations on that route become available for configuring stop times."
+"Fixture data for fast layout work. Run Import Lennakatten for real month/"
+"overview data. Wizard debug presets use hardcoded sample trips."
 msgstr ""
 
-#: inc/admin/meta-boxes/route.php:57
-msgid "How to use:"
-msgstr "Hur man använder:"
-
-#: inc/admin/meta-boxes/route.php:59
-msgid ""
-"Give your route a descriptive name, e.g., \"Hultsfred → Västervik\" or "
-"\"Main Line\""
-msgstr ""
-"Ge din sträcka ett beskrivande namn, t.ex. \"Hultsfred → Västervik\" eller "
-"\"Huvudlinje\""
-
-#: inc/admin/meta-boxes/route.php:60
-msgid "Set the start and end stations (terminus) for this route below"
-msgstr ""
-
-#: inc/admin/meta-boxes/route.php:61
-msgid ""
-"Add stations in the order they appear on the route using the dropdown below"
-msgstr ""
-"Lägg till stationer i den ordning de förekommer på sträckan med hjälp av "
-"rullgardinsmenyn nedan"
-
-#: inc/admin/meta-boxes/route.php:62
-msgid "Use ↑ ↓ buttons to reorder stations if needed"
-msgstr "Använd ↑ ↓ knappar för att ordna om stationer om det behövs"
-
-#: inc/admin/meta-boxes/route.php:63
-msgid ""
-"When creating a trip in a Timetable, select this route and choose a "
-"destination station"
-msgstr ""
-
-#: inc/admin/meta-boxes/route.php:65
-msgid "💡 What is a Route?"
-msgstr "💡 Vad är en Sträcka?"
-
-#: inc/admin/meta-boxes/route.php:78
-msgid "End Stations (Terminus)"
-msgstr "Ändhållplatser (Terminus)"
-
-#: inc/admin/meta-boxes/route.php:79
-msgid ""
-"Define the start and end stations for this route. These are the terminus "
-"stations where trains can start or end their journey."
-msgstr ""
-"Definiera start- och slutstationer för denna linje. Dessa är "
-"ändhållplatserna där tåg kan starta eller avsluta sin resa."
-
-#: inc/admin/meta-boxes/route.php:82
-msgid "Start Station"
-msgstr "Startstation"
-
-#: inc/admin/meta-boxes/route.php:85
-msgid "— Select Start Station —"
-msgstr ""
-
-#: inc/admin/meta-boxes/route.php:90
-msgid "The starting point (origin) of this route."
-msgstr "Startpunkten (ursprung) för denna linje."
-
-#: inc/admin/meta-boxes/route.php:94
-msgid "End Station"
-msgstr "Slutstation"
-
-#: inc/admin/meta-boxes/route.php:97
-msgid "— Select End Station —"
-msgstr ""
-
-#: inc/admin/meta-boxes/route.php:102
-msgid "The ending point (destination/terminus) of this route."
-msgstr "Slutpunkten (destination/terminus) för denna linje."
-
-#: inc/admin/meta-boxes/route.php:128
-msgid "Move up"
-msgstr "Flytta upp"
-
-#: inc/admin/meta-boxes/route.php:129
-msgid "Move down"
-msgstr "Flytta ner"
-
-#: inc/admin/meta-boxes/route.php:130
-#: inc/admin/meta-boxes/timetable-services.php:36
-#: inc/admin/meta-boxes/timetable.php:101
-msgid "Remove"
-msgstr "Ta bort"
-
-#: inc/admin/meta-boxes/route.php:148
-msgid "— Select Station —"
-msgstr "— Välj station —"
-
-#: inc/admin/meta-boxes/route.php:155
-msgid "Add"
-msgstr "Lägg till"
-
-#: inc/admin/meta-boxes/route.php:170
-msgid "Stations on Route"
-msgstr ""
-
-#: inc/admin/meta-boxes/route.php:171
-msgid "Add stations in the order they appear on the route. Use ↑ ↓ to reorder."
-msgstr ""
-
-#: inc/admin/meta-boxes/route.php:175
-#: inc/admin/meta-boxes/service-stoptimes.php:96
-msgid "Order"
-msgstr "Ordning"
-
-#: inc/admin/meta-boxes/service-save.php:142
-#: inc/admin/meta-boxes/service.php:221
-#: inc/admin/meta-boxes/timetable-services.php:143
-#: inc/infrastructure/ajax/timetable-services.php:52
-msgid "Route"
-msgstr "Sträcka"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:32
-#: inc/admin/meta-boxes/service-stoptimes.php:36
-msgid "HH:MM"
-msgstr ""
-
-#: inc/admin/meta-boxes/service-stoptimes.php:33
-#: inc/admin/meta-boxes/service-stoptimes.php:37
-msgid "Leave empty if train stops but time is not fixed"
-msgstr "Lämna tomt om tåget stannar men tiden inte är fast"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:42
-#: inc/admin/meta-boxes/service-stoptimes.php:101
-msgid "Pickup"
-msgstr "Påstigning"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:48
-#: inc/admin/meta-boxes/service-stoptimes.php:102
-msgid "Dropoff"
-msgstr "Avstigning"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:61
-msgid "Check \"Stops here\" for each station where the train stops"
-msgstr "Kryssa i \"Stannar här\" för varje station där tåget stannar"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:62
-msgid "Fill in Arrival and/or Departure times (HH:MM format, e.g., 09:15)"
-msgstr "Fyll i Ankomst och/eller Avgångstider (HH:MM format, t.ex. 09:15)"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:63
-msgid "Times can be left empty if the train stops but the time is not fixed"
-msgstr "Tider kan lämnas tomma om tåget stannar men tiden inte är fast"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:64
-msgid "Select Pickup/Dropoff if passengers can board/alight"
-msgstr "Välj Påstigning/Avstigning om passagerare kan gå på/av"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:65
-msgid "Click \"Save Stop Times\" at the bottom to save all changes"
-msgstr ""
-"Klicka \"Spara hållplatstider\" längst ner för att spara alla ändringar"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:67
-msgid "💡 How to configure Stop Times:"
-msgstr "💡 Hur man konfigurerar Hållplatstider:"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:98
-msgid "Stops here"
-msgstr "Stannar här"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:99
-msgid "Arrival"
-msgstr "Ankomst"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:100
-msgid "Departure"
-msgstr "Avgång"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:146
-msgid ""
-"No route selected. Select a route in Service Details above to configure stop "
-"times."
-msgstr ""
-
-#: inc/admin/meta-boxes/service-stoptimes.php:164
-msgid "Save Stop Times"
-msgstr "Spara hållplatstider"
-
-#: inc/admin/meta-boxes/service-stoptimes.php:167
-msgid ""
-"Configure which stations the train stops at, then click \"Save Stop Times\" "
-"to save all changes."
-msgstr ""
-
-#: inc/admin/meta-boxes/service-stoptimes.php:206
-msgid ""
-"Please select a Route in Service Details above first. Then you can configure "
-"which stations this service stops at."
-msgstr ""
-"Vänligen välj en Sträcka i Turdetaljer ovan först. Sedan kan du konfigurera "
-"vilka stationer denna service stannar vid."
-
-#: inc/admin/meta-boxes/service.php:35
-msgid "Back to Timetable"
-msgstr "Tillbaka till tidtabell"
-
-#: inc/admin/meta-boxes/service.php:36
-msgid ""
-"This trip belongs to a timetable. The title is automatically generated from "
-"Route + Destination."
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:63
-#: inc/infrastructure/ajax/route-destinations.php:36
-msgid "Start"
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:69
-#: inc/infrastructure/ajax/route-destinations.php:45
-msgid "End"
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:129
-msgid "Calculated direction:"
-msgstr "Beräknad riktning:"
-
-#: inc/admin/meta-boxes/service.php:130 inc/domain/service/stop-times.php:68
-#: inc/infrastructure/ajax/timetable-services.php:58
-#: inc/infrastructure/ajax/timetable-services.php:84
-#: inc/infrastructure/ajax/timetable-services.php:94
-msgid "Dit"
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:130 inc/domain/service/stop-times.php:70
-#: inc/infrastructure/ajax/timetable-services.php:60
-#: inc/infrastructure/ajax/timetable-services.php:86
-#: inc/infrastructure/ajax/timetable-services.php:94
-#: inc/public/journey-wizard/fields.php:48
-msgid "Från"
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:145
-msgid "Destination Station"
-msgstr "Destinationsstation"
-
-#: inc/admin/meta-boxes/service.php:148
-#: inc/admin/meta-boxes/timetable-services.php:71
-msgid "— Select Destination —"
-msgstr "— Välj destination —"
-
-#: inc/admin/meta-boxes/service.php:153
-msgid ""
-"Select the destination station for this trip. The direction will be "
-"calculated automatically based on the route and destination."
-msgstr ""
-"Välj destinationsstation för denna tur. Riktningen beräknas automatiskt "
-"baserat på linjen och destinationen."
-
-#: inc/admin/meta-boxes/service.php:174
-msgid "more"
-msgstr "mer"
-
-#: inc/admin/meta-boxes/service.php:184
-msgid "💡 What is a Trip (Service)?"
-msgstr "💡 Vad är en Tur (Service)?"
-
-#: inc/admin/meta-boxes/service.php:185
-msgid ""
-"A trip represents one train journey. It belongs to a Timetable (which "
-"defines which days it runs) and uses a Route (which defines which stations "
-"are available). After selecting a Route, you can configure Stop Times to set "
-"arrival/departure times for each station."
-msgstr ""
-"En tur representerar en tågresa. Den tillhör en Tidtabell (som definierar "
-"vilka dagar den kör) och använder en Sträcka (som definierar vilka stationer "
-"som är tillgängliga). Efter att ha valt en Sträcka kan du konfigurera "
-"Hållplatstider för att sätta ankomst/avgångstider för varje station."
-
-#: inc/admin/meta-boxes/service.php:200
-msgid ""
-"This trip belongs to the timetable you are editing. To change the timetable, "
-"go back to the timetable and remove this trip, then add it to another "
-"timetable."
-msgstr ""
-"Denna tur tillhör tidtabellen du redigerar. För att ändra tidtabellen, gå "
-"tillbaka till tidtabellen och ta bort denna tur, lägg sedan till den i en "
-"annan tidtabell."
-
-#: inc/admin/meta-boxes/service.php:203
-msgid "— Select Timetable —"
-msgstr "— Välj tidtabell —"
-
-#: inc/admin/meta-boxes/service.php:208
-msgid ""
-"⚠️ Required: Select the timetable this trip belongs to. The timetable defines "
-"which days (dates) the trip runs."
-msgstr ""
-"⚠️ Obligatoriskt: Välj tidtabellen som denna tur tillhör. Tidtabellen "
-"definierar vilka dagar (datum) turen kör."
-
-#: inc/admin/meta-boxes/service.php:224
-#: inc/admin/meta-boxes/timetable-services.php:55
-msgid "— Select Route —"
-msgstr "— Välj sträcka —"
-
-#: inc/admin/meta-boxes/service.php:229
-msgid ""
-"⚠️ Required: Select the route this trip runs on. After selecting a route and "
-"saving, you can configure Stop Times below. Example: \"Hultsfred - "
-"Västervik\" or \"Main Line\"."
-msgstr ""
-"⚠️ Obligatoriskt: Välj sträckan som denna tur kör på. Efter att ha valt en "
-"sträcka och sparat kan du konfigurera Hållplatstider nedan. Exempel: "
-"\"Hultsfred - Västervik\" eller \"Huvudlinje\"."
-
-#: inc/admin/meta-boxes/service.php:241
-#: inc/admin/meta-boxes/timetable-services.php:144
-msgid "Train Type"
-msgstr "Tågtyp"
-
-#: inc/admin/meta-boxes/service.php:244
-msgid "— Select Train Type —"
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:249
-msgid ""
-"Select the default train type for this service. You can override this for "
-"specific dates below. Example: \"Steam\", \"Diesel\", \"Electric\"."
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:262
-msgid "Train Number"
-msgstr "Tågnummer"
-
-#: inc/admin/meta-boxes/service.php:264
-msgid "e.g., 71, 91, 73"
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:265
-msgid ""
-"Enter the train number displayed in timetables (e.g., 71, 91, 73). If left "
-"empty, the service ID will be used as fallback."
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:283
-msgid "Public notice"
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:286
-msgid ""
-"Optional message for this trip (e.g. replaced locomotive). Shown in public "
-"journey data."
-msgstr ""
-
-#: inc/admin/meta-boxes/service.php:304
-msgid "Date-Specific Train Types"
+#: inc/admin/tools/component-debug-pages.php:46
+msgid "Debug – Month calendar"
 msgstr ""
 
-#: inc/admin/meta-boxes/service.php:306
-msgid ""
-"Override the default train type for specific dates. Leave empty to use the "
-"default train type."
+#: inc/admin/tools/component-debug-pages.php:47
+msgid "Debug: Month"
 msgstr ""
 
-#: inc/admin/meta-boxes/service.php:309
-msgid "⚠️ Please select a timetable first to see available dates."
+#: inc/admin/tools/component-debug-pages.php:55
+msgid "Debug – Timetable overview"
 msgstr ""
 
-#: inc/admin/meta-boxes/service.php:324
-msgid "— Use Default —"
+#: inc/admin/tools/component-debug-pages.php:56
+msgid "Debug: Overview"
 msgstr ""
 
-#: inc/admin/meta-boxes/service.php:399
-msgid "Trip Details"
+#: inc/admin/tools/component-debug-pages.php:64
+msgid "Debug – Wizard (date)"
 msgstr ""
 
-#: inc/admin/meta-boxes/station.php:19
-msgid "This station is used in the following routes:"
-msgstr "Denna station används i följande sträckor:"
-
-#: inc/admin/meta-boxes/station.php:25
-msgid "Used in Routes:"
-msgstr "Används i sträckor:"
-
-#: inc/admin/meta-boxes/station.php:38
-msgid "Station Type"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:41
-#: inc/admin/meta-boxes/timetable-services.php:63
-msgid "— Select —"
-msgstr "— Välj —"
-
-#: inc/admin/meta-boxes/station.php:43
-msgid "Halt"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:44
-msgid "Depot"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:45
-msgid "Museum"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:47
-msgid "Type of station (station, halt, depot, or museum)."
-msgstr "Typ av station (station, halt, depot eller museum)."
-
-#: inc/admin/meta-boxes/station.php:51
-msgid "Bus stop marker"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:55
-msgid ""
-"Show asterisk (*) in timetable (e.g. \"Från Selknä*\" for bus connections)"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:73
-msgid "Latitude"
-msgstr "Latitud"
-
-#: inc/admin/meta-boxes/station.php:75
-msgid "e.g., 57.486"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:76
-msgid "Latitude coordinate (e.g., 57.486). Optional."
-msgstr "Latitudkoordinat (t.ex. 57.486). Valfritt."
-
-#: inc/admin/meta-boxes/station.php:80
-msgid "Longitude"
-msgstr "Longitud"
-
-#: inc/admin/meta-boxes/station.php:82
-msgid "e.g., 15.842"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:83
-msgid "Longitude coordinate (e.g., 15.842). Optional."
-msgstr "Longitudkoordinat (t.ex. 15.842). Valfritt."
-
-#: inc/admin/meta-boxes/station.php:87
-msgid "Display Order"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:89
-msgid "e.g., 1, 2, 3"
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:90
-msgid ""
-"Order for sorting in lists (lower numbers appear first). Example: 1, 2, 3..."
-msgstr ""
-
-#: inc/admin/meta-boxes/station.php:124
-msgid "💡 What is a Station?"
-msgstr "💡 Vad är en Station?"
-
-#: inc/admin/meta-boxes/station.php:125
-msgid ""
-"A station is a physical location where trains can stop. Stations are used in "
-"Routes and Stop Times to define where trains travel and when they arrive/"
-"depart."
-msgstr ""
-"En station är en fysisk plats där tåg kan stanna. Stationer används i "
-"Sträckor och Hållplatstider för att definiera var tåg reser och när de "
-"ankommer/avgår."
-
-#: inc/admin/meta-boxes/timetable-overview.php:20
-msgid ""
-"Preview of how the timetable will look when displayed. Services are grouped "
-"by route and destination."
-msgstr ""
-
-#: inc/admin/meta-boxes/timetable-services.php:72
-msgid "Select a route first"
-msgstr "Välj en linje först"
-
-#: inc/admin/meta-boxes/timetable-services.php:74
-msgid "Select route first to see available destinations"
-msgstr "Välj linje först för att se tillgängliga destinationer"
-
-#: inc/admin/meta-boxes/timetable-services.php:78
-msgid "Add Trip"
-msgstr "Lägg till tur"
-
-#: inc/admin/meta-boxes/timetable-services.php:138
-msgid ""
-"Manage trips (services) for this timetable. Add, edit, or remove trips "
-"directly here."
-msgstr ""
-"Hantera turer (services) för denna tidtabell. Lägg till, redigera eller ta "
-"bort turer direkt här."
-
-#: inc/admin/meta-boxes/timetable-services.php:145
-msgid "Destination"
-msgstr "Destination"
-
-#: inc/admin/meta-boxes/timetable.php:23
-msgid "Timetable type"
-msgstr ""
-
-#: inc/admin/meta-boxes/timetable.php:26
-msgid "— None —"
-msgstr ""
-
-#: inc/admin/meta-boxes/timetable.php:27
-msgid "Grön (Green)"
-msgstr ""
-
-#: inc/admin/meta-boxes/timetable.php:28
-msgid "Röd (Red)"
-msgstr ""
-
-#: inc/admin/meta-boxes/timetable.php:29
-msgid "Gul (Yellow)"
-msgstr ""
-
-#: inc/admin/meta-boxes/timetable.php:30
-msgid "Orange"
-msgstr ""
-
-#: inc/admin/meta-boxes/timetable.php:32
-msgid ""
-"Shows as \"GRÖN TIDTABELL\", \"RÖD TIDTABELL\" etc. in the timetable "
-"overview."
-msgstr ""
-
-#: inc/admin/meta-boxes/timetable.php:45 inc/admin/meta-boxes/timetable.php:72
-msgid "Add Dates from Pattern"
-msgstr "Lägg till datum från mönster"
-
-#: inc/admin/meta-boxes/timetable.php:46
-msgid ""
-"Select a day of the week and a date range to automatically add all matching "
-"dates."
-msgstr ""
-"Välj en veckodag och ett datumintervall för att automatiskt lägga till alla "
-"matchande datum."
-
-#: inc/admin/meta-boxes/timetable.php:49
-msgid "Day of Week"
-msgstr "Veckodag"
-
-#: inc/admin/meta-boxes/timetable.php:52
-msgid "— Select Day —"
-msgstr "— Välj dag —"
-
-#: inc/admin/meta-boxes/timetable.php:53
-msgid "Monday"
-msgstr "Måndag"
-
-#: inc/admin/meta-boxes/timetable.php:54
-msgid "Tuesday"
-msgstr "Tisdag"
-
-#: inc/admin/meta-boxes/timetable.php:55
-msgid "Wednesday"
-msgstr "Onsdag"
-
-#: inc/admin/meta-boxes/timetable.php:56
-msgid "Thursday"
-msgstr "Torsdag"
-
-#: inc/admin/meta-boxes/timetable.php:57
-msgid "Friday"
-msgstr "Fredag"
-
-#: inc/admin/meta-boxes/timetable.php:58
-msgid "Saturday"
-msgstr "Lördag"
-
-#: inc/admin/meta-boxes/timetable.php:59
-msgid "Sunday"
-msgstr "Söndag"
-
-#: inc/admin/meta-boxes/timetable.php:64
-msgid "From Date"
-msgstr "Från datum"
-
-#: inc/admin/meta-boxes/timetable.php:68
-msgid "To Date"
-msgstr "Till datum"
-
-#: inc/admin/meta-boxes/timetable.php:75
-msgid "Add Single Date"
-msgstr "Lägg till enskilt datum"
-
-#: inc/admin/meta-boxes/timetable.php:76
-msgid "Add a specific date manually."
-msgstr "Lägg till ett specifikt datum manuellt."
-
-#: inc/admin/meta-boxes/timetable.php:79
-msgid "Add Date"
-msgstr "Lägg till datum"
-
-#: inc/admin/meta-boxes/timetable.php:93
-msgid "Selected Dates"
-msgstr "Valda datum"
-
-#: inc/admin/meta-boxes/timetable.php:94
-msgid ""
-"All dates when this timetable applies. Click \"Remove\" to remove individual "
-"dates."
-msgstr ""
-"Alla datum när denna tidtabell gäller. Klicka på \"Ta bort\" för att ta bort "
-"enskilda datum."
-
-#: inc/admin/meta-boxes/timetable.php:106
-msgid ""
-"No dates selected. Add dates using patterns or single date selection above."
-msgstr ""
-"Inga datum valda. Lägg till datum med mönster eller enskilt datumval ovan."
-
-#: inc/admin/meta-boxes/timetable.php:149
-msgid "💡 What is a Timetable?"
-msgstr "💡 Vad är en Tidtabell?"
-
-#: inc/admin/meta-boxes/timetable.php:150
-msgid ""
-"A timetable defines which days (dates) trains run. You can add dates using "
-"patterns (e.g., all Wednesdays in June-September) or add specific dates. You "
-"can also remove individual dates from patterns."
-msgstr ""
-"En tidtabell definierar vilka dagar (datum) tågen kör. Du kan lägga till "
-"datum med mönster (t.ex. alla onsdagar i juni-september) eller lägga till "
-"specifika datum. Du kan också ta bort enskilda datum från mönster."
-
-#: inc/admin/settings.php:28
-msgid "General Settings"
-msgstr "Allmänna inställningar"
-
-#: inc/admin/settings.php:30
-msgid "Configure timetable display."
-msgstr "Konfigurera visning av tidtabell."
-
-#: inc/admin/settings.php:37
-msgid "Enable Plugin"
-msgstr "Aktivera tillägget"
-
-#: inc/admin/settings.php:45
-msgid "Note"
-msgstr "Anteckning"
-
-#: inc/admin/settings.php:58
-msgid "Journey search — transfers"
+#: inc/admin/tools/component-debug-pages.php:65
+msgid "Debug: Wizard date"
 msgstr ""
 
-#: inc/admin/settings.php:60
-msgid ""
-"Minimum and maximum waiting time at a transfer station (journey wizard). Bus "
-"hub stations (Bus stop marker) are preferred over other stops on the same "
-"route."
+#: inc/admin/tools/component-debug-pages.php:70
+msgid "Debug – Wizard (outbound)"
 msgstr ""
 
-#: inc/admin/settings.php:70
-msgid "Min transfer wait (minutes)"
+#: inc/admin/tools/component-debug-pages.php:71
+msgid "Debug: Wizard outbound"
 msgstr ""
 
-#: inc/admin/settings.php:78
-msgid "Max transfer wait (minutes)"
+#: inc/admin/tools/component-debug-pages.php:76
+msgid "Debug – Wizard (return)"
 msgstr ""
 
-#: inc/admin/settings.php:92
-msgid "Earliest departure on leg 2 after arrival at transfer (default 5)."
+#: inc/admin/tools/component-debug-pages.php:77
+msgid "Debug: Wizard return"
 msgstr ""
-
-#: inc/admin/settings.php:102
-msgid ""
-"Longer waits are hidden from search results (default 120). Must be ≥ min."
-msgstr ""
-
-#: inc/admin/settings.php:121
-msgid "Public journey — price matrix"
-msgstr ""
-
-#: inc/admin/settings.php:123
-msgid "Optional prices for passenger categories (display/API)."
-msgstr ""
-
-#: inc/admin/settings.php:130
-msgid "Prices (SEK)"
-msgstr ""
-
-#: inc/admin/tools/clear-db.php:55
-msgid "Import is not available."
-msgstr ""
-
-#: inc/admin/tools/clear-db.php:67
-msgid "Demo page creation is not available."
-msgstr ""
-
-#: inc/admin/tools/clear-db.php:82
-#: inc/infrastructure/ajax/route-destinations.php:70
-#: inc/infrastructure/ajax/route-stations.php:144
-msgid "Security check failed."
-msgstr "Säkerhetskontroll misslyckades."
 
-#: inc/admin/tools/clear-db.php:188
-msgid ""
-"All plugin timetable data, demo page, train types, stop times, and settings "
-"have been cleared."
+#: inc/admin/tools/component-debug-pages.php:82
+msgid "Debug – Wizard (summary)"
 msgstr ""
 
-#: inc/admin/tools/clear-db.php:189
-msgid "Demo/test data has been imported."
+#: inc/admin/tools/component-debug-pages.php:83
+msgid "Debug: Wizard summary"
 msgstr ""
 
-#: inc/admin/tools/clear-db.php:190
-msgid "Demo page has been created or updated."
+#: inc/admin/tools/component-debug-pages.php:123
+msgid "not created yet (run Set up development menu)"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:67
+#: inc/admin/tools/demo-page.php:70
 msgid ""
 "Journey wizard — route → date → trips → summary (see docs/SHORTCODES.md)."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:68
+#: inc/admin/tools/demo-page.php:71
 msgid ""
 "Month calendar & timetable overview — timetable/mockup views (not the full "
 "“book a trip” flow)."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:71
+#: inc/admin/tools/demo-page.php:74
 msgid "Mockup alignment"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:103
+#: inc/admin/tools/demo-page.php:106
 msgid "Trying the journey wizard"
 msgstr ""
 
 #. translators: %s: timetable title e.g. GRÖN TIDTABELL 2026
-#: inc/admin/tools/demo-page.php:107
+#: inc/admin/tools/demo-page.php:110
 #, php-format
 msgid ""
 "Run %s from the Railway Timetable admin menu so stations, routes, and "
 "services exist."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:110
+#: inc/admin/tools/demo-page.php:113
 msgid ""
 "In the wizard, choose stations on the same line (e.g. From: Uppsala Östra, "
 "To: Faringe). If either station is missing, the import did not finish."
 msgstr ""
 
 #. translators: %1$s: example YYYY-MM-DD, %2$s: list of sample dates
-#: inc/admin/tools/demo-page.php:116
+#: inc/admin/tools/demo-page.php:119
 #, php-format
 msgid ""
 "Pick a traffic day: the GRÖN import includes dates such as %2$s. Example "
@@ -1358,20 +188,20 @@ msgid ""
 "that month appears, then choose a green (available) day for your pair."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:123
+#: inc/admin/tools/demo-page.php:126
 msgid ""
 "If you see “No connections on this date”, the pair or date has no matching "
 "service — try the example stations and a listed traffic day."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:127
+#: inc/admin/tools/demo-page.php:130
 msgid ""
 "The month calendar in section 1 has Previous month / Next month links (?"
 "mrt_month= in the URL)."
 msgstr ""
 
 #. translators: %s: timetable title after Lennakatten import
-#: inc/admin/tools/demo-page.php:145
+#: inc/admin/tools/demo-page.php:148
 #, php-format
 msgid ""
 "This page lists all public timetable shortcodes. For realistic data, run "
@@ -1379,87 +209,88 @@ msgid ""
 "a timetable titled \"%s\"."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:155
+#: inc/admin/tools/demo-page.php:158
 msgid "1. Month calendar"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:156
+#: inc/admin/tools/demo-page.php:159
 msgid ""
 "Mockup: calendar / traffic days (timetable context, not the journey booking "
 "flow)."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:158
+#: inc/admin/tools/demo-page.php:161
 msgid "2. Timetable overview"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:159
+#: inc/admin/tools/demo-page.php:162
 msgid "Mockup: printed-style overview (routes, directions, times)."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:161
+#: inc/admin/tools/demo-page.php:164
 msgid "3. Journey wizard (multi-step)"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:162
+#: inc/admin/tools/demo-page.php:165
 msgid ""
 "Mockup-based: full journey flow (V1–V5) with calendar, legs, optional "
 "return, prices in summary)."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:190 inc/admin/tools/dev-navigation.php:73
-#: inc/admin/tools/dev-navigation.php:254
-#: inc/infrastructure/ajax/timetable-services.php:29
+#: inc/admin/tools/demo-page.php:193 inc/admin/tools/dev-navigation.php:62
+#: inc/admin/tools/dev-navigation.php:507
+#: inc/domain/timetable/timetable-pages.php:163
+#: inc/domain/timetable/timetable-pages.php:229
 msgid "Permission denied."
 msgstr "Åtkomst nekad."
 
-#: inc/admin/tools/demo-page.php:192 inc/admin/tools/dev-navigation.php:34
+#: inc/admin/tools/demo-page.php:195 inc/admin/tools/dev-navigation.php:34
 msgid "Museum Railway Timetable – component demo"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:226
+#: inc/admin/tools/demo-page.php:229
 msgid "Demo page"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:237
+#: inc/admin/tools/demo-page.php:240
 msgid "View page"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:240
+#: inc/admin/tools/demo-page.php:243
 msgid "Edit page"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:244
+#: inc/admin/tools/demo-page.php:247
 msgid "Preview draft"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:258
-msgid "You do not have permission to access this page."
-msgstr ""
-
-#: inc/admin/tools/demo-page.php:261
+#: inc/admin/tools/demo-page.php:264
 msgid ""
 "Component demo tools require development mode (WP_DEBUG or MRT_DEVELOPMENT)."
 msgstr ""
 
 #. translators: %d: WordPress page ID
-#: inc/admin/tools/demo-page.php:274
+#: inc/admin/tools/demo-page.php:277
 #, php-format
 msgid "Demo page saved successfully (page ID %d). Use View page below."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:284
+#: inc/admin/tools/demo-page.php:287
 msgid ""
 "Creates or updates a published page with every public shortcode for local "
 "testing and QA."
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:293
+#: inc/admin/tools/demo-page.php:296
 msgid "Create or update demo page"
 msgstr ""
 
-#: inc/admin/tools/demo-page.php:299
-msgid "Front-end menu (development)"
+#: inc/admin/tools/demo-page.php:302
+msgid "Component debug pages"
+msgstr ""
+
+#: inc/admin/tools/demo-page.php:305
+msgid "Front-end development menu:"
 msgstr ""
 
 #: inc/admin/tools/dev-navigation.php:35
@@ -1470,57 +301,44 @@ msgstr ""
 msgid "Wizard smoke test"
 msgstr ""
 
-#: inc/admin/tools/dev-navigation.php:215
+#: inc/admin/tools/dev-navigation.php:271
+#: inc/admin/tools/dev-navigation.php:468
 msgid "Museum Railway (development)"
 msgstr ""
 
-#: inc/admin/tools/dev-navigation.php:250
+#: inc/admin/tools/dev-navigation.php:503
 msgid ""
 "Development navigation is only available in development mode (WP_DEBUG or "
 "MRT_DEVELOPMENT) or WP-CLI."
 msgstr ""
 
-#: inc/admin/tools/dev-navigation.php:354
-msgid "Set up development menu"
-msgstr ""
-
-#: inc/admin/tools/dev-navigation.php:357
-msgid ""
-"Creates or updates two smoke pages (component demo, wizard) and adds them to "
-"your site menu when missing."
-msgstr ""
-
-#. translators: %d: number of new menu items
-#: inc/admin/tools/dev-navigation.php:375
-#, php-format
-msgid ""
-"Development menu updated. %d new link(s) added. Open the front page to "
-"verify."
-msgstr ""
-
-#: inc/admin/tools/dev-navigation.php:378
-msgid ""
-"Development menu is up to date (smoke pages exist; menu links already "
-"present)."
-msgstr ""
-
+#: inc/admin/tools/import-lennakatten.php:23
 #: inc/admin/tools/import-lennakatten.php:24
-#: inc/admin/tools/import-lennakatten.php:25
 msgid "Import Lennakatten"
 msgstr ""
 
-#: inc/admin/tools/import-lennakatten.php:48
+#: inc/admin/tools/import-lennakatten.php:47
 msgid "Import Lennakatten 2026 Test Data"
 msgstr ""
 
-#: inc/admin/tools/import-lennakatten.php:49
+#: inc/admin/tools/import-lennakatten.php:48
 msgid ""
-"This imports test data from the Lennakatten reference PDFs: stations, "
-"routes, train types, GRÖN and GUL timetables with services and stop times."
+"Re-imports Lennakatten test data from the CSV fixture (testdata/fixtures/"
+"lennakatten), derived from reference PDFs. Existing fixture entities are "
+"updated; other plugin stations, routes, timetables, and services are removed."
 msgstr ""
 
-#: inc/admin/tools/import-lennakatten.php:56
-msgid "Run Import"
+#: inc/admin/tools/import-lennakatten.php:55
+msgid "Re-import Lennakatten"
+msgstr ""
+
+#: inc/admin/tools/timetable-pages.php:36
+#: inc/domain/timetable/timetable-pages.php:235
+msgid "Tidtabeller"
+msgstr ""
+
+#: inc/assets/vue-frontend.php:110
+msgid "Vue build missing. Run npm install && npm run build in frontend/vue/."
 msgstr ""
 
 #. translators: 1: first service name, 2: transfer station name, 3: second service name
@@ -1529,32 +347,66 @@ msgstr ""
 msgid "%1$s · Change at %2$s · %3$s"
 msgstr ""
 
+#: inc/domain/journey/request-params.php:27
+msgid "Please select both departure and arrival stations."
+msgstr ""
+
+#: inc/domain/journey/request-params.php:33
+msgid "Please select different stations for departure and arrival."
+msgstr "Vänligen välj olika stationer för avgång och ankomst."
+
+#: inc/domain/journey/request-params.php:80
+#: inc/infrastructure/rest/journey-public.php:103
+msgid "Please select a valid date."
+msgstr ""
+
+#: inc/domain/journey/request-params.php:112
+msgid "Please provide a valid outbound arrival time for return search."
+msgstr ""
+
+#: inc/domain/journey/request-params.php:144
+msgid "Please select a valid month."
+msgstr ""
+
+#: inc/domain/journey/request-params.php:176
+#: inc/infrastructure/rest/timetables.php:186
+msgid "Invalid service."
+msgstr ""
+
 #: inc/domain/pricing/prices.php:254
-msgid "Single ticket"
+msgid "Enkelbiljett"
 msgstr ""
 
 #: inc/domain/pricing/prices.php:255
-msgid "Return ticket"
+msgid "Returbiljett"
 msgstr ""
 
 #: inc/domain/pricing/prices.php:256
-msgid "Day pass"
+msgid "Dagskort"
 msgstr ""
 
 #: inc/domain/pricing/prices.php:267
-msgid "Adult"
+msgid "Vuxen"
 msgstr ""
 
 #: inc/domain/pricing/prices.php:268
-msgid "Child 7–15"
+msgid "Barn 7–15"
 msgstr ""
 
 #: inc/domain/pricing/prices.php:269
-msgid "Child 0–6"
+msgid "Barn 0–6"
 msgstr ""
 
 #: inc/domain/pricing/prices.php:270
-msgid "Student / senior 65+"
+msgid "Student / pensionär"
+msgstr ""
+
+#: inc/domain/route/destinations.php:31
+msgid "Start"
+msgstr ""
+
+#: inc/domain/route/destinations.php:40
+msgid "End"
 msgstr ""
 
 #: inc/domain/route/routes.php:154 inc/domain/route/routes.php:202
@@ -1568,184 +420,155 @@ msgstr ""
 msgid "Route to %s"
 msgstr ""
 
-#. translators: 1: station row, 2: train/service label, 3: time or symbol
-#: inc/domain/timetable/view/grid-helpers.php:25
+#: inc/domain/service/services.php:101
+msgid "default"
+msgstr ""
+
+#. translators: 1: actual train type, 2: planned train type
+#: inc/domain/service/services.php:104
 #, php-format
-msgid "%1$s. %2$s: %3$s"
-msgstr "%1$s. %2$s: %3$s"
+msgid "%1$s replaces planned %2$s."
+msgstr ""
 
-#: inc/domain/timetable/view/grid-rows.php:57
-#: inc/domain/timetable/view/grid-rows.php:64
-#: inc/domain/timetable/view/grid-rows.php:152
-#: inc/domain/timetable/view/grid.php:131
+#: inc/domain/service/stop-times.php:68
+#: inc/domain/service/timetable-trip-create.php:29
+#: inc/domain/service/timetable-trip-create.php:55
+#: inc/domain/service/timetable-trip-create.php:65
+msgid "Dit"
+msgstr ""
+
+#: inc/domain/service/stop-times.php:70
+#: inc/domain/service/timetable-trip-create.php:31
+#: inc/domain/service/timetable-trip-create.php:57
+#: inc/domain/service/timetable-trip-create.php:65
+#: inc/public/vue-shortcode-config.php:131
+msgid "Från"
+msgstr ""
+
+#: inc/domain/service/stoptimes-save.php:61
+msgid "Trip has no route."
+msgstr ""
+
+#: inc/domain/service/timetable-trip-create.php:23
+msgid "Route"
+msgstr "Sträcka"
+
+#: inc/domain/timetable/timetable-pages.php:41
+#: inc/public/timetable-index/shortcode.php:64
+msgid "Timetable"
+msgstr "Tidtabell"
+
+#: inc/domain/timetable/timetable-pages.php:51
+msgid "more"
+msgstr "mer"
+
+#. translators: %d: number of traffic days
+#: inc/domain/timetable/timetable-pages.php:66
 #, php-format
-msgid "Från %s"
+msgid "%d traffic day"
+msgid_plural "%d traffic days"
+msgstr[0] "%d trafikdag"
+msgstr[1] "%d trafikdagar"
+
+#: inc/domain/timetable/view/overview-data.php:21
+msgid "No trips found."
 msgstr ""
 
-#: inc/domain/timetable/view/grid-rows.php:142
-#: inc/domain/timetable/view/grid-rows.php:289
-#: inc/domain/timetable/view/grid-rows.php:296
-#: inc/domain/timetable/view/grid.php:133
-#, php-format
-msgid "Till %s"
+#: inc/domain/timetable/view/overview-data.php:27
+msgid "No valid trips found."
 msgstr ""
 
-#: inc/domain/timetable/view/grid-rows.php:265
-#: inc/domain/timetable/view/grid-rows.php:326
-#: inc/domain/timetable/view/grid-rows.php:386
-msgid "Tågbyte:"
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:131
-#: inc/domain/timetable/view/overview.php:132
-msgid "Förklaringar"
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:136
-msgid ""
-"Tåget stannar endast om det finns av- eller påstigande passagerare. Vill du "
-"stiga på, ställ dig tydligt så att föraren ser dig och stannar tåget. Vill "
-"du stiga av, säg till konduktören i god tid. Observera att avgångstiden är "
-"ungefärlig."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:140
-msgid ""
-"Tåget stannar endast om det finns påstigande passagerare. Vill du stiga på, "
-"ställ dig tydligt så att föraren ser dig och stannar tåget. Observera att "
-"avgångstiden är ungefärlig."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:144
-msgid "Inga anslutningsbussar går denna dag."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:148
-msgid "Thun’s-expressen tar dig till och från klädvaruhuset Thun’s i Faringe."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:151
-msgid "Med reservation för ändring av tågtyp."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:167
-#: inc/infrastructure/ajax/timetable-services.php:23
-msgid "Invalid timetable."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:178
+#: inc/domain/timetable/view/overview-data.php:82
 msgid "No trips in this timetable."
 msgstr ""
 
-#: inc/domain/timetable/view/overview.php:184
-msgid "No valid trips in this timetable."
-msgstr ""
-
-#. translators: %s: timetable post title
-#: inc/domain/timetable/view/overview.php:195
-#, php-format
-msgid "Timetable overview: %s"
-msgstr "Tidtabellsöversikt: %s"
-
-#: inc/domain/timetable/view/overview.php:216
-#: inc/public/month-calendar/shortcode.php:292
-#: inc/public/month-calendar/shortcode.php:299
+#: inc/domain/timetable/view/overview-data.php:94
+#: inc/public/month-calendar/shortcode.php:135
+#: inc/public/month-calendar/shortcode.php:142
 msgid "Invalid date."
 msgstr "Ogiltigt datum."
 
-#: inc/domain/timetable/view/overview.php:222
-msgid "No services running on this date."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:228
-msgid "No services found."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:234
-msgid "No valid services found for this date."
-msgstr ""
-
-#: inc/domain/timetable/view/overview.php:246
+#. translators: %s: formatted date
+#: inc/domain/timetable/view/overview-data.php:102
 #, php-format
 msgid "Timetable for %s"
 msgstr ""
 
-#. translators: 1: station count, 2: train type count, 3: timetable summaries, 4: services created
-#: inc/import/lennakatten/importer.php:23
+#: inc/domain/timetable/view/overview-data.php:115
+msgid "No services running on this date."
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:139
+msgid "Stannar vid av- och påstigning när någon resenär ska på eller av."
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:146
+msgid "Stannar endast vid påstigning när någon resenär ska på."
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:153
+msgid "Busshållplats; anslutande bussar visas i egen tabell i tidtabellen."
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:219
+msgid "Deviation from planned train type on the selected day."
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:305
+#: inc/domain/timetable/view/overview-data.php:367
+#: inc/domain/timetable/view/overview-data.php:397
+#: inc/domain/timetable/view/overview-data.php:624
+#: inc/domain/timetable/view/overview-data.php:638
+#, php-format
+msgid "Från %s"
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:308
+#: inc/domain/timetable/view/overview-data.php:384
+#: inc/domain/timetable/view/overview-data.php:422
+#: inc/domain/timetable/view/overview-data.php:627
+#, php-format
+msgid "Till %s"
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:540
+msgid "Tågbyte:"
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:584
+msgid "Buss"
+msgstr ""
+
+#: inc/domain/timetable/view/overview-data.php:595
+msgid "Anslutningsbuss:"
+msgstr ""
+
+#: inc/domain/train-type/rest-format.php:56
+msgid "Name is required."
+msgstr ""
+
+#: inc/domain/train-type/rest-format.php:75
+msgid "Train type not found."
+msgstr ""
+
+#. translators: 1: station count, 2: route count, 3: timetable count, 4: service count
+#: inc/import/lennakatten/importer.php:41
 #, php-format
 msgid ""
-"Import complete. Stations: %1$d, Routes: 4 (2 rail + 2 bus), Train types: "
-"%2$d, Timetables: %3$s, Services created: %4$d."
-msgstr ""
-
-#: inc/import/lennakatten/reference-data.php:222
-msgid "GRÖN"
-msgstr ""
-
-#: inc/import/lennakatten/reference-data.php:231
-msgid "GUL"
-msgstr ""
-
-#: inc/infrastructure/ajax/journey-parse.php:24
-msgid "Please select both departure and arrival stations."
-msgstr ""
-
-#: inc/infrastructure/ajax/journey-parse.php:30
-msgid "Please select different stations for departure and arrival."
-msgstr "Vänligen välj olika stationer för avgång och ankomst."
-
-#: inc/infrastructure/ajax/journey-parse.php:80
-#: inc/infrastructure/ajax/timetable-frontend.php:25
-msgid "Please select a valid date."
-msgstr ""
-
-#: inc/infrastructure/ajax/journey-parse.php:106
-msgid "Please provide a valid outbound arrival time for return search."
-msgstr ""
-
-#: inc/infrastructure/ajax/journey-parse.php:132
-msgid "Please select a valid month."
-msgstr ""
-
-#: inc/infrastructure/ajax/journey-parse.php:158
-#: inc/infrastructure/ajax/timetable-services.php:158
-msgid "Invalid service."
-msgstr ""
-
-#: inc/infrastructure/ajax/journey.php:54
-#: inc/infrastructure/ajax/journey.php:87
-#: inc/infrastructure/ajax/journey.php:121
-#: inc/infrastructure/ajax/timetable-frontend.php:19
-#: inc/infrastructure/ajax/timetable-services.php:18
-msgid "Security check failed. Please refresh the page."
-msgstr ""
-
-#: inc/infrastructure/ajax/route-destinations.php:75
-#: inc/infrastructure/ajax/route-stations.php:85
-#: inc/infrastructure/ajax/route-stations.php:151
-msgid "Invalid route."
-msgstr ""
-
-#: inc/infrastructure/ajax/route-stations.php:160
-msgid "End stations saved successfully."
-msgstr "Slutstationer sparade."
-
-#: inc/infrastructure/ajax/timetable-services.php:26
-msgid "Route is required."
-msgstr ""
-
-#: inc/infrastructure/ajax/timetable-services.php:120
-msgid "Failed to create trip: "
-msgstr ""
-
-#: inc/infrastructure/ajax/timetable-services.php:169
-msgid "Trip removed from timetable."
+"Re-import complete. Stations: %1$d, Routes: %2$d, Timetables: %3$d, "
+"Services: %4$d. Fixture data replaced; posts without a fixture code were "
+"removed."
 msgstr ""
 
 #: inc/infrastructure/post-types/admin.php:15
 #: inc/infrastructure/post-types/admin.php:103
 msgid "Station Name"
 msgstr "Stationsnamn"
+
+#: inc/infrastructure/post-types/admin.php:25
+#: inc/infrastructure/post-types/admin.php:109
+msgid "Route Name"
+msgstr "Sträcknamn"
 
 #: inc/infrastructure/post-types/admin.php:35
 #: inc/infrastructure/post-types/admin.php:115
@@ -1771,317 +594,232 @@ msgstr "Ange sträcknamn"
 msgid "Trip name (auto-generated from Route + Direction)"
 msgstr "Turnamn (genereras automatiskt från Sträcka + Riktning)"
 
-#: inc/public/journey-wizard/fields.php:51
-msgid "Var börjar du din resa?"
+#: inc/infrastructure/rest/import-export.php:47
+msgid "No file uploaded."
 msgstr ""
 
-#: inc/public/journey-wizard/fields.php:55
-msgid "Till"
+#: inc/infrastructure/rest/import-export.php:86
+msgid "Could not read export file."
 msgstr ""
 
-#: inc/public/journey-wizard/fields.php:58
-msgid "Vart vill du resa?"
+#: inc/infrastructure/rest/stations-routes.php:127
+#: inc/infrastructure/rest/stations-routes.php:248
+#: inc/infrastructure/rest/timetables-data.php:155
+msgid "Title is required."
 msgstr ""
 
-#: inc/public/journey-wizard/fields.php:62
-msgid "Restyp"
+#: inc/infrastructure/rest/stations-routes.php:172
+msgid "Station not found."
 msgstr ""
 
-#: inc/public/journey-wizard/fields.php:67
-msgid "Enkel"
+#: inc/infrastructure/rest/stations-routes.php:288
+msgid "Route not found."
 msgstr ""
 
-#: inc/public/journey-wizard/fields.php:72
-msgid "Tur och retur"
-msgstr ""
-
-#: inc/public/journey-wizard/fields.php:78
-msgid "Sök resa"
-msgstr ""
-
-#: inc/public/journey-wizard/shell.php:99
-msgid "This planner needs JavaScript enabled."
-msgstr ""
-
-#: inc/public/journey-wizard/shell.php:102
-msgid "Trip planner steps"
-msgstr ""
-
-#: inc/public/journey-wizard/shell.php:149
-msgid "No stations are available."
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:38
-msgid "Sök din resa med Lennakatten"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:62
-msgid "← Tillbaka"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:88
-msgid "Välj datum"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:91
-msgid "Calendar month navigation"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:92
-#: inc/public/month-calendar/shortcode.php:170
-msgid "Previous month"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:94
-#: inc/public/month-calendar/shortcode.php:175
-msgid "Next month"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:96
-msgid "Denna månad"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:103
-msgid "Travel dates calendar"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:105
-msgid "Calendar legend"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:106
-msgid "Lennakatten trafikerar den valda resan"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:107
-msgid "Lennakatten trafikerar, men ej den valda resan"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:108
-msgid "Ingen trafik"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:133
-msgid "Välj utresa"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:159
-msgid "Välj återresa"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:184
-msgid "Din resa"
-msgstr ""
-
-#: inc/public/journey-wizard/steps.php:188
-msgid "Fortsätt till biljetter"
-msgstr ""
-
-#: inc/public/journey-wizard/timetable.php:43
-msgid "Visa tidtabell"
-msgstr ""
-
-#. translators: 1: formatted date, 2: number of services
-#: inc/public/month-calendar/shortcode.php:81
-#, php-format
-msgid "Show timetable for %1$s, %2$d services"
-msgstr "Visa tidtabell för %1$s, %2$d turer"
-
-#: inc/public/month-calendar/shortcode.php:83
-#, php-format
-msgid "Show timetable for %s"
-msgstr "Visa tidtabell för %s"
-
-#: inc/public/month-calendar/shortcode.php:167
-msgid "Month navigation"
-msgstr "Månadsnavigation"
-
-#. translators: %s: month and year, e.g. April 2026
-#: inc/public/month-calendar/shortcode.php:201
-#, php-format
-msgid "Timetable month view, %s"
-msgstr "Månadsvy för tidtabell, %s"
-
-#. translators: %s: month and year
-#: inc/public/month-calendar/shortcode.php:210
-#, php-format
-msgid "Operating days for %s"
-msgstr "Trafikdagar för %s"
-
-#: inc/public/month-calendar/shortcode.php:227
-msgid "Service day"
-msgstr "Kördag"
-
-#: inc/public/month-calendar/shortcode.php:229
-msgid "count per day"
-msgstr "antal per dag"
-
-#: inc/public/month-calendar/shortcode.php:231
-msgid "Click to view timetable"
-msgstr ""
-
-#: inc/public/month-calendar/shortcode.php:234
-msgid "Selected day timetable"
-msgstr "Tidtabell för vald dag"
-
+#: inc/infrastructure/rest/timetables-data.php:53
+#: inc/infrastructure/rest/timetables-data.php:177
 #: inc/public/timetable-overview/shortcode.php:36
 msgid "Timetable not found."
 msgstr ""
 
-#: inc/domain/timetable/timetable-pages.php
-msgid "%d traffic day"
-msgid_plural "%d traffic days"
-msgstr[0] "%d trafikdag"
-msgstr[1] "%d trafikdagar"
+#: inc/infrastructure/rest/timetables-data.php:234
+msgid "Route is required."
+msgstr ""
 
-#: inc/public/timetable-index/shortcode.php
+#: inc/infrastructure/rest/timetables.php:222
+msgid "Invalid route."
+msgstr ""
+
+#: inc/public/journey-wizard/debug-fixtures.php:85
+msgid "Transfer via Marielund"
+msgstr ""
+
+#: inc/public/journey-wizard/debug-fixtures.php:92
+msgid "Behovsuppehåll, ge ett tecken till föraren om du vill stiga på"
+msgstr ""
+
+#: inc/public/journey-wizard/debug-fixtures.php:136
+msgid "Ångloket ersatt med diesellok pga brandrisk"
+msgstr ""
+
+#: inc/public/journey-wizard/debug-fixtures.php:160
+msgid "Transfer"
+msgstr ""
+
+#: inc/public/timetable-index/shortcode.php:50
 msgid "No timetables are published yet."
 msgstr "Inga tidtabeller är publicerade ännu."
 
-#: inc/public/timetable-index/shortcode.php
-msgid "Choose a timetable to see departures and traffic days."
-msgstr "Välj en tidtabell för att se avgångar och trafikdagar."
-
-#: inc/public/timetable-index/shortcode.php
+#: inc/public/timetable-index/shortcode.php:75
 msgid "View timetable"
 msgstr "Visa tidtabell"
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "Deviations by traffic day"
-msgstr "Avvikelser per trafikdag"
+#: inc/public/timetable-index/shortcode.php:89
+msgid "Choose a timetable to see departures and traffic days."
+msgstr "Välj en tidtabell för att se avgångar och trafikdagar."
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "Add a replacement train type and/or message for a single traffic day (e.g. steam replaced by diesel). Only days with a deviation are listed."
-msgstr "Lägg till ersättningstågtyp och/eller meddelande för en trafikdag (t.ex. ånglok ersatt med diesel). Endast dagar med avvikelse visas."
+#: inc/public/vue-shortcode-config.php:22
+msgid "sön"
+msgstr ""
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "Select a timetable with traffic days before adding deviations."
-msgstr "Välj en tidtabell med trafikdagar innan du lägger till avvikelser."
+#: inc/public/vue-shortcode-config.php:23
+msgid "mån"
+msgstr ""
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "Traffic day for new deviation"
-msgstr "Trafikdag för ny avvikelse"
+#: inc/public/vue-shortcode-config.php:24
+msgid "tis"
+msgstr ""
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "— Select traffic day —"
-msgstr "— Välj trafikdag —"
+#: inc/public/vue-shortcode-config.php:25
+msgid "ons"
+msgstr ""
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "Add deviation"
-msgstr "Lägg till avvikelse"
+#: inc/public/vue-shortcode-config.php:26
+msgid "tor"
+msgstr ""
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "All traffic days for this timetable already have a deviation row."
-msgstr "Alla trafikdagar för denna tidtabell har redan en avvikelserad."
+#: inc/public/vue-shortcode-config.php:27
+msgid "fre"
+msgstr ""
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "Replacement train type for %s"
-msgstr "Ersättningstågtyp för %s"
+#: inc/public/vue-shortcode-config.php:28
+msgid "lör"
+msgstr ""
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "— Default train type —"
-msgstr "— Standardtågtyp —"
+#. translators: %s: month and year
+#: inc/public/vue-shortcode-config.php:57
+#, php-format
+msgid "Månadskalender, %s"
+msgstr ""
 
-#: inc/admin/meta-boxes/service-deviations.php
-msgid "Message to travellers (e.g. steam loco replaced by diesel)"
-msgstr "Meddelande till resenärer (t.ex. ånglok ersatt med diesel)"
+#. translators: %s: month and year
+#: inc/public/vue-shortcode-config.php:62
+#, php-format
+msgid "Trafikdagar för %s"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-services.php
-msgid "Edit trip"
-msgstr "Redigera tur"
+#: inc/public/vue-shortcode-config.php:76
+msgid "Föregående månad"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-services.php
-msgid "Deviation"
-msgstr "Avvikelse"
+#: inc/public/vue-shortcode-config.php:77
+msgid "Nästa månad"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-services.php
-msgid "Deviation (%d)"
-msgstr "Avvikelse (%d)"
+#: inc/public/vue-shortcode-config.php:78
+msgid "Trafikdag"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-overview.php
-msgid "Preview how the timetable looks on the public site. Loaded on demand to keep this screen fast."
-msgstr "Förhandsgranska hur tidtabellen ser ut publikt. Laddas vid behov så att sidan hålls snabb."
+#: inc/public/vue-shortcode-config.php:79
+msgid "antal per dag"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-overview.php
-msgid "No public page linked yet. Run timetable page sync from the dashboard or dev reset."
-msgstr "Ingen publik sida kopplad ännu. Kör synk av tidtabellssidor från dashboard eller dev-reset."
+#: inc/public/vue-shortcode-config.php:80
+msgid "Klicka för att visa tidtabell"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-overview.php
-msgid "Show preview"
-msgstr "Visa förhandsgranskning"
+#: inc/public/vue-shortcode-config.php:126
+msgid "No stations are available."
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-overview.php
-msgid "Open public page"
-msgstr "Öppna publik sida"
+#: inc/public/vue-shortcode-config.php:127
+msgid "Reseplaneraren kräver JavaScript."
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-overview.php
-msgid "Timetable preview"
-msgstr "Förhandsgranskning av tidtabell"
+#: inc/public/vue-shortcode-config.php:128
+msgid "Steg i reseplaneraren"
+msgstr ""
 
-#: inc/assets/admin.php
-msgid "Preview loaded"
-msgstr "Förhandsgranskning laddad"
+#: inc/public/vue-shortcode-config.php:129
+msgid "Planera resa med Lennakatten"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-workspace.php
-msgid "Traffic days"
-msgstr "Trafikdagar"
+#: inc/public/vue-shortcode-config.php:130
+msgid "Välj avgång, ankomst och om du reser enkel eller tur och retur."
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-workspace.php
-msgid "Trips"
-msgstr "Turer"
+#: inc/public/vue-shortcode-config.php:132
+msgid "Till"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-workspace.php
-msgid "Deviations"
-msgstr "Avvikelser"
+#: inc/public/vue-shortcode-config.php:133
+#: inc/public/vue-shortcode-config.php:134
+msgid "Sök eller välj station…"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-workspace.php
-msgid "Preview"
-msgstr "Förhandsgranskning"
+#: inc/public/vue-shortcode-config.php:135
+msgid "Sök avgångsstation"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-workspace.php
-msgid "Define which calendar days this timetable applies. Use a weekday pattern or add single dates."
-msgstr "Ange vilka kalenderdagar tidtabellen gäller. Använd veckomönster eller lägg till enskilda datum."
+#: inc/public/vue-shortcode-config.php:136
+msgid "Sök ankomststation"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-deviations-panel.php
-msgid "Plan replacement train types or traveller messages per trip and traffic day. Save the timetable to apply changes."
-msgstr "Planera ersättningstågtyp och meddelanden per tur och trafikdag. Spara tidtabellen för att verkställa."
+#: inc/public/vue-shortcode-config.php:137
+msgid "Restyp"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-deviations-panel.php
-msgid "Add trips on the Trips tab before creating deviations."
-msgstr "Lägg till turer under fliken Turer innan du skapar avvikelser."
+#: inc/public/vue-shortcode-config.php:138
+msgid "Enkel resa"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-deviations-panel.php
-msgid "Add traffic days on the Traffic days tab before creating deviations."
-msgstr "Lägg till trafikdagar under fliken Trafikdagar innan du skapar avvikelser."
+#: inc/public/vue-shortcode-config.php:139
+msgid "Tur och retur"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-deviations-panel.php
-msgid "Trip"
-msgstr "Tur"
+#: inc/public/vue-shortcode-config.php:140
+msgid "Sök resa"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-deviations-panel.php
-msgid "Replacement train type"
-msgstr "Ersättningstågtyp"
+#: inc/public/vue-shortcode-config.php:141
+msgid "Visa hela tidtabellen"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-deviations-panel.php
-msgid "Message"
-msgstr "Meddelande"
+#: inc/public/vue-shortcode-config.php:142
+msgid "← Tillbaka"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-deviations-panel.php
-msgid "Choose trip and traffic day, then click Add. Fill in replacement type and/or message in the table."
-msgstr "Välj tur och trafikdag, klicka Lägg till. Fyll i ersättningstågtyp och/eller meddelande i tabellen."
+#: inc/public/vue-shortcode-config.php:143
+msgid "Välj datum"
+msgstr ""
 
-#: inc/admin/meta-boxes/timetable-deviations-panel.php
-msgid "— Select trip —"
-msgstr "— Välj tur —"
+#: inc/public/vue-shortcode-config.php:144
+#: inc/public/vue-shortcode-config.php:145
+msgid "Idag"
+msgstr ""
 
-#: inc/admin/meta-boxes/service.php
-msgid "Deviations tab"
-msgstr "Fliken Avvikelser"
+#: inc/public/vue-shortcode-config.php:146
+msgid "Inga bokningsbara dagar denna månad för din resa."
+msgstr ""
 
-#: inc/admin/meta-boxes/service.php
-msgid "Edit stop times here. Plan replacements on the timetable Deviations tab."
-msgstr "Redigera stopptider här. Planera ersättningar under tidtabellens flik Avvikelser."
+#: inc/public/vue-shortcode-config.php:147
+msgid "Byt månad med pilarna ovan."
+msgstr ""
 
-#: inc/admin/meta-boxes.php
-msgid "Timetable"
-msgstr "Tidtabell"
+#: inc/public/vue-shortcode-config.php:148
+msgid "Kan bokas för din resa"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:149
+msgid "Trafik, ej din resa"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:150
+msgid "Ingen trafik"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:151
+msgid "Välj utresa"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:152
+msgid "Välj återresa"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:153
+msgid "Din resa"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:154
+msgid "Fortsätt till biljetter"
+msgstr ""

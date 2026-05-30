@@ -129,4 +129,84 @@
   .mrt-admin-nav__tools {
     float: none;
   }
+
+  .mrt-admin-page--mobile .mrt-admin-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .mrt-admin-stat-card {
+    padding: 12px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 3px;
+  }
+
+  .mrt-admin-stat-card__value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .mrt-admin-stat-card__label {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #50575e;
+  }
+
+  .mrt-admin-quickstart__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mrt-admin-quickstart__actions .button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .mrt-admin-create-form input.regular-text {
+    display: block;
+    width: 100%;
+    margin-bottom: 8px;
+  }
+
+  .mrt-admin-create-form .button {
+    width: 100%;
+  }
+
+  .mrt-admin-card-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .mrt-admin-card-list__item {
+    margin-bottom: 10px;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  }
+
+  .mrt-admin-card-list__item .button {
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .mrt-admin-card-list__empty {
+    padding: 12px 0;
+    color: #646970;
+  }
+
+  .mrt-admin-table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }

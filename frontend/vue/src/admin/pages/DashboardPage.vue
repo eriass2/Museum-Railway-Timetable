@@ -4,11 +4,21 @@ import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
 import type { DashboardPayload } from '../types';
 import AdminNav from '../components/AdminNav.vue';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 
 const router = useRouter();
+const { isMobile } = useMobileAdmin();
 const loading = ref(true);
 const error = ref('');
 const data = ref<DashboardPayload | null>(null);
+
+const statItems = [
+  { key: 'stations', label: 'Stationer' },
+  { key: 'routes', label: 'Rutter' },
+  { key: 'timetables', label: 'Tidtabeller' },
+  { key: 'services', label: 'Turer' },
+  { key: 'train_types', label: 'Tågtyper' },
+] as const;
 
 onMounted(async () => {
   try {
@@ -27,7 +37,7 @@ function openRoute(hashRoute: string) {
 </script>
 
 <template>
-  <div>
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>Museum Railway Timetable</h1>
     <AdminNav />
 
@@ -35,7 +45,13 @@ function openRoute(hashRoute: string) {
     <p v-else-if="error" class="notice notice-error">{{ error }}</p>
 
     <template v-else-if="data">
-      <div class="mrt-admin-stats widefat">
+      <div v-if="isMobile" class="mrt-admin-stat-grid" aria-label="Statistik">
+        <div v-for="item in statItems" :key="item.key" class="mrt-admin-stat-card">
+          <span class="mrt-admin-stat-card__value">{{ data.stats[item.key] }}</span>
+          <span class="mrt-admin-stat-card__label">{{ item.label }}</span>
+        </div>
+      </div>
+      <div v-else class="mrt-admin-stats widefat">
         <p>
           <strong>{{ data.stats.stations }}</strong> stationer ·
           <strong>{{ data.stats.routes }}</strong> rutter ·
@@ -58,44 +74,48 @@ function openRoute(hashRoute: string) {
 
       <div v-if="data.next_traffic.length" class="mrt-admin-panel">
         <h2>Nästa trafik</h2>
-        <table class="widefat striped">
-          <thead>
-            <tr>
-              <th>Datum</th>
-              <th>Tidtabell</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="row in data.next_traffic" :key="row.date + row.timetable_id">
-              <td>{{ row.date }}</td>
-              <td>
-                <button
-                  type="button"
-                  class="button-link"
-                  @click="router.push(`/timetables/${row.timetable_id}`)"
-                >
-                  {{ row.title }}
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="mrt-admin-table-scroll">
+          <table class="widefat striped">
+            <thead>
+              <tr>
+                <th>Datum</th>
+                <th>Tidtabell</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in data.next_traffic" :key="row.date + row.timetable_id">
+                <td>{{ row.date }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="button-link"
+                    @click="router.push(`/timetables/${row.timetable_id}`)"
+                  >
+                    {{ row.title }}
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
 
-      <div class="mrt-admin-panel">
+      <div class="mrt-admin-panel mrt-admin-quickstart">
         <h2>Snabbstart</h2>
-        <p>
+        <p class="mrt-admin-quickstart__actions">
           <button type="button" class="button button-primary" @click="router.push('/timetables')">
             Hantera tidtabeller
           </button>
-          <button
-            type="button"
-            class="button"
-            @click="router.push('/stations-routes')"
-          >
+          <button type="button" class="button" @click="router.push('/stations-routes')">
             Stationer &amp; rutter
           </button>
-          <a v-if="data.links.front" class="button" :href="data.links.front" target="_blank" rel="noopener">
+          <a
+            v-if="data.links.front"
+            class="button"
+            :href="data.links.front"
+            target="_blank"
+            rel="noopener"
+          >
             Visa webbplats
           </a>
         </p>
