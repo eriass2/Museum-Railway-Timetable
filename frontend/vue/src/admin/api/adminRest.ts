@@ -15,6 +15,13 @@ async function parseJson(res: Response): Promise<unknown> {
   }
 }
 
+/** Join WP restUrl (often trailing slash) with path (/timetables). */
+export function buildAdminRestUrl(restUrl: string, path: string): string {
+  const base = restUrl.replace(/\/+$/, '');
+  const suffix = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${suffix}`;
+}
+
 export async function adminFetch<T>(
   path: string,
   init: RequestInit = {},
@@ -25,7 +32,7 @@ export async function adminFetch<T>(
   if (init.body && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }
-  const res = await fetch(`${cfg.restUrl}${path}`, {
+  const res = await fetch(buildAdminRestUrl(cfg.restUrl, path), {
     ...init,
     headers,
     credentials: 'same-origin',
@@ -272,7 +279,7 @@ export function importCsv(file: File, mode: 'merge' | 'override') {
   const body = new FormData();
   body.append('file', file);
   body.append('mode', mode);
-  return fetch(`${cfg.restUrl}import/csv`, {
+  return fetch(buildAdminRestUrl(cfg.restUrl, '/import/csv'), {
     method: 'POST',
     headers: { 'X-WP-Nonce': cfg.restNonce },
     credentials: 'same-origin',

@@ -319,3 +319,48 @@ if (!function_exists('apply_filters')) {
         return $value;
     }
 }
+
+if ( ! function_exists( 'wp_create_nonce' ) ) {
+    function wp_create_nonce( $action = -1 ) {
+        unset( $action );
+        return 'unit-test-nonce';
+    }
+}
+
+if ( ! function_exists( 'wp_verify_nonce' ) ) {
+    /**
+     * @return int|false
+     */
+    function wp_verify_nonce( $nonce, $action = -1 ) {
+        unset( $action );
+        return $nonce === 'unit-test-nonce' ? 1 : false;
+    }
+}
+
+if ( ! class_exists( 'WP_REST_Request' ) ) {
+    class WP_REST_Request {
+        /** @var array<string, string> */
+        private array $headers = array();
+
+        /** @var array<string, mixed> */
+        private array $params = array();
+
+        public function __construct( string $method = 'GET', string $route = '' ) {
+            unset( $method, $route );
+        }
+
+        public function set_header( string $key, string $value ): void {
+            $this->headers[ $key ] = $value;
+        }
+
+        /** @return string|array<int, string>|null */
+        public function get_header( string $key ) {
+            return $this->headers[ $key ] ?? null;
+        }
+
+        /** @return mixed */
+        public function get_param( string $key ) {
+            return $this->params[ $key ] ?? null;
+        }
+    }
+}

@@ -17,6 +17,16 @@ const dashboardPayload = {
   can_operate: true,
 };
 
+import { buildAdminRestUrl } from '../src/admin/api/adminRest';
+
+describe('buildAdminRestUrl', () => {
+  it('joins trailing-slash rest base with path', () => {
+    expect(
+      buildAdminRestUrl('https://example.test/wp-json/museum-railway-timetable/v1/', '/timetables'),
+    ).toBe('https://example.test/wp-json/museum-railway-timetable/v1/timetables');
+  });
+});
+
 describe('admin REST dashboard', () => {
   const adminWindow: { mrtAdminVue?: AdminClientConfig } = {};
 
@@ -31,7 +41,7 @@ describe('admin REST dashboard', () => {
 
   it('loads dashboard payload with REST nonce', async () => {
     adminWindow.mrtAdminVue = {
-      restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1',
+      restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1/',
       restNonce: 'test-nonce',
       initialRoute: '/dashboard',
       adminBase: 'https://example.test/wp-admin/admin.php?page=mrt_app',

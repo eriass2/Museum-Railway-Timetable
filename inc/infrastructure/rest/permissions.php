@@ -54,10 +54,16 @@ function MRT_rest_can_edit_post( int $post_id ): bool {
  */
 function MRT_rest_verify_public_nonce( WP_REST_Request $request ): bool {
 	$nonce = $request->get_header( 'X-WP-Nonce' );
+	if ( is_array( $nonce ) ) {
+		$nonce = isset( $nonce[0] ) ? (string) $nonce[0] : '';
+	}
 	if ( ! is_string( $nonce ) || $nonce === '' ) {
 		$nonce = (string) $request->get_param( '_wpnonce' );
 	}
-	return wp_verify_nonce( $nonce, 'wp_rest' );
+	if ( $nonce === '' ) {
+		return false;
+	}
+	return wp_verify_nonce( $nonce, 'wp_rest' ) !== false;
 }
 
 /**
