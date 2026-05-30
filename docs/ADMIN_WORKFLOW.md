@@ -2,7 +2,7 @@
 
 Detta dokument beskriver det rekommenderade arbetsflödet för att skapa en komplett tidtabell i admin-gränssnittet.
 
-**Kod:** Dashboard och meta boxes ligger under `inc/admin/` (menyn via `inc/admin/menu.php`). Demo-import: **Railway Timetable → Import demo data** (`inc/admin/tools/import-lennakatten.php`). Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) för component demo-sida.
+**Kod:** Vue-admin under **Railway Timetable** i WP-menyn (`admin.php?page=mrt_app`). Legacy PHP-verktyg (CSV-import m.m.) finns under **Inställningar & verktyg**. Se [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) och [REST_API.md](REST_API.md).
 
 ## Översikt
 
@@ -25,14 +25,15 @@ För att skapa en fungerande tidtabell behöver du:
 
 **Så här gör du:**
 
-1. Gå till **Railway Timetable → Stations** i admin-menyn
-2. Klicka på **"Add New"** (eller "Lägg till ny")
-3. Fyll i:
+1. Gå till **Railway Timetable → Stationer & rutter** i admin-menyn
+2. Skapa en ny station via formuläret (titel, typ, koordinater, visningsordning)
+3. Spara
+
+**Fält:**
    - **Titel**: Stationens namn (t.ex. "Hultsfred Museum")
    - **Station Type**: Välj typ (Station, Halt, Depot, eller Museum)
    - **Latitude/Longitude**: (valfritt) Koordinater för kartvisning
    - **Display Order**: Ordning för sortering (lägre nummer = högre upp)
-4. Klicka **"Publish"** (eller "Publicera")
 
 **Tips:**
 - Du kan skapa alla stations på en gång, eller skapa dem när du behöver dem

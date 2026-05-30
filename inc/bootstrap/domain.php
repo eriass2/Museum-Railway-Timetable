@@ -25,6 +25,8 @@ function MRT_load_journey_domain_modules(): void {
 	require_once $journey_dir . 'journey-notice.php';
 	require_once $journey_dir . 'journey-normalize.php';
 	require_once $journey_dir . 'journey-scoring.php';
+	require_once $journey_dir . 'request-params.php';
+	require_once $journey_dir . 'public-handlers.php';
 }
 
 /**
@@ -52,7 +54,11 @@ function MRT_load_domain_modules(): void {
 	require_once MRT_PATH . 'inc/domain/service/services.php';
 	require_once MRT_PATH . 'inc/domain/service/highlight.php';
 	require_once MRT_PATH . 'inc/domain/service/stop-times.php';
+	require_once MRT_PATH . 'inc/domain/service/stoptimes-persist.php';
+	require_once MRT_PATH . 'inc/domain/service/route-stoptimes-editor.php';
+	require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
 	require_once MRT_PATH . 'inc/domain/service/connections.php';
+	require_once MRT_PATH . 'inc/domain/route/destinations.php';
 	MRT_load_journey_domain_modules();
 	MRT_load_timetable_view_domain_modules();
 }

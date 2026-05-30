@@ -24,14 +24,23 @@ if (!jsRel) {
   process.exit(1);
 }
 
+const REST_PREFIX = '/wp-json/museum-railway-timetable/v1';
+const port = Number(process.env.MRT_E2E_PORT || 5199);
+
+function restClientConfig() {
+  return {
+    restUrl: `http://127.0.0.1:${port}${REST_PREFIX}/`,
+    restNonce: 'e2e-test',
+  };
+}
+
 function buildWizardConfig(requestUrl) {
   const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
   const debug = params.get('debug') || '';
 
   const config = {
     app: 'wizard',
-    ajaxurl: '/wp-admin/admin-ajax.php',
-    nonce: 'e2e-test',
+    ...restClientConfig(),
     stations: [
       { id: 1, title: 'Uppsala' },
       { id: 2, title: 'Märsta' },
@@ -159,8 +168,7 @@ function buildWizardConfig(requestUrl) {
 function buildMonthConfig() {
   return {
     app: 'month',
-    ajaxurl: '/wp-admin/admin-ajax.php',
-    nonce: 'e2e-test',
+    ...restClientConfig(),
     monthTitle: 'maj 2026',
     monthAriaLabel: 'Månadskalender, maj 2026',
     tableCaption: 'Trafikdagar för maj 2026',
@@ -185,8 +193,7 @@ function buildMonthConfig() {
 function buildOverviewConfig() {
   return {
     app: 'overview',
-    ajaxurl: '/wp-admin/admin-ajax.php',
-    nonce: 'e2e-test',
+    ...restClientConfig(),
     timetableId: 1,
     strings: { loading: 'Laddar...', errorGeneric: 'Kunde inte ladda översikten.' },
   };
@@ -200,25 +207,21 @@ function readRequestBody(req) {
   });
 }
 
-async function handleAjaxPost(req, res, requestUrl) {
+async function handleRestRequest(req, res, pathOnly, requestUrl) {
   const query = new URL(requestUrl, 'http://127.0.0.1').searchParams;
-  const body = await readRequestBody(req);
-  const form = new URLSearchParams(body);
-  const action = form.get('action') || '';
-
-  if (query.get('fail') === 'ajax') {
-    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-    res.end(JSON.stringify({ success: false, data: { message: 'AJAX-fel (e2e)' } }));
+  if (query.get('fail') === 'rest') {
+    res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ message: 'REST-fel (e2e)' }));
     return;
   }
 
-  let data = { overview: buildSampleOverviewPayload('timetable') };
-  if (action === 'mrt_get_timetable_for_date') {
-    data = { overview: buildSampleOverviewPayload('day') };
+  let payload = { overview: buildSampleOverviewPayload('timetable') };
+  if (pathOnly.endsWith('/timetables/day')) {
+    payload = { overview: buildSampleOverviewPayload('day') };
   }
 
   res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-  res.end(JSON.stringify({ success: true, data }));
+  res.end(JSON.stringify(payload));
 }
 
 function renderAppHtml(app, config) {
@@ -244,8 +247,8 @@ function renderWizardHtml(requestUrl) {
 function renderMonthHtml(requestUrl) {
   const config = buildMonthConfig();
   const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
-  if (params.get('fail') === 'ajax') {
-    config.ajaxurl = '/wp-admin/admin-ajax.php?fail=ajax';
+  if (params.get('fail') === 'rest') {
+    config.restUrl = `${config.restUrl}?fail=rest`;
   }
   return renderAppHtml('month', config);
 }
@@ -259,8 +262,6 @@ const mime = {
   '.css': 'text/css',
   '.json': 'application/json',
 };
-
-const port = Number(process.env.MRT_E2E_PORT || 5199);
 
 http
   .createServer((req, res) => {
@@ -281,8 +282,8 @@ http
       res.end(renderOverviewHtml());
       return;
     }
-    if (pathOnly === '/wp-admin/admin-ajax.php' && req.method === 'POST') {
-      handleAjaxPost(req, res, rawUrl);
+    if (pathOnly.startsWith(REST_PREFIX)) {
+      void handleRestRequest(req, res, pathOnly, rawUrl);
       return;
     }
     const rel = pathOnly.replace(/^\//, '');

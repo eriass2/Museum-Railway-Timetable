@@ -16,6 +16,8 @@ require_once MRT_PATH . 'inc/infrastructure/rest/dashboard.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/timetables.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/stations-routes.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/stop-times.php';
+require_once MRT_PATH . 'inc/infrastructure/rest/journey-public.php';
+require_once MRT_PATH . 'inc/infrastructure/rest/settings-admin.php';
 
 /**
  * Register all plugin REST routes.
@@ -25,6 +27,8 @@ function MRT_register_rest_routes(): void {
 	MRT_rest_register_timetable_routes();
 	MRT_rest_register_stations_routes_routes();
 	MRT_rest_register_stop_times_routes();
+	MRT_rest_register_journey_public_routes();
+	MRT_rest_register_settings_routes();
 }
 
 add_action( 'rest_api_init', 'MRT_register_rest_routes' );

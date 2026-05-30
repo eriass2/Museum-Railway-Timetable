@@ -20,7 +20,7 @@ $required_files = @(
     "inc/assets/loader.php",
     "inc/shortcodes.php",
     "inc/infrastructure/post-types.php",
-    "inc/infrastructure/ajax.php",
+    "inc/infrastructure/rest/loader.php",
     "inc/bootstrap.php",
     "inc/bootstrap/domain.php",
     "inc/infrastructure/wordpress/helpers-utils.php",

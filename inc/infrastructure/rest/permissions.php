@@ -46,3 +46,43 @@ function MRT_rest_can_edit_post( int $post_id ): bool {
 	}
 	return current_user_can( 'edit_post', $post_id );
 }
+
+/**
+ * Verify wp_rest nonce from a REST request.
+ *
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_verify_public_nonce( WP_REST_Request $request ): bool {
+	$nonce = $request->get_header( 'X-WP-Nonce' );
+	if ( ! is_string( $nonce ) || $nonce === '' ) {
+		$nonce = (string) $request->get_param( '_wpnonce' );
+	}
+	return wp_verify_nonce( $nonce, 'wp_rest' );
+}
+
+/**
+ * Public frontend REST (wizard, overview) with nonce, or admin read.
+ *
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_can_read_public( WP_REST_Request $request ): bool {
+	if ( MRT_rest_can_read() ) {
+		return true;
+	}
+	return MRT_rest_verify_public_nonce( $request );
+}
+
+/**
+ * Extract merged JSON/query params from a REST request.
+ *
+ * @param WP_REST_Request $request Request.
+ * @return array<string, mixed>
+ */
+function MRT_rest_request_input( WP_REST_Request $request ): array {
+	$json = $request->get_json_params();
+	if ( is_array( $json ) && $json !== array() ) {
+		return $json;
+	}
+	$params = $request->get_params();
+	return is_array( $params ) ? $params : array();
+}

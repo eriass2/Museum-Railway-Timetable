@@ -11,8 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/infrastructure/ajax/timetable-services.php';
-require_once MRT_PATH . 'inc/infrastructure/ajax/route-destinations.php';
+require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
+require_once MRT_PATH . 'inc/domain/route/destinations.php';
 
 /**
  * @return array<int, array{id: int, title: string, dates_count: int, trips_count: int}>

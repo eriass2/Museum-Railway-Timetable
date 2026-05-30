@@ -7,11 +7,20 @@ const route = useRoute();
 const router = useRouter();
 const cfg = adminConfig();
 
-const tabs = computed(() => [
-  { to: '/dashboard', label: 'Översikt' },
-  { to: '/timetables', label: 'Tidtabeller' },
-  { to: '/stations-routes', label: 'Stationer & rutter' },
-]);
+const tabs = computed(() => {
+  const base = [
+    { to: '/dashboard', label: 'Översikt' },
+    { to: '/timetables', label: 'Tidtabeller' },
+    { to: '/stations-routes', label: 'Stationer & rutter' },
+  ];
+  if (cfg.canManage) {
+    base.push(
+      { to: '/settings', label: 'Inställningar' },
+      { to: '/prices', label: 'Priser' },
+    );
+  }
+  return base;
+});
 
 function isActive(path: string): boolean {
   if (path === '/timetables') {

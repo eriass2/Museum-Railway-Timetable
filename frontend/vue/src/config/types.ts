@@ -1,9 +1,14 @@
 /** Shared fields on every Vue mount config from PHP. */
-export type MrtAjaxConfig = {
-  ajaxurl?: string;
+export type MrtRestConfig = {
+  restUrl?: string;
+  restNonce?: string;
+  /** @deprecated Legacy alias for restNonce */
   nonce?: string;
   strings?: Record<string, string>;
 };
+
+/** @deprecated Use MrtRestConfig */
+export type MrtAjaxConfig = MrtRestConfig;
 
 export type MrtVueApp = 'month' | 'overview' | 'wizard';
 
@@ -13,7 +18,7 @@ export type MonthDayMeta = {
   ymd?: string;
 };
 
-export type MonthVueConfig = MrtAjaxConfig & {
+export type MonthVueConfig = MrtRestConfig & {
   app: 'month';
   monthUid?: string;
   monthTitle?: string;
@@ -39,7 +44,7 @@ export type MonthVueConfig = MrtAjaxConfig & {
 
 import type { TimetableOverviewPayload } from '../types/timetableOverview';
 
-export type OverviewVueConfig = MrtAjaxConfig & {
+export type OverviewVueConfig = MrtRestConfig & {
   app: 'overview';
   timetableId: number;
   overview?: TimetableOverviewPayload;
@@ -48,7 +53,7 @@ export type OverviewVueConfig = MrtAjaxConfig & {
 
 export type WizardStation = { id: number; title: string };
 
-export type WizardVueConfig = MrtAjaxConfig & {
+export type WizardVueConfig = MrtRestConfig & {
   app: 'wizard';
   stations?: WizardStation[];
   ticketUrl?: string;

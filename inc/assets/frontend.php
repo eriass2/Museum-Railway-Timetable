@@ -137,8 +137,6 @@ function MRT_journey_wizard_script_localization(): array {
 	$cal = MRT_journey_wizard_calendar_i18n_arrays();
 	$l10n = array_merge(
 		array(
-			'ajaxurl'        => admin_url( 'admin-ajax.php' ),
-			'nonce'          => wp_create_nonce( 'mrt_frontend' ),
 			'monthNames'     => $cal['monthNames'],
 			'weekdayAbbrev'  => $cal['weekdayAbbrev'],
 			'trainTypeIcons'     => MRT_train_type_icon_urls(),
@@ -264,8 +262,6 @@ function MRT_enqueue_timetable_index_styles_if_needed(): void {
  */
 function MRT_frontend_script_localization(): array {
 	return array(
-		'ajaxurl'           => admin_url( 'admin-ajax.php' ),
-		'nonce'             => wp_create_nonce( 'mrt_frontend' ),
 		'search'            => __( 'Sök', MRT_TEXT_DOMAIN ),
 		'searching'         => __( 'Söker...', MRT_TEXT_DOMAIN ),
 		'loading'           => __( 'Laddar...', MRT_TEXT_DOMAIN ),

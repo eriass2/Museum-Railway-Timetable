@@ -1,8 +1,8 @@
 import { ref } from 'vue';
-import { mrtPost, type MrtAjaxResponse } from '../api/mrtApi';
-import type { MrtAjaxConfig } from '../config/types';
+import { mrtRestRequest, type MrtAjaxResponse } from '../api/mrtRest';
+import type { MrtRestConfig } from '../config/types';
 
-export function useMrtAjax(config: MrtAjaxConfig) {
+export function useMrtAjax(config: MrtRestConfig) {
   const loading = ref(false);
   const error = ref('');
 
@@ -12,7 +12,7 @@ export function useMrtAjax(config: MrtAjaxConfig) {
   ): Promise<MrtAjaxResponse<T>> {
     loading.value = true;
     error.value = '';
-    const res = await mrtPost<T>(config, action, data);
+    const res = await mrtRestRequest<T>(config, action, data);
     loading.value = false;
     if (!res.success) {
       error.value = res.message || 'Begäran misslyckades';

@@ -2,11 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mrtPost } from '../src/api/mrtApi';
 
 const config = {
-  ajaxurl: 'https://example.test/wp-admin/admin-ajax.php',
-  nonce: 'test-nonce',
+  restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1/',
+  restNonce: 'test-nonce',
 };
 
-describe('mrtPost', () => {
+describe('mrtPost (REST)', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
@@ -17,8 +17,7 @@ describe('mrtPost', () => {
       vi.fn().mockResolvedValue({
         ok: true,
         json: async () => ({
-          success: true,
-          data: { overview: { scope: 'timetable', timetableId: 1, groups: [] } },
+          overview: { scope: 'timetable', timetableId: 1, groups: [] },
         }),
       }),
     );
@@ -33,23 +32,31 @@ describe('mrtPost', () => {
   });
 
   it('returns message on HTTP error', async () => {
-    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: false }));
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+        json: async () => ({ message: 'Serverfel' }),
+      }),
+    );
 
-    const res = await mrtPost(config, 'mrt_test');
+    const res = await mrtPost(config, 'mrt_timetable_overview_data', { timetable_id: 1 });
     expect(res.success).toBe(false);
-    expect(res.message).toBe('Nätverksfel');
+    expect(res.message).toBe('Serverfel');
   });
 
-  it('includes nonce in POST body', async () => {
+  it('sends REST nonce header on GET overview', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
-      json: async () => ({ success: true, data: {} }),
+      json: async () => ({ overview: {} }),
     });
     vi.stubGlobal('fetch', fetchMock);
 
-    await mrtPost(config, 'mrt_test', { foo: 1 });
-    const body = String(fetchMock.mock.calls[0][1].body);
-    expect(body).toContain('nonce=test-nonce');
-    expect(body).toContain('action=mrt_test');
+    await mrtPost(config, 'mrt_timetable_overview_data', { timetable_id: 42 });
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(String(url)).toContain('/timetables/42/overview');
+    expect(init.method).toBe('GET');
+    expect(init.headers['X-WP-Nonce']).toBe('test-nonce');
   });
 });

@@ -60,7 +60,7 @@ function MRT_vue_read_manifest(): ?array {
 }
 
 /**
- * Shared AJAX / i18n bootstrap for Vue apps.
+ * Shared REST / i18n bootstrap for Vue apps.
  *
  * @return array<string, mixed>
  */
@@ -70,9 +70,9 @@ function MRT_vue_shared_client_config(): array {
 		: array();
 
 	return array(
-		'ajaxurl' => isset( $fe['ajaxurl'] ) ? (string) $fe['ajaxurl'] : admin_url( 'admin-ajax.php' ),
-		'nonce'   => isset( $fe['nonce'] ) ? (string) $fe['nonce'] : wp_create_nonce( 'mrt_frontend' ),
-		'strings' => $fe,
+		'restUrl'   => esc_url_raw( rest_url( MRT_REST_NAMESPACE ) ),
+		'restNonce' => wp_create_nonce( 'wp_rest' ),
+		'strings'   => $fe,
 	);
 }
 

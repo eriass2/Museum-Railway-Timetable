@@ -47,29 +47,22 @@ Exakta paths och payloads dokumenteras i [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) 
 
 ---
 
-## Migration från AJAX (nuvarande läge)
+## Migration från AJAX
 
-Allt under `inc/infrastructure/ajax/` ska flyttas till REST och sedan raderas.
+**Status (2026-05):** AJAX-lagret är borttaget. Publikt Vue och admin använder REST under `museum-railway-timetable/v1`.
 
-| AJAX action (idag) | REST-ersättare (plan) | Område |
-|--------------------|------------------------|--------|
-| `mrt_search_journey` | `POST /journey/search` | Publikt |
-| `mrt_journey_calendar_month` | `GET /journey/calendar` | Publikt |
-| `mrt_journey_connection_detail` | `GET /journey/connections/{id}` | Publikt |
-| `mrt_get_timetable_for_date` | `GET /timetables/for-date` | Publikt |
-| `mrt_timetable_overview_data` | `GET /timetables/{id}/overview` | Publikt + admin |
-| `mrt_*_stoptime*` | `PUT /services/{id}/stop-times` | Admin |
-| `mrt_add_service_to_timetable` | `POST /timetables/{id}/services` | Admin |
-| `mrt_remove_service_from_timetable` | `DELETE /timetables/{id}/services/{sid}` | Admin |
-| `mrt_get_route_destinations` | `GET /routes/{id}/destinations` | Admin |
-| `mrt_get_route_stations_for_stoptimes` | `GET /routes/{id}/stations` | Admin |
-| `mrt_save_route_end_stations` | `PATCH /routes/{id}` | Admin |
+| Tidigare AJAX action | REST |
+|--------------------|------|
+| `mrt_search_journey` | `POST /journey/search` |
+| `mrt_journey_calendar_month` | `POST /journey/calendar` |
+| `mrt_journey_connection_detail` | `POST /journey/connection-detail` |
+| `mrt_get_timetable_for_date` | `GET /timetables/day?date=&train_type=` |
+| `mrt_timetable_overview_data` | `GET /timetables/{id}/overview` |
+| Admin stopptider/turer/rutter | Se tabellen ovan (admin routes) |
 
-**Klientkod att migrera:**
+**Klient:** `frontend/vue/src/api/mrtRest.ts` (publikt); `frontend/vue/src/admin/api/adminRest.ts` (admin).
 
-- `frontend/vue/src/api/mrtApi.ts` → `mrtRest.ts` (eller liknande)
-- `assets/admin-*.js` → ersätts av Vue admin (tas bort)
-- `inc/assets/admin.php` / `frontend.php` — sluta lokalisera `ajaxurl`
+Publika routes kräver `X-WP-Nonce` (`wp_rest`) i frontend-config (`restUrl` + `restNonce`).
 
 ---
 

@@ -1,5 +1,5 @@
 import { unref, type MaybeRef } from 'vue';
-import { mrtPost } from '../../api/mrtApi';
+import { mrtRestRequest } from '../../api/mrtRest';
 import type { WizardVueConfig } from '../../config/types';
 import type {
   ConnectionDetailPayload,
@@ -32,7 +32,7 @@ export async function fetchConnectionLegDetail(
 ): Promise<ConnectionDetailPayload | null> {
   const from = leg.from_station_id || unref(params.legFrom);
   const to = leg.to_station_id || unref(params.legTo);
-  const res = await mrtPost<ConnectionDetailPayload>(
+  const res = await mrtRestRequest<ConnectionDetailPayload>(
     params.config,
     'mrt_journey_connection_detail',
     { from_station: from, to_station: to, service_id: leg.service_id },

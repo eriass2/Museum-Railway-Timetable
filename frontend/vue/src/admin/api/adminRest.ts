@@ -73,9 +73,9 @@ export function updateTimetable(
 }
 
 export function getTimetableOverview(id: number) {
-  return adminFetch<import('../../types/timetableOverview').TimetableOverviewPayload>(
+  return adminFetch<{ overview: import('../../types/timetableOverview').TimetableOverviewPayload }>(
     `/timetables/${id}/overview`,
-  );
+  ).then((res) => res.overview);
 }
 
 export function addTimetableService(
@@ -180,5 +180,41 @@ export function saveDeviations(
   return adminFetch<{ saved: boolean }>(`/timetables/${timetableId}/deviations`, {
     method: 'PUT',
     body: JSON.stringify({ by_service: byService }),
+  });
+}
+
+export type SettingsPayload = {
+  enabled: boolean;
+  note: string;
+  min_transfer_minutes: number;
+  max_transfer_minutes: number;
+};
+
+export function getSettings() {
+  return adminFetch<SettingsPayload>('/settings');
+}
+
+export function saveSettings(body: SettingsPayload) {
+  return adminFetch<SettingsPayload>('/settings', {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  });
+}
+
+export type PricesPayload = {
+  matrix: Record<string, Record<string, Record<number, number | null>>>;
+  ticket_types: Record<string, string>;
+  categories: Record<string, string>;
+  zones: number[];
+};
+
+export function getPrices() {
+  return adminFetch<PricesPayload>('/settings/prices');
+}
+
+export function savePrices(matrix: PricesPayload['matrix']) {
+  return adminFetch<PricesPayload>('/settings/prices', {
+    method: 'PATCH',
+    body: JSON.stringify({ matrix }),
   });
 }

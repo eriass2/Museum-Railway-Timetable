@@ -288,3 +288,31 @@ function MRT_get_route_label_from_unique_end_station( $route_id, array $end_stat
 	}
 	return MRT_get_route_label_from_end_station( $route_id, reset( $unique_end_stations ) );
 }
+
+/**
+ * Persist one route terminus station meta value.
+ *
+ * @param int    $route_id Route post ID.
+ * @param int    $station_id Station post ID (0 clears).
+ * @param string $meta_key Meta key.
+ */
+function MRT_update_route_terminus_station_meta( int $route_id, int $station_id, string $meta_key ): void {
+	if ( $station_id > 0 ) {
+		update_post_meta( $route_id, $meta_key, $station_id );
+		return;
+	}
+	delete_post_meta( $route_id, $meta_key );
+}
+
+/**
+ * Station post title or empty string.
+ *
+ * @param int $station_id Station post ID.
+ */
+function MRT_get_station_post_title( int $station_id ): string {
+	if ( $station_id <= 0 ) {
+		return '';
+	}
+	$post = get_post( $station_id );
+	return ( $post && is_string( $post->post_title ) ) ? $post->post_title : '';
+}

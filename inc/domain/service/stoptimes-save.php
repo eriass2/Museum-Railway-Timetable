@@ -11,7 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/infrastructure/ajax/stoptimes.php';
+require_once MRT_PATH . 'inc/domain/service/stoptimes-persist.php';
+require_once MRT_PATH . 'inc/domain/service/route-stoptimes-editor.php';
 
 /**
  * Save all stop times for a service.
@@ -59,7 +60,6 @@ function MRT_get_service_stoptimes_editor_payload( int $service_id ) {
 	if ( $route_id <= 0 ) {
 		return new WP_Error( 'no_route', __( 'Trip has no route.', 'museum-railway-timetable' ) );
 	}
-	require_once MRT_PATH . 'inc/infrastructure/ajax/route-stations.php';
 	$route_stations = MRT_get_route_stations( $route_id );
 	$existing       = MRT_map_existing_stoptimes_by_station( $service_id );
 	$stations       = MRT_build_stoptimes_station_rows( $route_stations, $existing );

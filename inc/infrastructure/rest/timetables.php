@@ -58,7 +58,7 @@ function MRT_rest_register_timetable_routes(): void {
 		array(
 			'methods'             => WP_REST_Server::READABLE,
 			'callback'            => 'MRT_rest_timetable_overview_handler',
-			'permission_callback' => 'MRT_rest_can_read',
+			'permission_callback' => 'MRT_rest_can_read_public',
 		)
 	);
 
@@ -162,7 +162,7 @@ function MRT_rest_timetable_overview_handler( WP_REST_Request $request ) {
 	if ( is_wp_error( $data ) ) {
 		return $data;
 	}
-	return rest_ensure_response( $data );
+	return rest_ensure_response( array( 'overview' => $data ) );
 }
 
 /**

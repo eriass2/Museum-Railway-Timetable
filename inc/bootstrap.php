@@ -30,7 +30,6 @@ function MRT_bootstrap_load_app(): void {
 	require_once MRT_PATH . 'inc/assets.php';
 	require_once MRT_PATH . 'inc/admin.php';
 	require_once MRT_PATH . 'inc/infrastructure/rest/loader.php';
-	require_once MRT_PATH . 'inc/infrastructure/ajax.php';
 	require_once MRT_PATH . 'inc/shortcodes.php';
 }
 

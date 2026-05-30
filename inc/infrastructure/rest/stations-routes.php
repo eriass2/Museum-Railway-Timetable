@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/infrastructure/ajax/route-stations.php';
 
 /**
  * Register stations/routes routes.
