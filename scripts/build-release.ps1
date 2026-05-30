@@ -5,8 +5,8 @@
 #   powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-release.ps1 -SkipBuild
 #   powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\build-release.ps1 -UseDocker
 #
-# Output: release/museum-railway-timetable-<version>.zip
-# Upload: unzip into wp-content/plugins/ (or upload zip via host panel).
+# Output: release/museum-railway-timetable.zip (folder name = zip name, avoids double-nesting)
+# Upload: wp-admin → Plugins → Add New → Upload Plugin (recommended).
 
 param(
     [switch] $SkipBuild = $false,
@@ -116,6 +116,125 @@ function Invoke-PluginValidate {
     }
 }
 
+function Write-InstallTxt {
+    param(
+        [string] $PluginDir,
+        [string] $Version
+    )
+
+    $mainFile = "$pluginSlug.php"
+    $lines = @(
+        "Installation - Museum Railway Timetable v$Version",
+        "",
+        "Rekommenderat:",
+        "  wp-admin -> Plugins -> Add New -> Upload Plugin",
+        "  Valj zip-filen -> Install Now -> Activate",
+        "",
+        "Manuellt (FTP / filhanterare):",
+        "  Packa upp zip direkt i wp-content/plugins/",
+        "  sa att denna fil hamnar har:",
+        "    wp-content/plugins/$pluginSlug/$mainFile",
+        "",
+        "Vanligt fel - filnamn med backslash (Linux):",
+        "    $pluginSlug\inc\admin.php  (FEL - ska vara mappen inc/)",
+        "  Orsak: Windows-zip med backslash. Anvand build-release.ps1 fran senaste repo.",
+        "",
+        "Vanligt fel - extra mapp (aktivering misslyckas):",
+        "    wp-content/plugins/$pluginSlug/$pluginSlug/$mainFile",
+        "  Orsak: gammal installation fanns kvar vid ny uppladdning.",
+        "",
+        "Innan du laddar upp igen:",
+        "  1. Plugins -> ta bort ALLA Museum Railway Timetable (Delete, inte bara avaktivera)",
+        "  2. Kontrollera i filhaneraren att mappen plugins/$pluginSlug ar borta",
+        "  3. Ladda upp zip pa nytt via Upload Plugin",
+        "  4. Aktivera - ska da bara finnas EN rad i pluginlistan",
+        "",
+        "Version $Version finns aven i plugin-huvudet ($mainFile)."
+    )
+    Set-Content -Path (Join-Path $PluginDir "INSTALL.txt") -Value $lines -Encoding UTF8
+}
+
+function Test-ReleaseZipStructure {
+    param([string] $ZipPath)
+
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+    $zip = [System.IO.Compression.ZipFile]::OpenRead($ZipPath)
+    try {
+        $mainEntry = "$pluginSlug/$pluginSlug.php"
+        $found = $false
+        foreach ($entry in $zip.Entries) {
+            if ($entry.FullName -match '\\') {
+                throw "Zip entry uses backslash (breaks Linux hosts): $($entry.FullName)"
+            }
+            $name = $entry.FullName
+            if ($name -eq $mainEntry) {
+                $found = $true
+            }
+        }
+        if (-not $found) {
+            throw "Zip missing required entry: $mainEntry"
+        }
+        Write-Host "  Zip OK: $mainEntry, forward-slash paths only" -ForegroundColor Green
+    } finally {
+        $zip.Dispose()
+    }
+}
+
+function New-ForwardSlashZip {
+    param(
+        [string] $PluginDir,
+        [string] $ZipPath
+    )
+
+    Add-Type -AssemblyName System.IO.Compression
+    Add-Type -AssemblyName System.IO.Compression.FileSystem
+
+    if (Test-Path $ZipPath) {
+        Remove-Item $ZipPath -Force
+    }
+
+    $root = (Resolve-Path $PluginDir).Path
+    $prefix = Split-Path $PluginDir -Leaf
+    $archive = [System.IO.Compression.ZipFile]::Open($ZipPath, [System.IO.Compression.ZipArchiveMode]::Create)
+    try {
+        Get-ChildItem -Path $PluginDir -Recurse -File | ForEach-Object {
+            $relative = $_.FullName.Substring($root.Length).TrimStart('\', '/')
+            $entryName = "$prefix/" + ($relative -replace '\\', '/')
+            [void][System.IO.Compression.ZipFileExtensions]::CreateEntryFromFile(
+                $archive,
+                $_.FullName,
+                $entryName,
+                [System.IO.Compression.CompressionLevel]::Optimal
+            )
+        }
+    } finally {
+        $archive.Dispose()
+    }
+}
+
+function New-LinuxZipViaDocker {
+    param(
+        [string] $ReleaseDir,
+        [string] $ZipPath
+    )
+
+    if (-not (Test-DockerAvailable)) {
+        return $false
+    }
+
+    $releaseMount = $ReleaseDir -replace '\\', '/'
+    if ($releaseMount -match '^[A-Za-z]:') {
+        $drive = $releaseMount.Substring(0, 1).ToLower()
+        $releaseMount = "/${drive}/" + $releaseMount.Substring(3)
+    }
+
+    Write-Host "  Zip via Linux (Docker alpine + zip)" -ForegroundColor Gray
+    & docker run --rm `
+        -v "${ReleaseDir}:/release" `
+        alpine sh -c "apk add --no-cache zip >/dev/null && cd /release/staging && zip -qr /release/museum-railway-timetable.zip museum-railway-timetable"
+    return $LASTEXITCODE -eq 0
+}
+
 function New-ReleaseZip {
     param(
         [string] $Version,
@@ -138,17 +257,30 @@ function New-ReleaseZip {
         Write-Host "  Packed: $item" -ForegroundColor Green
     }
 
+    Write-InstallTxt -PluginDir $pluginDir -Version $Version
+    Write-Host "  Packed: INSTALL.txt" -ForegroundColor Green
+
     if (-not (Test-Path $ReleaseDir)) {
         New-Item -ItemType Directory -Path $ReleaseDir -Force | Out-Null
     }
 
-    $zipName = "$pluginSlug-$Version.zip"
+    # Zip name matches plugin folder slug — avoids museum-railway-timetable-0.3.0/museum-railway-timetable/…
+    $zipName = "$pluginSlug.zip"
     $zipPath = Join-Path $ReleaseDir $zipName
     if (Test-Path $zipPath) {
         Remove-Item $zipPath -Force
     }
 
-    Compress-Archive -Path $pluginDir -DestinationPath $zipPath -CompressionLevel Optimal
+    # Remove legacy version-suffixed zips from earlier build scripts.
+    Get-ChildItem -Path $ReleaseDir -Filter "$pluginSlug-*.zip" -ErrorAction SilentlyContinue |
+        Remove-Item -Force
+
+    $usedDocker = New-LinuxZipViaDocker -ReleaseDir $ReleaseDir -ZipPath $zipPath
+    if (-not $usedDocker) {
+        Write-Host "  Zip via .NET (forward-slash entries)" -ForegroundColor Gray
+        New-ForwardSlashZip -PluginDir $pluginDir -ZipPath $zipPath
+    }
+    Test-ReleaseZipStructure -ZipPath $zipPath
     Remove-Item $StagingRoot -Recurse -Force
 
     return $zipPath
@@ -181,5 +313,6 @@ $zipPath = New-ReleaseZip -Version $version -ReleaseDir $releaseDir -StagingRoot
 $sizeMb = [math]::Round((Get-Item $zipPath).Length / 1MB, 2)
 Write-Host "`nRelease ready:" -ForegroundColor Green
 Write-Host "  $zipPath ($sizeMb MB)" -ForegroundColor White
-Write-Host "`nLive: upload zip, extract to wp-content/plugins/, activate in WP admin." -ForegroundColor Gray
+Write-Host "`nLive: wp-admin -> Plugins -> Add New -> Upload Plugin -> choose this zip." -ForegroundColor Gray
+Write-Host "Manual FTP: extract into wp-content/plugins/ (see INSTALL.txt in zip)." -ForegroundColor Gray
 Write-Host "Ensure pretty permalinks and WP_DEBUG off on production.`n" -ForegroundColor Gray
