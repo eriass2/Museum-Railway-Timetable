@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { adminConfig } from '../types';
+import { ADMIN_WP_PAGE_SLUGS, adminConfig, adminMenuUrl } from '../types';
 
 const route = useRoute();
 const router = useRouter();
@@ -34,6 +34,15 @@ function isActive(path: string): boolean {
   }
   return route.path === path || route.path.startsWith(`${path}/`);
 }
+
+function navigate(path: string) {
+  const wpSlug = ADMIN_WP_PAGE_SLUGS[path];
+  if (wpSlug) {
+    window.location.assign(adminMenuUrl(wpSlug));
+    return;
+  }
+  void router.push(path);
+}
 </script>
 
 <template>
@@ -44,7 +53,7 @@ function isActive(path: string): boolean {
       href="#"
       class="nav-tab"
       :class="{ 'nav-tab-active': isActive(tab.to) }"
-      @click.prevent="router.push(tab.to)"
+      @click.prevent="navigate(tab.to)"
     >
       {{ tab.label }}
     </a>

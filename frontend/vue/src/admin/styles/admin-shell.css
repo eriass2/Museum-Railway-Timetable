@@ -159,6 +159,40 @@
   color: #50575e;
 }
 
+.mrt-admin-shortcode {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #dcdcde;
+}
+
+.mrt-admin-shortcode:first-of-type {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.mrt-admin-shortcode h3 {
+  margin: 0 0 8px;
+}
+
+.mrt-admin-shortcode__example code {
+  display: inline-block;
+  margin-top: 4px;
+  word-break: break-word;
+}
+
+.mrt-admin-shortcode__params {
+  margin-top: 10px;
+}
+
+.mrt-admin-shortcode__params code {
+  white-space: nowrap;
+}
+
+.mrt-admin-help-table {
+  margin-top: 12px;
+}
+
 @media (max-width: 782px) {
   .mrt-admin-ops-today__actions {
     flex-direction: column;

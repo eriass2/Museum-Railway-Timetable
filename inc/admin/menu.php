@@ -13,16 +13,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Vue admin submenu definitions (slug => label + capability).
+ * Vue admin submenu definitions (slug => label + capability), excluding dashboard.
  *
  * @return array<string, array{label: string, cap: string}>
  */
 function MRT_admin_vue_submenu_pages(): array {
 	$pages = array(
-		MRT_ADMIN_APP_SLUG        => array(
-			'label' => __( 'Översikt', 'museum-railway-timetable' ),
-			'cap'   => 'edit_posts',
-		),
 		'mrt_app_timetables'      => array(
 			'label' => __( 'Tidtabeller', 'museum-railway-timetable' ),
 			'cap'   => 'edit_posts',
@@ -62,18 +58,32 @@ function MRT_admin_vue_submenu_pages(): array {
 }
 
 /**
- * Vue admin submenus (same render callback, different initial route).
+ * Register one Vue admin submenu.
+ */
+function MRT_admin_add_vue_submenu( string $slug, string $label, string $cap ): void {
+	add_submenu_page(
+		MRT_ADMIN_APP_SLUG,
+		$label,
+		$label,
+		$cap,
+		$slug,
+		'MRT_render_admin_app'
+	);
+}
+
+/**
+ * Vue admin submenus in display order.
  */
 function MRT_register_admin_vue_submenus(): void {
+	// First submenu must use parent slug — replaces WP auto-duplicate with «Översikt».
+	MRT_admin_add_vue_submenu(
+		MRT_ADMIN_APP_SLUG,
+		__( 'Översikt', 'museum-railway-timetable' ),
+		'edit_posts'
+	);
+
 	foreach ( MRT_admin_vue_submenu_pages() as $slug => $page ) {
-		add_submenu_page(
-			MRT_ADMIN_APP_SLUG,
-			$page['label'],
-			$page['label'],
-			$page['cap'],
-			$slug,
-			'MRT_render_admin_app'
-		);
+		MRT_admin_add_vue_submenu( $slug, $page['label'], $page['cap'] );
 	}
 }
 
@@ -118,23 +128,6 @@ function MRT_register_admin_menus(): void {
 }
 
 add_action( 'admin_menu', 'MRT_register_admin_menus' );
-
-/**
- * Repoint duplicate top-level slug to Översikt submenu (WordPress default).
- */
-function MRT_admin_menu_legacy_redirect(): void {
-	remove_submenu_page( MRT_ADMIN_APP_SLUG, MRT_ADMIN_APP_SLUG );
-	add_submenu_page(
-		MRT_ADMIN_APP_SLUG,
-		__( 'Översikt', 'museum-railway-timetable' ),
-		__( 'Översikt', 'museum-railway-timetable' ),
-		'edit_posts',
-		MRT_ADMIN_APP_SLUG,
-		'MRT_render_admin_app'
-	);
-}
-
-add_action( 'admin_menu', 'MRT_admin_menu_legacy_redirect', 999 );
 
 /**
  * Redirect legacy mrt_settings URL to Vue dev tools.

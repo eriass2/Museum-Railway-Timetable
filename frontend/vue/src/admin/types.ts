@@ -114,3 +114,23 @@ export function adminConfig(): AdminClientConfig {
     isDevMode: cfg.isDevMode ?? false,
   };
 }
+
+/** WordPress admin.php URL for a plugin submenu slug (syncs WP sidebar with Vue). */
+export function adminMenuUrl(pageSlug: string): string {
+  const base = adminConfig().adminBase;
+  const q = base.indexOf('?');
+  const path = q >= 0 ? base.slice(0, q) : base;
+  return `${path}?page=${encodeURIComponent(pageSlug)}`;
+}
+
+export const ADMIN_WP_PAGE_SLUGS: Record<string, string> = {
+  '/dashboard': 'mrt_app',
+  '/timetables': 'mrt_app_timetables',
+  '/stations-routes': 'mrt_app_stations_routes',
+  '/help': 'mrt_app_help',
+  '/train-types': 'mrt_app_train_types',
+  '/settings': 'mrt_app_settings',
+  '/prices': 'mrt_app_prices',
+  '/import-export': 'mrt_app_import_export',
+  '/dev-tools': 'mrt_app_dev_tools',
+};
