@@ -26,10 +26,19 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 
 ## 3. Admin: import vs manuell inmatning
 
-**Beslut:** **Import + manuell korrigering.**
+**Beslut:** **Import + Vue-admin för korrigering** (ersätter CPT/meta boxes).
 
-- Lennakatten-import (`inc/admin/tools/import-lennakatten.php`) för test/demo-data.
-- Meta boxes kvar för stationer, rutter, tidtabeller, turer, stopptider.
+- Lennakatten-import och CSV kvar; dev-verktyg enligt [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+- UI-plan: [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md). Meta boxes fasas ut Fas 2–7.
+
+---
+
+## 3b. API: REST, ingen AJAX
+
+**Beslut:** All klient–server-kommunikation via **WordPress REST API** i slutläge.
+
+- Parallell migration: REST först, AJAX kvar tills klient bytt, sedan radera.
+- Policy: [REST_API.md](REST_API.md).
 
 ---
 
@@ -66,6 +75,24 @@ Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 
 - Component demo (3 block), wizard smoke test, Lennakatten-import, clear DB.
 - Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+
+---
+
+## 9. Admin Vue (2026-05)
+
+**Beslut:** Vue **ersätter** WordPress CPT-admin. Dashboard först.
+
+| Punkt | Värde |
+|-------|--------|
+| Plan | [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) |
+| Fas 1 | Minimal dashboard (statistik, varningar, snabbstart, länkar) |
+| Design | WP-native skal + Vue-innehåll |
+| Routing | Hash (`#/dashboard`) under `admin.php?page=mrt_app` |
+| Behörighet | `manage_options` fullt; `edit_posts` begränsat (avvikelser, en avgångstid) |
+| Sparbeteende | Hybrid auto-save / explicit |
+| Mobil | Desktop-first; avvikelser + snabb avgångstid |
+| Språk | Svenska primärt |
+| E2E | Playwright från Fas 2 |
 
 ---
 

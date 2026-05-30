@@ -23,7 +23,9 @@ Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESI
 | [DATA_MODEL.md](DATA_MODEL.md) | Post types, meta, `mrt_stoptimes`, relationer |
 | [CSV_FORMAT.md](CSV_FORMAT.md) | Import/export av tidtabellsdata (zip, kolumner, lägen) |
 | [SHORTCODES.md](SHORTCODES.md) | Tre shortcodes: månad, översikt, wizard |
-| [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i WordPress-admin |
+| [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md) | **Vue-admin** – ersätter CPT-UI, faser, dashboard först |
+| [REST_API.md](REST_API.md) | **REST-only** – ingen AJAX i slutläge, migration |
+| [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell (legacy WP-admin; ersätts av Vue-plan) |
 | [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsmeny, component demo, import |
 | [VUE_FRONTEND.md](VUE_FRONTEND.md) | Publikt Vue-frontend (build, bundle, integration) |
 | [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning i Docker |

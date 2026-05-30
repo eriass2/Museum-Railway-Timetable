@@ -34,3 +34,9 @@ define(
 		MRT_POST_TYPE_SERVICE,
 	)
 );
+
+/** WordPress REST API namespace (no trailing slash). */
+define( 'MRT_REST_NAMESPACE', 'museum-railway-timetable/v1' );
+
+/** Admin Vue app menu slug. */
+define( 'MRT_ADMIN_APP_SLUG', 'mrt_app' );

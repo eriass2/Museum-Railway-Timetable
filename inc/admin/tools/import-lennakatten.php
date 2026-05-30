@@ -19,7 +19,7 @@ function MRT_register_import_lennakatten_admin_menu(): void {
 		return;
 	}
 	add_submenu_page(
-		'mrt_settings',
+		'mrt_app',
 		__( 'Import Lennakatten', 'museum-railway-timetable' ),
 		__( 'Import Lennakatten', 'museum-railway-timetable' ),
 		'manage_options',

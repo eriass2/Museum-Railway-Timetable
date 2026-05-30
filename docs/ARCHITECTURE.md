@@ -11,7 +11,7 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 | Lager | Roll | Exempel |
 |--------|------|---------|
 | **Domän** | Regler oberoende av WordPress och UI | Prismatris, datum/tid, connection-sökning, normalisering, tidtabellsrutnät |
-| **Infrastruktur** | WP-adapters: CPT, AJAX, inställningar, helpers | `MRT_ajax_*`, `inc/infrastructure/post-types/` |
+| **Infrastruktur** | WP-adapters: CPT, REST, inställningar, helpers | `inc/infrastructure/rest/` (mål), `inc/infrastructure/ajax/` (fasas ut), `inc/infrastructure/post-types/` |
 | **Admin / public** | Meta boxes, dashboard, shortcodes, enqueue | `inc/admin/meta-boxes/`, `inc/public/journey-wizard/` |
 
 **Vid ändringar:** Om en funktion kan beskrivas och testas utan `echo` och utan `$_POST` ska den ligga i **`inc/domain/`** (prefix `MRT_*`), inte i template-strängar eller JS.
@@ -23,7 +23,7 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 `museum-railway-timetable.php` → `inc/bootstrap.php`:
 
 1. **`MRT_bootstrap_load_domain()`** – `inc/bootstrap/domain.php` laddar domänmoduler (journey, timetable view, service, route, station, pricing, datetime).
-2. **`MRT_bootstrap_load_app()`** – miljö, inställningar, CPT, assets, admin, AJAX, shortcodes.
+2. **`MRT_bootstrap_load_app()`** – miljö, inställningar, CPT, assets, admin, REST (mål) / AJAX (legacy), shortcodes.
 
 Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootstrap.
 
@@ -40,11 +40,11 @@ Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootst
 
 ## 4. Affärskritisk kod och UI
 
-- **PHP:** Shortcode och AJAX ska **samla input → anropa domän → rendera**.
+- **PHP:** Shortcode och REST ska **samla input → anropa domän → returnera JSON/HTML**.
 - **JavaScript:** Servern är sanning för sökning, priser och giltiga datum; klienten visar svar och fel.
 - **Gemensam regel:** En implementation i PHP, inte copy-paste mellan admin och publikt.
 
-**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` (3) Tunt lager i shortcode/AJAX (4) UI visar och skickar parametrar.
+**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` (3) Tunt lager i shortcode/REST (4) UI visar och skickar parametrar. Se [REST_API.md](REST_API.md) och [ADMIN_VUE_PLAN.md](ADMIN_VUE_PLAN.md).
 
 ---
 

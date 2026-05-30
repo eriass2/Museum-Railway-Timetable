@@ -16,7 +16,7 @@ require_once MRT_PATH . 'inc/import/csv/loader.php';
  */
 function MRT_register_csv_import_export_menu(): void {
 	add_submenu_page(
-		'mrt_settings',
+		'mrt_app',
 		__( 'Import / Export CSV', 'museum-railway-timetable' ),
 		__( 'Import / Export CSV', 'museum-railway-timetable' ),
 		'manage_options',

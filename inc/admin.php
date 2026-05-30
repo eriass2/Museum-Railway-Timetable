@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/admin/app.php';
 require_once MRT_PATH . 'inc/admin/menu.php';
 require_once MRT_PATH . 'inc/admin/settings.php';
 require_once MRT_PATH . 'inc/admin/dashboard.php';
