@@ -130,6 +130,7 @@ Kör detta efter `docker compose up -d --build` när ändringen påverkar admin,
 - [ ] [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort rökning vid UI-ändringar
 - [ ] Översättningar: kör `powershell -File .\scripts\make-i18n.ps1` efter nya `__()`-strängar; fyll i tomma `msgstr` i `languages/museum-railway-timetable-sv_SE.po` vid behov
 - [ ] `docker compose up -d --build` eller `.\local\deploy.ps1` om du testar i full WordPress
+- [ ] **Live:** `powershell -File .\scripts\build-release.ps1` → zip i `release/` (Vue-bygg + validate + pack)
 
 ---
 

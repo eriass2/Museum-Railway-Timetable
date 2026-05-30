@@ -62,3 +62,6 @@ frontend/vue/node_modules/
 
 # Deploy config (user-specific Local path)
 local/deploy.config.json
+
+# Release zips (scripts/build-release.ps1)
+/release/
