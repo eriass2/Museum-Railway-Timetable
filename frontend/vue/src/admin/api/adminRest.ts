@@ -1,4 +1,5 @@
 import { adminConfig } from '../types';
+import { buildMrtRestUrl } from '../../api/restUrl';
 
 export class AdminRestError extends Error {
   constructor(message: string) {
@@ -15,11 +16,9 @@ async function parseJson(res: Response): Promise<unknown> {
   }
 }
 
-/** Join WP restUrl (often trailing slash) with path (/timetables). */
+/** Join WP restUrl with path (/timetables). Handles plain-permalink rest_route URLs. */
 export function buildAdminRestUrl(restUrl: string, path: string): string {
-  const base = restUrl.replace(/\/+$/, '');
-  const suffix = path.startsWith('/') ? path : `/${path}`;
-  return `${base}${suffix}`;
+  return buildMrtRestUrl(restUrl, path);
 }
 
 export async function adminFetch<T>(

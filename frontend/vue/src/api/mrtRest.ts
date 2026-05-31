@@ -1,4 +1,5 @@
 import type { MrtRestConfig } from '../config/types';
+import { buildMrtRestUrl } from './restUrl';
 
 export type MrtAjaxResponse<T> = {
   success: boolean;
@@ -45,16 +46,15 @@ function buildUrl(
   data: Record<string, string | number>,
   queryKeys?: string[],
 ): string {
-  const url = new URL(path.replace(/^\//, ''), base);
-  if (!queryKeys) {
-    return url.toString();
-  }
-  for (const key of queryKeys) {
-    if (data[key] !== undefined && data[key] !== '') {
-      url.searchParams.set(key, String(data[key]));
+  const query: Record<string, string | number> = {};
+  if (queryKeys) {
+    for (const key of queryKeys) {
+      if (data[key] !== undefined && data[key] !== '') {
+        query[key] = data[key];
+      }
     }
   }
-  return url.toString();
+  return buildMrtRestUrl(base, path, query);
 }
 
 function errorMessage(json: unknown, status: number): string {

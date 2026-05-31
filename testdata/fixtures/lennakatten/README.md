@@ -22,6 +22,9 @@ Validate after changes:
 
 ```sh
 composer csv:validate -- testdata/fixtures/lennakatten
+composer csv:zip
 ```
+
+Import zip (same data): `../lennakatten.zip` — regenerate with `composer csv:zip` after CSV edits.
 
 Format: [docs/CSV_FORMAT.md](../../docs/CSV_FORMAT.md).

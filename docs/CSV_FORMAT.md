@@ -325,6 +325,7 @@ Dev-only auto-setup (rensa DB, smoke-meny) är **separat** från operatörens im
 |----------|-------|
 | Referens-PDF | `testdata/reference-pdfs/` |
 | CSV-fixture | `testdata/fixtures/lennakatten/` |
+| CSV-fixture (zip) | `testdata/fixtures/lennakatten.zip` — `composer csv:zip` |
 | Dev-reset | `scripts/docker-dev-reset.ps1` |
 
 Dev-reset anropar import med **override** mot fixturen, sedan smoke-navigation. Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).

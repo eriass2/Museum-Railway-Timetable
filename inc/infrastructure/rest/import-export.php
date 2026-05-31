@@ -58,6 +58,9 @@ function MRT_rest_import_csv_handler( WP_REST_Request $request ) {
 			)
 		);
 	}
+	if ( function_exists( 'MRT_sync_timetable_public_pages' ) ) {
+		MRT_sync_timetable_public_pages();
+	}
 	return rest_ensure_response(
 		array(
 			'imported' => true,
