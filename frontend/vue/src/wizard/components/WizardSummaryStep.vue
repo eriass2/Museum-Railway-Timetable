@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
 import MrtPriceTable from '../../components/ui/MrtPriceTable.vue';
 import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
 import MrtSummaryCard from '../../components/ui/MrtSummaryCard.vue';
@@ -14,8 +13,6 @@ import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
 import { formatTripClock } from '../utils/format';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
-
-const { ticketUrl } = defineProps<{ ticketUrl: string }>();
 
 const { store, cfg } = useWizardContext();
 
@@ -88,12 +85,6 @@ function onBack(): void {
         :inbound-departure="inboundDeparture"
         include-day-tickets
       />
-
-      <p v-if="ticketUrl" data-wizard-ticket-wrap class="mrt-mt-sm mrt-actions">
-        <MrtAccentButton :href="ticketUrl">
-          {{ cfgStr(cfg, 'ticketCta', 'Fortsätt till biljetter') }}
-        </MrtAccentButton>
-      </p>
     </MrtSurfaceCard>
   </MrtStepPanel>
 </template>

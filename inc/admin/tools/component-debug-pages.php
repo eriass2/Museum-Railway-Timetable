@@ -81,7 +81,7 @@ function MRT_component_debug_page_specs(): array {
 			'option'     => 'mrt_debug_page_wizard_summary_id',
 			'title'      => __( 'Debug – Wizard (summary)', 'museum-railway-timetable' ),
 			'menu_label' => __( 'Debug: Wizard summary', 'museum-railway-timetable' ),
-			'content'    => '[museum_journey_wizard embedded="1" debug="summary" ticket_url="https://example.com/biljetter"]',
+			'content'    => '[museum_journey_wizard embedded="1" debug="summary"]',
 		),
 	);
 }

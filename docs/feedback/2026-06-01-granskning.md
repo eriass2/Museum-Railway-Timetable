@@ -14,7 +14,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | Buggar / fel | 4 | **4 åtgärdade** (G1, J4, G5, G6) |
 | UI / design | 6 | **G2, G3, J1** åtgärdade/delvis. **J3** kvar |
 | UX / flöde | 7 | G5 åtgärdad. G4, G7–G10, G9, J2 obehandlade |
-| Frågor / scope | 2 | J5 obehandlad (svar behövs) |
+| Frågor / scope | 2 | ~~J5~~ åtgärdad (knapp borttagen). G10 obehandlad |
 | Positivt | — | Båda imponerade, ser lovande ut |
 
 ### Genomfört (översikt)
@@ -79,8 +79,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Reseplanerare / biljetter
 - **Typ:** fråga / produktbeslut
 - **Prioritet:** info (svar behövs)
-- **Status:** obehandlad
-- **Svar:** *(ej skrivet än — formulera svar till Jesper om att knappen är placeholder / extern länk / framtida scope)*
+- **Status:** åtgärdad (knapp borttagen)
+- **Svar:** Inget biljettbokningssystem är planerat i nuvarande scope. Knappen **”Fortsätt till biljetter”** är borttagen från sammanfattningssteget — den var en placeholder och gav felaktigt intryck. Reseplaneraren visar tider och priser; biljetter köps som idag ombord/station (Edmonson m.m.). Shortcode-attributet `ticket_url` ignoreras tills vidare om det sätts.
 
 ---
 
@@ -177,7 +177,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** önskemål / ny funktion
 - **Prioritet:** låg–medium
 - **Status:** obehandlad
-- **Svar:** Ej planerat/implementerat.
+- **Svar:** Ej planerat/implementerat. Se **Praktiska förslag** nedan.
 
 ---
 
@@ -200,7 +200,21 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 10. **J2** – Busstider integrerade i huvudtidtabell
 11. **G7 / G8** – ~~Kalenderfärger per tidtabell~~ ✓ / SPA utan reload
 12. **G10** – Exportera resa (PNG/PDF)
-13. **J5** – Svar om biljettsystem vs Edmonson
+13. ~~**J5** – Svar om biljettsystem vs Edmonson~~ ✓ (knapp borttagen)
+
+---
+
+## G10 – praktiska förslag (ej beslutade)
+
+| Alternativ | Insats | För / emot |
+|------------|--------|------------|
+| **A. Skriv ut / Spara som PDF** | Låg | `@media print`-CSS på sammanfattningskortet + knapp som anropar `window.print()`. Användaren väljer ”Spara som PDF” i webbläsaren. Ingen dependency, fungerar desktop + mobil. |
+| **B. Web Share API** | Låg | Knapp ”Dela resa” som anropar `navigator.share()` med text (datum, tider, sträcka, pris). Bra på mobil; fallback till kopiera text till urklipp. |
+| **C. PNG via html2canvas** | Medium | Screenshot av `.mrt-summary-list` + prisblock, ladda ner som bild. Bra offline på mobilen; kräver npm-paket och kan klippa konstigt (J3-problem). |
+| **D. Delbar länk** | Medium–hög | URL med kodade parametrar (från/till/datum/tåg-id) som återskapar sammanfattning. Kräver att wizard kan läsa query vid start + ev. backend-validering. |
+| **E. Server-PDF (TCPDF/Dompdf)** | Hög | WordPress genererar PDF — överkill för pluginet, svårare att underhålla. |
+
+**Rekommendation:** börja med **A + B** (print/PDF + dela/kopiera text). Täcker ”ha med sig under dagen” utan bokningssystem eller tunga beroenden.
 
 ---
 
@@ -222,7 +236,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - [ ] Verifiera G9 mot nuvarande wizard-flöde
 - [x] Jämför färger mot lennakatten.se/grafisk-profil
 - [x] Reproducera G1 och J4 med konkreta testdata
-- [ ] Svara Jesper på J5 (biljettsystem)
+- [ ] Svara Jesper på J5 (biljettsystem) — *knapp borttagen; svar i doc*
 - [ ] Verifiera G1 på demo efter ny fixture-import
 - [x] **G6** — hitta och rätta laddningstext (teckenkodning)
 - [x] **G7** — kalenderfärger per `mrt_timetable_type`

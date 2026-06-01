@@ -178,7 +178,7 @@ const shortcodes: ShortcodeHelp[] = [
     example:
       '[museum_journey_wizard ticket_url="https://example.com/biljetter" timetable_page_url="https://example.com/tidtabeller"]',
     params: [
-      { name: 'ticket_url', desc: 'Länk till biljett/bokning (knapp i sista steget)' },
+      { name: 'ticket_url', desc: 'Reserverat (inaktiverat) — biljettknapp visas inte i nuvarande version' },
       { name: 'timetable_page_url', desc: 'Länk till tidtabellssida (visas under sök på steg 1)' },
       { name: 'embedded', desc: 'Kompakt layout inuti sidinnehåll (1/true)' },
       { name: 'timetable_id', desc: 'Legacy — inbäddad översikt under steg 1 (rekommenderas sällan)' },

@@ -24,7 +24,6 @@ const stations = props.config.stations || [];
 const hasStations = stations.length > 0;
 const embedded = Boolean(props.config.embedded);
 const debug = String(props.config.debug || '');
-const ticketUrl = String(props.config.ticketUrl || '');
 const timetablePageUrl = String(props.config.timetablePageUrl || '');
 const panelsRef = ref<HTMLElement | null>(null);
 
@@ -70,7 +69,6 @@ onMounted(() => {
       'mrt-journey-wizard--embedded': embedded,
       'mrt-journey-wizard--debug': debug !== '',
     }"
-    :data-ticket-url="ticketUrl"
     :data-start-of-week="String(config.startOfWeek ?? 1)"
     :data-wizard-debug="debug || undefined"
   >
@@ -101,7 +99,7 @@ onMounted(() => {
           <WizardDateStep v-else-if="store.step === 'date'" />
           <WizardTripStep v-else-if="store.step === 'outbound'" leg-ctx="outbound" />
           <WizardTripStep v-else-if="store.step === 'return'" leg-ctx="return" />
-          <WizardSummaryStep v-else-if="store.step === 'summary'" :ticket-url="ticketUrl" />
+          <WizardSummaryStep v-else-if="store.step === 'summary'" />
         </div>
         </template>
       </div>
