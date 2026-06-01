@@ -43,6 +43,7 @@ Text domain: `museum-railway-timetable`. Publikt Vue får strängar från PHP (`
 
 ## Underhåll
 
-Efter PHP-ändringar: uppdatera `languages/museum-railway-timetable.pot` (WP-CLI `wp i18n make-pot` eller manuellt).
+Efter PHP-ändringar: kör `powershell -File .\scripts\make-i18n.ps1` (WP-CLI + msgmerge + fyll svenska `msgstr`).  
+`inc/assets/frontend.php` använder literal `'museum-railway-timetable'` så WP-CLI hittar strängarna (variabeln `MRT_TEXT_DOMAIN` plockas inte upp av `make-pot`).
 
 Se även [STYLE_GUIDE.md](STYLE_GUIDE.md) §5 Översättning.

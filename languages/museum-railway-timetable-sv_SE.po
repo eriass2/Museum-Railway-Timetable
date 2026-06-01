@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Museum Railway Timetable 0.3.0\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/museum-railway-"
 "timetable\n"
-"POT-Creation-Date: 2026-06-01T10:10:41+00:00\n"
+"POT-Creation-Date: 2026-06-01T10:14:25+00:00\n"
 "PO-Revision-Date: 2025-01-27 12:00:00+0000\n"
 "Last-Translator: Erik <info@bytex.se>\n"
 "Language-Team: Swedish\n"
@@ -22,65 +22,66 @@ msgstr "Museijärnvägens tidtabell"
 #. Description of the plugin
 #: museum-railway-timetable.php
 msgid "A calendar displaying train timetables for a museum railway."
-msgstr ""
+msgstr "A calendar displaying train timetables for a museum railway."
 
 #. Author of the plugin
 #: museum-railway-timetable.php
 msgid "Erik"
-msgstr ""
+msgstr "Erik"
 
 #: inc/admin/app.php:58 inc/admin/tools/demo-page.php:261
 msgid "You do not have permission to access this page."
-msgstr ""
+msgstr "You do not have permission to access this page."
 
 #: inc/admin/menu.php:24
 msgid "Stationer & rutter"
-msgstr ""
+msgstr "Stationer & rutter"
 
 #: inc/admin/menu.php:28 inc/admin/tools/timetable-pages.php:36
 #: inc/domain/timetable/timetable-pages.php:215
 msgid "Tidtabeller"
-msgstr ""
+msgstr "Tidtabeller"
 
 #: inc/admin/menu.php:32
 msgid "Hjälp"
-msgstr ""
+msgstr "Hjälp"
 
 #: inc/admin/menu.php:36
 msgid "Tågtyper"
-msgstr ""
+msgstr "Tågtyper"
 
 #: inc/admin/menu.php:40
 msgid "Inställningar"
-msgstr ""
+msgstr "Inställningar"
 
-#: inc/admin/menu.php:44 inc/public/vue-shortcode-config.php:158
+#: inc/admin/menu.php:44 inc/assets/frontend.php:120
+#: inc/public/vue-shortcode-config.php:158
 msgid "Priser"
-msgstr ""
+msgstr "Priser"
 
 #: inc/admin/menu.php:48
 msgid "Import / export"
-msgstr ""
+msgstr "Import / export"
 
 #: inc/admin/menu.php:54
 msgid "Utvecklingsverktyg"
-msgstr ""
+msgstr "Utvecklingsverktyg"
 
 #: inc/admin/menu.php:82
 msgid "Översikt"
-msgstr ""
+msgstr "Översikt"
 
 #: inc/admin/menu.php:101 inc/admin/menu.php:102
 msgid "Komponentdemo"
-msgstr ""
+msgstr "Komponentdemo"
 
 #: inc/admin/menu.php:120
 msgid "Tidtabell"
-msgstr ""
+msgstr "Tidtabell"
 
 #: inc/admin/tools/component-debug-pages.php:17
 msgid "Development UI page"
-msgstr ""
+msgstr "Development UI page"
 
 #: inc/admin/tools/component-debug-pages.php:19
 msgid ""
@@ -90,55 +91,55 @@ msgstr ""
 
 #: inc/admin/tools/component-debug-pages.php:46
 msgid "Debug – Month calendar"
-msgstr ""
+msgstr "Debug – Month calendar"
 
 #: inc/admin/tools/component-debug-pages.php:47
 msgid "Debug: Month"
-msgstr ""
+msgstr "Debug: Month"
 
 #: inc/admin/tools/component-debug-pages.php:55
 msgid "Debug – Timetable overview"
-msgstr ""
+msgstr "Debug – Timetable overview"
 
 #: inc/admin/tools/component-debug-pages.php:56
 msgid "Debug: Overview"
-msgstr ""
+msgstr "Debug: Overview"
 
 #: inc/admin/tools/component-debug-pages.php:64
 msgid "Debug – Wizard (date)"
-msgstr ""
+msgstr "Debug – Wizard (date)"
 
 #: inc/admin/tools/component-debug-pages.php:65
 msgid "Debug: Wizard date"
-msgstr ""
+msgstr "Debug: Wizard date"
 
 #: inc/admin/tools/component-debug-pages.php:70
 msgid "Debug – Wizard (outbound)"
-msgstr ""
+msgstr "Debug – Wizard (outbound)"
 
 #: inc/admin/tools/component-debug-pages.php:71
 msgid "Debug: Wizard outbound"
-msgstr ""
+msgstr "Debug: Wizard outbound"
 
 #: inc/admin/tools/component-debug-pages.php:76
 msgid "Debug – Wizard (return)"
-msgstr ""
+msgstr "Debug – Wizard (return)"
 
 #: inc/admin/tools/component-debug-pages.php:77
 msgid "Debug: Wizard return"
-msgstr ""
+msgstr "Debug: Wizard return"
 
 #: inc/admin/tools/component-debug-pages.php:82
 msgid "Debug – Wizard (summary)"
-msgstr ""
+msgstr "Debug – Wizard (summary)"
 
 #: inc/admin/tools/component-debug-pages.php:83
 msgid "Debug: Wizard summary"
-msgstr ""
+msgstr "Debug: Wizard summary"
 
 #: inc/admin/tools/component-debug-pages.php:123
 msgid "not created yet (run Set up development menu)"
-msgstr ""
+msgstr "not created yet (run Set up development menu)"
 
 #: inc/admin/tools/demo-page.php:70
 msgid ""
@@ -153,11 +154,11 @@ msgstr ""
 
 #: inc/admin/tools/demo-page.php:74
 msgid "Mockup alignment"
-msgstr ""
+msgstr "Mockup alignment"
 
 #: inc/admin/tools/demo-page.php:106
 msgid "Trying the journey wizard"
-msgstr ""
+msgstr "Trying the journey wizard"
 
 #. translators: %s: timetable title e.g. GRÖN TIDTABELL 2026
 #: inc/admin/tools/demo-page.php:110
@@ -205,7 +206,7 @@ msgstr ""
 
 #: inc/admin/tools/demo-page.php:158
 msgid "1. Month calendar"
-msgstr ""
+msgstr "1. Month calendar"
 
 #: inc/admin/tools/demo-page.php:159
 msgid ""
@@ -215,15 +216,15 @@ msgstr ""
 
 #: inc/admin/tools/demo-page.php:161
 msgid "2. Timetable overview"
-msgstr ""
+msgstr "2. Timetable overview"
 
 #: inc/admin/tools/demo-page.php:162
 msgid "Mockup: printed-style overview (routes, directions, times)."
-msgstr ""
+msgstr "Mockup: printed-style overview (routes, directions, times)."
 
 #: inc/admin/tools/demo-page.php:164
 msgid "3. Journey wizard (multi-step)"
-msgstr ""
+msgstr "3. Journey wizard (multi-step)"
 
 #: inc/admin/tools/demo-page.php:165
 msgid ""
@@ -240,23 +241,23 @@ msgstr "Åtkomst nekad."
 
 #: inc/admin/tools/demo-page.php:195 inc/admin/tools/dev-navigation.php:34
 msgid "Museum Railway Timetable – component demo"
-msgstr ""
+msgstr "Museum Railway Timetable – component demo"
 
 #: inc/admin/tools/demo-page.php:229
 msgid "Demo page"
-msgstr ""
+msgstr "Demo page"
 
 #: inc/admin/tools/demo-page.php:240
 msgid "View page"
-msgstr ""
+msgstr "View page"
 
 #: inc/admin/tools/demo-page.php:243
 msgid "Edit page"
-msgstr ""
+msgstr "Edit page"
 
 #: inc/admin/tools/demo-page.php:247
 msgid "Preview draft"
-msgstr ""
+msgstr "Preview draft"
 
 #: inc/admin/tools/demo-page.php:264
 msgid ""
@@ -267,11 +268,11 @@ msgstr ""
 #: inc/admin/tools/demo-page.php:277
 #, php-format
 msgid "Demo page saved successfully (page ID %d). Use View page below."
-msgstr ""
+msgstr "Demo page saved successfully (page ID %d). Use View page below."
 
 #: inc/admin/tools/demo-page.php:286
 msgid "Component demo page"
-msgstr ""
+msgstr "Component demo page"
 
 #: inc/admin/tools/demo-page.php:287
 msgid ""
@@ -281,32 +282,32 @@ msgstr ""
 
 #: inc/admin/tools/demo-page.php:296
 msgid "Create or update demo page"
-msgstr ""
+msgstr "Create or update demo page"
 
 #: inc/admin/tools/demo-page.php:302
 msgid "Component debug pages"
-msgstr ""
+msgstr "Component debug pages"
 
 #: inc/admin/tools/demo-page.php:305
 msgid "Front-end development menu:"
-msgstr ""
+msgstr "Front-end development menu:"
 
 #: inc/admin/tools/demo-page.php:307
 msgid "Dev tools"
-msgstr ""
+msgstr "Dev tools"
 
 #: inc/admin/tools/dev-navigation.php:35
 msgid "Component demo"
-msgstr ""
+msgstr "Component demo"
 
 #: inc/admin/tools/dev-navigation.php:42 inc/admin/tools/dev-navigation.php:43
 msgid "Wizard smoke test"
-msgstr ""
+msgstr "Wizard smoke test"
 
 #: inc/admin/tools/dev-navigation.php:262
 #: inc/admin/tools/dev-navigation.php:459
 msgid "Museum Railway (development)"
-msgstr ""
+msgstr "Museum Railway (development)"
 
 #: inc/admin/tools/dev-navigation.php:494
 msgid ""
@@ -314,9 +315,376 @@ msgid ""
 "MRT_DEVELOPMENT) or WP-CLI."
 msgstr ""
 
+#: inc/assets/frontend.php:23
+msgid "januari"
+msgstr "januari"
+
+#: inc/assets/frontend.php:24
+msgid "februari"
+msgstr "februari"
+
+#: inc/assets/frontend.php:25
+msgid "mars"
+msgstr "mars"
+
+#: inc/assets/frontend.php:26
+msgid "april"
+msgstr "april"
+
+#: inc/assets/frontend.php:27
+msgid "maj"
+msgstr "maj"
+
+#: inc/assets/frontend.php:28
+msgid "juni"
+msgstr "juni"
+
+#: inc/assets/frontend.php:29
+msgid "juli"
+msgstr "juli"
+
+#: inc/assets/frontend.php:30
+msgid "augusti"
+msgstr "augusti"
+
+#: inc/assets/frontend.php:31
+msgid "september"
+msgstr "september"
+
+#: inc/assets/frontend.php:32
+msgid "oktober"
+msgstr "oktober"
+
+#: inc/assets/frontend.php:33
+msgid "november"
+msgstr "november"
+
+#: inc/assets/frontend.php:34
+msgid "december"
+msgstr "december"
+
+#: inc/assets/frontend.php:37 inc/public/vue-shortcode-config.php:22
+msgid "sön"
+msgstr "sön"
+
+#: inc/assets/frontend.php:38 inc/public/vue-shortcode-config.php:23
+msgid "mån"
+msgstr "mån"
+
+#: inc/assets/frontend.php:39 inc/public/vue-shortcode-config.php:24
+msgid "tis"
+msgstr "tis"
+
+#: inc/assets/frontend.php:40 inc/public/vue-shortcode-config.php:25
+msgid "ons"
+msgstr "ons"
+
+#: inc/assets/frontend.php:41 inc/public/vue-shortcode-config.php:26
+msgid "tor"
+msgstr "tor"
+
+#: inc/assets/frontend.php:42 inc/public/vue-shortcode-config.php:27
+msgid "fre"
+msgstr "fre"
+
+#: inc/assets/frontend.php:43 inc/public/vue-shortcode-config.php:28
+msgid "lör"
+msgstr "lör"
+
+#: inc/assets/frontend.php:55 inc/public/vue-shortcode-config.php:137
+msgid "Sök resa"
+msgstr "Sök resa"
+
+#: inc/assets/frontend.php:56 inc/public/vue-shortcode-config.php:140
+msgid "Välj datum"
+msgstr "Välj datum"
+
+#: inc/assets/frontend.php:57 inc/public/vue-shortcode-config.php:148
+msgid "Välj utresa"
+msgstr "Välj utresa"
+
+#: inc/assets/frontend.php:58 inc/public/vue-shortcode-config.php:149
+msgid "Välj återresa"
+msgstr "Välj återresa"
+
+#: inc/assets/frontend.php:59 inc/public/vue-shortcode-config.php:150
+msgid "Din resa"
+msgstr "Din resa"
+
+#: inc/assets/frontend.php:60 inc/assets/frontend.php:278
+msgid "Laddar..."
+msgstr "Laddar..."
+
+#: inc/assets/frontend.php:61
+msgid "Något gick fel. Försök igen."
+msgstr "Något gick fel. Försök igen."
+
+#: inc/assets/frontend.php:62
+msgid "Inga anslutningar detta datum."
+msgstr "Inga anslutningar detta datum."
+
+#: inc/assets/frontend.php:63
+msgid "Visa passerade stationer"
+msgstr "Visa passerade stationer"
+
+#: inc/assets/frontend.php:64
+msgid "Dölj passerade stationer"
+msgstr "Dölj passerade stationer"
+
+#: inc/assets/frontend.php:65 inc/assets/frontend.php:94
+msgid "Tåg"
+msgstr "Tåg"
+
+#: inc/assets/frontend.php:66
+msgid "Välj →"
+msgstr "Välj →"
+
+#: inc/assets/frontend.php:67
+msgid "Trafikmeddelande"
+msgstr "Trafikmeddelande"
+
+#: inc/assets/frontend.php:68
+#, php-format
+msgid "%d min"
+msgstr "%d min"
+
+#: inc/assets/frontend.php:69
+msgid "Utresa"
+msgstr "Utresa"
+
+#: inc/assets/frontend.php:70
+msgid "Återresa"
+msgstr "Återresa"
+
+#: inc/assets/frontend.php:71
+#, php-format
+msgid "den %s"
+msgstr "den %s"
+
+#: inc/assets/frontend.php:72
+msgid "Välj både avrese- och ankomststation."
+msgstr "Välj både avrese- och ankomststation."
+
+#: inc/assets/frontend.php:73 inc/public/vue-shortcode-config.php:135
+msgid "Enkel resa"
+msgstr "Enkel resa"
+
+#: inc/assets/frontend.php:74 inc/public/vue-shortcode-config.php:136
+msgid "Tur och retur"
+msgstr "Tur och retur"
+
+#: inc/assets/frontend.php:75
+#, php-format
+msgid "%1$s → %2$s | %3$s"
+msgstr "%1$s → %2$s | %3$s"
+
+#: inc/assets/frontend.php:76
+#, php-format
+msgid "%1$s → %2$s | %3$s\\n%4$s"
+msgstr "%1$s → %2$s | %3$s\\n%4$s"
+
+#: inc/assets/frontend.php:77
+msgid "Direktresa"
+msgstr "Direktresa"
+
+#: inc/assets/frontend.php:78
+msgid "Byte"
+msgstr "Byte"
+
+#: inc/assets/frontend.php:79
+msgid "Vald utresa"
+msgstr "Vald utresa"
+
+#: inc/assets/frontend.php:80
+#, php-format
+msgid "mot %s"
+msgstr "mot %s"
+
+#: inc/assets/frontend.php:81
+#, php-format
+msgid "Byte vid %s"
+msgstr "Byte vid %s"
+
+#: inc/assets/frontend.php:82
+#, php-format
+msgid "%d min byte"
+msgstr "%d min byte"
+
+#: inc/assets/frontend.php:83
+msgid "passerade stationer"
+msgstr "passerade stationer"
+
+#: inc/assets/frontend.php:95
+msgid "Fordonstyp"
+msgstr "Fordonstyp"
+
+#: inc/assets/frontend.php:96
+msgid "Avgång"
+msgstr "Avgång"
+
+#: inc/assets/frontend.php:97
+msgid "Ankomst"
+msgstr "Ankomst"
+
+#: inc/assets/frontend.php:98
+msgid "Station"
+msgstr "Station"
+
+#: inc/assets/frontend.php:99
+msgid "Åtgärder"
+msgstr "Åtgärder"
+
+#: inc/assets/frontend.php:100
+msgid "Kalender för resdatum"
+msgstr "Kalender för resdatum"
+
+#: inc/assets/frontend.php:101
+#, php-format
+msgid "%s — anslutning finns"
+msgstr "%s — anslutning finns"
+
+#: inc/assets/frontend.php:102
+#, php-format
+msgid "%s — trafik, ingen direktanslutning på rutten"
+msgstr "%s — trafik, ingen direktanslutning på rutten"
+
+#: inc/assets/frontend.php:103
+#, php-format
+msgid "%s — ingen trafik"
+msgstr "%s — ingen trafik"
+
+#: inc/assets/frontend.php:104
+#, php-format
+msgid "Utresor den %s"
+msgstr "Utresor den %s"
+
+#: inc/assets/frontend.php:105
+msgid "Återresor samma dag"
+msgstr "Återresor samma dag"
+
+#: inc/assets/frontend.php:106
+#, php-format
+msgid "Välj resa: %1$s, avgång %2$s, ankomst %3$s"
+msgstr "Välj resa: %1$s, avgång %2$s, ankomst %3$s"
+
+#: inc/assets/frontend.php:107
+#, php-format
+msgid "Visa hållplatser och tider för %s"
+msgstr "Visa hållplatser och tider för %s"
+
+#: inc/assets/frontend.php:108
+#, php-format
+msgid "Delsträcka %d"
+msgstr "Delsträcka %d"
+
+#: inc/assets/frontend.php:119
+msgid "Biljettyp"
+msgstr "Biljettyp"
+
+#: inc/assets/frontend.php:121
+msgid ""
+"Priset bygger på lägsta giltiga zontal för den valda resan (max tre zoner "
+"enligt taxa 2026). Pensionär gäller från 65 år."
+msgstr ""
+
+#: inc/assets/frontend.php:127
+msgid "Heldagsbiljett"
+msgstr "Heldagsbiljett"
+
+#: inc/assets/frontend.php:128
+msgid "Eftermiddagsbiljett (tur och retur)"
+msgstr "Eftermiddagsbiljett (tur och retur)"
+
+#: inc/assets/frontend.php:129
+msgid ""
+"Eftermiddagsbiljett gäller tur och retur med avgång efter kl 15 (ej "
+"evenemangsdagar)."
+msgstr ""
+
+#: inc/assets/frontend.php:130
+#, php-format
+msgid "%d zoner"
+msgstr "%d zoner"
+
+#: inc/assets/frontend.php:276
+msgid "Sök"
+msgstr "Sök"
+
+#: inc/assets/frontend.php:277
+msgid "Söker..."
+msgstr "Söker..."
+
+#: inc/assets/frontend.php:279
+msgid "Kunde inte söka anslutningar."
+msgstr "Kunde inte söka anslutningar."
+
+#: inc/assets/frontend.php:280
+msgid "Kunde inte ladda tidtabellen."
+msgstr "Kunde inte ladda tidtabellen."
+
+#: inc/assets/frontend.php:281
+msgid "Välj olika stationer för avresa och ankomst."
+msgstr "Välj olika stationer för avresa och ankomst."
+
+#: inc/assets/frontend.php:282
+msgid "Nätverksfel. Försök igen."
+msgstr "Nätverksfel. Försök igen."
+
+#: inc/assets/frontend.php:283
+msgid "Förklaringar"
+msgstr "Förklaringar"
+
+#: inc/assets/frontend.php:284
+msgid "Tecken"
+msgstr "Tecken"
+
+#: inc/assets/frontend.php:285
+msgid "Betydelse"
+msgstr "Betydelse"
+
+#: inc/assets/frontend.php:286
+msgid "Med reservation för ändring av tågtyp."
+msgstr "Med reservation för ändring av tågtyp."
+
+#: inc/assets/frontend.php:287
+#, php-format
+msgid "Planerat: %s"
+msgstr "Planerat: %s"
+
+#: inc/assets/frontend.php:288
+msgid "Avvikelse från planerad tågtyp"
+msgstr "Avvikelse från planerad tågtyp"
+
+#: inc/assets/frontend.php:289
+#, php-format
+msgid "Avgångar %s"
+msgstr "Avgångar %s"
+
+#: inc/assets/frontend.php:290
+msgid "Anslutningsbuss"
+msgstr "Anslutningsbuss"
+
+#: inc/assets/frontend.php:291
+msgid "Tur"
+msgstr "Tur"
+
+#: inc/assets/frontend.php:292
+msgid "Anslutande tåg"
+msgstr "Anslutande tåg"
+
+#: inc/assets/frontend.php:293
+#, php-format
+msgid "Tåg %1$s %2$s"
+msgstr "Tåg %1$s %2$s"
+
+#: inc/assets/frontend.php:294
+#, php-format
+msgid "Tur %s"
+msgstr "Tur %s"
+
 #: inc/assets/vue-frontend.php:109
 msgid "Vue build missing. Run npm install && npm run build in frontend/vue/."
-msgstr ""
+msgstr "Vue build missing. Run npm install && npm run build in frontend/vue/."
 
 #: inc/domain/admin/cancel-traffic.php:58
 #: inc/domain/timetable/view/overview-data.php:94
@@ -330,82 +698,82 @@ msgstr "Ogiltigt datum."
 
 #: inc/domain/admin/cancel-traffic.php:62
 msgid "Notice is required."
-msgstr ""
+msgstr "Notice is required."
 
 #: inc/domain/admin/delete-entities.php:37
 #: inc/domain/journey/request-params.php:148
 msgid "Invalid service."
-msgstr ""
+msgstr "Invalid service."
 
 #: inc/domain/admin/delete-entities.php:41
 msgid "Service not found."
-msgstr ""
+msgstr "Service not found."
 
 #: inc/domain/admin/delete-entities.php:46
 msgid "Could not delete service."
-msgstr ""
+msgstr "Could not delete service."
 
 #: inc/domain/admin/delete-entities.php:69
 #: inc/domain/timetable/timetable-pages.php:178
 #: inc/domain/timetable/view/overview-data.php:63
 msgid "Invalid timetable."
-msgstr ""
+msgstr "Invalid timetable."
 
 #: inc/domain/admin/delete-entities.php:73
 #: inc/infrastructure/rest/timetables-data.php:53
 #: inc/infrastructure/rest/timetables-data.php:177
 #: inc/public/timetable-overview/shortcode.php:36
 msgid "Timetable not found."
-msgstr ""
+msgstr "Timetable not found."
 
 #: inc/domain/admin/delete-entities.php:87
 msgid "Could not delete timetable."
-msgstr ""
+msgstr "Could not delete timetable."
 
 #: inc/domain/admin/delete-entities.php:179
 msgid "Invalid station."
-msgstr ""
+msgstr "Invalid station."
 
 #: inc/domain/admin/delete-entities.php:183
 #: inc/infrastructure/rest/stations-routes.php:187
 msgid "Station not found."
-msgstr ""
+msgstr "Station not found."
 
 #: inc/domain/admin/delete-entities.php:188
 msgid "Station is used by a route, trip, or stop times and cannot be deleted."
-msgstr ""
+msgstr "Station is used by a route, trip, or stop times and cannot be deleted."
 
 #: inc/domain/admin/delete-entities.php:194
 msgid "Could not delete station."
-msgstr ""
+msgstr "Could not delete station."
 
 #: inc/domain/admin/delete-entities.php:232
 #: inc/infrastructure/rest/timetables.php:240
 msgid "Invalid route."
-msgstr ""
+msgstr "Invalid route."
 
 #: inc/domain/admin/delete-entities.php:236
 #: inc/infrastructure/rest/stations-routes.php:303
 msgid "Route not found."
-msgstr ""
+msgstr "Route not found."
 
 #: inc/domain/admin/delete-entities.php:241
 msgid "Route is used by trips and cannot be deleted."
-msgstr ""
+msgstr "Route is used by trips and cannot be deleted."
 
 #: inc/domain/admin/delete-entities.php:247
 msgid "Could not delete route."
-msgstr ""
+msgstr "Could not delete route."
 
 #. translators: 1: first service name, 2: transfer station name, 3: second service name
 #: inc/domain/journey/journey-normalize.php:72
 #, php-format
 msgid "%1$s · Change at %2$s · %3$s"
-msgstr ""
+msgstr "%1$s · Change at %2$s · %3$s"
 
 #: inc/domain/journey/request-params.php:27
 msgid "Please select both departure and arrival stations."
-msgstr ""
+msgstr "Please select both departure and arrival stations."
 
 #: inc/domain/journey/request-params.php:33
 msgid "Please select different stations for departure and arrival."
@@ -414,79 +782,79 @@ msgstr "Vänligen välj olika stationer för avgång och ankomst."
 #: inc/domain/journey/request-params.php:73
 #: inc/infrastructure/rest/journey-public.php:111
 msgid "Please select a valid date."
-msgstr ""
+msgstr "Please select a valid date."
 
 #: inc/domain/journey/request-params.php:98
 msgid "Please provide a valid outbound arrival time for return search."
-msgstr ""
+msgstr "Please provide a valid outbound arrival time for return search."
 
 #: inc/domain/journey/request-params.php:123
 msgid "Please select a valid month."
-msgstr ""
+msgstr "Please select a valid month."
 
 #: inc/domain/pricing/prices.php:219
 msgid "Enkelbiljett"
-msgstr ""
+msgstr "Enkelbiljett"
 
 #: inc/domain/pricing/prices.php:220
 msgid "Returbiljett"
-msgstr ""
+msgstr "Returbiljett"
 
 #: inc/domain/pricing/prices.php:221
 msgid "Dagskort"
-msgstr ""
+msgstr "Dagskort"
 
 #: inc/domain/pricing/prices.php:232
 msgid "Vuxen"
-msgstr ""
+msgstr "Vuxen"
 
 #: inc/domain/pricing/prices.php:233
 msgid "Barn 4–15"
-msgstr ""
+msgstr "Barn 4–15"
 
 #: inc/domain/pricing/prices.php:234
 msgid "Barn 0–6"
-msgstr ""
+msgstr "Barn 0–6"
 
 #: inc/domain/pricing/prices.php:235
 msgid "Student / pensionär"
-msgstr ""
+msgstr "Student / pensionär"
 
 #: inc/domain/route/destinations.php:31
 msgid "Start"
-msgstr ""
+msgstr "Start"
 
 #: inc/domain/route/destinations.php:40
 msgid "End"
-msgstr ""
+msgstr "End"
 
 #: inc/domain/route/routes.php:129 inc/domain/route/routes.php:177
 #: inc/domain/route/routes.php:184
 #, php-format
 msgid "Från %1$s Till %2$s"
-msgstr ""
+msgstr "Från %1$s Till %2$s"
 
 #: inc/domain/route/routes.php:135
 #, php-format
 msgid "Route to %s"
-msgstr ""
+msgstr "Route to %s"
 
 #: inc/domain/service/services.php:101
 msgid "default"
-msgstr ""
+msgstr "default"
 
 #. translators: 1: actual train type, 2: planned train type
 #: inc/domain/service/services.php:104
 #, php-format
 msgid "%1$s replaces planned %2$s."
-msgstr ""
+msgstr "%1$s replaces planned %2$s."
 
 #: inc/domain/service/stop-times.php:68
 #: inc/domain/service/timetable-trip-create.php:29
 #: inc/domain/service/timetable-trip-create.php:55
 #: inc/domain/service/timetable-trip-create.php:65
 msgid "Dit"
-msgstr ""
+msgstr "Dit"
 
 #: inc/domain/service/stop-times.php:70
 #: inc/domain/service/timetable-trip-create.php:31
@@ -494,11 +862,11 @@ msgstr ""
 #: inc/domain/service/timetable-trip-create.php:65
 #: inc/public/vue-shortcode-config.php:128
 msgid "Från"
-msgstr ""
+msgstr "Från"
 
 #: inc/domain/service/stoptimes-save.php:61
 msgid "Trip has no route."
-msgstr ""
+msgstr "Trip has no route."
 
 #: inc/domain/service/timetable-trip-create.php:23
 msgid "Route"
@@ -514,61 +882,61 @@ msgstr[1] "%d trafikdagar"
 
 #: inc/domain/timetable/timetable-type.php:97
 msgid "GRÖN tidtabell"
-msgstr ""
+msgstr "GRÖN tidtabell"
 
 #: inc/domain/timetable/timetable-type.php:98
 msgid "GUL tidtabell"
-msgstr ""
+msgstr "GUL tidtabell"
 
 #: inc/domain/timetable/timetable-type.php:99
 msgid "RÖD tidtabell"
-msgstr ""
+msgstr "RÖD tidtabell"
 
 #: inc/domain/timetable/timetable-type.php:100
 msgid "ORANGE tidtabell"
-msgstr ""
+msgstr "ORANGE tidtabell"
 
 #: inc/domain/timetable/timetable-type.php:101
 msgid "BLÅ tidtabell"
-msgstr ""
+msgstr "BLÅ tidtabell"
 
 #: inc/domain/timetable/view/overview-data.php:21
 msgid "No trips found."
-msgstr ""
+msgstr "No trips found."
 
 #: inc/domain/timetable/view/overview-data.php:27
 msgid "No valid trips found."
-msgstr ""
+msgstr "No valid trips found."
 
 #: inc/domain/timetable/view/overview-data.php:82
 msgid "No trips in this timetable."
-msgstr ""
+msgstr "No trips in this timetable."
 
 #. translators: %s: formatted date
 #: inc/domain/timetable/view/overview-data.php:102
 #, php-format
 msgid "Timetable for %s"
-msgstr ""
+msgstr "Timetable for %s"
 
 #: inc/domain/timetable/view/overview-data.php:115
 msgid "No services running on this date."
-msgstr ""
+msgstr "No services running on this date."
 
 #: inc/domain/timetable/view/overview-data.php:139
 msgid "Stannar vid av- och påstigning när någon resenär ska på eller av."
-msgstr ""
+msgstr "Stannar vid av- och påstigning när någon resenär ska på eller av."
 
 #: inc/domain/timetable/view/overview-data.php:146
 msgid "Stannar endast vid påstigning när någon resenär ska på."
-msgstr ""
+msgstr "Stannar endast vid påstigning när någon resenär ska på."
 
 #: inc/domain/timetable/view/overview-data.php:153
 msgid "Busshållplats; anslutande bussar visas i egen tabell i tidtabellen."
-msgstr ""
+msgstr "Busshållplats; anslutande bussar visas i egen tabell i tidtabellen."
 
 #: inc/domain/timetable/view/overview-data.php:219
 msgid "Deviation from planned train type on the selected day."
-msgstr ""
+msgstr "Deviation from planned train type on the selected day."
 
 #: inc/domain/timetable/view/overview-data.php:305
 #: inc/domain/timetable/view/overview-data.php:367
@@ -577,7 +945,7 @@ msgstr ""
 #: inc/domain/timetable/view/overview-data.php:638
 #, php-format
 msgid "Från %s"
-msgstr ""
+msgstr "Från %s"
 
 #: inc/domain/timetable/view/overview-data.php:308
 #: inc/domain/timetable/view/overview-data.php:384
@@ -585,27 +953,27 @@ msgstr ""
 #: inc/domain/timetable/view/overview-data.php:627
 #, php-format
 msgid "Till %s"
-msgstr ""
+msgstr "Till %s"
 
 #: inc/domain/timetable/view/overview-data.php:540
 msgid "Tågbyte:"
-msgstr ""
+msgstr "Tågbyte:"
 
 #: inc/domain/timetable/view/overview-data.php:584
 msgid "Buss"
-msgstr ""
+msgstr "Buss"
 
 #: inc/domain/timetable/view/overview-data.php:595
 msgid "Anslutningsbuss:"
-msgstr ""
+msgstr "Anslutningsbuss:"
 
 #: inc/domain/train-type/rest-format.php:56
 msgid "Name is required."
-msgstr ""
+msgstr "Name is required."
 
 #: inc/domain/train-type/rest-format.php:75
 msgid "Train type not found."
-msgstr ""
+msgstr "Train type not found."
 
 #. translators: 1: station count, 2: route count, 3: timetable count, 4: service count
 #: inc/import/lennakatten/importer.php:41
@@ -618,51 +986,51 @@ msgstr ""
 
 #: inc/infrastructure/rest/import-export.php:47
 msgid "No file uploaded."
-msgstr ""
+msgstr "No file uploaded."
 
 #: inc/infrastructure/rest/import-export.php:89
 msgid "Could not read export file."
-msgstr ""
+msgstr "Could not read export file."
 
 #: inc/infrastructure/rest/stations-routes.php:142
 #: inc/infrastructure/rest/stations-routes.php:263
 #: inc/infrastructure/rest/timetables-data.php:155
 msgid "Title is required."
-msgstr ""
+msgstr "Title is required."
 
 #: inc/infrastructure/rest/timetables-data.php:234
 msgid "Route is required."
-msgstr ""
+msgstr "Route is required."
 
 #: inc/public/journey-wizard/debug-fixtures.php:85
 msgid "Transfer via Marielund"
-msgstr ""
+msgstr "Transfer via Marielund"
 
 #: inc/public/journey-wizard/debug-fixtures.php:92
 msgid "Behovsuppehåll, ge ett tecken till föraren om du vill stiga på"
-msgstr ""
+msgstr "Behovsuppehåll, ge ett tecken till föraren om du vill stiga på"
 
 #: inc/public/journey-wizard/debug-fixtures.php:136
 msgid "Ångloket ersatt med diesellok pga brandrisk"
-msgstr ""
+msgstr "Ångloket ersatt med diesellok pga brandrisk"
 
 #: inc/public/journey-wizard/debug-fixtures.php:160
 msgid "Transfer"
-msgstr ""
+msgstr "Transfer"
 
 #. translators: %s: month and year
 #: inc/public/month-calendar/shortcode.php:149
 #: inc/public/vue-shortcode-config.php:53
 #, php-format
 msgid "Månadskalender, %s"
-msgstr ""
+msgstr "Månadskalender, %s"
 
 #. translators: %s: month and year
 #: inc/public/month-calendar/shortcode.php:154
 #: inc/public/vue-shortcode-config.php:58
 #, php-format
 msgid "Trafikdagar för %s"
-msgstr ""
+msgstr "Trafikdagar för %s"
 
 #: inc/public/timetable-index/shortcode.php:50
 msgid "No timetables are published yet."
@@ -684,48 +1052,20 @@ msgstr "Välj en tidtabell för att se avgångar och trafikdagar."
 msgid "Timetables"
 msgstr "Tidtabeller"
 
-#: inc/public/vue-shortcode-config.php:22
-msgid "sön"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:23
-msgid "mån"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:24
-msgid "tis"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:25
-msgid "ons"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:26
-msgid "tor"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:27
-msgid "fre"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:28
-msgid "lör"
-msgstr ""
-
 #: inc/public/vue-shortcode-config.php:71
 #: inc/public/vue-shortcode-config.php:159
 msgid "Föregående månad"
-msgstr ""
+msgstr "Föregående månad"
 
 #: inc/public/vue-shortcode-config.php:72
 #: inc/public/vue-shortcode-config.php:160
 msgid "Nästa månad"
-msgstr ""
+msgstr "Nästa månad"
 
 #: inc/public/vue-shortcode-config.php:73
 #: inc/public/vue-shortcode-config.php:76
 msgid "Trafikdag"
-msgstr ""
+msgstr "Trafikdag"
 
 #: inc/public/vue-shortcode-config.php:74
 msgid ""
@@ -736,138 +1076,112 @@ msgstr ""
 #: inc/public/vue-shortcode-config.php:75
 #, php-format
 msgid "%d turer (alla linjer)"
-msgstr ""
+msgstr "%d turer (alla linjer)"
 
 #: inc/public/vue-shortcode-config.php:77
 msgid "Klicka för att visa tidtabell"
-msgstr ""
+msgstr "Klicka för att visa tidtabell"
 
 #: inc/public/vue-shortcode-config.php:123
 msgid "Inga stationer är tillgängliga."
-msgstr ""
+msgstr "Inga stationer är tillgängliga."
 
 #: inc/public/vue-shortcode-config.php:124
 msgid "Reseplaneraren kräver JavaScript."
-msgstr ""
+msgstr "Reseplaneraren kräver JavaScript."
 
 #: inc/public/vue-shortcode-config.php:125
 msgid "Steg i reseplaneraren"
-msgstr ""
+msgstr "Steg i reseplaneraren"
 
 #: inc/public/vue-shortcode-config.php:126
 msgid "Planera resa med Lennakatten"
-msgstr ""
+msgstr "Planera resa med Lennakatten"
 
 #: inc/public/vue-shortcode-config.php:127
 msgid "Välj avgång, ankomst och om du reser enkel eller tur och retur."
-msgstr ""
+msgstr "Välj avgång, ankomst och om du reser enkel eller tur och retur."
 
 #: inc/public/vue-shortcode-config.php:129
 msgid "Till"
-msgstr ""
+msgstr "Till"
 
 #: inc/public/vue-shortcode-config.php:130
 #: inc/public/vue-shortcode-config.php:131
 msgid "Sök eller välj station…"
-msgstr ""
+msgstr "Sök eller välj station…"
 
 #: inc/public/vue-shortcode-config.php:132
 msgid "Sök avgångsstation"
-msgstr ""
+msgstr "Sök avgångsstation"
 
 #: inc/public/vue-shortcode-config.php:133
 msgid "Sök ankomststation"
-msgstr ""
+msgstr "Sök ankomststation"
 
 #: inc/public/vue-shortcode-config.php:134
 msgid "Restyp"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:135
-msgid "Enkel resa"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:136
-msgid "Tur och retur"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:137
-msgid "Sök resa"
-msgstr ""
+msgstr "Restyp"
 
 #: inc/public/vue-shortcode-config.php:138
 msgid "Visa hela tidtabellen"
-msgstr ""
+msgstr "Visa hela tidtabellen"
 
 #: inc/public/vue-shortcode-config.php:139
 msgid "← Tillbaka"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:140
-msgid "Välj datum"
-msgstr ""
+msgstr "← Tillbaka"
 
 #: inc/public/vue-shortcode-config.php:141
 #: inc/public/vue-shortcode-config.php:142
 msgid "Idag"
-msgstr ""
+msgstr "Idag"
 
 #: inc/public/vue-shortcode-config.php:143
 msgid "Inga bokningsbara dagar denna månad för din resa."
-msgstr ""
+msgstr "Inga bokningsbara dagar denna månad för din resa."
 
 #: inc/public/vue-shortcode-config.php:144
 msgid "Byt månad med pilarna ovan."
-msgstr ""
+msgstr "Byt månad med pilarna ovan."
 
 #: inc/public/vue-shortcode-config.php:145
 msgid "Kan bokas för din resa"
-msgstr ""
+msgstr "Kan bokas för din resa"
 
 #: inc/public/vue-shortcode-config.php:146
 msgid "Trafik, ej din resa"
-msgstr ""
+msgstr "Trafik, ej din resa"
 
 #: inc/public/vue-shortcode-config.php:147
 msgid "Ingen trafik"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:148
-msgid "Välj utresa"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:149
-msgid "Välj återresa"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:150
-msgid "Din resa"
-msgstr ""
+msgstr "Ingen trafik"
 
 #: inc/public/vue-shortcode-config.php:151
 msgid "Fortsätt till biljetter"
-msgstr ""
+msgstr "Fortsätt till biljetter"
 
 #: inc/public/vue-shortcode-config.php:152
 msgid "Skriv ut / spara som PDF"
-msgstr ""
+msgstr "Skriv ut / spara som PDF"
 
 #: inc/public/vue-shortcode-config.php:153
 msgid "Dela resa"
-msgstr ""
+msgstr "Dela resa"
 
 #: inc/public/vue-shortcode-config.php:154
 msgid "Kopiera resa"
-msgstr ""
+msgstr "Kopiera resa"
 
 #: inc/public/vue-shortcode-config.php:155
 msgid "Resan kopierades till urklipp."
-msgstr ""
+msgstr "Resan kopierades till urklipp."
 
 #: inc/public/vue-shortcode-config.php:156
 msgid "Resan delades."
-msgstr ""
+msgstr "Resan delades."
 
 #: inc/public/vue-shortcode-config.php:157
 msgid "Kunde inte dela eller kopiera resan."
-msgstr ""
+msgstr "Kunde inte dela eller kopiera resan."
+
+

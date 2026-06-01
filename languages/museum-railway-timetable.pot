@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-01T10:10:41+00:00\n"
+"POT-Creation-Date: 2026-06-01T10:14:25+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: museum-railway-timetable\n"
@@ -58,6 +58,7 @@ msgid "Inställningar"
 msgstr ""
 
 #: inc/admin/menu.php:44
+#: inc/assets/frontend.php:120
 #: inc/public/vue-shortcode-config.php:158
 msgid "Priser"
 msgstr ""
@@ -292,6 +293,385 @@ msgstr ""
 
 #: inc/admin/tools/dev-navigation.php:494
 msgid "Development navigation is only available in development mode (WP_DEBUG or MRT_DEVELOPMENT) or WP-CLI."
+msgstr ""
+
+#: inc/assets/frontend.php:23
+msgid "januari"
+msgstr ""
+
+#: inc/assets/frontend.php:24
+msgid "februari"
+msgstr ""
+
+#: inc/assets/frontend.php:25
+msgid "mars"
+msgstr ""
+
+#: inc/assets/frontend.php:26
+msgid "april"
+msgstr ""
+
+#: inc/assets/frontend.php:27
+msgid "maj"
+msgstr ""
+
+#: inc/assets/frontend.php:28
+msgid "juni"
+msgstr ""
+
+#: inc/assets/frontend.php:29
+msgid "juli"
+msgstr ""
+
+#: inc/assets/frontend.php:30
+msgid "augusti"
+msgstr ""
+
+#: inc/assets/frontend.php:31
+msgid "september"
+msgstr ""
+
+#: inc/assets/frontend.php:32
+msgid "oktober"
+msgstr ""
+
+#: inc/assets/frontend.php:33
+msgid "november"
+msgstr ""
+
+#: inc/assets/frontend.php:34
+msgid "december"
+msgstr ""
+
+#: inc/assets/frontend.php:37
+#: inc/public/vue-shortcode-config.php:22
+msgid "sön"
+msgstr ""
+
+#: inc/assets/frontend.php:38
+#: inc/public/vue-shortcode-config.php:23
+msgid "mån"
+msgstr ""
+
+#: inc/assets/frontend.php:39
+#: inc/public/vue-shortcode-config.php:24
+msgid "tis"
+msgstr ""
+
+#: inc/assets/frontend.php:40
+#: inc/public/vue-shortcode-config.php:25
+msgid "ons"
+msgstr ""
+
+#: inc/assets/frontend.php:41
+#: inc/public/vue-shortcode-config.php:26
+msgid "tor"
+msgstr ""
+
+#: inc/assets/frontend.php:42
+#: inc/public/vue-shortcode-config.php:27
+msgid "fre"
+msgstr ""
+
+#: inc/assets/frontend.php:43
+#: inc/public/vue-shortcode-config.php:28
+msgid "lör"
+msgstr ""
+
+#: inc/assets/frontend.php:55
+#: inc/public/vue-shortcode-config.php:137
+msgid "Sök resa"
+msgstr ""
+
+#: inc/assets/frontend.php:56
+#: inc/public/vue-shortcode-config.php:140
+msgid "Välj datum"
+msgstr ""
+
+#: inc/assets/frontend.php:57
+#: inc/public/vue-shortcode-config.php:148
+msgid "Välj utresa"
+msgstr ""
+
+#: inc/assets/frontend.php:58
+#: inc/public/vue-shortcode-config.php:149
+msgid "Välj återresa"
+msgstr ""
+
+#: inc/assets/frontend.php:59
+#: inc/public/vue-shortcode-config.php:150
+msgid "Din resa"
+msgstr ""
+
+#: inc/assets/frontend.php:60
+#: inc/assets/frontend.php:278
+msgid "Laddar..."
+msgstr ""
+
+#: inc/assets/frontend.php:61
+msgid "Något gick fel. Försök igen."
+msgstr ""
+
+#: inc/assets/frontend.php:62
+msgid "Inga anslutningar detta datum."
+msgstr ""
+
+#: inc/assets/frontend.php:63
+msgid "Visa passerade stationer"
+msgstr ""
+
+#: inc/assets/frontend.php:64
+msgid "Dölj passerade stationer"
+msgstr ""
+
+#: inc/assets/frontend.php:65
+#: inc/assets/frontend.php:94
+msgid "Tåg"
+msgstr ""
+
+#: inc/assets/frontend.php:66
+msgid "Välj →"
+msgstr ""
+
+#: inc/assets/frontend.php:67
+msgid "Trafikmeddelande"
+msgstr ""
+
+#: inc/assets/frontend.php:68
+#, php-format
+msgid "%d min"
+msgstr ""
+
+#: inc/assets/frontend.php:69
+msgid "Utresa"
+msgstr ""
+
+#: inc/assets/frontend.php:70
+msgid "Återresa"
+msgstr ""
+
+#: inc/assets/frontend.php:71
+#, php-format
+msgid "den %s"
+msgstr ""
+
+#: inc/assets/frontend.php:72
+msgid "Välj både avrese- och ankomststation."
+msgstr ""
+
+#: inc/assets/frontend.php:73
+#: inc/public/vue-shortcode-config.php:135
+msgid "Enkel resa"
+msgstr ""
+
+#: inc/assets/frontend.php:74
+#: inc/public/vue-shortcode-config.php:136
+msgid "Tur och retur"
+msgstr ""
+
+#: inc/assets/frontend.php:75
+#, php-format
+msgid "%1$s → %2$s | %3$s"
+msgstr ""
+
+#: inc/assets/frontend.php:76
+#, php-format
+msgid "%1$s → %2$s | %3$s\\n%4$s"
+msgstr ""
+
+#: inc/assets/frontend.php:77
+msgid "Direktresa"
+msgstr ""
+
+#: inc/assets/frontend.php:78
+msgid "Byte"
+msgstr ""
+
+#: inc/assets/frontend.php:79
+msgid "Vald utresa"
+msgstr ""
+
+#: inc/assets/frontend.php:80
+#, php-format
+msgid "mot %s"
+msgstr ""
+
+#: inc/assets/frontend.php:81
+#, php-format
+msgid "Byte vid %s"
+msgstr ""
+
+#: inc/assets/frontend.php:82
+#, php-format
+msgid "%d min byte"
+msgstr ""
+
+#: inc/assets/frontend.php:83
+msgid "passerade stationer"
+msgstr ""
+
+#: inc/assets/frontend.php:95
+msgid "Fordonstyp"
+msgstr ""
+
+#: inc/assets/frontend.php:96
+msgid "Avgång"
+msgstr ""
+
+#: inc/assets/frontend.php:97
+msgid "Ankomst"
+msgstr ""
+
+#: inc/assets/frontend.php:98
+msgid "Station"
+msgstr ""
+
+#: inc/assets/frontend.php:99
+msgid "Åtgärder"
+msgstr ""
+
+#: inc/assets/frontend.php:100
+msgid "Kalender för resdatum"
+msgstr ""
+
+#: inc/assets/frontend.php:101
+#, php-format
+msgid "%s — anslutning finns"
+msgstr ""
+
+#: inc/assets/frontend.php:102
+#, php-format
+msgid "%s — trafik, ingen direktanslutning på rutten"
+msgstr ""
+
+#: inc/assets/frontend.php:103
+#, php-format
+msgid "%s — ingen trafik"
+msgstr ""
+
+#: inc/assets/frontend.php:104
+#, php-format
+msgid "Utresor den %s"
+msgstr ""
+
+#: inc/assets/frontend.php:105
+msgid "Återresor samma dag"
+msgstr ""
+
+#: inc/assets/frontend.php:106
+#, php-format
+msgid "Välj resa: %1$s, avgång %2$s, ankomst %3$s"
+msgstr ""
+
+#: inc/assets/frontend.php:107
+#, php-format
+msgid "Visa hållplatser och tider för %s"
+msgstr ""
+
+#: inc/assets/frontend.php:108
+#, php-format
+msgid "Delsträcka %d"
+msgstr ""
+
+#: inc/assets/frontend.php:119
+msgid "Biljettyp"
+msgstr ""
+
+#: inc/assets/frontend.php:121
+msgid "Priset bygger på lägsta giltiga zontal för den valda resan (max tre zoner enligt taxa 2026). Pensionär gäller från 65 år."
+msgstr ""
+
+#: inc/assets/frontend.php:127
+msgid "Heldagsbiljett"
+msgstr ""
+
+#: inc/assets/frontend.php:128
+msgid "Eftermiddagsbiljett (tur och retur)"
+msgstr ""
+
+#: inc/assets/frontend.php:129
+msgid "Eftermiddagsbiljett gäller tur och retur med avgång efter kl 15 (ej evenemangsdagar)."
+msgstr ""
+
+#: inc/assets/frontend.php:130
+#, php-format
+msgid "%d zoner"
+msgstr ""
+
+#: inc/assets/frontend.php:276
+msgid "Sök"
+msgstr ""
+
+#: inc/assets/frontend.php:277
+msgid "Söker..."
+msgstr ""
+
+#: inc/assets/frontend.php:279
+msgid "Kunde inte söka anslutningar."
+msgstr ""
+
+#: inc/assets/frontend.php:280
+msgid "Kunde inte ladda tidtabellen."
+msgstr ""
+
+#: inc/assets/frontend.php:281
+msgid "Välj olika stationer för avresa och ankomst."
+msgstr ""
+
+#: inc/assets/frontend.php:282
+msgid "Nätverksfel. Försök igen."
+msgstr ""
+
+#: inc/assets/frontend.php:283
+msgid "Förklaringar"
+msgstr ""
+
+#: inc/assets/frontend.php:284
+msgid "Tecken"
+msgstr ""
+
+#: inc/assets/frontend.php:285
+msgid "Betydelse"
+msgstr ""
+
+#: inc/assets/frontend.php:286
+msgid "Med reservation för ändring av tågtyp."
+msgstr ""
+
+#: inc/assets/frontend.php:287
+#, php-format
+msgid "Planerat: %s"
+msgstr ""
+
+#: inc/assets/frontend.php:288
+msgid "Avvikelse från planerad tågtyp"
+msgstr ""
+
+#: inc/assets/frontend.php:289
+#, php-format
+msgid "Avgångar %s"
+msgstr ""
+
+#: inc/assets/frontend.php:290
+msgid "Anslutningsbuss"
+msgstr ""
+
+#: inc/assets/frontend.php:291
+msgid "Tur"
+msgstr ""
+
+#: inc/assets/frontend.php:292
+msgid "Anslutande tåg"
+msgstr ""
+
+#: inc/assets/frontend.php:293
+#, php-format
+msgid "Tåg %1$s %2$s"
+msgstr ""
+
+#: inc/assets/frontend.php:294
+#, php-format
+msgid "Tur %s"
 msgstr ""
 
 #: inc/assets/vue-frontend.php:109
@@ -662,34 +1042,6 @@ msgstr ""
 msgid "Timetables"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:22
-msgid "sön"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:23
-msgid "mån"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:24
-msgid "tis"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:25
-msgid "ons"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:26
-msgid "tor"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:27
-msgid "fre"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:28
-msgid "lör"
-msgstr ""
-
 #: inc/public/vue-shortcode-config.php:71
 #: inc/public/vue-shortcode-config.php:159
 msgid "Föregående månad"
@@ -759,28 +1111,12 @@ msgstr ""
 msgid "Restyp"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:135
-msgid "Enkel resa"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:136
-msgid "Tur och retur"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:137
-msgid "Sök resa"
-msgstr ""
-
 #: inc/public/vue-shortcode-config.php:138
 msgid "Visa hela tidtabellen"
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:139
 msgid "← Tillbaka"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:140
-msgid "Välj datum"
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:141
@@ -806,18 +1142,6 @@ msgstr ""
 
 #: inc/public/vue-shortcode-config.php:147
 msgid "Ingen trafik"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:148
-msgid "Välj utresa"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:149
-msgid "Välj återresa"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:150
-msgid "Din resa"
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:151
