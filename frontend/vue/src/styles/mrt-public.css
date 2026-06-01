@@ -10,7 +10,6 @@
 @import '@mrt-assets/train-type-icons.css';
 @import '@mrt-assets/frontend-public.css';
 @import '@mrt-assets/frontend/timetable-index.css';
-@import '@mrt-assets/frontend/ui-components.css';
 /* Timetable overview: frontend/vue/src/styles/timetable-overview.css (via MrtTimetableOverviewView). */
 /* Journey wizard: frontend/vue/src/styles/journey-wizard.css (via JourneyWizardApp). */
 @import './vue-shell.css';
