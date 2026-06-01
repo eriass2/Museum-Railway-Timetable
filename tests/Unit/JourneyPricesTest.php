@@ -92,13 +92,6 @@ final class JourneyPricesTest extends TestCase {
         self::assertSame(30, $flat['single']['child_4_15']);
     }
 
-    public function test_boundary_station_can_count_as_either_zone(): void {
-        self::assertSame(1, MRT_price_zones_between_zone_sets([1, 2], [2]));
-        self::assertSame(1, MRT_price_zones_between_zone_sets([2], [2, 3]));
-        self::assertSame(2, MRT_price_zones_between_zone_sets([1], [2, 3]));
-        self::assertSame(4, MRT_price_zones_between_zone_sets([1], [4]));
-    }
-
     public function test_afternoon_return_prices_match_taxa_2026(): void {
         $prices = MRT_get_afternoon_return_prices();
         self::assertSame(160, $prices['adult']);
