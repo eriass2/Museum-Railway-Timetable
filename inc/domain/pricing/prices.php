@@ -196,40 +196,6 @@ function MRT_get_station_price_zones_map(): array {
 }
 
 /**
- * Cheapest zone count between two station zone sets.
- *
- * Boundary station rule: a station on a zone line counts as either zone, while
- * passing the boundary means entering the next zone.
- *
- * @param int[] $from_zones Possible zones for origin
- * @param int[] $to_zones Possible zones for destination
- * @return int
- */
-function MRT_price_zones_between_zone_sets( array $from_zones, array $to_zones ): int {
-	$best = 4;
-	foreach ( $from_zones as $from_zone ) {
-		foreach ( $to_zones as $to_zone ) {
-			$span = abs( (int) $to_zone - (int) $from_zone ) + 1;
-			$best = min( $best, $span );
-		}
-	}
-	return max( 1, min( 4, $best ) );
-}
-
-/**
- * Number of price zones for a station pair.
- *
- * @return int
- */
-function MRT_price_zones_for_station_pair( int $from_station_id, int $to_station_id ): int {
-	$map = MRT_get_station_price_zones_map();
-	if ( ! isset( $map[ $from_station_id ], $map[ $to_station_id ] ) ) {
-		return MRT_price_zone_cap();
-	}
-	return max( 1, min( MRT_price_zone_cap(), MRT_price_zones_between_zone_sets( $map[ $from_station_id ], $map[ $to_station_id ] ) ) );
-}
-
-/**
  * Flat afternoon return fares (tur och retur efter kl 15).
  *
  * @return array<string, int>
