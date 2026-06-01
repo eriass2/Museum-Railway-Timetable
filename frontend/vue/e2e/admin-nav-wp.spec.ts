@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { adminNavLink, useAdminMobileViewport } from './admin-helpers';
 import { wpDemoUrl } from './wp-demo-url';
 import { loginWpAdmin } from './wp-admin-login';
 
@@ -21,6 +22,7 @@ test.describe('AdminNav integration (WordPress)', () => {
 
   test.beforeEach(async ({ page }) => {
     await loginWpAdmin(page);
+    await useAdminMobileViewport(page);
     await page.goto(adminUrl);
     await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
     await expect(page.locator('.mrt-admin-nav')).toBeVisible();
@@ -30,21 +32,21 @@ test.describe('AdminNav integration (WordPress)', () => {
   });
 
   test('nav tabs switch view without full page reload', async ({ page }) => {
-    await page.locator('.mrt-admin-nav a', { hasText: 'Tidtabeller' }).click();
+    await adminNavLink(page, 'Tidtabeller').click();
     await expect(page).toHaveURL(/#\/timetables/);
     await expect(page.getByRole('heading', { name: /^tidtabeller$/i })).toBeVisible({
       timeout: 15_000,
     });
     await expectStillSpa(page);
 
-    await page.locator('.mrt-admin-nav a', { hasText: 'Hjälp' }).click();
+    await adminNavLink(page, 'Hjälp').click();
     await expect(page).toHaveURL(/#\/help/);
     await expect(page.getByRole('heading', { name: /^hjälp$/i })).toBeVisible({
       timeout: 15_000,
     });
     await expectStillSpa(page);
 
-    await page.locator('.mrt-admin-nav a', { hasText: 'Översikt' }).click();
+    await adminNavLink(page, 'Översikt').click();
     await expect(page).toHaveURL(/#\/dashboard/);
     await expect(page.getByRole('heading', { name: /museum railway timetable/i })).toBeVisible({
       timeout: 15_000,
@@ -53,7 +55,7 @@ test.describe('AdminNav integration (WordPress)', () => {
   });
 
   test('does not nest plugin path on tab navigation', async ({ page }) => {
-    await page.locator('.mrt-admin-nav a', { hasText: 'Priser' }).click();
+    await adminNavLink(page, 'Priser').click();
     await expect(page).toHaveURL(/#\/prices/);
     await expect(page).not.toHaveURL(/museum-railway-timetable\/museum-railway-timetable/);
     await expectStillSpa(page);

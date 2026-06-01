@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { gotoAdminRoute } from './admin-helpers';
 import { wpDemoUrl } from './wp-demo-url';
 import { loginWpAdmin } from './wp-admin-login';
 
@@ -19,10 +20,8 @@ test.describe('Vue admin timetable flow', () => {
     const uniqueTitle = `E2E ${Date.now()}`;
     const trafficDate = '2099-12-24';
 
-    await page.goto(adminUrl);
+    await gotoAdminRoute(page, adminUrl, '/timetables');
     await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
-
-    await page.locator('.mrt-admin-nav a', { hasText: 'Tidtabeller' }).click();
     await expect(page.getByRole('heading', { name: /tidtabeller/i })).toBeVisible({
       timeout: 15_000,
     });

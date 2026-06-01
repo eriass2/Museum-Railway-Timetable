@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { adminNavLink, gotoAdminRoute, useAdminMobileViewport } from './admin-helpers';
 import { wpDemoUrl } from './wp-demo-url';
 import { loginWpAdmin } from './wp-admin-login';
 
@@ -22,17 +23,15 @@ test.describe('Vue admin (WordPress)', () => {
     await expect(page.locator('.mrt-admin-stats')).toBeVisible({ timeout: 15_000 });
   });
 
-  test('timetables nav loads list', async ({ page }) => {
-    await page.goto(adminUrl);
-    await page.locator('.mrt-admin-nav a', { hasText: 'Tidtabeller' }).click();
+  test('timetables route loads list', async ({ page }) => {
+    await gotoAdminRoute(page, adminUrl, '/timetables');
     await expect(page.getByRole('heading', { name: /tidtabeller/i })).toBeVisible({
       timeout: 15_000,
     });
   });
 
   test('stations routes shows route preview', async ({ page }) => {
-    await page.goto(adminUrl);
-    await page.locator('.mrt-admin-nav a', { hasText: 'Stationer' }).click();
+    await gotoAdminRoute(page, adminUrl, '/stations-routes');
     await expect(page.getByRole('heading', { name: /stationer & rutter/i })).toBeVisible({
       timeout: 15_000,
     });
@@ -40,7 +39,7 @@ test.describe('Vue admin (WordPress)', () => {
   });
 
   test('mobile dashboard shows stat cards', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
+    await useAdminMobileViewport(page);
     await page.goto(adminUrl);
     await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
     await expect(page.locator('.mrt-admin-stat-grid')).toBeVisible({ timeout: 15_000 });
@@ -48,9 +47,9 @@ test.describe('Vue admin (WordPress)', () => {
   });
 
   test('mobile timetable list shows cards', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
+    await useAdminMobileViewport(page);
     await page.goto(adminUrl);
-    await page.locator('.mrt-admin-nav a', { hasText: 'Tidtabeller' }).click();
+    await adminNavLink(page, 'Tidtabeller').click();
     await expect(page.getByRole('heading', { name: /tidtabeller/i })).toBeVisible({
       timeout: 15_000,
     });
@@ -64,9 +63,9 @@ test.describe('Vue admin (WordPress)', () => {
   });
 
   test('mobile timetable editor shows quick departure panel', async ({ page }) => {
-    await page.setViewportSize({ width: 390, height: 844 });
+    await useAdminMobileViewport(page);
     await page.goto(adminUrl);
-    await page.locator('.mrt-admin-nav a', { hasText: 'Tidtabeller' }).click();
+    await adminNavLink(page, 'Tidtabeller').click();
     await expect(page.getByRole('heading', { name: /tidtabeller/i })).toBeVisible({
       timeout: 15_000,
     });
