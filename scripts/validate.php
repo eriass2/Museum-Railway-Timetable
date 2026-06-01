@@ -161,6 +161,7 @@ echo "\n7. Checking CSS files...\n";
 $css_files = [
     'assets/train-type-icons.css',
     'assets/frontend-public.css',
+    'frontend/vue/src/styles/month-calendar.css',
     'frontend/vue/src/styles/journey-wizard.css',
     'assets/admin.css',
 ];

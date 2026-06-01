@@ -48,7 +48,11 @@ function onClick(): void {
     v-if="info.running"
     type="button"
     class="mrt-day mrt-running mrt-day-clickable mrt-cursor-pointer"
-    :class="{ 'is-selected': selected }"
+    :class="{
+      'is-selected': selected,
+      'mrt-day--has-types': dayTypes.length > 0,
+      'mrt-day--multi-types': dayTypes.length > 1,
+    }"
     :aria-label="buttonAria"
     :aria-pressed="selected"
     :title="countTooltip"

@@ -16,7 +16,7 @@ Public styles are **bundled by Vite**, not enqueued from WordPress:
 
 - Source entry: `frontend/vue/src/styles/mrt-public.css`
 - Imports (unchanged on disk): `assets/train-type-icons.css`, `frontend-public.css`
-- Vue-owned: `frontend/vue/src/styles/timetable-overview.css`, `frontend/vue/src/styles/journey-wizard/`
+- Vue-owned: `frontend/vue/src/styles/month-calendar.css`, `frontend/vue/src/styles/timetable-overview.css`, `frontend/vue/src/styles/journey-wizard/`
 - Vue-only shell: `frontend/vue/src/styles/vue-shell.css`
 
 Styles ship in the Vite bundle (not separate `mrt-frontend-public` handles).

@@ -58,7 +58,8 @@
     font-weight: 700;
     line-height: 1.2;
     cursor: pointer;
-    white-space: nowrap;
+    white-space: normal;
+    text-align: center;
 }
 
 .mrt-journey-wizard .mrt-surface .mrt-segmented__option + .mrt-segmented__option {

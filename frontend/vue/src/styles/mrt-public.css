@@ -11,5 +11,6 @@
 @import '@mrt-assets/frontend-public.css';
 @import '@mrt-assets/frontend/timetable-index.css';
 /* Timetable overview: frontend/vue/src/styles/timetable-overview.css (via MrtTimetableOverviewView). */
+/* Month calendar: frontend/vue/src/styles/month-calendar.css (via MonthCalendarApp). */
 /* Journey wizard: frontend/vue/src/styles/journey-wizard.css (via JourneyWizardApp). */
 @import './vue-shell.css';

@@ -4,9 +4,29 @@
     }
 
     .mrt-journey-wizard .mrt-step-panel,
-    .mrt-journey-wizard .mrt-step-panel--search {
+    .mrt-journey-wizard .mrt-step-panel--search,
+    .mrt-journey-wizard .mrt-step-panel--wide {
         width: 100%;
-        padding: 1.2rem;
+        padding: 0.75rem 0.5rem 1.1rem;
+    }
+
+    .mrt-journey-wizard .mrt-step-nav {
+        margin-inline: -0.15rem;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .mrt-journey-wizard .mrt-step-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .mrt-journey-wizard .mrt-step-progress {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        width: max-content;
+        min-width: 100%;
+        gap: 0.3rem;
     }
 
     .mrt-journey-wizard .mrt-heading--surface-title {
@@ -21,7 +41,7 @@
     .mrt-journey-wizard .mrt-calendar-nav,
     .mrt-calendar-grid--wizard,
     .mrt-journey-wizard .mrt-legend-list {
-        padding-inline: 0.9rem;
+        padding-inline: 0.65rem;
     }
 
     .mrt-journey-wizard .mrt-legend-list {
@@ -29,52 +49,157 @@
     }
 
     .mrt-calendar-grid--wizard .mrt-calendar-grid__table th {
-        font-size: 1rem;
+        font-size: 0.85rem;
+        padding: 0.25rem 0;
     }
 
     .mrt-calendar-grid--wizard .mrt-calendar-day {
-        min-height: 2.4rem;
-        font-size: 1.2rem;
+        max-width: 100%;
+        min-width: 0;
+        min-height: 2.35rem;
+        font-size: 1rem;
     }
 
-    .mrt-trip-card__head,
-    .mrt-selected-trip__card {
+    .mrt-journey-wizard .mrt-surface:not(.mrt-surface--flush) {
+        padding: 0.85rem 0.75rem;
+    }
+
+    .mrt-journey-wizard .mrt-surface .mrt-segmented {
         grid-template-columns: 1fr;
     }
 
-    .mrt-trip-card__side {
-        justify-items: start;
+    .mrt-journey-wizard .mrt-surface .mrt-segmented__option + .mrt-segmented__option {
+        border-left: 0;
+        border-top: 2px solid var(--mrt-color-border-on-surface, #767676);
     }
 
-    .mrt-vehicle-row {
+    .mrt-journey-wizard .mrt-surface .mrt-segmented__option {
         justify-content: flex-start;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.975rem;
+    }
+
+    .mrt-journey-wizard .mrt-step-progress__item {
+        flex-shrink: 0;
+        font-size: 0.72rem;
+        padding: 0.2rem 0.4rem;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__head,
+    .mrt-journey-wizard .mrt-selected-trip__card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.85rem 0.75rem;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__copy,
+    .mrt-journey-wizard .mrt-trip-card__side {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__side {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "vehicles vehicles"
+            "duration button";
+        align-items: center;
+        gap: 0.55rem 0.75rem;
+    }
+
+    .mrt-journey-wizard .mrt-vehicle-row {
+        grid-area: vehicles;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0.35rem;
         max-width: 100%;
     }
 
-    .mrt-vehicle-row__item {
+    .mrt-journey-wizard .mrt-trip-card__duration {
+        grid-area: duration;
+        margin: 0;
+        font-size: 1.15rem;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__side > .mrt-accent-btn {
+        grid-area: button;
+        justify-self: end;
+    }
+
+    .mrt-journey-wizard .mrt-vehicle-row__item {
         min-width: 0;
         max-width: 100%;
     }
 
-    .mrt-vehicle-row__icon {
+    .mrt-journey-wizard .mrt-vehicle-row__icon {
         flex-shrink: 0;
-        width: 40px;
-        height: 20px;
+        width: 36px;
+        height: 18px;
     }
 
-    .mrt-vehicle-row__item > span:last-child {
+    .mrt-journey-wizard .mrt-vehicle-row__item > span:last-child {
         min-width: 0;
         overflow-wrap: anywhere;
     }
 
-    .mrt-timeline__row {
-        grid-template-columns: 4.2rem 1.4rem minmax(0, 1fr);
+    .mrt-journey-wizard .mrt-timeline__row {
+        grid-template-columns: 3.75rem 1.35rem minmax(0, 1fr);
+        gap: 0.5rem;
     }
 
-    .mrt-detail-segment__meta,
-    .mrt-timeline__expand,
-    .mrt-detail-segment__transfer {
-        margin-left: 5.2rem;
+    .mrt-journey-wizard .mrt-detail-panel {
+        padding: 1rem 0.65rem 0.85rem;
+        overflow-x: hidden;
+    }
+
+    .mrt-journey-wizard .mrt-detail-segment__meta {
+        margin: 0 0 0.45rem;
+        padding-left: 5.1rem;
+    }
+
+    .mrt-journey-wizard .mrt-detail-segment__transfer {
+        margin: 0.35rem 0 0.65rem;
+        padding-left: 5.1rem;
+        font-size: 1rem;
+    }
+
+    .mrt-journey-wizard .mrt-timeline__expand {
+        margin: 0.25rem 0 0.5rem;
+        padding-left: 5.1rem;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        text-align: left;
+    }
+
+    .mrt-journey-wizard .mrt-price-list {
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    .mrt-journey-wizard .mrt-price-list__row {
+        padding: 0.55rem 0;
+        border-bottom-color: var(--mrt-color-neutral-300, #ccc);
+    }
+
+    .mrt-journey-wizard .mrt-price-list__label {
+        color: var(--mrt-wizard-text, #151515);
+        font-weight: 800;
+    }
+
+    .mrt-journey-wizard .mrt-price-list__value {
+        color: var(--mrt-wizard-text, #151515);
+    }
+
+    .mrt-journey-wizard .mrt-price-block__title {
+        font-size: 1.05rem;
+    }
+
+    .mrt-journey-wizard .mrt-summary-card__heading {
+        font-size: 0.9rem;
     }
 
 }

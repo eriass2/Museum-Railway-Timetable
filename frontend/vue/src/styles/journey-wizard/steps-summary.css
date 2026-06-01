@@ -11,7 +11,17 @@
 .mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-price-block {
     margin-top: 1.25rem;
     padding-top: 1.25rem;
-    border-top: 1px solid var(--mrt-color-neutral-200);
+    border-top: 1px solid var(--mrt-color-neutral-300, #ccc);
+}
+
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-price-block + .mrt-price-block {
+    margin-top: 1rem;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-price-block__note {
+    color: var(--mrt-color-neutral-700, #444);
 }
 
 .mrt-journey-wizard .mrt-summary-print-title,

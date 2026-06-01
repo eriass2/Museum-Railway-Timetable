@@ -3,7 +3,7 @@
 Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder refereras nedan — lägg filerna i `docs/feedback/images/` om de sparas i repot.
 
 **Källor:** mail med skärmdumpar  
-**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** J2, J3, G4 + demo-verifiering G1.
+**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** J2, G4 + ev. visuell G3/J1.
 
 ---
 
@@ -21,7 +21,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 
 | Punkt | Kort svar |
 |-------|-----------|
-| **G1** | Tidtabellsdata synkad mot PDF; resa Uppsala→Marielund täcks av PHPUnit |
+| **G1** | Tidtabellsdata synkad mot PDF; resa Uppsala→Marielund **verifierad på demo** (import + 6 träffar 2026-06-06) |
 | **J4** | Taxa 2026, eftermiddagsbiljett, heldagsbiljetter i sammanfattning |
 | **G5** | Siffror dolda som standard; tydligare legend vid `show_counts=1` |
 | **G3** | Lennakatten-färgpalett + kalenderfärger per tidtabellstyp (G7) |
@@ -98,8 +98,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Reseplanerare / journey scoring
 - **Typ:** bugg
 - **Prioritet:** hög
-- **Status:** åtgärdad (testdata; verifiera på demo efter import)
-- **Svar:** Orsaken var felaktig/ofullständig tidtabellsdata i fixturen — inte själva resesökningsmotorn. Vi har synkat GRÖN, GUL, RÖD och ORANGE mot `Anslagstidtabell-2026.pdf` (tider, P/X, bussanslutningar). Resa **Uppsala Östra → Marielund** på grön trafikdag (t.ex. 2026-06-06) ger nu träff (tåg 71, avg 10:00). Täcks av `LennakattenJourneySearchTest.php`. **Demo-sajten** behöver ny import av Lennakatten-fixture om den fortfarande kör gammal data.
+- **Status:** åtgärdad och **verifierad på demo** (Docker import juni 2026)
+- **Svar:** Orsaken var felaktig/ofullständig tidtabellsdata i fixturen — inte själva resesökningsmotorn. Vi har synkat GRÖN, GUL, RÖD och ORANGE mot `Anslagstidtabell-2026.pdf` (tider, P/X, bussanslutningar). Resa **Uppsala Östra → Marielund** på grön trafikdag (t.ex. 2026-06-06) ger nu träff (tåg 71, avg 10:00, ankomst 10:35; 6 alternativ). Täcks av `LennakattenJourneySearchTest.php`. **Demo (Docker):** `MRT_dev_reset_and_import_cli()` → station 372→378, `MRT_find_connections` OK.
 
 ### G2. Typsnitt – Roboto + Open Sans Bold
 - **Källa:** mail
@@ -190,7 +190,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 ## Prioriterad åtgärdslista
 
 ### Fixa först (buggar / felaktigt beteende)
-1. ~~**G1** – Resa Uppsala–Marielund hittas inte på trafikdag~~ ✓ (testdata; verifiera demo-import)
+1. ~~**G1** – Resa Uppsala–Marielund hittas inte på trafikdag~~ ✓ (demo verifierad efter import)
 2. ~~**J4** – Fel biljettpriser (zoner + eftermiddagstaxa)~~ ✓
 3. ~~**G5** – Kalendersiffror stämmer inte / otydliga~~ ✓
 4. ~~**G6** – ”ÔÅ / Laddar…” (encoding/copy)~~ ✓
@@ -244,7 +244,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - [x] Reproducera G1 och J4 med konkreta testdata
 - [x] J5 — biljettknapp borttagen; svar till Jesper i doc (`f972420`)
 - [x] G10 — print + dela/kopiera (`8fa064a`); **PDF verifierad** (`a9a9ad3`)
-- [ ] Verifiera G1 på demo efter ny fixture-import
+- [x] Verifiera G1 på demo efter ny fixture-import (2026-06-06: 6 träffar, första avg 10:00)
 - [x] **G6** — laddningsspinner (teckenkodning)
 - [x] **G7** — kalenderfärger per `mrt_timetable_type`
 - [x] **J3** — mobil klippning + kortare linjetext (`b3fcbbb`)

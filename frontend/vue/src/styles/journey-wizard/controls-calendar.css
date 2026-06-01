@@ -21,6 +21,22 @@
 .mrt-calendar-grid--wizard {
     padding: 0.5rem 1.25rem 1rem;
     color: var(--mrt-wizard-text);
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+}
+
+.mrt-calendar-grid--wizard .mrt-calendar-grid__table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.mrt-calendar-grid--wizard .mrt-calendar-grid__table th,
+.mrt-calendar-grid--wizard .mrt-calendar-grid__table td {
+    width: 14.285%;
+    padding: 0.15rem 0.05rem;
+    overflow: hidden;
+    text-align: center;
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-grid__table th {
@@ -33,7 +49,7 @@
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-grid__table td {
-    height: 3rem;
+    height: auto;
     vertical-align: middle;
     border-color: var(--mrt-color-neutral-200);
 }
@@ -42,10 +58,11 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.65rem;
-    height: 2.65rem;
+    width: 100%;
+    max-width: 2.65rem;
+    min-width: 2rem;
+    min-height: 2.65rem;
     margin: 0 auto;
-    min-height: 0;
     border: 0;
     border-radius: 0;
     background: transparent;
@@ -55,55 +72,27 @@
     font-weight: 800;
     text-transform: none;
     padding: 0;
+    box-sizing: border-box;
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-day--ok {
-    background: var(--mrt-wizard-yellow);
-    color: var(--mrt-color-on-accent);
+    background: var(--mrt-cal-traffic-yellow-bg, var(--mrt-wizard-yellow));
+    color: var(--mrt-cal-traffic-yellow-fg, var(--mrt-color-on-accent));
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-day--ok:hover {
-    filter: brightness(0.92);
-}
-
-.mrt-calendar-grid--wizard .mrt-calendar-day--ok.mrt-calendar-day--green:hover {
-    background: var(--mrt-color-green-500);
-    filter: none;
-}
-
-.mrt-calendar-grid--wizard .mrt-calendar-day--ok.mrt-calendar-day--yellow:hover {
-    background: var(--mrt-color-accent-700);
-    filter: none;
+    filter: brightness(0.94);
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-day--traffic {
     background: var(--mrt-cal-traffic-muted-bg);
     color: var(--mrt-cal-traffic-muted-fg);
+    border: 1px solid var(--mrt-color-neutral-400, #999);
     cursor: not-allowed;
 }
 
-.mrt-calendar-grid--wizard .mrt-calendar-day--traffic.mrt-calendar-day--green {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-green-bg) 28%, var(--mrt-cal-traffic-muted-bg));
-    color: var(--mrt-color-green-800);
-}
-
-.mrt-calendar-grid--wizard .mrt-calendar-day--traffic.mrt-calendar-day--yellow {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-yellow-bg) 45%, var(--mrt-cal-traffic-muted-bg));
-    color: var(--mrt-cal-traffic-muted-fg);
-}
-
-.mrt-calendar-grid--wizard .mrt-calendar-day--traffic.mrt-calendar-day--red {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-red-bg) 30%, var(--mrt-cal-traffic-muted-bg));
-    color: #7a1212;
-}
-
-.mrt-calendar-grid--wizard .mrt-calendar-day--traffic.mrt-calendar-day--orange {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-orange-bg) 35%, var(--mrt-cal-traffic-muted-bg));
-    color: #7a4a08;
-}
-
 .mrt-calendar-grid--wizard .mrt-calendar-day--none {
-    background: transparent;
+    background: var(--mrt-wizard-surface, #fff);
     color: var(--mrt-color-neutral-500);
     cursor: not-allowed;
 }

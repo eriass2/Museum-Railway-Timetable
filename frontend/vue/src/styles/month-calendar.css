@@ -1,0 +1,304 @@
+/**
+ * Month calendar app styles ([museum_timetable_month]).
+ *
+ * Imported from MonthCalendarApp.vue. Shared day colours: assets/frontend/ui/calendar-tokens.css.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-month-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mrt-spacing-sm);
+    margin-bottom: var(--mrt-spacing-md);
+}
+
+.mrt-month-nav__title {
+    flex: 1 1 10rem;
+    margin: 0;
+    min-width: 0;
+    text-align: center;
+}
+
+.mrt-month-nav__prev,
+.mrt-month-nav__next {
+    flex-shrink: 0;
+}
+
+.mrt-month__grid-wrap {
+    position: relative;
+}
+
+.mrt-month__grid--loading {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.mrt-month__grid--loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    cursor: wait;
+}
+
+.mrt-month-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.mrt-month-table th,
+.mrt-month-table td {
+    border: 1px solid var(--mrt-border-light);
+    width: 14.285%;
+    vertical-align: top;
+    height: auto;
+    min-height: 4.25rem;
+    padding: 0;
+    overflow: hidden;
+}
+
+.mrt-month-table thead th {
+    background: var(--mrt-bg-lightest);
+    font-weight: 700;
+    font-size: 0.82rem;
+    letter-spacing: 0.01em;
+    padding: 0.45rem 0.15rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.mrt-month-table__caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    padding: var(--mrt-spacing-xs) 0;
+}
+
+.mrt-day-cell--inactive,
+.mrt-day-cell--running {
+    padding: 0;
+    vertical-align: stretch;
+}
+
+.mrt-day {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 4.25rem;
+    height: 100%;
+    margin: 0;
+    padding: 0.35rem 0.2rem 0;
+    border: none;
+    text-align: center;
+    font: inherit;
+    color: inherit;
+}
+
+.mrt-day--inactive {
+    background: var(--mrt-bg-lightest);
+    color: var(--mrt-text-tertiary);
+    cursor: default;
+    justify-content: center;
+}
+
+.mrt-day.mrt-running {
+    background: #fff;
+    color: var(--mrt-text-primary, #151515);
+}
+
+.mrt-daynum {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.1;
+    opacity: var(--mrt-opacity-85);
+}
+
+.mrt-day--inactive .mrt-daynum {
+    opacity: 0.55;
+}
+
+.mrt-day-bars {
+    display: flex;
+    flex-shrink: 0;
+    gap: 2px;
+    position: static;
+    width: 100%;
+    height: 0.55rem;
+    margin-top: auto;
+}
+
+.mrt-day-bar {
+    flex: 1 1 0;
+    min-width: 0;
+    border-radius: 1px 1px 0 0;
+}
+
+.mrt-day--has-types:not(.mrt-day--multi-types) .mrt-day-bar {
+    border-radius: 2px 2px 0 0;
+}
+
+.mrt-day-clickable {
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, background-color 0.15s ease;
+}
+
+.mrt-day-clickable:hover {
+    box-shadow: inset 0 0 0 1px var(--mrt-border-light);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .mrt-day-clickable:hover {
+        transform: none;
+    }
+}
+
+.mrt-day-clickable:focus-visible {
+    outline: 2px solid var(--mrt-blue-primary);
+    outline-offset: 2px;
+    z-index: 1;
+}
+
+.mrt-day-clickable.is-selected {
+    box-shadow: inset 0 0 0 3px var(--mrt-color-neutral-900);
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mrt-day-clickable {
+        transition: none;
+    }
+}
+
+.mrt-day-timetable {
+    margin: var(--mrt-spacing-md) 0;
+}
+
+.mrt-day-timetable-container {
+    margin-top: var(--mrt-spacing-xl);
+}
+
+.mrt-empty {
+    background: var(--mrt-bg-lightest);
+}
+
+/* —— Mobile: compact square grid —— */
+@media (max-width: 40rem) {
+    .mrt-month .mrt-calendar-nav {
+        padding: 0.65rem 0.35rem 0.5rem;
+        gap: 0.45rem;
+    }
+
+    .mrt-month .mrt-calendar-nav__title {
+        font-size: clamp(1.15rem, 5vw, 1.45rem);
+    }
+
+    .mrt-month .mrt-calendar-nav__prev,
+    .mrt-month .mrt-calendar-nav__next {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.35rem;
+    }
+
+    .mrt-month__grid-wrap {
+        border: 1px solid var(--mrt-border-light);
+        border-radius: var(--mrt-radius-sm, 0);
+        overflow: hidden;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
+    }
+
+    .mrt-month-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .mrt-month-table__caption {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .mrt-month-table th,
+    .mrt-month-table td {
+        min-height: 0;
+        aspect-ratio: 1;
+        border-width: 0 1px 1px 0;
+    }
+
+    .mrt-month-table tr:first-child th {
+        border-top: 0;
+    }
+
+    .mrt-month-table th:last-child,
+    .mrt-month-table td:last-child {
+        border-right: 0;
+    }
+
+    .mrt-month-table tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .mrt-month-table thead th {
+        aspect-ratio: auto;
+        height: auto;
+        padding: 0.35rem 0.05rem;
+        font-size: 0.68rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        text-transform: lowercase;
+        background: var(--mrt-bg-white, #fff);
+        border-bottom: 2px solid var(--mrt-border-light);
+    }
+
+    .mrt-day {
+        min-height: 0;
+        padding: 0.15rem 0.1rem 0;
+    }
+
+    .mrt-daynum {
+        font-size: clamp(0.78rem, 3.4vw, 0.95rem);
+        font-weight: 800;
+    }
+
+    .mrt-day-bars {
+        height: clamp(0.4rem, 22%, 0.7rem);
+        gap: 1px;
+    }
+
+    .mrt-day--has-types:not(.mrt-day--multi-types) .mrt-day-bars {
+        height: clamp(0.55rem, 32%, 0.95rem);
+    }
+
+    .mrt-day--has-types.mrt-day-clickable:not(.is-selected):hover {
+        background: var(--mrt-bg-lightest);
+    }
+
+    .mrt-day-clickable.is-selected {
+        box-shadow: inset 0 0 0 2px var(--mrt-green-primary, #296310);
+    }
+
+    .mrt-day--inactive {
+        background: var(--mrt-bg-white, #fff);
+    }
+
+    .mrt-empty {
+        background: var(--mrt-bg-white, #fff);
+    }
+}

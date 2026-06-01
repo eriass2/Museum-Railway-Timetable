@@ -32,10 +32,11 @@ mrt-color-tokens.css, mrt-typography.css
 | 3 | Flytta `components-ui.css` → `ui/primitives.css`; uppdatera kedjor | ✓ `d66ca02` |
 | 4 | Inför `ui/calendar-tokens.css`; koppla month + wizard | ✓ `ef062a4` |
 | 5 | Dela `ui-components.css` i moduler + barrel-import | ✓ (denna branch) |
+| 6 | Flytta `month-calendar.css` → Vue (`MonthCalendarApp.vue`) | ✓ |
 
 ## Regler efter refactor
 
 - Nya Vue-primitives → `assets/frontend/ui/<område>.css` + rad i barrel
-- App-specifikt → `frontend/vue/src/styles/<app>/`
+- App-specifikt → `frontend/vue/src/styles/<app>/` eller `<app>.css` eller `<app>.css` (t.ex. `month-calendar.css`, `journey-wizard/`)
 - Tokens → `mrt-color-tokens.css` / `mrt-typography.css` — aldrig nya hex i komponenter
 - Se [STYLE_GUIDE.md](../STYLE_GUIDE.md) §3 och [VUE_UI_COMPONENTS.md](../VUE_UI_COMPONENTS.md)

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, nextTick, ref, watch } from 'vue';
+import '../styles/month-calendar.css';
 import MrtAlert from '../components/ui/MrtAlert.vue';
 import MrtCalendarGrid from '../components/ui/MrtCalendarGrid.vue';
 import MrtCalendarNav from '../components/ui/MrtCalendarNav.vue';
