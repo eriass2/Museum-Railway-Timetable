@@ -48,14 +48,15 @@ function MRT_is_admin_vue_screen( string $hook ): bool {
  * @return array<string, mixed>
  */
 function MRT_admin_vue_client_config(): array {
-	$config = array(
-		'restUrl'      => esc_url_raw( rest_url( MRT_REST_NAMESPACE ) ),
-		'restNonce'    => wp_create_nonce( 'wp_rest' ),
-		'initialRoute' => MRT_admin_app_initial_route(),
-		'adminBase'    => admin_url( 'admin.php?page=' . MRT_ADMIN_APP_SLUG ),
-		'canManage'    => current_user_can( 'manage_options' ),
-		'canOperate'   => current_user_can( 'manage_options' ) || current_user_can( 'edit_posts' ),
-		'isDevMode'    => MRT_is_development_mode(),
+	$config = array_merge(
+		MRT_rest_client_config(),
+		array(
+			'initialRoute' => MRT_admin_app_initial_route(),
+			'adminBase'    => admin_url( 'admin.php?page=' . MRT_ADMIN_APP_SLUG ),
+			'canManage'    => current_user_can( 'manage_options' ),
+			'canOperate'   => current_user_can( 'manage_options' ) || current_user_can( 'edit_posts' ),
+			'isDevMode'    => MRT_is_development_mode(),
+		)
 	);
 	if ( MRT_is_development_mode() && function_exists( 'MRT_components_demo_menu_slug' ) ) {
 		$config['componentDemoAdminUrl'] = admin_url(

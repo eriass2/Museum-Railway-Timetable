@@ -7,6 +7,7 @@ import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSampleOverviewPayload } from './fixtures/sample-overview-payload.mjs';
 import { buildAdminRestResponse } from './fixtures/admin-rest.mjs';
+import { MRT_REST_JSON_PREFIX } from '../shared/restNamespace.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(root, '../../assets/dist/vue');
@@ -31,7 +32,7 @@ if (!existsSync(join(distDir, adminJsRel))) {
   process.exit(1);
 }
 
-const REST_PREFIX = '/wp-json/museum-railway-timetable/v1';
+const REST_PREFIX = MRT_REST_JSON_PREFIX;
 const port = Number(process.env.MRT_E2E_PORT || 5199);
 
 function restClientConfig() {

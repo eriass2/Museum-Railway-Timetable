@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/infrastructure/rest/client-config.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/permissions.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/dashboard.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/timetables.php';

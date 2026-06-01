@@ -1,5 +1,5 @@
 import type { MrtRestConfig } from '../config/types';
-import { buildMrtRestUrl } from './restUrl';
+import { buildMrtRestUrlFromConfig, resolveMrtRestNonce } from './restUrl';
 
 export type MrtAjaxResponse<T> = {
   success: boolean;
@@ -31,17 +31,8 @@ const ROUTES: Record<string, RouteSpec> = {
   },
 };
 
-function restBase(config: MrtRestConfig): string {
-  const base = config.restUrl || '/wp-json/museum-railway-timetable/v1/';
-  return base.endsWith('/') ? base : `${base}/`;
-}
-
-function restNonce(config: MrtRestConfig): string {
-  return config.restNonce || config.nonce || '';
-}
-
 function buildUrl(
-  base: string,
+  config: MrtRestConfig,
   path: string,
   data: Record<string, string | number>,
   queryKeys?: string[],
@@ -54,7 +45,11 @@ function buildUrl(
       }
     }
   }
-  return buildMrtRestUrl(base, path, query);
+  return buildMrtRestUrlFromConfig(
+    config,
+    path,
+    Object.keys(query).length ? query : undefined,
+  );
 }
 
 function errorMessage(json: unknown, status: number): string {
@@ -82,9 +77,9 @@ export async function mrtRestRequest<T>(
     return { success: false, message: `Okänd åtgärd: ${action}` };
   }
 
-  const url = buildUrl(restBase(config), route.path(data), data, route.queryKeys);
+  const url = buildUrl(config, route.path(data), data, route.queryKeys);
   const headers: Record<string, string> = {
-    'X-WP-Nonce': restNonce(config),
+    'X-WP-Nonce': resolveMrtRestNonce(config),
   };
   const init: RequestInit = {
     method: route.method,
@@ -110,3 +105,6 @@ export async function mrtRestRequest<T>(
 
 /** @deprecated Use mrtRestRequest — kept for gradual migration. */
 export const mrtPost = mrtRestRequest;
+
+/** @deprecated Use resolveMrtRestBase from restUrl.ts */
+export { resolveMrtRestBase as restBase } from './restUrl';

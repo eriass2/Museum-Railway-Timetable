@@ -1,5 +1,9 @@
 import { adminConfig } from '../types';
-import { buildMrtRestUrl } from '../../api/restUrl';
+import {
+  buildMrtRestUrl,
+  buildMrtRestUrlFromConfig,
+  resolveMrtRestNonce,
+} from '../../api/restUrl';
 
 export class AdminRestError extends Error {
   constructor(message: string) {
@@ -17,21 +21,26 @@ async function parseJson(res: Response): Promise<unknown> {
 }
 
 /** Join WP restUrl with path (/timetables). Handles plain-permalink rest_route URLs. */
-export function buildAdminRestUrl(restUrl: string, path: string): string {
-  return buildMrtRestUrl(restUrl, path);
+export function buildAdminRestUrl(
+  restUrl: string,
+  path: string,
+  query?: Record<string, string | number>,
+): string {
+  return buildMrtRestUrl(restUrl, path, query);
 }
 
 export async function adminFetch<T>(
   path: string,
   init: RequestInit = {},
+  query?: Record<string, string | number>,
 ): Promise<T> {
   const cfg = adminConfig();
   const headers = new Headers(init.headers);
-  headers.set('X-WP-Nonce', cfg.restNonce);
+  headers.set('X-WP-Nonce', resolveMrtRestNonce(cfg));
   if (init.body && !headers.has('Content-Type')) {
     headers.set('Content-Type', 'application/json');
   }
-  const res = await fetch(buildAdminRestUrl(cfg.restUrl, path), {
+  const res = await fetch(buildMrtRestUrlFromConfig(cfg, path, query), {
     ...init,
     headers,
     credentials: 'same-origin',
@@ -282,16 +291,17 @@ export function deleteTrainType(id: number) {
 }
 
 export function exportCsv(options: { include_prices?: boolean; include_settings?: boolean }) {
-  const params = new URLSearchParams();
+  const query: Record<string, string | number> = {};
   if (options.include_prices !== undefined) {
-    params.set('include_prices', options.include_prices ? '1' : '0');
+    query.include_prices = options.include_prices ? '1' : '0';
   }
   if (options.include_settings !== undefined) {
-    params.set('include_settings', options.include_settings ? '1' : '0');
+    query.include_settings = options.include_settings ? '1' : '0';
   }
-  const qs = params.toString();
   return adminFetch<{ filename: string; content_base64: string }>(
-    `/export/csv${qs ? `?${qs}` : ''}`,
+    'export/csv',
+    {},
+    Object.keys(query).length ? query : undefined,
   );
 }
 
@@ -300,9 +310,9 @@ export function importCsv(file: File, mode: 'merge' | 'override') {
   const body = new FormData();
   body.append('file', file);
   body.append('mode', mode);
-  return fetch(buildAdminRestUrl(cfg.restUrl, '/import/csv'), {
+  return fetch(buildMrtRestUrlFromConfig(cfg, 'import/csv'), {
     method: 'POST',
-    headers: { 'X-WP-Nonce': cfg.restNonce },
+    headers: { 'X-WP-Nonce': resolveMrtRestNonce(cfg) },
     credentials: 'same-origin',
     body,
   }).then(async (res) => {

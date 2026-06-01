@@ -67,7 +67,7 @@ Implementation: `inc/infrastructure/rest/*.php`. Admin-klient: `frontend/vue/src
 
 **Klient:** `frontend/vue/src/api/mrtRest.ts` (publikt); `frontend/vue/src/admin/api/adminRest.ts` (admin).
 
-Publika routes kräver `X-WP-Nonce` (`wp_rest`) i frontend-config (`restUrl` + `restNonce`).
+Publika routes kräver `X-WP-Nonce` (`wp_rest`) i frontend-config (`restUrl` + `restNonce` från `MRT_rest_client_config()` i PHP).
 
 ---
 

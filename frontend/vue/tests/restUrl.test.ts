@@ -1,5 +1,9 @@
-import { describe, expect, it } from 'vitest';
-import { buildMrtRestUrl } from '../src/api/restUrl';
+import { describe, expect, it, vi } from 'vitest';
+import {
+  buildMrtRestUrl,
+  buildMrtRestUrlFromConfig,
+  resolveMrtRestBase,
+} from '../src/api/restUrl';
 
 describe('buildMrtRestUrl', () => {
   it('joins path under wp-json base', () => {
@@ -34,5 +38,42 @@ describe('buildMrtRestUrl', () => {
     );
     expect(parsed.searchParams.get('date')).toBe('2026-06-06');
     expect(parsed.searchParams.get('train_type')).toBe('angtag');
+  });
+
+  it('resolveMrtRestBase uses PHP-provided restUrl unchanged', () => {
+    const base = 'https://ditt-site.local/wp-json/museum-railway-timetable/v1';
+    expect(resolveMrtRestBase({ restUrl: base })).toBe(`${base}/`);
+  });
+
+  it('resolveMrtRestBase falls back to same-origin when restUrl missing', () => {
+    const origin = 'https://live.example';
+    vi.stubGlobal('window', { location: { origin } });
+    expect(resolveMrtRestBase({})).toBe(
+      `${origin}/wp-json/museum-railway-timetable/v1/`,
+    );
+    vi.unstubAllGlobals();
+  });
+
+  it('buildMrtRestUrlFromConfig joins config base and path', () => {
+    const url = buildMrtRestUrlFromConfig(
+      { restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1/' },
+      'journey/search',
+    );
+    expect(url).toBe(
+      'https://example.test/wp-json/museum-railway-timetable/v1/journey/search',
+    );
+  });
+
+  it('strips query string from path segment (use query arg instead)', () => {
+    const url = buildMrtRestUrl(
+      'https://test3.example/index.php?rest_route=/museum-railway-timetable/v1',
+      'export/csv?include_prices=1',
+      { include_settings: '0' },
+    );
+    const parsed = new URL(url);
+    expect(parsed.searchParams.get('rest_route')).toBe(
+      '/museum-railway-timetable/v1/export/csv',
+    );
+    expect(parsed.searchParams.get('include_settings')).toBe('0');
   });
 });

@@ -69,10 +69,9 @@ function MRT_vue_shared_client_config(): array {
 		? MRT_frontend_script_localization()
 		: array();
 
-	return array(
-		'restUrl'   => esc_url_raw( rest_url( MRT_REST_NAMESPACE ) ),
-		'restNonce' => wp_create_nonce( 'wp_rest' ),
-		'strings'   => $fe,
+	return array_merge(
+		MRT_rest_client_config(),
+		array( 'strings' => $fe )
 	);
 }
 
