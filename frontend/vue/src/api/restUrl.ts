@@ -14,7 +14,7 @@ export type MrtRestUrlConfig = {
 };
 
 /** Normalize restUrl from PHP config (trailing slash). */
-export function normalizeMrtRestBase(restUrl: string): string {
+function normalizeMrtRestBase(restUrl: string): string {
   const trimmed = restUrl.trim();
   return trimmed.endsWith('/') ? trimmed : `${trimmed}/`;
 }
