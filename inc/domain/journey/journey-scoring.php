@@ -18,8 +18,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function MRT_journey_score_default_weights(): array {
 	return array(
-		'outbound_travel'              => 1,
-		'outbound_wait'                => 5,
 		'return_after_outbound'        => 3,
 		'return_travel'                => 1,
 		'direct_bonus'                 => 40,
@@ -103,19 +101,6 @@ function MRT_journey_normalized_is_direct( array $connection ): bool {
 }
 
 /**
- * Transfer wait minutes when present on a normalized connection.
- *
- * @param array<string, mixed> $connection Normalized API connection
- */
-function MRT_journey_normalized_transfer_wait_minutes( array $connection ): int {
-	$wait = $connection['transfer_wait_minutes'] ?? null;
-	if ( $wait === null || $wait === '' ) {
-		return 0;
-	}
-	return max( 0, (int) $wait );
-}
-
-/**
  * Whether any direct connection exists for a station pair on a date.
  */
 function MRT_journey_search_has_direct_connections(
@@ -140,25 +125,6 @@ function MRT_journey_score_quality_adjustment( array $connection, bool $has_dire
 		return -(int) $weights['unnecessary_transfer_penalty'];
 	}
 	return 0;
-}
-
-/**
- * Outbound score: prefer shorter door-to-door time; small direct bonus.
- *
- * @param array<string, mixed> $connection Normalized API connection
- * @return int|null Null when travel time cannot be calculated
- */
-function MRT_journey_score_outbound_connection( array $connection, bool $has_direct ): ?int {
-	$travel = MRT_journey_normalized_door_to_door_minutes( $connection );
-	if ( $travel === null ) {
-		return null;
-	}
-	$weights = MRT_journey_score_weights();
-	$wait    = MRT_journey_normalized_transfer_wait_minutes( $connection );
-	$score   = -( $travel * (int) $weights['outbound_travel'] );
-	$score  -= $wait * (int) $weights['outbound_wait'];
-	$score  += MRT_journey_score_quality_adjustment( $connection, $has_direct );
-	return $score;
 }
 
 /**
