@@ -352,7 +352,7 @@ function MRT_journey_transfer_dominated_by_direct(
 }
 
 /**
- * One-way journey search: normalized API connections for wizard AJAX.
+ * One-way journey search: normalized API connections for wizard REST.
  *
  * @return array<int, array<string, mixed>>
  */

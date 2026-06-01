@@ -30,7 +30,7 @@ Or run the full WP stack script from repo root: `bash scripts/ci-e2e-wp.sh`
 - [ ] Month grid renders with correct weekdays
 - [ ] Prev/next month links work
 - [ ] Click running day loads timetable panel
-- [ ] Error state if AJAX fails
+- [ ] Error state if REST request fails
 
 ## Timetable overview (`overview`)
 
