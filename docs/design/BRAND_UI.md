@@ -76,11 +76,11 @@ Vid ny CSS: räta hörn och inga gradienter om möjligt.
 |-----------|-----|
 | `border-radius: 4px` (`--mrt-radius-sm`) | Delar av `assets/frontend/`, admin |
 | Gradient på banner | `frontend/vue/src/styles/timetable-overview.css` |
-| Rundade detaljer (t.ex. 1–2px) | Månadskalender, admin |
+| Rundade detaljer | Admin, delade `assets/frontend/` |
 
-**Klart (räta hörn):** resesökaren — `journey-wizard/sharp-corners.css`, `price-table.css` (prislistor). Laddningsspinner (`.mrt-empty--loading::before`) behåller cirkel.
+**Klart (räta hörn):** resesökaren (`journey-wizard/sharp-corners.css`, `price-table.css`); månadskalender (`month-calendar.css`). Laddningsspinner (`.mrt-empty--loading::before`) behåller cirkel.
 
-**Nästa vy:** månadskalender → tidtabellsöversikt → övriga `assets/frontend/`.
+**Nästa vy:** tidtabellsöversikt → övriga `assets/frontend/`.
 
 ## Relaterat
 

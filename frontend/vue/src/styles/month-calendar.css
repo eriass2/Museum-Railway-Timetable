@@ -151,7 +151,7 @@
     flex: 1 1 0;
     min-width: 0;
     min-height: var(--mrt-month-bar-height);
-    border-radius: 2px 2px 0 0;
+    border-radius: 0;
 }
 
 .mrt-month .mrt-month-day--has-types:not(.mrt-month-day--multi-types) .mrt-month-day__bars {
@@ -272,7 +272,7 @@
 
     .mrt-month__grid-wrap {
         border: 1px solid var(--mrt-border-light);
-        border-radius: var(--mrt-radius-sm, 0);
+        border-radius: 0;
         overflow: hidden;
         box-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
     }
@@ -330,4 +330,13 @@
         --mrt-month-cell-min-height: 4.25rem;
         --mrt-month-day-font: 1.1rem;
     }
+}
+
+/* Lennakatten formspråk — räta hörn (docs/design/BRAND_UI.md) */
+.mrt-month .mrt-ui-alert,
+.mrt-month .mrt-surface--box,
+.mrt-month .mrt-calendar-nav__prev,
+.mrt-month .mrt-calendar-nav__next,
+.mrt-month .mrt-calendar-nav__link {
+    border-radius: 0;
 }
