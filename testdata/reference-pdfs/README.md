@@ -46,5 +46,22 @@ Används för att verifiera tågnummer, hållplatser och stopptider. Tider i `st
 
 1. Lägg ny PDF här och uppdatera denna README.
 2. Jämför `timetable_dates.csv` mot kalenderreglerna i anslagstidtabellen.
-3. Stickprov mot `stoptimes.csv` / `services.csv` om tider ändrats.
-4. Kör `composer csv:validate -- testdata/fixtures/lennakatten` och `composer test`.
+3. Stickprov mot `stoptimes.csv` / `services.csv` om tider ändrats — **inklusive P/X-symboler** (`pickup_allowed` / `dropoff_allowed`).
+4. Kör verifiering mot referensresor:
+
+```sh
+python scripts/verify-lennakatten-vs-pdf.py
+python scripts/generate-lennakatten-extra-timetables.py   # efter ändring av röd/orange/green-vard
+composer csv:validate -- testdata/fixtures/lennakatten
+composer test -- tests/Unit/LennakattenJourneySearchTest.php tests/Unit/CsvFixtureTest.php
+```
+
+### Referensresor (automatiskt stickprov)
+
+| Tidtabell | Tåg | Sträcka | Datum i test |
+|-----------|-----|---------|--------------|
+| GRÖN | 71 | Uppsala Östra → Marielund 10:00–10:35 | 2026-06-06 |
+| RÖD | 81 | Uppsala Östra → Marielund 10:00–10:35 | 2026-07-05 |
+| ORANGE | 73 | Uppsala Östra → Marielund 11:15–11:47 | (CSV-tider) |
+
+P/X-regler: `docs/CSV_FORMAT.md` och `scripts/lennakatten_symbols.py` (samma som `symbol-map.php`).

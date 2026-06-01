@@ -18,6 +18,12 @@ Timetable codes in the CSV package:
 
 Regenerate rail blocks after PDF edits: `python scripts/generate-lennakatten-extra-timetables.py` (bus split + red/orange services).
 
+Verify against Anslagstidtabell reference trips:
+
+```sh
+python scripts/verify-lennakatten-vs-pdf.py
+```
+
 Validate after changes:
 
 ```sh

@@ -5,35 +5,32 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from lennakatten_symbols import FAR_IN, UP_OUT, symbol_to_flags, symbols_for_train
+
 ROOT = Path(__file__).resolve().parents[1] / "testdata" / "fixtures" / "lennakatten"
 
-UP_OUT = [
-    "uppsala-ostra",
-    "fyrislund",
-    "arsta",
-    "skolsta",
-    "barby",
-    "gunsta",
-    "marielund",
-    "lovstahagen",
-    "selkna",
-    "lot",
-    "lanna",
-    "almunge",
-    "moga",
-    "faringe",
-]
-FAR_IN = list(reversed(UP_OUT))
 
-
-def stoptime_rows(service_code: str, stations: list[str], times: list[str | None]) -> list[str]:
+def stoptime_rows(
+    service_code: str,
+    stations: list[str],
+    times: list[str | None],
+    symbols: list[str],
+) -> list[str]:
     rows: list[str] = []
-    seq = 0
-    for station, time in zip(stations, times):
-        if not time:
-            continue
-        seq += 1
-        rows.append(f"{service_code},{seq},{station},{time},{time},1,0")
+    count = min(len(stations), len(times), len(symbols))
+    if count == 0:
+        return rows
+    stations = stations[:count]
+    times = times[:count]
+    symbols = (symbols + [""] * count)[:count]
+    active = [(station, time, symbol) for station, time, symbol in zip(stations, times, symbols) if time]
+    for idx, (station, time, symbol) in enumerate(active):
+        pickup, dropoff = symbol_to_flags(
+            symbol,
+            is_origin=(idx == 0),
+            is_last=(idx == len(active) - 1),
+        )
+        rows.append(f"{service_code},{idx + 1},{station},{time},{time},{pickup},{dropoff}")
     return rows
 
 
@@ -88,12 +85,16 @@ def build_rail_block(prefix: str, timetable: str, out_map: dict, in_map: dict, t
     for num, times in out_map.items():
         code = f"{prefix}-{num}-out"
         services.append(service_row(code, timetable, "uppsala-faringe", num, "faringe"))
-        stoptimes.extend(stoptime_rows(code, UP_OUT, times))
+        stoptimes.extend(
+            stoptime_rows(code, UP_OUT, times, symbols_for_train(prefix, num, "out"))
+        )
         train_types.append(f"{code},{types[num]}")
     for num, times in in_map.items():
         code = f"{prefix}-{num}-in"
         services.append(service_row(code, timetable, "faringe-uppsala-ostra", num, "uppsala-ostra"))
-        stoptimes.extend(stoptime_rows(code, FAR_IN, times))
+        stoptimes.extend(
+            stoptime_rows(code, FAR_IN, times, symbols_for_train(prefix, num, "in"))
+        )
         train_types.append(f"{code},{types[num]}")
     return services, stoptimes, train_types
 
