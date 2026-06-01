@@ -2,7 +2,8 @@ export type WizardStep = 'route' | 'date' | 'outbound' | 'return' | 'summary';
 
 export type TripType = 'single' | 'return';
 
-export type CalendarDayStatus = 'ok' | 'traffic_no_match' | 'none';
+import type { CalendarDayInfo, CalendarDayStatus } from '../../shared/calendarDay';
+export type { CalendarDayInfo, CalendarDayStatus };
 
 export type JourneyLeg = {
   service_id: number;

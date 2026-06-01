@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { MonthDayMeta } from '../../config/types';
+import { timetableTypeClass } from '../../shared/calendarDay';
 import { monthDayButtonAria, monthDayCountTitle } from '../../utils/monthDayLabels';
 
 const props = defineProps<{
@@ -10,9 +11,12 @@ const props = defineProps<{
   selected: boolean;
   countTitle?: string;
   runningAria?: string;
+  typeLabels?: Record<string, string>;
 }>();
 
 const emit = defineEmits<{ click: [ymd: string] }>();
+
+const typeClass = computed(() => timetableTypeClass(props.info.type));
 
 const countTooltip = computed(() => {
   if (!props.showCounts || !props.info.count || !props.countTitle) {
@@ -26,6 +30,7 @@ const buttonAria = computed(() =>
     showCounts: props.showCounts,
     countTitle: props.countTitle,
     runningLabel: props.runningAria,
+    typeLabels: props.typeLabels,
   }),
 );
 
@@ -44,7 +49,7 @@ function onClick(): void {
     v-else
     type="button"
     class="mrt-day mrt-running mrt-day-clickable mrt-cursor-pointer"
-    :class="{ 'is-selected': selected }"
+    :class="[{ 'is-selected': selected }, typeClass]"
     :aria-label="buttonAria"
     :aria-pressed="selected"
     :title="countTooltip"

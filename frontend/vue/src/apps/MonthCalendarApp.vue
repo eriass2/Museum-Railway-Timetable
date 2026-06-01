@@ -12,6 +12,7 @@ import { buildMonthGrid } from '../utils/monthGrid';
 import { chunkWeekRows } from '../utils/calendarGrid';
 import MrtTimetableOverviewView from '../components/overview/MrtTimetableOverviewView.vue';
 import { useTimetableOverview } from '../composables/useTimetableOverview';
+import { timetableTypeDotClass } from '../shared/calendarDay';
 import { resolveMrtString } from '../utils/mrtStrings';
 
 const props = defineProps<{ config: MonthVueConfig }>();
@@ -44,12 +45,29 @@ const { overview: dayOverview, loading: dayLoading, error: dayError, fetchDayOve
 
 const weekdayHeaders = computed(() => props.config.weekdayHeaders || []);
 
-const legendItems = computed(() => [
-  {
-    dotClass: 'mrt-dot--green',
-    label: props.config.legendServiceDay || '',
-  },
-]);
+const typeLabelMap = computed(() => {
+  const map: Record<string, string> = {};
+  for (const item of props.config.legendTimetableTypes || []) {
+    map[item.type] = item.label;
+  }
+  return map;
+});
+
+const legendItems = computed(() => {
+  const types = props.config.legendTimetableTypes || [];
+  if (types.length > 0) {
+    return types.map((item) => ({
+      dotClass: timetableTypeDotClass(item.type),
+      label: item.label,
+    }));
+  }
+  return [
+    {
+      dotClass: 'mrt-dot--green',
+      label: props.config.legendServiceDay || '',
+    },
+  ];
+});
 
 const legendHints = computed(() => {
   const hints: string[] = [];
@@ -131,6 +149,7 @@ watch([panelVisible, dayOverview, dayLoading], async ([visible, overview, loadin
           :show-counts="showCounts"
           :count-title="config.dayServiceCountTitle"
           :running-aria="config.dayRunningAria"
+          :type-labels="typeLabelMap"
           :selected="selectedYmd === cell.info.ymd"
           @click="onDayClick"
         />

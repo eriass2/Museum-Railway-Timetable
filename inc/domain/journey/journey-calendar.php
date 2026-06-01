@@ -37,13 +37,33 @@ function MRT_journey_calendar_day_status( $from_station_id, $to_station_id, $ymd
 }
 
 /**
- * Per-day status for a calendar month (YYYY-MM-DD => state)
+ * One calendar cell: journey status + dominant timetable type (when traffic runs).
+ *
+ * @return array{status: string, type: string}
+ */
+function MRT_journey_calendar_day_entry(
+	int $from_station_id,
+	int $to_station_id,
+	string $ymd,
+	array &$services_cache
+): array {
+	$status = MRT_journey_calendar_day_status( $from_station_id, $to_station_id, $ymd, $services_cache );
+	$type   = $status === 'none' ? '' : MRT_dominant_timetable_type_for_date( $ymd );
+
+	return array(
+		'status' => $status,
+		'type'   => $type,
+	);
+}
+
+/**
+ * Per-day status for a calendar month (YYYY-MM-DD => status + type)
  *
  * @param int $from_station_id From station
  * @param int $to_station_id To station
  * @param int $year Year
  * @param int $month Month 1-12
- * @return array<string, string>
+ * @return array<string, array{status: string, type: string}>
  */
 function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year, $month ) {
 	$out = array();
@@ -62,9 +82,9 @@ function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year
 		if ( ! MRT_validate_date( $ymd ) ) {
 			continue;
 		}
-		$out[ $ymd ] = MRT_journey_calendar_day_status(
-			$from_station_id,
-			$to_station_id,
+		$out[ $ymd ] = MRT_journey_calendar_day_entry(
+			(int) $from_station_id,
+			(int) $to_station_id,
 			$ymd,
 			$services_cache
 		);

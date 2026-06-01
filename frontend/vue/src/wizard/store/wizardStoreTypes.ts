@@ -1,6 +1,6 @@
 import type { ComputedRef } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
-import type { CalendarDayStatus, JourneyConnection, TripType, WizardStep } from '../types';
+import type { CalendarDayInfo, CalendarDayStatus, JourneyConnection, TripType, WizardStep } from '../types';
 import type { WizardCfg } from '../utils/wizardLabels';
 
 export type WizardStore = {
@@ -17,7 +17,7 @@ export type WizardStore = {
   outbound: JourneyConnection | null;
   inbound: JourneyConnection | null;
   error: string;
-  debugCalendarDays: Record<string, CalendarDayStatus> | null;
+  debugCalendarDays: Record<string, CalendarDayInfo | CalendarDayStatus> | null;
   debugOutboundConnections: JourneyConnection[] | null;
   debugReturnConnections: JourneyConnection[] | null;
   readonly stepSequence: WizardStep[];

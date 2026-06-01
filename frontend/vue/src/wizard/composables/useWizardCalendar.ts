@@ -2,7 +2,7 @@ import { onMounted, ref, watch, type ComputedRef } from 'vue';
 import { useMrtRest } from '../../composables/useMrtRest';
 import type { WizardVueConfig } from '../../config/types';
 import type { WizardStore } from '../store/createWizardStore';
-import type { CalendarDayStatus } from '../types';
+import type { CalendarDayInfo, CalendarDayStatus } from '../../shared/calendarDay';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import {
   goWizardCalendarToday,
@@ -20,7 +20,7 @@ export function useWizardCalendar(
 ) {
   const { loading, run } = useMrtRest(config);
   const startOfWeek = Number(config.startOfWeek ?? 1);
-  const daysMap = ref<Record<string, CalendarDayStatus>>({});
+  const daysMap = ref<Record<string, CalendarDayInfo | CalendarDayStatus>>({});
   const view = useWizardCalendarView(store, cfg, daysMap, startOfWeek);
 
   onMounted(() => {

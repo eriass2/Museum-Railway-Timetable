@@ -11,6 +11,12 @@ export type MonthDayMeta = {
   running?: boolean;
   count?: number | string;
   ymd?: string;
+  type?: string;
+};
+
+export type MonthLegendType = {
+  type: string;
+  label: string;
 };
 
 export type MonthVueConfig = MrtRestConfig & {
@@ -37,6 +43,7 @@ export type MonthVueConfig = MrtRestConfig & {
   dayServiceCountTitle?: string;
   dayRunningAria?: string;
   legendClickHint?: string;
+  legendTimetableTypes?: MonthLegendType[];
 };
 
 import type { TimetableOverviewPayload } from '../types/timetableOverview';

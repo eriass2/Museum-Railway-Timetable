@@ -1,15 +1,20 @@
 <script setup lang="ts">
-export type WizardCalendarDayStatus = 'ok' | 'traffic_no_match' | 'none';
+import { computed } from 'vue';
+import type { CalendarDayStatus } from '../../shared/calendarDay';
+import { timetableTypeClass } from '../../shared/calendarDay';
 
 const props = defineProps<{
   day: number;
   ymd: string;
-  status: WizardCalendarDayStatus;
+  status: CalendarDayStatus;
+  type?: string;
   selected: boolean;
   ariaLabel: string;
 }>();
 
 const emit = defineEmits<{ pick: [ymd: string] }>();
+
+const typeClass = computed(() => timetableTypeClass(props.type, 'mrt-calendar-day'));
 
 function onClick(): void {
   if (props.status === 'ok') {
@@ -23,7 +28,7 @@ function onClick(): void {
     v-if="status === 'ok'"
     type="button"
     class="mrt-calendar-day mrt-calendar-day--ok"
-    :class="{ 'is-selected': selected }"
+    :class="[{ 'is-selected': selected }, typeClass]"
     :aria-label="ariaLabel"
     :aria-pressed="selected"
     @click="onClick"
@@ -34,6 +39,7 @@ function onClick(): void {
     v-else-if="status === 'traffic_no_match'"
     type="button"
     class="mrt-calendar-day mrt-calendar-day--traffic"
+    :class="typeClass"
     disabled
     :aria-label="ariaLabel"
   >

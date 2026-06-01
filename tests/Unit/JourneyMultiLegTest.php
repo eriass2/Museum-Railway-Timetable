@@ -298,13 +298,19 @@ final class JourneyMultiLegTest extends TestCase {
         ], [
             11 => 900,
             22 => 901,
+        ], [], [
+            900 => 'green',
+            901 => 'yellow',
         ]);
 
         $month = MRT_get_journey_calendar_month(self::A, self::B, 2026, 6);
 
-        self::assertSame('ok', $month['2026-06-01']);
-        self::assertSame('traffic_no_match', $month['2026-06-02']);
-        self::assertSame('none', $month['2026-06-03']);
+        self::assertSame('ok', $month['2026-06-01']['status'] ?? '');
+        self::assertSame('green', $month['2026-06-01']['type'] ?? '');
+        self::assertSame('traffic_no_match', $month['2026-06-02']['status'] ?? '');
+        self::assertSame('yellow', $month['2026-06-02']['type'] ?? '');
+        self::assertSame('none', $month['2026-06-03']['status'] ?? '');
+        self::assertSame('', $month['2026-06-03']['type'] ?? '');
     }
 
     /**

@@ -11,7 +11,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 
 | Kategori | Antal | Kommentar |
 |----------|-------|-----------|
-| Buggar / fel | 4 | **3 åtgärdade** (G1, J4, G5). **1 kvar** (G6 teckenkodning) |
+| Buggar / fel | 4 | **4 åtgärdade** (G1, J4, G5, G6) |
 | UI / design | 6 | **G3 delvis** (färgpalett). J1, G2, J3 kvar |
 | UX / flöde | 7 | G5 åtgärdad. G4, G7–G10, G9, J2 obehandlade |
 | Frågor / scope | 2 | J5 obehandlad (svar behövs) |
@@ -24,7 +24,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | **G1** | Tidtabellsdata synkad mot PDF; resa Uppsala→Marielund täcks av PHPUnit |
 | **J4** | Taxa 2026, eftermiddagsbiljett, heldagsbiljetter i sammanfattning |
 | **G5** | Siffror dolda som standard; tydligare legend vid `show_counts=1` |
-| **G3** | Lennakatten-färgpalett i `mrt-color-tokens.css` (grön `#296310`, guld `#DDD24C`, svart text på guld) |
+| **G3** | Lennakatten-färgpalett + kalenderfärger per tidtabellstyp (G7) |
 | *(underliggande)* | GRÖN/GUL/RÖD/ORANGE + bussar synkade mot `Anslagstidtabell-2026.pdf`; 42 turer verifierade |
 
 ---
@@ -110,7 +110,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Global färger
 - **Typ:** design
 - **Prioritet:** medium
-- **Status:** delvis åtgärdad (tokens + docs; kalender per typ kvar — G7)
+- **Status:** delvis åtgärdad (tokens + kalenderfärger; vissa vyer kvar att granska visuellt)
 - **Anteckning:** Överlappar J1. Se `assets/mrt-color-tokens.css` och [COLOR_PALETTE.md](../design/COLOR_PALETTE.md).
 - **Svar:** Lennakatten varumärkesfärger är införda i `assets/mrt-color-tokens.css` (commit `8b82cb2`): grön `#296310`, guld `#DDD24C`, oliv `#807C1C`. **Svart text på guld** enligt profil (tidigare felaktigt vit). Trafikfärger som `--mrt-color-traffic-*` för tidtabellstyper. Referens-PDF och Word-mallar i `docs/design/reference/`. **Kvar:** kalenderdagar ska färgkodas per tidtabellstyp (G7); vissa vyer kan fortfarande behöva visuell genomgång.
 
@@ -139,9 +139,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Laddningstillstånd
 - **Typ:** bugg (teckenkodning?) + copy
 - **Prioritet:** medium
-- **Status:** obehandlad
-- **Anteckning:** Troligen felaktig encoding av ”Å” eller liknande — undersök var strängen kommer ifrån.
-- **Svar:** Ej åtgärdat. Troligen felaktig teckenkodning av svenska tecken i laddningstext eller aria-live-sträng. Nästa buggfix i kön.
+- **Status:** åtgärdad
+- **Svar:** Orsaken var en korrupt UTF-8-teckensträng i `assets/frontend/components-ui.css` (`.mrt-empty--loading::before { content: "ÔÅ│ " }`) — troligen avsedd som laddningsikon. Ersatt med ren CSS-spinner (ingen text i `content`), så användare ser bara ”Laddar…”.
 
 ### G7. Kalender – färger per tidtabell
 - **Källa:** mail (önskemål)
@@ -149,8 +148,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Kalender
 - **Typ:** önskemål
 - **Prioritet:** medium
-- **Status:** obehandlad (förutsättningar klara via G3)
-- **Svar:** Färg-tokens och admin-fält `mrt_timetable_type` (green/yellow/red/orange) finns. Själva kalender-UI:t använder dem inte än — planerat nästa steg efter färgpaletten.
+- **Status:** åtgärdad
+- **Svar:** Månadskalender och reseplanerarens datumsteg färgar trafikdagar enligt `mrt_timetable_type` (green/yellow/red/orange) via `--mrt-color-traffic-*`. Legend visar vilka tidtabellstyper som förekommer i månaden. Om flera typer delar samma dag väljs en dominerande typ (prioritet: grön → gul → röd → orange).
 
 ### G8. Ingen sidladdning vid månadsklick
 - **Källa:** mail (önskemål)
@@ -187,7 +186,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 1. ~~**G1** – Resa Uppsala–Marielund hittas inte på trafikdag~~ ✓ (testdata; verifiera demo-import)
 2. ~~**J4** – Fel biljettpriser (zoner + eftermiddagstaxa)~~ ✓
 3. ~~**G5** – Kalendersiffror stämmer inte / otydliga~~ ✓
-4. **G6** – ”ÔÅ / Laddar…” (encoding/copy)
+4. ~~**G6** – ”ÔÅ / Laddar…” (encoding/copy)~~ ✓
 
 ### Design som är relativt enkelt
 5. **J1 / G3** – ~~Färgpalett~~ ✓ delvis — kvar: stationer fetstil, kolumnbredder, tidtabell per typ
@@ -198,7 +197,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 8. **G4** – Kalender som startvy istället för tidtabellslista
 9. **G9** – Tur/retur med dedikerat återresesteg
 10. **J2** – Busstider integrerade i huvudtidtabell
-11. **G7 / G8** – Kalenderfärger per tidtabell, SPA utan reload
+11. **G7 / G8** – ~~Kalenderfärger per tidtabell~~ ✓ / SPA utan reload
 12. **G10** – Exportera resa (PNG/PDF)
 13. **J5** – Svar om biljettsystem vs Edmonson
 
@@ -224,5 +223,5 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - [x] Reproducera G1 och J4 med konkreta testdata
 - [ ] Svara Jesper på J5 (biljettsystem)
 - [ ] Verifiera G1 på demo efter ny fixture-import
-- [ ] **G6** — hitta och rätta laddningstext (teckenkodning)
-- [ ] **G7** — kalenderfärger per `mrt_timetable_type`
+- [x] **G6** — hitta och rätta laddningstext (teckenkodning)
+- [x] **G7** — kalenderfärger per `mrt_timetable_type`

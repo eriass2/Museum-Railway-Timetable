@@ -1,4 +1,4 @@
-import type { CalendarDayStatus, JourneyConnection, WizardStep } from '../types';
+import type { CalendarDayInfo, CalendarDayStatus, JourneyConnection, WizardStep } from '../types';
 
 import type {
   PriceMatrix,
@@ -21,7 +21,7 @@ export type DebugPreset = {
   date?: string;
   outbound?: JourneyConnection | null;
   inbound?: JourneyConnection | null;
-  calendarDays?: Record<string, CalendarDayStatus>;
+  calendarDays?: Record<string, CalendarDayInfo | CalendarDayStatus>;
   calendarYear?: number;
   calendarMonth?: number;
   outboundConnections?: JourneyConnection[];

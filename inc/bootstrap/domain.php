@@ -59,6 +59,7 @@ function MRT_load_domain_modules(): void {
 	require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
 	require_once MRT_PATH . 'inc/domain/service/connections.php';
 	require_once MRT_PATH . 'inc/domain/route/destinations.php';
+	require_once MRT_PATH . 'inc/domain/timetable/timetable-type.php';
 	MRT_load_journey_domain_modules();
 	MRT_load_timetable_view_domain_modules();
 }

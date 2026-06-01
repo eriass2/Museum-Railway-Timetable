@@ -1,6 +1,6 @@
 import { computed, type ComputedRef, type Ref } from 'vue';
 import type { WizardStore } from '../store/createWizardStore';
-import type { CalendarDayStatus } from '../types';
+import type { CalendarDayInfo, CalendarDayStatus } from '../../shared/calendarDay';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStringArray } from '../utils/wizardLabels';
 import { calendarMonthTitle } from '../utils/wizardDate';
@@ -14,7 +14,7 @@ import { wizardCalendarDayAria } from './wizardCalendarLoad';
 export function useWizardCalendarView(
   store: WizardStore,
   cfg: ComputedRef<WizardCfg>,
-  daysMap: Ref<Record<string, CalendarDayStatus>>,
+  daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   startOfWeek: number,
 ) {
   const monthNames = computed(() => cfgStringArray(cfg.value, 'monthNames'));

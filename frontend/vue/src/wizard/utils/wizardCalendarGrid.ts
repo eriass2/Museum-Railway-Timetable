@@ -1,20 +1,21 @@
 import { chunkWeekRows } from '../../utils/calendarGrid';
-import type { CalendarDayStatus } from '../types';
+import type { CalendarDayInfo, CalendarDayStatus } from '../../shared/calendarDay';
+import { calendarDayStatus, normalizeCalendarDay } from '../../shared/calendarDay';
 import { monthStartColumn, daysInMonth, ymdFromParts } from './wizardDate';
 
 export type WizardCalCell =
   | { kind: 'pad' }
-  | { kind: 'day'; day: number; ymd: string; status: CalendarDayStatus };
+  | { kind: 'day'; day: number; ymd: string; status: CalendarDayStatus; type?: string };
 
 export function countBookableDaysInMonth(
   year: number,
   month: number,
-  daysMap: Record<string, CalendarDayStatus>,
+  daysMap: Record<string, CalendarDayInfo | CalendarDayStatus>,
 ): number {
   const prefix = `${year}-${String(month).padStart(2, '0')}`;
   let count = 0;
-  for (const [ymd, status] of Object.entries(daysMap)) {
-    if (ymd.startsWith(prefix) && status === 'ok') {
+  for (const [ymd, value] of Object.entries(daysMap)) {
+    if (ymd.startsWith(prefix) && calendarDayStatus(value) === 'ok') {
       count += 1;
     }
   }
@@ -25,7 +26,7 @@ export function buildWizardCalendarGrid(
   year: number,
   month: number,
   startOfWeek: number,
-  daysMap: Record<string, CalendarDayStatus>,
+  daysMap: Record<string, CalendarDayInfo | CalendarDayStatus>,
 ): WizardCalCell[][] {
   const lastDay = daysInMonth(year, month);
   const startCol = monthStartColumn(year, month, startOfWeek);
@@ -35,7 +36,14 @@ export function buildWizardCalendarGrid(
   }
   for (let d = 1; d <= lastDay; d++) {
     const ymd = ymdFromParts(year, month, d);
-    flat.push({ kind: 'day', day: d, ymd, status: daysMap[ymd] || 'none' });
+    const info = normalizeCalendarDay(daysMap[ymd]);
+    flat.push({
+      kind: 'day',
+      day: d,
+      ymd,
+      status: info.status,
+      type: info.type,
+    });
   }
   while (flat.length % 7 !== 0) {
     flat.push({ kind: 'pad' });

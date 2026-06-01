@@ -48,6 +48,8 @@ function MRT_vue_month_config( array $context ): array {
 		$month_title = $cal['monthNames'][ $mo_index ] . ' ' . date( 'Y', $first_ts );
 	}
 	$weekday_heads = MRT_vue_month_swedish_weekday_headers( $start_monday );
+	$dates         = isset( $context['dates'] ) && is_array( $context['dates'] ) ? $context['dates'] : array();
+	$legend_types  = MRT_month_calendar_legend_types( $dates );
 
 	return array(
 		'monthUid'           => (string) ( $context['month_uid'] ?? '' ),
@@ -72,7 +74,8 @@ function MRT_vue_month_config( array $context ): array {
 		'daysInMonth'        => (int) ( $context['daysInMonth'] ?? 0 ),
 		'startMonday'        => $start_monday,
 		'atts'               => isset( $context['atts'] ) && is_array( $context['atts'] ) ? $context['atts'] : array(),
-		'dates'              => isset( $context['dates'] ) && is_array( $context['dates'] ) ? $context['dates'] : array(),
+		'dates'              => $dates,
+		'legendTimetableTypes' => $legend_types,
 		'stringsPrevMonth'   => __( 'Föregående månad', 'museum-railway-timetable' ),
 		'stringsNextMonth'   => __( 'Nästa månad', 'museum-railway-timetable' ),
 		'legendServiceDay'   => __( 'Trafikdag', 'museum-railway-timetable' ),

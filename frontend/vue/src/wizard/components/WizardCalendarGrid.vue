@@ -39,6 +39,7 @@ function asDay(cell: WizardCalCell): WizardDayCell | null {
         :day="asDay(cell as WizardCalCell)!.day"
         :ymd="asDay(cell as WizardCalCell)!.ymd"
         :status="asDay(cell as WizardCalCell)!.status"
+        :type="asDay(cell as WizardCalCell)!.type"
         :selected="selectedYmd === asDay(cell as WizardCalCell)!.ymd"
         :ariaLabel="dayAria(asDay(cell as WizardCalCell)!.ymd, asDay(cell as WizardCalCell)!.status)"
         @pick="emit('pick', $event)"

@@ -1,7 +1,7 @@
 import type { ComputedRef, Ref } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
 import type { WizardStore } from '../store/createWizardStore';
-import type { CalendarDayStatus } from '../types';
+import type { CalendarDayInfo, CalendarDayStatus } from '../../shared/calendarDay';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
 import {
@@ -18,7 +18,7 @@ type AjaxRun = <T>(
 export async function loadWizardCalendarMonth(
   store: WizardStore,
   cfg: ComputedRef<WizardCfg>,
-  daysMap: Ref<Record<string, CalendarDayStatus>>,
+  daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   run: AjaxRun,
   year: number,
   month: number,
@@ -29,7 +29,7 @@ export async function loadWizardCalendarMonth(
     daysMap.value = store.debugCalendarDays;
     return;
   }
-  const res = await run<{ year: number; month: number; days: Record<string, CalendarDayStatus> }>(
+  const res = await run<{ year: number; month: number; days: Record<string, CalendarDayInfo> }>(
     'mrt_journey_calendar_month',
     { from_station: store.fromId, to_station: store.toId, year, month },
   );
@@ -64,7 +64,7 @@ export function pickWizardCalendarDate(store: WizardStore, ymd: string): void {
 export function shiftWizardCalendarMonth(
   store: WizardStore,
   cfg: ComputedRef<WizardCfg>,
-  daysMap: Ref<Record<string, CalendarDayStatus>>,
+  daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   run: AjaxRun,
   delta: number,
 ): void {
@@ -75,7 +75,7 @@ export function shiftWizardCalendarMonth(
 export function goWizardCalendarToday(
   store: WizardStore,
   cfg: ComputedRef<WizardCfg>,
-  daysMap: Ref<Record<string, CalendarDayStatus>>,
+  daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   run: AjaxRun,
 ): void {
   const now = todayYearMonth();
@@ -86,7 +86,7 @@ export function initWizardCalendar(
   store: WizardStore,
   config: WizardVueConfig,
   cfg: ComputedRef<WizardCfg>,
-  daysMap: Ref<Record<string, CalendarDayStatus>>,
+  daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   run: AjaxRun,
 ): void {
   if (!store.calYear) {
