@@ -13,7 +13,15 @@ import {
 } from '../api/adminRest';
 import type { TimetableDetail } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import AdminNav from '../components/AdminNav.vue';
+import {
+  AdminDateList,
+  AdminFormActions,
+  AdminInlineForm,
+  AdminPanel,
+  AdminRowActions,
+  AdminTrainTypeCell,
+  AdminInlineField,
+} from '../components/ui';
 import StopTimesEditor from '../components/StopTimesEditor.vue';
 import EditableTimetableOverview from '../components/EditableTimetableOverview.vue';
 import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
@@ -43,6 +51,13 @@ const error = ref('');
 const dateInput = ref('');
 const newTrip = ref({ route_id: 0, train_type_id: 0, end_station_id: 0 });
 const destinations = ref<{ id: number; name: string }[]>([]);
+
+function trainTypeIconKey(typeId: number): string {
+  if (typeId <= 0) {
+    return '';
+  }
+  return detail.value?.train_types.find((t) => t.id === typeId)?.icon_key ?? '';
+}
 const selectedServiceId = ref(0);
 const deviationRows = ref<
   { service_id: number; date: string; trip_label: string; train_type_id: number; notice: string }[]
@@ -236,11 +251,10 @@ function onMobileSaved(message: string) {
 <template>
   <div>
     <h1 v-if="!detail">Tidtabell</h1>
-    <AdminNav />
     <AdminLoadState :loading="loading" :error="error" loading-text="Laddar tidtabell…" @retry="loadDetail">
     <p v-if="saveMsg" class="notice notice-success" role="status">{{ saveMsg }}</p>
 
-    <div v-if="detail && cfg.canManage" class="mrt-admin-panel mrt-admin-timetable-meta">
+    <AdminPanel v-if="detail && cfg.canManage" class="mrt-admin-timetable-meta">
       <p v-if="metaDirty" class="notice notice-warning mrt-admin-unsaved">
         Osparade ändringar i titel eller typ — spara innan du lämnar sidan.
       </p>
@@ -257,13 +271,13 @@ function onMobileSaved(message: string) {
           </option>
         </select>
       </p>
-      <p>
+      <AdminFormActions>
         <button type="button" class="button button-primary" @click="saveMeta">Spara namn och typ</button>
         <button type="button" class="button button-link-delete" @click="removeTimetable">
           Ta bort tidtabell
         </button>
-      </p>
-    </div>
+      </AdminFormActions>
+    </AdminPanel>
     <h1 v-else-if="detail">{{ detail.title }}</h1>
 
     <MobileTimetablePanel
@@ -288,24 +302,24 @@ function onMobileSaved(message: string) {
       </a>
     </nav>
 
-    <div v-if="detail && !isMobile && tab === 'dates'" class="mrt-admin-panel">
+    <AdminPanel v-if="detail && !isMobile && tab === 'dates'">
       <p v-if="datesDirty" class="notice notice-warning mrt-admin-unsaved">
         Osparade trafikdagar — klicka «Spara» för att spara listan.
       </p>
-      <p v-if="cfg.canManage">
+      <AdminInlineForm v-if="cfg.canManage">
         <input v-model="dateInput" type="date" />
         <button type="button" class="button" @click="addDate">Lägg till datum</button>
         <button type="button" class="button button-primary" @click="saveDates">Spara</button>
-      </p>
-      <ul>
+      </AdminInlineForm>
+      <AdminDateList>
         <li v-for="d in detail.dates" :key="d">
-          {{ d }}
+          <span>{{ d }}</span>
           <button v-if="cfg.canManage" type="button" class="button-link" @click="removeDate(d)">Ta bort</button>
         </li>
-      </ul>
-    </div>
+      </AdminDateList>
+    </AdminPanel>
 
-    <div v-if="detail && !isMobile && tab === 'trips'" class="mrt-admin-panel">
+    <AdminPanel v-if="detail && !isMobile && tab === 'trips'">
       <table class="widefat striped">
         <thead>
           <tr>
@@ -318,20 +332,27 @@ function onMobileSaved(message: string) {
         <tbody>
           <tr v-for="s in detail.services" :key="s.id">
             <td>{{ s.route_name }}</td>
-            <td>{{ s.train_type_name || '—' }}</td>
+            <td>
+              <AdminTrainTypeCell
+                :icon-key="s.train_type_icon_key"
+                :name="s.train_type_name"
+              />
+            </td>
             <td>{{ s.destination || '—' }}</td>
             <td>
-              <button type="button" class="button button-small" @click="selectedServiceId = s.id; tab = 'stoptimes'">
-                Stopptider
-              </button>
-              <button
-                v-if="cfg.canManage"
-                type="button"
-                class="button button-small"
-                @click="removeTrip(s.id)"
-              >
-                Ta bort
-              </button>
+              <AdminRowActions>
+                <button type="button" class="button" @click="selectedServiceId = s.id; tab = 'stoptimes'">
+                  Stopptider
+                </button>
+                <button
+                  v-if="cfg.canManage"
+                  type="button"
+                  class="button button-link-delete"
+                  @click="removeTrip(s.id)"
+                >
+                  Ta bort
+                </button>
+              </AdminRowActions>
             </td>
           </tr>
         </tbody>
@@ -341,19 +362,27 @@ function onMobileSaved(message: string) {
           <option :value="0">— Rutt —</option>
           <option v-for="r in detail.routes" :key="r.id" :value="r.id">{{ r.title }}</option>
         </select>
-        <select v-model.number="newTrip.train_type_id">
-          <option :value="0">— Tågtyp —</option>
-          <option v-for="t in detail.train_types" :key="t.id" :value="t.id">{{ t.name }}</option>
-        </select>
+        <AdminInlineField>
+          <AdminTrainTypeCell
+            v-if="trainTypeIconKey(newTrip.train_type_id)"
+            :icon-key="trainTypeIconKey(newTrip.train_type_id)"
+          />
+          <select v-model.number="newTrip.train_type_id">
+            <option :value="0">— Tågtyp —</option>
+            <option v-for="t in detail.train_types" :key="t.id" :value="t.id">{{ t.name }}</option>
+          </select>
+        </AdminInlineField>
         <select v-model.number="newTrip.end_station_id">
           <option :value="0">— Destination —</option>
           <option v-for="d in destinations" :key="d.id" :value="d.id">{{ d.name }}</option>
         </select>
-        <button type="button" class="button button-primary" @click="addTrip">Lägg till tur</button>
+        <div class="mrt-admin-trip-form__actions">
+          <button type="button" class="button button-primary" @click="addTrip">Lägg till tur</button>
+        </div>
       </div>
-    </div>
+    </AdminPanel>
 
-    <div v-if="detail && !isMobile && tab === 'stoptimes'" class="mrt-admin-panel mrt-vue-root">
+    <AdminPanel v-if="detail && !isMobile && tab === 'stoptimes'" class="mrt-vue-root">
       <p class="description">Klicka i rutorna för att ändra tid, stannar och P/A. Sparas automatiskt per tur.</p>
       <EditableTimetableOverview
         v-if="overview"
@@ -371,9 +400,9 @@ function onMobileSaved(message: string) {
         </p>
         <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
       </details>
-    </div>
+    </AdminPanel>
 
-    <div v-if="detail && !isMobile && tab === 'deviations'" class="mrt-admin-panel">
+    <AdminPanel v-if="detail && !isMobile && tab === 'deviations'">
       <p v-if="deviationsDirty" class="notice notice-warning mrt-admin-unsaved">
         Osparade avvikelser — klicka «Spara avvikelser».
       </p>
@@ -391,10 +420,16 @@ function onMobileSaved(message: string) {
             <td>{{ row.date }}</td>
             <td>{{ row.trip_label }}</td>
             <td>
-              <select v-model.number="row.train_type_id" :disabled="!cfg.canOperate">
-                <option :value="0">— Standard —</option>
-                <option v-for="t in detail.train_types" :key="t.id" :value="t.id">{{ t.name }}</option>
-              </select>
+              <AdminInlineField>
+                <AdminTrainTypeCell
+                  v-if="trainTypeIconKey(row.train_type_id)"
+                  :icon-key="trainTypeIconKey(row.train_type_id)"
+                />
+                <select v-model.number="row.train_type_id" :disabled="!cfg.canOperate">
+                  <option :value="0">— Standard —</option>
+                  <option v-for="t in detail.train_types" :key="t.id" :value="t.id">{{ t.name }}</option>
+                </select>
+              </AdminInlineField>
             </td>
             <td>
               <input v-model="row.notice" type="text" class="regular-text" :disabled="!cfg.canOperate" />
@@ -402,14 +437,14 @@ function onMobileSaved(message: string) {
           </tr>
         </tbody>
       </table>
-      <p v-if="cfg.canOperate">
+      <AdminFormActions v-if="cfg.canOperate">
         <button type="button" class="button button-primary" @click="saveDeviationChanges">Spara avvikelser</button>
-      </p>
-    </div>
+      </AdminFormActions>
+    </AdminPanel>
 
-    <div v-if="!isMobile && tab === 'preview'" class="mrt-admin-panel mrt-vue-root">
+    <AdminPanel v-if="!isMobile && tab === 'preview'" class="mrt-vue-root">
       <MrtTimetableOverviewView v-if="overview" :data="overview" :labels="overviewLabels" />
-    </div>
+    </AdminPanel>
     </AdminLoadState>
   </div>
 </template>

@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
 import type { DashboardPayload } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import AdminNav from '../components/AdminNav.vue';
+import { AdminActionBar, AdminPanel } from '../components/ui';
 import AdminSetupChecklist from '../components/AdminSetupChecklist.vue';
 import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
@@ -49,7 +49,6 @@ function openRoute(hashRoute: string) {
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>Museum Railway Timetable</h1>
-    <AdminNav />
 
     <AdminLoadState :loading="loading" :error="error" loading-text="Laddar översikt…" @retry="load">
     <template v-if="data">
@@ -81,7 +80,7 @@ function openRoute(hashRoute: string) {
         </p>
       </div>
 
-      <div v-if="data.warnings.length" class="mrt-admin-panel">
+      <AdminPanel v-if="data.warnings.length">
         <h2>Varningar</h2>
         <ul class="mrt-admin-warnings">
           <li v-for="w in data.warnings" :key="w.code + w.message">
@@ -90,9 +89,9 @@ function openRoute(hashRoute: string) {
             </button>
           </li>
         </ul>
-      </div>
+      </AdminPanel>
 
-      <div v-if="data.next_traffic.length" class="mrt-admin-panel">
+      <AdminPanel v-if="data.next_traffic.length">
         <h2>Nästa trafik</h2>
         <div class="mrt-admin-table-scroll">
           <table class="widefat striped">
@@ -118,11 +117,11 @@ function openRoute(hashRoute: string) {
             </tbody>
           </table>
         </div>
-      </div>
+      </AdminPanel>
 
-      <div class="mrt-admin-panel mrt-admin-quickstart">
+      <AdminPanel>
         <h2>Snabbstart</h2>
-        <p class="mrt-admin-quickstart__actions">
+        <AdminActionBar>
           <button type="button" class="button button-primary" @click="router.push('/stations-routes')">
             Stationer &amp; rutter
           </button>
@@ -141,8 +140,8 @@ function openRoute(hashRoute: string) {
           >
             Visa webbplats
           </a>
-        </p>
-      </div>
+        </AdminActionBar>
+      </AdminPanel>
     </template>
     </AdminLoadState>
   </div>

@@ -4,7 +4,13 @@ import { useRouter } from 'vue-router';
 import { createTimetable, deleteTimetable, listTimetables } from '../api/adminRest';
 import type { TimetableListItem } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import AdminNav from '../components/AdminNav.vue';
+import {
+  AdminEmptyState,
+  AdminInlineForm,
+  AdminPanel,
+  AdminRowActions,
+  AdminTableScroll,
+} from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
@@ -75,77 +81,88 @@ async function removeTimetable(id: number, title: string) {
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>Tidtabeller</h1>
-    <AdminNav />
     <AdminLoadState :loading="loading" :error="error" loading-text="Laddar tidtabeller…" @retry="load">
-    <p v-if="!cfg.canManage" class="notice notice-info">
-      Du kan öppna tidtabeller och ändra avvikelser eller avgångstider, men inte skapa nya
-      tidtabeller eller grunddata. Kontakta en administratör om du behöver fler rättigheter.
-    </p>
-
-    <div v-if="cfg.canManage" class="mrt-admin-panel mrt-admin-create-form">
-      <h2>Ny tidtabell</h2>
-      <p>
-        <input v-model="newTitle" type="text" class="regular-text" placeholder="Namn" />
-        <button type="button" class="button button-primary" @click="createNew">Skapa</button>
+      <p v-if="!cfg.canManage" class="notice notice-info">
+        Du kan öppna tidtabeller och ändra avvikelser eller avgångstider, men inte skapa nya
+        tidtabeller eller grunddata. Kontakta en administratör om du behöver fler rättigheter.
       </p>
-    </div>
 
-    <ul v-if="!loading && isMobile" class="mrt-admin-card-list">
-      <li v-for="row in items" :key="row.id" class="mrt-admin-card-list__item">
-        <strong>{{ row.title }}</strong>
-        <p class="description">
-          {{ row.dates_count }} trafikdagar · {{ row.trips_count }} turer
-        </p>
-        <button type="button" class="button button-primary" @click="openEditor(row.id)">
-          Redigera
-        </button>
-        <button
-          v-if="cfg.canManage"
-          type="button"
-          class="button button-link-delete"
-          @click="removeTimetable(row.id, row.title)"
-        >
-          Ta bort
-        </button>
-      </li>
-      <li v-if="!items.length" class="mrt-admin-card-list__empty">Inga tidtabeller.</li>
-    </ul>
+      <AdminPanel v-if="cfg.canManage" title="Ny tidtabell">
+        <AdminInlineForm>
+          <input v-model="newTitle" type="text" class="regular-text" placeholder="Namn" />
+          <button type="button" class="button button-primary" @click="createNew">Skapa</button>
+        </AdminInlineForm>
+      </AdminPanel>
 
-    <div v-else-if="!loading" class="mrt-admin-table-scroll">
-      <table class="widefat striped">
-        <thead>
-          <tr>
-            <th>Namn</th>
-            <th>Trafikdagar</th>
-            <th>Turer</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="row in items" :key="row.id">
-            <td>{{ row.title }}</td>
-            <td>{{ row.dates_count }}</td>
-            <td>{{ row.trips_count }}</td>
-            <td>
-              <button type="button" class="button button-small" @click="openEditor(row.id)">
-                Redigera
-              </button>
-              <button
-                v-if="cfg.canManage"
-                type="button"
-                class="button button-link-delete"
-                @click="removeTimetable(row.id, row.title)"
-              >
-                Ta bort
-              </button>
-            </td>
-          </tr>
-          <tr v-if="!items.length">
-            <td colspan="4">Inga tidtabeller.</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <ul v-if="!loading && isMobile" class="mrt-admin-card-list">
+        <li v-for="row in items" :key="row.id" class="mrt-admin-card-list__item">
+          <strong>{{ row.title }}</strong>
+          <p class="description">
+            {{ row.dates_count }} trafikdagar · {{ row.trips_count }} turer
+          </p>
+          <AdminRowActions stack>
+            <button type="button" class="button button-primary" @click="openEditor(row.id)">
+              Redigera
+            </button>
+            <button
+              v-if="cfg.canManage"
+              type="button"
+              class="button button-link-delete"
+              @click="removeTimetable(row.id, row.title)"
+            >
+              Ta bort
+            </button>
+          </AdminRowActions>
+        </li>
+        <li v-if="!items.length">
+          <AdminEmptyState
+            title="Inga tidtabeller"
+            message="Skapa en tidtabell ovan för att komma igång."
+          />
+        </li>
+      </ul>
+
+      <AdminPanel v-else-if="!loading">
+        <AdminEmptyState
+          v-if="!items.length"
+          title="Inga tidtabeller"
+          message="Skapa en tidtabell ovan för att komma igång."
+        />
+        <AdminTableScroll v-else>
+          <table class="widefat striped">
+            <thead>
+              <tr>
+                <th>Namn</th>
+                <th>Trafikdagar</th>
+                <th>Turer</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="row in items" :key="row.id">
+                <td>{{ row.title }}</td>
+                <td>{{ row.dates_count }}</td>
+                <td>{{ row.trips_count }}</td>
+                <td>
+                  <AdminRowActions>
+                    <button type="button" class="button" @click="openEditor(row.id)">
+                      Redigera
+                    </button>
+                    <button
+                      v-if="cfg.canManage"
+                      type="button"
+                      class="button button-link-delete"
+                      @click="removeTimetable(row.id, row.title)"
+                    >
+                      Ta bort
+                    </button>
+                  </AdminRowActions>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </AdminTableScroll>
+      </AdminPanel>
     </AdminLoadState>
   </div>
 </template>

@@ -6,6 +6,7 @@ export type AdminClientConfig = {
   canManage: boolean;
   canOperate: boolean;
   isDevMode: boolean;
+  trainTypeIconUrls: Record<string, string>;
   componentDemoAdminUrl?: string;
 };
 
@@ -48,6 +49,7 @@ export type TimetableServiceRow = {
   route_name: string;
   train_type_id: number;
   train_type_name: string;
+  train_type_icon_key?: string;
   destination: string;
 };
 
@@ -58,7 +60,7 @@ export type TimetableDetail = {
   dates: string[];
   services: TimetableServiceRow[];
   routes: { id: number; title: string }[];
-  train_types: { id: number; name: string }[];
+  train_types: { id: number; name: string; icon_key?: string }[];
 };
 
 export type StationRow = {
@@ -112,17 +114,6 @@ export function adminConfig(): AdminClientConfig {
   return {
     ...cfg,
     isDevMode: cfg.isDevMode ?? false,
+    trainTypeIconUrls: cfg.trainTypeIconUrls ?? {},
   };
 }
-
-export const ADMIN_WP_PAGE_SLUGS: Record<string, string> = {
-  '/dashboard': 'mrt_app',
-  '/timetables': 'mrt_app_timetables',
-  '/stations-routes': 'mrt_app_stations_routes',
-  '/help': 'mrt_app_help',
-  '/train-types': 'mrt_app_train_types',
-  '/settings': 'mrt_app_settings',
-  '/prices': 'mrt_app_prices',
-  '/import-export': 'mrt_app_import_export',
-  '/dev-tools': 'mrt_app_dev_tools',
-};

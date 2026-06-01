@@ -7,7 +7,7 @@ export async function useAdminMobileViewport(page: Page): Promise<void> {
   await page.setViewportSize(ADMIN_MOBILE_VIEWPORT);
 }
 
-/** Hash navigation for desktop (WP left menu is primary nav there). */
+/** Hash navigation for the single-page admin app. */
 export async function gotoAdminRoute(page: Page, adminBase: string, route: string): Promise<void> {
   const hash = route.startsWith('#') ? route : `#${route.startsWith('/') ? route : `/${route}`}`;
   const base = adminBase.replace(/#.*$/, '');
@@ -15,5 +15,5 @@ export async function gotoAdminRoute(page: Page, adminBase: string, route: strin
 }
 
 export function adminNavLink(page: Page, label: string | RegExp) {
-  return page.locator('.mrt-admin-nav a', { hasText: label });
+  return page.locator('.mrt-admin-shell__menu a', { hasText: label });
 }

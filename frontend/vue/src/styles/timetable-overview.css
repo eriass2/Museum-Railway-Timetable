@@ -365,6 +365,11 @@
   font-size: 0.85rem;
 }
 
+.mrt-ov-branch-trip-icon {
+  display: block;
+  margin: 0 auto;
+}
+
 .mrt-ov-branch-cards {
   display: none;
   margin: 0;

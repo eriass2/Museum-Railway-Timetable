@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import AdminNav from '../components/AdminNav.vue';
 import { adminConfig } from '../types';
+import { AdminPanel } from '../components/ui';
 
 const cfg = adminConfig();
 
@@ -191,10 +191,8 @@ const shortcodes: ShortcodeHelp[] = [
 <template>
   <div class="mrt-admin-page">
     <h1>Hjälp</h1>
-    <AdminNav />
 
-    <div class="mrt-admin-panel">
-      <h2>Vad pluginet gör</h2>
+    <AdminPanel title="Vad pluginet gör">
       <p>{{ pluginIntro }}</p>
       <table class="widefat striped mrt-admin-help-table">
         <thead>
@@ -214,10 +212,9 @@ const shortcodes: ShortcodeHelp[] = [
           </tr>
         </tbody>
       </table>
-    </div>
+    </AdminPanel>
 
-    <div class="mrt-admin-panel">
-      <h2>Administration</h2>
+    <AdminPanel title="Administration">
       <p class="description">Vad varje menyval gör i admin.</p>
       <dl class="mrt-admin-faq">
         <template v-for="section in visibleAdminSections" :key="section.title">
@@ -225,17 +222,15 @@ const shortcodes: ShortcodeHelp[] = [
           <dd>{{ section.body }}</dd>
         </template>
       </dl>
-    </div>
+    </AdminPanel>
 
-    <div class="mrt-admin-panel">
-      <h2>Arbetsflöde</h2>
+    <AdminPanel title="Arbetsflöde">
       <ol class="mrt-admin-help-steps">
         <li v-for="(step, i) in workflowSteps" :key="i">{{ step }}</li>
       </ol>
-    </div>
+    </AdminPanel>
 
-    <div class="mrt-admin-panel">
-      <h2>Drift och avvikelser</h2>
+    <AdminPanel title="Drift och avvikelser">
       <ul class="mrt-admin-help-steps">
         <li>
           <strong>Inställ trafik idag</strong> (Översikt) — sätter meddelandet «Inställd» på alla dagens turer.
@@ -250,10 +245,9 @@ const shortcodes: ShortcodeHelp[] = [
       <p class="description">
         Avvikelser och dagens drift syns i tidtabellsöversikten och i reseplaneraren för berörda datum.
       </p>
-    </div>
+    </AdminPanel>
 
-    <div class="mrt-admin-panel">
-      <h2>Shortcodes</h2>
+    <AdminPanel title="Shortcodes">
       <p>
         Shortcodes läggs in i innehållet på en WordPress-sida (block «Anpassad HTML» eller
         klassisk redigerare). Varje shortcode visar en del av tidtabellen på webbplatsen.
@@ -290,20 +284,18 @@ const shortcodes: ShortcodeHelp[] = [
           </tbody>
         </table>
       </article>
-    </div>
+    </AdminPanel>
 
-    <div class="mrt-admin-panel">
-      <h2>Vanliga frågor</h2>
+    <AdminPanel title="Vanliga frågor">
       <dl class="mrt-admin-faq">
         <template v-for="(item, i) in faqItems" :key="i">
           <dt>{{ item.q }}</dt>
           <dd>{{ item.a }}</dd>
         </template>
       </dl>
-    </div>
+    </AdminPanel>
 
-    <div class="mrt-admin-panel">
-      <h2>Mer information</h2>
+    <AdminPanel title="Mer information">
       <p>
         Full steg-för-steg-guide finns i plugin-dokumentationen:
         <code>docs/ADMIN_WORKFLOW.md</code> i projektets källkod.
@@ -312,6 +304,6 @@ const shortcodes: ShortcodeHelp[] = [
         Mer detaljer om shortcodes, CSV och utvecklingsverktyg finns i
         <code>docs/SHORTCODES.md</code> och övriga filer under <code>docs/</code>.
       </p>
-    </div>
+    </AdminPanel>
   </div>
 </template>

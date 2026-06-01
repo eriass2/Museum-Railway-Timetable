@@ -25,7 +25,7 @@ test.describe('AdminNav integration (WordPress)', () => {
     await useAdminMobileViewport(page);
     await page.goto(adminUrl);
     await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
-    await expect(page.locator('.mrt-admin-nav')).toBeVisible();
+    await expect(page.locator('.mrt-admin-shell__nav')).toBeVisible();
     await page.evaluate(() => {
       (window as unknown as { __mrtE2eStay?: boolean }).__mrtE2eStay = true;
     });

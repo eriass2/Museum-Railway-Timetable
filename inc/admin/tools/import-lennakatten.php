@@ -27,7 +27,7 @@ function MRT_admin_redirect_legacy_import_lennakatten_page(): void {
 		wp_safe_redirect( admin_url( 'admin.php?page=' . MRT_ADMIN_APP_SLUG ) );
 		exit;
 	}
-	wp_safe_redirect( admin_url( 'admin.php?page=mrt_app_dev_tools' ) );
+	wp_safe_redirect( MRT_admin_app_url( '/dev-tools' ) );
 	exit;
 }
 

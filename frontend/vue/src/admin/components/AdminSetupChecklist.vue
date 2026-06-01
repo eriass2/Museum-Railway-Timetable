@@ -5,6 +5,7 @@ import {
   buildAdminSetupSteps,
   isAdminSetupComplete,
 } from '../utils/adminSetupSteps';
+import { AdminPanel } from './ui';
 
 const props = defineProps<{
   stats: Record<string, number>;
@@ -17,8 +18,7 @@ const doneCount = computed(() => steps.value.filter((s) => s.done).length);
 </script>
 
 <template>
-  <div v-if="!complete" class="mrt-admin-panel mrt-admin-setup">
-    <h2>Kom igång</h2>
+  <AdminPanel v-if="!complete" class="mrt-admin-setup" title="Kom igång">
     <p class="description">
       {{ doneCount }} av {{ steps.length }} steg klara — följ ordningen nedan innan du publicerar
       tidtabeller på webbplatsen.
@@ -42,5 +42,5 @@ const doneCount = computed(() => steps.value.filter((s) => s.done).length);
         </button>
       </li>
     </ol>
-  </div>
+  </AdminPanel>
 </template>

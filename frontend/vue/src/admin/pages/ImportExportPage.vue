@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 import { exportCsv, importCsv } from '../api/adminRest';
-import AdminNav from '../components/AdminNav.vue';
+import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -68,13 +68,12 @@ async function onImport(ev: Event) {
 <template>
   <div>
     <h1>Import / export</h1>
-    <AdminNav />
 
     <p v-if="!cfg.canManage" class="notice notice-warning">Du har inte behörighet.</p>
-    <p v-if="error" class="notice notice-error">{{ error }}</p>
-    <p v-if="success" class="notice notice-success">{{ success }}</p>
+    <AdminStatusMessage v-if="error" :message="error" type="error" />
+    <AdminStatusMessage :message="success" />
 
-    <div v-if="cfg.canManage" class="mrt-admin-panel">
+    <AdminPanel v-if="cfg.canManage">
       <h2>Exportera CSV (zip)</h2>
       <p>
         <label>
@@ -86,11 +85,11 @@ async function onImport(ev: Event) {
           Inkludera priser
         </label>
       </p>
-      <p>
+      <AdminFormActions>
         <button type="button" class="button button-primary" :disabled="loading" @click="onExport">
           Ladda ner export
         </button>
-      </p>
+      </AdminFormActions>
 
       <h2>Importera CSV (zip)</h2>
       <p class="description">Se docs/CSV_FORMAT.md för kolumnformat.</p>
@@ -107,6 +106,6 @@ async function onImport(ev: Event) {
       <p>
         <input type="file" accept=".zip,application/zip" :disabled="loading" @change="onImport" />
       </p>
-    </div>
+    </AdminPanel>
   </div>
 </template>

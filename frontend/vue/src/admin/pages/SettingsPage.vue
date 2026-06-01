@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { getSettings, saveSettings } from '../api/adminRest';
 import type { SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import AdminNav from '../components/AdminNav.vue';
+import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
 
@@ -55,10 +55,10 @@ async function submit() {
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>Inställningar</h1>
-    <AdminNav />
 
     <AdminLoadState :loading="loading" :error="error" loading-text="Laddar inställningar…" @retry="load">
-    <form class="mrt-admin-panel" @submit.prevent="submit">
+    <AdminPanel>
+    <form @submit.prevent="submit">
       <table class="form-table">
         <tbody>
           <tr>
@@ -90,14 +90,15 @@ async function submit() {
           </tr>
         </tbody>
       </table>
-      <p>
+      <AdminFormActions>
         <button type="submit" class="button button-primary">Spara inställningar</button>
-        <span v-if="saved" class="description mrt-ml-sm">{{ saved }}</span>
-      </p>
+        <AdminStatusMessage v-if="saved" :message="saved" />
+      </AdminFormActions>
       <p class="description">
         CSV-import/export finns under fliken Import/export i menyn.
       </p>
     </form>
+    </AdminPanel>
     </AdminLoadState>
   </div>
 </template>

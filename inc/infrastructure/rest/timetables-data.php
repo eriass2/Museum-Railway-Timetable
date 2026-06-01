@@ -93,14 +93,18 @@ function MRT_rest_format_timetable_services( int $timetable_id ): array {
 		$train_types   = wp_get_post_terms( $service->ID, MRT_TAXONOMY_TRAIN_TYPE, array( 'fields' => 'ids' ) );
 		$train_type_id = is_array( $train_types ) && $train_types !== array() ? (int) $train_types[0] : 0;
 		$dest          = MRT_get_service_destination( (int) $service->ID );
-		$rows[]        = array(
-			'id'              => (int) $service->ID,
-			'title'           => (string) $service->post_title,
-			'route_id'        => $route_id,
-			'route_name'      => $route_id > 0 ? (string) get_the_title( $route_id ) : '',
-			'train_type_id'   => $train_type_id,
-			'train_type_name' => $train_type_id > 0 ? (string) ( get_term( $train_type_id, MRT_TAXONOMY_TRAIN_TYPE )->name ?? '' ) : '',
-			'destination'     => ! empty( $dest['destination'] ) ? (string) $dest['destination'] : '',
+		$train_type_term = $train_type_id > 0 ? get_term( $train_type_id, MRT_TAXONOMY_TRAIN_TYPE ) : null;
+		$rows[]          = array(
+			'id'                  => (int) $service->ID,
+			'title'               => (string) $service->post_title,
+			'route_id'            => $route_id,
+			'route_name'          => $route_id > 0 ? (string) get_the_title( $route_id ) : '',
+			'train_type_id'       => $train_type_id,
+			'train_type_name'     => ( $train_type_term instanceof WP_Term ) ? (string) $train_type_term->name : '',
+			'train_type_icon_key' => ( $train_type_term instanceof WP_Term )
+				? MRT_get_train_type_symbol_key( $train_type_term )
+				: '',
+			'destination'         => ! empty( $dest['destination'] ) ? (string) $dest['destination'] : '',
 		);
 	}
 	return $rows;
@@ -138,8 +142,9 @@ function MRT_rest_format_train_type_options( $terms ): array {
 			continue;
 		}
 		$rows[] = array(
-			'id'   => (int) $term->term_id,
-			'name' => (string) $term->name,
+			'id'       => (int) $term->term_id,
+			'name'     => (string) $term->name,
+			'icon_key' => MRT_get_train_type_symbol_key( $term ),
 		);
 	}
 	return $rows;

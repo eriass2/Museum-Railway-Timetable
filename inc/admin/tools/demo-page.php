@@ -14,7 +14,7 @@ require_once MRT_PATH . 'inc/import/csv/fixture-read.php';
 define( 'MRT_OPTION_COMPONENTS_DEMO_PAGE_ID', 'mrt_components_demo_page_id' );
 
 /**
- * Admin submenu slug for the component demo screen (must match add_submenu_page)
+ * Admin page slug for the component demo screen (hidden menu; linked from Vue AdminNav)
  *
  * @return string
  */
@@ -49,6 +49,23 @@ function MRT_redirect_components_demo_admin_canonical_url() {
 }
 
 add_action( 'admin_init', 'MRT_redirect_components_demo_admin_canonical_url', 0 );
+
+/**
+ * Hidden admin page: ensure WP admin header gets a non-null title.
+ */
+function MRT_components_demo_admin_set_title(): void {
+	if ( ! is_admin() ) {
+		return;
+	}
+	$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( (string) $_GET['page'] ) ) : '';
+	if ( $page !== MRT_components_demo_menu_slug() ) {
+		return;
+	}
+	global $title;
+	$title = __( 'Component demo page', 'museum-railway-timetable' );
+}
+
+add_action( 'admin_init', 'MRT_components_demo_admin_set_title', 1 );
 
 /**
  * Timetable post title used by Lennakatten import (overview shortcode)
@@ -303,7 +320,7 @@ function MRT_render_components_demo_admin_page() {
 			<?php MRT_render_component_debug_page_admin_links(); ?>
 			<p class="description">
 				<?php esc_html_e( 'Front-end development menu:', 'museum-railway-timetable' ); ?>
-				<a href="<?php echo esc_url( admin_url( 'admin.php?page=mrt_app_dev_tools' ) ); ?>">
+				<a href="<?php echo esc_url( MRT_admin_app_url( '/dev-tools' ) ); ?>">
 					<?php esc_html_e( 'Dev tools', 'museum-railway-timetable' ); ?>
 				</a>
 			</p>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import AdminFormActions from './ui/AdminFormActions.vue';
+
 defineProps<{
   loading?: boolean;
   error?: string;
@@ -16,9 +18,9 @@ defineEmits<{
   </p>
   <div v-else-if="error" class="mrt-admin-async__error notice notice-error">
     <p>{{ error }}</p>
-    <p>
+    <AdminFormActions>
       <button type="button" class="button" @click="$emit('retry')">Försök igen</button>
-    </p>
+    </AdminFormActions>
   </div>
   <slot v-else />
 </template>

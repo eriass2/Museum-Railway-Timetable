@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { cancelTrafficToday } from '../api/adminRest';
 import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
+import { AdminActionBar, AdminPanel } from './ui';
 
 const props = defineProps<{
   traffic: TrafficToday;
@@ -68,12 +69,12 @@ function openTimetable() {
 </script>
 
 <template>
-  <div class="mrt-admin-panel mrt-admin-ops-today">
+  <AdminPanel class="mrt-admin-ops-today">
     <h2>Trafik idag</h2>
     <p class="description">{{ traffic.date }} — {{ statusText }}</p>
     <p v-if="message" class="notice notice-success">{{ message }}</p>
     <p v-if="error" class="notice notice-error">{{ error }}</p>
-    <div class="mrt-admin-ops-today__actions">
+    <AdminActionBar>
       <button
         v-if="canOperate && !effectiveTraffic.all_cancelled && effectiveTraffic.services_count > 0"
         type="button"
@@ -94,6 +95,6 @@ function openTimetable() {
       >
         Ändra avgångstid / avvikelser
       </button>
-    </div>
-  </div>
+    </AdminActionBar>
+  </AdminPanel>
 </template>

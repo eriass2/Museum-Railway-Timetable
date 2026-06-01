@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { getStopTimes, saveStopTimes } from '../api/adminRest';
 import type { StopTimeRow } from '../types';
 import { adminConfig } from '../types';
+import AdminFormActions from './ui/AdminFormActions.vue';
 
 const props = defineProps<{ serviceId: number }>();
 const cfg = adminConfig();
@@ -96,8 +97,8 @@ async function save(explicit = true) {
         </tr>
       </tbody>
     </table>
-    <p v-if="cfg.canManage || cfg.canOperate">
+    <AdminFormActions v-if="cfg.canManage || cfg.canOperate">
       <button type="button" class="button button-primary" @click="save(true)">Spara stopptider</button>
-    </p>
+    </AdminFormActions>
   </div>
 </template>

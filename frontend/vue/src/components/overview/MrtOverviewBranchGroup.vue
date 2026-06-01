@@ -5,12 +5,17 @@ import {
   formatDeparturesAria,
   formatTrainConnecting,
 } from '../../shared/overviewUiLabels';
-import type { TimetableBranchGroup } from '../../types/timetableOverview';
+import type { TimetableBranchGroup, TimetableOverviewIconUrls } from '../../types/timetableOverview';
+import { trainTypeIconUrl } from '../../utils/overviewGrid';
+import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
 
 const props = defineProps<{
   group: TimetableBranchGroup;
+  iconUrls: TimetableOverviewIconUrls;
   labels: OverviewUiLabels;
 }>();
+
+const busIconUrl = trainTypeIconUrl(props.iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG);
 
 function departuresAria(): string {
   return formatDeparturesAria(props.labels.departuresAria, props.group.routeLabel);
@@ -45,7 +50,17 @@ function trainLabel(serviceNumber: string, timeDisplay: string): string {
         </thead>
         <tbody>
           <tr v-for="trip in group.trips" :key="trip.trip">
-            <th scope="row">{{ trip.trip }}</th>
+            <th scope="row">
+              <img
+                v-if="busIconUrl"
+                class="mrt-ov-branch-trip-icon"
+                :src="busIconUrl"
+                alt=""
+                width="24"
+                height="24"
+              />
+              <span class="screen-reader-text">{{ trip.trip }}</span>
+            </th>
             <td>{{ trip.fromTime }}</td>
             <td v-if="group.midLabel">{{ trip.midTime || '—' }}</td>
             <td>{{ trip.toTime }}</td>
@@ -64,7 +79,17 @@ function trainLabel(serviceNumber: string, timeDisplay: string): string {
 
     <ol class="mrt-ov-branch-cards" :aria-label="departuresAria()">
       <li v-for="trip in group.trips" :key="`card-${trip.trip}`" class="mrt-ov-branch-card">
-        <p class="mrt-ov-branch-card__trip">{{ formatCardTrip(labels.cardTrip, trip.trip) }}</p>
+        <p class="mrt-ov-branch-card__trip">
+          <img
+            v-if="busIconUrl"
+            class="mrt-ov-branch-trip-icon"
+            :src="busIconUrl"
+            alt=""
+            width="24"
+            height="24"
+          />
+          <span class="screen-reader-text">{{ formatCardTrip(labels.cardTrip, trip.trip) }}</span>
+        </p>
         <dl class="mrt-ov-branch-card__times">
           <div class="mrt-ov-branch-card__row">
             <dt>{{ group.fromLabel }}</dt>

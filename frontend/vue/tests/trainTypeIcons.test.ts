@@ -3,6 +3,7 @@ import {
   ROAD_BUS_ICON_KEY,
   ROAD_BUS_TRAIN_TYPE_SLUG,
   normalizeTrainTypeIconKey,
+  trainTypeIconLabel,
   trainTypeIconUrl,
 } from '../src/shared/trainTypeIcons';
 
@@ -22,5 +23,11 @@ describe('trainTypeIcons', () => {
     expect(trainTypeIconUrl(urls, ROAD_BUS_TRAIN_TYPE_SLUG)).toBe('/bus.png');
     expect(trainTypeIconUrl(urls, ROAD_BUS_ICON_KEY)).toBe('/bus.png');
     expect(trainTypeIconUrl(urls, 'ralsbuss')).toBe('/railbus.png');
+  });
+
+  it('returns Swedish labels for admin icon picker', () => {
+    expect(trainTypeIconLabel('bus')).toBe('Vägbuss');
+    expect(trainTypeIconLabel('buss')).toBe('Vägbuss');
+    expect(trainTypeIconLabel('steam')).toBe('Ångtåg');
   });
 });

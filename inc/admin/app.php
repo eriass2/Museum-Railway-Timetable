@@ -12,25 +12,38 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Map legacy admin page slugs to Vue initial routes.
+ * Legacy admin.php?page= slugs → Vue hash path (bookmarks / old links).
  *
- * @return array<string, string>
+ * @return array<string, string> slug => hash path without leading #
  */
-function MRT_admin_app_initial_routes(): array {
+function MRT_admin_legacy_vue_page_hashes(): array {
 	$routes = array(
-		MRT_ADMIN_APP_SLUG             => 'dashboard',
-		'mrt_app_timetables'           => 'timetables',
-		'mrt_app_stations_routes'      => 'stations-routes',
-		'mrt_app_help'                 => 'help',
-		'mrt_app_settings'             => 'settings',
-		'mrt_app_prices'               => 'prices',
-		'mrt_app_train_types'          => 'train-types',
-		'mrt_app_import_export'        => 'import-export',
+		'mrt_app_timetables'      => '/timetables',
+		'mrt_app_stations_routes' => '/stations-routes',
+		'mrt_app_help'            => '/help',
+		'mrt_app_settings'        => '/settings',
+		'mrt_app_prices'          => '/prices',
+		'mrt_app_train_types'     => '/train-types',
+		'mrt_app_import_export'   => '/import-export',
 	);
 	if ( MRT_is_development_mode() ) {
-		$routes['mrt_app_dev_tools'] = 'dev-tools';
+		$routes['mrt_app_dev_tools'] = '/dev-tools';
 	}
 	return $routes;
+}
+
+/**
+ * Full admin URL for the Vue app with optional hash route.
+ *
+ * @param string $hash_path e.g. `/timetables` or `#/timetables`
+ */
+function MRT_admin_app_url( string $hash_path = '' ): string {
+	$url = admin_url( 'admin.php?page=' . MRT_ADMIN_APP_SLUG );
+	if ( $hash_path === '' ) {
+		return $url;
+	}
+	$hash = str_starts_with( $hash_path, '#' ) ? $hash_path : '#' . ltrim( $hash_path, '#' );
+	return $url . $hash;
 }
 
 /**
@@ -42,13 +55,35 @@ function MRT_admin_app_current_slug(): string {
 }
 
 /**
- * Initial Vue route from WP submenu slug.
+ * Initial Vue route when no hash is present (router reads window.location.hash).
  */
 function MRT_admin_app_initial_route(): string {
-	$slug  = MRT_admin_app_current_slug();
-	$routes = MRT_admin_app_initial_routes();
-	return $routes[ $slug ] ?? 'dashboard';
+	return 'dashboard';
 }
+
+/**
+ * Redirect old submenu slugs to single app URL with hash.
+ */
+function MRT_admin_redirect_legacy_vue_submenu_slugs(): void {
+	if ( ! is_admin() ) {
+		return;
+	}
+	$page = MRT_admin_app_current_slug();
+	if ( $page === MRT_ADMIN_APP_SLUG ) {
+		return;
+	}
+	if ( function_exists( 'MRT_components_demo_menu_slug' ) && $page === MRT_components_demo_menu_slug() ) {
+		return;
+	}
+	$legacy = MRT_admin_legacy_vue_page_hashes();
+	if ( ! isset( $legacy[ $page ] ) ) {
+		return;
+	}
+	wp_safe_redirect( MRT_admin_app_url( $legacy[ $page ] ) );
+	exit;
+}
+
+add_action( 'admin_init', 'MRT_admin_redirect_legacy_vue_submenu_slugs', 4 );
 
 /**
  * Render Vue admin shell.
@@ -98,28 +133,15 @@ function MRT_admin_redirect_legacy_cpt_screens(): void {
 		return;
 	}
 	$targets = array(
-		MRT_POST_TYPE_TIMETABLE => array(
-			'page' => 'mrt_app_timetables',
-			'hash' => '#/timetables/' . $post_id,
-		),
-		MRT_POST_TYPE_STATION   => array(
-			'page' => 'mrt_app_stations_routes',
-			'hash' => '#/stations-routes',
-		),
-		MRT_POST_TYPE_ROUTE     => array(
-			'page' => 'mrt_app_stations_routes',
-			'hash' => '#/stations-routes',
-		),
-		MRT_POST_TYPE_SERVICE   => array(
-			'page' => 'mrt_app_timetables',
-			'hash' => MRT_admin_service_editor_hash( $post_id ),
-		),
+		MRT_POST_TYPE_TIMETABLE => MRT_admin_app_url( '/timetables/' . $post_id ),
+		MRT_POST_TYPE_STATION   => MRT_admin_app_url( '/stations-routes' ),
+		MRT_POST_TYPE_ROUTE     => MRT_admin_app_url( '/stations-routes' ),
+		MRT_POST_TYPE_SERVICE   => MRT_admin_app_url( MRT_admin_service_editor_hash( $post_id ) ),
 	);
 	if ( ! isset( $targets[ $post->post_type ] ) ) {
 		return;
 	}
-	$target = $targets[ $post->post_type ];
-	wp_safe_redirect( admin_url( 'admin.php?page=' . $target['page'] . $target['hash'] ) );
+	wp_safe_redirect( $targets[ $post->post_type ] );
 	exit;
 }
 
@@ -135,15 +157,15 @@ function MRT_admin_redirect_legacy_cpt_lists(): void {
 	}
 	$post_type = isset( $_GET['post_type'] ) ? sanitize_key( wp_unslash( (string) $_GET['post_type'] ) ) : '';
 	$map       = array(
-		MRT_POST_TYPE_TIMETABLE => 'mrt_app_timetables',
-		MRT_POST_TYPE_STATION   => 'mrt_app_stations_routes',
-		MRT_POST_TYPE_ROUTE     => 'mrt_app_stations_routes',
-		MRT_POST_TYPE_SERVICE   => 'mrt_app_timetables',
+		MRT_POST_TYPE_TIMETABLE => '/timetables',
+		MRT_POST_TYPE_STATION   => '/stations-routes',
+		MRT_POST_TYPE_ROUTE     => '/stations-routes',
+		MRT_POST_TYPE_SERVICE   => '/timetables',
 	);
 	if ( ! isset( $map[ $post_type ] ) ) {
 		return;
 	}
-	wp_safe_redirect( admin_url( 'admin.php?page=' . $map[ $post_type ] ) );
+	wp_safe_redirect( MRT_admin_app_url( $map[ $post_type ] ) );
 	exit;
 }
 

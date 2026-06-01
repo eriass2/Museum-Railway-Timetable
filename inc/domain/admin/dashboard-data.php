@@ -137,8 +137,8 @@ function MRT_dashboard_traffic_today(): ?array {
  */
 function MRT_dashboard_links(): array {
 	$links = array(
-		'timetables' => admin_url( 'admin.php?page=mrt_app_timetables' ),
-		'stations'   => admin_url( 'admin.php?page=mrt_app_stations_routes' ),
+		'timetables' => MRT_admin_app_url( '/timetables' ),
+		'stations'   => MRT_admin_app_url( '/stations-routes' ),
 		'front'      => home_url( '/' ),
 	);
 	if ( MRT_is_development_mode() ) {

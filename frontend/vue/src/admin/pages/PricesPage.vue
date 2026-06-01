@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import { getPrices, savePrices } from '../api/adminRest';
 import type { PricesPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import AdminNav from '../components/AdminNav.vue';
+import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -66,10 +66,10 @@ async function submit() {
 <template>
   <div>
     <h1>Priser</h1>
-    <AdminNav />
 
     <AdminLoadState :loading="loading" :error="error" loading-text="Laddar priser…" @retry="load">
-    <form v-if="data" @submit.prevent="submit">
+    <AdminPanel v-if="data">
+    <form @submit.prevent="submit">
       <p class="description">
         Priser i SEK per biljettyp, passagerarkategori och antal zoner.
       </p>
@@ -107,11 +107,12 @@ async function submit() {
           </tr>
         </tbody>
       </table>
-      <p class="mrt-mt-sm">
+      <AdminFormActions>
         <button type="submit" class="button button-primary">Spara priser</button>
-        <span v-if="saved" class="description mrt-ml-sm">{{ saved }}</span>
-      </p>
+        <AdminStatusMessage v-if="saved" :message="saved" />
+      </AdminFormActions>
     </form>
+    </AdminPanel>
     </AdminLoadState>
   </div>
 </template>
