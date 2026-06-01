@@ -9,7 +9,7 @@ import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
 import { priceTableLabelsFromCfg } from '../utils/priceTableLabels';
-import { zonesForStationPair } from '../../shared/prices';
+import { qualifiesForAfternoonReturn, zonesForStationPair } from '../../shared/prices';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
 import { formatTripClock } from '../utils/format';
@@ -27,8 +27,20 @@ const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
 
 const priceLabels = computed(() => {
   const zones = zonesForStationPair(store.fromId, store.toId, cfg.value);
-  return priceTableLabelsFromCfg(cfg.value, zones, true);
+  const afternoon = qualifiesForAfternoonReturn(
+    store.tripType,
+    outboundDeparture.value,
+    inboundDeparture.value,
+  );
+  return priceTableLabelsFromCfg(cfg.value, zones, !afternoon);
 });
+
+const outboundDeparture = computed(() =>
+  store.outbound ? departureFromOrigin(store.outbound) : '',
+);
+const inboundDeparture = computed(() =>
+  store.inbound ? departureFromOrigin(store.inbound) : '',
+);
 
 function legTimeRange(conn: NonNullable<typeof store.outbound>): string {
   return `${formatTripClock(departureFromOrigin(conn))} – ${formatTripClock(arrivalAtDestination(conn))}`;
@@ -72,6 +84,9 @@ function onBack(): void {
         :trip-type="store.tripType"
         :from-id="store.fromId"
         :to-id="store.toId"
+        :outbound-departure="outboundDeparture"
+        :inbound-departure="inboundDeparture"
+        include-day-tickets
       />
 
       <p v-if="ticketUrl" data-wizard-ticket-wrap class="mrt-mt-sm mrt-actions">

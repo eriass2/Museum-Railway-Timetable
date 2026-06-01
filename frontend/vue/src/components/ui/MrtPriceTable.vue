@@ -5,6 +5,7 @@ import type { PriceTripType } from '../../shared/prices';
 import {
   PRICE_CAT_KEYS,
   PRICE_TYPE_KEYS,
+  dayTicketMatrix,
   formatPriceCell,
   priceMatrixForTrip,
   zonesForStationPair,
@@ -19,16 +20,28 @@ const props = withDefaults(
     tripType: MaybeRef<PriceTripType>;
     fromId: MaybeRef<number>;
     toId: MaybeRef<number>;
+    outboundDeparture?: MaybeRef<string>;
+    inboundDeparture?: MaybeRef<string>;
     /** Summary step: one row for the chosen trip type. Set true to show full matrix. */
     showAllTypes?: boolean;
+    /** Summary step: show heldagsbiljett below the active trip prices. */
+    includeDayTickets?: boolean;
   }>(),
-  { showAllTypes: false },
+  { showAllTypes: false, includeDayTickets: false },
 );
 
 const priceCfg = computed(() => unref(props.priceCfg));
 const labels = computed(() => unref(props.labels));
 const zones = computed(() => zonesForStationPair(unref(props.fromId), unref(props.toId), priceCfg.value));
-const priceData = computed(() => priceMatrixForTrip(unref(props.tripType), priceCfg.value, zones.value));
+const priceData = computed(() =>
+  priceMatrixForTrip(unref(props.tripType), priceCfg.value, zones.value, {
+    outboundDeparture: unref(props.outboundDeparture) ?? '',
+    inboundDeparture: unref(props.inboundDeparture) ?? '',
+  }),
+);
+const dayPrices = computed(() =>
+  props.includeDayTickets ? dayTicketMatrix(priceCfg.value, zones.value) : null,
+);
 
 const cellCfg = computed((): PriceCfg => ({
   ...priceCfg.value,
@@ -53,8 +66,18 @@ const selectedTypeLabel = computed(() => {
   if (!priceData.value || props.showAllTypes) {
     return '';
   }
+  if (priceData.value.isAfternoonReturn) {
+    return priceCfg.value.priceAfternoonReturnLabel || labels.value.tickets.return || 'return';
+  }
   const key = priceData.value.activeType;
   return labels.value.tickets[key] || key;
+});
+
+const priceNote = computed(() => {
+  if (priceData.value?.isAfternoonReturn && priceCfg.value.priceAfternoonNote) {
+    return priceCfg.value.priceAfternoonNote;
+  }
+  return labels.value.note;
 });
 
 function priceForCategory(catKey: string, ticketType: string): string {
@@ -62,6 +85,13 @@ function priceForCategory(catKey: string, ticketType: string): string {
     return '';
   }
   return formatPriceCell(priceData.value.matrix[ticketType]?.[catKey], cellCfg.value);
+}
+
+function dayPriceForCategory(catKey: string): string {
+  if (!dayPrices.value) {
+    return '';
+  }
+  return formatPriceCell(dayPrices.value.day?.[catKey], cellCfg.value);
 }
 </script>
 
@@ -115,8 +145,20 @@ function priceForCategory(catKey: string, ticketType: string): string {
       </table>
     </div>
 
-    <p v-if="labels.note" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
-      {{ labels.note }}
+    <div v-if="dayPrices" class="mrt-price-block mrt-mt-md">
+      <MrtHeading level="h5" size="sm" class="mrt-price-block__title">
+        {{ priceCfg.priceDayTitle || labels.tickets.day || 'Heldagsbiljett' }}
+      </MrtHeading>
+      <dl class="mrt-price-list">
+        <div v-for="ck in PRICE_CAT_KEYS" :key="`day-${ck}`" class="mrt-price-list__row">
+          <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
+          <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
+        </div>
+      </dl>
+    </div>
+
+    <p v-if="priceNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
+      {{ priceNote }}
     </p>
   </div>
 </template>

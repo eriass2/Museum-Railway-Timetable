@@ -52,7 +52,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Prisberäkning / reseplanerare
 - **Typ:** bugg + önskemål
 - **Prioritet:** hög
-- **Status:** obehandlad
+- **Status:** åtgärdad (taxa 2026, eftermiddagsbiljett, heldagsbiljett i sammanfattning)
 - **Förväntade priser (exempelresan):**
   - Normal 2-zoner: vuxen 220, barn 4–15 60, student 200
   - Efter kl 15 (tur/retur i sin helhet): vuxen 160, student 140

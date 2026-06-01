@@ -1,6 +1,6 @@
 <?php
 /**
- * 2025 Lennakatten fare table from Taxa 2025 (builtin defaults).
+ * 2026 Lennakatten fare table (Taxa 2026, lennakatten.se/biljetter).
  *
  * @package Museum_Railway_Timetable
  * @return array<string, array<string, array<int, int|null>>>
@@ -13,16 +13,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 return array(
 	'single' => array(
 		'adult'          => array(
-			1 => 70,
+			1 => 80,
 			2 => 110,
-			3 => 120,
+			3 => 130,
 			4 => 130,
 		),
 		'child_4_15'     => array(
-			1 => 35,
-			2 => 55,
-			3 => 60,
-			4 => 65,
+			1 => 30,
+			2 => 30,
+			3 => 30,
+			4 => 30,
 		),
 		'child_0_3'      => array(
 			1 => 0,
@@ -31,24 +31,24 @@ return array(
 			4 => 0,
 		),
 		'student_senior' => array(
-			1 => 60,
+			1 => 70,
 			2 => 100,
-			3 => 110,
+			3 => 120,
 			4 => 120,
 		),
 	),
 	'return' => array(
 		'adult'          => array(
-			1 => 140,
+			1 => 160,
 			2 => 220,
-			3 => 240,
+			3 => 260,
 			4 => 260,
 		),
 		'child_4_15'     => array(
-			1 => 70,
-			2 => 110,
-			3 => 120,
-			4 => 130,
+			1 => 60,
+			2 => 60,
+			3 => 60,
+			4 => 60,
 		),
 		'child_0_3'      => array(
 			1 => 0,
@@ -57,10 +57,10 @@ return array(
 			4 => 0,
 		),
 		'student_senior' => array(
-			1 => 120,
+			1 => 140,
 			2 => 200,
 			3 => 220,
-			4 => 240,
+			4 => 220,
 		),
 	),
 	'day'    => array(
@@ -71,10 +71,10 @@ return array(
 			4 => 280,
 		),
 		'child_4_15'     => array(
-			1 => 140,
-			2 => 140,
-			3 => 140,
-			4 => 140,
+			1 => 80,
+			2 => 80,
+			3 => 80,
+			4 => 80,
 		),
 		'child_0_3'      => array(
 			1 => 0,

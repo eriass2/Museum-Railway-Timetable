@@ -7,11 +7,45 @@ export const PRICE_CAT_KEYS = ['adult', 'child_4_15', 'child_0_3', 'student_seni
 
 export type PriceTripType = 'single' | 'return' | 'day';
 
+export const MAX_PRICE_ZONES = 3;
+
+export function pricingZoneCount(zones: number): number {
+  if (!zones || Number.isNaN(zones)) {
+    return MAX_PRICE_ZONES;
+  }
+  return Math.max(1, Math.min(MAX_PRICE_ZONES, zones));
+}
+
+export function parseTripClock(hhmm: string): number | null {
+  const match = /^(\d{1,2}):(\d{2})$/.exec(hhmm.trim());
+  if (!match) {
+    return null;
+  }
+  return Number.parseInt(match[1], 10) * 60 + Number.parseInt(match[2], 10);
+}
+
+export function qualifiesForAfternoonReturn(
+  tripType: PriceTripType,
+  outboundDeparture: string,
+  inboundDeparture: string,
+  thresholdMinutes = 15 * 60,
+): boolean {
+  if (tripType !== 'return') {
+    return false;
+  }
+  const out = parseTripClock(outboundDeparture);
+  const inbound = parseTripClock(inboundDeparture);
+  if (out === null || inbound === null) {
+    return false;
+  }
+  return out >= thresholdMinutes && inbound >= thresholdMinutes;
+}
+
 export function zonesForStationPair(fromId: number, toId: number, cfg: PriceCfg): number {
   const map = cfg.priceStationZones ?? {};
   const fromZones = map[String(fromId)] || [];
   const toZones = map[String(toId)] || [];
-  let best = 4;
+  let best = MAX_PRICE_ZONES;
   if (!fromZones.length || !toZones.length) {
     return best;
   }
@@ -23,12 +57,12 @@ export function zonesForStationPair(fromId: number, toId: number, cfg: PriceCfg)
       }
     });
   });
-  return Math.max(1, Math.min(4, best));
+  return pricingZoneCount(best);
 }
 
 function matrixForZone(cfg: PriceCfg, zones: number): PriceMatrix {
   const byZone = cfg.priceMatrixByZone;
-  const zoneKey = String(Math.max(1, Math.min(4, zones || 4)));
+  const zoneKey = String(pricingZoneCount(zones));
   if (!byZone) {
     return cfg.priceMatrix ?? {};
   }
@@ -40,6 +74,18 @@ function matrixForZone(cfg: PriceCfg, zones: number): PriceMatrix {
     });
   });
   return out;
+}
+
+function afternoonReturnMatrix(cfg: PriceCfg): PriceMatrix {
+  const flat = cfg.afternoonReturnPrices ?? {
+    adult: 160,
+    child_4_15: 60,
+    child_0_3: 0,
+    student_senior: 140,
+  };
+  return {
+    return: { ...flat },
+  };
 }
 
 export function matrixHasAnyPrice(matrix: PriceMatrix): boolean {
@@ -59,14 +105,37 @@ export function formatPriceCell(v: unknown, cfg: PriceCfg): string {
   return /^\d+$/.test(s) ? `${s} kr` : s;
 }
 
+export type PriceTripOptions = {
+  outboundDeparture?: string;
+  inboundDeparture?: string;
+};
+
 export function priceMatrixForTrip(
   tripType: PriceTripType,
   cfg: PriceCfg,
   zones: number,
-): { matrix: PriceMatrix; activeType: string } | null {
-  const matrix = matrixForZone(cfg, zones);
+  options: PriceTripOptions = {},
+): { matrix: PriceMatrix; activeType: string; isAfternoonReturn: boolean } | null {
+  const isAfternoonReturn = qualifiesForAfternoonReturn(
+    tripType,
+    options.outboundDeparture ?? '',
+    options.inboundDeparture ?? '',
+  );
+  const matrix = isAfternoonReturn ? afternoonReturnMatrix(cfg) : matrixForZone(cfg, zones);
   if (!matrixHasAnyPrice(matrix)) {
     return null;
   }
-  return { matrix, activeType: tripType === 'return' ? 'return' : 'single' };
+  return {
+    matrix,
+    activeType: tripType === 'return' ? 'return' : 'single',
+    isAfternoonReturn,
+  };
+}
+
+export function dayTicketMatrix(cfg: PriceCfg, zones: number): PriceMatrix | null {
+  const matrix = matrixForZone(cfg, zones);
+  if (!matrixHasAnyPrice({ day: matrix.day ?? {} })) {
+    return null;
+  }
+  return { day: matrix.day ?? {} };
 }

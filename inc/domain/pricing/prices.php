@@ -36,6 +36,15 @@ function MRT_price_zone_keys() {
 }
 
 /**
+ * Max zones used for fare lookup (2026 taxa: three price bands).
+ *
+ * @return int
+ */
+function MRT_price_zone_cap() {
+	return 3;
+}
+
+/**
  * 2025 Lennakatten fare table from Taxa 2025.
  *
  * @return array<string, array<string, array<int, int|null>>>
@@ -153,7 +162,7 @@ function MRT_get_prices_for_context( $args = array() ) {
  * @return array<string, array<string, int|null>>
  */
 function MRT_price_matrix_for_zone( array $matrix, int $zones ): array {
-	$zone_key = max( 1, min( 4, $zones ) );
+	$zone_key = max( 1, min( MRT_price_zone_cap(), $zones ) );
 	$out      = array();
 	foreach ( MRT_price_ticket_type_keys() as $t ) {
 		$out[ $t ] = array();
@@ -239,9 +248,57 @@ function MRT_price_zones_between_zone_sets( array $from_zones, array $to_zones )
 function MRT_price_zones_for_station_pair( int $from_station_id, int $to_station_id ): int {
 	$map = MRT_get_station_price_zones_map();
 	if ( ! isset( $map[ $from_station_id ], $map[ $to_station_id ] ) ) {
-		return 4;
+		return MRT_price_zone_cap();
 	}
-	return MRT_price_zones_between_zone_sets( $map[ $from_station_id ], $map[ $to_station_id ] );
+	return max( 1, min( MRT_price_zone_cap(), MRT_price_zones_between_zone_sets( $map[ $from_station_id ], $map[ $to_station_id ] ) ) );
+}
+
+/**
+ * Flat afternoon return fares (tur och retur efter kl 15).
+ *
+ * @return array<string, int>
+ */
+function MRT_get_afternoon_return_prices() {
+	return array(
+		'adult'          => 160,
+		'child_4_15'     => 60,
+		'child_0_3'      => 0,
+		'student_senior' => 140,
+	);
+}
+
+/**
+ * Parse HH:MM clock to minutes since midnight.
+ *
+ * @param string $hhmm Clock value
+ * @return int|null
+ */
+function MRT_parse_trip_clock( $hhmm ) {
+	if ( ! is_string( $hhmm ) || ! preg_match( '/^(\d{1,2}):(\d{2})$/', trim( $hhmm ), $m ) ) {
+		return null;
+	}
+	return ( (int) $m[1] * 60 ) + (int) $m[2];
+}
+
+/**
+ * Whether a return trip qualifies for the flat afternoon fare.
+ *
+ * @param string $trip_type single|return|day
+ * @param string $outbound_departure Outbound origin departure (HH:MM)
+ * @param string $inbound_departure  Return origin departure (HH:MM)
+ * @return bool
+ */
+function MRT_qualifies_for_afternoon_return( $trip_type, $outbound_departure, $inbound_departure ) {
+	if ( $trip_type !== 'return' ) {
+		return false;
+	}
+	$threshold = 15 * 60;
+	$out       = MRT_parse_trip_clock( (string) $outbound_departure );
+	$in        = MRT_parse_trip_clock( (string) $inbound_departure );
+	if ( $out === null || $in === null ) {
+		return false;
+	}
+	return $out >= $threshold && $in >= $threshold;
 }
 
 /**
@@ -265,7 +322,7 @@ function MRT_price_ticket_type_labels() {
 function MRT_price_category_labels() {
 	return array(
 		'adult'          => __( 'Vuxen', 'museum-railway-timetable' ),
-		'child_4_15'     => __( 'Barn 7–15', 'museum-railway-timetable' ),
+		'child_4_15'     => __( 'Barn 4–15', 'museum-railway-timetable' ),
 		'child_0_3'      => __( 'Barn 0–6', 'museum-railway-timetable' ),
 		'student_senior' => __( 'Student / pensionär', 'museum-railway-timetable' ),
 	);

@@ -12,4 +12,8 @@ export type PriceCfg = {
   priceMatrix?: PriceMatrix;
   priceMatrixByZone?: PriceMatrixByZone;
   priceDash?: string;
+  afternoonReturnPrices?: Record<string, number>;
+  priceDayTitle?: string;
+  priceAfternoonReturnLabel?: string;
+  priceAfternoonNote?: string;
 };
