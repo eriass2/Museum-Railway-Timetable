@@ -40,13 +40,7 @@ function MRT_vue_month_swedish_weekday_headers( bool $start_monday ): array {
 function MRT_vue_month_config( array $context ): array {
 	$first_ts     = (int) ( $context['first_ts'] ?? 0 );
 	$start_monday = ! empty( $context['startMonday'] );
-	$nav_urls     = MRT_month_shortcode_nav_link_urls( $first_ts ?: false );
-	$cal          = MRT_journey_wizard_calendar_i18n_arrays();
 	$month_title  = (string) ( $context['month_title'] ?? '' );
-	if ( $first_ts > 0 && ! empty( $cal['monthNames'] ) ) {
-		$mo_index    = (int) date( 'n', $first_ts ) - 1;
-		$month_title = $cal['monthNames'][ $mo_index ] . ' ' . date( 'Y', $first_ts );
-	}
 	$weekday_heads = MRT_vue_month_swedish_weekday_headers( $start_monday );
 	$dates         = isset( $context['dates'] ) && is_array( $context['dates'] ) ? $context['dates'] : array();
 	$legend_types  = MRT_month_calendar_legend_types( $dates );
@@ -64,8 +58,6 @@ function MRT_vue_month_config( array $context ): array {
 			__( 'Trafikdagar för %s', 'museum-railway-timetable' ),
 			$month_title
 		),
-		'prevMonthUrl'       => $nav_urls[0],
-		'nextMonthUrl'       => $nav_urls[1],
 		'weekdayHeaders'     => $weekday_heads,
 		'weekdayFirst'       => (int) ( $context['weekdayFirst'] ?? 1 ),
 		'weekdayFirstSunday' => $first_ts ? (int) date( 'w', $first_ts ) : 0,

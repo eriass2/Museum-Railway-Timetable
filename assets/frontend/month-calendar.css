@@ -26,6 +26,11 @@
     flex-shrink: 0;
 }
 
+.mrt-month__grid--loading {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
 .mrt-month-table {
     width: 100%;
     border-collapse: collapse;

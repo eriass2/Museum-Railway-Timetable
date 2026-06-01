@@ -13,7 +13,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 |----------|-------|-----------|
 | Buggar / fel | 4 | **4 åtgärdade** (G1, J4, G5, G6) |
 | UI / design | 6 | **G2, G3, J1, J3** åtgärdade/delvis |
-| UX / flöde | 7 | **G5, G7, G9, G10** åtgärdade. **G4, G8, J2** kvar |
+| UX / flöde | 7 | **G5, G7, G8, G9, G10** åtgärdade. **G4, J2** kvar |
 | Frågor / scope | 2 | **J5** åtgärdad (knapp borttagen). **G10** åtgärdad (print + dela) |
 | Positivt | — | Båda imponerade, ser lovande ut |
 
@@ -32,6 +32,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | **G7** | Kalenderfärger per tidtabellstyp (green/yellow/red/orange) |
 | **G9** | Tur/retur: separat återresesteg med filtrering efter utresa |
 | **G10** | Skriv ut/PDF + dela/kopiera resa i sammanfattning (`8fa064a`) |
+| **G8** | Månadskalender byter månad via REST utan sidladdning |
 | *(underliggande)* | GRÖN/GUL/RÖD/ORANGE + bussar synkade mot `Anslagstidtabell-2026.pdf`; 42 turer verifierade |
 
 ---

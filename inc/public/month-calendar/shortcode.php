@@ -89,6 +89,75 @@ function MRT_month_shortcode_collect_day_meta( int $year, int $month, int $daysI
 }
 
 /**
+ * Month grid payload for Vue mount and REST (SPA month navigation).
+ *
+ * @param int                  $year Calendar year
+ * @param int                  $month Calendar month 1–12
+ * @param array<string, mixed> $atts Shortcode atts (train_type, service, start_monday)
+ * @return array<string, mixed>|WP_Error
+ */
+function MRT_month_calendar_data_for_month( int $year, int $month, array $atts ) {
+	if ( $year < 1970 || $year > 2100 || $month < 1 || $month > 12 ) {
+		return new WP_Error(
+			'mrt_month_invalid',
+			__( 'Invalid date.', 'museum-railway-timetable' ),
+			array( 'status' => 400 )
+		);
+	}
+
+	$first_day = sprintf( '%04d-%02d-01', $year, $month );
+	$first_ts  = strtotime( $first_day . ' 00:00:00' );
+	if ( false === $first_ts ) {
+		return new WP_Error(
+			'mrt_month_invalid',
+			__( 'Invalid date.', 'museum-railway-timetable' ),
+			array( 'status' => 400 )
+		);
+	}
+
+	$days_in_month = (int) date( 't', $first_ts );
+	if ( $days_in_month <= 0 ) {
+		return new WP_Error(
+			'mrt_month_invalid',
+			__( 'Invalid date.', 'museum-railway-timetable' ),
+			array( 'status' => 400 )
+		);
+	}
+
+	$dates        = MRT_month_shortcode_collect_day_meta( $year, $month, $days_in_month, $atts );
+	$start_monday = ! empty( $atts['start_monday'] );
+	$month_title  = date_i18n( 'F Y', $first_ts );
+	if ( function_exists( 'MRT_journey_wizard_calendar_i18n_arrays' ) ) {
+		$cal = MRT_journey_wizard_calendar_i18n_arrays();
+		if ( ! empty( $cal['monthNames'] ) ) {
+			$mo_index    = (int) date( 'n', $first_ts ) - 1;
+			$month_title = $cal['monthNames'][ $mo_index ] . ' ' . date( 'Y', $first_ts );
+		}
+	}
+
+	return array(
+		'year'                 => $year,
+		'month'                => $month,
+		'daysInMonth'          => $days_in_month,
+		'weekdayFirst'         => (int) date( 'N', $first_ts ),
+		'weekdayFirstSunday'   => (int) date( 'w', $first_ts ),
+		'monthTitle'           => $month_title,
+		'monthAriaLabel'       => sprintf(
+			/* translators: %s: month and year */
+			__( 'Månadskalender, %s', 'museum-railway-timetable' ),
+			$month_title
+		),
+		'tableCaption'         => sprintf(
+			/* translators: %s: month and year */
+			__( 'Trafikdagar för %s', 'museum-railway-timetable' ),
+			$month_title
+		),
+		'dates'                => $dates,
+		'legendTimetableTypes' => MRT_month_calendar_legend_types( $dates ),
+	);
+}
+
+/**
  * Resolve calendar month start timestamp from shortcode atts.
  *
  * @param array<string, mixed> $atts
@@ -139,20 +208,20 @@ function MRT_month_shortcode_build_context( $atts ) {
 
 	$year        = (int) date( 'Y', $first_ts );
 	$month       = (int) date( 'm', $first_ts );
-	$daysInMonth = (int) date( 't', $first_ts );
-	if ( $year <= 0 || $month <= 0 || $month > 12 || $daysInMonth <= 0 ) {
+	$month_data  = MRT_month_calendar_data_for_month( $year, $month, $atts );
+	if ( is_wp_error( $month_data ) ) {
 		return MRT_render_alert( __( 'Invalid date.', 'museum-railway-timetable' ), 'error' );
 	}
 
 	return array(
 		'first_ts'      => $first_ts,
 		'atts'          => $atts,
-		'dates'         => MRT_month_shortcode_collect_day_meta( $year, $month, $daysInMonth, $atts ),
-		'daysInMonth'   => $daysInMonth,
-		'weekdayFirst'  => (int) date( 'N', $first_ts ),
+		'dates'         => $month_data['dates'],
+		'daysInMonth'   => $month_data['daysInMonth'],
+		'weekdayFirst'  => $month_data['weekdayFirst'],
 		'startMonday'   => ! empty( $atts['start_monday'] ),
 		'month_uid'     => wp_unique_id( 'mrtmonth' ),
-		'month_title'   => date_i18n( 'F Y', $first_ts ),
+		'month_title'   => $month_data['monthTitle'],
 	);
 }
 

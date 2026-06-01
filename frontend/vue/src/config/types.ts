@@ -25,8 +25,6 @@ export type MonthVueConfig = MrtRestConfig & {
   monthTitle?: string;
   monthAriaLabel?: string;
   tableCaption?: string;
-  prevMonthUrl?: string;
-  nextMonthUrl?: string;
   weekdayHeaders?: string[];
   weekdayFirst?: number;
   weekdayFirstSunday?: number;

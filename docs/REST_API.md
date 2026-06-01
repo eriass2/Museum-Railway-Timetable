@@ -60,6 +60,7 @@ Implementation: `inc/infrastructure/rest/*.php`. Admin-klient: `frontend/vue/src
 | `mrt_journey_calendar_month` | `POST /journey/calendar` |
 | `mrt_journey_connection_detail` | `POST /journey/connection-detail` |
 | `mrt_get_timetable_for_date` | `GET /timetables/day?date=&train_type=` |
+| `mrt_get_timetable_month` | `GET /timetables/month?year=&month=&train_type=&service=&start_monday=` |
 | `mrt_timetable_overview_data` | `GET /timetables/{id}/overview` |
 | Admin stopptider/turer/rutter | Se tabellen ovan (admin routes) |
 | Tågtyper | `GET|POST /train-types`, `PATCH|DELETE /train-types/{id}` |
