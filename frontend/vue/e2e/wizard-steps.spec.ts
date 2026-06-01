@@ -41,4 +41,12 @@ test.describe('Journey wizard steps', () => {
     await expect(page.locator('.mrt-price-list')).toBeVisible();
     await expect(page.locator('.mrt-price-list')).toContainText('180 kr');
   });
+
+  test('summary step shows print and share actions, not ticket CTA', async ({ page }) => {
+    await page.goto('/wizard?debug=summary');
+    await expect(page.getByRole('button', { name: /Skriv ut|spara som PDF/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Dela resa|Kopiera resa/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Fortsätt till biljetter/i })).toHaveCount(0);
+    await expect(page.getByText(/Fortsätt till biljetter/i)).toHaveCount(0);
+  });
 });

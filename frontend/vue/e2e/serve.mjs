@@ -173,10 +173,46 @@ function buildWizardConfig(requestUrl) {
   return config;
 }
 
+function buildMonthRestPayload(year, month) {
+  const swedishMonths = [
+    'januari', 'februari', 'mars', 'april', 'maj', 'juni',
+    'juli', 'augusti', 'september', 'oktober', 'november', 'december',
+  ];
+  const first = new Date(year, month - 1, 1);
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const monthTitle = `${swedishMonths[month - 1]} ${year}`;
+  let weekdayFirst = first.getDay();
+  if (weekdayFirst === 0) {
+    weekdayFirst = 7;
+  }
+  const dates = {};
+  if (month === 5 && year === 2026) {
+    dates[10] = { running: true, count: 2, ymd: '2026-05-10', type: 'green' };
+    dates[17] = { running: true, count: 1, ymd: '2026-05-17', type: 'yellow' };
+  }
+  if (month === 6 && year === 2026) {
+    dates[6] = { running: true, count: 3, ymd: '2026-06-06', type: 'green' };
+  }
+  return {
+    year,
+    month,
+    daysInMonth,
+    weekdayFirst,
+    weekdayFirstSunday: first.getDay(),
+    monthTitle,
+    monthAriaLabel: `Månadskalender, ${monthTitle}`,
+    tableCaption: `Trafikdagar för ${monthTitle}`,
+    dates,
+    legendTimetableTypes: [],
+  };
+}
+
 function buildMonthConfig() {
   return {
     app: 'month',
     ...restClientConfig(),
+    year: 2026,
+    month: 5,
     monthTitle: 'maj 2026',
     monthAriaLabel: 'Månadskalender, maj 2026',
     tableCaption: 'Trafikdagar för maj 2026',
@@ -185,12 +221,13 @@ function buildMonthConfig() {
     weekdayFirstSunday: 0,
     daysInMonth: 31,
     startMonday: true,
-    atts: { legend: true, show_counts: true, nav: false },
+    atts: { legend: true, show_counts: false, nav: true, start_monday: 1 },
     dates: {
       5: { running: false, count: 0, ymd: '2026-05-05' },
-      10: { running: true, count: 2, ymd: '2026-05-10' },
-      17: { running: true, count: 1, ymd: '2026-05-17' },
+      10: { running: true, count: 2, ymd: '2026-05-10', type: 'green' },
+      17: { running: true, count: 1, ymd: '2026-05-17', type: 'yellow' },
     },
+    legendTimetableTypes: [],
     strings: { loading: 'Laddar...', errorGeneric: 'Kunde inte ladda tidtabellen.' },
     legendServiceDay: 'Trafikdag',
     legendCountHint: 'Siffran visar antal turer som trafikerar den dagen (alla linjer och riktningar).',
@@ -249,9 +286,15 @@ function renderAdminHtml() {
 
 async function handleRestRequest(req, res, pathOnly, requestUrl) {
   const query = new URL(requestUrl, 'http://127.0.0.1').searchParams;
+  const referer = String(req.headers.referer || '');
   if (query.get('fail') === 'rest') {
     res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ message: 'REST-fel (e2e)' }));
+    return;
+  }
+  if (pathOnly.endsWith('/timetables/day') && referer.includes('fail=ajax')) {
+    res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ message: 'Dag-REST-fel (e2e)' }));
     return;
   }
 
@@ -265,6 +308,13 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   let payload = { overview: buildSampleOverviewPayload('timetable') };
   if (pathOnly.endsWith('/timetables/day')) {
     payload = { overview: buildSampleOverviewPayload('day') };
+  }
+  if (pathOnly.endsWith('/timetables/month')) {
+    const year = Number(query.get('year') || 2026);
+    const month = Number(query.get('month') || 5);
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify(buildMonthRestPayload(year, month)));
+    return;
   }
 
   res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });

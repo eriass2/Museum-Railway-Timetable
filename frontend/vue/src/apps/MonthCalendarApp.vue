@@ -16,6 +16,7 @@ import { useTimetableOverview } from '../composables/useTimetableOverview';
 import { useMonthCalendar } from '../composables/useMonthCalendar';
 import { timetableTypeDotClass } from '../shared/calendarDay';
 import { resolveMrtString } from '../utils/mrtStrings';
+import { monthLegendHints } from '../utils/monthLegendHints';
 
 const props = defineProps<{ config: MonthVueConfig }>();
 
@@ -85,16 +86,13 @@ const legendItems = computed(() => {
   ];
 });
 
-const legendHints = computed(() => {
-  const hints: string[] = [];
-  if (showCounts.value && props.config.legendCountHint) {
-    hints.push(`(${props.config.legendCountHint})`);
-  }
-  if (props.config.legendClickHint) {
-    hints.push(`(${props.config.legendClickHint})`);
-  }
-  return hints;
-});
+const legendHints = computed(() =>
+  monthLegendHints(
+    showCounts.value,
+    props.config.legendCountHint,
+    props.config.legendClickHint,
+  ),
+);
 
 function monthCellClass(cell: MonthGridCell): string | undefined {
   if (cell.kind === 'empty') {

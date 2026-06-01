@@ -529,3 +529,28 @@ if ( ! class_exists( 'WP_Query' ) ) {
         }
     }
 }
+
+if ( ! function_exists( 'shortcode_atts' ) ) {
+    /**
+     * @param array<string, mixed> $pairs
+     * @param array<string, mixed>|string $atts
+     * @return array<string, mixed>
+     */
+    function shortcode_atts( array $pairs, $atts, string $shortcode = '' ): array {
+        unset( $shortcode );
+        $atts = is_array( $atts ) ? $atts : array();
+        $out  = array();
+        foreach ( $pairs as $name => $default ) {
+            $out[ $name ] = array_key_exists( $name, $atts ) ? $atts[ $name ] : $default;
+        }
+        return $out;
+    }
+}
+
+if ( ! function_exists( 'wp_unique_id' ) ) {
+    function wp_unique_id( string $prefix = '' ): string {
+        static $id = 0;
+        ++$id;
+        return $prefix . (string) $id;
+    }
+}

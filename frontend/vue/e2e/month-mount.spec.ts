@@ -20,7 +20,7 @@ test.describe('Month calendar (static mount)', () => {
 
   test('shows legend hints', async ({ page }) => {
     await page.goto('/month');
-    await expect(page.locator('.mrt-legend__hint')).toHaveCount(2);
+    await expect(page.locator('.mrt-legend__hint')).toHaveCount(1);
   });
 
   test('shows error when day AJAX fails', async ({ page }) => {
