@@ -1,6 +1,7 @@
 import type { MaybeRef } from 'vue';
 import { unref } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
+import { resolveMrtString } from '../../utils/mrtStrings';
 import type { WizardCfg, WizardCfgStringKey } from './wizardCfgTypes';
 
 export type { WizardCfg, DebugPreset, PriceMatrix, L10nMap } from './wizardCfgTypes';
@@ -16,8 +17,7 @@ export function cfgStr(
   key: WizardCfgStringKey,
   fallback = '',
 ): string {
-  const v = unref(cfg)[key];
-  return typeof v === 'string' ? v : fallback;
+  return resolveMrtString({ wizard: unref(cfg) }, key, fallback);
 }
 
 export function cfgStringArray(cfg: WizardCfg, key: keyof WizardCfg): string[] {

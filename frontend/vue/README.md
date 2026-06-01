@@ -15,8 +15,8 @@ Builds to `assets/dist/vue/` as a **single IIFE bundle** (classic WordPress `<sc
 ```
 src/
   config/       # Typed mount config + parseMountConfig
-  api/          # mrtPost
-  composables/  # useMrtAjax, useWizardContext
+  api/          # restUrl, mrtRestRequest
+  composables/  # useMrtRest, useWizardContext, useTimetableOverview
   utils/        # calendarGrid, monthGrid, mrtStrings (resolveMrtString)
   components/ui/   # Shared UI primitives (MrtAlert, MrtSurfaceCard, …)
   apps/
@@ -50,4 +50,4 @@ From repo root: `composer vue:check`
 | `npm run e2e` | Playwright smoke (static wizard mount; run `build` first) |
 | `npm run e2e:install` | Install Chromium for Playwright (once) |
 
-See [TESTING.md](./TESTING.md) for manual WP regression. Server HTML via `v-html`: [TRUSTED_HTML.md](./TRUSTED_HTML.md).
+See [TESTING.md](./TESTING.md) for manual WP regression. Utils guide: [../docs/VUE_UTILS.md](../docs/VUE_UTILS.md). Server HTML via `v-html`: [TRUSTED_HTML.md](./TRUSTED_HTML.md).

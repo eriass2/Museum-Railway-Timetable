@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { useMrtAjax } from '../../composables/useMrtAjax';
+import { useMrtRest } from '../../composables/useMrtRest';
 import type { JourneyConnection } from '../types';
 import { cfgStr } from '../utils/wizardLabels';
 import { arrivalAtDestination } from '../utils/connection';
@@ -7,7 +7,7 @@ import type { WizardInjection } from '../store/createWizardStore';
 
 export function useTripConnections(ctx: WizardInjection, legCtx: 'outbound' | 'return') {
   const { store, cfg, config } = ctx;
-  const { loading, error, run } = useMrtAjax(config);
+  const { loading, error, run } = useMrtRest(config);
   const connections = ref<JourneyConnection[]>([]);
 
   async function loadConnections(): Promise<void> {

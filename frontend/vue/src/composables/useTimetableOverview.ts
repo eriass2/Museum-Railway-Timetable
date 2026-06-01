@@ -2,11 +2,11 @@ import { ref } from 'vue';
 import type { MrtAjaxConfig } from '../config/types';
 import type { TimetableOverviewPayload } from '../types/timetableOverview';
 import { resolveMrtString } from '../utils/mrtStrings';
-import { useMrtAjax } from './useMrtAjax';
+import { useMrtRest } from './useMrtRest';
 
 export function useTimetableOverview(config: MrtAjaxConfig) {
   const overview = ref<TimetableOverviewPayload | null>(null);
-  const { loading, error, run, clearError } = useMrtAjax(config);
+  const { loading, error, run, clearError } = useMrtRest(config);
 
   async function fetchOverview(timetableId: number): Promise<boolean> {
     if (timetableId <= 0) {

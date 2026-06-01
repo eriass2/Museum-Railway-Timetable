@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import { useTimetableOverview } from '../src/composables/useTimetableOverview';
 
-vi.mock('../src/composables/useMrtAjax', () => ({
-  useMrtAjax: () => ({
+vi.mock('../src/composables/useMrtRest', () => ({
+  useMrtRest: () => ({
     loading: { value: false },
     error: { value: '' },
     run: vi.fn(async (action: string) => {

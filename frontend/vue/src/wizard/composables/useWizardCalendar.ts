@@ -1,5 +1,5 @@
 import { onMounted, ref, watch, type ComputedRef } from 'vue';
-import { useMrtAjax } from '../../composables/useMrtAjax';
+import { useMrtRest } from '../../composables/useMrtRest';
 import type { WizardVueConfig } from '../../config/types';
 import type { WizardStore } from '../store/createWizardStore';
 import type { CalendarDayStatus } from '../types';
@@ -18,7 +18,7 @@ export function useWizardCalendar(
   config: WizardVueConfig,
   cfg: ComputedRef<WizardCfg>,
 ) {
-  const { loading, run } = useMrtAjax(config);
+  const { loading, run } = useMrtRest(config);
   const startOfWeek = Number(config.startOfWeek ?? 1);
   const daysMap = ref<Record<string, CalendarDayStatus>>({});
   const view = useWizardCalendarView(store, cfg, daysMap, startOfWeek);
