@@ -18,6 +18,12 @@ test.describe('Journey wizard steps', () => {
     await expect(page.locator('.mrt-journey-wizard')).toHaveAttribute('data-step', 'return');
   });
 
+  test('return trip shows five progress steps', async ({ page }) => {
+    await page.goto('/wizard?debug=return');
+    await expect(page.locator('.mrt-step-progress__item')).toHaveCount(5);
+    await expect(page.locator('.mrt-step-progress__item.is-active')).toContainText(/återresa/i);
+  });
+
   test('return step shows selected outbound banner', async ({ page }) => {
     await page.goto('/wizard?debug=return');
     await expect(page.locator('.mrt-selected-trip[data-wizard-return-summary]')).toBeVisible();

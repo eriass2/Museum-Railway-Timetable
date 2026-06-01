@@ -102,7 +102,7 @@ function MRT_journey_parse_trip_search_params( array $input ) {
 	$base['outbound_service_id']    = isset( $input['outbound_service_id'] ) ? intval( $input['outbound_service_id'] ) : 0;
 	$base['min_turnaround_minutes'] = isset( $input['min_turnaround_minutes'] )
 		? max( 0, intval( $input['min_turnaround_minutes'] ) )
-		: 0;
+		: MRT_journey_min_transfer_minutes();
 	return $base;
 }
 

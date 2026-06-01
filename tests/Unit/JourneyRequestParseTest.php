@@ -100,6 +100,18 @@ final class JourneyRequestParseTest extends TestCase {
         self::assertSame(15, $out['min_turnaround_minutes']);
     }
 
+    public function test_parse_trip_search_return_default_turnaround(): void {
+        $out = MRT_journey_parse_trip_search_params([
+            'from_station'     => '1',
+            'to_station'       => '2',
+            'date'             => '2026-01-20',
+            'trip_type'        => 'return',
+            'outbound_arrival' => '14:30',
+        ]);
+        self::assertIsArray($out);
+        self::assertSame(MRT_journey_min_transfer_minutes(), $out['min_turnaround_minutes']);
+    }
+
     public function test_parse_calendar_month_params(): void {
         $out = MRT_journey_parse_calendar_month_params([
             'from_station' => '3',

@@ -3,7 +3,7 @@
 Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder refereras nedan — lägg filerna i `docs/feedback/images/` om de sparas i repot.
 
 **Källor:** mail med skärmdumpar  
-**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** J2, J3, G4, G8 + demo-verifiering G1.
+**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** J2, G4, G8 + demo-verifiering G1.
 
 ---
 
@@ -163,8 +163,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Kalender / SPA-beteende
 - **Typ:** önskemål / bugg
 - **Prioritet:** medium
-- **Status:** obehandlad
-- **Svar:** Vue-månadskalendern (`MonthCalendarApp`) laddar om utan full sidreload om shortcoden används i Vue-läge. Om full sidladdning fortfarande syns kan det bero på äldre PHP-shortcode-läge eller länkar med query-parametrar — behöver verifieras i vilken vy granskaren testade.
+- **Status:** åtgärdad
+- **Svar:** Månadskalendern (`MonthCalendarApp`) byter månad via REST (`GET /timetables/month`) utan sidladdning. Pilknappar ersätter `<a href>`. URL-parametern `?mrt_month=YYYY-MM` uppdateras med `history.replaceState` så bokmärken/delning fortfarande fungerar.
 
 ### G9. Tur och retur – separat steg för återresa
 - **Källa:** mail (önskemål)
@@ -173,7 +173,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** UX (kan delvis finnas redan — verifiera)
 - **Prioritet:** medium–hög
 - **Status:** åtgärdad
-- **Svar:** Tur/retur ger flödet **rutt → datum → utresa → återresa → sammanfattning** (`buildStepSequence` i wizard). I återresesteget skickas `outbound_arrival` till REST-sökningen så endast avgångar efter vald ankomst+ vändtid visas. Täcks av `JourneyScoringTest` (retursortering) och wizard E2E/manuell test.
+- **Svar:** Tur/retur ger flödet **rutt → datum → utresa → återresa → sammanfattning** (`buildStepSequence`). I återresesteget skickas `outbound_arrival` till REST-sökningen; backend filtrerar bort avgångar före ankomst + minsta vändtid (`MRT_find_return_connections`, standard = `min_transfer_minutes` i plugininställningar). Vald utresa visas som banner ovanför återreselistan. Täcks av `JourneyMultiLegTest`, `JourneyRequestParseTest`, `JourneyScoringTest` och E2E `wizard-steps.spec.ts`.
 
 ### G10. Spara resa som PNG/PDF
 - **Källa:** mail (önskemål)
@@ -203,7 +203,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 8. **G4** – Kalender som startvy istället för tidtabellslista
 9. ~~**G9** – Tur/retur med dedikerat återresesteg~~ ✓
 10. **J2** – Busstider integrerade i huvudtidtabell
-11. **G7 / G8** – ~~Kalenderfärger per tidtabell~~ ✓ / SPA utan reload
+11. ~~**G7 / G8** – Kalenderfärger per tidtabell ✓ / SPA utan reload ✓
 12. ~~**G10** – Exportera resa (PNG/PDF)~~ ✓ (print + dela/kopiera)
 13. ~~**J5** – Svar om biljettsystem vs Edmonson~~ ✓ (knapp borttagen)
 
@@ -246,7 +246,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - [ ] Verifiera G1 på demo efter ny fixture-import
 - [x] **G6** — laddningsspinner (teckenkodning)
 - [x] **G7** — kalenderfärger per `mrt_timetable_type`
-- [ ] **J3** — mobil klippning + kortare linjetext
+- [x] **J3** — mobil klippning + kortare linjetext (`b3fcbbb`)
 - [ ] **G4** — kalender som primär startvy (produktbeslut)
-- [ ] **G8** — SPA-månadsväxling i månadskalendern (länkar vs REST)
+- [x] **G8** — SPA-månadsväxling i månadskalendern
 - [ ] **J2** — bussar som rader i huvudtidtabell (produktbeslut)
