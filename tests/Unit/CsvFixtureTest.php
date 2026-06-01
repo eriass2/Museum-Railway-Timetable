@@ -84,6 +84,21 @@ final class CsvFixtureTest extends TestCase {
 		);
 	}
 
+	public function test_green_vard_stoptimes_mirror_green(): void {
+		foreach ( $this->fixture_files()['services.csv'] ?? array() as $row ) {
+			if ( ( $row['timetable_code'] ?? '' ) !== 'green-vard' || str_contains( $row['service_code'] ?? '', '-bus-' ) ) {
+				continue;
+			}
+			$green_code = 'green-' . substr( (string) $row['service_code'], strlen( 'green-vard-' ) );
+			self::assertSame(
+				$this->fixture_stoptime_count( $green_code ),
+				$this->fixture_stoptime_count( (string) $row['service_code'] ),
+				$green_code . ' vs ' . $row['service_code']
+			);
+			self::assertGreaterThan( 0, $this->fixture_stoptime_count( (string) $row['service_code'] ) );
+		}
+	}
+
 	public function test_timetable_titles_in_fixture(): void {
 		$files = $this->fixture_files();
 		$titles = array_column( $files['timetables.csv'] ?? array(), 'title', 'timetable_code' );
