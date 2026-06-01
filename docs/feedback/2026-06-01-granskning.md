@@ -3,7 +3,7 @@
 Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder refereras nedan — lägg filerna i `docs/feedback/images/` om de sparas i repot.
 
 **Källor:** mail med skärmdumpar  
-**Status:** delvis åtgärdad (genomgång juni 2026 — se **Svar** per punkt)
+**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** J2, J3, G4, G8 + demo-verifiering G1.
 
 ---
 
@@ -13,8 +13,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 |----------|-------|-----------|
 | Buggar / fel | 4 | **4 åtgärdade** (G1, J4, G5, G6) |
 | UI / design | 6 | **G2, G3, J1** åtgärdade/delvis. **J3** kvar |
-| UX / flöde | 7 | G5 åtgärdad. G4, G7–G10, G9, J2 obehandlade |
-| Frågor / scope | 2 | ~~J5~~ åtgärdad (knapp borttagen). G10 obehandlad |
+| UX / flöde | 7 | **G5, G7, G9, G10** åtgärdade. **G4, G8, J2** kvar |
+| Frågor / scope | 2 | **J5** åtgärdad (knapp borttagen). **G10** åtgärdad (print + dela) |
 | Positivt | — | Båda imponerade, ser lovande ut |
 
 ### Genomfört (översikt)
@@ -27,6 +27,11 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | **G3** | Lennakatten-färgpalett + kalenderfärger per tidtabellstyp (G7) |
 | **G2** | Roboto + Open Sans Bold (Lennakatten profil) |
 | **J1** | Delvis — fetstil stationer, smalare tågkolumner; färger via G3 |
+| **J5** | Biljettknapp borttagen; inget online-bokningssystem i scope (`f972420`) |
+| **G6** | Laddningsspinner utan korrupt tecken (`ui/primitives.css`) |
+| **G7** | Kalenderfärger per tidtabellstyp (green/yellow/red/orange) |
+| **G9** | Tur/retur: separat återresesteg med filtrering efter utresa |
+| **G10** | Skriv ut/PDF + dela/kopiera resa i sammanfattning (`8fa064a`) |
 | *(underliggande)* | GRÖN/GUL/RÖD/ORANGE + bussar synkade mot `Anslagstidtabell-2026.pdf`; 42 turer verifierade |
 
 ---
@@ -80,7 +85,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** fråga / produktbeslut
 - **Prioritet:** info (svar behövs)
 - **Status:** åtgärdad (knapp borttagen)
-- **Svar:** Inget biljettbokningssystem är planerat i nuvarande scope. Knappen **”Fortsätt till biljetter”** är borttagen från sammanfattningssteget — den var en placeholder och gav felaktigt intryck. Reseplaneraren visar tider och priser; biljetter köps som idag ombord/station (Edmonson m.m.). Shortcode-attributet `ticket_url` ignoreras tills vidare om det sätts.
+- **Svar:** Inget biljettbokningssystem är planerat i nuvarande scope. Knappen **”Fortsätt till biljetter”** är borttagen från sammanfattningssteget (commit `f972420`) — den var en placeholder och gav felaktigt intryck. Reseplaneraren visar tider och priser; biljetter köps som idag ombord/station (Edmonson m.m.). Shortcode-attributet `ticket_url` ignoreras tills vidare om det sätts.
 
 ---
 
@@ -113,7 +118,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Prioritet:** medium
 - **Status:** delvis åtgärdad (tokens + kalenderfärger; vissa vyer kvar att granska visuellt)
 - **Anteckning:** Överlappar J1. Se `assets/mrt-color-tokens.css` och [COLOR_PALETTE.md](../design/COLOR_PALETTE.md).
-- **Svar:** Lennakatten varumärkesfärger är införda i `assets/mrt-color-tokens.css` (commit `8b82cb2`): grön `#296310`, guld `#DDD24C`, oliv `#807C1C`. **Svart text på guld** enligt profil (tidigare felaktigt vit). Trafikfärger som `--mrt-color-traffic-*` för tidtabellstyper. Referens-PDF och Word-mallar i `docs/design/reference/`. **Kvar:** kalenderdagar ska färgkodas per tidtabellstyp (G7); vissa vyer kan fortfarande behöva visuell genomgång.
+- **Svar:** Lennakatten varumärkesfärger är införda i `assets/mrt-color-tokens.css` (commit `8b82cb2`): grön `#296310`, guld `#DDD24C`, oliv `#807C1C`. **Svart text på guld** enligt profil (tidigare felaktigt vit). Trafikfärger som `--mrt-color-traffic-*` för tidtabellstyper. Referens-PDF och Word-mallar i `docs/design/reference/`. Kalenderfärger per typ via G7. **Kvar:** ev. visuell genomgång av enstaka vyer.
 
 ### G4. Första vyn – kalender istället för tidtabellslista
 - **Källa:** mail
@@ -167,8 +172,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Reseplanerare / wizard
 - **Typ:** UX (kan delvis finnas redan — verifiera)
 - **Prioritet:** medium–hög
-- **Status:** obehandlad (behöver verifieras mot nuvarande wizard)
-- **Svar:** Ej verifierat/skrivet svar ännu. Wizard har tur/retur-läge — ska kontrolleras om det redan finns separat återresesteg med filtrering efter ankomsttid.
+- **Status:** åtgärdad
+- **Svar:** Tur/retur ger flödet **rutt → datum → utresa → återresa → sammanfattning** (`buildStepSequence` i wizard). I återresesteget skickas `outbound_arrival` till REST-sökningen så endast avgångar efter vald ankomst+ vändtid visas. Täcks av `JourneyScoringTest` (retursortering) och wizard E2E/manuell test.
 
 ### G10. Spara resa som PNG/PDF
 - **Källa:** mail (önskemål)
@@ -177,7 +182,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** önskemål / ny funktion
 - **Prioritet:** låg–medium
 - **Status:** åtgärdad (A + B: utskrift/PDF + dela/kopiera)
-- **Svar:** Knappar i sammanfattningssteget: **Skriv ut / spara som PDF** (`window.print()` + `@media print`) och **Dela resa** / **Kopiera resa** (Web Share API med fallback till urklipp). PNG/länk (C/D) ej implementerat.
+- **Svar:** Knappar i sammanfattningssteget (commit `8fa064a`): **Skriv ut / spara som PDF** (`window.print()` + `@media print`) och **Dela resa** / **Kopiera resa** (Web Share API med fallback till urklipp). PNG/länk (C/D) medvetet ej implementerat.
 
 ---
 
@@ -196,7 +201,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 
 ### Produktbeslut / större arbete
 8. **G4** – Kalender som startvy istället för tidtabellslista
-9. **G9** – Tur/retur med dedikerat återresesteg
+9. ~~**G9** – Tur/retur med dedikerat återresesteg~~ ✓
 10. **J2** – Busstider integrerade i huvudtidtabell
 11. **G7 / G8** – ~~Kalenderfärger per tidtabell~~ ✓ / SPA utan reload
 12. ~~**G10** – Exportera resa (PNG/PDF)~~ ✓ (print + dela/kopiera)
@@ -204,17 +209,17 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 
 ---
 
-## G10 – praktiska förslag (ej beslutade)
+## G10 – praktiska förslag
 
-| Alternativ | Insats | För / emot |
-|------------|--------|------------|
-| **A. Skriv ut / Spara som PDF** | Låg | `@media print`-CSS på sammanfattningskortet + knapp som anropar `window.print()`. Användaren väljer ”Spara som PDF” i webbläsaren. Ingen dependency, fungerar desktop + mobil. |
-| **B. Web Share API** | Låg | Knapp ”Dela resa” som anropar `navigator.share()` med text (datum, tider, sträcka, pris). Bra på mobil; fallback till kopiera text till urklipp. |
-| **C. PNG via html2canvas** | Medium | Screenshot av `.mrt-summary-list` + prisblock, ladda ner som bild. Bra offline på mobilen; kräver npm-paket och kan klippa konstigt (J3-problem). |
-| **D. Delbar länk** | Medium–hög | URL med kodade parametrar (från/till/datum/tåg-id) som återskapar sammanfattning. Kräver att wizard kan läsa query vid start + ev. backend-validering. |
-| **E. Server-PDF (TCPDF/Dompdf)** | Hög | WordPress genererar PDF — överkill för pluginet, svårare att underhålla. |
+| Alternativ | Insats | Status |
+|------------|--------|--------|
+| **A. Skriv ut / Spara som PDF** | Låg | ✓ Implementerat (`8fa064a`) |
+| **B. Web Share API + kopiera** | Låg | ✓ Implementerat (`8fa064a`) |
+| **C. PNG via html2canvas** | Medium | Ej implementerat |
+| **D. Delbar länk** | Medium–hög | Ej implementerat |
+| **E. Server-PDF (TCPDF/Dompdf)** | Hög | Ej planerat |
 
-**Rekommendation:** börja med **A + B** (print/PDF + dela/kopiera text). Täcker ”ha med sig under dagen” utan bokningssystem eller tunga beroenden.
+**Beslut:** A + B räcker för ”ha med sig under dagen” utan bokningssystem eller tunga beroenden.
 
 ---
 
@@ -233,10 +238,15 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 ## Nästa steg
 
 - [x] Granska punkt för punkt: tydlig / oklar / redan fixad / avvisad
-- [ ] Verifiera G9 mot nuvarande wizard-flöde
+- [x] Verifiera G9 mot nuvarande wizard-flöde (återresesteg finns)
 - [x] Jämför färger mot lennakatten.se/grafisk-profil
 - [x] Reproducera G1 och J4 med konkreta testdata
-- [ ] Svara Jesper på J5 (biljettsystem) — *knapp borttagen; svar i doc*
+- [x] J5 — biljettknapp borttagen; svar till Jesper i doc (`f972420`)
+- [x] G10 — print + dela/kopiera (`8fa064a`)
 - [ ] Verifiera G1 på demo efter ny fixture-import
-- [x] **G6** — hitta och rätta laddningstext (teckenkodning)
+- [x] **G6** — laddningsspinner (teckenkodning)
 - [x] **G7** — kalenderfärger per `mrt_timetable_type`
+- [ ] **J3** — mobil klippning + kortare linjetext
+- [ ] **G4** — kalender som primär startvy (produktbeslut)
+- [ ] **G8** — SPA-månadsväxling i månadskalendern (länkar vs REST)
+- [ ] **J2** — bussar som rader i huvudtidtabell (produktbeslut)
