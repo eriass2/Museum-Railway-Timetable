@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { wpDemoUrl } from './wp-demo-url';
 
 test.describe('Timetable overview (WordPress)', () => {
-  test.skip(!wpDemoUrl, 'Set MRT_E2E_WP_DEMO_URL (or legacy MRT_E2E_WP_OVERVIEW_URL)');
+  test.skip(!wpDemoUrl, 'Set MRT_E2E_WP_DEMO_URL');
 
   test('shortcode mounts Vue overview with timetable grid', async ({ page }) => {
     await page.goto(wpDemoUrl!);

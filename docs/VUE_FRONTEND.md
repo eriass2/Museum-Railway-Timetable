@@ -82,5 +82,5 @@ npm run e2e           # static wizard mount on :5199
 Optional WordPress demo (Docker):
 
 ```bash
-MRT_E2E_WP_URL=http://127.0.0.1:8080/?page_id=569 npm run e2e
+MRT_E2E_WP_DEMO_URL=http://127.0.0.1:8080/?page_id=569 npm run e2e
 ```

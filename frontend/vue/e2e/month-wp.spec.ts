@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { wpDemoUrl } from './wp-demo-url';
 
 test.describe('Month calendar (WordPress)', () => {
-  test.skip(!wpDemoUrl, 'Set MRT_E2E_WP_DEMO_URL (or legacy MRT_E2E_WP_MONTH_URL)');
+  test.skip(!wpDemoUrl, 'Set MRT_E2E_WP_DEMO_URL');
 
   test('shortcode mounts month grid on demo page', async ({ page }) => {
     await page.goto(wpDemoUrl!);
