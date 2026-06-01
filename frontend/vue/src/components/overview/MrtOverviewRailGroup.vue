@@ -16,7 +16,14 @@ defineProps<{
     <template #time-cell="{ row, track, columnIndex }">
       <span class="mrt-ov-time">{{ row.cells[columnIndex].text }}</span>
       <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
-        {{ row.cells[columnIndex].busServiceNumber }}
+        <img
+          v-if="trainTypeIconUrl(iconUrls, 'buss')"
+          class="mrt-ov-bus-ref__icon"
+          :src="trainTypeIconUrl(iconUrls, 'buss')"
+          alt=""
+          width="16"
+          height="16"
+        />
       </span>
     </template>
     <template #transfer-cell="{ row, track, columnIndex }">

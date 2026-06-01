@@ -14,6 +14,8 @@
   --mrt-ov-header-fg: var(--mrt-color-on-green);
   --mrt-ov-highlight: var(--mrt-from-to-bg, var(--mrt-light-blue-bg, #e8f4fc));
   --mrt-ov-highlight-strong: var(--mrt-from-to-col-bg, #d4ebfa);
+  --mrt-ov-bus-bg: var(--mrt-bus-bg, #e3f2fd);
+  --mrt-ov-bus-label: var(--mrt-from-to-col-bg, #90caf9);
   --mrt-ov-transfer: var(--mrt-transfer-bg, var(--mrt-special-bg, #fff9c4));
   --mrt-ov-transfer-label: var(--mrt-transfer-col-bg, #fff59d);
   --mrt-ov-stripe: var(--mrt-bg-lightest, #f7fbfd);
@@ -239,21 +241,30 @@
 
 .mrt-ov-grid-row--bus .mrt-ov-station-col,
 .mrt-ov-grid-row--bus .mrt-ov-time-cell {
-  background: var(--mrt-ov-transfer);
+  background: var(--mrt-ov-bus-bg);
 }
 
 .mrt-ov-grid-row--bus .mrt-ov-station-col {
-  background: var(--mrt-ov-transfer-label);
+  background: var(--mrt-ov-bus-label);
   font-weight: 700;
 }
 
 .mrt-ov-bus-ref {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
   margin-top: 0.15rem;
   font-size: 0.72rem;
   font-weight: 700;
-  line-height: 1.1;
-  color: var(--mrt-color-neutral-700, #505050);
+  line-height: 1;
+  color: var(--mrt-color-neutral-900, #000);
+}
+
+.mrt-ov-bus-ref__icon {
+  width: 1rem;
+  height: auto;
+  object-fit: contain;
 }
 
 .mrt-ov-grid-row--transfer .mrt-ov-transfer-cell--empty {

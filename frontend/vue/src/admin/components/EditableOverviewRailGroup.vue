@@ -3,6 +3,7 @@ import type { TimetableOverviewIconUrls, TimetableRailGroup, TimetableTimeCellEd
 import type { OverviewGridEdit } from '../composables/useOverviewGridEdit';
 import { overviewUiLabels } from '../../shared/overviewUiLabels';
 import MrtOverviewRailGroupGrid from '../../components/overview/MrtOverviewRailGroupGrid.vue';
+import { trainTypeIconUrl } from '../../utils/overviewGrid';
 
 const labels = overviewUiLabels({});
 
@@ -44,7 +45,14 @@ async function patchCell(
       <template v-if="readonly || !row.stationId || !group.columns[columnIndex].serviceId">
         <span class="mrt-ov-time">{{ row.cells[columnIndex].text }}</span>
         <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
-          {{ row.cells[columnIndex].busServiceNumber }}
+          <img
+            v-if="trainTypeIconUrl(iconUrls, 'buss')"
+            class="mrt-ov-bus-ref__icon"
+            :src="trainTypeIconUrl(iconUrls, 'buss')"
+            alt=""
+            width="16"
+            height="16"
+          />
         </span>
       </template>
       <template v-else>
