@@ -10,7 +10,7 @@ Wizard-CSS använder `--mrt-wizard-*` som pekar på `--mrt-color-*` i token-file
 |-------|-------------|------------|
 | `--mrt-wizard-green` | `green-600` | Varumärkesgrön |
 | `--mrt-wizard-green-dark` | `green-700` | Hero / mörk panel |
-| `--mrt-wizard-yellow` | `accent-600` (`#e0b820`) | CTA, aktivt steg, vald restyp — **vit text** |
+| `--mrt-wizard-yellow` | `accent-600` (`#DDD24C`) | CTA, aktivt steg, vald restyp — **svart text** |
 | `--mrt-wizard-yellow-bright` | `accent-500` | Highlight / klara steg på mörk bakgrund |
 | `--mrt-wizard-surface` | `neutral-100` | Formulärfält |
 | `--mrt-wizard-text` | `neutral-900` | Brödtext på ljus yta |

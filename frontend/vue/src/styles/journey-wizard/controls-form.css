@@ -66,12 +66,12 @@
 }
 
 .mrt-journey-wizard .mrt-surface .mrt-segmented__option.is-active {
-    background: var(--mrt-wizard-yellow, #e0b820);
-    color: var(--mrt-color-on-accent, #fff);
+    background: var(--mrt-wizard-yellow);
+    color: var(--mrt-color-on-accent);
 }
 
 .mrt-journey-wizard .mrt-surface .mrt-segmented__option:not(.is-active):hover {
-    background: color-mix(in srgb, var(--mrt-wizard-yellow, #e0b820) 16%, #fff);
+    background: color-mix(in srgb, var(--mrt-wizard-yellow) 16%, #fff);
 }
 
 .mrt-journey-wizard .mrt-surface .mrt-trip-type-icon {

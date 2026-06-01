@@ -50,8 +50,8 @@
 
 .mrt-timetable-index__card:hover,
 .mrt-timetable-index__card:focus-visible {
-  border-color: var(--mrt-color-green-600, #1c650f);
-  box-shadow: 0 4px 14px rgba(21, 83, 11, 0.12);
+  border-color: var(--mrt-color-traffic-green);
+  box-shadow: 0 4px 14px rgba(41, 99, 16, 0.12);
   transform: translateY(-1px);
   outline: none;
 }
@@ -65,23 +65,23 @@
   align-self: stretch;
   min-height: 2.75rem;
   border-radius: 999px;
-  background: var(--mrt-color-green-600, #1c650f);
+  background: var(--mrt-color-traffic-green);
 }
 
 .mrt-timetable-index__item--green .mrt-timetable-index__swatch {
-  background: var(--mrt-color-green-600, #1c650f);
+  background: var(--mrt-color-traffic-green);
 }
 
 .mrt-timetable-index__item--yellow .mrt-timetable-index__swatch {
-  background: var(--mrt-color-accent-600, #e0b820);
+  background: var(--mrt-color-traffic-yellow);
 }
 
 .mrt-timetable-index__item--red .mrt-timetable-index__swatch {
-  background: #b42318;
+  background: var(--mrt-color-traffic-red);
 }
 
 .mrt-timetable-index__item--orange .mrt-timetable-index__swatch {
-  background: var(--mrt-color-orange-600, #c9740c);
+  background: var(--mrt-color-traffic-orange);
 }
 
 .mrt-timetable-index__body {
@@ -95,26 +95,26 @@
   font-size: var(--mrt-font-lg, 1.125rem);
   font-weight: 800;
   line-height: 1.25;
-  color: var(--mrt-color-green-800, #0f3d08);
+  color: var(--mrt-color-green-800);
 }
 
 .mrt-timetable-index__card:hover .mrt-timetable-index__title,
 .mrt-timetable-index__card:focus-visible .mrt-timetable-index__title {
-  color: var(--mrt-color-green-700, #15530b);
+  color: var(--mrt-color-green-700);
 }
 
 .mrt-timetable-index__meta {
   display: block;
   font-size: var(--mrt-font-sm, 0.875rem);
   line-height: 1.4;
-  color: var(--mrt-color-neutral-600, #525252);
+  color: var(--mrt-color-neutral-600);
 }
 
 .mrt-timetable-index__chevron {
   width: 0.55rem;
   height: 0.55rem;
-  border-right: 2px solid var(--mrt-color-green-700, #15530b);
-  border-bottom: 2px solid var(--mrt-color-green-700, #15530b);
+  border-right: 2px solid var(--mrt-color-green-700);
+  border-bottom: 2px solid var(--mrt-color-green-700);
   transform: rotate(-45deg);
   margin-right: 0.15rem;
 }

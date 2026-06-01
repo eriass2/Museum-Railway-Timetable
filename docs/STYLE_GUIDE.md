@@ -81,8 +81,8 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Inga inline styles** – All styling i CSS-filer.
 
 ### Publik UI (wizard m.fl.)
-- **Primär accent:** `--mrt-color-accent-600` (`#e0b820`) — mättad varmgul för CTA, aktivt steg och vald restyp.
-- **Text på guld:** `--mrt-color-on-accent` (vit), inte mörk text på gul bakgrund.
+- **Primär accent:** `--mrt-color-accent-600` (`#DDD24C`) — Lennakatten varumärkesguld för CTA, aktivt steg och vald restyp.
+- **Text på guld:** `--mrt-color-on-accent` (**svart**), enligt [grafisk profil](https://lennakatten.se/grafisk-profil/).
 - **Vue-bundle:** Publik CSS ligger under `frontend/vue/src/styles/` och byggs till `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + delade primitives); appar importerar egna moduler (`journey-wizard.css`, `timetable-overview.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
 - **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — `base.css`, `wizard-shell.css`, `controls-form.css` (sök steg), `controls-calendar.css`, `steps-*.css`, `responsive.css`. Importeras från `JourneyWizardApp.vue`.
 - **Tidtabellsöversikt-CSS:** `frontend/vue/src/styles/timetable-overview.css` — block `.mrt-ov-*`, importeras från `MrtTimetableOverviewView.vue`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.

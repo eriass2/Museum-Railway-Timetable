@@ -1,68 +1,77 @@
 /**
- * Museum Railway – shared color tokens (public UI).
- * Source of truth for Vue bundle and journey wizard CSS.
+ * Museum Railway – Lennakatten colour tokens (public UI).
  *
- * Contrast targets: WCAG 2.1 AA (4.5:1 body, 3:1 large UI type).
+ * Brand profile: https://lennakatten.se/grafisk-profil/
+ * Reference: docs/design/reference/lennakatten-grafisk-manual.pdf
  *
  * @package Museum_Railway_Timetable
  */
 
 :root {
-    /* Brand greens */
-    --mrt-color-green-900: #0a2e06;
-    --mrt-color-green-800: #0f3d08;
-    --mrt-color-green-700: #15530b;
-    --mrt-color-green-600: #1c650f;
-    --mrt-color-green-500: #2a7a1c;
-    --mrt-color-green-400: #3d9430;
+    /* --- Lennakatten brand profile --- */
+    --mrt-color-brand-green: #296310;
+    --mrt-color-brand-gold: #ddd24c;
+    --mrt-color-brand-olive: #807c1c;
 
-    /* Accent (warm saturated gold – mockup / “Enkel resa” yellow) */
-    --mrt-color-accent-700: #c49a10;
-    --mrt-color-accent-600: #e0b820;
-    --mrt-color-accent-500: #e8c838;
-    --mrt-color-accent-400: #f0d858;
+    /* Green scale (600 = brand green) */
+    --mrt-color-green-900: #183809;
+    --mrt-color-green-800: #214f0c;
+    --mrt-color-green-700: #245610;
+    --mrt-color-green-600: var(--mrt-color-brand-green);
+    --mrt-color-green-500: #358015;
+    --mrt-color-green-400: #42961a;
 
-    /* Neutrals */
-    --mrt-color-neutral-900: #141414;
-    --mrt-color-neutral-700: #3d3d3d;
-    --mrt-color-neutral-600: #525252;
-    --mrt-color-neutral-500: #6b6b6b;
-    --mrt-color-neutral-200: #e5e5e5;
+    /* Gold / accent scale (600 = brand gold; text on gold = black per profile) */
+    --mrt-color-accent-700: #c5bd44;
+    --mrt-color-accent-600: var(--mrt-color-brand-gold);
+    --mrt-color-accent-500: #e3dc65;
+    --mrt-color-accent-400: #eae483;
+
+    /* Lennakatten grayscale */
     --mrt-color-neutral-100: #ffffff;
+    --mrt-color-neutral-200: #b4b4b4;
+    --mrt-color-neutral-500: #787878;
+    --mrt-color-neutral-600: #787878;
+    --mrt-color-neutral-700: #505050;
+    --mrt-color-neutral-900: #000000;
 
-    /* Semantic secondary */
-    --mrt-color-olive-600: #6b6f0f;
+    /* Semantic / traffic (timetable types; red/orange from poster until PDF extract) */
+    --mrt-color-olive-600: var(--mrt-color-brand-olive);
     --mrt-color-orange-600: #c9740c;
+    --mrt-color-traffic-green: var(--mrt-color-brand-green);
+    --mrt-color-traffic-yellow: var(--mrt-color-brand-gold);
+    --mrt-color-traffic-red: #b42318;
+    --mrt-color-traffic-orange: var(--mrt-color-orange-600);
     --mrt-color-error-bg: #fde8e8;
     --mrt-color-error-text: #7a1212;
 
-    /* Text on dark green surfaces (solid colors for reliable AA contrast) */
+    /* Text on coloured surfaces */
     --mrt-color-on-dark: #ffffff;
     --mrt-color-on-dark-muted: #e4efe2;
     --mrt-color-on-dark-link: #ffecb8;
-
-    /* Text on gold/accent fills (buttons, active step, selected segment) */
-    --mrt-color-on-accent: #ffffff;
+    --mrt-color-on-accent: #000000;
+    --mrt-color-on-green: #ffffff;
+    --mrt-color-on-olive: #ffffff;
 
     /* Surfaces & borders */
     --mrt-color-placeholder: var(--mrt-color-neutral-600);
-    --mrt-color-border-on-surface: #767676;
+    --mrt-color-border-on-surface: var(--mrt-color-neutral-500);
     --mrt-color-border-on-dark: rgba(255, 255, 255, 0.62);
 
     /* Focus */
     --mrt-color-focus-ring: #fff4d6;
     --mrt-color-focus-offset: var(--mrt-color-green-700);
 
-    /* Wizard aliases (map legacy --mrt-wizard-* names) */
+    /* Wizard aliases */
     --mrt-wizard-green: var(--mrt-color-green-600);
-    --mrt-wizard-green-dark: var(--mrt-color-green-700);
-    --mrt-wizard-olive: var(--mrt-color-olive-600);
+    --mrt-wizard-green-dark: var(--mrt-color-green-800);
+    --mrt-wizard-olive: var(--mrt-color-brand-olive);
     --mrt-wizard-yellow: var(--mrt-color-accent-600);
     --mrt-wizard-yellow-bright: var(--mrt-color-accent-500);
-    --mrt-wizard-orange: var(--mrt-color-orange-600);
+    --mrt-wizard-orange: var(--mrt-color-traffic-orange);
     --mrt-wizard-surface: var(--mrt-color-neutral-100);
     --mrt-wizard-surface-muted: var(--mrt-color-neutral-200);
     --mrt-wizard-text: var(--mrt-color-neutral-900);
-    --mrt-wizard-border: #c5c5c5;
+    --mrt-wizard-border: var(--mrt-color-neutral-200);
     --mrt-wizard-focus: var(--mrt-color-focus-ring);
 }

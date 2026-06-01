@@ -1,93 +1,88 @@
-# Färgpalett – Museum Railway (publik UI)
+# Färgpalett – Lennakatten / Museum Railway
 
-Startpunkt för visuell style guide (mockup-fas avslutad). Källan i kod: `assets/mrt-color-tokens.css`. Vidare UI: [VUE_UI_COMPONENTS.md](../VUE_UI_COMPONENTS.md), [SMOKE_CHECKLIST.md](../SMOKE_CHECKLIST.md).
+Källa i kod: [`assets/mrt-color-tokens.css`](../../assets/mrt-color-tokens.css). Officiell profil: [lennakatten.se/grafisk-profil](https://lennakatten.se/grafisk-profil/) och [`docs/design/reference/`](reference/).
 
-Grönt är varumärkesfärg (Lennakatten). Guld/gul accent används för aktivt steg, CTA och markeringar.
+## Varumärkesfärger (profil)
 
-## Primär grön
+| Token | Hex | Text ovanpå |
+|-------|-----|-------------|
+| `--mrt-color-brand-green` | `#296310` | vit (`--mrt-color-on-green`) |
+| `--mrt-color-brand-gold` | `#DDD24C` | **svart** (`--mrt-color-on-accent`) |
+| `--mrt-color-brand-olive` | `#807C1C` | vit (`--mrt-color-on-olive`) |
 
-| Token | Hex | Användning |
-|-------|-----|------------|
-| `--mrt-color-green-900` | `#0a2e06` | Djup skugga, sällan |
-| `--mrt-color-green-800` | `#0f3d08` | Alternativ hero-bakgrund |
-| `--mrt-color-green-700` | `#15530b` | **Hero / mörk panel** (vit text) |
-| `--mrt-color-green-600` | `#1c650f` | **Primär varumärkesgrön** |
-| `--mrt-color-green-500` | `#2a7a1c` | Hover på mörk yta, länkar |
-| `--mrt-color-green-400` | `#3d9430` | Kalender “trafik OK” |
-
-Vit text på `--mrt-color-green-700` uppfyller AA för normal text (~7:1+).
-
-## Accent (guld)
+## Grönskala (600 = varumärkesgrön)
 
 | Token | Hex | Användning |
 |-------|-----|------------|
-| `--mrt-color-accent-700` | `#c49a10` | Tryckt/hover på guld-CTA |
-| `--mrt-color-accent-600` | `#e0b820` | **Knappar, aktivt steg** (mättad varmgul) |
-| `--mrt-color-accent-500` | `#e8c838` | Highlight, “klar” steg i steglistan |
-| `--mrt-color-accent-400` | `#f0d858` | Ljus guldmarkering |
-| `--mrt-color-on-accent` | `#ffffff` | Text på guldfyll (knappar, aktivt steg) |
+| `--mrt-color-green-900` | `#183809` | Djup skugga |
+| `--mrt-color-green-800` | `#214F0C` | Mörk panel / gradient |
+| `--mrt-color-green-700` | `#245610` | Hero, rubrikfält |
+| `--mrt-color-green-600` | `#296310` | Primär varumärkesgrön |
+| `--mrt-color-green-500` | `#358015` | Hover på grön yta |
+| `--mrt-color-green-400` | `#42961A` | Ljusare markering (t.ex. kalender) |
 
-Använd **`accent-600` + `--mrt-color-on-accent`** på knappar, aktivt steg och vald restyp — inte mörk text på guld.
-
-## Neutrala
-
-| Token | Hex | Användning |
-|-------|-----|------------|
-| `--mrt-color-neutral-900` | `#141414` | Brödtext på vit yta |
-| `--mrt-color-neutral-700` | `#3d3d3d` | Sekundär text |
-| `--mrt-color-neutral-600` | `#525252` | **Placeholder** på vit yta |
-| `--mrt-color-neutral-500` | `#6b6b6b` | Hjälptext |
-| `--mrt-color-neutral-200` | `#e5e5e5` | Inaktiv yta (ersätter grå `#d5d5d5`) |
-| `--mrt-color-neutral-100` | `#ffffff` | Formulärfält, kort |
-
-## Semantiska
+## Guld / accent (600 = varumärkesguld)
 
 | Token | Hex | Användning |
 |-------|-----|------------|
-| `--mrt-color-olive-600` | `#6b6f0f` | Kalender: trafik men ej vald rutt |
-| `--mrt-color-orange-600` | `#c9740c` | Varningar, buss |
-| `--mrt-color-error-bg` | `#fde8e8` | Felruta bakgrund |
-| `--mrt-color-error-text` | `#7a1212` | Feltext |
+| `--mrt-color-accent-700` | `#C5BD44` | Hover på guld-CTA |
+| `--mrt-color-accent-600` | `#DDD24C` | Knappar, aktivt steg, bokningsbar dag |
+| `--mrt-color-accent-500` | `#E3DC65` | Highlight på mörk bakgrund |
+| `--mrt-color-accent-400` | `#EAE483` | Ljus guldmarkering |
 
-## Text på mörkgrön
+**Profilregel:** svart text på guld — använd `--mrt-color-on-accent` (`#000000`), inte vit.
 
-| Token | Värde | Användning |
-|-------|--------|------------|
-| `--mrt-color-on-dark` | `#ffffff` | Rubriker, etiketter |
-| `--mrt-color-on-dark-muted` | `#e4efe2` | Sekundärtext |
-| `--mrt-color-on-dark-link` | `#ffecb8` | Länkar |
+## Gråskala (Lennakatten-profil)
 
-## Kantlinjer & placeholder
+| Token | Hex |
+|-------|-----|
+| `--mrt-color-neutral-100` | `#FFFFFF` |
+| `--mrt-color-neutral-200` | `#B4B4B4` |
+| `--mrt-color-neutral-500` / `600` | `#787878` |
+| `--mrt-color-neutral-700` | `#505050` |
+| `--mrt-color-neutral-900` | `#000000` |
 
-| Token | Värde | Användning |
-|-------|--------|------------|
-| `--mrt-color-placeholder` | `#525252` | Placeholder i vita fält |
-| `--mrt-color-border-on-surface` | `#767676` | Kant runt vita fält |
-| `--mrt-color-border-on-dark` | vit ~62 % | Kant på grön yta |
+## Trafikfärger (tidtabellstyper)
 
-Använd **solid** färger på grön bakgrund — undvik `rgba()` för brödtext och placeholders.
+Samma som admin `mrt_timetable_type`. GRÖN/GUL följer profilen; RÖD/ORANGE från anslagstavla (ej i grafisk manual).
 
-## Fokus (tangentbord)
+| Token | Typ | Hex |
+|-------|-----|-----|
+| `--mrt-color-traffic-green` | green | `#296310` |
+| `--mrt-color-traffic-yellow` | yellow | `#DDD24C` |
+| `--mrt-color-traffic-red` | red | `#B42318` |
+| `--mrt-color-traffic-orange` | orange | `#C9740C` |
 
-| Token | Värde |
-|-------|--------|
-| `--mrt-color-focus-ring` | `#fff4d6` |
-| `--mrt-color-focus-offset` | `var(--mrt-color-green-700)` |
+## Övrigt semantiskt
+
+| Token | Hex | Användning |
+|-------|-----|------------|
+| `--mrt-color-olive-600` | `#807C1C` | Trafik utan matchande rutt |
+| `--mrt-color-error-bg` | `#FDE8E8` | Felruta |
+| `--mrt-color-error-text` | `#7A1212` | Feltext |
+
+## Text på ytor
+
+| Token | Värde | Yta |
+|-------|--------|-----|
+| `--mrt-color-on-dark` | `#FFFFFF` | Grön/oliv hero |
+| `--mrt-color-on-accent` | `#000000` | Guld/accent |
+| `--mrt-color-on-green` | `#FFFFFF` | Varumärkesgrön |
 
 ## Wizard-alias
 
-Komponenter använder fortfarande `--mrt-wizard-*` i CSS; dessa pekar på tokens ovan (se `mrt-color-tokens.css`).
+`--mrt-wizard-*` pekar på tokens ovan (se `mrt-color-tokens.css`).
 
 ## Riktlinjer
 
-1. **Hero och paneler:** `green-700` bakgrund, vit rubrik.
-2. **Primär handling:** `accent-600` bakgrund, vit text (`on-accent`), fetstil.
-3. **Inaktiva steg:** `green-800` på hero (`green-700`), vit text, kant `border-on-dark`.
-4. **Aktivt steg i steglista:** `accent-600` + vit text.
-5. **Klara steg:** `accent-500` som textfärg på mörk bakgrund.
-6. Nya färger: lägg till i `mrt-color-tokens.css` och denna tabell — inte hårdkoda hex i komponenter.
+1. **Hero och paneler:** `green-700`–`green-800`, vit rubrik.
+2. **Primär handling / aktivt steg:** `accent-600` + **svart** text.
+3. **Inaktiva steg:** mörkgrön bakgrund, vit text.
+4. **Tidtabellstyp:** `--mrt-color-traffic-*` — inte hårdkoda hex i komponenter.
+5. Nya färger: lägg i `mrt-color-tokens.css` och denna tabell.
 
 ## Relaterat
 
-- [DESIGN_TOKENS.md](../mockups/DESIGN_TOKENS.md) — komponent-specifika tokens (uppdateras mot denna palett)
-- [STYLE_GUIDE.md](../STYLE_GUIDE.md) — kodkonventioner
+- [DESIGN_TOKENS.md](../mockups/DESIGN_TOKENS.md)
+- [STYLE_GUIDE.md](../STYLE_GUIDE.md)
+- [VUE_UI_COMPONENTS.md](../VUE_UI_COMPONENTS.md)
