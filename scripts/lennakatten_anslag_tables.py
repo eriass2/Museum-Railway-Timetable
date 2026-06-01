@@ -264,6 +264,95 @@ YELLOW_IN: dict[str, list[Stop]] = {
 }
 
 
+def _uppsala_after_fjallnora(fjallnora: str, minutes: int = 28) -> str:
+    h, m = map(int, fjallnora.split(":"))
+    total = h * 60 + m + minutes
+    return f"{total // 60:02d}:{total % 60:02d}"
+
+
+def _uppsala_before_fjallnora(fjallnora: str, minutes: int = 27) -> str:
+    h, m = map(int, fjallnora.split(":"))
+    total = h * 60 + m - minutes
+    return f"{total // 60:02d}:{total % 60:02d}"
+
+
+# Anslutningsbussar – blå fält i PDF (Selknä* / Fjällnora*).
+# Uppsala-ben: +28 min efter Fjällnora (ut) / −27 min före Fjällnora (in), ej i huvudtabellen.
+GREEN_BUSS_OUT: dict[str, list[Stop]] = {
+    "1": [
+        ("selkna", "10:53", "10:53", "P"),
+        ("fjallnora", "11:00", "11:00", ""),
+        ("uppsala-ostra", _uppsala_after_fjallnora("11:00"), _uppsala_after_fjallnora("11:00"), ""),
+    ],
+    "2": [
+        ("selkna", "11:50", "11:50", "P"),
+        ("fjallnora", "11:57", "11:57", ""),
+        ("uppsala-ostra", _uppsala_after_fjallnora("11:57"), _uppsala_after_fjallnora("11:57"), ""),
+    ],
+    "3": [
+        ("selkna", "13:40", "13:40", "P"),
+        ("fjallnora", "13:47", "13:47", ""),
+        ("uppsala-ostra", _uppsala_after_fjallnora("13:47"), _uppsala_after_fjallnora("13:47"), ""),
+    ],
+    "4": [
+        ("selkna", "15:18", "15:18", "P"),
+        ("fjallnora", "15:25", "15:25", ""),
+        ("uppsala-ostra", _uppsala_after_fjallnora("15:25"), _uppsala_after_fjallnora("15:25"), ""),
+    ],
+}
+
+GREEN_BUSS_IN: dict[str, list[Stop]] = {
+    # B5: ej i anslagstavla (*‑rader); behåll etablerade tider tills Gron-tdt-buss-vard verifieras.
+    "5": [
+        ("uppsala-ostra", "11:05", "11:05", "P"),
+        ("fjallnora", "11:32", "11:32", ""),
+        ("selkna", "11:40", "11:40", ""),
+    ],
+    "6": [
+        ("uppsala-ostra", _uppsala_before_fjallnora("12:51"), _uppsala_before_fjallnora("12:51"), "P"),
+        ("fjallnora", "12:51", "12:51", ""),
+        ("selkna", "12:58", "12:58", ""),
+    ],
+    "7": [
+        ("uppsala-ostra", _uppsala_before_fjallnora("14:42"), _uppsala_before_fjallnora("14:42"), "P"),
+        ("fjallnora", "14:42", "14:42", ""),
+        ("selkna", "14:49", "14:49", ""),
+    ],
+    "8": [
+        ("uppsala-ostra", _uppsala_before_fjallnora("16:38"), _uppsala_before_fjallnora("16:38"), "P"),
+        ("fjallnora", "16:38", "16:38", ""),
+        ("selkna", "16:45", "16:45", ""),
+    ],
+}
+
+# GUL bussar: selkna/fjällnora ej i huvud-PDF; tider validerade mot GUL-tåg + samma Uppsala-offset.
+YELLOW_BUSS_OUT: dict[str, list[Stop]] = {
+    "1": [
+        ("selkna", "17:22", "17:22", "P"),
+        ("fjallnora", "17:30", "17:30", ""),
+        ("uppsala-ostra", "17:58", "17:58", ""),
+    ],
+    "2": [
+        ("selkna", "22:14", "22:14", "P"),
+        ("fjallnora", "22:22", "22:22", ""),
+        ("uppsala-ostra", "22:50", "22:50", ""),
+    ],
+}
+
+YELLOW_BUSS_IN: dict[str, list[Stop]] = {
+    "3": [
+        ("uppsala-ostra", "16:33", "16:33", "P"),
+        ("fjallnora", "17:00", "17:00", ""),
+        ("selkna", "17:08", "17:08", ""),
+    ],
+    "4": [
+        ("uppsala-ostra", "21:25", "21:25", "P"),
+        ("fjallnora", "21:52", "21:52", ""),
+        ("selkna", "22:00", "22:00", ""),
+    ],
+}
+
+
 def service_definitions() -> list[tuple[str, str, str, list[Stop]]]:
     """Return (service_code, timetable, route_code, stops)."""
     out: list[tuple[str, str, str, list[Stop]]] = []
@@ -275,4 +364,12 @@ def service_definitions() -> list[tuple[str, str, str, list[Stop]]]:
         out.append((f"yellow-{num}-out", "yellow", "uppsala-faringe", stops))
     for num, stops in YELLOW_IN.items():
         out.append((f"yellow-{num}-in", "yellow", "faringe-uppsala-ostra", stops))
+    for num, stops in GREEN_BUSS_OUT.items():
+        out.append((f"green-b{num}-bus-out", "green-buss", "selkna-uppsala-ostra", stops))
+    for num, stops in GREEN_BUSS_IN.items():
+        out.append((f"green-b{num}-bus-in", "green-buss", "uppsala-ostra-selkna", stops))
+    for num, stops in YELLOW_BUSS_OUT.items():
+        out.append((f"yellow-b{num}-bus-out", "yellow-buss", "selkna-uppsala-ostra", stops))
+    for num, stops in YELLOW_BUSS_IN.items():
+        out.append((f"yellow-b{num}-bus-in", "yellow-buss", "uppsala-ostra-selkna", stops))
     return out

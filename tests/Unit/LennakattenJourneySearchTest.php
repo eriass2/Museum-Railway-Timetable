@@ -109,6 +109,28 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '17:10', $connections[0]['to_arrival'] ?? '' );
 	}
 
+	public function test_find_connections_selkna_uppsala_on_green_buss_day(): void {
+		$this->boot_service_fixture( 'green-b1-bus-out', '2026-07-04' );
+		$stations = $this->station_ids();
+
+		$connections = MRT_find_connections(
+			$stations['selkna'],
+			$stations['uppsala-ostra'],
+			'2026-07-04'
+		);
+
+		self::assertNotEmpty( $connections );
+		self::assertSame( '10:53', $connections[0]['from_departure'] ?? '' );
+		self::assertSame( '11:28', $connections[0]['to_arrival'] ?? '' );
+	}
+
+	public function test_fixture_green_buss_b1_matches_anslag_branch_times(): void {
+		$row = $this->fixture_stop_row( 'green-b1-bus-out', 'selkna' );
+		self::assertSame( '10:53', $row['departure_time'] ?? '' );
+		$fjar = $this->fixture_stop_row( 'green-b1-bus-out', 'fjallnora' );
+		self::assertSame( '11:00', $fjar['arrival_time'] ?? '' );
+	}
+
 	public function test_find_connections_uppsala_marielund_on_red_sunday(): void {
 		$this->boot_service_fixture( 'red-81-out', self::DATE_RED );
 		$stations = $this->station_ids();

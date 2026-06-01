@@ -57,7 +57,9 @@ composer csv:validate -- testdata/fixtures/lennakatten
 composer test -- tests/Unit/LennakattenJourneySearchTest.php tests/Unit/CsvFixtureTest.php
 ```
 
-Kanonisk GRÖN/GUL-data: `scripts/lennakatten_anslag_tables.py` (härledd från PDF).
+Kanonisk GRÖN/GUL-data: `scripts/lennakatten_anslag_tables.py` (tåg + anslutningsbussar B1–B8).
+
+**Bussar:** Selknä*/Fjällnora*-tider från PDF; Uppsala-ben (+28 / −27 min) beräknas enligt etablerad offset (ej i huvudtabellen). B5 (in) saknas i anslagstavlan – oförändrad tills `Gron-tdt-buss-vard.pdf` verifieras.
 
 ### Referensresor (automatiskt stickprov)
 

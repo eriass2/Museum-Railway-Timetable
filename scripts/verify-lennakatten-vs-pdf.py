@@ -92,7 +92,7 @@ def main() -> int:
         failures.extend(compare_service(service_code, stops, by_service.get(service_code)))
 
     print(f"PDF present: {PDF.is_file()}  readable: {pdf_readable()}")
-    print(f"Checked {len(services)} GRÖN/GUL rail services against Anslagstidtabell")
+    print(f"Checked {len(services)} GRÖN/GUL rail and connection bus services against Anslagstidtabell")
 
     if failures:
         print(f"\nFAILURES ({len(failures)}):")
@@ -102,7 +102,7 @@ def main() -> int:
             print(f"... and {len(failures) - 80} more")
         return 1
 
-    print("All GRÖN/GUL services match Anslagstidtabell.")
+    print("All GRÖN/GUL rail and bus services match Anslagstidtabell.")
     return 0
 
 

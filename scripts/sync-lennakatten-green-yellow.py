@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""Sync GRÖN/GUL stoptimes in Lennakatten fixture from Anslagstidtabell tables."""
+"""Sync GRÖN/GUL rail and connection buses in Lennakatten fixture from Anslagstidtabell."""
 
 from __future__ import annotations
 
-import csv
 import sys
 from pathlib import Path
 
@@ -14,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
 STOPTIMES = FIXTURE / "stoptimes.csv"
 
-PREFIXES = ("green-", "yellow-")
+SYNC_PREFIXES = ("green-", "yellow-")
 
 
 def stop_rows(service_code: str, stops: list[tuple[str, str, str, str]]) -> list[str]:
@@ -31,10 +30,8 @@ def stop_rows(service_code: str, stops: list[tuple[str, str, str, str]]) -> list
     return rows
 
 
-def is_green_yellow_rail(code: str) -> bool:
-    if not code.startswith(PREFIXES):
-        return False
-    return "-bus-" not in code and not code.startswith("green-vard-")
+def is_synced_service(code: str, synced: set[str]) -> bool:
+    return code in synced
 
 
 def main() -> int:
@@ -46,27 +43,26 @@ def main() -> int:
     for service_code, _timetable, _route, stops in service_definitions():
         generated[service_code] = stop_rows(service_code, stops)
 
+    synced_codes = set(generated.keys())
     lines = STOPTIMES.read_text(encoding="utf-8-sig").splitlines()
     header = lines[0]
     kept: list[str] = [header]
-    replaced = 0
 
     for line in lines[1:]:
         if not line.strip():
             continue
         code = line.split(",", 1)[0]
-        if is_green_yellow_rail(code):
-            if code not in generated:
-                kept.append(line)
+        if code.startswith(SYNC_PREFIXES) and is_synced_service(code, synced_codes):
             continue
         kept.append(line)
 
     for service_code in sorted(generated, key=_service_sort_key):
         kept.extend(generated[service_code])
-        replaced += 1
 
     STOPTIMES.write_text("\n".join(kept) + "\n", encoding="utf-8")
-    print(f"Synced {replaced} GRÖN/GUL rail services in {STOPTIMES.name}")
+    rail = sum(1 for c in generated if "-bus-" not in c)
+    bus = sum(1 for c in generated if "-bus-" in c)
+    print(f"Synced {rail} rail + {bus} bus services in {STOPTIMES.name}")
     return 0
 
 
