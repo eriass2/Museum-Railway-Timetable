@@ -35,10 +35,9 @@ Beslut för MVP och produktinriktning. Uppdatera vid ändring.
 
 ## 3b. API: REST, ingen AJAX
 
-**Beslut:** All klient–server-kommunikation via **WordPress REST API** i slutläge.
+**Beslut:** All klient–server-kommunikation via **WordPress REST API**. AJAX-lagret är borttaget (2026-05).
 
-- Parallell migration: REST först, AJAX kvar tills klient bytt, sedan radera.
-- Policy: [REST_API.md](REST_API.md).
+- Policy och route-tabell: [REST_API.md](REST_API.md).
 
 ---
 

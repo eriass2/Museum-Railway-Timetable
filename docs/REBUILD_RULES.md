@@ -78,12 +78,11 @@ Presentation får rendera HTML men ska inte innehålla affärsregler. JS får h�
 
 ## 5. JavaScript-regler
 
-- Använd IIFE eller tydlig modulgräns.
-- Dela återanvändbar logik i `mrt-*.js`.
+- Vue/TypeScript-moduler i `frontend/vue/`; Vite bygger till IIFE i `assets/dist/vue/`.
+- Dela återanvändbar logik i Vue-utils/composables eller domänfunktioner i PHP — inte duplicera regler i klienten.
 - Ingen `console.log` i produktion utom bakom `window.mrtDebug`.
 - JS ska inte duplicera sök-/pris-/datumregler från PHP.
-- Klient–server ska gå via **WordPress REST API** — se [REST_API.md](REST_API.md). Ingen ny `admin-ajax.php` / `wp_ajax_*`.
-- Under migration: befintlig AJAX får leva tills REST-ersättare finns; ny kod ska bara använda REST.
+- Klient–server ska gå via **WordPress REST API** — se [REST_API.md](REST_API.md). Ingen `admin-ajax.php` / `wp_ajax_*`.
 - UI-rendering ska delas i små namngivna helpers.
 
 ---

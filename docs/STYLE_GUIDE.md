@@ -52,7 +52,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **ABSPATH** – Alla PHP-filer (utom `uninstall.php`) ska ha: `if (!defined('ABSPATH')) { exit; }`
 - **Escape all output** – Använd `esc_html()`, `esc_attr()`, `esc_url()` etc.
 - **Sanitize input** – `sanitize_text_field()`, `intval()`, `wp_kses()` etc.
-- **Nonces** – Alla formulär och AJAX-anrop ska använda nonces
+- **Nonces** – Formulär och REST-anrop ska använda nonces (`X-WP-Nonce` / `wp_rest`)
 - **Capability checks** – `current_user_can()` för admin-funktioner
 - **SQL** – Alltid `$wpdb->prepare()` för parametriserade queries
 
@@ -101,8 +101,8 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ## 4. JavaScript
 
 ### Struktur
-- **IIFE** – Wrappas i Immediately Invoked Function Expression
-- **jQuery** – Använd `$` för DOM-manipulation
+- **Vue + TypeScript** – Publikt frontend och admin i `frontend/vue/` (Vite → `assets/dist/vue/`)
+- **Ingen jQuery-frontend** – DOM och state hanteras i Vue-komponenter
 - **Ingen `console.log`** i produktion – endast med debug-flagga
 
 ### Namnkonventioner

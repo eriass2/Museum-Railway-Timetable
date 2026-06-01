@@ -52,7 +52,7 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 - **Timetable overview** and **month day panel**: JSON from `mrt_timetable_overview_data` / `mrt_get_timetable_for_date`; UI in `components/overview/` + `styles/timetable-overview.css` (no `v-html`, no public PHP HTML).
 - **Month calendar** grid: config JSON in mount; day detail uses shared overview components.
-- **Journey wizard**: reactive store; JSON AJAX (`mrt_search_journey`, `mrt_journey_calendar_month`, `mrt_journey_connection_detail`).
+- **Journey wizard**: reactive store; REST via `mrtRestRequest` (`journey/search`, `journey/calendar`, `journey/connection-detail`).
 - **PHP HTML** timetable renderers removed; Vue-admin editor uses the same overview component as the public site.
 
 ## Wizard Vue layout
