@@ -3,7 +3,7 @@
 Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder refereras nedan — lägg filerna i `docs/feedback/images/` om de sparas i repot.
 
 **Källor:** mail med skärmdumpar  
-**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** J2 + ev. visuell G3/J1.
+**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** ev. visuell G3/J1.
 
 ---
 
@@ -13,7 +13,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 |----------|-------|-----------|
 | Buggar / fel | 4 | **4 åtgärdade** (G1, J4, G5, G6) |
 | UI / design | 6 | **G2, G3, J1, J3** åtgärdade/delvis |
-| UX / flöde | 7 | **G4–G10** åtgärdade. **J2** kvar |
+| UX / flöde | 7 | **G4–G10, J2** åtgärdade |
 | Frågor / scope | 2 | **J5** åtgärdad (knapp borttagen). **G10** åtgärdad (print + dela) |
 | Positivt | — | Båda imponerade, ser lovande ut |
 
@@ -21,7 +21,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 
 | Punkt | Kort svar |
 |-------|-----------|
-| **G1** | Tidtabellsdata synkad mot PDF; resa Uppsala→Marielund **verifierad på demo** (import + 6 träffar 2026-06-06) |
+| **G1** | Tidtabellsdata synkad mot PDF; resa Uppsala→Marielund **verifierad på demo** (import + 6 träffar 2026-06-06). Del av felet var **PDF-avläsning** vid fixture-bygg, inte resesökningsmotorn |
 | **J4** | Taxa 2026, eftermiddagsbiljett, heldagsbiljetter i sammanfattning |
 | **G5** | Siffror dolda som standard; tydligare legend vid `show_counts=1` |
 | **G3** | Lennakatten-färgpalett + kalenderfärger per tidtabellstyp (G7) |
@@ -34,7 +34,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | **G10** | Skriv ut/PDF + dela/kopiera resa; **PDF verifierad** (`a9a9ad3`, `printElement`) |
 | **G8** | Månadskalender byter månad via REST utan sidladdning |
 | **G4** | Trafikkalender som startsida; klick på dag → tidtabell; `?mrt_date=` |
-| *(underliggande)* | Fixture **endast** enligt `Anslagstidtabell-2026.pdf`: GRÖN/GUL/RÖD/ORANGE-tåg + **GRÖN** anslutningsbuss Selknä–Fjällnora (ej GUL-buss). 37 turer verifierade mot PDF; min bytestid **3 min** (`7119f36`) |
+| *(underliggande)* | Fixture **endast** enligt `Anslagstidtabell-2026.pdf`: GRÖN/GUL/RÖD/ORANGE-tåg + **GRÖN** anslutningsbuss Selknä–Fjällnora (ej GUL-buss). 37 turer verifierade mot PDF; min bytestid **3 min** (`7119f36`). Tidigare fel i testdata berodde delvis på **ofullständig PDF-avläsning** (t.ex. saknade stopptider för `green-vard`, borttagen GUL-buss som aldrig fanns i PDF) — inte på resesökningslogiken |
 
 ---
 
@@ -55,8 +55,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Tidtabell
 - **Typ:** UX / produktbeslut
 - **Prioritet:** låg–medium (behöver avstämning)
-- **Status:** obehandlad
-- **Svar:** Ingen ändring av visning ännu (produktbeslut kvar). **Data:** endast **GRÖN** anslutningsbuss (Selknä↔Fjällnora, blå stjärnrader i PDF, 1/7–16/8). Overifierad GUL-buss och syntetiska Uppsala-ben borttagna (`7119f36`). Tåg+buss-byte vid Selknä kräver min **3 min** väntetid (PDF-takt); standardinställning uppdaterad.
+- **Status:** åtgärdad (Förslag A — inline bussrader i tåggriden)
+- **Svar:** Anslutningsbuss Selknä↔Fjällnora visas nu som **tidsrader i huvudtidtabellen** (PDF-likt): `Från Selknä*` / `Till Fjällnora*` utgående, `Från Fjällnora*` / `Till Selknä*` inkommande. Tider per tågkolumn med tur-nummer (B1, B2 …) under tiden. Separat busstabell (`MrtOverviewBranchGroup`) utelämnas när bussen är kopplad till tåggruppen. **Data:** GRÖN-buss enligt PDF (1/7–16/8); min **3 min** byte vid Selknä.
 
 ### J3. Reseplanerare – klippning och linjetext
 - **Källa:** mail, `image4.jpeg`
@@ -100,7 +100,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** bugg
 - **Prioritet:** hög
 - **Status:** åtgärdad och **verifierad på demo** (Docker import juni 2026)
-- **Svar:** Orsaken var felaktig/ofullständig tidtabellsdata i fixturen — inte själva resesökningsmotorn. Fixturen följer nu **endast** `Anslagstidtabell-2026.pdf` (commit `7119f36`): GRÖN/GUL/RÖD/ORANGE-tåg, GRÖN-buss Selknä–Fjällnora (ingen GUL-buss i PDF). Resa **Uppsala Östra → Marielund** på grön trafikdag (t.ex. 2026-06-06) ger träff (tåg 71, avg 10:00, ankomst 10:35). Tåg+buss t.ex. Marielund→Fjällnora via Selknä fungerar med 3 min bytestid. Täcks av `LennakattenJourneySearchTest.php`, `verify-lennakatten-vs-pdf.py`.
+- **Svar:** Resesökningsmotorn fungerade — felet låg i **test/fixture-data** som byggts från PDF:en. En del av avvikelserna berodde på att vår **avläsning av `Anslagstidtabell-2026.pdf` inte riktigt fungerade** vid tidigare synk (ofullständiga eller felaktiga CSV-rader), inte på journey scoring eller REST-sökningen. Exempel: tjänster utan stopptider (`green-vard` vardagstabell utan klockslag, `9c53095`), borttagen GUL-buss som aldrig fanns i PDF, syntetiska Uppsala-ben på bussar. Fixturen följer nu **endast** PDF:en (commit `7119f36` m.fl.): GRÖN/GUL/RÖD/ORANGE-tåg, GRÖN-buss Selknä–Fjällnora. Verifiering: `verify-lennakatten-vs-pdf.py` + `LennakattenJourneySearchTest.php`. Resa **Uppsala Östra → Marielund** på grön trafikdag (t.ex. 2026-06-06) ger träff (tåg 71, avg 10:00, ankomst 10:35). Tåg+buss t.ex. Marielund→Fjällnora via Selknä fungerar med 3 min bytestid.
 
 ### G2. Typsnitt – Roboto + Open Sans Bold
 - **Källa:** mail
@@ -191,7 +191,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 ## Prioriterad åtgärdslista
 
 ### Fixa först (buggar / felaktigt beteende)
-1. ~~**G1** – Resa Uppsala–Marielund hittas inte på trafikdag~~ ✓ (demo verifierad efter import)
+1. ~~**G1** – Resa Uppsala–Marielund hittas inte på trafikdag~~ ✓ (demo verifierad efter import; orsak: fixture/PDF-avläsning, ej resesökningsmotor)
 2. ~~**J4** – Fel biljettpriser (zoner + eftermiddagstaxa)~~ ✓
 3. ~~**G5** – Kalendersiffror stämmer inte / otydliga~~ ✓
 4. ~~**G6** – ”ÔÅ / Laddar…” (encoding/copy)~~ ✓
@@ -204,7 +204,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 ### Produktbeslut / större arbete
 8. ~~**G4** – Kalender som startvy istället för tidtabellslista~~ ✓
 9. ~~**G9** – Tur/retur med dedikerat återresesteg~~ ✓
-10. **J2** – Busstider integrerade i huvudtidtabell
+10. ~~**J2** – Busstider integrerade i huvudtidtabell~~ ✓
 11. ~~**G7 / G8** – Kalenderfärger per tidtabell ✓ / SPA utan reload ✓
 12. ~~**G10** – Exportera resa (PNG/PDF)~~ ✓ (print + dela/kopiera; PDF verifierad)
 13. ~~**J5** – Svar om biljettsystem vs Edmonson~~ ✓ (knapp borttagen)
@@ -251,5 +251,5 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - [x] **J3** — mobil klippning + kortare linjetext (`b3fcbbb`)
 - [x] **G4** — kalender som primär startvy (trafikkalender + dagklick)
 - [x] **G8** — SPA-månadsväxling i månadskalendern
-- [x] Fixture PDF-genomgång — borttagen GUL-buss, Selknä–Fjällnora enligt PDF, busskalender + 3 min byte (`7119f36`)
-- [ ] **J2** — bussar som rader i huvudtidtabell (produktbeslut)
+- [x] Fixture PDF-genomgång — borttagen GUL-buss, Selknä–Fjällnora enligt PDF, busskalender + 3 min byte (`7119f36`); rotorsak delvis **PDF-avläsning**, inte resesök (`9c53095` green-vard stopptider)
+- [x] **J2** — bussar som inline-rader i huvudtidtabell (Förslag A)

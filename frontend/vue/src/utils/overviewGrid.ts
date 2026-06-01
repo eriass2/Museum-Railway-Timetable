@@ -22,6 +22,8 @@ export function overviewRowClass(row: TimetableOverviewRow, rowIndex = 0): strin
     classes.push('mrt-ov-grid-row--from');
   } else if (row.kind === 'to' || row.kind === 'arrival') {
     classes.push('mrt-ov-grid-row--to');
+  } else if (row.kind === 'busDeparture' || row.kind === 'busArrival') {
+    classes.push('mrt-ov-grid-row--bus');
   } else if (row.kind === 'trainChange' || row.kind === 'busConnection') {
     classes.push('mrt-ov-grid-row--transfer');
   } else if (row.kind === 'station' && rowIndex % 2 === 0) {

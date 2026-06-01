@@ -33,6 +33,9 @@ function MRT_build_timetable_overview_payload( array $services, string $dateYmd,
 
 	$groups = array();
 	foreach ( $grouped as $group ) {
+		if ( MRT_timetable_group_is_branch_shuttle( $group ) && ! empty( $group['paired_rail'] ) ) {
+			continue;
+		}
 		$groups[] = MRT_timetable_overview_group_to_json( $group, $dateYmd );
 	}
 
@@ -315,7 +318,11 @@ function MRT_timetable_rail_group_to_json( array $group, string $dateYmd ): arra
 		'fromLabel'  => $from_label,
 		'toLabel'    => $to_label,
 		'columns'    => MRT_timetable_overview_columns_json( $view ),
-		'rows'       => MRT_timetable_overview_rail_rows_json( $view, $connection ),
+		'rows'       => MRT_timetable_overview_rail_rows_json(
+			$view,
+			$connection,
+			! empty( $group['paired_branch'] ) ? $group['paired_branch'] : null
+		),
 	);
 }
 
@@ -351,16 +358,17 @@ function MRT_timetable_overview_columns_json( array $view ): array {
  * @param array<string, mixed>|null $connection
  * @return array<int, array<string, mixed>>
  */
-function MRT_timetable_overview_rail_rows_json( array $view, ?array $connection ): array {
+function MRT_timetable_overview_rail_rows_json( array $view, ?array $connection, ?array $branch_group = null ): array {
 	$station_posts = $view['station_posts'];
 	$services      = $view['services_list'];
-	$classes       = $view['service_classes'];
 	$info          = $view['service_info'];
 	$rows          = array();
 
 	if ( $station_posts === array() ) {
 		return $rows;
 	}
+
+	$grid_direction = is_array( $connection ) ? (string) ( $connection['direction'] ?? 'outbound' ) : 'outbound';
 
 	$first = $station_posts[0];
 	$rows[] = MRT_timetable_row_times_json(
@@ -372,13 +380,20 @@ function MRT_timetable_overview_rail_rows_json( array $view, ?array $connection 
 		true,
 		false
 	);
-	$rows[] = MRT_timetable_maybe_bus_connection_row_json( $first, $services, $info, $classes, $connection );
 
-	$regular   = array_slice( $station_posts, 1, -1 );
-	$direction = MRT_timetable_grid_direction( $regular );
+	$regular = array_slice( $station_posts, 1, -1 );
 
 	foreach ( $regular as $station ) {
-		$station_id = (int) $station->ID;
+		$station_id   = (int) $station->ID;
+		$at_junction  = MRT_timetable_station_is_bus_junction( $connection, $branch_group, $station_id );
+		$bus_rows_pre = $at_junction && $grid_direction === 'inbound'
+			? MRT_timetable_junction_bus_rows_json( $services, $info, $connection, $branch_group )
+			: array();
+
+		foreach ( $bus_rows_pre as $bus_row ) {
+			$rows[] = $bus_row;
+		}
+
 		if ( MRT_station_row_has_arrival_departure_split( $station_id, $services ) ) {
 			$rows[] = MRT_timetable_row_times_json(
 				'arrival',
@@ -414,7 +429,12 @@ function MRT_timetable_overview_rail_rows_json( array $view, ?array $connection 
 			false,
 			false
 		);
-		$rows[] = MRT_timetable_maybe_bus_connection_row_json( $station, $services, $info, $classes, $connection );
+
+		if ( $at_junction && $grid_direction !== 'inbound' ) {
+			foreach ( MRT_timetable_junction_bus_rows_json( $services, $info, $connection, $branch_group ) as $bus_row ) {
+				$rows[] = $bus_row;
+			}
+		}
 	}
 
 	$last = end( $station_posts );
@@ -557,45 +577,244 @@ function MRT_timetable_vehicle_json( string $type_name, string $service_number, 
 }
 
 /**
- * @return array<string, mixed>|null
+ * @param array<string, mixed>|null $connection
+ * @param array<string, mixed>|null $branch_group
  */
-function MRT_timetable_maybe_bus_connection_row_json(
-	WP_Post $station,
+function MRT_timetable_station_is_bus_junction( ?array $connection, ?array $branch_group, int $station_id ): bool {
+	if ( ! is_array( $connection ) || ! is_array( $branch_group ) ) {
+		return false;
+	}
+	if ( ! MRT_connection_has_any_buses( $connection ) ) {
+		return false;
+	}
+	return (int) ( $connection['junction_id'] ?? 0 ) === $station_id;
+}
+
+/**
+ * @param array<string, mixed> $connection
+ */
+function MRT_connection_has_any_buses( array $connection ): bool {
+	foreach ( (array) ( $connection['train_to_bus'] ?? array() ) as $row ) {
+		if ( ! empty( $row['buses'] ) ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
+ * @param array<int, array<string, mixed>> $services
+ * @param array<int, array<string, mixed>> $info
+ * @param array<string, mixed>             $connection
+ * @param array<string, mixed>             $branch_group
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_timetable_junction_bus_rows_json(
 	array $services,
 	array $info,
-	array $classes,
-	?array $connection
-): ?array {
-	if ( ! $connection ) {
-		return null;
-	}
-	$junction_id = (int) ( $connection['junction_id'] ?? 0 );
-	if ( $junction_id <= 0 || (int) $station->ID !== $junction_id ) {
-		return null;
+	array $connection,
+	array $branch_group
+): array {
+	$junction_id    = (int) ( $connection['junction_id'] ?? 0 );
+	$junction_label = (string) ( $connection['junction_label'] ?? '' );
+	$remote_label   = MRT_timetable_bus_remote_station_label( $branch_group, $junction_id );
+	if ( $junction_label === '' || $remote_label === '' ) {
+		return array();
 	}
 
-	$bus_term = MRT_get_train_type_term_by_slug( 'buss' );
-	$cells    = array();
-	foreach ( $services as $idx => $service_data ) {
-		$train_number = (string) ( $info[ $idx ]['service_number'] ?? '' );
-		$buses        = MRT_connection_buses_for_train_number( $connection, $train_number );
-		$vehicles     = array();
-		foreach ( $buses as $bus ) {
-			$vehicles[] = array(
-				'typeName'      => __( 'Buss', 'museum-railway-timetable' ),
-				'serviceNumber' => $bus['service_number'],
-				'iconKey'       => $bus_term ? MRT_get_train_type_symbol_key( $bus_term ) : 'bus',
-				'detail'        => MRT_bus_transfer_detail_line( $bus ),
-			);
-		}
-		$cells[] = array( 'vehicles' => $vehicles );
+	$inbound = (string) ( $connection['direction'] ?? 'outbound' ) === 'inbound';
+	if ( $inbound ) {
+		return array(
+			MRT_timetable_bus_time_row_json(
+				'busDeparture',
+				sprintf( __( 'Från %s', 'museum-railway-timetable' ), $remote_label ),
+				$services,
+				$info,
+				$connection,
+				$branch_group,
+				'remote',
+				true
+			),
+			MRT_timetable_bus_time_row_json(
+				'busArrival',
+				sprintf( __( 'Till %s', 'museum-railway-timetable' ), $junction_label ),
+				$services,
+				$info,
+				$connection,
+				$branch_group,
+				'junction',
+				false
+			),
+		);
 	}
 
 	return array(
-		'kind'  => 'busConnection',
-		'label' => __( 'Anslutningsbuss:', 'museum-railway-timetable' ),
+		MRT_timetable_bus_time_row_json(
+			'busDeparture',
+			sprintf( __( 'Från %s', 'museum-railway-timetable' ), $junction_label ),
+			$services,
+			$info,
+			$connection,
+			$branch_group,
+			'junction',
+			true
+		),
+		MRT_timetable_bus_time_row_json(
+			'busArrival',
+			sprintf( __( 'Till %s', 'museum-railway-timetable' ), $remote_label ),
+			$services,
+			$info,
+			$connection,
+			$branch_group,
+			'remote',
+			false
+		),
+	);
+}
+
+/**
+ * @param array<string, mixed> $branch_group
+ */
+function MRT_timetable_bus_remote_station_label( array $branch_group, int $junction_id ): string {
+	$remote_id = MRT_timetable_bus_remote_station_id( $branch_group, $junction_id );
+	if ( $remote_id <= 0 ) {
+		return '';
+	}
+	$station = get_post( $remote_id );
+	if ( ! $station ) {
+		return '';
+	}
+	return MRT_get_station_display_name( $station );
+}
+
+/**
+ * @param array<string, mixed> $branch_group
+ */
+function MRT_timetable_bus_remote_station_id( array $branch_group, int $junction_id ): int {
+	foreach ( (array) ( $branch_group['stations'] ?? array() ) as $station_id ) {
+		$id = (int) $station_id;
+		if ( $id > 0 && $id !== $junction_id ) {
+			return $id;
+		}
+	}
+	return 0;
+}
+
+/**
+ * @param array<string, mixed> $branch_group
+ * @return array<string, mixed>|null
+ */
+function MRT_find_bus_service_in_branch( array $branch_group, string $service_number ): ?array {
+	foreach ( (array) ( $branch_group['services'] ?? array() ) as $service_data ) {
+		if ( MRT_connection_service_number( $service_data ) === $service_number ) {
+			return $service_data;
+		}
+	}
+	return null;
+}
+
+/**
+ * @param array<int, array<string, mixed>> $services
+ * @param array<int, array<string, mixed>> $info
+ * @param array<string, mixed>             $connection
+ * @param array<string, mixed>             $branch_group
+ * @return array<string, mixed>
+ */
+function MRT_timetable_bus_time_row_json(
+	string $kind,
+	string $label,
+	array $services,
+	array $info,
+	array $connection,
+	array $branch_group,
+	string $stop_role,
+	bool $use_departure
+): array {
+	$cells = array();
+	foreach ( $services as $idx => $service_data ) {
+		unset( $service_data );
+		$train_number = (string) ( $info[ $idx ]['service_number'] ?? '' );
+		$cells[]      = MRT_timetable_bus_time_cell_json(
+			$train_number,
+			$connection,
+			$branch_group,
+			$stop_role,
+			$use_departure
+		);
+	}
+
+	return array(
+		'kind'  => $kind,
+		'label' => $label,
 		'cells' => $cells,
 	);
+}
+
+/**
+ * @param array<string, mixed> $connection
+ * @param array<string, mixed> $branch_group
+ * @return array<string, mixed>
+ */
+function MRT_timetable_bus_time_cell_json(
+	string $train_number,
+	array $connection,
+	array $branch_group,
+	string $stop_role,
+	bool $use_departure
+): array {
+	$buses = MRT_connection_buses_for_train_number( $connection, $train_number );
+	if ( $buses === array() ) {
+		return array( 'text' => '—' );
+	}
+
+	$bus       = $buses[0];
+	$bus_data  = MRT_find_bus_service_in_branch( $branch_group, (string) $bus['service_number'] );
+	$stop      = MRT_timetable_bus_stop_for_role( $connection, $branch_group, $bus_data, $stop_role );
+	$cell      = array(
+		'text'             => MRT_timetable_bus_stop_display_time( $stop, $use_departure ),
+		'busServiceNumber' => (string) $bus['service_number'],
+	);
+	return $cell;
+}
+
+/**
+ * @param array<string, mixed>             $connection
+ * @param array<string, mixed>             $branch_group
+ * @param array<string, mixed>|null        $bus_data
+ * @return array<string, mixed>|null
+ */
+function MRT_timetable_bus_stop_for_role(
+	array $connection,
+	array $branch_group,
+	?array $bus_data,
+	string $stop_role
+): ?array {
+	if ( ! is_array( $bus_data ) ) {
+		return null;
+	}
+	$junction_id = (int) ( $connection['junction_id'] ?? 0 );
+	$remote_id   = MRT_timetable_bus_remote_station_id( $branch_group, $junction_id );
+	$station_id  = $stop_role === 'junction' ? $junction_id : $remote_id;
+	if ( $station_id <= 0 ) {
+		return null;
+	}
+	$stop = $bus_data['stop_times'][ $station_id ] ?? null;
+	return is_array( $stop ) ? $stop : null;
+}
+
+/**
+ * @param array<string, mixed>|null $stop
+ */
+function MRT_timetable_bus_stop_display_time( $stop, bool $use_departure ): string {
+	if ( ! is_array( $stop ) ) {
+		return '—';
+	}
+	if ( $use_departure ) {
+		$display = MRT_get_from_row_display_stop_time( $stop );
+		return MRT_format_stop_time_display( $display ?? $stop );
+	}
+	$display = MRT_get_to_row_display_stop_time( $stop );
+	return MRT_format_stop_time_display( $display ?? $stop );
 }
 
 /**

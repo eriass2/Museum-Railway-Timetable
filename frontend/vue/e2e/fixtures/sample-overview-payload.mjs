@@ -42,36 +42,14 @@ export function buildSampleOverviewPayload(scope = 'timetable') {
             cells: [{ text: '10:15' }],
           },
           {
-            kind: 'busConnection',
-            label: 'Anslutningsbuss:',
-            cells: [
-              {
-                vehicles: [
-                  {
-                    typeName: 'Buss',
-                    serviceNumber: 'B1',
-                    iconKey: 'buss',
-                    detail: '12:00 → Uppsala Östra',
-                  },
-                ],
-              },
-            ],
+            kind: 'busDeparture',
+            label: 'Från Selknä*',
+            cells: [{ text: '10:53', busServiceNumber: 'B1' }],
           },
-        ],
-      },
-      {
-        kind: 'branch',
-        routeLabel: 'Selknä – Uppsala Östra',
-        fromLabel: 'Från Selknä*',
-        midLabel: 'Från Fjällnora*',
-        toLabel: 'Till Uppsala Östra',
-        trips: [
           {
-            trip: 'B1',
-            fromTime: '11:52',
-            midTime: '12:00',
-            toTime: '12:28',
-            connectingTrains: [{ serviceNumber: '93', timeDisplay: '10:15' }],
+            kind: 'busArrival',
+            label: 'Till Fjällnora*',
+            cells: [{ text: '11:00', busServiceNumber: 'B1' }],
           },
         ],
       },

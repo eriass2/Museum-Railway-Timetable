@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Bus-only routes with two or three stops use a compact branch table in Vue.
+ * Bus-only routes with two or three stops use a compact branch table when not paired to a rail group.
  *
  * @param array<string, mixed> $group Route group from MRT_group_services_by_route.
  */

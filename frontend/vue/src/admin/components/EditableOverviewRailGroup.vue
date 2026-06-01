@@ -42,7 +42,10 @@ async function patchCell(
   >
     <template #time-cell="{ row, track, columnIndex }">
       <template v-if="readonly || !row.stationId || !group.columns[columnIndex].serviceId">
-        {{ row.cells[columnIndex].text }}
+        <span class="mrt-ov-time">{{ row.cells[columnIndex].text }}</span>
+        <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
+          {{ row.cells[columnIndex].busServiceNumber }}
+        </span>
       </template>
       <template v-else>
         <label class="mrt-ov-edit-stop">

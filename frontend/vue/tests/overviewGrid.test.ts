@@ -2,8 +2,10 @@ import { describe, expect, it } from 'vitest';
 import {
   buildHighlightStripeSpans,
   buildOverviewGridTracks,
+  isTimeRow,
   overviewGridMinWidth,
   overviewGridTemplateColumns,
+  overviewRowClass,
   splitOverviewRowSegments,
 } from '../src/utils/overviewGrid';
 import type { TimetableOverviewColumn, TimetableOverviewRow } from '../src/types/timetableOverview';
@@ -81,5 +83,12 @@ describe('overviewGrid tracks', () => {
       { kind: 'to', label: 'B', cells: [] },
     ];
     expect(splitOverviewRowSegments(rows)).toEqual([[0], [2]]);
+  });
+
+  it('styles bus inline rows separately from train transfers', () => {
+    expect(overviewRowClass({ kind: 'busDeparture', label: 'Från Selknä*', cells: [] })).toContain(
+      'mrt-ov-grid-row--bus',
+    );
+    expect(isTimeRow({ kind: 'busArrival', label: 'Till Fjällnora*', cells: [] })).toBe(true);
   });
 });

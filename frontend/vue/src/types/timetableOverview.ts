@@ -29,6 +29,7 @@ export type TimetableTimeCellEdit = {
 
 export type TimetableTimeCell = {
   text: string;
+  busServiceNumber?: string;
   edit?: TimetableTimeCellEdit;
 };
 
@@ -45,7 +46,14 @@ export type TimetableTransferCell = {
 
 export type TimetableOverviewRow =
   | {
-      kind: 'from' | 'to' | 'station' | 'arrival' | 'departure';
+      kind:
+        | 'from'
+        | 'to'
+        | 'station'
+        | 'arrival'
+        | 'departure'
+        | 'busDeparture'
+        | 'busArrival';
       label: string;
       stationId?: number;
       cells: TimetableTimeCell[];

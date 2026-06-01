@@ -14,7 +14,10 @@ defineProps<{
 <template>
   <MrtOverviewRailGroupGrid :group="group" :icon-urls="iconUrls" :labels="labels">
     <template #time-cell="{ row, track, columnIndex }">
-      {{ row.cells[columnIndex].text }}
+      <span class="mrt-ov-time">{{ row.cells[columnIndex].text }}</span>
+      <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
+        {{ row.cells[columnIndex].busServiceNumber }}
+      </span>
     </template>
     <template #transfer-cell="{ row, track, columnIndex }">
       <div

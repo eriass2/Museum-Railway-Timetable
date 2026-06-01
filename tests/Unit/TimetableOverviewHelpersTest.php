@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 final class TimetableOverviewHelpersTest extends TestCase {
 
 	protected function tearDown(): void {
-		unset( $GLOBALS['mrt_test_post_meta'] );
+		unset( $GLOBALS['mrt_test_post_meta'], $GLOBALS['mrt_test_posts'] );
 		parent::tearDown();
 	}
 
@@ -84,6 +84,74 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertIsArray( $to );
 		self::assertSame( '10.15', $to['arrival_time'] );
 		self::assertSame( '', $to['departure_time'] );
+	}
+
+	public function test_junction_bus_rows_use_inline_departure_and_arrival_times(): void {
+		$junction_id = 9;
+		$remote_id   = 15;
+		$branch      = array(
+			'stations' => array( $junction_id, $remote_id ),
+			'services' => array(
+				array(
+					'service'    => (object) array( 'ID' => 501 ),
+					'stop_times' => array(
+						$junction_id => array(
+							'arrival_time'   => '10:53',
+							'departure_time' => '10:53',
+						),
+						$remote_id   => array(
+							'arrival_time'   => '11:00',
+							'departure_time' => '11:00',
+						),
+					),
+				),
+			),
+		);
+		$connection = array(
+			'junction_id'    => $junction_id,
+			'junction_label' => 'Selknä*',
+			'direction'      => 'outbound',
+			'train_to_bus'   => array(
+				array(
+					'train' => array( 'service_number' => '71', 'time_display' => '10:50' ),
+					'buses' => array(
+						array(
+							'service_number' => 'B1',
+							'time_display'   => '10:53',
+							'destination'    => 'Fjällnora*',
+						),
+					),
+				),
+			),
+		);
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_number' => 'B1',
+			'9|mrt_station_bus_suffix' => '1',
+			'15|mrt_station_bus_suffix' => '1',
+		);
+		$GLOBALS['mrt_test_posts'] = array(
+			15 => (object) array(
+				'ID'         => 15,
+				'post_title' => 'Fjällnora',
+			),
+		);
+
+		$services = array( array( 'service' => (object) array( 'ID' => 71 ) ) );
+		$info     = array( array( 'service_number' => '71' ) );
+
+		self::assertSame( 15, MRT_timetable_bus_remote_station_id( $branch, $junction_id ) );
+		self::assertSame( 'Fjällnora*', MRT_timetable_bus_remote_station_label( $branch, $junction_id ) );
+
+		$rows = MRT_timetable_junction_bus_rows_json( $services, $info, $connection, $branch );
+
+		self::assertCount( 2, $rows );
+		self::assertSame( 'busDeparture', $rows[0]['kind'] );
+		self::assertSame( 'Från Selknä*', $rows[0]['label'] );
+		self::assertSame( '10.53', $rows[0]['cells'][0]['text'] );
+		self::assertSame( 'B1', $rows[0]['cells'][0]['busServiceNumber'] );
+		self::assertSame( 'busArrival', $rows[1]['kind'] );
+		self::assertSame( 'Till Fjällnora*', $rows[1]['label'] );
+		self::assertSame( '11.00', $rows[1]['cells'][0]['text'] );
 	}
 
 	/**

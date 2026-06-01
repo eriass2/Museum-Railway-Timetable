@@ -237,6 +237,25 @@
   font-weight: 700;
 }
 
+.mrt-ov-grid-row--bus .mrt-ov-station-col,
+.mrt-ov-grid-row--bus .mrt-ov-time-cell {
+  background: var(--mrt-ov-transfer);
+}
+
+.mrt-ov-grid-row--bus .mrt-ov-station-col {
+  background: var(--mrt-ov-transfer-label);
+  font-weight: 700;
+}
+
+.mrt-ov-bus-ref {
+  display: block;
+  margin-top: 0.15rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--mrt-color-neutral-700, #505050);
+}
+
 .mrt-ov-grid-row--transfer .mrt-ov-transfer-cell--empty {
   background: #fff;
   min-height: 0;
