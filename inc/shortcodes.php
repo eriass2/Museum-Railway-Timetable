@@ -13,7 +13,9 @@ require_once MRT_PATH . 'inc/public/timetable-overview/shortcode.php';
 require_once MRT_PATH . 'inc/public/timetable-index/shortcode.php';
 
 $mrt_journey_wizard_dir = MRT_PATH . 'inc/public/journey-wizard/';
-require_once $mrt_journey_wizard_dir . 'debug-fixtures.php';
+if ( MRT_is_development_mode() ) {
+	require_once $mrt_journey_wizard_dir . 'debug-fixtures.php';
+}
 require_once $mrt_journey_wizard_dir . 'timetable.php';
 require_once $mrt_journey_wizard_dir . 'shell.php';
 require_once MRT_PATH . 'inc/public/vue-shortcode-config.php';

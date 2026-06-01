@@ -109,14 +109,12 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **camelCase** för variabler och funktioner
 - **Prefix** för plugin-specifika: `mrtAdmin`, `mrtFrontend` etc.
 
-### Event och AJAX
-- **Nonces** – Skicka alltid med AJAX-anrop
+### Event och REST
+- **Nonces** – Skicka `X-WP-Nonce` (restNonce) på REST-anrop
 - **Felhantering** – Hantera nätverksfel och visa användarvänliga meddelanden
 
-### Delade util-moduler (`assets/mrt-*.js`)
-- **`mrt-string-utils.js`** – `window.MRTStringUtils.escapeHtml` (XSS-säker text i HTML-strängar).
-- **`mrt-date-utils.js`** – `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för `HH:MM`).
-- **JS-tester** – `composer test:js` kör `node --test tests/js/` (Node 18+).
+### Delade util-moduler
+- **Datum/tid och strängar** – Vue-utils under `frontend/vue/src/` (t.ex. `wizardDate.ts`, `mrtStrings.ts`); testas med Vitest (`npm test` i `frontend/vue/`).
 
 ### Admin (Vue)
 - **Vue-admin** – `frontend/vue/src/admin/` byggt till `assets/dist/vue/assets/admin.js` (`vite.admin.config.ts`).
@@ -178,7 +176,6 @@ museum-railway-timetable/
 ├── assets/
 │   ├── admin.css                  # WP-admin skal (Vue-admin)
 │   ├── dist/vue/                  # Vite bundle (public + admin JS/CSS)
-│   ├── mrt-string-utils.js, mrt-date-utils.js
 │   └── icons/train-types/
 ├── frontend/vue/src/styles/       # Vue-ägd publik CSS (se §3 CSS)
 │   ├── mrt-public.css             # tokens + assets primitives + vue-shell
@@ -195,7 +192,7 @@ museum-railway-timetable/
 - [ ] PHPDoc på alla nya funktioner
 - [ ] All output escaped
 - [ ] All input sanitized
-- [ ] Nonces på formulär/AJAX
+- [ ] Nonces på REST-anrop (X-WP-Nonce)
 - [ ] Inga inline styles
 - [ ] CSS-klasser med `.mrt-` prefix
 - [ ] Funktioner med `MRT_` prefix

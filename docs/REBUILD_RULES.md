@@ -117,7 +117,7 @@ Minimikrav per PR:
 - `composer phpstan`
 - `composer phpcs`
 - `composer plugin-check`
-- `npm run test:js`
+- `npm test` (i `frontend/vue/` — Vitest)
 
 UI-ändringar ska dessutom verifieras i WordPress med screenshot eller video.
 

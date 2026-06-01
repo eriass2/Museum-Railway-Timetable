@@ -36,8 +36,6 @@ $required_files = [
     'inc/bootstrap/domain.php',
     'inc/infrastructure/wordpress/helpers-utils.php',
     'assets/train-type-icons.css',
-    'assets/mrt-string-utils.js',
-    'assets/mrt-date-utils.js',
     'languages/museum-railway-timetable.pot',
     'languages/museum-railway-timetable-sv_SE.po',
 ];
@@ -179,28 +177,6 @@ foreach ($css_files as $css_file) {
     } else {
         $errors[] = "CSS file missing: $css_file";
         echo "  ❌ $css_file missing\n";
-    }
-}
-
-// 8. Check JS files exist and are valid
-echo "\n8. Checking JavaScript files...\n";
-$admin_js_files = [
-    'assets/mrt-string-utils.js',
-    'assets/mrt-date-utils.js',
-];
-foreach ($admin_js_files as $js_file) {
-    $checks++;
-    if (file_exists($js_file)) {
-        $js = file_get_contents($js_file);
-        if (strlen($js) > 0) {
-            echo "  ✅ $js_file\n";
-        } else {
-            $errors[] = "JS file is empty: $js_file";
-            echo "  ❌ $js_file is empty\n";
-        }
-    } else {
-        $errors[] = "JS file missing: $js_file";
-        echo "  ❌ $js_file missing\n";
     }
 }
 

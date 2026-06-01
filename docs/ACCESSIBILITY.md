@@ -36,7 +36,7 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 
 ## Månad och översikt
 
-**Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid AJAX. Filer: `inc/public/month-calendar/`, `frontend/vue/src/apps/MonthCalendarApp.vue`.
+**Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid laddning. Filer: `inc/public/month-calendar/`, `frontend/vue/src/apps/MonthCalendarApp.vue`.
 
 **Översikt:** Vue-komponenter med `role="region"`, `h3` per rutt, semantisk tabell för branch-bussar. Filer: `inc/domain/timetable/view/overview-data.php`, `frontend/vue/src/components/overview/`.
 

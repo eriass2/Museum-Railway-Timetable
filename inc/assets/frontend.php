@@ -256,7 +256,7 @@ function MRT_enqueue_timetable_index_styles_if_needed(): void {
 }
 
 /**
- * Localized strings for the Vue public frontend (AJAX).
+ * Localized strings for the Vue public frontend (REST).
  *
  * @return array<string, string>
  */

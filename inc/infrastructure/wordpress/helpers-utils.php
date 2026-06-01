@@ -15,30 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once MRT_PATH . 'inc/domain/train-type/icons.php';
 
 /**
- * Verify AJAX permission to edit a specific post.
- *
- * @param int $post_id Post ID
- * @return void
- */
-function MRT_verify_ajax_edit_post_permission( int $post_id ): void {
-	if ( $post_id <= 0 || ! current_user_can( 'edit_post', $post_id ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', MRT_TEXT_DOMAIN ) ) );
-	}
-}
-
-/**
- * Verify AJAX permission to delete a specific post.
- *
- * @param int $post_id Post ID
- * @return void
- */
-function MRT_verify_ajax_delete_post_permission( int $post_id ): void {
-	if ( $post_id <= 0 || ! current_user_can( 'delete_post', $post_id ) ) {
-		wp_send_json_error( array( 'message' => __( 'Permission denied.', MRT_TEXT_DOMAIN ) ) );
-	}
-}
-
-/**
  * Render alert HTML (error, info, warning)
  *
  * @param string $message Message text (will be escaped)

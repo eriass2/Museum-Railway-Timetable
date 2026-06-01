@@ -2,8 +2,6 @@
 export type MrtRestConfig = {
   restUrl?: string;
   restNonce?: string;
-  /** @deprecated Legacy alias for restNonce */
-  nonce?: string;
   strings?: Record<string, string>;
 };
 

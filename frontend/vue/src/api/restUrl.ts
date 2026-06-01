@@ -11,8 +11,6 @@ export const MRT_REST_NAMESPACE = 'museum-railway-timetable/v1';
 export type MrtRestUrlConfig = {
   restUrl?: string;
   restNonce?: string;
-  /** @deprecated Legacy alias for restNonce */
-  nonce?: string;
 };
 
 /** Normalize restUrl from PHP config (trailing slash). */
@@ -37,9 +35,9 @@ export function resolveMrtRestBase(config: Pick<MrtRestUrlConfig, 'restUrl'>): s
 }
 
 export function resolveMrtRestNonce(
-  config: Pick<MrtRestUrlConfig, 'restNonce' | 'nonce'>,
+  config: Pick<MrtRestUrlConfig, 'restNonce'>,
 ): string {
-  return config.restNonce || config.nonce || '';
+  return config.restNonce || '';
 }
 
 export function buildMrtRestUrl(

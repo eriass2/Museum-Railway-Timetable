@@ -6,7 +6,7 @@ Snabb genomgång efter ändringar i frontend, shortcodes eller import.
 
 | Kommando | Täcker |
 |----------|--------|
-| `composer check` | validate.php, PHPStan, PHPUnit (175 tester), JS-enhetstester |
+| `composer check` | validate.php, PHPStan, PHPUnit |
 | `composer vue:check` | Vue lint, Vitest, production build |
 | `.\scripts\docker-smoke.ps1` | Docker: import + demo (rensar inte DB) |
 
@@ -34,13 +34,12 @@ Login: `admin` / `admin`
 ```powershell
 docker compose up -d
 docker compose run --rm composer check
-npm run test:js
+npm test --prefix frontend/vue
 php scripts/validate.php
 ```
 
 ## Kända begränsningar
 
-- `composer check` i Docker saknar Node (`test:js` körs lokalt med Node 22).
 - Lokal PHP 7.4 kör inte full `composer install`; använd Docker för PHPUnit/PHPStan.
 - Mockup-PNG finns inte i repot; wizard-stil är återställd från pre-purge CSS.
 

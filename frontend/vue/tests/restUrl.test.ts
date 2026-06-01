@@ -3,6 +3,7 @@ import {
   buildMrtRestUrl,
   buildMrtRestUrlFromConfig,
   resolveMrtRestBase,
+  resolveMrtRestNonce,
 } from '../src/api/restUrl';
 
 describe('buildMrtRestUrl', () => {
@@ -52,6 +53,11 @@ describe('buildMrtRestUrl', () => {
       `${origin}/wp-json/museum-railway-timetable/v1/`,
     );
     vi.unstubAllGlobals();
+  });
+
+  it('resolveMrtRestNonce uses restNonce from config', () => {
+    expect(resolveMrtRestNonce({ restNonce: 'abc' })).toBe('abc');
+    expect(resolveMrtRestNonce({})).toBe('');
   });
 
   it('buildMrtRestUrlFromConfig joins config base and path', () => {

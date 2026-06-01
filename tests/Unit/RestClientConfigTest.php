@@ -33,9 +33,6 @@ if ( ! function_exists( 'esc_url_raw' ) ) {
 
 require_once dirname( __DIR__, 2 ) . '/inc/infrastructure/rest/client-config.php';
 
-/**
- * @group rest
- */
 final class RestClientConfigTest extends TestCase {
 
 	public function test_rest_client_config_keys(): void {

@@ -24,8 +24,6 @@ $required_files = @(
     "inc/bootstrap/domain.php",
     "inc/infrastructure/wordpress/helpers-utils.php",
     "assets/train-type-icons.css",
-    "assets/mrt-string-utils.js",
-    "assets/mrt-date-utils.js",
     "languages/museum-railway-timetable.pot",
     "languages/museum-railway-timetable-sv_SE.po"
 )
@@ -128,28 +126,6 @@ foreach ($cssFile in $cssFiles) {
     } else {
         $errors += "CSS file missing: $cssFile"
         Write-Host "  ERROR: $cssFile missing" -ForegroundColor Red
-    }
-}
-
-# 6. Check JS files
-Write-Host "`n6. Checking JavaScript files..." -ForegroundColor Yellow
-$admin_js_files = @(
-    "assets/mrt-string-utils.js",
-    "assets/mrt-date-utils.js"
-)
-foreach ($jsFile in $admin_js_files) {
-    $checks++
-    if (Test-Path $jsFile) {
-        $js = Get-Content $jsFile -Raw
-        if ($js.Length -gt 0) {
-            Write-Host "  OK: $jsFile" -ForegroundColor Green
-        } else {
-            $errors += "JS file is empty: $jsFile"
-            Write-Host "  ERROR: $jsFile is empty" -ForegroundColor Red
-        }
-    } else {
-        $errors += "JS file missing: $jsFile"
-        Write-Host "  ERROR: $jsFile missing" -ForegroundColor Red
     }
 }
 

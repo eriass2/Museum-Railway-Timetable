@@ -51,6 +51,10 @@ COMMIT_MESSAGE.txt
 # PHPUnit
 .phpunit.cache/
 
+# Python
+__pycache__/
+*.pyc
+
 # Composer
 /vendor/
 

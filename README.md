@@ -216,8 +216,6 @@ museum-railway-timetable/
 │   ├─ assets.php, admin.php, shortcodes.php
 ├─ assets/
 │   ├─ admin.css                 # WP-admin shell styles
-│   ├─ mrt-string-utils.js       # Shared string helpers (tests in tests/js/)
-│   ├─ mrt-date-utils.js         # Shared date/time helpers
 │   ├─ dist/vue/                 # Vite bundle (public + admin JS + CSS)
 │   ├─ frontend-public.css       # Shared primitives (imported by Vue mrt-public.css)
 │   ├─ icons/train-types/        # PNG train type symbols
