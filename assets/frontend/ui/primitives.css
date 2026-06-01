@@ -1,6 +1,5 @@
-﻿/**
- * UI Components ÔÇô button, badge, heading, empty, card variants
- * Importeras av admin-components.css
+/**
+ * Shared primitives — buttons, badges, empty/loading, dots, card variants.
  *
  * @package Museum_Railway_Timetable
  */
@@ -77,15 +76,6 @@ input.mrt-btn:focus-visible {
     color: var(--mrt-text-tertiary);
     font-style: italic;
     font-weight: 500;
-}
-
-.mrt-heading {
-    margin: 0;
-}
-
-.mrt-heading--xl {
-    font-size: var(--mrt-font-xl);
-    color: var(--mrt-text-secondary);
 }
 
 .mrt-empty {

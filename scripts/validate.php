@@ -185,7 +185,7 @@ echo "\n7. Checking accessibility markers in public modules...\n";
 $a11y_markers = array(
 	'inc/public/journey-wizard/shell.php'       => array( 'MRT_render_vue_mount', 'museum_journey_wizard' ),
 	'inc/public/month-calendar/shortcode.php'   => array( 'MRT_render_vue_mount', 'museum_timetable_month' ),
-	'assets/frontend/components-ui.css'         => array( ':focus-visible' ),
+	'assets/frontend/ui/primitives.css'         => array( ':focus-visible' ),
 );
 
 foreach ( $a11y_markers as $file => $needles ) {

@@ -4,6 +4,8 @@
  * @package Museum_Railway_Timetable
  */
 
+@import url("ui/primitives.css");
+
 /* —— Alerts (Vue MrtAlert) —— */
 .mrt-ui-alert {
     padding: var(--mrt-spacing-sm, 0.5rem);
