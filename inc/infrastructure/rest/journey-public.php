@@ -11,8 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/domain/journey/public-handlers.php';
-
 /**
  * Register public frontend REST routes.
  */
