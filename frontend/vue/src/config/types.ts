@@ -45,6 +45,8 @@ export type MonthVueConfig = MrtRestConfig & {
   dayRunningAria?: string;
   legendClickHint?: string;
   legendTimetableTypes?: MonthLegendType[];
+  /** Open day panel on load when ?mrt_date=YYYY-MM-DD is present. */
+  initialDate?: string;
 };
 
 import type { TimetableOverviewPayload } from '../types/timetableOverview';

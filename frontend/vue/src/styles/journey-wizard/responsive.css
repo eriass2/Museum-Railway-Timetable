@@ -179,6 +179,11 @@
         margin: 0.25rem 0 0.45rem 5.1rem;
         max-width: calc(100% - 5.1rem);
         overflow-wrap: anywhere;
+        color: var(--mrt-color-brand-olive, #807c1c);
+    }
+
+    .mrt-journey-wizard .mrt-expand-trigger--link:hover {
+        color: var(--mrt-color-green-900, #183809);
     }
 
     .mrt-journey-wizard .mrt-price-list {

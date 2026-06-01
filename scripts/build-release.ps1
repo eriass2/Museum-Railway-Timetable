@@ -144,7 +144,7 @@ function Write-InstallTxt {
         "   Valj merge eller override. Publica tidtabellssidor skapas/uppdateras automatiskt.",
         "",
         "4. Kontrollera frontend",
-        "   Startsida eller sida med [museum_timetable_index] ska visa klickbara tidtabeller.",
+        "   Startsida (Trafikkalender) ska visa månadskalender; klick på trafikdag visar avgångar.",
         "   Varje tidtabellssida anvander [museum_timetable_overview] och laddar rutnat via REST.",
         "",
         "Vanligt fel - filnamn med backslash (Linux):",

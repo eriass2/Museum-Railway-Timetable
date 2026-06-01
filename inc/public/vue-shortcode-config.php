@@ -75,6 +75,7 @@ function MRT_vue_month_config( array $context ): array {
 		'dayServiceCountTitle' => __( '%d turer (alla linjer)', 'museum-railway-timetable' ),
 		'dayRunningAria'     => __( 'Trafikdag', 'museum-railway-timetable' ),
 		'legendClickHint'    => __( 'Klicka för att visa tidtabell', 'museum-railway-timetable' ),
+		'initialDate'        => (string) ( $context['atts']['initial_date'] ?? '' ),
 	);
 }
 

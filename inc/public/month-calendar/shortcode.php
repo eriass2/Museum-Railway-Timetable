@@ -34,6 +34,37 @@ function MRT_month_shortcode_apply_query_month( array $atts ) {
 }
 
 /**
+ * Apply ?mrt_date=YYYY-MM-DD from the request (deep link to day timetable).
+ *
+ * @param array<string, mixed> $atts Shortcode attributes
+ * @return array<string, mixed>
+ */
+function MRT_month_shortcode_apply_query_date( array $atts ) {
+	if ( empty( $_GET['mrt_date'] ) || ! is_string( $_GET['mrt_date'] ) ) {
+		return $atts;
+	}
+	$date = sanitize_text_field( wp_unslash( $_GET['mrt_date'] ) );
+	if ( ! preg_match( '/^(\d{4})-(\d{2})-(\d{2})$/', $date, $m ) ) {
+		return $atts;
+	}
+	$y  = (int) $m[1];
+	$mo = (int) $m[2];
+	$d  = (int) $m[3];
+	if ( $y < 1970 || $y > 2100 || $mo < 1 || $mo > 12 || $d < 1 || $d > 31 ) {
+		return $atts;
+	}
+	if ( ! checkdate( $mo, $d, $y ) ) {
+		return $atts;
+	}
+	$atts['initial_date'] = $date;
+	if ( empty( $atts['month'] ) ) {
+		$atts['month'] = sprintf( '%04d-%02d', $y, $mo );
+	}
+
+	return $atts;
+}
+
+/**
  * Prev/next month URLs for shortcode navigation (preserves other query args)
  *
  * @param int|false $first_ts Timestamp of first day of displayed month
@@ -187,6 +218,7 @@ function MRT_month_shortcode_build_context( $atts ) {
 	$atts = shortcode_atts(
 		array(
 			'month'        => '',
+			'initial_date' => '',
 			'train_type'   => '',
 			'service'      => '',
 			'legend'       => 0,
@@ -199,6 +231,7 @@ function MRT_month_shortcode_build_context( $atts ) {
 	);
 
 	$atts = MRT_month_shortcode_apply_query_month( $atts );
+	$atts = MRT_month_shortcode_apply_query_date( $atts );
 
 	$datetime = MRT_get_current_datetime();
 	$now_ts   = $datetime['timestamp'];

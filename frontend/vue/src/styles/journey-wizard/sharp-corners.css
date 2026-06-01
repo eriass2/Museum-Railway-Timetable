@@ -13,6 +13,4 @@
     border-radius: 0;
 }
 
-.mrt-journey-wizard .mrt-timeline__node {
-    border-radius: 0;
-}
+/* Timeline nodes stay circular (station dots), not sharp-corner boxes. */

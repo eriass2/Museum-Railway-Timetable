@@ -52,10 +52,10 @@ Vid import/dev-reset synkas WordPress-sidor automatiskt:
 
 | Sida | Slug | Shortcode |
 |------|------|-----------|
-| **Tidtabeller** (index) | `tidtabeller` | `[museum_timetable_index]` |
+| **Trafikkalender** (index) | `tidtabeller` | `[museum_timetable_month legend="1"]` + tidtabellslista |
 | En per publicerad tidtabell | `tidtabell-{kod}` | `[museum_timetable_overview timetable_id="…"]` |
 
-**Tidtabeller** sätts som sajtens **statiska startsida** (`page_on_front`). I utvecklingsläge tas WordPress standardinnehåll bort (Hello world, Sample Page).
+**Trafikkalender** sätts som sajtens **statiska startsida** (`page_on_front`). Klicka på en trafikdag i kalendern för att se avgångar den dagen. Länk med `?mrt_month=YYYY-MM` och valfritt `?mrt_date=YYYY-MM-DD`. I utvecklingsläge tas WordPress standardinnehåll bort (Hello world, Sample Page).
 
 Menyn får en länk till index om dev-meny är uppsatt. Synka manuellt: `MRT_sync_timetable_public_pages()` (kräver admin; använd `MRT_dev_cli_set_admin_user()` i WP-CLI).
 

@@ -115,10 +115,14 @@ function MRT_timetable_public_page_url( int $timetable_id ): string {
 }
 
 /**
- * Index page post content.
+ * Index page post content (calendar-first per G4 feedback).
  */
 function MRT_timetables_index_page_content(): string {
-	return '[museum_timetable_index]';
+	$heading = __( 'Alla tidtabeller', 'museum-railway-timetable' );
+
+	return "[museum_timetable_month legend=\"1\" show_counts=\"0\" nav=\"1\"]\n\n"
+		. '<h2 class="mrt-timetable-index-secondary__title">' . esc_html( $heading ) . "</h2>\n"
+		. '[museum_timetable_index intro="0"]';
 }
 
 /**
@@ -212,7 +216,7 @@ function MRT_sync_timetable_public_pages() {
 	$errors = array();
 	$index  = MRT_ensure_option_backed_page(
 		MRT_OPTION_TIMETABLES_INDEX_PAGE_ID,
-		__( 'Tidtabeller', 'museum-railway-timetable' ),
+		__( 'Trafikkalender', 'museum-railway-timetable' ),
 		MRT_timetables_index_page_content(),
 		'tidtabeller'
 	);

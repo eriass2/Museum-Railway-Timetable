@@ -11,6 +11,17 @@
   max-width: 42rem;
 }
 
+.mrt-timetable-index-secondary__title {
+  max-width: 42rem;
+  margin: 2.25rem auto 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--mrt-color-neutral-200, #b4b4b4);
+  font-family: var(--mrt-font-heading, 'Open Sans', sans-serif);
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  font-weight: 700;
+  color: var(--mrt-color-green-700, #245610);
+}
+
 .mrt-timetable-index__intro {
   margin: 0 0 var(--mrt-spacing-lg, 1.5rem);
   font-size: var(--mrt-font-base, 1rem);

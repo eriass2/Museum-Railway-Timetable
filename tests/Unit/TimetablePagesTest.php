@@ -18,8 +18,12 @@ final class TimetablePagesTest extends TestCase {
 		);
 	}
 
-	public function test_index_page_content_uses_index_shortcode(): void {
-		self::assertSame( '[museum_timetable_index]', MRT_timetables_index_page_content() );
+	public function test_index_page_content_uses_calendar_first(): void {
+		$content = MRT_timetables_index_page_content();
+		self::assertStringContainsString( '[museum_timetable_month', $content );
+		self::assertStringContainsString( 'legend="1"', $content );
+		self::assertStringContainsString( '[museum_timetable_index intro="0"]', $content );
+		self::assertStringContainsString( 'mrt-timetable-index-secondary__title', $content );
 	}
 
 	public function test_public_page_slug_uses_code_when_present(): void {

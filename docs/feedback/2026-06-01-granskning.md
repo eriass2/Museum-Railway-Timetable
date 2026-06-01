@@ -3,7 +3,7 @@
 Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder refereras nedan — lägg filerna i `docs/feedback/images/` om de sparas i repot.
 
 **Källor:** mail med skärmdumpar  
-**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** J2, G4 + ev. visuell G3/J1.
+**Status:** majoriteten åtgärdad (genomgång juni 2026 — se **Svar** per punkt). **Kvar:** J2 + ev. visuell G3/J1.
 
 ---
 
@@ -13,7 +13,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 |----------|-------|-----------|
 | Buggar / fel | 4 | **4 åtgärdade** (G1, J4, G5, G6) |
 | UI / design | 6 | **G2, G3, J1, J3** åtgärdade/delvis |
-| UX / flöde | 7 | **G5, G7, G8, G9, G10** åtgärdade. **G4, J2** kvar |
+| UX / flöde | 7 | **G4–G10** åtgärdade. **J2** kvar |
 | Frågor / scope | 2 | **J5** åtgärdad (knapp borttagen). **G10** åtgärdad (print + dela) |
 | Positivt | — | Båda imponerade, ser lovande ut |
 
@@ -33,6 +33,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | **G9** | Tur/retur: separat återresesteg med filtrering efter utresa |
 | **G10** | Skriv ut/PDF + dela/kopiera resa; **PDF verifierad** (`a9a9ad3`, `printElement`) |
 | **G8** | Månadskalender byter månad via REST utan sidladdning |
+| **G4** | Trafikkalender som startsida; klick på dag → tidtabell; `?mrt_date=` |
 | *(underliggande)* | GRÖN/GUL/RÖD/ORANGE + bussar synkade mot `Anslagstidtabell-2026.pdf`; 42 turer verifierade |
 
 ---
@@ -127,8 +128,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Tidtabell / startvy
 - **Typ:** UX / större förändring
 - **Prioritet:** medium–hög (produktbeslut)
-- **Status:** obehandlad
-- **Svar:** Ingen ändring av startvy ännu. Månadskalender-shortcode finns redan; frågan är om den ska bli primär ingång istället för tidtabellslistan.
+- **Status:** åtgärdad
+- **Svar:** Startsidan (`/tidtabeller/`, `page_on_front`) visar **månadskalender** med legend. Klick på trafikdag öppnar dagens avgångar inline (REST `GET /timetables/day`). Under kalendern finns **Alla tidtabeller** med länkar till hela säsongs-PDF-vyerna. Deep link: `?mrt_month=YYYY-MM` och `?mrt_date=YYYY-MM-DD`. Synkas via Dev tools → Synka tidtabellssidor.
 
 ### G5. Kalendersiffror – oklar betydelse
 - **Källa:** mail
@@ -201,7 +202,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 7. ~~**J3** – Mobil klippning + kortare linjetext~~ ✓
 
 ### Produktbeslut / större arbete
-8. **G4** – Kalender som startvy istället för tidtabellslista
+8. ~~**G4** – Kalender som startvy istället för tidtabellslista~~ ✓
 9. ~~**G9** – Tur/retur med dedikerat återresesteg~~ ✓
 10. **J2** – Busstider integrerade i huvudtidtabell
 11. ~~**G7 / G8** – Kalenderfärger per tidtabell ✓ / SPA utan reload ✓
@@ -248,6 +249,6 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - [x] **G6** — laddningsspinner (teckenkodning)
 - [x] **G7** — kalenderfärger per `mrt_timetable_type`
 - [x] **J3** — mobil klippning + kortare linjetext (`b3fcbbb`)
-- [ ] **G4** — kalender som primär startvy (produktbeslut)
+- [x] **G4** — kalender som primär startvy (trafikkalender + dagklick)
 - [x] **G8** — SPA-månadsväxling i månadskalendern
 - [ ] **J2** — bussar som rader i huvudtidtabell (produktbeslut)

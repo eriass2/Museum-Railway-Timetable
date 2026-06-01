@@ -35,4 +35,13 @@ final class MonthCalendarShortcodeTest extends TestCase {
 		$config = MRT_vue_month_config( $context );
 		self::assertSame( 0, (int) ( $config['atts']['show_counts'] ?? -1 ) );
 	}
+
+	public function test_query_date_sets_initial_date_and_month(): void {
+		$_GET['mrt_date'] = '2026-06-14';
+		$context          = MRT_month_shortcode_build_context( array() );
+		unset( $_GET['mrt_date'] );
+		self::assertIsArray( $context );
+		self::assertSame( '2026-06-14', $context['atts']['initial_date'] ?? '' );
+		self::assertSame( '2026-06', $context['atts']['month'] ?? '' );
+	}
 }

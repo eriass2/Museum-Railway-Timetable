@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref, watch } from 'vue';
+import { computed, nextTick, onMounted, ref, watch } from 'vue';
 import '../styles/month-calendar.css';
 import MrtAlert from '../components/ui/MrtAlert.vue';
 import MrtCalendarGrid from '../components/ui/MrtCalendarGrid.vue';
@@ -16,6 +16,7 @@ import MrtTimetableOverviewView from '../components/overview/MrtTimetableOvervie
 import { useTimetableOverview } from '../composables/useTimetableOverview';
 import { useMonthCalendar } from '../composables/useMonthCalendar';
 import { timetableTypeDotClass } from '../shared/calendarDay';
+import { syncDayCalendarQuery } from '../utils/monthCalendarQuery';
 import { overviewUiLabels } from '../shared/overviewUiLabels';
 import { resolveMrtString } from '../utils/mrtStrings';
 
@@ -119,6 +120,7 @@ function monthCellClass(cell: MonthGridCell): string | undefined {
 function closeDayPanel(): void {
   panelVisible.value = false;
   selectedYmd.value = '';
+  syncDayCalendarQuery(null);
 }
 
 async function onMonthShift(delta: number): Promise<void> {
@@ -135,8 +137,22 @@ async function onDayClick(ymd: string): Promise<void> {
   }
   selectedYmd.value = ymd;
   panelVisible.value = true;
+  syncDayCalendarQuery(ymd);
   await fetchDayOverview(ymd, trainType.value);
 }
+
+function isRunningDay(ymd: string): boolean {
+  return Object.values(dates.value).some(
+    (day) => day.ymd === ymd && Boolean(day.running),
+  );
+}
+
+onMounted(async () => {
+  const initial = props.config.initialDate?.trim();
+  if (initial && isRunningDay(initial)) {
+    await onDayClick(initial);
+  }
+});
 
 watch([panelVisible, dayOverview, dayLoading], async ([visible, overview, loading]) => {
   if (!visible || loading || !overview) {
