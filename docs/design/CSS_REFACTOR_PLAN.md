@@ -27,11 +27,11 @@ mrt-color-tokens.css, mrt-typography.css
 
 | # | Åtgärd | Commit |
 |---|--------|--------|
-| 1 | Ta bort dubbel `ui-components.css`-import i `mrt-public.css` | `css-refactor: drop duplicate ui-components import` |
-| 2 | Ta bort döda overview-`@import` i `admin.css` | `css-refactor: remove dead admin overview imports` |
-| 3 | Flytta `components-ui.css` → `ui/primitives.css`; uppdatera kedjor | `css-refactor: consolidate legacy primitives into ui/` |
-| 4 | Inför `ui/calendar-tokens.css`; koppla month + wizard | `css-refactor: shared calendar day color tokens` |
-| 5 | Dela `ui-components.css` i moduler + barrel-import | `css-refactor: split ui-components into ui modules` |
+| 1 | Ta bort dubbel `ui-components.css`-import i `mrt-public.css` | ✓ `1406f16` |
+| 2 | Ta bort döda overview-`@import` i `admin.css` | ✓ `9d511b4` |
+| 3 | Flytta `components-ui.css` → `ui/primitives.css`; uppdatera kedjor | ✓ `d66ca02` |
+| 4 | Inför `ui/calendar-tokens.css`; koppla month + wizard | ✓ `ef062a4` |
+| 5 | Dela `ui-components.css` i moduler + barrel-import | ✓ (denna branch) |
 
 ## Regler efter refactor
 

@@ -1,0 +1,27 @@
+/**
+ * alerts
+ * @package Museum_Railway_Timetable
+ */
+/* â€”â€” Alerts (Vue MrtAlert) â€”â€” */
+.mrt-ui-alert {
+    padding: var(--mrt-spacing-sm, 0.5rem);
+    margin-bottom: var(--mrt-spacing-md, 0.75rem);
+    border-radius: var(--mrt-radius-sm, 0);
+}
+
+.mrt-ui-alert--info {
+    background: var(--mrt-info-bg, #e8f4fc);
+    border-left: 4px solid var(--mrt-info-border, #2271b1);
+}
+
+.mrt-ui-alert--error {
+    background: var(--mrt-bg-error, #fcf0f1);
+    border-left: 4px solid var(--mrt-text-error, #b32d2e);
+    color: var(--mrt-text-error, #b32d2e);
+}
+
+.mrt-ui-alert--warning {
+    background: var(--mrt-warning-bg, #fcf9e8);
+    border-left: 4px solid var(--mrt-warning-border, #dba617);
+}
+

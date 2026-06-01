@@ -75,7 +75,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 
 ### Struktur
 - **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
-- **UI-klasser** – Nya klasser ska använda `.mrt-*` och vara BEM-liknande där det behövs.
+- **UI-klasser** – Vue-primitives i `assets/frontend/ui/` (barrel: `ui-components.css`). Legacy PHP-knappar m.m. i `ui/primitives.css`.
 - **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
 - **Inga inline styles** – All styling i CSS-filer.

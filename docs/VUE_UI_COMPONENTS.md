@@ -1,6 +1,6 @@
 # Vue UI components (`frontend/vue/src/components/ui/`)
 
-Shared primitives for wizard, month calendar, and overview. Wizard-specific wrappers live in `frontend/vue/src/wizard/components/`. Styles: `assets/frontend/ui-components.css` (imported via `mrt-public.css`).
+Shared primitives for wizard, month calendar, and overview. Wizard-specific wrappers live in `frontend/vue/src/wizard/components/`. Styles: `assets/frontend/ui/` (barrel `ui-components.css`). See [CSS_REFACTOR_PLAN.md](design/CSS_REFACTOR_PLAN.md).
 
 ## Components
 

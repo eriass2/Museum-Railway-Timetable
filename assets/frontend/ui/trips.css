@@ -1,0 +1,324 @@
+/**
+ * trips
+ * @package Museum_Railway_Timetable
+ */
+/* â€”â€” Trip summary â€”â€” */
+.mrt-trip-summary__time {
+    margin: 0;
+    font-size: clamp(1.35rem, 3vw, 1.85rem);
+    line-height: 1.05;
+    font-weight: 900;
+}
+
+.mrt-trip-summary__route {
+    margin: 0.2rem 0 0;
+    font-size: 1.2rem;
+}
+
+.mrt-trip-summary__date {
+    margin: 0.2rem 0 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--mrt-color-neutral-600, #555);
+}
+
+.mrt-trip-summary__notice {
+    margin: 0.35rem 0 0;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.mrt-trip-summary__notice--warn {
+    color: var(--mrt-text-error, #b32d2e);
+}
+
+/* â€”â€” Trip card â€”â€” */
+.mrt-trip-card {
+    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-wizard-text, #151515);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+}
+
+.mrt-trip-card.is-expanded > .mrt-trip-card__head {
+    background: #d6d6d6;
+}
+
+.mrt-trip-card__head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 0.75rem 0.9rem;
+    align-items: start;
+}
+
+.mrt-trip-card__side {
+    display: grid;
+    align-content: start;
+    justify-items: end;
+    gap: 0.35rem;
+}
+
+.mrt-trip-card__duration {
+    font-size: 1.35rem;
+    font-weight: 900;
+    color: #3f3f3f;
+    white-space: nowrap;
+}
+
+/* â€”â€” Summary â€”â€” */
+.mrt-summary-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.mrt-summary-card {
+    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-wizard-text, #151515);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    padding: 0.75rem 0.9rem;
+}
+
+.mrt-summary-card__heading {
+    color: var(--mrt-wizard-green-dark, #1f4d2e);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+/* â€”â€” Trip list / selected outbound â€”â€” */
+.mrt-trip-list {
+    display: grid;
+    gap: 1.35rem;
+}
+
+.mrt-selected-trip__label {
+    margin-bottom: 0.4rem;
+    color: var(--mrt-color-on-dark-link, #f5e6a8);
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.mrt-selected-trip__card {
+    border: 3px solid var(--mrt-wizard-yellow);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+    padding: 0.75rem 0.9rem;
+}
+
+/* â€”â€” Route search layout â€”â€” */
+.mrt-route-layout {
+    width: min(100%, 36rem);
+    margin-inline: auto;
+}
+
+.mrt-route-layout__stations {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+@media (min-width: 40rem) {
+    .mrt-route-layout__stations {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem 1.25rem;
+    }
+}
+
+.mrt-route-layout__link-wrap {
+    margin: 1.25rem 0 0;
+    text-align: center;
+}
+
+.mrt-route-layout__link {
+    color: var(--mrt-color-on-dark-link, #f5e6a8);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.15em;
+}
+
+.mrt-route-layout__link:hover {
+    color: var(--mrt-color-on-dark, #ffffff);
+}
+
+.mrt-surface .mrt-route-layout__link {
+    color: var(--mrt-color-green-700, #1f4d2e);
+}
+
+.mrt-surface .mrt-route-layout__link:hover {
+    color: var(--mrt-color-accent-700, #a88a10);
+}
+
+/* â€”â€” Connection detail â€”â€” */
+.mrt-detail-panel {
+    padding: 1.2rem 0.8rem 1rem;
+    background: var(--mrt-wizard-surface, #fff);
+}
+
+.mrt-detail-panel--multi {
+    display: grid;
+    gap: 1rem;
+}
+
+.mrt-detail-segment__notice {
+    margin: 0.2rem 0 0.4rem;
+    color: #151515;
+    font-size: 0.95rem;
+}
+
+.mrt-detail-segment__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.8rem;
+    align-items: center;
+    margin: 0 0 0.55rem 6.6rem;
+}
+
+.mrt-detail-segment__duration {
+    font-size: 1.05rem;
+    font-weight: 900;
+    color: #3f3f3f;
+}
+
+.mrt-detail-segment__transfer {
+    margin: 0.45rem 0 0.8rem 6.6rem;
+    color: #333333;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+/* â€”â€” Timeline â€”â€” */
+.mrt-timeline {
+    display: grid;
+    gap: 0;
+}
+
+.mrt-timeline__row {
+    display: grid;
+    grid-template-columns: 5.4rem 1.6rem minmax(0, 1fr);
+    gap: 0.65rem;
+    min-height: 2.7rem;
+    align-items: start;
+}
+
+.mrt-timeline__time {
+    text-align: right;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.mrt-timeline__node {
+    position: relative;
+    width: 1.2rem;
+    height: 1.2rem;
+    margin-top: 0.1rem;
+    border: 0.35rem solid #151515;
+    border-radius: 50%;
+    background: #ffffff;
+}
+
+.mrt-timeline__node::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0.85rem;
+    width: 0.35rem;
+    height: 2.1rem;
+    background: #151515;
+    transform: translateX(-50%);
+}
+
+.mrt-timeline__row:last-of-type .mrt-timeline__node::after {
+    display: none;
+}
+
+.mrt-timeline__station {
+    font-size: 1.2rem;
+    font-weight: 800;
+}
+
+.mrt-timeline__row:not(.is-terminal) .mrt-timeline__station,
+.mrt-timeline__row:not(.is-terminal) .mrt-timeline__time {
+    font-weight: 500;
+}
+
+.mrt-timeline__expand {
+    justify-self: start;
+    margin: 0.3rem 0 0.6rem 6.6rem;
+    min-height: 0;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    color: var(--mrt-wizard-olive, #6b7a3a);
+    font-size: 1.05rem;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
+.mrt-timeline__expand .mrt-expand-trigger__chevron {
+    display: none;
+}
+
+/* â€”â€” Expand trigger â€”â€” */
+.mrt-expand-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border: 0;
+    border-top: 1px solid var(--mrt-wizard-border, #ddd);
+    padding: 0.45rem 0.9rem 0.65rem;
+    background: var(--mrt-color-neutral-100, #f3f3f3);
+    color: #151515;
+    font-size: 1.05rem;
+    font-weight: 700;
+    min-height: 0;
+    cursor: pointer;
+}
+
+.mrt-expand-trigger:hover {
+    background: var(--mrt-color-neutral-200, #e8e8e8);
+}
+
+.mrt-expand-trigger__chevron {
+    width: 1.1rem;
+    height: 1.1rem;
+    border-right: 3px solid currentColor;
+    border-bottom: 3px solid currentColor;
+    transform: rotate(45deg);
+}
+
+.mrt-expand-trigger.is-expanded .mrt-expand-trigger__chevron {
+    transform: rotate(225deg);
+}
+
+/* â€”â€” Vehicle row â€”â€” */
+.mrt-vehicle-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.65rem;
+    justify-content: flex-end;
+}
+
+.mrt-vehicle-row__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.mrt-vehicle-row__icon {
+    display: block;
+    width: 48px;
+    height: 24px;
+}
+
+.mrt-vehicle-row__mark {
+    display: inline-block;
+    width: 2rem;
+    height: 0.65rem;
+    background: var(--mrt-color-neutral-400, #999);
+}
+
