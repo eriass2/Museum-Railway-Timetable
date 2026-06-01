@@ -24,6 +24,7 @@ const loading = ref(true);
 const error = ref('');
 const newStationTitle = ref('');
 const newRouteTitle = ref('');
+const sectionTab = ref<'stations' | 'routes'>('stations');
 const editingRoute = ref<RouteRow | null>(null);
 const addStationToRoute = ref(0);
 
@@ -69,6 +70,7 @@ async function addRoute() {
 }
 
 function editRoute(route: RouteRow) {
+  sectionTab.value = 'routes';
   editingRoute.value = { ...route, station_ids: [...route.station_ids] };
 }
 
@@ -144,8 +146,27 @@ async function removeRoute(route: RouteRow) {
     <p v-if="loading" class="description">Laddar...</p>
     <p v-else-if="error" class="notice notice-error">{{ error }}</p>
 
-    <div class="mrt-admin-panel">
-      <h2>Stationer</h2>
+    <nav v-if="!loading" class="nav-tab-wrapper mrt-admin-section-nav" aria-label="Stationer eller rutter">
+      <a
+        href="#"
+        class="nav-tab"
+        :class="{ 'nav-tab-active': sectionTab === 'stations' }"
+        @click.prevent="sectionTab = 'stations'"
+      >
+        Stationer
+      </a>
+      <a
+        href="#"
+        class="nav-tab"
+        :class="{ 'nav-tab-active': sectionTab === 'routes' }"
+        @click.prevent="sectionTab = 'routes'"
+      >
+        Rutter
+      </a>
+    </nav>
+
+    <div v-if="!loading && sectionTab === 'stations'" class="mrt-admin-panel">
+      <h2 class="screen-reader-text">Stationer</h2>
       <p v-if="cfg.canManage" class="mrt-admin-create-form">
         <input v-model="newStationTitle" type="text" class="regular-text" placeholder="Ny station" />
         <button type="button" class="button button-primary" @click="addStation">Lägg till</button>
@@ -223,8 +244,8 @@ async function removeRoute(route: RouteRow) {
       </div>
     </div>
 
-    <div class="mrt-admin-panel">
-      <h2>Rutter</h2>
+    <div v-if="!loading && sectionTab === 'routes'" class="mrt-admin-panel">
+      <h2 class="screen-reader-text">Rutter</h2>
       <p v-if="cfg.canManage" class="mrt-admin-create-form">
         <input v-model="newRouteTitle" type="text" class="regular-text" placeholder="Ny rutt" />
         <button type="button" class="button button-primary" @click="addRoute">Lägg till</button>
@@ -269,7 +290,10 @@ async function removeRoute(route: RouteRow) {
       </div>
     </div>
 
-    <div v-if="editingRoute" class="mrt-admin-panel mrt-admin-route-editor">
+    <div
+      v-if="!loading && sectionTab === 'routes' && editingRoute"
+      class="mrt-admin-panel mrt-admin-route-editor"
+    >
       <h2>Redigera rutt: {{ editingRoute.title }}</h2>
       <p>
         <input v-model="editingRoute.title" type="text" class="regular-text" />
