@@ -33,21 +33,6 @@ function MRT_rest_can_edit_operations(): bool {
 }
 
 /**
- * Verify user may edit a specific post.
- *
- * @param int $post_id Post ID.
- */
-function MRT_rest_can_edit_post( int $post_id ): bool {
-	if ( $post_id <= 0 ) {
-		return false;
-	}
-	if ( current_user_can( 'manage_options' ) ) {
-		return true;
-	}
-	return current_user_can( 'edit_post', $post_id );
-}
-
-/**
  * Verify wp_rest nonce from a REST request.
  *
  * @param WP_REST_Request $request Request.

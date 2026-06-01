@@ -131,30 +131,6 @@ function MRT_get_price_matrix() {
 }
 
 /**
- * Full zone matrix plus active trip and zone.
- *
- * @param array<string, mixed> $args trip => single|return|day, from_station_id, to_station_id
- * @return array<string, mixed> matrix, active_ticket_type, active_row
- */
-function MRT_get_prices_for_context( $args = array() ) {
-	$trip = isset( $args['trip'] ) ? sanitize_key( (string) $args['trip'] ) : 'single';
-	if ( ! in_array( $trip, MRT_price_ticket_type_keys(), true ) ) {
-		$trip = 'single';
-	}
-	$full  = MRT_get_price_matrix();
-	$zones = MRT_price_zones_for_station_pair(
-		(int) ( $args['from_station_id'] ?? 0 ),
-		(int) ( $args['to_station_id'] ?? 0 )
-	);
-	return array(
-		'matrix'             => $full,
-		'active_ticket_type' => $trip,
-		'active_zone'        => $zones,
-		'active_row'         => MRT_price_matrix_for_zone( $full, $zones )[ $trip ],
-	);
-}
-
-/**
  * Select one zone column from the stored zone matrix.
  *
  * @param array<string, array<string, array<int, int|null>>> $matrix Full zone matrix
@@ -265,40 +241,6 @@ function MRT_get_afternoon_return_prices() {
 		'child_0_3'      => 0,
 		'student_senior' => 140,
 	);
-}
-
-/**
- * Parse HH:MM clock to minutes since midnight.
- *
- * @param string $hhmm Clock value
- * @return int|null
- */
-function MRT_parse_trip_clock( $hhmm ) {
-	if ( ! is_string( $hhmm ) || ! preg_match( '/^(\d{1,2}):(\d{2})$/', trim( $hhmm ), $m ) ) {
-		return null;
-	}
-	return ( (int) $m[1] * 60 ) + (int) $m[2];
-}
-
-/**
- * Whether a return trip qualifies for the flat afternoon fare.
- *
- * @param string $trip_type single|return|day
- * @param string $outbound_departure Outbound origin departure (HH:MM)
- * @param string $inbound_departure  Return origin departure (HH:MM)
- * @return bool
- */
-function MRT_qualifies_for_afternoon_return( $trip_type, $outbound_departure, $inbound_departure ) {
-	if ( $trip_type !== 'return' ) {
-		return false;
-	}
-	$threshold = 15 * 60;
-	$out       = MRT_parse_trip_clock( (string) $outbound_departure );
-	$in        = MRT_parse_trip_clock( (string) $inbound_departure );
-	if ( $out === null || $in === null ) {
-		return false;
-	}
-	return $out >= $threshold && $in >= $threshold;
 }
 
 /**

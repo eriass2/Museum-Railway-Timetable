@@ -46,20 +46,6 @@ final class RestPermissionsTest extends TestCase
 		self::assertTrue( MRT_rest_can_edit_operations() );
 	}
 
-	public function test_can_edit_post_rejects_invalid_id(): void
-	{
-		self::assertFalse( MRT_rest_can_edit_post( 0 ) );
-	}
-
-	public function test_can_edit_post_manager_bypasses_post_check(): void
-	{
-		$GLOBALS['mrt_test_current_user_can'] = static function ( string $cap ): bool {
-			return $cap === 'manage_options';
-		};
-
-		self::assertTrue( MRT_rest_can_edit_post( 42 ) );
-	}
-
 	public function test_can_read_public_allows_admin_without_nonce(): void
 	{
 		$GLOBALS['mrt_test_current_user_can'] = static function ( string $cap ): bool {

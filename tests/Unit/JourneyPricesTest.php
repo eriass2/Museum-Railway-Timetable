@@ -85,24 +85,6 @@ final class JourneyPricesTest extends TestCase {
         self::assertSame([1 => 99, 2 => 99, 3 => 99, 4 => 99], $out['single']['adult']);
     }
 
-    public function test_get_prices_for_context_active_row(): void {
-        $GLOBALS['mrt_test_options'] = [
-            'mrt_price_matrix' => [
-                'return' => ['adult' => ['3' => 200]],
-            ],
-        ];
-        $ctx = MRT_get_prices_for_context(['trip' => 'return']);
-        self::assertSame('return', $ctx['active_ticket_type']);
-        self::assertSame(200, $ctx['active_row']['adult']);
-        self::assertSame(3, $ctx['active_zone']);
-    }
-
-    public function test_get_prices_for_context_invalid_trip_falls_back_to_single(): void {
-        $ctx = MRT_get_prices_for_context(['trip' => 'unknown']);
-        self::assertSame('single', $ctx['active_ticket_type']);
-        self::assertSame(MRT_price_matrix_for_zone($ctx['matrix'], 3)['single'], $ctx['active_row']);
-    }
-
     public function test_price_matrix_for_zone_flattens_selected_zone(): void {
         $m = MRT_get_default_price_matrix();
         $flat = MRT_price_matrix_for_zone($m, 2);
@@ -115,12 +97,6 @@ final class JourneyPricesTest extends TestCase {
         self::assertSame(1, MRT_price_zones_between_zone_sets([2], [2, 3]));
         self::assertSame(2, MRT_price_zones_between_zone_sets([1], [2, 3]));
         self::assertSame(4, MRT_price_zones_between_zone_sets([1], [4]));
-    }
-
-    public function test_afternoon_return_qualifies_when_both_legs_after_fifteen(): void {
-        self::assertTrue(MRT_qualifies_for_afternoon_return('return', '15:00', '16:30'));
-        self::assertFalse(MRT_qualifies_for_afternoon_return('return', '14:59', '16:30'));
-        self::assertFalse(MRT_qualifies_for_afternoon_return('single', '15:00', '16:30'));
     }
 
     public function test_afternoon_return_prices_match_taxa_2026(): void {
