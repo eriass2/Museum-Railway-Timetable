@@ -34,6 +34,8 @@ export type MonthVueConfig = MrtRestConfig & {
   stringsNextMonth?: string;
   legendServiceDay?: string;
   legendCountHint?: string;
+  dayServiceCountTitle?: string;
+  dayRunningAria?: string;
   legendClickHint?: string;
 };
 

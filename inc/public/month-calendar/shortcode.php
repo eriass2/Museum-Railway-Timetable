@@ -117,7 +117,7 @@ function MRT_month_shortcode_build_context( $atts ) {
 			'train_type'   => '',
 			'service'      => '',
 			'legend'       => 1,
-			'show_counts'  => 1,
+			'show_counts'  => 0,
 			'start_monday' => 1,
 			'nav'          => 1,
 		),

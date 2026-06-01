@@ -193,7 +193,9 @@ function buildMonthConfig() {
     },
     strings: { loading: 'Laddar...', errorGeneric: 'Kunde inte ladda tidtabellen.' },
     legendServiceDay: 'Trafikdag',
-    legendCountHint: 'antal per dag',
+    legendCountHint: 'Siffran visar antal turer som trafikerar den dagen (alla linjer och riktningar).',
+    dayServiceCountTitle: '%d turer (alla linjer)',
+    dayRunningAria: 'Trafikdag',
     legendClickHint: 'Klicka för att visa tidtabell',
   };
 }

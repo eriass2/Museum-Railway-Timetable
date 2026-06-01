@@ -165,7 +165,7 @@ const shortcodes: ShortcodeHelp[] = [
       { name: 'train_type', desc: 'Filtrera på tågtypens slug (se Tågtyper)' },
       { name: 'service', desc: 'Filtrera på exakt tur-titel (valfritt)' },
       { name: 'legend', desc: 'Visa förklaring (1/0, standard 1)' },
-      { name: 'show_counts', desc: 'Visa antal turer per dag (1/0, standard 1)' },
+      { name: 'show_counts', desc: 'Visa antal turer per dag (1/0, standard 0). Siffran gäller alla linjer och riktningar.' },
       { name: 'start_monday', desc: 'Vecka börjar måndag (1/0, standard 1)' },
       { name: 'nav', desc: 'Länkar föregående/nästa månad (1/0, standard 1)' },
     ],

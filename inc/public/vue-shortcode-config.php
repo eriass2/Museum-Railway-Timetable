@@ -76,7 +76,9 @@ function MRT_vue_month_config( array $context ): array {
 		'stringsPrevMonth'   => __( 'Föregående månad', 'museum-railway-timetable' ),
 		'stringsNextMonth'   => __( 'Nästa månad', 'museum-railway-timetable' ),
 		'legendServiceDay'   => __( 'Trafikdag', 'museum-railway-timetable' ),
-		'legendCountHint'    => __( 'antal per dag', 'museum-railway-timetable' ),
+		'legendCountHint'    => __( 'Siffran visar antal turer som trafikerar den dagen (alla linjer och riktningar).', 'museum-railway-timetable' ),
+		'dayServiceCountTitle' => __( '%d turer (alla linjer)', 'museum-railway-timetable' ),
+		'dayRunningAria'     => __( 'Trafikdag', 'museum-railway-timetable' ),
 		'legendClickHint'    => __( 'Klicka för att visa tidtabell', 'museum-railway-timetable' ),
 	);
 }

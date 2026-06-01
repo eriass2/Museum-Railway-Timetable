@@ -129,6 +129,8 @@ watch([panelVisible, dayOverview, dayLoading], async ([visible, overview, loadin
           :day="cell.day"
           :info="cell.info"
           :show-counts="showCounts"
+          :count-title="config.dayServiceCountTitle"
+          :running-aria="config.dayRunningAria"
           :selected="selectedYmd === cell.info.ymd"
           @click="onDayClick"
         />

@@ -110,7 +110,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Kalender
 - **Typ:** bugg eller UX (oklarhet)
 - **Prioritet:** hög
-- **Status:** obehandlad
+- **Status:** åtgärdad (siffror av som standard; tydlig legend när show_counts=1)
+- **Anteckning:** Siffrorna var antal **turer** (services) alla linjer — inte avgångar för vald sträcka. Reseplanerarens kalender visar inga siffror.
 
 ### G6. ”ÔÅ / Laddar…” vid laddning
 - **Källa:** mail

@@ -1,14 +1,33 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import type { MonthDayMeta } from '../../config/types';
+import { monthDayButtonAria, monthDayCountTitle } from '../../utils/monthDayLabels';
 
 const props = defineProps<{
   day: number;
   info: MonthDayMeta;
   showCounts: boolean;
   selected: boolean;
+  countTitle?: string;
+  runningAria?: string;
 }>();
 
 const emit = defineEmits<{ click: [ymd: string] }>();
+
+const countTooltip = computed(() => {
+  if (!props.showCounts || !props.info.count || !props.countTitle) {
+    return undefined;
+  }
+  return monthDayCountTitle(props.countTitle, props.info.count);
+});
+
+const buttonAria = computed(() =>
+  monthDayButtonAria(props.day, props.info, {
+    showCounts: props.showCounts,
+    countTitle: props.countTitle,
+    runningLabel: props.runningAria,
+  }),
+);
 
 function onClick(): void {
   if (props.info.running && props.info.ymd) {
@@ -26,7 +45,9 @@ function onClick(): void {
     type="button"
     class="mrt-day mrt-running mrt-day-clickable mrt-cursor-pointer"
     :class="{ 'is-selected': selected }"
+    :aria-label="buttonAria"
     :aria-pressed="selected"
+    :title="countTooltip"
     @click="onClick"
   >
     <span class="mrt-daynum" aria-hidden="true">{{ day }}</span>
