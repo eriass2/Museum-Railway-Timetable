@@ -115,14 +115,6 @@ export function adminConfig(): AdminClientConfig {
   };
 }
 
-/** WordPress admin.php URL for a plugin submenu slug (syncs WP sidebar with Vue). */
-export function adminMenuUrl(pageSlug: string): string {
-  const base = adminConfig().adminBase;
-  const q = base.indexOf('?');
-  const path = q >= 0 ? base.slice(0, q) : base;
-  return `${path}?page=${encodeURIComponent(pageSlug)}`;
-}
-
 export const ADMIN_WP_PAGE_SLUGS: Record<string, string> = {
   '/dashboard': 'mrt_app',
   '/timetables': 'mrt_app_timetables',

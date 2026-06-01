@@ -26,7 +26,7 @@ type LoadParams = {
   legTo: MaybeRef<number>;
 };
 
-export async function fetchConnectionLegDetail(
+async function fetchConnectionLegDetail(
   params: LoadParams,
   leg: JourneyLeg,
 ): Promise<ConnectionDetailPayload | null> {
@@ -40,7 +40,7 @@ export async function fetchConnectionLegDetail(
   return res.success && res.data ? res.data : null;
 }
 
-export function segmentFromDetailPayload(
+function segmentFromDetailPayload(
   data: ConnectionDetailPayload,
   title: string,
   leg?: JourneyLeg,
