@@ -34,7 +34,7 @@ export async function loadWizardCalendarMonth(
     { from_station: store.fromId, to_station: store.toId, year, month },
   );
   if (!res.success || !res.data) {
-    store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel.'));
+    store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel. Försök igen.'));
     return;
   }
   daysMap.value = res.data.days || {};

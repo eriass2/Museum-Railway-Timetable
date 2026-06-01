@@ -56,7 +56,7 @@ function legTowardsSuffix(destination: string, cfg?: WizardCfg): string {
 }
 
 export function legVehicleLabel(leg: JourneyLeg, cfg?: WizardCfg): string {
-  const train = leg.train_type?.trim() || 'Tåg';
+  const train = leg.train_type?.trim() || cfgStr(cfg ?? {}, 'defaultTrainType', 'Tåg');
   const number = legServiceNumber(leg);
   const towards = legTowardsSuffix(leg.destination || '', cfg);
   if (number && towards) {

@@ -20,8 +20,8 @@ function stationTime(s: TimelineStop): string {
   <MrtTimeline
     :stops="stops"
     :format-time="stationTime"
-    :show-stops-label="cfgStr(cfg, 'showStops', 'Visa hållplatser')"
-    :hide-stops-label="cfgStr(cfg, 'hideStops', 'Dölj')"
+    :show-stops-label="cfgStr(cfg, 'showStops', 'Visa passerade stationer')"
+    :hide-stops-label="cfgStr(cfg, 'hideStops', 'Dölj passerade stationer')"
     :start-expanded="startExpanded"
   />
 </template>

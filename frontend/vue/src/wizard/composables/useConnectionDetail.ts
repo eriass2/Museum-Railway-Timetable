@@ -47,7 +47,7 @@ export function useConnectionDetail(params: DetailParams) {
     });
     loading.value = false;
     if (!next.length) {
-      error.value = cfgStr(cfg.value, 'errorGeneric', 'Något gick fel.');
+      error.value = cfgStr(cfg.value, 'errorGeneric', 'Något gick fel. Försök igen.');
       return;
     }
     segments.value = next;

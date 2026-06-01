@@ -29,7 +29,7 @@ export function useTripConnections(ctx: WizardInjection, legCtx: 'outbound' | 'r
     if (legCtx === 'return' && store.outbound) {
       const arr = arrivalAtDestination(store.outbound);
       if (!arr) {
-        store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel.'));
+        store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel. Försök igen.'));
         return;
       }
       payload.outbound_arrival = arr;

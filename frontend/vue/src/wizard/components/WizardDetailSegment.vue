@@ -38,7 +38,7 @@ const vehicleItems = computed((): MrtVehicleItem[] => {
   <MrtDetailSegment
     :title="segment.title"
     :notice="segment.notice"
-    :notice-label="cfgStr(cfg, 'noticeLabel', 'Notis')"
+    :notice-label="cfgStr(cfg, 'noticeLabel', 'Trafikmeddelande')"
     :transfer-text="showTransfer ? transferText : undefined"
   >
     <template v-if="segment.leg" #meta>

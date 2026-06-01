@@ -86,7 +86,7 @@ watch(
         :error="error"
         :loading-text="cfgStr(cfg, 'loading', 'Laddar...')"
         :empty="!connections.length"
-        :empty-text="cfgStr(cfg, 'noConnections', 'Inga anslutningar hittades.')"
+        :empty-text="cfgStr(cfg, 'noConnections', 'Inga anslutningar detta datum.')"
       >
         <MrtTripList>
           <WizardTripCard
