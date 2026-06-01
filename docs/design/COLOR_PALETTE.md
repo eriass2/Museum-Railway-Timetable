@@ -2,6 +2,17 @@
 
 Källa i kod: [`assets/mrt-color-tokens.css`](../../assets/mrt-color-tokens.css). Officiell profil: [lennakatten.se/grafisk-profil](https://lennakatten.se/grafisk-profil/) och [`docs/design/reference/`](reference/).
 
+## Typsnitt (Lennakatten profil)
+
+| Token | Värde | Användning |
+|-------|--------|------------|
+| `--mrt-font-body` | Roboto | Brödtext, tidtabellstider, formulär |
+| `--mrt-font-heading` | Open Sans | Rubriker, tidtabellsbanner, route-titel |
+| `--mrt-font-weight-heading` | 700 | Standard rubrik |
+| `--mrt-font-weight-heading-strong` | 800 | Stora rubriker (wizard, route) |
+
+Källa: [`assets/mrt-typography.css`](../../assets/mrt-typography.css)
+
 ## Varumärkesfärger (profil)
 
 | Token | Hex | Text ovanpå |

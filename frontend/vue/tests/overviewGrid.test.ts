@@ -51,8 +51,8 @@ describe('overviewGrid tracks', () => {
       column({ serviceNumber: '93', specialName: 'Express', highlightColor: '#fff9c4' }),
     ];
 
-    expect(overviewGridTemplateColumns(cols)).toContain('2.85rem');
-    expect(parseFloat(overviewGridMinWidth(cols))).toBeGreaterThan(11 + 3.75 * 2);
+    expect(overviewGridTemplateColumns(cols)).toContain('2.35rem');
+    expect(parseFloat(overviewGridMinWidth(cols))).toBeGreaterThan(10.5 + 4.1 * 2);
   });
 
   it('merges highlight stripes per segment around train change', () => {

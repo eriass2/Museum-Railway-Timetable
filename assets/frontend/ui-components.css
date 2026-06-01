@@ -810,6 +810,8 @@
 /* —— Headings —— */
 .mrt-heading {
     margin: 0;
+    font-family: var(--mrt-font-heading);
+    font-weight: var(--mrt-font-weight-heading);
 }
 
 .mrt-heading--lg {

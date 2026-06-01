@@ -230,9 +230,15 @@ function MRT_enqueue_timetable_index_styles(): void {
 		MRT_VERSION
 	);
 	wp_enqueue_style(
+		'mrt-typography',
+		$a . 'mrt-typography.css',
+		array( 'mrt-color-tokens' ),
+		MRT_VERSION
+	);
+	wp_enqueue_style(
 		'mrt-frontend-base',
 		$a . 'frontend/components-base.css',
-		array( 'mrt-color-tokens' ),
+		array( 'mrt-color-tokens', 'mrt-typography' ),
 		MRT_VERSION
 	);
 	wp_enqueue_style(

@@ -1,0 +1,49 @@
+/**
+ * Lennakatten typography — Roboto (body), Open Sans Bold (headings).
+ *
+ * Profile: https://lennakatten.se/grafisk-profil/
+ * Reference: docs/design/reference/README.md
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&family=Roboto:wght@400;500;700&display=swap");
+
+:root {
+    --mrt-font-body: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mrt-font-heading: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mrt-font-weight-body: 400;
+    --mrt-font-weight-heading: 700;
+    --mrt-font-weight-heading-strong: 800;
+}
+
+.mrt-vue-root,
+.mrt-has-shortcodes,
+.mrt-month,
+.mrt-journey-wizard,
+.mrt-ov,
+.mrt-timetable-index,
+.mrt-admin-app {
+    font-family: var(--mrt-font-body);
+    font-weight: var(--mrt-font-weight-body);
+}
+
+.mrt-heading,
+.mrt-ov-banner,
+.mrt-ov-route-title,
+.mrt-ov-day-title,
+.mrt-month-nav__title,
+.mrt-ov-print-key-title,
+.mrt-ov-col-head--number,
+.mrt-step-header__title,
+.mrt-calendar-nav__title {
+    font-family: var(--mrt-font-heading);
+    font-weight: var(--mrt-font-weight-heading);
+}
+
+.mrt-heading--md,
+.mrt-heading--xl,
+.mrt-heading--surface-title,
+.mrt-ov-route-title {
+    font-weight: var(--mrt-font-weight-heading-strong);
+}

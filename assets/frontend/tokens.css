@@ -6,6 +6,7 @@
  */
 
 @import url("../mrt-color-tokens.css");
+@import url("../mrt-typography.css");
 
 :root {
     /* Primary Colors (legacy aliases → Lennakatten brand) */

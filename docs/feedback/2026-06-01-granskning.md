@@ -12,7 +12,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | Kategori | Antal | Kommentar |
 |----------|-------|-----------|
 | Buggar / fel | 4 | **4 åtgärdade** (G1, J4, G5, G6) |
-| UI / design | 6 | **G3 delvis** (färgpalett). J1, G2, J3 kvar |
+| UI / design | 6 | **G2, G3, J1** åtgärdade/delvis. **J3** kvar |
 | UX / flöde | 7 | G5 åtgärdad. G4, G7–G10, G9, J2 obehandlade |
 | Frågor / scope | 2 | J5 obehandlad (svar behövs) |
 | Positivt | — | Båda imponerade, ser lovande ut |
@@ -25,6 +25,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | **J4** | Taxa 2026, eftermiddagsbiljett, heldagsbiljetter i sammanfattning |
 | **G5** | Siffror dolda som standard; tydligare legend vid `show_counts=1` |
 | **G3** | Lennakatten-färgpalett + kalenderfärger per tidtabellstyp (G7) |
+| **G2** | Roboto + Open Sans Bold (Lennakatten profil) |
+| **J1** | Delvis — fetstil stationer, smalare tågkolumner; färger via G3 |
 | *(underliggande)* | GRÖN/GUL/RÖD/ORANGE + bussar synkade mot `Anslagstidtabell-2026.pdf`; 42 turer verifierade |
 
 ---
@@ -37,9 +39,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Tidtabell (mobil)
 - **Typ:** UI / design
 - **Prioritet:** medium
-- **Status:** delvis åtgärdad (färger via G3; mått och fetstil kvar)
-- **Anteckning:** Se [COLOR_PALETTE.md](../design/COLOR_PALETTE.md). Officiell grafisk profil: https://lennakatten.se/grafisk-profil/
-- **Svar:** Varumärkesfärgerna är uppdaterade enligt Lennakatten grafisk profil (se G3). Kolumnbredder (t.ex. Thun's-Expressen) och **fetstil på stationsnamn** i tidtabellsvyn är inte gjorda än — ligger kvar i designbackloggen tillsammans med G2 (typsnitt).
+- **Status:** åtgärdad (delvis — fetstil + kolumnbredd; färger via G3)
+- **Svar:** Stationer i tidtabellsgriden är **fetstil** (`font-weight: 700`). Tågkolumner har fast maxbredd (inte `1fr`) så markerade turer som Thun's-expressen inte drar ut layouten; highlight-kolumnen är smalare med mindre vertikal etikettext. Varumärkesfärger via G3/G7.
 
 ### J2. Busstider i huvudtidtabellen
 - **Källa:** mail
@@ -100,9 +101,9 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Global typografi
 - **Typ:** design
 - **Prioritet:** medium
-- **Status:** obehandlad
+- **Status:** åtgärdad
 - **Referens:** https://lennakatten.se/grafisk-profil/
-- **Svar:** Ej implementerat. Nästa steg i designbackloggen efter färgpaletten.
+- **Svar:** **Roboto** (brödtext) och **Open Sans Bold** (rubriker) laddas via `assets/mrt-typography.css` (Google Fonts). Gäller publikt UI, wizard, tidtabell och admin Vue (`--mrt-font-body` / `--mrt-font-heading`).
 
 ### G3. Färger mot grafisk profil
 - **Källa:** mail
@@ -189,8 +190,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 4. ~~**G6** – ”ÔÅ / Laddar…” (encoding/copy)~~ ✓
 
 ### Design som är relativt enkelt
-5. **J1 / G3** – ~~Färgpalett~~ ✓ delvis — kvar: stationer fetstil, kolumnbredder, tidtabell per typ
-6. **G2** – Roboto + Open Sans Bold
+5. ~~**J1 / G3** – Färgpalett, fetstil stationer, kolumnbredder~~ ✓
+6. ~~**G2** – Roboto + Open Sans Bold~~ ✓
 7. **J3** – Mobil klippning + kortare linjetext
 
 ### Produktbeslut / större arbete

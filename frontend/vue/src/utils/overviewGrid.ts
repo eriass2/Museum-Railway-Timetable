@@ -59,9 +59,9 @@ export function buildOverviewGridTracks(columns: TimetableOverviewColumn[]): Ove
 }
 
 export function overviewGridMinWidth(columns: TimetableOverviewColumn[]): string {
-  let rem = 11;
+  let rem = 10.5;
   for (const track of buildOverviewGridTracks(columns)) {
-    rem += track.kind === 'highlight' ? 2.85 : 3.75;
+    rem += track.kind === 'highlight' ? 2.35 : 4.1;
   }
   return `${rem}rem`;
 }
@@ -69,7 +69,11 @@ export function overviewGridMinWidth(columns: TimetableOverviewColumn[]): string
 export function overviewGridTemplateColumns(columns: TimetableOverviewColumn[]): string {
   const parts = ['var(--mrt-ov-station-w)'];
   for (const track of buildOverviewGridTracks(columns)) {
-    parts.push(track.kind === 'highlight' ? 'minmax(2.25rem, 2.85rem)' : 'minmax(var(--mrt-ov-col-min), 1fr)');
+    parts.push(
+      track.kind === 'highlight'
+        ? 'minmax(2rem, var(--mrt-ov-highlight-w, 2.35rem))'
+        : 'minmax(var(--mrt-ov-col-min), var(--mrt-ov-col-max, 4.1rem))',
+    );
   }
   return parts.join(' ');
 }
