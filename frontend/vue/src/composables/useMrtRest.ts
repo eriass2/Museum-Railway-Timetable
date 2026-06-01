@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { mrtRestRequest, type MrtAjaxResponse } from '../api/mrtRest';
+import { mrtRestRequest, type MrtRestResponse } from '../api/mrtRest';
 import type { MrtRestConfig } from '../config/types';
 
 export function useMrtRest(config: MrtRestConfig) {
@@ -9,7 +9,7 @@ export function useMrtRest(config: MrtRestConfig) {
   async function run<T>(
     action: string,
     data: Record<string, string | number> = {},
-  ): Promise<MrtAjaxResponse<T>> {
+  ): Promise<MrtRestResponse<T>> {
     loading.value = true;
     error.value = '';
     const res = await mrtRestRequest<T>(config, action, data);

@@ -1,7 +1,7 @@
 import type { MrtRestConfig } from '../config/types';
 import { buildMrtRestUrlFromConfig, resolveMrtRestNonce } from './restUrl';
 
-export type MrtAjaxResponse<T> = {
+export type MrtRestResponse<T> = {
   success: boolean;
   data?: T;
   message?: string;
@@ -71,7 +71,7 @@ export async function mrtRestRequest<T>(
   config: MrtRestConfig,
   action: string,
   data: Record<string, string | number> = {},
-): Promise<MrtAjaxResponse<T>> {
+): Promise<MrtRestResponse<T>> {
   const route = ROUTES[action];
   if (!route) {
     return { success: false, message: `Okänd åtgärd: ${action}` };
