@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
 import type { DashboardPayload } from '../types';
 import AdminNav from '../components/AdminNav.vue';
+import AdminSetupChecklist from '../components/AdminSetupChecklist.vue';
 import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 
@@ -55,6 +56,8 @@ function openRoute(hashRoute: string) {
         :traffic="data.traffic_today"
         :can-operate="data.can_operate"
       />
+
+      <AdminSetupChecklist v-if="data.can_manage" :stats="data.stats" />
 
       <div v-if="isMobile" class="mrt-admin-stat-grid" aria-label="Statistik">
         <div v-for="item in statItems" :key="item.key" class="mrt-admin-stat-card">
@@ -114,11 +117,11 @@ function openRoute(hashRoute: string) {
       <div class="mrt-admin-panel mrt-admin-quickstart">
         <h2>Snabbstart</h2>
         <p class="mrt-admin-quickstart__actions">
-          <button type="button" class="button button-primary" @click="router.push('/timetables')">
-            Hantera tidtabeller
-          </button>
-          <button type="button" class="button" @click="router.push('/stations-routes')">
+          <button type="button" class="button button-primary" @click="router.push('/stations-routes')">
             Stationer &amp; rutter
+          </button>
+          <button type="button" class="button" @click="router.push('/timetables')">
+            Hantera tidtabeller
           </button>
           <button type="button" class="button" @click="router.push('/help')">
             Hjälp &amp; FAQ
