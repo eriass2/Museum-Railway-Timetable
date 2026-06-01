@@ -32,26 +32,6 @@ function MRT_get_published_timetables(): array {
 }
 
 /**
- * Human-readable label for lists (title + traffic-day hint).
- */
-function MRT_timetable_public_label( WP_Post $timetable ): string {
-	$timetable_id = (int) $timetable->ID;
-	$title        = get_the_title( $timetable );
-	if ( $title === '' ) {
-		$title = __( 'Timetable', 'museum-railway-timetable' ) . ' #' . $timetable_id;
-	}
-	$dates = MRT_get_timetable_dates( $timetable_id );
-	if ( $dates === array() ) {
-		return $title;
-	}
-	$first = date_i18n( get_option( 'date_format' ), strtotime( $dates[0] ) );
-	if ( count( $dates ) === 1 ) {
-		return $title . ' (' . $first . ')';
-	}
-	return $title . ' (' . $first . ' + ' . ( count( $dates ) - 1 ) . ' ' . __( 'more', 'museum-railway-timetable' ) . ')';
-}
-
-/**
  * Traffic-day count and date span for index cards.
  */
 function MRT_timetable_traffic_days_summary( int $timetable_id ): string {
