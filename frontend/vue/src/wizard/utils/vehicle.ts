@@ -1,5 +1,6 @@
 import type { JourneyLeg } from '../types';
 import type { WizardCfg } from './wizardCfgTypes';
+import { cfgStr } from './wizardLabels';
 
 export function trainIconKey(
   label: string,
@@ -36,18 +37,43 @@ export function trainIconUrl(kind: string, cfg: WizardCfg): string {
   return icons[kind] || icons.diesel || '';
 }
 
-export function legVehicleLabel(leg: JourneyLeg): string {
-  const service = leg.service_name || leg.service_number || (leg.service_id ? String(leg.service_id) : '');
-  const train = leg.train_type || '';
-  if (train && service) {
-    return `${train} ${service}`;
+function legServiceNumber(leg: JourneyLeg): string {
+  if (leg.service_number) {
+    return leg.service_number;
   }
-  return train || service || 'Tåg';
+  if (leg.service_id) {
+    return String(leg.service_id);
+  }
+  return '';
+}
+
+function legTowardsSuffix(destination: string, cfg?: WizardCfg): string {
+  const dest = destination.trim();
+  if (!dest) {
+    return '';
+  }
+  return cfgStr(cfg ?? {}, 'towards', 'mot %s').replace('%s', dest);
+}
+
+export function legVehicleLabel(leg: JourneyLeg, cfg?: WizardCfg): string {
+  const train = leg.train_type?.trim() || 'Tåg';
+  const number = legServiceNumber(leg);
+  const towards = legTowardsSuffix(leg.destination || '', cfg);
+  if (number && towards) {
+    return `${train} ${number} ${towards}`;
+  }
+  if (number) {
+    return `${train} ${number}`;
+  }
+  if (towards) {
+    return `${train} ${towards}`;
+  }
+  return train;
 }
 
 export function legVehicleKind(leg: JourneyLeg, cfg: WizardCfg): string {
   return trainIconKey(
-    legVehicleLabel(leg),
+    legVehicleLabel(leg, cfg),
     leg.train_type_slug || '',
     leg.train_type_icon || '',
     cfg,

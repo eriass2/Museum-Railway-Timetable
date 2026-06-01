@@ -27,7 +27,7 @@ const vehicleItems = computed((): MrtVehicleItem[] => {
   return [
     {
       kind,
-      label: legVehicleLabel(props.segment.leg),
+      label: legVehicleLabel(props.segment.leg, cfgRef.value),
       iconUrl: trainIconUrl(kind, cfgRef.value),
     },
   ];

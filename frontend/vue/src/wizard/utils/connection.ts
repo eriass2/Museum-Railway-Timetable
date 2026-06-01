@@ -15,8 +15,11 @@ export function connectionLegs(conn: JourneyConnection) {
   return [
     {
       service_id: conn.service_id,
-      service_name: conn.service_name,
+      service_number: conn.service_number,
       train_type: conn.train_type,
+      train_type_slug: conn.train_type_slug,
+      train_type_icon: conn.train_type_icon,
+      destination: conn.destination,
       from_departure: departureFromOrigin(conn),
       to_arrival: arrivalAtDestination(conn),
     },

@@ -24,6 +24,7 @@ export type JourneyLeg = {
 export type JourneyConnection = {
   service_id: number;
   service_name?: string;
+  service_number?: string;
   train_type?: string;
   train_type_slug?: string;
   train_type_icon?: string;
@@ -38,6 +39,7 @@ export type JourneyConnection = {
   notice?: string;
   legs?: JourneyLeg[];
   transfer_wait_minutes?: number;
+  destination?: string;
 };
 
 export type TimelineStop = {

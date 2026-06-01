@@ -46,6 +46,27 @@
         justify-items: start;
     }
 
+    .mrt-vehicle-row {
+        justify-content: flex-start;
+        max-width: 100%;
+    }
+
+    .mrt-vehicle-row__item {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .mrt-vehicle-row__icon {
+        flex-shrink: 0;
+        width: 40px;
+        height: 20px;
+    }
+
+    .mrt-vehicle-row__item > span:last-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
     .mrt-timeline__row {
         grid-template-columns: 4.2rem 1.4rem minmax(0, 1fr);
     }

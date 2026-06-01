@@ -12,7 +12,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | Kategori | Antal | Kommentar |
 |----------|-------|-----------|
 | Buggar / fel | 4 | **4 åtgärdade** (G1, J4, G5, G6) |
-| UI / design | 6 | **G2, G3, J1** åtgärdade/delvis. **J3** kvar |
+| UI / design | 6 | **G2, G3, J1, J3** åtgärdade/delvis |
 | UX / flöde | 7 | **G5, G7, G9, G10** åtgärdade. **G4, G8, J2** kvar |
 | Frågor / scope | 2 | **J5** åtgärdad (knapp borttagen). **G10** åtgärdad (print + dela) |
 | Positivt | — | Båda imponerade, ser lovande ut |
@@ -62,8 +62,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Reseplanerare (mobil)
 - **Typ:** UI + copy
 - **Prioritet:** medium
-- **Status:** obehandlad
-- **Svar:** Ej åtgärdat. Förslaget om kortare linjetext (”Rälsbuss 101 mot Faringe”) och bättre mobil-layout för symboler är noterat.
+- **Status:** åtgärdad
+- **Svar:** Linjetexten i reseplaneraren använder nu **tur-nummer + slutdestination** (t.ex. ”Rälsbuss 101 mot Faringe”) i stället för hela tur-titeln från WordPress. Mobil-layout för fordonsraden (ikon + text) har förbättrad radbrytning så symboler och text inte klipps.
 
 ### J4. Biljettpriser – zoner och eftermiddagstaxa
 - **Källa:** mail, `image2.png`
@@ -197,7 +197,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 ### Design som är relativt enkelt
 5. ~~**J1 / G3** – Färgpalett, fetstil stationer, kolumnbredder~~ ✓
 6. ~~**G2** – Roboto + Open Sans Bold~~ ✓
-7. **J3** – Mobil klippning + kortare linjetext
+7. ~~**J3** – Mobil klippning + kortare linjetext~~ ✓
 
 ### Produktbeslut / större arbete
 8. **G4** – Kalender som startvy istället för tidtabellslista
