@@ -16,7 +16,6 @@ require_once $root . '/tests/wp-stubs.php';
 require_once $root . '/scripts/csv-cli-stubs.php';
 require_once MRT_PATH . 'inc/import/csv/schema.php';
 require_once MRT_PATH . 'inc/import/csv/slugify.php';
-require_once MRT_PATH . 'inc/import/csv/symbol-map.php';
 require_once MRT_PATH . 'inc/import/csv/reader.php';
 require_once MRT_PATH . 'inc/import/csv/writer.php';
 require_once MRT_PATH . 'inc/import/csv/package.php';

@@ -12,7 +12,6 @@ use PHPUnit\Framework\TestCase;
 require_once dirname( __DIR__, 2 ) . '/scripts/csv-cli-stubs.php';
 require_once ABSPATH . 'inc/import/csv/schema.php';
 require_once ABSPATH . 'inc/import/csv/slugify.php';
-require_once ABSPATH . 'inc/import/csv/symbol-map.php';
 require_once ABSPATH . 'inc/import/csv/reader.php';
 require_once ABSPATH . 'inc/import/csv/writer.php';
 require_once ABSPATH . 'inc/import/csv/package.php';

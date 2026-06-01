@@ -69,4 +69,4 @@ Kanonisk GRÖN/GUL/RÖD/ORANGE-data: `scripts/lennakatten_anslag_tables.py` (tå
 | RÖD | 81 | Uppsala Östra → Marielund 10:00–10:35 | 2026-07-05 |
 | ORANGE | 73 | Uppsala Östra → Marielund 11:15–11:47 | (CSV-tider) |
 
-P/X-regler: `docs/CSV_FORMAT.md` och `scripts/lennakatten_symbols.py` (samma som `symbol-map.php`).
+P/X-regler: `docs/CSV_FORMAT.md` och `scripts/lennakatten_symbols.py`.

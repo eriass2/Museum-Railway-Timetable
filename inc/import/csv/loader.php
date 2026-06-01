@@ -14,7 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 $csv_dir = MRT_PATH . 'inc/import/csv/';
 require_once $csv_dir . 'schema.php';
 require_once $csv_dir . 'slugify.php';
-require_once $csv_dir . 'symbol-map.php';
 require_once $csv_dir . 'reader.php';
 require_once $csv_dir . 'writer.php';
 require_once $csv_dir . 'package.php';

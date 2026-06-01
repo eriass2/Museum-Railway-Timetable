@@ -1,4 +1,4 @@
-"""P/X stop symbols from Anslagstidtabell-2026.pdf (matches inc/import/csv/symbol-map.php)."""
+"""P/X stop symbols from Anslagstidtabell-2026.pdf (see docs/CSV_FORMAT.md)."""
 
 from __future__ import annotations
 
