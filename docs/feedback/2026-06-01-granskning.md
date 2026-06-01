@@ -34,7 +34,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | **G10** | Skriv ut/PDF + dela/kopiera resa; **PDF verifierad** (`a9a9ad3`, `printElement`) |
 | **G8** | Månadskalender byter månad via REST utan sidladdning |
 | **G4** | Trafikkalender som startsida; klick på dag → tidtabell; `?mrt_date=` |
-| *(underliggande)* | GRÖN/GUL/RÖD/ORANGE + bussar synkade mot `Anslagstidtabell-2026.pdf`; 42 turer verifierade |
+| *(underliggande)* | Fixture **endast** enligt `Anslagstidtabell-2026.pdf`: GRÖN/GUL/RÖD/ORANGE-tåg + **GRÖN** anslutningsbuss Selknä–Fjällnora (ej GUL-buss). 37 turer verifierade mot PDF; min bytestid **3 min** (`7119f36`) |
 
 ---
 
@@ -56,7 +56,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** UX / produktbeslut
 - **Prioritet:** låg–medium (behöver avstämning)
 - **Status:** obehandlad
-- **Svar:** Ingen ändring ännu. Busstider finns som egna tidtabeller/anslutningar i datan (synkade mot PDF). Kräver produktbeslut om de ska visas som extra rader i samma tabell som tågen.
+- **Svar:** Ingen ändring av visning ännu (produktbeslut kvar). **Data:** endast **GRÖN** anslutningsbuss (Selknä↔Fjällnora, blå stjärnrader i PDF, 1/7–16/8). Overifierad GUL-buss och syntetiska Uppsala-ben borttagna (`7119f36`). Tåg+buss-byte vid Selknä kräver min **3 min** väntetid (PDF-takt); standardinställning uppdaterad.
 
 ### J3. Reseplanerare – klippning och linjetext
 - **Källa:** mail, `image4.jpeg`
@@ -100,7 +100,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** bugg
 - **Prioritet:** hög
 - **Status:** åtgärdad och **verifierad på demo** (Docker import juni 2026)
-- **Svar:** Orsaken var felaktig/ofullständig tidtabellsdata i fixturen — inte själva resesökningsmotorn. Vi har synkat GRÖN, GUL, RÖD och ORANGE mot `Anslagstidtabell-2026.pdf` (tider, P/X, bussanslutningar). Resa **Uppsala Östra → Marielund** på grön trafikdag (t.ex. 2026-06-06) ger nu träff (tåg 71, avg 10:00, ankomst 10:35; 6 alternativ). Täcks av `LennakattenJourneySearchTest.php`. **Demo (Docker):** `MRT_dev_reset_and_import_cli()` → station 372→378, `MRT_find_connections` OK.
+- **Svar:** Orsaken var felaktig/ofullständig tidtabellsdata i fixturen — inte själva resesökningsmotorn. Fixturen följer nu **endast** `Anslagstidtabell-2026.pdf` (commit `7119f36`): GRÖN/GUL/RÖD/ORANGE-tåg, GRÖN-buss Selknä–Fjällnora (ingen GUL-buss i PDF). Resa **Uppsala Östra → Marielund** på grön trafikdag (t.ex. 2026-06-06) ger träff (tåg 71, avg 10:00, ankomst 10:35). Tåg+buss t.ex. Marielund→Fjällnora via Selknä fungerar med 3 min bytestid. Täcks av `LennakattenJourneySearchTest.php`, `verify-lennakatten-vs-pdf.py`.
 
 ### G2. Typsnitt – Roboto + Open Sans Bold
 - **Källa:** mail
@@ -175,7 +175,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** UX (kan delvis finnas redan — verifiera)
 - **Prioritet:** medium–hög
 - **Status:** åtgärdad
-- **Svar:** Tur/retur ger flödet **rutt → datum → utresa → återresa → sammanfattning** (`buildStepSequence`). I återresesteget skickas `outbound_arrival` till REST-sökningen; backend filtrerar bort avgångar före ankomst + minsta vändtid (`MRT_find_return_connections`, standard = `min_transfer_minutes` i plugininställningar). Vald utresa visas som banner ovanför återreselistan. Täcks av `JourneyMultiLegTest`, `JourneyRequestParseTest`, `JourneyScoringTest` och E2E `wizard-steps.spec.ts`.
+- **Svar:** Tur/retur ger flödet **rutt → datum → utresa → återresa → sammanfattning** (`buildStepSequence`). I återresesteget skickas `outbound_arrival` till REST-sökningen; backend filtrerar bort avgångar före ankomst + minsta vändtid (`MRT_find_return_connections`, standard **3 min** vid byte, `min_transfer_minutes`). Vald utresa visas som banner ovanför återreselistan. Täcks av `JourneyMultiLegTest`, `JourneyRequestParseTest`, `JourneyScoringTest` och E2E `wizard-steps.spec.ts`.
 
 ### G10. Spara resa som PNG/PDF
 - **Källa:** mail (önskemål)
@@ -251,4 +251,5 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - [x] **J3** — mobil klippning + kortare linjetext (`b3fcbbb`)
 - [x] **G4** — kalender som primär startvy (trafikkalender + dagklick)
 - [x] **G8** — SPA-månadsväxling i månadskalendern
+- [x] Fixture PDF-genomgång — borttagen GUL-buss, Selknä–Fjällnora enligt PDF, busskalender + 3 min byte (`7119f36`)
 - [ ] **J2** — bussar som rader i huvudtidtabell (produktbeslut)
