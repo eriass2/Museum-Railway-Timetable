@@ -1,4 +1,4 @@
-import type { JourneyConnection } from '../types';
+import type { JourneyConnection } from '../../shared/journey';
 
 export function departureFromOrigin(conn: JourneyConnection): string {
   return conn.from_departure || conn.from_arrival || conn.departure || '';

@@ -1,14 +1,11 @@
 import { computed, ref, unref, type MaybeRef } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
-import type { JourneyConnection } from '../types';
+import { buildTransferLabel, stationTitleLookup } from '../../shared/connectionLegDisplay';
+import type { JourneyConnection } from '../../shared/journey';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStr } from '../utils/wizardLabels';
 import { connectionLegs } from '../utils/connection';
-import {
-  connectionTransferLabel,
-  loadConnectionDetailSegments,
-  type LegSegment,
-} from './connectionDetailLoad';
+import { loadConnectionDetailSegments, type LegSegment } from './connectionDetailLoad';
 
 export type { LegSegment } from './connectionDetailLoad';
 
@@ -29,6 +26,9 @@ export function useConnectionDetail(params: DetailParams) {
 
   const legs = computed(() => connectionLegs(params.connection));
   const isMulti = computed(() => legs.value.length > 1);
+  const stationTitle = computed(() =>
+    stationTitleLookup(params.config.stations || []),
+  );
 
   async function loadDetail(): Promise<void> {
     if (loaded.value) {
@@ -54,8 +54,21 @@ export function useConnectionDetail(params: DetailParams) {
     loaded.value = true;
   }
 
-  function transferLabel(): string {
-    return connectionTransferLabel(params.connection, cfg.value);
+  function transferLabelAt(segmentIndex: number): string {
+    const legList = legs.value;
+    if (segmentIndex < 0 || segmentIndex >= legList.length - 1) {
+      return '';
+    }
+    return buildTransferLabel(
+      legList[segmentIndex],
+      legList[segmentIndex + 1],
+      params.connection,
+      stationTitle.value,
+      {
+        changeAt: cfgStr(cfg.value, 'changeAt', 'Byte vid %s'),
+        transferTrip: cfgStr(cfg.value, 'transferTrip', 'Byte'),
+      },
+    );
   }
 
   async function ensureLoaded(): Promise<void> {
@@ -71,7 +84,7 @@ export function useConnectionDetail(params: DetailParams) {
     segments,
     loaded,
     isMulti,
-    transferLabel,
+    transferLabelAt,
     ensureLoaded,
   };
 }

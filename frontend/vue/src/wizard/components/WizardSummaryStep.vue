@@ -23,8 +23,8 @@ import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
 import {
   buildConnectionLegSummary,
-  stationTitleLookup,
-} from '../utils/connectionLegSummary';
+} from '../utils/buildConnectionLegSummary';
+import { stationTitleLookup } from '../../shared/connectionLegDisplay';
 import { formatTripClock } from '../utils/format';
 import type { JourneyConnection } from '../types';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';

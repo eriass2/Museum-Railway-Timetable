@@ -24,7 +24,7 @@ const {
   segments,
   loaded,
   isMulti,
-  transferLabel,
+  transferLabelAt,
   ensureLoaded,
 } = useConnectionDetail({
   config,
@@ -51,7 +51,7 @@ defineExpose({ ensureLoaded });
           :cfg="cfg"
           :segment="seg"
           :show-transfer="isMulti && si < segments.length - 1"
-          :transfer-text="transferLabel()"
+          :transfer-text="transferLabelAt(si)"
         />
       </template>
     </MrtAsyncState>

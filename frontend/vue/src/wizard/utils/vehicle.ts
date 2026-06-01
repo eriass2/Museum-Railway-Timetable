@@ -1,4 +1,5 @@
-import type { JourneyLeg } from '../types';
+import type { JourneyLeg } from '../../shared/journey';
+import type { MrtVehicleItem } from '../../components/ui/types';
 import type { WizardCfg } from './wizardCfgTypes';
 import { cfgStr } from './wizardLabels';
 
@@ -78,4 +79,17 @@ export function legVehicleKind(leg: JourneyLeg, cfg: WizardCfg): string {
     leg.train_type_icon || '',
     cfg,
   );
+}
+
+export function legToVehicleItem(leg: JourneyLeg, cfg: WizardCfg): MrtVehicleItem {
+  const kind = legVehicleKind(leg, cfg);
+  return {
+    kind,
+    label: legVehicleLabel(leg, cfg),
+    iconUrl: trainIconUrl(kind, cfg),
+  };
+}
+
+export function legsToVehicleItems(legs: JourneyLeg[], cfg: WizardCfg): MrtVehicleItem[] {
+  return legs.map((leg) => legToVehicleItem(leg, cfg));
 }

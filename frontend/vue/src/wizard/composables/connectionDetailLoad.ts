@@ -77,14 +77,3 @@ export async function loadConnectionDetailSegments(params: LoadParams): Promise<
   out.push(segmentFromDetailPayload(data, '', legs[0]));
   return out;
 }
-
-export function connectionTransferLabel(
-  connection: JourneyConnection,
-  cfg: WizardCfg,
-): string {
-  const wait = connection.transfer_wait_minutes;
-  if (wait !== null && wait !== undefined && !Number.isNaN(Number(wait))) {
-    return cfgStr(cfg, 'transferWait', '%d min byte').replace('%d', String(wait));
-  }
-  return cfgStr(cfg, 'transferTrip', 'Byte');
-}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { trainIconKey, legVehicleLabel } from '../src/wizard/utils/vehicle';
+import { trainIconKey, legVehicleLabel, legToVehicleItem } from '../src/wizard/utils/vehicle';
 
 describe('trainIconKey', () => {
   it('uses slug map when present', () => {
@@ -39,5 +39,24 @@ describe('legVehicleLabel', () => {
         cfg,
       ),
     ).toBe('Rälsbuss 101 towards Faringe');
+  });
+});
+
+describe('legToVehicleItem', () => {
+  it('maps leg fields to vehicle row item', () => {
+    const cfg = { trainTypeSlugIcons: { buss: 'bus' }, trainTypeIcons: { bus: '/bus.svg' } };
+    const item = legToVehicleItem(
+      {
+        service_id: 1,
+        train_type: 'Buss',
+        train_type_slug: 'buss',
+        service_number: 'B1',
+        destination: 'Uppsala Östra',
+      },
+      cfg,
+    );
+    expect(item.label).toBe('Buss B1 mot Uppsala Östra');
+    expect(item.kind).toBe('bus');
+    expect(item.iconUrl).toBe('/bus.svg');
   });
 });

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { ConnectionLegSummaryItem } from '../../wizard/utils/connectionLegSummary';
+import type { ConnectionLegSummaryItem } from '../../shared/connectionLegDisplay';
 
 defineProps<{
   items: ConnectionLegSummaryItem[];

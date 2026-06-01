@@ -5,7 +5,6 @@ import MrtExpandTrigger from '../../components/ui/MrtExpandTrigger.vue';
 import MrtTripCard from '../../components/ui/MrtTripCard.vue';
 import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import MrtVehicleRow from '../../components/ui/MrtVehicleRow.vue';
-import type { MrtVehicleItem } from '../../components/ui/types';
 import { useWizardContext } from '../../composables/useWizardContext';
 import type { JourneyConnection } from '../types';
 import { cfgStr } from '../utils/wizardLabels';
@@ -16,7 +15,7 @@ import {
   isTransfer,
 } from '../utils/connection';
 import { formatDuration, formatTripClock, isWarningNotice } from '../utils/format';
-import { legVehicleKind, legVehicleLabel, trainIconUrl } from '../utils/vehicle';
+import { legsToVehicleItems } from '../utils/vehicle';
 import WizardTripDetail from './WizardTripDetail.vue';
 
 const props = defineProps<{
@@ -49,16 +48,7 @@ const meta = computed(() =>
 
 const legs = computed(() => connectionLegs(props.connection));
 
-const vehicleItems = computed((): MrtVehicleItem[] =>
-  legs.value.map((leg) => {
-    const kind = legVehicleKind(leg, cfg.value);
-    return {
-      kind,
-      label: legVehicleLabel(leg, cfg.value),
-      iconUrl: trainIconUrl(kind, cfg.value),
-    };
-  }),
-);
+const vehicleItems = computed(() => legsToVehicleItems(legs.value, cfg.value));
 
 async function toggleDetail(): Promise<void> {
   expanded.value = !expanded.value;

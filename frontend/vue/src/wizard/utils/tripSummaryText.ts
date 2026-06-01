@@ -1,10 +1,4 @@
-import type { ConnectionLegSummaryItem } from './connectionLegSummary';
-
-export type TripSummaryLegDetail = {
-  vehicleLabel: string;
-  timeRange: string;
-  route: string;
-};
+import type { ConnectionLegSummaryItem } from '../../shared/connectionLegDisplay';
 
 export type TripSummaryLeg = {
   heading: string;

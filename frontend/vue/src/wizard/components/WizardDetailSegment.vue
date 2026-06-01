@@ -2,12 +2,11 @@
 import { computed, unref, type MaybeRef } from 'vue';
 import MrtDetailSegment from '../../components/ui/MrtDetailSegment.vue';
 import MrtVehicleRow from '../../components/ui/MrtVehicleRow.vue';
-import type { MrtVehicleItem } from '../../components/ui/types';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import type { LegSegment } from '../composables/useConnectionDetail';
 import { cfgStr } from '../utils/wizardLabels';
 import { formatDuration } from '../utils/format';
-import { legVehicleKind, legVehicleLabel, trainIconUrl } from '../utils/vehicle';
+import { legToVehicleItem } from '../utils/vehicle';
 import WizardTimeline from './WizardTimeline.vue';
 
 const props = defineProps<{
@@ -19,19 +18,9 @@ const props = defineProps<{
 
 const cfgRef = computed(() => unref(props.cfg));
 
-const vehicleItems = computed((): MrtVehicleItem[] => {
-  if (!props.segment.leg) {
-    return [];
-  }
-  const kind = legVehicleKind(props.segment.leg, cfgRef.value);
-  return [
-    {
-      kind,
-      label: legVehicleLabel(props.segment.leg, cfgRef.value),
-      iconUrl: trainIconUrl(kind, cfgRef.value),
-    },
-  ];
-});
+const vehicleItems = computed(() =>
+  props.segment.leg ? [legToVehicleItem(props.segment.leg, cfgRef.value)] : [],
+);
 </script>
 
 <template>

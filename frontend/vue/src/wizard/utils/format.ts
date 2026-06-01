@@ -1,9 +1,7 @@
 import type { WizardCfg } from './wizardCfgTypes';
 import { cfgStr } from './wizardLabels';
 
-export function formatTripClock(time: string): string {
-  return time ? time.replace(':', '.') : '—';
-}
+export { formatTripClock } from '../../shared/tripClock';
 
 export function formatDuration(minutes: number | undefined, cfg: WizardCfg): string {
   const m = Number(minutes);
