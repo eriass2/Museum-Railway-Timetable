@@ -141,7 +141,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** bugg (teckenkodning?) + copy
 - **Prioritet:** medium
 - **Status:** åtgärdad
-- **Svar:** Orsaken var en korrupt UTF-8-teckensträng i `assets/frontend/components-ui.css` (`.mrt-empty--loading::before { content: "ÔÅ│ " }`) — troligen avsedd som laddningsikon. Ersatt med ren CSS-spinner (ingen text i `content`), så användare ser bara ”Laddar…”.
+- **Svar:** Orsaken var en korrupt UTF-8-teckensträng i `assets/frontend/ui/primitives.css` (`.mrt-empty--loading::before { content: "ÔÅ│ " }`; filen hette tidigare `components-ui.css`) — troligen avsedd som laddningsikon. Ersatt med ren CSS-spinner (ingen text i `content`), så användare ser bara ”Laddar…”.
 
 ### G7. Kalender – färger per tidtabell
 - **Källa:** mail (önskemål)
@@ -176,8 +176,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Reseplanerare / sammanfattning
 - **Typ:** önskemål / ny funktion
 - **Prioritet:** låg–medium
-- **Status:** obehandlad
-- **Svar:** Ej planerat/implementerat. Se **Praktiska förslag** nedan.
+- **Status:** åtgärdad (A + B: utskrift/PDF + dela/kopiera)
+- **Svar:** Knappar i sammanfattningssteget: **Skriv ut / spara som PDF** (`window.print()` + `@media print`) och **Dela resa** / **Kopiera resa** (Web Share API med fallback till urklipp). PNG/länk (C/D) ej implementerat.
 
 ---
 
@@ -199,7 +199,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 9. **G9** – Tur/retur med dedikerat återresesteg
 10. **J2** – Busstider integrerade i huvudtidtabell
 11. **G7 / G8** – ~~Kalenderfärger per tidtabell~~ ✓ / SPA utan reload
-12. **G10** – Exportera resa (PNG/PDF)
+12. ~~**G10** – Exportera resa (PNG/PDF)~~ ✓ (print + dela/kopiera)
 13. ~~**J5** – Svar om biljettsystem vs Edmonson~~ ✓ (knapp borttagen)
 
 ---

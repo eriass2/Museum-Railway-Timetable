@@ -14,14 +14,73 @@
     border-top: 1px solid var(--mrt-color-neutral-200);
 }
 
-.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] [data-wizard-ticket-wrap] {
+.mrt-journey-wizard .mrt-summary-print-title,
+.mrt-journey-wizard .mrt-summary-print-meta {
+    display: none;
+}
+
+.mrt-journey-wizard .mrt-summary-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
     margin-top: 1.75rem;
 }
 
-.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-accent-btn {
+.mrt-journey-wizard .mrt-summary-actions .mrt-accent-btn {
     display: inline-flex;
-    min-width: min(100%, 22rem);
+    min-width: min(100%, 14rem);
     min-height: 2.85rem;
     padding: 0.5rem 1.25rem;
-    font-size: 1.15rem;
+    font-size: 1.05rem;
+}
+
+.mrt-journey-wizard .mrt-summary-actions__feedback {
+    margin: 0.75rem 0 0;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--mrt-color-text-muted, #555);
+}
+
+@media print {
+    body * {
+        visibility: hidden;
+    }
+
+    .mrt-summary-print-root,
+    .mrt-summary-print-root * {
+        visibility: visible;
+    }
+
+    .mrt-summary-print-root {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        padding: 0;
+        border: 0;
+        box-shadow: none;
+        background: #fff;
+        color: #000;
+    }
+
+    .mrt-summary-print-title {
+        display: block;
+        margin: 0 0 0.35rem;
+        font-size: 1.35rem;
+        font-weight: 700;
+    }
+
+    .mrt-summary-print-meta {
+        display: block;
+        margin: 0 0 1rem;
+        font-size: 0.95rem;
+    }
+
+    .mrt-summary-step-head,
+    .mrt-summary-actions,
+    .mrt-summary-actions__feedback,
+    .mrt-step-progress {
+        display: none !important;
+    }
 }

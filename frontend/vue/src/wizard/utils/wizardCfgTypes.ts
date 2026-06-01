@@ -105,6 +105,13 @@ export type WizardCfgStringKey =
   | 'legendTraffic'
   | 'legendNone'
   | 'ticketCta'
+  | 'summaryPrint'
+  | 'summaryShare'
+  | 'summaryCopy'
+  | 'summaryCopyDone'
+  | 'summaryShareDone'
+  | 'summaryShareFailed'
+  | 'summaryPricesHeading'
   | 'calPrevAria'
   | 'calNextAria';
 

@@ -157,6 +157,13 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 			'stepReturn'      => __( 'Välj återresa', 'museum-railway-timetable' ),
 			'stepSummary'     => __( 'Din resa', 'museum-railway-timetable' ),
 			'ticketCta'       => __( 'Fortsätt till biljetter', 'museum-railway-timetable' ),
+			'summaryPrint'    => __( 'Skriv ut / spara som PDF', 'museum-railway-timetable' ),
+			'summaryShare'    => __( 'Dela resa', 'museum-railway-timetable' ),
+			'summaryCopy'     => __( 'Kopiera resa', 'museum-railway-timetable' ),
+			'summaryCopyDone' => __( 'Resan kopierades till urklipp.', 'museum-railway-timetable' ),
+			'summaryShareDone' => __( 'Resan delades.', 'museum-railway-timetable' ),
+			'summaryShareFailed' => __( 'Kunde inte dela eller kopiera resan.', 'museum-railway-timetable' ),
+			'summaryPricesHeading' => __( 'Priser', 'museum-railway-timetable' ),
 		),
 	);
 }
