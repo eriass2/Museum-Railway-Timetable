@@ -1,0 +1,18 @@
+/**
+ * Sharp corners — journey wizard (Lennakatten formspråk).
+ *
+ * @see docs/design/BRAND_UI.md
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-wizard .mrt-ui-alert {
+    border-radius: 0;
+}
+
+.mrt-journey-wizard .mrt-surface--box {
+    border-radius: 0;
+}
+
+.mrt-journey-wizard .mrt-timeline__node {
+    border-radius: 0;
+}

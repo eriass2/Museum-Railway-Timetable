@@ -49,6 +49,8 @@
 .mrt-journey-wizard__hero-inner {
     width: min(100%, 58rem);
     margin-inline: auto;
+    min-width: 0;
+    max-width: 100%;
 }
 
 .mrt-journey-wizard__errors {

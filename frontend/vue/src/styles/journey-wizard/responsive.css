@@ -11,22 +11,26 @@
     }
 
     .mrt-journey-wizard .mrt-step-nav {
-        margin-inline: -0.15rem;
-        overflow-x: auto;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-
-    .mrt-journey-wizard .mrt-step-nav::-webkit-scrollbar {
-        display: none;
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin-inline: 0;
+        overflow: visible;
     }
 
     .mrt-journey-wizard .mrt-step-progress {
-        flex-wrap: nowrap;
-        justify-content: flex-start;
-        width: max-content;
-        min-width: 100%;
-        gap: 0.3rem;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.35rem;
+        width: 100%;
+        max-width: 100%;
+        justify-content: stretch;
+    }
+
+    .mrt-journey-wizard .mrt-step-progress__item:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        width: calc(50% - 0.175rem);
+        justify-self: center;
     }
 
     .mrt-journey-wizard .mrt-heading--surface-title {
@@ -80,9 +84,14 @@
     }
 
     .mrt-journey-wizard .mrt-step-progress__item {
-        flex-shrink: 0;
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
         font-size: 0.72rem;
-        padding: 0.2rem 0.4rem;
+        line-height: 1.25;
+        padding: 0.35rem 0.35rem;
+        text-align: center;
+        white-space: normal;
     }
 
     .mrt-journey-wizard .mrt-trip-card__head,
@@ -166,12 +175,10 @@
         font-size: 1rem;
     }
 
-    .mrt-journey-wizard .mrt-timeline__expand {
-        margin: 0.25rem 0 0.5rem;
-        padding-left: 5.1rem;
-        max-width: 100%;
+    .mrt-journey-wizard .mrt-expand-trigger--link {
+        margin: 0.25rem 0 0.45rem 5.1rem;
+        max-width: calc(100% - 5.1rem);
         overflow-wrap: anywhere;
-        text-align: left;
     }
 
     .mrt-journey-wizard .mrt-price-list {

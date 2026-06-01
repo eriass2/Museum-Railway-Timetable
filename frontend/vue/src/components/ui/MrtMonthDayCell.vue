@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { MonthDayMeta } from '../../config/types';
-import { timetableTypeBarClass } from '../../shared/calendarDay';
+import {
+  timetableTypeMonthBarClass,
+  timetableTypeMonthDayClass,
+} from '../../shared/calendarDay';
 import { monthDayButtonAria, monthDayCountTitle, normalizeMonthDayCount } from '../../utils/monthDayLabels';
 import { resolveMonthDayTypes } from '../../utils/monthDayTypes';
 
@@ -18,6 +21,10 @@ const props = defineProps<{
 const emit = defineEmits<{ click: [ymd: string] }>();
 
 const dayTypes = computed(() => resolveMonthDayTypes(props.info));
+
+const singleTypeClass = computed(() =>
+  dayTypes.value.length === 1 ? timetableTypeMonthDayClass(dayTypes.value[0]) : undefined,
+);
 
 const countTooltip = computed(() => {
   const count = normalizeMonthDayCount(props.info.count);
@@ -47,28 +54,31 @@ function onClick(): void {
   <button
     v-if="info.running"
     type="button"
-    class="mrt-day mrt-running mrt-day-clickable mrt-cursor-pointer"
-    :class="{
-      'is-selected': selected,
-      'mrt-day--has-types': dayTypes.length > 0,
-      'mrt-day--multi-types': dayTypes.length > 1,
-    }"
+    class="mrt-month-day mrt-running mrt-month-day--clickable mrt-cursor-pointer"
+    :class="[
+      {
+        'is-selected': selected,
+        'mrt-month-day--has-types': dayTypes.length > 0,
+        'mrt-month-day--multi-types': dayTypes.length > 1,
+      },
+      singleTypeClass,
+    ]"
     :aria-label="buttonAria"
     :aria-pressed="selected"
     :title="countTooltip"
     @click="onClick"
   >
-    <span class="mrt-daynum">{{ day }}</span>
-    <span v-if="dayTypes.length" class="mrt-day-bars" aria-hidden="true">
+    <span class="mrt-month-day__num">{{ day }}</span>
+    <span v-if="dayTypes.length" class="mrt-month-day__bars" aria-hidden="true">
       <span
         v-for="t in dayTypes"
         :key="t"
-        class="mrt-day-bar"
-        :class="timetableTypeBarClass(t)"
+        class="mrt-month-day__bar"
+        :class="timetableTypeMonthBarClass(t)"
       />
     </span>
   </button>
-  <span v-else class="mrt-day mrt-day--inactive" aria-hidden="true">
-    <span class="mrt-daynum">{{ day }}</span>
+  <span v-else class="mrt-month-day mrt-month-day--inactive" aria-hidden="true">
+    <span class="mrt-month-day__num">{{ day }}</span>
   </span>
 </template>

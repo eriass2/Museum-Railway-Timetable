@@ -20,4 +20,6 @@ Typsnitt: **Open Sans** (rubriker), **Roboto** (brödtext), **Charter** (längre
 
 Trafikfärger i anslagstidtabell (GRÖN/GUL/RÖD/ORANGE) finns i [`testdata/reference-pdfs/Anslagstidtabell-2026.pdf`](../../testdata/reference-pdfs/Anslagstidtabell-2026.pdf). Implementerade som `--mrt-color-traffic-*` i [`assets/mrt-color-tokens.css`](../../assets/mrt-color-tokens.css).
 
+**Plugin-UI:** Sammanfattning av hur profilen tillämpas i kod → [BRAND_UI.md](../BRAND_UI.md).
+
 Uppdatera filerna vid behov om Lennakatten publicerar nya versioner på webben.

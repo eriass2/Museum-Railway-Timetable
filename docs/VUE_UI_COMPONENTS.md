@@ -14,7 +14,7 @@ Shared primitives for wizard, month calendar, and overview. Wizard-specific wrap
 | `MrtStepProgress` | `mrt-step-progress` | Journey wizard |
 | `MrtCalendarNav` | `mrt-calendar-nav` | Wizard date, month shortcode |
 | `MrtCalendarGrid` | `mrt-calendar-grid` | Wizard date (`WizardCalendarGrid`), month table |
-| `MrtMonthDayCell` | `mrt-day`, `is-selected` | Month calendar running days |
+| `MrtMonthDayCell` | `mrt-month-day`, `is-selected` | Month calendar running days |
 | `MrtWizardCalendarDayCell` | `mrt-calendar-day` | Wizard date grid (`WizardCalendarGrid`) |
 | `MrtSummaryCard` | `mrt-summary-card` | Wizard summary step |
 | `MrtDetailPanel` | `mrt-detail-panel` | Expanded trip connection detail |

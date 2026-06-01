@@ -33,6 +33,43 @@ describe('buildTripSummaryText', () => {
     expect(text).toContain('Priserna är vägledande.');
   });
 
+  it('includes structured leg segments in plain text', () => {
+    const text = buildTripSummaryText({
+      title: 'Din resa',
+      tripTypeLabel: 'Tur och retur',
+      legs: [
+        {
+          heading: 'Utresa',
+          route: 'Uppsala Östra → Fjällnora',
+          timeRange: '13:55 – 17:30',
+          date: 'fredag 10 juli 2026',
+          segments: [
+            {
+              type: 'leg',
+              leg: {
+                vehicleLabel: 'Ångtåg 77 mot Faringe',
+                timeRange: '13:55 – 17:14',
+                route: 'Uppsala Östra → Selknä',
+              },
+            },
+            { type: 'transfer', label: 'Byte vid Selknä · 8 min' },
+            {
+              type: 'leg',
+              leg: {
+                vehicleLabel: 'Buss B1 mot Uppsala Östra',
+                timeRange: '17:22 – 17:30',
+                route: 'Selknä → Fjällnora',
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    expect(text).toContain('Byte vid Selknä · 8 min');
+    expect(text).toContain('Ångtåg 77 mot Faringe · 13:55 – 17:14 (Uppsala Östra → Selknä)');
+  });
+
   it('omits price block when empty', () => {
     const text = buildTripSummaryText({
       title: 'Din resa',

@@ -94,6 +94,7 @@ Samma som admin `mrt_timetable_type`. GRÖN/GUL följer profilen; RÖD/ORANGE fr
 
 ## Relaterat
 
+- [BRAND_UI.md](BRAND_UI.md) — scope, formspråk, länkar, branding i texter
 - [DESIGN_TOKENS.md](../mockups/DESIGN_TOKENS.md)
 - [STYLE_GUIDE.md](../STYLE_GUIDE.md)
 - [VUE_UI_COMPONENTS.md](../VUE_UI_COMPONENTS.md)

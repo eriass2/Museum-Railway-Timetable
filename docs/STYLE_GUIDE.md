@@ -4,7 +4,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 
 **Arkitektur och rebuild-design:** [REBUILD_RULES.md](REBUILD_RULES.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Denna guide fokuserar på namngivning, säkerhet och filkonventioner så att regler inte dupliceras.
 
-**Visuell design (färger):** [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) — tokens i `assets/mrt-color-tokens.css`. Mockups i `docs/mockups/` är arkiverad referens.
+**Visuell design:** [design/BRAND_UI.md](design/BRAND_UI.md) (Lennakatten profil → plugin-UI), [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) (tokens i `assets/mrt-color-tokens.css`). Mockups i `docs/mockups/` är arkiverad referens.
 
 ---
 
@@ -74,6 +74,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Variabler** – CSS custom properties med `--mrt-` prefix
 
 ### Struktur
+- **Varumärke och UI** – Se [design/BRAND_UI.md](design/BRAND_UI.md) (scope, formspråk, typografi, branding i texter).
 - **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
 - **UI-klasser** – Vue-primitives i `assets/frontend/ui/` (barrel: `ui-components.css`). Legacy PHP-knappar m.m. i `ui/primitives.css`.
 - **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
@@ -81,10 +82,10 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Inga inline styles** – All styling i CSS-filer.
 
 ### Publik UI (wizard m.fl.)
-- **Primär accent:** `--mrt-color-accent-600` (`#DDD24C`) — Lennakatten varumärkesguld för CTA, aktivt steg och vald restyp.
-- **Text på guld:** `--mrt-color-on-accent` (**svart**), enligt [grafisk profil](https://lennakatten.se/grafisk-profil/).
+- **Primär accent:** `--mrt-color-accent-600` (`#DDD24C`) — Lennakatten varumärkesguld för CTA, aktivt steg och vald restyp (sparsamt; se [BRAND_UI.md](design/BRAND_UI.md)).
+- **Text på guld:** `--mrt-color-on-accent` (**svart**), enligt [grafisk profil](https://lennakatten.se/grafisk-profil/) och [BRAND_UI.md](design/BRAND_UI.md).
 - **Vue-bundle:** Publik CSS ligger under `frontend/vue/src/styles/` och byggs till `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + delade primitives); appar importerar egna moduler (`month-calendar.css`, `journey-wizard.css`, `timetable-overview.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
-- **Månadskalender-CSS:** `frontend/vue/src/styles/month-calendar.css` — `.mrt-month-*`, `.mrt-day-*`; importeras från `MonthCalendarApp.vue`. Dagfärger via `assets/frontend/ui/calendar-tokens.css`.
+- **Månadskalender-CSS:** `frontend/vue/src/styles/month-calendar.css` — `.mrt-month-*`, `.mrt-month-day*` (tidtabellstyp-färger); importeras från `MonthCalendarApp.vue`. Wizard använder `.mrt-calendar-day--*` (bokningsbar/trafik/ingen).
 - **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — `base.css`, `wizard-shell.css`, `controls-form.css` (sök steg), `controls-calendar.css`, `steps-*.css`, `responsive.css`. Importeras från `JourneyWizardApp.vue`.
 - **Tidtabellsöversikt-CSS:** `frontend/vue/src/styles/timetable-overview.css` — block `.mrt-ov-*`, importeras från `MrtTimetableOverviewView.vue`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
 - **Färgtokens:** `assets/mrt-color-tokens.css` importeras först i `mrt-public.css`. Se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) och [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
@@ -206,6 +207,7 @@ museum-railway-timetable/
 
 - **REBUILD_RULES.md** – Rebuild-regler för kod, design och kvalitet
 - **VUE_UI_COMPONENTS.md** – Vue-komponenter, tokens och alerts
+- **design/BRAND_UI.md** – Lennakatten UI-regler (scope, formspråk, branding)
 - **design/COLOR_PALETTE.md** – Färgpalett och kontrast
 - [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)

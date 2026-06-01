@@ -5,6 +5,8 @@ import {
   timetableTypeBarClass,
   timetableTypeClass,
   timetableTypeDotClass,
+  timetableTypeMonthBarClass,
+  timetableTypeMonthDayClass,
 } from '../src/shared/calendarDay';
 
 describe('calendarDay', () => {
@@ -25,6 +27,8 @@ describe('calendarDay', () => {
     expect(timetableTypeClass('yellow', 'mrt-calendar-day')).toBe('mrt-calendar-day--yellow');
     expect(timetableTypeDotClass('orange')).toBe('mrt-dot--orange');
     expect(timetableTypeBarClass('red')).toBe('mrt-day-bar--red');
+    expect(timetableTypeMonthBarClass('green')).toBe('mrt-month-day__bar--green');
+    expect(timetableTypeMonthDayClass('yellow')).toBe('mrt-month-day--yellow');
     expect(timetableTypeClass('')).toBeUndefined();
   });
 });

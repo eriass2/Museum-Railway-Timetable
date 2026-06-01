@@ -363,17 +363,13 @@ GREEN_BUSS_IN: dict[str, list[Stop]] = {
     ],
 }
 
-# GUL bussar: selkna/fjällnora ej i huvud-PDF; tider validerade mot GUL-tåg + samma Uppsala-offset.
+# GUL bussar: B1 ut + B3 in enligt Anslagstidtabell (sista buss ~17:30 Fjällnora).
+# Ingen kvällsbuss efter sista GUL-tåg — 22:xx-tider fanns i PDF-syntes men kör inte i verkligheten.
 YELLOW_BUSS_OUT: dict[str, list[Stop]] = {
     "1": [
         ("selkna", "17:22", "17:22", "P"),
         ("fjallnora", "17:30", "17:30", ""),
         ("uppsala-ostra", "17:58", "17:58", ""),
-    ],
-    "2": [
-        ("selkna", "22:14", "22:14", "P"),
-        ("fjallnora", "22:22", "22:22", ""),
-        ("uppsala-ostra", "22:50", "22:50", ""),
     ],
 }
 
@@ -382,11 +378,6 @@ YELLOW_BUSS_IN: dict[str, list[Stop]] = {
         ("uppsala-ostra", "16:33", "16:33", "P"),
         ("fjallnora", "17:00", "17:00", ""),
         ("selkna", "17:08", "17:08", ""),
-    ],
-    "4": [
-        ("uppsala-ostra", "21:25", "21:25", "P"),
-        ("fjallnora", "21:52", "21:52", ""),
-        ("selkna", "22:00", "22:00", ""),
     ],
 }
 

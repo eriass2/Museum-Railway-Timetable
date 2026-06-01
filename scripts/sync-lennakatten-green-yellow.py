@@ -52,7 +52,9 @@ def main() -> int:
         if not line.strip():
             continue
         code = line.split(",", 1)[0]
-        if code.startswith(SYNC_PREFIXES) and is_synced_service(code, synced_codes):
+        if code.startswith(SYNC_PREFIXES):
+            if is_synced_service(code, synced_codes):
+                continue
             continue
         kept.append(line)
 

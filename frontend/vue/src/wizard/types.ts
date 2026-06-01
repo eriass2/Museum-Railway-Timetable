@@ -39,6 +39,7 @@ export type JourneyConnection = {
   notice?: string;
   legs?: JourneyLeg[];
   transfer_wait_minutes?: number;
+  transfer_station_id?: number | null;
   destination?: string;
 };
 

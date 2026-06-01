@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
+import MrtConnectionLegList from '../../components/ui/MrtConnectionLegList.vue';
 import MrtPriceTable from '../../components/ui/MrtPriceTable.vue';
 import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
 import MrtSummaryCard from '../../components/ui/MrtSummaryCard.vue';
@@ -19,9 +20,12 @@ import {
 } from '../../shared/prices';
 import type { PriceCfg } from '../../shared/priceTypes';
 import { formatYmdForDisplay } from '../utils/wizardDate';
-import { arrivalAtDestination, departureFromOrigin, connectionLegs } from '../utils/connection';
+import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
+import {
+  buildConnectionLegSummary,
+  stationTitleLookup,
+} from '../utils/connectionLegSummary';
 import { formatTripClock } from '../utils/format';
-import { legVehicleLabel } from '../utils/vehicle';
 import type { JourneyConnection } from '../types';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
 import { printElement } from '../../utils/printElement';
@@ -87,16 +91,16 @@ function legTimeRange(conn: NonNullable<typeof store.outbound>): string {
   return `${formatTripClock(departureFromOrigin(conn))} – ${formatTripClock(arrivalAtDestination(conn))}`;
 }
 
-function connectionLegLines(conn: JourneyConnection): string[] {
-  return connectionLegs(conn).map((leg) => {
-    const label = legVehicleLabel(leg, cfg.value);
-    const from = formatTripClock(leg.from_departure || '');
-    const to = formatTripClock(leg.to_arrival || '');
-    if (from && to) {
-      return `${label} · ${from}–${to}`;
-    }
-    return label;
-  });
+const outboundLegItems = computed(() =>
+  store.outbound ? connectionLegItems(store.outbound) : [],
+);
+const inboundLegItems = computed(() =>
+  store.inbound ? connectionLegItems(store.inbound) : [],
+);
+
+function connectionLegItems(conn: JourneyConnection) {
+  const stationTitle = stationTitleLookup(store.config.stations || []);
+  return buildConnectionLegSummary(conn, stationTitle, cfg.value);
 }
 
 function buildLegs(): TripSummaryLeg[] {
@@ -107,6 +111,7 @@ function buildLegs(): TripSummaryLeg[] {
       route: `${store.fromTitle} → ${store.toTitle}`,
       timeRange: legTimeRange(store.outbound),
       date: dateText.value,
+      segments: connectionLegItems(store.outbound),
     });
   }
   if (store.tripType === 'return' && store.inbound) {
@@ -115,6 +120,7 @@ function buildLegs(): TripSummaryLeg[] {
       route: `${store.toTitle} → ${store.fromTitle}`,
       timeRange: legTimeRange(store.inbound),
       date: dateText.value,
+      segments: connectionLegItems(store.inbound),
     });
   }
   return legs;
@@ -232,15 +238,10 @@ function onBack(): void {
               :route="`${store.fromTitle} → ${store.toTitle}`"
               :date="dateText"
             />
-            <ul v-if="connectionLegLines(store.outbound).length" class="mrt-summary-print-legs">
-              <li
-                v-for="(line, index) in connectionLegLines(store.outbound)"
-                :key="`out-${index}`"
-                class="mrt-summary-print-legs__item"
-              >
-                {{ line }}
-              </li>
-            </ul>
+            <MrtConnectionLegList
+              v-if="outboundLegItems.length"
+              :items="outboundLegItems"
+            />
           </MrtSummaryCard>
 
           <MrtSummaryCard
@@ -252,15 +253,10 @@ function onBack(): void {
               :route="`${store.toTitle} → ${store.fromTitle}`"
               :date="dateText"
             />
-            <ul v-if="connectionLegLines(store.inbound).length" class="mrt-summary-print-legs">
-              <li
-                v-for="(line, index) in connectionLegLines(store.inbound)"
-                :key="`in-${index}`"
-                class="mrt-summary-print-legs__item"
-              >
-                {{ line }}
-              </li>
-            </ul>
+            <MrtConnectionLegList
+              v-if="inboundLegItems.length"
+              :items="inboundLegItems"
+            />
           </MrtSummaryCard>
         </div>
 

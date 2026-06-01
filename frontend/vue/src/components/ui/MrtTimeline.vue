@@ -47,7 +47,7 @@ const expandLabel = computed(() =>
     </div>
     <MrtExpandTrigger
       v-if="stops.length > 2"
-      class="mrt-timeline__expand"
+      variant="link"
       :expanded="showAllStops"
       :label="expandLabel"
       @toggle="showAllStops = !showAllStops"

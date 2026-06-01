@@ -1,10 +1,15 @@
 <script setup lang="ts">
 defineOptions({ inheritAttrs: false });
 
-defineProps<{
-  expanded: boolean;
-  label: string;
-}>();
+withDefaults(
+  defineProps<{
+    expanded: boolean;
+    label: string;
+    /** Full-width bar (trip card) or inline link (timeline stops). */
+    variant?: 'bar' | 'link';
+  }>(),
+  { variant: 'bar' },
+);
 
 defineEmits<{ toggle: [] }>();
 </script>
@@ -13,7 +18,10 @@ defineEmits<{ toggle: [] }>();
   <button
     type="button"
     class="mrt-expand-trigger"
-    :class="{ 'is-expanded': expanded }"
+    :class="{
+      'is-expanded': expanded,
+      'mrt-expand-trigger--link': variant === 'link',
+    }"
     :aria-expanded="expanded"
     v-bind="$attrs"
     @click="$emit('toggle')"

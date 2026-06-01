@@ -35,7 +35,7 @@
 .mrt-price-list {
     margin: 0;
     padding: 0.65rem 0.85rem;
-    border-radius: 0.35rem;
+    border-radius: 0;
     background: var(--mrt-color-neutral-100, #ececec);
 }
 
@@ -155,7 +155,7 @@
     .mrt-price-block__table tbody tr {
         margin-bottom: 0.5rem;
         padding: 0.65rem 0.75rem;
-        border-radius: 0.35rem;
+        border-radius: 0;
     }
 
     .mrt-price-block__table th[scope='row'] {

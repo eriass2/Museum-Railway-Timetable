@@ -56,6 +56,14 @@ export function timetableTypeBarClass(type?: string): string | undefined {
   return timetableTypeClass(type, 'mrt-day-bar');
 }
 
+export function timetableTypeMonthBarClass(type?: string): string | undefined {
+  return timetableTypeClass(type, 'mrt-month-day__bar');
+}
+
+export function timetableTypeMonthDayClass(type?: string): string | undefined {
+  return timetableTypeClass(type, 'mrt-month-day');
+}
+
 export function timetableTypeLabel(
   type: string,
   labels?: Record<string, string>,

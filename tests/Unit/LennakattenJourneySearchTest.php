@@ -124,6 +124,37 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '11:28', $connections[0]['to_arrival'] ?? '' );
 	}
 
+	public function test_yellow_buss_fixture_has_no_late_evening_services(): void {
+		$codes = array_column( $this->fixture_files()['services.csv'] ?? array(), 'service_code' );
+		self::assertContains( 'yellow-b1-bus-out', $codes );
+		self::assertContains( 'yellow-b3-bus-in', $codes );
+		self::assertNotContains( 'yellow-b2-bus-out', $codes, 'No 22:xx yellow bus in Anslagstidtabell' );
+		self::assertNotContains( 'yellow-b4-bus-in', $codes, 'No 21:xx yellow bus in Anslagstidtabell' );
+	}
+
+	public function test_find_connections_fjallnora_uppsala_yellow_buss_no_late_buses(): void {
+		$this->boot_fixture_services( array( 'yellow-b1-bus-out', 'yellow-b3-bus-in' ), '2026-07-10' );
+		$stations = $this->station_ids();
+
+		$connections = MRT_find_connections(
+			$stations['fjallnora'],
+			$stations['uppsala-ostra'],
+			'2026-07-10'
+		);
+
+		self::assertNotEmpty( $connections, 'Expected B1 Fjällnora → Uppsala Östra on yellow Friday' );
+		self::assertSame( '17:30', $connections[0]['from_departure'] ?? '' );
+		self::assertSame( '17:58', $connections[0]['to_arrival'] ?? '' );
+		foreach ( $connections as $connection ) {
+			$departure = (string) ( $connection['from_departure'] ?? '' );
+			self::assertLessThan(
+				'18:00',
+				$departure,
+				"No yellow bus after 18:00; got {$departure}"
+			);
+		}
+	}
+
 	public function test_fixture_green_buss_b1_matches_anslag_branch_times(): void {
 		$row = $this->fixture_stop_row( 'green-b1-bus-out', 'selkna' );
 		self::assertSame( '10:53', $row['departure_time'] ?? '' );
@@ -147,27 +178,43 @@ final class LennakattenJourneySearchTest extends TestCase {
 	}
 
 	private function boot_service_fixture( string $service_code, string $date ): void {
-		$stations = $this->station_ids();
-		$stops = $this->fixture_stops_for_service( $service_code );
-		$rows  = array();
-		foreach ( $stops as $stop ) {
-			$station_code = (string) ( $stop['station_code'] ?? '' );
-			$station_id   = $stations[ $station_code ] ?? 0;
-			self::assertGreaterThan( 0, $station_id, "Unknown station {$station_code}" );
-			$rows[] = array(
-				'service_post_id' => 7100,
-				'station_post_id' => $station_id,
-				'stop_sequence'   => (int) ( $stop['sequence'] ?? 0 ),
-				'arrival_time'    => (string) ( $stop['arrival_time'] ?? '' ),
-				'departure_time'  => (string) ( $stop['departure_time'] ?? '' ),
-				'pickup_allowed'  => (int) ( $stop['pickup_allowed'] ?? 1 ),
-				'dropoff_allowed' => (int) ( $stop['dropoff_allowed'] ?? 1 ),
-			);
+		$this->boot_fixture_services( array( $service_code ), $date );
+	}
+
+	/**
+	 * @param string[] $service_codes
+	 */
+	private function boot_fixture_services( array $service_codes, string $date ): void {
+		$stations           = $this->station_ids();
+		$rows_by_service    = array();
+		$service_timetables = array();
+		$next_service_id    = 7100;
+		foreach ( $service_codes as $service_code ) {
+			$stops = $this->fixture_stops_for_service( $service_code );
+			self::assertNotEmpty( $stops, "Missing fixture stops for {$service_code}" );
+			$rows = array();
+			foreach ( $stops as $stop ) {
+				$station_code = (string) ( $stop['station_code'] ?? '' );
+				$station_id   = $stations[ $station_code ] ?? 0;
+				self::assertGreaterThan( 0, $station_id, "Unknown station {$station_code}" );
+				$rows[] = array(
+					'service_post_id' => $next_service_id,
+					'station_post_id' => $station_id,
+					'stop_sequence'   => (int) ( $stop['sequence'] ?? 0 ),
+					'arrival_time'    => (string) ( $stop['arrival_time'] ?? '' ),
+					'departure_time'  => (string) ( $stop['departure_time'] ?? '' ),
+					'pickup_allowed'  => (int) ( $stop['pickup_allowed'] ?? 1 ),
+					'dropoff_allowed' => (int) ( $stop['dropoff_allowed'] ?? 1 ),
+				);
+			}
+			$rows_by_service[ $next_service_id ]    = $rows;
+			$service_timetables[ $next_service_id ] = 900;
+			++$next_service_id;
 		}
 		$this->mrt_use_journey_fixture(
-			array( 7100 => $rows ),
+			$rows_by_service,
 			array( 900 => array( $date ) ),
-			array( 7100 => 900 )
+			$service_timetables
 		);
 	}
 

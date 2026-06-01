@@ -1,5 +1,6 @@
 /**
- * Shared calendar day colours (month grid + journey wizard).
+ * Journey wizard date-step colours (.mrt-calendar-day--*).
+ * Month calendar timetable types: frontend/vue/src/styles/month-calendar.css
  *
  * @package Museum_Railway_Timetable
  */
@@ -19,57 +20,27 @@
     --mrt-cal-traffic-muted-fg: var(--mrt-color-neutral-700);
 }
 
-.mrt-day--green,
-.mrt-calendar-day--green,
-.mrt-day-cell--running.mrt-day--green {
+.mrt-calendar-day--green {
     background: var(--mrt-cal-traffic-green-bg);
     color: var(--mrt-cal-traffic-green-fg);
 }
 
-.mrt-day--yellow,
-.mrt-calendar-day--yellow,
-.mrt-day-cell--running.mrt-day--yellow {
+.mrt-calendar-day--yellow {
     background: var(--mrt-cal-traffic-yellow-bg);
     color: var(--mrt-cal-traffic-yellow-fg);
 }
 
-.mrt-day--red,
-.mrt-calendar-day--red,
-.mrt-day-cell--running.mrt-day--red {
+.mrt-calendar-day--red {
     background: var(--mrt-cal-traffic-red-bg);
     color: var(--mrt-cal-traffic-red-fg);
 }
 
-.mrt-day--orange,
-.mrt-calendar-day--orange,
-.mrt-day-cell--running.mrt-day--orange {
+.mrt-calendar-day--orange {
     background: var(--mrt-cal-traffic-orange-bg);
     color: var(--mrt-cal-traffic-orange-fg);
 }
 
-.mrt-day--blue,
-.mrt-calendar-day--blue,
-.mrt-day-cell--running.mrt-day--blue {
+.mrt-calendar-day--blue {
     background: var(--mrt-cal-traffic-blue-bg);
     color: var(--mrt-cal-traffic-blue-fg);
-}
-
-.mrt-day-bar--green {
-    background: var(--mrt-cal-traffic-green-bg);
-}
-
-.mrt-day-bar--yellow {
-    background: var(--mrt-cal-traffic-yellow-bg);
-}
-
-.mrt-day-bar--red {
-    background: var(--mrt-cal-traffic-red-bg);
-}
-
-.mrt-day-bar--orange {
-    background: var(--mrt-cal-traffic-orange-bg);
-}
-
-.mrt-day-bar--blue {
-    background: var(--mrt-cal-traffic-blue-bg);
 }

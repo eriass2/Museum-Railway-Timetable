@@ -1,8 +1,17 @@
+import type { ConnectionLegSummaryItem } from './connectionLegSummary';
+
+export type TripSummaryLegDetail = {
+  vehicleLabel: string;
+  timeRange: string;
+  route: string;
+};
+
 export type TripSummaryLeg = {
   heading: string;
   timeRange: string;
   route: string;
   date: string;
+  segments?: ConnectionLegSummaryItem[];
 };
 
 export type TripSummaryPriceRow = {
@@ -33,7 +42,19 @@ export function buildTripSummaryText(input: TripSummaryTextInput): string {
   lines.push('');
 
   for (const leg of input.legs) {
-    lines.push(leg.heading, leg.route, leg.timeRange, leg.date, '');
+    lines.push(leg.heading, leg.route, leg.timeRange, leg.date);
+    if (leg.segments?.length) {
+      for (const segment of leg.segments) {
+        if (segment.type === 'transfer') {
+          lines.push(`  ${segment.label}`);
+          continue;
+        }
+        const detail = segment.leg;
+        const routePart = detail.route ? ` (${detail.route})` : '';
+        lines.push(`  ${detail.vehicleLabel} · ${detail.timeRange}${routePart}`);
+      }
+    }
+    lines.push('');
   }
 
   const prices = input.priceSection;
