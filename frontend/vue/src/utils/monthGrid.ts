@@ -12,6 +12,7 @@ export function buildMonthGrid(
   weekdayFirstSunday: number,
   startMonday: boolean,
   dates: Record<number, MonthDayMeta>,
+  options?: { minWeekRows?: number },
 ): MonthGridCell[] {
   const lead = startMonday ? weekdayFirst - 1 : weekdayFirstSunday;
 
@@ -23,10 +24,14 @@ export function buildMonthGrid(
     cells.push({
       kind: 'day',
       day: d,
-      info: dates[d] || { ymd: '', count: 0, running: false },
+      info: dates[d] || { ymd: '', count: 0, running: false, type: '' },
     });
   }
   while (cells.length % 7 !== 0) {
+    cells.push({ kind: 'empty' });
+  }
+  const minCells = (options?.minWeekRows ?? 0) * 7;
+  while (cells.length < minCells) {
     cells.push({ kind: 'empty' });
   }
   return cells;

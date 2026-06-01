@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { MonthDayMeta } from '../../config/types';
-import { timetableTypeClass } from '../../shared/calendarDay';
+import { timetableTypeBarClass } from '../../shared/calendarDay';
 import { monthDayButtonAria, monthDayCountTitle, normalizeMonthDayCount } from '../../utils/monthDayLabels';
+import { resolveMonthDayTypes } from '../../utils/monthDayTypes';
 
 const props = defineProps<{
   day: number;
@@ -16,7 +17,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ click: [ymd: string] }>();
 
-const typeClass = computed(() => timetableTypeClass(props.info.type));
+const dayTypes = computed(() => resolveMonthDayTypes(props.info));
 
 const countTooltip = computed(() => {
   const count = normalizeMonthDayCount(props.info.count);
@@ -43,19 +44,27 @@ function onClick(): void {
 </script>
 
 <template>
-  <template v-if="!info.running">
-    <span class="mrt-daynum">{{ day }}</span>
-  </template>
   <button
-    v-else
+    v-if="info.running"
     type="button"
     class="mrt-day mrt-running mrt-day-clickable mrt-cursor-pointer"
-    :class="[{ 'is-selected': selected }, typeClass]"
+    :class="{ 'is-selected': selected }"
     :aria-label="buttonAria"
     :aria-pressed="selected"
     :title="countTooltip"
     @click="onClick"
   >
-    <span class="mrt-daynum" aria-hidden="true">{{ day }}</span>
+    <span class="mrt-daynum">{{ day }}</span>
+    <span v-if="dayTypes.length" class="mrt-day-bars" aria-hidden="true">
+      <span
+        v-for="t in dayTypes"
+        :key="t"
+        class="mrt-day-bar"
+        :class="timetableTypeBarClass(t)"
+      />
+    </span>
   </button>
+  <span v-else class="mrt-day mrt-day--inactive" aria-hidden="true">
+    <span class="mrt-daynum">{{ day }}</span>
+  </span>
 </template>

@@ -11,7 +11,10 @@ export type MonthDayMeta = {
   running?: boolean;
   count?: number | string;
   ymd?: string;
+  /** Dominant type (legacy / single-type consumers). */
   type?: string;
+  /** All timetable types active on this date (sorted). */
+  types?: string[];
 };
 
 export type MonthLegendType = {

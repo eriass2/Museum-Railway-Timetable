@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   calendarDayStatus,
   normalizeCalendarDay,
+  timetableTypeBarClass,
   timetableTypeClass,
   timetableTypeDotClass,
 } from '../src/shared/calendarDay';
@@ -23,6 +24,7 @@ describe('calendarDay', () => {
     expect(timetableTypeClass('green')).toBe('mrt-day--green');
     expect(timetableTypeClass('yellow', 'mrt-calendar-day')).toBe('mrt-calendar-day--yellow');
     expect(timetableTypeDotClass('orange')).toBe('mrt-dot--orange');
+    expect(timetableTypeBarClass('red')).toBe('mrt-day-bar--red');
     expect(timetableTypeClass('')).toBeUndefined();
   });
 });

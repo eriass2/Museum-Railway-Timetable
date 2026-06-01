@@ -18,8 +18,8 @@ final class TimetableTypeCalendarTest extends TestCase {
 
 	public function test_month_calendar_legend_types_sorted_and_unique(): void {
 		$dates = array(
-			1 => array( 'type' => 'yellow', 'running' => true ),
-			2 => array( 'type' => 'green', 'running' => true ),
+			1 => array( 'types' => array( 'yellow' ), 'running' => true ),
+			2 => array( 'types' => array( 'green', 'orange' ), 'running' => true ),
 			3 => array( 'type' => 'green', 'running' => true ),
 		);
 
@@ -29,8 +29,16 @@ final class TimetableTypeCalendarTest extends TestCase {
 			array(
 				array( 'type' => 'green', 'label' => 'GRÖN tidtabell' ),
 				array( 'type' => 'yellow', 'label' => 'GUL tidtabell' ),
+				array( 'type' => 'orange', 'label' => 'ORANGE tidtabell' ),
 			),
 			$legend
+		);
+	}
+
+	public function test_sort_timetable_types_for_calendar(): void {
+		self::assertSame(
+			array( 'green', 'orange' ),
+			MRT_sort_timetable_types_for_calendar( array( 'orange', 'green', 'unknown' ) )
 		);
 	}
 }

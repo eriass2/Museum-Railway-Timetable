@@ -31,7 +31,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 | **G6** | Laddningsspinner utan korrupt tecken (`ui/primitives.css`) |
 | **G7** | Kalenderfärger per tidtabellstyp (green/yellow/red/orange) |
 | **G9** | Tur/retur: separat återresesteg med filtrering efter utresa |
-| **G10** | Skriv ut/PDF + dela/kopiera resa i sammanfattning (`8fa064a`) |
+| **G10** | Skriv ut/PDF + dela/kopiera resa; **PDF verifierad** (`a9a9ad3`, `printElement`) |
 | **G8** | Månadskalender byter månad via REST utan sidladdning |
 | *(underliggande)* | GRÖN/GUL/RÖD/ORANGE + bussar synkade mot `Anslagstidtabell-2026.pdf`; 42 turer verifierade |
 
@@ -182,8 +182,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Reseplanerare / sammanfattning
 - **Typ:** önskemål / ny funktion
 - **Prioritet:** låg–medium
-- **Status:** åtgärdad (A + B: utskrift/PDF + dela/kopiera)
-- **Svar:** Knappar i sammanfattningssteget (commit `8fa064a`): **Skriv ut / spara som PDF** (`window.print()` + `@media print`) och **Dela resa** / **Kopiera resa** (Web Share API med fallback till urklipp). PNG/länk (C/D) medvetet ej implementerat.
+- **Status:** åtgärdad och **verifierad** (A + B: utskrift/PDF + dela/kopiera)
+- **Svar:** Knappar i sammanfattningssteget (commit `8fa064a`): **Skriv ut / spara som PDF** och **Dela resa** / **Kopiera resa** (Web Share API med fallback till urklipp). Utskriftslayout förbättrad i `a9a9ad3` — `printElement`-util (klon utan tomma sidor), strukturerad sammanfattning med ben och priser. **Manuellt godkänd** juni 2026 (PDF OK). PNG/länk (C/D) medvetet ej implementerat.
 
 ---
 
@@ -205,7 +205,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 9. ~~**G9** – Tur/retur med dedikerat återresesteg~~ ✓
 10. **J2** – Busstider integrerade i huvudtidtabell
 11. ~~**G7 / G8** – Kalenderfärger per tidtabell ✓ / SPA utan reload ✓
-12. ~~**G10** – Exportera resa (PNG/PDF)~~ ✓ (print + dela/kopiera)
+12. ~~**G10** – Exportera resa (PNG/PDF)~~ ✓ (print + dela/kopiera; PDF verifierad)
 13. ~~**J5** – Svar om biljettsystem vs Edmonson~~ ✓ (knapp borttagen)
 
 ---
@@ -214,7 +214,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 
 | Alternativ | Insats | Status |
 |------------|--------|--------|
-| **A. Skriv ut / Spara som PDF** | Låg | ✓ Implementerat (`8fa064a`) |
+| **A. Skriv ut / Spara som PDF** | Låg | ✓ Implementerat och **verifierat** (`8fa064a`, `a9a9ad3`) |
 | **B. Web Share API + kopiera** | Låg | ✓ Implementerat (`8fa064a`) |
 | **C. PNG via html2canvas** | Medium | Ej implementerat |
 | **D. Delbar länk** | Medium–hög | Ej implementerat |
@@ -243,7 +243,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - [x] Jämför färger mot lennakatten.se/grafisk-profil
 - [x] Reproducera G1 och J4 med konkreta testdata
 - [x] J5 — biljettknapp borttagen; svar till Jesper i doc (`f972420`)
-- [x] G10 — print + dela/kopiera (`8fa064a`)
+- [x] G10 — print + dela/kopiera (`8fa064a`); **PDF verifierad** (`a9a9ad3`)
 - [ ] Verifiera G1 på demo efter ny fixture-import
 - [x] **G6** — laddningsspinner (teckenkodning)
 - [x] **G7** — kalenderfärger per `mrt_timetable_type`

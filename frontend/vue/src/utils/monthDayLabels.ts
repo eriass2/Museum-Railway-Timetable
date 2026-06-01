@@ -1,5 +1,6 @@
 import type { MonthDayMeta } from '../config/types';
 import { timetableTypeLabel } from '../shared/calendarDay';
+import { resolveMonthDayTypes } from './monthDayTypes';
 
 export function normalizeMonthDayCount(count: MonthDayMeta['count']): number {
   if (count === undefined || count === null || count === '') {
@@ -26,10 +27,12 @@ export function monthDayButtonAria(
   if (!info.running) {
     return `${day}`;
   }
-  const typeLabel =
-    info.type && opts.typeLabels
-      ? timetableTypeLabel(info.type, opts.typeLabels)
-      : opts.runningLabel || 'Trafikdag';
+  const types = resolveMonthDayTypes(info);
+  const typeLabel = types.length
+    ? types
+        .map((t) => (opts.typeLabels ? timetableTypeLabel(t, opts.typeLabels) : t))
+        .join(', ')
+    : opts.runningLabel || 'Trafikdag';
   if (opts.showCounts && normalizeMonthDayCount(info.count) > 0 && opts.countTitle) {
     return `${day}, ${typeLabel}, ${monthDayCountTitle(opts.countTitle, normalizeMonthDayCount(info.count))}`;
   }

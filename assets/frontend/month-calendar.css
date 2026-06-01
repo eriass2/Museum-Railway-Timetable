@@ -26,9 +26,20 @@
     flex-shrink: 0;
 }
 
+.mrt-month__grid-wrap {
+    position: relative;
+}
+
 .mrt-month__grid--loading {
     opacity: 0.55;
     pointer-events: none;
+}
+
+.mrt-month__grid--loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    cursor: wait;
 }
 
 .mrt-month-table {
@@ -58,26 +69,18 @@
     padding: var(--mrt-spacing-xs) 0;
 }
 
-.mrt-day-cell--inactive {
-    background: var(--mrt-bg-lightest);
-    color: var(--mrt-text-tertiary);
-}
-
-.mrt-day-cell--inactive .mrt-daynum {
-    font-size: var(--mrt-font-base);
-    opacity: var(--mrt-opacity-85);
-}
-
+.mrt-day-cell--inactive,
 .mrt-day-cell--running {
     padding: 0;
     vertical-align: stretch;
 }
 
 .mrt-day {
+    display: block;
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    min-height: 70px;
+    min-height: 72px;
     height: 100%;
     margin: 0;
     padding: var(--mrt-spacing-xs);
@@ -87,55 +90,53 @@
     color: inherit;
 }
 
+.mrt-day--inactive {
+    background: var(--mrt-bg-lightest);
+    color: var(--mrt-text-tertiary);
+    cursor: default;
+}
+
+.mrt-day.mrt-running {
+    background: #fff;
+    color: var(--mrt-text-primary, #151515);
+}
+
 .mrt-daynum {
+    display: block;
     font-size: var(--mrt-font-base);
     font-weight: 600;
+    line-height: 1.2;
     opacity: var(--mrt-opacity-85);
 }
 
-.mrt-day[class*="mrt-day--"] .mrt-daynum {
-    font-weight: 700;
-    opacity: 1;
+.mrt-day-bars {
+    display: flex;
+    gap: 2px;
+    position: absolute;
+    left: var(--mrt-spacing-xs);
+    right: var(--mrt-spacing-xs);
+    bottom: var(--mrt-spacing-xs);
+    height: 5px;
 }
 
-/* Traffic type colours come from ui/calendar-tokens.css — no generic green override here. */
-.mrt-day.mrt-running:not([class*="mrt-day--"]) {
-    background: var(--mrt-cal-traffic-green-bg);
-    color: var(--mrt-cal-traffic-green-fg);
-}
-
-.mrt-day-cell--running[class*="mrt-day--"] {
-    padding: 0;
+.mrt-day-bar {
+    flex: 1 1 0;
+    min-width: 0;
+    border-radius: 1px;
 }
 
 .mrt-day-clickable {
     cursor: pointer;
-    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    transition: box-shadow 0.2s ease;
 }
 
 .mrt-day-clickable:hover {
-    filter: brightness(0.92);
-}
-
-.mrt-day-clickable.mrt-day--green:hover {
-    background-color: var(--mrt-color-green-500) !important;
-    filter: none;
-}
-
-.mrt-day-clickable.mrt-day--yellow:hover {
-    background-color: var(--mrt-color-accent-700) !important;
-    filter: none;
-}
-
-.mrt-day-clickable.mrt-day--red:hover,
-.mrt-day-clickable.mrt-day--orange:hover,
-.mrt-day-clickable.mrt-day--blue:hover {
-    filter: brightness(0.88);
+    box-shadow: inset 0 0 0 1px var(--mrt-border-light);
 }
 
 @media (prefers-reduced-motion: no-preference) {
     .mrt-day-clickable:hover {
-        transform: scale(1.05);
+        transform: none;
     }
 }
 

@@ -52,6 +52,10 @@ export function timetableTypeDotClass(type?: string): string | undefined {
   return undefined;
 }
 
+export function timetableTypeBarClass(type?: string): string | undefined {
+  return timetableTypeClass(type, 'mrt-day-bar');
+}
+
 export function timetableTypeLabel(
   type: string,
   labels?: Record<string, string>,

@@ -69,7 +69,7 @@ function MRT_month_shortcode_nav_link_urls( $first_ts ) {
  * @param int                  $month Month 1–12
  * @param int                  $daysInMonth Length of month
  * @param array<string, mixed> $atts Shortcode atts
- * @return array<int, array{ymd:string,count:int,running:bool,type:string}>
+ * @return array<int, array{ymd:string,count:int,running:bool,type:string,types:list<string>}>
  */
 function MRT_month_shortcode_collect_day_meta( int $year, int $month, int $daysInMonth, array $atts ): array {
 	$dates = array();
@@ -77,11 +77,13 @@ function MRT_month_shortcode_collect_day_meta( int $year, int $month, int $daysI
 		$ymd         = sprintf( '%04d-%02d-%02d', $year, $month, $d );
 		$service_ids = MRT_services_running_on_date( $ymd, $atts['train_type'], $atts['service'] );
 		$running     = ! empty( $service_ids );
+		$type_list   = $running ? MRT_sort_timetable_types_for_calendar( MRT_timetable_types_for_date( $ymd ) ) : array();
 		$dates[ $d ] = array(
 			'ymd'     => $ymd,
 			'count'   => count( $service_ids ),
 			'running' => $running,
-			'type'    => $running ? MRT_dominant_timetable_type_for_date( $ymd ) : '',
+			'type'    => $type_list[0] ?? '',
+			'types'   => $type_list,
 		);
 	}
 

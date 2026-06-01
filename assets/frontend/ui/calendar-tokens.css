@@ -53,3 +53,23 @@
     background: var(--mrt-cal-traffic-blue-bg);
     color: var(--mrt-cal-traffic-blue-fg);
 }
+
+.mrt-day-bar--green {
+    background: var(--mrt-cal-traffic-green-bg);
+}
+
+.mrt-day-bar--yellow {
+    background: var(--mrt-cal-traffic-yellow-bg);
+}
+
+.mrt-day-bar--red {
+    background: var(--mrt-cal-traffic-red-bg);
+}
+
+.mrt-day-bar--orange {
+    background: var(--mrt-cal-traffic-orange-bg);
+}
+
+.mrt-day-bar--blue {
+    background: var(--mrt-cal-traffic-blue-bg);
+}

@@ -14,7 +14,7 @@ import { chunkWeekRows } from '../utils/calendarGrid';
 import MrtTimetableOverviewView from '../components/overview/MrtTimetableOverviewView.vue';
 import { useTimetableOverview } from '../composables/useTimetableOverview';
 import { useMonthCalendar } from '../composables/useMonthCalendar';
-import { timetableTypeClass, timetableTypeDotClass } from '../shared/calendarDay';
+import { timetableTypeDotClass } from '../shared/calendarDay';
 import { resolveMrtString } from '../utils/mrtStrings';
 import { monthLegendHints } from '../utils/monthLegendHints';
 
@@ -50,6 +50,7 @@ const cells = computed(() =>
     weekdayFirstSunday.value,
     startMonday.value,
     dates.value,
+    { minWeekRows: 6 },
   ),
 );
 
@@ -96,8 +97,7 @@ function monthCellClass(cell: MonthGridCell): string | undefined {
     return 'mrt-day-cell mrt-day-cell--inactive';
   }
   if (cell.kind === 'day') {
-    const typeClass = timetableTypeClass(cell.info.type);
-    return ['mrt-day-cell', 'mrt-day-cell--running', typeClass].filter(Boolean).join(' ');
+    return cell.info.running ? 'mrt-day-cell mrt-day-cell--running' : 'mrt-day-cell mrt-day-cell--inactive';
   }
   return undefined;
 }
@@ -160,31 +160,35 @@ watch([panelVisible, dayOverview, dayLoading], async ([visible, overview, loadin
       {{ monthError }}
     </MrtAlert>
 
-    <MrtCalendarGrid
-      variant="month"
-      :weekday-headers="weekdayHeaders"
-      :rows="cellRows"
-      :caption="tableCaption"
-      :grid-label="monthAriaLabel"
-      :cell-class="monthCellClass"
-      :loading="monthLoading"
-      :loading-label="resolveMrtString(config, 'loading', 'Laddar...')"
+    <div
+      class="mrt-month__grid-wrap"
+      :class="{ 'mrt-month__grid--loading': monthLoading }"
+      :aria-busy="monthLoading || undefined"
     >
-      <template #cell="{ cell }">
-        <template v-if="cell.kind === 'empty'" />
-        <MrtMonthDayCell
-          v-else
-          :day="cell.day"
-          :info="cell.info"
-          :show-counts="showCounts"
-          :count-title="config.dayServiceCountTitle"
-          :running-aria="config.dayRunningAria"
-          :type-labels="typeLabelMap"
-          :selected="selectedYmd === cell.info.ymd"
-          @click="onDayClick"
-        />
-      </template>
-    </MrtCalendarGrid>
+      <MrtCalendarGrid
+        variant="month"
+        :weekday-headers="weekdayHeaders"
+        :rows="cellRows"
+        :caption="tableCaption"
+        :grid-label="monthAriaLabel"
+        :cell-class="monthCellClass"
+      >
+        <template #cell="{ cell }">
+          <template v-if="cell.kind === 'empty'" />
+          <MrtMonthDayCell
+            v-else
+            :day="cell.day"
+            :info="cell.info"
+            :show-counts="showCounts"
+            :count-title="config.dayServiceCountTitle"
+            :running-aria="config.dayRunningAria"
+            :type-labels="typeLabelMap"
+            :selected="selectedYmd === cell.info.ymd"
+            @click="onDayClick"
+          />
+        </template>
+      </MrtCalendarGrid>
+    </div>
 
     <div v-if="showLegend" class="mrt-mt-sm">
       <MrtLegend :items="legendItems" :hints="legendHints" />

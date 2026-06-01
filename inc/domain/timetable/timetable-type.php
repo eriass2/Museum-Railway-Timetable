@@ -52,6 +52,31 @@ function MRT_timetable_types_for_date( string $dateYmd ): array {
 }
 
 /**
+ * Sort type slugs in calendar display order (green → yellow → red → orange → blue).
+ *
+ * @param list<string> $types
+ * @return list<string>
+ */
+function MRT_sort_timetable_types_for_calendar( array $types ): array {
+	$seen = array();
+	foreach ( $types as $type ) {
+		$slug = MRT_normalize_timetable_type( (string) $type );
+		if ( $slug !== '' ) {
+			$seen[ $slug ] = true;
+		}
+	}
+
+	$sorted = array();
+	foreach ( MRT_timetable_type_slugs() as $slug ) {
+		if ( ! empty( $seen[ $slug ] ) ) {
+			$sorted[] = $slug;
+		}
+	}
+
+	return $sorted;
+}
+
+/**
  * Pick one type when several timetables share a date (e.g. rail + bus both green).
  */
 function MRT_dominant_timetable_type_for_date( string $dateYmd ): string {
@@ -60,13 +85,8 @@ function MRT_dominant_timetable_type_for_date( string $dateYmd ): string {
 		return '';
 	}
 
-	foreach ( MRT_timetable_type_slugs() as $preferred ) {
-		if ( in_array( $preferred, $types, true ) ) {
-			return $preferred;
-		}
-	}
-
-	return $types[0];
+	$sorted = MRT_sort_timetable_types_for_calendar( $types );
+	return $sorted[0] ?? '';
 }
 
 /**
@@ -96,9 +116,17 @@ function MRT_month_calendar_legend_types( array $dates ): array {
 		if ( ! is_array( $day ) ) {
 			continue;
 		}
-		$type = MRT_normalize_timetable_type( (string) ( $day['type'] ?? '' ) );
-		if ( $type !== '' ) {
-			$seen[ $type ] = true;
+		$day_types = array();
+		if ( ! empty( $day['types'] ) && is_array( $day['types'] ) ) {
+			$day_types = $day['types'];
+		} elseif ( ! empty( $day['type'] ) ) {
+			$day_types = array( (string) $day['type'] );
+		}
+		foreach ( $day_types as $raw_type ) {
+			$type = MRT_normalize_timetable_type( (string) $raw_type );
+			if ( $type !== '' ) {
+				$seen[ $type ] = true;
+			}
 		}
 	}
 

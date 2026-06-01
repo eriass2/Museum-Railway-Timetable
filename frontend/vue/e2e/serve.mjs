@@ -187,8 +187,8 @@ function buildMonthRestPayload(year, month) {
   }
   const dates = {};
   if (month === 5 && year === 2026) {
-    dates[10] = { running: true, count: 2, ymd: '2026-05-10', type: 'green' };
-    dates[17] = { running: true, count: 1, ymd: '2026-05-17', type: 'yellow' };
+    dates[10] = { running: true, count: 2, ymd: '2026-05-10', type: 'green', types: ['green'] };
+    dates[17] = { running: true, count: 1, ymd: '2026-05-17', type: 'yellow', types: ['yellow', 'orange'] };
   }
   if (month === 6 && year === 2026) {
     dates[6] = { running: true, count: 3, ymd: '2026-06-06', type: 'green' };
