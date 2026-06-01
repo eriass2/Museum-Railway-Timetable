@@ -40,6 +40,10 @@
   margin-left: auto;
 }
 
+.mrt-admin-unsaved {
+  margin: 0 0 12px;
+}
+
 .mrt-admin-nav {
   margin-bottom: 16px;
 }

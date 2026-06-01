@@ -18,7 +18,9 @@ import EditableTimetableOverview from '../components/EditableTimetableOverview.v
 import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
 import MrtTimetableOverviewView from '../../components/overview/MrtTimetableOverviewView.vue';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
+import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useTimetableEditorDirty } from '../composables/useTimetableEditorDirty';
 import { adminConfig } from '../types';
 import { useRouter } from 'vue-router';
 
@@ -41,9 +43,17 @@ const selectedServiceId = ref(0);
 const deviationRows = ref<
   { service_id: number; date: string; trip_label: string; train_type_id: number; notice: string }[]
 >([]);
-const saveMsg = ref('');
+const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 const editTitle = ref('');
 const editType = ref('');
+
+const {
+  syncSnapshots,
+  metaDirty,
+  datesDirty,
+  deviationsDirty,
+  tabLabel,
+} = useTimetableEditorDirty(detail, editTitle, editType, deviationRows);
 
 const timetableTypes = [
   { value: '', label: '— Ingen färgrubrik —' },
@@ -79,6 +89,7 @@ async function loadDetail() {
     detail.value = await getTimetable(timetableId.value);
     editTitle.value = detail.value.title;
     editType.value = detail.value.type || '';
+    syncSnapshots();
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Fel';
   } finally {
@@ -93,6 +104,7 @@ async function loadOverview() {
 async function loadDeviations() {
   const res = await getDeviations(timetableId.value);
   deviationRows.value = res.rows;
+  syncSnapshots();
 }
 
 onMounted(() => {
@@ -134,7 +146,8 @@ watch(
 async function saveDates() {
   if (!detail.value || !cfg.canManage) return;
   detail.value = await updateTimetable(timetableId.value, { dates: detail.value.dates });
-  saveMsg.value = 'Trafikdagar sparade';
+  syncSnapshots();
+  showSaveNotice('Trafikdagar sparade');
 }
 
 async function saveMeta() {
@@ -145,7 +158,8 @@ async function saveMeta() {
   });
   editTitle.value = detail.value.title;
   editType.value = detail.value.type || '';
-  saveMsg.value = 'Namn och typ sparade';
+  syncSnapshots();
+  showSaveNotice('Namn och typ sparade');
 }
 
 async function removeTimetable() {
@@ -204,11 +218,12 @@ async function saveDeviationChanges() {
     };
   }
   await saveDeviations(timetableId.value, byService);
-  saveMsg.value = 'Avvikelser sparade';
+  syncSnapshots();
+  showSaveNotice('Avvikelser sparade');
 }
 
 function onMobileSaved(message: string) {
-  saveMsg.value = message;
+  showSaveNotice(message);
 }
 </script>
 
@@ -218,9 +233,12 @@ function onMobileSaved(message: string) {
     <AdminNav />
     <p v-if="loading" class="description">Laddar...</p>
     <p v-else-if="error" class="notice notice-error">{{ error }}</p>
-    <p v-if="saveMsg" class="notice notice-success">{{ saveMsg }}</p>
+    <p v-if="saveMsg" class="notice notice-success" role="status">{{ saveMsg }}</p>
 
     <div v-if="detail && cfg.canManage" class="mrt-admin-panel mrt-admin-timetable-meta">
+      <p v-if="metaDirty" class="notice notice-warning mrt-admin-unsaved">
+        Osparade ändringar i titel eller typ — spara innan du lämnar sidan.
+      </p>
       <h2 class="screen-reader-text">Tidtabell</h2>
       <p>
         <label for="mrt-tt-title">Titel</label>
@@ -261,11 +279,14 @@ function onMobileSaved(message: string) {
         :class="{ 'nav-tab-active': tab === t[0] }"
         @click.prevent="tab = t[0]"
       >
-        {{ t[1] }}
+        {{ tabLabel(t[1], t[0]) }}
       </a>
     </nav>
 
     <div v-if="detail && !isMobile && tab === 'dates'" class="mrt-admin-panel">
+      <p v-if="datesDirty" class="notice notice-warning mrt-admin-unsaved">
+        Osparade trafikdagar — klicka «Spara» för att spara listan.
+      </p>
       <p v-if="cfg.canManage">
         <input v-model="dateInput" type="date" />
         <button type="button" class="button" @click="addDate">Lägg till datum</button>
@@ -348,6 +369,9 @@ function onMobileSaved(message: string) {
     </div>
 
     <div v-if="detail && !isMobile && tab === 'deviations'" class="mrt-admin-panel">
+      <p v-if="deviationsDirty" class="notice notice-warning mrt-admin-unsaved">
+        Osparade avvikelser — klicka «Spara avvikelser».
+      </p>
       <table class="widefat striped">
         <thead>
           <tr>

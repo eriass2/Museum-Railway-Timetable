@@ -71,6 +71,11 @@ async function removeTimetable(id: number, title: string) {
     <p v-if="loading" class="description">Laddar...</p>
     <p v-else-if="error" class="notice notice-error">{{ error }}</p>
 
+    <p v-else-if="!cfg.canManage" class="notice notice-info">
+      Du kan öppna tidtabeller och ändra avvikelser eller avgångstider, men inte skapa nya
+      tidtabeller eller grunddata. Kontakta en administratör om du behöver fler rättigheter.
+    </p>
+
     <div v-if="cfg.canManage" class="mrt-admin-panel mrt-admin-create-form">
       <h2>Ny tidtabell</h2>
       <p>
