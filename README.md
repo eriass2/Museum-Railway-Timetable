@@ -286,7 +286,7 @@ This plugin is provided as-is for use with WordPress.
 - **Inline Editing**: Click-to-edit functionality for Stop Times
 - **Streamlined Menu**: Cleaned up admin menu structure
 - **Enhanced UX**: Direct editing in Service edit pages without separate forms
-- **AJAX Operations**: All CRUD operations use AJAX for better performance
+- **REST operations**: Admin CRUD via REST endpoints
 - **Improved UI**: Visual feedback for editing mode with hover effects
 
 ### 0.1.0

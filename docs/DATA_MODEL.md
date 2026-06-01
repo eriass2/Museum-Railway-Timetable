@@ -535,8 +535,9 @@ The plugin provides a visual overview of timetables that groups services (trips)
 
 ### Service Functions
 - `MRT_services_running_on_date()` - Find services active on a date
-- `MRT_get_services_for_station()` - Get services stopping at station
-- `MRT_next_running_day_for_station()` - Find next service day for station
+- `MRT_find_connections()` - Direct trips between two stations on a date
+- `MRT_find_connecting_services()` - Transfer candidates at a junction station
+- `MRT_get_journey_calendar_month()` - Month calendar status for a station pair (wizard)
 
 
 ---
