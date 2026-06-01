@@ -18,6 +18,7 @@ import EditableTimetableOverview from '../components/EditableTimetableOverview.v
 import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
 import MrtTimetableOverviewView from '../../components/overview/MrtTimetableOverviewView.vue';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
+import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { useTimetableEditorDirty } from '../composables/useTimetableEditorDirty';
@@ -164,11 +165,13 @@ async function saveMeta() {
 
 async function removeTimetable() {
   if (!detail.value || !cfg.canManage) return;
-  if (
-    !window.confirm(
-      `Ta bort «${detail.value.title}» och alla turer? Detta går inte att ångra.`,
-    )
-  ) {
+  const ok = await adminConfirm({
+    title: 'Ta bort tidtabell',
+    message: `«${detail.value.title}» och alla dess turer raderas permanent.`,
+    confirmLabel: 'Ta bort',
+    danger: true,
+  });
+  if (!ok) {
     return;
   }
   try {

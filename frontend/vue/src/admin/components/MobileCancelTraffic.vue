@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { cancelTrafficToday } from '../api/adminRest';
+import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
 
 const props = defineProps<{
@@ -15,11 +16,13 @@ const busy = ref(false);
 async function cancelAll() {
   if (!props.canOperate || busy.value) return;
   const label = props.traffic.date;
-  if (
-    !window.confirm(
-      `Markera alla ${props.traffic.services_count} turer som inställda ${label}?`,
-    )
-  ) {
+  const ok = await adminConfirm({
+    title: 'Inställ trafik',
+    message: `Alla ${props.traffic.services_count} turer den ${label} får meddelandet «Inställd».`,
+    confirmLabel: 'Inställ trafik',
+    danger: true,
+  });
+  if (!ok) {
     return;
   }
   busy.value = true;

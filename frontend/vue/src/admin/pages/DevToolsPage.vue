@@ -8,6 +8,7 @@ import {
   devSyncTimetablePages,
 } from '../api/adminRest';
 import AdminNav from '../components/AdminNav.vue';
+import { adminConfirm } from '../composables/adminConfirm';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -17,8 +18,17 @@ const error = ref('');
 
 async function run(action: string, fn: () => Promise<unknown>) {
   if (busy.value) return;
-  if (action === 'clear' && !window.confirm('Radera ALL plugin-data? Detta går inte att ångra.')) {
-    return;
+  if (action === 'clear') {
+    const ok = await adminConfirm({
+      title: 'Radera all plugin-data',
+      message:
+        'Alla stationer, rutter, tidtabeller, turer och inställningar tas bort. Detta går inte att ångra.',
+      confirmLabel: 'Radera allt',
+      danger: true,
+    });
+    if (!ok) {
+      return;
+    }
   }
   busy.value = action;
   error.value = '';

@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import { createTimetable, deleteTimetable, listTimetables } from '../api/adminRest';
 import type { TimetableListItem } from '../types';
 import AdminNav from '../components/AdminNav.vue';
+import { adminConfirm } from '../composables/adminConfirm';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
 
@@ -51,7 +52,13 @@ function openEditor(id: number) {
 
 async function removeTimetable(id: number, title: string) {
   if (!cfg.canManage) return;
-  if (!window.confirm(`Ta bort tidtabellen «${title}» och alla dess turer? Detta går inte att ångra.`)) {
+  const ok = await adminConfirm({
+    title: 'Ta bort tidtabell',
+    message: `«${title}» och alla dess turer raderas permanent.`,
+    confirmLabel: 'Ta bort',
+    danger: true,
+  });
+  if (!ok) {
     return;
   }
   error.value = '';

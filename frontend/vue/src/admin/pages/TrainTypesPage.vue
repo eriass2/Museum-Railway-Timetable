@@ -8,6 +8,7 @@ import {
 } from '../api/adminRest';
 import type { TrainTypeRow } from '../types';
 import AdminNav from '../components/AdminNav.vue';
+import { adminConfirm } from '../composables/adminConfirm';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -59,7 +60,14 @@ async function saveType(row: TrainTypeRow) {
 }
 
 async function removeType(id: number) {
-  if (!cfg.canManage || !window.confirm('Ta bort tågtyp?')) return;
+  if (!cfg.canManage) return;
+  const ok = await adminConfirm({
+    title: 'Ta bort tågtyp',
+    message: 'Tågtypen tas bort från listan.',
+    confirmLabel: 'Ta bort',
+    danger: true,
+  });
+  if (!ok) return;
   await deleteTrainType(id);
   message.value = 'Borttagen';
   await load();

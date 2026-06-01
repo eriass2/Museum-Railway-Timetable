@@ -13,6 +13,7 @@ import {
 import type { RouteRow, StationRow } from '../types';
 import AdminNav from '../components/AdminNav.vue';
 import RoutePreview from '../components/RoutePreview.vue';
+import { adminConfirm } from '../composables/adminConfirm';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
 
@@ -113,7 +114,13 @@ async function saveStationMeta(st: StationRow) {
 
 async function removeStation(st: StationRow) {
   if (!cfg.canManage) return;
-  if (!window.confirm(`Ta bort stationen «${st.title}»?`)) return;
+  const ok = await adminConfirm({
+    title: 'Ta bort station',
+    message: `Stationen «${st.title}» tas bort om den inte används i rutter eller turer.`,
+    confirmLabel: 'Ta bort',
+    danger: true,
+  });
+  if (!ok) return;
   error.value = '';
   try {
     await deleteStation(st.id);
@@ -125,7 +132,13 @@ async function removeStation(st: StationRow) {
 
 async function removeRoute(route: RouteRow) {
   if (!cfg.canManage) return;
-  if (!window.confirm(`Ta bort rutten «${route.title}»?`)) return;
+  const ok = await adminConfirm({
+    title: 'Ta bort rutt',
+    message: `Rutten «${route.title}» tas bort om inga turer använder den.`,
+    confirmLabel: 'Ta bort',
+    danger: true,
+  });
+  if (!ok) return;
   error.value = '';
   try {
     await deleteRoute(route.id);
