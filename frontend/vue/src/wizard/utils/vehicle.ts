@@ -1,4 +1,8 @@
 import type { JourneyLeg } from '../../shared/journey';
+import {
+  normalizeTrainTypeIconKey,
+  trainTypeIconUrl as iconUrlForKey,
+} from '../../shared/trainTypeIcons';
 import type { MrtVehicleItem } from '../../components/ui/types';
 import type { WizardCfg } from './wizardCfgTypes';
 import { cfgStr } from './wizardLabels';
@@ -10,12 +14,12 @@ export function trainIconKey(
   cfg: WizardCfg,
 ): string {
   if (iconKeyArg) {
-    return iconKeyArg;
+    return normalizeTrainTypeIconKey(iconKeyArg);
   }
   const slugMap = cfg.trainTypeSlugIcons ?? {};
   const slugLower = slug.toLowerCase();
   if (slugLower && slugMap[slugLower]) {
-    return slugMap[slugLower];
+    return normalizeTrainTypeIconKey(slugMap[slugLower]);
   }
   const s = label.toLowerCase();
   if (s.includes('rälsbuss') || s.includes('ralsbuss') || s.includes('railbus')) {
@@ -34,8 +38,7 @@ export function trainIconKey(
 }
 
 export function trainIconUrl(kind: string, cfg: WizardCfg): string {
-  const icons = cfg.trainTypeIcons ?? {};
-  return icons[kind] || icons.diesel || '';
+  return iconUrlForKey(cfg.trainTypeIcons ?? {}, kind);
 }
 
 function legServiceNumber(leg: JourneyLeg): string {

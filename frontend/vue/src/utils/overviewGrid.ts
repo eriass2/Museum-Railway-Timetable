@@ -1,5 +1,7 @@
 import type { TimetableOverviewColumn, TimetableOverviewRow } from '../types/timetableOverview';
 
+export { trainTypeIconUrl } from '../shared/trainTypeIcons';
+
 export type OverviewGridTrack =
   | { kind: 'highlight'; label: string; color: string; columnIndex: number }
   | { kind: 'train'; columnIndex: number };
@@ -30,10 +32,6 @@ export function overviewRowClass(row: TimetableOverviewRow, rowIndex = 0): strin
     classes.push('mrt-ov-grid-row--alt');
   }
   return classes.join(' ');
-}
-
-export function trainTypeIconUrl(iconUrls: Record<string, string>, key: string): string {
-  return iconUrls[key] ?? iconUrls.diesel ?? '';
 }
 
 export type HighlightStripeSpan = {

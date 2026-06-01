@@ -15,6 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Supported train-type icon keys (assets/icons/train-types/{key}.png).
  *
+ * Icon keys (steam|diesel|railbus|bus) differ from WP train type slugs
+ * (angtag|ralsbuss|dieseltag|buss). Slug → icon mapping: MRT_train_type_slug_icon_map().
+ * Vue mirror: frontend/vue/src/shared/trainTypeIcons.ts
+ *
  * @return array<int, string>
  */
 function MRT_train_type_icon_keys(): array {

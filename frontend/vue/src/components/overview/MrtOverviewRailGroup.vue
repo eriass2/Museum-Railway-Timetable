@@ -2,6 +2,7 @@
 import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
 import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../types/timetableOverview';
 import { trainTypeIconUrl } from '../../utils/overviewGrid';
+import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
 import MrtOverviewRailGroupGrid from './MrtOverviewRailGroupGrid.vue';
 
 defineProps<{
@@ -17,9 +18,9 @@ defineProps<{
       <span class="mrt-ov-time">{{ row.cells[columnIndex].text }}</span>
       <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
         <img
-          v-if="trainTypeIconUrl(iconUrls, 'bus')"
+          v-if="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
           class="mrt-ov-bus-ref__icon"
-          :src="trainTypeIconUrl(iconUrls, 'bus')"
+          :src="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
           alt=""
           width="20"
           height="20"

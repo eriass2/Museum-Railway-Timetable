@@ -4,6 +4,7 @@ import type { OverviewGridEdit } from '../composables/useOverviewGridEdit';
 import { overviewUiLabels } from '../../shared/overviewUiLabels';
 import MrtOverviewRailGroupGrid from '../../components/overview/MrtOverviewRailGroupGrid.vue';
 import { trainTypeIconUrl } from '../../utils/overviewGrid';
+import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
 
 const labels = overviewUiLabels({});
 
@@ -46,9 +47,9 @@ async function patchCell(
         <span class="mrt-ov-time">{{ row.cells[columnIndex].text }}</span>
         <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
           <img
-            v-if="trainTypeIconUrl(iconUrls, 'bus')"
+            v-if="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
             class="mrt-ov-bus-ref__icon"
-            :src="trainTypeIconUrl(iconUrls, 'bus')"
+            :src="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
             alt=""
             width="20"
             height="20"
