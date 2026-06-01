@@ -3,7 +3,7 @@
 Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder refereras nedan — lägg filerna i `docs/feedback/images/` om de sparas i repot.
 
 **Källor:** mail med skärmdumpar  
-**Status:** obehandlad (väntar på genomgång)
+**Status:** delvis åtgärdad (genomgång juni 2026 — se **Svar** per punkt)
 
 ---
 
@@ -11,11 +11,21 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 
 | Kategori | Antal | Kommentar |
 |----------|-------|-----------|
-| Buggar / fel | 4 | Resesökning, priser, kalendersiffror, teckenkodning |
-| UI / design | 6 | Färger, typsnitt, tidtabell, klippning mobil |
-| UX / flöde | 7 | Kalender vs lista, tur/retur-steg, busstider, spara resa |
-| Frågor / scope | 2 | Biljettsystem, Edmonson-biljetter |
+| Buggar / fel | 4 | **3 åtgärdade** (G1, J4, G5). **1 kvar** (G6 teckenkodning) |
+| UI / design | 6 | **G3 delvis** (färgpalett). J1, G2, J3 kvar |
+| UX / flöde | 7 | G5 åtgärdad. G4, G7–G10, G9, J2 obehandlade |
+| Frågor / scope | 2 | J5 obehandlad (svar behövs) |
 | Positivt | — | Båda imponerade, ser lovande ut |
+
+### Genomfört (översikt)
+
+| Punkt | Kort svar |
+|-------|-----------|
+| **G1** | Tidtabellsdata synkad mot PDF; resa Uppsala→Marielund täcks av PHPUnit |
+| **J4** | Taxa 2026, eftermiddagsbiljett, heldagsbiljetter i sammanfattning |
+| **G5** | Siffror dolda som standard; tydligare legend vid `show_counts=1` |
+| **G3** | Lennakatten-färgpalett i `mrt-color-tokens.css` (grön `#296310`, guld `#DDD24C`, svart text på guld) |
+| *(underliggande)* | GRÖN/GUL/RÖD/ORANGE + bussar synkade mot `Anslagstidtabell-2026.pdf`; 42 turer verifierade |
 
 ---
 
@@ -27,8 +37,9 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Tidtabell (mobil)
 - **Typ:** UI / design
 - **Prioritet:** medium
-- **Status:** obehandlad
-- **Anteckning:** Se befintlig palett i [COLOR_PALETTE.md](../design/COLOR_PALETTE.md). Officiell grafisk profil: https://lennakatten.se/grafisk-profil/
+- **Status:** delvis åtgärdad (färger via G3; mått och fetstil kvar)
+- **Anteckning:** Se [COLOR_PALETTE.md](../design/COLOR_PALETTE.md). Officiell grafisk profil: https://lennakatten.se/grafisk-profil/
+- **Svar:** Varumärkesfärgerna är uppdaterade enligt Lennakatten grafisk profil (se G3). Kolumnbredder (t.ex. Thun's-Expressen) och **fetstil på stationsnamn** i tidtabellsvyn är inte gjorda än — ligger kvar i designbackloggen tillsammans med G2 (typsnitt).
 
 ### J2. Busstider i huvudtidtabellen
 - **Källa:** mail
@@ -37,6 +48,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** UX / produktbeslut
 - **Prioritet:** låg–medium (behöver avstämning)
 - **Status:** obehandlad
+- **Svar:** Ingen ändring ännu. Busstider finns som egna tidtabeller/anslutningar i datan (synkade mot PDF). Kräver produktbeslut om de ska visas som extra rader i samma tabell som tågen.
 
 ### J3. Reseplanerare – klippning och linjetext
 - **Källa:** mail, `image4.jpeg`
@@ -45,6 +57,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** UI + copy
 - **Prioritet:** medium
 - **Status:** obehandlad
+- **Svar:** Ej åtgärdat. Förslaget om kortare linjetext (”Rälsbuss 101 mot Faringe”) och bättre mobil-layout för symboler är noterat.
 
 ### J4. Biljettpriser – zoner och eftermiddagstaxa
 - **Källa:** mail, `image2.png`
@@ -52,11 +65,12 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Prisberäkning / reseplanerare
 - **Typ:** bugg + önskemål
 - **Prioritet:** hög
-- **Status:** åtgärdad (taxa 2026, eftermiddagsbiljett, heldagsbiljett i sammanfattning)
+- **Status:** åtgärdad
 - **Förväntade priser (exempelresan):**
   - Normal 2-zoner: vuxen 220, barn 4–15 60, student 200
   - Efter kl 15 (tur/retur i sin helhet): vuxen 160, student 140
   - Önskemål: visa heldagsbiljetter också
+- **Svar:** Fixat i commit `b098672`. Priserna följer Lennakatten taxa 2026. Zonberäkning (max 3 zoner) och **eftermiddagsbiljett** (tur/retur där båda benen avgår kl 15:00 eller senare → fast pris 160/140/60) är implementerade i PHP och Vue. **Heldagsbiljetter** visas i prissammanfattningen i wizard. Täcks av `JourneyPricesTest.php` och `frontend/vue/tests/prices.test.ts`.
 
 ### J5. ”Fortsätt till biljetter” – scope-fråga
 - **Källa:** mail
@@ -65,6 +79,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** fråga / produktbeslut
 - **Prioritet:** info (svar behövs)
 - **Status:** obehandlad
+- **Svar:** *(ej skrivet än — formulera svar till Jesper om att knappen är placeholder / extern länk / framtida scope)*
 
 ---
 
@@ -76,7 +91,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Reseplanerare / journey scoring
 - **Typ:** bugg
 - **Prioritet:** hög
-- **Status:** obehandlad
+- **Status:** åtgärdad (testdata; verifiera på demo efter import)
+- **Svar:** Orsaken var felaktig/ofullständig tidtabellsdata i fixturen — inte själva resesökningsmotorn. Vi har synkat GRÖN, GUL, RÖD och ORANGE mot `Anslagstidtabell-2026.pdf` (tider, P/X, bussanslutningar). Resa **Uppsala Östra → Marielund** på grön trafikdag (t.ex. 2026-06-06) ger nu träff (tåg 71, avg 10:00). Täcks av `LennakattenJourneySearchTest.php`. **Demo-sajten** behöver ny import av Lennakatten-fixture om den fortfarande kör gammal data.
 
 ### G2. Typsnitt – Roboto + Open Sans Bold
 - **Källa:** mail
@@ -86,6 +102,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Prioritet:** medium
 - **Status:** obehandlad
 - **Referens:** https://lennakatten.se/grafisk-profil/
+- **Svar:** Ej implementerat. Nästa steg i designbackloggen efter färgpaletten.
 
 ### G3. Färger mot grafisk profil
 - **Källa:** mail
@@ -93,8 +110,9 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Global färger
 - **Typ:** design
 - **Prioritet:** medium
-- **Status:** obehandlad
-- **Anteckning:** Överlappar J1. Jämför med `assets/mrt-color-tokens.css` och [COLOR_PALETTE.md](../design/COLOR_PALETTE.md).
+- **Status:** delvis åtgärdad (tokens + docs; kalender per typ kvar — G7)
+- **Anteckning:** Överlappar J1. Se `assets/mrt-color-tokens.css` och [COLOR_PALETTE.md](../design/COLOR_PALETTE.md).
+- **Svar:** Lennakatten varumärkesfärger är införda i `assets/mrt-color-tokens.css` (commit `8b82cb2`): grön `#296310`, guld `#DDD24C`, oliv `#807C1C`. **Svart text på guld** enligt profil (tidigare felaktigt vit). Trafikfärger som `--mrt-color-traffic-*` för tidtabellstyper. Referens-PDF och Word-mallar i `docs/design/reference/`. **Kvar:** kalenderdagar ska färgkodas per tidtabellstyp (G7); vissa vyer kan fortfarande behöva visuell genomgång.
 
 ### G4. Första vyn – kalender istället för tidtabellslista
 - **Källa:** mail
@@ -103,6 +121,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** UX / större förändring
 - **Prioritet:** medium–hög (produktbeslut)
 - **Status:** obehandlad
+- **Svar:** Ingen ändring av startvy ännu. Månadskalender-shortcode finns redan; frågan är om den ska bli primär ingång istället för tidtabellslistan.
 
 ### G5. Kalendersiffror – oklar betydelse
 - **Källa:** mail
@@ -110,8 +129,9 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Kalender
 - **Typ:** bugg eller UX (oklarhet)
 - **Prioritet:** hög
-- **Status:** åtgärdad (siffror av som standard; tydlig legend när show_counts=1)
+- **Status:** åtgärdad
 - **Anteckning:** Siffrorna var antal **turer** (services) alla linjer — inte avgångar för vald sträcka. Reseplanerarens kalender visar inga siffror.
+- **Svar:** Fixat i commit `63c8eb9`. **Siffror är av som standard** (`show_counts=0`) — dagar markeras med prick/färg istället. Om siffror aktiveras (`show_counts=1`) förklaras de i legenden som antal turer alla linjer och riktningar (inte avgångar för en viss sträcka). Reseplanerarens datumsteg visar aldrig per-dag-siffror. Hjälptext uppdaterad i admin.
 
 ### G6. ”ÔÅ / Laddar…” vid laddning
 - **Källa:** mail
@@ -121,6 +141,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Prioritet:** medium
 - **Status:** obehandlad
 - **Anteckning:** Troligen felaktig encoding av ”Å” eller liknande — undersök var strängen kommer ifrån.
+- **Svar:** Ej åtgärdat. Troligen felaktig teckenkodning av svenska tecken i laddningstext eller aria-live-sträng. Nästa buggfix i kön.
 
 ### G7. Kalender – färger per tidtabell
 - **Källa:** mail (önskemål)
@@ -128,7 +149,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Kalender
 - **Typ:** önskemål
 - **Prioritet:** medium
-- **Status:** obehandlad
+- **Status:** obehandlad (förutsättningar klara via G3)
+- **Svar:** Färg-tokens och admin-fält `mrt_timetable_type` (green/yellow/red/orange) finns. Själva kalender-UI:t använder dem inte än — planerat nästa steg efter färgpaletten.
 
 ### G8. Ingen sidladdning vid månadsklick
 - **Källa:** mail (önskemål)
@@ -137,6 +159,7 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** önskemål / bugg
 - **Prioritet:** medium
 - **Status:** obehandlad
+- **Svar:** Vue-månadskalendern (`MonthCalendarApp`) laddar om utan full sidreload om shortcoden används i Vue-läge. Om full sidladdning fortfarande syns kan det bero på äldre PHP-shortcode-läge eller länkar med query-parametrar — behöver verifieras i vilken vy granskaren testade.
 
 ### G9. Tur och retur – separat steg för återresa
 - **Källa:** mail (önskemål)
@@ -144,7 +167,8 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Område:** Reseplanerare / wizard
 - **Typ:** UX (kan delvis finnas redan — verifiera)
 - **Prioritet:** medium–hög
-- **Status:** obehandlad
+- **Status:** obehandlad (behöver verifieras mot nuvarande wizard)
+- **Svar:** Ej verifierat/skrivet svar ännu. Wizard har tur/retur-läge — ska kontrolleras om det redan finns separat återresesteg med filtrering efter ankomsttid.
 
 ### G10. Spara resa som PNG/PDF
 - **Källa:** mail (önskemål)
@@ -153,19 +177,20 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 - **Typ:** önskemål / ny funktion
 - **Prioritet:** låg–medium
 - **Status:** obehandlad
+- **Svar:** Ej planerat/implementerat.
 
 ---
 
-## Prioriterad åtgärdslista (utkast)
+## Prioriterad åtgärdslista
 
 ### Fixa först (buggar / felaktigt beteende)
-1. **G1** – Resa Uppsala–Marielund hittas inte på trafikdag
-2. **J4** – Fel biljettpriser (zoner + eftermiddagstaxa)
-3. **G5** – Kalendersiffror stämmer inte / otydliga
+1. ~~**G1** – Resa Uppsala–Marielund hittas inte på trafikdag~~ ✓ (testdata; verifiera demo-import)
+2. ~~**J4** – Fel biljettpriser (zoner + eftermiddagstaxa)~~ ✓
+3. ~~**G5** – Kalendersiffror stämmer inte / otydliga~~ ✓
 4. **G6** – ”ÔÅ / Laddar…” (encoding/copy)
 
 ### Design som är relativt enkelt
-5. **J1 / G3** – Färger och tidtabell (stationer fetstil, kolumnbredder)
+5. **J1 / G3** – ~~Färgpalett~~ ✓ delvis — kvar: stationer fetstil, kolumnbredder, tidtabell per typ
 6. **G2** – Roboto + Open Sans Bold
 7. **J3** – Mobil klippning + kortare linjetext
 
@@ -193,8 +218,11 @@ Sammanställning av feedback från Jesper och en andra granskare (mail). Bilder 
 
 ## Nästa steg
 
-- [ ] Granska punkt för punkt: tydlig / oklar / redan fixad / avvisad
+- [x] Granska punkt för punkt: tydlig / oklar / redan fixad / avvisad
 - [ ] Verifiera G9 mot nuvarande wizard-flöde
-- [ ] Jämför färger mot lennakatten.se/grafisk-profil
-- [ ] Reproducera G1 och J4 med konkreta testdata
+- [x] Jämför färger mot lennakatten.se/grafisk-profil
+- [x] Reproducera G1 och J4 med konkreta testdata
 - [ ] Svara Jesper på J5 (biljettsystem)
+- [ ] Verifiera G1 på demo efter ny fixture-import
+- [ ] **G6** — hitta och rätta laddningstext (teckenkodning)
+- [ ] **G7** — kalenderfärger per `mrt_timetable_type`
