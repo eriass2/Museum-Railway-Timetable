@@ -17,24 +17,6 @@ function MRT_csv_format_version(): string {
 }
 
 /**
- * Entity keys allowed in manifest.includes.
- *
- * @return array<int, string>
- */
-function MRT_csv_entity_types(): array {
-	return array(
-		'stations',
-		'train_types',
-		'routes',
-		'timetables',
-		'services',
-		'stoptimes',
-		'settings',
-		'prices',
-	);
-}
-
-/**
  * CSV filename per entity type.
  *
  * @return array<string, string>

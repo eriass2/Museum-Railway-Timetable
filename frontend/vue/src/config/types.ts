@@ -7,9 +7,6 @@ export type MrtRestConfig = {
   strings?: Record<string, string>;
 };
 
-/** @deprecated Use MrtRestConfig */
-export type MrtAjaxConfig = MrtRestConfig;
-
 export type MrtVueApp = 'month' | 'overview' | 'wizard';
 
 export type MonthDayMeta = {

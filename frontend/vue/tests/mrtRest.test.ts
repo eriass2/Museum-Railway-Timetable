@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { mrtPost } from '../src/api/mrtApi';
+import { mrtRestRequest } from '../src/api/mrtRest';
 
 const config = {
   restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1/',
   restNonce: 'test-nonce',
 };
 
-describe('mrtPost (REST)', () => {
+describe('mrtRestRequest', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
   });
@@ -22,7 +22,7 @@ describe('mrtPost (REST)', () => {
       }),
     );
 
-    const res = await mrtPost<{ overview: { timetableId: number } }>(
+    const res = await mrtRestRequest<{ overview: { timetableId: number } }>(
       config,
       'mrt_timetable_overview_data',
       { timetable_id: 1 },
@@ -41,7 +41,7 @@ describe('mrtPost (REST)', () => {
       }),
     );
 
-    const res = await mrtPost(config, 'mrt_timetable_overview_data', { timetable_id: 1 });
+    const res = await mrtRestRequest(config, 'mrt_timetable_overview_data', { timetable_id: 1 });
     expect(res.success).toBe(false);
     expect(res.message).toBe('Serverfel');
   });
@@ -53,7 +53,7 @@ describe('mrtPost (REST)', () => {
     });
     vi.stubGlobal('fetch', fetchMock);
 
-    await mrtPost(config, 'mrt_timetable_overview_data', { timetable_id: 42 });
+    await mrtRestRequest(config, 'mrt_timetable_overview_data', { timetable_id: 42 });
     const [url, init] = fetchMock.mock.calls[0];
     expect(String(url)).toContain('/timetables/42/overview');
     expect(init.method).toBe('GET');

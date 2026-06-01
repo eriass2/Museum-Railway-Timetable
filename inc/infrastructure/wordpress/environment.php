@@ -25,15 +25,6 @@ function MRT_is_development_mode(): bool {
 }
 
 /**
- * Whether browser console debug is allowed (admin JS).
- *
- * @return bool
- */
-function MRT_allow_script_debug(): bool {
-	return MRT_is_development_mode();
-}
-
-/**
  * Use post-name permalinks in development when still on WordPress "plain" URLs.
  *
  * Without this, paths like /wizard-smoke-test/ are not resolved and the static

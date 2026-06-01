@@ -61,7 +61,7 @@ Prioritet: `strings` → `wizard` → `labels` → fallback.
 | **Utils** (`src/utils/`, `*/utils/`) | Ren funktion, ingen Vue-state, enkel att unit-testa |
 | **Composables** (`src/composables/`, `*/composables/`) | `ref`/`computed`, livscykel, delad komponentlogik |
 
-`useMrtRest` — loading/error/run kring `mrtRestRequest`. Ersätter det gamla namnet `useMrtAjax` (deprecated alias finns kvar).
+`useMrtRest` — loading/error/run kring `mrtRestRequest`.
 
 ---
 

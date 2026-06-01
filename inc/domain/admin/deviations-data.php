@@ -56,23 +56,6 @@ function MRT_service_deviation_available_dates( array $timetable_dates, array $u
 }
 
 /**
- * Train types for deviation UI (id + name).
- *
- * @param array<int, WP_Term> $all_train_types Terms.
- * @return array<int, array{id: int, name: string}>
- */
-function MRT_service_deviation_train_type_options( array $all_train_types ): array {
-	$out = array();
-	foreach ( $all_train_types as $term ) {
-		$out[] = array(
-			'id'   => (int) $term->term_id,
-			'name' => (string) $term->name,
-		);
-	}
-	return $out;
-}
-
-/**
  * One deviation row for the timetable table.
  *
  * @return array{service_id: int, date: string, trip_label: string, train_type_id: int, notice: string}
@@ -120,35 +103,4 @@ function MRT_collect_timetable_deviation_rows( array $services ): array {
 		}
 	);
 	return $rows;
-}
-
-/**
- * Trip label for deviation dropdowns.
- */
-function MRT_timetable_deviation_trip_label( WP_Post $service ): string {
-	$route_id = (int) get_post_meta( $service->ID, 'mrt_service_route_id', true );
-	$route    = $route_id > 0 ? get_post( $route_id ) : null;
-	$dest     = MRT_get_service_destination( (int) $service->ID );
-	$dest_txt = ! empty( $dest['destination'] ) ? (string) $dest['destination'] : '';
-	if ( $route && $dest_txt !== '' ) {
-		return $route->post_title . ' → ' . $dest_txt;
-	}
-	return (string) $service->post_title;
-}
-
-/**
- * Per-trip dates already used for deviations.
- *
- * @param WP_Post[] $services Service posts.
- * @return array<int, string[]>
- */
-function MRT_timetable_deviation_used_dates_by_service( array $services ): array {
-	$out = array();
-	foreach ( $services as $service ) {
-		if ( ! $service instanceof WP_Post ) {
-			continue;
-		}
-		$out[ (int) $service->ID ] = MRT_service_deviation_dates( (int) $service->ID );
-	}
-	return $out;
 }

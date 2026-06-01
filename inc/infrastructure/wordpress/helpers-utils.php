@@ -15,28 +15,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once MRT_PATH . 'inc/domain/train-type/icons.php';
 
 /**
- * Verify meta box save: nonce, autosave, permissions
- * Call at start of save_post_* handlers.
- *
- * @param int    $post_id Post ID
- * @param string $nonce_name $_POST key for nonce
- * @param string $nonce_action wp_verify_nonce action
- * @return bool True if save should proceed, false to abort
- */
-function MRT_verify_meta_box_save( int $post_id, string $nonce_name, string $nonce_action ): bool {
-	if ( ! isset( $_POST[ $nonce_name ] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST[ $nonce_name ] ) ), $nonce_action ) ) {
-		return false;
-	}
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
-		return false;
-	}
-	if ( ! current_user_can( 'edit_post', $post_id ) ) {
-		return false;
-	}
-	return true;
-}
-
-/**
  * Verify AJAX permission to edit a specific post.
  *
  * @param int $post_id Post ID
@@ -78,25 +56,6 @@ function MRT_render_alert( string $message, string $type = 'error', string $extr
 	$role = ( $type === 'info' ) ? 'status' : 'alert';
 
 	return '<div class="' . $classes . '" role="' . esc_attr( $role ) . '">' . esc_html( $message ) . '</div>';
-}
-
-/**
- * Render info box (title + content)
- *
- * @param string $title Box title (will be escaped)
- * @param string $content HTML content (sanitized with wp_kses_post for safe HTML)
- * @param string $extra_classes Optional extra CSS classes (e.g. 'mrt-mb-1')
- * @return void Outputs HTML
- */
-function MRT_render_info_box( string $title, string $content, string $extra_classes = '' ): void {
-	$classes = 'mrt-alert mrt-alert-info mrt-info-box';
-	if ( ! empty( $extra_classes ) ) {
-		$classes .= ' ' . esc_attr( $extra_classes );
-	}
-	echo '<div class="' . esc_attr( $classes ) . '">';
-	echo '<p><strong>' . esc_html( $title ) . '</strong></p>';
-	echo wp_kses_post( $content );
-	echo '</div>';
 }
 
 /**

@@ -1,10 +1,10 @@
 import { ref } from 'vue';
-import type { MrtAjaxConfig } from '../config/types';
+import type { MrtRestConfig } from '../config/types';
 import type { TimetableOverviewPayload } from '../types/timetableOverview';
 import { resolveMrtString } from '../utils/mrtStrings';
 import { useMrtRest } from './useMrtRest';
 
-export function useTimetableOverview(config: MrtAjaxConfig) {
+export function useTimetableOverview(config: MrtRestConfig) {
   const overview = ref<TimetableOverviewPayload | null>(null);
   const { loading, error, run, clearError } = useMrtRest(config);
 

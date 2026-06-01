@@ -1,6 +1,6 @@
-import type { MrtAjaxConfig } from '../config/types';
+import type { MrtRestConfig } from '../config/types';
 
-export type MrtStringSources = Pick<MrtAjaxConfig, 'strings'> & {
+export type MrtStringSources = Pick<MrtRestConfig, 'strings'> & {
   wizard?: Record<string, unknown>;
   labels?: Record<string, string>;
 };

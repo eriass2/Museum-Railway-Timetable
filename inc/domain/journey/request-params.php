@@ -1,6 +1,6 @@
 <?php
 /**
- * Journey request parameter parsing (REST and legacy POST).
+ * Journey request parameter parsing (REST body).
  *
  * @package Museum_Railway_Timetable
  */
@@ -58,13 +58,6 @@ function MRT_journey_parse_stations_pair( array $input ) {
 }
 
 /**
- * @return array<string, int>|WP_Error
- */
-function MRT_journey_ajax_parse_stations_pair() {
-	return MRT_journey_parse_stations_pair( $_POST );
-}
-
-/**
  * @param array<string, mixed> $input Request body.
  * @return array<string, mixed>|WP_Error
  */
@@ -81,13 +74,6 @@ function MRT_journey_parse_from_to_date( array $input ) {
 		);
 	}
 	return array_merge( $pair, array( 'date' => $date ) );
-}
-
-/**
- * @return array<string, mixed>|WP_Error
- */
-function MRT_journey_ajax_parse_from_to_date() {
-	return MRT_journey_parse_from_to_date( $_POST );
 }
 
 /**
@@ -121,13 +107,6 @@ function MRT_journey_parse_trip_search_params( array $input ) {
 }
 
 /**
- * @return array<string, mixed>|WP_Error
- */
-function MRT_journey_ajax_parse_trip_search_params() {
-	return MRT_journey_parse_trip_search_params( $_POST );
-}
-
-/**
  * @param array<string, mixed> $input Request body.
  * @return array<string, int>|WP_Error
  */
@@ -154,13 +133,6 @@ function MRT_journey_parse_calendar_month_params( array $input ) {
 }
 
 /**
- * @return array<string, int>|WP_Error
- */
-function MRT_journey_ajax_parse_calendar_month_params() {
-	return MRT_journey_parse_calendar_month_params( $_POST );
-}
-
-/**
  * @param array<string, mixed> $input Request body.
  * @return array<string, int>|WP_Error
  */
@@ -177,11 +149,4 @@ function MRT_journey_parse_connection_detail_params( array $input ) {
 		);
 	}
 	return array_merge( $pair, array( 'service_id' => $service_id ) );
-}
-
-/**
- * @return array<string, int>|WP_Error
- */
-function MRT_journey_ajax_parse_connection_detail_params() {
-	return MRT_journey_parse_connection_detail_params( $_POST );
 }

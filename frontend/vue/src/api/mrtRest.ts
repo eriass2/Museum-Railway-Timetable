@@ -102,9 +102,3 @@ export async function mrtRestRequest<T>(
     return { success: false, message: 'Nätverksfel' };
   }
 }
-
-/** @deprecated Use mrtRestRequest — kept for gradual migration. */
-export const mrtPost = mrtRestRequest;
-
-/** @deprecated Use resolveMrtRestBase from restUrl.ts */
-export { resolveMrtRestBase as restBase } from './restUrl';

@@ -115,15 +115,6 @@ function MRT_ensure_dev_smoke_pages(): array {
 }
 
 /**
- * All smoke + debug page specs for nav menu links.
- *
- * @return array<int, array{option: string, title: string, menu_label: string, content: string|callable(): string}>
- */
-function MRT_dev_all_front_page_specs(): array {
-	return array_merge( MRT_dev_smoke_page_specs(), MRT_component_debug_page_specs() );
-}
-
-/**
  * Theme location slugs to try for the site menu (classic themes).
  *
  * @return string[]
