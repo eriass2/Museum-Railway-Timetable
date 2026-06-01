@@ -12,6 +12,7 @@ import {
   updateTimetable,
 } from '../api/adminRest';
 import type { TimetableDetail } from '../types';
+import AdminLoadState from '../components/AdminLoadState.vue';
 import AdminNav from '../components/AdminNav.vue';
 import StopTimesEditor from '../components/StopTimesEditor.vue';
 import EditableTimetableOverview from '../components/EditableTimetableOverview.vue';
@@ -234,8 +235,7 @@ function onMobileSaved(message: string) {
   <div>
     <h1 v-if="!detail">Tidtabell</h1>
     <AdminNav />
-    <p v-if="loading" class="description">Laddar...</p>
-    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
+    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar tidtabell…" @retry="loadDetail">
     <p v-if="saveMsg" class="notice notice-success" role="status">{{ saveMsg }}</p>
 
     <div v-if="detail && cfg.canManage" class="mrt-admin-panel mrt-admin-timetable-meta">
@@ -408,5 +408,6 @@ function onMobileSaved(message: string) {
     <div v-if="!isMobile && tab === 'preview'" class="mrt-admin-panel mrt-vue-root">
       <MrtTimetableOverviewView v-if="overview" :data="overview" />
     </div>
+    </AdminLoadState>
   </div>
 </template>

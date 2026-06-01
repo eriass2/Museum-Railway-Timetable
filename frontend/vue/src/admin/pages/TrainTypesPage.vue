@@ -7,6 +7,7 @@ import {
   updateTrainType,
 } from '../api/adminRest';
 import type { TrainTypeRow } from '../types';
+import AdminLoadState from '../components/AdminLoadState.vue';
 import AdminNav from '../components/AdminNav.vue';
 import { adminConfirm } from '../composables/adminConfirm';
 import { adminConfig } from '../types';
@@ -79,11 +80,10 @@ async function removeType(id: number) {
     <h1>Tågtyper</h1>
     <AdminNav />
 
-    <p v-if="loading" class="description">Laddar...</p>
-    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
+    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar tågtyper…" @retry="load">
     <p v-if="message" class="notice notice-success">{{ message }}</p>
 
-    <table v-if="!loading" class="widefat striped">
+    <table class="widefat striped">
       <thead>
         <tr>
           <th>Namn</th>
@@ -127,7 +127,7 @@ async function removeType(id: number) {
       </tbody>
     </table>
 
-    <div v-if="cfg.canManage && !loading" class="mrt-admin-panel mrt-mt-sm">
+    <div v-if="cfg.canManage" class="mrt-admin-panel mrt-mt-sm">
       <h2>Ny tågtyp</h2>
       <p>
         <input v-model="newType.name" type="text" placeholder="Namn" class="regular-text" />
@@ -138,5 +138,6 @@ async function removeType(id: number) {
         <button type="button" class="button button-primary" @click="addType">Skapa</button>
       </p>
     </div>
+    </AdminLoadState>
   </div>
 </template>

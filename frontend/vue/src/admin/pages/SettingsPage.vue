@@ -2,6 +2,7 @@
 import { onMounted, ref } from 'vue';
 import { getSettings, saveSettings } from '../api/adminRest';
 import type { SettingsPayload } from '../api/adminRest';
+import AdminLoadState from '../components/AdminLoadState.vue';
 import AdminNav from '../components/AdminNav.vue';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
@@ -18,12 +19,14 @@ const form = ref<SettingsPayload>({
   max_transfer_minutes: 120,
 });
 
-onMounted(async () => {
+async function load() {
   if (!cfg.canManage) {
     error.value = 'Du har inte behörighet att ändra inställningar.';
     loading.value = false;
     return;
   }
+  loading.value = true;
+  error.value = '';
   try {
     form.value = await getSettings();
   } catch (e) {
@@ -31,6 +34,10 @@ onMounted(async () => {
   } finally {
     loading.value = false;
   }
+}
+
+onMounted(() => {
+  void load();
 });
 
 async function submit() {
@@ -50,10 +57,8 @@ async function submit() {
     <h1>Inställningar</h1>
     <AdminNav />
 
-    <p v-if="loading" class="description">Laddar...</p>
-    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
-
-    <form v-else class="mrt-admin-panel" @submit.prevent="submit">
+    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar inställningar…" @retry="load">
+    <form class="mrt-admin-panel" @submit.prevent="submit">
       <table class="form-table">
         <tbody>
           <tr>
@@ -93,5 +98,6 @@ async function submit() {
         CSV-import/export finns under fliken Import/export i menyn.
       </p>
     </form>
+    </AdminLoadState>
   </div>
 </template>

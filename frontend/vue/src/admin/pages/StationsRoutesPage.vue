@@ -11,6 +11,7 @@ import {
   updateStation,
 } from '../api/adminRest';
 import type { RouteRow, StationRow } from '../types';
+import AdminLoadState from '../components/AdminLoadState.vue';
 import AdminNav from '../components/AdminNav.vue';
 import RoutePreview from '../components/RoutePreview.vue';
 import { adminConfirm } from '../composables/adminConfirm';
@@ -156,10 +157,8 @@ async function removeRoute(route: RouteRow) {
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>Stationer &amp; rutter</h1>
     <AdminNav />
-    <p v-if="loading" class="description">Laddar...</p>
-    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
-
-    <nav v-if="!loading" class="nav-tab-wrapper mrt-admin-section-nav" aria-label="Stationer eller rutter">
+    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar stationer och rutter…" @retry="load">
+    <nav class="nav-tab-wrapper mrt-admin-section-nav" aria-label="Stationer eller rutter">
       <a
         href="#"
         class="nav-tab"
@@ -178,7 +177,7 @@ async function removeRoute(route: RouteRow) {
       </a>
     </nav>
 
-    <div v-if="!loading && sectionTab === 'stations'" class="mrt-admin-panel">
+    <div v-if="sectionTab === 'stations'" class="mrt-admin-panel">
       <h2 class="screen-reader-text">Stationer</h2>
       <p v-if="cfg.canManage" class="mrt-admin-create-form">
         <input v-model="newStationTitle" type="text" class="regular-text" placeholder="Ny station" />
@@ -257,7 +256,7 @@ async function removeRoute(route: RouteRow) {
       </div>
     </div>
 
-    <div v-if="!loading && sectionTab === 'routes'" class="mrt-admin-panel">
+    <div v-if="sectionTab === 'routes'" class="mrt-admin-panel">
       <h2 class="screen-reader-text">Rutter</h2>
       <p v-if="cfg.canManage" class="mrt-admin-create-form">
         <input v-model="newRouteTitle" type="text" class="regular-text" placeholder="Ny rutt" />
@@ -304,7 +303,7 @@ async function removeRoute(route: RouteRow) {
     </div>
 
     <div
-      v-if="!loading && sectionTab === 'routes' && editingRoute"
+      v-if="sectionTab === 'routes' && editingRoute"
       class="mrt-admin-panel mrt-admin-route-editor"
     >
       <h2>Redigera rutt: {{ editingRoute.title }}</h2>
@@ -350,5 +349,6 @@ async function removeRoute(route: RouteRow) {
         <button type="button" class="button" @click="editingRoute = null">Avbryt</button>
       </p>
     </div>
+    </AdminLoadState>
   </div>
 </template>

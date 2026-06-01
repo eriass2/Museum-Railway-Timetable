@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
 import type { DashboardPayload } from '../types';
+import AdminLoadState from '../components/AdminLoadState.vue';
 import AdminNav from '../components/AdminNav.vue';
 import AdminSetupChecklist from '../components/AdminSetupChecklist.vue';
 import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
@@ -22,14 +23,21 @@ const statItems = [
   { key: 'train_types', label: 'Tågtyper' },
 ] as const;
 
-onMounted(async () => {
+async function load() {
+  loading.value = true;
+  error.value = '';
   try {
     data.value = await getDashboard();
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Kunde inte ladda översikt';
+    data.value = null;
   } finally {
     loading.value = false;
   }
+}
+
+onMounted(() => {
+  void load();
 });
 
 function openRoute(hashRoute: string) {
@@ -43,10 +51,8 @@ function openRoute(hashRoute: string) {
     <h1>Museum Railway Timetable</h1>
     <AdminNav />
 
-    <p v-if="loading" class="description">Laddar...</p>
-    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
-
-    <template v-else-if="data">
+    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar översikt…" @retry="load">
+    <template v-if="data">
       <p v-if="data.can_operate && !data.can_manage" class="notice notice-info">
         Begränsad behörighet: du kan ändra avvikelser och avgångstider, inte grunddata.
       </p>
@@ -138,5 +144,6 @@ function openRoute(hashRoute: string) {
         </p>
       </div>
     </template>
+    </AdminLoadState>
   </div>
 </template>

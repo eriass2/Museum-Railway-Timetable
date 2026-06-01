@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { createTimetable, deleteTimetable, listTimetables } from '../api/adminRest';
 import type { TimetableListItem } from '../types';
+import AdminLoadState from '../components/AdminLoadState.vue';
 import AdminNav from '../components/AdminNav.vue';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
@@ -75,10 +76,8 @@ async function removeTimetable(id: number, title: string) {
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>Tidtabeller</h1>
     <AdminNav />
-    <p v-if="loading" class="description">Laddar...</p>
-    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
-
-    <p v-else-if="!cfg.canManage" class="notice notice-info">
+    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar tidtabeller…" @retry="load">
+    <p v-if="!cfg.canManage" class="notice notice-info">
       Du kan öppna tidtabeller och ändra avvikelser eller avgångstider, men inte skapa nya
       tidtabeller eller grunddata. Kontakta en administratör om du behöver fler rättigheter.
     </p>
@@ -147,5 +146,6 @@ async function removeTimetable(id: number, title: string) {
         </tbody>
       </table>
     </div>
+    </AdminLoadState>
   </div>
 </template>

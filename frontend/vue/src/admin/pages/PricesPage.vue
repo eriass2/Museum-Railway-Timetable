@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { getPrices, savePrices } from '../api/adminRest';
 import type { PricesPayload } from '../api/adminRest';
+import AdminLoadState from '../components/AdminLoadState.vue';
 import AdminNav from '../components/AdminNav.vue';
 import { adminConfig } from '../types';
 
@@ -15,19 +16,26 @@ const ticketKeys = computed(() => Object.keys(data.value?.ticket_types ?? {}));
 const categoryKeys = computed(() => Object.keys(data.value?.categories ?? {}));
 const zones = computed(() => data.value?.zones ?? []);
 
-onMounted(async () => {
+async function load() {
   if (!cfg.canManage) {
     error.value = 'Du har inte behörighet att ändra priser.';
     loading.value = false;
     return;
   }
+  loading.value = true;
+  error.value = '';
   try {
     data.value = await getPrices();
   } catch (e) {
     error.value = e instanceof Error ? e.message : 'Kunde inte ladda priser';
+    data.value = null;
   } finally {
     loading.value = false;
   }
+}
+
+onMounted(() => {
+  void load();
 });
 
 function cellValue(ticket: string, category: string, zone: number): number | '' {
@@ -60,10 +68,8 @@ async function submit() {
     <h1>Priser</h1>
     <AdminNav />
 
-    <p v-if="loading" class="description">Laddar...</p>
-    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
-
-    <form v-else-if="data" @submit.prevent="submit">
+    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar priser…" @retry="load">
+    <form v-if="data" @submit.prevent="submit">
       <p class="description">
         Priser i SEK per biljettyp, passagerarkategori och antal zoner.
       </p>
@@ -106,5 +112,6 @@ async function submit() {
         <span v-if="saved" class="description mrt-ml-sm">{{ saved }}</span>
       </p>
     </form>
+    </AdminLoadState>
   </div>
 </template>
