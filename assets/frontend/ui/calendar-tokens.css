@@ -20,31 +20,36 @@
 }
 
 .mrt-day--green,
-.mrt-calendar-day--green {
+.mrt-calendar-day--green,
+.mrt-day-cell--running.mrt-day--green {
     background: var(--mrt-cal-traffic-green-bg);
     color: var(--mrt-cal-traffic-green-fg);
 }
 
 .mrt-day--yellow,
-.mrt-calendar-day--yellow {
+.mrt-calendar-day--yellow,
+.mrt-day-cell--running.mrt-day--yellow {
     background: var(--mrt-cal-traffic-yellow-bg);
     color: var(--mrt-cal-traffic-yellow-fg);
 }
 
 .mrt-day--red,
-.mrt-calendar-day--red {
+.mrt-calendar-day--red,
+.mrt-day-cell--running.mrt-day--red {
     background: var(--mrt-cal-traffic-red-bg);
     color: var(--mrt-cal-traffic-red-fg);
 }
 
 .mrt-day--orange,
-.mrt-calendar-day--orange {
+.mrt-calendar-day--orange,
+.mrt-day-cell--running.mrt-day--orange {
     background: var(--mrt-cal-traffic-orange-bg);
     color: var(--mrt-cal-traffic-orange-fg);
 }
 
 .mrt-day--blue,
-.mrt-calendar-day--blue {
+.mrt-calendar-day--blue,
+.mrt-day-cell--running.mrt-day--blue {
     background: var(--mrt-cal-traffic-blue-bg);
     color: var(--mrt-cal-traffic-blue-fg);
 }

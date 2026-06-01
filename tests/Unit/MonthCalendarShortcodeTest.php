@@ -19,6 +19,7 @@ final class MonthCalendarShortcodeTest extends TestCase {
 		$context = MRT_month_shortcode_build_context( array() );
 		self::assertIsArray( $context );
 		self::assertSame( 0, (int) $context['atts']['show_counts'] );
+		self::assertSame( 0, (int) $context['atts']['legend'] );
 	}
 
 	public function test_shortcode_accepts_show_counts_on(): void {

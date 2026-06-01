@@ -85,23 +85,27 @@
     text-align: left;
     font: inherit;
     color: inherit;
-    background: var(--mrt-bg-success);
 }
 
 .mrt-daynum {
     font-size: var(--mrt-font-base);
+    font-weight: 600;
     opacity: var(--mrt-opacity-85);
 }
 
-.mrt-dot {
-    position: absolute;
-    right: var(--mrt-spacing-sm);
-    bottom: var(--mrt-spacing-xs);
-    font-size: var(--mrt-font-sm);
+.mrt-day[class*="mrt-day--"] .mrt-daynum {
+    font-weight: 700;
+    opacity: 1;
 }
 
-.mrt-running {
-    background: var(--mrt-bg-success);
+/* Traffic type colours come from ui/calendar-tokens.css — no generic green override here. */
+.mrt-day.mrt-running:not([class*="mrt-day--"]) {
+    background: var(--mrt-cal-traffic-green-bg);
+    color: var(--mrt-cal-traffic-green-fg);
+}
+
+.mrt-day-cell--running[class*="mrt-day--"] {
+    padding: 0;
 }
 
 .mrt-day-clickable {

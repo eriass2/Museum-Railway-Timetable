@@ -14,7 +14,7 @@ import { chunkWeekRows } from '../utils/calendarGrid';
 import MrtTimetableOverviewView from '../components/overview/MrtTimetableOverviewView.vue';
 import { useTimetableOverview } from '../composables/useTimetableOverview';
 import { useMonthCalendar } from '../composables/useMonthCalendar';
-import { timetableTypeDotClass } from '../shared/calendarDay';
+import { timetableTypeClass, timetableTypeDotClass } from '../shared/calendarDay';
 import { resolveMrtString } from '../utils/mrtStrings';
 import { monthLegendHints } from '../utils/monthLegendHints';
 
@@ -86,13 +86,7 @@ const legendItems = computed(() => {
   ];
 });
 
-const legendHints = computed(() =>
-  monthLegendHints(
-    showCounts.value,
-    props.config.legendCountHint,
-    props.config.legendClickHint,
-  ),
-);
+const legendHints = computed(() => monthLegendHints());
 
 function monthCellClass(cell: MonthGridCell): string | undefined {
   if (cell.kind === 'empty') {
@@ -102,7 +96,8 @@ function monthCellClass(cell: MonthGridCell): string | undefined {
     return 'mrt-day-cell mrt-day-cell--inactive';
   }
   if (cell.kind === 'day') {
-    return 'mrt-day-cell mrt-day-cell--running';
+    const typeClass = timetableTypeClass(cell.info.type);
+    return ['mrt-day-cell', 'mrt-day-cell--running', typeClass].filter(Boolean).join(' ');
   }
   return undefined;
 }

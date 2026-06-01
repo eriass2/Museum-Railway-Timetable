@@ -2,7 +2,7 @@ export type WizardStep = 'route' | 'date' | 'outbound' | 'return' | 'summary';
 
 export type TripType = 'single' | 'return';
 
-import type { CalendarDayInfo, CalendarDayStatus } from '../../shared/calendarDay';
+import type { CalendarDayInfo, CalendarDayStatus } from '../shared/calendarDay';
 export type { CalendarDayInfo, CalendarDayStatus };
 
 export type JourneyLeg = {

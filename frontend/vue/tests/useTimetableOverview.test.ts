@@ -31,17 +31,23 @@ vi.mock('../src/composables/useMrtRest', () => ({
 }));
 
 describe('useTimetableOverview', () => {
+  const restConfig = {
+    restUrl: 'http://127.0.0.1/wp-json/museum-railway-timetable/v1/',
+    restNonce: 'test',
+  };
+
   it('fetchOverview loads JSON payload', async () => {
-    const config = { ajaxurl: '/ajax', nonce: 'n' };
-    const { overview, fetchOverview } = useTimetableOverview(config);
+    const { overview, fetchOverview } = useTimetableOverview(restConfig);
     const ok = await fetchOverview(42);
     expect(ok).toBe(true);
     expect(overview.value?.timetableId).toBe(42);
   });
 
   it('fetchOverview rejects invalid timetable id', async () => {
-    const config = { ajaxurl: '/ajax', nonce: 'n', strings: {} };
-    const { fetchOverview, error } = useTimetableOverview(config);
+    const { fetchOverview, error } = useTimetableOverview({
+      ...restConfig,
+      strings: {},
+    });
     const ok = await fetchOverview(0);
     expect(ok).toBe(false);
     expect(error.value).not.toBe('');

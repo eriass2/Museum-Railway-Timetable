@@ -23,6 +23,7 @@ describe('legVehicleLabel', () => {
     expect(
       legVehicleLabel({
         train_type: 'Rälsbuss',
+        service_id: 101,
         service_name: 'Uppsala Östra – Faringe 101',
         service_number: '101',
         destination: 'Faringe',
@@ -34,7 +35,7 @@ describe('legVehicleLabel', () => {
     const cfg = { towards: 'towards %s' };
     expect(
       legVehicleLabel(
-        { train_type: 'Rälsbuss', service_number: '101', destination: 'Faringe' },
+        { train_type: 'Rälsbuss', service_id: 101, service_number: '101', destination: 'Faringe' },
         cfg,
       ),
     ).toBe('Rälsbuss 101 towards Faringe');

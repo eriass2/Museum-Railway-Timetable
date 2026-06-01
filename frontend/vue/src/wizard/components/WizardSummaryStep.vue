@@ -19,9 +19,12 @@ import {
 } from '../../shared/prices';
 import type { PriceCfg } from '../../shared/priceTypes';
 import { formatYmdForDisplay } from '../utils/wizardDate';
-import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
+import { arrivalAtDestination, departureFromOrigin, connectionLegs } from '../utils/connection';
 import { formatTripClock } from '../utils/format';
+import { legVehicleLabel } from '../utils/vehicle';
+import type { JourneyConnection } from '../types';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
+import { printElement } from '../../utils/printElement';
 import {
   buildTripSummaryText,
   canUseWebShare,
@@ -82,6 +85,18 @@ const tripTypeLabel = computed(() =>
 
 function legTimeRange(conn: NonNullable<typeof store.outbound>): string {
   return `${formatTripClock(departureFromOrigin(conn))} – ${formatTripClock(arrivalAtDestination(conn))}`;
+}
+
+function connectionLegLines(conn: JourneyConnection): string[] {
+  return connectionLegs(conn).map((leg) => {
+    const label = legVehicleLabel(leg, cfg.value);
+    const from = formatTripClock(leg.from_departure || '');
+    const to = formatTripClock(leg.to_arrival || '');
+    if (from && to) {
+      return `${label} · ${from}–${to}`;
+    }
+    return label;
+  });
 }
 
 function buildLegs(): TripSummaryLeg[] {
@@ -187,7 +202,7 @@ async function onShareOrCopy(): Promise<void> {
 }
 
 function onPrint(): void {
-  window.print();
+  printElement('[data-wizard-summary-print]');
 }
 
 function onBack(): void {
@@ -217,6 +232,15 @@ function onBack(): void {
               :route="`${store.fromTitle} → ${store.toTitle}`"
               :date="dateText"
             />
+            <ul v-if="connectionLegLines(store.outbound).length" class="mrt-summary-print-legs">
+              <li
+                v-for="(line, index) in connectionLegLines(store.outbound)"
+                :key="`out-${index}`"
+                class="mrt-summary-print-legs__item"
+              >
+                {{ line }}
+              </li>
+            </ul>
           </MrtSummaryCard>
 
           <MrtSummaryCard
@@ -228,6 +252,15 @@ function onBack(): void {
               :route="`${store.toTitle} → ${store.fromTitle}`"
               :date="dateText"
             />
+            <ul v-if="connectionLegLines(store.inbound).length" class="mrt-summary-print-legs">
+              <li
+                v-for="(line, index) in connectionLegLines(store.inbound)"
+                :key="`in-${index}`"
+                class="mrt-summary-print-legs__item"
+              >
+                {{ line }}
+              </li>
+            </ul>
           </MrtSummaryCard>
         </div>
 

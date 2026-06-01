@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import type { MonthDayMeta } from '../../config/types';
 import { timetableTypeClass } from '../../shared/calendarDay';
-import { monthDayButtonAria, monthDayCountTitle } from '../../utils/monthDayLabels';
+import { monthDayButtonAria, monthDayCountTitle, normalizeMonthDayCount } from '../../utils/monthDayLabels';
 
 const props = defineProps<{
   day: number;
@@ -19,10 +19,11 @@ const emit = defineEmits<{ click: [ymd: string] }>();
 const typeClass = computed(() => timetableTypeClass(props.info.type));
 
 const countTooltip = computed(() => {
-  if (!props.showCounts || !props.info.count || !props.countTitle) {
+  const count = normalizeMonthDayCount(props.info.count);
+  if (!props.showCounts || count <= 0 || !props.countTitle) {
     return undefined;
   }
-  return monthDayCountTitle(props.countTitle, props.info.count);
+  return monthDayCountTitle(props.countTitle, count);
 });
 
 const buttonAria = computed(() =>
@@ -56,6 +57,5 @@ function onClick(): void {
     @click="onClick"
   >
     <span class="mrt-daynum" aria-hidden="true">{{ day }}</span>
-    <span class="mrt-dot" aria-hidden="true">{{ showCounts ? info.count : '•' }}</span>
   </button>
 </template>

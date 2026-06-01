@@ -146,7 +146,7 @@ function dayPriceForCategory(catKey: string): string {
     </div>
 
     <div v-if="dayPrices" class="mrt-price-block mrt-mt-md">
-      <MrtHeading level="h5" size="sm" class="mrt-price-block__title">
+      <MrtHeading level="h4" size="md" class="mrt-price-block__title">
         {{ priceCfg.priceDayTitle || labels.tickets.day || 'Heldagsbiljett' }}
       </MrtHeading>
       <dl class="mrt-price-list">
