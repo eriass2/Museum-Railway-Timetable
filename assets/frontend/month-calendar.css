@@ -83,31 +83,6 @@
     background: var(--mrt-bg-success);
 }
 
-.mrt-day--green {
-    background: var(--mrt-color-traffic-green);
-    color: var(--mrt-color-on-green);
-}
-
-.mrt-day--yellow {
-    background: var(--mrt-color-traffic-yellow);
-    color: var(--mrt-color-on-accent);
-}
-
-.mrt-day--red {
-    background: var(--mrt-color-traffic-red);
-    color: var(--mrt-color-on-green);
-}
-
-.mrt-day--orange {
-    background: var(--mrt-color-traffic-orange);
-    color: var(--mrt-color-on-green);
-}
-
-.mrt-day--blue {
-    background: var(--mrt-blue-primary);
-    color: var(--mrt-color-on-dark);
-}
-
 .mrt-daynum {
     font-size: var(--mrt-font-base);
     opacity: var(--mrt-opacity-85);

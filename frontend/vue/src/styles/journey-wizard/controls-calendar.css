@@ -62,26 +62,6 @@
     color: var(--mrt-color-on-accent);
 }
 
-.mrt-calendar-grid--wizard .mrt-calendar-day--ok.mrt-calendar-day--green {
-    background: var(--mrt-color-traffic-green);
-    color: var(--mrt-color-on-green);
-}
-
-.mrt-calendar-grid--wizard .mrt-calendar-day--ok.mrt-calendar-day--yellow {
-    background: var(--mrt-color-traffic-yellow);
-    color: var(--mrt-color-on-accent);
-}
-
-.mrt-calendar-grid--wizard .mrt-calendar-day--ok.mrt-calendar-day--red {
-    background: var(--mrt-color-traffic-red);
-    color: var(--mrt-color-on-green);
-}
-
-.mrt-calendar-grid--wizard .mrt-calendar-day--ok.mrt-calendar-day--orange {
-    background: var(--mrt-color-traffic-orange);
-    color: var(--mrt-color-on-green);
-}
-
 .mrt-calendar-grid--wizard .mrt-calendar-day--ok:hover {
     filter: brightness(0.92);
 }
@@ -97,28 +77,28 @@
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-day--traffic {
-    background: var(--mrt-color-neutral-200);
-    color: var(--mrt-color-neutral-700);
+    background: var(--mrt-cal-traffic-muted-bg);
+    color: var(--mrt-cal-traffic-muted-fg);
     cursor: not-allowed;
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-day--traffic.mrt-calendar-day--green {
-    background: color-mix(in srgb, var(--mrt-color-traffic-green) 28%, var(--mrt-color-neutral-200));
+    background: color-mix(in srgb, var(--mrt-cal-traffic-green-bg) 28%, var(--mrt-cal-traffic-muted-bg));
     color: var(--mrt-color-green-800);
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-day--traffic.mrt-calendar-day--yellow {
-    background: color-mix(in srgb, var(--mrt-color-traffic-yellow) 45%, var(--mrt-color-neutral-200));
-    color: var(--mrt-color-neutral-700);
+    background: color-mix(in srgb, var(--mrt-cal-traffic-yellow-bg) 45%, var(--mrt-cal-traffic-muted-bg));
+    color: var(--mrt-cal-traffic-muted-fg);
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-day--traffic.mrt-calendar-day--red {
-    background: color-mix(in srgb, var(--mrt-color-traffic-red) 30%, var(--mrt-color-neutral-200));
+    background: color-mix(in srgb, var(--mrt-cal-traffic-red-bg) 30%, var(--mrt-cal-traffic-muted-bg));
     color: #7a1212;
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-day--traffic.mrt-calendar-day--orange {
-    background: color-mix(in srgb, var(--mrt-color-traffic-orange) 35%, var(--mrt-color-neutral-200));
+    background: color-mix(in srgb, var(--mrt-cal-traffic-orange-bg) 35%, var(--mrt-cal-traffic-muted-bg));
     color: #7a4a08;
 }
 

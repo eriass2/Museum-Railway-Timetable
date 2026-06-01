@@ -5,6 +5,7 @@
  */
 
 @import url("ui/primitives.css");
+@import url("ui/calendar-tokens.css");
 
 /* —— Alerts (Vue MrtAlert) —— */
 .mrt-ui-alert {
@@ -388,12 +389,12 @@
 }
 
 .mrt-legend-swatch--ok {
-    background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
+    background: var(--mrt-cal-traffic-yellow-bg, var(--mrt-wizard-yellow, var(--mrt-color-accent-600)));
     border: 0;
 }
 
 .mrt-legend-swatch--traffic {
-    background: var(--mrt-color-neutral-200, #e0e0e0);
+    background: var(--mrt-cal-traffic-muted-bg, var(--mrt-color-neutral-200, #e0e0e0));
     border: 0;
 }
 
