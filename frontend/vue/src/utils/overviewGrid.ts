@@ -61,7 +61,7 @@ export function buildOverviewGridTracks(columns: TimetableOverviewColumn[]): Ove
 export function overviewGridMinWidth(columns: TimetableOverviewColumn[]): string {
   let rem = 10.5;
   for (const track of buildOverviewGridTracks(columns)) {
-    rem += track.kind === 'highlight' ? 2.35 : 4.1;
+    rem += track.kind === 'highlight' ? 1.15 : 4.1;
   }
   return `${rem}rem`;
 }
@@ -71,7 +71,7 @@ export function overviewGridTemplateColumns(columns: TimetableOverviewColumn[]):
   for (const track of buildOverviewGridTracks(columns)) {
     parts.push(
       track.kind === 'highlight'
-        ? 'minmax(2rem, var(--mrt-ov-highlight-w, 2.35rem))'
+        ? 'minmax(0.85rem, var(--mrt-ov-highlight-w, 1.15rem))'
         : 'minmax(var(--mrt-ov-col-min), var(--mrt-ov-col-max, 4.1rem))',
     );
   }

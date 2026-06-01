@@ -144,17 +144,12 @@ def main() -> None:
     kept_stoptimes: list[str] = [header_st]
     kept_train_types: list[str] = [header_tt]
 
-    move_bus = ("green-buss", "yellow-buss")
-
     for line in services_lines[1:]:
         if not line.strip():
             continue
         code, timetable, *_rest = line.split(",", 3)
         if timetable == "green" and "-bus-" in code:
             kept_services.append(line.replace(",green,", ",green-buss,", 1))
-            continue
-        if timetable == "yellow" and "-bus-" in code:
-            kept_services.append(line.replace(",yellow,", ",yellow-buss,", 1))
             continue
         if timetable in ("red", "orange", "green-vard"):
             continue

@@ -10,8 +10,8 @@
  */
 
 .mrt-ov {
-  --mrt-ov-green: var(--mrt-color-green-700);
-  --mrt-ov-green-dark: var(--mrt-color-green-800);
+  --mrt-ov-header-bg: var(--mrt-color-traffic-green);
+  --mrt-ov-header-fg: var(--mrt-color-on-green);
   --mrt-ov-highlight: var(--mrt-from-to-bg, var(--mrt-light-blue-bg, #e8f4fc));
   --mrt-ov-highlight-strong: var(--mrt-from-to-col-bg, #d4ebfa);
   --mrt-ov-transfer: var(--mrt-transfer-bg, var(--mrt-special-bg, #fff9c4));
@@ -23,11 +23,36 @@
   line-height: 1.35;
 }
 
+.mrt-ov--green {
+  --mrt-ov-header-bg: var(--mrt-color-traffic-green);
+  --mrt-ov-header-fg: var(--mrt-color-on-green);
+}
+
+.mrt-ov--yellow {
+  --mrt-ov-header-bg: var(--mrt-color-traffic-yellow);
+  --mrt-ov-header-fg: var(--mrt-color-on-accent);
+}
+
+.mrt-ov--red {
+  --mrt-ov-header-bg: var(--mrt-color-traffic-red);
+  --mrt-ov-header-fg: var(--mrt-color-on-green);
+}
+
+.mrt-ov--orange {
+  --mrt-ov-header-bg: var(--mrt-color-traffic-orange);
+  --mrt-ov-header-fg: var(--mrt-color-on-green);
+}
+
+.mrt-ov--blue {
+  --mrt-ov-header-bg: var(--mrt-blue-primary, #1e5a96);
+  --mrt-ov-header-fg: var(--mrt-color-on-dark);
+}
+
 .mrt-ov-banner {
   margin: 0 0 var(--mrt-spacing-md, 1rem);
   padding: 0.65rem var(--mrt-spacing-md, 1rem);
-  background: linear-gradient(135deg, var(--mrt-ov-green), var(--mrt-ov-green-dark));
-  color: var(--mrt-color-on-dark, #fff);
+  background: var(--mrt-ov-header-bg);
+  color: var(--mrt-ov-header-fg);
   font-weight: 700;
   letter-spacing: 0.02em;
   text-align: center;
@@ -48,8 +73,8 @@
 
 .mrt-ov-route-header {
   padding: 0.85rem var(--mrt-spacing-md, 1rem);
-  background: linear-gradient(135deg, var(--mrt-ov-green), var(--mrt-ov-green-dark));
-  color: var(--mrt-color-on-dark, #fff);
+  background: var(--mrt-ov-header-bg);
+  color: var(--mrt-ov-header-fg);
 }
 
 .mrt-ov-route-title {
@@ -84,7 +109,7 @@
   --mrt-ov-station-w: 10.5rem;
   --mrt-ov-col-min: 3.35rem;
   --mrt-ov-col-max: 4.1rem;
-  --mrt-ov-highlight-w: 2.35rem;
+  --mrt-ov-highlight-w: 1.15rem;
   display: grid;
   width: max(100%, var(--mrt-ov-grid-min, 30rem));
   background: #fff;
@@ -101,6 +126,11 @@
 }
 
 .mrt-ov-grid-row--head + .mrt-ov-grid-row--head .mrt-ov-col-head {
+  background: var(--mrt-ov-highlight);
+  font-size: 0.95rem;
+}
+
+.mrt-ov-grid-row--head + .mrt-ov-grid-row--head .mrt-ov-station-col {
   background: var(--mrt-ov-highlight);
   font-size: 0.95rem;
 }
@@ -123,15 +153,6 @@
 
 .mrt-ov-grid-row--head .mrt-ov-station-col {
   z-index: 3;
-}
-
-.mrt-ov-station-col--empty {
-  visibility: hidden;
-  min-height: 0;
-  padding-top: 0;
-  padding-bottom: 0;
-  border-color: transparent;
-  box-shadow: none;
 }
 
 .mrt-ov-col-head {
@@ -169,7 +190,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.35rem 0.2rem;
+  padding-block: 0.35rem;
+  padding-inline: 1px;
   border: 1px solid var(--mrt-border-default, #ccc);
   background: var(--mrt-ov-cell-highlight, var(--mrt-special-bg, #fff9c4));
   min-height: 2.5rem;
@@ -177,20 +199,22 @@
 
 .mrt-ov-highlight-stripe--head {
   min-height: 0;
-  padding: 0.25rem 0.1rem;
+  padding-block: 0.25rem;
+  padding-inline: 1px;
 }
 
 .mrt-ov-highlight-stripe--span {
   align-self: stretch;
   min-height: 0;
-  padding: 0.5rem 0.25rem;
+  padding-block: 0.5rem;
+  padding-inline: 1px;
 }
 
 .mrt-ov-highlight-stripe__label {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 800;
-  line-height: 1.15;
+  line-height: 1.1;
   text-align: center;
   writing-mode: vertical-rl;
   text-orientation: mixed;
@@ -198,9 +222,9 @@
 }
 
 .mrt-ov-highlight-stripe--span .mrt-ov-highlight-stripe__label {
-  font-size: clamp(0.68rem, 0.78rem, 0.88rem);
-  line-height: 1.2;
-  letter-spacing: 0.02em;
+  font-size: clamp(0.6rem, 0.68rem, 0.75rem);
+  line-height: 1.15;
+  letter-spacing: 0.01em;
 }
 
 .mrt-ov-grid-row--transfer .mrt-ov-station-col,

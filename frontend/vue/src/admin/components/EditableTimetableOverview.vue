@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { timetableTypeOverviewClass } from '../../shared/calendarDay';
 import { overviewUiLabels } from '../../shared/overviewUiLabels';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
 import MrtOverviewBranchGroup from '../../components/overview/MrtOverviewBranchGroup.vue';
@@ -17,11 +18,16 @@ const labels = overviewUiLabels({});
 </script>
 
 <template>
-  <div class="mrt-ov" role="region" :aria-label="data.title">
+  <div
+    class="mrt-ov"
+    :class="timetableTypeOverviewClass(data.timetableType)"
+    role="region"
+    :aria-label="data.title"
+  >
     <p v-if="editor.error.value" class="notice notice-error">{{ editor.error.value }}</p>
     <p v-if="editor.message.value" class="notice notice-success">{{ editor.message.value }}</p>
 
-    <p v-if="data.scope !== 'day' && data.typeBanner?.label" class="mrt-ov-banner">
+    <p v-if="data.typeBanner?.label" class="mrt-ov-banner">
       {{ data.typeBanner.label }}
     </p>
 

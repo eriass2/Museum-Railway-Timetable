@@ -60,7 +60,7 @@ function MRT_rest_get_settings_handler( WP_REST_Request $request ) {
 		array(
 			'enabled'              => ! empty( $opts['enabled'] ),
 			'note'                 => (string) ( $opts['note'] ?? '' ),
-			'min_transfer_minutes' => (int) ( $opts['min_transfer_minutes'] ?? 5 ),
+			'min_transfer_minutes' => (int) ( $opts['min_transfer_minutes'] ?? 3 ),
 			'max_transfer_minutes' => (int) ( $opts['max_transfer_minutes'] ?? 120 ),
 		)
 	);

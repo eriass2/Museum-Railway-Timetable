@@ -41,4 +41,9 @@ final class TimetableTypeCalendarTest extends TestCase {
 			MRT_sort_timetable_types_for_calendar( array( 'orange', 'green', 'unknown' ) )
 		);
 	}
+
+	public function test_dominant_timetable_type_prefers_green_over_yellow(): void {
+		$sorted = MRT_sort_timetable_types_for_calendar( array( 'yellow', 'green' ) );
+		self::assertSame( 'green', $sorted[0] ?? '' );
+	}
 }

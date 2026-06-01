@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from lennakatten_anslag_tables import pdf_service_definitions
+from lennakatten_calendar import expected_green_buss_dates
 from lennakatten_symbols import symbol_to_flags
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -67,6 +68,34 @@ def compare_service(
     return errors
 
 
+def load_timetable_dates() -> dict[str, list[str]]:
+    path = FIXTURE / "timetable_dates.csv"
+    by_code: dict[str, list[str]] = {}
+    with path.open(encoding="utf-8-sig", newline="") as handle:
+        for row in csv.DictReader(handle):
+            by_code.setdefault(row["timetable_code"], []).append(row["date"])
+    for dates in by_code.values():
+        dates.sort()
+    return by_code
+
+
+def verify_green_buss_calendar(dates_by_code: dict[str, list[str]]) -> list[str]:
+    expected = expected_green_buss_dates(
+        dates_by_code.get("green", []),
+        dates_by_code.get("green-vard", []),
+    )
+    actual = dates_by_code.get("green-buss", [])
+    errors: list[str] = []
+    if actual != expected:
+        extra = sorted(set(actual) - set(expected))
+        missing = sorted(set(expected) - set(actual))
+        if missing:
+            errors.append(f"green-buss missing dates: {', '.join(missing)}")
+        if extra:
+            errors.append(f"green-buss extra dates: {', '.join(extra)}")
+    return errors
+
+
 def pdf_readable() -> bool:
     if not PDF.is_file():
         return False
@@ -88,11 +117,17 @@ def main() -> int:
     failures: list[str] = []
     services = pdf_service_definitions()
 
+    dates_by_code = load_timetable_dates()
     for service_code, _tt, _route, stops in services:
         failures.extend(compare_service(service_code, stops, by_service.get(service_code)))
+    failures.extend(verify_green_buss_calendar(dates_by_code))
 
     print(f"PDF present: {PDF.is_file()}  readable: {pdf_readable()}")
     print(f"Checked {len(services)} GRÖN/GUL/RÖD/ORANGE rail and bus services against Anslagstidtabell")
+    print(
+        f"Checked green-buss calendar: {len(dates_by_code.get('green-buss', []))} days "
+        "(1/7-16/8 on green traffic days)"
+    )
 
     if failures:
         print(f"\nFAILURES ({len(failures)}):")

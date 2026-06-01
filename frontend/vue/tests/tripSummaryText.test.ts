@@ -48,6 +48,8 @@ describe('buildTripSummaryText', () => {
               type: 'leg',
               leg: {
                 vehicleLabel: 'Ångtåg 77 mot Faringe',
+                iconUrl: '',
+                kind: 'train',
                 timeRange: '13:55 – 17:14',
                 route: 'Uppsala Östra → Selknä',
               },
@@ -56,7 +58,9 @@ describe('buildTripSummaryText', () => {
             {
               type: 'leg',
               leg: {
-                vehicleLabel: 'Buss B1 mot Uppsala Östra',
+                vehicleLabel: 'Buss B1 mot Fjällnora',
+                iconUrl: '',
+                kind: 'bus',
                 timeRange: '17:22 – 17:30',
                 route: 'Selknä → Fjällnora',
               },
@@ -68,6 +72,7 @@ describe('buildTripSummaryText', () => {
 
     expect(text).toContain('Byte vid Selknä · 8 min');
     expect(text).toContain('Ångtåg 77 mot Faringe · 13:55 – 17:14 (Uppsala Östra → Selknä)');
+    expect(text).toContain('Buss B1 mot Fjällnora · 17:22 – 17:30 (Selknä → Fjällnora)');
   });
 
   it('omits price block when empty', () => {

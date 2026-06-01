@@ -51,7 +51,7 @@ describe('overviewGrid tracks', () => {
       column({ serviceNumber: '93', specialName: 'Express', highlightColor: '#fff9c4' }),
     ];
 
-    expect(overviewGridTemplateColumns(cols)).toContain('2.35rem');
+    expect(overviewGridTemplateColumns(cols)).toContain('1.15rem');
     expect(parseFloat(overviewGridMinWidth(cols))).toBeGreaterThan(10.5 + 4.1 * 2);
   });
 

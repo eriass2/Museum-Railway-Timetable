@@ -18,7 +18,7 @@ function MRT_default_plugin_settings(): array {
 	return array(
 		'enabled'                => true,
 		'note'                   => '',
-		'min_transfer_minutes'   => 5,
+		'min_transfer_minutes'   => 3,
 		'max_transfer_minutes'   => 120,
 	);
 }

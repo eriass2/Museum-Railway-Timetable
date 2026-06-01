@@ -64,6 +64,10 @@ export function timetableTypeMonthDayClass(type?: string): string | undefined {
   return timetableTypeClass(type, 'mrt-month-day');
 }
 
+export function timetableTypeOverviewClass(type?: string): string | undefined {
+  return timetableTypeClass(type, 'mrt-ov');
+}
+
 export function timetableTypeLabel(
   type: string,
   labels?: Record<string, string>,

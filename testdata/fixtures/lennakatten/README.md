@@ -4,28 +4,28 @@ Test/demo timetable data for development (`docker-dev-reset`, Import Lennakatten
 
 **Source of truth:** edit the CSV files here directly.
 
-**Reference PDFs:** `testdata/reference-pdfs/` — primarily `Anslagstidtabell-2026.pdf` for traffic-day calendar rules; detail tables (`Gron-tidtabell-lor.pdf`, `Gul-tidtabell-fre.pdf`, …) for stop times.
+**Reference PDF:** `testdata/reference-pdfs/Anslagstidtabell-2026.pdf` (kalender + alla tidtabeller).
 
 Timetable codes in the CSV package:
 
 | Code | Meaning |
 |------|---------|
 | `green` | GRÖN rail – Saturdays |
-| `green-vard` | GRÖN rail – Wed/Thu summer (see `Gron-tdt-buss-vard.pdf`) |
-| `green-buss` | GRÖN Fjällnora connection buses (Jul–Aug) |
-| `yellow` / `yellow-buss` | GUL rail / connection buses |
+| `green-vard` | GRÖN rail – Wed/Thu summer (1/7–6/8) |
+| `green-buss` | GRÖN anslutningsbuss Selknä–Fjällnora (1/7–16/8, gröna trafikdagar) |
+| `yellow` | GUL rail – Fridays |
 | `red` / `orange` | RÖD Sundays / ORANGE extra Friday trains |
 
-Regenerate rail blocks after PDF edits: `python scripts/generate-lennakatten-extra-timetables.py` (bus split + red/orange services).
+Regenerate rail blocks after PDF edits: `python scripts/generate-lennakatten-extra-timetables.py` (green-vard clone + red/orange).
 
-Sync GRÖN/GUL rail from Anslagstidtabell (source: `scripts/lennakatten_anslag_tables.py`):
+Sync GRÖN/GUL rail and bus stop times from Anslagstidtabell:
 
 ```sh
 python scripts/sync-lennakatten-green-yellow.py
 python scripts/generate-lennakatten-extra-timetables.py
 ```
 
-Verify against Anslagstidtabell reference trips:
+Verify against Anslagstidtabell:
 
 ```sh
 python scripts/verify-lennakatten-vs-pdf.py

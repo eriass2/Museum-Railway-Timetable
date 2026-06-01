@@ -103,6 +103,8 @@ function MRT_get_timetable_day_data( string $dateYmd, string $train_type_slug = 
 		date_i18n( get_option( 'date_format' ), strtotime( $dateYmd ) )
 	);
 
+	$tt = MRT_dominant_timetable_type_for_date( $dateYmd );
+
 	return MRT_build_timetable_overview_payload(
 		$services,
 		$dateYmd,
@@ -110,8 +112,7 @@ function MRT_get_timetable_day_data( string $dateYmd, string $train_type_slug = 
 			'scope'         => 'day',
 			'timetableId'   => 0,
 			'title'         => $title,
-			'timetableType' => '',
-			'typeBanner'    => array( 'label' => '' ),
+			'timetableType' => $tt,
 			'emptyMessage'  => __( 'No services running on this date.', 'museum-railway-timetable' ),
 		)
 	);

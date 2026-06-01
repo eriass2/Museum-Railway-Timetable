@@ -109,50 +109,19 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '17:10', $connections[0]['to_arrival'] ?? '' );
 	}
 
-	public function test_find_connections_selkna_uppsala_on_green_buss_day(): void {
+	public function test_find_connections_selkna_fjallnora_on_green_buss_day(): void {
 		$this->boot_service_fixture( 'green-b1-bus-out', '2026-07-04' );
 		$stations = $this->station_ids();
 
 		$connections = MRT_find_connections(
 			$stations['selkna'],
-			$stations['uppsala-ostra'],
+			$stations['fjallnora'],
 			'2026-07-04'
 		);
 
 		self::assertNotEmpty( $connections );
 		self::assertSame( '10:53', $connections[0]['from_departure'] ?? '' );
-		self::assertSame( '11:28', $connections[0]['to_arrival'] ?? '' );
-	}
-
-	public function test_yellow_buss_fixture_has_no_late_evening_services(): void {
-		$codes = array_column( $this->fixture_files()['services.csv'] ?? array(), 'service_code' );
-		self::assertContains( 'yellow-b1-bus-out', $codes );
-		self::assertContains( 'yellow-b3-bus-in', $codes );
-		self::assertNotContains( 'yellow-b2-bus-out', $codes, 'No 22:xx yellow bus in Anslagstidtabell' );
-		self::assertNotContains( 'yellow-b4-bus-in', $codes, 'No 21:xx yellow bus in Anslagstidtabell' );
-	}
-
-	public function test_find_connections_fjallnora_uppsala_yellow_buss_no_late_buses(): void {
-		$this->boot_fixture_services( array( 'yellow-b1-bus-out', 'yellow-b3-bus-in' ), '2026-07-10' );
-		$stations = $this->station_ids();
-
-		$connections = MRT_find_connections(
-			$stations['fjallnora'],
-			$stations['uppsala-ostra'],
-			'2026-07-10'
-		);
-
-		self::assertNotEmpty( $connections, 'Expected B1 Fjällnora → Uppsala Östra on yellow Friday' );
-		self::assertSame( '17:30', $connections[0]['from_departure'] ?? '' );
-		self::assertSame( '17:58', $connections[0]['to_arrival'] ?? '' );
-		foreach ( $connections as $connection ) {
-			$departure = (string) ( $connection['from_departure'] ?? '' );
-			self::assertLessThan(
-				'18:00',
-				$departure,
-				"No yellow bus after 18:00; got {$departure}"
-			);
-		}
+		self::assertSame( '11:00', $connections[0]['to_arrival'] ?? '' );
 	}
 
 	public function test_fixture_green_buss_b1_matches_anslag_branch_times(): void {
@@ -160,6 +129,34 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '10:53', $row['departure_time'] ?? '' );
 		$fjar = $this->fixture_stop_row( 'green-b1-bus-out', 'fjallnora' );
 		self::assertSame( '11:00', $fjar['arrival_time'] ?? '' );
+	}
+
+	public function test_find_multi_leg_train_to_bus_at_selkna_on_green_buss_day(): void {
+		$this->boot_fixture_services(
+			array( 'green-71-out', 'green-b1-bus-out' ),
+			'2026-07-04'
+		);
+		$stations = $this->station_ids();
+
+		$results = MRT_find_multi_leg_connections(
+			$stations['marielund'],
+			$stations['fjallnora'],
+			'2026-07-04'
+		);
+
+		self::assertNotEmpty( $results, 'Expected train+bus Marielund → Fjällnora via Selknä' );
+		$transfer = null;
+		foreach ( $results as $row ) {
+			if ( ( $row['connection_type'] ?? '' ) === 'transfer' ) {
+				$transfer = $row;
+				break;
+			}
+		}
+		self::assertIsArray( $transfer );
+		self::assertSame( $stations['selkna'], $transfer['transfer_station_id'] ?? 0 );
+		self::assertCount( 2, $transfer['legs'] ?? array() );
+		self::assertSame( '10:53', $transfer['legs'][1]['from_departure'] ?? '' );
+		self::assertSame( '11:00', $transfer['legs'][1]['to_arrival'] ?? '' );
 	}
 
 	public function test_find_connections_uppsala_marielund_on_red_sunday(): void {
@@ -211,11 +208,32 @@ final class LennakattenJourneySearchTest extends TestCase {
 			$service_timetables[ $next_service_id ] = 900;
 			++$next_service_id;
 		}
+		$station_meta = $this->fixture_bus_hub_station_meta( $stations );
 		$this->mrt_use_journey_fixture(
 			$rows_by_service,
 			array( 900 => array( $date ) ),
-			$service_timetables
+			$service_timetables,
+			$station_meta
 		);
+	}
+
+	/**
+	 * @param array<string, int> $stations station_code => post ID
+	 * @return array<int, array<string, string>>
+	 */
+	private function fixture_bus_hub_station_meta( array $stations ): array {
+		$meta = array();
+		foreach ( $this->fixture_files()['stations.csv'] ?? array() as $row ) {
+			if ( ( $row['bus_stop_marker'] ?? '' ) !== '1' ) {
+				continue;
+			}
+			$code = (string) ( $row['station_code'] ?? '' );
+			$id   = $stations[ $code ] ?? 0;
+			if ( $id > 0 ) {
+				$meta[ $id ] = array( 'mrt_station_bus_suffix' => '1' );
+			}
+		}
+		return $meta;
 	}
 
 	/**

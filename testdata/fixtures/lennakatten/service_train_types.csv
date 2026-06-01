@@ -14,7 +14,6 @@ green-b1-bus-out,buss
 green-b2-bus-out,buss
 green-b3-bus-out,buss
 green-b4-bus-out,buss
-green-b5-bus-in,buss
 green-b6-bus-in,buss
 green-b7-bus-in,buss
 green-b8-bus-in,buss
@@ -22,8 +21,6 @@ yellow-101-out,ralsbuss
 yellow-103-out,ralsbuss
 yellow-100-in,ralsbuss
 yellow-102-in,ralsbuss
-yellow-b1-bus-out,buss
-yellow-b3-bus-in,buss
 green-vard-71-out,angtag
 green-vard-93-out,ralsbuss
 green-vard-75-out,angtag

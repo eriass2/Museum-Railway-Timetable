@@ -138,6 +138,15 @@ final class JourneyMultiLegTest extends TestCase {
         self::assertSame([], $results);
     }
 
+    public function test_find_multi_leg_accepts_three_minute_transfer_at_default_minimum(): void {
+        $this->mrt_use_journey_fixture($this->transferRows('10:03'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 3, false);
+
+        self::assertCount(1, $results);
+        self::assertSame('10:03', $results[0]['legs'][1]['from_departure']);
+    }
+
     public function test_find_multi_leg_accepts_transfer_at_minimum_time(): void {
         $this->mrt_use_journey_fixture($this->transferRows('10:05'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 

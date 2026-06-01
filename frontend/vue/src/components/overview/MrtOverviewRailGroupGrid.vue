@@ -97,10 +97,11 @@ function stripeSpan(rowIndex: number, trackIndex: number) {
 
         <div class="mrt-ov-grid-row mrt-ov-grid-row--head">
           <div
-            class="mrt-ov-station-col mrt-ov-station-col--empty"
+            class="mrt-ov-station-col"
             :style="{ ...overviewStationColumnStyle(), ...overviewHeadRowStyle(2) }"
-            aria-hidden="true"
-          />
+          >
+            {{ labels.colTrip }}
+          </div>
           <template v-for="(track, ti) in gridTracks" :key="`num-${ti}`">
             <div
               v-if="track.kind === 'highlight'"

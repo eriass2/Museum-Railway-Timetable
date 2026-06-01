@@ -270,7 +270,7 @@ function MRT_journey_transfer_option( int $first_service_id, $from_station_id, i
  * @param bool   $include_direct Include single-service connections
  * @return array<int, array<string, mixed>>
  */
-function MRT_find_multi_leg_connections( $from_station_id, $to_station_id, $dateYmd, $min_transfer_minutes = 5, $include_direct = true ) {
+function MRT_find_multi_leg_connections( $from_station_id, $to_station_id, $dateYmd, $min_transfer_minutes = 3, $include_direct = true ) {
 	$results = array();
 	if ( $from_station_id <= 0 || $to_station_id <= 0 || $from_station_id === $to_station_id ) {
 		return $results;

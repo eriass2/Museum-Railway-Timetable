@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { timetableTypeOverviewClass } from '../../shared/calendarDay';
 import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
 import MrtOverviewBranchGroup from './MrtOverviewBranchGroup.vue';
@@ -13,11 +14,16 @@ defineProps<{
 </script>
 
 <template>
-  <div class="mrt-ov" role="region" :aria-label="data.title">
-    <p v-if="data.scope !== 'day' && data.typeBanner?.label" class="mrt-ov-banner">
+  <div
+    class="mrt-ov"
+    :class="timetableTypeOverviewClass(data.timetableType)"
+    role="region"
+    :aria-label="data.title"
+  >
+    <p v-if="data.typeBanner?.label" class="mrt-ov-banner">
       {{ data.typeBanner.label }}
     </p>
-    <h2 v-else-if="data.scope === 'day'" class="mrt-ov-day-title">{{ data.title }}</h2>
+    <h2 v-if="data.scope === 'day'" class="mrt-ov-day-title">{{ data.title }}</h2>
 
     <template v-for="(group, gi) in data.groups" :key="gi">
       <MrtOverviewRailGroup

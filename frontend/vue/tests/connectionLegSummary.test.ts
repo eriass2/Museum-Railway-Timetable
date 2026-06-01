@@ -46,7 +46,7 @@ const transferConnection: JourneyConnection = {
       to_station_id: 3,
       from_departure: '17:22',
       to_arrival: '17:30',
-      destination: 'Uppsala Östra',
+      destination: 'Fjällnora',
     },
   ],
 };
@@ -60,9 +60,9 @@ describe('buildTransferLabel', () => {
 
   it('falls back to computed wait when transfer_wait_minutes is missing', () => {
     const label = buildTransferLabel(
-      { to_station_id: 2, to_arrival: '17:14' },
-      { from_station_id: 2, from_departure: '17:22' },
-      {},
+      { service_id: 0, to_station_id: 2, to_arrival: '17:14' },
+      { service_id: 0, from_station_id: 2, from_departure: '17:22' },
+      { service_id: 0 },
       stationTitle,
       transferStrings,
     );
@@ -113,7 +113,7 @@ describe('buildConnectionLegSummary', () => {
     expect(items[2]).toMatchObject({
       type: 'leg',
       leg: {
-        vehicleLabel: 'Buss B1 mot Uppsala Östra',
+        vehicleLabel: 'Buss B1 mot Fjällnora',
         timeRange: '17.22 – 17.30',
         route: 'Selknä → Fjällnora',
       },

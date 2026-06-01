@@ -66,7 +66,7 @@ final class CsvFixtureTest extends TestCase {
 		self::assertSame( '2026-09-26', $dates[ count( $dates ) - 1 ] );
 	}
 
-	public function test_green_vard_timetable_dates_match_buss_vard_pdf(): void {
+	public function test_green_vard_timetable_dates_match_anslagstidtabell_2026(): void {
 		$dates = MRT_csv_fixture_timetable_dates( 'green-vard' );
 
 		self::assertCount( 12, $dates );
@@ -113,13 +113,11 @@ final class CsvFixtureTest extends TestCase {
 		}
 	}
 
-	public function test_bus_services_have_three_stops_through_uppsala(): void {
-		$bus_routes = array( 'selkna-uppsala-ostra', 'uppsala-ostra-selkna' );
-		foreach ( array( 'green-buss', 'yellow-buss' ) as $tt ) {
-			foreach ( $bus_routes as $route ) {
-				foreach ( $this->fixture_services( $tt, $route ) as $row ) {
-					self::assertSame( 3, $this->fixture_stoptime_count( $row['service_code'] ) );
-				}
+	public function test_bus_services_have_two_stops_per_anslagstidtabell(): void {
+		$bus_routes = array( 'selkna-fjallnora', 'fjallnora-selkna' );
+		foreach ( $bus_routes as $route ) {
+			foreach ( $this->fixture_services( 'green-buss', $route ) as $row ) {
+				self::assertSame( 2, $this->fixture_stoptime_count( $row['service_code'] ) );
 			}
 		}
 	}
@@ -138,12 +136,23 @@ final class CsvFixtureTest extends TestCase {
 		self::assertSame( '2026-08-07', $dates[ count( $dates ) - 1 ] );
 	}
 
-	public function test_green_buss_dates_are_summer_connection_window(): void {
-		$dates = MRT_csv_fixture_timetable_dates( 'green-buss' );
+	public function test_green_buss_dates_are_green_traffic_within_pdf_bus_window(): void {
+		$green      = MRT_csv_fixture_timetable_dates( 'green' );
+		$green_vard = MRT_csv_fixture_timetable_dates( 'green-vard' );
+		$dates      = MRT_csv_fixture_timetable_dates( 'green-buss' );
+		$expected   = array();
+
+		foreach ( array_merge( $green, $green_vard ) as $iso ) {
+			if ( $iso >= '2026-07-01' && $iso <= '2026-08-16' ) {
+				$expected[] = $iso;
+			}
+		}
+		sort( $expected );
+
+		self::assertSame( $expected, $dates );
 		self::assertCount( 18, $dates );
-		self::assertContains( '2026-07-01', $dates );
-		self::assertContains( '2026-08-15', $dates );
 		self::assertNotContains( '2026-05-30', $dates );
+		self::assertNotContains( '2026-07-03', $dates, 'GUL Friday must not have green-buss' );
 	}
 
 	public function test_thuns_express_highlight_is_csv_driven_per_service(): void {

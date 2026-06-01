@@ -27,9 +27,7 @@ faringe-uppsala-ostra,11,skolsta
 faringe-uppsala-ostra,12,arsta
 faringe-uppsala-ostra,13,fyrislund
 faringe-uppsala-ostra,14,uppsala-ostra
-selkna-uppsala-ostra,1,selkna
-selkna-uppsala-ostra,2,fjallnora
-selkna-uppsala-ostra,3,uppsala-ostra
-uppsala-ostra-selkna,1,uppsala-ostra
-uppsala-ostra-selkna,2,fjallnora
-uppsala-ostra-selkna,3,selkna
+selkna-fjallnora,1,selkna
+selkna-fjallnora,2,fjallnora
+fjallnora-selkna,1,fjallnora
+fjallnora-selkna,2,selkna
