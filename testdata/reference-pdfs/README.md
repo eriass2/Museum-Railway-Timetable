@@ -50,11 +50,14 @@ Används för att verifiera tågnummer, hållplatser och stopptider. Tider i `st
 4. Kör verifiering mot referensresor:
 
 ```sh
+python scripts/sync-lennakatten-green-yellow.py
+python scripts/generate-lennakatten-extra-timetables.py
 python scripts/verify-lennakatten-vs-pdf.py
-python scripts/generate-lennakatten-extra-timetables.py   # efter ändring av röd/orange/green-vard
 composer csv:validate -- testdata/fixtures/lennakatten
 composer test -- tests/Unit/LennakattenJourneySearchTest.php tests/Unit/CsvFixtureTest.php
 ```
+
+Kanonisk GRÖN/GUL-data: `scripts/lennakatten_anslag_tables.py` (härledd från PDF).
 
 ### Referensresor (automatiskt stickprov)
 

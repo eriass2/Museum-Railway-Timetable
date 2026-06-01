@@ -18,6 +18,13 @@ Timetable codes in the CSV package:
 
 Regenerate rail blocks after PDF edits: `python scripts/generate-lennakatten-extra-timetables.py` (bus split + red/orange services).
 
+Sync GRÖN/GUL rail from Anslagstidtabell (source: `scripts/lennakatten_anslag_tables.py`):
+
+```sh
+python scripts/sync-lennakatten-green-yellow.py
+python scripts/generate-lennakatten-extra-timetables.py
+```
+
 Verify against Anslagstidtabell reference trips:
 
 ```sh

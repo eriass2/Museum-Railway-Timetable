@@ -79,6 +79,36 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '10:35', $connections[0]['to_arrival'] ?? '' );
 	}
 
+	public function test_find_connections_uppsala_faringe_on_green_thuns_express(): void {
+		$this->boot_service_fixture( 'green-93-out', self::DATE_GREEN );
+		$stations = $this->station_ids();
+
+		$connections = MRT_find_connections(
+			$stations['uppsala-ostra'],
+			$stations['faringe'],
+			self::DATE_GREEN
+		);
+
+		self::assertNotEmpty( $connections );
+		self::assertSame( '11:10', $connections[0]['from_departure'] ?? '' );
+		self::assertSame( '12:17', $connections[0]['to_arrival'] ?? '' );
+	}
+
+	public function test_find_connections_uppsala_marielund_on_yellow_friday(): void {
+		$this->boot_service_fixture( 'yellow-101-out', '2026-06-05' );
+		$stations = $this->station_ids();
+
+		$connections = MRT_find_connections(
+			$stations['uppsala-ostra'],
+			$stations['marielund'],
+			'2026-06-05'
+		);
+
+		self::assertNotEmpty( $connections );
+		self::assertSame( '16:45', $connections[0]['from_departure'] ?? '' );
+		self::assertSame( '17:10', $connections[0]['to_arrival'] ?? '' );
+	}
+
 	public function test_find_connections_uppsala_marielund_on_red_sunday(): void {
 		$this->boot_service_fixture( 'red-81-out', self::DATE_RED );
 		$stations = $this->station_ids();
