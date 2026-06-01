@@ -16,12 +16,12 @@ const adminSections: HelpSection[] = [
     body: 'Statistik, varningar om dataproblem, nästa trafikdag och snabbstart. På mobil: inställ trafik idag och snabb avgångstid när det finns trafik.',
   },
   {
-    title: 'Tidtabeller',
-    body: 'Skapa och redigera tidtabeller. I editorn: titel och typ (färg), trafikdagar, turer, stopptider (rutnät eller tabell), avvikelser och förhandsvisning som på webbplatsen.',
-  },
-  {
     title: 'Stationer & rutter',
     body: 'Grunddata: stationer (namn, typ, koordinater, buss-suffix) och rutter med stationer i ordning. Rutten styr vilka hållplatser som finns i stopptidsrutnätet.',
+  },
+  {
+    title: 'Tidtabeller',
+    body: 'Skapa och redigera tidtabeller. I editorn: titel och typ (färg), trafikdagar, turer, stopptider (rutnät eller tabell), avvikelser och förhandsvisning som på webbplatsen.',
   },
   {
     title: 'Tågtyper',

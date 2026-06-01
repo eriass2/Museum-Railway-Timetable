@@ -1,17 +1,19 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { ADMIN_WP_PAGE_SLUGS, adminConfig } from '../types';
 
 const route = useRoute();
 const router = useRouter();
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 
 const tabs = computed(() => {
   const base = [
     { to: '/dashboard', label: 'Översikt' },
-    { to: '/timetables', label: 'Tidtabeller' },
     { to: '/stations-routes', label: 'Stationer & rutter' },
+    { to: '/timetables', label: 'Tidtabeller' },
     { to: '/help', label: 'Hjälp' },
   ];
   if (cfg.canManage) {
@@ -57,7 +59,8 @@ function syncWpPageInUrl(path: string) {
 </script>
 
 <template>
-  <nav class="nav-tab-wrapper mrt-admin-nav">
+  <!-- Desktop: use WordPress left submenu (avoids duplicate nav). -->
+  <nav v-if="isMobile" class="nav-tab-wrapper mrt-admin-nav" aria-label="Admin">
     <a
       v-for="tab in tabs"
       :key="tab.to"

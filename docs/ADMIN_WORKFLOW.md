@@ -1,6 +1,8 @@
 # Admin arbetsflöde – Vue-admin
 
-Steg-för-steg i **Vue-admin** under **Railway Timetable** (`admin.php?page=mrt_app`). Hash-routing: `#/dashboard`, `#/timetables/123`, osv. Dev-verktyg: `#/dev-tools` (endast dev-läge).
+Steg-för-steg i **Vue-admin** under **Tidtabell** i WordPress (`admin.php?page=mrt_app`). Hash-routing: `#/dashboard`, `#/timetables/123`, osv. Dev-verktyg: `#/dev-tools` (endast dev-läge).
+
+**Navigation:** på desktop används WordPress vänstermeny (Översikt → Stationer & rutter → Tidtabeller → …). På smal skärm visas även flikar i appen.
 
 ## Översikt
 

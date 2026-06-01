@@ -2,7 +2,8 @@
 /**
  * Admin menu registration (Vue app + utility pages).
  *
- * Submenu capabilities mirror Vue AdminNav: edit_posts sees operate pages only;
+ * Submenu order matches setup workflow (stationer → tidtabeller). Capabilities mirror
+ * Vue AdminNav (mobile only): edit_posts sees operate pages; manage_options sees settings.
  * manage_options sees settings, prices, train types, import/export, and dev tools.
  *
  * @package Museum_Railway_Timetable
@@ -19,12 +20,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function MRT_admin_vue_submenu_pages(): array {
 	$pages = array(
-		'mrt_app_timetables'      => array(
-			'label' => __( 'Tidtabeller', 'museum-railway-timetable' ),
-			'cap'   => 'edit_posts',
-		),
 		'mrt_app_stations_routes' => array(
 			'label' => __( 'Stationer & rutter', 'museum-railway-timetable' ),
+			'cap'   => 'edit_posts',
+		),
+		'mrt_app_timetables'      => array(
+			'label' => __( 'Tidtabeller', 'museum-railway-timetable' ),
 			'cap'   => 'edit_posts',
 		),
 		'mrt_app_help'            => array(

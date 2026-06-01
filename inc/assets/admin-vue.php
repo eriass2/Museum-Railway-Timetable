@@ -19,8 +19,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_admin_vue_page_slugs(): array {
 	$slugs = array(
 		MRT_ADMIN_APP_SLUG,
-		'mrt_app_timetables',
 		'mrt_app_stations_routes',
+		'mrt_app_timetables',
 		'mrt_app_help',
 		'mrt_app_settings',
 		'mrt_app_prices',
