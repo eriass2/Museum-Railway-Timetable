@@ -5,7 +5,7 @@ Each stop: (station_code, arrival, departure, symbol) where symbol is P, X or ''
 
 from __future__ import annotations
 
-from lennakatten_symbols import FAR_IN, UP_OUT
+from lennakatten_symbols import FAR_IN, UP_OUT, symbols_for_train
 
 Stop = tuple[str, str, str, str]
 
@@ -264,6 +264,44 @@ YELLOW_IN: dict[str, list[Stop]] = {
 }
 
 
+# RÖD / ORANGE – huvudlinje (tider från Anslagstidtabell; P/X via lennakatten_symbols).
+RED_OUT_TIMES: dict[str, list[str]] = {
+    "81": ["10:00", "10:04", "10:07", "10:12", "10:23", "10:25", "10:35", "10:46", "10:50", "10:54", "10:57", "11:10", "11:14", "11:25"],
+    "91": ["10:45", "10:48", "10:50", "10:53", "11:03", "11:04", "11:12", "11:42", "11:43", "11:47", "11:50", "11:54", "12:04", "12:07"],
+    "83": ["12:50", "12:54", "12:57", "13:02", "13:13", "13:15", "13:25", "13:33", "13:37", "13:41", "13:47", "14:00", "14:04", "14:15"],
+    "95": ["13:30", "13:33", "13:35", "13:38", "13:48", "13:49", "13:57", "15:44", "15:47", "15:50", "15:53", "16:03", "16:07", "16:15"],
+    "99": ["15:20", "15:23", "15:25", "15:28", "15:35", "15:36", "15:43", "15:44", "15:47", "15:50", "15:53", "16:03", "16:07", "16:15"],
+    "85": ["15:48", "15:52", "15:55", "16:00", "16:10", "16:12", "16:22", "16:39", "16:43", "16:48", "16:52", "17:05", "17:11", "17:22"],
+}
+RED_IN_TIMES: dict[str, list[str]] = {
+    "80": ["07:40", "07:49", "08:02", "08:15", "08:17", "08:22", "08:27", "08:30", "08:45", "08:51", "08:55", "09:04", "09:09", "09:12", "09:20"],
+    "92": ["09:40", "09:47", "09:57", "10:08", "10:10", "10:14", "10:17", "10:20", "11:20", "11:24", "11:27", "11:33", "11:36", "11:38", "11:47"],
+    "82": ["10:25", "10:30", "10:33", "10:40", "10:44", "10:46", "10:55", "11:00", "11:55", "12:01", "12:05", "12:14", "12:19", "12:22", "12:30"],
+    "94": ["12:27", "12:34", "12:41", "12:54", "12:56", "13:01", "13:04", "13:07", "14:05", "14:09", "14:12", "14:18", "14:21", "14:23", "14:32"],
+    "84": ["14:25", "14:31", "14:36", "14:46", "14:47", "14:52", "14:55", "14:58", "15:15", "15:15", "15:15", "15:15", "15:15", "15:15", "16:45"],
+}
+ORANGE_OUT_TIMES: dict[str, list[str]] = {
+    "73": ["11:15", "11:18", "11:20", "11:24", "11:37", "11:38", "11:47", "14:43", "14:47", "14:50", "14:54", "15:07", "15:11", "15:22"],
+    "77": ["13:55", "13:58", "14:00", "14:04", "14:17", "14:18", "14:27", "17:11", "17:14", "17:17", "17:23", "17:33", "17:36", "17:45"],
+}
+ORANGE_IN_TIMES: dict[str, list[str]] = {
+    "72": ["09:30", "09:37", "09:49", "09:59", "10:01", "10:06", "10:09", "10:12", "10:25", "10:30", "10:33", "10:40", "10:44", "10:46", "10:55"],
+    "76": ["15:30", "15:36", "15:42", "15:52", "15:53", "15:57", "16:00", "16:03", "16:03", "16:08", "16:10", "16:16", "16:19", "16:21", "16:30"],
+}
+
+
+def _rail_out_stops(prefix: str, train: str, times: list[str]) -> list[Stop]:
+    symbols = symbols_for_train(prefix, train, "out")
+    count = min(len(UP_OUT), len(times), len(symbols))
+    return [(UP_OUT[i], times[i], times[i], symbols[i]) for i in range(count)]
+
+
+def _rail_in_stops(prefix: str, train: str, times: list[str]) -> list[Stop]:
+    symbols = symbols_for_train(prefix, train, "in")
+    count = min(len(FAR_IN), len(times), len(symbols))
+    return [(FAR_IN[i], times[i], times[i], symbols[i]) for i in range(count)]
+
+
 def _uppsala_after_fjallnora(fjallnora: str, minutes: int = 28) -> str:
     h, m = map(int, fjallnora.split(":"))
     total = h * 60 + m + minutes
@@ -373,3 +411,22 @@ def service_definitions() -> list[tuple[str, str, str, list[Stop]]]:
     for num, stops in YELLOW_BUSS_IN.items():
         out.append((f"yellow-b{num}-bus-in", "yellow-buss", "uppsala-ostra-selkna", stops))
     return out
+
+
+def red_orange_service_definitions() -> list[tuple[str, str, str, list[Stop]]]:
+    """Return (service_code, timetable, route_code, stops) for RÖD/ORANGE rail."""
+    out: list[tuple[str, str, str, list[Stop]]] = []
+    for num, times in RED_OUT_TIMES.items():
+        out.append((f"red-{num}-out", "red", "uppsala-faringe", _rail_out_stops("red", num, times)))
+    for num, times in RED_IN_TIMES.items():
+        out.append((f"red-{num}-in", "red", "faringe-uppsala-ostra", _rail_in_stops("red", num, times)))
+    for num, times in ORANGE_OUT_TIMES.items():
+        out.append((f"orange-{num}-out", "orange", "uppsala-faringe", _rail_out_stops("orange", num, times)))
+    for num, times in ORANGE_IN_TIMES.items():
+        out.append((f"orange-{num}-in", "orange", "faringe-uppsala-ostra", _rail_in_stops("orange", num, times)))
+    return out
+
+
+def pdf_service_definitions() -> list[tuple[str, str, str, list[Stop]]]:
+    """All services verifiable against Anslagstidtabell-2026.pdf."""
+    return service_definitions() + red_orange_service_definitions()

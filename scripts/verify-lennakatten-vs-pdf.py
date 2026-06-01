@@ -7,7 +7,7 @@ import csv
 import sys
 from pathlib import Path
 
-from lennakatten_anslag_tables import service_definitions
+from lennakatten_anslag_tables import pdf_service_definitions
 from lennakatten_symbols import symbol_to_flags
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -86,13 +86,13 @@ def main() -> int:
 
     by_service = load_stoptimes()
     failures: list[str] = []
-    services = service_definitions()
+    services = pdf_service_definitions()
 
     for service_code, _tt, _route, stops in services:
         failures.extend(compare_service(service_code, stops, by_service.get(service_code)))
 
     print(f"PDF present: {PDF.is_file()}  readable: {pdf_readable()}")
-    print(f"Checked {len(services)} GRÖN/GUL rail and connection bus services against Anslagstidtabell")
+    print(f"Checked {len(services)} GRÖN/GUL/RÖD/ORANGE rail and bus services against Anslagstidtabell")
 
     if failures:
         print(f"\nFAILURES ({len(failures)}):")
@@ -102,7 +102,7 @@ def main() -> int:
             print(f"... and {len(failures) - 80} more")
         return 1
 
-    print("All GRÖN/GUL rail and bus services match Anslagstidtabell.")
+    print("All GRÖN/GUL/RÖD/ORANGE rail and bus services match Anslagstidtabell.")
     return 0
 
 
