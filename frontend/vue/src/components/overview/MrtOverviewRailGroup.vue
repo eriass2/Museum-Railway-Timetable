@@ -17,12 +17,12 @@ defineProps<{
       <span class="mrt-ov-time">{{ row.cells[columnIndex].text }}</span>
       <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
         <img
-          v-if="trainTypeIconUrl(iconUrls, 'buss')"
+          v-if="trainTypeIconUrl(iconUrls, 'bus')"
           class="mrt-ov-bus-ref__icon"
-          :src="trainTypeIconUrl(iconUrls, 'buss')"
+          :src="trainTypeIconUrl(iconUrls, 'bus')"
           alt=""
-          width="16"
-          height="16"
+          width="20"
+          height="20"
         />
       </span>
     </template>
