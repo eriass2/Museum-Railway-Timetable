@@ -11,6 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+if ( MRT_is_development_mode() ) {
+	require_once MRT_PATH . 'inc/import/lennakatten/importer.php';
+}
+
 /**
  * Register dev tool routes.
  */
