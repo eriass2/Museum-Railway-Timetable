@@ -9,14 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-05-30T17:16:30+00:00\n"
+"POT-Creation-Date: 2026-06-01T10:10:41+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: museum-railway-timetable\n"
 
 #. Plugin Name of the plugin
 #: museum-railway-timetable.php
-#: inc/admin/menu.php:70
+#: inc/admin/menu.php:119
 msgid "Museum Railway Timetable"
 msgstr ""
 
@@ -30,65 +30,57 @@ msgstr ""
 msgid "Erik"
 msgstr ""
 
-#: inc/admin/app.php:57
+#: inc/admin/app.php:58
 #: inc/admin/tools/demo-page.php:261
 msgid "You do not have permission to access this page."
 msgstr ""
 
-#: inc/admin/menu.php:17
-#: inc/admin/menu.php:91
-#: inc/admin/menu.php:92
-msgid "Dashboard"
+#: inc/admin/menu.php:24
+msgid "Stationer & rutter"
 msgstr ""
 
-#: inc/admin/menu.php:18
-#: inc/public/timetable-index/shortcode.php:95
-msgid "Timetables"
+#: inc/admin/menu.php:28
+#: inc/admin/tools/timetable-pages.php:36
+#: inc/domain/timetable/timetable-pages.php:215
+msgid "Tidtabeller"
 msgstr ""
 
-#: inc/admin/menu.php:19
-msgid "Stations & routes"
+#: inc/admin/menu.php:32
+msgid "Hjälp"
 msgstr ""
 
-#: inc/admin/menu.php:20
-msgid "Settings"
+#: inc/admin/menu.php:36
+msgid "Tågtyper"
 msgstr ""
 
-#: inc/admin/menu.php:21
-msgid "Prices"
+#: inc/admin/menu.php:40
+msgid "Inställningar"
 msgstr ""
 
-#: inc/admin/menu.php:22
-msgid "Train types"
+#: inc/admin/menu.php:44
+#: inc/public/vue-shortcode-config.php:158
+msgid "Priser"
 msgstr ""
 
-#: inc/admin/menu.php:23
+#: inc/admin/menu.php:48
 msgid "Import / export"
 msgstr ""
 
-#: inc/admin/menu.php:26
-#: inc/admin/tools/demo-page.php:307
-msgid "Dev tools"
+#: inc/admin/menu.php:54
+msgid "Utvecklingsverktyg"
 msgstr ""
 
-#: inc/admin/menu.php:52
-#: inc/admin/menu.php:53
-#: inc/admin/tools/demo-page.php:286
-msgid "Component demo page"
+#: inc/admin/menu.php:82
+msgid "Översikt"
 msgstr ""
 
-#: inc/admin/menu.php:71
-msgid "Railway Timetable"
+#: inc/admin/menu.php:101
+#: inc/admin/menu.php:102
+msgid "Komponentdemo"
 msgstr ""
 
-#: inc/admin/meta-boxes/hooks.php:48
-msgid "Example route name: \"Hultsfred - Västervik\" or \"Main Line\"."
-msgstr ""
-
-#: inc/admin/timetable-vue-preview.php:19
-#: inc/domain/timetable/timetable-pages.php:198
-#: inc/domain/timetable/view/overview-data.php:63
-msgid "Invalid timetable."
+#: inc/admin/menu.php:120
+msgid "Tidtabell"
 msgstr ""
 
 #: inc/admin/tools/component-debug-pages.php:17
@@ -223,9 +215,9 @@ msgstr ""
 
 #: inc/admin/tools/demo-page.php:193
 #: inc/admin/tools/dev-navigation.php:62
-#: inc/admin/tools/dev-navigation.php:507
-#: inc/domain/timetable/timetable-pages.php:163
-#: inc/domain/timetable/timetable-pages.php:229
+#: inc/admin/tools/dev-navigation.php:498
+#: inc/domain/timetable/timetable-pages.php:143
+#: inc/domain/timetable/timetable-pages.php:209
 msgid "Permission denied."
 msgstr ""
 
@@ -260,6 +252,10 @@ msgstr ""
 msgid "Demo page saved successfully (page ID %d). Use View page below."
 msgstr ""
 
+#: inc/admin/tools/demo-page.php:286
+msgid "Component demo page"
+msgstr ""
+
 #: inc/admin/tools/demo-page.php:287
 msgid "Creates or updates a published page with every public shortcode for local testing and QA."
 msgstr ""
@@ -276,6 +272,10 @@ msgstr ""
 msgid "Front-end development menu:"
 msgstr ""
 
+#: inc/admin/tools/demo-page.php:307
+msgid "Dev tools"
+msgstr ""
+
 #: inc/admin/tools/dev-navigation.php:35
 msgid "Component demo"
 msgstr ""
@@ -285,39 +285,96 @@ msgstr ""
 msgid "Wizard smoke test"
 msgstr ""
 
-#: inc/admin/tools/dev-navigation.php:271
-#: inc/admin/tools/dev-navigation.php:468
+#: inc/admin/tools/dev-navigation.php:262
+#: inc/admin/tools/dev-navigation.php:459
 msgid "Museum Railway (development)"
 msgstr ""
 
-#: inc/admin/tools/dev-navigation.php:503
+#: inc/admin/tools/dev-navigation.php:494
 msgid "Development navigation is only available in development mode (WP_DEBUG or MRT_DEVELOPMENT) or WP-CLI."
 msgstr ""
 
-#: inc/admin/tools/import-lennakatten.php:23
-#: inc/admin/tools/import-lennakatten.php:24
-msgid "Import Lennakatten"
-msgstr ""
-
-#: inc/admin/tools/import-lennakatten.php:47
-msgid "Import Lennakatten 2026 Test Data"
-msgstr ""
-
-#: inc/admin/tools/import-lennakatten.php:48
-msgid "Re-imports Lennakatten test data from the CSV fixture (testdata/fixtures/lennakatten), derived from reference PDFs. Existing fixture entities are updated; other plugin stations, routes, timetables, and services are removed."
-msgstr ""
-
-#: inc/admin/tools/import-lennakatten.php:55
-msgid "Re-import Lennakatten"
-msgstr ""
-
-#: inc/admin/tools/timetable-pages.php:36
-#: inc/domain/timetable/timetable-pages.php:235
-msgid "Tidtabeller"
-msgstr ""
-
-#: inc/assets/vue-frontend.php:110
+#: inc/assets/vue-frontend.php:109
 msgid "Vue build missing. Run npm install && npm run build in frontend/vue/."
+msgstr ""
+
+#: inc/domain/admin/cancel-traffic.php:58
+#: inc/domain/timetable/view/overview-data.php:94
+#: inc/public/month-calendar/shortcode.php:105
+#: inc/public/month-calendar/shortcode.php:115
+#: inc/public/month-calendar/shortcode.php:124
+#: inc/public/month-calendar/shortcode.php:208
+#: inc/public/month-calendar/shortcode.php:215
+msgid "Invalid date."
+msgstr ""
+
+#: inc/domain/admin/cancel-traffic.php:62
+msgid "Notice is required."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:37
+#: inc/domain/journey/request-params.php:148
+msgid "Invalid service."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:41
+msgid "Service not found."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:46
+msgid "Could not delete service."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:69
+#: inc/domain/timetable/timetable-pages.php:178
+#: inc/domain/timetable/view/overview-data.php:63
+msgid "Invalid timetable."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:73
+#: inc/infrastructure/rest/timetables-data.php:53
+#: inc/infrastructure/rest/timetables-data.php:177
+#: inc/public/timetable-overview/shortcode.php:36
+msgid "Timetable not found."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:87
+msgid "Could not delete timetable."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:179
+msgid "Invalid station."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:183
+#: inc/infrastructure/rest/stations-routes.php:187
+msgid "Station not found."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:188
+msgid "Station is used by a route, trip, or stop times and cannot be deleted."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:194
+msgid "Could not delete station."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:232
+#: inc/infrastructure/rest/timetables.php:240
+msgid "Invalid route."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:236
+#: inc/infrastructure/rest/stations-routes.php:303
+msgid "Route not found."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:241
+msgid "Route is used by trips and cannot be deleted."
+msgstr ""
+
+#: inc/domain/admin/delete-entities.php:247
+msgid "Could not delete route."
 msgstr ""
 
 #. translators: 1: first service name, 2: transfer station name, 3: second service name
@@ -334,49 +391,44 @@ msgstr ""
 msgid "Please select different stations for departure and arrival."
 msgstr ""
 
-#: inc/domain/journey/request-params.php:80
-#: inc/infrastructure/rest/journey-public.php:103
+#: inc/domain/journey/request-params.php:73
+#: inc/infrastructure/rest/journey-public.php:111
 msgid "Please select a valid date."
 msgstr ""
 
-#: inc/domain/journey/request-params.php:112
+#: inc/domain/journey/request-params.php:98
 msgid "Please provide a valid outbound arrival time for return search."
 msgstr ""
 
-#: inc/domain/journey/request-params.php:144
+#: inc/domain/journey/request-params.php:123
 msgid "Please select a valid month."
 msgstr ""
 
-#: inc/domain/journey/request-params.php:176
-#: inc/infrastructure/rest/timetables.php:186
-msgid "Invalid service."
-msgstr ""
-
-#: inc/domain/pricing/prices.php:254
+#: inc/domain/pricing/prices.php:219
 msgid "Enkelbiljett"
 msgstr ""
 
-#: inc/domain/pricing/prices.php:255
+#: inc/domain/pricing/prices.php:220
 msgid "Returbiljett"
 msgstr ""
 
-#: inc/domain/pricing/prices.php:256
+#: inc/domain/pricing/prices.php:221
 msgid "Dagskort"
 msgstr ""
 
-#: inc/domain/pricing/prices.php:267
+#: inc/domain/pricing/prices.php:232
 msgid "Vuxen"
 msgstr ""
 
-#: inc/domain/pricing/prices.php:268
-msgid "Barn 7–15"
+#: inc/domain/pricing/prices.php:233
+msgid "Barn 4–15"
 msgstr ""
 
-#: inc/domain/pricing/prices.php:269
+#: inc/domain/pricing/prices.php:234
 msgid "Barn 0–6"
 msgstr ""
 
-#: inc/domain/pricing/prices.php:270
+#: inc/domain/pricing/prices.php:235
 msgid "Student / pensionär"
 msgstr ""
 
@@ -388,14 +440,14 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: inc/domain/route/routes.php:154
-#: inc/domain/route/routes.php:202
-#: inc/domain/route/routes.php:209
+#: inc/domain/route/routes.php:129
+#: inc/domain/route/routes.php:177
+#: inc/domain/route/routes.php:184
 #, php-format
 msgid "Från %1$s Till %2$s"
 msgstr ""
 
-#: inc/domain/route/routes.php:160
+#: inc/domain/route/routes.php:135
 #, php-format
 msgid "Route to %s"
 msgstr ""
@@ -421,7 +473,7 @@ msgstr ""
 #: inc/domain/service/timetable-trip-create.php:31
 #: inc/domain/service/timetable-trip-create.php:57
 #: inc/domain/service/timetable-trip-create.php:65
-#: inc/public/vue-shortcode-config.php:131
+#: inc/public/vue-shortcode-config.php:128
 msgid "Från"
 msgstr ""
 
@@ -433,22 +485,33 @@ msgstr ""
 msgid "Route"
 msgstr ""
 
-#: inc/domain/timetable/timetable-pages.php:41
-#: inc/public/timetable-index/shortcode.php:64
-msgid "Timetable"
-msgstr ""
-
-#: inc/domain/timetable/timetable-pages.php:51
-msgid "more"
-msgstr ""
-
 #. translators: %d: number of traffic days
-#: inc/domain/timetable/timetable-pages.php:66
+#: inc/domain/timetable/timetable-pages.php:46
 #, php-format
 msgid "%d traffic day"
 msgid_plural "%d traffic days"
 msgstr[0] ""
 msgstr[1] ""
+
+#: inc/domain/timetable/timetable-type.php:97
+msgid "GRÖN tidtabell"
+msgstr ""
+
+#: inc/domain/timetable/timetable-type.php:98
+msgid "GUL tidtabell"
+msgstr ""
+
+#: inc/domain/timetable/timetable-type.php:99
+msgid "RÖD tidtabell"
+msgstr ""
+
+#: inc/domain/timetable/timetable-type.php:100
+msgid "ORANGE tidtabell"
+msgstr ""
+
+#: inc/domain/timetable/timetable-type.php:101
+msgid "BLÅ tidtabell"
+msgstr ""
 
 #: inc/domain/timetable/view/overview-data.php:21
 msgid "No trips found."
@@ -460,12 +523,6 @@ msgstr ""
 
 #: inc/domain/timetable/view/overview-data.php:82
 msgid "No trips in this timetable."
-msgstr ""
-
-#: inc/domain/timetable/view/overview-data.php:94
-#: inc/public/month-calendar/shortcode.php:135
-#: inc/public/month-calendar/shortcode.php:142
-msgid "Invalid date."
 msgstr ""
 
 #. translators: %s: formatted date
@@ -537,74 +594,22 @@ msgstr ""
 msgid "Re-import complete. Stations: %1$d, Routes: %2$d, Timetables: %3$d, Services: %4$d. Fixture data replaced; posts without a fixture code were removed."
 msgstr ""
 
-#: inc/infrastructure/post-types/admin.php:15
-#: inc/infrastructure/post-types/admin.php:103
-msgid "Station Name"
-msgstr ""
-
-#: inc/infrastructure/post-types/admin.php:25
-#: inc/infrastructure/post-types/admin.php:109
-msgid "Route Name"
-msgstr ""
-
-#: inc/infrastructure/post-types/admin.php:35
-#: inc/infrastructure/post-types/admin.php:115
-msgid "Trip Name"
-msgstr ""
-
-#: inc/infrastructure/post-types/admin.php:48
-msgid "ID"
-msgstr ""
-
-#: inc/infrastructure/post-types/admin.php:72
-#: inc/infrastructure/post-types/admin.php:81
-msgid "Enter station name"
-msgstr ""
-
-#: inc/infrastructure/post-types/admin.php:74
-#: inc/infrastructure/post-types/admin.php:83
-msgid "Enter route name"
-msgstr ""
-
-#: inc/infrastructure/post-types/admin.php:76
-#: inc/infrastructure/post-types/admin.php:85
-msgid "Trip name (auto-generated from Route + Direction)"
-msgstr ""
-
 #: inc/infrastructure/rest/import-export.php:47
 msgid "No file uploaded."
 msgstr ""
 
-#: inc/infrastructure/rest/import-export.php:86
+#: inc/infrastructure/rest/import-export.php:89
 msgid "Could not read export file."
 msgstr ""
 
-#: inc/infrastructure/rest/stations-routes.php:127
-#: inc/infrastructure/rest/stations-routes.php:248
+#: inc/infrastructure/rest/stations-routes.php:142
+#: inc/infrastructure/rest/stations-routes.php:263
 #: inc/infrastructure/rest/timetables-data.php:155
 msgid "Title is required."
 msgstr ""
 
-#: inc/infrastructure/rest/stations-routes.php:172
-msgid "Station not found."
-msgstr ""
-
-#: inc/infrastructure/rest/stations-routes.php:288
-msgid "Route not found."
-msgstr ""
-
-#: inc/infrastructure/rest/timetables-data.php:53
-#: inc/infrastructure/rest/timetables-data.php:177
-#: inc/public/timetable-overview/shortcode.php:36
-msgid "Timetable not found."
-msgstr ""
-
 #: inc/infrastructure/rest/timetables-data.php:234
 msgid "Route is required."
-msgstr ""
-
-#: inc/infrastructure/rest/timetables.php:222
-msgid "Invalid route."
 msgstr ""
 
 #: inc/public/journey-wizard/debug-fixtures.php:85
@@ -623,8 +628,26 @@ msgstr ""
 msgid "Transfer"
 msgstr ""
 
+#. translators: %s: month and year
+#: inc/public/month-calendar/shortcode.php:149
+#: inc/public/vue-shortcode-config.php:53
+#, php-format
+msgid "Månadskalender, %s"
+msgstr ""
+
+#. translators: %s: month and year
+#: inc/public/month-calendar/shortcode.php:154
+#: inc/public/vue-shortcode-config.php:58
+#, php-format
+msgid "Trafikdagar för %s"
+msgstr ""
+
 #: inc/public/timetable-index/shortcode.php:50
 msgid "No timetables are published yet."
+msgstr ""
+
+#: inc/public/timetable-index/shortcode.php:64
+msgid "Timetable"
 msgstr ""
 
 #: inc/public/timetable-index/shortcode.php:75
@@ -633,6 +656,10 @@ msgstr ""
 
 #: inc/public/timetable-index/shortcode.php:89
 msgid "Choose a timetable to see departures and traffic days."
+msgstr ""
+
+#: inc/public/timetable-index/shortcode.php:95
+msgid "Timetables"
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:22
@@ -663,140 +690,160 @@ msgstr ""
 msgid "lör"
 msgstr ""
 
-#. translators: %s: month and year
-#: inc/public/vue-shortcode-config.php:57
-#, php-format
-msgid "Månadskalender, %s"
-msgstr ""
-
-#. translators: %s: month and year
-#: inc/public/vue-shortcode-config.php:62
-#, php-format
-msgid "Trafikdagar för %s"
-msgstr ""
-
-#: inc/public/vue-shortcode-config.php:76
+#: inc/public/vue-shortcode-config.php:71
+#: inc/public/vue-shortcode-config.php:159
 msgid "Föregående månad"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:77
+#: inc/public/vue-shortcode-config.php:72
+#: inc/public/vue-shortcode-config.php:160
 msgid "Nästa månad"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:78
+#: inc/public/vue-shortcode-config.php:73
+#: inc/public/vue-shortcode-config.php:76
 msgid "Trafikdag"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:79
-msgid "antal per dag"
+#: inc/public/vue-shortcode-config.php:74
+msgid "Siffran visar antal turer som trafikerar den dagen (alla linjer och riktningar)."
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:80
+#: inc/public/vue-shortcode-config.php:75
+#, php-format
+msgid "%d turer (alla linjer)"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:77
 msgid "Klicka för att visa tidtabell"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:126
-msgid "No stations are available."
+#: inc/public/vue-shortcode-config.php:123
+msgid "Inga stationer är tillgängliga."
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:127
+#: inc/public/vue-shortcode-config.php:124
 msgid "Reseplaneraren kräver JavaScript."
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:128
+#: inc/public/vue-shortcode-config.php:125
 msgid "Steg i reseplaneraren"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:129
+#: inc/public/vue-shortcode-config.php:126
 msgid "Planera resa med Lennakatten"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:130
+#: inc/public/vue-shortcode-config.php:127
 msgid "Välj avgång, ankomst och om du reser enkel eller tur och retur."
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:132
+#: inc/public/vue-shortcode-config.php:129
 msgid "Till"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:133
-#: inc/public/vue-shortcode-config.php:134
+#: inc/public/vue-shortcode-config.php:130
+#: inc/public/vue-shortcode-config.php:131
 msgid "Sök eller välj station…"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:135
+#: inc/public/vue-shortcode-config.php:132
 msgid "Sök avgångsstation"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:136
+#: inc/public/vue-shortcode-config.php:133
 msgid "Sök ankomststation"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:137
+#: inc/public/vue-shortcode-config.php:134
 msgid "Restyp"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:138
+#: inc/public/vue-shortcode-config.php:135
 msgid "Enkel resa"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:139
+#: inc/public/vue-shortcode-config.php:136
 msgid "Tur och retur"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:140
+#: inc/public/vue-shortcode-config.php:137
 msgid "Sök resa"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:141
+#: inc/public/vue-shortcode-config.php:138
 msgid "Visa hela tidtabellen"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:142
+#: inc/public/vue-shortcode-config.php:139
 msgid "← Tillbaka"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:143
+#: inc/public/vue-shortcode-config.php:140
 msgid "Välj datum"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:144
-#: inc/public/vue-shortcode-config.php:145
+#: inc/public/vue-shortcode-config.php:141
+#: inc/public/vue-shortcode-config.php:142
 msgid "Idag"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:146
+#: inc/public/vue-shortcode-config.php:143
 msgid "Inga bokningsbara dagar denna månad för din resa."
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:147
+#: inc/public/vue-shortcode-config.php:144
 msgid "Byt månad med pilarna ovan."
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:148
+#: inc/public/vue-shortcode-config.php:145
 msgid "Kan bokas för din resa"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:149
+#: inc/public/vue-shortcode-config.php:146
 msgid "Trafik, ej din resa"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:150
+#: inc/public/vue-shortcode-config.php:147
 msgid "Ingen trafik"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:151
+#: inc/public/vue-shortcode-config.php:148
 msgid "Välj utresa"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:152
+#: inc/public/vue-shortcode-config.php:149
 msgid "Välj återresa"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:153
+#: inc/public/vue-shortcode-config.php:150
 msgid "Din resa"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:154
+#: inc/public/vue-shortcode-config.php:151
 msgid "Fortsätt till biljetter"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:152
+msgid "Skriv ut / spara som PDF"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:153
+msgid "Dela resa"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:154
+msgid "Kopiera resa"
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:155
+msgid "Resan kopierades till urklipp."
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:156
+msgid "Resan delades."
+msgstr ""
+
+#: inc/public/vue-shortcode-config.php:157
+msgid "Kunde inte dela eller kopiera resan."
 msgstr ""
