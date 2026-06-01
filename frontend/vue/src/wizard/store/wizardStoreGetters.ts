@@ -2,7 +2,7 @@ import type { WizardStep, TripType } from '../types';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
 import { formatYmdForDisplay } from '../utils/wizardDate';
-import { buildStepLabels, buildStepSequence } from './wizardSteps';
+import { buildStepLabels } from './wizardSteps';
 
 export type WizardContextState = {
   tripType: TripType;
@@ -10,10 +10,6 @@ export type WizardContextState = {
   toTitle: string;
   dateYmd: string;
 };
-
-export function wizardStepSequence(tripType: TripType): WizardStep[] {
-  return buildStepSequence(tripType);
-}
 
 export function wizardStepLabels(cfg: WizardCfg): Record<WizardStep, string> {
   return buildStepLabels(cfg);

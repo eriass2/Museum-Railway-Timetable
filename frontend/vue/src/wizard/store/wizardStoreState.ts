@@ -7,8 +7,8 @@ import { applyInboundSelection, applyOutboundSelection } from './wizardSelection
 import {
   wizardContextLine,
   wizardStepLabels,
-  wizardStepSequence,
 } from './wizardStoreGetters';
+import { buildStepSequence } from './wizardSteps';
 import type { WizardStore } from './wizardStoreTypes';
 
 export function buildWizardStoreState(
@@ -34,7 +34,7 @@ export function buildWizardStoreState(
     debugReturnConnections: null as JourneyConnection[] | null,
 
     get stepSequence(): WizardStep[] {
-      return wizardStepSequence(this.tripType);
+      return buildStepSequence(this.tripType);
     },
     get stepLabels(): Record<WizardStep, string> {
       return wizardStepLabels(cfg.value);
