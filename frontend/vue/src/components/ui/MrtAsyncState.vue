@@ -12,7 +12,7 @@ defineProps<{
 
 <template>
   <p v-if="loading" class="mrt-empty mrt-empty--loading mrt-async__loading">
-    {{ loadingText || 'Laddar...' }}
+    {{ loadingText }}
   </p>
   <MrtAlert v-else-if="error" variant="error" live="assertive">
     {{ error }}
