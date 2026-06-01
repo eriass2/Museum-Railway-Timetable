@@ -280,6 +280,18 @@ function MRT_frontend_script_localization(): array {
 		'errorLoading'      => __( 'Kunde inte ladda tidtabellen.', MRT_TEXT_DOMAIN ),
 		'errorSameStations' => __( 'Välj olika stationer för avresa och ankomst.', MRT_TEXT_DOMAIN ),
 		'networkError'      => __( 'Nätverksfel. Försök igen.', MRT_TEXT_DOMAIN ),
+		'ovPrintKeyTitle'       => __( 'Förklaringar', MRT_TEXT_DOMAIN ),
+		'ovPrintKeySymbolCol'   => __( 'Tecken', MRT_TEXT_DOMAIN ),
+		'ovPrintKeyMeaningCol'  => __( 'Betydelse', MRT_TEXT_DOMAIN ),
+		'ovPrintKeyNote'        => __( 'Med reservation för ändring av tågtyp.', MRT_TEXT_DOMAIN ),
+		'ovDeviationPlanned'    => __( 'Planerat: %s', MRT_TEXT_DOMAIN ),
+		'ovDeviationFromPlan'   => __( 'Avvikelse från planerad tågtyp', MRT_TEXT_DOMAIN ),
+		'ovDeparturesAria'      => __( 'Avgångar %s', MRT_TEXT_DOMAIN ),
+		'ovBranchNote'          => __( 'Anslutningsbuss', MRT_TEXT_DOMAIN ),
+		'ovColTrip'             => __( 'Tur', MRT_TEXT_DOMAIN ),
+		'ovColConnectingTrain'  => __( 'Anslutande tåg', MRT_TEXT_DOMAIN ),
+		'ovTrainConnecting'     => __( 'Tåg %1$s %2$s', MRT_TEXT_DOMAIN ),
+		'ovCardTrip'            => __( 'Tur %s', MRT_TEXT_DOMAIN ),
 	);
 }
 

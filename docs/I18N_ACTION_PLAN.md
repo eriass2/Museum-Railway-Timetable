@@ -8,8 +8,8 @@ Text domain: `museum-railway-timetable`. Publikt Vue får strängar från PHP (`
 |-----|-------------|--------|
 | 1 | Dokumentation och wizard PHP/Vue | Klar |
 | 2 | Månadskalender – legend-hints från config | Klar |
-| 3 | Tidtabellsöversikt – UI-etiketter via `strings` | Planerad |
-| 4 | Delade komponenter (`MrtAsyncState`, tåg-fallback) | Planerad |
+| 3 | Tidtabellsöversikt – UI-etiketter via `strings` | Klar |
+| 4 | Delade komponenter (`MrtAsyncState`, tåg-fallback) | Klar |
 | 5 | Admin Vue – `mrtAdminVue.strings` | Ej påbörjad |
 
 ## Fas 1 – Wizard

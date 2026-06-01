@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { TimetableOverviewIconUrls, TimetableRailGroup, TimetableTimeCellEdit } from '../../types/timetableOverview';
 import type { OverviewGridEdit } from '../composables/useOverviewGridEdit';
+import { overviewUiLabels } from '../../shared/overviewUiLabels';
 import MrtOverviewRailGroupGrid from '../../components/overview/MrtOverviewRailGroupGrid.vue';
+
+const labels = overviewUiLabels({});
 
 const props = defineProps<{
   group: TimetableRailGroup;
@@ -33,6 +36,7 @@ async function patchCell(
   <MrtOverviewRailGroupGrid
     :group="group"
     :icon-urls="iconUrls"
+    :labels="labels"
     :show-deviation-meta="false"
     :editable-cells="!readonly"
   >

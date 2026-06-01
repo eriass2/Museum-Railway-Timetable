@@ -16,6 +16,7 @@ import MrtTimetableOverviewView from '../components/overview/MrtTimetableOvervie
 import { useTimetableOverview } from '../composables/useTimetableOverview';
 import { useMonthCalendar } from '../composables/useMonthCalendar';
 import { timetableTypeDotClass } from '../shared/calendarDay';
+import { overviewUiLabels } from '../shared/overviewUiLabels';
 import { resolveMrtString } from '../utils/mrtStrings';
 
 const props = defineProps<{ config: MonthVueConfig }>();
@@ -86,6 +87,8 @@ const legendItems = computed(() => {
     },
   ];
 });
+
+const overviewLabels = computed(() => overviewUiLabels(props.config));
 
 const legendHints = computed(() => {
   const hints: string[] = [];
@@ -214,7 +217,11 @@ watch([panelVisible, dayOverview, dayLoading], async ([visible, overview, loadin
       :error="dayError"
       :loading-text="resolveMrtString(config, 'loading', 'Laddar...')"
     >
-      <MrtTimetableOverviewView v-if="dayOverview" :data="dayOverview" />
+      <MrtTimetableOverviewView
+        v-if="dayOverview"
+        :data="dayOverview"
+        :labels="overviewLabels"
+      />
     </MrtHtmlPanel>
   </div>
 </template>

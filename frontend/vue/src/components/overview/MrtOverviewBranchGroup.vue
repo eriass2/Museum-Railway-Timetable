@@ -1,16 +1,31 @@
 <script setup lang="ts">
+import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
+import {
+  formatCardTrip,
+  formatDeparturesAria,
+  formatTrainConnecting,
+} from '../../shared/overviewUiLabels';
 import type { TimetableBranchGroup } from '../../types/timetableOverview';
 
-defineProps<{
+const props = defineProps<{
   group: TimetableBranchGroup;
+  labels: OverviewUiLabels;
 }>();
+
+function departuresAria(): string {
+  return formatDeparturesAria(props.labels.departuresAria, props.group.routeLabel);
+}
+
+function trainLabel(serviceNumber: string, timeDisplay: string): string {
+  return formatTrainConnecting(props.labels.trainConnecting, serviceNumber, timeDisplay);
+}
 </script>
 
 <template>
   <section class="mrt-ov-group mrt-ov-group--branch">
     <header class="mrt-ov-route-header">
       <h3 class="mrt-ov-route-title">{{ group.routeLabel }}</h3>
-      <p class="mrt-ov-branch-note">Anslutningsbuss</p>
+      <p class="mrt-ov-branch-note">{{ labels.branchNote }}</p>
       <p class="mrt-ov-route-ends">
         <span>{{ group.fromLabel }}</span>
         <span class="mrt-ov-route-arrow" aria-hidden="true">→</span>
@@ -21,11 +36,11 @@ defineProps<{
       <table class="mrt-ov-branch-table">
         <thead>
           <tr>
-            <th>Tur</th>
+            <th>{{ labels.colTrip }}</th>
             <th>{{ group.fromLabel }}</th>
             <th v-if="group.midLabel">{{ group.midLabel }}</th>
             <th>{{ group.toLabel }}</th>
-            <th>Anslutande tåg</th>
+            <th>{{ labels.colConnectingTrain }}</th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +52,7 @@ defineProps<{
             <td>
               <template v-if="trip.connectingTrains.length">
                 <span v-for="(t, ti) in trip.connectingTrains" :key="ti" class="mrt-ov-branch-train">
-                  Tåg {{ t.serviceNumber }} {{ t.timeDisplay }}
+                  {{ trainLabel(t.serviceNumber, t.timeDisplay) }}
                 </span>
               </template>
               <span v-else>—</span>
@@ -47,9 +62,9 @@ defineProps<{
       </table>
     </div>
 
-    <ol class="mrt-ov-branch-cards" :aria-label="`Avgångar ${group.routeLabel}`">
+    <ol class="mrt-ov-branch-cards" :aria-label="departuresAria()">
       <li v-for="trip in group.trips" :key="`card-${trip.trip}`" class="mrt-ov-branch-card">
-        <p class="mrt-ov-branch-card__trip">Tur {{ trip.trip }}</p>
+        <p class="mrt-ov-branch-card__trip">{{ formatCardTrip(labels.cardTrip, trip.trip) }}</p>
         <dl class="mrt-ov-branch-card__times">
           <div class="mrt-ov-branch-card__row">
             <dt>{{ group.fromLabel }}</dt>
@@ -64,7 +79,7 @@ defineProps<{
             <dd>{{ trip.toTime }}</dd>
           </div>
           <div class="mrt-ov-branch-card__row">
-            <dt>Anslutande tåg</dt>
+            <dt>{{ labels.colConnectingTrain }}</dt>
             <dd>
               <template v-if="trip.connectingTrains.length">
                 <span
@@ -72,7 +87,7 @@ defineProps<{
                   :key="ti"
                   class="mrt-ov-branch-train"
                 >
-                  Tåg {{ t.serviceNumber }} {{ t.timeDisplay }}
+                  {{ trainLabel(t.serviceNumber, t.timeDisplay) }}
                 </span>
               </template>
               <span v-else>—</span>

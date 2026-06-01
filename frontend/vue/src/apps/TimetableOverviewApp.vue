@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
+import { overviewUiLabels } from '../shared/overviewUiLabels';
 import MrtHtmlPanel from '../components/ui/MrtHtmlPanel.vue';
 import MrtTimetableOverviewView from '../components/overview/MrtTimetableOverviewView.vue';
 import type { OverviewVueConfig } from '../config/types';
@@ -12,6 +13,7 @@ const embedded = computed(() => Boolean(props.config.embedded));
 const hasInlineData = computed(() => Boolean(props.config.overview));
 
 const { overview, loading, error, fetchOverview } = useTimetableOverview(props.config);
+const overviewLabels = computed(() => overviewUiLabels(props.config));
 
 onMounted(() => {
   if (props.config.overview) {
@@ -35,7 +37,7 @@ onMounted(() => {
       :error="error"
       :loading-text="resolveMrtString(config, 'loading', 'Laddar...')"
     >
-      <MrtTimetableOverviewView v-if="overview" :data="overview" />
+      <MrtTimetableOverviewView v-if="overview" :data="overview" :labels="overviewLabels" />
     </MrtHtmlPanel>
   </div>
 </template>

@@ -18,6 +18,7 @@ import StopTimesEditor from '../components/StopTimesEditor.vue';
 import EditableTimetableOverview from '../components/EditableTimetableOverview.vue';
 import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
 import MrtTimetableOverviewView from '../../components/overview/MrtTimetableOverviewView.vue';
+import { overviewUiLabels } from '../../shared/overviewUiLabels';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
@@ -27,6 +28,7 @@ import { adminConfig } from '../types';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+const overviewLabels = overviewUiLabels({});
 
 const props = defineProps<{ id: string }>();
 const cfg = adminConfig();
@@ -406,7 +408,7 @@ function onMobileSaved(message: string) {
     </div>
 
     <div v-if="!isMobile && tab === 'preview'" class="mrt-admin-panel mrt-vue-root">
-      <MrtTimetableOverviewView v-if="overview" :data="overview" />
+      <MrtTimetableOverviewView v-if="overview" :data="overview" :labels="overviewLabels" />
     </div>
     </AdminLoadState>
   </div>

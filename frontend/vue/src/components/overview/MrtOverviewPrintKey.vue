@@ -1,19 +1,21 @@
 <script setup lang="ts">
+import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
 import type { TimetablePrintKeyRow } from '../../types/timetableOverview';
 
 defineProps<{
   rows: TimetablePrintKeyRow[];
+  labels: OverviewUiLabels;
 }>();
 </script>
 
 <template>
-  <section class="mrt-ov-print-key" aria-label="Förklaringar">
-    <h4 class="mrt-ov-print-key-title">Förklaringar</h4>
+  <section class="mrt-ov-print-key" :aria-label="labels.printKeyTitle">
+    <h4 class="mrt-ov-print-key-title">{{ labels.printKeyTitle }}</h4>
     <table class="mrt-ov-print-key-table">
       <thead>
         <tr>
-          <th>Tecken</th>
-          <th>Betydelse</th>
+          <th>{{ labels.printKeySymbolCol }}</th>
+          <th>{{ labels.printKeyMeaningCol }}</th>
         </tr>
       </thead>
       <tbody>
@@ -23,6 +25,6 @@ defineProps<{
         </tr>
       </tbody>
     </table>
-    <p class="mrt-ov-print-key-note">Med reservation för ändring av tågtyp.</p>
+    <p class="mrt-ov-print-key-note">{{ labels.printKeyNote }}</p>
   </section>
 </template>

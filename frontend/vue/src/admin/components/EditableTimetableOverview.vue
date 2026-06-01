@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { overviewUiLabels } from '../../shared/overviewUiLabels';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
 import MrtOverviewBranchGroup from '../../components/overview/MrtOverviewBranchGroup.vue';
 import MrtOverviewPrintKey from '../../components/overview/MrtOverviewPrintKey.vue';
@@ -12,6 +13,7 @@ defineProps<{
 }>();
 
 const editor = useOverviewGridEdit();
+const labels = overviewUiLabels({});
 </script>
 
 <template>
@@ -31,10 +33,10 @@ const editor = useOverviewGridEdit();
         :editor="editor"
         :readonly="readonly"
       />
-      <MrtOverviewBranchGroup v-else :group="group" />
+      <MrtOverviewBranchGroup v-else :group="group" :labels="labels" />
       <div v-if="gi < data.groups.length - 1" class="mrt-ov-separator" aria-hidden="true" />
     </template>
 
-    <MrtOverviewPrintKey :rows="data.printKey" />
+    <MrtOverviewPrintKey :rows="data.printKey" :labels="labels" />
   </div>
 </template>

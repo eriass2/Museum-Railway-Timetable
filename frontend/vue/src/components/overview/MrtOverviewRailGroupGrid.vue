@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../types/timetableOverview';
+import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
+import { formatDeviationPlanned } from '../../shared/overviewUiLabels';
 import {
   buildHighlightStripeSpans,
   buildOverviewGridTracks,
@@ -21,11 +23,19 @@ const props = withDefaults(
   defineProps<{
     group: TimetableRailGroup;
     iconUrls: TimetableOverviewIconUrls;
+    labels: OverviewUiLabels;
     showDeviationMeta?: boolean;
     editableCells?: boolean;
   }>(),
   { showDeviationMeta: true, editableCells: false },
 );
+
+function deviationTitle(plannedName: string | undefined): string {
+  if (plannedName) {
+    return formatDeviationPlanned(props.labels.deviationPlanned, plannedName);
+  }
+  return props.labels.deviationFromPlan;
+}
 
 const gridTracks = computed(() => buildOverviewGridTracks(props.group.columns));
 const gridStyle = computed(() => overviewGridStyle(props.group.columns));
@@ -78,7 +88,7 @@ function stripeSpan(rowIndex: number, trackIndex: number) {
                 <abbr
                   v-if="showDeviationMeta && group.columns[track.columnIndex].isDeviation"
                   class="mrt-ov-deviation-mark"
-                  :title="group.columns[track.columnIndex].plannedTrainTypeName ? `Planerat: ${group.columns[track.columnIndex].plannedTrainTypeName}` : 'Avvikelse från planerad tågtyp'"
+                  :title="deviationTitle(group.columns[track.columnIndex].plannedTrainTypeName)"
                 >†</abbr>
               </span>
             </div>
