@@ -144,7 +144,7 @@ function MRT_ensure_option_backed_page(
 	string $post_name = ''
 ) {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		return new WP_Error( 'mrt_cap', __( 'Permission denied.', 'museum-railway-timetable' ) );
+		return new WP_Error( 'mrt_cap', __( 'Åtkomst nekad.', 'museum-railway-timetable' ) );
 	}
 
 	$post_id = (int) get_option( $option_key, 0 );
@@ -210,7 +210,7 @@ function MRT_ensure_timetable_public_page( WP_Post $timetable ) {
  */
 function MRT_sync_timetable_public_pages() {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		return new WP_Error( 'mrt_cap', __( 'Permission denied.', 'museum-railway-timetable' ) );
+		return new WP_Error( 'mrt_cap', __( 'Åtkomst nekad.', 'museum-railway-timetable' ) );
 	}
 
 	$errors = array();

@@ -70,7 +70,7 @@ function MRT_dev_reset_and_import() {
 	if ( ! MRT_dev_cli_allowed() ) {
 		return new WP_Error(
 			'mrt_not_dev',
-			'Dev reset requires WP_DEBUG, MRT_DEVELOPMENT, or WP-CLI.'
+			__( 'Utvecklingsåterställning kräver WP_DEBUG, MRT_DEVELOPMENT eller WP-CLI.', 'museum-railway-timetable' )
 		);
 	}
 	if ( ! function_exists( 'MRT_run_lennakatten_import_package' ) ) {
@@ -86,7 +86,8 @@ function MRT_dev_reset_and_import() {
 		return $import_result;
 	}
 	$import_message = sprintf(
-		'Stations: %d, Routes: %d, Timetables: %d, Services: %d.',
+		/* translators: 1: stations, 2: routes, 3: timetables, 4: services */
+		__( 'Stationer: %1$d, Rutter: %2$d, Tidtabeller: %3$d, Turer: %4$d.', 'museum-railway-timetable' ),
 		(int) ( $import_result['stations'] ?? 0 ),
 		(int) ( $import_result['routes'] ?? 0 ),
 		(int) ( $import_result['timetables'] ?? 0 ),

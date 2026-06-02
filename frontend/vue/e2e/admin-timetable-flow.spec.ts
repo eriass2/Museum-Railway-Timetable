@@ -10,6 +10,7 @@ const adminUrl =
     : '');
 
 test.describe('Vue admin timetable flow', () => {
+  test.describe.configure({ mode: 'serial' });
   test.skip(!adminUrl, 'Set MRT_E2E_WP_ADMIN_URL or MRT_E2E_WP_DEMO_URL');
 
   test.beforeEach(async ({ page }) => {
@@ -33,8 +34,11 @@ test.describe('Vue admin timetable flow', () => {
     await page.locator('.nav-tab', { hasText: 'Trafikdagar' }).click();
     await page.locator('input[type="date"]').fill(trafficDate);
     await page.getByRole('button', { name: 'Lägg till datum' }).click();
-    await page.getByRole('button', { name: 'Spara' }).first().click();
-    await expect(page.getByText('Trafikdagar sparade')).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('.admin-date-list li', { hasText: trafficDate })).toBeVisible({
+      timeout: 5_000,
+    });
+    await page.getByRole('button', { name: 'Spara', exact: true }).click();
+    await expect(page.getByText('Trafikdagar sparade')).toBeVisible({ timeout: 15_000 });
 
     await page.locator('.nav-tab', { hasText: 'Turer' }).click();
     const routeSelect = page.locator('.mrt-admin-trip-form select').first();

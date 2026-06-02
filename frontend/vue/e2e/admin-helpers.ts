@@ -1,5 +1,8 @@
 import type { Page } from '@playwright/test';
 
+/** Matches `dashboardTitle` in sv_SE (msgid shared with plugin name). */
+export const DASHBOARD_HEADING = /museum railway timetable|museijärnvägens tidtabell/i;
+
 /** Matches admin `useMobileAdmin` / WP admin mobile breakpoint. */
 export const ADMIN_MOBILE_VIEWPORT = { width: 390, height: 844 };
 

@@ -31,16 +31,16 @@ function MRT_dev_smoke_page_specs(): array {
 	return array(
 		array(
 			'option'     => MRT_OPTION_COMPONENTS_DEMO_PAGE_ID,
-			'title'      => __( 'Museum Railway Timetable – component demo', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Component demo', 'museum-railway-timetable' ),
+			'title'      => __( 'Museijärnvägens tidtabell – komponentdemo', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Komponentdemo', 'museum-railway-timetable' ),
 			'content'    => static function (): string {
 				return MRT_get_components_demo_page_content();
 			},
 		),
 		array(
 			'option'     => MRT_OPTION_WIZARD_SMOKE_PAGE_ID,
-			'title'      => __( 'Wizard smoke test', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Wizard smoke test', 'museum-railway-timetable' ),
+			'title'      => __( 'Wizard-smoketest', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Wizard-smoketest', 'museum-railway-timetable' ),
 			'content'    => sprintf(
 				'[museum_journey_wizard timetable="%s"]',
 				esc_attr( $tt )
@@ -59,7 +59,7 @@ function MRT_dev_smoke_page_specs(): array {
  */
 function MRT_ensure_dev_smoke_page( string $option_key, string $title, $content ) {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		return new WP_Error( 'mrt_cap', __( 'Permission denied.', 'museum-railway-timetable' ) );
+		return new WP_Error( 'mrt_cap', __( 'Åtkomst nekad.', 'museum-railway-timetable' ) );
 	}
 
 	$body = is_callable( $content ) ? (string) call_user_func( $content ) : (string) $content;
@@ -259,7 +259,7 @@ function MRT_get_or_create_dev_wp_navigation_post() {
 		return $nav_id;
 	}
 
-	$menu_name = __( 'Museum Railway (development)', 'museum-railway-timetable' );
+	$menu_name = __( 'Museijärnväg (utveckling)', 'museum-railway-timetable' );
 	$nav_id    = wp_insert_post(
 		wp_slash(
 			array(
@@ -456,7 +456,7 @@ function MRT_get_or_create_dev_nav_menu() {
 		return $stored;
 	}
 
-	$menu_name = __( 'Museum Railway (development)', 'museum-railway-timetable' );
+	$menu_name = __( 'Museijärnväg (utveckling)', 'museum-railway-timetable' );
 	$menu_id   = wp_create_nav_menu( $menu_name );
 	if ( is_wp_error( $menu_id ) ) {
 		return $menu_id;
@@ -491,11 +491,11 @@ function MRT_setup_development_navigation() {
 	if ( ! MRT_dev_cli_allowed() ) {
 		return new WP_Error(
 			'mrt_not_dev',
-			__( 'Development navigation is only available in development mode (WP_DEBUG or MRT_DEVELOPMENT) or WP-CLI.', 'museum-railway-timetable' )
+			__( 'Utvecklingsmeny är endast tillgänglig i utvecklingsläge (WP_DEBUG eller MRT_DEVELOPMENT) eller WP-CLI.', 'museum-railway-timetable' )
 		);
 	}
 	if ( ! current_user_can( 'manage_options' ) ) {
-		return new WP_Error( 'mrt_cap', __( 'Permission denied.', 'museum-railway-timetable' ) );
+		return new WP_Error( 'mrt_cap', __( 'Åtkomst nekad.', 'museum-railway-timetable' ) );
 	}
 
 	MRT_ensure_pretty_permalinks();

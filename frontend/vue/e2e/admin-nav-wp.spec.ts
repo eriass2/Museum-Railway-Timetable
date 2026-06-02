@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { adminNavLink, useAdminMobileViewport } from './admin-helpers';
+import { adminNavLink, useAdminMobileViewport, DASHBOARD_HEADING } from './admin-helpers';
 import { wpDemoUrl } from './wp-demo-url';
 import { loginWpAdmin } from './wp-admin-login';
 
@@ -18,6 +18,7 @@ async function expectStillSpa(page: import('@playwright/test').Page) {
 }
 
 test.describe('AdminNav integration (WordPress)', () => {
+  test.describe.configure({ mode: 'serial' });
   test.skip(!adminUrl, 'Set MRT_E2E_WP_ADMIN_URL or MRT_E2E_WP_DEMO_URL');
 
   test.beforeEach(async ({ page }) => {
@@ -48,7 +49,7 @@ test.describe('AdminNav integration (WordPress)', () => {
 
     await adminNavLink(page, 'Översikt').click();
     await expect(page).toHaveURL(/#\/dashboard/);
-    await expect(page.getByRole('heading', { name: /museum railway timetable/i })).toBeVisible({
+    await expect(page.getByRole('heading', { name: DASHBOARD_HEADING })).toBeVisible({
       timeout: 15_000,
     });
     await expectStillSpa(page);

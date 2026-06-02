@@ -16,7 +16,11 @@ Publikt Vue får strängar från PHP (`strings`, `wizard`, `labels`). Admin Vue 
 
 ## Kvar (valfritt / backlog)
 
-- Dev/QA-texter i `inc/admin/tools/*` – engelska källsträngar; svenska katalogen fyller `msgstr` från `msgid` (acceptabelt för intern QA)
+_Inga öppna i18n-punkter._
+
+## Senast klart
+
+- Dev/QA-texter i `inc/admin/tools/*` — svenska källsträngar (komponentdemo, debug-sidor, utvecklingsmeny, CLI-meddelanden).
 
 ## Underhåll
 

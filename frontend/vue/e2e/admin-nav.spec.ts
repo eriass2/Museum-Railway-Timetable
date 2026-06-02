@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { adminNavLink, useAdminMobileViewport } from './admin-helpers';
+import { adminNavLink, useAdminMobileViewport, DASHBOARD_HEADING } from './admin-helpers';
 
 const adminUrl = '/admin?page=mrt_app';
 
@@ -8,7 +8,7 @@ async function mountAdmin(page: import('@playwright/test').Page) {
   await page.goto(adminUrl);
   await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
   await expect(page.locator('.mrt-admin-shell__nav')).toBeVisible();
-  await expect(page.getByRole('heading', { name: /museum railway timetable/i })).toBeVisible({
+  await expect(page.getByRole('heading', { name: DASHBOARD_HEADING })).toBeVisible({
     timeout: 15_000,
   });
   await page.evaluate(() => {
@@ -33,7 +33,7 @@ test.describe('AdminNav integration (static mount)', () => {
       { tab: 'Tidtabeller', hash: '#/timetables', heading: /^tidtabeller$/i },
       { tab: 'Hjälp', hash: '#/help', heading: /^hjälp$/i },
       { tab: 'Priser', hash: '#/prices', heading: /^priser$/i },
-      { tab: 'Översikt', hash: '#/dashboard', heading: /museum railway timetable/i },
+      { tab: 'Översikt', hash: '#/dashboard', heading: DASHBOARD_HEADING },
     ];
 
     for (const step of steps) {

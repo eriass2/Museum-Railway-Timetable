@@ -14,10 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function MRT_component_debug_intro_html(): string {
 	return '<div class="mrt-alert mrt-alert-warning mrt-mb-lg"><p><strong>' .
-		esc_html__( 'Development UI page', 'museum-railway-timetable' ) .
+		esc_html__( 'Utvecklingssida för UI', 'museum-railway-timetable' ) .
 		'</strong> — ' .
 		esc_html__(
-			'Fixture data for fast layout work. Run Import Lennakatten for real month/overview data. Wizard debug presets use hardcoded sample trips.',
+			'Fixturdata för snabb layout. Kör Importera Lennakatten för riktiga månads-/översiktsdata. Wizard-debug använder hårdkodade exempelturer.',
 			'museum-railway-timetable'
 		) .
 		'</p></div>';
@@ -43,8 +43,8 @@ function MRT_component_debug_page_specs(): array {
 	return array(
 		array(
 			'option'     => 'mrt_debug_page_month_id',
-			'title'      => __( 'Debug – Month calendar', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Debug: Month', 'museum-railway-timetable' ),
+			'title'      => __( 'Debug – Månadskalender', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Debug: Månad', 'museum-railway-timetable' ),
 			'content'    => static function () use ( $date ): string {
 				return MRT_component_debug_intro_html() .
 					'[museum_timetable_month month="' . esc_attr( $date ) . '" show_counts="1" legend="1"]';
@@ -52,8 +52,8 @@ function MRT_component_debug_page_specs(): array {
 		),
 		array(
 			'option'     => 'mrt_debug_page_overview_id',
-			'title'      => __( 'Debug – Timetable overview', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Debug: Overview', 'museum-railway-timetable' ),
+			'title'      => __( 'Debug – Tidtabellsöversikt', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Debug: Översikt', 'museum-railway-timetable' ),
 			'content'    => static function () use ( $tt ): string {
 				return MRT_component_debug_intro_html() .
 					'[museum_timetable_overview timetable="' . esc_attr( $tt ) . '"]';
@@ -61,26 +61,26 @@ function MRT_component_debug_page_specs(): array {
 		),
 		array(
 			'option'     => 'mrt_debug_page_wizard_date_id',
-			'title'      => __( 'Debug – Wizard (date)', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Debug: Wizard date', 'museum-railway-timetable' ),
+			'title'      => __( 'Debug – Wizard (datum)', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Debug: Wizard datum', 'museum-railway-timetable' ),
 			'content'    => '[museum_journey_wizard embedded="1" debug="date"]',
 		),
 		array(
 			'option'     => 'mrt_debug_page_wizard_outbound_id',
-			'title'      => __( 'Debug – Wizard (outbound)', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Debug: Wizard outbound', 'museum-railway-timetable' ),
+			'title'      => __( 'Debug – Wizard (utresa)', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Debug: Wizard utresa', 'museum-railway-timetable' ),
 			'content'    => '[museum_journey_wizard embedded="1" debug="outbound"]',
 		),
 		array(
 			'option'     => 'mrt_debug_page_wizard_return_id',
-			'title'      => __( 'Debug – Wizard (return)', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Debug: Wizard return', 'museum-railway-timetable' ),
+			'title'      => __( 'Debug – Wizard (retur)', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Debug: Wizard retur', 'museum-railway-timetable' ),
 			'content'    => '[museum_journey_wizard embedded="1" debug="return"]',
 		),
 		array(
 			'option'     => 'mrt_debug_page_wizard_summary_id',
-			'title'      => __( 'Debug – Wizard (summary)', 'museum-railway-timetable' ),
-			'menu_label' => __( 'Debug: Wizard summary', 'museum-railway-timetable' ),
+			'title'      => __( 'Debug – Wizard (sammanfattning)', 'museum-railway-timetable' ),
+			'menu_label' => __( 'Debug: Wizard sammanfattning', 'museum-railway-timetable' ),
 			'content'    => '[museum_journey_wizard embedded="1" debug="summary"]',
 		),
 	);
@@ -120,7 +120,7 @@ function MRT_render_component_debug_page_admin_links(): void {
 		$page_id = (int) get_option( $spec['option'], 0 );
 		if ( $page_id <= 0 || ! get_post( $page_id ) ) {
 			echo '<li>' . esc_html( $spec['menu_label'] ) . ' — ' .
-				esc_html__( 'not created yet (run Set up development menu)', 'museum-railway-timetable' ) .
+				esc_html__( 'Inte skapad än (kör Sätt upp utvecklingsmeny)', 'museum-railway-timetable' ) .
 				'</li>';
 			continue;
 		}

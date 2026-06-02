@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { adminNavLink, gotoAdminRoute, useAdminMobileViewport } from './admin-helpers';
+import { adminNavLink, gotoAdminRoute, useAdminMobileViewport, DASHBOARD_HEADING } from './admin-helpers';
 import { wpDemoUrl } from './wp-demo-url';
 import { loginWpAdmin } from './wp-admin-login';
 
@@ -10,6 +10,7 @@ const adminUrl =
     : '');
 
 test.describe('Vue admin (WordPress)', () => {
+  test.describe.configure({ mode: 'serial' });
   test.skip(!adminUrl, 'Set MRT_E2E_WP_ADMIN_URL or MRT_E2E_WP_DEMO_URL');
 
   test.beforeEach(async ({ page }) => {
@@ -19,7 +20,9 @@ test.describe('Vue admin (WordPress)', () => {
   test('dashboard mounts with stats', async ({ page }) => {
     await page.goto(adminUrl);
     await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByRole('heading', { name: /museum railway timetable/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: DASHBOARD_HEADING })).toBeVisible({
+      timeout: 15_000,
+    });
     await expect(page.locator('.mrt-admin-stats')).toBeVisible({ timeout: 15_000 });
   });
 
@@ -35,7 +38,13 @@ test.describe('Vue admin (WordPress)', () => {
     await expect(page.getByRole('heading', { name: /stationer & rutter/i })).toBeVisible({
       timeout: 15_000,
     });
-    await expect(page.locator('.mrt-route-preview').first()).toBeVisible({ timeout: 15_000 });
+    await page.locator('.nav-tab', { hasText: /rutter/i }).click();
+    const preview = page.locator('.mrt-route-preview').first();
+    const empty = page.locator('.mrt-route-preview__empty');
+    await expect(preview.or(empty)).toBeVisible({ timeout: 15_000 });
+    if ((await preview.count()) === 0) {
+      test.skip(true, 'No routes in database — import demo data first');
+    }
   });
 
   test('mobile dashboard shows stat cards', async ({ page }) => {
@@ -54,12 +63,9 @@ test.describe('Vue admin (WordPress)', () => {
       timeout: 15_000,
     });
     const cards = page.locator('.mrt-admin-card-list__item');
-    const table = page.locator('table.widefat');
-    if ((await cards.count()) > 0) {
-      await expect(cards.first()).toBeVisible();
-    } else {
-      await expect(table.or(page.locator('.mrt-admin-card-list__empty'))).toBeVisible();
-    }
+    await expect(cards.first().or(page.getByText(/inga tidtabeller/i))).toBeVisible({
+      timeout: 15_000,
+    });
   });
 
   test('mobile timetable editor shows quick departure panel', async ({ page }) => {
