@@ -39,7 +39,7 @@ const labels = overviewUiLabels({});
         :editor="editor"
         :readonly="readonly"
       />
-      <MrtOverviewBranchGroup v-else :group="group" :labels="labels" />
+      <MrtOverviewBranchGroup v-else :group="group" :icon-urls="data.iconUrls" :labels="labels" />
       <div v-if="gi < data.groups.length - 1" class="mrt-ov-separator" aria-hidden="true" />
     </template>
 
