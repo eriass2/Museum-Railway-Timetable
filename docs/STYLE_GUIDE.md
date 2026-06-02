@@ -70,13 +70,14 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 
 ### Namnkonventioner
 - **Prefix** – Alla klasser: `.mrt-` (t.ex. `.mrt-timetable-overview`)
-- **BEM-liknande** – `.mrt-block--modifier` (t.ex. `.mrt-btn--primary`)
+- **BEM-liknande** – `.mrt-block--modifier` (t.ex. `.mrt-accent-btn--primary`, `MrtButton` med `variant`)
 - **Variabler** – CSS custom properties med `--mrt-` prefix
 
 ### Struktur
 - **Varumärke och UI** – Se [design/BRAND_UI.md](design/BRAND_UI.md) (scope, formspråk, typografi, branding i texter).
 - **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
-- **UI-klasser** – Vue-primitives i `assets/frontend/ui/` (barrel: `ui-components.css`). Legacy PHP-knappar m.m. i `ui/primitives.css`.
+- **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med scoped CSS; se [UI_LIBRARY.md](UI_LIBRARY.md) och [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md). Kvarvarande global modul-CSS: `assets/frontend/ui/` (wizard-steg, trips, kalender — barrel `ui-components.css`).
+- **Legacy PHP** – `.mrt-alert` m.m. i `assets/frontend/components-base.css` (demo-verktyg, bygg-varningar).
 - **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
 - **Inga inline styles** – All styling i CSS-filer.
@@ -84,7 +85,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Publik UI (wizard m.fl.)
 - **Primär accent:** `--mrt-color-accent-600` (`#DDD24C`) — Lennakatten varumärkesguld för CTA, aktivt steg och vald restyp (sparsamt; se [BRAND_UI.md](design/BRAND_UI.md)).
 - **Text på guld:** `--mrt-color-on-accent` (**svart**), enligt [grafisk profil](https://lennakatten.se/grafisk-profil/) och [BRAND_UI.md](design/BRAND_UI.md).
-- **Vue-bundle:** Publik CSS ligger under `frontend/vue/src/styles/` och byggs till `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + delade primitives); appar importerar egna moduler (`month-calendar.css`, `journey-wizard.css`, `timetable-overview.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
+- **Vue-bundle:** Publik CSS under `frontend/vue/src/styles/` → `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + vue-shell); varje app importerar egen modul (`month-calendar.css`, `journey-wizard.css`, `timetable-overview.css`, `timetable-index.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
 - **Månadskalender-CSS:** `frontend/vue/src/styles/month-calendar.css` — `.mrt-month-*`, `.mrt-month-day*` (tidtabellstyp-färger); importeras från `MonthCalendarApp.vue`. Wizard använder `.mrt-calendar-day--*` (bokningsbar/trafik/ingen).
 - **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — `base.css`, `wizard-shell.css`, `controls-form.css` (sök steg), `controls-calendar.css`, `steps-*.css`, `responsive.css`. Importeras från `JourneyWizardApp.vue`.
 - **Tidtabellsöversikt-CSS:** `frontend/vue/src/styles/timetable-overview.css` — block `.mrt-ov-*`, importeras från `MrtTimetableOverviewView.vue`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
@@ -92,10 +93,19 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i `controls-form.css` (scoped under `.mrt-journey-wizard .mrt-surface`).
 
 ### Exempel
+
+Publik (Vue):
+
 ```html
-<button class="mrt-button mrt-button--primary">Spara</button>
-<div class="mrt-card">...</div>
-<div class="mrt-form-field">...</div>
+<!-- Prefer MrtButton in Vue templates -->
+<button class="mrt-accent-btn mrt-accent-btn--primary">Sök resa</button>
+```
+
+Admin (Vue, wp-admin):
+
+```html
+<!-- MrtButton context="admin" → WP-klasser -->
+<button class="button button-primary">Spara</button>
 ```
 
 ---
@@ -124,7 +134,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **CSS** – `assets/admin.css` (WP-native skal) + `admin-shell.css` i Vue-bundeln.
 
 ### Publikt frontend (Vue)
-- **Ingen jQuery-frontend** – månad, översikt och wizard mountar Vue (`frontend/vue/`, byggt till `assets/dist/vue/`).
+- **Ingen jQuery-frontend** – månad, översikt, index och wizard mountar Vue (`frontend/vue/`, byggt till `assets/dist/vue/`).
 - **REST** – Vue anropar `wp-json/museum-railway-timetable/v1/` med nonce från mount-config.
 - **CSS** – Vite-bundel; källfiler under `frontend/vue/src/styles/` (se §3 CSS).
 
@@ -182,7 +192,8 @@ museum-railway-timetable/
 ├── frontend/vue/src/styles/       # Vue-ägd publik CSS (se §3 CSS)
 │   ├── mrt-public.css             # tokens + assets primitives + vue-shell
 │   ├── journey-wizard/            # wizard-moduler
-│   └── timetable-overview.css     # .mrt-ov-* tidtabell
+│   ├── timetable-overview.css     # .mrt-ov-* tidtabell
+│   └── timetable-index.css        # .mrt-timetable-index__*
 └── languages/
 ```
 

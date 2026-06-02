@@ -11,7 +11,8 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 - [ ] **`[museum_journey_wizard]`** – Tabba igenom steg; kalender och fel; zoom 200 %; tågtypsikoner i resultat.
 - [ ] **`[museum_timetable_month]`** – Månadsnav; trafikdag med `aria-pressed`; panel under kalendern.
 - [ ] **`[museum_timetable_overview]`** – Region per rutt; `h3` + beskrivande namn på tidsceller i rutnät.
-- [ ] **Admin** – Synlig `:focus-visible` på minst en sida med `mrt-btn`.
+- [ ] **`[museum_timetable_index]`** – Listan renderas (Vue); kort/länkar tabbbara; färgmarkör synlig.
+- [ ] **Admin** – Synlig `:focus-visible` på `MrtButton` / WP `.button` (t.ex. dashboard snabbstart).
 - [ ] **Miljö** – Samma tema/plugins som produktion; kort NVDA/VoiceOver-session.
 - [ ] **Översättningar** – Uppdatera `languages/*.po`, kompilera `.mo` (Poedit eller `msgfmt`).
 
@@ -39,6 +40,8 @@ Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell r
 **Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid laddning. Filer: `inc/public/month-calendar/`, `frontend/vue/src/apps/MonthCalendarApp.vue`.
 
 **Översikt:** Vue-komponenter med `role="region"`, `h3` per rutt, semantisk tabell för branch-bussar. Filer: `inc/domain/timetable/view/overview-data.php`, `frontend/vue/src/components/overview/`.
+
+**Tidtabellsindex:** Vue-lista med `nav` + länkkort; `aria-label` per kort (titel + meta). Filer: `inc/public/timetable-index/`, `frontend/vue/src/apps/TimetableIndexApp.vue`.
 
 ---
 

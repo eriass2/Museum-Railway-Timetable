@@ -42,9 +42,14 @@ Valideringen inkluderar statiska a11y-markörer i publika moduler (region, aria-
 - [ ] Tidsceller har beskrivande `aria-label` (station + tåg + tid)
 - [ ] Tågtypsikoner syns i rutnätet
 
+### Tidtabellsindex
+
+- [ ] `[museum_timetable_index]`: minst ett kort synligt; länk/tab fungerar
+- [ ] Introtext och färgmarkör (grön/gul/röd/orange) syns
+
 ### Admin
 
-- [ ] Railway Timetable → dashboard: `.mrt-btn` har synlig `:focus-visible`
+- [ ] Railway Timetable → dashboard: `MrtButton` / WP `.button` har synlig `:focus-visible`
 - [ ] Import / demo / clear: formulär kan tabbas; fel/notice läsbara
 
 ### Miljö

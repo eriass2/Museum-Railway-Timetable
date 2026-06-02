@@ -2,7 +2,7 @@
 
 Städning efter Vue-migrering: tydligare lager, mindre duplicering, bättre återanvändbarhet.
 
-**Status: klar** (juni 2026). Alla steg 1–7 är genomförda. Dokumentet behålls som referens för import-kedja och regler efter refactor.
+**Status: klar** (juni 2026). Ursprungliga steg 1–7 genomförda. Efterföljande UI-biblioteksarbete (colocated primitiver, Vue index) dokumenteras i [UI_LIBRARY.md](../UI_LIBRARY.md).
 
 ## Mål
 
@@ -12,20 +12,21 @@ Städning efter Vue-migrering: tydligare lager, mindre duplicering, bättre åte
 4. Delade kalender-tokens (månad + wizard)
 5. Modulära UI-CSS-filer under `assets/frontend/ui/`
 
-## Lager (målbild)
+## Lager (nuvarande)
 
 ```
 mrt-color-tokens.css, mrt-typography.css
   → tokens.css (spacing, legacy aliases)
-  → components-base.css (card, alert PHP)
+  → components-base.css (card, alert — PHP legacy)
   → ui-components.css (barrel @import)
-      → ui/primitives.css
+      → ui/primitives.css          (.mrt-empty, m.m.)
       → ui/calendar-tokens.css
-      → ui/*.css (alerts, wizard, calendar, trips, …)
-  → app-CSS i frontend/vue/src/styles/ (wizard, overview)
+      → ui/*.css (wizard, calendar, trips, …)
+  → Vue SFC scoped CSS             (MrtAlert, MrtButton, MrtDot, MrtSurfaceCard)
+  → app-CSS i frontend/vue/src/styles/ (wizard, overview, index, month)
 ```
 
-## Steg
+## Steg (historik)
 
 | # | Åtgärd | Commit |
 |---|--------|--------|
@@ -37,11 +38,14 @@ mrt-color-tokens.css, mrt-typography.css
 | 6 | Flytta `month-calendar.css` → Vue (`MonthCalendarApp.vue`) | ✓ |
 | 7 | Ta bort döda meta-box CSS (`meta-boxes-*.css`) + doc-referenser | ✓ |
 
-**Alla steg klara.** Framtida CSS-arbete följer avsnittet *Regler efter refactor* nedan — inga öppna refactor-punkter kvar.
+**Alla ursprungliga steg klara.**
 
 ## Regler efter refactor
 
-- Nya Vue-primitives → `assets/frontend/ui/<område>.css` + rad i barrel
-- App-specifikt → `frontend/vue/src/styles/<app>/` eller `<app>.css` eller `<app>.css` (t.ex. `month-calendar.css`, `journey-wizard/`)
-- Tokens → `mrt-color-tokens.css` / `mrt-typography.css` — aldrig nya hex i komponenter
+**Gällande (se [UI_LIBRARY.md](../UI_LIBRARY.md)):**
+
+- **Nya Vue-primitiver** → scoped CSS i `frontend/vue/src/components/ui/` (inte nya filer i `assets/frontend/ui/`)
+- **Domän-/app-CSS** → `frontend/vue/src/styles/<app>/` (wizard, overview, index, month)
+- **Kvarvarande global modul-CSS** → `assets/frontend/ui/` (trips, wizard-steg, kalender) tills colocated
+- **Tokens** → `mrt-color-tokens.css` / `mrt-typography.css` — aldrig nya hex i komponenter
 - Se [STYLE_GUIDE.md](../STYLE_GUIDE.md) §3 och [VUE_UI_COMPONENTS.md](../VUE_UI_COMPONENTS.md)
