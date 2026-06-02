@@ -31,6 +31,12 @@ import { useAdminRowFlash } from '../composables/useAdminRowFlash';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
+import {
+  formatStationPriceZones,
+  stationHasPriceZone,
+  STATION_PRICE_ZONE_OPTIONS,
+  toggleStationPriceZone,
+} from '../utils/stationPriceZones';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -59,7 +65,10 @@ watch(
     if (!payload) {
       return;
     }
-    stations.value = payload.stations.map((row) => ({ ...row }));
+    stations.value = payload.stations.map((row) => ({
+      ...row,
+      price_zones: row.price_zones ?? [],
+    }));
     routes.value = payload.routes.map((row) => ({ ...row }));
   },
   { immediate: true },
@@ -233,6 +242,7 @@ async function removeRoute(route: RouteRow) {
             <th>{{ adminStr(cfg, 'stationsColLat') }}</th>
             <th>{{ adminStr(cfg, 'stationsColLng') }}</th>
             <th>{{ adminStr(cfg, 'stationsColBus') }}</th>
+            <th>{{ adminStr(cfg, 'stationsColZones') }}</th>
             <th>{{ adminStr(cfg, 'stationsColOrder') }}</th>
             <th v-if="cfg.canManage"></th>
           </tr>
@@ -284,6 +294,27 @@ async function removeRoute(route: RouteRow) {
                 type="checkbox"
               />
               <span v-else>{{ st.bus_suffix ? adminStr(cfg, 'yes') : '—' }}</span>
+            </td>
+            <td>
+              <div
+                v-if="cfg.canManage"
+                class="mrt-admin-zone-picks"
+                :aria-label="adminStr(cfg, 'stationsColZones')"
+              >
+                <label
+                  v-for="zone in STATION_PRICE_ZONE_OPTIONS"
+                  :key="`${st.id}-${zone}`"
+                  class="mrt-admin-zone-picks__item"
+                >
+                  <input
+                    type="checkbox"
+                    :checked="stationHasPriceZone(st, zone)"
+                    @change="toggleStationPriceZone(st, zone)"
+                  />
+                  {{ zone }}
+                </label>
+              </div>
+              <span v-else>{{ formatStationPriceZones(st.price_zones) }}</span>
             </td>
             <td>
               <input v-if="cfg.canManage" v-model.number="st.display_order" type="number" class="small-text" />

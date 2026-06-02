@@ -86,7 +86,7 @@ function MRT_admin_vue_help_admin_sections(): array {
 		array(
 			'title' => __( 'Stationer & rutter', 'museum-railway-timetable' ),
 			'body'  => __(
-				'Grunddata: stationer (namn, typ, koordinater, buss-suffix) och rutter med stationer i ordning. Rutten styr vilka hållplatser som finns i stopptidsrutnätet.',
+				'Grunddata: stationer (namn, typ, koordinater, buss-suffix, priszoner) och rutter med stationer i ordning. Rutten styr vilka hållplatser som finns i stopptidsrutnätet.',
 				'museum-railway-timetable'
 			),
 		),

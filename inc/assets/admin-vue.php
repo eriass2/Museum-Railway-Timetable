@@ -171,6 +171,7 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsColLat'             => __( 'Lat', 'museum-railway-timetable' ),
 		'stationsColLng'             => __( 'Lng', 'museum-railway-timetable' ),
 		'stationsColBus'             => __( 'Buss', 'museum-railway-timetable' ),
+		'stationsColZones'           => __( 'Priszoner', 'museum-railway-timetable' ),
 		'stationsColOrder'           => __( 'Ordning', 'museum-railway-timetable' ),
 		'stationsColStations'        => __( 'Stationer', 'museum-railway-timetable' ),
 		'stationsTypeStation'        => __( 'Station', 'museum-railway-timetable' ),
