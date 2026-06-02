@@ -30,12 +30,8 @@ function MRT_timetable_branch_group_to_json( array $group, string $dateYmd ): ar
 			'trips'      => array(),
 		);
 	}
-	$from_label   = $from_station
-		? sprintf( __( 'Från %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $from_station ) )
-		: '';
-	$to_label     = $to_station
-		? sprintf( __( 'Till %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $to_station ) )
-		: '';
+	$from_label = sprintf( __( 'Från %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $from_station ) );
+	$to_label   = sprintf( __( 'Till %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $to_station ) );
 
 	$station_ids = array_map( 'intval', (array) ( $group['stations'] ?? array() ) );
 	$mid_station = null;

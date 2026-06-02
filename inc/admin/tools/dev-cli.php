@@ -115,7 +115,7 @@ function MRT_dev_reset_and_import() {
 
 	return array(
 		'cleared'        => true,
-		'import_message' => is_string( $import_message ) ? $import_message : '',
+		'import_message' => $import_message,
 		'navigation'     => $nav_result,
 		'pages'          => MRT_dev_smoke_page_permalinks(),
 		'admin'          => admin_url( 'admin.php?page=' . MRT_ADMIN_APP_SLUG ),
