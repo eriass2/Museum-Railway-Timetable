@@ -116,7 +116,7 @@ function MRT_journey_connection_departure_hhmm( array $connection ): string {
 /**
  * Collect transfer options before filtering and sorting.
  *
- * @return array<int, array{transfer: array<string, mixed>, priority: int, wait: int, departure: string}>
+ * @return array<int, array{transfer: array<string, mixed>, priority: int, wait: int, departure: string, dedupe_key: string}>
  */
 function MRT_journey_collect_transfer_candidates( $from_station_id, $to_station_id, $dateYmd, $min_transfer_minutes ) {
 	$candidates  = array();
@@ -283,6 +283,7 @@ function MRT_find_multi_leg_connections( $from_station_id, $to_station_id, $date
 			$results[] = MRT_journey_wrap_direct_multi( $conn, $dateYmd, $from_station_id, $to_station_id );
 		}
 	}
+	/** @var array<string, bool> $seen */
 	$seen = array();
 	$min  = $min_transfer_minutes > 0 ? (int) $min_transfer_minutes : MRT_journey_min_transfer_minutes();
 	MRT_journey_append_transfer_options( $results, $seen, $from_station_id, $to_station_id, $dateYmd, $min );
