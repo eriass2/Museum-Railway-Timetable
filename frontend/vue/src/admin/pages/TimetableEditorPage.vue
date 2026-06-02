@@ -16,6 +16,7 @@ import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminFormActions,
   AdminPanel,
+  MrtButton,
 } from '../components/ui';
 import TimetableEditorDatesTab from '../components/timetable-editor/TimetableEditorDatesTab.vue';
 import TimetableEditorDeviationsTab from '../components/timetable-editor/TimetableEditorDeviationsTab.vue';
@@ -281,12 +282,12 @@ function onMobileSaved(message: string) {
         </select>
       </p>
       <AdminFormActions>
-        <button type="button" class="button button-primary" @click="saveMeta">
+        <MrtButton context="admin" variant="primary" @click="saveMeta">
           {{ adminStr(cfg, 'editorSaveMeta') }}
-        </button>
-        <button type="button" class="button button-link-delete" @click="removeTimetable">
+        </MrtButton>
+        <MrtButton context="admin" variant="link-delete" @click="removeTimetable">
           {{ adminStr(cfg, 'editorDeleteTimetable') }}
-        </button>
+        </MrtButton>
       </AdminFormActions>
     </AdminPanel>
     <h1 v-else-if="detail">{{ detail.title }}</h1>

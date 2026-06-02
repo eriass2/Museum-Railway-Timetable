@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
 import type { DashboardPayload } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import { AdminActionBar, AdminPanel } from '../components/ui';
+import { AdminActionBar, AdminPanel, MrtButton } from '../components/ui';
 import AdminSetupChecklist from '../components/AdminSetupChecklist.vue';
 import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
@@ -96,9 +96,9 @@ function openRoute(hashRoute: string) {
         <h2>{{ adminStr(cfg, 'dashboardWarningsTitle', 'Varningar') }}</h2>
         <ul class="mrt-admin-warnings">
           <li v-for="w in data.warnings" :key="w.code + w.message">
-            <button type="button" class="button-link" @click="openRoute(w.route)">
+            <MrtButton context="admin" variant="link" @click="openRoute(w.route)">
               {{ w.message }}
-            </button>
+            </MrtButton>
           </li>
         </ul>
       </AdminPanel>
@@ -117,13 +117,13 @@ function openRoute(hashRoute: string) {
               <tr v-for="row in data.next_traffic" :key="row.date + row.timetable_id">
                 <td>{{ row.date }}</td>
                 <td>
-                  <button
-                    type="button"
-                    class="button-link"
+                  <MrtButton
+                    context="admin"
+                    variant="link"
                     @click="router.push(`/timetables/${row.timetable_id}`)"
                   >
                     {{ row.title }}
-                  </button>
+                  </MrtButton>
                 </td>
               </tr>
             </tbody>
@@ -134,24 +134,25 @@ function openRoute(hashRoute: string) {
       <AdminPanel>
         <h2>{{ adminStr(cfg, 'dashboardQuickstartTitle', 'Snabbstart') }}</h2>
         <AdminActionBar>
-          <button type="button" class="button button-primary" @click="router.push('/stations-routes')">
+          <MrtButton context="admin" variant="primary" @click="router.push('/stations-routes')">
             {{ adminStr(cfg, 'dashboardQuickStations', 'Stationer & rutter') }}
-          </button>
-          <button type="button" class="button" @click="router.push('/timetables')">
+          </MrtButton>
+          <MrtButton context="admin" variant="secondary" @click="router.push('/timetables')">
             {{ adminStr(cfg, 'dashboardQuickTimetables', 'Hantera tidtabeller') }}
-          </button>
-          <button type="button" class="button" @click="router.push('/help')">
+          </MrtButton>
+          <MrtButton context="admin" variant="secondary" @click="router.push('/help')">
             {{ adminStr(cfg, 'dashboardQuickHelp', 'Hjälp & FAQ') }}
-          </button>
-          <a
+          </MrtButton>
+          <MrtButton
             v-if="data.links.front"
-            class="button"
+            context="admin"
+            variant="secondary"
             :href="data.links.front"
             target="_blank"
             rel="noopener"
           >
             {{ adminStr(cfg, 'dashboardViewSite', 'Visa webbplats') }}
-          </a>
+          </MrtButton>
         </AdminActionBar>
       </AdminPanel>
     </template>

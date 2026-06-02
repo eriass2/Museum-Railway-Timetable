@@ -21,6 +21,7 @@ import {
   AdminRowActions,
   AdminStatusMessage,
   AdminTableScroll,
+  MrtButton,
 } from '../components/ui';
 import RoutePreview from '../components/RoutePreview.vue';
 import { routePreviewTypeLabel } from '../utils/routePreviewNodes';
@@ -211,9 +212,9 @@ async function removeRoute(route: RouteRow) {
           class="regular-text"
           :placeholder="adminStr(cfg, 'stationsNewStation')"
         />
-        <button type="button" class="button button-primary" @click="addStation">
+        <MrtButton context="admin" variant="primary" @click="addStation">
           {{ adminStr(cfg, 'add') }}
-        </button>
+        </MrtButton>
       </AdminInlineForm>
       <AdminEmptyState
         v-if="!stations.length"
@@ -287,12 +288,12 @@ async function removeRoute(route: RouteRow) {
             </td>
             <td v-if="cfg.canManage">
               <AdminRowActions>
-                <button type="button" class="button" @click="saveStationMeta(st)">
+                <MrtButton context="admin" variant="secondary" @click="saveStationMeta(st)">
                   {{ adminStr(cfg, 'save') }}
-                </button>
-                <button type="button" class="button button-link-delete" @click="removeStation(st)">
+                </MrtButton>
+                <MrtButton context="admin" variant="link-delete" @click="removeStation(st)">
                   {{ adminStr(cfg, 'delete') }}
-                </button>
+                </MrtButton>
               </AdminRowActions>
             </td>
           </AdminFlashRow>
@@ -310,9 +311,9 @@ async function removeRoute(route: RouteRow) {
           class="regular-text"
           :placeholder="adminStr(cfg, 'stationsNewRoute')"
         />
-        <button type="button" class="button button-primary" @click="addRoute">
+        <MrtButton context="admin" variant="primary" @click="addRoute">
           {{ adminStr(cfg, 'add') }}
-        </button>
+        </MrtButton>
       </AdminInlineForm>
       <AdminEmptyState
         v-if="!routes.length"
@@ -342,17 +343,17 @@ async function removeRoute(route: RouteRow) {
             </td>
             <td>
               <AdminRowActions>
-                <button v-if="cfg.canManage" type="button" class="button" @click="editRoute(route)">
+                <MrtButton v-if="cfg.canManage" context="admin" variant="secondary" @click="editRoute(route)">
                   {{ adminStr(cfg, 'edit') }}
-                </button>
-                <button
+                </MrtButton>
+                <MrtButton
                   v-if="cfg.canManage"
-                  type="button"
-                  class="button button-link-delete"
+                  context="admin"
+                  variant="link-delete"
                   @click="removeRoute(route)"
                 >
                   {{ adminStr(cfg, 'delete') }}
-                </button>
+                </MrtButton>
               </AdminRowActions>
             </td>
           </tr>
@@ -395,8 +396,8 @@ async function removeRoute(route: RouteRow) {
             {{ stations.find((s) => s.id === sid)?.title || sid }}
           </span>
           <AdminRowActions>
-            <button type="button" class="button" @click="moveStation(idx, -1)">↑</button>
-            <button type="button" class="button" @click="moveStation(idx, 1)">↓</button>
+            <MrtButton context="admin" variant="secondary" @click="moveStation(idx, -1)">↑</MrtButton>
+            <MrtButton context="admin" variant="secondary" @click="moveStation(idx, 1)">↓</MrtButton>
           </AdminRowActions>
         </li>
       </ol>
@@ -405,17 +406,17 @@ async function removeRoute(route: RouteRow) {
           <option :value="0">{{ adminStr(cfg, 'stationsAddStationPrompt') }}</option>
           <option v-for="st in stations" :key="st.id" :value="st.id">{{ st.title }}</option>
         </select>
-        <button type="button" class="button" @click="appendStationToRoute">
+        <MrtButton context="admin" variant="secondary" @click="appendStationToRoute">
           {{ adminStr(cfg, 'add') }}
-        </button>
+        </MrtButton>
       </AdminInlineForm>
       <AdminFormActions>
-        <button type="button" class="button button-primary" @click="saveRoute">
+        <MrtButton context="admin" variant="primary" @click="saveRoute">
           {{ adminStr(cfg, 'stationsSaveRoute') }}
-        </button>
-        <button type="button" class="button" @click="editingRoute = null">
+        </MrtButton>
+        <MrtButton context="admin" variant="secondary" @click="editingRoute = null">
           {{ adminStr(cfg, 'cancel') }}
-        </button>
+        </MrtButton>
       </AdminFormActions>
     </AdminPanel>
     </AdminLoadState>

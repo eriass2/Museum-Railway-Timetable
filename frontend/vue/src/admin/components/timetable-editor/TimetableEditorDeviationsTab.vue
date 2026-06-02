@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdminFormActions, AdminInlineField, AdminPanel, AdminTrainTypeCell } from '../ui';
+import { AdminFormActions, AdminInlineField, AdminPanel, AdminTrainTypeCell, MrtButton } from '../ui';
 import type { TimetableDetail } from '../../types';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
@@ -61,9 +61,9 @@ const emit = defineEmits<{ save: [] }>();
       </tbody>
     </table>
     <AdminFormActions v-if="canOperate">
-      <button type="button" class="button button-primary" @click="emit('save')">
+      <MrtButton context="admin" variant="primary" @click="emit('save')">
         {{ adminStr(cfg, 'editorSaveDeviations') }}
-      </button>
+      </MrtButton>
     </AdminFormActions>
   </AdminPanel>
 </template>

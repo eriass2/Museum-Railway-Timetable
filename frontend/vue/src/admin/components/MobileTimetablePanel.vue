@@ -6,6 +6,7 @@ import { adminConfig } from '../types';
 import { adminStr } from '../utils/adminLabels';
 import MobileQuickDeparture from './MobileQuickDeparture.vue';
 import MobileCancelTraffic from './MobileCancelTraffic.vue';
+import { MrtButton } from './ui';
 
 const props = defineProps<{
   timetableId: number;
@@ -135,9 +136,9 @@ async function saveDeviationChanges() {
         </p>
       </div>
       <p v-if="canOperate && deviationRows.length">
-        <button type="button" class="button button-primary widefat" @click="saveDeviationChanges">
+        <MrtButton context="admin" variant="primary" wide @click="saveDeviationChanges">
           {{ adminStr(cfg, 'editorSaveDeviations') }}
-        </button>
+        </MrtButton>
       </p>
       <p v-else-if="!deviationRows.length" class="description">
         {{ adminStr(cfg, 'mobileNoDeviations') }}

@@ -5,6 +5,7 @@ import type { StopTimeRow } from '../types';
 import { adminConfig } from '../types';
 import { adminStr } from '../utils/adminLabels';
 import AdminFormActions from './ui/AdminFormActions.vue';
+import { MrtButton } from './ui';
 
 const props = defineProps<{ serviceId: number }>();
 const cfg = adminConfig();
@@ -99,9 +100,9 @@ async function save(explicit = true) {
       </tbody>
     </table>
     <AdminFormActions v-if="cfg.canManage || cfg.canOperate">
-      <button type="button" class="button button-primary" @click="save(true)">
+      <MrtButton context="admin" variant="primary" @click="save(true)">
         {{ adminStr(cfg, 'stopTimesSaveButton') }}
-      </button>
+      </MrtButton>
     </AdminFormActions>
   </div>
 </template>

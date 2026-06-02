@@ -3,7 +3,7 @@ import { computed, onMounted, ref } from 'vue';
 import { getPrices, savePrices } from '../api/adminRest';
 import type { PricesPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
+import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
 import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
@@ -114,9 +114,9 @@ async function submit() {
         </tbody>
       </table>
       <AdminFormActions>
-        <button type="submit" class="button button-primary">
+        <MrtButton context="admin" variant="primary" type="submit">
           {{ adminStr(cfg, 'pricesSaveButton') }}
-        </button>
+        </MrtButton>
         <AdminStatusMessage v-if="saved" :message="saved" />
       </AdminFormActions>
     </form>

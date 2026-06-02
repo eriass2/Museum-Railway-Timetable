@@ -7,7 +7,7 @@ import {
   devSetupNavigation,
   devSyncTimetablePages,
 } from '../api/adminRest';
-import { AdminPanel, AdminStatusMessage, AdminToolList } from '../components/ui';
+import { AdminPanel, AdminStatusMessage, AdminToolList, MrtButton } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
 import { adminConfig } from '../types';
 import { adminStr } from '../utils/adminLabels';
@@ -65,31 +65,31 @@ async function run(action: string, fn: () => Promise<unknown>) {
       <AdminStatusMessage v-if="error" :message="error" type="error" />
       <AdminPanel>
         <AdminToolList>
-          <button
-            type="button"
-            class="button button-link-delete"
+          <MrtButton
+            context="admin"
+            variant="link-delete"
             :disabled="!!busy"
             @click="run('clear', devClearDatabase)"
           >
             {{ adminStr(cfg, 'devClearButton') }}
-          </button>
-          <button
-            type="button"
-            class="button button-primary"
+          </MrtButton>
+          <MrtButton
+            context="admin"
+            variant="primary"
             :disabled="!!busy"
             @click="run('import', devImportLennakatten)"
           >
             {{ adminStr(cfg, 'devImportButton') }}
-          </button>
-          <button type="button" class="button" :disabled="!!busy" @click="run('demo', devCreateDemoPage)">
+          </MrtButton>
+          <MrtButton context="admin" variant="secondary" :disabled="!!busy" @click="run('demo', devCreateDemoPage)">
             {{ adminStr(cfg, 'devDemoButton') }}
-          </button>
-          <button type="button" class="button" :disabled="!!busy" @click="run('nav', devSetupNavigation)">
+          </MrtButton>
+          <MrtButton context="admin" variant="secondary" :disabled="!!busy" @click="run('nav', devSetupNavigation)">
             {{ adminStr(cfg, 'devNavButton') }}
-          </button>
-          <button type="button" class="button" :disabled="!!busy" @click="run('pages', devSyncTimetablePages)">
+          </MrtButton>
+          <MrtButton context="admin" variant="secondary" :disabled="!!busy" @click="run('pages', devSyncTimetablePages)">
             {{ adminStr(cfg, 'devPagesButton') }}
-          </button>
+          </MrtButton>
         </AdminToolList>
         <p v-if="cfg.componentDemoAdminUrl" class="description mrt-mt-sm">
           <a :href="cfg.componentDemoAdminUrl">{{ adminStr(cfg, 'devComponentDemoLink') }}</a>

@@ -5,6 +5,7 @@ import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
 import { adminConfig } from '../types';
 import { adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
+import { MrtButton } from './ui';
 
 const props = defineProps<{
   traffic: TrafficToday;
@@ -59,14 +60,15 @@ async function cancelAll() {
       {{ adminStr(cfg, 'mobileCancelAllCancelled') }}
     </p>
     <p v-else-if="canOperate">
-      <button
-        type="button"
-        class="button button-primary widefat"
+      <MrtButton
+        context="admin"
+        variant="primary"
+        wide
         :disabled="busy || traffic.services_count === 0"
         @click="cancelAll"
       >
         {{ adminStr(cfg, 'mobileCancelButton') }}
-      </button>
+      </MrtButton>
     </p>
     <p v-else class="description">{{ adminStr(cfg, 'mobileCancelNoPermission') }}</p>
   </div>

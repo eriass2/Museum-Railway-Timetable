@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAdminConfirmDialog } from '../composables/adminConfirm';
+import { MrtButton } from './ui';
 
 const { open, options, confirm, cancel } = useAdminConfirmDialog();
 
@@ -39,17 +40,16 @@ function onKeydown(event: KeyboardEvent) {
           {{ options.message }}
         </p>
         <p class="mrt-admin-confirm__actions">
-          <button type="button" class="button" @click="cancel">
+          <MrtButton context="admin" variant="secondary" @click="cancel">
             {{ options.cancelLabel }}
-          </button>
-          <button
-            type="button"
-            class="button"
-            :class="options.danger ? 'button-link-delete' : 'button-primary'"
+          </MrtButton>
+          <MrtButton
+            context="admin"
+            :variant="options.danger ? 'link-delete' : 'primary'"
             @click="confirm"
           >
             {{ options.confirmLabel }}
-          </button>
+          </MrtButton>
         </p>
       </div>
     </div>

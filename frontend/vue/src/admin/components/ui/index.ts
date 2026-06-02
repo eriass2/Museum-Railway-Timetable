@@ -1,3 +1,4 @@
+export { MrtButton } from '@/components/ui';
 export { default as AdminActionBar } from './AdminActionBar.vue';
 export { default as AdminDateList } from './AdminDateList.vue';
 export { default as AdminDisclosure } from './AdminDisclosure.vue';

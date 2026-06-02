@@ -67,14 +67,14 @@ Alla delade primitiver accepterar `context`:
 | `MrtButton` | ersätter `MrtAccentButton` | ny — gradvis migration | skapad |
 | `MrtDot` | legend, kalender | — | skapad |
 
-### Fas 2 — planerad
+### Fas 2 — påbörjad ✓
 
-| Åtgärd | Beskrivning |
-|--------|-------------|
-| Migrera admin-knappar | Ersätt rå `<button class="button">` med `MrtButton context="admin"` |
-| Colocate CSS | Flytta `assets/frontend/ui/alerts.css` m.fl. till SFC `<style scoped>` |
-| Ta bort död CSS | `.mrt-btn`, `.mrt-badge`, `.mrt-form-*` (oanvända) |
-| `AdminPanel` → `MrtPanel` | valfritt — panel med `context` |
+| Åtgärd | Beskrivning | Status |
+|--------|-------------|--------|
+| Migrera admin-knappar | `MrtButton context="admin"` i alla admin-sidor | ✓ |
+| Colocate CSS | Flytta `assets/frontend/ui/alerts.css` m.fl. till SFC | planerad |
+| Ta bort död CSS | `.mrt-btn`, `.mrt-badge`, `.mrt-form-*` | planerad |
+| `AdminPanel` → `MrtPanel` | valfritt | planerad |
 
 ### Fas 3 — större
 

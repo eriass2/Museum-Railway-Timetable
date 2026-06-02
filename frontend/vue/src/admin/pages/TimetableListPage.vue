@@ -10,6 +10,7 @@ import {
   AdminPanel,
   AdminRowActions,
   AdminTableScroll,
+  MrtButton,
 } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
@@ -107,9 +108,9 @@ async function removeTimetable(id: number, title: string) {
             class="regular-text"
             :placeholder="adminStr(cfg, 'timetablesNamePlaceholder')"
           />
-          <button type="button" class="button button-primary" @click="createNew">
+          <MrtButton context="admin" variant="primary" @click="createNew">
             {{ adminStr(cfg, 'timetablesCreateButton') }}
-          </button>
+          </MrtButton>
         </AdminInlineForm>
       </AdminPanel>
 
@@ -118,17 +119,17 @@ async function removeTimetable(id: number, title: string) {
           <strong>{{ row.title }}</strong>
           <p class="description">{{ cardSummary(row) }}</p>
           <AdminRowActions stack>
-            <button type="button" class="button button-primary" @click="openEditor(row.id)">
+            <MrtButton context="admin" variant="primary" @click="openEditor(row.id)">
               {{ adminStr(cfg, 'edit') }}
-            </button>
-            <button
+            </MrtButton>
+            <MrtButton
               v-if="cfg.canManage"
-              type="button"
-              class="button button-link-delete"
+              context="admin"
+              variant="link-delete"
               @click="removeTimetable(row.id, row.title)"
             >
               {{ adminStr(cfg, 'delete') }}
-            </button>
+            </MrtButton>
           </AdminRowActions>
         </li>
         <li v-if="!items.length">
@@ -162,17 +163,17 @@ async function removeTimetable(id: number, title: string) {
                 <td>{{ row.trips_count }}</td>
                 <td>
                   <AdminRowActions>
-                    <button type="button" class="button" @click="openEditor(row.id)">
+                    <MrtButton context="admin" variant="secondary" @click="openEditor(row.id)">
                       {{ adminStr(cfg, 'edit') }}
-                    </button>
-                    <button
+                    </MrtButton>
+                    <MrtButton
                       v-if="cfg.canManage"
-                      type="button"
-                      class="button button-link-delete"
+                      context="admin"
+                      variant="link-delete"
                       @click="removeTimetable(row.id, row.title)"
                     >
                       {{ adminStr(cfg, 'delete') }}
-                    </button>
+                    </MrtButton>
                   </AdminRowActions>
                 </td>
               </tr>

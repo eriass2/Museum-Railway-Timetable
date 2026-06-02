@@ -5,6 +5,7 @@ import {
   AdminPanel,
   AdminRowActions,
   AdminTrainTypeCell,
+  MrtButton,
 } from '../ui';
 import type { TimetableDetail } from '../../types';
 import { adminStr } from '../../utils/adminLabels';
@@ -54,17 +55,17 @@ const emit = defineEmits<{
           <td>{{ s.destination || '—' }}</td>
           <td>
             <AdminRowActions>
-              <button type="button" class="button" @click="emit('open-stoptimes', s.id)">
+              <MrtButton context="admin" variant="secondary" @click="emit('open-stoptimes', s.id)">
                 {{ adminStr(cfg, 'editorStopptimes') }}
-              </button>
-              <button
+              </MrtButton>
+              <MrtButton
                 v-if="canManage"
-                type="button"
-                class="button button-link-delete"
+                context="admin"
+                variant="link-delete"
                 @click="emit('remove-trip', s.id)"
               >
                 {{ adminStr(cfg, 'delete') }}
-              </button>
+              </MrtButton>
             </AdminRowActions>
           </td>
         </tr>
@@ -90,9 +91,9 @@ const emit = defineEmits<{
         <option v-for="d in destinations" :key="d.id" :value="d.id">{{ d.name }}</option>
       </select>
       <div class="mrt-admin-trip-form__actions">
-        <button type="button" class="button button-primary" @click="emit('add-trip')">
+        <MrtButton context="admin" variant="primary" @click="emit('add-trip')">
           {{ adminStr(cfg, 'editorAddTrip') }}
-        </button>
+        </MrtButton>
       </div>
     </div>
   </AdminPanel>

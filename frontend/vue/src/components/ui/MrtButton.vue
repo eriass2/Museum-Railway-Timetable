@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, useAttrs } from 'vue';
 import type { MrtAdminButtonVariant, MrtPublicButtonVariant, MrtUiContext } from './types';
 import { isAdminContext, mrtAdminButtonClass, mrtPublicButtonClass } from './uiContext';
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(
   defineProps<{
@@ -25,16 +27,22 @@ const props = withDefaults(
 
 defineEmits<{ click: [] }>();
 
+const attrs = useAttrs();
+
 const buttonClass = computed(() => {
-  if (isAdminContext(props.context)) {
-    return mrtAdminButtonClass(props.variant as MrtAdminButtonVariant, props.wide);
+  const base = isAdminContext(props.context)
+    ? mrtAdminButtonClass(props.variant as MrtAdminButtonVariant, props.wide)
+    : mrtPublicButtonClass(props.variant as MrtPublicButtonVariant);
+  const extra = attrs.class;
+  if (!extra) {
+    return base;
   }
-  return mrtPublicButtonClass(props.variant as MrtPublicButtonVariant);
+  return [base, extra];
 });
 </script>
 
 <template>
-  <a v-if="href" :href="href" :class="buttonClass">
+  <a v-if="href" :href="href" :class="buttonClass" v-bind="attrs">
     <slot />
   </a>
   <button
@@ -42,6 +50,7 @@ const buttonClass = computed(() => {
     :type="type"
     :class="buttonClass"
     :disabled="disabled"
+    v-bind="attrs"
     @click="$emit('click')"
   >
     <slot />

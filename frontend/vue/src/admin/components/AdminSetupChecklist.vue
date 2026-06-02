@@ -7,7 +7,7 @@ import {
 } from '../utils/adminSetupSteps';
 import { adminConfig } from '../types';
 import { adminFmtN, adminStr } from '../utils/adminLabels';
-import { AdminPanel } from './ui';
+import { AdminPanel, MrtButton } from './ui';
 
 const props = defineProps<{
   stats: Record<string, number>;
@@ -34,14 +34,15 @@ const doneCount = computed(() => steps.value.filter((s) => s.done).length);
       >
         <span class="mrt-admin-setup__status" aria-hidden="true">{{ step.done ? '✓' : '○' }}</span>
         <span class="mrt-admin-setup__label">{{ step.label }}</span>
-        <button
+        <MrtButton
           v-if="!step.done"
-          type="button"
-          class="button button-small mrt-admin-setup__go"
+          context="admin"
+          variant="small"
+          class="mrt-admin-setup__go"
           @click="router.push(step.route)"
         >
           {{ adminStr(cfg, 'setupGo') }}
-        </button>
+        </MrtButton>
       </li>
     </ol>
   </AdminPanel>

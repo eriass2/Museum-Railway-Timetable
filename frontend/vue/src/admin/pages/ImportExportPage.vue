@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { exportCsv, importCsv } from '../api/adminRest';
-import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
+import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
 import { adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
@@ -89,9 +89,9 @@ async function onImport(ev: Event) {
         </label>
       </p>
       <AdminFormActions>
-        <button type="button" class="button button-primary" :disabled="loading" @click="onExport">
+        <MrtButton context="admin" variant="primary" :disabled="loading" @click="onExport">
           {{ adminStr(cfg, 'importExportDownloadButton') }}
-        </button>
+        </MrtButton>
       </AdminFormActions>
 
       <h2>{{ adminStr(cfg, 'importExportImportTitle') }}</h2>

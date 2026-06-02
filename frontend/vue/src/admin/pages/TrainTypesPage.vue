@@ -17,6 +17,7 @@ import {
   AdminRowActions,
   AdminStatusMessage,
   AdminTableScroll,
+  MrtButton,
   TrainTypeIconPicker,
 } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
@@ -153,12 +154,12 @@ async function removeType(id: number) {
                 </td>
                 <td v-if="cfg.canManage">
                   <AdminRowActions>
-                    <button type="button" class="button" @click="saveType(row)">
+                    <MrtButton context="admin" variant="secondary" @click="saveType(row)">
                       {{ adminStr(cfg, 'save') }}
-                    </button>
-                    <button type="button" class="button button-link-delete" @click="removeType(row.id)">
+                    </MrtButton>
+                    <MrtButton context="admin" variant="link-delete" @click="removeType(row.id)">
                       {{ adminStr(cfg, 'delete') }}
-                    </button>
+                    </MrtButton>
                   </AdminRowActions>
                 </td>
               </AdminFlashRow>
@@ -198,9 +199,9 @@ async function removeType(id: number) {
             </label>
           </AdminDisclosure>
           <AdminFormActions>
-            <button type="button" class="button button-primary" @click="addType">
+            <MrtButton context="admin" variant="primary" @click="addType">
               {{ adminStr(cfg, 'trainTypesCreateButton') }}
-            </button>
+            </MrtButton>
           </AdminFormActions>
         </div>
       </AdminPanel>

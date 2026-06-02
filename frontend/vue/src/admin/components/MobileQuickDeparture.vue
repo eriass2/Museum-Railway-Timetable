@@ -4,6 +4,7 @@ import { getStopTimes, quickDeparture } from '../api/adminRest';
 import type { TimetableServiceRow } from '../types';
 import { adminConfig } from '../types';
 import { adminStr } from '../utils/adminLabels';
+import { MrtButton } from './ui';
 
 const props = defineProps<{
   services: TimetableServiceRow[];
@@ -91,14 +92,15 @@ async function save() {
       />
     </p>
     <p v-if="canEdit">
-      <button
-        type="button"
-        class="button button-primary widefat"
+      <MrtButton
+        context="admin"
+        variant="primary"
+        wide
         :disabled="!serviceId || loading"
         @click="save"
       >
         {{ adminStr(cfg, 'mobileSaveDeparture') }}
-      </button>
+      </MrtButton>
     </p>
   </div>
 </template>

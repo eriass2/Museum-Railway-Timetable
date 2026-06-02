@@ -6,7 +6,7 @@ import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
 import { adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
-import { AdminActionBar, AdminPanel } from './ui';
+import { AdminActionBar, AdminPanel, MrtButton } from './ui';
 
 const props = defineProps<{
   traffic: TrafficToday;
@@ -85,26 +85,26 @@ function openTimetable() {
     <p v-if="message" class="notice notice-success">{{ message }}</p>
     <p v-if="error" class="notice notice-error">{{ error }}</p>
     <AdminActionBar>
-      <button
+      <MrtButton
         v-if="canOperate && !effectiveTraffic.all_cancelled && effectiveTraffic.services_count > 0"
-        type="button"
-        class="button button-primary"
+        context="admin"
+        variant="primary"
         :disabled="busy"
         @click="cancelAll"
       >
         {{ adminStr(cfg, 'trafficTodayCancelTitle') }}
-      </button>
-      <button type="button" class="button" @click="openTimetable">
+      </MrtButton>
+      <MrtButton context="admin" variant="secondary" @click="openTimetable">
         {{ adminStr(cfg, 'trafficTodayOpenTimetable') }}
-      </button>
-      <button
+      </MrtButton>
+      <MrtButton
         v-if="traffic.services_count > 0"
-        type="button"
-        class="button"
+        context="admin"
+        variant="secondary"
         @click="openTimetable"
       >
         {{ adminStr(cfg, 'trafficTodayEditDeviations') }}
-      </button>
+      </MrtButton>
     </AdminActionBar>
   </AdminPanel>
 </template>

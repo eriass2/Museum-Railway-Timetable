@@ -3,7 +3,7 @@ import { onMounted, ref } from 'vue';
 import { getSettings, saveSettings } from '../api/adminRest';
 import type { SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
+import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
@@ -97,9 +97,9 @@ async function submit() {
         </tbody>
       </table>
       <AdminFormActions>
-        <button type="submit" class="button button-primary">
+        <MrtButton context="admin" variant="primary" type="submit">
           {{ adminStr(cfg, 'settingsSaveButton') }}
-        </button>
+        </MrtButton>
         <AdminStatusMessage v-if="saved" :message="saved" />
       </AdminFormActions>
       <p class="description">
