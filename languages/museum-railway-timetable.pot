@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-02T07:36:05+00:00\n"
+"POT-Creation-Date: 2026-06-02T07:41:58+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: museum-railway-timetable\n"
@@ -17,6 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #: museum-railway-timetable.php
 #: inc/admin/menu.php:20
+#: inc/assets/admin-vue.php:120
 msgid "Museum Railway Timetable"
 msgstr ""
 
@@ -36,13 +37,14 @@ msgid "You do not have permission to access this page."
 msgstr ""
 
 #: inc/admin/menu.php:21
-#: inc/assets/admin-vue.php:52
+#: inc/assets/admin-vue.php:59
+#: inc/assets/admin-vue.php:140
 msgid "Tidtabell"
 msgstr ""
 
 #: inc/admin/menu.php:51
 #: inc/admin/menu.php:52
-#: inc/assets/admin-vue.php:63
+#: inc/assets/admin-vue.php:70
 msgid "Komponentdemo"
 msgstr ""
 
@@ -259,7 +261,8 @@ msgid "Development navigation is only available in development mode (WP_DEBUG or
 msgstr ""
 
 #: inc/admin/tools/timetable-pages.php:36
-#: inc/assets/admin-vue.php:56
+#: inc/assets/admin-vue.php:63
+#: inc/assets/admin-vue.php:129
 msgid "Tidtabeller"
 msgstr ""
 
@@ -283,113 +286,342 @@ msgstr ""
 msgid "Kunde inte spara."
 msgstr ""
 
-#: inc/assets/admin-vue.php:53
-msgid "Tidtabell admin"
+#: inc/assets/admin-vue.php:44
+msgid "Bekräfta"
 msgstr ""
 
-#: inc/assets/admin-vue.php:54
-msgid "Översikt"
+#: inc/assets/admin-vue.php:45
+msgid "Avbryt"
 msgstr ""
 
-#: inc/assets/admin-vue.php:55
-msgid "Stationer & rutter"
+#: inc/assets/admin-vue.php:46
+msgid "Ta bort"
 msgstr ""
 
-#: inc/assets/admin-vue.php:57
-msgid "Hjälp"
+#: inc/assets/admin-vue.php:47
+msgid "Spara"
 msgstr ""
 
-#: inc/assets/admin-vue.php:58
-msgid "Tågtyper"
+#: inc/assets/admin-vue.php:48
+msgid "Redigera"
 msgstr ""
 
-#: inc/assets/admin-vue.php:59
-#: inc/assets/admin-vue.php:72
-msgid "Inställningar"
+#: inc/assets/admin-vue.php:49
+msgid "Lägg till"
+msgstr ""
+
+#: inc/assets/admin-vue.php:50
+msgid "Ja"
 msgstr ""
 
 #: inc/assets/admin-vue.php:60
-#: inc/assets/admin-vue.php:94
+msgid "Tidtabell admin"
+msgstr ""
+
+#: inc/assets/admin-vue.php:61
+msgid "Översikt"
+msgstr ""
+
+#: inc/assets/admin-vue.php:62
+#: inc/assets/admin-vue.php:142
+#: inc/assets/admin-vue.php:154
+msgid "Stationer & rutter"
+msgstr ""
+
+#: inc/assets/admin-vue.php:64
+msgid "Hjälp"
+msgstr ""
+
+#: inc/assets/admin-vue.php:65
+#: inc/assets/admin-vue.php:131
+msgid "Tågtyper"
+msgstr ""
+
+#: inc/assets/admin-vue.php:66
+#: inc/assets/admin-vue.php:79
+msgid "Inställningar"
+msgstr ""
+
+#: inc/assets/admin-vue.php:67
+#: inc/assets/admin-vue.php:101
 #: inc/assets/frontend.php:120
 #: inc/public/vue-shortcode-config.php:159
 msgid "Priser"
 msgstr ""
 
-#: inc/assets/admin-vue.php:61
+#: inc/assets/admin-vue.php:68
 msgid "Import/export"
 msgstr ""
 
-#: inc/assets/admin-vue.php:62
+#: inc/assets/admin-vue.php:69
 msgid "Dev"
 msgstr ""
 
-#: inc/assets/admin-vue.php:73
+#: inc/assets/admin-vue.php:80
 msgid "Laddar inställningar…"
 msgstr ""
 
-#: inc/assets/admin-vue.php:74
+#: inc/assets/admin-vue.php:81
 msgid "Du har inte behörighet att ändra inställningar."
 msgstr ""
 
-#: inc/assets/admin-vue.php:75
+#: inc/assets/admin-vue.php:82
 msgid "Kunde inte ladda inställningar."
 msgstr ""
 
-#: inc/assets/admin-vue.php:76
+#: inc/assets/admin-vue.php:83
 msgid "Spara inställningar"
 msgstr ""
 
-#: inc/assets/admin-vue.php:77
+#: inc/assets/admin-vue.php:84
 msgid "Aktivera plugin"
 msgstr ""
 
-#: inc/assets/admin-vue.php:78
+#: inc/assets/admin-vue.php:85
 msgid "Pluginet är aktivt"
 msgstr ""
 
-#: inc/assets/admin-vue.php:79
+#: inc/assets/admin-vue.php:86
 msgid "Anteckning"
 msgstr ""
 
-#: inc/assets/admin-vue.php:80
+#: inc/assets/admin-vue.php:87
 msgid "Min väntetid vid byte (min)"
 msgstr ""
 
-#: inc/assets/admin-vue.php:81
+#: inc/assets/admin-vue.php:88
 msgid "Max väntetid vid byte (min)"
 msgstr ""
 
-#: inc/assets/admin-vue.php:82
+#: inc/assets/admin-vue.php:89
 msgid "CSV-import/export finns under fliken Import/export i menyn."
 msgstr ""
 
-#: inc/assets/admin-vue.php:95
+#: inc/assets/admin-vue.php:102
 msgid "Laddar priser…"
 msgstr ""
 
-#: inc/assets/admin-vue.php:96
+#: inc/assets/admin-vue.php:103
 msgid "Du har inte behörighet att ändra priser."
 msgstr ""
 
-#: inc/assets/admin-vue.php:97
+#: inc/assets/admin-vue.php:104
 msgid "Kunde inte ladda priser."
 msgstr ""
 
-#: inc/assets/admin-vue.php:98
+#: inc/assets/admin-vue.php:105
 msgid "Spara priser"
 msgstr ""
 
-#: inc/assets/admin-vue.php:99
+#: inc/assets/admin-vue.php:106
 msgid "Priser i SEK per biljettyp, passagerarkategori och antal zoner."
 msgstr ""
 
-#: inc/assets/admin-vue.php:103
+#: inc/assets/admin-vue.php:110
 #: inc/assets/frontend.php:119
 msgid "Biljettyp"
 msgstr ""
 
-#: inc/assets/admin-vue.php:104
+#: inc/assets/admin-vue.php:111
 msgid "Zoner"
+msgstr ""
+
+#: inc/assets/admin-vue.php:121
+msgid "Laddar översikt…"
+msgstr ""
+
+#: inc/assets/admin-vue.php:122
+msgid "Kunde inte ladda översikt."
+msgstr ""
+
+#: inc/assets/admin-vue.php:123
+msgid "Begränsad behörighet: du kan ändra avvikelser och avgångstider, inte grunddata."
+msgstr ""
+
+#: inc/assets/admin-vue.php:127
+#: inc/assets/admin-vue.php:157
+#: inc/assets/admin-vue.php:171
+msgid "Stationer"
+msgstr ""
+
+#: inc/assets/admin-vue.php:128
+#: inc/assets/admin-vue.php:158
+msgid "Rutter"
+msgstr ""
+
+#: inc/assets/admin-vue.php:130
+msgid "Turer"
+msgstr ""
+
+#: inc/assets/admin-vue.php:132
+msgid "Statistik"
+msgstr ""
+
+#: inc/assets/admin-vue.php:133
+#, php-format
+msgid "%1$s stationer · %2$s rutter · %3$s tidtabeller · %4$s turer · %5$s tågtyper"
+msgstr ""
+
+#: inc/assets/admin-vue.php:137
+msgid "Varningar"
+msgstr ""
+
+#: inc/assets/admin-vue.php:138
+msgid "Nästa trafik"
+msgstr ""
+
+#: inc/assets/admin-vue.php:139
+msgid "Datum"
+msgstr ""
+
+#: inc/assets/admin-vue.php:141
+msgid "Snabbstart"
+msgstr ""
+
+#: inc/assets/admin-vue.php:143
+msgid "Hantera tidtabeller"
+msgstr ""
+
+#: inc/assets/admin-vue.php:144
+msgid "Hjälp & FAQ"
+msgstr ""
+
+#: inc/assets/admin-vue.php:145
+msgid "Visa webbplats"
+msgstr ""
+
+#: inc/assets/admin-vue.php:155
+msgid "Laddar stationer och rutter…"
+msgstr ""
+
+#: inc/assets/admin-vue.php:156
+msgid "Stationer eller rutter"
+msgstr ""
+
+#: inc/assets/admin-vue.php:159
+msgid "Ny station"
+msgstr ""
+
+#: inc/assets/admin-vue.php:160
+msgid "Ny rutt"
+msgstr ""
+
+#: inc/assets/admin-vue.php:161
+msgid "Inga stationer"
+msgstr ""
+
+#: inc/assets/admin-vue.php:162
+msgid "Lägg till din första station ovan."
+msgstr ""
+
+#: inc/assets/admin-vue.php:163
+msgid "Inga rutter"
+msgstr ""
+
+#: inc/assets/admin-vue.php:164
+msgid "Skapa en rutt ovan och koppla stationer i redigeringsvyn."
+msgstr ""
+
+#: inc/assets/admin-vue.php:165
+msgid "Namn"
+msgstr ""
+
+#: inc/assets/admin-vue.php:166
+msgid "Typ"
+msgstr ""
+
+#: inc/assets/admin-vue.php:167
+msgid "Lat"
+msgstr ""
+
+#: inc/assets/admin-vue.php:168
+msgid "Lng"
+msgstr ""
+
+#: inc/assets/admin-vue.php:169
+msgid "Buss"
+msgstr ""
+
+#: inc/assets/admin-vue.php:170
+msgid "Ordning"
+msgstr ""
+
+#: inc/assets/admin-vue.php:172
+#: inc/assets/frontend.php:98
+msgid "Station"
+msgstr ""
+
+#: inc/assets/admin-vue.php:173
+msgid "Hållplats"
+msgstr ""
+
+#: inc/assets/admin-vue.php:174
+msgid "Depot"
+msgstr ""
+
+#: inc/assets/admin-vue.php:175
+msgid "Museum"
+msgstr ""
+
+#: inc/assets/admin-vue.php:176
+#, php-format
+msgid "Rutten «%s» sparades."
+msgstr ""
+
+#: inc/assets/admin-vue.php:177
+#, php-format
+msgid "«%s» sparades."
+msgstr ""
+
+#: inc/assets/admin-vue.php:178
+msgid "Ta bort station"
+msgstr ""
+
+#: inc/assets/admin-vue.php:179
+#, php-format
+msgid "Stationen «%s» tas bort om den inte används i rutter eller turer."
+msgstr ""
+
+#: inc/assets/admin-vue.php:183
+msgid "Ta bort rutt"
+msgstr ""
+
+#: inc/assets/admin-vue.php:184
+#, php-format
+msgid "Rutten «%s» tas bort om inga turer använder den."
+msgstr ""
+
+#: inc/assets/admin-vue.php:188
+msgid "Kunde inte ta bort station."
+msgstr ""
+
+#: inc/assets/admin-vue.php:189
+msgid "Kunde inte ta bort rutt."
+msgstr ""
+
+#: inc/assets/admin-vue.php:190
+#, php-format
+msgid "Redigera rutt: %s"
+msgstr ""
+
+#: inc/assets/admin-vue.php:191
+msgid "Start:"
+msgstr ""
+
+#: inc/assets/admin-vue.php:192
+msgid "Slut:"
+msgstr ""
+
+#: inc/assets/admin-vue.php:193
+msgid "Förhandsgranskning av rutt"
+msgstr ""
+
+#: inc/assets/admin-vue.php:194
+msgid "Lägg till station..."
+msgstr ""
+
+#: inc/assets/admin-vue.php:195
+msgid "Spara rutt"
 msgstr ""
 
 #: inc/assets/frontend.php:23
@@ -617,10 +849,6 @@ msgstr ""
 
 #: inc/assets/frontend.php:97
 msgid "Ankomst"
-msgstr ""
-
-#: inc/assets/frontend.php:98
-msgid "Station"
 msgstr ""
 
 #: inc/assets/frontend.php:99

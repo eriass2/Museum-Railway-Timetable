@@ -27,6 +27,7 @@ import { routePreviewTypeLabel } from '../utils/routePreviewNodes';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -60,7 +61,7 @@ async function load() {
     stations.value = s.items;
     routes.value = r.items;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Fel';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'loadFailed');
   } finally {
     loading.value = false;
   }
@@ -100,7 +101,7 @@ async function saveRoute() {
     station_ids: editingRoute.value.station_ids,
   });
   editingRoute.value = null;
-  message.value = `Rutten «${title}» sparades.`;
+  message.value = adminFmt(cfg, 'stationsRouteSaved', title);
   flashRow(routeId);
   await load();
 }
@@ -128,16 +129,16 @@ function appendStationToRoute() {
 async function saveStationMeta(st: StationRow) {
   if (!cfg.canManage) return;
   await updateStation(st.id, st);
-  message.value = `«${st.title}» sparades.`;
+  message.value = adminFmt(cfg, 'stationsStationSaved', st.title);
   flashRow(st.id);
 }
 
 async function removeStation(st: StationRow) {
   if (!cfg.canManage) return;
   const ok = await adminConfirm({
-    title: 'Ta bort station',
-    message: `Stationen «${st.title}» tas bort om den inte används i rutter eller turer.`,
-    confirmLabel: 'Ta bort',
+    title: adminStr(cfg, 'stationsDeleteStationTitle'),
+    message: adminFmt(cfg, 'stationsDeleteStationMsg', st.title),
+    confirmLabel: adminStr(cfg, 'delete'),
     danger: true,
   });
   if (!ok) return;
@@ -146,16 +147,16 @@ async function removeStation(st: StationRow) {
     await deleteStation(st.id);
     await load();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte ta bort station';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'stationsDeleteStationFailed');
   }
 }
 
 async function removeRoute(route: RouteRow) {
   if (!cfg.canManage) return;
   const ok = await adminConfirm({
-    title: 'Ta bort rutt',
-    message: `Rutten «${route.title}» tas bort om inga turer använder den.`,
-    confirmLabel: 'Ta bort',
+    title: adminStr(cfg, 'stationsDeleteRouteTitle'),
+    message: adminFmt(cfg, 'stationsDeleteRouteMsg', route.title),
+    confirmLabel: adminStr(cfg, 'delete'),
     danger: true,
   });
   if (!ok) return;
@@ -167,24 +168,29 @@ async function removeRoute(route: RouteRow) {
     }
     await load();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte ta bort rutt';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'stationsDeleteRouteFailed');
   }
 }
 </script>
 
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
-    <h1>Stationer &amp; rutter</h1>
-    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar stationer och rutter…" @retry="load">
+    <h1>{{ adminStr(cfg, 'stationsTitle') }}</h1>
+    <AdminLoadState
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'stationsLoading')"
+      @retry="load"
+    >
     <AdminStatusMessage :message="message" />
-    <nav class="nav-tab-wrapper mrt-admin-section-nav" aria-label="Stationer eller rutter">
+    <nav class="nav-tab-wrapper mrt-admin-section-nav" :aria-label="adminStr(cfg, 'stationsNavAria')">
       <a
         href="#"
         class="nav-tab"
         :class="{ 'nav-tab-active': sectionTab === 'stations' }"
         @click.prevent="sectionTab = 'stations'"
       >
-        Stationer
+        {{ adminStr(cfg, 'stationsTabStations') }}
       </a>
       <a
         href="#"
@@ -192,31 +198,38 @@ async function removeRoute(route: RouteRow) {
         :class="{ 'nav-tab-active': sectionTab === 'routes' }"
         @click.prevent="sectionTab = 'routes'"
       >
-        Rutter
+        {{ adminStr(cfg, 'stationsTabRoutes') }}
       </a>
     </nav>
 
     <AdminPanel v-if="sectionTab === 'stations'">
-      <h2 class="screen-reader-text">Stationer</h2>
+      <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabStations') }}</h2>
       <AdminInlineForm v-if="cfg.canManage">
-        <input v-model="newStationTitle" type="text" class="regular-text" placeholder="Ny station" />
-        <button type="button" class="button button-primary" @click="addStation">Lägg till</button>
+        <input
+          v-model="newStationTitle"
+          type="text"
+          class="regular-text"
+          :placeholder="adminStr(cfg, 'stationsNewStation')"
+        />
+        <button type="button" class="button button-primary" @click="addStation">
+          {{ adminStr(cfg, 'add') }}
+        </button>
       </AdminInlineForm>
       <AdminEmptyState
         v-if="!stations.length"
-        title="Inga stationer"
-        message="Lägg till din första station ovan."
+        :title="adminStr(cfg, 'stationsEmptyStationsTitle')"
+        :message="adminStr(cfg, 'stationsEmptyStationsMsg')"
       />
       <AdminTableScroll v-else>
       <table class="widefat striped mrt-admin-stations-table">
         <thead>
           <tr>
-            <th>Namn</th>
-            <th>Typ</th>
-            <th>Lat</th>
-            <th>Lng</th>
-            <th>Buss</th>
-            <th>Ordning</th>
+            <th>{{ adminStr(cfg, 'stationsColName') }}</th>
+            <th>{{ adminStr(cfg, 'stationsColType') }}</th>
+            <th>{{ adminStr(cfg, 'stationsColLat') }}</th>
+            <th>{{ adminStr(cfg, 'stationsColLng') }}</th>
+            <th>{{ adminStr(cfg, 'stationsColBus') }}</th>
+            <th>{{ adminStr(cfg, 'stationsColOrder') }}</th>
             <th v-if="cfg.canManage"></th>
           </tr>
         </thead>
@@ -233,10 +246,10 @@ async function removeRoute(route: RouteRow) {
             <td>
               <select v-if="cfg.canManage" v-model="st.station_type">
                 <option value="">—</option>
-                <option value="station">Station</option>
-                <option value="halt">Hållplats</option>
-                <option value="depot">Depot</option>
-                <option value="museum">Museum</option>
+                <option value="station">{{ adminStr(cfg, 'stationsTypeStation') }}</option>
+                <option value="halt">{{ adminStr(cfg, 'stationsTypeHalt') }}</option>
+                <option value="depot">{{ adminStr(cfg, 'stationsTypeDepot') }}</option>
+                <option value="museum">{{ adminStr(cfg, 'stationsTypeMuseum') }}</option>
               </select>
               <span v-else>{{ routePreviewTypeLabel(st.station_type) || '—' }}</span>
             </td>
@@ -266,7 +279,7 @@ async function removeRoute(route: RouteRow) {
                 v-model="st.bus_suffix"
                 type="checkbox"
               />
-              <span v-else>{{ st.bus_suffix ? 'Ja' : '—' }}</span>
+              <span v-else>{{ st.bus_suffix ? adminStr(cfg, 'yes') : '—' }}</span>
             </td>
             <td>
               <input v-if="cfg.canManage" v-model.number="st.display_order" type="number" class="small-text" />
@@ -274,9 +287,11 @@ async function removeRoute(route: RouteRow) {
             </td>
             <td v-if="cfg.canManage">
               <AdminRowActions>
-                <button type="button" class="button" @click="saveStationMeta(st)">Spara</button>
+                <button type="button" class="button" @click="saveStationMeta(st)">
+                  {{ adminStr(cfg, 'save') }}
+                </button>
                 <button type="button" class="button button-link-delete" @click="removeStation(st)">
-                  Ta bort
+                  {{ adminStr(cfg, 'delete') }}
                 </button>
               </AdminRowActions>
             </td>
@@ -287,22 +302,29 @@ async function removeRoute(route: RouteRow) {
     </AdminPanel>
 
     <AdminPanel v-if="sectionTab === 'routes'">
-      <h2 class="screen-reader-text">Rutter</h2>
+      <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabRoutes') }}</h2>
       <AdminInlineForm v-if="cfg.canManage">
-        <input v-model="newRouteTitle" type="text" class="regular-text" placeholder="Ny rutt" />
-        <button type="button" class="button button-primary" @click="addRoute">Lägg till</button>
+        <input
+          v-model="newRouteTitle"
+          type="text"
+          class="regular-text"
+          :placeholder="adminStr(cfg, 'stationsNewRoute')"
+        />
+        <button type="button" class="button button-primary" @click="addRoute">
+          {{ adminStr(cfg, 'add') }}
+        </button>
       </AdminInlineForm>
       <AdminEmptyState
         v-if="!routes.length"
-        title="Inga rutter"
-        message="Skapa en rutt ovan och koppla stationer i redigeringsvyn."
+        :title="adminStr(cfg, 'stationsEmptyRoutesTitle')"
+        :message="adminStr(cfg, 'stationsEmptyRoutesMsg')"
       />
       <AdminTableScroll v-else>
       <table class="widefat striped mrt-admin-routes-table">
         <thead>
           <tr>
-            <th>Namn</th>
-            <th>Stationer</th>
+            <th>{{ adminStr(cfg, 'stationsColName') }}</th>
+            <th>{{ adminStr(cfg, 'stationsColStations') }}</th>
             <th></th>
           </tr>
         </thead>
@@ -321,7 +343,7 @@ async function removeRoute(route: RouteRow) {
             <td>
               <AdminRowActions>
                 <button v-if="cfg.canManage" type="button" class="button" @click="editRoute(route)">
-                  Redigera
+                  {{ adminStr(cfg, 'edit') }}
                 </button>
                 <button
                   v-if="cfg.canManage"
@@ -329,7 +351,7 @@ async function removeRoute(route: RouteRow) {
                   class="button button-link-delete"
                   @click="removeRoute(route)"
                 >
-                  Ta bort
+                  {{ adminStr(cfg, 'delete') }}
                 </button>
               </AdminRowActions>
             </td>
@@ -342,18 +364,18 @@ async function removeRoute(route: RouteRow) {
     <AdminPanel
       v-if="sectionTab === 'routes' && editingRoute"
       class="mrt-admin-route-editor"
-      :title="`Redigera rutt: ${editingRoute.title}`"
+      :title="adminFmt(cfg, 'stationsEditRouteTitle', editingRoute.title)"
     >
       <p>
         <input v-model="editingRoute.title" type="text" class="regular-text" />
       </p>
       <p>
-        <label>Start:</label>
+        <label>{{ adminStr(cfg, 'stationsRouteStart') }}</label>
         <select v-model.number="editingRoute.start_station">
           <option :value="0">—</option>
           <option v-for="st in stations" :key="st.id" :value="st.id">{{ st.title }}</option>
         </select>
-        <label>Slut:</label>
+        <label>{{ adminStr(cfg, 'stationsRouteEnd') }}</label>
         <select v-model.number="editingRoute.end_station">
           <option :value="0">—</option>
           <option v-for="st in stations" :key="st.id" :value="st.id">{{ st.title }}</option>
@@ -365,7 +387,7 @@ async function removeRoute(route: RouteRow) {
         :stations-by-id="stationsById"
         :start-station-id="editingRoute.start_station"
         :end-station-id="editingRoute.end_station"
-        label="Förhandsgranskning av rutt"
+        :label="adminStr(cfg, 'stationsRoutePreview')"
       />
       <ol class="mrt-admin-route-station-list">
         <li v-for="(sid, idx) in editingRoute.station_ids" :key="sid" class="mrt-admin-route-station-row">
@@ -380,14 +402,20 @@ async function removeRoute(route: RouteRow) {
       </ol>
       <AdminInlineForm>
         <select v-model.number="addStationToRoute">
-          <option :value="0">Lägg till station...</option>
+          <option :value="0">{{ adminStr(cfg, 'stationsAddStationPrompt') }}</option>
           <option v-for="st in stations" :key="st.id" :value="st.id">{{ st.title }}</option>
         </select>
-        <button type="button" class="button" @click="appendStationToRoute">Lägg till</button>
+        <button type="button" class="button" @click="appendStationToRoute">
+          {{ adminStr(cfg, 'add') }}
+        </button>
       </AdminInlineForm>
       <AdminFormActions>
-        <button type="button" class="button button-primary" @click="saveRoute">Spara rutt</button>
-        <button type="button" class="button" @click="editingRoute = null">Avbryt</button>
+        <button type="button" class="button button-primary" @click="saveRoute">
+          {{ adminStr(cfg, 'stationsSaveRoute') }}
+        </button>
+        <button type="button" class="button" @click="editingRoute = null">
+          {{ adminStr(cfg, 'cancel') }}
+        </button>
       </AdminFormActions>
     </AdminPanel>
     </AdminLoadState>

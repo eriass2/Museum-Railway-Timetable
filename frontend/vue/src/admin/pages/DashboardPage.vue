@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
 import type { DashboardPayload } from '../types';
@@ -8,20 +8,23 @@ import { AdminActionBar, AdminPanel } from '../components/ui';
 import AdminSetupChecklist from '../components/AdminSetupChecklist.vue';
 import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { adminStr } from '../utils/adminLabels';
+import { adminConfig } from '../types';
 
+const cfg = adminConfig();
 const router = useRouter();
 const { isMobile } = useMobileAdmin();
 const loading = ref(true);
 const error = ref('');
 const data = ref<DashboardPayload | null>(null);
 
-const statItems = [
-  { key: 'stations', label: 'Stationer' },
-  { key: 'routes', label: 'Rutter' },
-  { key: 'timetables', label: 'Tidtabeller' },
-  { key: 'services', label: 'Turer' },
-  { key: 'train_types', label: 'Tågtyper' },
-] as const;
+const statItems = computed(() => [
+  { key: 'stations', label: adminStr(cfg, 'dashboardStatStations', 'Stationer') },
+  { key: 'routes', label: adminStr(cfg, 'dashboardStatRoutes', 'Rutter') },
+  { key: 'timetables', label: adminStr(cfg, 'dashboardStatTimetables', 'Tidtabeller') },
+  { key: 'services', label: adminStr(cfg, 'dashboardStatServices', 'Turer') },
+  { key: 'train_types', label: adminStr(cfg, 'dashboardStatTrainTypes', 'Tågtyper') },
+] as const);
 
 async function load() {
   loading.value = true;
@@ -29,7 +32,7 @@ async function load() {
   try {
     data.value = await getDashboard();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte ladda översikt';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'dashboardLoadFailed');
     data.value = null;
   } finally {
     loading.value = false;
@@ -48,12 +51,17 @@ function openRoute(hashRoute: string) {
 
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
-    <h1>Museum Railway Timetable</h1>
+    <h1>{{ adminStr(cfg, 'dashboardTitle', 'Museum Railway Timetable') }}</h1>
 
-    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar översikt…" @retry="load">
+    <AdminLoadState
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'dashboardLoading')"
+      @retry="load"
+    >
     <template v-if="data">
       <p v-if="data.can_operate && !data.can_manage" class="notice notice-info">
-        Begränsad behörighet: du kan ändra avvikelser och avgångstider, inte grunddata.
+        {{ adminStr(cfg, 'dashboardLimitedRole') }}
       </p>
 
       <TrafficTodayPanel
@@ -64,7 +72,11 @@ function openRoute(hashRoute: string) {
 
       <AdminSetupChecklist v-if="data.can_manage" :stats="data.stats" />
 
-      <div v-if="isMobile" class="mrt-admin-stat-grid" aria-label="Statistik">
+      <div
+        v-if="isMobile"
+        class="mrt-admin-stat-grid"
+        :aria-label="adminStr(cfg, 'dashboardStatsAria', 'Statistik')"
+      >
         <div v-for="item in statItems" :key="item.key" class="mrt-admin-stat-card">
           <span class="mrt-admin-stat-card__value">{{ data.stats[item.key] }}</span>
           <span class="mrt-admin-stat-card__label">{{ item.label }}</span>
@@ -72,16 +84,16 @@ function openRoute(hashRoute: string) {
       </div>
       <div v-else class="mrt-admin-stats widefat">
         <p>
-          <strong>{{ data.stats.stations }}</strong> stationer ·
-          <strong>{{ data.stats.routes }}</strong> rutter ·
-          <strong>{{ data.stats.timetables }}</strong> tidtabeller ·
-          <strong>{{ data.stats.services }}</strong> turer ·
-          <strong>{{ data.stats.train_types }}</strong> tågtyper
+          <strong>{{ data.stats.stations }}</strong> {{ adminStr(cfg, 'dashboardStatStations').toLowerCase() }} ·
+          <strong>{{ data.stats.routes }}</strong> {{ adminStr(cfg, 'dashboardStatRoutes').toLowerCase() }} ·
+          <strong>{{ data.stats.timetables }}</strong> {{ adminStr(cfg, 'dashboardStatTimetables').toLowerCase() }} ·
+          <strong>{{ data.stats.services }}</strong> {{ adminStr(cfg, 'dashboardStatServices').toLowerCase() }} ·
+          <strong>{{ data.stats.train_types }}</strong> {{ adminStr(cfg, 'dashboardStatTrainTypes').toLowerCase() }}
         </p>
       </div>
 
       <AdminPanel v-if="data.warnings.length">
-        <h2>Varningar</h2>
+        <h2>{{ adminStr(cfg, 'dashboardWarningsTitle', 'Varningar') }}</h2>
         <ul class="mrt-admin-warnings">
           <li v-for="w in data.warnings" :key="w.code + w.message">
             <button type="button" class="button-link" @click="openRoute(w.route)">
@@ -92,13 +104,13 @@ function openRoute(hashRoute: string) {
       </AdminPanel>
 
       <AdminPanel v-if="data.next_traffic.length">
-        <h2>Nästa trafik</h2>
+        <h2>{{ adminStr(cfg, 'dashboardNextTrafficTitle', 'Nästa trafik') }}</h2>
         <div class="mrt-admin-table-scroll">
           <table class="widefat striped">
             <thead>
               <tr>
-                <th>Datum</th>
-                <th>Tidtabell</th>
+                <th>{{ adminStr(cfg, 'dashboardColDate', 'Datum') }}</th>
+                <th>{{ adminStr(cfg, 'dashboardColTimetable', 'Tidtabell') }}</th>
               </tr>
             </thead>
             <tbody>
@@ -120,16 +132,16 @@ function openRoute(hashRoute: string) {
       </AdminPanel>
 
       <AdminPanel>
-        <h2>Snabbstart</h2>
+        <h2>{{ adminStr(cfg, 'dashboardQuickstartTitle', 'Snabbstart') }}</h2>
         <AdminActionBar>
           <button type="button" class="button button-primary" @click="router.push('/stations-routes')">
-            Stationer &amp; rutter
+            {{ adminStr(cfg, 'dashboardQuickStations', 'Stationer & rutter') }}
           </button>
           <button type="button" class="button" @click="router.push('/timetables')">
-            Hantera tidtabeller
+            {{ adminStr(cfg, 'dashboardQuickTimetables', 'Hantera tidtabeller') }}
           </button>
           <button type="button" class="button" @click="router.push('/help')">
-            Hjälp &amp; FAQ
+            {{ adminStr(cfg, 'dashboardQuickHelp', 'Hjälp & FAQ') }}
           </button>
           <a
             v-if="data.links.front"
@@ -138,7 +150,7 @@ function openRoute(hashRoute: string) {
             target="_blank"
             rel="noopener"
           >
-            Visa webbplats
+            {{ adminStr(cfg, 'dashboardViewSite', 'Visa webbplats') }}
           </a>
         </AdminActionBar>
       </AdminPanel>

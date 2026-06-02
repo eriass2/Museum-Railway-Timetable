@@ -41,6 +41,13 @@ function MRT_admin_vue_l10n_common(): array {
 		'retry'      => __( 'Försök igen', 'museum-railway-timetable' ),
 		'loadFailed' => __( 'Kunde inte ladda.', 'museum-railway-timetable' ),
 		'saveFailed' => __( 'Kunde inte spara.', 'museum-railway-timetable' ),
+		'confirm'    => __( 'Bekräfta', 'museum-railway-timetable' ),
+		'cancel'     => __( 'Avbryt', 'museum-railway-timetable' ),
+		'delete'     => __( 'Ta bort', 'museum-railway-timetable' ),
+		'save'       => __( 'Spara', 'museum-railway-timetable' ),
+		'edit'       => __( 'Redigera', 'museum-railway-timetable' ),
+		'add'        => __( 'Lägg till', 'museum-railway-timetable' ),
+		'yes'        => __( 'Ja', 'museum-railway-timetable' ),
 	);
 }
 
@@ -106,8 +113,90 @@ function MRT_admin_vue_l10n_prices(): array {
 }
 
 /**
- * Localized strings for Vue admin (phase 5 i18n).
- *
+ * @return array<string, string>
+ */
+function MRT_admin_vue_l10n_dashboard(): array {
+	return array(
+		'dashboardTitle'           => __( 'Museum Railway Timetable', 'museum-railway-timetable' ),
+		'dashboardLoading'         => __( 'Laddar översikt…', 'museum-railway-timetable' ),
+		'dashboardLoadFailed'      => __( 'Kunde inte ladda översikt.', 'museum-railway-timetable' ),
+		'dashboardLimitedRole'     => __(
+			'Begränsad behörighet: du kan ändra avvikelser och avgångstider, inte grunddata.',
+			'museum-railway-timetable'
+		),
+		'dashboardStatStations'    => __( 'Stationer', 'museum-railway-timetable' ),
+		'dashboardStatRoutes'      => __( 'Rutter', 'museum-railway-timetable' ),
+		'dashboardStatTimetables'  => __( 'Tidtabeller', 'museum-railway-timetable' ),
+		'dashboardStatServices'    => __( 'Turer', 'museum-railway-timetable' ),
+		'dashboardStatTrainTypes'  => __( 'Tågtyper', 'museum-railway-timetable' ),
+		'dashboardStatsAria'       => __( 'Statistik', 'museum-railway-timetable' ),
+		'dashboardStatsSummary'    => __(
+			'%1$s stationer · %2$s rutter · %3$s tidtabeller · %4$s turer · %5$s tågtyper',
+			'museum-railway-timetable'
+		),
+		'dashboardWarningsTitle'   => __( 'Varningar', 'museum-railway-timetable' ),
+		'dashboardNextTrafficTitle' => __( 'Nästa trafik', 'museum-railway-timetable' ),
+		'dashboardColDate'         => __( 'Datum', 'museum-railway-timetable' ),
+		'dashboardColTimetable'    => __( 'Tidtabell', 'museum-railway-timetable' ),
+		'dashboardQuickstartTitle' => __( 'Snabbstart', 'museum-railway-timetable' ),
+		'dashboardQuickStations'   => __( 'Stationer & rutter', 'museum-railway-timetable' ),
+		'dashboardQuickTimetables' => __( 'Hantera tidtabeller', 'museum-railway-timetable' ),
+		'dashboardQuickHelp'       => __( 'Hjälp & FAQ', 'museum-railway-timetable' ),
+		'dashboardViewSite'        => __( 'Visa webbplats', 'museum-railway-timetable' ),
+	);
+}
+
+/**
+ * @return array<string, string>
+ */
+function MRT_admin_vue_l10n_stations(): array {
+	return array(
+		'stationsTitle'              => __( 'Stationer & rutter', 'museum-railway-timetable' ),
+		'stationsLoading'            => __( 'Laddar stationer och rutter…', 'museum-railway-timetable' ),
+		'stationsNavAria'            => __( 'Stationer eller rutter', 'museum-railway-timetable' ),
+		'stationsTabStations'        => __( 'Stationer', 'museum-railway-timetable' ),
+		'stationsTabRoutes'          => __( 'Rutter', 'museum-railway-timetable' ),
+		'stationsNewStation'         => __( 'Ny station', 'museum-railway-timetable' ),
+		'stationsNewRoute'           => __( 'Ny rutt', 'museum-railway-timetable' ),
+		'stationsEmptyStationsTitle' => __( 'Inga stationer', 'museum-railway-timetable' ),
+		'stationsEmptyStationsMsg'   => __( 'Lägg till din första station ovan.', 'museum-railway-timetable' ),
+		'stationsEmptyRoutesTitle'   => __( 'Inga rutter', 'museum-railway-timetable' ),
+		'stationsEmptyRoutesMsg'     => __( 'Skapa en rutt ovan och koppla stationer i redigeringsvyn.', 'museum-railway-timetable' ),
+		'stationsColName'            => __( 'Namn', 'museum-railway-timetable' ),
+		'stationsColType'            => __( 'Typ', 'museum-railway-timetable' ),
+		'stationsColLat'             => __( 'Lat', 'museum-railway-timetable' ),
+		'stationsColLng'             => __( 'Lng', 'museum-railway-timetable' ),
+		'stationsColBus'             => __( 'Buss', 'museum-railway-timetable' ),
+		'stationsColOrder'           => __( 'Ordning', 'museum-railway-timetable' ),
+		'stationsColStations'        => __( 'Stationer', 'museum-railway-timetable' ),
+		'stationsTypeStation'        => __( 'Station', 'museum-railway-timetable' ),
+		'stationsTypeHalt'           => __( 'Hållplats', 'museum-railway-timetable' ),
+		'stationsTypeDepot'          => __( 'Depot', 'museum-railway-timetable' ),
+		'stationsTypeMuseum'         => __( 'Museum', 'museum-railway-timetable' ),
+		'stationsRouteSaved'         => __( 'Rutten «%s» sparades.', 'museum-railway-timetable' ),
+		'stationsStationSaved'       => __( '«%s» sparades.', 'museum-railway-timetable' ),
+		'stationsDeleteStationTitle' => __( 'Ta bort station', 'museum-railway-timetable' ),
+		'stationsDeleteStationMsg'   => __(
+			'Stationen «%s» tas bort om den inte används i rutter eller turer.',
+			'museum-railway-timetable'
+		),
+		'stationsDeleteRouteTitle'   => __( 'Ta bort rutt', 'museum-railway-timetable' ),
+		'stationsDeleteRouteMsg'     => __(
+			'Rutten «%s» tas bort om inga turer använder den.',
+			'museum-railway-timetable'
+		),
+		'stationsDeleteStationFailed' => __( 'Kunde inte ta bort station.', 'museum-railway-timetable' ),
+		'stationsDeleteRouteFailed'   => __( 'Kunde inte ta bort rutt.', 'museum-railway-timetable' ),
+		'stationsEditRouteTitle'     => __( 'Redigera rutt: %s', 'museum-railway-timetable' ),
+		'stationsRouteStart'         => __( 'Start:', 'museum-railway-timetable' ),
+		'stationsRouteEnd'           => __( 'Slut:', 'museum-railway-timetable' ),
+		'stationsRoutePreview'       => __( 'Förhandsgranskning av rutt', 'museum-railway-timetable' ),
+		'stationsAddStationPrompt'   => __( 'Lägg till station...', 'museum-railway-timetable' ),
+		'stationsSaveRoute'          => __( 'Spara rutt', 'museum-railway-timetable' ),
+	);
+}
+
+/**
  * @return array<string, string>
  */
 function MRT_admin_vue_script_localization(): array {
@@ -115,7 +204,9 @@ function MRT_admin_vue_script_localization(): array {
 		MRT_admin_vue_l10n_common(),
 		MRT_admin_vue_l10n_nav(),
 		MRT_admin_vue_l10n_settings(),
-		MRT_admin_vue_l10n_prices()
+		MRT_admin_vue_l10n_prices(),
+		MRT_admin_vue_l10n_dashboard(),
+		MRT_admin_vue_l10n_stations()
 	);
 }
 

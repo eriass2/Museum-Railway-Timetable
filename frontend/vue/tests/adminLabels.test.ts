@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { adminStr } from '../src/admin/utils/adminLabels';
+import { adminFmt, adminFmtN, adminStr } from '../src/admin/utils/adminLabels';
 import type { AdminClientConfig } from '../src/admin/types';
 
 function cfg(strings: Record<string, string>): AdminClientConfig {
@@ -23,5 +23,18 @@ describe('adminStr', () => {
 
   it('falls back when key missing', () => {
     expect(adminStr(cfg({}), 'saved', 'Sparat.')).toBe('Sparat.');
+  });
+});
+
+describe('adminFmt', () => {
+  it('replaces %s placeholders in order', () => {
+    expect(adminFmt(cfg({ msg: 'Hello %s!' }), 'msg', 'world')).toBe('Hello world!');
+  });
+});
+
+describe('adminFmtN', () => {
+  it('replaces numbered placeholders', () => {
+    const strings = { summary: '%1$s stationer · %2$s rutter' };
+    expect(adminFmtN(cfg(strings), 'summary', { 1: 3, 2: 5 })).toBe('3 stationer · 5 rutter');
   });
 });
