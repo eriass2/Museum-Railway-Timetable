@@ -297,7 +297,7 @@ function MRT_trains_for_bus_at_junction(
  *   junction_label: string,
  *   direction: string,
  *   train_to_bus: array<int, array{train: array{service_number: string, time_display: string}, buses: array<int, array{service_number: string, time_display: string, destination: string}>>>,
- *   bus_to_train: array<int, array{bus: array{service_number: string, time_display: string, destination: string}, trains: array<int, array{service_number: string, time_display: string}>>
+ *   bus_to_train: array<int, array{bus: array{service_number: string, time_display: string, destination: string}, trains: array<int, array{service_number: string, time_display: string}>}>
  * }
  */
 function MRT_build_rail_bus_connection_data( array $rail_group, array $branch_group ): array {

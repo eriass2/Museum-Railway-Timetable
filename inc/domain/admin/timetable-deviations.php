@@ -17,7 +17,7 @@ require_once MRT_PATH . 'inc/domain/admin/deviations-data.php';
  * Apply deviation rows for all services on a timetable.
  *
  * @param int   $timetable_id Timetable ID.
- * @param array<int, array<string, array<string, array{train_type?: int, notice?: string}>>> $by_service Service ID => date => fields.
+ * @param array<int, array<string, array{train_type?: int, notice?: string}>> $by_service Service ID => date => fields.
  */
 function MRT_apply_timetable_deviations( int $timetable_id, array $by_service ): void {
 	$services = get_posts(

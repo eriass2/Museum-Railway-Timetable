@@ -160,7 +160,7 @@ function MRT_journey_wizard_script_localization(): array {
 /**
  * Detect which frontend shortcodes are present in post content.
  *
- * @return array{has_any: bool, has_overview: bool, has_journey_wizard: bool}
+ * @return array{has_any: bool, has_overview: bool, has_journey_wizard: bool, has_timetable_index: bool}
  */
 function MRT_frontend_shortcode_flags_from_post(): array {
 	global $post;
@@ -181,7 +181,7 @@ function MRT_frontend_shortcode_flags_from_post(): array {
 /**
  * Empty frontend shortcode flags.
  *
- * @return array{has_any: bool, has_overview: bool, has_journey_wizard: bool}
+ * @return array{has_any: bool, has_overview: bool, has_journey_wizard: bool, has_timetable_index: bool}
  */
 function MRT_empty_frontend_shortcode_flags(): array {
 	return array(
@@ -195,7 +195,7 @@ function MRT_empty_frontend_shortcode_flags(): array {
 /**
  * Detect frontend shortcode flags from content.
  *
- * @return array{has_any: bool, has_overview: bool, has_journey_wizard: bool}
+ * @return array{has_any: bool, has_overview: bool, has_journey_wizard: bool, has_timetable_index: bool}
  */
 function MRT_frontend_shortcode_flags_from_content( string $content ): array {
 	$flags      = MRT_empty_frontend_shortcode_flags();
