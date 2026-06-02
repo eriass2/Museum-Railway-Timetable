@@ -17,6 +17,7 @@ import {
   AdminFormActions,
   AdminPanel,
   AdminStatusMessage,
+  AdminUnsavedBanner,
   MrtButton,
 } from '../components/ui';
 import TimetableEditorDatesTab from '../components/timetable-editor/TimetableEditorDatesTab.vue';
@@ -257,9 +258,7 @@ function onMobileSaved(message: string) {
     <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
 
     <AdminPanel v-if="detail && cfg.canManage" class="mrt-admin-timetable-meta">
-      <p v-if="metaDirty" class="notice notice-warning mrt-admin-unsaved">
-        {{ adminStr(cfg, 'editorMetaUnsaved') }}
-      </p>
+      <AdminUnsavedBanner :show="metaDirty" :message="adminStr(cfg, 'editorMetaUnsaved')" />
       <h2 class="screen-reader-text">{{ adminStr(cfg, 'editorTitle') }}</h2>
       <p>
         <label for="mrt-tt-title">{{ adminStr(cfg, 'editorTitleLabel') }}</label>

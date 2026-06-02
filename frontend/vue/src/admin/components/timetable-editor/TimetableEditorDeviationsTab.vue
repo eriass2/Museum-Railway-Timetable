@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdminFormActions, AdminInlineField, AdminPanel, AdminTrainTypeCell, AdminTrainTypeSelect, MrtButton } from '../ui';
+import { AdminFormActions, AdminPanel, AdminTrainTypeSelect, AdminUnsavedBanner, MrtButton } from '../ui';
 import type { TimetableDetail } from '../../types';
 import type { DeviationRow } from '../../utils/deviationsPayload';
 import { adminStr } from '../../utils/adminLabels';
@@ -19,9 +19,7 @@ const emit = defineEmits<{ save: [] }>();
 
 <template>
   <AdminPanel>
-    <p v-if="deviationsDirty" class="notice notice-warning mrt-admin-unsaved">
-      {{ adminStr(cfg, 'editorDeviationsUnsaved') }}
-    </p>
+    <AdminUnsavedBanner :show="deviationsDirty" :message="adminStr(cfg, 'editorDeviationsUnsaved')" />
     <table class="widefat striped">
       <thead>
         <tr>

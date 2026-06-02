@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdminDateList, AdminInlineForm, AdminPanel, MrtButton } from '../ui';
+import { AdminDateList, AdminInlineForm, AdminPanel, AdminUnsavedBanner, MrtButton } from '../ui';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 
@@ -21,9 +21,7 @@ const emit = defineEmits<{
 
 <template>
   <AdminPanel>
-    <p v-if="datesDirty" class="notice notice-warning mrt-admin-unsaved">
-      {{ adminStr(cfg, 'editorDatesUnsaved') }}
-    </p>
+    <AdminUnsavedBanner :show="datesDirty" :message="adminStr(cfg, 'editorDatesUnsaved')" />
     <AdminInlineForm v-if="canManage">
       <input v-model="dateInput" type="date" />
       <MrtButton context="admin" variant="secondary" @click="emit('add')">

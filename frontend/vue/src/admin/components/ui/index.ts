@@ -15,4 +15,5 @@ export { default as AdminTableScroll } from './AdminTableScroll.vue';
 export { default as AdminToolList } from './AdminToolList.vue';
 export { default as AdminTrainTypeCell } from './AdminTrainTypeCell.vue';
 export { default as AdminTrainTypeSelect } from './AdminTrainTypeSelect.vue';
+export { default as AdminUnsavedBanner } from './AdminUnsavedBanner.vue';
 export { default as TrainTypeIconPicker } from './TrainTypeIconPicker.vue';
