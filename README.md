@@ -272,8 +272,8 @@ This plugin is provided as-is for use with WordPress.
 - **Dev menu**: component demo + wizard smoke test only
 
 ### 0.4.0
-- **Journey Planner**: New shortcode `[museum_journey_planner]` for searching connections between stations (removed in favor of wizard)
-- **Admin Documentation**: Comprehensive documentation for all shortcodes including journey planner
+- **Journey search**: Shortcode `[museum_journey_planner]` for connection search (superseded by `[museum_journey_wizard]` — see Unreleased)
+- **Admin Documentation**: Comprehensive documentation for public shortcodes
 - **Enhanced Help**: Improved admin page with detailed shortcode usage instructions
 
 ### 0.3.0

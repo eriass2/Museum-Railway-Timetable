@@ -2,6 +2,8 @@
 
 Städning efter Vue-migrering: tydligare lager, mindre duplicering, bättre återanvändbarhet.
 
+**Status: klar** (juni 2026). Alla steg 1–7 är genomförda. Dokumentet behålls som referens för import-kedja och regler efter refactor.
+
 ## Mål
 
 1. En import-kedja utan duplicering i Vue-bundlen
@@ -31,9 +33,11 @@ mrt-color-tokens.css, mrt-typography.css
 | 2 | Ta bort döda overview-`@import` i `admin.css` | ✓ `9d511b4` |
 | 3 | Flytta `components-ui.css` → `ui/primitives.css`; uppdatera kedjor | ✓ `d66ca02` |
 | 4 | Inför `ui/calendar-tokens.css`; koppla month + wizard | ✓ `ef062a4` |
-| 5 | Dela `ui-components.css` i moduler + barrel-import | ✓ (denna branch) |
+| 5 | Dela `ui-components.css` i moduler + barrel-import | ✓ |
 | 6 | Flytta `month-calendar.css` → Vue (`MonthCalendarApp.vue`) | ✓ |
 | 7 | Ta bort döda meta-box CSS (`meta-boxes-*.css`) + doc-referenser | ✓ |
+
+**Alla steg klara.** Framtida CSS-arbete följer avsnittet *Regler efter refactor* nedan — inga öppna refactor-punkter kvar.
 
 ## Regler efter refactor
 
