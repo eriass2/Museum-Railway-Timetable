@@ -1,6 +1,7 @@
-# Run PHPUnit locally (PHP 8.2+) or in Docker php-test (PHP 8.2, CI parity).
+# Run PHPUnit in Docker by default (PHP 8.2, CI parity). Use -Local for host PHP 8.2+.
 # Never invoke vendor\bin\phpunit directly on Windows.
 param(
+    [switch]$Local,
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$Passthrough
 )
@@ -46,14 +47,19 @@ function Ensure-Vendor {
 
 Ensure-Vendor
 
-$useDocker = $false
+$useDocker = -not $Local
 $phpVersion = $null
 
-& php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" 2>$null | ForEach-Object { $phpVersion = $_ }
-if ($LASTEXITCODE -ne 0 -or -not $phpVersion) {
-    $useDocker = $true
-} elseif ([version]$phpVersion -lt [version]"8.2") {
-    $useDocker = $true
+if ($Local) {
+    & php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" 2>$null | ForEach-Object { $phpVersion = $_ }
+    if ($LASTEXITCODE -ne 0 -or -not $phpVersion) {
+        Write-Host "Local PHP not in PATH. Omit -Local to use Docker." -ForegroundColor Red
+        exit 1
+    }
+    if ([version]$phpVersion -lt [version]"8.2") {
+        Write-Host "Local PHP $phpVersion < 8.2. Omit -Local to use Docker." -ForegroundColor Red
+        exit 1
+    }
 }
 
 if ($useDocker) {
@@ -65,11 +71,7 @@ if ($useDocker) {
         }
         exit 1
     }
-    if ($phpVersion) {
-        Write-Host "Local PHP $phpVersion < 8.2 - using Docker." -ForegroundColor Yellow
-    } else {
-        Write-Host "PHP not in PATH - using Docker." -ForegroundColor Yellow
-    }
+    Write-Host "Using Docker (php:8.2-cli). Pass -Local to run on host PHP." -ForegroundColor Cyan
     Invoke-DockerPhpUnit -PhpUnitArgs $Passthrough
 }
 

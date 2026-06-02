@@ -13,12 +13,13 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 
 | Context | Command |
 |---------|---------|
-| Recommended (Windows) | `.\scripts\test.ps1` — auto Docker if local PHP &lt; 8.2 |
+| Full PHP gate (Windows) | `.\scripts\check.ps1` — validate + PHPStan + PHPUnit + PHPCS in Docker |
+| PHPUnit only (Windows) | `.\scripts\test.ps1` — Docker by default |
 | Single test file | `.\scripts\test.ps1 tests/Unit/SomeTest.php` |
-| Local PHP 8.2+ | `composer test` or `composer test -- tests/Unit/SomeTest.php` |
-| Docker (PHP 8.2, CI parity) | `docker compose --profile tools run --rm php-test vendor/bin/phpunit` |
-| Full composer check in Docker | `docker compose --profile tools run --rm composer check` |
+| Host PHP 8.2+ (optional) | `.\scripts\test.ps1 -Local` |
+| Docker (explicit) | `docker compose --profile tools run --rm composer check` |
+| PHPCS only | `docker compose --profile tools run --rm composer phpcs` |
 
-`scripts/test.ps1` picks local `composer test` when PHP ≥ 8.2, otherwise `php-test` (php:8.2-cli). Same codebase via volume mount.
+`scripts/test.ps1` and `scripts/check.ps1` use Docker (`php:8.2-cli` / `composer:2`) by default. Same codebase via volume mount.
 
 See `docs/PHP_INSTALL_WINDOWS.md` and `docs/DEVELOPER.md` for humans.
