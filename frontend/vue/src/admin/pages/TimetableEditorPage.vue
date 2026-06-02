@@ -16,6 +16,7 @@ import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminFormActions,
   AdminPanel,
+  AdminStatusMessage,
   MrtButton,
 } from '../components/ui';
 import TimetableEditorDatesTab from '../components/timetable-editor/TimetableEditorDatesTab.vue';
@@ -31,6 +32,7 @@ import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { useTimetableEditorDirty } from '../composables/useTimetableEditorDirty';
+import { deviationsToSavePayload, type DeviationRow } from '../utils/deviationsPayload';
 import { adminConfig } from '../types';
 import { adminFmt, adminStr } from '../utils/adminLabels';
 import { useRouter } from 'vue-router';
@@ -59,9 +61,7 @@ function trainTypeIconKey(typeId: number): string {
   return detail.value?.train_types.find((t) => t.id === typeId)?.icon_key ?? '';
 }
 const selectedServiceId = ref(0);
-const deviationRows = ref<
-  { service_id: number; date: string; trip_label: string; train_type_id: number; notice: string }[]
->([]);
+const deviationRows = ref<DeviationRow[]>([]);
 const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 const editTitle = ref('');
 const editType = ref('');
@@ -230,15 +230,7 @@ async function removeTrip(serviceId: number) {
 }
 
 async function saveDeviationChanges() {
-  const byService: Record<number, Record<string, { train_type?: number; notice?: string }>> = {};
-  for (const row of deviationRows.value) {
-    if (!byService[row.service_id]) byService[row.service_id] = {};
-    byService[row.service_id][row.date] = {
-      train_type: row.train_type_id || undefined,
-      notice: row.notice || undefined,
-    };
-  }
-  await saveDeviations(timetableId.value, byService);
+  await saveDeviations(timetableId.value, deviationsToSavePayload(deviationRows.value));
   syncSnapshots();
   showSaveNotice(adminStr(cfg, 'editorSavedDeviations'));
 }
@@ -262,7 +254,7 @@ function onMobileSaved(message: string) {
       :loading-text="adminStr(cfg, 'editorLoading')"
       @retry="loadDetail"
     >
-    <p v-if="saveMsg" class="notice notice-success" role="status">{{ saveMsg }}</p>
+    <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
 
     <AdminPanel v-if="detail && cfg.canManage" class="mrt-admin-timetable-meta">
       <p v-if="metaDirty" class="notice notice-warning mrt-admin-unsaved">

@@ -4,6 +4,7 @@ import { overviewUiLabels } from '../../shared/overviewUiLabels';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
 import MrtOverviewBranchGroup from '../../components/overview/MrtOverviewBranchGroup.vue';
 import MrtOverviewPrintKey from '../../components/overview/MrtOverviewPrintKey.vue';
+import { AdminStatusMessage } from './ui';
 import EditableOverviewRailGroup from './EditableOverviewRailGroup.vue';
 import { useOverviewGridEdit } from '../composables/useOverviewGridEdit';
 import '../../styles/timetable-overview.css';
@@ -24,8 +25,8 @@ const labels = overviewUiLabels({});
     role="region"
     :aria-label="data.title"
   >
-    <p v-if="editor.error.value" class="notice notice-error">{{ editor.error.value }}</p>
-    <p v-if="editor.message.value" class="notice notice-success">{{ editor.message.value }}</p>
+    <AdminStatusMessage v-if="editor.error.value" type="error" :message="editor.error.value" />
+    <AdminStatusMessage v-if="editor.message.value" :message="editor.message.value" />
 
     <p v-if="data.typeBanner?.label" class="mrt-ov-banner">
       {{ data.typeBanner.label }}

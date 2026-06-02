@@ -1,12 +1,15 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { getDeviations, listTrainTypes, saveDeviations } from '../api/adminRest';
 import type { TimetableDetail, TrainTypeRow } from '../types';
 import { adminConfig } from '../types';
 import { adminStr } from '../utils/adminLabels';
+import { deviationsToSavePayload, type DeviationRow } from '../utils/deviationsPayload';
+import { useAdminResource } from '../composables/useAdminResource';
+import AdminLoadState from './AdminLoadState.vue';
 import MobileQuickDeparture from './MobileQuickDeparture.vue';
 import MobileCancelTraffic from './MobileCancelTraffic.vue';
-import { MrtButton } from './ui';
+import { AdminDeviationRowFields, AdminStatusMessage, MrtButton } from './ui';
 
 const props = defineProps<{
   timetableId: number;
@@ -18,13 +21,32 @@ const props = defineProps<{
 const emit = defineEmits<{ saved: [message: string] }>();
 
 const cfg = adminConfig();
-const deviationRows = ref<
-  { service_id: number; date: string; trip_label: string; train_type_id: number; notice: string }[]
->([]);
+const deviationRows = ref<DeviationRow[]>([]);
 const trainTypes = ref<TrainTypeRow[]>([]);
-const loading = ref(true);
-const error = ref('');
 const cancelMsg = ref('');
+
+const { loading, error, load, reload, data } = useAdminResource({
+  fetch: async () => {
+    const [deviations, types] = await Promise.all([
+      getDeviations(props.timetableId),
+      listTrainTypes(),
+    ]);
+    return { rows: deviations.rows, trainTypes: types.items };
+  },
+  errorMessage: (e) => (e instanceof Error ? e.message : adminStr(cfg, 'genericError')),
+});
+
+watch(
+  data,
+  (payload) => {
+    if (!payload) {
+      return;
+    }
+    deviationRows.value = payload.rows.map((row) => ({ ...row }));
+    trainTypes.value = payload.trainTypes;
+  },
+  { immediate: true },
+);
 
 const cancelledNotice = computed(() => adminStr(cfg, 'trafficCancelledNotice').toLowerCase());
 
@@ -56,93 +78,68 @@ const trafficTodayPayload = computed(() => {
 function onCancelDone(message: string) {
   cancelMsg.value = message;
   emit('saved', message);
-  void reloadDeviations();
+  void reload();
 }
 
-async function reloadDeviations() {
-  const deviations = await getDeviations(props.timetableId);
-  deviationRows.value = deviations.rows;
+function onCancelError(message: string) {
+  error.value = message;
 }
-
-onMounted(async () => {
-  try {
-    const [deviations, types] = await Promise.all([
-      getDeviations(props.timetableId),
-      listTrainTypes(),
-    ]);
-    deviationRows.value = deviations.rows;
-    trainTypes.value = types.items;
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'genericError');
-  } finally {
-    loading.value = false;
-  }
-});
 
 async function saveDeviationChanges() {
-  const byService: Record<number, Record<string, { train_type?: number; notice?: string }>> = {};
-  for (const row of deviationRows.value) {
-    if (!byService[row.service_id]) byService[row.service_id] = {};
-    byService[row.service_id][row.date] = {
-      train_type: row.train_type_id || undefined,
-      notice: row.notice || undefined,
-    };
-  }
-  await saveDeviations(props.timetableId, byService);
+  await saveDeviations(props.timetableId, deviationsToSavePayload(deviationRows.value));
   emit('saved', adminStr(cfg, 'editorSavedDeviations'));
 }
 </script>
 
 <template>
   <div class="mrt-admin-mobile-panel">
-    <p v-if="loading" class="description">{{ adminStr(cfg, 'mobileLoading') }}</p>
-    <p v-else-if="error" class="notice notice-error">{{ error }}</p>
+    <AdminLoadState
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'mobileLoading')"
+      @retry="load"
+    >
+      <MobileQuickDeparture
+        :services="detail.services"
+        :can-edit="canOperate"
+        @saved="emit('saved', $event)"
+      />
 
-    <MobileQuickDeparture
-      :services="detail.services"
-      :can-edit="canOperate"
-      @saved="emit('saved', $event)"
-    />
+      <MobileCancelTraffic
+        v-if="showCancelToday && trafficTodayPayload"
+        :traffic="trafficTodayPayload"
+        :can-operate="canOperate"
+        @done="onCancelDone"
+        @error="onCancelError"
+      />
+      <AdminStatusMessage v-if="cancelMsg" :message="cancelMsg" />
 
-    <MobileCancelTraffic
-      v-if="showCancelToday && trafficTodayPayload"
-      :traffic="trafficTodayPayload"
-      :can-operate="canOperate"
-      @done="onCancelDone"
-      @error="error = $event"
-    />
-    <p v-if="cancelMsg" class="notice notice-success">{{ cancelMsg }}</p>
-
-    <div class="mrt-admin-mobile-deviations">
-      <h3>{{ adminStr(cfg, 'mobileDeviationsTitle') }}</h3>
-      <div
-        v-for="(row, idx) in deviationRows"
-        :key="idx"
-        class="mrt-admin-mobile-deviation-card"
-      >
-        <p class="mrt-admin-mobile-deviation-meta">
-          <strong>{{ row.date }}</strong> · {{ row.trip_label }}
+      <div class="mrt-admin-mobile-deviations">
+        <h3>{{ adminStr(cfg, 'mobileDeviationsTitle') }}</h3>
+        <div
+          v-for="(row, idx) in deviationRows"
+          :key="idx"
+          class="mrt-admin-mobile-deviation-card"
+        >
+          <AdminDeviationRowFields
+            :train-type-id="row.train_type_id"
+            :notice="row.notice"
+            :meta="`${row.date} · ${row.trip_label}`"
+            :train-types="trainTypes"
+            :can-operate="canOperate"
+            @update:train-type-id="row.train_type_id = $event"
+            @update:notice="row.notice = $event"
+          />
+        </div>
+        <p v-if="canOperate && deviationRows.length">
+          <MrtButton context="admin" variant="primary" wide @click="saveDeviationChanges">
+            {{ adminStr(cfg, 'editorSaveDeviations') }}
+          </MrtButton>
         </p>
-        <p>
-          <label>{{ adminStr(cfg, 'editorColTrainType') }}</label>
-          <select v-model.number="row.train_type_id" class="widefat" :disabled="!canOperate">
-            <option :value="0">{{ adminStr(cfg, 'editorStandardTrainType') }}</option>
-            <option v-for="t in trainTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
-          </select>
-        </p>
-        <p>
-          <label>{{ adminStr(cfg, 'editorColMessage') }}</label>
-          <input v-model="row.notice" type="text" class="widefat" :disabled="!canOperate" />
+        <p v-else-if="!deviationRows.length" class="description">
+          {{ adminStr(cfg, 'mobileNoDeviations') }}
         </p>
       </div>
-      <p v-if="canOperate && deviationRows.length">
-        <MrtButton context="admin" variant="primary" wide @click="saveDeviationChanges">
-          {{ adminStr(cfg, 'editorSaveDeviations') }}
-        </MrtButton>
-      </p>
-      <p v-else-if="!deviationRows.length" class="description">
-        {{ adminStr(cfg, 'mobileNoDeviations') }}
-      </p>
-    </div>
+    </AdminLoadState>
   </div>
 </template>

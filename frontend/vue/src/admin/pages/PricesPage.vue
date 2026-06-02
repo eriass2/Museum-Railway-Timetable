@@ -1,43 +1,35 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { getPrices, savePrices } from '../api/adminRest';
 import type { PricesPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
+import { useAdminResource } from '../composables/useAdminResource';
+import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
-const loading = ref(true);
-const error = ref('');
-const saved = ref('');
+const { saveMsg, show: showSaved } = useAdminSaveNotice();
 const data = ref<PricesPayload | null>(null);
+
+const { loading, error, load } = useAdminResource({
+  beforeLoad: () => cfg.canManage,
+  deniedMessage: adminStr(cfg, 'pricesNoPermission'),
+  fetch: async () => {
+    const payload = await getPrices();
+    data.value = payload;
+    return payload;
+  },
+  errorMessage: (e) => {
+    data.value = null;
+    return e instanceof Error ? e.message : adminStr(cfg, 'pricesLoadFailed');
+  },
+});
 
 const ticketKeys = computed(() => Object.keys(data.value?.ticket_types ?? {}));
 const categoryKeys = computed(() => Object.keys(data.value?.categories ?? {}));
 const zones = computed(() => data.value?.zones ?? []);
-
-async function load() {
-  if (!cfg.canManage) {
-    error.value = adminStr(cfg, 'pricesNoPermission');
-    loading.value = false;
-    return;
-  }
-  loading.value = true;
-  error.value = '';
-  try {
-    data.value = await getPrices();
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'pricesLoadFailed');
-    data.value = null;
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
-  void load();
-});
 
 function cellValue(ticket: string, category: string, zone: number): number | '' {
   const v = data.value?.matrix[ticket]?.[category]?.[zone];
@@ -53,11 +45,10 @@ function setCell(ticket: string, category: string, zone: number, raw: string) {
 
 async function submit() {
   if (!data.value) return;
-  saved.value = '';
   error.value = '';
   try {
     data.value = await savePrices(data.value.matrix);
-    saved.value = adminStr(cfg, 'saved');
+    showSaved(adminStr(cfg, 'saved'));
   } catch (e) {
     error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
   }
@@ -117,7 +108,7 @@ async function submit() {
         <MrtButton context="admin" variant="primary" type="submit">
           {{ adminStr(cfg, 'pricesSaveButton') }}
         </MrtButton>
-        <AdminStatusMessage v-if="saved" :message="saved" />
+        <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
       </AdminFormActions>
     </form>
     </AdminPanel>

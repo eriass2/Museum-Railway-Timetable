@@ -1,63 +1,31 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { getStopTimes, saveStopTimes } from '../api/adminRest';
-import type { StopTimeRow } from '../types';
+import { toRef, watch } from 'vue';
 import { adminConfig } from '../types';
 import { adminStr } from '../utils/adminLabels';
-import AdminFormActions from './ui/AdminFormActions.vue';
-import { MrtButton } from './ui';
+import { useStopTimes } from '../composables/useStopTimes';
+import AdminLoadState from './AdminLoadState.vue';
+import { AdminFormActions, AdminStatusMessage, MrtButton } from './ui';
 
 const props = defineProps<{ serviceId: number }>();
 const cfg = adminConfig();
-const stations = ref<StopTimeRow[]>([]);
-const loading = ref(true);
-const error = ref('');
-const message = ref('');
+const serviceId = toRef(props, 'serviceId');
+const { stations, loading, error, message, load, save } = useStopTimes(serviceId);
 
-async function load() {
-  loading.value = true;
-  error.value = '';
-  try {
-    const res = await getStopTimes(props.serviceId);
-    stations.value = res.stations;
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'genericError');
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
+watch(serviceId, () => {
   void load();
-});
-
-async function save(explicit = true) {
-  if (!cfg.canManage && !cfg.canOperate) return;
-  const stops = stations.value.map((s) => ({
-    station_id: s.id,
-    stops_here: s.stops_here ? '1' : '0',
-    arrival: s.arrival_time || '',
-    departure: s.departure_time || '',
-    pickup: s.pickup_allowed ? '1' : '',
-    dropoff: s.dropoff_allowed ? '1' : '',
-  }));
-  try {
-    const res = await saveStopTimes(props.serviceId, stops, !explicit);
-    stations.value = res.stations;
-    message.value = adminStr(cfg, 'stopTimesSaved');
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
-  }
-}
+}, { immediate: true });
 </script>
 
 <template>
-  <div>
-    <p v-if="loading" class="description">{{ adminStr(cfg, 'stopTimesLoading') }}</p>
-    <p v-if="error" class="notice notice-error">{{ error }}</p>
-    <p v-if="message" class="notice notice-success">{{ message }}</p>
+  <AdminLoadState
+    :loading="loading"
+    :error="error"
+    :loading-text="adminStr(cfg, 'stopTimesLoading')"
+    @retry="load"
+  >
+    <AdminStatusMessage v-if="message" :message="message" />
 
-    <table v-if="!loading" class="widefat striped mrt-admin-stoptimes">
+    <table class="widefat striped mrt-admin-stoptimes">
       <thead>
         <tr>
           <th>{{ adminStr(cfg, 'stopTimesColStops') }}</th>
@@ -104,5 +72,5 @@ async function save(explicit = true) {
         {{ adminStr(cfg, 'stopTimesSaveButton') }}
       </MrtButton>
     </AdminFormActions>
-  </div>
+  </AdminLoadState>
 </template>

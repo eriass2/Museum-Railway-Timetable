@@ -1,6 +1,7 @@
 export { MrtButton } from '@/components/ui';
 export { default as AdminActionBar } from './AdminActionBar.vue';
 export { default as AdminDateList } from './AdminDateList.vue';
+export { default as AdminDeviationRowFields } from './AdminDeviationRowFields.vue';
 export { default as AdminDisclosure } from './AdminDisclosure.vue';
 export { default as AdminEmptyState } from './AdminEmptyState.vue';
 export { default as AdminFlashRow } from './AdminFlashRow.vue';
@@ -13,4 +14,5 @@ export { default as AdminStatusMessage } from './AdminStatusMessage.vue';
 export { default as AdminTableScroll } from './AdminTableScroll.vue';
 export { default as AdminToolList } from './AdminToolList.vue';
 export { default as AdminTrainTypeCell } from './AdminTrainTypeCell.vue';
+export { default as AdminTrainTypeSelect } from './AdminTrainTypeSelect.vue';
 export { default as TrainTypeIconPicker } from './TrainTypeIconPicker.vue';

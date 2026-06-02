@@ -1,16 +1,9 @@
 <script setup lang="ts">
-import { AdminFormActions, AdminInlineField, AdminPanel, AdminTrainTypeCell, MrtButton } from '../ui';
+import { AdminFormActions, AdminInlineField, AdminPanel, AdminTrainTypeCell, AdminTrainTypeSelect, MrtButton } from '../ui';
 import type { TimetableDetail } from '../../types';
+import type { DeviationRow } from '../../utils/deviationsPayload';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
-
-export type DeviationRow = {
-  service_id: number;
-  date: string;
-  trip_label: string;
-  train_type_id: number;
-  notice: string;
-};
 
 defineProps<{
   canOperate: boolean;
@@ -43,16 +36,13 @@ const emit = defineEmits<{ save: [] }>();
           <td>{{ row.date }}</td>
           <td>{{ row.trip_label }}</td>
           <td>
-            <AdminInlineField>
-              <AdminTrainTypeCell
-                v-if="trainTypeIconKey(row.train_type_id)"
-                :icon-key="trainTypeIconKey(row.train_type_id)"
-              />
-              <select v-model.number="row.train_type_id" :disabled="!canOperate">
-                <option :value="0">{{ adminStr(cfg, 'editorStandardTrainType') }}</option>
-                <option v-for="t in trainTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
-              </select>
-            </AdminInlineField>
+            <AdminTrainTypeSelect
+              v-model="row.train_type_id"
+              show-icon
+              :icon-key="trainTypeIconKey(row.train_type_id)"
+              :train-types="trainTypes"
+              :disabled="!canOperate"
+            />
           </td>
           <td>
             <input v-model="row.notice" type="text" class="regular-text" :disabled="!canOperate" />

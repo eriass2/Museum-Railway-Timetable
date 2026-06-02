@@ -1,15 +1,10 @@
 import { computed, ref, type Ref } from 'vue';
 import type { TimetableDetail } from '../types';
+import type { DeviationRow } from '../utils/deviationsPayload';
 
 export type TimetableEditorTab = 'dates' | 'trips' | 'stoptimes' | 'deviations' | 'preview';
 
-export type DeviationRow = {
-  service_id: number;
-  date: string;
-  trip_label: string;
-  train_type_id: number;
-  notice: string;
-};
+export type { DeviationRow };
 
 function datesKey(dates: string[]): string {
   return [...dates].sort().join(',');

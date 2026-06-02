@@ -2,6 +2,9 @@ import { ref } from 'vue';
 import { getStopTimes, saveStopTimes } from '../api/adminRest';
 import type { StopTimeRow } from '../types';
 import type { TimetableTimeCellEdit } from '../../types/timetableOverview';
+import { adminConfig } from '../types';
+import { adminStr } from '../utils/adminLabels';
+import { stopTimesToApiPayload } from '../utils/stopTimesPayload';
 
 function hhmmToInput(value: string): string {
   if (!value || !/^\d{1,2}:\d{2}$/.test(value)) {
@@ -20,6 +23,7 @@ function inputToHhmm(value: string): string {
 }
 
 export function useOverviewGridEdit() {
+  const cfg = adminConfig();
   const cache = ref(new Map<number, StopTimeRow[]>());
   const saving = ref(new Set<number>());
   const error = ref('');
@@ -75,19 +79,11 @@ export function useOverviewGridEdit() {
     }
     saving.value.add(serviceId);
     try {
-      const stops = rows.map((s) => ({
-        station_id: s.id,
-        stops_here: s.stops_here ? '1' : '0',
-        arrival: s.arrival_time || '',
-        departure: s.departure_time || '',
-        pickup: s.pickup_allowed ? '1' : '',
-        dropoff: s.dropoff_allowed ? '1' : '',
-      }));
-      const res = await saveStopTimes(serviceId, stops);
+      const res = await saveStopTimes(serviceId, stopTimesToApiPayload(rows), true);
       cache.value.set(serviceId, res.stations);
-      message.value = 'Stopptid sparad';
+      message.value = adminStr(cfg, 'stopTimesSaved');
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Kunde inte spara';
+      error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
     } finally {
       saving.value.delete(serviceId);
     }

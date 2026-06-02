@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref, watch } from 'vue';
 import { getSettings, saveSettings } from '../api/adminRest';
 import type { SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
+import { useAdminResource } from '../composables/useAdminResource';
+import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
-const loading = ref(true);
-const error = ref('');
-const saved = ref('');
+const { saveMsg, show: showSaved } = useAdminSaveNotice();
 const form = ref<SettingsPayload>({
   enabled: true,
   note: '',
@@ -20,33 +20,28 @@ const form = ref<SettingsPayload>({
   max_transfer_minutes: 120,
 });
 
-async function load() {
-  if (!cfg.canManage) {
-    error.value = adminStr(cfg, 'settingsNoPermission');
-    loading.value = false;
-    return;
-  }
-  loading.value = true;
-  error.value = '';
-  try {
-    form.value = await getSettings();
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'settingsLoadFailed');
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
-  void load();
+const { loading, error, data, load } = useAdminResource({
+  beforeLoad: () => cfg.canManage,
+  deniedMessage: adminStr(cfg, 'settingsNoPermission'),
+  fetch: () => getSettings(),
+  errorMessage: (e) => (e instanceof Error ? e.message : adminStr(cfg, 'settingsLoadFailed')),
 });
 
+watch(
+  data,
+  (payload) => {
+    if (payload) {
+      form.value = payload;
+    }
+  },
+  { immediate: true },
+);
+
 async function submit() {
-  saved.value = '';
   error.value = '';
   try {
     form.value = await saveSettings(form.value);
-    saved.value = adminStr(cfg, 'saved');
+    showSaved(adminStr(cfg, 'saved'));
   } catch (e) {
     error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
   }
@@ -100,7 +95,7 @@ async function submit() {
         <MrtButton context="admin" variant="primary" type="submit">
           {{ adminStr(cfg, 'settingsSaveButton') }}
         </MrtButton>
-        <AdminStatusMessage v-if="saved" :message="saved" />
+        <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
       </AdminFormActions>
       <p class="description">
         {{ adminStr(cfg, 'settingsImportHint') }}

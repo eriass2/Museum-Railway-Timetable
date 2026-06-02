@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
-import type { DashboardPayload } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import { AdminActionBar, AdminPanel, MrtButton } from '../components/ui';
 import AdminSetupChecklist from '../components/AdminSetupChecklist.vue';
 import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
+import { useAdminResource } from '../composables/useAdminResource';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
@@ -14,9 +14,13 @@ import { adminConfig } from '../types';
 const cfg = adminConfig();
 const router = useRouter();
 const { isMobile } = useMobileAdmin();
-const loading = ref(true);
-const error = ref('');
-const data = ref<DashboardPayload | null>(null);
+
+const { loading, error, data, load } = useAdminResource({
+  fetch: () => getDashboard(),
+  errorMessage: (e) => {
+    return e instanceof Error ? e.message : adminStr(cfg, 'dashboardLoadFailed');
+  },
+});
 
 const statItems = computed(() => [
   { key: 'stations', label: adminStr(cfg, 'dashboardStatStations', 'Stationer') },
@@ -25,23 +29,6 @@ const statItems = computed(() => [
   { key: 'services', label: adminStr(cfg, 'dashboardStatServices', 'Turer') },
   { key: 'train_types', label: adminStr(cfg, 'dashboardStatTrainTypes', 'Tågtyper') },
 ] as const);
-
-async function load() {
-  loading.value = true;
-  error.value = '';
-  try {
-    data.value = await getDashboard();
-  } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'dashboardLoadFailed');
-    data.value = null;
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
-  void load();
-});
 
 function openRoute(hashRoute: string) {
   const path = hashRoute.replace(/^#/, '');

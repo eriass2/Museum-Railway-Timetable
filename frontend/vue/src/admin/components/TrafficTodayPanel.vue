@@ -6,7 +6,7 @@ import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
 import { adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
-import { AdminActionBar, AdminPanel, MrtButton } from './ui';
+import { AdminActionBar, AdminPanel, AdminStatusMessage, MrtButton } from './ui';
 
 const props = defineProps<{
   traffic: TrafficToday;
@@ -82,8 +82,8 @@ function openTimetable() {
   <AdminPanel class="mrt-admin-ops-today">
     <h2>{{ adminStr(cfg, 'trafficTodayTitle') }}</h2>
     <p class="description">{{ traffic.date }} — {{ statusText }}</p>
-    <p v-if="message" class="notice notice-success">{{ message }}</p>
-    <p v-if="error" class="notice notice-error">{{ error }}</p>
+    <AdminStatusMessage v-if="message" :message="message" />
+    <AdminStatusMessage v-if="error" type="error" :message="error" />
     <AdminActionBar>
       <MrtButton
         v-if="canOperate && !effectiveTraffic.all_cancelled && effectiveTraffic.services_count > 0"

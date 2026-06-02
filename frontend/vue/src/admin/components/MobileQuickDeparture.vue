@@ -4,7 +4,7 @@ import { getStopTimes, quickDeparture } from '../api/adminRest';
 import type { TimetableServiceRow } from '../types';
 import { adminConfig } from '../types';
 import { adminStr } from '../utils/adminLabels';
-import { MrtButton } from './ui';
+import { AdminStatusMessage, MrtButton } from './ui';
 
 const props = defineProps<{
   services: TimetableServiceRow[];
@@ -69,7 +69,7 @@ async function save() {
   <div class="mrt-admin-mobile-departure">
     <h3>{{ adminStr(cfg, 'mobileQuickDepartureTitle') }}</h3>
     <p class="description">{{ adminStr(cfg, 'mobileQuickDepartureHint') }}</p>
-    <p v-if="error" class="notice notice-error">{{ error }}</p>
+    <AdminStatusMessage v-if="error" type="error" :message="error" />
     <p>
       <label for="mrt-mobile-service">{{ adminStr(cfg, 'mobileTripLabel') }}</label>
       <select id="mrt-mobile-service" v-model.number="serviceId" class="widefat">
