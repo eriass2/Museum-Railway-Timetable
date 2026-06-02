@@ -12,8 +12,9 @@ const props = withDefaults(
     showIcon?: boolean;
     iconKey?: string;
     wide?: boolean;
+    emptyLabelKey?: string;
   }>(),
-  { showIcon: false, wide: false },
+  { showIcon: false, wide: false, emptyLabelKey: 'editorStandardTrainType' },
 );
 
 defineEmits<{ 'update:modelValue': [number] }>();
@@ -30,7 +31,7 @@ const cfg = adminConfig();
       :disabled="disabled"
       @change="$emit('update:modelValue', Number(($event.target as HTMLSelectElement).value))"
     >
-      <option :value="0">{{ adminStr(cfg, 'editorStandardTrainType') }}</option>
+      <option :value="0">{{ adminStr(cfg, props.emptyLabelKey) }}</option>
       <option v-for="t in trainTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
     </select>
   </AdminInlineField>
@@ -41,7 +42,7 @@ const cfg = adminConfig();
     :disabled="disabled"
     @change="$emit('update:modelValue', Number(($event.target as HTMLSelectElement).value))"
   >
-    <option :value="0">{{ adminStr(cfg, 'editorStandardTrainType') }}</option>
+    <option :value="0">{{ adminStr(cfg, props.emptyLabelKey) }}</option>
     <option v-for="t in trainTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
   </select>
 </template>

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import {
   AdminFormActions,
-  AdminInlineField,
   AdminPanel,
   AdminRowActions,
   AdminTrainTypeCell,
+  AdminTrainTypeSelect,
   MrtButton,
 } from '../ui';
 import type { TimetableDetail } from '../../types';
@@ -76,16 +76,13 @@ const emit = defineEmits<{
         <option :value="0">{{ adminStr(cfg, 'editorRoutePrompt') }}</option>
         <option v-for="r in detail.routes" :key="r.id" :value="r.id">{{ r.title }}</option>
       </select>
-      <AdminInlineField>
-        <AdminTrainTypeCell
-          v-if="trainTypeIconKey(newTrip.train_type_id)"
-          :icon-key="trainTypeIconKey(newTrip.train_type_id)"
-        />
-        <select v-model.number="newTrip.train_type_id">
-          <option :value="0">{{ adminStr(cfg, 'editorTrainTypePrompt') }}</option>
-          <option v-for="t in detail.train_types" :key="t.id" :value="t.id">{{ t.name }}</option>
-        </select>
-      </AdminInlineField>
+      <AdminTrainTypeSelect
+        v-model="newTrip.train_type_id"
+        :train-types="detail.train_types"
+        :icon-key="trainTypeIconKey(newTrip.train_type_id)"
+        show-icon
+        empty-label-key="editorTrainTypePrompt"
+      />
       <select v-model.number="newTrip.end_station_id">
         <option :value="0">{{ adminStr(cfg, 'editorDestinationPrompt') }}</option>
         <option v-for="d in destinations" :key="d.id" :value="d.id">{{ d.name }}</option>
