@@ -86,6 +86,17 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertSame( '', $to['departure_time'] );
 	}
 
+	public function test_print_key_base_rows_include_standard_symbols(): void {
+		$rows    = MRT_timetable_print_key_base_rows();
+		$symbols = array_column( $rows, 'symbol' );
+
+		self::assertSame( array( 'X', 'P', '*' ), $symbols );
+		self::assertCount( 3, $rows );
+		foreach ( $rows as $row ) {
+			self::assertNotSame( '', $row['text'] );
+		}
+	}
+
 	public function test_junction_bus_rows_use_inline_departure_and_arrival_times(): void {
 		$junction_id = 9;
 		$remote_id   = 15;

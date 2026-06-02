@@ -64,7 +64,7 @@ inc/
 │   ├── route/
 │   ├── service/            # services, stop-times, connections
 │   ├── station/
-│   ├── timetable/view/     # overview-data (JSON), group-view, grid-merge, grid-connections
+│   ├── timetable/view/     # overview-data (+ print-key, rail/bus rows, branch), group-view, grid-merge, grid-connections
 │   ├── train-type/         # ikon-slugs
 │   └── admin/              # dashboard-data, deviations (REST backing)
 ├── infrastructure/
@@ -100,7 +100,7 @@ Vue-admin under `admin.php?page=mrt_app` (`frontend/vue/src/admin/`). REST via `
 
 ### Timetable overview (Vue)
 
-`inc/domain/timetable/view/overview-data.php` bygger JSON (`MRT_get_timetable_overview_data`). Vue renderar i `frontend/vue/src/components/overview/`; admin editor och shortcode mountar samma komponent.
+`inc/domain/timetable/view/overview-data.php` (och moduler `overview-print-key.php`, `overview-rail-rows.php`, `overview-bus-rows.php`, `overview-branch-group.php`) bygger JSON (`MRT_get_timetable_overview_data`). Vue renderar i `frontend/vue/src/components/overview/`; admin editor och shortcode mountar samma komponent.
 
 ---
 
