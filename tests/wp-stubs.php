@@ -287,22 +287,108 @@ if (!function_exists('wp_get_post_terms')) {
      * @return array<int, mixed>
      */
     function wp_get_post_terms($post_id, $taxonomy, $args = []) {
-        unset($taxonomy, $args);
+        unset($taxonomy);
         $map = $GLOBALS['mrt_test_post_terms'] ?? [];
         $key = (int) $post_id;
         if (!isset($map[$key])) {
             return [];
         }
-        $term_ids = (array) $map[$key];
+        $term_ids = array_map( 'intval', (array) $map[$key] );
+        if ( ( $args['fields'] ?? '' ) === 'ids' ) {
+            return $term_ids;
+        }
         $terms = $GLOBALS['mrt_test_terms'] ?? [];
         $out = [];
         foreach ($term_ids as $tid) {
-            $tid = (int) $tid;
             if (isset($terms[$tid])) {
                 $out[] = $terms[$tid];
             }
         }
         return $out;
+    }
+}
+
+if ( ! function_exists( 'get_terms' ) ) {
+    /**
+     * @param array<string, mixed> $args
+     * @return array<int, WP_Term>
+     */
+    function get_terms( $args = array() ) {
+        if ( isset( $GLOBALS['mrt_test_get_terms'] ) && is_callable( $GLOBALS['mrt_test_get_terms'] ) ) {
+            return $GLOBALS['mrt_test_get_terms']( $args );
+        }
+        return $GLOBALS['mrt_test_terms_list'] ?? array();
+    }
+}
+
+if ( ! function_exists( 'wp_insert_post' ) ) {
+    /**
+     * @param array<string, mixed> $postarr
+     * @return int|WP_Error
+     */
+    function wp_insert_post( $postarr, $wp_error = false ) {
+        unset( $wp_error );
+        if ( isset( $GLOBALS['mrt_test_wp_insert_post'] ) && is_callable( $GLOBALS['mrt_test_wp_insert_post'] ) ) {
+            return $GLOBALS['mrt_test_wp_insert_post']( $postarr );
+        }
+        if ( ! isset( $GLOBALS['mrt_test_next_post_id'] ) ) {
+            $GLOBALS['mrt_test_next_post_id'] = 9000;
+        }
+        $id = (int) ++$GLOBALS['mrt_test_next_post_id'];
+        $post = new WP_Post(
+            (object) array(
+                'ID'          => $id,
+                'post_title'  => (string) ( $postarr['post_title'] ?? '' ),
+                'post_type'   => (string) ( $postarr['post_type'] ?? 'post' ),
+                'post_status' => (string) ( $postarr['post_status'] ?? 'publish' ),
+            )
+        );
+        if ( ! isset( $GLOBALS['mrt_test_posts'] ) || ! is_array( $GLOBALS['mrt_test_posts'] ) ) {
+            $GLOBALS['mrt_test_posts'] = array();
+        }
+        $GLOBALS['mrt_test_posts'][ $id ] = $post;
+        return $id;
+    }
+}
+
+if ( ! function_exists( 'wp_update_post' ) ) {
+    /**
+     * @param array<string, mixed> $postarr
+     * @return int|WP_Error
+     */
+    function wp_update_post( $postarr, $wp_error = false ) {
+        unset( $wp_error );
+        $id = (int) ( $postarr['ID'] ?? 0 );
+        if ( $id <= 0 || ! isset( $GLOBALS['mrt_test_posts'][ $id ] ) ) {
+            return 0;
+        }
+        if ( isset( $postarr['post_title'] ) ) {
+            $GLOBALS['mrt_test_posts'][ $id ]->post_title = (string) $postarr['post_title'];
+        }
+        return $id;
+    }
+}
+
+if ( ! function_exists( 'wp_set_object_terms' ) ) {
+    /**
+     * @param int          $object_id
+     * @param array|int|string $terms
+     * @return array<int, int>|WP_Error
+     */
+    function wp_set_object_terms( $object_id, $terms, $taxonomy, $append = false ) {
+        unset( $taxonomy, $append );
+        if ( ! isset( $GLOBALS['mrt_test_post_terms'] ) || ! is_array( $GLOBALS['mrt_test_post_terms'] ) ) {
+            $GLOBALS['mrt_test_post_terms'] = array();
+        }
+        $GLOBALS['mrt_test_post_terms'][ (int) $object_id ] = array_map( 'intval', (array) $terms );
+        return array();
+    }
+}
+
+if ( ! function_exists( 'get_edit_post_link' ) ) {
+    function get_edit_post_link( $post_id, $context = 'display' ): string {
+        unset( $context );
+        return '/wp-admin/post.php?post=' . (int) $post_id . '&action=edit';
     }
 }
 
@@ -356,7 +442,7 @@ if ( ! function_exists( 'current_time' ) ) {
 }
 
 if ( ! class_exists( 'WP_REST_Request' ) ) {
-    class WP_REST_Request {
+    class WP_REST_Request implements ArrayAccess {
         /** @var array<string, string> */
         private array $headers = array();
 
@@ -402,6 +488,25 @@ if ( ! class_exists( 'WP_REST_Request' ) ) {
         /** @return array<string, mixed> */
         public function get_json_params(): array {
             return $this->json_params;
+        }
+
+        public function offsetExists( $offset ): bool {
+            return isset( $this->params[ $offset ] );
+        }
+
+        /** @param mixed $offset */
+        public function offsetGet( $offset ): mixed {
+            return $this->params[ $offset ] ?? null;
+        }
+
+        /** @param mixed $offset */
+        public function offsetSet( $offset, $value ): void {
+            $this->params[ $offset ] = $value;
+        }
+
+        /** @param mixed $offset */
+        public function offsetUnset( $offset ): void {
+            unset( $this->params[ $offset ] );
         }
     }
 }
