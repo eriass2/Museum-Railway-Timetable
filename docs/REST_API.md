@@ -43,6 +43,7 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `GET|PUT /settings/prices` | Prismatris |
 | `POST /import/csv`, `GET /export/csv` | Import/export |
 | `POST /journey/search` | Resesökning (publikt) |
+| `GET /prices/trip` | Priser för vald resa (publikt, wizard) |
 | `GET /journey/calendar` | Trafikdagar (publikt) |
 | `GET /journey/connection-detail` | Detalj (publikt) |
 
@@ -59,6 +60,7 @@ Implementation: `inc/infrastructure/rest/*.php`. Admin-klient: `frontend/vue/src
 | `mrt_search_journey` | `POST /journey/search` |
 | `mrt_journey_calendar_month` | `POST /journey/calendar` |
 | `mrt_journey_connection_detail` | `POST /journey/connection-detail` |
+| `mrt_trip_prices` | `GET /prices/trip?from_id=&to_id=&trip_type=&…` |
 | `mrt_get_timetable_for_date` | `GET /timetables/day?date=&train_type=` |
 | `mrt_get_timetable_month` | `GET /timetables/month?year=&month=&train_type=&service=&start_monday=` |
 | `mrt_timetable_overview_data` | `GET /timetables/{id}/overview` |

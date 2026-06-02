@@ -18,6 +18,7 @@ require_once MRT_PATH . 'inc/infrastructure/rest/timetables.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/stations-routes.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/stop-times.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/journey-public.php';
+require_once MRT_PATH . 'inc/infrastructure/rest/pricing-public.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/settings-admin.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/train-types.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/import-export.php';
@@ -33,6 +34,7 @@ function MRT_register_rest_routes(): void {
 	MRT_rest_register_stations_routes_routes();
 	MRT_rest_register_stop_times_routes();
 	MRT_rest_register_journey_public_routes();
+	MRT_rest_register_pricing_public_routes();
 	MRT_rest_register_settings_routes();
 	MRT_rest_register_train_type_routes();
 	MRT_rest_register_import_export_routes();

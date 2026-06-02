@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { computed, type MaybeRef, unref } from 'vue';
 import type { PriceTableLabels } from '../../shared/priceLabels';
-import type { PriceTripType } from '../../shared/prices';
 import {
   PRICE_CAT_KEYS,
   PRICE_TYPE_KEYS,
-  dayTicketMatrix,
   formatPriceCell,
-  priceMatrixForTrip,
-  zonesForStationPair,
+  type DayTicketData,
+  type TripPriceData,
 } from '../../shared/prices';
 import type { PriceCfg } from '../../shared/priceTypes';
 import MrtHeading from './MrtHeading.vue';
@@ -17,31 +15,19 @@ const props = withDefaults(
   defineProps<{
     priceCfg: MaybeRef<PriceCfg>;
     labels: MaybeRef<PriceTableLabels>;
-    tripType: MaybeRef<PriceTripType>;
-    fromId: MaybeRef<number>;
-    toId: MaybeRef<number>;
-    outboundDeparture?: MaybeRef<string>;
-    inboundDeparture?: MaybeRef<string>;
+    tripPrice: MaybeRef<TripPriceData | null>;
+    dayPrice?: MaybeRef<DayTicketData | null>;
+    loading?: boolean;
     /** Summary step: one row for the chosen trip type. Set true to show full matrix. */
     showAllTypes?: boolean;
-    /** Summary step: show heldagsbiljett below the active trip prices. */
-    includeDayTickets?: boolean;
   }>(),
-  { showAllTypes: false, includeDayTickets: false },
+  { showAllTypes: false, loading: false },
 );
 
 const priceCfg = computed(() => unref(props.priceCfg));
 const labels = computed(() => unref(props.labels));
-const zones = computed(() => zonesForStationPair(unref(props.fromId), unref(props.toId), priceCfg.value));
-const priceData = computed(() =>
-  priceMatrixForTrip(unref(props.tripType), priceCfg.value, zones.value, {
-    outboundDeparture: unref(props.outboundDeparture) ?? '',
-    inboundDeparture: unref(props.inboundDeparture) ?? '',
-  }),
-);
-const dayPrices = computed(() =>
-  props.includeDayTickets ? dayTicketMatrix(priceCfg.value, zones.value) : null,
-);
+const priceData = computed(() => unref(props.tripPrice));
+const dayPrices = computed(() => unref(props.dayPrice) ?? null);
 
 const cellCfg = computed((): PriceCfg => ({
   ...priceCfg.value,
@@ -96,7 +82,10 @@ function dayPriceForCategory(catKey: string): string {
 </script>
 
 <template>
-  <div v-if="priceData" class="mrt-price-block mrt-mt-lg">
+  <div v-if="loading" class="mrt-price-block mrt-mt-lg" role="status">
+    {{ labels.title }}…
+  </div>
+  <div v-else-if="priceData" class="mrt-price-block mrt-mt-lg">
     <MrtHeading level="h4" size="md" class="mrt-price-block__title">
       {{ labels.title }}
       <span v-if="selectedTypeLabel" class="mrt-price-block__title-trip">

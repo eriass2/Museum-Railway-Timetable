@@ -1,4 +1,10 @@
-import { parseTripClock } from './prices';
+export function parseTripClock(hhmm: string): number | null {
+  const match = /^(\d{1,2}):(\d{2})$/.exec(hhmm.trim());
+  if (!match) {
+    return null;
+  }
+  return Number.parseInt(match[1], 10) * 60 + Number.parseInt(match[2], 10);
+}
 
 export function formatTripClock(time: string): string {
   return time ? time.replace(':', '.') : '—';

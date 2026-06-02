@@ -34,6 +34,18 @@ const ROUTES: Record<string, RouteSpec> = {
     path: () => 'timetables/month',
     queryKeys: ['year', 'month', 'train_type', 'service', 'start_monday'],
   },
+  mrt_trip_prices: {
+    method: 'GET',
+    path: () => 'prices/trip',
+    queryKeys: [
+      'from_id',
+      'to_id',
+      'trip_type',
+      'outbound_departure',
+      'inbound_departure',
+      'include_day',
+    ],
+  },
 };
 
 function buildUrl(

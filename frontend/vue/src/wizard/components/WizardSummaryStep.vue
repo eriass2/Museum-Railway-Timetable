@@ -8,16 +8,10 @@ import MrtSummaryCard from '../../components/ui/MrtSummaryCard.vue';
 import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
+import { useTripPrices } from '../../composables/useTripPrices';
 import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
 import { priceTableLabelsFromCfg } from '../utils/priceTableLabels';
-import {
-  PRICE_CAT_KEYS,
-  dayTicketMatrix,
-  formatPriceCell,
-  priceMatrixForTrip,
-  qualifiesForAfternoonReturn,
-  zonesForStationPair,
-} from '../../shared/prices';
+import { PRICE_CAT_KEYS, formatPriceCell } from '../../shared/prices';
 import type { PriceCfg } from '../../shared/priceTypes';
 import { formatYmdForDisplay } from '../utils/wizardDate';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
@@ -52,33 +46,26 @@ const shareLabel = computed(() =>
     : cfgStr(cfg, 'summaryCopy', 'Kopiera resa'),
 );
 
-const zones = computed(() => zonesForStationPair(store.fromId, store.toId, cfg.value));
-const afternoonReturn = computed(() =>
-  qualifiesForAfternoonReturn(
-    store.tripType,
-    outboundDeparture.value,
-    inboundDeparture.value,
-  ),
-);
-
-const priceLabels = computed(() =>
-  priceTableLabelsFromCfg(cfg.value, zones.value, !afternoonReturn.value),
-);
-
-const priceData = computed(() =>
-  priceMatrixForTrip(store.tripType, cfg.value, zones.value, {
-    outboundDeparture: outboundDeparture.value,
-    inboundDeparture: inboundDeparture.value,
-  }),
-);
-
-const dayPrices = computed(() => dayTicketMatrix(cfg.value, zones.value));
-
 const outboundDeparture = computed(() =>
   store.outbound ? departureFromOrigin(store.outbound) : '',
 );
 const inboundDeparture = computed(() =>
   store.inbound ? departureFromOrigin(store.inbound) : '',
+);
+
+const tripPricesQuery = computed(() => ({
+  fromId: store.fromId,
+  toId: store.toId,
+  tripType: store.tripType,
+  outboundDeparture: outboundDeparture.value,
+  inboundDeparture: inboundDeparture.value,
+  includeDay: true,
+}));
+
+const { loading: pricesLoading, zones, trip: priceData, day: dayPrices } = useTripPrices(cfg, tripPricesQuery);
+
+const priceLabels = computed(() =>
+  priceTableLabelsFromCfg(cfg.value, zones.value, !priceData.value?.isAfternoonReturn),
 );
 
 const tripTypeLabel = computed(() =>
@@ -158,7 +145,7 @@ function summaryPlainText(): string {
   const data = priceData.value;
   const priceCfg = cfg.value as PriceCfg;
   const ticketTypeLabel = data
-    ? afternoonReturn.value
+    ? data.isAfternoonReturn
       ? priceCfg.priceAfternoonReturnLabel || priceLabels.value.tickets.return || 'Returbiljett'
       : priceLabels.value.tickets[data.activeType] || data.activeType
     : '';
@@ -172,7 +159,7 @@ function summaryPlainText(): string {
           heading: cfgStr(cfg, 'summaryPricesHeading', 'Priser'),
           ticketTypeLabel,
           rows: buildPriceRows(),
-          note: afternoonReturn.value ? priceCfg.priceAfternoonNote : priceLabels.value.note,
+          note: data.isAfternoonReturn ? priceCfg.priceAfternoonNote : priceLabels.value.note,
           dayTicketHeading: dayPrices.value
             ? priceCfg.priceDayTitle || priceLabels.value.tickets.day || 'Heldagsbiljett'
             : undefined,
@@ -263,12 +250,9 @@ function onBack(): void {
         <MrtPriceTable
           :price-cfg="cfg"
           :labels="priceLabels"
-          :trip-type="store.tripType"
-          :from-id="store.fromId"
-          :to-id="store.toId"
-          :outbound-departure="outboundDeparture"
-          :inbound-departure="inboundDeparture"
-          include-day-tickets
+          :trip-price="priceData"
+          :day-price="dayPrices"
+          :loading="pricesLoading"
         />
       </div>
 

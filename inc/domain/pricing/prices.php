@@ -235,3 +235,5 @@ function MRT_price_category_labels() {
 		'student_senior' => __( 'Student / pensionär', 'museum-railway-timetable' ),
 	);
 }
+
+require_once __DIR__ . '/price-rules.php';
