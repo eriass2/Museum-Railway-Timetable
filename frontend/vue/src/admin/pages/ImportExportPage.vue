@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 import { exportCsv, importCsv } from '../api/adminRest';
 import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
+import { adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -34,9 +35,9 @@ async function onExport() {
     a.download = res.filename;
     a.click();
     URL.revokeObjectURL(url);
-    success.value = 'Export klar.';
+    success.value = adminStr(cfg, 'importExportExportSuccess');
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Export misslyckades';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'importExportExportFailed');
   } finally {
     loading.value = false;
   }
@@ -55,9 +56,9 @@ async function onImport(ev: Event) {
     const stats = Object.entries(res.stats)
       .map(([k, v]) => `${k}: ${v}`)
       .join(', ');
-    success.value = `Import klar (${res.mode}). ${stats}`;
+    success.value = adminFmt(cfg, 'importExportImportSuccess', res.mode, stats);
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Import misslyckades';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'importExportImportFailed');
   } finally {
     loading.value = false;
     input.value = '';
@@ -67,40 +68,42 @@ async function onImport(ev: Event) {
 
 <template>
   <div>
-    <h1>Import / export</h1>
+    <h1>{{ adminStr(cfg, 'importExportTitle') }}</h1>
 
-    <p v-if="!cfg.canManage" class="notice notice-warning">Du har inte behörighet.</p>
+    <p v-if="!cfg.canManage" class="notice notice-warning">
+      {{ adminStr(cfg, 'importExportNoPermission') }}
+    </p>
     <AdminStatusMessage v-if="error" :message="error" type="error" />
     <AdminStatusMessage :message="success" />
 
     <AdminPanel v-if="cfg.canManage">
-      <h2>Exportera CSV (zip)</h2>
+      <h2>{{ adminStr(cfg, 'importExportExportTitle') }}</h2>
       <p>
         <label>
           <input v-model="includeSettings" type="checkbox" />
-          Inkludera inställningar
+          {{ adminStr(cfg, 'importExportIncludeSettings') }}
         </label>
         <label class="mrt-ml-sm">
           <input v-model="includePrices" type="checkbox" />
-          Inkludera priser
+          {{ adminStr(cfg, 'importExportIncludePrices') }}
         </label>
       </p>
       <AdminFormActions>
         <button type="button" class="button button-primary" :disabled="loading" @click="onExport">
-          Ladda ner export
+          {{ adminStr(cfg, 'importExportDownloadButton') }}
         </button>
       </AdminFormActions>
 
-      <h2>Importera CSV (zip)</h2>
-      <p class="description">Se docs/CSV_FORMAT.md för kolumnformat.</p>
+      <h2>{{ adminStr(cfg, 'importExportImportTitle') }}</h2>
+      <p class="description">{{ adminStr(cfg, 'importExportImportHint') }}</p>
       <p>
         <label>
           <input v-model="mode" type="radio" value="merge" />
-          Slå ihop (uppdatera befintlig data)
+          {{ adminStr(cfg, 'importExportModeMerge') }}
         </label>
         <label class="mrt-ml-sm">
           <input v-model="mode" type="radio" value="override" />
-          Ersätt (ta bort poster som saknas i filen)
+          {{ adminStr(cfg, 'importExportModeOverride') }}
         </label>
       </p>
       <p>

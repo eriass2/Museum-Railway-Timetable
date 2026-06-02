@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router';
 import { cancelTrafficToday } from '../api/adminRest';
 import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
+import { adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
+import { adminConfig } from '../types';
 import { AdminActionBar, AdminPanel } from './ui';
 
 const props = defineProps<{
@@ -11,6 +13,7 @@ const props = defineProps<{
   canOperate: boolean;
 }>();
 
+const cfg = adminConfig();
 const router = useRouter();
 const busy = ref(false);
 const message = ref('');
@@ -25,20 +28,26 @@ const effectiveTraffic = computed(() => ({
 const statusText = computed(() => {
   const traffic = effectiveTraffic.value;
   if (traffic.services_count === 0) {
-    return 'Inga turer schemalagda.';
+    return adminStr(cfg, 'trafficTodayNoServices');
   }
   if (traffic.all_cancelled) {
-    return `All trafik (${traffic.services_count} turer) är inställd.`;
+    return adminFmtN(cfg, 'trafficTodayAllCancelled', { 1: traffic.services_count });
   }
-  return `${traffic.services_count} turer · ${traffic.timetable_title}`;
+  return adminFmtN(cfg, 'trafficTodaySummary', {
+    1: traffic.services_count,
+    2: traffic.timetable_title,
+  });
 });
 
 async function cancelAll() {
   if (!props.canOperate || busy.value) return;
   const ok = await adminConfirm({
-    title: 'Inställ trafik idag',
-    message: `Alla ${props.traffic.services_count} turer den ${props.traffic.date} får meddelandet «Inställd». Detta påverkar visningen på webbplatsen.`,
-    confirmLabel: 'Inställ trafik',
+    title: adminStr(cfg, 'trafficTodayCancelTitle'),
+    message: adminFmtN(cfg, 'trafficTodayCancelMessage', {
+      1: props.traffic.services_count,
+      2: props.traffic.date,
+    }),
+    confirmLabel: adminStr(cfg, 'trafficTodayCancelButton'),
     danger: true,
   });
   if (!ok) {
@@ -51,13 +60,13 @@ async function cancelAll() {
     const res = await cancelTrafficToday(props.traffic.date);
     message.value =
       res.services_updated > 0
-        ? `${res.services_updated} turer markerade som inställda.`
-        : 'Ingen trafik att ställa in.';
+        ? adminFmt(cfg, 'trafficTodayCancelSuccess', res.services_updated)
+        : adminStr(cfg, 'trafficTodayCancelNone');
     if (res.services_updated > 0) {
       localAllCancelled.value = true;
     }
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte ställa in trafik';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'trafficTodayCancelFailed');
   } finally {
     busy.value = false;
   }
@@ -70,7 +79,7 @@ function openTimetable() {
 
 <template>
   <AdminPanel class="mrt-admin-ops-today">
-    <h2>Trafik idag</h2>
+    <h2>{{ adminStr(cfg, 'trafficTodayTitle') }}</h2>
     <p class="description">{{ traffic.date }} — {{ statusText }}</p>
     <p v-if="message" class="notice notice-success">{{ message }}</p>
     <p v-if="error" class="notice notice-error">{{ error }}</p>
@@ -82,10 +91,10 @@ function openTimetable() {
         :disabled="busy"
         @click="cancelAll"
       >
-        Inställ trafik idag
+        {{ adminStr(cfg, 'trafficTodayCancelTitle') }}
       </button>
       <button type="button" class="button" @click="openTimetable">
-        Öppna tidtabell
+        {{ adminStr(cfg, 'trafficTodayOpenTimetable') }}
       </button>
       <button
         v-if="traffic.services_count > 0"
@@ -93,7 +102,7 @@ function openTimetable() {
         class="button"
         @click="openTimetable"
       >
-        Ändra avgångstid / avvikelser
+        {{ adminStr(cfg, 'trafficTodayEditDeviations') }}
       </button>
     </AdminActionBar>
   </AdminPanel>

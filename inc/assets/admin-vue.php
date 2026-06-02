@@ -199,6 +199,113 @@ function MRT_admin_vue_l10n_stations(): array {
 /**
  * @return array<string, string>
  */
+function MRT_admin_vue_l10n_timetables(): array {
+	return array(
+		'timetablesTitle'              => __( 'Tidtabeller', 'museum-railway-timetable' ),
+		'timetablesLoading'            => __( 'Laddar tidtabeller…', 'museum-railway-timetable' ),
+		'timetablesLoadFailed'         => __( 'Fel vid laddning', 'museum-railway-timetable' ),
+		'timetablesCreateFailed'       => __( 'Kunde inte skapa', 'museum-railway-timetable' ),
+		'timetablesDeleteFailed'       => __( 'Kunde inte ta bort', 'museum-railway-timetable' ),
+		'timetablesLimitedRole'        => __(
+			'Du kan öppna tidtabeller och ändra avvikelser eller avgångstider, men inte skapa nya tidtabeller eller grunddata. Kontakta en administratör om du behöver fler rättigheter.',
+			'museum-railway-timetable'
+		),
+		'timetablesNewTitle'           => __( 'Ny tidtabell', 'museum-railway-timetable' ),
+		'timetablesNamePlaceholder'    => __( 'Namn', 'museum-railway-timetable' ),
+		'timetablesCreateButton'       => __( 'Skapa', 'museum-railway-timetable' ),
+		'timetablesEmptyTitle'         => __( 'Inga tidtabeller', 'museum-railway-timetable' ),
+		'timetablesEmptyMessage'       => __( 'Skapa en tidtabell ovan för att komma igång.', 'museum-railway-timetable' ),
+		'timetablesColName'            => __( 'Namn', 'museum-railway-timetable' ),
+		'timetablesColDates'           => __( 'Trafikdagar', 'museum-railway-timetable' ),
+		'timetablesColTrips'           => __( 'Turer', 'museum-railway-timetable' ),
+		'timetablesCardSummary'        => __( '%1$s trafikdagar · %2$s turer', 'museum-railway-timetable' ),
+		'timetablesDeleteTitle'        => __( 'Ta bort tidtabell', 'museum-railway-timetable' ),
+		'timetablesDeleteMessage'      => __(
+			'«%s» och alla dess turer raderas permanent.',
+			'museum-railway-timetable'
+		),
+	);
+}
+
+/**
+ * @return array<string, string>
+ */
+function MRT_admin_vue_l10n_train_types(): array {
+	return array(
+		'trainTypesTitle'           => __( 'Tågtyper', 'museum-railway-timetable' ),
+		'trainTypesLoading'         => __( 'Laddar tågtyper…', 'museum-railway-timetable' ),
+		'trainTypesEmptyTitle'      => __( 'Inga tågtyper ännu', 'museum-railway-timetable' ),
+		'trainTypesEmptyMessage'    => __(
+			'Skapa den första tågtypen nedan. Ikonen visas i tidtabeller och bokningsflödet.',
+			'museum-railway-timetable'
+		),
+		'trainTypesColName'         => __( 'Namn', 'museum-railway-timetable' ),
+		'trainTypesColIcon'         => __( 'Ikon', 'museum-railway-timetable' ),
+		'trainTypesSlugLabel'       => __( 'Slug', 'museum-railway-timetable' ),
+		'trainTypesNewTitle'        => __( 'Ny tågtyp', 'museum-railway-timetable' ),
+		'trainTypesNameLabel'       => __( 'Namn', 'museum-railway-timetable' ),
+		'trainTypesIconLabel'       => __( 'Ikon', 'museum-railway-timetable' ),
+		'trainTypesSlugOptional'    => __( 'Slug (valfritt)', 'museum-railway-timetable' ),
+		'trainTypesSlugPlaceholder' => __( 't.ex. ralsbuss', 'museum-railway-timetable' ),
+		'trainTypesCreateButton'    => __( 'Skapa', 'museum-railway-timetable' ),
+		'trainTypesCreated'         => __( 'Tågtypen «%s» skapades.', 'museum-railway-timetable' ),
+		'trainTypesSaved'           => __( '«%s» sparades.', 'museum-railway-timetable' ),
+		'trainTypesDeleteTitle'     => __( 'Ta bort tågtyp', 'museum-railway-timetable' ),
+		'trainTypesDeleteMessage'   => __( '«%s» tas bort från listan.', 'museum-railway-timetable' ),
+		'trainTypesDeleteFallback'  => __( 'Tågtypen tas bort från listan.', 'museum-railway-timetable' ),
+		'trainTypesRemoved'         => __( '«%s» borttagen.', 'museum-railway-timetable' ),
+		'trainTypesRemovedFallback' => __( 'Borttagen.', 'museum-railway-timetable' ),
+	);
+}
+
+/**
+ * @return array<string, string>
+ */
+function MRT_admin_vue_l10n_import_export(): array {
+	return array(
+		'importExportTitle'            => __( 'Import / export', 'museum-railway-timetable' ),
+		'importExportNoPermission'     => __( 'Du har inte behörighet.', 'museum-railway-timetable' ),
+		'importExportExportTitle'      => __( 'Exportera CSV (zip)', 'museum-railway-timetable' ),
+		'importExportIncludeSettings'  => __( 'Inkludera inställningar', 'museum-railway-timetable' ),
+		'importExportIncludePrices'    => __( 'Inkludera priser', 'museum-railway-timetable' ),
+		'importExportDownloadButton'   => __( 'Ladda ner export', 'museum-railway-timetable' ),
+		'importExportImportTitle'      => __( 'Importera CSV (zip)', 'museum-railway-timetable' ),
+		'importExportImportHint'       => __( 'Se docs/CSV_FORMAT.md för kolumnformat.', 'museum-railway-timetable' ),
+		'importExportModeMerge'        => __( 'Slå ihop (uppdatera befintlig data)', 'museum-railway-timetable' ),
+		'importExportModeOverride'     => __( 'Ersätt (ta bort poster som saknas i filen)', 'museum-railway-timetable' ),
+		'importExportExportSuccess'    => __( 'Export klar.', 'museum-railway-timetable' ),
+		'importExportExportFailed'     => __( 'Export misslyckades', 'museum-railway-timetable' ),
+		'importExportImportFailed'     => __( 'Import misslyckades', 'museum-railway-timetable' ),
+		'importExportImportSuccess'    => __( 'Import klar (%s). %s', 'museum-railway-timetable' ),
+	);
+}
+
+/**
+ * @return array<string, string>
+ */
+function MRT_admin_vue_l10n_traffic(): array {
+	return array(
+		'trafficTodayTitle'            => __( 'Trafik idag', 'museum-railway-timetable' ),
+		'trafficTodayNoServices'       => __( 'Inga turer schemalagda.', 'museum-railway-timetable' ),
+		'trafficTodayAllCancelled'     => __( 'All trafik (%1$s turer) är inställd.', 'museum-railway-timetable' ),
+		'trafficTodaySummary'          => __( '%1$s turer · %2$s', 'museum-railway-timetable' ),
+		'trafficTodayCancelTitle'      => __( 'Inställ trafik idag', 'museum-railway-timetable' ),
+		'trafficTodayCancelMessage'    => __(
+			'Alla %1$s turer den %2$s får meddelandet «Inställd». Detta påverkar visningen på webbplatsen.',
+			'museum-railway-timetable'
+		),
+		'trafficTodayCancelButton'     => __( 'Inställ trafik', 'museum-railway-timetable' ),
+		'trafficTodayCancelSuccess'    => __( '%s turer markerade som inställda.', 'museum-railway-timetable' ),
+		'trafficTodayCancelNone'       => __( 'Ingen trafik att ställa in.', 'museum-railway-timetable' ),
+		'trafficTodayCancelFailed'     => __( 'Kunde inte ställa in trafik', 'museum-railway-timetable' ),
+		'trafficTodayOpenTimetable'    => __( 'Öppna tidtabell', 'museum-railway-timetable' ),
+		'trafficTodayEditDeviations'   => __( 'Ändra avgångstid / avvikelser', 'museum-railway-timetable' ),
+	);
+}
+
+/**
+ * @return array<string, string>
+ */
 function MRT_admin_vue_script_localization(): array {
 	return array_merge(
 		MRT_admin_vue_l10n_common(),
@@ -206,7 +313,11 @@ function MRT_admin_vue_script_localization(): array {
 		MRT_admin_vue_l10n_settings(),
 		MRT_admin_vue_l10n_prices(),
 		MRT_admin_vue_l10n_dashboard(),
-		MRT_admin_vue_l10n_stations()
+		MRT_admin_vue_l10n_stations(),
+		MRT_admin_vue_l10n_timetables(),
+		MRT_admin_vue_l10n_train_types(),
+		MRT_admin_vue_l10n_import_export(),
+		MRT_admin_vue_l10n_traffic()
 	);
 }
 

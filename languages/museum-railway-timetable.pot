@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-02T07:41:58+00:00\n"
+"POT-Creation-Date: 2026-06-02T07:46:36+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: museum-railway-timetable\n"
@@ -263,6 +263,7 @@ msgstr ""
 #: inc/admin/tools/timetable-pages.php:36
 #: inc/assets/admin-vue.php:63
 #: inc/assets/admin-vue.php:129
+#: inc/assets/admin-vue.php:204
 msgid "Tidtabeller"
 msgstr ""
 
@@ -334,6 +335,7 @@ msgstr ""
 
 #: inc/assets/admin-vue.php:65
 #: inc/assets/admin-vue.php:131
+#: inc/assets/admin-vue.php:235
 msgid "Tågtyper"
 msgstr ""
 
@@ -450,6 +452,7 @@ msgid "Rutter"
 msgstr ""
 
 #: inc/assets/admin-vue.php:130
+#: inc/assets/admin-vue.php:220
 msgid "Turer"
 msgstr ""
 
@@ -523,6 +526,10 @@ msgid "Skapa en rutt ovan och koppla stationer i redigeringsvyn."
 msgstr ""
 
 #: inc/assets/admin-vue.php:165
+#: inc/assets/admin-vue.php:214
+#: inc/assets/admin-vue.php:218
+#: inc/assets/admin-vue.php:242
+#: inc/assets/admin-vue.php:246
 msgid "Namn"
 msgstr ""
 
@@ -569,6 +576,7 @@ msgid "Rutten «%s» sparades."
 msgstr ""
 
 #: inc/assets/admin-vue.php:177
+#: inc/assets/admin-vue.php:252
 #, php-format
 msgid "«%s» sparades."
 msgstr ""
@@ -622,6 +630,230 @@ msgstr ""
 
 #: inc/assets/admin-vue.php:195
 msgid "Spara rutt"
+msgstr ""
+
+#: inc/assets/admin-vue.php:205
+msgid "Laddar tidtabeller…"
+msgstr ""
+
+#: inc/assets/admin-vue.php:206
+msgid "Fel vid laddning"
+msgstr ""
+
+#: inc/assets/admin-vue.php:207
+msgid "Kunde inte skapa"
+msgstr ""
+
+#: inc/assets/admin-vue.php:208
+msgid "Kunde inte ta bort"
+msgstr ""
+
+#: inc/assets/admin-vue.php:209
+msgid "Du kan öppna tidtabeller och ändra avvikelser eller avgångstider, men inte skapa nya tidtabeller eller grunddata. Kontakta en administratör om du behöver fler rättigheter."
+msgstr ""
+
+#: inc/assets/admin-vue.php:213
+msgid "Ny tidtabell"
+msgstr ""
+
+#: inc/assets/admin-vue.php:215
+#: inc/assets/admin-vue.php:250
+msgid "Skapa"
+msgstr ""
+
+#: inc/assets/admin-vue.php:216
+msgid "Inga tidtabeller"
+msgstr ""
+
+#: inc/assets/admin-vue.php:217
+msgid "Skapa en tidtabell ovan för att komma igång."
+msgstr ""
+
+#: inc/assets/admin-vue.php:219
+msgid "Trafikdagar"
+msgstr ""
+
+#: inc/assets/admin-vue.php:221
+#, php-format
+msgid "%1$s trafikdagar · %2$s turer"
+msgstr ""
+
+#: inc/assets/admin-vue.php:222
+msgid "Ta bort tidtabell"
+msgstr ""
+
+#: inc/assets/admin-vue.php:223
+#, php-format
+msgid "«%s» och alla dess turer raderas permanent."
+msgstr ""
+
+#: inc/assets/admin-vue.php:236
+msgid "Laddar tågtyper…"
+msgstr ""
+
+#: inc/assets/admin-vue.php:237
+msgid "Inga tågtyper ännu"
+msgstr ""
+
+#: inc/assets/admin-vue.php:238
+msgid "Skapa den första tågtypen nedan. Ikonen visas i tidtabeller och bokningsflödet."
+msgstr ""
+
+#: inc/assets/admin-vue.php:243
+#: inc/assets/admin-vue.php:247
+msgid "Ikon"
+msgstr ""
+
+#: inc/assets/admin-vue.php:244
+msgid "Slug"
+msgstr ""
+
+#: inc/assets/admin-vue.php:245
+msgid "Ny tågtyp"
+msgstr ""
+
+#: inc/assets/admin-vue.php:248
+msgid "Slug (valfritt)"
+msgstr ""
+
+#: inc/assets/admin-vue.php:249
+msgid "t.ex. ralsbuss"
+msgstr ""
+
+#: inc/assets/admin-vue.php:251
+#, php-format
+msgid "Tågtypen «%s» skapades."
+msgstr ""
+
+#: inc/assets/admin-vue.php:253
+msgid "Ta bort tågtyp"
+msgstr ""
+
+#: inc/assets/admin-vue.php:254
+#, php-format
+msgid "«%s» tas bort från listan."
+msgstr ""
+
+#: inc/assets/admin-vue.php:255
+msgid "Tågtypen tas bort från listan."
+msgstr ""
+
+#: inc/assets/admin-vue.php:256
+#, php-format
+msgid "«%s» borttagen."
+msgstr ""
+
+#: inc/assets/admin-vue.php:257
+msgid "Borttagen."
+msgstr ""
+
+#: inc/assets/admin-vue.php:266
+msgid "Import / export"
+msgstr ""
+
+#: inc/assets/admin-vue.php:267
+msgid "Du har inte behörighet."
+msgstr ""
+
+#: inc/assets/admin-vue.php:268
+msgid "Exportera CSV (zip)"
+msgstr ""
+
+#: inc/assets/admin-vue.php:269
+msgid "Inkludera inställningar"
+msgstr ""
+
+#: inc/assets/admin-vue.php:270
+msgid "Inkludera priser"
+msgstr ""
+
+#: inc/assets/admin-vue.php:271
+msgid "Ladda ner export"
+msgstr ""
+
+#: inc/assets/admin-vue.php:272
+msgid "Importera CSV (zip)"
+msgstr ""
+
+#: inc/assets/admin-vue.php:273
+msgid "Se docs/CSV_FORMAT.md för kolumnformat."
+msgstr ""
+
+#: inc/assets/admin-vue.php:274
+msgid "Slå ihop (uppdatera befintlig data)"
+msgstr ""
+
+#: inc/assets/admin-vue.php:275
+msgid "Ersätt (ta bort poster som saknas i filen)"
+msgstr ""
+
+#: inc/assets/admin-vue.php:276
+msgid "Export klar."
+msgstr ""
+
+#: inc/assets/admin-vue.php:277
+msgid "Export misslyckades"
+msgstr ""
+
+#: inc/assets/admin-vue.php:278
+msgid "Import misslyckades"
+msgstr ""
+
+#: inc/assets/admin-vue.php:279
+#, php-format
+msgid "Import klar (%s). %s"
+msgstr ""
+
+#: inc/assets/admin-vue.php:288
+msgid "Trafik idag"
+msgstr ""
+
+#: inc/assets/admin-vue.php:289
+msgid "Inga turer schemalagda."
+msgstr ""
+
+#: inc/assets/admin-vue.php:290
+#, php-format
+msgid "All trafik (%1$s turer) är inställd."
+msgstr ""
+
+#: inc/assets/admin-vue.php:291
+#, php-format
+msgid "%1$s turer · %2$s"
+msgstr ""
+
+#: inc/assets/admin-vue.php:292
+msgid "Inställ trafik idag"
+msgstr ""
+
+#: inc/assets/admin-vue.php:293
+#, php-format
+msgid "Alla %1$s turer den %2$s får meddelandet «Inställd». Detta påverkar visningen på webbplatsen."
+msgstr ""
+
+#: inc/assets/admin-vue.php:297
+msgid "Inställ trafik"
+msgstr ""
+
+#: inc/assets/admin-vue.php:298
+#, php-format
+msgid "%s turer markerade som inställda."
+msgstr ""
+
+#: inc/assets/admin-vue.php:299
+msgid "Ingen trafik att ställa in."
+msgstr ""
+
+#: inc/assets/admin-vue.php:300
+msgid "Kunde inte ställa in trafik"
+msgstr ""
+
+#: inc/assets/admin-vue.php:301
+msgid "Öppna tidtabell"
+msgstr ""
+
+#: inc/assets/admin-vue.php:302
+msgid "Ändra avgångstid / avvikelser"
 msgstr ""
 
 #: inc/assets/frontend.php:23

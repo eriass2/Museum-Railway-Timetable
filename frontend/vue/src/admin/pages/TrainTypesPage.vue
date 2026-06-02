@@ -21,6 +21,7 @@ import {
 } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
+import { adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -40,7 +41,7 @@ async function load() {
     items.value = res.items;
     iconKeys.value = res.icon_keys;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Fel';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'loadFailed');
   } finally {
     loading.value = false;
   }
@@ -58,7 +59,7 @@ async function addType() {
     icon_key: newType.value.icon_key,
   });
   newType.value = { name: '', slug: '', icon_key: 'diesel' };
-  message.value = `Tågtypen «${created.name}» skapades.`;
+  message.value = adminFmt(cfg, 'trainTypesCreated', created.name);
   await load();
   flashRow(created.id);
 }
@@ -70,7 +71,7 @@ async function saveType(row: TrainTypeRow) {
     slug: row.slug,
     icon_key: row.icon_key,
   });
-  message.value = `«${row.name}» sparades.`;
+  message.value = adminFmt(cfg, 'trainTypesSaved', row.name);
   flashRow(row.id);
 }
 
@@ -78,38 +79,47 @@ async function removeType(id: number) {
   if (!cfg.canManage) return;
   const row = items.value.find((item) => item.id === id);
   const ok = await adminConfirm({
-    title: 'Ta bort tågtyp',
-    message: row ? `«${row.name}» tas bort från listan.` : 'Tågtypen tas bort från listan.',
-    confirmLabel: 'Ta bort',
+    title: adminStr(cfg, 'trainTypesDeleteTitle'),
+    message: row
+      ? adminFmt(cfg, 'trainTypesDeleteMessage', row.name)
+      : adminStr(cfg, 'trainTypesDeleteFallback'),
+    confirmLabel: adminStr(cfg, 'delete'),
     danger: true,
   });
   if (!ok) return;
   await deleteTrainType(id);
-  message.value = row ? `«${row.name}» borttagen.` : 'Borttagen.';
+  message.value = row
+    ? adminFmt(cfg, 'trainTypesRemoved', row.name)
+    : adminStr(cfg, 'trainTypesRemovedFallback');
   await load();
 }
 </script>
 
 <template>
   <div class="train-types-page">
-    <h1>Tågtyper</h1>
+    <h1>{{ adminStr(cfg, 'trainTypesTitle') }}</h1>
 
-    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar tågtyper…" @retry="load">
+    <AdminLoadState
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'trainTypesLoading')"
+      @retry="load"
+    >
       <AdminStatusMessage :message="message" />
 
       <AdminPanel>
         <AdminEmptyState
           v-if="!items.length"
-          title="Inga tågtyper ännu"
-          message="Skapa den första tågtypen nedan. Ikonen visas i tidtabeller och bokningsflödet."
+          :title="adminStr(cfg, 'trainTypesEmptyTitle')"
+          :message="adminStr(cfg, 'trainTypesEmptyMessage')"
         />
 
         <AdminTableScroll v-else>
           <table class="widefat striped train-types-page__table">
             <thead>
               <tr>
-                <th>Namn</th>
-                <th>Ikon</th>
+                <th>{{ adminStr(cfg, 'trainTypesColName') }}</th>
+                <th>{{ adminStr(cfg, 'trainTypesColIcon') }}</th>
                 <th v-if="cfg.canManage"></th>
               </tr>
             </thead>
@@ -124,7 +134,7 @@ async function removeType(id: number) {
                   />
                   <AdminDisclosure v-if="cfg.canManage" class="train-types-page__slug">
                     <label class="train-types-page__slug-label">
-                      Slug
+                      {{ adminStr(cfg, 'trainTypesSlugLabel') }}
                       <input v-model="row.slug" type="text" class="regular-text" />
                     </label>
                   </AdminDisclosure>
@@ -142,9 +152,11 @@ async function removeType(id: number) {
                 </td>
                 <td v-if="cfg.canManage">
                   <AdminRowActions>
-                    <button type="button" class="button" @click="saveType(row)">Spara</button>
+                    <button type="button" class="button" @click="saveType(row)">
+                      {{ adminStr(cfg, 'save') }}
+                    </button>
                     <button type="button" class="button button-link-delete" @click="removeType(row.id)">
-                      Ta bort
+                      {{ adminStr(cfg, 'delete') }}
                     </button>
                   </AdminRowActions>
                 </td>
@@ -154,24 +166,36 @@ async function removeType(id: number) {
         </AdminTableScroll>
       </AdminPanel>
 
-      <AdminPanel v-if="cfg.canManage" title="Ny tågtyp">
+      <AdminPanel v-if="cfg.canManage" :title="adminStr(cfg, 'trainTypesNewTitle')">
         <div class="train-types-page__new">
           <label class="train-types-page__field">
-            <span class="train-types-page__field-label">Namn</span>
-            <input v-model="newType.name" type="text" placeholder="Namn" class="regular-text" />
+            <span class="train-types-page__field-label">{{ adminStr(cfg, 'trainTypesNameLabel') }}</span>
+            <input
+              v-model="newType.name"
+              type="text"
+              :placeholder="adminStr(cfg, 'trainTypesNameLabel')"
+              class="regular-text"
+            />
           </label>
           <div class="train-types-page__field">
-            <span class="train-types-page__field-label">Ikon</span>
+            <span class="train-types-page__field-label">{{ adminStr(cfg, 'trainTypesIconLabel') }}</span>
             <TrainTypeIconPicker v-model="newType.icon_key" :icon-keys="iconKeys" />
           </div>
           <AdminDisclosure>
             <label class="train-types-page__field train-types-page__field--slug">
-              <span class="train-types-page__field-label">Slug (valfritt)</span>
-              <input v-model="newType.slug" type="text" placeholder="t.ex. ralsbuss" class="regular-text" />
+              <span class="train-types-page__field-label">{{ adminStr(cfg, 'trainTypesSlugOptional') }}</span>
+              <input
+                v-model="newType.slug"
+                type="text"
+                :placeholder="adminStr(cfg, 'trainTypesSlugPlaceholder')"
+                class="regular-text"
+              />
             </label>
           </AdminDisclosure>
           <AdminFormActions>
-            <button type="button" class="button button-primary" @click="addType">Skapa</button>
+            <button type="button" class="button button-primary" @click="addType">
+              {{ adminStr(cfg, 'trainTypesCreateButton') }}
+            </button>
           </AdminFormActions>
         </div>
       </AdminPanel>
