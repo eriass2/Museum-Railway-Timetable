@@ -154,6 +154,17 @@ if (!function_exists('get_the_title')) {
      */
     function get_the_title($post = 0): string {
         $id = is_object($post) ? (int) $post->ID : (int) $post;
+        if (
+            $id > 0
+            && isset($GLOBALS['mrt_test_posts'])
+            && is_array($GLOBALS['mrt_test_posts'])
+            && array_key_exists($id, $GLOBALS['mrt_test_posts'])
+        ) {
+            $title = $GLOBALS['mrt_test_posts'][$id]->post_title ?? '';
+            if ($title !== '') {
+                return (string) $title;
+            }
+        }
 
         return $id > 0 ? 'Post ' . $id : '';
     }

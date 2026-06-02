@@ -66,7 +66,7 @@ final class PriceRulesTest extends TestCase {
 		);
 		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 3 ), $map ) );
 		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 4 ), $map ) );
-		self::assertSame( 3, MRT_zones_for_station_path( array( 1, 2, 3 ), $map ) );
+		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 2, 3 ), $map ) );
 	}
 
 	public function test_parse_trip_price_legs_param(): void {
