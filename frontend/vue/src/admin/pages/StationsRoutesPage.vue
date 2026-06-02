@@ -28,6 +28,7 @@ import { routePreviewTypeLabel } from '../utils/routePreviewNodes';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
+import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
@@ -36,7 +37,7 @@ const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
 const stations = ref<StationRow[]>([]);
 const routes = ref<RouteRow[]>([]);
-const message = ref('');
+const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 const { flashRow, isFlashed } = useAdminRowFlash();
 const newStationTitle = ref('');
 const newRouteTitle = ref('');
@@ -104,7 +105,7 @@ async function saveRoute() {
     station_ids: editingRoute.value.station_ids,
   });
   editingRoute.value = null;
-  message.value = adminFmt(cfg, 'stationsRouteSaved', title);
+  showSaveNotice(adminFmt(cfg, 'stationsRouteSaved', title));
   flashRow(routeId);
   await reload();
 }
@@ -132,7 +133,7 @@ function appendStationToRoute() {
 async function saveStationMeta(st: StationRow) {
   if (!cfg.canManage) return;
   await updateStation(st.id, st);
-  message.value = adminFmt(cfg, 'stationsStationSaved', st.title);
+  showSaveNotice(adminFmt(cfg, 'stationsStationSaved', st.title));
   flashRow(st.id);
 }
 
@@ -185,7 +186,7 @@ async function removeRoute(route: RouteRow) {
       :loading-text="adminStr(cfg, 'stationsLoading')"
       @retry="load"
     >
-    <AdminStatusMessage :message="message" />
+    <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
     <nav class="nav-tab-wrapper mrt-admin-section-nav" :aria-label="adminStr(cfg, 'stationsNavAria')">
       <a
         href="#"

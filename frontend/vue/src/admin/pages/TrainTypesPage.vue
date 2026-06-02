@@ -23,13 +23,14 @@ import {
 import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
+import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
 const items = ref<TrainTypeRow[]>([]);
 const iconKeys = ref<string[]>([]);
-const message = ref('');
+const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 const newType = ref({ name: '', slug: '', icon_key: 'diesel' });
 const { flashRow, isFlashed } = useAdminRowFlash();
 
@@ -58,7 +59,7 @@ async function addType() {
     icon_key: newType.value.icon_key,
   });
   newType.value = { name: '', slug: '', icon_key: 'diesel' };
-  message.value = adminFmt(cfg, 'trainTypesCreated', created.name);
+  showSaveNotice(adminFmt(cfg, 'trainTypesCreated', created.name));
   await reload();
   flashRow(created.id);
 }
@@ -70,7 +71,7 @@ async function saveType(row: TrainTypeRow) {
     slug: row.slug,
     icon_key: row.icon_key,
   });
-  message.value = adminFmt(cfg, 'trainTypesSaved', row.name);
+  showSaveNotice(adminFmt(cfg, 'trainTypesSaved', row.name));
   flashRow(row.id);
 }
 
@@ -87,9 +88,11 @@ async function removeType(id: number) {
   });
   if (!ok) return;
   await deleteTrainType(id);
-  message.value = row
-    ? adminFmt(cfg, 'trainTypesRemoved', row.name)
-    : adminStr(cfg, 'trainTypesRemovedFallback');
+  showSaveNotice(
+    row
+      ? adminFmt(cfg, 'trainTypesRemoved', row.name)
+      : adminStr(cfg, 'trainTypesRemovedFallback'),
+  );
   await reload();
 }
 </script>
@@ -104,7 +107,7 @@ async function removeType(id: number) {
       :loading-text="adminStr(cfg, 'trainTypesLoading')"
       @retry="load"
     >
-      <AdminStatusMessage :message="message" />
+      <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
 
       <AdminPanel>
         <AdminEmptyState
