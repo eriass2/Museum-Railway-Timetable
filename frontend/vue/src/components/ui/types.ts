@@ -1,4 +1,12 @@
-export type MrtAlertVariant = 'info' | 'error' | 'warning';
+export type MrtUiContext = 'public' | 'admin';
+
+export type MrtAlertVariant = 'info' | 'error' | 'warning' | 'success';
+
+export type MrtPublicButtonVariant = 'primary' | 'select' | 'secondary';
+
+export type MrtAdminButtonVariant = 'primary' | 'secondary' | 'link' | 'link-delete' | 'small';
+
+export type MrtDotColor = 'green' | 'yellow' | 'red' | 'orange' | 'blue';
 
 export type MrtComboboxOption = {
   id: number;

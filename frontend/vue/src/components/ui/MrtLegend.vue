@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import type { MrtLegendItem } from './types';
+import MrtDot from './MrtDot.vue';
+import type { MrtDotColor, MrtLegendItem } from './types';
+import { mrtDotColorFromClass } from './uiContext';
 
 defineProps<{
   items: MrtLegendItem[];
   hints?: string[];
 }>();
+
+function legendDotColor(item: MrtLegendItem): MrtDotColor | null {
+  if (!item.dotClass) {
+    return null;
+  }
+  const parsed = mrtDotColorFromClass(item.dotClass);
+  return parsed as MrtDotColor | null;
+}
 </script>
 
 <template>
@@ -17,6 +27,7 @@ defineProps<{
           :class="item.swatchClass"
           aria-hidden="true"
         />
+        <MrtDot v-else-if="legendDotColor(item)" :color="legendDotColor(item)!" />
         <span
           v-else-if="item.dotClass"
           class="mrt-dot"

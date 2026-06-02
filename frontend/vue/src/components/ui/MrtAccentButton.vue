@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import MrtButton from './MrtButton.vue';
+import type { MrtPublicButtonVariant } from './types';
+
 withDefaults(
   defineProps<{
     href?: string;
     type?: 'button' | 'submit';
-    variant?: 'primary' | 'select' | 'secondary';
+    variant?: MrtPublicButtonVariant;
     disabled?: boolean;
   }>(),
   {
@@ -17,22 +20,14 @@ defineEmits<{ click: [] }>();
 </script>
 
 <template>
-  <a
-    v-if="href"
+  <MrtButton
+    context="public"
     :href="href"
-    class="mrt-accent-btn"
-    :class="`mrt-accent-btn--${variant}`"
-  >
-    <slot />
-  </a>
-  <button
-    v-else
     :type="type"
-    class="mrt-accent-btn"
-    :class="`mrt-accent-btn--${variant}`"
+    :variant="variant"
     :disabled="disabled"
     @click="$emit('click')"
   >
     <slot />
-  </button>
+  </MrtButton>
 </template>

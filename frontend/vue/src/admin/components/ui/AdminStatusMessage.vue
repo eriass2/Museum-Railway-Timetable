@@ -1,5 +1,9 @@
 <script setup lang="ts">
-withDefaults(
+import { computed } from 'vue';
+import MrtAlert from '@/components/ui/MrtAlert.vue';
+import type { MrtAlertVariant } from '@/components/ui/types';
+
+const props = withDefaults(
   defineProps<{
     message?: string;
     type?: 'success' | 'error' | 'info' | 'warning';
@@ -7,14 +11,11 @@ withDefaults(
   { type: 'success' },
 );
 
-const noticeClass: Record<string, string> = {
-  success: 'notice notice-success',
-  error: 'notice notice-error',
-  info: 'notice notice-info',
-  warning: 'notice notice-warning',
-};
+const variant = computed((): MrtAlertVariant => props.type);
 </script>
 
 <template>
-  <p v-if="message" :class="noticeClass[type]" role="status">{{ message }}</p>
+  <MrtAlert v-if="message" context="admin" :variant="variant">
+    {{ message }}
+  </MrtAlert>
 </template>

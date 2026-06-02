@@ -1,6 +1,17 @@
 # Vue UI components (`frontend/vue/src/components/ui/`)
 
-Shared primitives for wizard, month calendar, and overview. Wizard-specific wrappers live in `frontend/vue/src/wizard/components/`. Styles: `assets/frontend/ui/` (barrel `ui-components.css`). See [CSS_REFACTOR_PLAN.md](design/CSS_REFACTOR_PLAN.md).
+Shared primitives for wizard, month calendar, overview, and Vue admin. Wizard-specific wrappers live in `frontend/vue/src/wizard/components/`. **Shared library plan:** [UI_LIBRARY.md](UI_LIBRARY.md). Styles: `assets/frontend/ui/` (barrel `ui-components.css`) — migrating to SFC scoped per UI_LIBRARY. See [CSS_REFACTOR_PLAN.md](design/CSS_REFACTOR_PLAN.md).
+
+## Shared primitives (admin + public)
+
+| Component | `context` | Notes |
+|-----------|-----------|--------|
+| `MrtButton` | `public` \| `admin` | Public: `.mrt-accent-btn`; admin: WP `.button` |
+| `MrtAlert` | `public` \| `admin` | Public: `.mrt-ui-alert`; admin: WP `.notice` |
+| `MrtAsyncState` | `public` \| `admin` | Loading, error, empty; admin retry via `@retry` |
+| `MrtDot` | — | Traffic / timetable type dots |
+
+Admin wrappers (deprecated gradually): `AdminLoadState` → `MrtAsyncState context="admin"`; `AdminStatusMessage` → `MrtAlert context="admin"`. `MrtAccentButton` delegates to `MrtButton context="public"`.
 
 ## Components
 
