@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { ref, watch } from 'vue';
 import {
   createTrainType,
   deleteTrainType,
@@ -21,6 +21,7 @@ import {
   TrainTypeIconPicker,
 } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
+import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
@@ -28,29 +29,26 @@ import { adminConfig } from '../types';
 const cfg = adminConfig();
 const items = ref<TrainTypeRow[]>([]);
 const iconKeys = ref<string[]>([]);
-const loading = ref(true);
-const error = ref('');
 const message = ref('');
 const newType = ref({ name: '', slug: '', icon_key: 'diesel' });
 const { flashRow, isFlashed } = useAdminRowFlash();
 
-async function load() {
-  loading.value = true;
-  error.value = '';
-  try {
-    const res = await listTrainTypes();
+const { loading, error, data, load, reload } = useAdminResource({
+  fetch: () => listTrainTypes(),
+  errorMessage: (e) => adminErrorMessage(cfg, e, 'loadFailed'),
+});
+
+watch(
+  data,
+  (res) => {
+    if (!res) {
+      return;
+    }
     items.value = res.items;
     iconKeys.value = res.icon_keys;
-  } catch (e) {
-    error.value = adminErrorMessage(cfg, e, 'loadFailed');
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
-  void load();
-});
+  },
+  { immediate: true },
+);
 
 async function addType() {
   if (!cfg.canManage || !newType.value.name.trim()) return;
@@ -61,7 +59,7 @@ async function addType() {
   });
   newType.value = { name: '', slug: '', icon_key: 'diesel' };
   message.value = adminFmt(cfg, 'trainTypesCreated', created.name);
-  await load();
+  await reload();
   flashRow(created.id);
 }
 
@@ -92,7 +90,7 @@ async function removeType(id: number) {
   message.value = row
     ? adminFmt(cfg, 'trainTypesRemoved', row.name)
     : adminStr(cfg, 'trainTypesRemovedFallback');
-  await load();
+  await reload();
 }
 </script>
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import {
   createRoute,
   createStation,
@@ -26,6 +26,7 @@ import {
 import RoutePreview from '../components/RoutePreview.vue';
 import { routePreviewTypeLabel } from '../utils/routePreviewNodes';
 import { adminConfirm } from '../composables/adminConfirm';
+import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
@@ -35,8 +36,6 @@ const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
 const stations = ref<StationRow[]>([]);
 const routes = ref<RouteRow[]>([]);
-const loading = ref(true);
-const error = ref('');
 const message = ref('');
 const { flashRow, isFlashed } = useAdminRowFlash();
 const newStationTitle = ref('');
@@ -44,6 +43,26 @@ const newRouteTitle = ref('');
 const sectionTab = ref<'stations' | 'routes'>('stations');
 const editingRoute = ref<RouteRow | null>(null);
 const addStationToRoute = ref(0);
+
+const { loading, error, data, load, reload } = useAdminResource({
+  fetch: async () => {
+    const [s, r] = await Promise.all([listStations(), listRoutes()]);
+    return { stations: s.items, routes: r.items };
+  },
+  errorMessage: (e) => adminErrorMessage(cfg, e, 'loadFailed'),
+});
+
+watch(
+  data,
+  (payload) => {
+    if (!payload) {
+      return;
+    }
+    stations.value = payload.stations.map((row) => ({ ...row }));
+    routes.value = payload.routes.map((row) => ({ ...row }));
+  },
+  { immediate: true },
+);
 
 const stationsById = computed(
   () =>
@@ -55,35 +74,18 @@ const stationsById = computed(
     ),
 );
 
-async function load() {
-  loading.value = true;
-  try {
-    const [s, r] = await Promise.all([listStations(), listRoutes()]);
-    stations.value = s.items;
-    routes.value = r.items;
-  } catch (e) {
-    error.value = adminErrorMessage(cfg, e, 'loadFailed');
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
-  void load();
-});
-
 async function addStation() {
   if (!cfg.canManage || !newStationTitle.value.trim()) return;
   await createStation({ title: newStationTitle.value.trim() });
   newStationTitle.value = '';
-  await load();
+  await reload();
 }
 
 async function addRoute() {
   if (!cfg.canManage || !newRouteTitle.value.trim()) return;
   await createRoute({ title: newRouteTitle.value.trim(), station_ids: [] });
   newRouteTitle.value = '';
-  await load();
+  await reload();
 }
 
 function editRoute(route: RouteRow) {
@@ -104,7 +106,7 @@ async function saveRoute() {
   editingRoute.value = null;
   message.value = adminFmt(cfg, 'stationsRouteSaved', title);
   flashRow(routeId);
-  await load();
+  await reload();
 }
 
 function moveStation(idx: number, dir: -1 | 1) {
@@ -146,7 +148,7 @@ async function removeStation(st: StationRow) {
   error.value = '';
   try {
     await deleteStation(st.id);
-    await load();
+    await reload();
   } catch (e) {
     error.value = adminErrorMessage(cfg, e, 'stationsDeleteStationFailed');
   }
@@ -167,7 +169,7 @@ async function removeRoute(route: RouteRow) {
     if (editingRoute.value?.id === route.id) {
       editingRoute.value = null;
     }
-    await load();
+    await reload();
   } catch (e) {
     error.value = adminErrorMessage(cfg, e, 'stationsDeleteRouteFailed');
   }

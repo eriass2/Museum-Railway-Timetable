@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { createTimetable, deleteTimetable, listTimetables } from '../api/adminRest';
-import type { TimetableListItem } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminEmptyState,
@@ -13,6 +12,7 @@ import {
   MrtButton,
 } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
+import { useAdminResource } from '../composables/useAdminResource';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
@@ -20,34 +20,21 @@ import { adminConfig } from '../types';
 const router = useRouter();
 const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
-const items = ref<TimetableListItem[]>([]);
-const loading = ref(true);
-const error = ref('');
 const newTitle = ref('');
 
-function cardSummary(row: TimetableListItem): string {
+const { loading, error, data, load, reload } = useAdminResource({
+  fetch: () => listTimetables(),
+  errorMessage: (e) => adminErrorMessage(cfg, e, 'timetablesLoadFailed'),
+});
+
+const items = computed(() => data.value?.items ?? []);
+
+function cardSummary(row: (typeof items.value)[number]): string {
   return adminFmtN(cfg, 'timetablesCardSummary', {
     1: row.dates_count,
     2: row.trips_count,
   });
 }
-
-async function load() {
-  loading.value = true;
-  error.value = '';
-  try {
-    const res = await listTimetables();
-    items.value = res.items;
-  } catch (e) {
-    error.value = adminErrorMessage(cfg, e, 'timetablesLoadFailed');
-  } finally {
-    loading.value = false;
-  }
-}
-
-onMounted(() => {
-  void load();
-});
 
 async function createNew() {
   if (!cfg.canManage || !newTitle.value.trim()) {
@@ -80,7 +67,7 @@ async function removeTimetable(id: number, title: string) {
   error.value = '';
   try {
     await deleteTimetable(id);
-    await load();
+    await reload();
   } catch (e) {
     error.value = adminErrorMessage(cfg, e, 'timetablesDeleteFailed');
   }
