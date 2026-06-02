@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router';
 import { cancelTrafficToday } from '../api/adminRest';
 import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
-import { adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 import { AdminActionBar, AdminPanel, AdminStatusMessage, MrtButton } from './ui';
 
@@ -67,7 +67,7 @@ async function cancelAll() {
       localAllCancelled.value = true;
     }
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'trafficTodayCancelFailed');
+    error.value = adminErrorMessage(cfg, e, 'trafficTodayCancelFailed');
   } finally {
     busy.value = false;
   }

@@ -10,7 +10,7 @@ import {
 import { AdminPanel, AdminStatusMessage, AdminToolList, MrtButton } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
 import { adminConfig } from '../types';
-import { adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 
 const cfg = adminConfig();
 const busy = ref('');
@@ -44,7 +44,7 @@ async function run(action: string, fn: () => Promise<unknown>) {
     };
     message.value = labels[action] || adminStr(cfg, 'devDone');
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'genericError');
+    error.value = adminErrorMessage(cfg, e, 'genericError');
   } finally {
     busy.value = '';
   }

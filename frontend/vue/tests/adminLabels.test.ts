@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { adminFmt, adminFmtN, adminStr } from '../src/admin/utils/adminLabels';
+import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../src/admin/utils/adminLabels';
 import type { AdminClientConfig } from '../src/admin/types';
 
 function cfg(strings: Record<string, string>): AdminClientConfig {
@@ -36,5 +36,17 @@ describe('adminFmtN', () => {
   it('replaces numbered placeholders', () => {
     const strings = { summary: '%1$s stationer · %2$s rutter' };
     expect(adminFmtN(cfg(strings), 'summary', { 1: 3, 2: 5 })).toBe('3 stationer · 5 rutter');
+  });
+});
+
+describe('adminErrorMessage', () => {
+  it('returns Error message when present', () => {
+    expect(adminErrorMessage(cfg({}), new Error('boom'), 'loadFailed', 'Fail')).toBe('boom');
+  });
+
+  it('falls back to localized string', () => {
+    expect(adminErrorMessage(cfg({ loadFailed: 'Load failed.' }), 'x', 'loadFailed')).toBe(
+      'Load failed.',
+    );
   });
 });

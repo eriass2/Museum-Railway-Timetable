@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { exportCsv, importCsv } from '../api/adminRest';
 import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
-import { adminFmt, adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -37,7 +37,7 @@ async function onExport() {
     URL.revokeObjectURL(url);
     success.value = adminStr(cfg, 'importExportExportSuccess');
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'importExportExportFailed');
+    error.value = adminErrorMessage(cfg, e, 'importExportExportFailed');
   } finally {
     loading.value = false;
   }
@@ -58,7 +58,7 @@ async function onImport(ev: Event) {
       .join(', ');
     success.value = adminFmt(cfg, 'importExportImportSuccess', res.mode, stats);
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'importExportImportFailed');
+    error.value = adminErrorMessage(cfg, e, 'importExportImportFailed');
   } finally {
     loading.value = false;
     input.value = '';

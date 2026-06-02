@@ -8,7 +8,7 @@ import AdminSetupChecklist from '../components/AdminSetupChecklist.vue';
 import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
-import { adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -18,7 +18,7 @@ const { isMobile } = useMobileAdmin();
 const { loading, error, data, load } = useAdminResource({
   fetch: () => getDashboard(),
   errorMessage: (e) => {
-    return e instanceof Error ? e.message : adminStr(cfg, 'dashboardLoadFailed');
+    return adminErrorMessage(cfg, e, 'dashboardLoadFailed');
   },
 });
 

@@ -3,7 +3,7 @@ import { computed, ref, watch } from 'vue';
 import { getDeviations, listTrainTypes, saveDeviations } from '../api/adminRest';
 import type { TimetableDetail, TrainTypeRow } from '../types';
 import { adminConfig } from '../types';
-import { adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { deviationsToSavePayload, type DeviationRow } from '../utils/deviationsPayload';
 import { useAdminResource } from '../composables/useAdminResource';
 import AdminLoadState from './AdminLoadState.vue';
@@ -33,7 +33,7 @@ const { loading, error, load, reload, data } = useAdminResource({
     ]);
     return { rows: deviations.rows, trainTypes: types.items };
   },
-  errorMessage: (e) => (e instanceof Error ? e.message : adminStr(cfg, 'genericError')),
+  errorMessage: (e) => adminErrorMessage(cfg, e, 'genericError'),
 });
 
 watch(

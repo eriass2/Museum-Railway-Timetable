@@ -7,7 +7,7 @@ import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
-import { adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -24,7 +24,7 @@ const { loading, error, data, load } = useAdminResource({
   beforeLoad: () => cfg.canManage,
   deniedMessage: adminStr(cfg, 'settingsNoPermission'),
   fetch: () => getSettings(),
-  errorMessage: (e) => (e instanceof Error ? e.message : adminStr(cfg, 'settingsLoadFailed')),
+  errorMessage: (e) => adminErrorMessage(cfg, e, 'settingsLoadFailed'),
 });
 
 watch(
@@ -43,7 +43,7 @@ async function submit() {
     form.value = await saveSettings(form.value);
     showSaved(adminStr(cfg, 'saved'));
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
+    error.value = adminErrorMessage(cfg, e, 'saveFailed');
   }
 }
 </script>

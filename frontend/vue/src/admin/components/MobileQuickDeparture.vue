@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue';
 import { getStopTimes, quickDeparture } from '../api/adminRest';
 import type { TimetableServiceRow } from '../types';
 import { adminConfig } from '../types';
-import { adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { AdminStatusMessage, MrtButton } from './ui';
 
 const props = defineProps<{
@@ -34,7 +34,7 @@ async function loadFirstStop() {
     firstStopName.value = first?.name || '—';
     departure.value = first?.departure_time || '';
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'mobileStopTimesLoadFailed');
+    error.value = adminErrorMessage(cfg, e, 'mobileStopTimesLoadFailed');
   } finally {
     loading.value = false;
   }
@@ -58,7 +58,7 @@ async function save() {
     await quickDeparture(serviceId.value, departure.value);
     emit('saved', adminStr(cfg, 'mobileDepartureSaved'));
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'mobileSaveFailed');
+    error.value = adminErrorMessage(cfg, e, 'mobileSaveFailed');
   } finally {
     loading.value = false;
   }

@@ -14,7 +14,7 @@ import {
 } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
-import { adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const router = useRouter();
@@ -39,7 +39,7 @@ async function load() {
     const res = await listTimetables();
     items.value = res.items;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'timetablesLoadFailed');
+    error.value = adminErrorMessage(cfg, e, 'timetablesLoadFailed');
   } finally {
     loading.value = false;
   }
@@ -58,7 +58,7 @@ async function createNew() {
     newTitle.value = '';
     await router.push(`/timetables/${tt.id}`);
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'timetablesCreateFailed');
+    error.value = adminErrorMessage(cfg, e, 'timetablesCreateFailed');
   }
 }
 
@@ -82,7 +82,7 @@ async function removeTimetable(id: number, title: string) {
     await deleteTimetable(id);
     await load();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'timetablesDeleteFailed');
+    error.value = adminErrorMessage(cfg, e, 'timetablesDeleteFailed');
   }
 }
 </script>

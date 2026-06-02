@@ -3,7 +3,7 @@ import { getStopTimes, saveStopTimes } from '../api/adminRest';
 import type { StopTimeRow } from '../types';
 import type { TimetableTimeCellEdit } from '../../types/timetableOverview';
 import { adminConfig } from '../types';
-import { adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { stopTimesToApiPayload } from '../utils/stopTimesPayload';
 
 function hhmmToInput(value: string): string {
@@ -83,7 +83,7 @@ export function useOverviewGridEdit() {
       cache.value.set(serviceId, res.stations);
       message.value = adminStr(cfg, 'stopTimesSaved');
     } catch (e) {
-      error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
+      error.value = adminErrorMessage(cfg, e, 'saveFailed');
     } finally {
       saving.value.delete(serviceId);
     }

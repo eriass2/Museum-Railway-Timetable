@@ -6,7 +6,7 @@ import AdminLoadState from '../components/AdminLoadState.vue';
 import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
-import { adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -23,7 +23,7 @@ const { loading, error, load } = useAdminResource({
   },
   errorMessage: (e) => {
     data.value = null;
-    return e instanceof Error ? e.message : adminStr(cfg, 'pricesLoadFailed');
+    return adminErrorMessage(cfg, e, 'pricesLoadFailed');
   },
 });
 
@@ -50,7 +50,7 @@ async function submit() {
     data.value = await savePrices(data.value.matrix);
     showSaved(adminStr(cfg, 'saved'));
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
+    error.value = adminErrorMessage(cfg, e, 'saveFailed');
   }
 }
 </script>

@@ -28,7 +28,7 @@ import { routePreviewTypeLabel } from '../utils/routePreviewNodes';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
-import { adminFmt, adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -62,7 +62,7 @@ async function load() {
     stations.value = s.items;
     routes.value = r.items;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'loadFailed');
+    error.value = adminErrorMessage(cfg, e, 'loadFailed');
   } finally {
     loading.value = false;
   }
@@ -148,7 +148,7 @@ async function removeStation(st: StationRow) {
     await deleteStation(st.id);
     await load();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'stationsDeleteStationFailed');
+    error.value = adminErrorMessage(cfg, e, 'stationsDeleteStationFailed');
   }
 }
 
@@ -169,7 +169,7 @@ async function removeRoute(route: RouteRow) {
     }
     await load();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'stationsDeleteRouteFailed');
+    error.value = adminErrorMessage(cfg, e, 'stationsDeleteRouteFailed');
   }
 }
 </script>

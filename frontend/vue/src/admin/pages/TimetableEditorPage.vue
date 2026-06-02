@@ -34,7 +34,7 @@ import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { useTimetableEditorDirty } from '../composables/useTimetableEditorDirty';
 import { deviationsToSavePayload, type DeviationRow } from '../utils/deviationsPayload';
 import { adminConfig } from '../types';
-import { adminFmt, adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -110,7 +110,7 @@ async function loadDetail() {
     editType.value = detail.value.type || '';
     syncSnapshots();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'genericError');
+    error.value = adminErrorMessage(cfg, e, 'genericError');
   } finally {
     loading.value = false;
   }
@@ -142,14 +142,14 @@ watch(tab, async (t) => {
     try {
       await loadOverview();
     } catch (e) {
-      error.value = e instanceof Error ? e.message : adminStr(cfg, 'editorOverviewLoadFailed');
+      error.value = adminErrorMessage(cfg, e, 'editorOverviewLoadFailed');
     }
   }
   if (t === 'deviations' && deviationRows.value.length === 0) {
     try {
       await loadDeviations();
     } catch (e) {
-      error.value = e instanceof Error ? e.message : adminStr(cfg, 'editorDeviationsLoadFailed');
+      error.value = adminErrorMessage(cfg, e, 'editorDeviationsLoadFailed');
     }
   }
 });
@@ -196,7 +196,7 @@ async function removeTimetable() {
     await deleteTimetable(timetableId.value);
     await router.push('/timetables');
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'timetablesDeleteFailed');
+    error.value = adminErrorMessage(cfg, e, 'timetablesDeleteFailed');
   }
 }
 

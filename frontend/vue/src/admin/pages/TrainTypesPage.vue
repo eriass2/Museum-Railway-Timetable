@@ -22,7 +22,7 @@ import {
 } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
-import { adminFmt, adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -42,7 +42,7 @@ async function load() {
     items.value = res.items;
     iconKeys.value = res.icon_keys;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : adminStr(cfg, 'loadFailed');
+    error.value = adminErrorMessage(cfg, e, 'loadFailed');
   } finally {
     loading.value = false;
   }

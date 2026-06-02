@@ -11,6 +11,19 @@ export function adminStr(
   return resolveMrtString({ strings: unref(cfg).strings }, key, fallback);
 }
 
+/** Map caught errors to a user-facing admin message. */
+export function adminErrorMessage(
+  cfg: MaybeRef<AdminClientConfig>,
+  error: unknown,
+  fallbackKey: string,
+  fallback = '',
+): string {
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+  return adminStr(cfg, fallbackKey, fallback);
+}
+
 /** Replace `%s` placeholders in order (WordPress-style templates from PHP). */
 export function adminFmt(
   cfg: MaybeRef<AdminClientConfig>,

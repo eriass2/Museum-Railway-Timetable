@@ -4,7 +4,7 @@ import { cancelTrafficToday } from '../api/adminRest';
 import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
 import { adminConfig } from '../types';
-import { adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
 import { MrtButton } from './ui';
 
 const props = defineProps<{
@@ -43,7 +43,7 @@ async function cancelAll() {
         : adminStr(cfg, 'mobileCancelNone'),
     );
   } catch (e) {
-    emit('error', e instanceof Error ? e.message : adminStr(cfg, 'trafficTodayCancelFailed'));
+    emit('error', adminErrorMessage(cfg, e, 'trafficTodayCancelFailed'));
   } finally {
     busy.value = false;
   }
