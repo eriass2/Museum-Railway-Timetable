@@ -105,6 +105,38 @@ final class PriceRulesTest extends TestCase {
 		self::assertSame( 140, $result['matrix']['return']['student_senior'] );
 	}
 
+	public function test_price_matrix_for_trip_selects_single_type(): void {
+		$result = MRT_price_matrix_for_trip( 'single', 2, '', '', $this->sample_zone_matrix() );
+		self::assertNotNull( $result );
+		self::assertSame( 'single', $result['activeType'] );
+		self::assertFalse( $result['isAfternoonReturn'] );
+		self::assertSame( 110, $result['matrix']['single']['adult'] );
+	}
+
+	public function test_afternoon_return_fails_when_inbound_before_threshold(): void {
+		self::assertFalse( MRT_qualifies_for_afternoon_return( 'return', '15:00', '14:59' ) );
+		$result = MRT_price_matrix_for_trip( 'return', 2, '15:00', '14:59', $this->sample_zone_matrix() );
+		self::assertNotNull( $result );
+		self::assertFalse( $result['isAfternoonReturn'] );
+		self::assertSame( 220, $result['matrix']['return']['adult'] );
+	}
+
+	public function test_trip_prices_response_returns_single_trip(): void {
+		$result = MRT_trip_prices_response( 1, 2, 'single' );
+		self::assertSame( 3, $result['zones'] );
+		self::assertNotNull( $result['trip'] );
+		self::assertSame( 'single', $result['trip']['activeType'] );
+		self::assertNull( $result['day'] );
+	}
+
+	public function test_trip_prices_response_includes_day_ticket(): void {
+		$result = MRT_trip_prices_response( 1, 2, 'return', '15:00', '16:00', true );
+		self::assertNotNull( $result['trip'] );
+		self::assertTrue( $result['trip']['isAfternoonReturn'] );
+		self::assertNotNull( $result['day'] );
+		self::assertArrayHasKey( 'day', $result['day'] );
+	}
+
 	public function test_day_ticket_matrix_returns_day_row(): void {
 		$day = MRT_day_ticket_matrix( 2, $this->sample_zone_matrix() );
 		self::assertNotNull( $day );
