@@ -8,6 +8,7 @@ export type AdminClientConfig = {
   isDevMode: boolean;
   trainTypeIconUrls: Record<string, string>;
   componentDemoAdminUrl?: string;
+  strings?: Record<string, string>;
 };
 
 export type DashboardWarning = {
@@ -115,5 +116,6 @@ export function adminConfig(): AdminClientConfig {
     ...cfg,
     isDevMode: cfg.isDevMode ?? false,
     trainTypeIconUrls: cfg.trainTypeIconUrls ?? {},
+    strings: cfg.strings ?? {},
   };
 }

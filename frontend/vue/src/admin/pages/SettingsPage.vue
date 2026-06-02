@@ -5,6 +5,7 @@ import type { SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -21,7 +22,7 @@ const form = ref<SettingsPayload>({
 
 async function load() {
   if (!cfg.canManage) {
-    error.value = 'Du har inte behörighet att ändra inställningar.';
+    error.value = adminStr(cfg, 'settingsNoPermission');
     loading.value = false;
     return;
   }
@@ -30,7 +31,7 @@ async function load() {
   try {
     form.value = await getSettings();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte ladda inställningar';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'settingsLoadFailed');
   } finally {
     loading.value = false;
   }
@@ -45,45 +46,50 @@ async function submit() {
   error.value = '';
   try {
     form.value = await saveSettings(form.value);
-    saved.value = 'Sparat.';
+    saved.value = adminStr(cfg, 'saved');
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte spara';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
   }
 }
 </script>
 
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
-    <h1>Inställningar</h1>
+    <h1>{{ adminStr(cfg, 'settingsTitle', 'Inställningar') }}</h1>
 
-    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar inställningar…" @retry="load">
+    <AdminLoadState
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'settingsLoading')"
+      @retry="load"
+    >
     <AdminPanel>
     <form @submit.prevent="submit">
       <table class="form-table">
         <tbody>
           <tr>
-            <th scope="row">Aktivera plugin</th>
+            <th scope="row">{{ adminStr(cfg, 'settingsEnabledLabel') }}</th>
             <td>
               <label>
                 <input v-model="form.enabled" type="checkbox" />
-                Pluginet är aktivt
+                {{ adminStr(cfg, 'settingsEnabledCheckbox') }}
               </label>
             </td>
           </tr>
           <tr>
-            <th scope="row">Anteckning</th>
+            <th scope="row">{{ adminStr(cfg, 'settingsNote') }}</th>
             <td>
               <input v-model="form.note" type="text" class="regular-text" />
             </td>
           </tr>
           <tr>
-            <th scope="row">Min väntetid vid byte (min)</th>
+            <th scope="row">{{ adminStr(cfg, 'settingsMinTransfer') }}</th>
             <td>
               <input v-model.number="form.min_transfer_minutes" type="number" min="0" max="60" />
             </td>
           </tr>
           <tr>
-            <th scope="row">Max väntetid vid byte (min)</th>
+            <th scope="row">{{ adminStr(cfg, 'settingsMaxTransfer') }}</th>
             <td>
               <input v-model.number="form.max_transfer_minutes" type="number" min="0" max="480" />
             </td>
@@ -91,11 +97,13 @@ async function submit() {
         </tbody>
       </table>
       <AdminFormActions>
-        <button type="submit" class="button button-primary">Spara inställningar</button>
+        <button type="submit" class="button button-primary">
+          {{ adminStr(cfg, 'settingsSaveButton') }}
+        </button>
         <AdminStatusMessage v-if="saved" :message="saved" />
       </AdminFormActions>
       <p class="description">
-        CSV-import/export finns under fliken Import/export i menyn.
+        {{ adminStr(cfg, 'settingsImportHint') }}
       </p>
     </form>
     </AdminPanel>

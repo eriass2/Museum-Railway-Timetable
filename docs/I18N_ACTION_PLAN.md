@@ -10,7 +10,7 @@ Text domain: `museum-railway-timetable`. Publikt Vue får strängar från PHP (`
 | 2 | Månadskalender – legend-hints från config | Klar |
 | 3 | Tidtabellsöversikt – UI-etiketter via `strings` | Klar |
 | 4 | Delade komponenter (`MrtAsyncState`, tåg-fallback) | Klar |
-| 5 | Admin Vue – `mrtAdminVue.strings` | Ej påbörjad |
+| 5 | Admin Vue – `mrtAdminVue.strings` | Påbörjad (nav, gemensamt, inställningar, priser) |
 
 ## Fas 1 – Wizard
 
@@ -36,10 +36,12 @@ Text domain: `museum-railway-timetable`. Publikt Vue får strängar från PHP (`
 - [x] `MrtAsyncState` – ingen hårdkodad svenska som default
 - [x] `legVehicleLabel` – `defaultTrainType` från cfg
 
-## Fas 5 – Admin (senare)
+## Fas 5 – Admin (pågår)
 
-- [ ] `MRT_admin_vue_script_localization()` i `inc/assets/admin-vue.php`
-- [ ] Ersätt hårdkodad text i `frontend/vue/src/admin/**` stegvis (sida för sida)
+- [x] `MRT_admin_vue_script_localization()` i `inc/assets/admin-vue.php`
+- [x] `adminStr()` + `frontend/vue/src/admin/utils/adminLabels.ts`
+- [x] Navigering, `AdminLoadState`, Inställningar, Priser
+- [ ] Övriga admin-sidor (översikt, stationer, tidtabeller, m.fl.)
 
 ## Underhåll
 

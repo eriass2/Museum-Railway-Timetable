@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const route = useRoute();
@@ -9,21 +10,21 @@ const cfg = adminConfig();
 
 const tabs = computed(() => {
   const base = [
-    { to: '/dashboard', label: 'Översikt' },
-    { to: '/stations-routes', label: 'Stationer & rutter' },
-    { to: '/timetables', label: 'Tidtabeller' },
-    { to: '/help', label: 'Hjälp' },
+    { to: '/dashboard', label: adminStr(cfg, 'navOverview', 'Översikt') },
+    { to: '/stations-routes', label: adminStr(cfg, 'navStationsRoutes', 'Stationer & rutter') },
+    { to: '/timetables', label: adminStr(cfg, 'navTimetables', 'Tidtabeller') },
+    { to: '/help', label: adminStr(cfg, 'navHelp', 'Hjälp') },
   ];
   if (cfg.canManage) {
     base.push(
-      { to: '/train-types', label: 'Tågtyper' },
-      { to: '/settings', label: 'Inställningar' },
-      { to: '/prices', label: 'Priser' },
-      { to: '/import-export', label: 'Import/export' },
+      { to: '/train-types', label: adminStr(cfg, 'navTrainTypes', 'Tågtyper') },
+      { to: '/settings', label: adminStr(cfg, 'navSettings', 'Inställningar') },
+      { to: '/prices', label: adminStr(cfg, 'navPrices', 'Priser') },
+      { to: '/import-export', label: adminStr(cfg, 'navImportExport', 'Import/export') },
     );
   }
   if (cfg.canManage && cfg.isDevMode) {
-    base.push({ to: '/dev-tools', label: 'Dev' });
+    base.push({ to: '/dev-tools', label: adminStr(cfg, 'navDev', 'Dev') });
   }
   return base;
 });
@@ -41,8 +42,8 @@ function navigate(path: string) {
 </script>
 
 <template>
-  <aside class="mrt-admin-shell__nav" aria-label="Tidtabell admin">
-    <p class="mrt-admin-shell__brand">Tidtabell</p>
+  <aside class="mrt-admin-shell__nav" :aria-label="adminStr(cfg, 'navAria', 'Tidtabell admin')">
+    <p class="mrt-admin-shell__brand">{{ adminStr(cfg, 'navBrand', 'Tidtabell') }}</p>
     <nav class="mrt-admin-shell__menu">
       <a
         v-for="tab in tabs"
@@ -56,7 +57,9 @@ function navigate(path: string) {
       </a>
     </nav>
     <p v-if="cfg.componentDemoAdminUrl" class="mrt-admin-shell__tools">
-      <a :href="cfg.componentDemoAdminUrl" class="mrt-admin-shell__tools-link">Komponentdemo</a>
+      <a :href="cfg.componentDemoAdminUrl" class="mrt-admin-shell__tools-link">
+        {{ adminStr(cfg, 'navComponentDemo', 'Komponentdemo') }}
+      </a>
     </p>
   </aside>
 </template>

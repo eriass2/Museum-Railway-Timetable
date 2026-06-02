@@ -4,6 +4,7 @@ import { getPrices, savePrices } from '../api/adminRest';
 import type { PricesPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import { AdminFormActions, AdminPanel, AdminStatusMessage } from '../components/ui';
+import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -18,7 +19,7 @@ const zones = computed(() => data.value?.zones ?? []);
 
 async function load() {
   if (!cfg.canManage) {
-    error.value = 'Du har inte behörighet att ändra priser.';
+    error.value = adminStr(cfg, 'pricesNoPermission');
     loading.value = false;
     return;
   }
@@ -27,7 +28,7 @@ async function load() {
   try {
     data.value = await getPrices();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte ladda priser';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'pricesLoadFailed');
     data.value = null;
   } finally {
     loading.value = false;
@@ -56,33 +57,38 @@ async function submit() {
   error.value = '';
   try {
     data.value = await savePrices(data.value.matrix);
-    saved.value = 'Sparat.';
+    saved.value = adminStr(cfg, 'saved');
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte spara';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
   }
 }
 </script>
 
 <template>
   <div>
-    <h1>Priser</h1>
+    <h1>{{ adminStr(cfg, 'pricesTitle', 'Priser') }}</h1>
 
-    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar priser…" @retry="load">
+    <AdminLoadState
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'pricesLoading')"
+      @retry="load"
+    >
     <AdminPanel v-if="data">
     <form @submit.prevent="submit">
       <p class="description">
-        Priser i SEK per biljettyp, passagerarkategori och antal zoner.
+        {{ adminStr(cfg, 'pricesDescription') }}
       </p>
       <table class="widefat striped mrt-price-matrix-table">
         <thead>
           <tr>
-            <th>Biljettyp</th>
+            <th>{{ adminStr(cfg, 'pricesTicketTypeCol') }}</th>
             <th v-for="cat in categoryKeys" :key="cat" :colspan="zones.length">
               {{ data.categories[cat] }}
             </th>
           </tr>
           <tr>
-            <th>Zoner</th>
+            <th>{{ adminStr(cfg, 'pricesZonesCol') }}</th>
             <template v-for="cat in categoryKeys" :key="`z-${cat}`">
               <th v-for="zone in zones" :key="`${cat}-${zone}`">{{ zone }}</th>
             </template>
@@ -108,7 +114,9 @@ async function submit() {
         </tbody>
       </table>
       <AdminFormActions>
-        <button type="submit" class="button button-primary">Spara priser</button>
+        <button type="submit" class="button button-primary">
+          {{ adminStr(cfg, 'pricesSaveButton') }}
+        </button>
         <AdminStatusMessage v-if="saved" :message="saved" />
       </AdminFormActions>
     </form>
