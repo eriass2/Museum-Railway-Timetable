@@ -31,7 +31,7 @@ import {
   type TripSummaryLeg,
 } from '../utils/tripSummaryText';
 
-const { store, cfg } = useWizardContext();
+const { store, cfg, config } = useWizardContext();
 const shareFeedback = ref('');
 
 const dateText = computed(() =>
@@ -62,7 +62,12 @@ const tripPricesQuery = computed(() => ({
   includeDay: true,
 }));
 
-const { loading: pricesLoading, zones, trip: priceData, day: dayPrices } = useTripPrices(cfg, tripPricesQuery);
+const restConfig = computed(() => config);
+
+const { loading: pricesLoading, zones, trip: priceData, day: dayPrices } = useTripPrices(
+  restConfig,
+  tripPricesQuery,
+);
 
 const priceLabels = computed(() =>
   priceTableLabelsFromCfg(cfg.value, zones.value, !priceData.value?.isAfternoonReturn),
