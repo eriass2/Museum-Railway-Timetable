@@ -41,6 +41,16 @@ final class RefactoredHelpersTest extends TestCase {
 		self::assertSame( '', MRT_route_direction_from_station_order( $route_stations, $endpoints, 99 ) );
 	}
 
+	public function test_route_leg_travels_towards_station(): void {
+		$route_id = 77;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			$route_id . '|mrt_route_stations' => array( 10, 101, 303 ),
+		);
+
+		self::assertTrue( MRT_route_leg_travels_towards_station( $route_id, 101, 303, 303 ) );
+		self::assertFalse( MRT_route_leg_travels_towards_station( $route_id, 101, 10, 303 ) );
+	}
+
 	public function test_route_label_from_shared_service_end_station(): void {
 		$GLOBALS['mrt_test_post_meta'] = array(
 			'77|mrt_route_start_station'    => 10,

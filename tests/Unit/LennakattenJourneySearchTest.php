@@ -174,6 +174,32 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '10:35', $connections[0]['to_arrival'] ?? '' );
 	}
 
+	public function test_find_multi_leg_fyrislund_barby_rejects_opposite_direction_transfer(): void {
+		$this->boot_fixture_services(
+			array( 'orange-72-in', 'orange-73-out' ),
+			'2026-07-17'
+		);
+		$stations = $this->station_ids();
+
+		$results = MRT_find_multi_leg_connections(
+			$stations['fyrislund'],
+			$stations['barby'],
+			'2026-07-17'
+		);
+
+		foreach ( $results as $row ) {
+			self::assertNotSame(
+				'transfer',
+				$row['connection_type'] ?? '',
+				'Must not suggest transfer via Uppsala when traveling towards Bärby'
+			);
+		}
+		self::assertNotEmpty( $results, 'Expected direct Fyrislund → Bärby on orange-73-out' );
+		self::assertSame( 'direct', $results[0]['connection_type'] ?? '' );
+		self::assertSame( '11:18', $results[0]['legs'][0]['from_departure'] ?? '' );
+		self::assertSame( '11:37', $results[0]['legs'][0]['to_arrival'] ?? '' );
+	}
+
 	private function boot_service_fixture( string $service_code, string $date ): void {
 		$this->boot_fixture_services( array( $service_code ), $date );
 	}
@@ -185,6 +211,7 @@ final class LennakattenJourneySearchTest extends TestCase {
 		$stations           = $this->station_ids();
 		$rows_by_service    = array();
 		$service_timetables = array();
+		$service_code_to_id = array();
 		$next_service_id    = 7100;
 		foreach ( $service_codes as $service_code ) {
 			$stops = $this->fixture_stops_for_service( $service_code );
@@ -204,8 +231,9 @@ final class LennakattenJourneySearchTest extends TestCase {
 					'dropoff_allowed' => (int) ( $stop['dropoff_allowed'] ?? 1 ),
 				);
 			}
-			$rows_by_service[ $next_service_id ]    = $rows;
-			$service_timetables[ $next_service_id ] = 900;
+			$rows_by_service[ $next_service_id ]       = $rows;
+			$service_timetables[ $next_service_id ]    = 900;
+			$service_code_to_id[ $service_code ]       = $next_service_id;
 			++$next_service_id;
 		}
 		$station_meta = $this->fixture_bus_hub_station_meta( $stations );
@@ -215,6 +243,66 @@ final class LennakattenJourneySearchTest extends TestCase {
 			$service_timetables,
 			$station_meta
 		);
+		$route_meta = $this->fixture_route_post_meta( $stations, $service_code_to_id );
+		$GLOBALS['mrt_test_post_meta'] = array_merge( $GLOBALS['mrt_test_post_meta'] ?? array(), $route_meta );
+	}
+
+	/**
+	 * @param array<string, int> $stations station_code => post ID
+	 * @param array<string, int> $service_code_to_id service_code => post ID
+	 * @return array<string, mixed>
+	 */
+	private function fixture_route_post_meta( array $stations, array $service_code_to_id ): array {
+		$meta                     = array();
+		$route_code_to_id         = array();
+		$route_stations_by_code   = array();
+		$next_route_id            = 8000;
+
+		foreach ( $this->fixture_files()['route_stations.csv'] ?? array() as $row ) {
+			$route_code    = (string) ( $row['route_code'] ?? '' );
+			$station_code  = (string) ( $row['station_code'] ?? '' );
+			$station_id    = $stations[ $station_code ] ?? 0;
+			if ( $route_code === '' || $station_id <= 0 ) {
+				continue;
+			}
+			$route_stations_by_code[ $route_code ][] = $station_id;
+		}
+
+		foreach ( $this->fixture_files()['routes.csv'] ?? array() as $row ) {
+			$route_code = (string) ( $row['route_code'] ?? '' );
+			if ( $route_code === '' ) {
+				continue;
+			}
+			$route_id                      = $next_route_id++;
+			$route_code_to_id[ $route_code ] = $route_id;
+			if ( isset( $route_stations_by_code[ $route_code ] ) ) {
+				$meta[ $route_id . '|mrt_route_stations' ] = $route_stations_by_code[ $route_code ];
+			}
+			$start_id = $stations[ (string) ( $row['start_station_code'] ?? '' ) ] ?? 0;
+			$end_id   = $stations[ (string) ( $row['end_station_code'] ?? '' ) ] ?? 0;
+			if ( $start_id > 0 ) {
+				$meta[ $route_id . '|mrt_route_start_station' ] = $start_id;
+			}
+			if ( $end_id > 0 ) {
+				$meta[ $route_id . '|mrt_route_end_station' ] = $end_id;
+			}
+		}
+
+		foreach ( $this->fixture_files()['services.csv'] ?? array() as $row ) {
+			$service_code = (string) ( $row['service_code'] ?? '' );
+			$route_code   = (string) ( $row['route_code'] ?? '' );
+			$service_id   = $service_code_to_id[ $service_code ] ?? 0;
+			$route_id     = $route_code_to_id[ $route_code ] ?? 0;
+			if ( $service_id > 0 && $route_id > 0 ) {
+				$meta[ $service_id . '|mrt_service_route_id' ] = $route_id;
+			}
+			$end_station_id = $stations[ (string) ( $row['end_station_code'] ?? '' ) ] ?? 0;
+			if ( $service_id > 0 && $end_station_id > 0 ) {
+				$meta[ $service_id . '|mrt_service_end_station_id' ] = $end_station_id;
+			}
+		}
+
+		return $meta;
 	}
 
 	/**

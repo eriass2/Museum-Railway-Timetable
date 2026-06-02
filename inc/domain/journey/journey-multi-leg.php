@@ -184,6 +184,10 @@ function MRT_journey_collect_transfer_at_stop(
 	if ( ! MRT_journey_station_allows_transfer( $xfer_id ) ) {
 		return;
 	}
+	$route_id = (int) get_post_meta( $s1, 'mrt_service_route_id', true );
+	if ( $route_id > 0 && ! MRT_route_leg_travels_towards_station( $route_id, $from_station_id, $xfer_id, $to_station_id ) ) {
+		return;
+	}
 	$xfer_arr = MRT_stop_effective_arrival( $stop_row );
 	if ( $xfer_arr === '' || ! MRT_validate_time_hhmm( $xfer_arr ) ) {
 		return;
@@ -194,6 +198,10 @@ function MRT_journey_collect_transfer_at_stop(
 	}
 	foreach ( MRT_find_connections_departing_not_before( $xfer_id, $to_station_id, $dateYmd, $earliest ) as $c2 ) {
 		if ( (int) $c2['service_id'] === $s1 ) {
+			continue;
+		}
+		$route_id_2 = (int) get_post_meta( (int) $c2['service_id'], 'mrt_service_route_id', true );
+		if ( $route_id_2 > 0 && ! MRT_route_leg_travels_towards_station( $route_id_2, $xfer_id, $to_station_id, $to_station_id ) ) {
 			continue;
 		}
 		$dep2 = MRT_journey_connection_departure_hhmm( $c2 );
@@ -280,6 +288,11 @@ function MRT_find_multi_leg_connections( $from_station_id, $to_station_id, $date
 	}
 	if ( $include_direct ) {
 		foreach ( MRT_find_connections( $from_station_id, $to_station_id, $dateYmd ) as $conn ) {
+			$sid      = (int) ( $conn['service_id'] ?? 0 );
+			$route_id = $sid > 0 ? (int) get_post_meta( $sid, 'mrt_service_route_id', true ) : 0;
+			if ( $route_id > 0 && ! MRT_route_leg_travels_towards_station( $route_id, $from_station_id, $to_station_id, $to_station_id ) ) {
+				continue;
+			}
 			$results[] = MRT_journey_wrap_direct_multi( $conn, $dateYmd, $from_station_id, $to_station_id );
 		}
 	}

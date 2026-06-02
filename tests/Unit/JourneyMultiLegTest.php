@@ -119,6 +119,38 @@ final class JourneyMultiLegTest extends TestCase {
         self::assertSame('10:00', $results[0]['legs'][0]['to_arrival']);
     }
 
+    private const ROUTE_MAIN = 500;
+    private const ST_UPPSALA = 10;
+
+    public function test_find_multi_leg_rejects_transfer_in_opposite_direction(): void {
+        $mid  = 101;
+        $goal = 303;
+
+        $this->mrt_use_journey_fixture(
+            [
+                11 => [
+                    $this->mrt_stop(11, $mid, 1, null, '09:00'),
+                    $this->mrt_stop(11, self::ST_UPPSALA, 2, '10:00', null),
+                ],
+                22 => [
+                    $this->mrt_stop(22, self::ST_UPPSALA, 1, null, '10:10'),
+                    $this->mrt_stop(22, $mid, 2, '10:30', null),
+                    $this->mrt_stop(22, $goal, 3, '11:00', null),
+                ],
+            ],
+            [900 => [self::DATE]],
+            [],
+            $this->mrt_hub_station_meta(self::ST_UPPSALA),
+            [],
+            [self::ROUTE_MAIN => [self::ST_UPPSALA, $mid, $goal]],
+            [11 => self::ROUTE_MAIN, 22 => self::ROUTE_MAIN]
+        );
+
+        $results = MRT_find_multi_leg_connections($mid, $goal, self::DATE, 5, false);
+
+        self::assertSame([], $results);
+    }
+
     public function test_find_multi_leg_returns_transfer_at_shared_station(): void {
         $this->mrt_use_journey_fixture($this->transferRows('10:10'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 

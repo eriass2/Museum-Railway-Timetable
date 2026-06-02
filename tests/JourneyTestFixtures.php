@@ -146,18 +146,31 @@ trait MRT_Journey_Test_Fixture {
 	 * @param array<int, array<int, array<string, mixed>>> $rows_by_service
 	 * @param array<int, string[]>                         $timetable_dates
 	 * @param array<int, int>                              $service_timetables
+	 * @param array<int, array<string, mixed>>             $station_meta
+	 * @param array<int, string>                           $timetable_types
+	 * @param array<int, int[]>                            $routes route_id => ordered station IDs
+	 * @param array<int, int>                              $service_routes service_id => route_id
 	 */
 	protected function mrt_use_journey_fixture(
 		array $rows_by_service,
 		array $timetable_dates,
 		array $service_timetables = array(),
 		array $station_meta = array(),
-		array $timetable_types = array()
+		array $timetable_types = array(),
+		array $routes = array(),
+		array $service_routes = array()
 	): void {
 		$this->mrt_original_wpdb = $GLOBALS['wpdb'] ?? null;
 		$service_timetables      = $this->mrt_service_timetables( array_keys( $rows_by_service ), $service_timetables );
 		$GLOBALS['wpdb']         = new MRT_Journey_Test_Db( $rows_by_service );
-		$GLOBALS['mrt_test_post_meta'] = $this->mrt_post_meta( $timetable_dates, $service_timetables, $station_meta, $timetable_types );
+		$GLOBALS['mrt_test_post_meta'] = $this->mrt_post_meta(
+			$timetable_dates,
+			$service_timetables,
+			$station_meta,
+			$timetable_types,
+			$routes,
+			$service_routes
+		);
 		$GLOBALS['mrt_test_get_posts'] = $this->mrt_get_posts_callback( $timetable_dates, $service_timetables );
 	}
 
@@ -203,9 +216,18 @@ trait MRT_Journey_Test_Fixture {
 	/**
 	 * @param array<int, string[]> $timetable_dates
 	 * @param array<int, int>      $service_timetables
+	 * @param array<int, int[]>    $routes
+	 * @param array<int, int>      $service_routes
 	 * @return array<string, mixed>
 	 */
-	private function mrt_post_meta( array $timetable_dates, array $service_timetables, array $station_meta = array(), array $timetable_types = array() ): array {
+	private function mrt_post_meta(
+		array $timetable_dates,
+		array $service_timetables,
+		array $station_meta = array(),
+		array $timetable_types = array(),
+		array $routes = array(),
+		array $service_routes = array()
+	): array {
 		$meta = array();
 		foreach ( $timetable_dates as $timetable_id => $dates ) {
 			$meta[ (int) $timetable_id . '|mrt_timetable_dates' ] = $dates;
@@ -217,6 +239,12 @@ trait MRT_Journey_Test_Fixture {
 		foreach ( $service_timetables as $service_id => $timetable_id ) {
 			$meta[ (int) $service_id . '|mrt_service_timetable_id' ] = (int) $timetable_id;
 			$meta[ (int) $service_id . '|mrt_service_number' ]       = (string) $service_id;
+		}
+		foreach ( $service_routes as $service_id => $route_id ) {
+			$meta[ (int) $service_id . '|mrt_service_route_id' ] = (int) $route_id;
+		}
+		foreach ( $routes as $route_id => $station_ids ) {
+			$meta[ (int) $route_id . '|mrt_route_stations' ] = array_map( 'intval', $station_ids );
 		}
 		foreach ( $station_meta as $station_id => $pairs ) {
 			foreach ( $pairs as $meta_key => $value ) {

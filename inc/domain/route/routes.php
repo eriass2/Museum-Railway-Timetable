@@ -107,6 +107,66 @@ function MRT_route_direction_from_station_order( array $route_stations, array $e
 }
 
 /**
+ * Index of a station on a route, or null when not on the route.
+ *
+ * @param array<int, int> $route_stations Route station IDs in order
+ */
+function MRT_route_station_index( array $route_stations, $station_id ): ?int {
+	$station_id = (int) $station_id;
+	foreach ( $route_stations as $index => $id ) {
+		if ( (int) $id === $station_id ) {
+			return (int) $index;
+		}
+	}
+	return null;
+}
+
+/**
+ * Whether a leg from A to B moves towards the goal station along the route.
+ *
+ * @param int $route_id Route post ID
+ * @param int $from_station_id Boarding station
+ * @param int $to_station_id Alighting station
+ * @param int $goal_station_id Ultimate destination for the journey search
+ */
+function MRT_route_leg_travels_towards_station( $route_id, $from_station_id, $to_station_id, $goal_station_id ): bool {
+	$from_station_id = (int) $from_station_id;
+	$to_station_id   = (int) $to_station_id;
+	$goal_station_id = (int) $goal_station_id;
+	if ( $from_station_id <= 0 || $to_station_id <= 0 || $goal_station_id <= 0 ) {
+		return false;
+	}
+	if ( $from_station_id === $to_station_id ) {
+		return false;
+	}
+	if ( $to_station_id === $goal_station_id ) {
+		return true;
+	}
+	if ( $from_station_id === $goal_station_id ) {
+		return false;
+	}
+	if ( $route_id <= 0 ) {
+		return true;
+	}
+	$route_stations = MRT_get_route_stations( (int) $route_id );
+	if ( $route_stations === array() ) {
+		return true;
+	}
+	$from_idx = MRT_route_station_index( $route_stations, $from_station_id );
+	$to_idx   = MRT_route_station_index( $route_stations, $to_station_id );
+	$goal_idx = MRT_route_station_index( $route_stations, $goal_station_id );
+	if ( $from_idx === null || $to_idx === null || $goal_idx === null ) {
+		return true;
+	}
+	$to_delta   = $to_idx - $from_idx;
+	$goal_delta = $goal_idx - $from_idx;
+	if ( $to_delta === 0 ) {
+		return false;
+	}
+	return ( $to_delta > 0 && $goal_delta > 0 ) || ( $to_delta < 0 && $goal_delta < 0 );
+}
+
+/**
  * Get route label from end stations
  * Helper function for MRT_get_route_label()
  *
