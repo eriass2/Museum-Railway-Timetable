@@ -121,6 +121,7 @@ function MRT_rest_format_station( WP_Post $post ): array {
 		'lat'           => (string) get_post_meta( $post->ID, 'mrt_lat', true ),
 		'lng'           => (string) get_post_meta( $post->ID, 'mrt_lng', true ),
 		'display_order' => (int) get_post_meta( $post->ID, 'mrt_display_order', true ),
+		'price_zones'   => MRT_get_station_price_zones( (int) $post->ID ),
 	);
 }
 
@@ -174,6 +175,10 @@ function MRT_rest_apply_station_meta( int $station_id, array $body ): void {
 	}
 	if ( isset( $body['display_order'] ) ) {
 		update_post_meta( $station_id, 'mrt_display_order', (int) $body['display_order'] );
+	}
+	if ( array_key_exists( 'price_zones', $body ) ) {
+		$zones = is_array( $body['price_zones'] ) ? $body['price_zones'] : array();
+		MRT_update_station_price_zones_meta( $station_id, $zones );
 	}
 }
 

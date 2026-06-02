@@ -125,6 +125,7 @@ export type StationRow = {
   lat: string;
   lng: string;
   display_order: number;
+  price_zones: number[];
 };
 
 export type RouteRow = {

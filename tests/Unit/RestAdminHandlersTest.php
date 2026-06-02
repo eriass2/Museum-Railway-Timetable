@@ -70,6 +70,7 @@ final class RestAdminHandlersTest extends TestCase {
 			'5|mrt_station_type'       => 'station',
 			'5|mrt_station_bus_suffix' => '1',
 			'5|mrt_display_order'      => 3,
+			'5|' . MRT_station_price_zones_meta_key() => array( 2, 3 ),
 		);
 
 		$rows = MRT_rest_list_stations_payload();
@@ -79,6 +80,24 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertSame( 'Selknä', $rows[0]['title'] );
 		self::assertTrue( $rows[0]['bus_suffix'] );
 		self::assertSame( 3, $rows[0]['display_order'] );
+		self::assertSame( array( 2, 3 ), $rows[0]['price_zones'] );
+	}
+
+	public function test_apply_station_meta_saves_price_zones(): void {
+		$GLOBALS['mrt_test_post_meta'] = array();
+		MRT_rest_apply_station_meta( 9, array( 'price_zones' => array( 1, 2 ) ) );
+		self::assertSame(
+			array( 1, 2 ),
+			get_post_meta( 9, MRT_station_price_zones_meta_key(), true )
+		);
+	}
+
+	public function test_apply_station_meta_clears_price_zones_when_empty(): void {
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'9|' . MRT_station_price_zones_meta_key() => array( 3 ),
+		);
+		MRT_rest_apply_station_meta( 9, array( 'price_zones' => array() ) );
+		self::assertSame( '', get_post_meta( 9, MRT_station_price_zones_meta_key(), true ) );
 	}
 
 	public function test_create_station_handler_rejects_empty_title(): void {
