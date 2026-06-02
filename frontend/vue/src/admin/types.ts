@@ -1,3 +1,55 @@
+export type AdminHelpSection = {
+  title: string;
+  body: string;
+  adminOnly?: boolean;
+  devOnly?: boolean;
+};
+
+export type AdminHelpShortcode = {
+  tag: string;
+  title: string;
+  summary: string;
+  example: string;
+  params: { name: string; desc: string }[];
+};
+
+export type AdminHelpFaqItem = {
+  q: string;
+  a: string;
+  aEditor?: string;
+};
+
+export type AdminHelpContent = {
+  title: string;
+  intro: string;
+  panelWhat: string;
+  colPart: string;
+  colDescription: string;
+  partAdmin: string;
+  partAdminDesc: string;
+  partPublic: string;
+  partPublicDesc: string;
+  panelAdmin: string;
+  panelAdminHint: string;
+  panelWorkflow: string;
+  panelOperations: string;
+  panelShortcodes: string;
+  panelFaq: string;
+  panelMore: string;
+  shortcodesIntro: string;
+  shortcodesDevHint: string;
+  shortcodeExample: string;
+  paramName: string;
+  operationsNote: string;
+  moreInfoBody: string;
+  moreInfoDocs: string;
+  adminSections: AdminHelpSection[];
+  workflowSteps: string[];
+  operations: { title: string; body: string }[];
+  shortcodes: AdminHelpShortcode[];
+  faq: AdminHelpFaqItem[];
+};
+
 export type AdminClientConfig = {
   restUrl: string;
   restNonce: string;
@@ -9,6 +61,7 @@ export type AdminClientConfig = {
   trainTypeIconUrls: Record<string, string>;
   componentDemoAdminUrl?: string;
   strings?: Record<string, string>;
+  help?: AdminHelpContent;
 };
 
 export type DashboardWarning = {
@@ -117,5 +170,6 @@ export function adminConfig(): AdminClientConfig {
     isDevMode: cfg.isDevMode ?? false,
     trainTypeIconUrls: cfg.trainTypeIconUrls ?? {},
     strings: cfg.strings ?? {},
+    help: cfg.help,
   };
 }

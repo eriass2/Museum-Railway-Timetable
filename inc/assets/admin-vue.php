@@ -335,6 +335,7 @@ function MRT_admin_vue_client_config(): array {
 			'isDevMode'          => MRT_is_development_mode(),
 			'trainTypeIconUrls'  => MRT_train_type_icon_urls(),
 			'strings'            => MRT_admin_vue_script_localization(),
+			'help'               => MRT_admin_vue_help_content(),
 		)
 	);
 	if ( MRT_is_development_mode() && function_exists( 'MRT_components_demo_menu_slug' ) ) {

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-06-02T07:46:36+00:00\n"
+"POT-Creation-Date: 2026-06-02T07:48:08+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: museum-railway-timetable\n"
@@ -261,10 +261,428 @@ msgid "Development navigation is only available in development mode (WP_DEBUG or
 msgstr ""
 
 #: inc/admin/tools/timetable-pages.php:36
+#: inc/assets/admin-vue-help.php:94
 #: inc/assets/admin-vue.php:63
 #: inc/assets/admin-vue.php:129
 #: inc/assets/admin-vue.php:204
 msgid "Tidtabeller"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:19
+#: inc/assets/admin-vue.php:64
+msgid "Hjälp"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:20
+msgid "Museum Railway Timetable hanterar tidtabellsdata i WordPress och viser den på webbplatsen via shortcodes. I admin skapar du stationer, rutter, tidtabeller och turer. Besökare kan se tidtabeller, kalender och söka resor med reseplaneraren."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:24
+msgid "Vad pluginet gör"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:25
+msgid "Del"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:26
+msgid "Beskrivning"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:27
+#: inc/assets/admin-vue-help.php:37
+msgid "Administration"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:28
+msgid "Data under menyn Tidtabell — stationer, rutter, tidtabeller, drift och (för administratör) priser och import."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:32
+msgid "Webbplats"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:33
+msgid "Shortcodes på WordPress-sidor: lista, tidtabellsöversikt, månadskalender och reseplanerare."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:38
+msgid "Vad varje menyval gör i admin."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:39
+msgid "Arbetsflöde"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:40
+msgid "Drift och avvikelser"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:41
+msgid "Shortcodes"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:42
+msgid "Vanliga frågor"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:43
+msgid "Mer information"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:44
+msgid "Shortcodes läggs in i innehållet på en WordPress-sida (block «Anpassad HTML» eller klassisk redigerare). Varje shortcode visar en del av tidtabellen på webbplatsen."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:48
+msgid "I utvecklingsläge: använd Utvecklingsverktyg → Skapa/uppdatera tidtabellssidor för att skapa en indexsida och en sida per tidtabell med rätt shortcodes."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:52
+msgid "Exempel:"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:53
+msgid "Parameter"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:54
+msgid "Avvikelser och dagens drift syns i tidtabellsöversikten och i reseplaneraren för berörda datum."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:58
+msgid "Full steg-för-steg-guide finns i plugin-dokumentationen: docs/ADMIN_WORKFLOW.md i projektets källkod."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:62
+msgid "Mer detaljer om shortcodes, CSV och utvecklingsverktyg finns i docs/SHORTCODES.md och övriga filer under docs/."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:80
+#: inc/assets/admin-vue.php:61
+msgid "Översikt"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:81
+msgid "Statistik, varningar om dataproblem, nästa trafikdag och snabbstart. På mobil: inställ trafik idag och snabb avgångstid när det finns trafik."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:87
+#: inc/assets/admin-vue.php:62
+#: inc/assets/admin-vue.php:142
+#: inc/assets/admin-vue.php:154
+msgid "Stationer & rutter"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:88
+msgid "Grunddata: stationer (namn, typ, koordinater, buss-suffix) och rutter med stationer i ordning. Rutten styr vilka hållplatser som finns i stopptidsrutnätet."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:95
+msgid "Skapa och redigera tidtabeller. I editorn: titel och typ (färg), trafikdagar, turer, stopptider (rutnät eller tabell), avvikelser och förhandsvisning som på webbplatsen."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:101
+#: inc/assets/admin-vue.php:65
+#: inc/assets/admin-vue.php:131
+#: inc/assets/admin-vue.php:235
+msgid "Tågtyper"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:102
+msgid "Kategorier med namn, slug och ikon — visas i tidtabellsöversikt och kan filtrera månadskalendern."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:109
+#: inc/assets/admin-vue.php:66
+#: inc/assets/admin-vue.php:79
+msgid "Inställningar"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:110
+msgid "Aktivera/inaktivera plugin, intern anteckning och min/max väntetid vid byte i reseplaneraren."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:117
+#: inc/assets/admin-vue.php:67
+#: inc/assets/admin-vue.php:101
+#: inc/assets/frontend.php:120
+#: inc/public/vue-shortcode-config.php:159
+msgid "Priser"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:118
+msgid "Prismatris (biljettyp × kategori × zoner) som reseplaneraren använder i sammanfattningssteget."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:125
+#: inc/assets/admin-vue.php:266
+msgid "Import / export"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:126
+msgid "Säkerhetskopiera eller flytta all data som CSV i zip. Välj slå ihop eller ersätt vid import."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:133
+msgid "Utvecklingsverktyg"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:134
+msgid "Demoimport, demosida, tidtabellssidor och databasrensning — endast i utvecklingsläge, syns inte på produktion."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:149
+msgid "Skapa stationer under Stationer & rutter"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:150
+msgid "Skapa rutter och lägg stationer i ordning"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:151
+msgid "Valfritt: skapa tågtyper med ikoner (Tågtyper)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:152
+msgid "Skapa en tidtabell och lägg till trafikdagar"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:153
+msgid "Lägg till turer (koppla rutt och destination)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:154
+msgid "Fyll i stopptider i editorn (rutnät eller tabellvy)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:155
+msgid "Kontrollera förhandsvisningen — samma vy som på webbplatsen"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:156
+msgid "Publicera: lägg shortcodes på sidor (eller skapa sidor i utvecklingsläge)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:166
+#: inc/assets/admin-vue.php:292
+msgid "Inställ trafik idag"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:167
+msgid "(Översikt) — sätter meddelandet «Inställd» på alla dagens turer."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:173
+msgid "Avvikelser"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:174
+msgid "(tidtabellseditor) — ändra tågtyp eller meddelande för en specifik tur och datum."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:180
+msgid "Snabb avgångstid"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:181
+msgid "(mobil) — uppdatera avgång vid första hållplats utan att öppna hela rutnätet."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:196
+msgid "Lista tidtabeller"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:197
+msgid "Visar klickbara kort för alla publicerade tidtabeller med länkar till respektive tidtabellssida. Passar som startsida eller hubb."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:205
+msgid "Visa antal trafikdagar och datumspann (1/0, standard 1)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:209
+msgid "Visa kort introduktionstext (1/0, standard 1)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:215
+msgid "Tidtabellsöversikt"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:216
+msgid "Visar hela tidtabellen som rutnät: turer grupperade per rutt och riktning, med tider, tågtyper och avvikelser för vald dag."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:224
+msgid "Tidtabellens ID (rekommenderat — syns i editorns URL)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:228
+msgid "Alternativt: exakt titel på tidtabellen"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:234
+msgid "Månadskalender"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:235
+msgid "Kalender som visar vilka dagar som har trafik. Besökare kan bläddra månad och se antal turer per dag."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:243
+msgid "Månad som YYYY-MM (standard: aktuell månad)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:247
+msgid "Filtrera på tågtypens slug (se Tågtyper)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:251
+msgid "Filtrera på exakt tur-titel (valfritt)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:255
+msgid "Visa förklaring (1/0, standard 1)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:259
+msgid "Visa antal turer per dag (1/0, standard 0). Siffran gäller alla linjer och riktningar."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:266
+msgid "Vecka börjar måndag (1/0, standard 1)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:270
+msgid "Länkar föregående/nästa månad (1/0, standard 1)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:276
+msgid "Reseplanerare"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:277
+msgid "Flerstegsflöde: välj rutt, datum, utresa och ev. retur. Visar priser och anslutningar. Kräver JavaScript."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:285
+msgid "Reserverat (inaktiverat) — biljettknapp visas inte i nuvarande version"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:289
+msgid "Länk till tidtabellssida (visas under sök på steg 1)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:293
+msgid "Kompakt layout inuti sidinnehåll (1/true)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:297
+msgid "Legacy — inbäddad översikt under steg 1 (rekommenderas sällan)"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:301
+msgid "Samma som timetable_id men med tidtabellstitel"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:314
+msgid "Var börjar jag?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:315
+msgid "Följ ordningen stationer → rutter → tidtabell → turer → stopptider. På mobil räcker det ofta att ändra avvikelser och avgångstider via Översikt eller tidtabellseditorn."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:321
+msgid "Vad betyder varningarna på översikten?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:322
+msgid "De är dataproblem (t.ex. tidtabell utan datum, tur utan stopptider). Klicka på varningen för att gå till rätt sida och åtgärda."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:328
+msgid "Hur ställer jag in trafik för idag?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:329
+msgid "På Översikt: Inställ trafik idag sätter meddelandet «Inställd» på alla dagens turer. Du kan också ändra en enskild avgångstid eller avvikelse i tidtabellseditorn."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:335
+msgid "Kan jag radera stationer och rutter?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:336
+msgid "Ja, om de inte används. En station som ingår i en rutt eller har stopptider kan inte raderas förrän kopplingen tagits bort. Rutter med turer kan inte raderas."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:342
+msgid "Vad är skillnaden mellan admin och redaktör?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:343
+msgid "Du har full behörighet: grunddata, priser, import och inställningar."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:347
+msgid "Som redaktör kan du läsa allt och ändra avvikelser samt snabb avgångstid. Grunddata (stationer, tidtabeller, priser m.m.) kräver administratör."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:353
+msgid "Hur importerar jag data?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:354
+msgid "Gå till Import / export. CSV zip kan slås samman med befintlig data eller ersätta den. I utvecklingsläge finns även Lennakatten-demo under Utvecklingsverktyg."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:358
+msgid "Import och export kräver administratörsbehörighet. Be en administratör importera eller exportera åt dig."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:364
+msgid "Var syns tidtabellen på webbplatsen?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:365
+msgid "Via shortcodes på WordPress-sidor — se avsnittet Shortcodes nedan. I utvecklingsläge kan du synka färdiga sidor under Utvecklingsverktyg."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:371
+msgid "Fungerar admin på mobil?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:372
+msgid "Ja för drift: inställ trafik, avvikelser och snabb avgångstid. Full redigering (datum, turer, stopptidsrutnät) görs enklast på desktop."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:378
+msgid "Vad gör tidtabellseditorns flikar?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:379
+msgid "Trafikdagar: vilka datum tidtabellen gäller. Turer: lägg till eller ta bort avgångar. Stopptider: tider per hållplats. Avvikelser: ändra tågtyp eller meddelande för ett visst datum. Förhandsvisning: hur det ser ut för besökare."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:385
+msgid "Hur fungerar priser och inställningar?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:386
+msgid "Priser styr reseplanerarens prissammanfattning. Inställningar styr om pluginet är aktivt och hur lång väntetid som accepteras vid byte. Båda nås via menyn och kan exporteras med CSV."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:390
+msgid "Priser och inställningar kräver administratörsbehörighet."
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:393
+msgid "Kan jag radera en hel tidtabell?"
+msgstr ""
+
+#: inc/assets/admin-vue-help.php:394
+msgid "Ja — i tidtabellslistan eller editorn. Alla turer och stopptider i tidtabellen tas bort. Publicerade WordPress-sidor med shortcode påverkas inte automatiskt; uppdatera eller ta bort sidor manuellt."
 msgstr ""
 
 #: inc/assets/admin-vue.php:39
@@ -317,38 +735,6 @@ msgstr ""
 
 #: inc/assets/admin-vue.php:60
 msgid "Tidtabell admin"
-msgstr ""
-
-#: inc/assets/admin-vue.php:61
-msgid "Översikt"
-msgstr ""
-
-#: inc/assets/admin-vue.php:62
-#: inc/assets/admin-vue.php:142
-#: inc/assets/admin-vue.php:154
-msgid "Stationer & rutter"
-msgstr ""
-
-#: inc/assets/admin-vue.php:64
-msgid "Hjälp"
-msgstr ""
-
-#: inc/assets/admin-vue.php:65
-#: inc/assets/admin-vue.php:131
-#: inc/assets/admin-vue.php:235
-msgid "Tågtyper"
-msgstr ""
-
-#: inc/assets/admin-vue.php:66
-#: inc/assets/admin-vue.php:79
-msgid "Inställningar"
-msgstr ""
-
-#: inc/assets/admin-vue.php:67
-#: inc/assets/admin-vue.php:101
-#: inc/assets/frontend.php:120
-#: inc/public/vue-shortcode-config.php:159
-msgid "Priser"
 msgstr ""
 
 #: inc/assets/admin-vue.php:68
@@ -747,10 +1133,6 @@ msgstr ""
 msgid "Borttagen."
 msgstr ""
 
-#: inc/assets/admin-vue.php:266
-msgid "Import / export"
-msgstr ""
-
 #: inc/assets/admin-vue.php:267
 msgid "Du har inte behörighet."
 msgstr ""
@@ -820,10 +1202,6 @@ msgstr ""
 #: inc/assets/admin-vue.php:291
 #, php-format
 msgid "%1$s turer · %2$s"
-msgstr ""
-
-#: inc/assets/admin-vue.php:292
-msgid "Inställ trafik idag"
 msgstr ""
 
 #: inc/assets/admin-vue.php:293
