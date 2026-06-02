@@ -1,53 +1,69 @@
-# Delat UI-bibliotek (Vue)
+# Delat UI-bibliotek (Vue) — masterplan
 
-Plan för ett gemensamt komponentbibliotek som både **publikt frontend** och **Vue-admin** kan använda.
+Gemensamt komponentbibliotek för **publikt frontend** och **Vue-admin**.
 
 **Relaterat:** [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [design/CSS_REFACTOR_PLAN.md](design/CSS_REFACTOR_PLAN.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3.
 
 ---
 
-## Mål
+## Översikt
 
-1. **En implementation** per UI-mönster (alert, loading, knapp) — inte parallella `Mrt*` + `Admin*`.
-2. **Två visuella kontexter** via prop (`context="public" | "admin"`), inte duplicerad markup.
-3. **CSS colocation** i SFC där det går; tokens fortsatt i `assets/mrt-color-tokens.css`.
-4. **Gradvis migration** — admin-specifika wrappers behålls tills all kod flyttats.
-
----
-
-## Lager
-
-```
-assets/mrt-color-tokens.css          ← designsystem (delat)
-frontend/vue/src/components/
-├── ui/                              ← delade primitiver (detta bibliotek)
-│   ├── MrtAlert.vue
-│   ├── MrtAsyncState.vue
-│   ├── MrtButton.vue
-│   ├── MrtDot.vue
-│   └── index.ts
-├── overview/                        ← domän (redan delat admin + publik)
-└── admin/components/ui/             ← admin-specifikt (tabeller, editor, …)
-```
-
-| Lager | Exempel | Delas? |
-|-------|---------|--------|
-| Tokens | `--mrt-color-green-700` | Ja |
-| Primitiver | Alert, knapp, spinner | Ja (`context`-prop) |
-| Domän | `MrtTimetableOverviewView` | Ja (redan idag) |
-| App-skals | wizard-hero, admin-sidebar | Nej |
-| Admin-only | `AdminTableScroll`, `StopTimesEditor` | Nej |
+| Fas | Innehåll | Status |
+|-----|----------|--------|
+| **1** | Primitiver + `context`-prop | ✓ Klar |
+| **2** | Admin-knappar, CSS colocate, städa död CSS | ✓ Klar |
+| **3** | `[museum_timetable_index]` → Vue | ✓ Klar |
+| **4** | Dokumentation + underhållsregler | ✓ Klar |
 
 ---
 
-## `context`-prop
+## Fas 1 — Primitiver ✓
 
-Alla delade primitiver accepterar `context`:
+| Komponent | Publik | Admin |
+|-----------|--------|-------|
+| `MrtButton` | `context="public"` → `.mrt-accent-btn` | `context="admin"` → WP `.button` |
+| `MrtAlert` | `.mrt-ui-alert` | WP `.notice` |
+| `MrtAsyncState` | loading / error / empty | + `@retry` |
+| `MrtDot` | legend, kalender | — |
+| `MrtAccentButton` | wrapper → `MrtButton` | — |
 
-| Värde | Var | Utseende |
-|-------|-----|----------|
-| `public` (default) | Shortcodes, wizard | Lennakatten — `.mrt-ui-alert`, `.mrt-accent-btn` |
-| `admin` | wp-admin Vue-app | WordPress — `.notice`, `.button` |
+Admin wrappers (behålls): `AdminLoadState`, `AdminStatusMessage`.
+
+---
+
+## Fas 2 — CSS & admin ✓
+
+| Steg | Beskrivning | Status |
+|------|-------------|--------|
+| 2a | Alla admin-knappar → `MrtButton context="admin"` | ✓ |
+| 2b | Colocate: `MrtAlert`, `MrtButton`, `MrtDot`, `MrtSurfaceCard` (scoped SFC) | ✓ |
+| 2c | Ta bort oanvänd CSS: `.mrt-btn`, `.mrt-badge`, `.mrt-info-box`, `.mrt-form-*` (utom `.mrt-input` i admin) | ✓ |
+| 2d | Rensa `assets/frontend/ui/alerts.css`, `surface-buttons.css` från barrel | ✓ |
+| 2e | `AdminPanel` → `MrtPanel` | **Skippad** — låg vinst, admin-specifik layout |
+
+---
+
+## Fas 3 — Sista PHP-UI:t ✓
+
+| Steg | Beskrivning |
+|------|-------------|
+| 3a | `TimetableIndexApp.vue` + `MrtTimetableIndexView.vue` |
+| 3b | Shortcode mountar Vue (`app: index`) med items i config |
+| 3c | CSS: `frontend/vue/src/styles/timetable-index.css` |
+| 3d | Ta bort separat PHP-enqueue för index |
+| 3e | Behåll `MRT_render_timetable_index_html()` för PHPUnit |
+
+**Medvetet kvar som global CSS:** `timetable-overview.css`, wizard-shell, `.mrt-empty` (månadskalender).
+
+---
+
+## Fas 4 — Regler framåt
+
+1. **Nya primitiver** → `frontend/vue/src/components/ui/` med scoped CSS.
+2. **Tokens** → `assets/mrt-color-tokens.css` (aldrig nya hex i komponenter).
+3. **App-specifikt** → `frontend/vue/src/styles/<app>/`.
+4. **Admin-skals** → `admin/styles/admin-shell.css`.
+5. **Import** → `@/components/ui` (publik + admin).
 
 ```vue
 <MrtButton context="public" variant="primary">Sök resa</MrtButton>
@@ -56,78 +72,23 @@ Alla delade primitiver accepterar `context`:
 
 ---
 
-## Komponentkarta
+## Lager
 
-### Fas 1 — påbörjad ✓
-
-| Komponent | Publik | Admin | Status |
-|-----------|--------|-------|--------|
-| `MrtAlert` | `MrtAlert` | via `AdminStatusMessage` | `context` tillagd |
-| `MrtAsyncState` | wizard, overview | via `AdminLoadState` | `context` + retry |
-| `MrtButton` | ersätter `MrtAccentButton` | ny — gradvis migration | skapad |
-| `MrtDot` | legend, kalender | — | skapad |
-
-### Fas 2 — påbörjad ✓
-
-| Åtgärd | Beskrivning | Status |
-|--------|-------------|--------|
-| Migrera admin-knappar | `MrtButton context="admin"` i alla admin-sidor | ✓ |
-| Colocate CSS | Flytta `assets/frontend/ui/alerts.css` m.fl. till SFC | planerad |
-| Ta bort död CSS | `.mrt-btn`, `.mrt-badge`, `.mrt-form-*` | planerad |
-| `AdminPanel` → `MrtPanel` | valfritt | planerad |
-
-### Fas 3 — större
-
-| Åtgärd | Beskrivning |
-|--------|-------------|
-| `[museum_timetable_index]` → Vue | sista PHP-UI:t |
-| Overview-CSS | behåll globalt (komplex grid) |
-
----
-
-## Import-konventioner
-
-**Publikt** — importera från `@/components/ui`:
-
-```ts
-import { MrtAlert, MrtButton, MrtAsyncState } from '@/components/ui';
 ```
-
-**Admin** — använd befintliga `Admin*`-exports tills migration är klar; wrappers delegerar till delade primitiver:
-
-```ts
-import { AdminLoadState, AdminStatusMessage } from '../components/ui';
-// internt: MrtAsyncState context="admin", MrtAlert context="admin"
+assets/mrt-color-tokens.css     ← designsystem
+frontend/vue/src/components/
+├── ui/                         ← delade primitiver
+├── overview/                   ← domän (delat)
+├── timetable-index/            ← domän (publikt)
+└── admin/components/ui/        ← admin-specifikt
 ```
-
-Nya admin-sidor kan importera direkt från `@/components/ui`.
-
----
-
-## CSS-regler efter införande
-
-1. **Nya primitiver** — styling i SFC (`<style scoped>`), inte nya filer i `assets/frontend/ui/`.
-2. **Tokens** — alltid `@import` / `var(--mrt-*)` från `mrt-color-tokens.css`.
-3. **App-specifikt** — `frontend/vue/src/styles/<app>/`.
-4. **Admin-skals** — `admin/styles/admin-shell.css` (layout, tabeller).
-
----
-
-## Bakåtkompatibilitet
-
-| Gammalt | Nytt | Strategi |
-|---------|------|----------|
-| `MrtAccentButton` | `MrtButton context="public"` | `MrtAccentButton` delegerar till `MrtButton` |
-| `AdminLoadState` | `MrtAsyncState context="admin"` | Wrapper kvar i admin/ui |
-| `AdminStatusMessage` | `MrtAlert context="admin"` | Wrapper kvar i admin/ui |
-| `assets/frontend/ui/*.css` | SFC scoped | Ta bort modul när colocated |
 
 ---
 
 ## Checklista per ny primitiv
 
-- [ ] Props: `context`, variants dokumenterade i denna fil + `VUE_UI_COMPONENTS.md`
-- [ ] Används i minst ett publikt + ett admin-flöde (eller motiverat undantag)
-- [ ] Tokens — inga nya hårdkodade hex
-- [ ] `:focus-visible` testad (admin + publik)
+- [ ] `context`-prop om admin + publik
+- [ ] Scoped CSS i SFC (inte ny fil i `assets/frontend/ui/`)
+- [ ] Tokens — inga nya hex
 - [ ] Vitest om klass-logik är icke-trivial
+- [ ] Uppdatera [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md)

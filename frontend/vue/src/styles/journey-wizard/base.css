@@ -83,7 +83,7 @@
     color: var(--mrt-color-on-dark-muted);
 }
 
-.mrt-journey-wizard .mrt-step-panel--search .mrt-form-field label {
+.mrt-journey-wizard .mrt-step-panel--search .mrt-field label {
     display: block;
     margin-bottom: 0.35rem;
     color: var(--mrt-color-on-dark);
@@ -164,7 +164,7 @@
     padding-inline: clamp(1.75rem, 4vw, 3rem);
 }
 
-.mrt-journey-wizard--embedded .mrt-step-panel--search .mrt-form-field {
+.mrt-journey-wizard--embedded .mrt-step-panel--search .mrt-field {
     margin-bottom: 1.35rem;
 }
 

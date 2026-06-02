@@ -78,12 +78,12 @@ function MRT_vue_shared_client_config(): array {
 /**
  * Render mount node for a Vue app.
  *
- * @param string               $app    month|overview|wizard
+ * @param string               $app    month|overview|wizard|index
  * @param array<string, mixed> $config App-specific config (merged with shared).
  * @return string HTML
  */
 function MRT_render_vue_mount( string $app, array $config ): string {
-	$allowed = array( 'month', 'overview', 'wizard' );
+	$allowed = array( 'month', 'overview', 'wizard', 'index' );
 	if ( ! in_array( $app, $allowed, true ) ) {
 		return '';
 	}
@@ -116,7 +116,7 @@ function MRT_render_vue_mount( string $app, array $config ): string {
 		'<div class="mrt-vue-root mrt-vue-root--%1$s%3$s" data-mrt-vue-app="%1$s"><script type="application/json" class="mrt-vue-config">%2$s</script></div>',
 		esc_attr( $app ),
 		$json,
-		'overview' === $app || 'month' === $app ? ' alignwide' : ''
+		'overview' === $app || 'month' === $app || 'index' === $app ? ' alignwide' : ''
 	);
 }
 

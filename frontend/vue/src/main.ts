@@ -2,6 +2,7 @@ import { createApp, type Component } from 'vue';
 import MonthCalendarApp from './apps/MonthCalendarApp.vue';
 import TimetableOverviewApp from './apps/TimetableOverviewApp.vue';
 import JourneyWizardApp from './apps/JourneyWizardApp.vue';
+import TimetableIndexApp from './apps/TimetableIndexApp.vue';
 import { parseMountConfig, type MrtVueApp, type MrtVueConfig } from './config';
 import './styles/mrt-public.css';
 
@@ -9,6 +10,7 @@ const apps: Record<MrtVueApp, Component<{ config: MrtVueConfig }>> = {
   month: MonthCalendarApp,
   overview: TimetableOverviewApp,
   wizard: JourneyWizardApp,
+  index: TimetableIndexApp,
 };
 
 function mountRoot(el: HTMLElement): void {

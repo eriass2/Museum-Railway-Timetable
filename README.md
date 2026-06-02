@@ -237,7 +237,7 @@ All three public shortcodes use **Vue** (`assets/dist/vue/`). Build after fronte
 | `[museum_timetable_month]` | Month calendar with traffic days |
 | `[museum_timetable_overview]` | Full timetable grid |
 | `[museum_journey_wizard]` | Journey search (only public trip planner) |
-| `[museum_timetable_index]` | Timetable index page (PHP-rendered; separate CSS enqueue) |
+| `[museum_timetable_index]` | Timetable index (Vue mount) |
 
 The legacy `[museum_journey_planner]` shortcode was removed in favor of the wizard.
 

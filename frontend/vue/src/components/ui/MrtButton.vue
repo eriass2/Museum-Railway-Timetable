@@ -8,12 +8,10 @@ defineOptions({ inheritAttrs: false });
 const props = withDefaults(
   defineProps<{
     context?: MrtUiContext;
-    /** Public: primary | select | secondary. Admin: primary | secondary | link | link-delete | small. */
     variant?: MrtPublicButtonVariant | MrtAdminButtonVariant;
     href?: string;
     type?: 'button' | 'submit';
     disabled?: boolean;
-    /** Admin mobile: adds WordPress `widefat`. */
     wide?: boolean;
   }>(),
   {
@@ -56,3 +54,62 @@ const buttonClass = computed(() => {
     <slot />
   </button>
 </template>
+
+<style scoped>
+.mrt-accent-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.45rem;
+  padding: 0.35rem 0.9rem;
+  border: 0;
+  border-radius: 0;
+  font-size: 1.08rem;
+  font-weight: 900;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.mrt-accent-btn--primary {
+  background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
+  color: var(--mrt-color-on-accent);
+  text-transform: uppercase;
+}
+
+.mrt-accent-btn--select {
+  min-width: 6.5rem;
+  background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
+  color: var(--mrt-color-on-accent);
+  text-transform: none;
+}
+
+.mrt-accent-btn--secondary {
+  background: var(--mrt-bg-lighter, #f5f5f5);
+  color: var(--mrt-text-secondary, #333);
+  border: 1px solid var(--mrt-border-default, #ccc);
+  font-weight: 600;
+  text-transform: none;
+}
+
+.mrt-accent-btn--primary:hover,
+.mrt-accent-btn--select:hover {
+  background: var(--mrt-color-accent-700, #c9a01a);
+  color: var(--mrt-color-on-accent);
+}
+
+.mrt-accent-btn--secondary:hover {
+  background: var(--mrt-bg-light, #eee);
+  color: var(--mrt-text-primary, #111);
+}
+
+.mrt-accent-btn:active {
+  transform: translateY(1px);
+}
+
+.mrt-accent-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+</style>

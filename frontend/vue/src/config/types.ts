@@ -5,7 +5,7 @@ export type MrtRestConfig = {
   strings?: Record<string, string>;
 };
 
-export type MrtVueApp = 'month' | 'overview' | 'wizard';
+export type MrtVueApp = 'month' | 'overview' | 'wizard' | 'index';
 
 export type MonthDayMeta = {
   running?: boolean;
@@ -75,7 +75,17 @@ export type WizardVueConfig = MrtRestConfig & {
   labels?: Record<string, string>;
 };
 
-export type MrtVueConfig = MonthVueConfig | OverviewVueConfig | WizardVueConfig;
+import type { TimetableIndexItem, TimetableIndexLabels } from '../types/timetableIndex';
+
+export type IndexVueConfig = MrtRestConfig & {
+  app: 'index';
+  showIntro?: boolean;
+  items?: TimetableIndexItem[];
+  labels?: TimetableIndexLabels;
+  emptyMessage?: string;
+};
+
+export type MrtVueConfig = MonthVueConfig | OverviewVueConfig | WizardVueConfig | IndexVueConfig;
 
 export function isMonthConfig(c: MrtVueConfig): c is MonthVueConfig {
   return c.app === 'month';
@@ -87,4 +97,8 @@ export function isOverviewConfig(c: MrtVueConfig): c is OverviewVueConfig {
 
 export function isWizardConfig(c: MrtVueConfig): c is WizardVueConfig {
   return c.app === 'wizard';
+}
+
+export function isIndexConfig(c: MrtVueConfig): c is IndexVueConfig {
+  return c.app === 'index';
 }

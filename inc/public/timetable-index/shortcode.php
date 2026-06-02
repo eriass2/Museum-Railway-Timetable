@@ -12,35 +12,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once MRT_PATH . 'inc/domain/timetable/timetable-pages.php';
 
 /**
- * Mark index shortcode usage (late asset enqueue in block themes).
- */
-function MRT_timetable_index_mark_used(): void {
-	$GLOBALS['mrt_timetable_index_used'] = true;
-}
-
-/**
- * Whether the index shortcode rendered on this request.
- */
-function MRT_timetable_index_was_used(): bool {
-	return ! empty( $GLOBALS['mrt_timetable_index_used'] );
-}
-
-/**
- * Render list of timetables with links to public pages.
+ * Build timetable index items for Vue mount or tests.
  *
  * @param array<string, string> $atts Shortcode attributes.
- * @return string
+ * @return array{show_intro: bool, show_dates: bool, items: array<int, array{url: string, label: string, meta: string, modifier: string, aria_hint: string}>}|string Alert HTML when empty.
  */
-function MRT_render_shortcode_timetable_index( $atts ) {
-	MRT_timetable_index_mark_used();
-	MRT_enqueue_timetable_index_styles_if_needed();
-
+function MRT_timetable_index_build_context( $atts ) {
 	$atts = shortcode_atts(
 		array(
 			'show_dates' => '1',
 			'intro'      => '1',
 		),
-		$atts,
+		(array) $atts,
 		'museum_timetable_index'
 	);
 
@@ -76,7 +59,26 @@ function MRT_render_shortcode_timetable_index( $atts ) {
 		);
 	}
 
-	return MRT_render_timetable_index_html( $items, $show_intro );
+	return array(
+		'show_intro' => $show_intro,
+		'show_dates' => $show_dates,
+		'items'      => $items,
+	);
+}
+
+/**
+ * Render list of timetables with links to public pages (Vue mount).
+ *
+ * @param array<string, string> $atts Shortcode attributes.
+ * @return string
+ */
+function MRT_render_shortcode_timetable_index( $atts ) {
+	$context = MRT_timetable_index_build_context( $atts );
+	if ( is_string( $context ) ) {
+		return $context;
+	}
+
+	return MRT_render_vue_mount( 'index', MRT_vue_index_config( $context ) );
 }
 
 /**

@@ -162,3 +162,29 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 		),
 	);
 }
+
+/**
+ * @param array{show_intro: bool, show_dates: bool, items: array<int, array{url: string, label: string, meta: string, modifier: string, aria_hint: string}>} $context
+ * @return array<string, mixed>
+ */
+function MRT_vue_index_config( array $context ): array {
+	$items = array();
+	foreach ( $context['items'] as $item ) {
+		$items[] = array(
+			'url'       => (string) $item['url'],
+			'label'     => (string) $item['label'],
+			'meta'      => (string) $item['meta'],
+			'modifier'  => (string) $item['modifier'],
+			'ariaHint'  => (string) $item['aria_hint'],
+		);
+	}
+
+	return array(
+		'showIntro' => ! empty( $context['show_intro'] ),
+		'items'     => $items,
+		'labels'    => array(
+			'intro'   => __( 'Choose a timetable to see departures and traffic days.', 'museum-railway-timetable' ),
+			'navAria' => __( 'Timetables', 'museum-railway-timetable' ),
+		),
+	);
+}

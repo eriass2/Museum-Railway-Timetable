@@ -1,6 +1,6 @@
 # Vue UI components (`frontend/vue/src/components/ui/`)
 
-Shared primitives for wizard, month calendar, overview, and Vue admin. Wizard-specific wrappers live in `frontend/vue/src/wizard/components/`. **Shared library plan:** [UI_LIBRARY.md](UI_LIBRARY.md). Styles: `assets/frontend/ui/` (barrel `ui-components.css`) — migrating to SFC scoped per UI_LIBRARY. See [CSS_REFACTOR_PLAN.md](design/CSS_REFACTOR_PLAN.md).
+Shared primitives for wizard, month calendar, overview, timetable index, and Vue admin. Wizard-specific wrappers live in `frontend/vue/src/wizard/components/`. **Shared library plan:** [UI_LIBRARY.md](UI_LIBRARY.md). Styles for colocated primitives live in SFC `<style scoped>` (MrtAlert, MrtButton, MrtDot, MrtSurfaceCard). Remaining shared modules: `assets/frontend/ui/` barrel (wizard, calendar, trips). See [UI_LIBRARY.md](UI_LIBRARY.md).
 
 ## Shared primitives (admin + public)
 
