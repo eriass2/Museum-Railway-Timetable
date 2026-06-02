@@ -50,6 +50,12 @@ function MRT_csv_import_stations( array $files, array &$maps ): int {
 		if ( ( $row['lng'] ?? '' ) !== '' ) {
 			update_post_meta( $id, 'mrt_lng', (float) $row['lng'] );
 		}
+		if ( array_key_exists( 'price_zones', $row ) ) {
+			MRT_update_station_price_zones_meta(
+				(int) $id,
+				MRT_parse_station_price_zones_csv( (string) ( $row['price_zones'] ?? '' ) )
+			);
+		}
 		$maps['station'][ $code ] = (int) $id;
 		++$count;
 	}

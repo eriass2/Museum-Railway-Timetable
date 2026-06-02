@@ -137,6 +137,10 @@ function MRT_csv_export_stations( array &$maps ): array {
 			'bus_stop_marker' => get_post_meta( $post->ID, 'mrt_station_bus_suffix', true ) === '1' ? '1' : '0',
 			'lat'             => (string) get_post_meta( $post->ID, 'mrt_lat', true ),
 			'lng'             => (string) get_post_meta( $post->ID, 'mrt_lng', true ),
+			'price_zones'     => implode(
+				',',
+				array_map( 'strval', MRT_get_station_price_zones( (int) $post->ID ) )
+			),
 		);
 	}
 	return $rows;

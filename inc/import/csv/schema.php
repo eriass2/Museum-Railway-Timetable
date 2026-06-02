@@ -79,6 +79,7 @@ function MRT_csv_export_column_headers(): array {
 			'bus_stop_marker',
 			'lat',
 			'lng',
+			'price_zones',
 		),
 		'train_types.csv'         => array( 'slug', 'name', 'icon_file' ),
 		'routes.csv'              => array( 'route_code', 'title', 'start_station_code', 'end_station_code' ),

@@ -87,6 +87,27 @@ final class CsvImportEntitiesTest extends TestCase {
 		self::assertSame( 2, (int) get_post_meta( $id, 'mrt_display_order', true ) );
 	}
 
+	public function test_import_stations_saves_price_zones(): void {
+		$this->boot_get_posts_by_code();
+		$maps  = array( 'station' => array(), 'route' => array(), 'timetable' => array(), 'service' => array() );
+		$files = array(
+			'stations.csv' => array(
+				array(
+					'station_code'    => 'arsta',
+					'name'            => 'Årsta',
+					'price_zones'     => '2,1',
+				),
+			),
+		);
+
+		MRT_csv_import_stations( $files, $maps );
+		$id = $maps['station']['arsta'];
+		self::assertSame(
+			array( 1, 2 ),
+			get_post_meta( $id, MRT_station_price_zones_meta_key(), true )
+		);
+	}
+
 	public function test_import_routes_resolves_station_order(): void {
 		$this->boot_get_posts_by_code();
 		$maps = array(
