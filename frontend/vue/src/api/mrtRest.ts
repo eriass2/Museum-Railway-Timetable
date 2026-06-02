@@ -45,6 +45,8 @@ const ROUTES: Record<string, RouteSpec> = {
       'outbound_departure',
       'inbound_departure',
       'include_day',
+      'outbound_legs',
+      'inbound_legs',
     ],
   },
 };

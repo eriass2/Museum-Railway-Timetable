@@ -46,6 +46,33 @@ describe('mrtRestRequest', () => {
     expect(res.message).toBe('Serverfel');
   });
 
+  it('includes journey legs in trip prices query string', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ zones: 2, trip: null, day: null }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    const legs = JSON.stringify([
+      { service_id: 10, from_station_id: 1, to_station_id: 5 },
+    ]);
+    await mrtRestRequest(config, 'mrt_trip_prices', {
+      from_id: 1,
+      to_id: 5,
+      trip_type: 'single',
+      outbound_legs: legs,
+      inbound_legs: '',
+    });
+
+    const [url] = fetchMock.mock.calls[0];
+    const parsed = new URL(String(url));
+    expect(parsed.pathname).toContain('/prices/trip');
+    expect(parsed.searchParams.get('from_id')).toBe('1');
+    expect(parsed.searchParams.get('to_id')).toBe('5');
+    expect(parsed.searchParams.get('outbound_legs')).toBe(legs);
+    expect(parsed.searchParams.has('inbound_legs')).toBe(false);
+  });
+
   it('sends REST nonce header on GET overview', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
       ok: true,
