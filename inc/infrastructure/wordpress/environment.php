@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Filter: mrt_is_development_mode
  *
  * @return bool
+ * @phpstan-impure
  */
 function MRT_is_development_mode(): bool {
 	$from_config = ( defined( 'WP_DEBUG' ) && WP_DEBUG )
