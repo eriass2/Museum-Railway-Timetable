@@ -48,6 +48,7 @@ describe('admin REST dashboard', () => {
       canManage: true,
       canOperate: true,
       isDevMode: false,
+      trainTypeIconUrls: {},
     };
 
     const fetchMock = vi.fn().mockResolvedValue({

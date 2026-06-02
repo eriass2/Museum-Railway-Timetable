@@ -23,6 +23,7 @@ describe('quickDeparture REST', () => {
       canManage: false,
       canOperate: true,
       isDevMode: false,
+      trainTypeIconUrls: {},
     };
 
     const fetchMock = vi.fn().mockResolvedValue({
