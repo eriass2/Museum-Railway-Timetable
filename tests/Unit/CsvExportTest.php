@@ -92,6 +92,7 @@ final class CsvExportTest extends TestCase {
 			'11|mrt_station_bus_suffix' => '0',
 			'11|mrt_lat'             => '',
 			'11|mrt_lng'             => '',
+			'11|' . MRT_station_price_zones_meta_key() => array( 1 ),
 		);
 
 		$this->export_dir = sys_get_temp_dir() . '/mrt-export-test-' . bin2hex( random_bytes( 4 ) );
@@ -117,6 +118,7 @@ final class CsvExportTest extends TestCase {
 		self::assertCount( 1, $stations );
 		self::assertSame( 'uppsala', $stations[0]['station_code'] ?? '' );
 		self::assertSame( 'Uppsala Östra', $stations[0]['name'] ?? '' );
+		self::assertSame( '1', $stations[0]['price_zones'] ?? '' );
 
 		$raw_csv = (string) file_get_contents( $this->export_dir . '/stations.csv' );
 		self::assertStringContainsString( 'name', $raw_csv );

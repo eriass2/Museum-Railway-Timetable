@@ -81,9 +81,18 @@ docker compose up -d --build
 Kör Composer-kommandon i Docker om datorn saknar lokal PHP/Composer:
 
 ```sh
-docker compose run --rm composer install
-docker compose run --rm composer check
+docker compose --profile tools run --rm composer install
+docker compose --profile tools run --rm composer check
 ```
+
+Vue (typecheck, Vitest, build) körs i **`vue`-containern**, inte via `composer vue:check` i Docker:
+
+```powershell
+.\scripts\vue-check.ps1
+# eller: docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"
+```
+
+PHP + Vue: `.\scripts\check.ps1 -Vue`
 
 Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
 
@@ -95,7 +104,7 @@ Efter ändringar i import, rutter eller demosidor – ett kommando för agent/ut
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1
 ```
 
-`-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo` och `pages.wizard`. Reset bygger Vue (`docker compose --profile tools run --rm vue`) och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md).
+`-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo` och `pages.wizard`. Reset bygger Vue (`docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"`) och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md).
 
 ### Automatiserad Docker-smoke
 

@@ -1,7 +1,8 @@
 # Run PHP quality gates in Docker (validate + PHPStan + PHPUnit; optional PHPCS).
-# CI parity on Windows without local PHP 8.2.
+# Pass -Vue to also run frontend/vue via the node:22-alpine container.
 param(
     [switch]$SkipPhpcs,
+    [switch]$Vue,
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$Passthrough
 )
@@ -51,3 +52,11 @@ if (-not $SkipPhpcs) {
 }
 
 Write-Host "PHP check OK." -ForegroundColor Green
+
+if ($Vue) {
+    $vueCheck = Join-Path $PSScriptRoot "vue-check.ps1"
+    & $vueCheck
+    if ($LASTEXITCODE -ne 0) {
+        exit $LASTEXITCODE
+    }
+}

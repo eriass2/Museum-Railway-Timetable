@@ -68,6 +68,7 @@ services:
         wp --allow-root rewrite structure '/%postname%/' --hard;
       '
 
+  # PHP tooling — no Node. Do not run composer vue:* here; use the vue service.
   composer:
     image: composer:2
     entrypoint:
@@ -90,6 +91,9 @@ services:
     entrypoint:
       - php
 
+  # Node 22 — Vue build/check. Examples:
+  #   docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"
+  #   docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
   vue:
     image: node:22-alpine
     profiles:
@@ -97,7 +101,6 @@ services:
     working_dir: /app/frontend/vue
     volumes:
       - ./:/app
-    command: sh -c "npm ci && npm run check"
 
 volumes:
   db_data:

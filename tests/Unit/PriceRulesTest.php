@@ -69,6 +69,19 @@ final class PriceRulesTest extends TestCase {
 		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 2, 3 ), $map ) );
 	}
 
+	public function test_zones_for_station_path_returns_cap_when_no_zones(): void {
+		self::assertSame( 3, MRT_zones_for_station_path( array( 99 ), array() ) );
+	}
+
+	public function test_zones_for_trip_price_falls_back_without_legs(): void {
+		$map = array(
+			1 => array( 1 ),
+			4 => array( 4 ),
+		);
+		self::assertSame( 3, MRT_zones_for_trip_price( 1, 4, null, null ) );
+		self::assertSame( 3, MRT_zones_for_station_pair( 1, 4, $map ) );
+	}
+
 	public function test_parse_trip_price_legs_param(): void {
 		$json = wp_json_encode(
 			array(

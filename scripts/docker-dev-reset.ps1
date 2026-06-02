@@ -16,7 +16,7 @@ Set-Location $root
 Write-Host "`n=== MRT dev reset (clear + import + smoke menu) ===" -ForegroundColor Cyan
 
 if (-not $SkipCompose) {
-    docker compose up -d
+    docker compose up -d --build
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     Write-Host "Waiting for WordPress..." -ForegroundColor Gray
     Start-Sleep -Seconds 12
@@ -25,7 +25,7 @@ if (-not $SkipCompose) {
 Write-Host "`n--- Build Vue public bundle (CSS + JS) ---" -ForegroundColor Cyan
 $prevEap = $ErrorActionPreference
 $ErrorActionPreference = 'Continue'
-docker compose --profile tools run --rm vue 2>&1 | ForEach-Object { Write-Host $_ }
+docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify" 2>&1 | ForEach-Object { Write-Host $_ }
 $vueExit = $LASTEXITCODE
 $ErrorActionPreference = $prevEap
 if ($vueExit -ne 0) { exit $vueExit }

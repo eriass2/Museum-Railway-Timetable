@@ -74,6 +74,34 @@ describe('useTripPrices', () => {
     expect(trip.value?.isAfternoonReturn).toBe(true);
   });
 
+  it('forwards encoded journey legs to REST', async () => {
+    vi.mocked(mrtRestRequest).mockResolvedValue({
+      success: true,
+      data: { zones: 2, trip: null, day: null },
+    });
+
+    const legs = [{ service_id: 10, from_station_id: 1, to_station_id: 5 }];
+    const query = computed(() => ({
+      fromId: 1,
+      toId: 5,
+      tripType: 'single',
+      outboundLegs: legs,
+      inboundLegs: [],
+    }));
+    const { loading } = useTripPrices(config, query);
+
+    await vi.waitFor(() => expect(loading.value).toBe(false));
+
+    expect(mrtRestRequest).toHaveBeenCalledWith(
+      config.value,
+      'mrt_trip_prices',
+      expect.objectContaining({
+        outbound_legs: JSON.stringify(legs),
+        inbound_legs: '',
+      }),
+    );
+  });
+
   it('clears prices when REST fails', async () => {
     vi.mocked(mrtRestRequest).mockResolvedValue({ success: false });
 

@@ -122,7 +122,9 @@ PHPUnit ska **köras i terminalen**, inte öppnas som fil.
 
 | Gör så här | Kommando |
 |------------|----------|
-| Rekommenderat (Windows) | `.\scripts\test.ps1` — kör lokalt om PHP ≥ 8.2, annars Docker automatiskt |
+| Rekommenderat (Windows) | `.\scripts\test.ps1` — Docker som standard; `-Local` för host PHP 8.2+ |
+| Full PHP gate | `.\scripts\check.ps1` |
+| Vue gate | `.\scripts\vue-check.ps1` |
 | Lokal PHP 8.2+ | `composer test` |
 | Docker manuellt (PHP 8.2, samma som CI) | `docker compose --profile tools run --rm php-test vendor/bin/phpunit` |
 | En testfil via wrapper | `.\scripts\test.ps1 tests/Unit/SomeTest.php` |

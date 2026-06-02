@@ -14,7 +14,7 @@ require_once ABSPATH . 'inc/domain/pricing/prices.php';
 final class StationZonesTest extends TestCase {
 
 	protected function tearDown(): void {
-		unset( $GLOBALS['mrt_test_post_meta'] );
+		unset( $GLOBALS['mrt_test_post_meta'], $GLOBALS['mrt_test_posts'], $GLOBALS['mrt_test_get_posts'] );
 		parent::tearDown();
 	}
 
@@ -47,5 +47,40 @@ final class StationZonesTest extends TestCase {
 		);
 		self::assertSame( array( 1, 2 ), MRT_get_station_price_zones( 7 ) );
 		self::assertFalse( MRT_station_price_zones_is_custom( 7 ) );
+	}
+
+	public function test_update_station_price_zones_meta_persists_and_clears(): void {
+		$GLOBALS['mrt_test_post_meta'] = array();
+		MRT_update_station_price_zones_meta( 8, array( 2, 1 ) );
+		self::assertSame(
+			array( 1, 2 ),
+			get_post_meta( 8, MRT_station_price_zones_meta_key(), true )
+		);
+		MRT_update_station_price_zones_meta( 8, array() );
+		self::assertSame( '', get_post_meta( 8, MRT_station_price_zones_meta_key(), true ) );
+	}
+
+	public function test_get_station_price_zones_map_merges_meta_and_defaults(): void {
+		$GLOBALS['mrt_test_get_posts'] = static function ( array $args ): array {
+			if ( ( $args['post_type'] ?? '' ) === MRT_POST_TYPE_STATION && ( $args['fields'] ?? '' ) === 'ids' ) {
+				return array( 5, 7 );
+			}
+			return array();
+		};
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'5|' . MRT_station_price_zones_meta_key() => array( 2, 3 ),
+		);
+		$GLOBALS['mrt_test_posts']     = array(
+			7 => (object) array(
+				'ID'         => 7,
+				'post_title' => 'Årsta',
+				'post_type'  => MRT_POST_TYPE_STATION,
+			),
+		);
+
+		$map = MRT_get_station_price_zones_map();
+
+		self::assertSame( array( 2, 3 ), $map[5] );
+		self::assertSame( array( 1, 2 ), $map[7] );
 	}
 }

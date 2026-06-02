@@ -6,9 +6,10 @@ Snabb genomgång efter ändringar i frontend, shortcodes eller import.
 
 | Kommando | Täcker |
 |----------|--------|
-| `composer check` | validate.php, PHPStan, PHPUnit |
-| `composer vue:check` | Vue lint, Vitest, production build |
-| `.\scripts\docker-smoke.ps1` | Docker: import + demo (rensar inte DB) |
+| `.\scripts\check.ps1` | validate.php, PHPStan, PHPUnit, PHPCS (Docker) |
+| `.\scripts\check.ps1 -Vue` | PHP + Vue (Docker) |
+| `.\scripts\vue-check.ps1` | Vue typecheck, Vitest, build (Docker) |
+| `.\scripts\docker-smoke.ps1` | Docker: Vue build + import + demo + PHP check (rensar inte DB) |
 
 ## Docker-smoke
 
@@ -32,10 +33,9 @@ Login: `admin` / `admin`
 ## Kommandon
 
 ```powershell
-docker compose up -d
-docker compose run --rm composer check
-npm test --prefix frontend/vue
-php scripts/validate.php
+docker compose up -d --build
+.\scripts\check.ps1 -SkipPhpcs
+.\scripts\vue-check.ps1
 ```
 
 ## Kända begränsningar

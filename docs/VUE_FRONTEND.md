@@ -27,16 +27,25 @@ Docker dev (`docker compose up` / `docker-dev-reset.ps1`) sätter `MRT_DEVELOPME
 
 ## Build and check
 
+Host (Node/npm i PATH):
+
 ```bash
 composer vue:check   # typecheck + vitest + build + bundle smoke test
 composer vue:build   # build only
 ```
 
-Docker (tools profile):
+Docker (Windows rekommenderat — samma Node 22 som CI):
+
+```powershell
+.\scripts\vue-check.ps1
+```
 
 ```bash
-docker compose --profile tools run --rm vue
+docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"
+docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
 ```
+
+**Kör inte** `docker compose … run composer vue:check` — `composer`-imaget saknar npm.
 
 Output: `assets/dist/vue/` (commit after CSS/JS changes). Single IIFE entry `assets/main-*.js`.
 

@@ -53,5 +53,6 @@ Or run the full WP stack script from repo root: `bash scripts/ci-e2e-wp.sh`
 
 ```bash
 cd frontend/vue && npm run check
-# or: composer vue:check
+# or (host): composer vue:check
+# or (Docker, repo root): .\scripts\vue-check.ps1
 ```

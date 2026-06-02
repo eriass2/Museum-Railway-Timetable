@@ -13,6 +13,10 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 Write-Host "Waiting for WordPress init..." -ForegroundColor Gray
 Start-Sleep -Seconds 20
 
+Write-Host "`n--- Build Vue public bundle (CSS + JS) ---" -ForegroundColor Cyan
+docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify" 2>&1 | Out-Host
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
 Write-Host "`n--- Import demo data ---" -ForegroundColor Cyan
 docker compose run --rm wordpress-init wp --allow-root eval "MRT_run_lennakatten_import();" 2>&1 | Out-Host
 
@@ -22,8 +26,9 @@ $demoOut | Out-Host
 $demoUrl = ($demoOut | Select-String -Pattern 'http\S+' | Select-Object -Last 1).Matches.Value
 
 Write-Host "`n--- Composer check (PHP 8.2) ---" -ForegroundColor Cyan
-docker compose run --rm composer install --no-interaction 2>&1 | Out-Host
-docker compose run --rm composer check 2>&1 | Out-Host
+docker compose --profile tools run --rm composer install --no-interaction 2>&1 | Out-Host
+docker compose --profile tools run --rm composer check 2>&1 | Out-Host
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $pages = @(
     @{ Name = "Wizard test"; Url = "http://localhost:8080/?p=39" },

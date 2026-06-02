@@ -17,7 +17,13 @@ Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` �
 
 Se [VUE_FRONTEND.md](VUE_FRONTEND.md). Bygg manuellt: `composer vue:build` eller `docker compose --profile tools run --rm vue`.
 
-Lokal kvalitetskontroll utan WordPress: `composer vue:check` (typecheck, Vitest, build, bundle smoke test). PHPUnit: `composer test` (kräver **PHP 8.2+**; på äldre system: `docker compose --profile tools run --rm composer test`). Samma kedja körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
+Lokal kvalitetskontroll utan WordPress:
+
+- Vue: `.\scripts\vue-check.ps1` (Docker) eller `composer vue:check` (host npm)
+- PHP: `.\scripts\test.ps1` (Docker) eller `composer test` (host PHP 8.2+)
+- Båda: `.\scripts\check.ps1 -Vue`
+
+Samma kedja körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 Publikt UI är **Vue-only** (jQuery-wizard-moduler är borttagna). Månad, översikt och wizard mountar Vue via `assets/dist/vue/`.
 
