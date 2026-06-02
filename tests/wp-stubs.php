@@ -321,6 +321,31 @@ if ( ! function_exists( 'get_terms' ) ) {
     }
 }
 
+if ( ! function_exists( 'wp_count_terms' ) ) {
+    /**
+     * @param array<string, mixed> $args
+     */
+    function wp_count_terms( $args = array() ) {
+        unset( $args );
+        if ( isset( $GLOBALS['mrt_test_wp_count_terms'] ) ) {
+            return (int) $GLOBALS['mrt_test_wp_count_terms'];
+        }
+        return is_array( $GLOBALS['mrt_test_terms_list'] ?? null ) ? count( $GLOBALS['mrt_test_terms_list'] ) : 0;
+    }
+}
+
+if ( ! function_exists( 'wp_count_posts' ) ) {
+    /**
+     * @return object{publish:int}
+     */
+    function wp_count_posts( $type = 'post', $perm = 'readable' ) {
+        unset( $perm );
+        $counts = $GLOBALS['mrt_test_wp_count_posts'] ?? array();
+        $publish = (int) ( $counts[ $type ] ?? 0 );
+        return (object) array( 'publish' => $publish );
+    }
+}
+
 if ( ! function_exists( 'wp_insert_post' ) ) {
     /**
      * @param array<string, mixed> $postarr
@@ -489,6 +514,19 @@ if ( ! class_exists( 'WP_REST_Request' ) ) {
         public function get_json_params(): array {
             return $this->json_params;
         }
+
+        /** @return array<string, mixed> */
+        public function get_file_params(): array {
+            return $this->file_params ?? array();
+        }
+
+        /** @param array<string, mixed> $params */
+        public function set_file_params( array $params ): void {
+            $this->file_params = $params;
+        }
+
+        /** @var array<string, mixed> */
+        private array $file_params = array();
 
         public function offsetExists( $offset ): bool {
             return isset( $this->params[ $offset ] );
