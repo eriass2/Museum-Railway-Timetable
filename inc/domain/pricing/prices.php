@@ -175,6 +175,8 @@ function MRT_default_station_price_zones_by_title(): array {
 	);
 }
 
+require_once __DIR__ . '/station-zones.php';
+
 /**
  * Station zones keyed by WordPress station ID for frontend localization.
  *
@@ -185,11 +187,10 @@ function MRT_get_station_price_zones_map(): array {
 	if ( ! function_exists( 'MRT_get_all_stations' ) ) {
 		return $map;
 	}
-	$by_title = MRT_default_station_price_zones_by_title();
 	foreach ( MRT_get_all_stations() as $station_id ) {
-		$title = get_the_title( (int) $station_id );
-		if ( isset( $by_title[ $title ] ) ) {
-			$map[ (int) $station_id ] = $by_title[ $title ];
+		$zones = MRT_get_station_price_zones( (int) $station_id );
+		if ( $zones !== array() ) {
+			$map[ (int) $station_id ] = $zones;
 		}
 	}
 	return $map;

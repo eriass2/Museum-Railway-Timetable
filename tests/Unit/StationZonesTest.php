@@ -1,0 +1,51 @@
+<?php
+/**
+ * Station price zone meta helpers.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+declare(strict_types=1);
+
+use PHPUnit\Framework\TestCase;
+
+require_once ABSPATH . 'inc/domain/pricing/prices.php';
+
+final class StationZonesTest extends TestCase {
+
+	protected function tearDown(): void {
+		unset( $GLOBALS['mrt_test_post_meta'] );
+		parent::tearDown();
+	}
+
+	public function test_sanitize_station_price_zones_caps_at_two(): void {
+		self::assertSame( array( 1, 2 ), MRT_sanitize_station_price_zones( array( 2, 1, 3, 4 ) ) );
+		self::assertSame( array(), MRT_sanitize_station_price_zones( array( 0, 9 ) ) );
+	}
+
+	public function test_parse_station_price_zones_csv(): void {
+		self::assertSame( array( 1, 2 ), MRT_parse_station_price_zones_csv( '2,1' ) );
+		self::assertSame( array(), MRT_parse_station_price_zones_csv( '' ) );
+	}
+
+	public function test_get_station_price_zones_uses_meta_when_set(): void {
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'5|' . MRT_station_price_zones_meta_key() => array( 2, 3 ),
+		);
+		self::assertSame( array( 2, 3 ), MRT_get_station_price_zones( 5 ) );
+		self::assertTrue( MRT_station_price_zones_is_custom( 5 ) );
+	}
+
+	public function test_get_station_price_zones_falls_back_to_title_default(): void {
+		$GLOBALS['mrt_test_post_meta'] = array();
+		$GLOBALS['mrt_test_posts']     = array(
+			7 => (object) array(
+				'ID'         => 7,
+				'post_title' => 'Årsta',
+				'post_type'  => MRT_POST_TYPE_STATION,
+			),
+		);
+		self::assertSame( array( 1, 2 ), MRT_get_station_price_zones( 7 ) );
+		self::assertFalse( MRT_station_price_zones_is_custom( 7 ) );
+	}
+}
