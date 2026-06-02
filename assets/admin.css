@@ -1,5 +1,5 @@
 /**
- * Admin styles for Museum Railway Timetable (dashboard, meta boxes, lists).
+ * Admin styles for Museum Railway Timetable (WP-admin shell around Vue admin).
  *
  * Reuses shared tokens/components from the public frontend bundle modules.
  *
@@ -13,6 +13,4 @@
 @import url("frontend/components-form.css");
 @import url("frontend/tables.css");
 @import url("admin/layout-width.css");
-@import url("admin/meta-boxes-fields.css");
-@import url("admin/meta-boxes-edit.css");
 @import url("admin/responsive.css");

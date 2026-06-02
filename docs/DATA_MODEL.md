@@ -2,7 +2,7 @@
 
 This document describes all data objects in the Museum Railway Timetable plugin and their relationships.
 
-**Plugin code:** Data is read and written via `inc/domain/` (business rules) and `inc/infrastructure/` (WordPress adapters). Admin UI: `inc/admin/meta-boxes/`. See [ARCHITECTURE.md](ARCHITECTURE.md).
+**Plugin code:** Data is read and written via `inc/domain/` (business rules) and `inc/infrastructure/` (WordPress adapters). Admin UI: Vue SPA under `frontend/vue/src/admin/` (REST-backed). See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Code map (where logic lives)
 

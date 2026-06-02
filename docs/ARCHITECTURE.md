@@ -73,7 +73,6 @@ inc/
 │   └── wordpress/          # environment, plugin-settings, helpers-utils
 ├── admin/
 │   ├── app.php, menu.php   # Vue shell + legacy redirects
-│   ├── meta-boxes/         # save-hooks (UI borttaget)
 │   └── tools/              # demo, import, clear-db, dev-navigation, timetable-pages
 ├── public/
 │   ├── month-calendar/

@@ -153,7 +153,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Mappar
 - **Använd mappar** – Organisera kod efter ansvar (`inc/domain/`, `inc/admin/`, `inc/infrastructure/`, `inc/public/`)
 - **En fil per ansvar** – Varje mapp innehåller filer med tydligt, sammanhörande ansvar
-- **Loader-filer** – Tunna loaders (`inc/infrastructure/rest/loader.php`, `inc/admin/meta-boxes.php`) require:ar undermappar
+- **Loader-filer** – Tunna loaders (`inc/infrastructure/rest/loader.php`, `inc/bootstrap/domain.php`) require:ar undermappar
 
 ### Struktur
 
@@ -169,7 +169,7 @@ museum-railway-timetable/
 │   ├── bootstrap/                 # domain loader
 │   ├── domain/                    # affärslogik (journey, service, timetable, …)
 │   ├── infrastructure/            # CPT, rest/, wordpress/
-│   ├── admin/                     # dashboard/, meta-boxes/, tools/
+│   ├── admin/                     # app.php, menu.php, tools/
 │   ├── public/                    # month-calendar, timetable-overview, journey-wizard
 │   ├── import/lennakatten/
 │   ├── assets/                    # enqueue-hjälpare

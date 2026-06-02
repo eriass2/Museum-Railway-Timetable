@@ -33,6 +33,7 @@ mrt-color-tokens.css, mrt-typography.css
 | 4 | Inför `ui/calendar-tokens.css`; koppla month + wizard | ✓ `ef062a4` |
 | 5 | Dela `ui-components.css` i moduler + barrel-import | ✓ (denna branch) |
 | 6 | Flytta `month-calendar.css` → Vue (`MonthCalendarApp.vue`) | ✓ |
+| 7 | Ta bort döda meta-box CSS (`meta-boxes-*.css`) + doc-referenser | ✓ |
 
 ## Regler efter refactor
 

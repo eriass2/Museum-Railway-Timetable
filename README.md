@@ -208,7 +208,7 @@ museum-railway-timetable/
 │   ├─ bootstrap/domain.php
 │   ├─ constants.php
 │   ├─ domain/                   # journey, service, timetable, pricing, …
-│   ├─ admin/                    # dashboard/, meta-boxes/, tools/
+│   ├─ admin/                    # app.php, menu.php, tools/
 │   ├─ public/                   # month-calendar, timetable-overview, journey-wizard
 │   ├─ infrastructure/           # post-types/, rest/, wordpress/
 │   ├─ import/lennakatten/
