@@ -52,6 +52,16 @@ function MRT_rest_register_pricing_public_routes(): void {
 					'type'    => 'boolean',
 					'default' => false,
 				),
+				'outbound_legs'       => array(
+					'type'              => 'string',
+					'default'           => '',
+					'sanitize_callback' => 'sanitize_text_field',
+				),
+				'inbound_legs'        => array(
+					'type'              => 'string',
+					'default'           => '',
+					'sanitize_callback' => 'sanitize_text_field',
+				),
 			),
 		)
 	);
@@ -81,7 +91,9 @@ function MRT_rest_trip_prices_handler( WP_REST_Request $request ) {
 		$trip_type,
 		(string) $request->get_param( 'outbound_departure' ),
 		(string) $request->get_param( 'inbound_departure' ),
-		$include_day
+		$include_day,
+		MRT_parse_trip_price_legs_param( (string) $request->get_param( 'outbound_legs' ) ),
+		MRT_parse_trip_price_legs_param( (string) $request->get_param( 'inbound_legs' ) )
 	);
 
 	return rest_ensure_response( $result );

@@ -69,6 +69,128 @@ function MRT_zones_for_station_pair( int $from_id, int $to_id, array $station_zo
 }
 
 /**
+ * Count distinct fare zones along a station path (union of each stop's zones).
+ *
+ * @param int[]               $station_ids       Ordered station post IDs on the journey.
+ * @param array<int, int[]>   $station_zones_map Station post ID => zone numbers.
+ */
+function MRT_zones_for_station_path( array $station_ids, array $station_zones_map ): int {
+	$seen = array();
+	foreach ( $station_ids as $station_id ) {
+		$sid = (int) $station_id;
+		if ( $sid <= 0 ) {
+			continue;
+		}
+		foreach ( $station_zones_map[ $sid ] ?? array() as $zone ) {
+			$seen[ (int) $zone ] = true;
+		}
+	}
+	if ( $seen === array() ) {
+		return MRT_price_zone_cap();
+	}
+	return MRT_pricing_zone_count( count( $seen ) );
+}
+
+/**
+ * @param array<int, array<string, mixed>> $legs Each leg: service_id, from_station_id, to_station_id.
+ * @return int[]
+ */
+function MRT_collect_journey_leg_station_ids( array $legs ): array {
+	$ids   = array();
+	$seen  = array();
+	foreach ( $legs as $leg ) {
+		if ( ! is_array( $leg ) ) {
+			continue;
+		}
+		$service_id = (int) ( $leg['service_id'] ?? 0 );
+		$from_id    = (int) ( $leg['from_station_id'] ?? 0 );
+		$to_id      = (int) ( $leg['to_station_id'] ?? 0 );
+		if ( $service_id <= 0 || $from_id <= 0 || $to_id <= 0 ) {
+			continue;
+		}
+		$detail = MRT_get_connection_journey_detail( $service_id, $from_id, $to_id );
+		foreach ( (array) ( $detail['stops'] ?? array() ) as $stop ) {
+			$sid = (int) ( $stop['station_id'] ?? 0 );
+			if ( $sid <= 0 || isset( $seen[ $sid ] ) ) {
+				continue;
+			}
+			$seen[ $sid ] = true;
+			$ids[]        = $sid;
+		}
+	}
+	return $ids;
+}
+
+/**
+ * @param array<int, array<string, mixed>> $legs Journey legs with service and station ids.
+ * @param array<int, int[]>|null           $station_zones_map Optional zone map.
+ */
+function MRT_zones_for_journey_legs( array $legs, ?array $station_zones_map = null ): int {
+	$station_zones_map = $station_zones_map ?? MRT_get_station_price_zones_map();
+	$station_ids       = MRT_collect_journey_leg_station_ids( $legs );
+	if ( $station_ids === array() ) {
+		return MRT_price_zone_cap();
+	}
+	return MRT_zones_for_station_path( $station_ids, $station_zones_map );
+}
+
+/**
+ * Resolve fare zone count for wizard pricing (route-based when legs given).
+ *
+ * @param array<int, array<string, mixed>>|null $outbound_legs Outbound legs.
+ * @param array<int, array<string, mixed>>|null $inbound_legs  Return legs (when return trip).
+ */
+function MRT_zones_for_trip_price(
+	int $from_id,
+	int $to_id,
+	?array $outbound_legs = null,
+	?array $inbound_legs = null
+): int {
+	if ( $outbound_legs !== null && $outbound_legs !== array() ) {
+		$zones = MRT_zones_for_journey_legs( $outbound_legs );
+		if ( $inbound_legs !== null && $inbound_legs !== array() ) {
+			$zones = max( $zones, MRT_zones_for_journey_legs( $inbound_legs ) );
+		}
+		return MRT_pricing_zone_count( $zones );
+	}
+	return MRT_zones_for_station_pair_ids( $from_id, $to_id );
+}
+
+/**
+ * Parse JSON journey legs from REST query param.
+ *
+ * @return array<int, array<string, mixed>>|null
+ */
+function MRT_parse_trip_price_legs_param( string $raw ): ?array {
+	$raw = trim( $raw );
+	if ( $raw === '' ) {
+		return null;
+	}
+	$decoded = json_decode( $raw, true );
+	if ( ! is_array( $decoded ) ) {
+		return null;
+	}
+	$legs = array();
+	foreach ( $decoded as $leg ) {
+		if ( ! is_array( $leg ) ) {
+			continue;
+		}
+		$service_id = (int) ( $leg['service_id'] ?? 0 );
+		$from_id    = (int) ( $leg['from_station_id'] ?? 0 );
+		$to_id      = (int) ( $leg['to_station_id'] ?? 0 );
+		if ( $service_id <= 0 || $from_id <= 0 || $to_id <= 0 ) {
+			continue;
+		}
+		$legs[] = array(
+			'service_id'       => $service_id,
+			'from_station_id'  => $from_id,
+			'to_station_id'    => $to_id,
+		);
+	}
+	return $legs === array() ? null : $legs;
+}
+
+/**
  * Zone span for two stations using the configured station-zone map.
  */
 function MRT_zones_for_station_pair_ids( int $from_id, int $to_id ): int {
@@ -147,9 +269,16 @@ function MRT_trip_prices_response(
 	string $trip_type,
 	string $outbound_departure = '',
 	string $inbound_departure = '',
-	bool $include_day = false
+	bool $include_day = false,
+	?array $outbound_legs = null,
+	?array $inbound_legs = null
 ): array {
-	$zones = MRT_zones_for_station_pair_ids( $from_id, $to_id );
+	$zones = MRT_zones_for_trip_price(
+		$from_id,
+		$to_id,
+		$outbound_legs,
+		$trip_type === 'return' ? $inbound_legs : null
+	);
 	$trip  = MRT_price_matrix_for_trip( $trip_type, $zones, $outbound_departure, $inbound_departure );
 	$day   = $include_day ? MRT_day_ticket_matrix( $zones ) : null;
 

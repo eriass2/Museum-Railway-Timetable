@@ -57,6 +57,35 @@ final class PriceRulesTest extends TestCase {
 		self::assertSame( 3, MRT_zones_for_station_pair( 1, 2, $map ) );
 	}
 
+	public function test_zones_for_station_path_counts_distinct_zones(): void {
+		$map = array(
+			1 => array( 1 ),
+			2 => array( 1, 2 ),
+			3 => array( 2 ),
+			4 => array( 4 ),
+		);
+		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 3 ), $map ) );
+		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 4 ), $map ) );
+		self::assertSame( 3, MRT_zones_for_station_path( array( 1, 2, 3 ), $map ) );
+	}
+
+	public function test_parse_trip_price_legs_param(): void {
+		$json = wp_json_encode(
+			array(
+				array(
+					'service_id'      => 5,
+					'from_station_id' => 1,
+					'to_station_id'   => 2,
+				),
+			)
+		);
+		$legs = MRT_parse_trip_price_legs_param( (string) $json );
+		self::assertNotNull( $legs );
+		self::assertSame( 5, $legs[0]['service_id'] );
+		self::assertNull( MRT_parse_trip_price_legs_param( '' ) );
+		self::assertNull( MRT_parse_trip_price_legs_param( 'not-json' ) );
+	}
+
 	public function test_pricing_zone_count_caps_at_three(): void {
 		self::assertSame( 3, MRT_pricing_zone_count( 4 ) );
 		self::assertSame( 2, MRT_pricing_zone_count( 2 ) );
