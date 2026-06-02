@@ -5,18 +5,28 @@ export type RoutePreviewNode = {
   role: 'start' | 'end' | 'via' | 'both';
 };
 
-const TYPE_LABELS: Record<string, string> = {
-  station: 'Station',
-  halt: 'Hållplats',
-  depot: 'Depot',
-  museum: 'Museum',
+const STATION_TYPE_STRING_KEYS: Record<string, string> = {
+  station: 'stationsTypeStation',
+  halt: 'stationsTypeHalt',
+  depot: 'stationsTypeDepot',
+  museum: 'stationsTypeMuseum',
 };
 
-export function routePreviewTypeLabel(stationType: string): string {
+export function routePreviewTypeLabel(
+  stationType: string,
+  labelFor?: (key: string) => string,
+): string {
   if (!stationType) {
     return '';
   }
-  return TYPE_LABELS[stationType] || stationType;
+  const stringKey = STATION_TYPE_STRING_KEYS[stationType];
+  if (stringKey && labelFor) {
+    const translated = labelFor(stringKey);
+    if (translated) {
+      return translated;
+    }
+  }
+  return stationType;
 }
 
 export function buildRoutePreviewNodes(

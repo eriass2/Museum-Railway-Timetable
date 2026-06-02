@@ -31,6 +31,7 @@ import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { useTimetableEditorDirty } from '../composables/useTimetableEditorDirty';
 import { adminConfig } from '../types';
+import { adminFmt, adminStr } from '../utils/adminLabels';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
@@ -72,13 +73,13 @@ const {
   tabLabel,
 } = useTimetableEditorDirty(detail, editTitle, editType, deviationRows);
 
-const timetableTypes = [
-  { value: '', label: '— Ingen färgrubrik —' },
-  { value: 'green', label: 'Grön tidtabell' },
-  { value: 'yellow', label: 'Gul tidtabell' },
-  { value: 'red', label: 'Röd tidtabell' },
-  { value: 'orange', label: 'Orange tidtabell' },
-] as const;
+const timetableTypes = computed(() => [
+  { value: '', label: adminStr(cfg, 'editorTypeNone') },
+  { value: 'green', label: adminStr(cfg, 'editorTypeGreen') },
+  { value: 'yellow', label: adminStr(cfg, 'editorTypeYellow') },
+  { value: 'red', label: adminStr(cfg, 'editorTypeRed') },
+  { value: 'orange', label: adminStr(cfg, 'editorTypeOrange') },
+] as const);
 
 const trafficToday = computed(() => {
   const d = new Date();
@@ -91,11 +92,11 @@ const trafficToday = computed(() => {
 const desktopTabs = computed(() => {
   if (isMobile.value) return [];
   return [
-    ['dates', 'Trafikdagar'],
-    ['trips', 'Turer'],
-    ['stoptimes', 'Stopptider'],
-    ['deviations', 'Avvikelser'],
-    ['preview', 'Förhandsvisning'],
+    ['dates', adminStr(cfg, 'editorTabDates')],
+    ['trips', adminStr(cfg, 'editorTabTrips')],
+    ['stoptimes', adminStr(cfg, 'editorTabStoptimes')],
+    ['deviations', adminStr(cfg, 'editorTabDeviations')],
+    ['preview', adminStr(cfg, 'editorTabPreview')],
   ] as const;
 });
 
@@ -108,7 +109,7 @@ async function loadDetail() {
     editType.value = detail.value.type || '';
     syncSnapshots();
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Fel';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'genericError');
   } finally {
     loading.value = false;
   }
@@ -140,14 +141,14 @@ watch(tab, async (t) => {
     try {
       await loadOverview();
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Overview fel';
+      error.value = e instanceof Error ? e.message : adminStr(cfg, 'editorOverviewLoadFailed');
     }
   }
   if (t === 'deviations' && deviationRows.value.length === 0) {
     try {
       await loadDeviations();
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'Avvikelser fel';
+      error.value = e instanceof Error ? e.message : adminStr(cfg, 'editorDeviationsLoadFailed');
     }
   }
 });
@@ -164,7 +165,7 @@ async function saveDates() {
   if (!detail.value || !cfg.canManage) return;
   detail.value = await updateTimetable(timetableId.value, { dates: detail.value.dates });
   syncSnapshots();
-  showSaveNotice('Trafikdagar sparade');
+  showSaveNotice(adminStr(cfg, 'editorSavedDates'));
 }
 
 async function saveMeta() {
@@ -176,15 +177,15 @@ async function saveMeta() {
   editTitle.value = detail.value.title;
   editType.value = detail.value.type || '';
   syncSnapshots();
-  showSaveNotice('Namn och typ sparade');
+  showSaveNotice(adminStr(cfg, 'editorSavedMeta'));
 }
 
 async function removeTimetable() {
   if (!detail.value || !cfg.canManage) return;
   const ok = await adminConfirm({
-    title: 'Ta bort tidtabell',
-    message: `«${detail.value.title}» och alla dess turer raderas permanent.`,
-    confirmLabel: 'Ta bort',
+    title: adminStr(cfg, 'timetablesDeleteTitle'),
+    message: adminFmt(cfg, 'timetablesDeleteMessage', detail.value.title),
+    confirmLabel: adminStr(cfg, 'delete'),
     danger: true,
   });
   if (!ok) {
@@ -194,7 +195,7 @@ async function removeTimetable() {
     await deleteTimetable(timetableId.value);
     await router.push('/timetables');
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte ta bort';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'timetablesDeleteFailed');
   }
 }
 
@@ -238,7 +239,7 @@ async function saveDeviationChanges() {
   }
   await saveDeviations(timetableId.value, byService);
   syncSnapshots();
-  showSaveNotice('Avvikelser sparade');
+  showSaveNotice(adminStr(cfg, 'editorSavedDeviations'));
 }
 
 function openStoptimes(serviceId: number) {
@@ -253,21 +254,26 @@ function onMobileSaved(message: string) {
 
 <template>
   <div>
-    <h1 v-if="!detail">Tidtabell</h1>
-    <AdminLoadState :loading="loading" :error="error" loading-text="Laddar tidtabell…" @retry="loadDetail">
+    <h1 v-if="!detail">{{ adminStr(cfg, 'editorTitle') }}</h1>
+    <AdminLoadState
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'editorLoading')"
+      @retry="loadDetail"
+    >
     <p v-if="saveMsg" class="notice notice-success" role="status">{{ saveMsg }}</p>
 
     <AdminPanel v-if="detail && cfg.canManage" class="mrt-admin-timetable-meta">
       <p v-if="metaDirty" class="notice notice-warning mrt-admin-unsaved">
-        Osparade ändringar i titel eller typ — spara innan du lämnar sidan.
+        {{ adminStr(cfg, 'editorMetaUnsaved') }}
       </p>
-      <h2 class="screen-reader-text">Tidtabell</h2>
+      <h2 class="screen-reader-text">{{ adminStr(cfg, 'editorTitle') }}</h2>
       <p>
-        <label for="mrt-tt-title">Titel</label>
+        <label for="mrt-tt-title">{{ adminStr(cfg, 'editorTitleLabel') }}</label>
         <input id="mrt-tt-title" v-model="editTitle" type="text" class="regular-text" />
       </p>
       <p>
-        <label for="mrt-tt-type">Typ (färg i översikt)</label>
+        <label for="mrt-tt-type">{{ adminStr(cfg, 'editorTypeLabel') }}</label>
         <select id="mrt-tt-type" v-model="editType">
           <option v-for="opt in timetableTypes" :key="opt.value" :value="opt.value">
             {{ opt.label }}
@@ -275,9 +281,11 @@ function onMobileSaved(message: string) {
         </select>
       </p>
       <AdminFormActions>
-        <button type="button" class="button button-primary" @click="saveMeta">Spara namn och typ</button>
+        <button type="button" class="button button-primary" @click="saveMeta">
+          {{ adminStr(cfg, 'editorSaveMeta') }}
+        </button>
         <button type="button" class="button button-link-delete" @click="removeTimetable">
-          Ta bort tidtabell
+          {{ adminStr(cfg, 'editorDeleteTimetable') }}
         </button>
       </AdminFormActions>
     </AdminPanel>
@@ -329,18 +337,18 @@ function onMobileSaved(message: string) {
     />
 
     <AdminPanel v-if="detail && !isMobile && tab === 'stoptimes'" class="mrt-vue-root">
-      <p class="description">Klicka i rutorna för att ändra tid, stannar och P/A. Sparas automatiskt per tur.</p>
+      <p class="description">{{ adminStr(cfg, 'editorStoptimesHint') }}</p>
       <EditableTimetableOverview
         v-if="overview"
         :data="overview"
         :readonly="!cfg.canManage && !cfg.canOperate"
       />
       <details class="mrt-mt-sm">
-        <summary>Tabellvy för en tur</summary>
+        <summary>{{ adminStr(cfg, 'editorStoptimesTableSummary') }}</summary>
         <p>
-          <label>Tur:</label>
+          <label>{{ adminStr(cfg, 'editorStoptimesTripLabel') }}</label>
           <select v-model.number="selectedServiceId">
-            <option :value="0">— Välj tur —</option>
+            <option :value="0">{{ adminStr(cfg, 'editorSelectTrip') }}</option>
             <option v-for="s in detail.services" :key="s.id" :value="s.id">{{ s.title }}</option>
           </select>
         </p>

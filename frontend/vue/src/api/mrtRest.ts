@@ -1,4 +1,5 @@
 import type { MrtRestConfig } from '../config/types';
+import { resolveMrtString } from '../utils/mrtStrings';
 import { buildMrtRestUrlFromConfig, resolveMrtRestNonce } from './restUrl';
 
 export type MrtRestResponse<T> = {
@@ -69,7 +70,7 @@ function buildUrl(
   );
 }
 
-function errorMessage(json: unknown, status: number): string {
+function errorMessage(json: unknown, status: number, config: MrtRestConfig): string {
   if (json && typeof json === 'object') {
     if ('message' in json && typeof (json as { message: unknown }).message === 'string') {
       return (json as { message: string }).message;
@@ -81,7 +82,14 @@ function errorMessage(json: unknown, status: number): string {
       }
     }
   }
-  return status === 403 ? 'Säkerhetskontroll misslyckades.' : 'Begäran misslyckades';
+  return status === 403
+    ? resolveMrtString(config, 'securityCheckFailed', 'Säkerhetskontroll misslyckades.')
+    : resolveMrtString(config, 'requestFailed', 'Begäran misslyckades.');
+}
+
+function unknownActionMessage(config: MrtRestConfig, action: string): string {
+  const template = resolveMrtString(config, 'unknownAction', 'Okänd åtgärd: %s');
+  return template.replace('%s', action);
 }
 
 export async function mrtRestRequest<T>(
@@ -91,7 +99,7 @@ export async function mrtRestRequest<T>(
 ): Promise<MrtRestResponse<T>> {
   const route = ROUTES[action];
   if (!route) {
-    return { success: false, message: `Okänd åtgärd: ${action}` };
+    return { success: false, message: unknownActionMessage(config, action) };
   }
 
   const url = buildUrl(config, route.path(data), data, route.queryKeys);
@@ -112,10 +120,13 @@ export async function mrtRestRequest<T>(
     const res = await fetch(url, init);
     const json = await res.json().catch(() => null);
     if (!res.ok) {
-      return { success: false, message: errorMessage(json, res.status) };
+      return { success: false, message: errorMessage(json, res.status, config) };
     }
     return { success: true, data: json as T };
   } catch {
-    return { success: false, message: 'Nätverksfel' };
+    return {
+      success: false,
+      message: resolveMrtString(config, 'networkError', 'Nätverksfel. Försök igen.'),
+    };
   }
 }

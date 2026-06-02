@@ -1,6 +1,7 @@
 <?php
 /**
- * Copy msgid into empty msgstr for Swedish catalog (source strings are Swedish).
+ * Copy msgid into empty msgstr for Swedish catalog.
+ * Multiline msgid blocks are filled too (e.g. English dev/QA strings stay as-is).
  *
  * Usage: php scripts/fill-sv-po.php [path-to.po]
  *
@@ -24,18 +25,30 @@ $n     = count( $lines );
 while ( $i < $n ) {
 	$line = $lines[ $i ];
 	if ( $line === 'msgid ""' ) {
-		$out[] = $line;
+		$msgid_lines = array( $line );
 		++$i;
 		while ( $i < $n && isset( $lines[ $i ][0] ) && $lines[ $i ][0] === '"' ) {
-			$out[] = $lines[ $i ];
+			$msgid_lines[] = $lines[ $i ];
 			++$i;
 		}
-		if ( $i < $n && $lines[ $i ] === 'msgstr ""' ) {
-			$out[] = $lines[ $i ];
+		$msgid_text = po_read_po_string( $msgid_lines, 'msgid' );
+		foreach ( $msgid_lines as $l ) {
+			$out[] = $l;
+		}
+		if ( $i < $n && preg_match( '/^msgstr /', $lines[ $i ] ) ) {
+			$msgstr_lines = array( $lines[ $i ] );
 			++$i;
 			while ( $i < $n && isset( $lines[ $i ][0] ) && $lines[ $i ][0] === '"' ) {
-				$out[] = $lines[ $i ];
+				$msgstr_lines[] = $lines[ $i ];
 				++$i;
+			}
+			$msgstr_text = po_read_po_string( $msgstr_lines, 'msgstr' );
+			if ( $msgstr_text === '' && $msgid_text !== '' ) {
+				$out = array_merge( $out, po_quote_msgstr( $msgid_text ) );
+			} else {
+				foreach ( $msgstr_lines as $l ) {
+					$out[] = $l;
+				}
 			}
 		}
 		continue;

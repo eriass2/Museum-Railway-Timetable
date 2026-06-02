@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { getStopTimes, saveStopTimes } from '../api/adminRest';
 import type { StopTimeRow } from '../types';
 import { adminConfig } from '../types';
+import { adminStr } from '../utils/adminLabels';
 import AdminFormActions from './ui/AdminFormActions.vue';
 
 const props = defineProps<{ serviceId: number }>();
@@ -19,7 +20,7 @@ async function load() {
     const res = await getStopTimes(props.serviceId);
     stations.value = res.stations;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Fel';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'genericError');
   } finally {
     loading.value = false;
   }
@@ -42,28 +43,28 @@ async function save(explicit = true) {
   try {
     const res = await saveStopTimes(props.serviceId, stops, !explicit);
     stations.value = res.stations;
-    message.value = 'Stopptider sparade';
+    message.value = adminStr(cfg, 'stopTimesSaved');
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte spara';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'saveFailed');
   }
 }
 </script>
 
 <template>
   <div>
-    <p v-if="loading" class="description">Laddar stopptider...</p>
+    <p v-if="loading" class="description">{{ adminStr(cfg, 'stopTimesLoading') }}</p>
     <p v-if="error" class="notice notice-error">{{ error }}</p>
     <p v-if="message" class="notice notice-success">{{ message }}</p>
 
     <table v-if="!loading" class="widefat striped mrt-admin-stoptimes">
       <thead>
         <tr>
-          <th>Stannar</th>
-          <th>Station</th>
-          <th>Ankomst</th>
-          <th>Avgång</th>
-          <th>P</th>
-          <th>A</th>
+          <th>{{ adminStr(cfg, 'stopTimesColStops') }}</th>
+          <th>{{ adminStr(cfg, 'stopTimesColStation') }}</th>
+          <th>{{ adminStr(cfg, 'stopTimesColArrival') }}</th>
+          <th>{{ adminStr(cfg, 'stopTimesColDeparture') }}</th>
+          <th>{{ adminStr(cfg, 'stopTimesColPickup') }}</th>
+          <th>{{ adminStr(cfg, 'stopTimesColDropoff') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -98,7 +99,9 @@ async function save(explicit = true) {
       </tbody>
     </table>
     <AdminFormActions v-if="cfg.canManage || cfg.canOperate">
-      <button type="button" class="button button-primary" @click="save(true)">Spara stopptider</button>
+      <button type="button" class="button button-primary" @click="save(true)">
+        {{ adminStr(cfg, 'stopTimesSaveButton') }}
+      </button>
     </AdminFormActions>
   </div>
 </template>

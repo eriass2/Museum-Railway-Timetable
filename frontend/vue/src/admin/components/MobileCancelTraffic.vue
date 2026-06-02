@@ -3,6 +3,8 @@ import { ref } from 'vue';
 import { cancelTrafficToday } from '../api/adminRest';
 import { adminConfirm } from '../composables/adminConfirm';
 import type { TrafficToday } from '../types';
+import { adminConfig } from '../types';
+import { adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
 
 const props = defineProps<{
   traffic: TrafficToday;
@@ -11,15 +13,19 @@ const props = defineProps<{
 
 const emit = defineEmits<{ done: [message: string]; error: [message: string] }>();
 
+const cfg = adminConfig();
 const busy = ref(false);
 
 async function cancelAll() {
   if (!props.canOperate || busy.value) return;
   const label = props.traffic.date;
   const ok = await adminConfirm({
-    title: 'Inställ trafik',
-    message: `Alla ${props.traffic.services_count} turer den ${label} får meddelandet «Inställd».`,
-    confirmLabel: 'Inställ trafik',
+    title: adminStr(cfg, 'mobileCancelConfirmTitle'),
+    message: adminFmtN(cfg, 'mobileCancelConfirmMessage', {
+      1: props.traffic.services_count,
+      2: label,
+    }),
+    confirmLabel: adminStr(cfg, 'trafficTodayCancelButton'),
     danger: true,
   });
   if (!ok) {
@@ -27,15 +33,16 @@ async function cancelAll() {
   }
   busy.value = true;
   try {
-    const res = await cancelTrafficToday(props.traffic.date);
+    const notice = adminStr(cfg, 'trafficCancelledNotice');
+    const res = await cancelTrafficToday(props.traffic.date, notice);
     emit(
       'done',
       res.services_updated > 0
-        ? `${res.services_updated} turer markerade som inställda.`
-        : 'Ingen trafik att ställa in för detta datum.',
+        ? adminFmt(cfg, 'mobileCancelSuccess', res.services_updated)
+        : adminStr(cfg, 'mobileCancelNone'),
     );
   } catch (e) {
-    emit('error', e instanceof Error ? e.message : 'Kunde inte ställa in trafik');
+    emit('error', e instanceof Error ? e.message : adminStr(cfg, 'trafficTodayCancelFailed'));
   } finally {
     busy.value = false;
   }
@@ -44,12 +51,12 @@ async function cancelAll() {
 
 <template>
   <div class="mrt-admin-mobile-cancel">
-    <h3>Inställ trafik</h3>
+    <h3>{{ adminStr(cfg, 'mobileCancelTitle') }}</h3>
     <p class="description">
-      Sätter meddelandet «Inställd» på alla turer som gäller {{ traffic.date }}.
+      {{ adminFmt(cfg, 'mobileCancelHint', traffic.date) }}
     </p>
     <p v-if="traffic.all_cancelled" class="notice notice-info">
-      All trafik är redan markerad som inställd.
+      {{ adminStr(cfg, 'mobileCancelAllCancelled') }}
     </p>
     <p v-else-if="canOperate">
       <button
@@ -58,9 +65,9 @@ async function cancelAll() {
         :disabled="busy || traffic.services_count === 0"
         @click="cancelAll"
       >
-        Inställ trafik idag
+        {{ adminStr(cfg, 'mobileCancelButton') }}
       </button>
     </p>
-    <p v-else class="description">Du har inte behörighet att ställa in trafik.</p>
+    <p v-else class="description">{{ adminStr(cfg, 'mobileCancelNoPermission') }}</p>
   </div>
 </template>

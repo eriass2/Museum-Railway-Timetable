@@ -57,7 +57,8 @@ async function cancelAll() {
   message.value = '';
   error.value = '';
   try {
-    const res = await cancelTrafficToday(props.traffic.date);
+    const notice = adminStr(cfg, 'trafficCancelledNotice');
+    const res = await cancelTrafficToday(props.traffic.date, notice);
     message.value =
       res.services_updated > 0
         ? adminFmt(cfg, 'trafficTodayCancelSuccess', res.services_updated)

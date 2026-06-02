@@ -2,6 +2,8 @@
 import { onMounted, ref, watch } from 'vue';
 import { getStopTimes, quickDeparture } from '../api/adminRest';
 import type { TimetableServiceRow } from '../types';
+import { adminConfig } from '../types';
+import { adminStr } from '../utils/adminLabels';
 
 const props = defineProps<{
   services: TimetableServiceRow[];
@@ -10,6 +12,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ saved: [message: string] }>();
 
+const cfg = adminConfig();
 const serviceId = ref(0);
 const departure = ref('');
 const firstStopName = ref('');
@@ -30,7 +33,7 @@ async function loadFirstStop() {
     firstStopName.value = first?.name || '—';
     departure.value = first?.departure_time || '';
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte ladda stopptider';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'mobileStopTimesLoadFailed');
   } finally {
     loading.value = false;
   }
@@ -52,9 +55,9 @@ async function save() {
   error.value = '';
   try {
     await quickDeparture(serviceId.value, departure.value);
-    emit('saved', 'Avgångstid sparad');
+    emit('saved', adminStr(cfg, 'mobileDepartureSaved'));
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Kunde inte spara';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'mobileSaveFailed');
   } finally {
     loading.value = false;
   }
@@ -63,20 +66,22 @@ async function save() {
 
 <template>
   <div class="mrt-admin-mobile-departure">
-    <h3>Snabb avgångstid</h3>
-    <p class="description">Ändra avgångstid vid första hållplatsen (mobil).</p>
+    <h3>{{ adminStr(cfg, 'mobileQuickDepartureTitle') }}</h3>
+    <p class="description">{{ adminStr(cfg, 'mobileQuickDepartureHint') }}</p>
     <p v-if="error" class="notice notice-error">{{ error }}</p>
     <p>
-      <label for="mrt-mobile-service">Tur</label>
+      <label for="mrt-mobile-service">{{ adminStr(cfg, 'mobileTripLabel') }}</label>
       <select id="mrt-mobile-service" v-model.number="serviceId" class="widefat">
-        <option :value="0">— Välj tur —</option>
+        <option :value="0">{{ adminStr(cfg, 'editorSelectTrip') }}</option>
         <option v-for="s in services" :key="s.id" :value="s.id">
           {{ s.title || s.route_name }}
         </option>
       </select>
     </p>
     <p v-if="serviceId">
-      <label for="mrt-mobile-departure">{{ firstStopName }} — avgång</label>
+      <label for="mrt-mobile-departure">
+        {{ firstStopName }} — {{ adminStr(cfg, 'mobileDepartureSuffix') }}
+      </label>
       <input
         id="mrt-mobile-departure"
         v-model="departure"
@@ -92,7 +97,7 @@ async function save() {
         :disabled="!serviceId || loading"
         @click="save"
       >
-        Spara avgångstid
+        {{ adminStr(cfg, 'mobileSaveDeparture') }}
       </button>
     </p>
   </div>

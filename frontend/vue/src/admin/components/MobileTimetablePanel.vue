@@ -2,6 +2,8 @@
 import { computed, onMounted, ref } from 'vue';
 import { getDeviations, listTrainTypes, saveDeviations } from '../api/adminRest';
 import type { TimetableDetail, TrainTypeRow } from '../types';
+import { adminConfig } from '../types';
+import { adminStr } from '../utils/adminLabels';
 import MobileQuickDeparture from './MobileQuickDeparture.vue';
 import MobileCancelTraffic from './MobileCancelTraffic.vue';
 
@@ -14,6 +16,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{ saved: [message: string] }>();
 
+const cfg = adminConfig();
 const deviationRows = ref<
   { service_id: number; date: string; trip_label: string; train_type_id: number; notice: string }[]
 >([]);
@@ -21,6 +24,8 @@ const trainTypes = ref<TrainTypeRow[]>([]);
 const loading = ref(true);
 const error = ref('');
 const cancelMsg = ref('');
+
+const cancelledNotice = computed(() => adminStr(cfg, 'trafficCancelledNotice').toLowerCase());
 
 const showCancelToday = computed(
   () =>
@@ -34,7 +39,7 @@ const trafficTodayPayload = computed(() => {
   const cancelled = deviationRows.value.filter(
     (row) =>
       row.date === today &&
-      row.notice.toLowerCase().includes('inställd'),
+      row.notice.toLowerCase().includes(cancelledNotice.value),
   ).length;
   const total = props.detail.services.length;
   return {
@@ -67,7 +72,7 @@ onMounted(async () => {
     deviationRows.value = deviations.rows;
     trainTypes.value = types.items;
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'Fel';
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'genericError');
   } finally {
     loading.value = false;
   }
@@ -83,13 +88,13 @@ async function saveDeviationChanges() {
     };
   }
   await saveDeviations(props.timetableId, byService);
-  emit('saved', 'Avvikelser sparade');
+  emit('saved', adminStr(cfg, 'editorSavedDeviations'));
 }
 </script>
 
 <template>
   <div class="mrt-admin-mobile-panel">
-    <p v-if="loading" class="description">Laddar...</p>
+    <p v-if="loading" class="description">{{ adminStr(cfg, 'mobileLoading') }}</p>
     <p v-else-if="error" class="notice notice-error">{{ error }}</p>
 
     <MobileQuickDeparture
@@ -108,7 +113,7 @@ async function saveDeviationChanges() {
     <p v-if="cancelMsg" class="notice notice-success">{{ cancelMsg }}</p>
 
     <div class="mrt-admin-mobile-deviations">
-      <h3>Avvikelser</h3>
+      <h3>{{ adminStr(cfg, 'mobileDeviationsTitle') }}</h3>
       <div
         v-for="(row, idx) in deviationRows"
         :key="idx"
@@ -118,23 +123,25 @@ async function saveDeviationChanges() {
           <strong>{{ row.date }}</strong> · {{ row.trip_label }}
         </p>
         <p>
-          <label>Tågtyp</label>
+          <label>{{ adminStr(cfg, 'editorColTrainType') }}</label>
           <select v-model.number="row.train_type_id" class="widefat" :disabled="!canOperate">
-            <option :value="0">— Standard —</option>
+            <option :value="0">{{ adminStr(cfg, 'editorStandardTrainType') }}</option>
             <option v-for="t in trainTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
           </select>
         </p>
         <p>
-          <label>Meddelande</label>
+          <label>{{ adminStr(cfg, 'editorColMessage') }}</label>
           <input v-model="row.notice" type="text" class="widefat" :disabled="!canOperate" />
         </p>
       </div>
       <p v-if="canOperate && deviationRows.length">
         <button type="button" class="button button-primary widefat" @click="saveDeviationChanges">
-          Spara avvikelser
+          {{ adminStr(cfg, 'editorSaveDeviations') }}
         </button>
       </p>
-      <p v-else-if="!deviationRows.length" class="description">Inga avvikelser för denna tidtabell.</p>
+      <p v-else-if="!deviationRows.length" class="description">
+        {{ adminStr(cfg, 'mobileNoDeviations') }}
+      </p>
     </div>
   </div>
 </template>

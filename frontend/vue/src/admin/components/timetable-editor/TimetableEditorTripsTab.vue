@@ -7,6 +7,8 @@ import {
   AdminTrainTypeCell,
 } from '../ui';
 import type { TimetableDetail } from '../../types';
+import { adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
 
 defineProps<{
   canManage: boolean;
@@ -15,6 +17,7 @@ defineProps<{
   trainTypeIconKey: (typeId: number) => string;
 }>();
 
+const cfg = adminConfig();
 const newTrip = defineModel<{
   route_id: number;
   train_type_id: number;
@@ -33,9 +36,9 @@ const emit = defineEmits<{
     <table class="widefat striped">
       <thead>
         <tr>
-          <th>Rutt</th>
-          <th>Tågtyp</th>
-          <th>Destination</th>
+          <th>{{ adminStr(cfg, 'editorColRoute') }}</th>
+          <th>{{ adminStr(cfg, 'editorColTrainType') }}</th>
+          <th>{{ adminStr(cfg, 'editorColDestination') }}</th>
           <th></th>
         </tr>
       </thead>
@@ -52,7 +55,7 @@ const emit = defineEmits<{
           <td>
             <AdminRowActions>
               <button type="button" class="button" @click="emit('open-stoptimes', s.id)">
-                Stopptider
+                {{ adminStr(cfg, 'editorStopptimes') }}
               </button>
               <button
                 v-if="canManage"
@@ -60,7 +63,7 @@ const emit = defineEmits<{
                 class="button button-link-delete"
                 @click="emit('remove-trip', s.id)"
               >
-                Ta bort
+                {{ adminStr(cfg, 'delete') }}
               </button>
             </AdminRowActions>
           </td>
@@ -69,7 +72,7 @@ const emit = defineEmits<{
     </table>
     <div v-if="canManage" class="mrt-admin-trip-form">
       <select v-model.number="newTrip.route_id">
-        <option :value="0">— Rutt —</option>
+        <option :value="0">{{ adminStr(cfg, 'editorRoutePrompt') }}</option>
         <option v-for="r in detail.routes" :key="r.id" :value="r.id">{{ r.title }}</option>
       </select>
       <AdminInlineField>
@@ -78,17 +81,17 @@ const emit = defineEmits<{
           :icon-key="trainTypeIconKey(newTrip.train_type_id)"
         />
         <select v-model.number="newTrip.train_type_id">
-          <option :value="0">— Tågtyp —</option>
+          <option :value="0">{{ adminStr(cfg, 'editorTrainTypePrompt') }}</option>
           <option v-for="t in detail.train_types" :key="t.id" :value="t.id">{{ t.name }}</option>
         </select>
       </AdminInlineField>
       <select v-model.number="newTrip.end_station_id">
-        <option :value="0">— Destination —</option>
+        <option :value="0">{{ adminStr(cfg, 'editorDestinationPrompt') }}</option>
         <option v-for="d in destinations" :key="d.id" :value="d.id">{{ d.name }}</option>
       </select>
       <div class="mrt-admin-trip-form__actions">
         <button type="button" class="button button-primary" @click="emit('add-trip')">
-          Lägg till tur
+          {{ adminStr(cfg, 'editorAddTrip') }}
         </button>
       </div>
     </div>

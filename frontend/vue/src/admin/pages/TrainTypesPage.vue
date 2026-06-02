@@ -147,6 +147,7 @@ async function removeType(id: number) {
                     v-model="row.icon_key"
                     :icon-keys="iconKeys"
                     :disabled="!cfg.canManage"
+                    :aria-label="adminStr(cfg, 'trainTypesIconPickerAria')"
                     compact
                   />
                 </td>
@@ -179,7 +180,11 @@ async function removeType(id: number) {
           </label>
           <div class="train-types-page__field">
             <span class="train-types-page__field-label">{{ adminStr(cfg, 'trainTypesIconLabel') }}</span>
-            <TrainTypeIconPicker v-model="newType.icon_key" :icon-keys="iconKeys" />
+            <TrainTypeIconPicker
+              v-model="newType.icon_key"
+              :icon-keys="iconKeys"
+              :aria-label="adminStr(cfg, 'trainTypesIconPickerAria')"
+            />
           </div>
           <AdminDisclosure>
             <label class="train-types-page__field train-types-page__field--slug">

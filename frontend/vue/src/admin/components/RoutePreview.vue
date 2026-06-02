@@ -5,6 +5,8 @@ import {
   routePreviewTypeLabel,
   type RoutePreviewNode,
 } from '../utils/routePreviewNodes';
+import { adminConfig } from '../types';
+import { adminStr } from '../utils/adminLabels';
 
 const props = withDefaults(
   defineProps<{
@@ -19,8 +21,14 @@ const props = withDefaults(
     startStationId: 0,
     endStationId: 0,
     compact: false,
-    label: 'Ruttens stationer',
+    label: '',
   },
+);
+
+const cfg = adminConfig();
+
+const displayLabel = computed(
+  () => props.label || adminStr(cfg, 'routePreviewLabel'),
 );
 
 const nodes = computed<RoutePreviewNode[]>(() =>
@@ -33,10 +41,14 @@ const nodes = computed<RoutePreviewNode[]>(() =>
 );
 
 function roleLabel(role: RoutePreviewNode['role']): string {
-  if (role === 'start') return 'Start';
-  if (role === 'end') return 'Slut';
-  if (role === 'both') return 'Start/slut';
+  if (role === 'start') return adminStr(cfg, 'routePreviewStart');
+  if (role === 'end') return adminStr(cfg, 'routePreviewEnd');
+  if (role === 'both') return adminStr(cfg, 'routePreviewBoth');
   return '';
+}
+
+function stationTypeLabel(stationType: string): string {
+  return routePreviewTypeLabel(stationType, (key) => adminStr(cfg, key));
 }
 </script>
 
@@ -46,7 +58,7 @@ function roleLabel(role: RoutePreviewNode['role']): string {
     class="mrt-route-preview"
     :class="{ 'mrt-route-preview--compact': compact }"
     role="list"
-    :aria-label="label"
+    :aria-label="displayLabel"
   >
     <template v-for="(node, index) in nodes" :key="node.id">
       <span v-if="index > 0" class="mrt-route-preview__arrow" aria-hidden="true">→</span>
@@ -60,10 +72,12 @@ function roleLabel(role: RoutePreviewNode['role']): string {
           {{ roleLabel(node.role) }}
         </span>
         <span v-if="node.station_type" class="mrt-route-preview__type">
-          {{ routePreviewTypeLabel(node.station_type) }}
+          {{ stationTypeLabel(node.station_type) }}
         </span>
       </span>
     </template>
   </div>
-  <p v-else class="description mrt-route-preview__empty">Inga stationer på rutten.</p>
+  <p v-else class="description mrt-route-preview__empty">
+    {{ adminStr(cfg, 'routePreviewEmpty') }}
+  </p>
 </template>

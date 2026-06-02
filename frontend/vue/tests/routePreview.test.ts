@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import RoutePreview from '../src/admin/components/RoutePreview.vue';
+import type { AdminClientConfig } from '../src/admin/types';
 import {
   buildRoutePreviewNodes,
   routePreviewTypeLabel,
@@ -19,12 +20,43 @@ describe('routePreviewNodes', () => {
     expect(nodes[1]?.role).toBe('end');
   });
 
-  it('labels station types in Swedish', () => {
-    expect(routePreviewTypeLabel('halt')).toBe('Hållplats');
+  it('labels station types via string keys', () => {
+    const label = routePreviewTypeLabel('halt', (key) =>
+      key === 'stationsTypeHalt' ? 'Hållplats' : '',
+    );
+    expect(label).toBe('Hållplats');
   });
 });
 
 describe('RoutePreview (SSR)', () => {
+  const adminWindow: { mrtAdminVue?: AdminClientConfig } = {};
+
+  beforeEach(() => {
+    adminWindow.mrtAdminVue = {
+      restUrl: 'http://example.test/wp-json/museum-railway-timetable/v1/',
+      restNonce: 'nonce',
+      initialRoute: '/dashboard',
+      adminBase: 'http://example.test/wp-admin/admin.php?page=mrt_app',
+      canManage: true,
+      canOperate: true,
+      isDevMode: false,
+      trainTypeIconUrls: {},
+      strings: {
+        routePreviewLabel: 'Ruttens stationer',
+        routePreviewStart: 'Start',
+        routePreviewEnd: 'Slut',
+        routePreviewBoth: 'Start/slut',
+        stationsTypeStation: 'Station',
+      },
+    };
+    vi.stubGlobal('window', adminWindow);
+  });
+
+  afterEach(() => {
+    delete adminWindow.mrtAdminVue;
+    vi.unstubAllGlobals();
+  });
+
   it('renders station chain with arrows', async () => {
     const stationsById = new Map([
       [1, { title: 'A', station_type: 'station' }],

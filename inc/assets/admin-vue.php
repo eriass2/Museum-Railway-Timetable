@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/assets/admin-vue-l10n-misc.php';
+
 /**
  * Admin page slugs that mount Vue.
  *
@@ -41,6 +43,8 @@ function MRT_admin_vue_l10n_common(): array {
 		'retry'      => __( 'Försök igen', 'museum-railway-timetable' ),
 		'loadFailed' => __( 'Kunde inte ladda.', 'museum-railway-timetable' ),
 		'saveFailed' => __( 'Kunde inte spara.', 'museum-railway-timetable' ),
+		'genericError' => __( 'Fel', 'museum-railway-timetable' ),
+		'trafficCancelledNotice' => __( 'Inställd', 'museum-railway-timetable' ),
 		'confirm'    => __( 'Bekräfta', 'museum-railway-timetable' ),
 		'cancel'     => __( 'Avbryt', 'museum-railway-timetable' ),
 		'delete'     => __( 'Ta bort', 'museum-railway-timetable' ),
@@ -245,6 +249,11 @@ function MRT_admin_vue_l10n_train_types(): array {
 		'trainTypesNewTitle'        => __( 'Ny tågtyp', 'museum-railway-timetable' ),
 		'trainTypesNameLabel'       => __( 'Namn', 'museum-railway-timetable' ),
 		'trainTypesIconLabel'       => __( 'Ikon', 'museum-railway-timetable' ),
+		'trainTypesIconPickerAria'  => __( 'Välj ikon för tågtyp', 'museum-railway-timetable' ),
+		'trainTypesIconSteam'       => __( 'Ångtåg', 'museum-railway-timetable' ),
+		'trainTypesIconDiesel'      => __( 'Diesel', 'museum-railway-timetable' ),
+		'trainTypesIconRailbus'     => __( 'Rälsbuss', 'museum-railway-timetable' ),
+		'trainTypesIconBus'         => __( 'Vägbuss', 'museum-railway-timetable' ),
 		'trainTypesSlugOptional'    => __( 'Slug (valfritt)', 'museum-railway-timetable' ),
 		'trainTypesSlugPlaceholder' => __( 't.ex. ralsbuss', 'museum-railway-timetable' ),
 		'trainTypesCreateButton'    => __( 'Skapa', 'museum-railway-timetable' ),
@@ -317,7 +326,13 @@ function MRT_admin_vue_script_localization(): array {
 		MRT_admin_vue_l10n_timetables(),
 		MRT_admin_vue_l10n_train_types(),
 		MRT_admin_vue_l10n_import_export(),
-		MRT_admin_vue_l10n_traffic()
+		MRT_admin_vue_l10n_traffic(),
+		MRT_admin_vue_l10n_editor(),
+		MRT_admin_vue_l10n_mobile(),
+		MRT_admin_vue_l10n_stop_times(),
+		MRT_admin_vue_l10n_dev(),
+		MRT_admin_vue_l10n_setup(),
+		MRT_admin_vue_l10n_route_preview()
 	);
 }
 

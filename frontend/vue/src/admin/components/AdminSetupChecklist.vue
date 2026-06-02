@@ -5,23 +5,25 @@ import {
   buildAdminSetupSteps,
   isAdminSetupComplete,
 } from '../utils/adminSetupSteps';
+import { adminConfig } from '../types';
+import { adminFmtN, adminStr } from '../utils/adminLabels';
 import { AdminPanel } from './ui';
 
 const props = defineProps<{
   stats: Record<string, number>;
 }>();
 
+const cfg = adminConfig();
 const router = useRouter();
-const steps = computed(() => buildAdminSetupSteps(props.stats));
+const steps = computed(() => buildAdminSetupSteps(props.stats, cfg));
 const complete = computed(() => isAdminSetupComplete(steps.value));
 const doneCount = computed(() => steps.value.filter((s) => s.done).length);
 </script>
 
 <template>
-  <AdminPanel v-if="!complete" class="mrt-admin-setup" title="Kom igång">
+  <AdminPanel v-if="!complete" class="mrt-admin-setup" :title="adminStr(cfg, 'setupTitle')">
     <p class="description">
-      {{ doneCount }} av {{ steps.length }} steg klara — följ ordningen nedan innan du publicerar
-      tidtabeller på webbplatsen.
+      {{ adminFmtN(cfg, 'setupProgress', { 1: doneCount, 2: steps.length }) }}
     </p>
     <ol class="mrt-admin-setup__list">
       <li
@@ -38,7 +40,7 @@ const doneCount = computed(() => steps.value.filter((s) => s.done).length);
           class="button button-small mrt-admin-setup__go"
           @click="router.push(step.route)"
         >
-          Gå till
+          {{ adminStr(cfg, 'setupGo') }}
         </button>
       </li>
     </ol>

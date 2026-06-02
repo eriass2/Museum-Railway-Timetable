@@ -1,3 +1,6 @@
+import type { AdminClientConfig } from '../types';
+import { adminStr } from './adminLabels';
+
 export type AdminSetupStep = {
   id: string;
   label: string;
@@ -5,29 +8,32 @@ export type AdminSetupStep = {
   route: string;
 };
 
-export function buildAdminSetupSteps(stats: Record<string, number>): AdminSetupStep[] {
+export function buildAdminSetupSteps(
+  stats: Record<string, number>,
+  cfg: AdminClientConfig,
+): AdminSetupStep[] {
   return [
     {
       id: 'stations',
-      label: 'Skapa minst en station',
+      label: adminStr(cfg, 'setupStepStations'),
       done: (stats.stations ?? 0) > 0,
       route: '/stations-routes',
     },
     {
       id: 'routes',
-      label: 'Skapa minst en rutt med stationer',
+      label: adminStr(cfg, 'setupStepRoutes'),
       done: (stats.routes ?? 0) > 0,
       route: '/stations-routes',
     },
     {
       id: 'timetables',
-      label: 'Skapa en tidtabell',
+      label: adminStr(cfg, 'setupStepTimetables'),
       done: (stats.timetables ?? 0) > 0,
       route: '/timetables',
     },
     {
       id: 'services',
-      label: 'Lägg till turer i en tidtabell',
+      label: adminStr(cfg, 'setupStepServices'),
       done: (stats.services ?? 0) > 0,
       route: '/timetables',
     },

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { trainTypeIconLabel } from '../../../shared/trainTypeIcons';
+import { adminConfig } from '../../types';
+import { adminStr } from '../../utils/adminLabels';
 import TrainTypeIcon from '../TrainTypeIcon.vue';
 
 const props = withDefaults(
@@ -14,10 +16,11 @@ const props = withDefaults(
   {
     disabled: false,
     compact: false,
-    ariaLabel: 'Välj ikon för tågtyp',
+    ariaLabel: '',
   },
 );
 
+const cfg = adminConfig();
 const emit = defineEmits<{
   'update:modelValue': [value: string];
 }>();
@@ -25,7 +28,7 @@ const emit = defineEmits<{
 const options = computed(() =>
   props.iconKeys.map((key) => ({
     key,
-    label: trainTypeIconLabel(key),
+    label: trainTypeIconLabel(key, (labelKey) => adminStr(cfg, labelKey)),
   })),
 );
 

@@ -46,6 +46,9 @@ const shareLabel = computed(() =>
     : cfgStr(cfg, 'summaryCopy', 'Kopiera resa'),
 );
 
+const ticketUrl = computed(() => (config.ticketUrl || '').trim());
+const ticketCtaLabel = computed(() => cfgStr(cfg, 'ticketCta', 'Fortsätt till biljetter'));
+
 const outboundDeparture = computed(() =>
   store.outbound ? departureFromOrigin(store.outbound) : '',
 );
@@ -262,6 +265,13 @@ function onBack(): void {
       </div>
 
       <div class="mrt-actions mrt-summary-actions">
+        <MrtAccentButton
+          v-if="ticketUrl"
+          :href="ticketUrl"
+          variant="primary"
+        >
+          {{ ticketCtaLabel }}
+        </MrtAccentButton>
         <MrtAccentButton type="button" variant="secondary" @click="onPrint">
           {{ printLabel }}
         </MrtAccentButton>

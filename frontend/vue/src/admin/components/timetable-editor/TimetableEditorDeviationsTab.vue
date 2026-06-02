@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { AdminFormActions, AdminInlineField, AdminPanel, AdminTrainTypeCell } from '../ui';
 import type { TimetableDetail } from '../../types';
+import { adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
 
 export type DeviationRow = {
   service_id: number;
@@ -18,21 +20,22 @@ defineProps<{
   trainTypeIconKey: (typeId: number) => string;
 }>();
 
+const cfg = adminConfig();
 const emit = defineEmits<{ save: [] }>();
 </script>
 
 <template>
   <AdminPanel>
     <p v-if="deviationsDirty" class="notice notice-warning mrt-admin-unsaved">
-      Osparade avvikelser — klicka «Spara avvikelser».
+      {{ adminStr(cfg, 'editorDeviationsUnsaved') }}
     </p>
     <table class="widefat striped">
       <thead>
         <tr>
-          <th>Datum</th>
-          <th>Tur</th>
-          <th>Tågtyp</th>
-          <th>Meddelande</th>
+          <th>{{ adminStr(cfg, 'editorColDate') }}</th>
+          <th>{{ adminStr(cfg, 'editorColTrip') }}</th>
+          <th>{{ adminStr(cfg, 'editorColTrainType') }}</th>
+          <th>{{ adminStr(cfg, 'editorColMessage') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -46,7 +49,7 @@ const emit = defineEmits<{ save: [] }>();
                 :icon-key="trainTypeIconKey(row.train_type_id)"
               />
               <select v-model.number="row.train_type_id" :disabled="!canOperate">
-                <option :value="0">— Standard —</option>
+                <option :value="0">{{ adminStr(cfg, 'editorStandardTrainType') }}</option>
                 <option v-for="t in trainTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
               </select>
             </AdminInlineField>
@@ -59,7 +62,7 @@ const emit = defineEmits<{ save: [] }>();
     </table>
     <AdminFormActions v-if="canOperate">
       <button type="button" class="button button-primary" @click="emit('save')">
-        Spara avvikelser
+        {{ adminStr(cfg, 'editorSaveDeviations') }}
       </button>
     </AdminFormActions>
   </AdminPanel>

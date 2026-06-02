@@ -30,8 +30,16 @@ export const TRAIN_TYPE_SLUG_TO_ICON_KEY: Record<string, TrainTypeIconKey> = {
 export const ROAD_BUS_TRAIN_TYPE_SLUG = 'buss';
 export const ROAD_BUS_ICON_KEY: TrainTypeIconKey = 'bus';
 
-/** Swedish labels for admin icon picker (not sent to API). */
-export const TRAIN_TYPE_ICON_LABELS: Record<TrainTypeIconKey, string> = {
+/** Admin l10n keys in `MRT_admin_vue_l10n_train_types()`. */
+export const TRAIN_TYPE_ICON_LABEL_KEYS: Record<TrainTypeIconKey, string> = {
+  steam: 'trainTypesIconSteam',
+  diesel: 'trainTypesIconDiesel',
+  railbus: 'trainTypesIconRailbus',
+  bus: 'trainTypesIconBus',
+};
+
+/** Fallback labels when admin config is unavailable (tests, SSR). */
+const TRAIN_TYPE_ICON_LABEL_FALLBACKS: Record<TrainTypeIconKey, string> = {
   steam: 'Ångtåg',
   diesel: 'Diesel',
   railbus: 'Rälsbuss',
@@ -53,9 +61,19 @@ export function normalizeTrainTypeIconKey(keyOrSlug: string): TrainTypeIconKey {
   return TRAIN_TYPE_SLUG_TO_ICON_KEY[lower] ?? 'diesel';
 }
 
-export function trainTypeIconLabel(keyOrSlug: string): string {
+export function trainTypeIconLabel(
+  keyOrSlug: string,
+  labelFor?: (key: string) => string,
+): string {
   const key = normalizeTrainTypeIconKey(keyOrSlug);
-  return TRAIN_TYPE_ICON_LABELS[key] ?? key;
+  const stringKey = TRAIN_TYPE_ICON_LABEL_KEYS[key];
+  if (stringKey && labelFor) {
+    const translated = labelFor(stringKey);
+    if (translated) {
+      return translated;
+    }
+  }
+  return TRAIN_TYPE_ICON_LABEL_FALLBACKS[key] ?? key;
 }
 
 export function trainTypeIconUrl(

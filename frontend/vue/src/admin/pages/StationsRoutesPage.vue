@@ -251,7 +251,7 @@ async function removeRoute(route: RouteRow) {
                 <option value="depot">{{ adminStr(cfg, 'stationsTypeDepot') }}</option>
                 <option value="museum">{{ adminStr(cfg, 'stationsTypeMuseum') }}</option>
               </select>
-              <span v-else>{{ routePreviewTypeLabel(st.station_type) || '—' }}</span>
+              <span v-else>{{ routePreviewTypeLabel(st.station_type, (k) => adminStr(cfg, k)) || '—' }}</span>
             </td>
             <td>
               <input
