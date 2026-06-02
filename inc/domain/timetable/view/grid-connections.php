@@ -296,7 +296,7 @@ function MRT_trains_for_bus_at_junction(
  *   junction_id: int,
  *   junction_label: string,
  *   direction: string,
- *   train_to_bus: array<int, array{train: array{service_number: string, time_display: string}, buses: array<int, array{service_number: string, time_display: string, destination: string}>>>,
+ *   train_to_bus: array<int, array{train: array{service_number: string, time_display: string}, buses: array<int, array{service_number: string, time_display: string, destination: string}>}>,
  *   bus_to_train: array<int, array{bus: array{service_number: string, time_display: string, destination: string}, trains: array<int, array{service_number: string, time_display: string}>}>
  * }
  */

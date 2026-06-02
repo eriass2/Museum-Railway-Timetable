@@ -47,9 +47,8 @@ function MRT_register_admin_menu_demo_submenu(): void {
 	}
 	$demo_slug = MRT_components_demo_menu_slug();
 	// WordPress accepts null parent to register a hidden submenu page.
-	// @phpstan-ignore argument.type
 	add_submenu_page(
-		null,
+		null, // @phpstan-ignore-line argument.type
 		__( 'Komponentdemo', 'museum-railway-timetable' ),
 		__( 'Komponentdemo', 'museum-railway-timetable' ),
 		'manage_options',
