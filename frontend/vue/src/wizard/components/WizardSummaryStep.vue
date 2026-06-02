@@ -19,6 +19,7 @@ import {
   buildConnectionLegSummary,
 } from '../utils/buildConnectionLegSummary';
 import { stationTitleLookup } from '../../shared/connectionLegDisplay';
+import { connectionToPriceLegs } from '../../shared/connectionPriceLegs';
 import { formatTripClock } from '../utils/format';
 import type { JourneyConnection } from '../types';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
@@ -63,6 +64,13 @@ const tripPricesQuery = computed(() => ({
   outboundDeparture: outboundDeparture.value,
   inboundDeparture: inboundDeparture.value,
   includeDay: true,
+  outboundLegs: store.outbound
+    ? connectionToPriceLegs(store.outbound, store.fromId, store.toId)
+    : [],
+  inboundLegs:
+    store.tripType === 'return' && store.inbound
+      ? connectionToPriceLegs(store.inbound, store.toId, store.fromId)
+      : [],
 }));
 
 const restConfig = computed(() => config);

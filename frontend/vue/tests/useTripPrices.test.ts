@@ -66,6 +66,8 @@ describe('useTripPrices', () => {
         trip_type: 'return',
         outbound_departure: '15:00',
         inbound_departure: '16:00',
+        outbound_legs: '',
+        inbound_legs: '',
       }),
     );
     expect(zones.value).toBe(2);

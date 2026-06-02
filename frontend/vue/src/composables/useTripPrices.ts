@@ -3,6 +3,9 @@ import type { MrtRestConfig } from '../config/types';
 import { mrtRestRequest } from '../api/mrtRest';
 import type { DayTicketData, TripPriceData } from '../shared/prices';
 
+import type { TripPriceLeg } from '../shared/connectionPriceLegs';
+import { encodeTripPriceLegs } from '../shared/connectionPriceLegs';
+
 export type TripPricesQuery = {
   fromId: number;
   toId: number;
@@ -10,6 +13,8 @@ export type TripPricesQuery = {
   outboundDeparture?: string;
   inboundDeparture?: string;
   includeDay?: boolean;
+  outboundLegs?: TripPriceLeg[];
+  inboundLegs?: TripPriceLeg[];
 };
 
 type TripPricesApiResponse = {
@@ -51,6 +56,8 @@ export function useTripPrices(
           outbound_departure: params.outboundDeparture ?? '',
           inbound_departure: params.inboundDeparture ?? '',
           include_day: params.includeDay ? 1 : 0,
+          outbound_legs: encodeTripPriceLegs(params.outboundLegs ?? []),
+          inbound_legs: encodeTripPriceLegs(params.inboundLegs ?? []),
         });
         if (!response.success || !response.data) {
           trip.value = null;
