@@ -427,6 +427,30 @@ if ( ! function_exists( 'wp_update_post' ) ) {
     }
 }
 
+if ( ! function_exists( 'wp_delete_post' ) ) {
+    function wp_delete_post( $post_id, $force_delete = false ) {
+        unset( $force_delete );
+        if ( ! isset( $GLOBALS['mrt_test_deleted_posts'] ) || ! is_array( $GLOBALS['mrt_test_deleted_posts'] ) ) {
+            $GLOBALS['mrt_test_deleted_posts'] = array();
+        }
+        $GLOBALS['mrt_test_deleted_posts'][] = (int) $post_id;
+        unset( $GLOBALS['mrt_test_posts'][ (int) $post_id ] );
+        return true;
+    }
+}
+
+if ( ! function_exists( 'wp_delete_term' ) ) {
+    function wp_delete_term( $term_id, $taxonomy ) {
+        unset( $taxonomy );
+        if ( ! isset( $GLOBALS['mrt_test_deleted_terms'] ) || ! is_array( $GLOBALS['mrt_test_deleted_terms'] ) ) {
+            $GLOBALS['mrt_test_deleted_terms'] = array();
+        }
+        $GLOBALS['mrt_test_deleted_terms'][] = (int) $term_id;
+        unset( $GLOBALS['mrt_test_terms'][ (int) $term_id ] );
+        return true;
+    }
+}
+
 if ( ! function_exists( 'wp_set_object_terms' ) ) {
     /**
      * @param int          $object_id
