@@ -290,6 +290,28 @@ if (!function_exists('get_term')) {
     }
 }
 
+if ( ! function_exists( 'get_term_by' ) ) {
+    /**
+     * @param string $field
+     * @param string $value
+     * @param string $taxonomy
+     * @return object|null
+     */
+    function get_term_by( $field, $value, $taxonomy = '' ) {
+        unset( $taxonomy );
+        $terms = $GLOBALS['mrt_test_terms'] ?? array();
+        foreach ( $terms as $term ) {
+            if ( $field === 'name' && ( $term->name ?? '' ) === $value ) {
+                return $term;
+            }
+            if ( $field === 'slug' && ( $term->slug ?? '' ) === $value ) {
+                return $term;
+            }
+        }
+        return null;
+    }
+}
+
 if (!function_exists('wp_get_post_terms')) {
     /**
      * @param int    $post_id
