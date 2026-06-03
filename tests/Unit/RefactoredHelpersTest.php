@@ -51,6 +51,30 @@ final class RefactoredHelpersTest extends TestCase {
 		self::assertFalse( MRT_route_leg_travels_towards_station( $route_id, 101, 10, 303 ) );
 	}
 
+	public function test_journey_transfer_overshoots_destination(): void {
+		$route_id = 77;
+		$uppsala  = 10;
+		$fyris    = 11;
+		$marie    = 12;
+		$faringe  = 50;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			$route_id . '|mrt_route_stations' => array( $uppsala, $fyris, $marie, $faringe ),
+		);
+
+		self::assertTrue(
+			MRT_journey_transfer_overshoots_destination( $route_id, $uppsala, $faringe, $fyris )
+		);
+		self::assertTrue(
+			MRT_journey_transfer_overshoots_destination( $route_id, $uppsala, $marie, $fyris )
+		);
+		self::assertFalse(
+			MRT_journey_transfer_overshoots_destination( $route_id, $uppsala, $marie, $faringe )
+		);
+		self::assertFalse(
+			MRT_journey_transfer_overshoots_destination( $route_id, $uppsala, $fyris, $marie )
+		);
+	}
+
 	public function test_route_label_from_shared_service_end_station(): void {
 		$GLOBALS['mrt_test_post_meta'] = array(
 			'77|mrt_route_start_station'    => 10,

@@ -188,6 +188,9 @@ function MRT_journey_collect_transfer_at_stop(
 	if ( $route_id > 0 && ! MRT_route_leg_travels_towards_station( $route_id, $from_station_id, $xfer_id, $to_station_id ) ) {
 		return;
 	}
+	if ( $route_id > 0 && MRT_journey_transfer_overshoots_destination( $route_id, $from_station_id, $xfer_id, (int) $to_station_id ) ) {
+		return;
+	}
 	$xfer_arr = MRT_stop_effective_arrival( $stop_row );
 	if ( $xfer_arr === '' || ! MRT_validate_time_hhmm( $xfer_arr ) ) {
 		return;

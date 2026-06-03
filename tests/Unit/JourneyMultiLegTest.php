@@ -121,6 +121,59 @@ final class JourneyMultiLegTest extends TestCase {
 
     private const ROUTE_MAIN = 500;
     private const ST_UPPSALA = 10;
+    private const ST_FYRISLUND = 11;
+    private const ST_MARIELUND = 12;
+    private const ST_FARINGE = 50;
+
+    public function test_find_multi_leg_rejects_backtrack_past_pickup_only_destination(): void {
+        $this->mrt_use_journey_fixture(
+            [
+                11 => [
+                    $this->mrt_stop( 11, self::ST_UPPSALA, 1, null, '10:00' ),
+                    [
+                        'service_post_id' => 11,
+                        'station_post_id' => self::ST_FYRISLUND,
+                        'stop_sequence'   => 2,
+                        'arrival_time'    => '10:05',
+                        'departure_time'  => '10:06',
+                        'pickup_allowed'  => 1,
+                        'dropoff_allowed' => 0,
+                    ],
+                    $this->mrt_stop( 11, self::ST_MARIELUND, 3, '10:35', '10:36' ),
+                    $this->mrt_stop( 11, self::ST_FARINGE, 4, '11:30', null ),
+                ],
+                22 => [
+                    $this->mrt_stop( 22, self::ST_FARINGE, 1, null, '12:00' ),
+                    $this->mrt_stop( 22, self::ST_MARIELUND, 2, '12:30', '12:31' ),
+                    $this->mrt_stop( 22, self::ST_FYRISLUND, 3, '13:00', '13:01' ),
+                    $this->mrt_stop( 22, self::ST_UPPSALA, 4, '13:36', null ),
+                ],
+            ],
+            [900 => [self::DATE]],
+            [],
+            [],
+            [],
+            [
+                self::ROUTE_MAIN => [
+                    self::ST_UPPSALA,
+                    self::ST_FYRISLUND,
+                    self::ST_MARIELUND,
+                    self::ST_FARINGE,
+                ],
+            ],
+            [11 => self::ROUTE_MAIN, 22 => self::ROUTE_MAIN]
+        );
+
+        $results = MRT_find_multi_leg_connections(
+            self::ST_UPPSALA,
+            self::ST_FYRISLUND,
+            self::DATE,
+            5,
+            true
+        );
+
+        self::assertSame( [], $results );
+    }
 
     public function test_find_multi_leg_rejects_transfer_in_opposite_direction(): void {
         $mid  = 101;

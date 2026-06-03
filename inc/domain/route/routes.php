@@ -167,6 +167,44 @@ function MRT_route_leg_travels_towards_station( $route_id, $from_station_id, $to
 }
 
 /**
+ * Whether a transfer leg passes the journey destination without alighting there.
+ *
+ * Used to reject backtracking via a hub (e.g. ride past pickup-only Fyrislund to Faringe,
+ * then return on a train towards Uppsala).
+ *
+ * @param int $route_id Route post ID
+ * @param int $from_station_id Origin
+ * @param int $transfer_station_id Transfer hub on the first leg
+ * @param int $goal_station_id Final destination
+ */
+function MRT_journey_transfer_overshoots_destination(
+	int $route_id,
+	int $from_station_id,
+	int $transfer_station_id,
+	int $goal_station_id
+): bool {
+	if ( $route_id <= 0 || $from_station_id <= 0 || $transfer_station_id <= 0 || $goal_station_id <= 0 ) {
+		return false;
+	}
+	if ( $transfer_station_id === $goal_station_id || $from_station_id === $goal_station_id ) {
+		return false;
+	}
+	$route_stations = MRT_get_route_stations( $route_id );
+	if ( $route_stations === array() ) {
+		return false;
+	}
+	$from_idx = MRT_route_station_index( $route_stations, $from_station_id );
+	$xfer_idx = MRT_route_station_index( $route_stations, $transfer_station_id );
+	$goal_idx = MRT_route_station_index( $route_stations, $goal_station_id );
+	if ( $from_idx === null || $xfer_idx === null || $goal_idx === null ) {
+		return false;
+	}
+	$min_idx = min( $from_idx, $xfer_idx );
+	$max_idx = max( $from_idx, $xfer_idx );
+	return $goal_idx > $min_idx && $goal_idx < $max_idx;
+}
+
+/**
  * Get route label from end stations
  * Helper function for MRT_get_route_label()
  *
