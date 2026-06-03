@@ -43,6 +43,10 @@ final class JourneyMultiLegTest extends TestCase {
         self::assertSame([], MRT_find_multi_leg_connections(1, 2, '2026-06-01', 5, false));
     }
 
+    public function test_journey_engine_max_transfers_default_is_two(): void {
+        self::assertSame(2, MRT_journey_engine_max_transfers());
+    }
+
     public function test_journey_find_stop_index_finds_station(): void {
         $ordered = [
             ['station_post_id' => 10],
@@ -95,11 +99,7 @@ final class JourneyMultiLegTest extends TestCase {
     }
 
     public function test_append_transfer_options_no_ops_when_no_services(): void {
-        $results = [];
-        $seen = [];
-        MRT_journey_append_transfer_options($results, $seen, 1, 2, '2026-06-01', 5);
-        self::assertSame([], $results);
-        self::assertSame([], $seen);
+        self::assertSame([], MRT_find_multi_leg_connections(1, 2, '2026-06-01', 5, false));
     }
 
     public function test_find_multi_leg_returns_direct_connection(): void {

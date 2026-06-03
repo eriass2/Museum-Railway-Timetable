@@ -96,3 +96,18 @@ Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 
 - Wizard finpolish mot PNG i `docs/mockups/` när designfiler finns.
 - [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-genomgång före ”live”.
+
+---
+
+## 10. Resesökmotor (journey engine, 2026-06)
+
+**Beslut:** Ny BFS-motor i `inc/domain/journey/engine/` bakom oförändrat REST-API.
+
+| Punkt | Värde |
+|-------|--------|
+| Max antal byten | **2** (3 ben). Filter: `mrt_journey_max_transfers`. |
+| Progressiv djupning | Kalender: direkt först, sedan 1 byte, sedan 2. Wizard: alla träffar upp till max. |
+| Bytesstation | Hub (terminus, buss-*, `mrt_transfer_priority`) vid mellanliggande byte; slutstation kräver inte hub. |
+| Regler | Befintliga: pickup/dropoff, riktning mot mål, min/max bytestid, overshoot-filter. |
+| Avvikelser i poäng | **Ej ännu** — TODO kvar i `journey-scoring.php`. |
+| Presentation | Befintlig normalisering, wizard-filter och sortering; `legs[]` stöder N ben. |

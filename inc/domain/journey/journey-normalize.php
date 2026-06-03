@@ -50,30 +50,52 @@ function MRT_journey_multi_leg_train_type_label( array $legs ) {
 }
 
 /**
- * Human-readable label for a transfer journey (two services)
+ * Human-readable label for a multi-leg journey.
  *
  * @param array<string, mixed>             $item Multi-leg bundle
  * @param array<int, array<string, mixed>> $legs Leg payloads
  * @return string
  */
 function MRT_journey_multi_leg_service_label( array $item, array $legs ) {
-	$transfer_id = (int) ( $item['transfer_station_id'] ?? 0 );
-	$hub         = $transfer_id > 0 ? get_the_title( $transfer_id ) : '';
-	$titles      = array();
+	$titles = array();
 	foreach ( $legs as $leg ) {
 		$sid = (int) ( $leg['service_id'] ?? 0 );
 		if ( $sid > 0 ) {
 			$titles[] = get_the_title( $sid ) ?: ( '#' . $sid );
 		}
 	}
-	if ( $hub !== '' && isset( $titles[0], $titles[1] ) ) {
-		return sprintf(
-			/* translators: 1: first service name, 2: transfer station name, 3: second service name */
-			__( '%1$s · Change at %2$s · %3$s', 'museum-railway-timetable' ),
-			$titles[0],
-			$hub,
-			$titles[1]
-		);
+	if ( count( $legs ) === 2 ) {
+		$transfer_id = (int) ( $item['transfer_station_id'] ?? 0 );
+		$hub         = $transfer_id > 0 ? get_the_title( $transfer_id ) : '';
+		if ( $hub !== '' && isset( $titles[0], $titles[1] ) ) {
+			return sprintf(
+				/* translators: 1: first service name, 2: transfer station name, 3: second service name */
+				__( '%1$s · Change at %2$s · %3$s', 'museum-railway-timetable' ),
+				$titles[0],
+				$hub,
+				$titles[1]
+			);
+		}
+	}
+	if ( count( $legs ) > 2 ) {
+		$parts = array();
+		for ( $i = 0; $i < count( $legs ); $i++ ) {
+			if ( $i > 0 ) {
+				$hub_id = (int) ( $legs[ $i - 1 ]['to_station_id'] ?? 0 );
+				$hub    = $hub_id > 0 ? get_the_title( $hub_id ) : '';
+				if ( $hub !== '' ) {
+					$parts[] = sprintf(
+						/* translators: %s: transfer station name */
+						__( 'Change at %s', 'museum-railway-timetable' ),
+						$hub
+					);
+				}
+			}
+			if ( isset( $titles[ $i ] ) ) {
+				$parts[] = $titles[ $i ];
+			}
+		}
+		return implode( ' · ', $parts );
 	}
 	return implode( ' · ', $titles );
 }

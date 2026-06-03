@@ -26,14 +26,10 @@ function MRT_journey_calendar_day_status( $from_station_id, $to_station_id, $ymd
 		return 'none';
 	}
 	$min_xfer = MRT_journey_min_transfer_minutes();
-	$options  = MRT_find_multi_leg_connections(
-		$from_station_id,
-		$to_station_id,
-		$ymd,
-		$min_xfer,
-		true
-	);
-	return ! empty( $options ) ? 'ok' : 'traffic_no_match';
+	if ( MRT_journey_engine_has_connection( $from_station_id, $to_station_id, $ymd, $min_xfer ) ) {
+		return 'ok';
+	}
+	return 'traffic_no_match';
 }
 
 /**

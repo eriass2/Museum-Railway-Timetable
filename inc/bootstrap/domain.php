@@ -21,6 +21,7 @@ function MRT_load_journey_domain_modules(): void {
 	require_once $journey_dir . 'journey-calendar.php';
 	require_once $journey_dir . 'journey-return.php';
 	require_once $journey_dir . 'journey-multi-leg.php';
+	require_once $journey_dir . 'engine/search.php';
 	require_once MRT_PATH . 'inc/domain/pricing/prices.php';
 	require_once $journey_dir . 'journey-notice.php';
 	require_once $journey_dir . 'journey-normalize.php';
