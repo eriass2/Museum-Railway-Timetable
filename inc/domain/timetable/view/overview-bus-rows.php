@@ -247,4 +247,3 @@ function MRT_timetable_bus_stop_display_time( $stop, bool $use_departure ): stri
 	$display = MRT_get_to_row_display_stop_time( $stop );
 	return MRT_format_stop_time_display( $display ?? $stop );
 }
-

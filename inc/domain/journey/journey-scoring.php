@@ -122,7 +122,7 @@ function MRT_journey_score_quality_adjustment( array $connection, bool $has_dire
 		return (int) $weights['direct_bonus'];
 	}
 	if ( $has_direct ) {
-		return -(int) $weights['unnecessary_transfer_penalty'];
+		return - (int) $weights['unnecessary_transfer_penalty'];
 	}
 	return 0;
 }

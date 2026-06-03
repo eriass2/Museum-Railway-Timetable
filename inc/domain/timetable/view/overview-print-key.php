@@ -151,4 +151,3 @@ function MRT_timetable_deviation_print_key_row( WP_Post $service, string $dateYm
 		'has_type_deviation'  => $type_dev,
 	);
 }
-

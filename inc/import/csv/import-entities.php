@@ -101,7 +101,12 @@ function MRT_csv_import_routes( array $files, array &$maps ): int {
 				)
 			);
 		} else {
-			wp_update_post( array( 'ID' => $id, 'post_title' => $title ) );
+			wp_update_post(
+				array(
+					'ID' => $id,
+					'post_title' => $title,
+				)
+			);
 		}
 		if ( ! $id || $id instanceof WP_Error ) {
 			continue;

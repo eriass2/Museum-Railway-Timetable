@@ -286,7 +286,7 @@ function MRT_admin_vue_l10n_import_export(): array {
 		'importExportExportSuccess'    => __( 'Export klar.', 'museum-railway-timetable' ),
 		'importExportExportFailed'     => __( 'Export misslyckades', 'museum-railway-timetable' ),
 		'importExportImportFailed'     => __( 'Import misslyckades', 'museum-railway-timetable' ),
-		'importExportImportSuccess'    => __( 'Import klar (%s). %s', 'museum-railway-timetable' ),
+		'importExportImportSuccess'    => __( 'Import klar (%1$s). %2$s', 'museum-railway-timetable' ),
 	);
 }
 

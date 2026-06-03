@@ -81,7 +81,12 @@ function MRT_csv_export_zip( string $zip_path, array $options = array() ) {
  * @return array<string, array<int, array<string, string>>>
  */
 function MRT_csv_collect_export_tables( bool $include_prices, bool $include_settings ): array {
-	$maps = array( 'station' => array(), 'route' => array(), 'timetable' => array(), 'service' => array() );
+	$maps = array(
+		'station' => array(),
+		'route' => array(),
+		'timetable' => array(),
+		'service' => array(),
+	);
 	$tables = array(
 		'stations.csv'            => MRT_csv_export_stations( $maps ),
 		'train_types.csv'         => MRT_csv_export_train_types(),

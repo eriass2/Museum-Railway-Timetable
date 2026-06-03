@@ -27,7 +27,10 @@ function MRT_csv_read_file( string $path ) {
 	$headers = fgetcsv( $handle );
 	if ( $headers === false ) {
 		fclose( $handle );
-		return array( 'headers' => array(), 'rows' => array() );
+		return array(
+			'headers' => array(),
+			'rows' => array(),
+		);
 	}
 	$headers = MRT_csv_normalize_headers( $headers );
 	$rows    = array();
@@ -40,7 +43,10 @@ function MRT_csv_read_file( string $path ) {
 		$rows[] = MRT_csv_combine_row( $headers, $data, $path, $line );
 	}
 	fclose( $handle );
-	return array( 'headers' => $headers, 'rows' => $rows );
+	return array(
+		'headers' => $headers,
+		'rows' => $rows,
+	);
 }
 
 /**

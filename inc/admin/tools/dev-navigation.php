@@ -267,7 +267,7 @@ function MRT_get_or_create_dev_wp_navigation_post() {
 				'post_status' => 'publish',
 				'post_title'  => $menu_name,
 				'post_name'   => 'museum-railway-development',
-				'post_content'=> '',
+				'post_content' => '',
 			)
 		),
 		true

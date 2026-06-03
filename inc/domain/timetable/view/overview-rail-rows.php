@@ -255,10 +255,22 @@ function MRT_timetable_train_change_row_json(
 	}
 
 	$map = array(
-		'71' => array( 'typeName' => 'Dieseltåg', 'serviceNumber' => '61' ),
-		'63' => array( 'typeName' => 'Rälsbuss', 'serviceNumber' => '97' ),
-		'60' => array( 'typeName' => 'Ångtåg', 'serviceNumber' => '74' ),
-		'96' => array( 'typeName' => 'Dieseltåg', 'serviceNumber' => '64' ),
+		'71' => array(
+			'typeName' => 'Dieseltåg',
+			'serviceNumber' => '61',
+		),
+		'63' => array(
+			'typeName' => 'Rälsbuss',
+			'serviceNumber' => '97',
+		),
+		'60' => array(
+			'typeName' => 'Ångtåg',
+			'serviceNumber' => '74',
+		),
+		'96' => array(
+			'typeName' => 'Dieseltåg',
+			'serviceNumber' => '64',
+		),
 	);
 
 	$cells = array();
@@ -289,4 +301,3 @@ function MRT_timetable_vehicle_json( string $type_name, string $service_number, 
 		'detail'        => $detail,
 	);
 }
-

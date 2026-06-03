@@ -20,15 +20,24 @@ function MRT_csv_validate_package( array $package, ?array $existing_codes = null
 	$errors = array();
 	MRT_csv_validate_manifest( $package, $errors );
 	if ( $errors !== array() ) {
-		return array( 'valid' => false, 'errors' => $errors );
+		return array(
+			'valid' => false,
+			'errors' => $errors,
+		);
 	}
 	$resolved = MRT_csv_resolve_package_codes( $package, $errors );
 	if ( $errors !== array() ) {
-		return array( 'valid' => false, 'errors' => $errors );
+		return array(
+			'valid' => false,
+			'errors' => $errors,
+		);
 	}
 	MRT_csv_validate_references( $resolved, $package, $existing_codes, $errors );
 	MRT_csv_validate_stoptimes( $resolved, $errors );
-	return array( 'valid' => $errors === array(), 'errors' => $errors );
+	return array(
+		'valid' => $errors === array(),
+		'errors' => $errors,
+	);
 }
 
 /**

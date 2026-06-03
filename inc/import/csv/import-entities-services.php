@@ -33,7 +33,12 @@ function MRT_csv_import_timetables( array $files, array &$maps ): int {
 				)
 			);
 		} else {
-			wp_update_post( array( 'ID' => $id, 'post_title' => $row['title'] ) );
+			wp_update_post(
+				array(
+					'ID' => $id,
+					'post_title' => $row['title'],
+				)
+			);
 		}
 		if ( ! $id || $id instanceof WP_Error ) {
 			continue;
@@ -77,7 +82,12 @@ function MRT_csv_import_services( array $files, array &$maps ): int {
 				)
 			);
 		} else {
-			wp_update_post( array( 'ID' => $id, 'post_title' => $title ) );
+			wp_update_post(
+				array(
+					'ID' => $id,
+					'post_title' => $title,
+				)
+			);
 			MRT_csv_clear_service_stoptimes( (int) $id );
 		}
 		if ( ! $id || $id instanceof WP_Error ) {

@@ -62,6 +62,7 @@ function MRT_components_demo_admin_set_title(): void {
 		return;
 	}
 	global $title;
+	// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Sets admin screen title for component demo page.
 	$title = __( 'Komponentdemosida', 'museum-railway-timetable' );
 }
 

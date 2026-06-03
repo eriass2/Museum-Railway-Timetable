@@ -99,4 +99,3 @@ function MRT_timetable_branch_group_to_json( array $group, string $dateYmd ): ar
 	}
 	return $result;
 }
-

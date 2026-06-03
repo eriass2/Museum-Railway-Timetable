@@ -78,8 +78,9 @@ function MRT_journey_multi_leg_service_label( array $item, array $legs ) {
 		}
 	}
 	if ( count( $legs ) > 2 ) {
-		$parts = array();
-		for ( $i = 0; $i < count( $legs ); $i++ ) {
+		$parts     = array();
+		$leg_count = count( $legs );
+		for ( $i = 0; $i < $leg_count; $i++ ) {
 			if ( $i > 0 ) {
 				$hub_id = (int) ( $legs[ $i - 1 ]['to_station_id'] ?? 0 );
 				$hub    = $hub_id > 0 ? get_the_title( $hub_id ) : '';

@@ -17,7 +17,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_csv_open_package( string $path ) {
 	$path = rtrim( $path, '/\\' );
 	if ( is_dir( $path ) ) {
-		return array( 'dir' => $path, 'cleanup' => false );
+		return array(
+			'dir' => $path,
+			'cleanup' => false,
+		);
 	}
 	if ( is_file( $path ) ) {
 		return MRT_csv_extract_zip( $path );
@@ -48,7 +51,10 @@ function MRT_csv_extract_zip( string $zip_path ) {
 		MRT_csv_remove_dir( $dir );
 		return new WP_Error( 'mrt_csv_zip', 'manifest.json not found in zip.' );
 	}
-	return array( 'dir' => $root, 'cleanup' => true );
+	return array(
+		'dir' => $root,
+		'cleanup' => true,
+	);
 }
 
 /**

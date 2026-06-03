@@ -244,7 +244,10 @@ function MRT_csv_export_settings(): array {
 		if ( is_bool( $val ) ) {
 			$val = $val ? '1' : '0';
 		}
-		$rows[] = array( 'key' => $key, 'value' => (string) $val );
+		$rows[] = array(
+			'key' => $key,
+			'value' => (string) $val,
+		);
 	}
 	return $rows;
 }

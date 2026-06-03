@@ -50,7 +50,12 @@ function MRT_csv_run_import( array $package ): array {
 		'timetables' => 0,
 		'services'   => 0,
 	);
-	$maps     = array( 'station' => array(), 'route' => array(), 'timetable' => array(), 'service' => array() );
+	$maps     = array(
+		'station' => array(),
+		'route' => array(),
+		'timetable' => array(),
+		'service' => array(),
+	);
 
 	if ( in_array( 'stations', $includes, true ) ) {
 		$stats['stations'] = MRT_csv_import_stations( $files, $maps );
