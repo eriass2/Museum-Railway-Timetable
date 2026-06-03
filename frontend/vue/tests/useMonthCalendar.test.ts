@@ -9,6 +9,7 @@ vi.mock('../src/api/mrtRest', () => ({
 import { mrtRestRequest } from '../src/api/mrtRest';
 
 const baseConfig: MonthVueConfig = {
+  app: 'month',
   restUrl: 'http://example.test/wp-json/museum-railway-timetable/v1/',
   restNonce: 'nonce',
   year: 2026,

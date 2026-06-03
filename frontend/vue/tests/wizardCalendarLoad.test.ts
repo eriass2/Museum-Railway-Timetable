@@ -2,6 +2,8 @@ import { computed, ref } from 'vue';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createWizardStore } from '../src/wizard/store/createWizardStore';
 import type { WizardVueConfig } from '../src/config/types';
+import type { CalendarDayInfo, CalendarDayStatus } from '../src/shared/calendarDay';
+import type { WizardCfg } from '../src/wizard/utils/wizardCfgTypes';
 import {
   loadWizardCalendarMonth,
   pickWizardCalendarDate,
@@ -9,15 +11,18 @@ import {
 } from '../src/wizard/composables/wizardCalendarLoad';
 
 const config: WizardVueConfig = {
+  app: 'wizard',
   restUrl: 'http://example.test/wp-json/museum-railway-timetable/v1/',
   restNonce: 'nonce',
   startOfWeek: 1,
+  wizard: {
+    monthNames: ['januari', 'februari', 'mars', 'april', 'maj', 'juni'],
+  },
   strings: {
     errorGeneric: 'Något gick fel.',
     dayDateOk: 'Datum %s, trafik finns',
     dayDateTraffic: 'Datum %s, ingen match',
     dayDateNone: 'Datum %s, ingen trafik',
-    monthNames: ['januari', 'februari', 'mars', 'april', 'maj', 'juni'],
   },
 };
 
@@ -35,12 +40,14 @@ describe('wizardCalendarLoad', () => {
   });
 
   it('wizardCalendarDayAria labels bookable days', () => {
-    const cfg = computed(() => ({
-      monthNames: config.strings?.monthNames ?? [],
-      dayDateOk: config.strings?.dayDateOk ?? '',
-      dayDateTraffic: config.strings?.dayDateTraffic ?? '',
-      dayDateNone: config.strings?.dayDateNone ?? '',
-    }));
+    const cfg = computed(
+      (): WizardCfg => ({
+        monthNames: ['januari', 'februari', 'mars', 'april', 'maj', 'juni'],
+        dayDateOk: config.strings?.dayDateOk ?? '',
+        dayDateTraffic: config.strings?.dayDateTraffic ?? '',
+        dayDateNone: config.strings?.dayDateNone ?? '',
+      }),
+    );
     const aria = wizardCalendarDayAria('2026-06-04', 'ok', cfg);
 
     expect(aria).toContain('juni');
@@ -51,7 +58,7 @@ describe('wizardCalendarLoad', () => {
     const { store } = createWizardStore(config);
     store.fromId = 1;
     store.toId = 2;
-    const daysMap = ref<Record<string, unknown>>({});
+    const daysMap = ref<Record<string, CalendarDayInfo | CalendarDayStatus>>({});
     const run = vi.fn().mockResolvedValue({
       success: true,
       data: {
