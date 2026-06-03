@@ -211,6 +211,8 @@ function MRT_zones_for_journey_legs( array $legs, ?array $station_zones_map = nu
 /**
  * Resolve fare zone count for wizard pricing (route-based when legs given).
  *
+ * Tur och retur uses the outbound corridor (A→B); return leg path must not raise the band.
+ *
  * @param array<int, array<string, mixed>>|null $outbound_legs Outbound legs.
  * @param array<int, array<string, mixed>>|null $inbound_legs  Return legs (when return trip).
  */
@@ -221,11 +223,10 @@ function MRT_zones_for_trip_price(
 	?array $inbound_legs = null
 ): int {
 	if ( $outbound_legs !== null && $outbound_legs !== array() ) {
-		$zones = MRT_zones_for_journey_legs( $outbound_legs );
-		if ( $inbound_legs !== null && $inbound_legs !== array() ) {
-			$zones = max( $zones, MRT_zones_for_journey_legs( $inbound_legs ) );
-		}
-		return MRT_pricing_zone_count( $zones );
+		return MRT_pricing_zone_count( MRT_zones_for_journey_legs( $outbound_legs ) );
+	}
+	if ( $inbound_legs !== null && $inbound_legs !== array() ) {
+		return MRT_pricing_zone_count( MRT_zones_for_journey_legs( $inbound_legs ) );
 	}
 	return MRT_zones_for_station_pair_ids( $from_id, $to_id );
 }

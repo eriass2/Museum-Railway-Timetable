@@ -117,7 +117,7 @@ final class PriceZonesJourneyTest extends TestCase {
 		self::assertSame( 2, MRT_zones_for_station_pair( 1, 4, $this->sample_zone_map() ) );
 	}
 
-	public function test_zones_for_trip_price_uses_legs_and_max_on_return(): void {
+	public function test_zones_for_trip_price_uses_outbound_zones_on_return(): void {
 		$this->mrt_use_journey_fixture(
 			array(
 				10 => array(
@@ -155,9 +155,33 @@ final class PriceZonesJourneyTest extends TestCase {
 			MRT_zones_for_trip_price( 1, 3, $outbound, null )
 		);
 		self::assertSame(
-			2,
+			1,
 			MRT_zones_for_trip_price( 1, 6, $outbound, $inbound )
 		);
+	}
+
+	public function test_zones_for_trip_price_uses_inbound_when_outbound_legs_missing(): void {
+		$this->mrt_use_journey_fixture(
+			array(
+				11 => array(
+					$this->mrt_stop( 11, 1, 1, null, '15:00' ),
+					$this->mrt_stop( 11, 2, 2, '15:10', '15:12' ),
+					$this->mrt_stop( 11, 6, 3, '15:40', null ),
+				),
+			),
+			array( 900 => array( '2026-06-01' ) )
+		);
+		$this->boot_station_zone_meta();
+
+		$inbound = array(
+			array(
+				'service_id'      => 11,
+				'from_station_id' => 1,
+				'to_station_id'   => 6,
+			),
+		);
+
+		self::assertSame( 2, MRT_zones_for_trip_price( 1, 6, null, $inbound ) );
 	}
 
 	public function test_zones_for_journey_legs_uppsala_to_skolsta_is_one_zone(): void {

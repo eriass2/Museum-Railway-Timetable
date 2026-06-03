@@ -81,7 +81,11 @@ const { loading: pricesLoading, zones, trip: priceData, day: dayPrices } = useTr
 );
 
 const priceLabels = computed(() =>
-  priceTableLabelsFromCfg(cfg.value, zones.value, !priceData.value?.isAfternoonReturn),
+  priceTableLabelsFromCfg(
+    cfg.value,
+    zones.value,
+    store.tripType === 'return' || !priceData.value?.isAfternoonReturn,
+  ),
 );
 
 const tripTypeLabel = computed(() =>

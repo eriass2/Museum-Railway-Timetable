@@ -22,7 +22,7 @@ Endast **Gunsta** och **Almunge** har två zoner (gränsstationer mellan prisban
 
 - **PHP-defaults:** `MRT_default_station_price_zones_by_title()` i `inc/domain/pricing/prices.php`
 - **Per station (meta/CSV):** `price_zones` — se [CSV_FORMAT.md](CSV_FORMAT.md)
-- **Zonberäkning för resa:** `inc/domain/pricing/price-rules.php` — lägsta giltiga zontal längs betjänade hållplatser
+- **Zonberäkning för resa:** `inc/domain/pricing/price-rules.php` — lägsta giltiga zontal längs betjänade hållplatser på **utresan**. Tur och retur använder samma zonband som utresan (A→B); återresan höjer inte zontalet.
 
 ## CSV-exempel (`stations.csv`)
 
