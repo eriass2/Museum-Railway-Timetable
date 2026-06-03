@@ -727,6 +727,10 @@ if ( ! class_exists( 'WP_Query' ) ) {
             }
             $this->posts = array();
         }
+
+        public function have_posts(): bool {
+            return count( $this->posts ) > 0;
+        }
     }
 }
 
