@@ -45,7 +45,7 @@ final class StationZonesTest extends TestCase {
 				'post_type'  => MRT_POST_TYPE_STATION,
 			),
 		);
-		self::assertSame( array( 1, 2 ), MRT_get_station_price_zones( 7 ) );
+		self::assertSame( array( 1 ), MRT_get_station_price_zones( 7 ) );
 		self::assertFalse( MRT_station_price_zones_is_custom( 7 ) );
 	}
 
@@ -81,6 +81,23 @@ final class StationZonesTest extends TestCase {
 		$map = MRT_get_station_price_zones_map();
 
 		self::assertSame( array( 2, 3 ), $map[5] );
-		self::assertSame( array( 1, 2 ), $map[7] );
+		self::assertSame( array( 1 ), $map[7] );
+	}
+
+	public function test_default_zones_only_gunsta_and_almunge_span_two_bands(): void {
+		$defaults = MRT_default_station_price_zones_by_title();
+		$dual     = array();
+		foreach ( $defaults as $title => $zones ) {
+			if ( count( $zones ) > 1 ) {
+				$dual[ $title ] = $zones;
+			}
+		}
+		self::assertSame(
+			array(
+				'Gunsta'  => array( 1, 2 ),
+				'Almunge' => array( 2, 3 ),
+			),
+			$dual
+		);
 	}
 }

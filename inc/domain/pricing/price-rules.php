@@ -61,7 +61,7 @@ function MRT_zones_for_station_pair( int $from_id, int $to_id, array $station_zo
 	}
 	foreach ( $from_zones as $from_zone ) {
 		foreach ( $to_zones as $to_zone ) {
-			$span = abs( (int) $to_zone - (int) $from_zone ) + 1;
+			$span = MRT_zones_pair_span( (int) $from_zone, (int) $to_zone );
 			$best = min( $best, $span );
 		}
 	}
@@ -69,12 +69,19 @@ function MRT_zones_for_station_pair( int $from_id, int $to_id, array $station_zo
 }
 
 /**
- * Count distinct fare zones along a station path (union of each stop's zones).
- *
- * @param int[]               $station_ids       Ordered station post IDs on the journey.
- * @param array<int, int[]>   $station_zones_map Station post ID => zone numbers.
+ * Fare zone span between two zone numbers (1 = same band, 2 = one step, …).
  */
-function MRT_zones_for_station_path( array $station_ids, array $station_zones_map ): int {
+function MRT_zones_pair_span( int $from_zone, int $to_zone ): int {
+	return max( 1, abs( $to_zone - $from_zone ) );
+}
+
+/**
+ * Distinct price-zone numbers assigned to stops on a path.
+ *
+ * @param int[]             $station_ids
+ * @param array<int, int[]> $station_zones_map
+ */
+function MRT_zones_distinct_on_path( array $station_ids, array $station_zones_map ): int {
 	$seen = array();
 	foreach ( $station_ids as $station_id ) {
 		$sid = (int) $station_id;
@@ -85,10 +92,77 @@ function MRT_zones_for_station_path( array $station_ids, array $station_zones_ma
 			$seen[ (int) $zone ] = true;
 		}
 	}
-	if ( $seen === array() ) {
+	return count( $seen );
+}
+
+/**
+ * Minimum zone span when each stop may pick any of its assigned zones.
+ *
+ * @param int[]             $station_ids
+ * @param array<int, int[]> $station_zones_map
+ */
+function MRT_zones_min_range_on_path( array $station_ids, array $station_zones_map ): int {
+	if ( $station_ids === array() ) {
+		return 0;
+	}
+	$first_id    = (int) $station_ids[0];
+	$first_zones = $station_zones_map[ $first_id ] ?? array();
+	if ( $first_zones === array() ) {
+		return 0;
+	}
+	/** @var array<string, array{min: int, max: int}> $states */
+	$states = array();
+	foreach ( $first_zones as $zone ) {
+		$zone = (int) $zone;
+		$states[ $zone . ',' . $zone ] = array(
+			'min' => $zone,
+			'max' => $zone,
+		);
+	}
+	for ( $i = 1, $count = count( $station_ids ); $i < $count; $i++ ) {
+		$sid          = (int) $station_ids[ $i ];
+		$zone_options = $station_zones_map[ $sid ] ?? array();
+		if ( $zone_options === array() ) {
+			return 0;
+		}
+		$next = array();
+		foreach ( $states as $state ) {
+			foreach ( $zone_options as $zone ) {
+				$zone   = (int) $zone;
+				$min_z  = min( $state['min'], $zone );
+				$max_z  = max( $state['max'], $zone );
+				$key    = $min_z . ',' . $max_z;
+				$next[ $key ] = array(
+					'min' => $min_z,
+					'max' => $max_z,
+				);
+			}
+		}
+		$states = $next;
+	}
+	$best = MRT_price_zone_cap();
+	foreach ( $states as $state ) {
+		$best = min( $best, MRT_zones_pair_span( $state['min'], $state['max'] ) );
+	}
+	return $best;
+}
+
+/**
+ * Lowest valid fare zone count along a served stop path.
+ *
+ * @param int[]             $station_ids       Ordered station post IDs on the journey.
+ * @param array<int, int[]> $station_zones_map Station post ID => zone numbers.
+ */
+function MRT_zones_for_station_path( array $station_ids, array $station_zones_map ): int {
+	$distinct = MRT_zones_distinct_on_path( $station_ids, $station_zones_map );
+	if ( $distinct === 0 ) {
 		return MRT_price_zone_cap();
 	}
-	return MRT_pricing_zone_count( count( $seen ) );
+	$range = MRT_zones_min_range_on_path( $station_ids, $station_zones_map );
+	if ( $range <= 0 ) {
+		return MRT_price_zone_cap();
+	}
+	return MRT_pricing_zone_count( min( $range, $distinct ) );
 }
 
 /**

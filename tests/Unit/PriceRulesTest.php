@@ -46,7 +46,7 @@ final class PriceRulesTest extends TestCase {
 			1 => array( 1 ),
 			2 => array( 3 ),
 		);
-		self::assertSame( 3, MRT_zones_for_station_pair( 1, 2, $map ) );
+		self::assertSame( 2, MRT_zones_for_station_pair( 1, 2, $map ) );
 	}
 
 	public function test_zones_for_station_pair_caps_at_three(): void {
@@ -64,9 +64,9 @@ final class PriceRulesTest extends TestCase {
 			3 => array( 2 ),
 			4 => array( 4 ),
 		);
-		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 3 ), $map ) );
+		self::assertSame( 1, MRT_zones_for_station_path( array( 1, 3 ), $map ) );
 		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 4 ), $map ) );
-		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 2, 3 ), $map ) );
+		self::assertSame( 1, MRT_zones_for_station_path( array( 1, 2, 3 ), $map ) );
 	}
 
 	public function test_zones_for_station_path_returns_cap_when_no_zones(): void {

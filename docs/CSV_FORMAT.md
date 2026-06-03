@@ -129,7 +129,7 @@ Identifieras via `slug` (WordPress taxonomy). Ingen separat `train_type_code`.
 | `bus_stop_marker` | nej | 0\|1 | Asterisk i tidtabell (busshållplats) |
 | `lat` | nej | float | |
 | `lng` | nej | float | |
-| `price_zones` | nej | string | Priszoner `1`–`4`, kommaseparerade (max två). Tom = titel-default eller inga zoner. Gränsstationer t.ex. `1,2`. |
+| `price_zones` | nej | string | Priszoner `1`–`4`, kommaseparerade (max två). Tom = titel-default. **Gränsstationer:** endast Gunsta (`1,2`) och Almunge (`2,3`) — se [PRICE_ZONES.md](PRICE_ZONES.md). |
 
 ### 4.2 `train_types.csv`
 

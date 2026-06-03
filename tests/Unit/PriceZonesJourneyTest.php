@@ -30,7 +30,7 @@ final class PriceZonesJourneyTest extends TestCase {
 			1 => array( 1 ),
 			2 => array( 1, 2 ),
 			3 => array( 2 ),
-			4 => array( 4 ),
+			4 => array( 3 ),
 			6 => array( 3 ),
 		);
 	}
@@ -70,7 +70,7 @@ final class PriceZonesJourneyTest extends TestCase {
 		self::assertSame( array( 1, 2, 3 ), MRT_collect_journey_leg_station_ids( $legs ) );
 	}
 
-	public function test_zones_for_journey_legs_counts_stops_not_endpoint_span(): void {
+	public function test_zones_for_journey_legs_uses_lowest_valid_path_zones(): void {
 		$this->mrt_use_journey_fixture(
 			array(
 				10 => array(
@@ -90,8 +90,8 @@ final class PriceZonesJourneyTest extends TestCase {
 			),
 		);
 
-		self::assertSame( 2, MRT_zones_for_journey_legs( $legs, $this->sample_zone_map() ) );
-		self::assertSame( 3, MRT_zones_for_station_pair( 1, 4, $this->sample_zone_map() ) );
+		self::assertSame( 1, MRT_zones_for_journey_legs( $legs, $this->sample_zone_map() ) );
+		self::assertSame( 2, MRT_zones_for_station_pair( 1, 4, $this->sample_zone_map() ) );
 	}
 
 	public function test_zones_for_journey_legs_skipped_stops_reduce_zone_count(): void {
@@ -114,7 +114,7 @@ final class PriceZonesJourneyTest extends TestCase {
 		);
 
 		self::assertSame( 2, MRT_zones_for_journey_legs( $legs, $this->sample_zone_map() ) );
-		self::assertSame( 3, MRT_zones_for_station_pair( 1, 4, $this->sample_zone_map() ) );
+		self::assertSame( 2, MRT_zones_for_station_pair( 1, 4, $this->sample_zone_map() ) );
 	}
 
 	public function test_zones_for_trip_price_uses_legs_and_max_on_return(): void {
@@ -151,13 +151,44 @@ final class PriceZonesJourneyTest extends TestCase {
 		);
 
 		self::assertSame(
-			2,
+			1,
 			MRT_zones_for_trip_price( 1, 3, $outbound, null )
 		);
 		self::assertSame(
-			3,
+			2,
 			MRT_zones_for_trip_price( 1, 6, $outbound, $inbound )
 		);
+	}
+
+	public function test_zones_for_journey_legs_uppsala_to_skolsta_is_one_zone(): void {
+		$this->mrt_use_journey_fixture(
+			array(
+				71 => array(
+					$this->mrt_stop( 71, 1, 1, null, '10:00' ),
+					$this->mrt_stop( 71, 5, 2, '10:03', '10:03' ),
+					$this->mrt_stop( 71, 2, 3, '10:05', '10:05' ),
+					$this->mrt_stop( 71, 3, 4, '10:09', null ),
+				),
+			),
+			array( 900 => array( '2026-06-06' ) )
+		);
+
+		$zone_map = array(
+			1 => array( 1 ),
+			5 => array( 1 ),
+			2 => array( 1 ),
+			3 => array( 1 ),
+		);
+
+		$legs = array(
+			array(
+				'service_id'      => 71,
+				'from_station_id' => 1,
+				'to_station_id'   => 3,
+			),
+		);
+
+		self::assertSame( 1, MRT_zones_for_journey_legs( $legs, $zone_map ) );
 	}
 
 	public function test_trip_prices_response_uses_path_zones_when_legs_given(): void {

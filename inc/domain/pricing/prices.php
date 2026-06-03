@@ -150,7 +150,8 @@ function MRT_price_matrix_for_zone( array $matrix, int $zones ): array {
 }
 
 /**
- * Default station zones. Boundary stations are listed in both neighboring zones.
+ * Default station zones per Lennakatten taxa 2026 (see docs/PRICE_ZONES.md).
+ * Only Gunsta and Almunge span two zones (boundary stations).
  *
  * @return array<string, int[]>
  */
@@ -158,20 +159,20 @@ function MRT_default_station_price_zones_by_title(): array {
 	return array(
 		'Uppsala Östra'   => array( 1 ),
 		'Fyrislund'       => array( 1 ),
-		'Årsta'           => array( 1, 2 ),
-		'Skölsta'         => array( 2 ),
-		'Bärby'           => array( 2 ),
-		'Gunsta'          => array( 2, 3 ),
-		'Marielund'       => array( 3 ),
-		'Lövstahagen'     => array( 3 ),
-		'Selknä'          => array( 3 ),
-		'Löt'             => array( 3 ),
-		'Länna'           => array( 3 ),
-		'Fjällnora'       => array( 3 ),
-		'Almunge'         => array( 3, 4 ),
-		'Moga'            => array( 4 ),
-		'Faringe'         => array( 4 ),
-		'Linnés Hammarby' => array( 4 ),
+		'Årsta'           => array( 1 ),
+		'Skölsta'         => array( 1 ),
+		'Bärby'           => array( 1 ),
+		'Gunsta'          => array( 1, 2 ),
+		'Marielund'       => array( 2 ),
+		'Lövstahagen'     => array( 2 ),
+		'Selknä'          => array( 2 ),
+		'Löt'             => array( 2 ),
+		'Länna'           => array( 2 ),
+		'Fjällnora'       => array( 2 ),
+		'Almunge'         => array( 2, 3 ),
+		'Moga'            => array( 3 ),
+		'Faringe'         => array( 3 ),
+		'Linnés Hammarby' => array( 3 ),
 	);
 }
 
