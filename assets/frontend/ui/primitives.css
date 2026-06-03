@@ -54,3 +54,13 @@
 .mrt-code-block {
     overflow-x: auto;
 }
+
+/* Reusable focus ring for interactive elements using shared primitives. */
+.mrt-focus-ring:focus {
+    outline: none;
+}
+
+.mrt-focus-ring:focus-visible {
+    outline: 3px solid var(--mrt-color-focus-ring);
+    outline-offset: 2px;
+}

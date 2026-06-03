@@ -18,13 +18,13 @@ require_once MRT_PATH . 'inc/domain/journey/engine/graph.php';
  * Build one leg payload from a graph edge.
  *
  * @param array{service_id: int, to_station_id: int, departure: string, arrival: string, connection: array<string, mixed>} $edge
- * @return array<string, mixed>|null
+ * @return array<string, mixed>
  */
 function MRT_journey_engine_leg_from_edge(
 	array $edge,
 	int $from_station_id,
 	string $dateYmd
-): ?array {
+): array {
 	$leg = MRT_journey_build_leg_segment(
 		(int) $edge['service_id'],
 		$from_station_id,
@@ -127,20 +127,24 @@ function MRT_journey_engine_find_direct(
 }
 
 /**
+ * Append a journey result when not already seen.
+ *
  * @param array<int, array<string, mixed>> $results
  * @param array<string, bool>              $seen
+ * @return array{0: array<int, array<string, mixed>>, 1: array<string, bool>}
  */
-function MRT_journey_engine_store_result( array &$results, array &$seen, array $result ): void {
+function MRT_journey_engine_append_result( array $results, array $seen, array $result ): array {
 	$legs = $result['legs'] ?? array();
 	if ( ! is_array( $legs ) || $legs === array() ) {
-		return;
+		return array( $results, $seen );
 	}
 	$key = MRT_journey_engine_dedupe_key( $legs );
 	if ( isset( $seen[ $key ] ) ) {
-		return;
+		return array( $results, $seen );
 	}
-	$seen[ $key ] = true;
-	$results[]    = $result;
+	$seen[ $key ]       = true;
+	$results[]          = $result;
+	return array( $results, $seen );
 }
 
 /**
@@ -148,7 +152,9 @@ function MRT_journey_engine_store_result( array &$results, array &$seen, array $
  *
  * @param array<int, array<string, mixed>> $queue
  * @param array<int, array<string, mixed>> $results
+ * @param-out array<int, array<string, mixed>> $results
  * @param array<string, bool>              $seen
+ * @param-out array<string, bool>          $seen
  * @param array{station: int, arrival: string, legs: array<int, array<string, mixed>>, last_service_id: int} $state
  */
 function MRT_journey_engine_extend_state(
@@ -191,7 +197,9 @@ function MRT_journey_engine_extend_state(
  *
  * @param array<int, array<string, mixed>> $queue
  * @param array<int, array<string, mixed>> $results
+ * @param-out array<int, array<string, mixed>> $results
  * @param array<string, bool>              $seen
+ * @param-out array<string, bool>          $seen
  * @param array{station: int, arrival: string, legs: array<int, array<string, mixed>>, last_service_id: int} $state
  * @param array{service_id: int, to_station_id: int, departure: string, arrival: string, connection: array<string, mixed>} $edge
  */
@@ -209,13 +217,14 @@ function MRT_journey_engine_apply_edge(
 		return;
 	}
 	$leg = MRT_journey_engine_leg_from_edge( $edge, (int) $state['station'], $dateYmd );
-	if ( $leg === null ) {
-		return;
-	}
 	$new_legs = array_merge( $state['legs'], array( $leg ) );
 	$to_id    = (int) $edge['to_station_id'];
 	if ( $to_id === $goal_station_id ) {
-		MRT_journey_engine_store_result( $results, $seen, MRT_journey_engine_build_result( $new_legs ) );
+		list( $results, $seen ) = MRT_journey_engine_append_result(
+			$results,
+			$seen,
+			MRT_journey_engine_build_result( $new_legs )
+		);
 		return;
 	}
 	$transfers = count( $new_legs ) - 1;
@@ -246,7 +255,9 @@ function MRT_journey_engine_find_with_transfers(
 	if ( $max_transfers <= 0 ) {
 		return array();
 	}
+	/** @var array<int, array<string, mixed>> $results */
 	$results = array();
+	/** @var array<string, bool> $seen */
 	$seen    = array();
 	$queue   = array();
 	foreach ( MRT_journey_graph_next_legs( $from_station_id, $to_station_id, $dateYmd ) as $edge ) {
@@ -284,7 +295,9 @@ function MRT_journey_engine_find_with_transfers(
  *
  * @param array<int, array<string, mixed>> $queue
  * @param array<int, array<string, mixed>> $results
+ * @param-out array<int, array<string, mixed>> $results
  * @param array<string, bool>              $seen
+ * @param-out array<string, bool>          $seen
  * @param array{service_id: int, to_station_id: int, departure: string, arrival: string, connection: array<string, mixed>} $edge
  */
 function MRT_journey_engine_apply_first_edge(
@@ -299,14 +312,15 @@ function MRT_journey_engine_apply_first_edge(
 	bool $emit_single_leg = false
 ): void {
 	$leg = MRT_journey_engine_leg_from_edge( $edge, $from_station_id, $dateYmd );
-	if ( $leg === null ) {
-		return;
-	}
 	$new_legs = array( $leg );
 	$to_id    = (int) $edge['to_station_id'];
 	if ( $to_id === $goal_station_id ) {
 		if ( $emit_single_leg ) {
-			MRT_journey_engine_store_result( $results, $seen, MRT_journey_engine_build_result( $new_legs ) );
+			list( $results, $seen ) = MRT_journey_engine_append_result(
+				$results,
+				$seen,
+				MRT_journey_engine_build_result( $new_legs )
+			);
 		}
 		return;
 	}
@@ -342,15 +356,17 @@ function MRT_journey_engine_find(
 	}
 	$max   = $max_transfers ?? MRT_journey_engine_max_transfers();
 	$min   = $min_transfer_minutes > 0 ? (int) $min_transfer_minutes : MRT_journey_min_transfer_minutes();
+	/** @var array<int, array<string, mixed>> $out */
 	$out   = array();
+	/** @var array<string, bool> $seen */
 	$seen  = array();
 	if ( $include_direct ) {
 		foreach ( MRT_journey_engine_find_direct( $from_station_id, $to_station_id, $dateYmd ) as $direct ) {
-			MRT_journey_engine_store_result( $out, $seen, $direct );
+			list( $out, $seen ) = MRT_journey_engine_append_result( $out, $seen, $direct );
 		}
 	}
 	foreach ( MRT_journey_engine_find_with_transfers( $from_station_id, $to_station_id, $dateYmd, $min, $max, false ) as $transfer ) {
-		MRT_journey_engine_store_result( $out, $seen, $transfer );
+		list( $out, $seen ) = MRT_journey_engine_append_result( $out, $seen, $transfer );
 	}
 	return $out;
 }
