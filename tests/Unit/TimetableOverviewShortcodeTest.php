@@ -19,14 +19,7 @@ if ( ! function_exists( 'MRT_render_vue_mount' ) ) {
 	}
 }
 
-if ( ! function_exists( 'MRT_vue_overview_config' ) ) {
-	function MRT_vue_overview_config( int $timetable_id ): array {
-		return array(
-			'timetableId' => $timetable_id,
-		);
-	}
-}
-
+require_once ABSPATH . 'inc/public/vue-shortcode-config.php';
 require_once ABSPATH . 'inc/public/timetable-overview/shortcode.php';
 
 final class TimetableOverviewShortcodeTest extends TestCase {
