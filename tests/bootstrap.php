@@ -16,6 +16,15 @@ define('MRT_POST_TYPE_SERVICE', 'mrt_service');
 define('MRT_POST_TYPE_TIMETABLE', 'mrt_timetable');
 define('MRT_POST_TYPE_STATION', 'mrt_station');
 define('MRT_POST_TYPE_ROUTE', 'mrt_route');
+define(
+	'MRT_POST_TYPES',
+	array(
+		MRT_POST_TYPE_STATION,
+		MRT_POST_TYPE_ROUTE,
+		MRT_POST_TYPE_TIMETABLE,
+		MRT_POST_TYPE_SERVICE,
+	)
+);
 
 require_once __DIR__ . '/wp-stubs.php';
 require_once __DIR__ . '/JourneyTestFixtures.php';
@@ -63,6 +72,15 @@ if (!isset($GLOBALS['wpdb'])) {
         public function delete($table, $data, $where_format = null, $where = null) {
             unset($table, $data, $where_format, $where);
             return 1;
+        }
+
+        /**
+         * @param string $query
+         * @return bool|int
+         */
+        public function query($query) {
+            unset($query);
+            return true;
         }
     };
 }

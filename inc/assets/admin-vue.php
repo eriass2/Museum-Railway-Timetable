@@ -287,6 +287,18 @@ function MRT_admin_vue_l10n_import_export(): array {
 		'importExportExportFailed'     => __( 'Export misslyckades', 'museum-railway-timetable' ),
 		'importExportImportFailed'     => __( 'Import misslyckades', 'museum-railway-timetable' ),
 		'importExportImportSuccess'    => __( 'Import klar (%1$s). %2$s', 'museum-railway-timetable' ),
+		'importExportClearTitle'       => __( 'Radera all data', 'museum-railway-timetable' ),
+		'importExportClearHint'        => __(
+			'Tar bort alla stationer, rutter, tidtabeller, turer, stopptider, tågtyper, inställningar och priser. Exportera först om du vill behålla en kopia. Detta går inte att ångra.',
+			'museum-railway-timetable'
+		),
+		'importExportClearMessage'     => __(
+			'All plugin-data raderas permanent. Fortsätta?',
+			'museum-railway-timetable'
+		),
+		'importExportClearConfirm'     => __( 'Radera allt', 'museum-railway-timetable' ),
+		'importExportClearButton'      => __( 'Radera all data', 'museum-railway-timetable' ),
+		'importExportClearSuccess'     => __( 'All data har raderats.', 'museum-railway-timetable' ),
 	);
 }
 

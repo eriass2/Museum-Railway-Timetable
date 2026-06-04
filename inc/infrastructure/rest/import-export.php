@@ -36,6 +36,34 @@ function MRT_rest_register_import_export_routes(): void {
 			'permission_callback' => 'MRT_rest_can_manage',
 		)
 	);
+
+	register_rest_route(
+		MRT_REST_NAMESPACE,
+		'/data/clear',
+		array(
+			'methods'             => WP_REST_Server::CREATABLE,
+			'callback'            => 'MRT_rest_clear_plugin_data_handler',
+			'permission_callback' => 'MRT_rest_can_manage',
+		)
+	);
+}
+
+/**
+ * Delete all plugin-owned timetable data (stations, routes, services, settings, prices).
+ *
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_clear_plugin_data_handler( WP_REST_Request $request ) {
+	unset( $request );
+	if ( ! function_exists( 'MRT_clear_all_plugin_data' ) ) {
+		return new WP_Error(
+			'unavailable',
+			__( 'Clear data is not available.', 'museum-railway-timetable' ),
+			array( 'status' => 500 )
+		);
+	}
+	MRT_clear_all_plugin_data();
+	return rest_ensure_response( array( 'cleared' => true ) );
 }
 
 /**

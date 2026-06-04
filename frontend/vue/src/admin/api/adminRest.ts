@@ -35,7 +35,7 @@ export {
   deleteTrainType,
 } from './adminRestSettings';
 export type { SettingsPayload, PricesPayload } from './adminRestSettings';
-export { exportCsv, importCsv } from './adminRestImport';
+export { exportCsv, importCsv, clearAllData } from './adminRestImport';
 export {
   devClearDatabase,
   devImportLennakatten,

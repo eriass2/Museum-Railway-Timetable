@@ -140,6 +140,19 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertSame( 'no_file', $result->get_error_code() );
 	}
 
+	public function test_clear_plugin_data_handler_clears_plugin_data(): void {
+		require_once ABSPATH . 'inc/admin/tools/clear-db.php';
+		require_once ABSPATH . 'inc/admin/tools/dev-cli.php';
+
+		$GLOBALS['mrt_test_get_posts'] = static fn (): array => array();
+
+		$response = MRT_rest_clear_plugin_data_handler( new WP_REST_Request( 'POST', '/data/clear' ) );
+		$data     = $response instanceof WP_REST_Response ? $response->get_data() : $response;
+
+		self::assertIsArray( $data );
+		self::assertTrue( $data['cleared'] ?? false );
+	}
+
 	public function test_get_dashboard_returns_payload_keys(): void {
 		$GLOBALS['mrt_test_get_posts'] = static fn (): array => array();
 		$GLOBALS['mrt_test_current_timestamp'] = strtotime( '2026-06-06 10:00:00 UTC' );

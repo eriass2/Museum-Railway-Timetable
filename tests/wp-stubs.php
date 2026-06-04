@@ -223,6 +223,24 @@ if (!function_exists('update_option')) {
     }
 }
 
+if (!function_exists('delete_option')) {
+    /**
+     * @param string $option
+     * @return bool
+     */
+    function delete_option($option) {
+        if (!isset($GLOBALS['mrt_test_options']) || !is_array($GLOBALS['mrt_test_options'])) {
+            return false;
+        }
+        if (!array_key_exists($option, $GLOBALS['mrt_test_options'])) {
+            return false;
+        }
+        unset($GLOBALS['mrt_test_options'][$option]);
+
+        return true;
+    }
+}
+
 if (!function_exists('get_post_meta')) {
     /**
      * Test overrides via $GLOBALS['mrt_test_post_meta'][ "{$id}|{$key}" ]

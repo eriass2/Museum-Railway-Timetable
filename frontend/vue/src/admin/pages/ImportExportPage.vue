@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { exportCsv, importCsv } from '../api/adminRest';
+import { clearAllData, exportCsv, importCsv } from '../api/adminRest';
+import { adminConfirm } from '../composables/adminConfirm';
 import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
@@ -64,6 +65,28 @@ async function onImport(ev: Event) {
     input.value = '';
   }
 }
+
+async function onClearAll() {
+  if (!cfg.canManage || loading.value) return;
+  const ok = await adminConfirm({
+    title: adminStr(cfg, 'importExportClearTitle'),
+    message: adminStr(cfg, 'importExportClearMessage'),
+    confirmLabel: adminStr(cfg, 'importExportClearConfirm'),
+    danger: true,
+  });
+  if (!ok) return;
+  loading.value = true;
+  error.value = '';
+  success.value = '';
+  try {
+    await clearAllData();
+    success.value = adminStr(cfg, 'importExportClearSuccess');
+  } catch (e) {
+    error.value = adminErrorMessage(cfg, e, 'genericError');
+  } finally {
+    loading.value = false;
+  }
+}
 </script>
 
 <template>
@@ -109,6 +132,19 @@ async function onImport(ev: Event) {
       <p>
         <input type="file" accept=".zip,application/zip" :disabled="loading" @change="onImport" />
       </p>
+
+      <h2>{{ adminStr(cfg, 'importExportClearTitle') }}</h2>
+      <p class="description">{{ adminStr(cfg, 'importExportClearHint') }}</p>
+      <AdminFormActions>
+        <MrtButton
+          context="admin"
+          variant="link-delete"
+          :disabled="loading"
+          @click="onClearAll"
+        >
+          {{ adminStr(cfg, 'importExportClearButton') }}
+        </MrtButton>
+      </AdminFormActions>
     </AdminPanel>
   </div>
 </template>

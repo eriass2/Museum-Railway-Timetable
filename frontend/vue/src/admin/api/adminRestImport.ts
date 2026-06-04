@@ -24,3 +24,7 @@ export function importCsv(file: File, mode: 'merge' | 'override') {
     body,
   );
 }
+
+export function clearAllData() {
+  return adminFetch<{ cleared: boolean }>('data/clear', { method: 'POST' });
+}
