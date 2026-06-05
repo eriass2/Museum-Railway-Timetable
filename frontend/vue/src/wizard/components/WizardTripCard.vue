@@ -10,6 +10,7 @@ import type { JourneyConnection } from '../types';
 import { cfgStr } from '../utils/wizardLabels';
 import {
   arrivalAtDestination,
+  connectionDoorToDoorMinutes,
   connectionLegs,
   departureFromOrigin,
   isTransfer,
@@ -48,6 +49,8 @@ const meta = computed(() =>
 
 const legs = computed(() => connectionLegs(props.connection));
 
+const doorToDoorMinutes = computed(() => connectionDoorToDoorMinutes(props.connection));
+
 const vehicleItems = computed(() => legsToVehicleItems(legs.value, cfg.value));
 
 async function toggleDetail(): Promise<void> {
@@ -70,8 +73,8 @@ async function toggleDetail(): Promise<void> {
     </template>
     <template #side>
       <MrtVehicleRow :items="vehicleItems" />
-        <p v-if="connection.duration_minutes" class="mrt-trip-card__duration">
-        {{ formatDuration(connection.duration_minutes, cfg) }}
+        <p v-if="doorToDoorMinutes !== null" class="mrt-trip-card__duration">
+        {{ formatDuration(doorToDoorMinutes, cfg) }}
       </p>
       <MrtAccentButton variant="select" type="button" @click="emit('select')">
         {{ cfgStr(cfg, 'selectTrip', 'Välj →') }}

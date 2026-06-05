@@ -14,7 +14,7 @@ final class JourneyNormalizeTest extends TestCase {
         parent::tearDown();
     }
 
-    public function test_total_duration_from_legs_sums(): void {
+    public function test_total_duration_from_legs_door_to_door(): void {
         $legs = [
             [
                 'from_departure' => '08:00',
@@ -25,7 +25,7 @@ final class JourneyNormalizeTest extends TestCase {
                 'to_arrival' => '09:45',
             ],
         ];
-        self::assertSame(75, MRT_normalize_total_duration_from_legs($legs));
+        self::assertSame(105, MRT_normalize_total_duration_from_legs($legs));
     }
 
     public function test_total_duration_from_legs_null_if_segment_invalid(): void {
@@ -61,7 +61,7 @@ final class JourneyNormalizeTest extends TestCase {
         $out = MRT_normalize_multi_leg_for_api($item, '2026-04-01');
         self::assertSame('transfer', $out['connection_type']);
         self::assertSame(5, $out['transfer_station_id']);
-        self::assertSame(70, $out['duration_minutes']);
+        self::assertSame(90, $out['duration_minutes']);
         self::assertSame('10:00', $out['departure']);
         self::assertSame('11:30', $out['arrival']);
         self::assertSame('10:00', $out['from_departure']);

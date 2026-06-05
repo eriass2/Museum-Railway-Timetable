@@ -105,8 +105,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Reseplanerare / visning
 - **Typ:** UX / ev. bugg (förvirrande)
 - **Prioritet:** medium
-- **Status:** öppen
-- **Anteckning:** Avsiktligt idag — `duration_minutes` = summa leg, inte dörr-till-dörr. Överväg: visa total tid, eller ”44 min restid + 113 min väntetid”.
+- **Status:** klar
+- **Svar:** Resekortet visar nu **dörr-till-dörr** (första avgång → sista ankomst), samma som klockintervallet. Per ben i detaljvyn behåller körsträcka. API: `MRT_normalize_total_duration_from_legs()` räknar elapsed, inte summa leg.
 
 ---
 
@@ -215,9 +215,9 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | # | ID | Punkt | Insats |
 |---|-----|-------|--------|
 | 1 | R15 | Zon/pris Uppsala–Fjällnora | ~~Medium~~ ✓ |
-| 2 | R6 | Busskoppling Selknä (113 min) | Data + ev. kod |
+| 2 | R6 | Busskoppling Selknä (113 min) | Klar |
 | 3 | R2 | Direktresa vs byte Marielund | Klar (fixture) |
-| 4 | R8 | Restid inkl. väntetid / tydligare | Liten |
+| 4 | R8 | Restid inkl. väntetid / tydligare | Klar |
 | 5 | R16 | Barn 0–3 etikett | Minimal |
 | 6 | R5 | Veteranbuss-namn | Liten |
 | 7 | R9 | ”1 byte” / ”2 byten” | Liten |
@@ -230,7 +230,15 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 14 | R14 | Riktig PDF på mobil | Större |
 | 15 | R11 | Gångvägar + karta | Framtida |
 
-**Klart:** R1 (tur/retur-kalender), R17 (fråga besvarad).
+**Klart:** R1 (tur/retur-kalender), R2, R3, R6, R8, R15, R17 (fråga besvarad).
+
+---
+
+## Nästa steg
+
+- [ ] Nästa punkt: **R16** (barn 0–3 etikett) eller **R5** (Veteranbuss-namn)
+- [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
+- [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 
 ---
 
@@ -243,11 +251,3 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | Dela/utskrift textfil | R14 |
 
 > Lägg ev. skärmdumpar i `docs/feedback/images/` med datum i filnamn.
-
----
-
-## Nästa steg
-
-- [ ] Välj punkt **R15** eller **R6** som första att gå igenom tillsammans
-- [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
-- [ ] Länka commit/PR i **Svar** när punkt är åtgärdad

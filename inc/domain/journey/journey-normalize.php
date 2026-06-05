@@ -9,23 +9,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
 /**
- * Sum leg durations; null if any segment missing times
+ * Door-to-door minutes from first leg departure to last leg arrival.
  *
  * @param array<int, array<string, mixed>> $legs Leg payloads
  * @return int|null
  */
 function MRT_normalize_total_duration_from_legs( array $legs ) {
-	$total = 0;
-	foreach ( $legs as $leg ) {
-		$dep = $leg['from_departure'] ?? '';
-		$arr = $leg['to_arrival'] ?? '';
-		$m   = MRT_format_duration_minutes( $dep, $arr );
-		if ( $m === null ) {
-			return null;
-		}
-		$total += $m;
+	if ( $legs === array() ) {
+		return 0;
 	}
-	return $total;
+	$first = $legs[0];
+	$last  = $legs[ count( $legs ) - 1 ];
+	$dep   = (string) ( $first['from_departure'] ?? '' );
+	$arr   = (string) ( $last['to_arrival'] ?? '' );
+	return MRT_format_duration_minutes( $dep, $arr );
 }
 
 /**

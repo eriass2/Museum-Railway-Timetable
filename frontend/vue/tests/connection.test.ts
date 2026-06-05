@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   arrivalAtDestination,
+  connectionDoorToDoorMinutes,
   connectionLegs,
   departureFromOrigin,
   isTransfer,
@@ -46,5 +47,21 @@ describe('connection utils', () => {
     expect(isTransfer(direct)).toBe(false);
     expect(isTransfer({ ...direct, legs: [{ service_id: 1 }, { service_id: 2 }] })).toBe(true);
     expect(isTransfer({ ...direct, connection_type: 'transfer' })).toBe(true);
+  });
+
+  it('door-to-door minutes include transfer wait', () => {
+    const transfer: JourneyConnection = {
+      service_id: 1,
+      connection_type: 'transfer',
+      from_departure: '11:10',
+      to_arrival: '13:47',
+      duration_minutes: 44,
+      legs: [
+        { service_id: 1, from_departure: '11:10', to_arrival: '12:00' },
+        { service_id: 2, from_departure: '12:20', to_arrival: '13:47' },
+      ],
+    };
+    expect(connectionDoorToDoorMinutes(transfer)).toBe(157);
+    expect(connectionDoorToDoorMinutes(direct)).toBe(90);
   });
 });
