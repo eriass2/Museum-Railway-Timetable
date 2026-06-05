@@ -9,21 +9,55 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
 /**
+ * Whether at least one outbound connection has a valid return on the same day.
+ *
+ * @param int    $from_station_id Outbound origin
+ * @param int    $to_station_id   Outbound destination
+ * @param string $ymd             Date YYYY-MM-DD
+ */
+function MRT_journey_calendar_has_round_trip( int $from_station_id, int $to_station_id, string $ymd ): bool {
+	$outbound   = MRT_journey_find_normalized_connections( $from_station_id, $to_station_id, $ymd );
+	$turnaround = MRT_journey_min_transfer_minutes();
+	foreach ( $outbound as $conn ) {
+		$arrival = MRT_journey_normalized_arrival_hhmm( $conn );
+		if ( $arrival === '' ) {
+			continue;
+		}
+		if ( MRT_find_return_connections(
+			$from_station_id,
+			$to_station_id,
+			$ymd,
+			$arrival,
+			$turnaround
+		) !== array() ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
  * Status for one day: no traffic, traffic but no connection, or ok
  *
  * @param int                      $from_station_id From station
  * @param int                      $to_station_id To station
  * @param string                   $ymd Date YYYY-MM-DD
  * @param array<string, list<int>> $services_cache Ref-filled cache date => service ids
+ * @param string                   $trip_type single|return
  * @return string none|traffic_no_match|ok
  */
-function MRT_journey_calendar_day_status( $from_station_id, $to_station_id, $ymd, array &$services_cache ) {
+function MRT_journey_calendar_day_status( $from_station_id, $to_station_id, $ymd, array &$services_cache, string $trip_type = 'single' ) {
 	if ( ! isset( $services_cache[ $ymd ] ) ) {
 		$run                    = MRT_services_running_on_date( $ymd );
 		$services_cache[ $ymd ] = array_values( array_map( static fn ( $id ): int => (int) $id, $run ) );
 	}
 	if ( empty( $services_cache[ $ymd ] ) ) {
 		return 'none';
+	}
+	if ( $trip_type === 'return' ) {
+		return MRT_journey_calendar_has_round_trip( (int) $from_station_id, (int) $to_station_id, $ymd )
+			? 'ok'
+			: 'traffic_no_match';
 	}
 	$min_xfer = MRT_journey_min_transfer_minutes();
 	if ( MRT_journey_engine_has_connection( $from_station_id, $to_station_id, $ymd, $min_xfer ) ) {
@@ -41,9 +75,10 @@ function MRT_journey_calendar_day_entry(
 	int $from_station_id,
 	int $to_station_id,
 	string $ymd,
-	array &$services_cache
+	array &$services_cache,
+	string $trip_type = 'single'
 ): array {
-	$status = MRT_journey_calendar_day_status( $from_station_id, $to_station_id, $ymd, $services_cache );
+	$status = MRT_journey_calendar_day_status( $from_station_id, $to_station_id, $ymd, $services_cache, $trip_type );
 	$type   = $status === 'none' ? '' : MRT_dominant_timetable_type_for_date( $ymd );
 
 	return array(
@@ -61,7 +96,7 @@ function MRT_journey_calendar_day_entry(
  * @param int $month Month 1-12
  * @return array<string, array{status: string, type: string}>
  */
-function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year, $month ) {
+function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year, $month, string $trip_type = 'single' ) {
 	$out = array();
 	if ( $from_station_id <= 0 || $to_station_id <= 0 || $from_station_id === $to_station_id ) {
 		return $out;
@@ -71,6 +106,7 @@ function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year
 	if ( $year < 1970 || $year > 2100 || $month < 1 || $month > 12 ) {
 		return $out;
 	}
+	$trip_type = ( $trip_type === 'return' ) ? 'return' : 'single';
 	$days           = (int) gmdate( 't', gmmktime( 0, 0, 0, $month, 1, $year ) );
 	$services_cache = array();
 	for ( $d = 1; $d <= $days; $d++ ) {
@@ -82,7 +118,8 @@ function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year
 			(int) $from_station_id,
 			(int) $to_station_id,
 			$ymd,
-			$services_cache
+			$services_cache,
+			$trip_type
 		);
 	}
 	return $out;

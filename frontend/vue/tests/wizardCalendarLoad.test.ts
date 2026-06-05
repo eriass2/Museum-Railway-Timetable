@@ -58,6 +58,7 @@ describe('wizardCalendarLoad', () => {
     const { store } = createWizardStore(config);
     store.fromId = 1;
     store.toId = 2;
+    store.tripType = 'return';
     const daysMap = ref<Record<string, CalendarDayInfo | CalendarDayStatus>>({});
     const run = vi.fn().mockResolvedValue({
       success: true,
@@ -83,6 +84,7 @@ describe('wizardCalendarLoad', () => {
       to_station: 2,
       year: 2026,
       month: 6,
+      trip_type: 'return',
     });
   });
 });

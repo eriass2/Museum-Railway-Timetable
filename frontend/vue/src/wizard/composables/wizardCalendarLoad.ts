@@ -31,7 +31,13 @@ export async function loadWizardCalendarMonth(
   }
   const res = await run<{ year: number; month: number; days: Record<string, CalendarDayInfo> }>(
     'mrt_journey_calendar_month',
-    { from_station: store.fromId, to_station: store.toId, year, month },
+    {
+      from_station: store.fromId,
+      to_station: store.toId,
+      year,
+      month,
+      trip_type: store.tripType,
+    },
   );
   if (!res.success || !res.data) {
     store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel. Försök igen.'));

@@ -407,6 +407,42 @@ final class JourneyMultiLegTest extends TestCase {
         self::assertSame('', $month['2026-06-03']['type'] ?? '');
     }
 
+    public function test_journey_calendar_month_return_marks_one_way_only_days_as_traffic_no_match(): void {
+        $this->mrt_use_journey_fixture(
+            [
+                11 => [
+                    $this->mrt_stop( 11, self::A, 1, null, '09:00' ),
+                    $this->mrt_stop( 11, self::B, 2, '10:00', null ),
+                ],
+                22 => [
+                    $this->mrt_stop( 22, self::B, 1, null, '11:00' ),
+                    $this->mrt_stop( 22, self::A, 2, '12:00', null ),
+                ],
+                33 => [
+                    $this->mrt_stop( 33, self::A, 1, null, '17:00' ),
+                    $this->mrt_stop( 33, self::B, 2, '18:07', null ),
+                ],
+            ],
+            [
+                900 => [ '2026-06-01' ],
+                901 => [ '2026-06-02' ],
+            ],
+            [
+                11 => 900,
+                22 => 900,
+                33 => 901,
+            ]
+        );
+
+        $single = MRT_get_journey_calendar_month( self::A, self::B, 2026, 6, 'single' );
+        $return = MRT_get_journey_calendar_month( self::A, self::B, 2026, 6, 'return' );
+
+        self::assertSame( 'ok', $single['2026-06-01']['status'] ?? '' );
+        self::assertSame( 'ok', $single['2026-06-02']['status'] ?? '' );
+        self::assertSame( 'ok', $return['2026-06-01']['status'] ?? '' );
+        self::assertSame( 'traffic_no_match', $return['2026-06-02']['status'] ?? '' );
+    }
+
     /**
      * @return array<int, array<int, array<string, mixed>>>
      */

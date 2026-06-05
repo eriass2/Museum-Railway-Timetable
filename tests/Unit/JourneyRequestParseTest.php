@@ -122,6 +122,19 @@ final class JourneyRequestParseTest extends TestCase {
         self::assertIsArray($out);
         self::assertSame(2026, $out['year']);
         self::assertSame(4, $out['month']);
+        self::assertSame('single', $out['trip_type']);
+    }
+
+    public function test_parse_calendar_month_params_return_trip_type(): void {
+        $out = MRT_journey_parse_calendar_month_params([
+            'from_station' => '3',
+            'to_station'   => '4',
+            'year'         => '2026',
+            'month'        => '4',
+            'trip_type'    => 'return',
+        ]);
+        self::assertIsArray($out);
+        self::assertSame('return', $out['trip_type']);
     }
 
     public function test_parse_calendar_month_invalid_range(): void {

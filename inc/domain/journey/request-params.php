@@ -123,11 +123,15 @@ function MRT_journey_parse_calendar_month_params( array $input ) {
 			__( 'Please select a valid month.', 'museum-railway-timetable' )
 		);
 	}
+	$trip_raw          = isset( $input['trip_type'] ) ? sanitize_text_field( (string) $input['trip_type'] ) : 'single';
+	$trip_type         = ( $trip_raw === 'return' ) ? 'return' : 'single';
+
 	return array_merge(
 		$pair,
 		array(
-			'year'  => $year,
-			'month' => $month,
+			'year'      => $year,
+			'month'     => $month,
+			'trip_type' => $trip_type,
 		)
 	);
 }
