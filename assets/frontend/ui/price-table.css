@@ -32,6 +32,23 @@
     color: var(--mrt-color-neutral-600, #555);
 }
 
+.mrt-price-columns {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+}
+
+.mrt-price-columns--split {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.mrt-price-column__title {
+    margin: 0 0 0.5rem;
+    color: inherit;
+    font-weight: 800;
+    line-height: 1.25;
+}
+
 .mrt-price-list {
     margin: 0;
     padding: 0.65rem 0.85rem;

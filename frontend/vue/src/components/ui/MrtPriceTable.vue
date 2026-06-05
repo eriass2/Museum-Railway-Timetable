@@ -46,7 +46,13 @@ const visibleTypes = computed(() => {
 
 const useListLayout = computed(() => !props.showAllTypes && visibleTypes.value.length === 1);
 
+const useSplitPriceLayout = computed(() => useListLayout.value && !!dayPrices.value?.day);
+
 const listTicketType = computed(() => visibleTypes.value[0] ?? priceData.value?.activeType ?? 'single');
+
+const dayTicketTitle = computed(
+  () => priceCfg.value.priceDayTitle || labels.value.tickets.day || 'Heldagsbiljett',
+);
 
 const selectedTypeLabel = computed(() => {
   if (!priceData.value || props.showAllTypes) {
@@ -88,7 +94,7 @@ function dayPriceForCategory(catKey: string): string {
   <div v-else-if="priceData" class="mrt-price-block mrt-mt-lg">
     <MrtHeading level="h4" size="md" class="mrt-price-block__title">
       {{ labels.title }}
-      <span v-if="selectedTypeLabel" class="mrt-price-block__title-trip">
+      <span v-if="selectedTypeLabel && !useSplitPriceLayout" class="mrt-price-block__title-trip">
         — {{ selectedTypeLabel }}
       </span>
       <span v-if="labels.titleSuffix" class="mrt-price-block__title-suffix">
@@ -96,55 +102,85 @@ function dayPriceForCategory(catKey: string): string {
       </span>
     </MrtHeading>
 
-    <dl v-if="useListLayout" class="mrt-price-list">
-      <div v-for="ck in PRICE_CAT_KEYS" :key="ck" class="mrt-price-list__row">
-        <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
-        <dd class="mrt-price-list__value">{{ priceForCategory(ck, listTicketType) }}</dd>
-      </div>
-    </dl>
-
-    <div v-else class="mrt-price-block__table-wrap">
-      <table class="mrt-table mrt-price-block__table">
-        <thead>
-          <tr>
-            <th scope="col" class="mrt-price-block__corner">
-              <span class="mrt-sr-only">{{ labels.typeColumnSr || labels.title }}</span>
-            </th>
-            <th v-for="ck in PRICE_CAT_KEYS" :key="ck" scope="col">
-              {{ labels.categories[ck] || ck }}
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr
-            v-for="tk in visibleTypes"
-            :key="tk"
-            :class="{ 'mrt-price-block__row--active': tk === priceData.activeType }"
-          >
-            <th scope="row">{{ labels.tickets[tk] || tk }}</th>
-            <td
-              v-for="ck in PRICE_CAT_KEYS"
-              :key="ck"
-              :data-label="labels.categories[ck] || ck"
-            >
-              {{ priceForCategory(ck, tk) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+    <div
+      v-if="useSplitPriceLayout"
+      class="mrt-price-columns mrt-price-columns--split"
+    >
+      <section class="mrt-price-column">
+        <MrtHeading level="h5" size="sm" class="mrt-price-column__title">
+          {{ selectedTypeLabel }}
+        </MrtHeading>
+        <dl class="mrt-price-list">
+          <div v-for="ck in PRICE_CAT_KEYS" :key="ck" class="mrt-price-list__row">
+            <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
+            <dd class="mrt-price-list__value">{{ priceForCategory(ck, listTicketType) }}</dd>
+          </div>
+        </dl>
+      </section>
+      <section class="mrt-price-column">
+        <MrtHeading level="h5" size="sm" class="mrt-price-column__title">
+          {{ dayTicketTitle }}
+        </MrtHeading>
+        <dl class="mrt-price-list">
+          <div v-for="ck in PRICE_CAT_KEYS" :key="`day-${ck}`" class="mrt-price-list__row">
+            <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
+            <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
+          </div>
+        </dl>
+      </section>
     </div>
 
-    <div v-if="dayPrices" class="mrt-price-block mrt-mt-md">
-      <MrtHeading level="h4" size="md" class="mrt-price-block__title">
-        {{ priceCfg.priceDayTitle || labels.tickets.day || 'Heldagsbiljett' }}
-      </MrtHeading>
-      <dl class="mrt-price-list">
-        <div v-for="ck in PRICE_CAT_KEYS" :key="`day-${ck}`" class="mrt-price-list__row">
+    <template v-else>
+      <dl v-if="useListLayout" class="mrt-price-list">
+        <div v-for="ck in PRICE_CAT_KEYS" :key="ck" class="mrt-price-list__row">
           <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
-          <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
+          <dd class="mrt-price-list__value">{{ priceForCategory(ck, listTicketType) }}</dd>
         </div>
       </dl>
-    </div>
+
+      <div v-else class="mrt-price-block__table-wrap">
+        <table class="mrt-table mrt-price-block__table">
+          <thead>
+            <tr>
+              <th scope="col" class="mrt-price-block__corner">
+                <span class="mrt-sr-only">{{ labels.typeColumnSr || labels.title }}</span>
+              </th>
+              <th v-for="ck in PRICE_CAT_KEYS" :key="ck" scope="col">
+                {{ labels.categories[ck] || ck }}
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              v-for="tk in visibleTypes"
+              :key="tk"
+              :class="{ 'mrt-price-block__row--active': tk === priceData.activeType }"
+            >
+              <th scope="row">{{ labels.tickets[tk] || tk }}</th>
+              <td
+                v-for="ck in PRICE_CAT_KEYS"
+                :key="ck"
+                :data-label="labels.categories[ck] || ck"
+              >
+                {{ priceForCategory(ck, tk) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div v-if="dayPrices" class="mrt-price-block mrt-mt-md">
+        <MrtHeading level="h4" size="md" class="mrt-price-block__title">
+          {{ dayTicketTitle }}
+        </MrtHeading>
+        <dl class="mrt-price-list">
+          <div v-for="ck in PRICE_CAT_KEYS" :key="`day-${ck}`" class="mrt-price-list__row">
+            <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
+            <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
+          </div>
+        </dl>
+      </div>
+    </template>
 
     <p v-if="priceNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
       {{ priceNote }}

@@ -21,6 +21,7 @@ describe('tripSummaryDocument', () => {
     expect(body).toContain('<h1>Din resa</h1>');
     expect(body).toContain('Uppsala → Fjällnora');
     expect(tripSummaryPdfStyles()).toContain('@page');
+    expect(tripSummaryPdfStyles()).not.toMatch(/\.prices\s*\{[^}]*break-inside:\s*avoid/);
   });
 
   it('combines route and date on one line', () => {
@@ -71,5 +72,46 @@ describe('tripSummaryDocument', () => {
       ],
     });
     expect(body).not.toContain('<ul class="segments">');
+  });
+
+  it('lays out trip and day ticket prices side by side when both exist', () => {
+    const body = buildTripSummaryHtml({
+      ...sampleInput,
+      priceSection: {
+        heading: 'Priser',
+        ticketTypeLabel: 'Returbiljett',
+        rows: [{ label: 'Vuxen', value: '160 kr' }],
+        dayTicketHeading: 'Heldagsbiljett',
+        dayTicketRows: [{ label: 'Vuxen', value: '280 kr' }],
+      },
+    });
+    expect(body).toContain('<table class="price-columns-table">');
+    expect(body).toContain('Returbiljett');
+    expect(body).toContain('Heldagsbiljett');
+  });
+
+  it('lays out outbound and return legs side by side for round trips', () => {
+    const body = buildTripSummaryHtml({
+      ...sampleInput,
+      tripTypeLabel: 'Tur och retur',
+      legs: [
+        {
+          heading: 'Utresa',
+          route: 'Uppsala Östra → Gunsta',
+          timeRange: '10.00 – 10.24',
+          date: '13 juni 2026',
+        },
+        {
+          heading: 'Återresa',
+          route: 'Gunsta → Uppsala Östra',
+          timeRange: '11.50 – 12.17',
+          date: '13 juni 2026',
+        },
+      ],
+    });
+    expect(body).toContain('<table class="legs-table">');
+    expect(body).toContain('<td class="legs-cell">');
+    expect(body).toContain('Utresa');
+    expect(body).toContain('Återresa');
   });
 });

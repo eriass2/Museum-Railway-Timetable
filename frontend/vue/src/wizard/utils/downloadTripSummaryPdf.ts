@@ -35,7 +35,7 @@ function mountPdfIframe(bodyHtml: string): HTMLIFrameElement {
   iframe.setAttribute('aria-hidden', 'true');
   iframe.title = '';
   iframe.style.cssText =
-    'position:fixed;left:0;top:0;width:210mm;height:297mm;border:0;opacity:0;pointer-events:none;z-index:-1;';
+    'position:fixed;left:0;top:0;width:210mm;height:auto;min-height:0;border:0;opacity:0;pointer-events:none;z-index:-1;';
   document.body.appendChild(iframe);
 
   const doc = iframe.contentDocument;
@@ -65,6 +65,7 @@ async function waitForIframeLayout(iframe: HTMLIFrameElement): Promise<HTMLEleme
   await new Promise<void>((resolve) => {
     requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
   });
+  iframe.style.height = `${body.scrollHeight}px`;
   return body;
 }
 
@@ -89,7 +90,7 @@ export async function downloadTripSummaryPdf(
         image: { type: 'jpeg', quality: 0.96 },
         html2canvas: { scale: 2, logging: false, useCORS: true, scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+        pagebreak: { mode: ['css', 'legacy'] },
       })
       .from(body)
       .outputPdf('blob')) as Blob;

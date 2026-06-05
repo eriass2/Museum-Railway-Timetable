@@ -99,14 +99,20 @@ html.mrt-print-summary #mrt-print-clone {
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-summary-list {
-        display: block;
-        margin: 0 0 6mm;
+        display: grid;
+        gap: 3mm;
+        margin: 0 0 4mm;
+        grid-template-columns: 1fr;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-summary-list--round-trip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-summary-card {
         break-inside: avoid;
         page-break-inside: avoid;
-        margin: 0 0 3mm;
+        margin: 0;
         padding: 3mm 4mm;
         border: 1px solid #bbb;
         border-radius: 0;
@@ -179,6 +185,18 @@ html.mrt-print-summary #mrt-print-clone {
     html.mrt-print-summary #mrt-print-clone .mrt-price-block__title {
         margin: 0 0 2mm;
         font-size: 9.5pt;
+        font-weight: 700;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-columns--split {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3mm;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-column__title {
+        margin: 0 0 1.5mm;
+        font-size: 8.5pt;
         font-weight: 700;
     }
 
