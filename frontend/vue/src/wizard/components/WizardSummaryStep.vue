@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
-import MrtConnectionLegList from '../../components/ui/MrtConnectionLegList.vue';
 import MrtPriceTable from '../../components/ui/MrtPriceTable.vue';
 import MrtStepHeader from '../../components/ui/MrtStepHeader.vue';
-import MrtSummaryCard from '../../components/ui/MrtSummaryCard.vue';
 import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
-import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useTripPrices } from '../../composables/useTripPrices';
 import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
@@ -14,15 +11,16 @@ import { priceTableLabelsFromCfg } from '../utils/priceTableLabels';
 import { PRICE_CAT_KEYS, formatPriceCell } from '../../shared/prices';
 import type { PriceCfg } from '../../shared/priceTypes';
 import { formatYmdForDisplay } from '../utils/wizardDate';
-import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
+import { departureFromOrigin } from '../utils/connection';
 import {
-  buildConnectionLegSummary,
-} from '../utils/buildConnectionLegSummary';
-import { stationTitleLookup } from '../../shared/connectionLegDisplay';
+  connectionLegItems,
+  connectionRouteText,
+  connectionTimeRange,
+} from '../composables/useConnectionLegDisplay';
 import { connectionToPriceLegs } from '../../shared/connectionPriceLegs';
-import { formatTripClock } from '../utils/format';
 import type { JourneyConnection } from '../types';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
+import WizardConnectionLeg from './WizardConnectionLeg.vue';
 import { printElement } from '../../utils/printElement';
 import { type TripSummaryLeg, type TripSummaryTextInput } from '../utils/tripSummaryText';
 import { downloadTripSummaryPdf } from '../utils/downloadTripSummaryPdf';
@@ -89,41 +87,27 @@ const tripTypeLabel = computed(() =>
     : cfgStr(cfg, 'tripSingle', 'Enkel resa'),
 );
 
-function legTimeRange(conn: NonNullable<typeof store.outbound>): string {
-  return `${formatTripClock(departureFromOrigin(conn))} – ${formatTripClock(arrivalAtDestination(conn))}`;
-}
-
-const outboundLegItems = computed(() =>
-  store.outbound ? connectionLegItems(store.outbound) : [],
-);
-const inboundLegItems = computed(() =>
-  store.inbound ? connectionLegItems(store.inbound) : [],
-);
-
-function connectionLegItems(conn: JourneyConnection) {
-  const stationTitle = stationTitleLookup(store.config.stations || []);
-  return buildConnectionLegSummary(conn, stationTitle, cfg.value);
+function summaryLeg(
+  conn: JourneyConnection,
+  legCtx: 'outbound' | 'return',
+  heading: string,
+): TripSummaryLeg {
+  return {
+    heading,
+    route: connectionRouteText(legCtx, store.fromTitle, store.toTitle),
+    timeRange: connectionTimeRange(conn),
+    date: dateText.value,
+    segments: connectionLegItems(conn, store.config.stations || [], cfg.value),
+  };
 }
 
 function buildLegs(): TripSummaryLeg[] {
   const legs: TripSummaryLeg[] = [];
   if (store.outbound) {
-    legs.push({
-      heading: cfgStr(cfg, 'outboundHeading', 'Utresa'),
-      route: `${store.fromTitle} → ${store.toTitle}`,
-      timeRange: legTimeRange(store.outbound),
-      date: dateText.value,
-      segments: connectionLegItems(store.outbound),
-    });
+    legs.push(summaryLeg(store.outbound, 'outbound', cfgStr(cfg, 'outboundHeading', 'Utresa')));
   }
   if (store.tripType === 'return' && store.inbound) {
-    legs.push({
-      heading: cfgStr(cfg, 'returnHeading', 'Återresa'),
-      route: `${store.toTitle} → ${store.fromTitle}`,
-      timeRange: legTimeRange(store.inbound),
-      date: dateText.value,
-      segments: connectionLegItems(store.inbound),
-    });
+    legs.push(summaryLeg(store.inbound, 'return', cfgStr(cfg, 'returnHeading', 'Återresa')));
   }
   return legs;
 }
@@ -229,32 +213,20 @@ function onBack(): void {
         <p class="mrt-summary-print-meta">{{ tripTypeLabel }} · {{ store.contextLine.replace(/\n/g, ' · ') }}</p>
 
         <div class="mrt-summary-list">
-          <MrtSummaryCard v-if="store.outbound" :heading="cfgStr(cfg, 'outboundHeading', 'Utresa')">
-            <MrtTripSummary
-              :time-range="legTimeRange(store.outbound)"
-              :route="`${store.fromTitle} → ${store.toTitle}`"
-              :date="dateText"
-            />
-            <MrtConnectionLegList
-              v-if="outboundLegItems.length"
-              :items="outboundLegItems"
-            />
-          </MrtSummaryCard>
-
-          <MrtSummaryCard
+          <WizardConnectionLeg
+            v-if="store.outbound"
+            :connection="store.outbound"
+            leg-ctx="outbound"
+            :heading="cfgStr(cfg, 'outboundHeading', 'Utresa')"
+            :date="dateText"
+          />
+          <WizardConnectionLeg
             v-if="store.tripType === 'return' && store.inbound"
+            :connection="store.inbound"
+            leg-ctx="return"
             :heading="cfgStr(cfg, 'returnHeading', 'Återresa')"
-          >
-            <MrtTripSummary
-              :time-range="legTimeRange(store.inbound)"
-              :route="`${store.toTitle} → ${store.fromTitle}`"
-              :date="dateText"
-            />
-            <MrtConnectionLegList
-              v-if="inboundLegItems.length"
-              :items="inboundLegItems"
-            />
-          </MrtSummaryCard>
+            :date="dateText"
+          />
         </div>
 
         <MrtPriceTable

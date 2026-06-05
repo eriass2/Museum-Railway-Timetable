@@ -154,6 +154,7 @@
     .mrt-journey-wizard .mrt-trip-card__side > .mrt-accent-btn {
         grid-area: button;
         justify-self: end;
+        min-width: min(100%, 8.5rem);
     }
 
     .mrt-journey-wizard .mrt-vehicle-row__item {
@@ -173,52 +174,8 @@
     }
 
     .mrt-journey-wizard .mrt-detail-panel {
-        --mrt-tl-time: 3.35rem;
-        --mrt-tl-node: 1.2rem;
-        --mrt-tl-gap: 0.4rem;
         padding: 0.85rem 0.5rem 0.75rem;
         overflow-x: hidden;
-    }
-
-    .mrt-journey-wizard .mrt-timeline {
-        --mrt-tl-time: 3.35rem;
-        --mrt-tl-node: 1.2rem;
-        --mrt-tl-gap: 0.4rem;
-    }
-
-    .mrt-journey-wizard .mrt-timeline__row {
-        min-height: 2.15rem;
-    }
-
-    .mrt-journey-wizard .mrt-timeline__time {
-        font-size: 0.95rem;
-    }
-
-    .mrt-journey-wizard .mrt-timeline__station {
-        font-size: 1rem;
-        line-height: 1.25;
-    }
-
-    .mrt-journey-wizard .mrt-timeline__node {
-        width: 0.85rem;
-        height: 0.85rem;
-        margin-top: 0.15rem;
-        border-width: 0.22rem;
-    }
-
-    .mrt-journey-wizard .mrt-timeline__toggle .mrt-expand-trigger--link {
-        font-size: 0.9rem;
-        line-height: 1.35;
-    }
-
-    .mrt-journey-wizard .mrt-timeline__toggle .mrt-expand-trigger--link:hover {
-        color: var(--mrt-color-green-900, #183809);
-    }
-
-    .mrt-journey-wizard .mrt-detail-segment__meta {
-        margin-left: var(--mrt-tl-content-start);
-        margin-bottom: 0.4rem;
-        gap: 0.35rem 0.5rem;
     }
 
     .mrt-journey-wizard .mrt-detail-segment__meta .mrt-vehicle-row {
@@ -226,16 +183,20 @@
         width: 100%;
     }
 
-    .mrt-journey-wizard .mrt-detail-segment__transfer {
-        margin-left: var(--mrt-tl-content-start);
-        margin-top: 0.25rem;
-        margin-bottom: 0.55rem;
-        font-size: 0.95rem;
-        line-height: 1.35;
-    }
+    @media (max-width: 22.5rem) {
+        .mrt-journey-wizard .mrt-trip-card__side {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas:
+                "vehicles"
+                "duration"
+                "button";
+        }
 
-    .mrt-journey-wizard .mrt-detail-segment__title {
-        font-size: 1rem;
+        .mrt-journey-wizard .mrt-trip-card__side > .mrt-accent-btn {
+            grid-area: button;
+            justify-self: stretch;
+            width: 100%;
+        }
     }
 
     .mrt-journey-wizard .mrt-price-list {
