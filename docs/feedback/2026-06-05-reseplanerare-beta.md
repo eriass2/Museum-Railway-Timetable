@@ -61,8 +61,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Reseplanerare / tidslinje
 - **Typ:** UX
 - **Prioritet:** låg–medium
-- **Status:** öppen
-- **Kod:** `frontend/vue/src/components/ui/MrtTimeline.vue`, `WizardTimeline.vue`
+- **Status:** klar
+- **Svar:** `MrtTimeline` visar expand-länken mellan första och sista stopp när listan är ihopfälld; vid expandering ligger ”Dölj …” kvar efter avgångsstationen, före mellanliggande håll.
 
 ---
 
@@ -221,7 +221,7 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 5 | R16 | Barn 0–3 etikett | Klar |
 | 6 | R5 | Veteranbuss-namn | Klar |
 | 7 | R9 | ”1 byte” / ”2 byten” | Klar |
-| 8 | R4 | Placering ”Visa passerade stationer” | Liten UI |
+| 8 | R4 | Placering ”Visa passerade stationer” | Klar |
 | 9 | R3 | Mobil klippning | Klar (CSS) |
 | 10 | R10 | Få avgångar Fjällnora | Datakontroll |
 | 11 | R7 | Min bytestid 0 min? | Beslut + ev. default |
@@ -230,13 +230,13 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 14 | R14 | Riktig PDF på mobil | Större |
 | 15 | R11 | Gångvägar + karta | Framtida |
 
-**Klart:** R1 (tur/retur-kalender), R2, R3, R5, R6, R8, R9, R15, R16, R17 (fråga besvarad).
+**Klart:** R1 (tur/retur-kalender), R2, R3, R4, R5, R6, R8, R9, R15, R16, R17 (fråga besvarad).
 
 ---
 
 ## Nästa steg
 
-- [ ] Nästa punkt: **R4** (placering passerade stationer) eller **R10** (Fjällnora-avgångar)
+- [ ] Nästa punkt: **R10** (Fjällnora-avgångar) eller **R7** (min bytestid)
 - [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 

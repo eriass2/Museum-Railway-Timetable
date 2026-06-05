@@ -8,6 +8,10 @@ export type MrtTimelineStop = {
   arrival_time?: string;
 };
 
+type TimelineItem =
+  | { kind: 'stop'; stop: MrtTimelineStop; terminal: boolean; key: string }
+  | { kind: 'toggle' };
+
 const props = withDefaults(
   defineProps<{
     stops: MrtTimelineStop[];
@@ -21,36 +25,67 @@ const props = withDefaults(
 
 const showAllStops = ref(Boolean(props.startExpanded));
 
-const visibleStops = computed(() => {
-  if (showAllStops.value || props.stops.length <= 2) {
-    return props.stops;
-  }
-  return [props.stops[0], props.stops[props.stops.length - 1]];
-});
-
 const expandLabel = computed(() =>
   showAllStops.value ? props.hideStopsLabel : props.showStopsLabel,
 );
+
+const timelineItems = computed((): TimelineItem[] => {
+  const { stops } = props;
+  if (stops.length <= 2) {
+    return stops.map((stop, index) => ({
+      kind: 'stop' as const,
+      stop,
+      terminal: index === 0 || index === stops.length - 1,
+      key: `stop-${index}`,
+    }));
+  }
+
+  const items: TimelineItem[] = [
+    { kind: 'stop', stop: stops[0], terminal: true, key: 'stop-first' },
+    { kind: 'toggle' },
+  ];
+
+  if (showAllStops.value) {
+    stops.slice(1, -1).forEach((stop, index) => {
+      items.push({
+        kind: 'stop',
+        stop,
+        terminal: false,
+        key: `stop-mid-${index}`,
+      });
+    });
+  }
+
+  items.push({
+    kind: 'stop',
+    stop: stops[stops.length - 1],
+    terminal: true,
+    key: 'stop-last',
+  });
+
+  return items;
+});
 </script>
 
 <template>
   <div class="mrt-timeline">
-    <div
-      v-for="(stop, i) in visibleStops"
-      :key="i"
-      class="mrt-timeline__row"
-      :class="{ 'is-terminal': i === 0 || i === visibleStops.length - 1 }"
-    >
-      <time class="mrt-timeline__time">{{ formatTime(stop) }}</time>
-      <span class="mrt-timeline__node" aria-hidden="true" />
-      <span class="mrt-timeline__station">{{ stop.station_title }}</span>
-    </div>
-    <MrtExpandTrigger
-      v-if="stops.length > 2"
-      variant="link"
-      :expanded="showAllStops"
-      :label="expandLabel"
-      @toggle="showAllStops = !showAllStops"
-    />
+    <template v-for="item in timelineItems" :key="item.kind === 'stop' ? item.key : 'toggle'">
+      <div
+        v-if="item.kind === 'stop'"
+        class="mrt-timeline__row"
+        :class="{ 'is-terminal': item.terminal }"
+      >
+        <time class="mrt-timeline__time">{{ formatTime(item.stop) }}</time>
+        <span class="mrt-timeline__node" aria-hidden="true" />
+        <span class="mrt-timeline__station">{{ item.stop.station_title }}</span>
+      </div>
+      <MrtExpandTrigger
+        v-else
+        variant="link"
+        :expanded="showAllStops"
+        :label="expandLabel"
+        @toggle="showAllStops = !showAllStops"
+      />
+    </template>
   </div>
 </template>
