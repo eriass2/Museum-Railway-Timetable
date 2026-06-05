@@ -134,7 +134,7 @@
         padding: 0;
         background: #fff;
         color: #000;
-        font-family: Roboto, "Segoe UI", sans-serif;
+        font-family: var(--mrt-font-body);
         font-size: 11pt;
         line-height: 1.4;
     }
@@ -142,8 +142,9 @@
     html.mrt-print-summary #mrt-print-clone .mrt-summary-print-title {
         display: block;
         margin: 0 0 2mm;
+        font-family: var(--mrt-font-heading);
         font-size: 16pt;
-        font-weight: 700;
+        font-weight: var(--mrt-font-weight-heading-strong);
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-summary-print-meta {

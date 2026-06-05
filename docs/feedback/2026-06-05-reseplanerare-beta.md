@@ -13,9 +13,9 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 |----------|-------|-----------|
 | Buggar / fel | 5 | Zoner, busskoppling Selknä, ev. byte Marielund |
 | UI / copy | 6 | Klippning, bussnamn, byte-etikett, passerade stationer, restid |
-| Design / profil | 2 | Typsnitt, kalenderfärger |
+| Design / profil | 0 | — |
 | PDF / export | 1 | Mobil utskrift vs riktig PDF |
-| Data / tidtabell | 1 | Få avgångar till Fjällnora |
+| Data / tidtabell | 1 | Fjällnora — ej sökgräns, datat styr antal |
 | Framtida scope | 1 | Gångvägar + karta |
 | Redan åtgärdat | 1 | Tur/retur-kalender (grå dagar) |
 | Frågor | 1 | Hur matas data in? |
@@ -127,8 +127,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Tidtabell / sökning
 - **Typ:** utred data
 - **Prioritet:** medium
-- **Status:** öppen
-- **Anteckning:** Wizard har **ingen hård gräns** på antal träffar. Tre avgångar = troligen bara tre giltiga kopplingar i datat för det datumet.
+- **Status:** klar (2026-06-05)
+- **Svar:** **Ingen sökgräns** i wizard eller REST. Fixture (grön vardag, Uppsala Östra → Fjällnora, alla tåg + buss B1–B4): **fyra** giltiga kopplingar — 10:00 (71+61+B1), 11:10 (93+B2), 12:38 (75+B3), 14:10 (63+97+B4). Tre träffar = troligen annat datum, ofullständig import i produktion, eller att en tåg+buss-koppling saknas i datat — inte UI-begränsning. Test: `LennakattenJourneySearchTest::test_find_uppsala_fjallnora_green_weekday_lists_all_train_bus_connections`.
 
 ---
 
@@ -148,8 +148,9 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Global typografi
 - **Typ:** design
 - **Prioritet:** medium
-- **Status:** delvis (G2: Roboto + Open Sans Bold finns — verifiera att allt använder tokens)
+- **Status:** klar (2026-06-05)
 - **Referens:** https://lennakatten.se/grafisk-profil/
+- **Svar:** **Samma punkt som G2 (juni)** — inte borttagen. Roboto/Open Sans laddas via `mrt-typography.css`. R12 i betatesten var troligen (a) knappar/input som inte ärver `font-family` (webbläsare default), (b) WP-tema som slår igenom utanför `.mrt-vue-root`, eller (c) Google Fonts blockerad (cookie/annonsblockerare). Fix: explicit typografi-import i Vue-bundle, `font-family: inherit` på formulärelement, utskrift via tokens.
 
 ---
 
@@ -159,8 +160,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Kalender (månad + wizard datumsteg)
 - **Typ:** design
 - **Prioritet:** medium
-- **Status:** öppen
-- **Anteckning:** Trafikfärger (`--mrt-color-traffic-*`) vs varumärkesfärger (`--mrt-color-brand-*`). G7 införde typ-färger — kan behöva justeras mot profil.
+- **Status:** klar (2026-06-05)
+- **Svar:** Månadskalendern (`[museum_timetable_month]`) använde `color-mix` mot vitt — gav bleka grön/gul istället för profilens `--mrt-color-traffic-*`. Enkeltyp-dagar använder nu solid trafikfärg + korrekt förgrund (`--mrt-cal-traffic-*-fg`). Reseplanerarens datumsteg oförändrat (guld = bokningsbar dag enligt BRAND_UI).
 
 ---
 
@@ -223,20 +224,20 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 7 | R9 | ”1 byte” / ”2 byten” | Klar |
 | 8 | R4 | Placering ”Visa passerade stationer” | Klar |
 | 9 | R3 | Mobil klippning | Klar (CSS) |
-| 10 | R10 | Få avgångar Fjällnora | Datakontroll |
+| 10 | R10 | Få avgångar Fjällnora | Klar (4 koppl. fixture) |
 | 11 | R7 | Min bytestid 0 min? | Klar (default 0) |
-| 12 | R13 | Kalenderfärger vs profil | Design |
-| 13 | R12 | Typsnitt (kvarvarande) | Design |
+| 12 | R13 | Kalenderfärger vs profil | Klar (månadskalender) |
+| 13 | R12 | Typsnitt | Klar (G2 + arv) |
 | 14 | R14 | Riktig PDF på mobil | Större |
 | 15 | R11 | Gångvägar + karta | Framtida |
 
-**Klart:** R1 (tur/retur-kalender), R2, R3, R4, R5, R6, R7, R8, R9, R15, R16, R17 (fråga besvarad).
+**Klart:** R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R12, R13, R15, R16, R17 (fråga besvarad).
 
 ---
 
 ## Nästa steg
 
-- [ ] Nästa punkt: **R10** (Fjällnora-avgångar) eller **R13** (kalenderfärger)
+- [ ] Nästa punkt: **R14** (PDF på mobil)
 - [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 

@@ -256,6 +256,41 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '11:50', $results[0]['legs'][1]['from_departure'] ?? '' );
 	}
 
+	public function test_find_uppsala_fjallnora_green_weekday_lists_all_train_bus_connections(): void {
+		$this->boot_fixture_services(
+			array(
+				'green-vard-71-out',
+				'green-vard-61-out',
+				'green-vard-93-out',
+				'green-vard-75-out',
+				'green-vard-63-out',
+				'green-vard-97-out',
+				'green-b1-bus-out',
+				'green-b2-bus-out',
+				'green-b3-bus-out',
+				'green-b4-bus-out',
+			),
+			'2026-07-01'
+		);
+		$stations = $this->station_ids();
+
+		$results = MRT_journey_find_normalized_connections(
+			$stations['uppsala-ostra'],
+			$stations['fjallnora'],
+			'2026-07-01'
+		);
+
+		$deps = array_map(
+			static fn ( array $row ): string => MRT_journey_normalized_departure_hhmm( $row ),
+			$results
+		);
+		self::assertSame(
+			array( '10:00', '11:10', '12:38', '14:10' ),
+			$deps,
+			'Expected four Uppsala→Fjällnora connections (train+bus); not a search limit'
+		);
+	}
+
 	public function test_find_connections_uppsala_marielund_on_red_sunday(): void {
 		$this->boot_service_fixture( 'red-81-out', self::DATE_RED );
 		$stations = $this->station_ids();

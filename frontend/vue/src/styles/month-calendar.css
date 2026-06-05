@@ -184,28 +184,28 @@
 }
 
 .mrt-month .mrt-month-day--green {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-green-bg) 24%, #fff);
-    color: var(--mrt-text-primary, #151515);
+    background: var(--mrt-cal-traffic-green-bg);
+    color: var(--mrt-cal-traffic-green-fg);
 }
 
 .mrt-month .mrt-month-day--yellow {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-yellow-bg) 38%, #fff);
-    color: var(--mrt-text-primary, #151515);
+    background: var(--mrt-cal-traffic-yellow-bg);
+    color: var(--mrt-cal-traffic-yellow-fg);
 }
 
 .mrt-month .mrt-month-day--red {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-red-bg) 18%, #fff);
-    color: var(--mrt-text-primary, #151515);
+    background: var(--mrt-cal-traffic-red-bg);
+    color: var(--mrt-cal-traffic-red-fg);
 }
 
 .mrt-month .mrt-month-day--orange {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-orange-bg) 22%, #fff);
-    color: var(--mrt-text-primary, #151515);
+    background: var(--mrt-cal-traffic-orange-bg);
+    color: var(--mrt-cal-traffic-orange-fg);
 }
 
 .mrt-month .mrt-month-day--blue {
-    background: color-mix(in srgb, var(--mrt-cal-traffic-blue-bg) 18%, #fff);
-    color: var(--mrt-text-primary, #151515);
+    background: var(--mrt-cal-traffic-blue-bg);
+    color: var(--mrt-cal-traffic-blue-fg);
 }
 
 .mrt-month .mrt-month-day--clickable {

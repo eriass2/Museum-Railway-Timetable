@@ -28,6 +28,10 @@
     font-weight: var(--mrt-font-weight-body);
 }
 
+.mrt-vue-root :where(button, input, select, textarea) {
+    font-family: inherit;
+}
+
 .mrt-heading,
 .mrt-ov-banner,
 .mrt-ov-route-title,
