@@ -25,6 +25,7 @@ Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESI
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i Vue-admin (steg-för-steg) |
 | [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsmeny, component demo, import |
 | [VUE_FRONTEND.md](VUE_FRONTEND.md) | Publikt Vue-frontend (build, bundle, integration) |
+| [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md) | Reseplanerare – prestanda (fas 1–4, status) |
 | [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) | Delade `Mrt*`-komponenter, tokens, alerts |
 | [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning i Docker |
 | [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG-krav per modul |

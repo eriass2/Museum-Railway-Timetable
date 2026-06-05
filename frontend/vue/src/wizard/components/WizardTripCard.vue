@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
 import MrtExpandTrigger from '../../components/ui/MrtExpandTrigger.vue';
 import MrtTripCard from '../../components/ui/MrtTripCard.vue';
@@ -59,6 +59,7 @@ const vehicleItems = computed(() => legsToVehicleItems(legs.value, cfg.value));
 async function toggleDetail(): Promise<void> {
   expanded.value = !expanded.value;
   if (expanded.value) {
+    await nextTick();
     await detailRef.value?.ensureLoaded();
   }
 }
@@ -87,7 +88,7 @@ async function toggleDetail(): Promise<void> {
       <MrtExpandTrigger :expanded="expanded" :label="meta" @toggle="toggleDetail" />
     </template>
     <WizardTripDetail
-      v-show="expanded"
+      v-if="expanded"
       ref="detailRef"
       :connection="connection"
       :leg-ctx="legCtx"

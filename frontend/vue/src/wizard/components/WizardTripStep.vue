@@ -82,7 +82,7 @@ watch(
       </MrtSelectedTrip>
 
       <MrtAsyncState
-        :loading="loading"
+        :loading="loading && !connections.length"
         :error="error"
         :loading-text="cfgStr(cfg, 'loading', 'Laddar...')"
         :empty="!connections.length"

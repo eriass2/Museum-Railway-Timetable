@@ -9,6 +9,7 @@ import {
   pickWizardCalendarDate,
   wizardCalendarDayAria,
 } from '../src/wizard/composables/wizardCalendarLoad';
+import { clearWizardCalendarCache } from '../src/wizard/utils/wizardCalendarCache';
 
 const config: WizardVueConfig = {
   app: 'wizard',
@@ -29,6 +30,7 @@ const config: WizardVueConfig = {
 describe('wizardCalendarLoad', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
+    clearWizardCalendarCache();
   });
 
   it('pickWizardCalendarDate stores date and advances step', () => {
@@ -86,5 +88,30 @@ describe('wizardCalendarLoad', () => {
       month: 6,
       trip_type: 'return',
     });
+  });
+
+  it('loadWizardCalendarMonth reuses client cache on repeat load', async () => {
+    const { store } = createWizardStore(config);
+    store.fromId = 1;
+    store.toId = 2;
+    store.tripType = 'single';
+    const daysMap = ref<Record<string, CalendarDayInfo | CalendarDayStatus>>({});
+    const run = vi.fn().mockResolvedValue({
+      success: true,
+      data: {
+        year: 2026,
+        month: 6,
+        days: { '2026-06-04': { status: 'ok', types: ['green'] } },
+      },
+    });
+    const cfg = computed(() => ({
+      errorGeneric: config.strings?.errorGeneric ?? '',
+    }));
+
+    await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
+    await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
+
+    expect(run).toHaveBeenCalledTimes(1);
+    expect(daysMap.value['2026-06-04']).toEqual({ status: 'ok', types: ['green'] });
   });
 });

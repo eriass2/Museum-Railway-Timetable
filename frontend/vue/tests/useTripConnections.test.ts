@@ -3,6 +3,7 @@ import { createWizardStore } from '../src/wizard/store/createWizardStore';
 import type { WizardVueConfig } from '../src/config/types';
 import { useTripConnections } from '../src/wizard/composables/useTripConnections';
 import type { JourneyConnection } from '../src/wizard/types';
+import { clearTripConnectionsCache } from '../src/wizard/utils/tripConnectionsCache';
 
 vi.mock('../src/api/mrtRest', () => ({
   mrtRestRequest: vi.fn(),
@@ -29,6 +30,7 @@ function wizardConfig(): WizardVueConfig {
 describe('useTripConnections', () => {
   beforeEach(() => {
     vi.mocked(mrtRestRequest).mockReset();
+    clearTripConnectionsCache();
   });
 
   it('uses debug outbound connections without REST', async () => {
@@ -96,5 +98,24 @@ describe('useTripConnections', () => {
         outbound_arrival: '10:30',
       }),
     );
+  });
+
+  it('reuses client cache on repeat load without REST', async () => {
+    vi.mocked(mrtRestRequest).mockResolvedValue({
+      success: true,
+      data: { connections: [{ service_id: 5, from_departure: '09:00', to_arrival: '10:00' }] },
+    });
+
+    const ctx = createWizardStore(wizardConfig());
+    ctx.store.fromId = 1;
+    ctx.store.toId = 2;
+    ctx.store.dateYmd = '2026-06-01';
+
+    const { loadConnections, connections } = useTripConnections(ctx, 'outbound');
+    await loadConnections();
+    await loadConnections();
+
+    expect(connections.value).toHaveLength(1);
+    expect(mrtRestRequest).toHaveBeenCalledTimes(1);
   });
 });

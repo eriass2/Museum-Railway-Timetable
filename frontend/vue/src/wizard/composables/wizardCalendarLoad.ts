@@ -9,6 +9,11 @@ import {
   formatYmdForDisplay,
   todayYearMonth,
 } from '../utils/wizardDate';
+import {
+  getWizardCalendarCache,
+  setWizardCalendarCache,
+  wizardCalendarCacheKey,
+} from '../utils/wizardCalendarCache';
 
 type AjaxRun = <T>(
   action: string,
@@ -29,6 +34,20 @@ export async function loadWizardCalendarMonth(
     daysMap.value = store.debugCalendarDays;
     return;
   }
+
+  const cacheKey = wizardCalendarCacheKey(
+    store.fromId,
+    store.toId,
+    store.tripType,
+    year,
+    month,
+  );
+  const cached = getWizardCalendarCache(cacheKey);
+  if (cached) {
+    daysMap.value = cached;
+    return;
+  }
+
   const res = await run<{ year: number; month: number; days: Record<string, CalendarDayInfo> }>(
     'mrt_journey_calendar_month',
     {
@@ -43,7 +62,9 @@ export async function loadWizardCalendarMonth(
     store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel. Försök igen.'));
     return;
   }
-  daysMap.value = res.data.days || {};
+  const days = res.data.days || {};
+  daysMap.value = days;
+  setWizardCalendarCache(cacheKey, days);
 }
 
 export function wizardCalendarDayAria(
