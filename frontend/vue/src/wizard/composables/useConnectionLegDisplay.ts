@@ -4,7 +4,7 @@ import type { ConnectionLegSummaryItem } from '../../shared/connectionLegDisplay
 import { stationTitleLookup } from '../../shared/connectionLegDisplay';
 import { buildConnectionLegSummary } from '../utils/buildConnectionLegSummary';
 import { arrivalAtDestination, departureFromOrigin } from '../utils/connection';
-import { formatTripClock } from '../utils/format';
+import { formatTripClock } from '../../shared/tripClock';
 import type { JourneyConnection } from '../types';
 
 export type ConnectionLegContext = 'outbound' | 'return';

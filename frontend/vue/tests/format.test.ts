@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { formatDuration, formatTripClock, isWarningNotice } from '../src/wizard/utils/format';
+import { formatTripClock } from '../src/shared/tripClock';
+import { formatDuration, isWarningNotice } from '../src/wizard/utils/format';
 
 describe('formatTripClock', () => {
   it('replaces colon with dot', () => {

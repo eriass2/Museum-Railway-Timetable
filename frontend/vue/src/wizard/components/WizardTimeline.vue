@@ -3,7 +3,7 @@ import MrtTimeline from '../../components/ui/MrtTimeline.vue';
 import type { TimelineStop } from '../types';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStr } from '../utils/wizardLabels';
-import { formatTripClock } from '../utils/format';
+import { formatTripClock } from '../../shared/tripClock';
 
 defineProps<{
   cfg: WizardCfg;
