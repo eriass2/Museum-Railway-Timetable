@@ -114,7 +114,7 @@ describe('buildConnectionLegSummary', () => {
     expect(items[2]).toMatchObject({
       type: 'leg',
       leg: {
-        vehicleLabel: 'Buss B1 mot Fjällnora',
+        vehicleLabel: 'Veteranbuss mot Fjällnora',
         timeRange: '17.22 – 17.30',
         route: 'Selknä → Fjällnora',
       },

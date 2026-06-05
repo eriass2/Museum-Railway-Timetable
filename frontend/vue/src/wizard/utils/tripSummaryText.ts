@@ -27,7 +27,7 @@ export type TripSummaryTextInput = {
   };
 };
 
-/** Plain-text trip summary for share / copy. */
+/** Plain-text trip summary (e.g. accessibility or future export). */
 export function buildTripSummaryText(input: TripSummaryTextInput): string {
   const lines: string[] = [input.title];
   if (input.tripTypeLabel) {
@@ -74,35 +74,4 @@ export function buildTripSummaryText(input: TripSummaryTextInput): string {
   }
 
   return lines.join('\n').trim();
-}
-
-export function canUseWebShare(): boolean {
-  return typeof navigator !== 'undefined' && typeof navigator.share === 'function';
-}
-
-export async function copyTripSummaryText(text: string): Promise<boolean> {
-  if (typeof navigator === 'undefined' || !navigator.clipboard?.writeText) {
-    return false;
-  }
-  try {
-    await navigator.clipboard.writeText(text);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-export async function shareTripSummaryText(title: string, text: string): Promise<'shared' | 'aborted' | 'failed'> {
-  if (!canUseWebShare()) {
-    return 'failed';
-  }
-  try {
-    await navigator.share({ title, text });
-    return 'shared';
-  } catch (err) {
-    if (err instanceof DOMException && err.name === 'AbortError') {
-      return 'aborted';
-    }
-    return 'failed';
-  }
 }
