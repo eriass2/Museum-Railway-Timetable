@@ -12,7 +12,9 @@ import {
   arrivalAtDestination,
   connectionDoorToDoorMinutes,
   connectionLegs,
+  connectionTransferCount,
   departureFromOrigin,
+  formatTransferTripLabel,
   isTransfer,
 } from '../utils/connection';
 import { formatDuration, formatTripClock, isWarningNotice } from '../utils/format';
@@ -41,11 +43,12 @@ const timeRange = computed(
     `${formatTripClock(departureFromOrigin(props.connection))} – ${formatTripClock(arrivalAtDestination(props.connection))}`,
 );
 
-const meta = computed(() =>
-  isTransfer(props.connection)
-    ? cfgStr(cfg, 'transferTrip', 'Byte')
-    : cfgStr(cfg, 'directTrip', 'Direktresa'),
-);
+const meta = computed(() => {
+  if (!isTransfer(props.connection)) {
+    return cfgStr(cfg, 'directTrip', 'Direktresa');
+  }
+  return formatTransferTripLabel(connectionTransferCount(props.connection), cfg.value);
+});
 
 const legs = computed(() => connectionLegs(props.connection));
 

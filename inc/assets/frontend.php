@@ -77,6 +77,8 @@ function MRT_journey_wizard_l10n_steps_and_trip(): array {
 		'routeDateContext' => __( '%1$s → %2$s | %3$s\n%4$s', 'museum-railway-timetable' ),
 		'directTrip'       => __( 'Direktresa', 'museum-railway-timetable' ),
 		'transferTrip'     => __( 'Byte', 'museum-railway-timetable' ),
+		'transferTripOne'  => __( '1 byte', 'museum-railway-timetable' ),
+		'transferTripMany' => __( '%d byten', 'museum-railway-timetable' ),
 		'selectedOutbound' => __( 'Vald utresa', 'museum-railway-timetable' ),
 		'towards'          => __( 'mot %s', 'museum-railway-timetable' ),
 		'changeAt'         => __( 'Byte vid %s', 'museum-railway-timetable' ),

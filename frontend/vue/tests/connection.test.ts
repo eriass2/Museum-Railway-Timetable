@@ -3,7 +3,9 @@ import {
   arrivalAtDestination,
   connectionDoorToDoorMinutes,
   connectionLegs,
+  connectionTransferCount,
   departureFromOrigin,
+  formatTransferTripLabel,
   isTransfer,
 } from '../src/wizard/utils/connection';
 import type { JourneyConnection } from '../src/wizard/types';
@@ -63,5 +65,18 @@ describe('connection utils', () => {
     };
     expect(connectionDoorToDoorMinutes(transfer)).toBe(157);
     expect(connectionDoorToDoorMinutes(direct)).toBe(90);
+  });
+
+  it('formats transfer trip labels with count', () => {
+    const cfg = { transferTripOne: '1 byte', transferTripMany: '%d byten' };
+    expect(formatTransferTripLabel(1, cfg)).toBe('1 byte');
+    expect(formatTransferTripLabel(2, cfg)).toBe('2 byten');
+    expect(connectionTransferCount({ ...direct, legs: [{ service_id: 1 }, { service_id: 2 }] })).toBe(1);
+    expect(
+      connectionTransferCount({
+        ...direct,
+        legs: [{ service_id: 1 }, { service_id: 2 }, { service_id: 3 }],
+      }),
+    ).toBe(2);
   });
 });

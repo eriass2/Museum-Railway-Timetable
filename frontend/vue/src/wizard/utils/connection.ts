@@ -1,5 +1,7 @@
 import type { JourneyConnection } from '../../shared/journey';
 import { waitMinutesBetween } from '../../shared/tripClock';
+import type { WizardCfg } from './wizardCfgTypes';
+import { cfgStr } from './wizardLabels';
 
 export function departureFromOrigin(conn: JourneyConnection): string {
   return conn.from_departure || conn.from_arrival || conn.departure || '';
@@ -29,6 +31,20 @@ export function connectionLegs(conn: JourneyConnection) {
 
 export function isTransfer(conn: JourneyConnection): boolean {
   return conn.connection_type === 'transfer' || (conn.legs?.length ?? 0) > 1;
+}
+
+export function connectionTransferCount(conn: JourneyConnection): number {
+  return Math.max(0, connectionLegs(conn).length - 1);
+}
+
+export function formatTransferTripLabel(count: number, cfg: WizardCfg): string {
+  if (count <= 0) {
+    return cfgStr(cfg, 'transferTrip', 'Byte');
+  }
+  if (count === 1) {
+    return cfgStr(cfg, 'transferTripOne', '1 byte');
+  }
+  return cfgStr(cfg, 'transferTripMany', '%d byten').replace('%d', String(count));
 }
 
 /** Door-to-door minutes matching the displayed clock range (includes transfer wait). */

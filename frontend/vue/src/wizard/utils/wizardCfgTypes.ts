@@ -54,6 +54,8 @@ export type WizardCfgStringKey =
   | 'routeDateContext'
   | 'directTrip'
   | 'transferTrip'
+  | 'transferTripOne'
+  | 'transferTripMany'
   | 'selectedOutbound'
   | 'towards'
   | 'changeAt'

@@ -116,8 +116,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Reseplanerare / copy
 - **Typ:** UX
 - **Prioritet:** låg
-- **Status:** öppen
-- **Kod:** `WizardTripCard.vue`, ev. `connectionLegDisplay.ts`
+- **Status:** klar
+- **Svar:** Expanderingsknappen på resekort visar `1 byte` / `N byten` utifrån antal ben minus ett (`formatTransferTripLabel`).
 
 ---
 
@@ -220,7 +220,7 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 4 | R8 | Restid inkl. väntetid / tydligare | Klar |
 | 5 | R16 | Barn 0–3 etikett | Klar |
 | 6 | R5 | Veteranbuss-namn | Klar |
-| 7 | R9 | ”1 byte” / ”2 byten” | Liten |
+| 7 | R9 | ”1 byte” / ”2 byten” | Klar |
 | 8 | R4 | Placering ”Visa passerade stationer” | Liten UI |
 | 9 | R3 | Mobil klippning | Klar (CSS) |
 | 10 | R10 | Få avgångar Fjällnora | Datakontroll |
@@ -230,13 +230,13 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 14 | R14 | Riktig PDF på mobil | Större |
 | 15 | R11 | Gångvägar + karta | Framtida |
 
-**Klart:** R1 (tur/retur-kalender), R2, R3, R5, R6, R8, R15, R16, R17 (fråga besvarad).
+**Klart:** R1 (tur/retur-kalender), R2, R3, R5, R6, R8, R9, R15, R16, R17 (fråga besvarad).
 
 ---
 
 ## Nästa steg
 
-- [ ] Nästa punkt: **R9** (”1 byte” / ”2 byten”) eller **R4** (placering passerade stationer)
+- [ ] Nästa punkt: **R4** (placering passerade stationer) eller **R10** (Fjällnora-avgångar)
 - [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 
