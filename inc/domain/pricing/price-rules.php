@@ -69,10 +69,15 @@ function MRT_zones_for_station_pair( int $from_id, int $to_id, array $station_zo
 }
 
 /**
- * Fare zone span between two zone numbers (1 = same band, 2 = one step, …).
+ * Fare zone count between two geographic zone numbers.
+ *
+ * Same band → 1-zone ticket; crossing one band (e.g. 1→2) → 2-zone ticket.
  */
 function MRT_zones_pair_span( int $from_zone, int $to_zone ): int {
-	return max( 1, abs( $to_zone - $from_zone ) );
+	if ( $from_zone === $to_zone ) {
+		return 1;
+	}
+	return max( 2, abs( $to_zone - $from_zone ) );
 }
 
 /**

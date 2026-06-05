@@ -90,7 +90,7 @@ final class PriceZonesJourneyTest extends TestCase {
 			),
 		);
 
-		self::assertSame( 1, MRT_zones_for_journey_legs( $legs, $this->sample_zone_map() ) );
+		self::assertSame( 2, MRT_zones_for_journey_legs( $legs, $this->sample_zone_map() ) );
 		self::assertSame( 2, MRT_zones_for_station_pair( 1, 4, $this->sample_zone_map() ) );
 	}
 
@@ -151,11 +151,11 @@ final class PriceZonesJourneyTest extends TestCase {
 		);
 
 		self::assertSame(
-			1,
+			2,
 			MRT_zones_for_trip_price( 1, 3, $outbound, null )
 		);
 		self::assertSame(
-			1,
+			2,
 			MRT_zones_for_trip_price( 1, 6, $outbound, $inbound )
 		);
 	}
@@ -182,6 +182,43 @@ final class PriceZonesJourneyTest extends TestCase {
 		);
 
 		self::assertSame( 2, MRT_zones_for_trip_price( 1, 6, null, $inbound ) );
+	}
+
+	public function test_zones_for_journey_legs_uppsala_to_fjallnora_is_two_zones(): void {
+		$this->mrt_use_journey_fixture(
+			array(
+				93 => array(
+					$this->mrt_stop( 93, 1, 1, null, '11:10' ),
+					$this->mrt_stop( 93, 2, 2, '11:47', null ),
+				),
+				3 => array(
+					$this->mrt_stop( 3, 2, 1, null, '11:50' ),
+					$this->mrt_stop( 3, 3, 2, '11:57', null ),
+				),
+			),
+			array( 900 => array( '2026-07-01' ) )
+		);
+
+		$zone_map = array(
+			1 => array( 1 ),
+			2 => array( 2 ),
+			3 => array( 2 ),
+		);
+
+		$legs = array(
+			array(
+				'service_id'      => 93,
+				'from_station_id' => 1,
+				'to_station_id'   => 2,
+			),
+			array(
+				'service_id'      => 3,
+				'from_station_id' => 2,
+				'to_station_id'   => 3,
+			),
+		);
+
+		self::assertSame( 2, MRT_zones_for_journey_legs( $legs, $zone_map ) );
 	}
 
 	public function test_zones_for_journey_legs_uppsala_to_skolsta_is_one_zone(): void {

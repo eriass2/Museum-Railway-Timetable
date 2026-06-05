@@ -49,6 +49,29 @@ final class PriceRulesTest extends TestCase {
 		self::assertSame( 2, MRT_zones_for_station_pair( 1, 2, $map ) );
 	}
 
+	public function test_zones_for_station_pair_adjacent_bands(): void {
+		$map = array(
+			1 => array( 1 ),
+			2 => array( 2 ),
+		);
+		self::assertSame( 2, MRT_zones_for_station_pair( 1, 2, $map ) );
+	}
+
+	public function test_zones_pair_span_lennakatten_bands(): void {
+		self::assertSame( 1, MRT_zones_pair_span( 1, 1 ) );
+		self::assertSame( 2, MRT_zones_pair_span( 1, 2 ) );
+		self::assertSame( 2, MRT_zones_pair_span( 1, 3 ) );
+		self::assertSame( 2, MRT_zones_pair_span( 2, 3 ) );
+	}
+
+	public function test_zones_for_station_path_boundary_gunsta_stays_one_zone(): void {
+		$map = array(
+			1 => array( 1 ),
+			2 => array( 1, 2 ),
+		);
+		self::assertSame( 1, MRT_zones_for_station_path( array( 1, 2 ), $map ) );
+	}
+
 	public function test_zones_for_station_pair_caps_at_three(): void {
 		$map = array(
 			1 => array( 1 ),
@@ -64,9 +87,9 @@ final class PriceRulesTest extends TestCase {
 			3 => array( 2 ),
 			4 => array( 4 ),
 		);
-		self::assertSame( 1, MRT_zones_for_station_path( array( 1, 3 ), $map ) );
+		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 3 ), $map ) );
 		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 4 ), $map ) );
-		self::assertSame( 1, MRT_zones_for_station_path( array( 1, 2, 3 ), $map ) );
+		self::assertSame( 2, MRT_zones_for_station_path( array( 1, 2, 3 ), $map ) );
 	}
 
 	public function test_zones_for_station_path_returns_cap_when_no_zones(): void {
