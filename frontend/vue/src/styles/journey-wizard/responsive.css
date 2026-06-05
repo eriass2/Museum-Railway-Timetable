@@ -7,7 +7,22 @@
     .mrt-journey-wizard .mrt-step-panel--search,
     .mrt-journey-wizard .mrt-step-panel--wide {
         width: 100%;
-        padding: 0.75rem 0.5rem 1.1rem;
+        min-width: 0;
+        padding: 0.75rem 0.85rem 1.1rem;
+        box-sizing: border-box;
+    }
+
+    .mrt-journey-wizard .mrt-step-header,
+    .mrt-journey-wizard .mrt-step-header__context,
+    .mrt-journey-wizard .mrt-trip-summary,
+    .mrt-journey-wizard .mrt-trip-summary__route {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .mrt-journey-wizard .mrt-step-header__context,
+    .mrt-journey-wizard .mrt-trip-summary__route {
+        overflow-wrap: anywhere;
     }
 
     .mrt-journey-wizard .mrt-step-nav {
@@ -66,6 +81,9 @@
 
     .mrt-journey-wizard .mrt-surface:not(.mrt-surface--flush) {
         padding: 0.85rem 0.75rem;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     .mrt-journey-wizard .mrt-surface .mrt-segmented {

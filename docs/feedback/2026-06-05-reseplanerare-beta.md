@@ -40,7 +40,7 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Typ:** bugg eller missförstånd — **utred**
 - **Prioritet:** hög
 - **Status:** klar (2026-06-05)
-- **Anteckning:** Tidtabellen modellerar 71→61 som **en tur** med stopp i Marielund; PDF visar tågbyte. Fix: dela resor som korsar Marielund till två ben (71 + 61), visa ”mot [alight-station]” per ben. Uppsala→Marielund förblir direktresa.
+- **Anteckning:** Fixture delad vid Marielund: t.ex. `green-71-out` (→ Marielund) + `green-61-out` (Marielund → Faringe). Resesökningsmotorn hittar riktigt byte; PDF-byteskarta kvar för tidtabellsöversikt.
 
 ---
 
@@ -50,8 +50,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Reseplanerare / mobil CSS
 - **Typ:** UI
 - **Prioritet:** medium
-- **Status:** öppen
-- **Anteckning:** Troligen padding/`overflow-x` i wizard-shell. J3 (juni-granskning) adresserade fordonsrad — kan vara kvar i steg-header/context-rad.
+- **Status:** klar (2026-06-05)
+- **Anteckning:** Orsak: full-bleed `100vw` + `overflow-x: hidden` gav horisontell förskjutning och klippte vänsterkant. Fix: full-bleed endast ≥48rem, bättre radbrytning i steg-header och rutt-rad, mer sidpadding på mobil.
 
 ---
 
@@ -216,13 +216,13 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 |---|-----|-------|--------|
 | 1 | R15 | Zon/pris Uppsala–Fjällnora | ~~Medium~~ ✓ |
 | 2 | R6 | Busskoppling Selknä (113 min) | Data + ev. kod |
-| 3 | R2 | Direktresa vs byte Marielund | Utredning |
+| 3 | R2 | Direktresa vs byte Marielund | Klar (fixture) |
 | 4 | R8 | Restid inkl. väntetid / tydligare | Liten |
 | 5 | R16 | Barn 0–3 etikett | Minimal |
 | 6 | R5 | Veteranbuss-namn | Liten |
 | 7 | R9 | ”1 byte” / ”2 byten” | Liten |
 | 8 | R4 | Placering ”Visa passerade stationer” | Liten UI |
-| 9 | R3 | Mobil klippning | Liten CSS |
+| 9 | R3 | Mobil klippning | Klar (CSS) |
 | 10 | R10 | Få avgångar Fjällnora | Datakontroll |
 | 11 | R7 | Min bytestid 0 min? | Beslut + ev. default |
 | 12 | R13 | Kalenderfärger vs profil | Design |
