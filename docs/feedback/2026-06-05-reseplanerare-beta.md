@@ -39,11 +39,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Reseplanerare / sökning / copy
 - **Typ:** bugg eller missförstånd — **utred**
 - **Prioritet:** hög
-- **Status:** öppen
-- **Anteckning:**
-  - ”mot Faringe” = tågets **slutdestination** (headsign), inte resenärens mål. En resa utan tågbyte kan korrekt vara ”Direktresa” även om tåget fortsätter längre.
-  - Om byte 71→61 **krävs** men visas som direktresa: troligen tidtabellsdata (en tur i stället för två) eller att sökningen inte hittar kopplingen.
-- **Nästa steg:** Reproducera konkret sträcka + datum; kontrollera turer/stopptider i admin.
+- **Status:** klar (2026-06-05)
+- **Anteckning:** Tidtabellen modellerar 71→61 som **en tur** med stopp i Marielund; PDF visar tågbyte. Fix: dela resor som korsar Marielund till två ben (71 + 61), visa ”mot [alight-station]” per ben. Uppsala→Marielund förblir direktresa.
 
 ---
 

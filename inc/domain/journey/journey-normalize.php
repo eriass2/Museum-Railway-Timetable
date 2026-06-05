@@ -229,10 +229,12 @@ function MRT_normalize_connection_for_api( $item, $dateYmd, $from_station_id, $t
 	if ( $dur === null ) {
 		$dur = MRT_format_duration_minutes( $dep, $arr );
 	}
+	$leg   = $sid > 0 ? MRT_journey_build_leg_segment( $sid, $from_station_id, $to_station_id, $dateYmd ) : null;
+	$legs  = $leg !== null ? array( $leg ) : array();
 	return array(
 		'connection_type'     => 'direct',
 		'transfer_station_id' => null,
-		'legs'                => array(),
+		'legs'                => $legs,
 		'service_id'          => $sid,
 		'departure'           => $dep,
 		'arrival'             => $arr,
@@ -247,7 +249,9 @@ function MRT_normalize_connection_for_api( $item, $dateYmd, $from_station_id, $t
 		'service_name'        => (string) ( $conn['service_name'] ?? '' ),
 		'service_number'      => $num !== '' && $num !== null ? (string) $num : ( $sid > 0 ? (string) $sid : '' ),
 		'route_name'          => (string) ( $conn['route_name'] ?? '' ),
-		'destination'         => (string) ( $conn['destination'] ?? '' ),
+		'destination'         => $leg !== null
+			? (string) ( $leg['destination'] ?? '' )
+			: MRT_journey_leg_destination_label( $to_station_id ),
 		'direction'           => (string) ( $conn['direction'] ?? '' ),
 		'segments'            => $extra['segments'],
 		'notice'              => $extra['notice'],

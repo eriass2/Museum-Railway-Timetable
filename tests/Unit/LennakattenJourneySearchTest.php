@@ -80,6 +80,41 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '10:35', $connections[0]['to_arrival'] ?? '' );
 	}
 
+	public function test_find_uppsala_faringe_on_green_train_71_splits_at_marielund(): void {
+		$this->boot_service_fixture( 'green-71-out', self::DATE_GREEN );
+		$stations = $this->station_ids();
+
+		$results = MRT_journey_find_normalized_connections(
+			$stations['uppsala-ostra'],
+			$stations['faringe'],
+			self::DATE_GREEN
+		);
+
+		self::assertNotEmpty( $results );
+		$first = $results[0];
+		self::assertSame( 'transfer', $first['connection_type'] ?? '' );
+		self::assertSame( $stations['marielund'], $first['transfer_station_id'] ?? 0 );
+		self::assertCount( 2, $first['legs'] ?? array() );
+		self::assertSame( '71', $first['legs'][0]['service_number'] ?? '' );
+		self::assertSame( '61', $first['legs'][1]['service_number'] ?? '' );
+		self::assertSame( '11:25', $first['to_arrival'] ?? '' );
+	}
+
+	public function test_find_uppsala_marielund_stays_direct_with_alighting_destination(): void {
+		$this->boot_service_fixture( 'green-71-out', self::DATE_GREEN );
+		$stations = $this->station_ids();
+
+		$results = MRT_journey_find_normalized_connections(
+			$stations['uppsala-ostra'],
+			$stations['marielund'],
+			self::DATE_GREEN
+		);
+
+		self::assertNotEmpty( $results );
+		self::assertSame( 'direct', $results[0]['connection_type'] ?? '' );
+		self::assertSame( 'Marielund', $results[0]['legs'][0]['destination'] ?? '' );
+	}
+
 	public function test_find_connections_uppsala_faringe_on_green_thuns_express(): void {
 		$this->boot_service_fixture( 'green-93-out', self::DATE_GREEN );
 		$stations = $this->station_ids();
@@ -246,7 +281,26 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '11:37', $results[0]['legs'][0]['to_arrival'] ?? '' );
 	}
 
+	private function register_fixture_station_posts(): void {
+		if ( ! isset( $GLOBALS['mrt_test_posts'] ) || ! is_array( $GLOBALS['mrt_test_posts'] ) ) {
+			$GLOBALS['mrt_test_posts'] = array();
+		}
+		foreach ( $this->fixture_files()['stations.csv'] ?? array() as $row ) {
+			$code = (string) ( $row['station_code'] ?? '' );
+			$name = (string) ( $row['name'] ?? '' );
+			$id   = $this->station_ids()[ $code ] ?? 0;
+			if ( $id <= 0 || $name === '' ) {
+				continue;
+			}
+			$GLOBALS['mrt_test_posts'][ $id ] = (object) array(
+				'ID'         => $id,
+				'post_title' => $name,
+			);
+		}
+	}
+
 	private function boot_service_fixture( string $service_code, string $date ): void {
+		$this->register_fixture_station_posts();
 		$this->boot_fixture_services( array( $service_code ), $date );
 	}
 
@@ -254,6 +308,7 @@ final class LennakattenJourneySearchTest extends TestCase {
 	 * @param string[] $service_codes
 	 */
 	private function boot_fixture_services( array $service_codes, string $date ): void {
+		$this->register_fixture_station_posts();
 		$stations           = $this->station_ids();
 		$rows_by_service    = array();
 		$service_timetables = array();
@@ -345,6 +400,10 @@ final class LennakattenJourneySearchTest extends TestCase {
 			$end_station_id = $stations[ (string) ( $row['end_station_code'] ?? '' ) ] ?? 0;
 			if ( $service_id > 0 && $end_station_id > 0 ) {
 				$meta[ $service_id . '|mrt_service_end_station_id' ] = $end_station_id;
+			}
+			$service_number = (string) ( $row['service_number'] ?? '' );
+			if ( $service_id > 0 && $service_number !== '' ) {
+				$meta[ $service_id . '|mrt_service_number' ] = $service_number;
 			}
 		}
 

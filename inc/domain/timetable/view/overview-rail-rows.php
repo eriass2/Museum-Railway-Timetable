@@ -254,24 +254,7 @@ function MRT_timetable_train_change_row_json(
 		return null;
 	}
 
-	$map = array(
-		'71' => array(
-			'typeName' => 'Dieseltåg',
-			'serviceNumber' => '61',
-		),
-		'63' => array(
-			'typeName' => 'Rälsbuss',
-			'serviceNumber' => '97',
-		),
-		'60' => array(
-			'typeName' => 'Ångtåg',
-			'serviceNumber' => '74',
-		),
-		'96' => array(
-			'typeName' => 'Dieseltåg',
-			'serviceNumber' => '64',
-		),
-	);
+	$map = MRT_journey_train_change_by_station()['Marielund'] ?? array();
 
 	$cells = array();
 	foreach ( $services as $idx => $service_data ) {
