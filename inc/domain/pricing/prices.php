@@ -233,7 +233,7 @@ function MRT_price_category_labels() {
 	return array(
 		'adult'          => __( 'Vuxen', 'museum-railway-timetable' ),
 		'child_4_15'     => __( 'Barn 4–15', 'museum-railway-timetable' ),
-		'child_0_3'      => __( 'Barn 0–6', 'museum-railway-timetable' ),
+		'child_0_3'      => __( 'Barn 0–3', 'museum-railway-timetable' ),
 		'student_senior' => __( 'Student / pensionär', 'museum-railway-timetable' ),
 	);
 }

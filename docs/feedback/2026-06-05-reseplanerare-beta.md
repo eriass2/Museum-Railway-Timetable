@@ -192,8 +192,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Priser / copy
 - **Typ:** bugg (fel label)
 - **Prioritet:** låg (en rad)
-- **Status:** öppen
-- **Kod:** `MRT_price_category_labels()` i `inc/domain/pricing/prices.php` — nyckel `child_0_3`, label ”Barn 0–6”.
+- **Status:** klar
+- **Svar:** Etikett i `MRT_price_category_labels()` ändrad till ”Barn 0–3” (nyckeln `child_0_3` oförändrad).
 
 ---
 
@@ -218,7 +218,7 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 2 | R6 | Busskoppling Selknä (113 min) | Klar |
 | 3 | R2 | Direktresa vs byte Marielund | Klar (fixture) |
 | 4 | R8 | Restid inkl. väntetid / tydligare | Klar |
-| 5 | R16 | Barn 0–3 etikett | Minimal |
+| 5 | R16 | Barn 0–3 etikett | Klar |
 | 6 | R5 | Veteranbuss-namn | Liten |
 | 7 | R9 | ”1 byte” / ”2 byten” | Liten |
 | 8 | R4 | Placering ”Visa passerade stationer” | Liten UI |
@@ -230,13 +230,13 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 14 | R14 | Riktig PDF på mobil | Större |
 | 15 | R11 | Gångvägar + karta | Framtida |
 
-**Klart:** R1 (tur/retur-kalender), R2, R3, R6, R8, R15, R17 (fråga besvarad).
+**Klart:** R1 (tur/retur-kalender), R2, R3, R6, R8, R15, R16, R17 (fråga besvarad).
 
 ---
 
 ## Nästa steg
 
-- [ ] Nästa punkt: **R16** (barn 0–3 etikett) eller **R5** (Veteranbuss-namn)
+- [ ] Nästa punkt: **R5** (Veteranbuss-namn) eller **R9** (”1 byte” / ”2 byten”)
 - [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 
