@@ -57,13 +57,13 @@ final class JourneyTransferRulesTest extends TestCase {
 			'12|mrt_service_route_id'  => 901,
 		);
 
-		self::assertSame( 0, MRT_journey_min_transfer_between_legs( 9, 11, 10 ) );
-		self::assertSame( 4, MRT_journey_min_transfer_between_legs( 9, 11, 12 ) );
+		self::assertSame( 0, MRT_journey_min_transfer_between_legs( 9, 11, 10, 4 ) );
+		self::assertSame( 4, MRT_journey_min_transfer_between_legs( 9, 11, 12, 4 ) );
 		self::assertTrue(
-			MRT_journey_transfer_wait_is_valid_between_services( '11:47', '11:50', 9, 11, 10 )
+			MRT_journey_transfer_wait_is_valid_between_services( '11:47', '11:50', 9, 11, 10, 4 )
 		);
 		self::assertFalse(
-			MRT_journey_transfer_wait_is_valid_between_services( '11:47', '11:50', 9, 11, 12 )
+			MRT_journey_transfer_wait_is_valid_between_services( '11:47', '11:50', 9, 11, 12, 4 )
 		);
 	}
 

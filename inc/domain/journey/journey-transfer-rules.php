@@ -86,7 +86,8 @@ function MRT_journey_route_is_bus_shuttle( int $route_id ): bool {
 function MRT_journey_min_transfer_between_legs(
 	int $hub_station_id,
 	int $incoming_service_id,
-	int $outgoing_service_id
+	int $outgoing_service_id,
+	int $search_min_minutes
 ): int {
 	if (
 		$hub_station_id > 0
@@ -96,7 +97,7 @@ function MRT_journey_min_transfer_between_legs(
 	) {
 		return 0;
 	}
-	return MRT_journey_min_transfer_minutes();
+	return max( 0, $search_min_minutes );
 }
 
 /**
@@ -107,13 +108,19 @@ function MRT_journey_transfer_wait_is_valid_between_services(
 	string $departure_hhmm,
 	int $hub_station_id,
 	int $incoming_service_id,
-	int $outgoing_service_id
+	int $outgoing_service_id,
+	int $search_min_minutes
 ): bool {
 	$wait = MRT_journey_transfer_wait_minutes( $arrival_hhmm, $departure_hhmm );
 	if ( $wait === null ) {
 		return false;
 	}
-	$min = MRT_journey_min_transfer_between_legs( $hub_station_id, $incoming_service_id, $outgoing_service_id );
+	$min = MRT_journey_min_transfer_between_legs(
+		$hub_station_id,
+		$incoming_service_id,
+		$outgoing_service_id,
+		$search_min_minutes
+	);
 	$max = MRT_journey_max_transfer_minutes();
 	return $wait >= $min && $wait <= $max;
 }
