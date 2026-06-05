@@ -59,10 +59,20 @@ function legTowardsSuffix(destination: string, cfg?: WizardCfg): string {
   return cfgStr(cfg ?? {}, 'towards', 'mot %s').replace('%s', dest);
 }
 
+function isBusLeg(leg: JourneyLeg): boolean {
+  const slug = (leg.train_type_slug || '').toLowerCase();
+  const train = (leg.train_type || '').trim().toLowerCase();
+  return slug === 'buss' || train === 'buss';
+}
+
 export function legVehicleLabel(leg: JourneyLeg, cfg?: WizardCfg): string {
+  const towards = legTowardsSuffix(leg.destination || '', cfg);
+  if (isBusLeg(leg)) {
+    const busLabel = cfgStr(cfg ?? {}, 'veteranBus', 'Veteranbuss');
+    return towards ? `${busLabel} ${towards}` : busLabel;
+  }
   const train = leg.train_type?.trim() || cfgStr(cfg ?? {}, 'defaultTrainType', 'Tåg');
   const number = legServiceNumber(leg);
-  const towards = legTowardsSuffix(leg.destination || '', cfg);
   if (number && towards) {
     return `${train} ${number} ${towards}`;
   }

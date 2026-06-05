@@ -63,6 +63,7 @@ function MRT_journey_wizard_l10n_steps_and_trip(): array {
 		'showStops'        => __( 'Visa passerade stationer', 'museum-railway-timetable' ),
 		'hideStops'        => __( 'Dölj passerade stationer', 'museum-railway-timetable' ),
 		'defaultTrainType' => __( 'Tåg', 'museum-railway-timetable' ),
+		'veteranBus'       => __( 'Veteranbuss', 'museum-railway-timetable' ),
 		'selectTrip'       => __( 'Välj →', 'museum-railway-timetable' ),
 		'noticeLabel'      => __( 'Trafikmeddelande', 'museum-railway-timetable' ),
 		'durationMinutes'  => __( '%d min', 'museum-railway-timetable' ),

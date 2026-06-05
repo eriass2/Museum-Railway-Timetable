@@ -72,8 +72,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Reseplanerare / copy
 - **Typ:** UX / copy
 - **Prioritet:** låg (enkel kodändring)
-- **Status:** öppen
-- **Kod:** `frontend/vue/src/wizard/utils/vehicle.ts` (`legVehicleLabel`)
+- **Status:** klar
+- **Svar:** `legVehicleLabel()` visar ”Veteranbuss mot …” för buss-ben (slug/typ `buss`), utan linjenummer. Översättningsnyckel `veteranBus`.
 
 ---
 
@@ -219,7 +219,7 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 3 | R2 | Direktresa vs byte Marielund | Klar (fixture) |
 | 4 | R8 | Restid inkl. väntetid / tydligare | Klar |
 | 5 | R16 | Barn 0–3 etikett | Klar |
-| 6 | R5 | Veteranbuss-namn | Liten |
+| 6 | R5 | Veteranbuss-namn | Klar |
 | 7 | R9 | ”1 byte” / ”2 byten” | Liten |
 | 8 | R4 | Placering ”Visa passerade stationer” | Liten UI |
 | 9 | R3 | Mobil klippning | Klar (CSS) |
@@ -230,13 +230,13 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 14 | R14 | Riktig PDF på mobil | Större |
 | 15 | R11 | Gångvägar + karta | Framtida |
 
-**Klart:** R1 (tur/retur-kalender), R2, R3, R6, R8, R15, R16, R17 (fråga besvarad).
+**Klart:** R1 (tur/retur-kalender), R2, R3, R5, R6, R8, R15, R16, R17 (fråga besvarad).
 
 ---
 
 ## Nästa steg
 
-- [ ] Nästa punkt: **R5** (Veteranbuss-namn) eller **R9** (”1 byte” / ”2 byten”)
+- [ ] Nästa punkt: **R9** (”1 byte” / ”2 byten”) eller **R4** (placering passerade stationer)
 - [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 

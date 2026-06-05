@@ -97,6 +97,7 @@ export type WizardCfgStringKey =
   | 'timetablePageLink'
   | 'back'
   | 'defaultTrainType'
+  | 'veteranBus'
   | 'thisMonth'
   | 'goToToday'
   | 'calendarEmptyMonth'

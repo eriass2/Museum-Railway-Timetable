@@ -40,6 +40,17 @@ describe('legVehicleLabel', () => {
       ),
     ).toBe('Rälsbuss 101 towards Faringe');
   });
+
+  it('shows veteran bus without service number', () => {
+    expect(
+      legVehicleLabel({
+        train_type: 'Buss',
+        train_type_slug: 'buss',
+        service_number: 'B3',
+        destination: 'Fjällnora',
+      }),
+    ).toBe('Veteranbuss mot Fjällnora');
+  });
 });
 
 describe('legToVehicleItem', () => {
@@ -55,7 +66,7 @@ describe('legToVehicleItem', () => {
       },
       cfg,
     );
-    expect(item.label).toBe('Buss B1 mot Uppsala Östra');
+    expect(item.label).toBe('Veteranbuss mot Uppsala Östra');
     expect(item.kind).toBe('bus');
     expect(item.iconUrl).toBe('/bus.svg');
   });
