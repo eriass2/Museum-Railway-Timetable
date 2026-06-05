@@ -15,7 +15,7 @@ final class PluginSettingsTest extends TestCase {
 
 	public function test_default_transfer_limits(): void {
 		$defaults = MRT_default_plugin_settings();
-		self::assertSame( 3, $defaults['min_transfer_minutes'] );
+		self::assertSame( 0, $defaults['min_transfer_minutes'] );
 		self::assertSame( 120, $defaults['max_transfer_minutes'] );
 	}
 

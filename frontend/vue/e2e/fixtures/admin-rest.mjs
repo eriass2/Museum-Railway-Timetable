@@ -50,7 +50,7 @@ export function buildAdminRestResponse(pathOnly, restPrefix) {
     settings: {
       enabled: true,
       note: '',
-      min_transfer_minutes: 3,
+      min_transfer_minutes: 0,
       max_transfer_minutes: 120,
     },
     'settings/prices': {

@@ -94,8 +94,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Inställningar / sökning
 - **Typ:** produktbeslut
 - **Prioritet:** låg
-- **Status:** öppen
-- **Anteckning:** Standard **3 min** (`min_transfer_minutes` i admin `#/settings`). Kan sättas till 0 utan kodändring. Påverkar inte 113-min-problemet (R6).
+- **Status:** klar
+- **Svar:** **Ja** — standard `min_transfer_minutes` är **0**. Tidtabellens schemalagda byten styr; operatör kan höja i admin om buffert önskas. Tåg→buss vid busshub har fortfarande egen 0-min-regel (R6).
 
 ---
 
@@ -224,19 +224,19 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 8 | R4 | Placering ”Visa passerade stationer” | Klar |
 | 9 | R3 | Mobil klippning | Klar (CSS) |
 | 10 | R10 | Få avgångar Fjällnora | Datakontroll |
-| 11 | R7 | Min bytestid 0 min? | Beslut + ev. default |
+| 11 | R7 | Min bytestid 0 min? | Klar (default 0) |
 | 12 | R13 | Kalenderfärger vs profil | Design |
 | 13 | R12 | Typsnitt (kvarvarande) | Design |
 | 14 | R14 | Riktig PDF på mobil | Större |
 | 15 | R11 | Gångvägar + karta | Framtida |
 
-**Klart:** R1 (tur/retur-kalender), R2, R3, R4, R5, R6, R8, R9, R15, R16, R17 (fråga besvarad).
+**Klart:** R1 (tur/retur-kalender), R2, R3, R4, R5, R6, R7, R8, R9, R15, R16, R17 (fråga besvarad).
 
 ---
 
 ## Nästa steg
 
-- [ ] Nästa punkt: **R10** (Fjällnora-avgångar) eller **R7** (min bytestid)
+- [ ] Nästa punkt: **R10** (Fjällnora-avgångar) eller **R13** (kalenderfärger)
 - [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 

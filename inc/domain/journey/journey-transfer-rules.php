@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function MRT_journey_min_transfer_minutes(): int {
 	$opts = MRT_get_plugin_settings();
-	$min  = max( 0, (int) ( $opts['min_transfer_minutes'] ?? 3 ) );
+	$min  = max( 0, (int) ( $opts['min_transfer_minutes'] ?? 0 ) );
 	return max( 0, (int) apply_filters( 'mrt_min_transfer_minutes', $min ) );
 }
 

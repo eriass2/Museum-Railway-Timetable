@@ -359,7 +359,7 @@ function MRT_journey_engine_find(
 	int $from_station_id,
 	int $to_station_id,
 	string $dateYmd,
-	int $min_transfer_minutes = 3,
+	int $min_transfer_minutes = 0,
 	bool $include_direct = true,
 	?int $max_transfers = null
 ): array {
@@ -396,7 +396,7 @@ function MRT_journey_engine_find(
  * @param bool   $include_direct Include single-service connections
  * @return array<int, array<string, mixed>>
  */
-function MRT_find_multi_leg_connections( $from_station_id, $to_station_id, $dateYmd, $min_transfer_minutes = 3, $include_direct = true ) {
+function MRT_find_multi_leg_connections( $from_station_id, $to_station_id, $dateYmd, $min_transfer_minutes = 0, $include_direct = true ) {
 	return MRT_journey_engine_find(
 		(int) $from_station_id,
 		(int) $to_station_id,
