@@ -41,6 +41,32 @@ final class JourneyTransferRulesTest extends TestCase {
 		self::assertFalse( MRT_journey_transfer_wait_is_valid( '10:00', '14:00' ) );
 	}
 
+	public function test_train_to_bus_at_bus_hub_allows_three_minute_wait_when_min_is_four(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'min_transfer_minutes' => 4,
+				'max_transfer_minutes' => 120,
+			),
+		);
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'9|mrt_station_bus_suffix' => '1',
+			'10|mrt_service_route_id'  => 8001,
+			'8001|mrt_route_stations'  => array( 9, 15 ),
+			'15|mrt_station_bus_suffix' => '1',
+			'11|mrt_service_route_id'  => 900,
+			'12|mrt_service_route_id'  => 901,
+		);
+
+		self::assertSame( 0, MRT_journey_min_transfer_between_legs( 9, 11, 10 ) );
+		self::assertSame( 4, MRT_journey_min_transfer_between_legs( 9, 11, 12 ) );
+		self::assertTrue(
+			MRT_journey_transfer_wait_is_valid_between_services( '11:47', '11:50', 9, 11, 10 )
+		);
+		self::assertFalse(
+			MRT_journey_transfer_wait_is_valid_between_services( '11:47', '11:50', 9, 11, 12 )
+		);
+	}
+
 	public function test_transfer_station_priority_prefers_bus_hub(): void {
 		$GLOBALS['mrt_test_post_meta'] = array(
 			'9|mrt_station_bus_suffix' => '1',

@@ -86,9 +86,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Reseplanerare / sökning / tidtabell
 - **Typ:** bugg — **utred**
 - **Prioritet:** hög
-- **Status:** öppen
-- **Anteckning:** Inte orsakat av min bytestid (3 min). Sökningen hittar sen buss (13:40) i stället för tidigare (~11:50). Kontrollera busstider i data, rutter, P/A-flaggor.
-- **Nästa steg:** Reproducera Uppsala → Fjällnora med datum; jämför mot PDF/tidtabell.
+- **Status:** klar (2026-06-05)
+- **Anteckning:** Orsak: global `min_transfer_minutes` > 3 avvisade B2 (11:50) med exakt 3 min byte tåg→buss. Fix: 0 min min-byte vid busshub (`mrt_station_bus_suffix`) för tåg→buss. Tester med min=4.
 
 ---
 

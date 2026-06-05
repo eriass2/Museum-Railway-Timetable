@@ -23,6 +23,7 @@ final class LennakattenJourneySearchTest extends TestCase {
 
 	protected function tearDown(): void {
 		$this->mrt_reset_journey_fixture();
+		unset( $GLOBALS['mrt_test_options'] );
 		parent::tearDown();
 	}
 
@@ -157,6 +158,51 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertCount( 2, $transfer['legs'] ?? array() );
 		self::assertSame( '10:53', $transfer['legs'][1]['from_departure'] ?? '' );
 		self::assertSame( '11:00', $transfer['legs'][1]['to_arrival'] ?? '' );
+	}
+
+	public function test_find_uppsala_fjallnora_prefers_b2_bus_after_green_vard_93(): void {
+		$this->boot_fixture_services(
+			array( 'green-vard-93-out', 'green-b2-bus-out', 'green-b3-bus-out' ),
+			'2026-07-01'
+		);
+		$stations = $this->station_ids();
+
+		$results = MRT_journey_find_normalized_connections(
+			$stations['uppsala-ostra'],
+			$stations['fjallnora'],
+			'2026-07-01'
+		);
+
+		self::assertNotEmpty( $results, 'Expected Uppsala Östra → Fjällnora on green weekday' );
+		$first = $results[0];
+		self::assertSame( '11:10', MRT_journey_normalized_departure_hhmm( $first ) );
+		self::assertSame( '11:57', MRT_journey_normalized_arrival_hhmm( $first ) );
+		self::assertSame( 'transfer', $first['connection_type'] ?? '' );
+		self::assertSame( '11:50', $first['legs'][1]['from_departure'] ?? '' );
+	}
+
+	public function test_find_uppsala_fjallnora_uses_b2_even_when_min_transfer_is_four(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'min_transfer_minutes' => 4,
+				'max_transfer_minutes' => 120,
+			),
+		);
+		$this->boot_fixture_services(
+			array( 'green-vard-93-out', 'green-b2-bus-out', 'green-b3-bus-out' ),
+			'2026-07-01'
+		);
+		$stations = $this->station_ids();
+
+		$results = MRT_journey_find_normalized_connections(
+			$stations['uppsala-ostra'],
+			$stations['fjallnora'],
+			'2026-07-01'
+		);
+
+		self::assertNotEmpty( $results );
+		self::assertSame( '11:57', MRT_journey_normalized_arrival_hhmm( $results[0] ) );
+		self::assertSame( '11:50', $results[0]['legs'][1]['from_departure'] ?? '' );
 	}
 
 	public function test_find_connections_uppsala_marielund_on_red_sunday(): void {

@@ -167,18 +167,24 @@ function MRT_journey_engine_extend_state(
 	int $min_transfer_minutes,
 	int $max_transfers
 ): void {
-	$earliest = MRT_add_minutes_to_hhmm( $state['arrival'], $min_transfer_minutes );
-	if ( $earliest === null ) {
-		return;
-	}
+	unset( $min_transfer_minutes );
 	$edges = MRT_journey_graph_next_legs(
 		(int) $state['station'],
 		$goal_station_id,
 		$dateYmd,
-		$earliest,
+		$state['arrival'],
 		(int) $state['last_service_id']
 	);
 	foreach ( $edges as $edge ) {
+		$min      = MRT_journey_min_transfer_between_legs(
+			(int) $state['station'],
+			(int) $state['last_service_id'],
+			(int) $edge['service_id']
+		);
+		$earliest = MRT_add_minutes_to_hhmm( $state['arrival'], $min );
+		if ( $earliest === null || MRT_compare_hhmm( $edge['departure'], $earliest ) < 0 ) {
+			continue;
+		}
 		MRT_journey_engine_apply_edge(
 			$queue,
 			$results,
@@ -213,7 +219,13 @@ function MRT_journey_engine_apply_edge(
 	string $dateYmd,
 	int $max_transfers
 ): void {
-	if ( ! MRT_journey_constraint_transfer_wait( $state['arrival'], $edge['departure'] ) ) {
+	if ( ! MRT_journey_transfer_wait_is_valid_between_services(
+		$state['arrival'],
+		$edge['departure'],
+		(int) $state['station'],
+		(int) $state['last_service_id'],
+		(int) $edge['service_id']
+	) ) {
 		return;
 	}
 	$leg = MRT_journey_engine_leg_from_edge( $edge, (int) $state['station'], $dateYmd );

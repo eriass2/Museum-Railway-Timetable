@@ -50,6 +50,75 @@ function MRT_journey_transfer_wait_is_valid( string $arrival_hhmm, string $depar
 }
 
 /**
+ * Whether a service is a connecting bus (taxonomy or Selknä-style shuttle route).
+ */
+function MRT_journey_service_is_bus( int $service_id ): bool {
+	if ( $service_id <= 0 ) {
+		return false;
+	}
+	$terms = wp_get_post_terms( $service_id, 'mrt_train_type', array( 'fields' => 'slugs' ) );
+	if ( ! is_wp_error( $terms ) && in_array( 'buss', $terms, true ) ) {
+		return true;
+	}
+	$route_id = (int) get_post_meta( $service_id, 'mrt_service_route_id', true );
+	return $route_id > 0 && MRT_journey_route_is_bus_shuttle( $route_id );
+}
+
+/**
+ * Two-stop route where both ends are marked bus stops (Selknä–Fjällnora).
+ */
+function MRT_journey_route_is_bus_shuttle( int $route_id ): bool {
+	$stations = MRT_get_route_stations( $route_id );
+	if ( count( $stations ) !== 2 ) {
+		return false;
+	}
+	foreach ( $stations as $station_id ) {
+		if ( get_post_meta( (int) $station_id, 'mrt_station_bus_suffix', true ) !== '1' ) {
+			return false;
+		}
+	}
+	return true;
+}
+
+/**
+ * Minimum wait before boarding the next leg (train→bus at bus hub uses 0 min).
+ */
+function MRT_journey_min_transfer_between_legs(
+	int $hub_station_id,
+	int $incoming_service_id,
+	int $outgoing_service_id
+): int {
+	if (
+		$hub_station_id > 0
+		&& get_post_meta( $hub_station_id, 'mrt_station_bus_suffix', true ) === '1'
+		&& MRT_journey_service_is_bus( $outgoing_service_id )
+		&& ! MRT_journey_service_is_bus( $incoming_service_id )
+	) {
+		return 0;
+	}
+	return MRT_journey_min_transfer_minutes();
+}
+
+/**
+ * Whether wait between two legs satisfies min/max for that transfer type.
+ */
+function MRT_journey_transfer_wait_is_valid_between_services(
+	string $arrival_hhmm,
+	string $departure_hhmm,
+	int $hub_station_id,
+	int $incoming_service_id,
+	int $outgoing_service_id
+): bool {
+	$wait = MRT_journey_transfer_wait_minutes( $arrival_hhmm, $departure_hhmm );
+	if ( $wait === null ) {
+		return false;
+	}
+	$min = MRT_journey_min_transfer_between_legs( $hub_station_id, $incoming_service_id, $outgoing_service_id );
+	$max = MRT_journey_max_transfer_minutes();
+	return $wait >= $min && $wait <= $max;
+}
+
+/**
  * Sort key for transfer stations (lower = preferred). Selknä-style bus hubs rank first.
  *
  * @param int $station_id Station post ID
