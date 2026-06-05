@@ -24,36 +24,23 @@ import { formatTripClock } from '../utils/format';
 import type { JourneyConnection } from '../types';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
 import { printElement } from '../../utils/printElement';
-import {
-  buildTripSummaryText,
-  canUseWebShare,
-  copyTripSummaryText,
-  shareTripSummaryText,
-  type TripSummaryLeg,
-  type TripSummaryTextInput,
-} from '../utils/tripSummaryText';
-import {
-  buildTripSummaryHtml,
-  openSummaryPrintTab,
-  prefersStandalonePrintTab,
-  shareTripSummary,
-  wrapTripSummaryDocument,
-} from '../utils/tripSummaryDocument';
+import { type TripSummaryLeg, type TripSummaryTextInput } from '../utils/tripSummaryText';
+import { downloadTripSummaryPdf } from '../utils/downloadTripSummaryPdf';
 
 const { store, cfg, config } = useWizardContext();
-const shareFeedback = ref('');
 
 const dateText = computed(() =>
   formatYmdForDisplay(store.dateYmd, cfgStringArray(cfg.value, 'monthNames')),
 );
 
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
-const printLabel = computed(() => cfgStr(cfg, 'summaryPrint', 'Skriv ut / spara som PDF'));
-const shareLabel = computed(() =>
-  canUseWebShare()
-    ? cfgStr(cfg, 'summaryShare', 'Dela resa')
-    : cfgStr(cfg, 'summaryCopy', 'Kopiera resa'),
+const printLabel = computed(() => cfgStr(cfg, 'summaryPrint', 'Skriv ut'));
+const downloadPdfLabel = computed(() => cfgStr(cfg, 'summaryDownloadPdf', 'Ladda ner som PDF'));
+const pdfErrorLabel = computed(() =>
+  cfgStr(cfg, 'summaryPdfError', 'Kunde inte skapa PDF. Försök igen eller använd Skriv ut.'),
 );
+const pdfDownloading = ref(false);
+const pdfError = ref('');
 
 const ticketUrl = computed(() => (config.ticketUrl || '').trim());
 const ticketCtaLabel = computed(() => cfgStr(cfg, 'ticketCta', 'Fortsätt till biljetter'));
@@ -197,49 +184,28 @@ function buildSummaryInput(): TripSummaryTextInput {
   };
 }
 
-function summaryPlainText(): string {
-  return buildTripSummaryText(buildSummaryInput());
-}
-
-function summaryDocumentHtml(): string {
-  return wrapTripSummaryDocument(buildTripSummaryHtml(buildSummaryInput()), cfgStr(cfg, 'stepSummary', 'Din resa'));
-}
-
-function setShareFeedback(message: string): void {
-  shareFeedback.value = message;
-}
-
-async function onShareOrCopy(): Promise<void> {
-  const text = summaryPlainText();
-  const title = cfgStr(cfg, 'stepSummary', 'Din resa');
-  const documentHtml = summaryDocumentHtml();
-  if (canUseWebShare()) {
-    const result = await shareTripSummary(title, text, documentHtml, shareTripSummaryText);
-    if (result === 'shared') {
-      setShareFeedback(cfgStr(cfg, 'summaryShareDone', 'Resan delades.'));
-      return;
-    }
-    if (result === 'aborted') {
-      return;
-    }
-  }
-  const copied = await copyTripSummaryText(text);
-  setShareFeedback(
-    copied
-      ? cfgStr(cfg, 'summaryCopyDone', 'Resan kopierades till urklipp.')
-      : cfgStr(cfg, 'summaryShareFailed', 'Kunde inte dela eller kopiera resan.'),
-  );
-}
-
 function onPrint(): void {
-  const title = cfgStr(cfg, 'stepSummary', 'Din resa');
-  if (prefersStandalonePrintTab()) {
-    const opened = openSummaryPrintTab(summaryDocumentHtml(), title);
-    if (opened) {
-      return;
-    }
-  }
   printElement('[data-wizard-summary-print]');
+}
+
+async function onDownloadPdf(): Promise<void> {
+  if (pdfDownloading.value) {
+    return;
+  }
+  pdfError.value = '';
+  pdfDownloading.value = true;
+  try {
+    const ok = await downloadTripSummaryPdf(buildSummaryInput(), {
+      tripPdfUrl: config.tripPdfUrl,
+    });
+    if (!ok) {
+      pdfError.value = pdfErrorLabel.value;
+    }
+  } catch {
+    pdfError.value = pdfErrorLabel.value;
+  } finally {
+    pdfDownloading.value = false;
+  }
 }
 
 function onBack(): void {
@@ -311,17 +277,17 @@ function onBack(): void {
         <MrtAccentButton type="button" variant="secondary" @click="onPrint">
           {{ printLabel }}
         </MrtAccentButton>
-        <MrtAccentButton type="button" variant="secondary" @click="onShareOrCopy">
-          {{ shareLabel }}
+        <MrtAccentButton
+          type="button"
+          variant="secondary"
+          :disabled="pdfDownloading"
+          @click="onDownloadPdf"
+        >
+          {{ downloadPdfLabel }}
         </MrtAccentButton>
       </div>
-      <p
-        v-if="shareFeedback"
-        class="mrt-summary-actions__feedback"
-        role="status"
-        aria-live="polite"
-      >
-        {{ shareFeedback }}
+      <p v-if="pdfError" class="mrt-summary-actions__feedback" role="alert">
+        {{ pdfError }}
       </p>
     </MrtSurfaceCard>
   </MrtStepPanel>

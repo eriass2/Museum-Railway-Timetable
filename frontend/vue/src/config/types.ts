@@ -3,6 +3,8 @@ export type MrtRestConfig = {
   restUrl?: string;
   restNonce?: string;
   strings?: Record<string, string>;
+  /** Lazy-loaded html2pdf bundle (assets/dist/vue/assets/trip-pdf.js). */
+  tripPdfUrl?: string;
 };
 
 export type MrtVueApp = 'month' | 'overview' | 'wizard' | 'index';

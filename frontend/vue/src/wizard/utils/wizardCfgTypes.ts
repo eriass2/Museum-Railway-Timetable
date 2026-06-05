@@ -109,11 +109,8 @@ export type WizardCfgStringKey =
   | 'legendNone'
   | 'ticketCta'
   | 'summaryPrint'
-  | 'summaryShare'
-  | 'summaryCopy'
-  | 'summaryCopyDone'
-  | 'summaryShareDone'
-  | 'summaryShareFailed'
+  | 'summaryDownloadPdf'
+  | 'summaryPdfError'
   | 'summaryPricesHeading'
   | 'calPrevAria'
   | 'calNextAria';

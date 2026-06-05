@@ -82,4 +82,9 @@ if (!existsSync(adminPath)) {
   fail('missing admin bundle assets/admin.js — run full npm run build');
 }
 
-console.log(`vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB; admin.js ${(readFileSync(adminPath, 'utf8').length / 1024).toFixed(1)} KiB)`);
+const tripPdfPath = join(distDir, 'assets/trip-pdf.js');
+if (!existsSync(tripPdfPath)) {
+  fail('missing trip-pdf.js — run full npm run build (vite.pdf.config.ts)');
+}
+
+console.log(`vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB; admin.js ${(readFileSync(adminPath, 'utf8').length / 1024).toFixed(1)} KiB; trip-pdf.js ${(readFileSync(tripPdfPath, 'utf8').length / 1024).toFixed(1)} KiB)`);

@@ -208,6 +208,15 @@ html.mrt-print-summary #mrt-print-clone {
         border-top: 1px dotted #ccc;
     }
 
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__icon,
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__icon-fallback {
+        display: none;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__leg {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__vehicle {
         font-size: 10pt;
     }

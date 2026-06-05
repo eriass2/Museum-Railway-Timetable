@@ -79,13 +79,14 @@ const timelineItems = computed((): TimelineItem[] => {
         <span class="mrt-timeline__node" aria-hidden="true" />
         <span class="mrt-timeline__station">{{ item.stop.station_title }}</span>
       </div>
-      <MrtExpandTrigger
-        v-else
-        variant="link"
-        :expanded="showAllStops"
-        :label="expandLabel"
-        @toggle="showAllStops = !showAllStops"
-      />
+      <div v-else class="mrt-timeline__toggle">
+        <MrtExpandTrigger
+          variant="link"
+          :expanded="showAllStops"
+          :label="expandLabel"
+          @toggle="showAllStops = !showAllStops"
+        />
+      </div>
     </template>
   </div>
 </template>
