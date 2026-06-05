@@ -92,15 +92,10 @@ function MRT_journey_wrap_direct_multi( array $conn, $dateYmd, $from_station_id,
 	if ( $leg === null ) {
 		$leg = MRT_journey_leg_from_connection_row( $conn, $dateYmd, $from_station_id, $to_station_id );
 	}
-	return MRT_journey_split_train_change_legs(
-		array(
-			'connection_type'     => 'direct',
-			'transfer_station_id' => null,
-			'legs'                => array( $leg ),
-		),
-		$dateYmd,
-		(int) $from_station_id,
-		(int) $to_station_id
+	return array(
+		'connection_type'     => 'direct',
+		'transfer_station_id' => null,
+		'legs'                => array( $leg ),
 	);
 }
 

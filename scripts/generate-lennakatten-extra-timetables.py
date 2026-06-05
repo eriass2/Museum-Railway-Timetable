@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Generate Lennakatten fixture rows (red/orange, green-vard clone, bus split)."""
+"""Generate Lennakatten fixture rows (red/orange, green-vard clone, bus split).
+
+Run ``python scripts/sync-lennakatten-rail-fixture.py`` first so GRÖN/GUL rail
+(including Marielund train-change splits) is up to date before cloning to green-vard.
+"""
 
 from __future__ import annotations
 

@@ -203,6 +203,10 @@ function MRT_journey_station_allows_transfer( int $station_id ): bool {
 	if ( isset( MRT_journey_route_terminus_station_ids()[ $station_id ] ) ) {
 		return true;
 	}
+	$title = get_the_title( $station_id );
+	if ( $title !== '' && isset( MRT_journey_train_change_by_station()[ $title ] ) ) {
+		return true;
+	}
 	return (bool) apply_filters( 'mrt_journey_station_allows_transfer', false, $station_id );
 }
 

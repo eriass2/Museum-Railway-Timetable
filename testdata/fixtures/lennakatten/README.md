@@ -18,10 +18,10 @@ Timetable codes in the CSV package:
 
 Regenerate rail blocks after PDF edits: `python scripts/generate-lennakatten-extra-timetables.py` (green-vard clone + red/orange).
 
-Sync GRÖN/GUL rail and bus stop times from Anslagstidtabell:
+Sync GRÖN/GUL rail and bus stop times from Anslagstidtabell (splits tågbyte at Marielund into separate services):
 
 ```sh
-python scripts/sync-lennakatten-green-yellow.py
+python scripts/sync-lennakatten-rail-fixture.py
 python scripts/generate-lennakatten-extra-timetables.py
 ```
 

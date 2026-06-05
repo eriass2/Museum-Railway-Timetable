@@ -80,8 +80,24 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '10:35', $connections[0]['to_arrival'] ?? '' );
 	}
 
-	public function test_find_uppsala_faringe_on_green_train_71_splits_at_marielund(): void {
+	public function test_green_71_out_alone_does_not_reach_faringe(): void {
 		$this->boot_service_fixture( 'green-71-out', self::DATE_GREEN );
+		$stations = $this->station_ids();
+
+		$connections = MRT_find_connections(
+			$stations['uppsala-ostra'],
+			$stations['faringe'],
+			self::DATE_GREEN
+		);
+
+		self::assertSame( array(), $connections );
+	}
+
+	public function test_find_uppsala_faringe_on_green_train_71_splits_at_marielund(): void {
+		$this->boot_fixture_services(
+			array( 'green-71-out', 'green-61-out' ),
+			self::DATE_GREEN
+		);
 		$stations = $this->station_ids();
 
 		$results = MRT_journey_find_normalized_connections(
@@ -169,7 +185,7 @@ final class LennakattenJourneySearchTest extends TestCase {
 
 	public function test_find_multi_leg_train_to_bus_at_selkna_on_green_buss_day(): void {
 		$this->boot_fixture_services(
-			array( 'green-71-out', 'green-b1-bus-out' ),
+			array( 'green-61-out', 'green-b1-bus-out' ),
 			'2026-07-04'
 		);
 		$stations = $this->station_ids();

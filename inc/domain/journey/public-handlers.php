@@ -77,7 +77,7 @@ function MRT_journey_calendar_response( array $input ) {
 		$parsed['to'],
 		$parsed['year'],
 		$parsed['month'],
-		$parsed['trip_type']
+		(string) $parsed['trip_type']
 	);
 	return array(
 		'year'  => $parsed['year'],

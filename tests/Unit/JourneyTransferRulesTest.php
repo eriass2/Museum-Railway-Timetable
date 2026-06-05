@@ -67,6 +67,14 @@ final class JourneyTransferRulesTest extends TestCase {
 		);
 	}
 
+	public function test_station_allows_transfer_at_marielund_train_change_hub(): void {
+		$GLOBALS['mrt_test_posts'] = array(
+			50 => (object) array( 'ID' => 50, 'post_title' => 'Marielund' ),
+		);
+
+		self::assertTrue( MRT_journey_station_allows_transfer( 50 ) );
+	}
+
 	public function test_transfer_station_priority_prefers_bus_hub(): void {
 		$GLOBALS['mrt_test_post_meta'] = array(
 			'9|mrt_station_bus_suffix' => '1',

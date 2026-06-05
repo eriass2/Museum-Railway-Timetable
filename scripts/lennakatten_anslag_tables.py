@@ -9,7 +9,121 @@ from lennakatten_symbols import FAR_IN, UP_OUT, symbols_for_train
 
 Stop = tuple[str, str, str, str]
 
-# Outbound: Uppsala Östra → Faringe (train numbers 71, 93, …).
+MARIELUND = "marielund"
+
+# PDF tågbytesrad i Marielund: kolumnnummer → fortsättningståg (separata turer i datamodellen).
+MARIELUND_TRAIN_CHANGES: dict[tuple[str, str], tuple[str, str]] = {
+    ("out", "71"): ("61", "dieseltag"),
+    ("out", "63"): ("97", "ralsbuss"),
+    ("in", "60"): ("74", "angtag"),
+    ("in", "96"): ("64", "dieseltag"),
+}
+
+GREEN_RAIL_TRAIN_TYPES: dict[str, str] = {
+    "71": "angtag",
+    "93": "ralsbuss",
+    "75": "angtag",
+    "63": "dieseltag",
+    "65": "dieseltag",
+    "79": "ang-diesel",
+    "70": "angtag",
+    "60": "dieseltag",
+    "62": "dieseltag",
+    "96": "ralsbuss",
+    "78": "ang-diesel",
+    "61": "dieseltag",
+    "97": "ralsbuss",
+    "74": "angtag",
+    "64": "dieseltag",
+}
+
+YELLOW_RAIL_TRAIN_TYPES: dict[str, str] = {
+    "101": "ralsbuss",
+    "103": "ralsbuss",
+    "100": "ralsbuss",
+    "102": "ralsbuss",
+}
+
+# service_code → (highlight_label, highlight_color, highlight_note)
+RAIL_SERVICE_HIGHLIGHTS: dict[str, tuple[str, str, str]] = {
+    "green-93-out": (
+        "Thun's-expressen",
+        "#fff9c4",
+        "Thun's-expressen tar dig till och från klädvaruhuset Thun's i Faringe.",
+    ),
+    "green-96-in": ("Thun's-expressen", "#fff9c4", ""),
+}
+
+
+def split_stops_at_marielund(stops: list[Stop]) -> tuple[list[Stop], list[Stop]]:
+    """Split one PDF column at Marielund into two services (before / after train change)."""
+    idx = next((i for i, stop in enumerate(stops) if stop[0] == MARIELUND), None)
+    if idx is None:
+        raise ValueError("marielund not found in stop list")
+    leg1 = stops[: idx + 1]
+    _station, _arr, dep, _sym = stops[idx]
+    leg2 = [(MARIELUND, dep, dep, "P")] + stops[idx + 1 :]
+    return leg1, leg2
+
+
+def _rail_service_code(timetable: str, train_num: str, direction: str) -> str:
+    return f"{timetable}-{train_num}-{direction}"
+
+
+def _append_rail_definitions(
+    out: list[tuple[str, str, str, list[Stop]]],
+    timetable: str,
+    direction: str,
+    route_code: str,
+    trains: dict[str, list[Stop]],
+) -> None:
+    for num, stops in trains.items():
+        change = MARIELUND_TRAIN_CHANGES.get((direction, num))
+        if change is None:
+            out.append((_rail_service_code(timetable, num, direction), timetable, route_code, stops))
+            continue
+        cont_num, _cont_type = change
+        leg1, leg2 = split_stops_at_marielund(stops)
+        out.append((_rail_service_code(timetable, num, direction), timetable, route_code, leg1))
+        out.append((_rail_service_code(timetable, cont_num, direction), timetable, route_code, leg2))
+
+
+def rail_end_station_code(direction: str, *, after_train_change: bool) -> str:
+    if direction == "out":
+        return "faringe" if after_train_change else MARIELUND
+    return "uppsala-ostra" if after_train_change else MARIELUND
+
+
+def rail_train_type_slug(timetable: str, train_num: str) -> str:
+    if timetable == "yellow":
+        return YELLOW_RAIL_TRAIN_TYPES[train_num]
+    return GREEN_RAIL_TRAIN_TYPES[train_num]
+
+
+def rail_service_csv_row(
+    service_code: str,
+    timetable: str,
+    route_code: str,
+    train_num: str,
+    end_station_code: str,
+) -> str:
+    label, color, note = RAIL_SERVICE_HIGHLIGHTS.get(service_code, ("", "", ""))
+    if note and ("," in note or '"' in note):
+        note_field = f'"{note.replace(chr(34), chr(39))}"'
+    else:
+        note_field = note
+    return (
+        f"{service_code},{timetable},{route_code},{train_num},{end_station_code},"
+        f",{label},{color},{note_field}"
+    )
+
+
+def is_synced_green_yellow_rail(service_code: str) -> bool:
+    """True for GRÖN/GUL rail rows replaced by sync (not vard, bus, red, orange)."""
+    if service_code.startswith(("red-", "orange-", "green-vard-")) or "-bus-" in service_code:
+        return False
+    return service_code.startswith(("green-", "yellow-"))
+
 GREEN_OUT: dict[str, list[Stop]] = {
     "71": [
         ("uppsala-ostra", "10:00", "10:00", "P"),
@@ -342,10 +456,8 @@ GREEN_BUSS_IN: dict[str, list[Stop]] = {
 def service_definitions() -> list[tuple[str, str, str, list[Stop]]]:
     """Return (service_code, timetable, route_code, stops)."""
     out: list[tuple[str, str, str, list[Stop]]] = []
-    for num, stops in GREEN_OUT.items():
-        out.append((f"green-{num}-out", "green", "uppsala-faringe", stops))
-    for num, stops in GREEN_IN.items():
-        out.append((f"green-{num}-in", "green", "faringe-uppsala-ostra", stops))
+    _append_rail_definitions(out, "green", "out", "uppsala-faringe", GREEN_OUT)
+    _append_rail_definitions(out, "green", "in", "faringe-uppsala-ostra", GREEN_IN)
     for num, stops in YELLOW_OUT.items():
         out.append((f"yellow-{num}-out", "yellow", "uppsala-faringe", stops))
     for num, stops in YELLOW_IN.items():
@@ -355,6 +467,45 @@ def service_definitions() -> list[tuple[str, str, str, list[Stop]]]:
     for num, stops in GREEN_BUSS_IN.items():
         out.append((f"green-b{num}-bus-in", "green-buss", "fjallnora-selkna", stops))
     return out
+
+
+def service_csv_rows() -> list[str]:
+    """services.csv data rows (no header) for GRÖN/GUL rail and bus from PDF tables."""
+    cont_nums = {cont for (_d, _n), (cont, _t) in MARIELUND_TRAIN_CHANGES.items()}
+    incoming_with_change = {inc for (_d, inc), (_c, _t) in MARIELUND_TRAIN_CHANGES.items()}
+    rows: list[str] = []
+    for service_code, timetable, route_code, stops in service_definitions():
+        if "-bus-" in service_code:
+            bpart = service_code.split("-")[1]
+            train_num = f"B{bpart[1:]}" if bpart.startswith("b") else bpart
+            end = stops[-1][0]
+            rows.append(rail_service_csv_row(service_code, timetable, route_code, train_num, end))
+            continue
+
+        direction = "out" if service_code.endswith("-out") else "in"
+        train_num = service_code.split("-")[1]
+        if train_num in cont_nums:
+            end = rail_end_station_code(direction, after_train_change=True)
+        elif train_num in incoming_with_change:
+            end = rail_end_station_code(direction, after_train_change=False)
+        elif direction == "out":
+            end = "faringe"
+        else:
+            end = "uppsala-ostra"
+        rows.append(rail_service_csv_row(service_code, timetable, route_code, train_num, end))
+    return rows
+
+
+def service_train_type_rows() -> list[str]:
+    """service_train_types.csv data rows for synced GRÖN/GUL rail and bus."""
+    rows: list[str] = []
+    for service_code, timetable, _route, _stops in service_definitions():
+        if "-bus-" in service_code:
+            rows.append(f"{service_code},buss")
+            continue
+        train_num = service_code.split("-")[1]
+        rows.append(f"{service_code},{rail_train_type_slug(timetable, train_num)}")
+    return rows
 
 
 def red_orange_service_definitions() -> list[tuple[str, str, str, list[Stop]]]:
