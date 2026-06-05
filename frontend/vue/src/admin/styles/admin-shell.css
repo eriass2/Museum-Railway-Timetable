@@ -159,16 +159,109 @@
   margin: 0;
 }
 
+.mrt-admin-route-editor__section {
+  margin-bottom: 16px;
+}
+
+.mrt-admin-route-editor__section:last-child {
+  margin-bottom: 0;
+}
+
+.mrt-admin-route-editor__label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.mrt-admin-route-editor__heading {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.mrt-admin-route-editor__endpoints {
+  margin: 0;
+  padding: 12px 14px 14px;
+  border: 1px solid #c3c4c7;
+  border-radius: 3px;
+}
+
+.mrt-admin-route-editor__endpoints legend {
+  padding: 0 4px;
+  font-weight: 600;
+}
+
+.mrt-admin-route-editor__endpoint-fields {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 12px;
+  align-items: center;
+  max-width: 28em;
+}
+
+.mrt-admin-route-editor__empty {
+  margin-top: 0;
+}
+
+.mrt-admin-route-station-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  max-width: 36em;
+}
+
 .mrt-admin-route-station-row {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 6px 0;
+  padding: 8px 0;
+  border-bottom: 1px solid #dcdcde;
+}
+
+.mrt-admin-route-station-row:last-child {
+  border-bottom: none;
+}
+
+.mrt-admin-route-station-row__order {
+  flex: 0 0 1.5em;
+  color: #646970;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
 }
 
 .mrt-admin-route-station-row__name {
   flex: 1;
   min-width: 0;
+}
+
+.mrt-admin-route-station-row__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mrt-admin-route-station-row__badge {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.mrt-admin-route-station-row__badge--start {
+  border: 1px solid #2271b1;
+  background: #f0f6fc;
+  color: #1d4f8c;
+}
+
+.mrt-admin-route-station-row__badge--end {
+  border: 1px solid #3a6b1f;
+  background: #f0f6eb;
+  color: #2f5c17;
+}
+
+.mrt-admin-route-editor__add {
+  margin-top: 12px;
 }
 
 .mrt-admin-trip-form {
@@ -514,15 +607,19 @@
     color: #646970;
   }
 
+  .mrt-admin-route-editor__endpoint-fields {
+    grid-template-columns: 1fr;
+    max-width: none;
+  }
+
+  .mrt-admin-route-station-list {
+    max-width: none;
+  }
+
   .mrt-admin-route-editor select,
   .mrt-admin-route-editor .admin-form-actions .button,
   .mrt-admin-route-editor .admin-inline-form .button {
     width: 100%;
-  }
-
-  .mrt-admin-route-editor label {
-    display: block;
-    margin-top: 8px;
   }
 
   .mrt-admin-page--mobile .form-table th,

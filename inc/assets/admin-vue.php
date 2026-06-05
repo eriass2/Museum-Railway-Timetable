@@ -193,9 +193,23 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsDeleteStationFailed' => __( 'Kunde inte ta bort station.', 'museum-railway-timetable' ),
 		'stationsDeleteRouteFailed'   => __( 'Kunde inte ta bort rutt.', 'museum-railway-timetable' ),
 		'stationsEditRouteTitle'     => __( 'Redigera rutt: %s', 'museum-railway-timetable' ),
-		'stationsRouteStart'         => __( 'Start:', 'museum-railway-timetable' ),
-		'stationsRouteEnd'           => __( 'Slut:', 'museum-railway-timetable' ),
-		'stationsRoutePreview'       => __( 'Förhandsgranskning av rutt', 'museum-railway-timetable' ),
+		'stationsRouteNameLabel'     => __( 'Namn', 'museum-railway-timetable' ),
+		'stationsRouteEndpointsLegend' => __( 'Ändstationer', 'museum-railway-timetable' ),
+		'stationsRouteEndpointsHint' => __(
+			'Välj start- och slutstation bland rutts stationer. Används för att visa riktning (dit/från) i tidtabellen.',
+			'museum-railway-timetable'
+		),
+		'stationsRouteOrderLegend'   => __( 'Stationer i ordning', 'museum-railway-timetable' ),
+		'stationsRouteOrderHint'     => __(
+			'Ordningen bestämmer i vilken följd tåget passerar hållplatserna. Använd pilarna för att ändra ordning.',
+			'museum-railway-timetable'
+		),
+		'stationsRouteStart'         => __( 'Startstation', 'museum-railway-timetable' ),
+		'stationsRouteEnd'           => __( 'Slutstation', 'museum-railway-timetable' ),
+		'stationsRouteMoveUp'        => __( 'Flytta upp', 'museum-railway-timetable' ),
+		'stationsRouteMoveDown'      => __( 'Flytta ner', 'museum-railway-timetable' ),
+		'stationsRouteRemoveStation' => __( 'Ta bort från rutt', 'museum-railway-timetable' ),
+		'stationsRouteEmptyStations' => __( 'Inga stationer ännu. Lägg till en station nedan.', 'museum-railway-timetable' ),
 		'stationsAddStationPrompt'   => __( 'Lägg till station...', 'museum-railway-timetable' ),
 		'stationsSaveRoute'          => __( 'Spara rutt', 'museum-railway-timetable' ),
 	);

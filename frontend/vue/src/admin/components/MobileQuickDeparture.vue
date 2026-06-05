@@ -75,7 +75,7 @@ async function save() {
       <select id="mrt-mobile-service" v-model.number="serviceId" class="widefat">
         <option :value="0">{{ adminStr(cfg, 'editorSelectTrip') }}</option>
         <option v-for="s in services" :key="s.id" :value="s.id">
-          {{ s.title || s.route_name }}
+          {{ s.service_number }} — {{ s.destination || s.route_name }}
         </option>
       </select>
     </p>

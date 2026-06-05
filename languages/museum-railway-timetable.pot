@@ -1584,7 +1584,7 @@ msgstr ""
 
 #: inc/assets/admin-vue.php:288
 #, php-format
-msgid "Import klar (%s). %s"
+msgid "Import klar (%1$s). %2$s"
 msgstr ""
 
 #: inc/assets/admin-vue.php:297

@@ -3,7 +3,7 @@ import { ref } from 'vue';
 import { clearAllData, exportCsv, importCsv } from '../api/adminRest';
 import { adminConfirm } from '../composables/adminConfirm';
 import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
-import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
+import { adminErrorMessage, adminFmtN, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -55,9 +55,17 @@ async function onImport(ev: Event) {
   try {
     const res = await importCsv(file, mode.value);
     const stats = Object.entries(res.stats)
-      .map(([k, v]) => `${k}: ${v}`)
+      .filter(([key]) => key !== 'mode')
+      .map(([key, value]) => `${key}: ${value}`)
       .join(', ');
-    success.value = adminFmt(cfg, 'importExportImportSuccess', res.mode, stats);
+    const modeLabel =
+      res.mode === 'override'
+        ? adminStr(cfg, 'importExportModeOverride')
+        : adminStr(cfg, 'importExportModeMerge');
+    success.value = adminFmtN(cfg, 'importExportImportSuccess', {
+      1: modeLabel,
+      2: stats,
+    });
   } catch (e) {
     error.value = adminErrorMessage(cfg, e, 'importExportImportFailed');
   } finally {

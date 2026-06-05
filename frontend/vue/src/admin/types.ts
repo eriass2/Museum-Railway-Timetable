@@ -99,6 +99,7 @@ export type TimetableListItem = {
 export type TimetableServiceRow = {
   id: number;
   title: string;
+  service_number: string;
   route_id: number;
   route_name: string;
   train_type_id: number;

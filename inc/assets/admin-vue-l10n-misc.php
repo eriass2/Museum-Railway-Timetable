@@ -47,14 +47,21 @@ function MRT_admin_vue_l10n_editor(): array {
 			'Osparade avvikelser — klicka «Spara avvikelser».',
 			'museum-railway-timetable'
 		),
+		'editorDeviationsEmpty'      => __( 'Inga avvikelser ännu. Välj datum och tur nedan.', 'museum-railway-timetable' ),
+		'editorAddDeviation'         => __( 'Lägg till avvikelse', 'museum-railway-timetable' ),
+		'editorDeviationDatePrompt'  => __( '— Datum —', 'museum-railway-timetable' ),
 		'editorSavedDates'           => __( 'Trafikdagar sparade', 'museum-railway-timetable' ),
 		'editorSavedMeta'            => __( 'Namn och typ sparade', 'museum-railway-timetable' ),
 		'editorSavedDeviations'      => __( 'Avvikelser sparade', 'museum-railway-timetable' ),
 		'editorStoptimesHint'        => __(
-			'Klicka i rutorna för att ändra tid, stannar och P/A. Sparas automatiskt per tur.',
+			'Välj tur och redigera stopptider i tabellen nedan. Klicka «Spara stopptider» när du är klar.',
 			'museum-railway-timetable'
 		),
-		'editorStoptimesTableSummary' => __( 'Tabellvy för en tur', 'museum-railway-timetable' ),
+		'editorStoptimesGridSummary' => __( 'Matrisvy (alla turer)', 'museum-railway-timetable' ),
+		'editorStoptimesGridHint'    => __(
+			'Klicka på en tid i matrisen för att redigera stopptiden.',
+			'museum-railway-timetable'
+		),
 		'editorStoptimesTripLabel'   => __( 'Tur:', 'museum-railway-timetable' ),
 		'editorSelectTrip'             => __( '— Välj tur —', 'museum-railway-timetable' ),
 		'editorColRoute'               => __( 'Rutt', 'museum-railway-timetable' ),
@@ -119,8 +126,11 @@ function MRT_admin_vue_l10n_stop_times(): array {
 		'stopTimesColStation'  => __( 'Station', 'museum-railway-timetable' ),
 		'stopTimesColArrival'  => __( 'Ankomst', 'museum-railway-timetable' ),
 		'stopTimesColDeparture' => __( 'Avgång', 'museum-railway-timetable' ),
-		'stopTimesColPickup'   => __( 'P', 'museum-railway-timetable' ),
-		'stopTimesColDropoff'  => __( 'A', 'museum-railway-timetable' ),
+		'stopTimesColPickup'   => __( 'På', 'museum-railway-timetable' ),
+		'stopTimesColDropoff'  => __( 'Av', 'museum-railway-timetable' ),
+		'stopTimesPickupLabel' => __( 'Påstigning', 'museum-railway-timetable' ),
+		'stopTimesDropoffLabel' => __( 'Avstigning', 'museum-railway-timetable' ),
+		'stopTimesGridEditTitle' => __( '%1$s · tur %2$s', 'museum-railway-timetable' ),
 	);
 }
 

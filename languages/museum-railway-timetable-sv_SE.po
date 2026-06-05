@@ -1755,10 +1755,10 @@ msgstr "Export misslyckades"
 msgid "Import misslyckades"
 msgstr "Import misslyckades"
 
-#: inc/assets/admin-vue.php:288
+#: inc/assets/admin-vue.php:289
 #, php-format
-msgid "Import klar (%s). %s"
-msgstr "Import klar (%s). %s"
+msgid "Import klar (%1$s). %2$s"
+msgstr "Import klar (%1$s). %2$s"
 
 #: inc/assets/admin-vue.php:297
 msgid "Trafik idag"

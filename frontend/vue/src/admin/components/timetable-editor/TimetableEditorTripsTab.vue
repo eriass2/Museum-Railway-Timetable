@@ -37,6 +37,7 @@ const emit = defineEmits<{
     <table class="widefat striped">
       <thead>
         <tr>
+          <th>{{ adminStr(cfg, 'editorColTrip') }}</th>
           <th>{{ adminStr(cfg, 'editorColRoute') }}</th>
           <th>{{ adminStr(cfg, 'editorColTrainType') }}</th>
           <th>{{ adminStr(cfg, 'editorColDestination') }}</th>
@@ -45,6 +46,7 @@ const emit = defineEmits<{
       </thead>
       <tbody>
         <tr v-for="s in detail.services" :key="s.id">
+          <td>{{ s.service_number }}</td>
           <td>{{ s.route_name }}</td>
           <td>
             <AdminTrainTypeCell

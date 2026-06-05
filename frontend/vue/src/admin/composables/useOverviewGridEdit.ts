@@ -107,6 +107,10 @@ export function useOverviewGridEdit() {
     return { ...base, ...patch };
   }
 
+  function clearCache(): void {
+    cache.value = new Map();
+  }
+
   return {
     saving,
     error,
@@ -115,6 +119,7 @@ export function useOverviewGridEdit() {
     inputToHhmm,
     applyCellEdit,
     mergeEdit,
+    clearCache,
   };
 }
 

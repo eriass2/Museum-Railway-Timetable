@@ -62,6 +62,7 @@ function trainTypeIconKey(typeId: number): string {
   return detail.value?.train_types.find((t) => t.id === typeId)?.icon_key ?? '';
 }
 const selectedServiceId = ref(0);
+const gridOverviewLoading = ref(false);
 const deviationRows = ref<DeviationRow[]>([]);
 const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 const editTitle = ref('');
@@ -134,12 +135,39 @@ onMounted(() => {
 watch(
   () => props.id,
   () => {
+    selectedServiceId.value = 0;
+    overview.value = null;
     void loadDetail();
   },
 );
 
+function ensureDefaultTripSelection(): void {
+  if (selectedServiceId.value > 0 || !detail.value?.services.length) {
+    return;
+  }
+  selectedServiceId.value = detail.value.services[0].id;
+}
+
+async function onStoptimesGridToggle(event: Event): Promise<void> {
+  const el = event.target as HTMLDetailsElement;
+  if (!el.open || overview.value) {
+    return;
+  }
+  gridOverviewLoading.value = true;
+  try {
+    await loadOverview();
+  } catch (e) {
+    error.value = adminErrorMessage(cfg, e, 'editorOverviewLoadFailed');
+  } finally {
+    gridOverviewLoading.value = false;
+  }
+}
+
 watch(tab, async (t) => {
-  if ((t === 'preview' || t === 'stoptimes') && !overview.value) {
+  if (t === 'stoptimes') {
+    ensureDefaultTripSelection();
+  }
+  if (t === 'preview' && !overview.value) {
     try {
       await loadOverview();
     } catch (e) {
@@ -330,29 +358,36 @@ function onMobileSaved(message: string) {
 
     <AdminPanel v-if="detail && !isMobile && tab === 'stoptimes'" class="mrt-vue-root">
       <p class="description">{{ adminStr(cfg, 'editorStoptimesHint') }}</p>
-      <EditableTimetableOverview
-        v-if="overview"
-        :data="overview"
-        :readonly="!cfg.canManage && !cfg.canOperate"
-      />
-      <details class="mrt-mt-sm">
-        <summary>{{ adminStr(cfg, 'editorStoptimesTableSummary') }}</summary>
-        <p>
-          <label>{{ adminStr(cfg, 'editorStoptimesTripLabel') }}</label>
-          <select v-model.number="selectedServiceId">
-            <option :value="0">{{ adminStr(cfg, 'editorSelectTrip') }}</option>
-            <option v-for="s in detail.services" :key="s.id" :value="s.id">{{ s.title }}</option>
-          </select>
-        </p>
-        <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
+      <p class="mrt-admin-stoptimes-trip-picker">
+        <label for="mrt-stoptimes-service">{{ adminStr(cfg, 'editorStoptimesTripLabel') }}</label>
+        <select id="mrt-stoptimes-service" v-model.number="selectedServiceId">
+          <option :value="0">{{ adminStr(cfg, 'editorSelectTrip') }}</option>
+          <option v-for="s in detail.services" :key="s.id" :value="s.id">
+            {{ s.service_number }} — {{ s.destination || s.route_name }}
+          </option>
+        </select>
+      </p>
+      <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
+      <details class="mrt-mt-sm mrt-admin-stoptimes-grid" @toggle="onStoptimesGridToggle">
+        <summary>{{ adminStr(cfg, 'editorStoptimesGridSummary') }}</summary>
+        <p class="description">{{ adminStr(cfg, 'editorStoptimesGridHint') }}</p>
+        <p v-if="gridOverviewLoading" class="description">{{ adminStr(cfg, 'editorLoading') }}</p>
+        <EditableTimetableOverview
+          v-else-if="overview"
+          :data="overview"
+          :readonly="!cfg.canManage && !cfg.canOperate"
+          @refresh-needed="loadOverview"
+        />
       </details>
     </AdminPanel>
 
     <TimetableEditorDeviationsTab
       v-if="detail && !isMobile && tab === 'deviations'"
+      v-model:rows="deviationRows"
       :can-operate="cfg.canOperate"
       :deviations-dirty="deviationsDirty"
-      :rows="deviationRows"
+      :services="detail.services"
+      :dates="detail.dates"
       :train-types="detail.train_types"
       :train-type-icon-key="trainTypeIconKey"
       @save="saveDeviationChanges"

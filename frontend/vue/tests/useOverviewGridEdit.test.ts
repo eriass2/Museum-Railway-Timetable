@@ -105,4 +105,39 @@ describe('useOverviewGridEdit', () => {
     );
     expect(message.value).toBe('Sparat');
   });
+
+  it('clearCache forces reload on next edit', async () => {
+    vi.mocked(getStopTimes).mockResolvedValue({
+      route_id: 50,
+      stations: [
+        {
+          id: 101,
+          name: 'Alpha',
+          sequence: 1,
+          stops_here: true,
+          arrival_time: '',
+          departure_time: '09:00',
+          pickup_allowed: true,
+          dropoff_allowed: true,
+        },
+      ],
+    });
+    vi.mocked(saveStopTimes).mockResolvedValue({
+      route_id: 50,
+      stations: [],
+    });
+    const edit = {
+      arrival: '',
+      departure: '09:15',
+      stopsHere: true,
+      pickupAllowed: true,
+      dropoffAllowed: true,
+    };
+    const { applyCellEdit, clearCache } = useOverviewGridEdit();
+    await applyCellEdit(501, 101, edit);
+    expect(getStopTimes).toHaveBeenCalledTimes(1);
+    clearCache();
+    await applyCellEdit(501, 101, edit);
+    expect(getStopTimes).toHaveBeenCalledTimes(2);
+  });
 });

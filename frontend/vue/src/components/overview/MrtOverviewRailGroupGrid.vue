@@ -185,8 +185,8 @@ function stripeSpan(rowIndex: number, trackIndex: number) {
 <style scoped>
 .mrt-ov-time-cell--edit {
   display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  font-size: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
 }
 </style>

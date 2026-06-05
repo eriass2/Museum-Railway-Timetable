@@ -94,9 +94,14 @@ function MRT_rest_format_timetable_services( int $timetable_id ): array {
 		$train_type_id = is_array( $train_types ) && $train_types !== array() ? (int) $train_types[0] : 0;
 		$dest          = MRT_get_service_destination( (int) $service->ID );
 		$train_type_term = $train_type_id > 0 ? get_term( $train_type_id, MRT_TAXONOMY_TRAIN_TYPE ) : null;
+		$service_number  = (string) get_post_meta( $service->ID, 'mrt_service_number', true );
+		if ( $service_number === '' ) {
+			$service_number = (string) $service->ID;
+		}
 		$rows[]          = array(
 			'id'                  => (int) $service->ID,
 			'title'               => (string) $service->post_title,
+			'service_number'      => $service_number,
 			'route_id'            => $route_id,
 			'route_name'          => $route_id > 0 ? (string) get_the_title( $route_id ) : '',
 			'train_type_id'       => $train_type_id,

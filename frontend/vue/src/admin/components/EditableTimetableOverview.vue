@@ -13,8 +13,15 @@ defineProps<{
   readonly?: boolean;
 }>();
 
+const emit = defineEmits<{ 'refresh-needed': [] }>();
+
 const editor = useOverviewGridEdit();
 const labels = overviewUiLabels({});
+
+function onGridCellSaved(): void {
+  editor.clearCache();
+  emit('refresh-needed');
+}
 </script>
 
 <template>
@@ -30,6 +37,7 @@ const labels = overviewUiLabels({});
         :icon-urls="iconUrls"
         :editor="editor"
         :readonly="readonly"
+        @saved="onGridCellSaved"
       />
       <MrtOverviewBranchGroup v-else :group="group" :icon-urls="iconUrls" :labels="labels" />
     </template>

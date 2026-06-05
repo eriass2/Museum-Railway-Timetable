@@ -59,9 +59,11 @@ test.describe('Vue admin timetable flow', () => {
     });
 
     await page.locator('.nav-tab', { hasText: 'Stopptider' }).click();
-    await page.getByText('Tabellvy för en tur').click();
-    const serviceSelect = page.locator('summary').locator('..').locator('select').first();
-    await serviceSelect.selectOption({ index: 1 });
+    const serviceSelect = page.locator('#mrt-stoptimes-service');
+    await expect(serviceSelect).toBeVisible({ timeout: 15_000 });
+    if ((await serviceSelect.locator('option').count()) > 1) {
+      await serviceSelect.selectOption({ index: 1 });
+    }
     const depInput = page.locator('.mrt-admin-stoptimes input[type="time"]').first();
     await expect(depInput).toBeVisible({ timeout: 15_000 });
     await depInput.fill('09:30');

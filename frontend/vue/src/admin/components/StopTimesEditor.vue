@@ -5,6 +5,8 @@ import { adminStr } from '../utils/adminLabels';
 import { useStopTimes } from '../composables/useStopTimes';
 import AdminLoadState from './AdminLoadState.vue';
 import { AdminFormActions, AdminStatusMessage, MrtButton } from './ui';
+import StopTimePaCheckbox from './StopTimePaCheckbox.vue';
+import StopTimePaHeading from './StopTimePaHeading.vue';
 
 const props = defineProps<{ serviceId: number }>();
 const cfg = adminConfig();
@@ -32,8 +34,8 @@ watch(serviceId, () => {
           <th>{{ adminStr(cfg, 'stopTimesColStation') }}</th>
           <th>{{ adminStr(cfg, 'stopTimesColArrival') }}</th>
           <th>{{ adminStr(cfg, 'stopTimesColDeparture') }}</th>
-          <th>{{ adminStr(cfg, 'stopTimesColPickup') }}</th>
-          <th>{{ adminStr(cfg, 'stopTimesColDropoff') }}</th>
+          <th scope="col"><StopTimePaHeading kind="pickup" /></th>
+          <th scope="col"><StopTimePaHeading kind="dropoff" /></th>
         </tr>
       </thead>
       <tbody>
@@ -59,10 +61,20 @@ watch(serviceId, () => {
             />
           </td>
           <td>
-            <input v-model="row.pickup_allowed" type="checkbox" :disabled="!cfg.canManage" />
+            <StopTimePaCheckbox
+              v-model="row.pickup_allowed"
+              kind="pickup"
+              :show-label="false"
+              :disabled="!cfg.canManage"
+            />
           </td>
           <td>
-            <input v-model="row.dropoff_allowed" type="checkbox" :disabled="!cfg.canManage" />
+            <StopTimePaCheckbox
+              v-model="row.dropoff_allowed"
+              kind="dropoff"
+              :show-label="false"
+              :disabled="!cfg.canManage"
+            />
           </td>
         </tr>
       </tbody>

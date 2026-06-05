@@ -74,6 +74,7 @@ final class RestTimetablesDataTest extends TestCase {
 		self::assertSame( array( '2026-06-06', '2026-06-07' ), $data['dates'] );
 		self::assertCount( 1, $data['services'] );
 		self::assertSame( 701, $data['services'][0]['id'] );
+		self::assertSame( '71', $data['services'][0]['service_number'] );
 		self::assertSame( 'Ångtåg', $data['services'][0]['train_type_name'] );
 	}
 
@@ -197,6 +198,7 @@ final class RestTimetablesDataTest extends TestCase {
 			'701|mrt_service_timetable_id' => 10,
 			'701|mrt_service_route_id'     => 50,
 			'701|mrt_service_end_station_id' => 120,
+			'701|mrt_service_number'       => '71',
 		);
 		$GLOBALS['mrt_test_get_posts'] = static function ( array $args ): array {
 			$post_type = (string) ( $args['post_type'] ?? '' );

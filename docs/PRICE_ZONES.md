@@ -35,3 +35,23 @@ marielund,Marielund,...,2
 ```
 
 Tom `price_zones` → titel-default ovan. Gränsstationer: kommaseparerade, max två värden.
+
+## Backlog / TODO
+
+### Konfigurerbar prisstruktur (inte bara belopp)
+
+**Status:** Ej påbörjad.
+
+Idag kan administratören ändra **prisbelopp** i prismatrisen (`mrt_price_matrix`), men **strukturen** är hårdkodad:
+
+| Dimension | Nu | Var i kod |
+|-----------|-----|-----------|
+| **Antal zoner** | 1–4 kolumner i admin, max 3 används vid lookup | `MRT_price_zone_keys()`, `MRT_price_zone_cap()` i `inc/domain/pricing/prices.php` |
+| **Biljettyper** | Enkel, retur, dagskort | `MRT_price_ticket_type_keys()` / `PRICE_TYPE_KEYS` |
+| **Kundkategorier** | Vuxen, barn 4–15, barn 0–3, student/pensionär | `MRT_price_category_keys()` / `PRICE_CAT_KEYS` |
+
+**Mål:** Kunna lägga till, ta bort och byta namn på zoner, biljettyper och passagerarkategorier via admin (och CSV), utan kodändring i PHP/Vue.
+
+**Påverkar ungefär:** admin `PricesPage.vue`, REST `settings-admin.php`, `prices.php`, `price-rules.php`, `MrtPriceTable.vue`, `useTripPrices`, PDF/sammanfattning, import/export, etiketter/i18n, eftermiddags-retur som specialfall.
+
+**Relaterat:** Eftermiddags-returpriser (`MRT_get_afternoon_return_prices()`) är också hårdkodade — bör ingå i samma konfigurationsmodell eller dokumenteras som undantag.
