@@ -8,10 +8,10 @@ import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
 import MrtTripList from '../../components/ui/MrtTripList.vue';
 import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
+import { useConnectionLegDisplay } from '../composables/useConnectionLegDisplay';
 import { useTripConnections } from '../composables/useTripConnections';
 import { cfgStr } from '../utils/wizardLabels';
 import WizardTripCard from './WizardTripCard.vue';
-import { formatTripClock } from '../utils/format';
 
 const props = defineProps<{
   legCtx: 'outbound' | 'return';
@@ -24,6 +24,9 @@ const { loading, error, connections, loadConnections } = useTripConnections(
   props.legCtx,
 );
 
+const { routeText: selectedOutboundRoute, timeRange: selectedOutboundTime } =
+  useConnectionLegDisplay(() => store.outbound, 'outbound');
+
 const stepLabel = computed(() =>
   props.legCtx === 'outbound'
     ? cfgStr(cfg, 'stepOutbound', 'Välj utresa')
@@ -31,13 +34,6 @@ const stepLabel = computed(() =>
 );
 
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
-
-const selectedOutboundTime = computed(() => {
-  if (!store.outbound) {
-    return '';
-  }
-  return `${formatTripClock(store.outbound.from_departure || '')} – ${formatTripClock(store.outbound.to_arrival || '')}`;
-});
 
 function onBack(): void {
   store.clearError();
@@ -77,7 +73,7 @@ watch(
         </template>
         <MrtTripSummary
           :time-range="selectedOutboundTime"
-          :route="`${store.fromTitle} → ${store.toTitle}`"
+          :route="selectedOutboundRoute"
         />
       </MrtSelectedTrip>
 

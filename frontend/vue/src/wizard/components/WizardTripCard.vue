@@ -7,17 +7,16 @@ import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import MrtVehicleRow from '../../components/ui/MrtVehicleRow.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import type { JourneyConnection } from '../types';
+import { useConnectionLegDisplay } from '../composables/useConnectionLegDisplay';
 import { cfgStr } from '../utils/wizardLabels';
 import {
-  arrivalAtDestination,
   connectionDoorToDoorMinutes,
   connectionLegs,
   connectionTransferCount,
-  departureFromOrigin,
   formatTransferTripLabel,
   isTransfer,
 } from '../utils/connection';
-import { formatDuration, formatTripClock, isWarningNotice } from '../utils/format';
+import { formatDuration, isWarningNotice } from '../utils/format';
 import { legsToVehicleItems } from '../utils/vehicle';
 import WizardTripDetail from './WizardTripDetail.vue';
 
@@ -26,21 +25,15 @@ const props = defineProps<{
   legCtx: 'outbound' | 'return';
 }>();
 
-const { store, cfg } = useWizardContext();
+const { cfg } = useWizardContext();
 const emit = defineEmits<{ select: [] }>();
 
 const expanded = ref(false);
 const detailRef = ref<InstanceType<typeof WizardTripDetail> | null>(null);
 
-const routeText = computed(() =>
-  props.legCtx === 'return'
-    ? `${store.toTitle} → ${store.fromTitle}`
-    : `${store.fromTitle} → ${store.toTitle}`,
-);
-
-const timeRange = computed(
-  () =>
-    `${formatTripClock(departureFromOrigin(props.connection))} – ${formatTripClock(arrivalAtDestination(props.connection))}`,
+const { routeText, timeRange } = useConnectionLegDisplay(
+  () => props.connection,
+  props.legCtx,
 );
 
 const meta = computed(() => {

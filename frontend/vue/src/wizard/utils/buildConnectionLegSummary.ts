@@ -5,14 +5,7 @@ import { formatTripClock } from '../../shared/tripClock';
 import type { WizardCfg } from './wizardCfgTypes';
 import { connectionLegs } from './connection';
 import { legToVehicleItem } from './vehicle';
-import { cfgStr } from './wizardLabels';
-
-function transferStrings(cfg: WizardCfg) {
-  return {
-    changeAt: cfgStr(cfg, 'changeAt', 'Byte vid %s'),
-    transferTrip: cfgStr(cfg, 'transferTrip', 'Byte'),
-  };
-}
+import { transferLabelStringsFromCfg } from './wizardLabels';
 
 function legRouteLabel(leg: JourneyLeg, stationTitle: StationTitleLookup): string {
   const from = stationTitle(leg.from_station_id);
@@ -57,7 +50,7 @@ export function buildConnectionLegSummary(
     return [];
   }
 
-  const strings = transferStrings(cfg);
+  const strings = transferLabelStringsFromCfg(cfg);
   const items: ConnectionLegSummaryItem[] = [];
   legs.forEach((leg, index) => {
     if (index > 0) {

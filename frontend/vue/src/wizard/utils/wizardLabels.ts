@@ -1,6 +1,7 @@
 import type { MaybeRef } from 'vue';
 import { unref } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
+import type { TransferLabelStrings } from '../../shared/connectionLegDisplay';
 import { resolveMrtString } from '../../utils/mrtStrings';
 import type { WizardCfg, WizardCfgStringKey } from './wizardCfgTypes';
 
@@ -18,6 +19,14 @@ export function cfgStr(
   fallback = '',
 ): string {
   return resolveMrtString({ wizard: unref(cfg) }, key, fallback);
+}
+
+/** L10n strings for {@link buildTransferLabel} (summary, detail, share). */
+export function transferLabelStringsFromCfg(cfg: MaybeRef<WizardCfg>): TransferLabelStrings {
+  return {
+    changeAt: cfgStr(cfg, 'changeAt', 'Byte vid %s'),
+    transferTrip: cfgStr(cfg, 'transferTrip', 'Byte'),
+  };
 }
 
 export function cfgStringArray(cfg: WizardCfg, key: keyof WizardCfg): string[] {

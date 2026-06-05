@@ -5,6 +5,7 @@ import {
 } from '../src/shared/connectionLegDisplay';
 import { waitMinutesBetween } from '../src/shared/tripClock';
 import { buildConnectionLegSummary } from '../src/wizard/utils/buildConnectionLegSummary';
+import { transferLabelStringsFromCfg } from '../src/wizard/utils/wizardLabels';
 import type { JourneyConnection } from '../src/shared/journey';
 
 const stations = [
@@ -117,6 +118,20 @@ describe('buildConnectionLegSummary', () => {
         timeRange: '17.22 – 17.30',
         route: 'Selknä → Fjällnora',
       },
+    });
+  });
+});
+
+describe('transferLabelStringsFromCfg', () => {
+  it('reads changeAt and transferTrip from wizard cfg', () => {
+    expect(
+      transferLabelStringsFromCfg({
+        changeAt: 'Byte vid %s',
+        transferTrip: 'Byte',
+      }),
+    ).toEqual({
+      changeAt: 'Byte vid %s',
+      transferTrip: 'Byte',
     });
   });
 });

@@ -3,7 +3,7 @@ import type { WizardVueConfig } from '../../config/types';
 import { buildTransferLabel, stationTitleLookup } from '../../shared/connectionLegDisplay';
 import type { JourneyConnection } from '../../shared/journey';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
-import { cfgStr } from '../utils/wizardLabels';
+import { cfgStr, transferLabelStringsFromCfg } from '../utils/wizardLabels';
 import { connectionLegs } from '../utils/connection';
 import { loadConnectionDetailSegments, type LegSegment } from './connectionDetailLoad';
 
@@ -64,10 +64,7 @@ export function useConnectionDetail(params: DetailParams) {
       legList[segmentIndex + 1],
       params.connection,
       stationTitle.value,
-      {
-        changeAt: cfgStr(cfg.value, 'changeAt', 'Byte vid %s'),
-        transferTrip: cfgStr(cfg.value, 'transferTrip', 'Byte'),
-      },
+      transferLabelStringsFromCfg(params.cfg),
     );
   }
 
