@@ -6,10 +6,14 @@ export type DownloadTripSummaryPdfOptions = {
   tripPdfUrl?: string;
 };
 
-function pdfFilename(title: string): string {
-  const slug = title
+/** Slug for PDF download filename (ASCII-safe, preserves Swedish letters as a/o). */
+export function tripSummaryPdfFilename(tripName: string): string {
+  const slug = tripName
     .toLowerCase()
-    .replace(/[^a-z0-9åäö]+/gi, '-')
+    .replace(/å/g, 'a')
+    .replace(/ä/g, 'a')
+    .replace(/ö/g, 'o')
+    .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
   return `${slug || 'resa'}.pdf`;
 }
@@ -81,7 +85,7 @@ export async function downloadTripSummaryPdf(
     const blob = (await html2pdf()
       .set({
         margin: [14, 12, 14, 12],
-        filename: pdfFilename(input.title),
+        filename: tripSummaryPdfFilename(input.downloadName),
         image: { type: 'jpeg', quality: 0.96 },
         html2canvas: { scale: 2, logging: false, useCORS: true, scrollX: 0, scrollY: 0 },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
@@ -93,7 +97,7 @@ export async function downloadTripSummaryPdf(
     if (!(blob instanceof Blob) || blob.size === 0) {
       throw new Error('Empty PDF blob');
     }
-    downloadBlob(blob, pdfFilename(input.title));
+    downloadBlob(blob, tripSummaryPdfFilename(input.downloadName));
     return true;
   } finally {
     iframe.remove();

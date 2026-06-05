@@ -15,6 +15,8 @@ export type TripSummaryPriceRow = {
 
 export type TripSummaryTextInput = {
   title: string;
+  /** Route label used for PDF download filename (e.g. "Uppsala → Fjällnora"). */
+  downloadName: string;
   tripTypeLabel: string;
   legs: TripSummaryLeg[];
   priceSection?: {

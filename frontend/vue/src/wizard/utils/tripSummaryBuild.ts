@@ -102,10 +102,18 @@ export function buildTripSummaryInput(params: BuildTripSummaryInputParams): Trip
       : priceLabels.tickets[priceData.activeType] || priceData.activeType
     : '';
 
+  const legs = buildTripSummaryLegs(store, cfg, dateText);
+  const routeName =
+    store.fromTitle && store.toTitle
+      ? `${store.fromTitle} → ${store.toTitle}`
+      : legs[0]?.route ?? cfgStr(cfg, 'stepSummary', 'Din resa');
+  const downloadName = store.dateYmd ? `${routeName} ${store.dateYmd}` : routeName;
+
   return {
     title: cfgStr(cfg, 'stepSummary', 'Din resa'),
+    downloadName,
     tripTypeLabel,
-    legs: buildTripSummaryLegs(store, cfg, dateText),
+    legs,
     priceSection: priceData
       ? {
           heading: cfgStr(cfg, 'summaryPricesHeading', 'Priser'),

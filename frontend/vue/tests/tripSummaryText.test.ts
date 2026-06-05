@@ -5,6 +5,7 @@ describe('buildTripSummaryText', () => {
   it('formats legs and prices as plain text', () => {
     const text = buildTripSummaryText({
       title: 'Din resa',
+      downloadName: 'Uppsala → Marielund',
       tripTypeLabel: 'Tur och retur',
       legs: [
         {
@@ -36,6 +37,7 @@ describe('buildTripSummaryText', () => {
   it('includes structured leg segments in plain text', () => {
     const text = buildTripSummaryText({
       title: 'Din resa',
+      downloadName: 'Uppsala → Marielund',
       tripTypeLabel: 'Tur och retur',
       legs: [
         {
@@ -78,6 +80,7 @@ describe('buildTripSummaryText', () => {
   it('omits price block when empty', () => {
     const text = buildTripSummaryText({
       title: 'Din resa',
+      downloadName: 'A → B',
       tripTypeLabel: 'Enkel resa',
       legs: [
         {

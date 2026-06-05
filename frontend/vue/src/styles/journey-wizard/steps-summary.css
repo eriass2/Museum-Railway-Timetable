@@ -77,24 +77,24 @@ html.mrt-print-summary #mrt-print-clone {
         background: #fff;
         color: #000;
         font-family: var(--mrt-font-body);
-        font-size: 11pt;
-        line-height: 1.4;
+        font-size: 9.5pt;
+        line-height: 1.35;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-summary-print-title {
         display: block;
         margin: 0 0 2mm;
         font-family: var(--mrt-font-heading);
-        font-size: 16pt;
+        font-size: 14pt;
         font-weight: var(--mrt-font-weight-heading-strong);
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-summary-print-meta {
         display: block;
-        margin: 0 0 6mm;
-        padding-bottom: 4mm;
+        margin: 0 0 5mm;
+        padding-bottom: 3mm;
         border-bottom: 1px solid #ccc;
-        font-size: 10.5pt;
+        font-size: 9pt;
         color: #333;
     }
 
@@ -106,8 +106,8 @@ html.mrt-print-summary #mrt-print-clone {
     html.mrt-print-summary #mrt-print-clone .mrt-summary-card {
         break-inside: avoid;
         page-break-inside: avoid;
-        margin: 0 0 4mm;
-        padding: 4mm 5mm;
+        margin: 0 0 3mm;
+        padding: 3mm 4mm;
         border: 1px solid #bbb;
         border-radius: 0;
         box-shadow: none;
@@ -116,8 +116,8 @@ html.mrt-print-summary #mrt-print-clone {
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-summary-card__heading {
-        margin: 0 0 2mm;
-        font-size: 10pt;
+        margin: 0 0 1.5mm;
+        font-size: 8.5pt;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.04em;
@@ -126,14 +126,14 @@ html.mrt-print-summary #mrt-print-clone {
 
     html.mrt-print-summary #mrt-print-clone .mrt-trip-summary__time {
         margin: 0 0 1mm;
-        font-size: 13pt;
+        font-size: 11pt;
         font-weight: 700;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-trip-summary__route,
     html.mrt-print-summary #mrt-print-clone .mrt-trip-summary__date {
         margin: 0 0 1mm;
-        font-size: 10.5pt;
+        font-size: 9pt;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list {
@@ -152,19 +152,19 @@ html.mrt-print-summary #mrt-print-clone {
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__vehicle {
-        font-size: 10pt;
+        font-size: 8.5pt;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__time {
-        font-size: 10.5pt;
+        font-size: 9pt;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__route {
-        font-size: 9.5pt;
+        font-size: 8pt;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__transfer {
-        font-size: 9.5pt;
+        font-size: 8pt;
         background: #fff9c4;
     }
 
@@ -177,33 +177,44 @@ html.mrt-print-summary #mrt-print-clone {
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-price-block__title {
-        margin: 0 0 3mm;
-        font-size: 11pt;
+        margin: 0 0 2mm;
+        font-size: 9.5pt;
         font-weight: 700;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-price-list {
+        display: table;
+        width: 100%;
+        border-collapse: collapse;
         margin: 0;
+        padding: 0;
+        background: transparent;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-price-list__row {
-        display: flex;
-        justify-content: space-between;
-        gap: 8mm;
-        margin: 0;
-        padding: 1.5mm 0;
-        border-bottom: 1px solid #eee;
+        display: table-row;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-price-list__label,
     html.mrt-print-summary #mrt-print-clone .mrt-price-list__value {
+        display: table-cell;
         margin: 0;
-        font-size: 10pt;
+        padding: 1mm 0;
+        border-bottom: 1px solid #eee;
+        font-size: 8.5pt;
+        vertical-align: top;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-list__value {
+        text-align: right;
+        white-space: nowrap;
+        width: 28%;
+        font-weight: 700;
     }
 
     html.mrt-print-summary #mrt-print-clone .mrt-price-block__note {
-        margin: 3mm 0 0;
-        font-size: 9pt;
+        margin: 2mm 0 0;
+        font-size: 8pt;
         color: #444;
     }
 }

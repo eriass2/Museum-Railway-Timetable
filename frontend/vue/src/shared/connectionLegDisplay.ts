@@ -68,3 +68,14 @@ export function buildTransferLabel(
   }
   return base;
 }
+
+/** Hide leg list for direct trips; show when there are transfers or multiple legs. */
+export function shouldShowConnectionLegList(items: ConnectionLegSummaryItem[]): boolean {
+  if (items.length === 0) {
+    return false;
+  }
+  if (items.some((item) => item.type === 'transfer')) {
+    return true;
+  }
+  return items.length > 1;
+}

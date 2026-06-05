@@ -5,6 +5,7 @@ import type { WizardStore } from '../src/wizard/store/wizardStoreTypes';
 const storeStub = {
   fromTitle: 'Uppsala Östra',
   toTitle: 'Fjällnora',
+  dateYmd: '2026-06-05',
   tripType: 'single',
   config: { stations: [{ id: 1, title: 'Uppsala Östra' }] },
   outbound: {
@@ -46,6 +47,7 @@ describe('tripSummaryBuild', () => {
       priceLabels: { categories: {}, tickets: {}, dash: '—', title: '', titleSuffix: '', note: '', typeColumnSr: '' },
     });
     expect(input.title).toBe('Din resa');
+    expect(input.downloadName).toBe('Uppsala Östra → Fjällnora 2026-06-05');
     expect(input.legs[0].heading).toBe('Utresa');
     expect(input.priceSection).toBeUndefined();
   });

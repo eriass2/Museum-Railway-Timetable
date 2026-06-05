@@ -4,6 +4,7 @@ import MrtSummaryCard from '../../components/ui/MrtSummaryCard.vue';
 import MrtTripSummary from '../../components/ui/MrtTripSummary.vue';
 import type { ConnectionLegContext } from '../composables/useConnectionLegDisplay';
 import { useConnectionLegDisplay } from '../composables/useConnectionLegDisplay';
+import { shouldShowConnectionLegList } from '../../shared/connectionLegDisplay';
 import type { JourneyConnection } from '../types';
 
 const props = defineProps<{
@@ -22,6 +23,6 @@ const { routeText, timeRange, legItems } = useConnectionLegDisplay(
 <template>
   <MrtSummaryCard :heading="heading">
     <MrtTripSummary :time-range="timeRange" :route="routeText" :date="date" />
-    <MrtConnectionLegList v-if="legItems.length" :items="legItems" />
+    <MrtConnectionLegList v-if="shouldShowConnectionLegList(legItems)" :items="legItems" />
   </MrtSummaryCard>
 </template>
