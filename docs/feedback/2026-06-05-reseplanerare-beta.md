@@ -151,6 +151,7 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Status:** klar (2026-06-05)
 - **Referens:** https://lennakatten.se/grafisk-profil/
 - **Svar:** **Samma punkt som G2 (juni)** — inte borttagen. Roboto/Open Sans laddas via `mrt-typography.css`. R12 i betatesten var troligen (a) knappar/input som inte ärver `font-family` (webbläsare default), (b) WP-tema som slår igenom utanför `.mrt-vue-root`, eller (c) Google Fonts blockerad (cookie/annonsblockerare). Fix: explicit typografi-import i Vue-bundle, `font-family: inherit` på formulärelement, utskrift via tokens.
+- **Verifiering (senare):** På **test3**-sidan — DevTools → Network: `fonts.googleapis.com` / Roboto + Open Sans laddas; Computed på wizard-knapp/rubrik ska visa rätt `font-family` (inte bara temats).
 
 ---
 
@@ -238,6 +239,7 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 ## Nästa steg
 
 - [ ] Nästa punkt: **R14** (PDF på mobil)
+- [ ] **R12 — test3:** Verifiera att Google Fonts (Roboto/Open Sans) laddas på test3-sidan efter deploy
 - [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 
