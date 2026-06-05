@@ -118,6 +118,10 @@
     color: var(--mrt-color-text-muted, #555);
 }
 
+html.mrt-print-summary #mrt-print-clone {
+    display: none;
+}
+
 @media print {
     @page {
         margin: 14mm 12mm;
@@ -130,6 +134,10 @@
 
     html.mrt-print-summary #mrt-print-clone {
         display: block !important;
+        position: static;
+        visibility: visible;
+        left: auto;
+        overflow: visible;
         margin: 0;
         padding: 0;
         background: #fff;

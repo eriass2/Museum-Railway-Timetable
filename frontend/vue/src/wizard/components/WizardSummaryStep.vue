@@ -30,7 +30,15 @@ import {
   copyTripSummaryText,
   shareTripSummaryText,
   type TripSummaryLeg,
+  type TripSummaryTextInput,
 } from '../utils/tripSummaryText';
+import {
+  buildTripSummaryHtml,
+  openSummaryPrintTab,
+  prefersStandalonePrintTab,
+  shareTripSummary,
+  wrapTripSummaryDocument,
+} from '../utils/tripSummaryDocument';
 
 const { store, cfg, config } = useWizardContext();
 const shareFeedback = ref('');
@@ -161,7 +169,7 @@ function buildDayPriceRows(): { label: string; value: string }[] {
   })).filter((row) => row.value && row.value !== '—');
 }
 
-function summaryPlainText(): string {
+function buildSummaryInput(): TripSummaryTextInput {
   const data = priceData.value;
   const priceCfg = cfg.value as PriceCfg;
   const ticketTypeLabel = data
@@ -170,7 +178,7 @@ function summaryPlainText(): string {
       : priceLabels.value.tickets[data.activeType] || data.activeType
     : '';
 
-  return buildTripSummaryText({
+  return {
     title: cfgStr(cfg, 'stepSummary', 'Din resa'),
     tripTypeLabel: tripTypeLabel.value,
     legs: buildLegs(),
@@ -186,7 +194,15 @@ function summaryPlainText(): string {
           dayTicketRows: buildDayPriceRows(),
         }
       : undefined,
-  });
+  };
+}
+
+function summaryPlainText(): string {
+  return buildTripSummaryText(buildSummaryInput());
+}
+
+function summaryDocumentHtml(): string {
+  return wrapTripSummaryDocument(buildTripSummaryHtml(buildSummaryInput()), cfgStr(cfg, 'stepSummary', 'Din resa'));
 }
 
 function setShareFeedback(message: string): void {
@@ -196,8 +212,9 @@ function setShareFeedback(message: string): void {
 async function onShareOrCopy(): Promise<void> {
   const text = summaryPlainText();
   const title = cfgStr(cfg, 'stepSummary', 'Din resa');
+  const documentHtml = summaryDocumentHtml();
   if (canUseWebShare()) {
-    const result = await shareTripSummaryText(title, text);
+    const result = await shareTripSummary(title, text, documentHtml, shareTripSummaryText);
     if (result === 'shared') {
       setShareFeedback(cfgStr(cfg, 'summaryShareDone', 'Resan delades.'));
       return;
@@ -215,6 +232,13 @@ async function onShareOrCopy(): Promise<void> {
 }
 
 function onPrint(): void {
+  const title = cfgStr(cfg, 'stepSummary', 'Din resa');
+  if (prefersStandalonePrintTab()) {
+    const opened = openSummaryPrintTab(summaryDocumentHtml(), title);
+    if (opened) {
+      return;
+    }
+  }
   printElement('[data-wizard-summary-print]');
 }
 

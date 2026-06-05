@@ -14,7 +14,7 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 | Buggar / fel | 5 | Zoner, busskoppling Selknä, ev. byte Marielund |
 | UI / copy | 6 | Klippning, bussnamn, byte-etikett, passerade stationer, restid |
 | Design / profil | 0 | — |
-| PDF / export | 1 | Mobil utskrift vs riktig PDF |
+| PDF / export | 0 | — |
 | Data / tidtabell | 1 | Fjällnora — ej sökgräns, datat styr antal |
 | Framtida scope | 1 | Gångvägar + karta |
 | Redan åtgärdat | 1 | Tur/retur-kalender (grå dagar) |
@@ -172,8 +172,8 @@ Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå 
 - **Område:** Sammanfattningssteg / export
 - **Typ:** önskemål / begränsning i nuvarande lösning
 - **Prioritet:** medium
-- **Status:** öppen
-- **Anteckning:** Idag `window.print()` + Web Share/kopiera text (G10). Riktig PDF i ny flik kräver ny funktion (jsPDF / server-PDF). Se alternativ i [2026-06-01-granskning.md](2026-06-01-granskning.md) § G10.
+- **Status:** klar (2026-06-05)
+- **Svar:** Mobil (≤48rem): **Skriv ut / spara som PDF** öppnar formaterad resa i **ny flik** och triggar utskrift där (Spara som PDF i webbläsaren). Skriv ut-klonen döljs på skärmen under desktop-utskrift. **Dela resa** försöker dela `.html`-fil (formaterad) via Web Share när stöds; annars oförändrad plaintext/kopiera. Ingen jsPDF — samma G10-beslut.
 
 ---
 
@@ -229,17 +229,17 @@ Gå igenom i denna ordning (högsta affärs-/användarvärde först):
 | 11 | R7 | Min bytestid 0 min? | Klar (default 0) |
 | 12 | R13 | Kalenderfärger vs profil | Klar (månadskalender) |
 | 13 | R12 | Typsnitt | Klar (G2 + arv) |
-| 14 | R14 | Riktig PDF på mobil | Större |
+| 14 | R14 | Riktig PDF på mobil | Klar (ny flik + HTML-dela) |
 | 15 | R11 | Gångvägar + karta | Framtida |
 
-**Klart:** R1, R2, R3, R4, R5, R6, R7, R8, R9, R10, R12, R13, R15, R16, R17 (fråga besvarad).
+**Klart:** R1–R10, R12, R13–R17 (fråga besvarad).
 
 ---
 
 ## Nästa steg
 
-- [ ] Nästa punkt: **R14** (PDF på mobil)
 - [ ] **R12 — test3:** Verifiera att Google Fonts (Roboto/Open Sans) laddas på test3-sidan efter deploy
+- [ ] **R14 — test3/mobil:** Verifiera ny flik + HTML-dela efter deploy
 - [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 
