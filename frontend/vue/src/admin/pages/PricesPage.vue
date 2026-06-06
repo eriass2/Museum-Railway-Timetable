@@ -3,7 +3,15 @@ import { computed, ref } from 'vue';
 import { getPrices, savePrices } from '../api/adminRest';
 import type { PricesPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import { AdminFormActions, AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
+import {
+  AdminDisclosure,
+  AdminFormActions,
+  AdminInlineForm,
+  AdminPanel,
+  AdminStatusMessage,
+  MrtButton,
+} from '../components/ui';
+import { usePriceSchemaEditor } from '../composables/usePriceSchemaEditor';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
@@ -12,6 +20,9 @@ import { adminConfig } from '../types';
 const cfg = adminConfig();
 const { saveMsg, show: showSaved } = useAdminSaveNotice();
 const data = ref<PricesPayload | null>(null);
+const newTicketLabel = ref('');
+const newCategoryLabel = ref('');
+const newZone = ref('');
 
 const { loading, error, load } = useAdminResource({
   beforeLoad: () => cfg.canManage,
@@ -19,6 +30,7 @@ const { loading, error, load } = useAdminResource({
   fetch: async () => {
     const payload = await getPrices();
     data.value = payload;
+    ensureMatrixCells(payload);
     return payload;
   },
   errorMessage: (e) => {
@@ -26,6 +38,16 @@ const { loading, error, load } = useAdminResource({
     return adminErrorMessage(cfg, e, 'pricesLoadFailed');
   },
 });
+
+const {
+  addTicketType,
+  removeTicketType,
+  addCategory,
+  removeCategory,
+  addZone,
+  removeZone,
+  ensureMatrixCells,
+} = usePriceSchemaEditor(data);
 
 const ticketKeys = computed(() => Object.keys(data.value?.ticket_types ?? {}));
 const categoryKeys = computed(() => Object.keys(data.value?.categories ?? {}));
@@ -43,11 +65,36 @@ function setCell(ticket: string, category: string, zone: number, raw: string) {
   data.value.matrix[ticket][category][zone] = raw === '' ? null : Number(raw);
 }
 
+function submitAddTicketType() {
+  addTicketType(newTicketLabel.value);
+  newTicketLabel.value = '';
+}
+
+function submitAddCategory() {
+  addCategory(newCategoryLabel.value);
+  newCategoryLabel.value = '';
+}
+
+function submitAddZone() {
+  const zone = parseInt(newZone.value, 10);
+  if (!Number.isFinite(zone)) {
+    return;
+  }
+  addZone(zone);
+  newZone.value = '';
+}
+
 async function submit() {
   if (!data.value) return;
   error.value = '';
   try {
-    data.value = await savePrices(data.value.matrix);
+    data.value = await savePrices({
+      matrix: data.value.matrix,
+      ticket_types: data.value.ticket_types,
+      categories: data.value.categories,
+      zones: data.value.zones,
+    });
+    ensureMatrixCells(data.value);
     showSaved(adminStr(cfg, 'saved'));
   } catch (e) {
     error.value = adminErrorMessage(cfg, e, 'saveFailed');
@@ -70,6 +117,119 @@ async function submit() {
       <p class="description">
         {{ adminStr(cfg, 'pricesDescription') }}
       </p>
+
+      <AdminDisclosure :summary="adminStr(cfg, 'pricesSchemaSummary')">
+        <p class="description">{{ adminStr(cfg, 'pricesSchemaHint') }}</p>
+
+        <h3 class="mrt-admin-prices-schema__heading">{{ adminStr(cfg, 'pricesTicketTypesHeading') }}</h3>
+        <table class="widefat striped mrt-admin-prices-schema__table">
+          <thead>
+            <tr>
+              <th>{{ adminStr(cfg, 'pricesSchemaKeyCol') }}</th>
+              <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="key in ticketKeys" :key="`ticket-${key}`">
+              <td><code>{{ key }}</code></td>
+              <td>
+                <input v-model="data.ticket_types[key]" type="text" class="regular-text" />
+              </td>
+              <td>
+                <MrtButton
+                  context="admin"
+                  variant="link-delete"
+                  :disabled="ticketKeys.length <= 1"
+                  @click="removeTicketType(key)"
+                >
+                  {{ adminStr(cfg, 'delete') }}
+                </MrtButton>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <AdminInlineForm>
+          <input
+            v-model="newTicketLabel"
+            type="text"
+            class="regular-text"
+            :placeholder="adminStr(cfg, 'pricesNewTicketPlaceholder')"
+          />
+          <MrtButton context="admin" variant="secondary" type="button" @click="submitAddTicketType">
+            {{ adminStr(cfg, 'add') }}
+          </MrtButton>
+        </AdminInlineForm>
+
+        <h3 class="mrt-admin-prices-schema__heading">{{ adminStr(cfg, 'pricesCategoriesHeading') }}</h3>
+        <table class="widefat striped mrt-admin-prices-schema__table">
+          <thead>
+            <tr>
+              <th>{{ adminStr(cfg, 'pricesSchemaKeyCol') }}</th>
+              <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="key in categoryKeys" :key="`cat-${key}`">
+              <td><code>{{ key }}</code></td>
+              <td>
+                <input v-model="data.categories[key]" type="text" class="regular-text" />
+              </td>
+              <td>
+                <MrtButton
+                  context="admin"
+                  variant="link-delete"
+                  :disabled="categoryKeys.length <= 1"
+                  @click="removeCategory(key)"
+                >
+                  {{ adminStr(cfg, 'delete') }}
+                </MrtButton>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <AdminInlineForm>
+          <input
+            v-model="newCategoryLabel"
+            type="text"
+            class="regular-text"
+            :placeholder="adminStr(cfg, 'pricesNewCategoryPlaceholder')"
+          />
+          <MrtButton context="admin" variant="secondary" type="button" @click="submitAddCategory">
+            {{ adminStr(cfg, 'add') }}
+          </MrtButton>
+        </AdminInlineForm>
+
+        <h3 class="mrt-admin-prices-schema__heading">{{ adminStr(cfg, 'pricesZonesHeading') }}</h3>
+        <p class="mrt-admin-prices-schema__zones">
+          <span v-for="zone in zones" :key="`zone-${zone}`" class="mrt-admin-prices-schema__zone">
+            {{ adminStr(cfg, 'pricesZoneLabel', 'Zon') }} {{ zone }}
+            <MrtButton
+              context="admin"
+              variant="link-delete"
+              :disabled="zones.length <= 1"
+              @click="removeZone(zone)"
+            >
+              ×
+            </MrtButton>
+          </span>
+        </p>
+        <AdminInlineForm>
+          <input
+            v-model="newZone"
+            type="number"
+            min="1"
+            max="99"
+            class="small-text"
+            :placeholder="adminStr(cfg, 'pricesNewZonePlaceholder')"
+          />
+          <MrtButton context="admin" variant="secondary" type="button" @click="submitAddZone">
+            {{ adminStr(cfg, 'add') }}
+          </MrtButton>
+        </AdminInlineForm>
+      </AdminDisclosure>
+
       <table class="widefat striped mrt-price-matrix-table">
         <thead>
           <tr>
@@ -115,3 +275,29 @@ async function submit() {
     </AdminLoadState>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-prices-schema__heading {
+  margin: 16px 0 8px;
+  font-size: 13px;
+}
+
+.mrt-admin-prices-schema__table {
+  margin-bottom: 8px;
+}
+
+.mrt-admin-prices-schema__zones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.mrt-admin-prices-schema__zone {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  background: #f0f0f1;
+  border-radius: 3px;
+}
+</style>

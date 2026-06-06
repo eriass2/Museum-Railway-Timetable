@@ -235,6 +235,30 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertArrayHasKey( 'zones', $data );
 	}
 
+	public function test_save_prices_handler_persists_schema(): void {
+		$request = new WP_REST_Request( 'PATCH', '/settings/prices' );
+		$request->set_json_params(
+			array(
+				'ticket_types' => array( 'family' => 'Familjebiljett' ),
+				'categories'   => array( 'adult' => 'Vuxen' ),
+				'zones'        => array( 1, 2 ),
+				'matrix'       => array(
+					'family' => array(
+						'adult' => array(
+							1 => 100,
+							2 => 150,
+						),
+					),
+				),
+			)
+		);
+
+		MRT_rest_save_prices_handler( $request );
+
+		self::assertSame( array( 'family' ), MRT_price_ticket_type_keys() );
+		self::assertSame( array( 1, 2 ), MRT_price_zone_keys() );
+	}
+
 	public function test_list_train_types_handler_returns_icon_keys(): void {
 		$term = new WP_Term();
 		$term->term_id = 8;

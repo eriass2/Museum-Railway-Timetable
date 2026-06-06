@@ -29,10 +29,10 @@ export function getPrices() {
   return adminFetch<PricesPayload>('/settings/prices');
 }
 
-export function savePrices(matrix: PricesPayload['matrix']) {
+export function savePrices(payload: Pick<PricesPayload, 'matrix' | 'ticket_types' | 'categories' | 'zones'>) {
   return adminFetch<PricesPayload>('/settings/prices', {
     method: 'PATCH',
-    body: JSON.stringify({ matrix }),
+    body: JSON.stringify(payload),
   });
 }
 

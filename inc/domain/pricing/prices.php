@@ -8,13 +8,15 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
+require_once __DIR__ . '/price-schema.php';
+
 /**
  * Ticket-type keys (rows in mockup price table)
  *
  * @return string[]
  */
 function MRT_price_ticket_type_keys() {
-	return array( 'single', 'return', 'day' );
+	return MRT_price_schema_ticket_keys();
 }
 
 /**
@@ -23,7 +25,7 @@ function MRT_price_ticket_type_keys() {
  * @return string[]
  */
 function MRT_price_category_keys() {
-	return array( 'adult', 'child_4_15', 'child_0_3', 'student_senior' );
+	return MRT_price_schema_category_keys();
 }
 
 /**
@@ -32,7 +34,7 @@ function MRT_price_category_keys() {
  * @return int[]
  */
 function MRT_price_zone_keys() {
-	return array( 1, 2, 3, 4 );
+	return MRT_price_schema_zone_keys();
 }
 
 /**
@@ -217,11 +219,7 @@ function MRT_get_afternoon_return_prices() {
  * @return array<string, string>
  */
 function MRT_price_ticket_type_labels() {
-	return array(
-		'single' => __( 'Enkelbiljett', 'museum-railway-timetable' ),
-		'return' => __( 'Returbiljett', 'museum-railway-timetable' ),
-		'day'    => __( 'Dagskort', 'museum-railway-timetable' ),
-	);
+	return MRT_price_schema_ticket_labels();
 }
 
 /**
@@ -230,12 +228,7 @@ function MRT_price_ticket_type_labels() {
  * @return array<string, string>
  */
 function MRT_price_category_labels() {
-	return array(
-		'adult'          => __( 'Vuxen', 'museum-railway-timetable' ),
-		'child_4_15'     => __( 'Barn 4–15', 'museum-railway-timetable' ),
-		'child_0_3'      => __( 'Barn 0–3', 'museum-railway-timetable' ),
-		'student_senior' => __( 'Student / pensionär', 'museum-railway-timetable' ),
-	);
+	return MRT_price_schema_category_labels();
 }
 
 require_once __DIR__ . '/price-rules.php';

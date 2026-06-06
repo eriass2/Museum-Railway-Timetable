@@ -102,7 +102,20 @@ function MRT_rest_get_prices_handler( WP_REST_Request $request ) {
  * @param WP_REST_Request $request Request.
  */
 function MRT_rest_save_prices_handler( WP_REST_Request $request ) {
-	$body   = (array) $request->get_json_params();
+	$body = (array) $request->get_json_params();
+	if (
+		isset( $body['ticket_types'], $body['categories'], $body['zones'] )
+		&& is_array( $body['ticket_types'] )
+		&& is_array( $body['categories'] )
+		&& is_array( $body['zones'] )
+	) {
+		$schema = MRT_sanitize_price_schema_from_admin_maps(
+			$body['ticket_types'],
+			$body['categories'],
+			array_map( 'intval', $body['zones'] )
+		);
+		update_option( 'mrt_price_schema', $schema );
+	}
 	$matrix = isset( $body['matrix'] ) && is_array( $body['matrix'] ) ? $body['matrix'] : array();
 	$clean  = MRT_sanitize_price_matrix( $matrix );
 	update_option( 'mrt_price_matrix', $clean );

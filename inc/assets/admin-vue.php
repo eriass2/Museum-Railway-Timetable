@@ -114,6 +114,20 @@ function MRT_admin_vue_l10n_prices(): array {
 		),
 		'pricesTicketTypeCol' => __( 'Biljettyp', 'museum-railway-timetable' ),
 		'pricesZonesCol'      => __( 'Zoner', 'museum-railway-timetable' ),
+		'pricesSchemaSummary' => __( 'Prisstruktur (biljettyper, kategorier, zoner)', 'museum-railway-timetable' ),
+		'pricesSchemaHint'    => __(
+			'Nyckeln (kod) är låst efter skapande och används i CSV och beräkningar. Etiketten visas i admin och för besökare.',
+			'museum-railway-timetable'
+		),
+		'pricesTicketTypesHeading' => __( 'Biljettyper', 'museum-railway-timetable' ),
+		'pricesCategoriesHeading'  => __( 'Passagerarkategorier', 'museum-railway-timetable' ),
+		'pricesZonesHeading'       => __( 'Priszoner', 'museum-railway-timetable' ),
+		'pricesSchemaKeyCol'       => __( 'Nyckel', 'museum-railway-timetable' ),
+		'pricesSchemaLabelCol'     => __( 'Etikett', 'museum-railway-timetable' ),
+		'pricesNewTicketPlaceholder' => __( 'Ny biljettyp', 'museum-railway-timetable' ),
+		'pricesNewCategoryPlaceholder' => __( 'Ny kategori', 'museum-railway-timetable' ),
+		'pricesNewZonePlaceholder' => __( 'Zonnummer', 'museum-railway-timetable' ),
+		'pricesZoneLabel'          => __( 'Zon', 'museum-railway-timetable' ),
 	);
 }
 
