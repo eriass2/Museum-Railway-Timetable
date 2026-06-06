@@ -9,6 +9,7 @@ import {
 import type { TrainTypeRow } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import {
+  AdminBackNav,
   AdminDisclosure,
   AdminEmptyState,
   AdminFlashRow,
@@ -17,6 +18,7 @@ import {
   AdminRowActions,
   AdminStatusMessage,
   AdminTableScroll,
+  AdminTrainTypeCell,
   MrtButton,
   TrainTypeIconPicker,
 } from '../components/ui';
@@ -27,11 +29,15 @@ import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
+type TrainTypesView = 'list' | 'edit' | 'create';
+
 const cfg = adminConfig();
 const items = ref<TrainTypeRow[]>([]);
 const iconKeys = ref<string[]>([]);
-const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
+const viewMode = ref<TrainTypesView>('list');
+const editingRow = ref<TrainTypeRow | null>(null);
 const newType = ref({ name: '', slug: '', icon_key: 'diesel' });
+const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 const { flashRow, isFlashed } = useAdminRowFlash();
 
 const { loading, error, data, load, reload } = useAdminResource({
@@ -51,6 +57,29 @@ watch(
   { immediate: true },
 );
 
+function backToList(): void {
+  editingRow.value = null;
+  newType.value = { name: '', slug: '', icon_key: 'diesel' };
+  viewMode.value = 'list';
+}
+
+function startCreate(): void {
+  if (!cfg.canManage) {
+    return;
+  }
+  editingRow.value = null;
+  newType.value = { name: '', slug: '', icon_key: 'diesel' };
+  viewMode.value = 'create';
+}
+
+function startEdit(row: TrainTypeRow): void {
+  if (!cfg.canManage) {
+    return;
+  }
+  editingRow.value = { ...row };
+  viewMode.value = 'edit';
+}
+
 async function addType() {
   if (!cfg.canManage || !newType.value.name.trim()) return;
   const created = await createTrainType({
@@ -58,20 +87,23 @@ async function addType() {
     slug: newType.value.slug.trim() || undefined,
     icon_key: newType.value.icon_key,
   });
-  newType.value = { name: '', slug: '', icon_key: 'diesel' };
   showSaveNotice(adminFmt(cfg, 'trainTypesCreated', created.name));
+  backToList();
   await reload();
   flashRow(created.id);
 }
 
-async function saveType(row: TrainTypeRow) {
-  if (!cfg.canManage) return;
+async function saveType() {
+  if (!cfg.canManage || !editingRow.value) return;
+  const row = editingRow.value;
   await updateTrainType(row.id, {
     name: row.name,
     slug: row.slug,
     icon_key: row.icon_key,
   });
   showSaveNotice(adminFmt(cfg, 'trainTypesSaved', row.name));
+  backToList();
+  await reload();
   flashRow(row.id);
 }
 
@@ -93,6 +125,9 @@ async function removeType(id: number) {
       ? adminFmt(cfg, 'trainTypesRemoved', row.name)
       : adminStr(cfg, 'trainTypesRemovedFallback'),
   );
+  if (editingRow.value?.id === id) {
+    backToList();
+  }
   await reload();
 }
 </script>
@@ -109,7 +144,7 @@ async function removeType(id: number) {
     >
       <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
 
-      <AdminPanel>
+      <AdminPanel v-if="viewMode === 'list'">
         <AdminEmptyState
           v-if="!items.length"
           :title="adminStr(cfg, 'trainTypesEmptyTitle')"
@@ -127,36 +162,14 @@ async function removeType(id: number) {
             </thead>
             <tbody>
               <AdminFlashRow v-for="row in items" :key="row.id" :active="isFlashed(row.id)">
+                <td>{{ row.name }}</td>
                 <td>
-                  <input
-                    v-model="row.name"
-                    type="text"
-                    class="regular-text"
-                    :disabled="!cfg.canManage"
-                  />
-                  <AdminDisclosure v-if="cfg.canManage" class="train-types-page__slug">
-                    <label class="train-types-page__slug-label">
-                      {{ adminStr(cfg, 'trainTypesSlugLabel') }}
-                      <input v-model="row.slug" type="text" class="regular-text" />
-                    </label>
-                  </AdminDisclosure>
-                  <span v-else-if="row.slug" class="train-types-page__slug-readonly description">
-                    {{ row.slug }}
-                  </span>
-                </td>
-                <td>
-                  <TrainTypeIconPicker
-                    v-model="row.icon_key"
-                    :icon-keys="iconKeys"
-                    :disabled="!cfg.canManage"
-                    :aria-label="adminStr(cfg, 'trainTypesIconPickerAria')"
-                    compact
-                  />
+                  <AdminTrainTypeCell :icon-key="row.icon_key" :name="row.name" />
                 </td>
                 <td v-if="cfg.canManage">
                   <AdminRowActions>
-                    <MrtButton context="admin" variant="secondary" @click="saveType(row)">
-                      {{ adminStr(cfg, 'save') }}
+                    <MrtButton context="admin" variant="secondary" @click="startEdit(row)">
+                      {{ adminStr(cfg, 'edit') }}
                     </MrtButton>
                     <MrtButton context="admin" variant="link-delete" @click="removeType(row.id)">
                       {{ adminStr(cfg, 'delete') }}
@@ -167,9 +180,17 @@ async function removeType(id: number) {
             </tbody>
           </table>
         </AdminTableScroll>
+
+        <AdminFormActions v-if="cfg.canManage">
+          <MrtButton context="admin" variant="primary" @click="startCreate">
+            {{ adminStr(cfg, 'trainTypesCreateButton') }}
+          </MrtButton>
+        </AdminFormActions>
       </AdminPanel>
 
-      <AdminPanel v-if="cfg.canManage" :title="adminStr(cfg, 'trainTypesNewTitle')">
+      <AdminPanel v-else-if="viewMode === 'create' && cfg.canManage">
+        <AdminBackNav @back="backToList" />
+        <h2 class="train-types-page__detail-title">{{ adminStr(cfg, 'trainTypesNewTitle') }}</h2>
         <div class="train-types-page__new">
           <label class="train-types-page__field">
             <span class="train-types-page__field-label">{{ adminStr(cfg, 'trainTypesNameLabel') }}</span>
@@ -203,6 +224,45 @@ async function removeType(id: number) {
             <MrtButton context="admin" variant="primary" @click="addType">
               {{ adminStr(cfg, 'trainTypesCreateButton') }}
             </MrtButton>
+            <MrtButton context="admin" variant="secondary" @click="backToList">
+              {{ adminStr(cfg, 'cancel') }}
+            </MrtButton>
+          </AdminFormActions>
+        </div>
+      </AdminPanel>
+
+      <AdminPanel v-else-if="viewMode === 'edit' && editingRow && cfg.canManage">
+        <AdminBackNav @back="backToList" />
+        <h2 class="train-types-page__detail-title">{{ adminStr(cfg, 'edit') }}: {{ editingRow.name }}</h2>
+        <div class="train-types-page__new">
+          <label class="train-types-page__field">
+            <span class="train-types-page__field-label">{{ adminStr(cfg, 'trainTypesNameLabel') }}</span>
+            <input v-model="editingRow.name" type="text" class="regular-text" />
+          </label>
+          <div class="train-types-page__field">
+            <span class="train-types-page__field-label">{{ adminStr(cfg, 'trainTypesIconLabel') }}</span>
+            <TrainTypeIconPicker
+              v-model="editingRow.icon_key"
+              :icon-keys="iconKeys"
+              :aria-label="adminStr(cfg, 'trainTypesIconPickerAria')"
+            />
+          </div>
+          <AdminDisclosure>
+            <label class="train-types-page__field train-types-page__field--slug">
+              <span class="train-types-page__field-label">{{ adminStr(cfg, 'trainTypesSlugLabel') }}</span>
+              <input v-model="editingRow.slug" type="text" class="regular-text" />
+            </label>
+          </AdminDisclosure>
+          <AdminFormActions>
+            <MrtButton context="admin" variant="primary" @click="saveType">
+              {{ adminStr(cfg, 'save') }}
+            </MrtButton>
+            <MrtButton context="admin" variant="secondary" @click="backToList">
+              {{ adminStr(cfg, 'cancel') }}
+            </MrtButton>
+            <MrtButton context="admin" variant="link-delete" @click="removeType(editingRow.id)">
+              {{ adminStr(cfg, 'delete') }}
+            </MrtButton>
           </AdminFormActions>
         </div>
       </AdminPanel>
@@ -212,24 +272,12 @@ async function removeType(id: number) {
 
 <style scoped>
 .train-types-page__table td {
-  vertical-align: top;
+  vertical-align: middle;
 }
 
-.train-types-page__slug {
-  margin-top: 6px;
-}
-
-.train-types-page__slug-label {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  font-size: 12px;
-  color: #50575e;
-}
-
-.train-types-page__slug-readonly {
-  display: block;
-  margin-top: 4px;
+.train-types-page__detail-title {
+  margin: 0 0 16px;
+  font-size: 14px;
 }
 
 .train-types-page__new {
