@@ -29,6 +29,16 @@ function MRT_rest_register_import_export_routes(): void {
 
 	register_rest_route(
 		MRT_REST_NAMESPACE,
+		'/export/csv/template',
+		array(
+			'methods'             => WP_REST_Server::READABLE,
+			'callback'            => 'MRT_rest_export_csv_template_handler',
+			'permission_callback' => 'MRT_rest_can_manage',
+		)
+	);
+
+	register_rest_route(
+		MRT_REST_NAMESPACE,
 		'/export/csv',
 		array(
 			'methods'             => WP_REST_Server::READABLE,
@@ -75,11 +85,19 @@ function MRT_rest_import_csv_handler( WP_REST_Request $request ) {
 		return new WP_Error( 'no_file', __( 'No file uploaded.', 'museum-railway-timetable' ), array( 'status' => 400 ) );
 	}
 	$mode = $request->get_param( 'mode' ) === 'override' ? 'override' : 'merge';
-	$result = MRT_csv_import_package( (string) $files['file']['tmp_name'], $mode );
+	$upload_name = isset( $files['file']['name'] ) ? (string) $files['file']['name'] : '';
+	$result = MRT_csv_import_package( (string) $files['file']['tmp_name'], $mode, $upload_name );
 	if ( is_wp_error( $result ) ) {
+		$message = $result->get_error_message();
+		if ( $result->get_error_code() === 'mrt_csv_invalid' ) {
+			$data = $result->get_error_data();
+			if ( is_array( $data ) ) {
+				$message = MRT_csv_format_validation_errors( $data );
+			}
+		}
 		return new WP_Error(
 			'import_failed',
-			$result->get_error_message(),
+			$message,
 			array(
 				'status' => 400,
 				'data'   => $result->get_error_data(),
@@ -94,6 +112,30 @@ function MRT_rest_import_csv_handler( WP_REST_Request $request ) {
 			'imported' => true,
 			'stats'    => is_array( $result ) ? $result : array(),
 			'mode'     => $mode,
+		)
+	);
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_export_csv_template_handler( WP_REST_Request $request ) {
+	unset( $request );
+	$tmpdir   = trailingslashit( get_temp_dir() ) . 'mrt-template-' . wp_generate_password( 8, false );
+	$zip_path = $tmpdir . '.zip';
+	$result   = MRT_csv_export_template_zip( $zip_path );
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	$raw = file_get_contents( $zip_path );
+	if ( ! is_string( $raw ) ) {
+		return new WP_Error( 'export_failed', __( 'Could not read template file.', 'museum-railway-timetable' ), array( 'status' => 500 ) );
+	}
+	@unlink( $zip_path );
+	return rest_ensure_response(
+		array(
+			'filename'       => 'mrt-import-template.zip',
+			'content_base64' => base64_encode( $raw ),
 		)
 	);
 }

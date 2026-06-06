@@ -38,4 +38,5 @@ require_once MRT_PATH . 'inc/assets/vue-frontend.php';
 require_once MRT_PATH . 'inc/assets/admin.php';
 require_once MRT_PATH . 'inc/assets/admin-vue.php';
 require_once MRT_PATH . 'inc/assets/admin-vue-help.php';
+require_once MRT_PATH . 'inc/assets/admin-vue-import-export-help.php';
 require_once MRT_PATH . 'inc/assets/frontend.php';

@@ -317,9 +317,13 @@ function MRT_admin_vue_l10n_import_export(): array {
 		),
 		'importExportTemplateSuccess'  => __( 'Mall nedladdad.', 'museum-railway-timetable' ),
 		'importExportTemplateFailed'   => __( 'Kunde inte ladda ner mall', 'museum-railway-timetable' ),
-		'importExportImportTitle'      => __( 'Importera zip', 'museum-railway-timetable' ),
+		'importExportImportTitle'      => __( 'Importera zip eller CSV', 'museum-railway-timetable' ),
 		'importExportImportHint'       => __(
-			'Ladda upp zip med CSV-filer. manifest.json är valfri. Vid fel visas fil och radnummer.',
+			'Ladda upp zip med alla filer, eller en enskild CSV (t.ex. stoptimes.csv) för små ändringar. manifest.json är valfri.',
+			'museum-railway-timetable'
+		),
+		'importExportSingleCsvHint'    => __(
+			'Filen måste heta som i exportpaketet: stations.csv, stoptimes.csv, timetable_dates.csv m.fl. Slå ihop rekommenderas för enstaka filer.',
 			'museum-railway-timetable'
 		),
 		'importExportModeMergeShort'   => __( 'Rekommenderas — uppdaterar det som finns i filen och behåller övrig data.', 'museum-railway-timetable' ),

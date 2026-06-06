@@ -18,8 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $mode   merge|override
  * @return array<string, mixed>|WP_Error
  */
-function MRT_csv_import_package( string $path, string $mode = 'merge' ) {
-	$package = MRT_csv_load_package( $path );
+function MRT_csv_import_package( string $path, string $mode = 'merge', string $upload_filename = '' ) {
+	$package = MRT_csv_load_package( $path, $upload_filename );
 	if ( is_wp_error( $package ) ) {
 		return $package;
 	}

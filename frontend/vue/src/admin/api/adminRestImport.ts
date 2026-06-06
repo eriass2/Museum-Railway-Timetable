@@ -15,6 +15,10 @@ export function exportCsv(options: { include_prices?: boolean; include_settings?
   );
 }
 
+export function exportTemplateCsv() {
+  return adminFetch<{ filename: string; content_base64: string }>('export/csv/template');
+}
+
 export function importCsv(file: File, mode: 'merge' | 'override') {
   const body = new FormData();
   body.append('file', file);

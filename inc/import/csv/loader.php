@@ -17,6 +17,7 @@ require_once $csv_dir . 'slugify.php';
 require_once $csv_dir . 'reader.php';
 require_once $csv_dir . 'writer.php';
 require_once $csv_dir . 'package.php';
+require_once $csv_dir . 'manifest.php';
 require_once $csv_dir . 'validate-manifest.php';
 require_once $csv_dir . 'validate-codes.php';
 require_once $csv_dir . 'validate-codes-entities.php';
