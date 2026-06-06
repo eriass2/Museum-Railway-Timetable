@@ -204,28 +204,11 @@ function MRT_ensure_components_demo_page_cli() {
  * @return int|WP_Error Post ID or error
  */
 function MRT_ensure_components_demo_page() {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return new WP_Error( 'mrt_cap', __( 'Åtkomst nekad.', 'museum-railway-timetable' ) );
-	}
-	$title   = __( 'Museijärnvägens tidtabell – komponentdemo', 'museum-railway-timetable' );
-	$content = MRT_get_components_demo_page_content();
-	$post_id = (int) get_option( MRT_OPTION_COMPONENTS_DEMO_PAGE_ID, 0 );
-	$postarr = array(
-		'post_type'    => 'page',
-		'post_status'  => 'publish',
-		'post_title'   => $title,
-		'post_content' => $content,
+	return MRT_ensure_option_backed_page(
+		MRT_OPTION_COMPONENTS_DEMO_PAGE_ID,
+		__( 'Museijärnvägens tidtabell – komponentdemo', 'museum-railway-timetable' ),
+		'MRT_get_components_demo_page_content'
 	);
-	if ( $post_id > 0 && get_post( $post_id ) && get_post_type( $post_id ) === 'page' ) {
-		$postarr['ID'] = $post_id;
-		$result        = wp_update_post( wp_slash( $postarr ), true );
-	} else {
-		$result = wp_insert_post( wp_slash( $postarr ), true );
-		if ( ! is_wp_error( $result ) ) {
-			update_option( MRT_OPTION_COMPONENTS_DEMO_PAGE_ID, (int) $result );
-		}
-	}
-	return $result;
 }
 
 /**

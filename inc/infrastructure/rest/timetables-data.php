@@ -11,7 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
 require_once MRT_PATH . 'inc/domain/service/timetable-trip-update.php';
 require_once MRT_PATH . 'inc/domain/route/destinations.php';
 
@@ -247,49 +246,35 @@ function MRT_rest_save_timetable_dates( int $timetable_id, array $dates ): void 
  * @return array<string, mixed>|WP_Error
  */
 function MRT_rest_add_timetable_service( int $timetable_id, array $body ) {
-	$input = array(
-		'timetable_id'   => $timetable_id,
-		'route_id'       => (int) ( $body['route_id'] ?? 0 ),
-		'train_type_id'  => (int) ( $body['train_type_id'] ?? 0 ),
-		'end_station_id' => (int) ( $body['end_station_id'] ?? 0 ),
-		'direction'      => '',
-	);
-	if ( $input['route_id'] <= 0 ) {
-		return new WP_Error( 'route', __( 'Route is required.', 'museum-railway-timetable' ), array( 'status' => 400 ) );
+	$parsed = MRT_parse_trip_input( $body );
+	if ( is_wp_error( $parsed ) ) {
+		return $parsed;
 	}
-	if ( $input['end_station_id'] > 0 ) {
-		$input['direction'] = MRT_calculate_direction_from_end_station( $input['route_id'], $input['end_station_id'] );
-	}
-	$auto_title = MRT_build_service_auto_title( $input['route_id'], $input['end_station_id'], $input['direction'] );
+
 	$service_id = wp_insert_post(
 		array(
 			'post_type'   => MRT_POST_TYPE_SERVICE,
-			'post_title'  => $auto_title,
+			'post_title'  => MRT_build_service_auto_title(
+				$parsed['route_id'],
+				$parsed['end_station_id'],
+				$parsed['direction']
+			),
 			'post_status' => 'publish',
 		)
 	);
 	if ( $service_id instanceof WP_Error ) {
 		return $service_id;
 	}
+
 	update_post_meta( $service_id, 'mrt_service_timetable_id', $timetable_id );
-	update_post_meta( $service_id, 'mrt_service_route_id', $input['route_id'] );
-	if ( $input['end_station_id'] > 0 ) {
-		update_post_meta( $service_id, 'mrt_service_end_station_id', $input['end_station_id'] );
-		if ( $input['direction'] !== '' ) {
-			update_post_meta( $service_id, 'mrt_direction', $input['direction'] );
-		}
-	}
-	if ( $input['train_type_id'] > 0 ) {
-		wp_set_object_terms( $service_id, array( $input['train_type_id'] ), MRT_TAXONOMY_TRAIN_TYPE );
-	}
-	require_once MRT_PATH . 'inc/domain/service/highlight.php';
-	MRT_apply_service_number_and_highlight_meta( (int) $service_id, $body );
+	MRT_persist_trip_fields( (int) $service_id, $parsed, $body );
+
 	return MRT_build_add_service_response(
 		(int) $service_id,
-		$input['route_id'],
-		$input['train_type_id'],
-		$input['end_station_id'],
-		$input['direction']
+		$parsed['route_id'],
+		$parsed['train_type_id'],
+		$parsed['end_station_id'],
+		$parsed['direction']
 	);
 }
 

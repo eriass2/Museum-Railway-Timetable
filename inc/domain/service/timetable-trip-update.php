@@ -11,8 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
-require_once MRT_PATH . 'inc/domain/service/highlight.php';
+require_once MRT_PATH . 'inc/domain/service/timetable-trip-fields.php';
 
 /**
  * Verify service belongs to timetable.
@@ -38,50 +37,10 @@ function MRT_get_timetable_service_post( int $timetable_id, int $service_id ) {
  * @return true|WP_Error
  */
 function MRT_apply_timetable_service_update( int $service_id, array $body ) {
-	$route_id = (int) ( $body['route_id'] ?? 0 );
-	if ( $route_id <= 0 ) {
-		return new WP_Error( 'route', __( 'Route is required.', 'museum-railway-timetable' ), array( 'status' => 400 ) );
-	}
-	$route = get_post( $route_id );
-	if ( ! $route instanceof WP_Post || $route->post_type !== MRT_POST_TYPE_ROUTE ) {
-		return new WP_Error( 'route', __( 'Route not found.', 'museum-railway-timetable' ), array( 'status' => 400 ) );
+	$parsed = MRT_parse_trip_input( $body );
+	if ( is_wp_error( $parsed ) ) {
+		return $parsed;
 	}
 
-	$train_type_id  = (int) ( $body['train_type_id'] ?? 0 );
-	$end_station_id = (int) ( $body['end_station_id'] ?? 0 );
-	$direction      = '';
-	if ( $end_station_id > 0 ) {
-		$direction = MRT_calculate_direction_from_end_station( $route_id, $end_station_id );
-	}
-
-	update_post_meta( $service_id, 'mrt_service_route_id', $route_id );
-	if ( $end_station_id > 0 ) {
-		update_post_meta( $service_id, 'mrt_service_end_station_id', $end_station_id );
-		if ( $direction !== '' ) {
-			update_post_meta( $service_id, 'mrt_direction', $direction );
-		} else {
-			delete_post_meta( $service_id, 'mrt_direction' );
-		}
-	} else {
-		delete_post_meta( $service_id, 'mrt_service_end_station_id' );
-		delete_post_meta( $service_id, 'mrt_direction' );
-	}
-
-	if ( $train_type_id > 0 ) {
-		wp_set_object_terms( $service_id, array( $train_type_id ), MRT_TAXONOMY_TRAIN_TYPE );
-	} else {
-		wp_set_object_terms( $service_id, array(), MRT_TAXONOMY_TRAIN_TYPE );
-	}
-
-	$auto_title = MRT_build_service_auto_title( $route_id, $end_station_id, $direction );
-	wp_update_post(
-		array(
-			'ID'         => $service_id,
-			'post_title' => $auto_title,
-		)
-	);
-
-	MRT_apply_service_number_and_highlight_meta( $service_id, $body );
-
-	return true;
+	return MRT_persist_trip_fields( $service_id, $parsed, $body );
 }

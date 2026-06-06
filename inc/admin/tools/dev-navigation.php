@@ -50,41 +50,6 @@ function MRT_dev_smoke_page_specs(): array {
 }
 
 /**
- * Create or update a single smoke page.
- *
- * @param string               $option_key Option storing post ID.
- * @param string               $title      Page title.
- * @param string|callable(): string $content Page content or callback.
- * @return int|WP_Error Post ID or error.
- */
-function MRT_ensure_dev_smoke_page( string $option_key, string $title, $content ) {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return new WP_Error( 'mrt_cap', __( 'Åtkomst nekad.', 'museum-railway-timetable' ) );
-	}
-
-	$body = is_callable( $content ) ? (string) call_user_func( $content ) : (string) $content;
-	$post_id = (int) get_option( $option_key, 0 );
-	$postarr = array(
-		'post_type'    => 'page',
-		'post_status'  => 'publish',
-		'post_title'   => $title,
-		'post_content' => $body,
-	);
-
-	if ( $post_id > 0 && get_post( $post_id ) && get_post_type( $post_id ) === 'page' ) {
-		$postarr['ID'] = $post_id;
-		$result        = wp_update_post( wp_slash( $postarr ), true );
-	} else {
-		$result = wp_insert_post( wp_slash( $postarr ), true );
-		if ( ! is_wp_error( $result ) ) {
-			update_option( $option_key, (int) $result );
-		}
-	}
-
-	return $result;
-}
-
-/**
  * Create or update all development smoke pages.
  *
  * @return array{page_ids: int[], errors: WP_Error[]}
@@ -94,7 +59,7 @@ function MRT_ensure_dev_smoke_pages(): array {
 	$errors   = array();
 
 	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
-		$result = MRT_ensure_dev_smoke_page( $spec['option'], $spec['title'], $spec['content'] );
+		$result = MRT_ensure_option_backed_page( $spec['option'], $spec['title'], $spec['content'] );
 		if ( is_wp_error( $result ) ) {
 			$errors[] = $result;
 			continue;

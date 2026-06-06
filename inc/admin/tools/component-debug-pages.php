@@ -95,7 +95,7 @@ function MRT_ensure_component_debug_pages(): array {
 	$page_ids = array();
 	$errors   = array();
 	foreach ( MRT_component_debug_page_specs() as $spec ) {
-		$result = MRT_ensure_dev_smoke_page( $spec['option'], $spec['title'], $spec['content'] );
+		$result = MRT_ensure_option_backed_page( $spec['option'], $spec['title'], $spec['content'] );
 		if ( is_wp_error( $result ) ) {
 			$errors[] = $result;
 			continue;

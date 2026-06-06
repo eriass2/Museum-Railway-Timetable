@@ -135,24 +135,26 @@ function MRT_timetable_single_page_content( int $timetable_id ): string {
 /**
  * Create or update a published page stored in an option key.
  *
+ * @param string|callable(): string $content Page content or callback.
  * @return int|WP_Error
  */
 function MRT_ensure_option_backed_page(
 	string $option_key,
 	string $title,
-	string $content,
+	$content,
 	string $post_name = ''
 ) {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return new WP_Error( 'mrt_cap', __( 'Åtkomst nekad.', 'museum-railway-timetable' ) );
 	}
 
+	$body    = is_callable( $content ) ? (string) call_user_func( $content ) : (string) $content;
 	$post_id = (int) get_option( $option_key, 0 );
 	$postarr = array(
 		'post_type'    => 'page',
 		'post_status'  => 'publish',
 		'post_title'   => $title,
-		'post_content' => $content,
+		'post_content' => $body,
 	);
 	if ( $post_name !== '' ) {
 		$postarr['post_name'] = $post_name;
