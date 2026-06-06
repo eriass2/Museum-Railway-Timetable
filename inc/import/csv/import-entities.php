@@ -143,3 +143,31 @@ function MRT_csv_row_code( array $row, string $field, string $fallback_field ): 
 	}
 	return MRT_csv_slugify( (string) ( $row[ $fallback_field ] ?? '' ) );
 }
+
+/**
+ * Import train-change rows (optional station_train_changes.csv).
+ *
+ * @param array<string, array<int, array<string, string>>> $files
+ * @param array<string, array<string, int>>               $maps
+ */
+function MRT_csv_import_station_train_changes( array $files, array $maps ): void {
+	/** @var array<int, array<string, array{typeName: string, serviceNumber: string}>> $by_station */
+	$by_station = array();
+	foreach ( (array) ( $files['station_train_changes.csv'] ?? array() ) as $row ) {
+		$code = trim( (string) ( $row['station_code'] ?? '' ) );
+		if ( $code === '' || ! isset( $maps['station'][ $code ] ) ) {
+			continue;
+		}
+		$from = sanitize_text_field( (string) ( $row['from_service'] ?? '' ) );
+		$type = sanitize_text_field( (string) ( $row['type_name'] ?? '' ) );
+		$to   = sanitize_text_field( (string) ( $row['to_service'] ?? '' ) );
+		if ( $from === '' || $type === '' || $to === '' ) {
+			continue;
+		}
+		$station_id = (int) $maps['station'][ $code ];
+		$by_station[ $station_id ][ $from ] = MRT_train_change_map_entry( $type, $to );
+	}
+	foreach ( $by_station as $station_id => $map ) {
+		MRT_update_station_train_change_map_meta( (int) $station_id, $map );
+	}
+}

@@ -14,6 +14,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once MRT_PATH . 'inc/domain/admin/delete-entities.php';
 
 /**
+ * @return array<string, array{typeName: string, serviceNumber: string}>
+ */
+function MRT_rest_format_train_change_map( int $station_id ): array {
+	return MRT_get_station_train_change_map_stored( $station_id );
+}
+
+/**
+ * @param mixed $value Raw REST body field.
+ * @return array<string, array{typeName: string, serviceNumber: string}>
+ */
+function MRT_rest_parse_train_change_map_body( $value ): array {
+	if ( ! is_array( $value ) ) {
+		return array();
+	}
+	return MRT_sanitize_station_train_change_map( $value );
+}
+
+/**
  * Register station routes.
  */
 function MRT_rest_register_station_routes(): void {
@@ -88,6 +106,7 @@ function MRT_rest_format_station( WP_Post $post ): array {
 		'lng'           => (string) get_post_meta( $post->ID, 'mrt_lng', true ),
 		'display_order' => (int) get_post_meta( $post->ID, 'mrt_display_order', true ),
 		'price_zones'   => MRT_get_station_price_zones( (int) $post->ID ),
+		'train_change_map' => MRT_rest_format_train_change_map( (int) $post->ID ),
 	);
 }
 
@@ -145,6 +164,12 @@ function MRT_rest_apply_station_meta( int $station_id, array $body ): void {
 	if ( array_key_exists( 'price_zones', $body ) ) {
 		$zones = is_array( $body['price_zones'] ) ? $body['price_zones'] : array();
 		MRT_update_station_price_zones_meta( $station_id, $zones );
+	}
+	if ( array_key_exists( 'train_change_map', $body ) ) {
+		MRT_update_station_train_change_map_meta(
+			$station_id,
+			MRT_rest_parse_train_change_map_body( $body['train_change_map'] )
+		);
 	}
 }
 

@@ -8,6 +8,7 @@
 |----------|----------|
 | [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) | MVP-beslut: wizard-only, shortcodes, import |
 | [MULTI_OPERATOR.md](MULTI_OPERATOR.md) | Plan: plugin för flera föreningar (Lennakatten = referens, inte default) |
+| [OPERATOR_ONBOARDING.md](OPERATOR_ONBOARDING.md) | Kom igång för ny förening (import, shortcodes, tema) |
 | [REBUILD_RULES.md](REBUILD_RULES.md) | **Primär regelbok** – arkitektur, design, kvalitet vid ny kod |
 
 Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Tågtypsikoner: `assets/icons/train-types/`.

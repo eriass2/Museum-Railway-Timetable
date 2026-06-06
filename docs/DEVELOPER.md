@@ -32,6 +32,7 @@ Fullständigt index: **[README.md](README.md)**.
 | [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning |
 | [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG per modul |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i admin |
+| [OPERATOR_ONBOARDING.md](OPERATOR_ONBOARDING.md) | Ny förening: import, tema, shortcodes |
 | [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP/Composer på Windows |
 
 ---

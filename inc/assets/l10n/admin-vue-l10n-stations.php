@@ -72,5 +72,18 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsRouteEmptyStations' => __( 'Inga stationer ännu. Lägg till en station nedan.', 'museum-railway-timetable' ),
 		'stationsAddStationPrompt'   => __( 'Lägg till station...', 'museum-railway-timetable' ),
 		'stationsSaveRoute'          => __( 'Spara rutt', 'museum-railway-timetable' ),
+		'stationsTrainChangeSummary' => __( 'Tågbyte', 'museum-railway-timetable' ),
+		'stationsTrainChangeSummaryCount' => __( 'Tågbyte (%1$s)', 'museum-railway-timetable' ),
+		'stationsTrainChangeHint'    => __(
+			'Visar anslutande tåg i tidtabellsöversikten när ett tågnummer anländer (t.ex. 71 → Dieseltåg 61).',
+			'museum-railway-timetable'
+		),
+		'stationsTrainChangeFrom'    => __( 'Ankommande tågnummer', 'museum-railway-timetable' ),
+		'stationsTrainChangeFromPh'  => __( '71', 'museum-railway-timetable' ),
+		'stationsTrainChangeType'    => __( 'Anslutande fordons typ', 'museum-railway-timetable' ),
+		'stationsTrainChangeTypePh'  => __( 'Dieseltåg', 'museum-railway-timetable' ),
+		'stationsTrainChangeTo'      => __( 'Anslutande tågnummer', 'museum-railway-timetable' ),
+		'stationsTrainChangeToPh'    => __( '61', 'museum-railway-timetable' ),
+		'stationsTrainChangeAdd'     => __( 'Lägg till rad', 'museum-railway-timetable' ),
 	);
 }

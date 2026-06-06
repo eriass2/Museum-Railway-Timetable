@@ -10,13 +10,15 @@ import {
   MrtButton,
 } from './ui';
 import { routePreviewTypeLabel } from '../utils/routePreviewNodes';
-import { adminStr } from '../utils/adminLabels';
+import { adminStr, adminFmtN } from '../utils/adminLabels';
 import {
   formatStationPriceZones,
   stationHasPriceZone,
   STATION_PRICE_ZONE_OPTIONS,
   toggleStationPriceZone,
 } from '../utils/stationPriceZones';
+import { trainChangeEntryCount } from '../utils/stationTrainChange';
+import StationTrainChangeEditor from './StationTrainChangeEditor.vue';
 import { adminConfig } from '../types';
 import type { StationRow } from '../types';
 
@@ -34,6 +36,14 @@ const emit = defineEmits<{
 }>();
 
 const cfg = adminConfig();
+
+function trainChangeSummary(st: StationRow): string {
+  const count = trainChangeEntryCount(st.train_change_map);
+  if (count > 0) {
+    return adminFmtN(cfg, 'stationsTrainChangeSummaryCount', { 1: count });
+  }
+  return adminStr(cfg, 'stationsTrainChangeSummary');
+}
 </script>
 
 <template>
@@ -103,6 +113,11 @@ const cfg = adminConfig();
               class="small-text"
             />
           </p>
+          <AdminDisclosure
+            :summary="adminStr(cfg, 'stationsTrainChangeSummary', 'Tågbyte')"
+          >
+            <StationTrainChangeEditor :station="newStation" />
+          </AdminDisclosure>
         </div>
       </AdminDisclosure>
     </div>
@@ -198,7 +213,10 @@ const cfg = adminConfig();
               <span v-else>{{ st.display_order }}</span>
             </td>
             <td v-if="cfg.canManage">
-              <AdminRowActions>
+              <AdminRowActions stack>
+                <AdminDisclosure :summary="trainChangeSummary(st)">
+                  <StationTrainChangeEditor :station="st" />
+                </AdminDisclosure>
                 <MrtButton context="admin" variant="secondary" @click="emit('save', st)">
                   {{ adminStr(cfg, 'save') }}
                 </MrtButton>

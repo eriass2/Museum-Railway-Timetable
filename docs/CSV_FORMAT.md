@@ -16,6 +16,7 @@ Ett **exportpaket** är en mapp eller en `.zip` med samma innehåll.
 mrt-export/
 ├── manifest.json
 ├── stations.csv
+├── station_train_changes.csv   (valfri)
 ├── train_types.csv
 ├── routes.csv
 ├── route_stations.csv
@@ -129,7 +130,20 @@ Identifieras via `slug` (WordPress taxonomy). Ingen separat `train_type_code`.
 | `bus_stop_marker` | nej | 0\|1 | Asterisk i tidtabell (busshållplats) |
 | `lat` | nej | float | |
 | `lng` | nej | float | |
-| `price_zones` | nej | string | Priszoner `1`–`4`, kommaseparerade (max två). Tom = titel-default. **Gränsstationer:** endast Gunsta (`1,2`) och Almunge (`2,3`) — se [PRICE_ZONES.md](PRICE_ZONES.md). |
+| `price_zones` | nej | string | Priszoner `1`–`4`, kommaseparerade (max två). Tom = inga zoner. Se [PRICE_ZONES.md](PRICE_ZONES.md). |
+
+### 4.1b `station_train_changes.csv` (valfri)
+
+Importeras tillsammans med `stations`. En rad per anslutning vid bytesstation.
+
+| Kolumn | Oblig | Typ | Beskrivning |
+|--------|-------|-----|-------------|
+| `station_code` | ja | string | FK → `stations.csv` |
+| `from_service` | ja | string | Ankommande tågnummer (t.ex. `71`) |
+| `type_name` | ja | string | Anslutande fordons typ (t.ex. `Dieseltåg`) |
+| `to_service` | ja | string | Anslutande tågnummer (t.ex. `61`) |
+
+Flera rader med samma `station_code` slås ihop till stationens `train_change_map`. Redigerbart i admin under **Stationer → Tågbyte**.
 
 ### 4.2 `train_types.csv`
 

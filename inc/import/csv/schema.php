@@ -24,6 +24,7 @@ function MRT_csv_format_version(): string {
 function MRT_csv_entity_files(): array {
 	return array(
 		'stations'            => 'stations.csv',
+		'station_train_changes' => 'station_train_changes.csv',
 		'train_types'         => 'train_types.csv',
 		'routes'              => 'routes.csv',
 		'route_stations'      => 'route_stations.csv',
@@ -46,6 +47,7 @@ function MRT_csv_entity_files(): array {
 function MRT_csv_required_columns(): array {
 	return array(
 		'stations.csv'            => array( 'name' ),
+		'station_train_changes.csv' => array( 'station_code', 'from_service', 'type_name', 'to_service' ),
 		'train_types.csv'           => array( 'slug', 'name' ),
 		'routes.csv'                => array( 'title' ),
 		'route_stations.csv'        => array( 'route_code', 'sequence', 'station_code' ),
@@ -82,6 +84,12 @@ function MRT_csv_export_column_headers(): array {
 			'lat',
 			'lng',
 			'price_zones',
+		),
+		'station_train_changes.csv' => array(
+			'station_code',
+			'from_service',
+			'type_name',
+			'to_service',
 		),
 		'train_types.csv'         => array( 'slug', 'name', 'icon_file' ),
 		'routes.csv'              => array( 'route_code', 'title', 'start_station_code', 'end_station_code' ),

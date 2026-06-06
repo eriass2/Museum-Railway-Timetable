@@ -170,6 +170,8 @@ export type TimetableDetail = {
   train_types: { id: number; name: string; icon_key?: string }[];
 };
 
+export type TrainChangeMap = Record<string, { typeName: string; serviceNumber: string }>;
+
 export type StationRow = {
   id: number;
   title: string;
@@ -179,6 +181,7 @@ export type StationRow = {
   lng: string;
   display_order: number;
   price_zones: number[];
+  train_change_map?: TrainChangeMap;
 };
 
 export type RouteRow = {

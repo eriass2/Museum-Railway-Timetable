@@ -1,68 +1,60 @@
 /**
- * Museum Railway – Lennakatten colour tokens (public UI).
+ * Museum Railway – neutral public UI colour tokens (default).
  *
- * Brand profile: https://lennakatten.se/grafisk-profil/
- * Reference: docs/design/reference/lennakatten-grafisk-manual.pdf
+ * Override via theme/child theme or enqueue optional brand pack
+ * (see assets/brand/lennakatten-color-tokens.css).
  *
  * @package Museum_Railway_Timetable
  */
 
 :root {
-    /* --- Lennakatten brand profile --- */
-    --mrt-color-brand-green: #296310;
-    --mrt-color-brand-gold: #ddd24c;
-    --mrt-color-brand-olive: #807c1c;
+    /* --- Neutral heritage profile (not operator-specific) --- */
+    --mrt-color-brand-green: #1e4d6b;
+    --mrt-color-brand-gold: #c9a227;
+    --mrt-color-brand-olive: #4a6670;
 
-    /* Green scale (600 = brand green) */
-    --mrt-color-green-900: #183809;
-    --mrt-color-green-800: #214f0c;
-    --mrt-color-green-700: #245610;
+    --mrt-color-green-900: #0f2a3d;
+    --mrt-color-green-800: #163a52;
+    --mrt-color-green-700: #1a4460;
     --mrt-color-green-600: var(--mrt-color-brand-green);
-    --mrt-color-green-500: #358015;
-    --mrt-color-green-400: #42961a;
+    --mrt-color-green-500: #286089;
+    --mrt-color-green-400: #35739c;
 
-    /* Gold / accent scale (600 = brand gold; text on gold = black per profile) */
-    --mrt-color-accent-700: #c5bd44;
+    --mrt-color-accent-700: #b89222;
     --mrt-color-accent-600: var(--mrt-color-brand-gold);
-    --mrt-color-accent-500: #e3dc65;
-    --mrt-color-accent-400: #eae483;
+    --mrt-color-accent-500: #d4b44a;
+    --mrt-color-accent-400: #e0c56e;
 
-    /* Lennakatten grayscale */
     --mrt-color-neutral-100: #ffffff;
-    --mrt-color-neutral-200: #b4b4b4;
-    --mrt-color-neutral-500: #787878;
-    --mrt-color-neutral-600: #787878;
-    --mrt-color-neutral-700: #505050;
-    --mrt-color-neutral-900: #000000;
+    --mrt-color-neutral-200: #e2e8f0;
+    --mrt-color-neutral-500: #64748b;
+    --mrt-color-neutral-600: #64748b;
+    --mrt-color-neutral-700: #334155;
+    --mrt-color-neutral-900: #0f172a;
 
-    /* Semantic / traffic (timetable types; red/orange from poster until PDF extract) */
     --mrt-color-olive-600: var(--mrt-color-brand-olive);
     --mrt-color-orange-600: #c9740c;
-    --mrt-color-traffic-green: var(--mrt-color-brand-green);
-    --mrt-color-traffic-yellow: var(--mrt-color-brand-gold);
+    --mrt-color-traffic-green: #296310;
+    --mrt-color-traffic-yellow: #ddd24c;
     --mrt-color-traffic-red: #b42318;
     --mrt-color-traffic-orange: var(--mrt-color-orange-600);
     --mrt-color-error-bg: #fde8e8;
     --mrt-color-error-text: #7a1212;
 
-    /* Text on coloured surfaces */
     --mrt-color-on-dark: #ffffff;
-    --mrt-color-on-dark-muted: #e4efe2;
-    --mrt-color-on-dark-link: #ffecb8;
+    --mrt-color-on-dark-muted: #e2e8f0;
+    --mrt-color-on-dark-link: #f5e6a8;
     --mrt-color-on-accent: #000000;
     --mrt-color-on-green: #ffffff;
     --mrt-color-on-olive: #ffffff;
 
-    /* Surfaces & borders */
     --mrt-color-placeholder: var(--mrt-color-neutral-600);
     --mrt-color-border-on-surface: var(--mrt-color-neutral-500);
     --mrt-color-border-on-dark: rgba(255, 255, 255, 0.62);
 
-    /* Focus */
-    --mrt-color-focus-ring: #fff4d6;
+    --mrt-color-focus-ring: #fef3c7;
     --mrt-color-focus-offset: var(--mrt-color-green-700);
 
-    /* Wizard aliases */
     --mrt-wizard-green: var(--mrt-color-green-600);
     --mrt-wizard-green-dark: var(--mrt-color-green-800);
     --mrt-wizard-olive: var(--mrt-color-brand-olive);

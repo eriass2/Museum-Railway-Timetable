@@ -1,25 +1,29 @@
-# Färgpalett – Lennakatten / Museum Railway
+# Färgpalett – Museum Railway (neutral default + valfri Lennakatten-profil)
 
-Källa i kod: [`assets/mrt-color-tokens.css`](../../assets/mrt-color-tokens.css). Officiell profil: [lennakatten.se/grafisk-profil](https://lennakatten.se/grafisk-profil/) och [`docs/design/reference/`](reference/).
+**Standard (alla operatörer):** [`assets/mrt-color-tokens.css`](../../assets/mrt-color-tokens.css) — neutral blå/brass-profil.
 
-## Typsnitt (Lennakatten profil)
+**Lennakatten (valfritt):** [`assets/brand/lennakatten-color-tokens.css`](../../assets/brand/lennakatten-color-tokens.css) — enqueues när `MRT_LENNAKATTEN_BRAND` eller filter `mrt_use_lennakatten_brand_tokens` är aktivt. Profil: [lennakatten.se/grafisk-profil](https://lennakatten.se/grafisk-profil/).
 
-| Token | Värde | Användning |
-|-------|--------|------------|
-| `--mrt-font-body` | Roboto | Brödtext, tidtabellstider, formulär |
-| `--mrt-font-heading` | Open Sans | Rubriker, tidtabellsbanner, route-titel |
-| `--mrt-font-weight-heading` | 700 | Standard rubrik |
-| `--mrt-font-weight-heading-strong` | 800 | Stora rubriker (wizard, route) |
+Override i child theme: sätt `--mrt-*` på `:root`. Se [OPERATOR_ONBOARDING.md](../OPERATOR_ONBOARDING.md).
 
-Källa: [`assets/mrt-typography.css`](../../assets/mrt-typography.css)
+## Typsnitt
 
-## Varumärkesfärger (profil)
+| Token | Neutral default | Lennakatten (brand pack) |
+|-------|-----------------|--------------------------|
+| `--mrt-font-body` | system-ui stack | Roboto |
+| `--mrt-font-heading` | system-ui stack | Open Sans |
+
+Källa neutral: [`assets/mrt-typography.css`](../../assets/mrt-typography.css). Lennakatten: [`assets/brand/lennakatten-typography.css`](../../assets/brand/lennakatten-typography.css).
+
+## Varumärkesfärger (Lennakatten-profil)
 
 | Token | Hex | Text ovanpå |
 |-------|-----|-------------|
 | `--mrt-color-brand-green` | `#296310` | vit (`--mrt-color-on-green`) |
 | `--mrt-color-brand-gold` | `#DDD24C` | **svart** (`--mrt-color-on-accent`) |
 | `--mrt-color-brand-olive` | `#807C1C` | vit (`--mrt-color-on-olive`) |
+
+Neutral default använder `#1e4d6b` / `#c9a227` / `#4a6670` för motsvarande roller — se `mrt-color-tokens.css`.
 
 ## Grönskala (600 = varumärkesgrön)
 

@@ -79,21 +79,3 @@ function MRT_lennakatten_reference_train_change_maps_by_station_title(): array {
 
 	return $map;
 }
-
-/**
- * Persist Lennakatten train-change maps onto imported stations (by title match).
- */
-function MRT_lennakatten_seed_train_change_maps(): void {
-	if ( ! function_exists( 'MRT_get_all_stations' ) ) {
-		return;
-	}
-	$by_title = MRT_lennakatten_reference_train_change_maps_by_station_title();
-	foreach ( MRT_get_all_stations() as $station_id ) {
-		$id    = (int) $station_id;
-		$title = get_the_title( $id );
-		if ( $title === '' || ! isset( $by_title[ $title ] ) ) {
-			continue;
-		}
-		MRT_update_station_train_change_map_meta( $id, $by_title[ $title ] );
-	}
-}

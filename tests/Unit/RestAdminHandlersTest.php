@@ -101,6 +101,51 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertSame( '', get_post_meta( 9, MRT_station_price_zones_meta_key(), true ) );
 	}
 
+	public function test_apply_station_meta_saves_train_change_map(): void {
+		$GLOBALS['mrt_test_post_meta'] = array();
+		MRT_rest_apply_station_meta(
+			9,
+			array(
+				'train_change_map' => array(
+					'71' => array(
+						'typeName'      => 'Dieseltåg',
+						'serviceNumber' => '61',
+					),
+				),
+			)
+		);
+		self::assertSame(
+			array(
+				'71' => array(
+					'typeName'      => 'Dieseltåg',
+					'serviceNumber' => '61',
+				),
+			),
+			get_post_meta( 9, MRT_station_train_change_map_meta_key(), true )
+		);
+	}
+
+	public function test_list_stations_includes_train_change_map(): void {
+		$post = new WP_Post(
+			(object) array(
+				'ID'         => 5,
+				'post_title' => 'Marielund',
+				'post_type'  => MRT_POST_TYPE_STATION,
+			)
+		);
+		$GLOBALS['mrt_test_get_posts'] = static fn (): array => array( $post );
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'5|' . MRT_station_train_change_map_meta_key() => array(
+				'71' => array(
+					'typeName'      => 'Dieseltåg',
+					'serviceNumber' => '61',
+				),
+			),
+		);
+		$rows = MRT_rest_list_stations_payload();
+		self::assertSame( '61', $rows[0]['train_change_map']['71']['serviceNumber'] );
+	}
+
 	public function test_create_station_handler_applies_optional_meta(): void {
 		$request = new WP_REST_Request( 'POST', '/stations' );
 		$request->set_json_params(

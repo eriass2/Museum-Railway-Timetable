@@ -35,6 +35,7 @@ function MRT_csv_manifest_include_order(): array {
 function MRT_csv_file_to_include_entity( string $filename ): ?string {
 	$map = array(
 		'stations.csv'            => 'stations',
+		'station_train_changes.csv' => 'stations',
 		'train_types.csv'         => 'train_types',
 		'routes.csv'              => 'routes',
 		'route_stations.csv'      => 'routes',

@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
 require_once MRT_PATH . 'inc/import/csv/loader.php';
-require_once MRT_PATH . 'inc/import/lennakatten/reference-data.php';
 
 /**
  * Import mode for Lennakatten fixture (replace fixture-owned data).
@@ -24,12 +23,7 @@ function MRT_lennakatten_import_mode(): string {
  * @return array<string, mixed>|WP_Error
  */
 function MRT_run_lennakatten_import_package() {
-	$result = MRT_csv_import_package( MRT_csv_lennakatten_fixture_path(), MRT_lennakatten_import_mode() );
-	if ( is_wp_error( $result ) ) {
-		return $result;
-	}
-	MRT_lennakatten_seed_train_change_maps();
-	return $result;
+	return MRT_csv_import_package( MRT_csv_lennakatten_fixture_path(), MRT_lennakatten_import_mode() );
 }
 
 /**

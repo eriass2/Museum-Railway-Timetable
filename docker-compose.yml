@@ -24,6 +24,7 @@ services:
       WORDPRESS_CONFIG_EXTRA: |
         define( 'WPLANG', 'sv_SE' );
         define( 'MRT_DEVELOPMENT', true );
+        define( 'MRT_LENNAKATTEN_BRAND', true );
     volumes:
       - wordpress_data:/var/www/html
       - ./:/var/www/html/wp-content/plugins/museum-railway-timetable

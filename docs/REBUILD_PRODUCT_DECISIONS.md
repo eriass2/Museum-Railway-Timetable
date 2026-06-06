@@ -124,7 +124,7 @@ Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 | Problem idag | Branding, builtin-priser, titel-fallbacks (zoner, tågbyte), affärsregler utan UI |
 | Tågbyte (2026-06) | Per-station meta `mrt_station_train_change_map` — **delvis**; REST/admin/CSV saknas; Marielund-default kvar i kod |
 | Plan och status | [MULTI_OPERATOR.md](MULTI_OPERATOR.md) (Tier A → B) |
-| Tier A (2026-06) | **A1–A4 klara:** neutral rubrik + `route_title`, tom pris-default, inga titel-fallbacks (zoner/tågbyte), Lennakatten-import sår train-change-meta |
-| Kvar Tier A | A5 tema, A6 onboarding-dok |
+| Tier A (2026-06) | **Klart:** A1–A6 (neutral defaults, onboarding, brand pack) |
+| Tier B | **B1 klart:** train change admin/REST/CSV. Kvar: B2–B5 |
 
 **Princip:** *Fail empty* — saknas operatörsdata ska systemet vara neutralt eller varna, inte gissa Lennakatten.

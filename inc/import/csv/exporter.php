@@ -89,6 +89,7 @@ function MRT_csv_collect_export_tables( bool $include_prices, bool $include_sett
 	);
 	$tables = array(
 		'stations.csv'            => MRT_csv_export_stations( $maps ),
+		'station_train_changes.csv' => MRT_csv_export_station_train_changes( $maps ),
 		'train_types.csv'         => MRT_csv_export_train_types(),
 		'routes.csv'              => array(),
 		'route_stations.csv'      => array(),
@@ -148,6 +149,44 @@ function MRT_csv_export_stations( array &$maps ): array {
 				array_map( 'strval', MRT_get_station_price_zones( (int) $post->ID ) )
 			),
 		);
+	}
+	return $rows;
+}
+
+/**
+ * @param array<string, array<string, int>> $maps
+ * @return array<int, array<string, string>>
+ */
+function MRT_csv_export_station_train_changes( array &$maps ): array {
+	$rows  = array();
+	$posts = get_posts(
+		array(
+			'post_type'      => MRT_POST_TYPE_STATION,
+			'posts_per_page' => -1,
+			'orderby'        => 'meta_value_num',
+			'meta_key'       => 'mrt_display_order',
+			'order'          => 'ASC',
+		)
+	);
+	$meta = MRT_csv_code_meta_keys()['stations'];
+	foreach ( $posts as $post ) {
+		$map = MRT_get_station_train_change_map_stored( (int) $post->ID );
+		if ( $map === array() ) {
+			continue;
+		}
+		$code = (string) get_post_meta( $post->ID, $meta, true );
+		if ( $code === '' ) {
+			$code = MRT_csv_slugify( $post->post_title );
+		}
+		$maps['station'][ $code ] = (int) $post->ID;
+		foreach ( $map as $from_service => $transfer ) {
+			$rows[] = array(
+				'station_code'  => $code,
+				'from_service'  => (string) $from_service,
+				'type_name'     => (string) ( $transfer['typeName'] ?? '' ),
+				'to_service'    => (string) ( $transfer['serviceNumber'] ?? '' ),
+			);
+		}
 	}
 	return $rows;
 }

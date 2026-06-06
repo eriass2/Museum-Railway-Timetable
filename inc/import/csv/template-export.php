@@ -19,6 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_csv_template_files(): array {
 	return array(
 		'stations.csv',
+		'station_train_changes.csv',
 		'train_types.csv',
 		'routes.csv',
 		'route_stations.csv',

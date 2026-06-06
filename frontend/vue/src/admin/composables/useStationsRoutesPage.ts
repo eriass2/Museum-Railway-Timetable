@@ -46,6 +46,7 @@ export function useStationsRoutesPage() {
       stations.value = payload.stations.map((row) => ({
         ...row,
         price_zones: row.price_zones ?? [],
+        train_change_map: row.train_change_map ?? {},
       }));
       routes.value = payload.routes.map((row) => ({ ...row }));
     },
@@ -77,6 +78,7 @@ export function useStationsRoutesPage() {
       bus_suffix: draft.bus_suffix,
       display_order: draft.display_order || undefined,
       price_zones: draft.price_zones,
+      train_change_map: draft.train_change_map,
     });
     newStation.value = emptyStationDraft();
     await reload();

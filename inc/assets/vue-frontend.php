@@ -155,14 +155,20 @@ function MRT_enqueue_vue_frontend_assets(): void {
 	}
 
 	$base_url = MRT_assets_base_url() . 'dist/vue/';
-	$css      = isset( $entry['css'] ) && is_array( $entry['css'] ) ? $entry['css'] : array();
+	$css          = isset( $entry['css'] ) && is_array( $entry['css'] ) ? $entry['css'] : array();
+	$last_css_hdl = '';
 	foreach ( $css as $i => $file ) {
+		$handle = 'mrt-vue-public-' . $i;
 		wp_enqueue_style(
-			'mrt-vue-public-' . $i,
+			$handle,
 			$base_url . $file,
 			array(),
 			MRT_VERSION
 		);
+		$last_css_hdl = $handle;
+	}
+	if ( function_exists( 'MRT_enqueue_brand_token_overrides' ) ) {
+		MRT_enqueue_brand_token_overrides( $last_css_hdl );
 	}
 
 	$js_file = isset( $entry['file'] ) ? (string) $entry['file'] : '';

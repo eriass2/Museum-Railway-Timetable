@@ -10,6 +10,7 @@ export function emptyStationDraft(): StationRow {
     lng: '',
     display_order: 0,
     price_zones: [] as number[],
+    train_change_map: {},
   };
 }
 
