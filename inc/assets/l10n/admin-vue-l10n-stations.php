@@ -85,5 +85,12 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsTrainChangeTo'      => __( 'Anslutande tågnummer', 'museum-railway-timetable' ),
 		'stationsTrainChangeToPh'    => __( '61', 'museum-railway-timetable' ),
 		'stationsTrainChangeAdd'     => __( 'Lägg till rad', 'museum-railway-timetable' ),
+		'stationsZonesHint'          => __(
+			'Priszoner styr biljettpris i reseplaneraren. Gränsstationer kan ha två zoner (t.ex. 1 och 2).',
+			'museum-railway-timetable'
+		),
+		'stationsZonesHelpLink'      => __( 'Läs om priszoner', 'museum-railway-timetable' ),
+		'stationsFilterMissingZones' => __( 'Visa bara stationer utan priszon', 'museum-railway-timetable' ),
+		'stationsMissingZoneBadge'   => __( 'Saknar priszon', 'museum-railway-timetable' ),
 	);
 }

@@ -47,5 +47,7 @@ function MRT_admin_vue_l10n_settings(): array {
 			'CSV-import/export finns under fliken Import/export i menyn.',
 			'museum-railway-timetable'
 		),
+		'settingsUnsaved'         => __( 'Du har osparade inställningsändringar.', 'museum-railway-timetable' ),
+		'settingsPricesLink'      => __( 'Eftermiddags-returpriser (Priser)', 'museum-railway-timetable' ),
 	);
 }

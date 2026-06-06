@@ -23,5 +23,7 @@ function MRT_admin_vue_l10n_setup(): array {
 		'setupStepRoutes'    => __( 'Skapa minst en rutt med stationer', 'museum-railway-timetable' ),
 		'setupStepTimetables' => __( 'Skapa en tidtabell', 'museum-railway-timetable' ),
 		'setupStepServices'  => __( 'Lägg till turer i en tidtabell', 'museum-railway-timetable' ),
+		'setupStepPrices'    => __( 'Konfigurera biljettpriser', 'museum-railway-timetable' ),
+		'setupStepStationZones' => __( 'Tilldela priszoner till alla stationer', 'museum-railway-timetable' ),
 	);
 }
