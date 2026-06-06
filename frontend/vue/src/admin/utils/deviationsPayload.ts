@@ -46,6 +46,30 @@ export function createDeviationRow(
   };
 }
 
+/** Whether a deviation notice marks the trip as cancelled. */
+export function isCancelledDeviationNotice(notice: string, defaultNotice = 'Inställd'): boolean {
+  const text = notice.trim().toLowerCase();
+  if (!text) {
+    return false;
+  }
+  const marker = defaultNotice.trim().toLowerCase();
+  return text.includes('inställd') || text.includes('installd') || (marker !== '' && text.includes(marker));
+}
+
+export function toggleCancelledDeviationNotice(
+  notice: string,
+  cancelled: boolean,
+  defaultNotice = 'Inställd',
+): string {
+  if (cancelled) {
+    return defaultNotice;
+  }
+  if (isCancelledDeviationNotice(notice, defaultNotice)) {
+    return '';
+  }
+  return notice;
+}
+
 /** Aggregate deviation rows for `saveDeviations` REST body. */
 export function deviationsToSavePayload(rows: DeviationRow[]): DeviationSavePayload {
   const byService: DeviationSavePayload = {};

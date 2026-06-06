@@ -3,6 +3,7 @@ import { computed } from 'vue';
 import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../types/timetableOverview';
 import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
 import { formatDeviationPlanned } from '../../shared/overviewUiLabels';
+import { overviewColumnIsCancelled } from '../../shared/overviewCancelled';
 import {
   buildHighlightStripeSpans,
   buildOverviewGridTracks,
@@ -44,6 +45,27 @@ const highlightSpans = computed(() => buildHighlightStripeSpans(props.group.rows
 function stripeSpan(rowIndex: number, trackIndex: number) {
   return highlightStripeSpanAt(highlightSpans.value, rowIndex, trackIndex);
 }
+
+function columnAt(index: number) {
+  return props.group.columns[index];
+}
+
+function columnCancelled(index: number): boolean {
+  const column = columnAt(index);
+  return column ? overviewColumnIsCancelled(column) : false;
+}
+
+function cancelledNoticeDetail(index: number): boolean {
+  const column = columnAt(index);
+  if (!column || !overviewColumnIsCancelled(column)) {
+    return false;
+  }
+  const notice = column.deviationNotice?.trim() || '';
+  if (!notice) {
+    return false;
+  }
+  return notice.toLowerCase() !== props.labels.cancelledLabel.toLowerCase();
+}
 </script>
 
 <template>
@@ -73,11 +95,13 @@ function stripeSpan(rowIndex: number, trackIndex: number) {
             <div
               v-else
               class="mrt-ov-col-head"
+              :class="{ 'mrt-ov-col-head--cancelled': columnCancelled(track.columnIndex) }"
               :style="{ ...overviewGridCellStyle(ti), ...overviewHeadRowStyle(1) }"
             >
               <img
                 v-if="trainTypeIconUrl(iconUrls, group.columns[track.columnIndex].iconKey)"
                 class="mrt-ov-icon"
+                :class="{ 'mrt-ov-icon--cancelled': columnCancelled(track.columnIndex) }"
                 :src="trainTypeIconUrl(iconUrls, group.columns[track.columnIndex].iconKey)"
                 :alt="group.columns[track.columnIndex].trainTypeName"
                 width="36"
@@ -112,11 +136,28 @@ function stripeSpan(rowIndex: number, trackIndex: number) {
             <div
               v-else
               class="mrt-ov-col-head mrt-ov-col-head--number"
+              :class="{ 'mrt-ov-col-head--cancelled': columnCancelled(track.columnIndex) }"
               :style="{ ...overviewGridCellStyle(ti), ...overviewHeadRowStyle(2) }"
             >
               {{ group.columns[track.columnIndex].serviceNumber }}
               <span
-                v-if="showDeviationMeta && group.columns[track.columnIndex].deviationNotice"
+                v-if="showDeviationMeta && columnCancelled(track.columnIndex)"
+                class="mrt-ov-cancelled-badge"
+              >
+                {{ labels.cancelledLabel }}
+              </span>
+              <span
+                v-if="showDeviationMeta && cancelledNoticeDetail(track.columnIndex)"
+                class="mrt-ov-deviation-note mrt-ov-deviation-note--cancelled-detail"
+              >
+                {{ group.columns[track.columnIndex].deviationNotice }}
+              </span>
+              <span
+                v-else-if="
+                  showDeviationMeta &&
+                  group.columns[track.columnIndex].deviationNotice &&
+                  !columnCancelled(track.columnIndex)
+                "
                 class="mrt-ov-deviation-note"
               >
                 {{ group.columns[track.columnIndex].deviationNotice }}
@@ -147,7 +188,10 @@ function stripeSpan(rowIndex: number, trackIndex: number) {
               <div
                 v-else-if="track.kind === 'train'"
                 class="mrt-ov-time-cell"
-                :class="{ 'mrt-ov-time-cell--edit': editableCells && row.stationId }"
+                :class="{
+                  'mrt-ov-time-cell--edit': editableCells && row.stationId,
+                  'mrt-ov-time-cell--cancelled': columnCancelled(track.columnIndex),
+                }"
                 :style="overviewGridCellStyle(ti)"
               >
                 <slot

@@ -70,6 +70,7 @@ function MRT_admin_vue_l10n_editor(): array {
 		'editorColDate'                => __( 'Datum', 'museum-railway-timetable' ),
 		'editorColTrip'                => __( 'Tur', 'museum-railway-timetable' ),
 		'editorColMessage'             => __( 'Meddelande', 'museum-railway-timetable' ),
+		'editorDeviationCancelled'     => __( 'Inställt tåg', 'museum-railway-timetable' ),
 		'editorStopptimes'             => __( 'Stopptider', 'museum-railway-timetable' ),
 		'editorAddTrip'                => __( 'Lägg till tur', 'museum-railway-timetable' ),
 		'editorEditTrip'               => __( 'Redigera', 'museum-railway-timetable' ),

@@ -13,6 +13,8 @@ import {
   createDeviationRow,
   formatDeviationTripLabel,
   hasDeviationRow,
+  isCancelledDeviationNotice,
+  toggleCancelledDeviationNotice,
   type DeviationRow,
 } from '../../utils/deviationsPayload';
 import { adminStr } from '../../utils/adminLabels';
@@ -31,6 +33,7 @@ const rows = defineModel<DeviationRow[]>('rows', { required: true });
 
 const cfg = adminConfig();
 const emit = defineEmits<{ save: [] }>();
+const cancelledNotice = computed(() => adminStr(cfg, 'trafficCancelledNotice'));
 
 const newDate = ref('');
 const newServiceId = ref(0);
@@ -65,6 +68,14 @@ function removeDeviation(index: number): void {
   rows.value = rows.value.filter((_, i) => i !== index);
 }
 
+function rowIsCancelled(row: DeviationRow): boolean {
+  return isCancelledDeviationNotice(row.notice, cancelledNotice.value);
+}
+
+function setRowCancelled(row: DeviationRow, cancelled: boolean): void {
+  row.notice = toggleCancelledDeviationNotice(row.notice, cancelled, cancelledNotice.value);
+}
+
 watch(
   () => [props.dates, props.services] as const,
   ([dates, services]) => {
@@ -88,6 +99,7 @@ watch(
           <th>{{ adminStr(cfg, 'editorColDate') }}</th>
           <th>{{ adminStr(cfg, 'editorColTrip') }}</th>
           <th>{{ adminStr(cfg, 'editorColTrainType') }}</th>
+          <th>{{ adminStr(cfg, 'editorDeviationCancelled') }}</th>
           <th>{{ adminStr(cfg, 'editorColMessage') }}</th>
           <th v-if="canOperate"></th>
         </tr>
@@ -104,6 +116,17 @@ watch(
               :train-types="trainTypes"
               :disabled="!canOperate"
             />
+          </td>
+          <td>
+            <label>
+              <input
+                type="checkbox"
+                :checked="rowIsCancelled(row)"
+                :disabled="!canOperate"
+                @change="setRowCancelled(row, ($event.target as HTMLInputElement).checked)"
+              />
+              {{ adminStr(cfg, 'editorDeviationCancelled') }}
+            </label>
           </td>
           <td>
             <input v-model="row.notice" type="text" class="regular-text" :disabled="!canOperate" />

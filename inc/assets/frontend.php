@@ -240,6 +240,7 @@ function MRT_frontend_script_localization(): array {
 		'ovPrintKeyNote'        => __( 'Med reservation för ändring av tågtyp.', 'museum-railway-timetable' ),
 		'ovDeviationPlanned'    => __( 'Planerat: %s', 'museum-railway-timetable' ),
 		'ovDeviationFromPlan'   => __( 'Avvikelse från planerad tågtyp', 'museum-railway-timetable' ),
+		'ovCancelledLabel'      => __( 'Inställd', 'museum-railway-timetable' ),
 		'ovDeparturesAria'      => __( 'Avgångar %s', 'museum-railway-timetable' ),
 		'ovBranchNote'          => __( 'Anslutningsbuss', 'museum-railway-timetable' ),
 		'ovColTrip'             => __( 'Tur', 'museum-railway-timetable' ),

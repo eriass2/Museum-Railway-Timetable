@@ -24,3 +24,12 @@ describe('isWarningNotice', () => {
     expect(isWarningNotice('Normal trafik')).toBe(false);
   });
 });
+
+describe('connectionNoticeIsCancelled', () => {
+  it('detects cancelled connections from notice or flag', async () => {
+    const { connectionNoticeIsCancelled } = await import('../src/wizard/utils/format');
+    expect(connectionNoticeIsCancelled({ service_id: 1, notice: 'Inställd' })).toBe(true);
+    expect(connectionNoticeIsCancelled({ service_id: 1, is_cancelled: true })).toBe(true);
+    expect(connectionNoticeIsCancelled({ service_id: 1, notice: 'Normal trafik' })).toBe(false);
+  });
+});

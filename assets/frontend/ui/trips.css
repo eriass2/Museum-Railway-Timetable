@@ -32,6 +32,15 @@
     color: var(--mrt-text-error, #b32d2e);
 }
 
+.mrt-trip-summary__notice--cancelled,
+.mrt-trip-summary__time--cancelled {
+    color: var(--mrt-text-error, #b32d2e);
+}
+
+.mrt-trip-summary__time--cancelled {
+    text-decoration: line-through;
+}
+
 /* â€”â€” Trip card â€”â€” */
 .mrt-trip-card {
     background: var(--mrt-wizard-surface, #fff);

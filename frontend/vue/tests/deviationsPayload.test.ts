@@ -4,6 +4,7 @@ import {
   deviationsToSavePayload,
   formatDeviationTripLabel,
   hasDeviationRow,
+  toggleCancelledDeviationNotice,
   type DeviationRow,
 } from '../src/admin/utils/deviationsPayload';
 
@@ -70,5 +71,11 @@ describe('deviation row helpers', () => {
     ];
     expect(hasDeviationRow(rows, 10, '2026-06-01')).toBe(true);
     expect(hasDeviationRow(rows, 10, '2026-06-02')).toBe(false);
+  });
+
+  it('toggles cancelled notice text', () => {
+    expect(toggleCancelledDeviationNotice('', true)).toBe('Inställd');
+    expect(toggleCancelledDeviationNotice('Inställd', false)).toBe('');
+    expect(toggleCancelledDeviationNotice('Försening', false)).toBe('Försening');
   });
 });

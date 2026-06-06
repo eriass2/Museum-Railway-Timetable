@@ -1,5 +1,9 @@
 import type { WizardCfg } from './wizardCfgTypes';
 import { cfgStr } from './wizardLabels';
+import { connectionIsCancelled, isCancelledNotice } from '../../shared/cancelledNotice';
+import type { JourneyConnection } from '../types';
+
+export { isCancelledNotice };
 
 export function formatDuration(minutes: number | undefined, cfg: WizardCfg): string {
   const m = Number(minutes);
@@ -17,4 +21,8 @@ export function formatDuration(minutes: number | undefined, cfg: WizardCfg): str
 export function isWarningNotice(notice: string): boolean {
   const n = notice.toLowerCase();
   return n.includes('brand') || n.includes('ersatt') || n.includes('varning');
+}
+
+export function connectionNoticeIsCancelled(connection: JourneyConnection): boolean {
+  return connectionIsCancelled(connection);
 }

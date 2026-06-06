@@ -30,6 +30,7 @@ export type JourneyConnection = {
   duration_minutes?: number;
   connection_type?: string;
   notice?: string;
+  is_cancelled?: boolean;
   legs?: JourneyLeg[];
   transfer_wait_minutes?: number;
   transfer_station_id?: number | null;

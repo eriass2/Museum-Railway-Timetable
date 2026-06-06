@@ -337,6 +337,39 @@
   color: var(--mrt-color-warning-800, #7a4f01);
 }
 
+.mrt-ov-cancelled-badge {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: 0.68rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--mrt-text-error, #b32d2e);
+}
+
+.mrt-ov-deviation-note--cancelled-detail {
+  color: var(--mrt-text-error, #b32d2e);
+}
+
+.mrt-ov-col-head--cancelled {
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+}
+
+.mrt-ov-icon--cancelled {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.mrt-ov-time-cell--cancelled {
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+}
+
+.mrt-ov-time--cancelled {
+  text-decoration: line-through;
+  color: var(--mrt-color-neutral-600, #666);
+}
+
 .mrt-ov-branch-scroll {
   overflow-x: visible;
   padding: 0 var(--mrt-spacing-md, 1rem) var(--mrt-spacing-md, 1rem);

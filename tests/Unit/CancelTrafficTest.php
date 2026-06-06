@@ -32,6 +32,7 @@ final class CancelTrafficTest extends TestCase {
 	}
 
 	public function test_service_is_cancelled_detects_notice(): void {
+		require_once ABSPATH . 'inc/domain/journey/journey-notice.php';
 		require_once ABSPATH . 'inc/domain/admin/cancel-traffic.php';
 		$GLOBALS['mrt_test_post_meta'] = array(
 			'3|mrt_service_notices_by_date' => array( '2026-08-01' => 'Inställd pga väder' ),
@@ -39,5 +40,13 @@ final class CancelTrafficTest extends TestCase {
 
 		self::assertTrue( MRT_service_is_cancelled_on_date( 3, '2026-08-01' ) );
 		self::assertFalse( MRT_service_is_cancelled_on_date( 3, '2026-08-02' ) );
+	}
+
+	public function test_notice_indicates_cancelled(): void {
+		require_once ABSPATH . 'inc/domain/journey/journey-notice.php';
+
+		self::assertTrue( MRT_notice_indicates_cancelled( 'Inställd' ) );
+		self::assertTrue( MRT_notice_indicates_cancelled( 'Inställd pga väder' ) );
+		self::assertFalse( MRT_notice_indicates_cancelled( 'Försenad avgång' ) );
 	}
 }

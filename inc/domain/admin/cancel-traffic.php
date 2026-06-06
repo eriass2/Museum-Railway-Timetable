@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once MRT_PATH . 'inc/domain/datetime/datetime.php';
 require_once MRT_PATH . 'inc/domain/service/services.php';
+require_once MRT_PATH . 'inc/domain/journey/journey-notice.php';
 
 /** Default notice when cancelling traffic for a day. */
 const MRT_CANCEL_TRAFFIC_NOTICE = 'Inställd';
@@ -25,8 +26,7 @@ function MRT_service_is_cancelled_on_date( int $service_id, string $date_ymd ): 
 	if ( ! is_array( $notices ) || ! isset( $notices[ $date_ymd ] ) ) {
 		return false;
 	}
-	$text = strtolower( (string) $notices[ $date_ymd ] );
-	return str_contains( $text, 'inställd' ) || str_contains( $text, 'installd' );
+	return MRT_notice_indicates_cancelled( (string) $notices[ $date_ymd ] );
 }
 
 /**

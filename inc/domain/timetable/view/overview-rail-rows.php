@@ -55,6 +55,7 @@ function MRT_timetable_overview_columns_json( array $view ): array {
 			'iconKey'                => $tt ? MRT_get_train_type_symbol_key( $tt ) : 'diesel',
 			'plannedTrainTypeName'   => $default_tt ? $default_tt->name : '',
 			'isDeviation'            => ! empty( $info['is_deviation'] ),
+			'isCancelled'            => ! empty( $info['is_cancelled'] ),
 			'deviationNotice'        => (string) ( $info['deviation_notice'] ?? '' ),
 			'isSpecial'              => ! empty( $info['highlight_label'] ),
 			'specialName'            => (string) ( $info['highlight_label'] ?? '' ),

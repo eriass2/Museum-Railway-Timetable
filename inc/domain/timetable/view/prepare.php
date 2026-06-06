@@ -96,6 +96,7 @@ function MRT_prepare_service_info( array $services_list, string $dateYmd ): arra
 		$default_train_type = MRT_get_service_default_train_type( (int) $service->ID );
 		$is_deviation       = $dateYmd !== '' && MRT_service_has_train_type_deviation( (int) $service->ID, $dateYmd );
 		$deviation_notice   = $dateYmd !== '' ? MRT_get_service_notice_for_date( (int) $service->ID, $dateYmd ) : '';
+		$is_cancelled       = $dateYmd !== '' && MRT_notice_indicates_cancelled( $deviation_notice );
 
 		$service_info[ $idx ] = array(
 			'service'                => $service,
@@ -103,6 +104,7 @@ function MRT_prepare_service_info( array $services_list, string $dateYmd ): arra
 			'default_train_type'     => $default_train_type,
 			'is_deviation'           => $is_deviation,
 			'deviation_notice'       => $deviation_notice,
+			'is_cancelled'           => $is_cancelled,
 			'service_number'         => $disp['service_number'],
 			'is_special'             => $disp['is_special'],
 			'special_name'           => $disp['special_name'],

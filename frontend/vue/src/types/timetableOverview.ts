@@ -13,6 +13,7 @@ export type TimetableOverviewColumn = {
   iconKey: string;
   plannedTrainTypeName?: string;
   isDeviation?: boolean;
+  isCancelled?: boolean;
   deviationNotice?: string;
   isSpecial: boolean;
   specialName: string;

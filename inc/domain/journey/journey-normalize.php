@@ -109,10 +109,12 @@ function MRT_journey_multi_leg_service_label( array $item, array $legs ) {
  */
 function MRT_normalize_segments_single_service( $service_id, $from_id, $to_id, $dateYmd ) {
 	$detail = MRT_get_connection_journey_detail( $service_id, $from_id, $to_id );
+	$notice = MRT_get_service_notice( $service_id, $dateYmd );
 	return array(
 		'segments'         => $detail['stops'],
 		'duration_minutes' => $detail['duration_minutes'],
-		'notice'           => MRT_get_service_notice( $service_id, $dateYmd ),
+		'notice'           => $notice,
+		'is_cancelled'     => MRT_notice_indicates_cancelled( $notice ),
 	);
 }
 
@@ -160,12 +162,16 @@ function MRT_normalize_multi_leg_for_api( array $item, $dateYmd ) {
 	$legs     = $item['legs'];
 	$duration = MRT_normalize_total_duration_from_legs( $legs );
 	$notices  = array();
+	$cancelled = false;
 	foreach ( $legs as $leg ) {
 		$nid = isset( $leg['service_id'] ) ? (int) $leg['service_id'] : 0;
 		if ( $nid <= 0 ) {
 			continue;
 		}
 		$n = MRT_get_service_notice( $nid, $dateYmd );
+		if ( MRT_notice_indicates_cancelled( $n ) ) {
+			$cancelled = true;
+		}
 		if ( $n !== '' ) {
 			$notices[] = $n;
 		}
@@ -188,6 +194,7 @@ function MRT_normalize_multi_leg_for_api( array $item, $dateYmd ) {
 		'duration_minutes'    => $duration,
 		'segments'            => array(),
 		'notice'              => implode( "\n", array_unique( $notices ) ),
+		'is_cancelled'        => $cancelled,
 		'service_id'          => isset( $legs[0]['service_id'] ) ? (int) $legs[0]['service_id'] : 0,
 		'departure'           => $dep_first,
 		'arrival'             => $arr_last,
@@ -252,6 +259,7 @@ function MRT_normalize_connection_for_api( $item, $dateYmd, $from_station_id, $t
 		'direction'           => (string) ( $conn['direction'] ?? '' ),
 		'segments'            => $extra['segments'],
 		'notice'              => $extra['notice'],
+		'is_cancelled'        => ! empty( $extra['is_cancelled'] ),
 	);
 }
 

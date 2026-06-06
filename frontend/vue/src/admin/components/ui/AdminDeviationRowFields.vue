@@ -1,9 +1,11 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import AdminTrainTypeSelect from './AdminTrainTypeSelect.vue';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
+import { isCancelledDeviationNotice, toggleCancelledDeviationNotice } from '../../utils/deviationsPayload';
 
-defineProps<{
+const props = defineProps<{
   trainTypeId: number;
   notice: string;
   trainTypes: { id: number; name: string }[];
@@ -11,12 +13,20 @@ defineProps<{
   meta?: string;
 }>();
 
-defineEmits<{
+const emit = defineEmits<{
   'update:trainTypeId': [number];
   'update:notice': [string];
 }>();
 
 const cfg = adminConfig();
+const cancelledNotice = computed(() => adminStr(cfg, 'trafficCancelledNotice'));
+
+const isCancelled = computed({
+  get: () => isCancelledDeviationNotice(props.notice, cancelledNotice.value),
+  set: (value: boolean) => {
+    emit('update:notice', toggleCancelledDeviationNotice(props.notice, value, cancelledNotice.value));
+  },
+});
 </script>
 
 <template>
@@ -33,6 +43,16 @@ const cfg = adminConfig();
         :disabled="!canOperate"
         @update:model-value="$emit('update:trainTypeId', $event)"
       />
+    </p>
+    <p>
+      <label>
+        <input
+          v-model="isCancelled"
+          type="checkbox"
+          :disabled="!canOperate"
+        />
+        {{ adminStr(cfg, 'editorDeviationCancelled') }}
+      </label>
     </p>
     <p>
       <label>{{ adminStr(cfg, 'editorColMessage') }}</label>

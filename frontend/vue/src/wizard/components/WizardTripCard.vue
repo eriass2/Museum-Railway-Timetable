@@ -16,7 +16,7 @@ import {
   formatTransferTripLabel,
   isTransfer,
 } from '../utils/connection';
-import { formatDuration, isWarningNotice } from '../utils/format';
+import { formatDuration, connectionNoticeIsCancelled, isWarningNotice } from '../utils/format';
 import { legsToVehicleItems } from '../utils/vehicle';
 import WizardTripDetail from './WizardTripDetail.vue';
 
@@ -49,6 +49,8 @@ const doorToDoorMinutes = computed(() => connectionDoorToDoorMinutes(props.conne
 
 const vehicleItems = computed(() => legsToVehicleItems(legs.value, cfg.value));
 
+const isCancelled = computed(() => connectionNoticeIsCancelled(props.connection));
+
 async function toggleDetail(): Promise<void> {
   expanded.value = !expanded.value;
   if (expanded.value) {
@@ -66,6 +68,7 @@ async function toggleDetail(): Promise<void> {
         :route="routeText"
         :notice="connection.notice"
         :notice-warn="isWarningNotice(connection.notice || '')"
+        :notice-cancelled="isCancelled"
       />
     </template>
     <template #side>
@@ -73,7 +76,12 @@ async function toggleDetail(): Promise<void> {
         <p v-if="doorToDoorMinutes !== null" class="mrt-trip-card__duration">
         {{ formatDuration(doorToDoorMinutes, cfg) }}
       </p>
-      <MrtAccentButton variant="select" type="button" @click="emit('select')">
+      <MrtAccentButton
+        variant="select"
+        type="button"
+        :disabled="isCancelled"
+        @click="emit('select')"
+      >
         {{ cfgStr(cfg, 'selectTrip', 'Välj →') }}
       </MrtAccentButton>
     </template>

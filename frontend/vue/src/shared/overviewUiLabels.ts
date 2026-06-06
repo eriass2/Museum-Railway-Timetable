@@ -8,6 +8,7 @@ export type OverviewUiLabels = {
   printKeyNote: string;
   deviationPlanned: string;
   deviationFromPlan: string;
+  cancelledLabel: string;
   departuresAria: string;
   branchNote: string;
   colTrip: string;
@@ -32,6 +33,7 @@ export function overviewUiLabels(config: MrtRestConfig): OverviewUiLabels {
       'ovDeviationFromPlan',
       'Avvikelse från planerad tågtyp',
     ),
+    cancelledLabel: resolveMrtString(config, 'ovCancelledLabel', 'Inställd'),
     departuresAria: resolveMrtString(config, 'ovDeparturesAria', 'Avgångar %s'),
     branchNote: resolveMrtString(config, 'ovBranchNote', 'Anslutningsbuss'),
     colTrip: resolveMrtString(config, 'ovColTrip', 'Tur'),

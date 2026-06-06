@@ -36,6 +36,17 @@ function MRT_get_service_notices_by_date( $service_id ): array {
 }
 
 /**
+ * Whether notice text indicates cancelled traffic.
+ */
+function MRT_notice_indicates_cancelled( string $notice ): bool {
+	$text = strtolower( trim( $notice ) );
+	if ( $text === '' ) {
+		return false;
+	}
+	return str_contains( $text, 'inställd' ) || str_contains( $text, 'installd' );
+}
+
+/**
  * Notice text for one calendar day (date override only, not global fallback).
  *
  * @param int    $service_id Service post ID
