@@ -16,4 +16,5 @@ export type TimelineStop = {
 export type ConnectionDetailPayload = {
   detail?: { stops?: TimelineStop[] };
   notice?: string;
+  is_cancelled?: boolean;
 };

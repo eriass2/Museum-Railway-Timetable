@@ -85,7 +85,12 @@ Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 **Fliken Avvikelser** (desktop) eller mobilpanelen i editorn:
 
 - Byt **tågtyp** eller **meddelande** för ett visst datum och tur
+- Kryssa i **Inställt tåg** för en enskild inställd avgång (sätter meddelandet «Inställd»)
 - **Spara avvikelser**
+
+Inställda turer **visas kvar** i tidtabell och reseplanerare med tydlig markering (genomstrukna tider, badge «Inställd»). Reseplaneraren låter inte välja en inställd tur.
+
+**Förhandsvisning** (fliken i editorn) visar samma avvikelse- och inställ-markering som på webbplatsen.
 
 ### Mobil drift
 

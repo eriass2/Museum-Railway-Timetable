@@ -18,6 +18,8 @@ const props = defineProps<{
 
 const cfgRef = computed(() => unref(props.cfg));
 
+const segmentCancelled = computed(() => props.segment.isCancelled === true);
+
 const vehicleItems = computed(() =>
   props.segment.leg ? [legToVehicleItem(props.segment.leg, cfgRef.value)] : [],
 );
@@ -28,14 +30,24 @@ const vehicleItems = computed(() =>
     :title="segment.title"
     :notice="segment.notice"
     :notice-label="cfgStr(cfg, 'noticeLabel', 'Trafikmeddelande')"
+    :notice-cancelled="segmentCancelled"
     :transfer-text="showTransfer ? transferText : undefined"
   >
     <template v-if="segment.leg" #meta>
-      <span v-if="segment.leg.duration_minutes" class="mrt-detail-segment__duration">
+      <span
+        v-if="segment.leg.duration_minutes"
+        class="mrt-detail-segment__duration"
+        :class="{ 'mrt-detail-segment__duration--cancelled': segmentCancelled }"
+      >
         {{ formatDuration(segment.leg.duration_minutes, cfgRef) }}
       </span>
       <MrtVehicleRow :items="vehicleItems" />
     </template>
-    <WizardTimeline :cfg="cfgRef" :stops="segment.stops" :start-expanded="false" />
+    <WizardTimeline
+      :cfg="cfgRef"
+      :stops="segment.stops"
+      :start-expanded="false"
+      :cancelled="segmentCancelled"
+    />
   </MrtDetailSegment>
 </template>

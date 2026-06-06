@@ -126,4 +126,20 @@ final class OverviewJsonTest extends TestCase {
 		self::assertSame( '71', $rows[0]['symbol'] );
 		self::assertSame( 'Ersatt lok', $rows[0]['text'] );
 	}
+
+	public function test_print_key_deviation_rows_adds_cancelled_legend(): void {
+		$service = new WP_Post( (object) array( 'ID' => 502, 'post_title' => 'Tur 42', 'post_type' => MRT_POST_TYPE_SERVICE ) );
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'502|mrt_service_number'          => '42',
+			'502|mrt_service_notices_by_date' => array(
+				'2026-06-06' => 'Inställd',
+			),
+		);
+
+		$rows = MRT_timetable_print_key_deviation_rows( array( $service ), '2026-06-06' );
+
+		self::assertSame( 'Inställd', $rows[0]['symbol'] );
+		self::assertStringContainsString( 'genomstrukna', $rows[0]['text'] );
+		self::assertSame( '42 (Inställd)', $rows[1]['symbol'] );
+	}
 }

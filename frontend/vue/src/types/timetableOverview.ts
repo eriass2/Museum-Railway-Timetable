@@ -79,6 +79,8 @@ export type TimetableBranchTrip = {
   fromTime: string;
   toTime: string;
   midTime?: string;
+  isCancelled?: boolean;
+  deviationNotice?: string;
   connectingTrains: { serviceNumber: string; timeDisplay: string }[];
 };
 

@@ -57,11 +57,40 @@ describe('connectionDetailLoad', () => {
       connection: directConnection,
       legFrom: 1,
       legTo: 2,
+      dateYmd: '2026-06-06',
     });
 
     expect(segments).toHaveLength(1);
     expect(segments[0]?.notice).toBe('Ersatt lok');
     expect(segments[0]?.stops).toHaveLength(1);
+    expect(mrtRestRequest).toHaveBeenCalledWith(
+      config,
+      expect.objectContaining({
+        body: expect.objectContaining({ date: '2026-06-06' }),
+      }),
+    );
+  });
+
+  it('marks segment cancelled from REST flag', async () => {
+    vi.mocked(mrtRestRequest).mockResolvedValue({
+      success: true,
+      data: {
+        detail: { stops: [] },
+        notice: 'Inställd',
+        is_cancelled: true,
+      },
+    });
+
+    const segments = await loadConnectionDetailSegments({
+      config,
+      cfg: { legSegmentLabel: 'Delsträcka %d', errorGeneric: 'Fel' },
+      connection: directConnection,
+      legFrom: 1,
+      legTo: 2,
+      dateYmd: '',
+    });
+
+    expect(segments[0]?.isCancelled).toBe(true);
   });
 
   it('returns empty when any multi-leg REST detail fails', async () => {
@@ -100,6 +129,7 @@ describe('connectionDetailLoad', () => {
       connection,
       legFrom: 1,
       legTo: 2,
+      dateYmd: '',
     });
 
     expect(segments).toEqual([]);
@@ -115,6 +145,7 @@ describe('connectionDetailLoad', () => {
       connection: directConnection,
       legFrom: 1,
       legTo: 2,
+      dateYmd: '',
     });
 
     expect(segments).toEqual([]);
@@ -168,6 +199,7 @@ describe('useConnectionDetail', () => {
       connection,
       legFrom: ref(1),
       legTo: ref(2),
+      dateYmd: ref('2026-06-06'),
     });
 
     await detail.ensureLoaded();

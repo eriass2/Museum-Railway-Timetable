@@ -15,6 +15,7 @@ type DetailParams = {
   connection: JourneyConnection;
   legFrom: MaybeRef<number>;
   legTo: MaybeRef<number>;
+  dateYmd: MaybeRef<string>;
 };
 
 export function useConnectionDetail(params: DetailParams) {
@@ -44,6 +45,7 @@ export function useConnectionDetail(params: DetailParams) {
       connection: params.connection,
       legFrom: params.legFrom,
       legTo: params.legTo,
+      dateYmd: params.dateYmd,
     });
     loading.value = false;
     if (!next.length) {

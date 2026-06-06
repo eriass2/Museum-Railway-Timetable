@@ -295,6 +295,22 @@
     font-size: 0.95rem;
 }
 
+.mrt-detail-segment__notice--cancelled {
+    color: var(--mrt-text-error, #b32d2e);
+    font-weight: 700;
+}
+
+.mrt-detail-segment__duration--cancelled {
+    text-decoration: line-through;
+    color: var(--mrt-text-error, #b32d2e);
+}
+
+.mrt-timeline__row--cancelled .mrt-timeline__time,
+.mrt-timeline__row--cancelled .mrt-timeline__station {
+    text-decoration: line-through;
+    color: var(--mrt-text-error, #b32d2e);
+}
+
 .mrt-detail-segment__meta {
     display: flex;
     flex-wrap: wrap;

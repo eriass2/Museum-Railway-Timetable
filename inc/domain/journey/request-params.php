@@ -152,5 +152,15 @@ function MRT_journey_parse_connection_detail_params( array $input ) {
 			__( 'Invalid service.', 'museum-railway-timetable' )
 		);
 	}
-	return array_merge( $pair, array( 'service_id' => $service_id ) );
+	$date = isset( $input['date'] ) ? sanitize_text_field( (string) $input['date'] ) : '';
+	if ( $date !== '' && ! MRT_validate_date( $date ) ) {
+		return new WP_Error(
+			'mrt_journey_date',
+			__( 'Invalid date.', 'museum-railway-timetable' )
+		);
+	}
+	return array_merge( $pair, array(
+		'service_id' => $service_id,
+		'date'       => $date,
+	) );
 }

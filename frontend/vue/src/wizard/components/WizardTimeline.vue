@@ -9,6 +9,7 @@ defineProps<{
   cfg: WizardCfg;
   stops: TimelineStop[];
   startExpanded?: boolean;
+  cancelled?: boolean;
 }>();
 
 function stationTime(s: TimelineStop): string {
@@ -23,5 +24,6 @@ function stationTime(s: TimelineStop): string {
     :show-stops-label="cfgStr(cfg, 'showStops', 'Visa passerade stationer')"
     :hide-stops-label="cfgStr(cfg, 'hideStops', 'Dölj passerade stationer')"
     :start-expanded="startExpanded"
+    :cancelled="cancelled"
   />
 </template>

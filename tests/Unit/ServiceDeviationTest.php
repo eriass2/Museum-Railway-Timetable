@@ -77,6 +77,19 @@ final class ServiceDeviationTest extends TestCase {
 		self::assertStringContainsString( 'Pga underhåll', $row['text'] );
 	}
 
+	public function test_deviation_print_key_row_marks_cancelled_trip(): void {
+		$service = new WP_Post( (object) array( 'ID' => 11, 'post_type' => 'mrt_service' ) );
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'11|mrt_service_number'          => '42',
+			'11|mrt_service_notices_by_date' => array( '2026-08-01' => 'Inställd' ),
+		);
+
+		$row = MRT_timetable_deviation_print_key_row( $service, '2026-08-01' );
+		self::assertNotNull( $row );
+		self::assertStringContainsString( 'Inställd', $row['symbol'] );
+		self::assertSame( 'Inställd', $row['text'] );
+	}
+
 	private function make_term( int $id, string $name, string $slug ): WP_Term {
 		$term           = new WP_Term();
 		$term->term_id  = $id;

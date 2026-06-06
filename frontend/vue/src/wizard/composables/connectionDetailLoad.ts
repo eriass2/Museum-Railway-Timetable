@@ -10,11 +10,13 @@ import type {
 import type { WizardCfg } from '../utils/wizardCfgTypes';
 import { cfgStr } from '../utils/wizardLabels';
 import { connectionLegs } from '../utils/connection';
+import { isCancelledNotice } from '../../shared/cancelledNotice';
 
 export type LegSegment = {
   title: string;
   stops: TimelineStop[];
   notice: string;
+  isCancelled?: boolean;
   leg?: JourneyLeg;
 };
 
@@ -24,6 +26,7 @@ type LoadParams = {
   connection: JourneyConnection;
   legFrom: MaybeRef<number>;
   legTo: MaybeRef<number>;
+  dateYmd: MaybeRef<string>;
 };
 
 async function fetchConnectionLegDetail(
@@ -35,7 +38,12 @@ async function fetchConnectionLegDetail(
   const res = await mrtRestRequest<ConnectionDetailPayload>(params.config, {
     method: 'POST',
     path: 'journey/connection-detail',
-    body: { from_station: from, to_station: to, service_id: leg.service_id },
+    body: {
+      from_station: from,
+      to_station: to,
+      service_id: leg.service_id,
+      date: unref(params.dateYmd) || undefined,
+    },
   });
   return res.success && res.data ? res.data : null;
 }
@@ -49,6 +57,7 @@ function segmentFromDetailPayload(
     title,
     stops: data.detail?.stops || [],
     notice: data.notice || '',
+    isCancelled: data.is_cancelled === true || isCancelledNotice(data.notice || ''),
     leg,
   };
 }

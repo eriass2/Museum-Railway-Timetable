@@ -17,6 +17,7 @@ const { store, cfg, config } = useWizardContext();
 
 const legFrom = computed(() => (props.legCtx === 'return' ? store.toId : store.fromId));
 const legTo = computed(() => (props.legCtx === 'return' ? store.fromId : store.toId));
+const dateYmd = computed(() => store.dateYmd);
 
 const {
   loading,
@@ -32,6 +33,7 @@ const {
   connection: props.connection,
   legFrom,
   legTo,
+  dateYmd,
 });
 
 defineExpose({ ensureLoaded });

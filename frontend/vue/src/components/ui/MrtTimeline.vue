@@ -19,8 +19,9 @@ const props = withDefaults(
     showStopsLabel: string;
     hideStopsLabel: string;
     startExpanded?: boolean;
+    cancelled?: boolean;
   }>(),
-  { startExpanded: false },
+  { startExpanded: false, cancelled: false },
 );
 
 const showAllStops = ref(Boolean(props.startExpanded));
@@ -73,7 +74,7 @@ const timelineItems = computed((): TimelineItem[] => {
       <div
         v-if="item.kind === 'stop'"
         class="mrt-timeline__row"
-        :class="{ 'is-terminal': item.terminal }"
+        :class="{ 'is-terminal': item.terminal, 'mrt-timeline__row--cancelled': cancelled }"
       >
         <time class="mrt-timeline__time">{{ formatTime(item.stop) }}</time>
         <span class="mrt-timeline__node" aria-hidden="true" />

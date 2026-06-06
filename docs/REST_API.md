@@ -39,13 +39,13 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `POST /operations/cancel-traffic` | Markera all trafik inställd för datum (mobil drift) |
 | `POST /dev/*` | Dev-verktyg (endast dev-läge): clear-db, import, demo-page, setup-navigation, sync-timetable-pages |
 | `GET|POST /timetables/{id}/deviations` | Avvikelser |
-| `GET /timetables/{id}/overview` | Overview-JSON (samma som idag) |
+| `GET /timetables/{id}/overview` | Overview-JSON (samma som idag); kolumner/turer med `isCancelled`, print key med inställ-förklaring |
 | `GET|PUT /settings/prices` | Prismatris |
 | `POST /import/csv`, `GET /export/csv` | Import/export |
-| `POST /journey/search` | Resesökning (publikt) |
+| `POST /journey/search` | Resesökning (publikt); connections inkl. `notice`, `is_cancelled` |
 | `GET /prices/trip` | Priser för vald resa (publikt, wizard) |
 | `GET /journey/calendar` | Trafikdagar (publikt) |
-| `GET /journey/connection-detail` | Detalj (publikt) |
+| `GET /journey/connection-detail` | Detalj (publikt); valfri `date` i body; svar med `notice`, `is_cancelled` |
 
 Implementation: `inc/infrastructure/rest/*.php`. Admin-klient: `frontend/vue/src/admin/api/adminRest.ts`.
 

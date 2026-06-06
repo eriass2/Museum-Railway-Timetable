@@ -6,6 +6,7 @@ import {
   formatTrainConnecting,
 } from '../../shared/overviewUiLabels';
 import type { TimetableBranchGroup, TimetableOverviewIconUrls } from '../../types/timetableOverview';
+import { branchTripIsCancelled, branchTripNoticeDetail } from '../../shared/branchTripCancelled';
 import { trainTypeIconUrl } from '../../utils/overviewGrid';
 import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
 
@@ -23,6 +24,10 @@ function departuresAria(): string {
 
 function trainLabel(serviceNumber: string, timeDisplay: string): string {
   return formatTrainConnecting(props.labels.trainConnecting, serviceNumber, timeDisplay);
+}
+
+function tripCancelled(trip: TimetableBranchGroup['trips'][number]): boolean {
+  return branchTripIsCancelled(trip);
 }
 </script>
 
@@ -49,21 +54,33 @@ function trainLabel(serviceNumber: string, timeDisplay: string): string {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="trip in group.trips" :key="trip.trip">
+          <tr v-for="trip in group.trips" :key="trip.trip" :class="{ 'mrt-ov-branch-row--cancelled': tripCancelled(trip) }">
             <th scope="row">
               <img
                 v-if="busIconUrl"
                 class="mrt-ov-branch-trip-icon"
+                :class="{ 'mrt-ov-icon--cancelled': tripCancelled(trip) }"
                 :src="busIconUrl"
                 alt=""
                 width="24"
                 height="24"
               />
               <span class="screen-reader-text">{{ trip.trip }}</span>
+              <span v-if="tripCancelled(trip)" class="mrt-ov-cancelled-badge">
+                {{ labels.cancelledLabel }}
+              </span>
+              <span
+                v-if="branchTripNoticeDetail(trip, labels.cancelledLabel)"
+                class="mrt-ov-deviation-note mrt-ov-deviation-note--cancelled-detail"
+              >
+                {{ branchTripNoticeDetail(trip, labels.cancelledLabel) }}
+              </span>
             </th>
-            <td>{{ trip.fromTime }}</td>
-            <td v-if="group.midLabel">{{ trip.midTime || '—' }}</td>
-            <td>{{ trip.toTime }}</td>
+            <td :class="{ 'mrt-ov-time--cancelled': tripCancelled(trip) }">{{ trip.fromTime }}</td>
+            <td v-if="group.midLabel" :class="{ 'mrt-ov-time--cancelled': tripCancelled(trip) }">
+              {{ trip.midTime || '—' }}
+            </td>
+            <td :class="{ 'mrt-ov-time--cancelled': tripCancelled(trip) }">{{ trip.toTime }}</td>
             <td>
               <template v-if="trip.connectingTrains.length">
                 <span v-for="(t, ti) in trip.connectingTrains" :key="ti" class="mrt-ov-branch-train">
@@ -78,30 +95,39 @@ function trainLabel(serviceNumber: string, timeDisplay: string): string {
     </div>
 
     <ol class="mrt-ov-branch-cards" :aria-label="departuresAria()">
-      <li v-for="trip in group.trips" :key="`card-${trip.trip}`" class="mrt-ov-branch-card">
+      <li
+        v-for="trip in group.trips"
+        :key="`card-${trip.trip}`"
+        class="mrt-ov-branch-card"
+        :class="{ 'mrt-ov-branch-card--cancelled': tripCancelled(trip) }"
+      >
         <p class="mrt-ov-branch-card__trip">
           <img
             v-if="busIconUrl"
             class="mrt-ov-branch-trip-icon"
+            :class="{ 'mrt-ov-icon--cancelled': tripCancelled(trip) }"
             :src="busIconUrl"
             alt=""
             width="24"
             height="24"
           />
+          <span v-if="tripCancelled(trip)" class="mrt-ov-cancelled-badge">
+            {{ labels.cancelledLabel }}
+          </span>
           <span class="screen-reader-text">{{ formatCardTrip(labels.cardTrip, trip.trip) }}</span>
         </p>
         <dl class="mrt-ov-branch-card__times">
           <div class="mrt-ov-branch-card__row">
             <dt>{{ group.fromLabel }}</dt>
-            <dd>{{ trip.fromTime }}</dd>
+            <dd :class="{ 'mrt-ov-time--cancelled': tripCancelled(trip) }">{{ trip.fromTime }}</dd>
           </div>
           <div v-if="group.midLabel" class="mrt-ov-branch-card__row">
             <dt>{{ group.midLabel }}</dt>
-            <dd>{{ trip.midTime || '—' }}</dd>
+            <dd :class="{ 'mrt-ov-time--cancelled': tripCancelled(trip) }">{{ trip.midTime || '—' }}</dd>
           </div>
           <div class="mrt-ov-branch-card__row">
             <dt>{{ group.toLabel }}</dt>
-            <dd>{{ trip.toTime }}</dd>
+            <dd :class="{ 'mrt-ov-time--cancelled': tripCancelled(trip) }">{{ trip.toTime }}</dd>
           </div>
           <div class="mrt-ov-branch-card__row">
             <dt>{{ labels.colConnectingTrain }}</dt>

@@ -103,7 +103,7 @@ function MRT_admin_vue_help_operations(): array {
 		array(
 			'title' => __( 'Avvikelser', 'museum-railway-timetable' ),
 			'body'  => __(
-				'(tidtabellseditor) — ändra tågtyp eller meddelande för en specifik tur och datum.',
+				'(tidtabellseditor) — ändra tågtyp, meddelande eller markera inställt tåg för en specifik tur och datum. Förhandsvisningen visar samma markering som på webbplatsen.',
 				'museum-railway-timetable'
 			),
 		),

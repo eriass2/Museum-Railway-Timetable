@@ -85,6 +85,7 @@ function MRT_timetable_print_key_deviation_rows( array $services, string $dateYm
 
 	$rows               = array();
 	$has_type_deviation = false;
+	$has_cancelled      = false;
 
 	foreach ( $services as $service ) {
 		if ( ! $service instanceof WP_Post ) {
@@ -97,8 +98,24 @@ function MRT_timetable_print_key_deviation_rows( array $services, string $dateYm
 		if ( ! empty( $row['has_type_deviation'] ) ) {
 			$has_type_deviation = true;
 		}
-		unset( $row['has_type_deviation'] );
+		if ( ! empty( $row['is_cancelled'] ) ) {
+			$has_cancelled = true;
+		}
+		unset( $row['has_type_deviation'], $row['is_cancelled'] );
 		$rows[] = $row;
+	}
+
+	if ( $has_cancelled ) {
+		array_unshift(
+			$rows,
+			array(
+				'symbol' => __( 'Inställd', 'museum-railway-timetable' ),
+				'text'   => __(
+					'Inställd tur — avgår inte men visas i tabellen med genomstrukna tider.',
+					'museum-railway-timetable'
+				),
+			)
+		);
 	}
 
 	if ( $has_type_deviation ) {
@@ -118,12 +135,13 @@ function MRT_timetable_print_key_deviation_rows( array $services, string $dateYm
 }
 
 /**
- * @return array{symbol: string, text: string, has_type_deviation: bool}|null
+ * @return array{symbol: string, text: string, has_type_deviation: bool, is_cancelled: bool}|null
  */
 function MRT_timetable_deviation_print_key_row( WP_Post $service, string $dateYmd ): ?array {
 	$service_id   = (int) $service->ID;
 	$type_dev     = MRT_service_has_train_type_deviation( $service_id, $dateYmd );
 	$notice       = MRT_get_service_notice_for_date( $service_id, $dateYmd );
+	$is_cancelled = MRT_notice_indicates_cancelled( $notice );
 	if ( ! $type_dev && $notice === '' ) {
 		return null;
 	}
@@ -145,9 +163,18 @@ function MRT_timetable_deviation_print_key_row( WP_Post $service, string $dateYm
 		$parts[] = $notice;
 	}
 
+	$symbol = $number;
+	if ( $type_dev ) {
+		$symbol .= '†';
+	}
+	if ( $is_cancelled ) {
+		$symbol .= ' (' . __( 'Inställd', 'museum-railway-timetable' ) . ')';
+	}
+
 	return array(
-		'symbol'              => $type_dev ? $number . '†' : $number,
-		'text'                => implode( ' ', $parts ),
-		'has_type_deviation'  => $type_dev,
+		'symbol'             => $symbol,
+		'text'               => implode( ' ', $parts ),
+		'has_type_deviation' => $type_dev,
+		'is_cancelled'       => $is_cancelled,
 	);
 }

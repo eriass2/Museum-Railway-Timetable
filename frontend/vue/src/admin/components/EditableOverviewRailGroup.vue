@@ -2,6 +2,7 @@
 import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../types/timetableOverview';
 import type { OverviewGridEdit } from '../composables/useOverviewGridEdit';
 import { overviewUiLabels } from '../../shared/overviewUiLabels';
+import { overviewColumnIsCancelled } from '../../shared/overviewCancelled';
 import MrtOverviewRailGroupGrid from '../../components/overview/MrtOverviewRailGroupGrid.vue';
 import { trainTypeIconUrl } from '../../utils/overviewGrid';
 import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
@@ -24,12 +25,15 @@ const emit = defineEmits<{ saved: [] }>();
     :group="group"
     :icon-urls="iconUrls"
     :labels="labels"
-    :show-deviation-meta="false"
+    :show-deviation-meta="true"
     :editable-cells="!readonly"
   >
     <template #time-cell="{ row, columnIndex }">
       <template v-if="readonly || !row.stationId || !group.columns[columnIndex].serviceId">
-        <span class="mrt-ov-time">{{ row.cells[columnIndex].text }}</span>
+        <span
+          class="mrt-ov-time"
+          :class="{ 'mrt-ov-time--cancelled': overviewColumnIsCancelled(group.columns[columnIndex]) }"
+        >{{ row.cells[columnIndex].text }}</span>
         <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
           <img
             v-if="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"

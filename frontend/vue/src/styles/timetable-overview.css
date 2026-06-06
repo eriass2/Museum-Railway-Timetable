@@ -375,9 +375,13 @@
   padding: 0 var(--mrt-spacing-md, 1rem) var(--mrt-spacing-md, 1rem);
 }
 
-.mrt-ov-branch-table {
-  width: 100%;
-  border-collapse: collapse;
+.mrt-ov-branch-table tbody tr.mrt-ov-branch-row--cancelled {
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+}
+
+.mrt-ov-branch-card--cancelled {
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+  opacity: 0.95;
 }
 
 .mrt-ov-branch-table th,

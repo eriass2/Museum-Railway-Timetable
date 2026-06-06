@@ -102,9 +102,14 @@ function MRT_journey_connection_detail_response( array $input ) {
 		$parsed['from'],
 		$parsed['to']
 	);
-	$notice = MRT_get_service_notice( $parsed['service_id'], null );
+	$date   = (string) ( $parsed['date'] ?? '' );
+	$notice = MRT_get_service_notice(
+		$parsed['service_id'],
+		$date !== '' ? $date : null
+	);
 	return array(
-		'detail' => $detail,
-		'notice' => $notice,
+		'detail'       => $detail,
+		'notice'       => $notice,
+		'is_cancelled' => MRT_notice_indicates_cancelled( $notice ),
 	);
 }
