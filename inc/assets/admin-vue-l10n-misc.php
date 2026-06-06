@@ -140,6 +140,10 @@ function MRT_admin_vue_l10n_stop_times(): array {
 		'stopTimesLoading'     => __( 'Laddar stopptider…', 'museum-railway-timetable' ),
 		'stopTimesSaved'       => __( 'Stopptider sparade', 'museum-railway-timetable' ),
 		'stopTimesSaveButton'  => __( 'Spara stopptider', 'museum-railway-timetable' ),
+		'stopTimesOperatorHint' => __(
+			'Som operatör kan du ändra tider och om tåget stannar. På/Av (påstigning/avstigning) kräver administratörsbehörighet.',
+			'museum-railway-timetable'
+		),
 		'stopTimesColStops'    => __( 'Stannar', 'museum-railway-timetable' ),
 		'stopTimesColStation'  => __( 'Station', 'museum-railway-timetable' ),
 		'stopTimesColArrival'  => __( 'Ankomst', 'museum-railway-timetable' ),

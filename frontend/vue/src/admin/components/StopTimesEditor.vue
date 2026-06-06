@@ -79,6 +79,9 @@ watch(serviceId, () => {
         </tr>
       </tbody>
     </table>
+    <p v-if="cfg.canOperate && !cfg.canManage" class="description">
+      {{ adminStr(cfg, 'stopTimesOperatorHint') }}
+    </p>
     <AdminFormActions v-if="cfg.canManage || cfg.canOperate">
       <MrtButton context="admin" variant="primary" @click="save(true)">
         {{ adminStr(cfg, 'stopTimesSaveButton') }}

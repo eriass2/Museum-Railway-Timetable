@@ -32,6 +32,13 @@ export function useStopTimes(serviceId: Ref<number>) {
     }
   }
 
+  function resolveQuickEdit(explicit: boolean): boolean {
+    if (!cfg.canManage && cfg.canOperate) {
+      return true;
+    }
+    return !explicit;
+  }
+
   async function save(explicit = true) {
     const id = serviceId.value;
     if (!id || (!cfg.canManage && !cfg.canOperate)) {
@@ -39,7 +46,11 @@ export function useStopTimes(serviceId: Ref<number>) {
     }
     error.value = '';
     try {
-      const res = await saveStopTimes(id, stopTimesToApiPayload(stations.value), !explicit);
+      const res = await saveStopTimes(
+        id,
+        stopTimesToApiPayload(stations.value),
+        resolveQuickEdit(explicit),
+      );
       stations.value = res.stations;
       message.value = adminStr(cfg, 'stopTimesSaved');
     } catch (e) {
