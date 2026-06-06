@@ -1,9 +1,4 @@
 import html2pdf from 'html2pdf.js';
+import type { Html2PdfFn } from './loadHtml2Pdf';
 
-declare global {
-  interface Window {
-    MRTHtml2Pdf?: typeof html2pdf;
-  }
-}
-
-window.MRTHtml2Pdf = html2pdf;
+window.MRTHtml2Pdf = html2pdf as Html2PdfFn;

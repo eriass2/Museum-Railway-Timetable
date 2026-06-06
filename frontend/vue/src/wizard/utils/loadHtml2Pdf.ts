@@ -1,11 +1,11 @@
-type Html2PdfWorker = {
+export type Html2PdfWorker = {
   set(options: Record<string, unknown>): Html2PdfWorker;
   from(element: HTMLElement): Html2PdfWorker;
   outputPdf(type: string): Promise<unknown>;
   save(): Promise<void>;
 };
 
-type Html2PdfFn = () => Html2PdfWorker;
+export type Html2PdfFn = () => Html2PdfWorker;
 
 declare global {
   interface Window {
