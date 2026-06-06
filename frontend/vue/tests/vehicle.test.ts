@@ -46,6 +46,7 @@ describe('legVehicleLabel', () => {
       legVehicleLabel({
         train_type: 'Buss',
         train_type_slug: 'buss',
+        service_id: 0,
         service_number: 'B3',
         destination: 'Fjällnora',
       }),
