@@ -20,6 +20,8 @@ require_once MRT_PATH . 'inc/domain/admin/cancel-traffic.php';
  * @return array<string, int>
  */
 function MRT_dashboard_stats(): array {
+	require_once MRT_PATH . 'inc/domain/pricing/prices.php';
+
 	$train_types_count = wp_count_terms(
 		array(
 			'taxonomy'   => MRT_TAXONOMY_TRAIN_TYPE,
@@ -30,11 +32,13 @@ function MRT_dashboard_stats(): array {
 		$train_types_count = 0;
 	}
 	return array(
-		'stations'    => (int) wp_count_posts( MRT_POST_TYPE_STATION )->publish,
-		'routes'      => (int) wp_count_posts( MRT_POST_TYPE_ROUTE )->publish,
-		'timetables'  => (int) wp_count_posts( MRT_POST_TYPE_TIMETABLE )->publish,
-		'services'    => (int) wp_count_posts( MRT_POST_TYPE_SERVICE )->publish,
-		'train_types' => (int) $train_types_count,
+		'stations'               => (int) wp_count_posts( MRT_POST_TYPE_STATION )->publish,
+		'routes'                 => (int) wp_count_posts( MRT_POST_TYPE_ROUTE )->publish,
+		'timetables'             => (int) wp_count_posts( MRT_POST_TYPE_TIMETABLE )->publish,
+		'services'               => (int) wp_count_posts( MRT_POST_TYPE_SERVICE )->publish,
+		'train_types'            => (int) $train_types_count,
+		'prices_configured'      => MRT_price_matrix_is_configured() ? 1 : 0,
+		'stations_without_zones' => MRT_count_stations_without_price_zones(),
 	);
 }
 
@@ -48,7 +52,8 @@ function MRT_collect_dashboard_warnings(): array {
 		MRT_dashboard_warnings_empty_timetable_dates(),
 		MRT_dashboard_warnings_timetables_without_trips(),
 		MRT_dashboard_warnings_trips_without_stoptimes(),
-		MRT_dashboard_warnings_routes_without_stations()
+		MRT_dashboard_warnings_routes_without_stations(),
+		MRT_dashboard_warnings_pricing()
 	);
 }
 

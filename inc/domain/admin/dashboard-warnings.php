@@ -163,3 +163,57 @@ function MRT_dashboard_warnings_routes_without_stations(): array {
 	}
 	return $warnings;
 }
+
+/**
+ * Warnings for pricing configuration (matrix, station zones, afternoon return).
+ *
+ * @return array<int, array{code: string, message: string, route: string}>
+ */
+function MRT_dashboard_warnings_pricing(): array {
+	require_once MRT_PATH . 'inc/domain/pricing/prices.php';
+	require_once MRT_PATH . 'inc/infrastructure/wordpress/plugin-settings.php';
+
+	$warnings = array();
+	if ( ! MRT_price_matrix_is_configured() ) {
+		$warnings[] = MRT_dashboard_warning_row(
+			'prices_not_configured',
+			__( 'Prismatrisen är tom — reseplaneraren kan inte visa biljettpriser.', 'museum-railway-timetable' ),
+			'#/prices'
+		);
+	}
+
+	$missing_zones = MRT_count_stations_without_price_zones();
+	if ( $missing_zones > 0 ) {
+		$warnings[] = MRT_dashboard_warning_row(
+			'stations_missing_price_zones',
+			sprintf(
+				// translators: %d: number of stations without price zones.
+				_n(
+					'%d station saknar priszon — prisberäkning blir opålitlig.',
+					'%d stationer saknar priszon — prisberäkning blir opålitlig.',
+					$missing_zones,
+					'museum-railway-timetable'
+				),
+				$missing_zones
+			),
+			'#/stations-routes'
+		);
+	}
+
+	if (
+		MRT_price_matrix_is_configured()
+		&& MRT_afternoon_return_threshold_minutes() > 0
+		&& ! MRT_afternoon_return_prices_configured()
+	) {
+		$warnings[] = MRT_dashboard_warning_row(
+			'afternoon_return_not_configured',
+			__(
+				'Eftermiddags-retur är aktiverad men priserna saknas — fyll i under Priser.',
+				'museum-railway-timetable'
+			),
+			'#/prices'
+		);
+	}
+
+	return $warnings;
+}

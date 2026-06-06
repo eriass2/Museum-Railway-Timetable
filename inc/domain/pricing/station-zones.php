@@ -102,3 +102,19 @@ function MRT_update_station_price_zones_meta( int $station_id, array $zones ): v
 function MRT_station_price_zones_is_custom( int $station_id ): bool {
 	return MRT_get_station_price_zones_stored( $station_id ) !== array();
 }
+
+/**
+ * Count published stations without configured price zones.
+ */
+function MRT_count_stations_without_price_zones(): int {
+	if ( ! function_exists( 'MRT_get_all_stations' ) ) {
+		return 0;
+	}
+	$count = 0;
+	foreach ( MRT_get_all_stations() as $station_id ) {
+		if ( MRT_get_station_price_zones( (int) $station_id ) === array() ) {
+			++$count;
+		}
+	}
+	return $count;
+}

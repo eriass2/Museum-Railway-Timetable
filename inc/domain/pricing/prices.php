@@ -152,6 +152,36 @@ function MRT_get_price_matrix() {
 }
 
 /**
+ * Whether any cell in the stored price matrix has a value.
+ */
+function MRT_price_matrix_is_configured(): bool {
+	$matrix = MRT_get_price_matrix();
+	foreach ( MRT_price_ticket_type_keys() as $ticket_type ) {
+		foreach ( MRT_price_category_keys() as $category ) {
+			foreach ( MRT_price_zone_keys() as $zone ) {
+				$value = $matrix[ $ticket_type ][ $category ][ $zone ] ?? null;
+				if ( $value !== null && $value !== '' ) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+/**
+ * Whether any afternoon-return category price is set above zero.
+ */
+function MRT_afternoon_return_prices_configured(): bool {
+	foreach ( MRT_get_afternoon_return_prices() as $price ) {
+		if ( (int) $price > 0 ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
  * Select one zone column from the stored zone matrix.
  *
  * @param array<string, array<string, array<int, int|null>>> $matrix Full zone matrix
