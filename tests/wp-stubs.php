@@ -50,13 +50,16 @@ if (!class_exists('WP_Error')) {
         /** @var array<string, array<int, string>> */
         public $errors = [];
 
+        /** @var mixed */
+        private $error_data = '';
+
         /**
          * @param string|int $code
          * @param string     $message
          * @param mixed      $data
          */
         public function __construct($code = '', $message = '', $data = '') {
-            unset($data);
+            $this->error_data = $data;
             if ((string) $code !== '') {
                 $this->errors[(string) $code] = [(string) $message];
             }
@@ -72,6 +75,15 @@ if (!class_exists('WP_Error')) {
             $messages = reset($this->errors);
 
             return is_array($messages) ? (string) ($messages[0] ?? '') : '';
+        }
+
+        /**
+         * @param string|int $code
+         * @return mixed
+         */
+        public function get_error_data($code = '') {
+            unset($code);
+            return $this->error_data;
         }
     }
 }
