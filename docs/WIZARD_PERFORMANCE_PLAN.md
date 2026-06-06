@@ -26,7 +26,7 @@ Upplevd långsamhet i wizard (juni 2026). Planen täcker identifierade flaskhals
 | 0 | Diagnostik och plan (detta dokument) | Klar |
 | 1 | Quick wins – client-cache, mindre refetch | Klar (juni 2026) |
 | 2 | Server – optimera kalendermånad | Ej påbörjad |
-| 3 | Bundle-splitting, parallell detaljhämtning | Ej påbörjad |
+| 3 | Bundle-splitting, parallell detaljhämtning | Klar (juni 2026) |
 | 4 | Mätning och underhåll | Ej påbörjad |
 
 ---
@@ -55,11 +55,11 @@ WordPress shortcode
 
 ### Bundle (nu)
 
-- `frontend/vue/vite.config.ts`: `inlineDynamicImports: true`, format `iife`
-- `frontend/vue/src/main.ts`: statisk import av month, overview, wizard, index
-- Publik JS: ~223 KiB (`assets/dist/vue/assets/main-*.js`)
-- CSS inbäddad i JS-bundeln (inga separata CSS-filer i manifest)
-- **OBS:** `SHORTCODES.md` säger att wizard laddas som async chunk — stämmer **inte** med nuvarande Vite-konfig
+- `frontend/vue/vite.config.ts`: format `es`, lazy chunks per app
+- `frontend/vue/src/main.ts`: dynamisk `import()` per `data-mrt-vue-app`
+- Publik JS entry: ~67 KiB (`assets/main-*.js`) + lazy app-chunk (t.ex. wizard ~57 KiB) + delad vendor i entry
+- WordPress: `wp_script_add_data( …, 'type', 'module' )` i `inc/assets/vue-frontend.php`
+- CSS per chunk i manifest (Vite injicerar chunk-CSS vid lazy load)
 
 ---
 
@@ -254,9 +254,15 @@ Vid import, sparande av tidtabell eller tjänst — rensa relevanta transients (
 
 ### Verifiering Fas 3
 
-- [ ] Wizard-sida laddar endast wizard-chunk (+ shared)
-- [ ] `npm run verify` / `.\scripts\vue-check.ps1` grönt
+- [x] Wizard-sida laddar endast wizard-chunk (+ shared entry)
+- [x] `npm run verify` / `.\scripts\vue-check.ps1` grönt
 - [ ] Expand av 2+ ben: märkbart snabbare (jämför nätverk-fliken)
+
+### Senast klart (Fas 3)
+
+- ES module entry + lazy `import()` per app i `main.ts`
+- `connectionDetailLoad.ts` — parallell `Promise.all` för flerbeniga detaljer
+- `verify-build.mjs`, e2e serve (`type="module"`), PHP enqueue uppdaterade
 
 ---
 

@@ -1,6 +1,6 @@
 # Museum Railway – public Vue frontend
 
-Builds to `assets/dist/vue/` as a **single IIFE bundle** (classic WordPress `<script>` enqueue).
+Builds to `assets/dist/vue/` as an **ES module** entry with **lazy chunks per app** (WordPress enqueues `type="module"`).
 
 ## Apps (`src/apps/`)
 
@@ -47,7 +47,7 @@ From repo root: `composer vue:check`
 | `npm run typecheck` | `vue-tsc` |
 | `npm test` | Vitest (12 files: utils, store, parseMount) |
 | `npm run build` | Vite → `assets/dist/vue/` |
-| `npm run verify` | IIFE smoke load in Node |
+| `npm run verify` | Manifest + lazy-chunk smoke check |
 | `npm run check` | All of the above |
 | `npm run e2e` | Playwright smoke (static wizard mount; run `build` first) |
 | `npm run e2e:install` | Install Chromium for Playwright (once) |

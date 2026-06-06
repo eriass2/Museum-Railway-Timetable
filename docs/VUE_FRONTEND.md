@@ -48,13 +48,13 @@ docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && np
 
 **Kör inte** `docker compose … run composer vue:check` — `composer`-imaget saknar npm.
 
-Output: `assets/dist/vue/` (commit after CSS/JS changes). Single IIFE entry `assets/main-*.js`.
+Output: `assets/dist/vue/` (commit after CSS/JS changes). ES module entry `assets/main-*.js` with lazy chunks per app (`month`, `overview`, `wizard`, `index`).
 
 Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 ## PHP integration
 
-- `inc/assets/vue-frontend.php` — enqueue bundled CSS/JS (IIFE), mount HTML
+- `inc/assets/vue-frontend.php` — enqueue ES module entry + CSS from manifest, mount HTML
 - `inc/public/vue-shortcode-config.php` — JSON config per shortcode
 - Shortcodes render via `MRT_render_vue_mount()` (Vue-only)
 

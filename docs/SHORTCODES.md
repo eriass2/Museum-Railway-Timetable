@@ -106,7 +106,7 @@ Delad journey-domän och REST (används av wizarden):
 
 ## Frontend Assets
 
-Plugin laddar **en** Vite-bundel (`assets/dist/vue/`) med CSS (importerad från `assets/*.css`) och Vue-appar för månad, översikt och wizard. Wizard laddas som async chunk endast när wizarden mountas.
+Plugin laddar **en** Vite ES-modul (`assets/dist/vue/assets/main-*.js`) med CSS (importerad från `assets/*.css`). Varje Vue-app (`month`, `overview`, `wizard`, `index`) laddas som async chunk när shortcoden mountas på sidan.
 
 - **Enqueue:** `inc/assets/vue-frontend.php`, `inc/assets/frontend.php`
 - **Tågtypsikoner:** bundlade via `frontend/vue/src/styles/mrt-public.css`

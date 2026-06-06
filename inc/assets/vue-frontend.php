@@ -170,13 +170,14 @@ function MRT_enqueue_vue_frontend_assets(): void {
 		return;
 	}
 
-	wp_enqueue_script(
-		'mrt-vue-public',
-		$base_url . $js_file,
-		array(),
-		MRT_VERSION,
-		true
-	);
+  wp_enqueue_script(
+    'mrt-vue-public',
+    $base_url . $js_file,
+    array(),
+    MRT_VERSION,
+    true
+  );
+  wp_script_add_data( 'mrt-vue-public', 'type', 'module' );
 }
 
 /**

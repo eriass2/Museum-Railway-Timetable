@@ -1,30 +1,30 @@
 import { createApp, type Component } from 'vue';
-import MonthCalendarApp from './apps/MonthCalendarApp.vue';
-import TimetableOverviewApp from './apps/TimetableOverviewApp.vue';
-import JourneyWizardApp from './apps/JourneyWizardApp.vue';
-import TimetableIndexApp from './apps/TimetableIndexApp.vue';
 import { parseMountConfig, type MrtVueApp, type MrtVueConfig } from './config';
 import './styles/mrt-public.css';
 
-const apps: Record<MrtVueApp, Component<{ config: MrtVueConfig }>> = {
-  month: MonthCalendarApp,
-  overview: TimetableOverviewApp,
-  wizard: JourneyWizardApp,
-  index: TimetableIndexApp,
+type AppLoader = () => Promise<Component<{ config: MrtVueConfig }>>;
+
+const appLoaders: Record<MrtVueApp, AppLoader> = {
+  month: () => import('./apps/MonthCalendarApp.vue').then((m) => m.default),
+  overview: () => import('./apps/TimetableOverviewApp.vue').then((m) => m.default),
+  wizard: () => import('./apps/JourneyWizardApp.vue').then((m) => m.default),
+  index: () => import('./apps/TimetableIndexApp.vue').then((m) => m.default),
 };
 
-function mountRoot(el: HTMLElement): void {
+async function mountRoot(el: HTMLElement): Promise<void> {
   const appId = el.getAttribute('data-mrt-vue-app') as MrtVueApp | null;
   const config = parseMountConfig(el);
-  if (!appId || !config || !apps[appId]) {
+  if (!appId || !config || !appLoaders[appId]) {
     return;
   }
-  const App = apps[appId];
+  const App = await appLoaders[appId]();
   createApp(App, { config }).mount(el);
 }
 
 function bootVueApps(): void {
-  document.querySelectorAll<HTMLElement>('[data-mrt-vue-app]').forEach(mountRoot);
+  document.querySelectorAll<HTMLElement>('[data-mrt-vue-app]').forEach((el) => {
+    void mountRoot(el);
+  });
 }
 
 if (document.readyState === 'loading') {

@@ -4,7 +4,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import vm from 'node:vm';
 
 const vueRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(vueRoot, '../../assets/dist/vue');
@@ -32,49 +31,48 @@ if (!existsSync(jsPath)) {
 }
 
 const code = readFileSync(jsPath, 'utf8');
-if (!code.startsWith('(function')) {
-  fail('expected IIFE bundle (starts with "(function") — check vite.config.js output.format');
+if (!code.includes('import') && !code.includes('export')) {
+  fail('expected ES module entry (import/export) — check vite.config.ts output.format');
 }
 
-const forbiddenInBundle = ['wizardStrings(', 'initLegacyWizard', 'jQuery is not defined'];
-for (const token of forbiddenInBundle) {
+const dynamicImports = Array.isArray(entry.dynamicImports) ? entry.dynamicImports : [];
+if (dynamicImports.length < 4) {
+  fail(`expected 4 lazy app chunks in manifest, got ${dynamicImports.length}`);
+}
+
+for (const chunkKey of dynamicImports) {
+  const chunk = manifest[chunkKey];
+  if (!chunk?.file) {
+    fail(`manifest missing chunk for ${chunkKey}`);
+  }
+  const chunkPath = join(distDir, String(chunk.file).replace(/^\//, ''));
+  if (!existsSync(chunkPath)) {
+    fail(`missing chunk file ${chunk.file}`);
+  }
+}
+
+const forbiddenInEntry = ['wizardStrings(', 'initLegacyWizard', 'jQuery is not defined'];
+for (const token of forbiddenInEntry) {
   if (code.includes(token)) {
-    fail(`bundle contains forbidden token: ${token}`);
+    fail(`entry bundle contains forbidden token: ${token}`);
   }
 }
 
-const requiredInBundle = ['data-mrt-vue-app', 'MonthCalendarApp', 'JourneyWizardApp'];
-for (const token of requiredInBundle) {
+const requiredInEntry = ['data-mrt-vue-app', 'import('];
+for (const token of requiredInEntry) {
   if (!code.includes(token)) {
-    fail(`bundle missing expected marker: ${token}`);
+    fail(`entry bundle missing expected marker: ${token}`);
   }
 }
 
-const sandbox = {
-  window: {},
-  document: {
-    readyState: 'complete',
-    querySelectorAll: () => [],
-    addEventListener: () => {},
-    createElement: () => ({
-      style: {},
-      setAttribute: () => {},
-      appendChild: () => {},
-      textContent: '',
-    }),
-    head: { appendChild: () => {} },
-  },
-  fetch: async () => ({ ok: false, json: async () => ({ success: false }) }),
-};
-sandbox.window = sandbox;
-
-const context = vm.createContext(sandbox);
-
-try {
-  vm.runInContext(code, context, { timeout: 10000 });
-} catch (err) {
-  const message = err instanceof Error ? err.message : String(err);
-  fail(`bundle threw on load: ${message}`);
+const wizardChunkKey = dynamicImports.find((key) => String(key).includes('JourneyWizardApp'));
+if (wizardChunkKey) {
+  const wizardChunk = manifest[wizardChunkKey];
+  const wizardPath = join(distDir, String(wizardChunk.file).replace(/^\//, ''));
+  const wizardCode = readFileSync(wizardPath, 'utf8');
+  if (!wizardCode.includes('JourneyWizardApp') && !wizardCode.includes('mrt-journey-wizard')) {
+    fail('wizard chunk missing expected wizard markers');
+  }
 }
 
 const adminPath = join(distDir, 'assets/admin.js');
@@ -87,4 +85,6 @@ if (!existsSync(tripPdfPath)) {
   fail('missing trip-pdf.js — run full npm run build (vite.pdf.config.ts)');
 }
 
-console.log(`vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB; admin.js ${(readFileSync(adminPath, 'utf8').length / 1024).toFixed(1)} KiB; trip-pdf.js ${(readFileSync(tripPdfPath, 'utf8').length / 1024).toFixed(1)} KiB)`);
+console.log(
+  `vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB entry; ${dynamicImports.length} app chunks; admin.js ${(readFileSync(adminPath, 'utf8').length / 1024).toFixed(1)} KiB; trip-pdf.js ${(readFileSync(tripPdfPath, 'utf8').length / 1024).toFixed(1)} KiB)`,
+);

@@ -20,10 +20,9 @@ export default defineConfig({
     rollupOptions: {
       input: path.resolve(__dirname, 'src/main.ts'),
       output: {
-        format: 'iife',
-        name: 'MRTVuePublic',
-        inlineDynamicImports: true,
+        format: 'es',
         entryFileNames: 'assets/[name]-[hash].js',
+        chunkFileNames: 'assets/[name]-[hash].js',
       },
     },
   },

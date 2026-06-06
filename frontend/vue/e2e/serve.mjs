@@ -332,7 +332,7 @@ function renderAppHtml(app, config) {
   <div class="mrt-vue-root" data-mrt-vue-app="${app}">
     <script type="application/json" class="mrt-vue-config">${JSON.stringify(config)}</script>
   </div>
-  <script src="/${jsRel}"></script>
+  <script type="module" src="/${jsRel}"></script>
 </body>
 </html>`;
 }
