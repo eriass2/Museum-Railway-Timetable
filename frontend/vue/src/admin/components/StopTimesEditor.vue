@@ -11,7 +11,9 @@ import StopTimePaHeading from './StopTimePaHeading.vue';
 const props = defineProps<{ serviceId: number }>();
 const cfg = adminConfig();
 const serviceId = toRef(props, 'serviceId');
-const { stations, loading, error, message, load, save } = useStopTimes(serviceId);
+const { stations, loading, error, message, isDirty, load, save } = useStopTimes(serviceId);
+
+defineExpose({ getIsDirty: () => isDirty.value });
 
 watch(serviceId, () => {
   void load();
@@ -79,12 +81,10 @@ watch(serviceId, () => {
         </tr>
       </tbody>
     </table>
-    <p v-if="cfg.canOperate && !cfg.canManage" class="description">
-      {{ adminStr(cfg, 'stopTimesOperatorHint') }}
-    </p>
+
     <AdminFormActions v-if="cfg.canManage || cfg.canOperate">
-      <MrtButton context="admin" variant="primary" @click="save(true)">
-        {{ adminStr(cfg, 'stopTimesSaveButton') }}
+      <MrtButton context="admin" variant="primary" @click="save()">
+        {{ adminStr(cfg, 'stopTimesSave') }}
       </MrtButton>
     </AdminFormActions>
   </AdminLoadState>

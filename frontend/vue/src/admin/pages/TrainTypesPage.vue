@@ -23,6 +23,7 @@ import {
   TrainTypeIconPicker,
 } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
+import { proceedIfDiscardAllowed } from '../composables/adminDiscardGuard';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
@@ -37,6 +38,7 @@ const iconKeys = ref<string[]>([]);
 const viewMode = ref<TrainTypesView>('list');
 const editingRow = ref<TrainTypeRow | null>(null);
 const newType = ref({ name: '', slug: '', icon_key: 'diesel' });
+const formSnapshot = ref('');
 const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 const { flashRow, isFlashed } = useAdminRowFlash();
 
@@ -57,10 +59,33 @@ watch(
   { immediate: true },
 );
 
-function backToList(): void {
+function typeDraftSnapshot(row: { name: string; slug: string; icon_key: string }): string {
+  return JSON.stringify(row);
+}
+
+function isFormDirty(): boolean {
+  if (viewMode.value === 'list') {
+    return false;
+  }
+  const current =
+    viewMode.value === 'edit' && editingRow.value
+      ? typeDraftSnapshot(editingRow.value)
+      : typeDraftSnapshot(newType.value);
+  return current !== formSnapshot.value;
+}
+
+function resetFormState(): void {
   editingRow.value = null;
   newType.value = { name: '', slug: '', icon_key: 'diesel' };
   viewMode.value = 'list';
+  formSnapshot.value = '';
+}
+
+async function backToList(): Promise<void> {
+  if (viewMode.value !== 'list' && !(await proceedIfDiscardAllowed(isFormDirty()))) {
+    return;
+  }
+  resetFormState();
 }
 
 function startCreate(): void {
@@ -70,6 +95,7 @@ function startCreate(): void {
   editingRow.value = null;
   newType.value = { name: '', slug: '', icon_key: 'diesel' };
   viewMode.value = 'create';
+  formSnapshot.value = typeDraftSnapshot(newType.value);
 }
 
 function startEdit(row: TrainTypeRow): void {
@@ -78,6 +104,7 @@ function startEdit(row: TrainTypeRow): void {
   }
   editingRow.value = { ...row };
   viewMode.value = 'edit';
+  formSnapshot.value = typeDraftSnapshot(editingRow.value);
 }
 
 async function addType() {
@@ -88,7 +115,7 @@ async function addType() {
     icon_key: newType.value.icon_key,
   });
   showSaveNotice(adminFmt(cfg, 'trainTypesCreated', created.name));
-  backToList();
+  resetFormState();
   await reload();
   flashRow(created.id);
 }
@@ -102,7 +129,7 @@ async function saveType() {
     icon_key: row.icon_key,
   });
   showSaveNotice(adminFmt(cfg, 'trainTypesSaved', row.name));
-  backToList();
+  resetFormState();
   await reload();
   flashRow(row.id);
 }
@@ -126,7 +153,7 @@ async function removeType(id: number) {
       : adminStr(cfg, 'trainTypesRemovedFallback'),
   );
   if (editingRow.value?.id === id) {
-    backToList();
+    resetFormState();
   }
   await reload();
 }

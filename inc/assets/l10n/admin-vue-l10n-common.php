@@ -27,6 +27,12 @@ function MRT_admin_vue_l10n_common(): array {
 		'edit'       => __( 'Redigera', 'museum-railway-timetable' ),
 		'add'        => __( 'Lägg till', 'museum-railway-timetable' ),
 		'backToList' => __( 'Tillbaka till listan', 'museum-railway-timetable' ),
+		'discardChangesTitle'   => __( 'Osparade ändringar', 'museum-railway-timetable' ),
+		'discardChangesMessage' => __(
+			'Du har ändringar som inte är sparade. Vill du kasta dem?',
+			'museum-railway-timetable'
+		),
+		'discardChangesConfirm' => __( 'Kasta ändringar', 'museum-railway-timetable' ),
 		'yes'        => __( 'Ja', 'museum-railway-timetable' ),
 	);
 }

@@ -11,6 +11,7 @@ import TimetableEditorTripsTab from '../components/timetable-editor/TimetableEdi
 import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
 import { AdminPanel, AdminStatusMessage } from '../components/ui';
 import { useTimetableEditorPage } from '../composables/useTimetableEditorPage';
+import type { TimetableEditorTab } from '../composables/useTimetableEditorPage';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 
@@ -33,6 +34,8 @@ const {
   editDestinations,
   tripsView,
   stoptimesView,
+  stoptimesPanelRef,
+  deviationsTabRef,
   selectedServiceId,
   gridOverviewLoading,
   deviationRows,
@@ -51,7 +54,9 @@ const {
   onStoptimesGridToggle,
   loadEditDestinations,
   startCreateTrip,
-  backToTripsList,
+  requestBackToTripsList,
+  requestBackToStoptimesList,
+  switchTab,
   backToStoptimesList,
   startEditTrip,
   saveEditTrip,
@@ -82,6 +87,10 @@ const desktopTabs = computed(() => {
     ['preview', adminStr(cfg, 'editorTabPreview')],
   ] as const;
 });
+
+function onTabClick(next: TimetableEditorTab): void {
+  void switchTab(next);
+}
 </script>
 
 <template>
@@ -133,7 +142,7 @@ const desktopTabs = computed(() => {
           href="#"
           class="nav-tab"
           :class="{ 'nav-tab-active': tab === t[0] }"
-          @click.prevent="tab = t[0]"
+          @click.prevent="onTabClick(t[0])"
         >
           {{ tabLabel(t[1], t[0]) }}
         </a>
@@ -163,7 +172,7 @@ const desktopTabs = computed(() => {
         @open-stoptimes="openStoptimes"
         @start-create="startCreateTrip"
         @start-edit="startEditTrip"
-        @back="backToTripsList"
+        @back="requestBackToTripsList"
         @remove-trip="removeTrip"
         @add-trip="addTrip"
         @save-edit="saveEditTrip"
@@ -172,6 +181,7 @@ const desktopTabs = computed(() => {
 
       <TimetableEditorStoptimesPanel
         v-if="detail && !isMobile && tab === 'stoptimes'"
+        ref="stoptimesPanelRef"
         v-model:selected-service-id="selectedServiceId"
         :detail="detail"
         :overview="overview"
@@ -187,6 +197,7 @@ const desktopTabs = computed(() => {
 
       <TimetableEditorDeviationsTab
         v-if="detail && !isMobile && tab === 'deviations'"
+        ref="deviationsTabRef"
         v-model:rows="deviationRows"
         :can-operate="cfg.canOperate"
         :deviations-dirty="deviationsDirty"

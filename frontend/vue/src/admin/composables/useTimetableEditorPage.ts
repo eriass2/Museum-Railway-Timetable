@@ -12,6 +12,7 @@ import {
   updateTimetable,
   updateTimetableService,
 } from '../api/adminRest';
+import type { ComponentPublicInstance } from 'vue';
 import type { TripEditDraft } from '../components/timetable-editor/TimetableEditorTripEditForm.vue';
 import type { TripsPanelView } from '../components/timetable-editor/TimetableEditorTripsTab.vue';
 import {
@@ -19,6 +20,7 @@ import {
   tripDraftToApiBody,
 } from '../components/timetable-editor/tripFormTypes';
 import { adminConfirm } from './adminConfirm';
+import { proceedIfDiscardAllowed } from './adminDiscardGuard';
 import { useAdminSaveNotice } from './useAdminSaveNotice';
 import { useTimetableEditorDirty } from './useTimetableEditorDirty';
 import { deviationsToSavePayload, type DeviationRow } from '../utils/deviationsPayload';
@@ -35,6 +37,11 @@ export type TimetableServiceEditRow = TimetableServiceRow & {
 };
 
 export type StoptimesPanelView = 'list' | 'detail';
+export type TimetableEditorTab = 'dates' | 'trips' | 'stoptimes' | 'deviations' | 'preview';
+
+function tripDraftSnapshot(draft: TripEditDraft | ReturnType<typeof emptyTripDraft>): string {
+  return JSON.stringify(draft);
+}
 
 export function useTimetableEditorPage(timetableId: () => number) {
   const router = useRouter();
@@ -49,8 +56,15 @@ export function useTimetableEditorPage(timetableId: () => number) {
   const destinations = ref<{ id: number; name: string }[]>([]);
   const editTrip = ref<TripEditDraft | null>(null);
   const editDestinations = ref<{ id: number; name: string }[]>([]);
+  const tripFormSnapshot = ref('');
   const tripsView = ref<TripsPanelView>('list');
   const stoptimesView = ref<StoptimesPanelView>('list');
+  const stoptimesPanelRef = ref<ComponentPublicInstance<{ requestBackToList: () => Promise<boolean> }> | null>(
+    null,
+  );
+  const deviationsTabRef = ref<ComponentPublicInstance<{ requestBackToList: () => Promise<boolean> }> | null>(
+    null,
+  );
   const selectedServiceId = ref(0);
   const gridOverviewLoading = ref(false);
   const deviationRows = ref<DeviationRow[]>([]);
@@ -127,17 +141,64 @@ export function useTimetableEditorPage(timetableId: () => number) {
     void loadDetail();
   });
 
+  function isTripFormDirty(): boolean {
+    if (tripsView.value === 'list') {
+      return false;
+    }
+    const current =
+      tripsView.value === 'edit' && editTrip.value
+        ? tripDraftSnapshot(editTrip.value)
+        : tripDraftSnapshot(newTrip.value);
+    return current !== tripFormSnapshot.value;
+  }
+
   function backToTripsList(): void {
     editTrip.value = null;
     editDestinations.value = [];
     newTrip.value = emptyTripDraft();
     destinations.value = [];
     tripsView.value = 'list';
+    tripFormSnapshot.value = '';
+  }
+
+  async function requestBackToTripsList(): Promise<boolean> {
+    if (tripsView.value !== 'list' && !(await proceedIfDiscardAllowed(isTripFormDirty()))) {
+      return false;
+    }
+    backToTripsList();
+    return true;
   }
 
   function backToStoptimesList(): void {
     selectedServiceId.value = 0;
     stoptimesView.value = 'list';
+  }
+
+  async function requestBackToStoptimesList(): Promise<boolean> {
+    return (await stoptimesPanelRef.value?.requestBackToList()) ?? true;
+  }
+
+  async function leaveActiveSubView(): Promise<boolean> {
+    if (tab.value === 'trips' && tripsView.value !== 'list') {
+      return requestBackToTripsList();
+    }
+    if (tab.value === 'stoptimes' && stoptimesView.value === 'detail') {
+      return requestBackToStoptimesList();
+    }
+    if (tab.value === 'deviations') {
+      return (await deviationsTabRef.value?.requestBackToList()) ?? true;
+    }
+    return true;
+  }
+
+  async function switchTab(next: TimetableEditorTab): Promise<void> {
+    if (tab.value === next) {
+      return;
+    }
+    if (!(await leaveActiveSubView())) {
+      return;
+    }
+    tab.value = next;
   }
 
   function startCreateTrip(): void {
@@ -149,6 +210,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
     newTrip.value = emptyTripDraft();
     destinations.value = [];
     tripsView.value = 'create';
+    tripFormSnapshot.value = tripDraftSnapshot(newTrip.value);
   }
 
   async function onStoptimesGridToggle(event: Event): Promise<void> {
@@ -166,13 +228,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
     }
   }
 
-  watch(tab, async (t, prev) => {
-    if (prev === 'trips' && t !== 'trips') {
-      backToTripsList();
-    }
-    if (prev === 'stoptimes' && t !== 'stoptimes') {
-      backToStoptimesList();
-    }
+  watch(tab, async (t) => {
     if (t === 'preview' && !overview.value) {
       try {
         await loadOverview();
@@ -225,12 +281,13 @@ export function useTimetableEditorPage(timetableId: () => number) {
       highlight_color: service.highlight_color || '#fff9c4',
       highlight_note: service.highlight_note ?? '',
     };
+    tripFormSnapshot.value = tripDraftSnapshot(editTrip.value);
     tripsView.value = 'edit';
     await loadEditDestinations(service.route_id);
   }
 
-  function cancelEditTrip(): void {
-    backToTripsList();
+  async function cancelEditTrip(): Promise<void> {
+    await requestBackToTripsList();
   }
 
   async function saveEditTrip(): Promise<void> {
@@ -318,9 +375,16 @@ export function useTimetableEditorPage(timetableId: () => number) {
   }
 
   function openStoptimes(serviceId: number) {
-    selectedServiceId.value = serviceId;
-    stoptimesView.value = 'detail';
-    tab.value = 'stoptimes';
+    void (async () => {
+      if (tab.value === 'trips' && tripsView.value !== 'list') {
+        if (!(await requestBackToTripsList())) {
+          return;
+        }
+      }
+      selectedServiceId.value = serviceId;
+      stoptimesView.value = 'detail';
+      tab.value = 'stoptimes';
+    })();
   }
 
   function onMobileSaved(message: string) {
@@ -341,6 +405,8 @@ export function useTimetableEditorPage(timetableId: () => number) {
     editDestinations,
     tripsView,
     stoptimesView,
+    stoptimesPanelRef,
+    deviationsTabRef,
     selectedServiceId,
     gridOverviewLoading,
     deviationRows,
@@ -359,6 +425,10 @@ export function useTimetableEditorPage(timetableId: () => number) {
     onStoptimesGridToggle,
     loadEditDestinations,
     startCreateTrip,
+    requestBackToTripsList,
+    requestBackToStoptimesList,
+    switchTab,
+    leaveActiveSubView,
     backToTripsList,
     backToStoptimesList,
     startEditTrip,

@@ -20,7 +20,11 @@ function MRT_admin_vue_l10n_editor_deviations(): array {
 			'Osparade avvikelser — klicka «Spara avvikelser».',
 			'museum-railway-timetable'
 		),
-		'editorDeviationsEmpty'     => __( 'Inga avvikelser ännu. Välj datum och tur nedan.', 'museum-railway-timetable' ),
+		'editorDeviationsEmpty'     => __(
+			'Inga avvikelser ännu. Lägg till med knappen nedan.',
+			'museum-railway-timetable'
+		),
+		'editorEditDeviation'       => __( 'Redigera avvikelse', 'museum-railway-timetable' ),
 		'editorAddDeviation'        => __( 'Lägg till avvikelse', 'museum-railway-timetable' ),
 		'editorDeviationDatePrompt' => __( '— Datum —', 'museum-railway-timetable' ),
 		'editorColDate'             => __( 'Datum', 'museum-railway-timetable' ),

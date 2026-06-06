@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed, ref, type ComponentPublicInstance } from 'vue';
 import {
   AdminBackNav,
   AdminPanel,
@@ -7,7 +8,7 @@ import {
 } from './ui';
 import StopTimesEditor from './StopTimesEditor.vue';
 import EditableTimetableOverview from './EditableTimetableOverview.vue';
-import { computed } from 'vue';
+import { proceedIfDiscardAllowed } from '../composables/adminDiscardGuard';
 import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 import type { TimetableDetail } from '../types';
@@ -34,6 +35,25 @@ const emit = defineEmits<{
 }>();
 
 const cfg = adminConfig();
+const stopTimesRef = ref<ComponentPublicInstance<{ getIsDirty: () => boolean }> | null>(null);
+
+async function tryLeaveDetail(): Promise<boolean> {
+  if (props.viewMode === 'list') {
+    return true;
+  }
+  const dirty = stopTimesRef.value?.getIsDirty() ?? false;
+  if (dirty && !(await proceedIfDiscardAllowed(true))) {
+    return false;
+  }
+  emit('back');
+  return true;
+}
+
+defineExpose({ requestBackToList: tryLeaveDetail });
+
+async function onBack(): Promise<void> {
+  await tryLeaveDetail();
+}
 
 const selectedTripLabel = computed(() => {
   const service = props.detail.services.find((row) => row.id === selectedServiceId.value);
@@ -79,9 +99,13 @@ const selectedTripLabel = computed(() => {
     </template>
 
     <template v-else>
-      <AdminBackNav @back="emit('back')" />
+      <AdminBackNav @back="onBack" />
       <p class="description mrt-admin-stoptimes-trip-label">{{ selectedTripLabel }}</p>
-      <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
+      <StopTimesEditor
+        v-if="selectedServiceId"
+        ref="stopTimesRef"
+        :service-id="selectedServiceId"
+      />
     </template>
 
     <details class="mrt-mt-sm mrt-admin-stoptimes-grid" @toggle="emit('gridToggle', $event)">

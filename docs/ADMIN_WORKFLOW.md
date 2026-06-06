@@ -4,6 +4,18 @@ Steg-för-steg i **Vue-admin** under **Tidtabell** i WordPress (`admin.php?page=
 
 **Navigation:** på desktop används WordPress vänstermeny (Översikt → Stationer & rutter → Tidtabeller → …). På smal skärm visas även flikar i appen.
 
+## List ↔ detalj
+
+De flesta entitetslistor visar **en vy i taget**:
+
+- **Lista** – översikt med knappar för redigera / lägg till
+- **Detalj** – formulär för en post; **Tillbaka till listan** återgår till listan
+- Osparade ändringar i detaljvyn → bekräftelsedialog innan tillbaka (turer, rutter, tågtyper, stopptider m.m.)
+
+Undantag: **stationer** redigeras fortfarande inline i tabellen. **Inställningar** och **priser** är enkla formulär/spreadsheet utan list↔detalj.
+
+---
+
 ## Översikt
 
 För en fungerande tidtabell behöver du:
@@ -19,7 +31,7 @@ För en fungerande tidtabell behöver du:
 
 ## Steg 1: Stationer
 
-**Meny:** Railway Timetable → **Stationer & rutter** (`#/stations-routes`)
+**Meny:** Railway Timetable → **Stationer & rutter** (`#/stations-routes`) → fliken **Stationer**
 
 1. Skriv stationsnamn i fältet **Ny station** och klicka **Lägg till**
 2. Redigera i tabellen: **Namn**, **Typ**, **Lat/Lng** (valfritt, för karta), **Buss** (suffix i visning), **Ordning**
@@ -29,13 +41,12 @@ För en fungerande tidtabell behöver du:
 
 ## Steg 2: Rutter
 
-**Samma sida** – panelen **Rutter**
+**Samma sida** – fliken **Rutter**
 
-1. Skapa rutt med **Ny rutt** → **Lägg till**
-2. Klicka **Redigera** på en rutt
-3. Lägg till stationer i ordning med dropdown **Lägg till station…** → **Lägg till**
-4. Ordna med **↑** / **↓**, ta bort med **×**
-5. **Spara rutt**
+1. Klicka **Ny rutt** i listan
+2. Ange namn och valfria stationer/ändpunkter → **Lägg till**
+3. För befintlig rutt: **Redigera** → ändra namn och stationer → **Spara rutt**
+4. **Tillbaka till listan** avbryter utan att lämna sidan (bekräftelse om du ändrat något)
 
 Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 
@@ -45,8 +56,9 @@ Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 
 **Meny:** **Tågtyper** (`#/train-types`)
 
-1. Fyll i namn, slug (valfritt) och ikon
-2. **Lägg till** eller **Spara** på befintlig rad
+1. Klicka **Skapa tågtyp** (listan)
+2. Fyll i namn, slug (valfritt) och ikon → **Skapa tågtyp**
+3. Befintlig typ: **Redigera** → **Spara** eller **Tillbaka till listan**
 
 ---
 
@@ -54,7 +66,7 @@ Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 
 **Meny:** **Tidtabeller** (`#/timetables`)
 
-1. Ange namn under **Ny tidtabell** → **Skapa**
+1. Klicka **Ny tidtabell** → ange namn och typ → **Skapa**
 2. I editorn: **Titel** och **Typ (färg i översikt)** → **Spara namn och typ**
 3. Fliken **Trafikdagar**: lägg till datum → **Spara**
 
@@ -64,8 +76,10 @@ Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 
 **Fliken Turer** i tidtabellseditorn
 
-1. Välj **Rutt**, **Tågtyp** (valfritt) och **Destination**
-2. **Lägg till tur**
+1. Klicka **Lägg till tur** (listan)
+2. Välj **Rutt**, **Tågtyp** (valfritt) och **Destination** → **Lägg till tur**
+3. Befintlig tur: **Redigera** → **Spara tur** eller **Tillbaka till listan**
+4. **Stopptider** på en rad hoppar till stopptidsfliken för den turen
 
 ---
 
@@ -73,8 +87,11 @@ Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 
 **Fliken Stopptider**
 
-- **Rutnät:** klicka i celler för att ändra tid, stannar och P/A (passagerare på/av)
-- **Tabellvy:** välj tur under *Tabellvy för en tur* → redigera → **Spara stopptider**
+1. Listan visar alla turer – klicka **Stopptider** på en rad
+2. Redigera tider och hållplatser → **Spara stopptider**
+3. **Tillbaka till listan** (bekräftelse om osparade tider)
+
+**Rutnät** (hopfällbart under editorn): klicka i celler för att ändra tid, stannar och P/A (passagerare på/av).
 
 **Fliken Förhandsvisning** visar samma översikt som på webbplatsen (read-only).
 
@@ -84,9 +101,9 @@ Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 
 **Fliken Avvikelser** (desktop) eller mobilpanelen i editorn:
 
-- Byt **tågtyp** eller **meddelande** för ett visst datum och tur
-- Kryssa i **Inställt tåg** för en enskild inställd avgång (sätter meddelandet «Inställd»)
-- **Spara avvikelser**
+1. Klicka **Lägg till avvikelse** eller **Redigera** på en rad
+2. Välj datum och tur (vid ny), **tågtyp**, **Inställt tåg** och **Meddelande**
+3. **Spara** i detaljvyn uppdaterar listan (minne); **Spara avvikelser** skickar till servern
 
 Inställda turer **visas kvar** i tidtabell och reseplanerare med tydlig markering (genomstrukna tider, badge «Inställd»). Reseplaneraren låter inte välja en inställd tur.
 
