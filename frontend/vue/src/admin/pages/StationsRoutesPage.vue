@@ -13,6 +13,7 @@ import {
 import type { RouteRow, StationRow } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import {
+  AdminDisclosure,
   AdminEmptyState,
   AdminFlashRow,
   AdminFormActions,
@@ -45,7 +46,20 @@ const stations = ref<StationRow[]>([]);
 const routes = ref<RouteRow[]>([]);
 const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 const { flashRow, isFlashed } = useAdminRowFlash();
-const newStationTitle = ref('');
+function emptyStationDraft(): StationRow {
+  return {
+    id: 0,
+    title: '',
+    station_type: '',
+    bus_suffix: false,
+    lat: '',
+    lng: '',
+    display_order: 0,
+    price_zones: [],
+  };
+}
+
+const newStation = ref<StationRow>(emptyStationDraft());
 const newRouteTitle = ref('');
 const sectionTab = ref<'stations' | 'routes'>('stations');
 const editingRoute = ref<RouteRow | null>(null);
@@ -85,9 +99,18 @@ const stationsById = computed(
 );
 
 async function addStation() {
-  if (!cfg.canManage || !newStationTitle.value.trim()) return;
-  await createStation({ title: newStationTitle.value.trim() });
-  newStationTitle.value = '';
+  const draft = newStation.value;
+  if (!cfg.canManage || !draft.title.trim()) return;
+  await createStation({
+    title: draft.title.trim(),
+    station_type: draft.station_type || undefined,
+    lat: draft.lat || undefined,
+    lng: draft.lng || undefined,
+    bus_suffix: draft.bus_suffix,
+    display_order: draft.display_order || undefined,
+    price_zones: draft.price_zones,
+  });
+  newStation.value = emptyStationDraft();
   await reload();
 }
 
@@ -243,17 +266,73 @@ async function removeRoute(route: RouteRow) {
 
     <AdminPanel v-if="sectionTab === 'stations'">
       <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabStations') }}</h2>
-      <AdminInlineForm v-if="cfg.canManage">
-        <input
-          v-model="newStationTitle"
-          type="text"
-          class="regular-text"
-          :placeholder="adminStr(cfg, 'stationsNewStation')"
-        />
-        <MrtButton context="admin" variant="primary" @click="addStation">
-          {{ adminStr(cfg, 'add') }}
-        </MrtButton>
-      </AdminInlineForm>
+      <div v-if="cfg.canManage" class="mrt-admin-station-create">
+        <AdminInlineForm>
+          <input
+            v-model="newStation.title"
+            type="text"
+            class="regular-text"
+            :placeholder="adminStr(cfg, 'stationsNewStation')"
+          />
+          <MrtButton context="admin" variant="primary" @click="addStation">
+            {{ adminStr(cfg, 'add') }}
+          </MrtButton>
+        </AdminInlineForm>
+        <AdminDisclosure :summary="adminStr(cfg, 'stationsCreateMoreFields')">
+          <div class="mrt-admin-station-create__fields">
+            <p>
+              <label for="mrt-new-st-type">{{ adminStr(cfg, 'stationsColType') }}</label>
+              <select id="mrt-new-st-type" v-model="newStation.station_type">
+                <option value="">—</option>
+                <option value="station">{{ adminStr(cfg, 'stationsTypeStation') }}</option>
+                <option value="halt">{{ adminStr(cfg, 'stationsTypeHalt') }}</option>
+                <option value="depot">{{ adminStr(cfg, 'stationsTypeDepot') }}</option>
+                <option value="museum">{{ adminStr(cfg, 'stationsTypeMuseum') }}</option>
+              </select>
+            </p>
+            <p>
+              <label for="mrt-new-st-lat">{{ adminStr(cfg, 'stationsColLat') }}</label>
+              <input id="mrt-new-st-lat" v-model="newStation.lat" type="text" class="small-text" />
+            </p>
+            <p>
+              <label for="mrt-new-st-lng">{{ adminStr(cfg, 'stationsColLng') }}</label>
+              <input id="mrt-new-st-lng" v-model="newStation.lng" type="text" class="small-text" />
+            </p>
+            <p>
+              <label>
+                <input v-model="newStation.bus_suffix" type="checkbox" />
+                {{ adminStr(cfg, 'stationsColBus') }}
+              </label>
+            </p>
+            <p>
+              <span class="label">{{ adminStr(cfg, 'stationsColZones') }}</span>
+              <span class="mrt-admin-zone-picks">
+                <label
+                  v-for="zone in STATION_PRICE_ZONE_OPTIONS"
+                  :key="`new-${zone}`"
+                  class="mrt-admin-zone-picks__item"
+                >
+                  <input
+                    type="checkbox"
+                    :checked="stationHasPriceZone(newStation, zone)"
+                    @change="toggleStationPriceZone(newStation, zone)"
+                  />
+                  {{ zone }}
+                </label>
+              </span>
+            </p>
+            <p>
+              <label for="mrt-new-st-order">{{ adminStr(cfg, 'stationsColOrder') }}</label>
+              <input
+                id="mrt-new-st-order"
+                v-model.number="newStation.display_order"
+                type="number"
+                class="small-text"
+              />
+            </p>
+          </div>
+        </AdminDisclosure>
+      </div>
       <AdminEmptyState
         v-if="!stations.length"
         :title="adminStr(cfg, 'stationsEmptyStationsTitle')"

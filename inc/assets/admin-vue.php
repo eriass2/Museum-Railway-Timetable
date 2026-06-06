@@ -65,6 +65,7 @@ function MRT_admin_vue_l10n_nav(): array {
 		'navOverview'        => __( 'Översikt', 'museum-railway-timetable' ),
 		'navStationsRoutes'  => __( 'Stationer & rutter', 'museum-railway-timetable' ),
 		'navTimetables'      => __( 'Tidtabeller', 'museum-railway-timetable' ),
+		'navShortcodes'      => __( 'Shortcodes', 'museum-railway-timetable' ),
 		'navHelp'            => __( 'Hjälp', 'museum-railway-timetable' ),
 		'navTrainTypes'      => __( 'Tågtyper', 'museum-railway-timetable' ),
 		'navSettings'        => __( 'Inställningar', 'museum-railway-timetable' ),
@@ -161,6 +162,7 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsTabStations'        => __( 'Stationer', 'museum-railway-timetable' ),
 		'stationsTabRoutes'          => __( 'Rutter', 'museum-railway-timetable' ),
 		'stationsNewStation'         => __( 'Ny station', 'museum-railway-timetable' ),
+		'stationsCreateMoreFields'   => __( 'Fler uppgifter (valfritt)', 'museum-railway-timetable' ),
 		'stationsNewRoute'           => __( 'Ny rutt', 'museum-railway-timetable' ),
 		'stationsEmptyStationsTitle' => __( 'Inga stationer', 'museum-railway-timetable' ),
 		'stationsEmptyStationsMsg'   => __( 'Lägg till din första station ovan.', 'museum-railway-timetable' ),
@@ -293,8 +295,20 @@ function MRT_admin_vue_l10n_import_export(): array {
 		'importExportIncludeSettings'  => __( 'Inkludera inställningar', 'museum-railway-timetable' ),
 		'importExportIncludePrices'    => __( 'Inkludera priser', 'museum-railway-timetable' ),
 		'importExportDownloadButton'   => __( 'Ladda ner export', 'museum-railway-timetable' ),
-		'importExportImportTitle'      => __( 'Importera CSV (zip)', 'museum-railway-timetable' ),
-		'importExportImportHint'       => __( 'Se docs/CSV_FORMAT.md för kolumnformat.', 'museum-railway-timetable' ),
+		'importExportTemplateButton'   => __( 'Ladda ner tom mall', 'museum-railway-timetable' ),
+		'importExportTemplateHint'     => __(
+			'Zip med alla CSV-filer och kolumnrubriker — fyll i raderna och ladda upp igen.',
+			'museum-railway-timetable'
+		),
+		'importExportTemplateSuccess'  => __( 'Mall nedladdad.', 'museum-railway-timetable' ),
+		'importExportTemplateFailed'   => __( 'Kunde inte ladda ner mall', 'museum-railway-timetable' ),
+		'importExportImportTitle'      => __( 'Importera zip', 'museum-railway-timetable' ),
+		'importExportImportHint'       => __(
+			'Ladda upp zip med CSV-filer. manifest.json är valfri. Vid fel visas fil och radnummer.',
+			'museum-railway-timetable'
+		),
+		'importExportModeMergeShort'   => __( 'Rekommenderas — uppdaterar det som finns i filen och behåller övrig data.', 'museum-railway-timetable' ),
+		'importExportAdvancedMode'     => __( 'Avancerat importläge', 'museum-railway-timetable' ),
 		'importExportModeMerge'        => __( 'Slå ihop (uppdatera befintlig data)', 'museum-railway-timetable' ),
 		'importExportModeOverride'     => __( 'Ersätt (ta bort poster som saknas i filen)', 'museum-railway-timetable' ),
 		'importExportExportSuccess'    => __( 'Export klar.', 'museum-railway-timetable' ),
@@ -378,6 +392,7 @@ function MRT_admin_vue_client_config(): array {
 			'trainTypeIconUrls'  => MRT_train_type_icon_urls(),
 			'strings'            => MRT_admin_vue_script_localization(),
 			'help'               => MRT_admin_vue_help_content(),
+			'importExportGuide'  => MRT_admin_vue_import_export_guide(),
 		)
 	);
 	if ( MRT_is_development_mode() && function_exists( 'MRT_components_demo_menu_slug' ) ) {

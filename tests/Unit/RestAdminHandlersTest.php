@@ -100,6 +100,31 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertSame( '', get_post_meta( 9, MRT_station_price_zones_meta_key(), true ) );
 	}
 
+	public function test_create_station_handler_applies_optional_meta(): void {
+		$request = new WP_REST_Request( 'POST', '/stations' );
+		$request->set_json_params(
+			array(
+				'title'         => 'Faringe',
+				'station_type'  => 'halt',
+				'lat'           => '57.48',
+				'lng'           => '15.82',
+				'bus_suffix'    => true,
+				'display_order' => 5,
+				'price_zones'   => array( 1, 2 ),
+			)
+		);
+
+		$result = MRT_rest_create_station_handler( $request );
+
+		self::assertIsArray( $result );
+		$data = $result;
+		self::assertSame( 'Faringe', $data['title'] );
+		self::assertSame( 'halt', $data['station_type'] );
+		self::assertSame( '57.48', $data['lat'] );
+		self::assertTrue( $data['bus_suffix'] );
+		self::assertSame( array( 1, 2 ), $data['price_zones'] );
+	}
+
 	public function test_create_station_handler_rejects_empty_title(): void {
 		$request = new WP_REST_Request( 'POST', '/stations' );
 		$request->set_json_params( array() );

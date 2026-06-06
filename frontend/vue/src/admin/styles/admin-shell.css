@@ -89,6 +89,14 @@
   margin-top: 0;
 }
 
+.mrt-admin-station-create {
+  margin-bottom: 12px;
+}
+
+.mrt-admin-station-create__fields p {
+  margin: 8px 0;
+}
+
 .mrt-admin-stations-table input.small-text {
   min-width: 5.5em;
   width: 5.5em;
@@ -514,6 +522,60 @@
 
 .mrt-admin-shortcode__params code {
   white-space: nowrap;
+}
+
+.mrt-admin-shortcodes-quick {
+  margin-top: 12px;
+}
+
+.mrt-admin-shortcodes-quick code {
+  white-space: nowrap;
+}
+
+.mrt-admin-import-error {
+  white-space: pre-line;
+}
+
+.mrt-admin-import-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mrt-admin-import-export-options {
+  margin: 12px 0 0;
+}
+
+.mrt-admin-import-files {
+  margin-top: 12px;
+}
+
+.mrt-admin-import-files code {
+  white-space: nowrap;
+}
+
+.mrt-admin-import-docs {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+
+.mrt-admin-import-warning {
+  margin-bottom: 0;
+  color: #996800;
+}
+
+.mrt-admin-page__lead {
+  margin: -4px 0 20px;
+  max-width: 52rem;
+  color: #50575e;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 .mrt-admin-help-table {
