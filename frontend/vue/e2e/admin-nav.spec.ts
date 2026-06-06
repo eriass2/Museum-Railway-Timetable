@@ -31,6 +31,7 @@ test.describe('AdminNav integration (static mount)', () => {
     const steps = [
       { tab: 'Stationer', hash: '#/stations-routes', heading: /stationer & rutter/i },
       { tab: 'Tidtabeller', hash: '#/timetables', heading: /^tidtabeller$/i },
+      { tab: 'Shortcodes', hash: '#/shortcodes', heading: /^shortcodes$/i },
       { tab: 'Hjälp', hash: '#/help', heading: /^hjälp$/i },
       { tab: 'Priser', hash: '#/prices', heading: /^priser$/i },
       { tab: 'Översikt', hash: '#/dashboard', heading: DASHBOARD_HEADING },

@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { adminConfig } from '../types';
-import { AdminPanel } from '../components/ui';
+import { AdminPanel, MrtButton } from '../components/ui';
+
+const router = useRouter();
 
 const cfg = adminConfig();
 const help = computed(() => {
@@ -24,6 +27,10 @@ function faqAnswer(item: (typeof help.value.faq)[number]): string {
     return item.aEditor;
   }
   return item.a;
+}
+
+function openShortcodesGuide() {
+  void router.push('/shortcodes');
 }
 </script>
 
@@ -79,36 +86,10 @@ function faqAnswer(item: (typeof help.value.faq)[number]): string {
     </AdminPanel>
 
     <AdminPanel :title="help.panelShortcodes">
-      <p>{{ help.shortcodesIntro }}</p>
-      <p v-if="cfg.isDevMode" class="description">{{ help.shortcodesDevHint }}</p>
-
-      <article
-        v-for="sc in help.shortcodes"
-        :key="sc.tag"
-        class="mrt-admin-shortcode"
-      >
-        <h3>{{ sc.title }}</h3>
-        <p><code>[{{ sc.tag }}]</code></p>
-        <p>{{ sc.summary }}</p>
-        <p class="mrt-admin-shortcode__example">
-          <strong>{{ help.shortcodeExample }}</strong>
-          <code>{{ sc.example }}</code>
-        </p>
-        <table v-if="sc.params.length" class="widefat striped mrt-admin-shortcode__params">
-          <thead>
-            <tr>
-              <th>{{ help.paramName }}</th>
-              <th>{{ help.colDescription }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="param in sc.params" :key="param.name">
-              <td><code>{{ param.name }}</code></td>
-              <td>{{ param.desc }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </article>
+      <p>{{ help.helpLinkToShortcodes }}</p>
+      <MrtButton context="admin" variant="secondary" @click="openShortcodesGuide">
+        {{ help.shortcodesPageTitle }}
+      </MrtButton>
     </AdminPanel>
 
     <AdminPanel :title="help.panelFaq">

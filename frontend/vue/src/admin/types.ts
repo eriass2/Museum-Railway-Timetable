@@ -48,6 +48,56 @@ export type AdminHelpContent = {
   operations: { title: string; body: string }[];
   shortcodes: AdminHelpShortcode[];
   faq: AdminHelpFaqItem[];
+  shortcodesPageTitle: string;
+  shortcodesPageIntro: string;
+  shortcodesHowToTitle: string;
+  shortcodesHowToSteps: string[];
+  shortcodesQuickRefTitle: string;
+  shortcodesQuickRefHint: string;
+  shortcodesColShortcode: string;
+  shortcodesColUse: string;
+  shortcodesSetupTitle: string;
+  shortcodesSetupSteps: string[];
+  shortcodesWidgetTitle: string;
+  shortcodesWidgetNote: string;
+  helpLinkToShortcodes: string;
+};
+
+export type AdminImportExportPackageFile = {
+  file: string;
+  required: boolean;
+  desc: string;
+};
+
+export type AdminImportExportGuide = {
+  intro: string;
+  buildTitle: string;
+  buildSteps: string[];
+  packageTitle: string;
+  packageHint: string;
+  colFile: string;
+  colRequired: string;
+  colDescription: string;
+  requiredYes: string;
+  requiredNo: string;
+  packageFiles: AdminImportExportPackageFile[];
+  orderTitle: string;
+  orderHint: string;
+  orderSteps: string[];
+  keysTitle: string;
+  keysIntro: string;
+  keysTips: string[];
+  modesTitle: string;
+  modeMergeDetail: string;
+  modeOverrideDetail: string;
+  modeOverrideWarning: string;
+  tipsTitle: string;
+  tips: string[];
+  docsNote: string;
+  workflowTitle: string;
+  workflowSteps: string[];
+  manifestAutoNote: string;
+  guideDisclosureSummary: string;
 };
 
 export type AdminClientConfig = {
@@ -62,6 +112,7 @@ export type AdminClientConfig = {
   componentDemoAdminUrl?: string;
   strings?: Record<string, string>;
   help?: AdminHelpContent;
+  importExportGuide?: AdminImportExportGuide;
 };
 
 export type DashboardWarning = {
@@ -100,6 +151,7 @@ export type TimetableServiceRow = {
   id: number;
   title: string;
   service_number: string;
+  end_station_id?: number;
   route_id: number;
   route_name: string;
   train_type_id: number;

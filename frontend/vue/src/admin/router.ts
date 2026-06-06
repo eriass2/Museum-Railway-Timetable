@@ -9,6 +9,7 @@ import TrainTypesPage from './pages/TrainTypesPage.vue';
 import ImportExportPage from './pages/ImportExportPage.vue';
 import DevToolsPage from './pages/DevToolsPage.vue';
 import HelpPage from './pages/HelpPage.vue';
+import ShortcodesPage from './pages/ShortcodesPage.vue';
 import { adminConfig } from './types';
 
 export function createAdminRouter(initialRoute: string) {
@@ -32,6 +33,7 @@ export function createAdminRouter(initialRoute: string) {
     { path: '/prices', component: PricesPage, name: 'prices' },
     { path: '/train-types', component: TrainTypesPage, name: 'train-types' },
     { path: '/import-export', component: ImportExportPage, name: 'import-export' },
+    { path: '/shortcodes', component: ShortcodesPage, name: 'shortcodes' },
     { path: '/help', component: HelpPage, name: 'help' },
   ];
   if (cfg.isDevMode) {
@@ -51,6 +53,7 @@ export function createAdminRouter(initialRoute: string) {
     prices: '/prices',
     'train-types': '/train-types',
     'import-export': '/import-export',
+    shortcodes: '/shortcodes',
     'dev-tools': '/dev-tools',
     help: '/help',
   };

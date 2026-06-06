@@ -13,6 +13,7 @@ const tabs = computed(() => {
     { to: '/dashboard', label: adminStr(cfg, 'navOverview', 'Översikt') },
     { to: '/stations-routes', label: adminStr(cfg, 'navStationsRoutes', 'Stationer & rutter') },
     { to: '/timetables', label: adminStr(cfg, 'navTimetables', 'Tidtabeller') },
+    { to: '/shortcodes', label: adminStr(cfg, 'navShortcodes', 'Shortcodes') },
     { to: '/help', label: adminStr(cfg, 'navHelp', 'Hjälp') },
   ];
   if (cfg.canManage) {

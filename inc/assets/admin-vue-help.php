@@ -63,6 +63,31 @@ function MRT_admin_vue_help_content(): array {
 			'Mer detaljer om shortcodes, CSV och utvecklingsverktyg finns i docs/SHORTCODES.md och övriga filer under docs/.',
 			'museum-railway-timetable'
 		),
+		'shortcodesPageTitle'    => __( 'Shortcodes', 'museum-railway-timetable' ),
+		'shortcodesPageIntro'    => __(
+			'Shortcodes visar tidtabellsdata på webbplatsen. Lägg in dem på WordPress-sidor så besökare kan se listor, tidtabeller, kalender och söka resor.',
+			'museum-railway-timetable'
+		),
+		'shortcodesHowToTitle'   => __( 'Så här lägger du in en shortcode', 'museum-railway-timetable' ),
+		'shortcodesHowToSteps'   => MRT_admin_vue_help_shortcodes_howto_steps(),
+		'shortcodesQuickRefTitle' => __( 'Snabböversikt', 'museum-railway-timetable' ),
+		'shortcodesQuickRefHint' => __(
+			'Alla fyra publika shortcodes. Klicka vidare i avsnittet nedan för parametrar och exempel.',
+			'museum-railway-timetable'
+		),
+		'shortcodesColShortcode' => __( 'Shortcode', 'museum-railway-timetable' ),
+		'shortcodesColUse'       => __( 'Typisk användning', 'museum-railway-timetable' ),
+		'shortcodesSetupTitle'   => __( 'Rekommenderad sidstruktur', 'museum-railway-timetable' ),
+		'shortcodesSetupSteps'   => MRT_admin_vue_help_shortcodes_setup_steps(),
+		'shortcodesWidgetTitle'  => __( 'Widgets och block', 'museum-railway-timetable' ),
+		'shortcodesWidgetNote'   => __(
+			'Shortcodes fungerar i WordPress text-widget, «Anpassad HTML»-block och klassisk redigerare. Det finns inga färdiga Gutenberg-block — klistra in shortcoden som text.',
+			'museum-railway-timetable'
+		),
+		'helpLinkToShortcodes'   => __(
+			'Parametrar, exempel och rekommenderad sidstruktur finns i guiden under menyn Shortcodes.',
+			'museum-railway-timetable'
+		),
 		'adminSections'      => MRT_admin_vue_help_admin_sections(),
 		'workflowSteps'      => MRT_admin_vue_help_workflow_steps(),
 		'operations'         => MRT_admin_vue_help_operations(),
@@ -124,7 +149,7 @@ function MRT_admin_vue_help_admin_sections(): array {
 		array(
 			'title'     => __( 'Import / export', 'museum-railway-timetable' ),
 			'body'      => __(
-				'Säkerhetskopiera eller flytta all data som CSV i zip. Välj slå ihop eller ersätt vid import.',
+				'Säkerhetskopiera eller flytta all data som CSV i zip. Sidan har steg-för-steg-guide för att bygga importpaket.',
 				'museum-railway-timetable'
 			),
 			'adminOnly' => true,
@@ -183,6 +208,32 @@ function MRT_admin_vue_help_operations(): array {
 				'museum-railway-timetable'
 			),
 		),
+	);
+}
+
+/**
+ * @return list<string>
+ */
+function MRT_admin_vue_help_shortcodes_howto_steps(): array {
+	return array(
+		__( 'Skapa eller redigera en sida under Sidor i WordPress.', 'museum-railway-timetable' ),
+		__( 'Lägg till ett «Anpassad HTML»-block (blockredigeraren) eller klistra in shortcoden i klassisk redigerare.', 'museum-railway-timetable' ),
+		__( 'Kopiera shortcoden från tabellen nedan — t.ex. [museum_timetable_overview timetable_id="123"].', 'museum-railway-timetable' ),
+		__( 'Ersätt timetable_id med ID från tidtabellseditorns URL (siffran efter /timetables/).', 'museum-railway-timetable' ),
+		__( 'Publicera sidan och kontrollera att tidtabellen visas som i förhandsvisningen i admin.', 'museum-railway-timetable' ),
+	);
+}
+
+/**
+ * @return list<string>
+ */
+function MRT_admin_vue_help_shortcodes_setup_steps(): array {
+	return array(
+		__( 'Indexsida med [museum_timetable_index] — länkar till alla tidtabeller.', 'museum-railway-timetable' ),
+		__( 'En sida per tidtabell med [museum_timetable_overview timetable_id="…"] — hela rutnätet.', 'museum-railway-timetable' ),
+		__( 'Valfritt: månadskalender [museum_timetable_month] på samma sida eller separat.', 'museum-railway-timetable' ),
+		__( 'Valfritt: reseplanerare [museum_journey_wizard] med länk till tidtabellssidan.', 'museum-railway-timetable' ),
+		__( 'I utvecklingsläge: Utvecklingsverktyg → Skapa/uppdatera tidtabellssidor skapar sidorna automatiskt.', 'museum-railway-timetable' ),
 	);
 }
 
@@ -352,7 +403,7 @@ function MRT_admin_vue_help_faq_items(): array {
 		array(
 			'q' => __( 'Hur importerar jag data?', 'museum-railway-timetable' ),
 			'a' => __(
-				'Gå till Import / export. CSV zip kan slås samman med befintlig data eller ersätta den. I utvecklingsläge finns även Lennakatten-demo under Utvecklingsverktyg.',
+				'Gå till Import / export — sidan beskriver steg för steg hur du bygger zip-paketet. CSV zip kan slås samman med befintlig data eller ersätta den. I utvecklingsläge finns även Lennakatten-demo under Utvecklingsverktyg.',
 				'museum-railway-timetable'
 			),
 			'aEditor' => __(
@@ -363,7 +414,7 @@ function MRT_admin_vue_help_faq_items(): array {
 		array(
 			'q' => __( 'Var syns tidtabellen på webbplatsen?', 'museum-railway-timetable' ),
 			'a' => __(
-				'Via shortcodes på WordPress-sidor — se avsnittet Shortcodes nedan. I utvecklingsläge kan du synka färdiga sidor under Utvecklingsverktyg.',
+				'Via shortcodes på WordPress-sidor — se fliken Shortcodes i menyn. I utvecklingsläge kan du synka färdiga sidor under Utvecklingsverktyg.',
 				'museum-railway-timetable'
 			),
 		),
