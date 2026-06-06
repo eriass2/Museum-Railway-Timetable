@@ -2,8 +2,11 @@ import { describe, expect, it } from 'vitest';
 import type { PricesPayload } from '../src/admin/api/adminRest';
 import {
   buildAdminPricePreviewTrip,
+  effectivePricingZones,
+  hasMatrixZonesBeyondCap,
   priceMatrixHasAnyValue,
   priceMatrixRowForZone,
+  resolvePricingZone,
 } from '../src/admin/utils/adminPricePreview';
 
 describe('adminPricePreview', () => {
@@ -52,6 +55,25 @@ describe('adminPricePreview', () => {
       adult: 110,
       child_4_15: 30,
     });
+    expect(resolvePricingZone(payload, 9)).toBe(2);
+  });
+
+  it('lists effective pricing zones up to zone_cap', () => {
+    expect(effectivePricingZones(payload)).toEqual([1, 2]);
+    expect(
+      hasMatrixZonesBeyondCap({
+        ...payload,
+        zones: [1, 2, 3, 4],
+        zone_cap: 3,
+      }),
+    ).toBe(true);
+    expect(
+      effectivePricingZones({
+        ...payload,
+        zones: [1, 2, 3, 4],
+        zone_cap: 3,
+      }),
+    ).toEqual([1, 2, 3]);
   });
 
   it('builds afternoon return preview', () => {

@@ -2,9 +2,11 @@
 import { computed } from 'vue';
 import { adminConfig } from '../types';
 import AdminShortcodesGuide from '../components/AdminShortcodesGuide.vue';
-import { AdminPanel } from '../components/ui';
+import { AdminPanel, AdminTableScroll } from '../components/ui';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 const help = computed(() => {
   if (!cfg.help) {
     throw new Error('mrtAdminVue.help config missing');
@@ -14,7 +16,7 @@ const help = computed(() => {
 </script>
 
 <template>
-  <div class="mrt-admin-page">
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ help.shortcodesPageTitle }}</h1>
     <p class="mrt-admin-page__lead">{{ help.shortcodesPageIntro }}</p>
 
@@ -26,22 +28,24 @@ const help = computed(() => {
 
     <AdminPanel :title="help.shortcodesQuickRefTitle">
       <p class="description">{{ help.shortcodesQuickRefHint }}</p>
-      <table class="widefat striped mrt-admin-shortcodes-quick">
-        <thead>
-          <tr>
-            <th>{{ help.shortcodesColShortcode }}</th>
-            <th>{{ help.colDescription }}</th>
-            <th>{{ help.shortcodesColUse }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="sc in help.shortcodes" :key="sc.tag">
-            <td><code>[{{ sc.tag }}]</code></td>
-            <td>{{ sc.title }}</td>
-            <td>{{ sc.summary }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <AdminTableScroll>
+        <table class="widefat striped mrt-admin-shortcodes-quick mrt-admin-responsive-table">
+          <thead>
+            <tr>
+              <th>{{ help.shortcodesColShortcode }}</th>
+              <th>{{ help.colDescription }}</th>
+              <th>{{ help.shortcodesColUse }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="sc in help.shortcodes" :key="sc.tag">
+              <td :data-label="help.shortcodesColShortcode"><code>[{{ sc.tag }}]</code></td>
+              <td :data-label="help.colDescription">{{ sc.title }}</td>
+              <td :data-label="help.shortcodesColUse">{{ sc.summary }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </AdminTableScroll>
     </AdminPanel>
 
     <AdminPanel :title="help.shortcodesSetupTitle">

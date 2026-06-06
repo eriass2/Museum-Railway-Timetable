@@ -20,13 +20,18 @@ import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useAdminFormDirty } from '../composables/useAdminFormDirty';
 import { useAdminUnsavedGuard } from '../composables/useAdminUnsavedGuard';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfirm } from '../composables/adminConfirm';
 import { adminErrorMessage, adminFmtN, adminStr } from '../utils/adminLabels';
-import { priceMatrixHasAnyValue } from '../utils/adminPricePreview';
+import {
+  hasMatrixZonesBeyondCap,
+  priceMatrixHasAnyValue,
+} from '../utils/adminPricePreview';
 import { minutesToTimeInput } from '../utils/settingsTime';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 const { saveMsg, show: showSaved } = useAdminSaveNotice();
 const data = ref<PricesPayload | null>(null);
 const afternoonThresholdMinutes = ref(900);
@@ -77,6 +82,9 @@ const ticketKeys = computed(() => Object.keys(data.value?.ticket_types ?? {}));
 const categoryKeys = computed(() => Object.keys(data.value?.categories ?? {}));
 const zones = computed(() => data.value?.zones ?? []);
 const matrixConfigured = computed(() => (data.value ? priceMatrixHasAnyValue(data.value) : false));
+const zonesBeyondCap = computed(() =>
+  data.value ? hasMatrixZonesBeyondCap(data.value) : false,
+);
 
 const afternoonStatus = computed(() =>
   adminFmtN(cfg, 'pricesAfternoonStatus', {
@@ -183,7 +191,7 @@ async function submit() {
 </script>
 
 <template>
-  <div>
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'pricesTitle', 'Priser') }}</h1>
 
     <AdminLoadState
@@ -210,6 +218,21 @@ async function submit() {
           </p>
 
           <AdminPricesPreview :payload="data" />
+
+          <p v-if="matrixConfigured" class="description mrt-admin-prices-zone-cap-status">
+            {{
+              adminFmtN(cfg, 'pricesZoneCapStatus', {
+                1: String(data.zone_cap),
+              })
+            }}
+          </p>
+          <p v-if="zonesBeyondCap" class="description mrt-admin-prices-zone-cap-notice">
+            {{
+              adminFmtN(cfg, 'pricesMatrixZoneCapNotice', {
+                1: String(data.zone_cap),
+              })
+            }}
+          </p>
 
           <AdminDisclosure :summary="adminStr(cfg, 'pricesCopyZoneHeading')">
             <p class="description">{{ adminStr(cfg, 'pricesCopyZoneHint') }}</p>
@@ -244,33 +267,35 @@ async function submit() {
             <h3 class="mrt-admin-prices-schema__heading">
               {{ adminStr(cfg, 'pricesTicketTypesHeading') }}
             </h3>
-            <table class="widefat striped mrt-admin-prices-schema__table">
-              <thead>
-                <tr>
-                  <th>{{ adminStr(cfg, 'pricesSchemaKeyCol') }}</th>
-                  <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="key in ticketKeys" :key="`ticket-${key}`">
-                  <td><code>{{ key }}</code></td>
-                  <td>
-                    <input v-model="data.ticket_types[key]" type="text" class="regular-text" />
-                  </td>
-                  <td>
-                    <MrtButton
-                      context="admin"
-                      variant="link-delete"
-                      :disabled="ticketKeys.length <= 1"
-                      @click="confirmRemoveTicketType(key)"
-                    >
-                      {{ adminStr(cfg, 'delete') }}
-                    </MrtButton>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <AdminTableScroll>
+              <table class="widefat striped mrt-admin-prices-schema__table mrt-admin-responsive-table">
+                <thead>
+                  <tr>
+                    <th>{{ adminStr(cfg, 'pricesSchemaKeyCol') }}</th>
+                    <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="key in ticketKeys" :key="`ticket-${key}`">
+                    <td :data-label="adminStr(cfg, 'pricesSchemaKeyCol')"><code>{{ key }}</code></td>
+                    <td :data-label="adminStr(cfg, 'pricesSchemaLabelCol')">
+                      <input v-model="data.ticket_types[key]" type="text" class="regular-text" />
+                    </td>
+                    <td>
+                      <MrtButton
+                        context="admin"
+                        variant="link-delete"
+                        :disabled="ticketKeys.length <= 1"
+                        @click="confirmRemoveTicketType(key)"
+                      >
+                        {{ adminStr(cfg, 'delete') }}
+                      </MrtButton>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </AdminTableScroll>
             <AdminInlineForm>
               <input
                 v-model="newTicketLabel"
@@ -286,33 +311,35 @@ async function submit() {
             <h3 class="mrt-admin-prices-schema__heading">
               {{ adminStr(cfg, 'pricesCategoriesHeading') }}
             </h3>
-            <table class="widefat striped mrt-admin-prices-schema__table">
-              <thead>
-                <tr>
-                  <th>{{ adminStr(cfg, 'pricesSchemaKeyCol') }}</th>
-                  <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="key in categoryKeys" :key="`cat-${key}`">
-                  <td><code>{{ key }}</code></td>
-                  <td>
-                    <input v-model="data.categories[key]" type="text" class="regular-text" />
-                  </td>
-                  <td>
-                    <MrtButton
-                      context="admin"
-                      variant="link-delete"
-                      :disabled="categoryKeys.length <= 1"
-                      @click="confirmRemoveCategory(key)"
-                    >
-                      {{ adminStr(cfg, 'delete') }}
-                    </MrtButton>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <AdminTableScroll>
+              <table class="widefat striped mrt-admin-prices-schema__table mrt-admin-responsive-table">
+                <thead>
+                  <tr>
+                    <th>{{ adminStr(cfg, 'pricesSchemaKeyCol') }}</th>
+                    <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="key in categoryKeys" :key="`cat-${key}`">
+                    <td :data-label="adminStr(cfg, 'pricesSchemaKeyCol')"><code>{{ key }}</code></td>
+                    <td :data-label="adminStr(cfg, 'pricesSchemaLabelCol')">
+                      <input v-model="data.categories[key]" type="text" class="regular-text" />
+                    </td>
+                    <td>
+                      <MrtButton
+                        context="admin"
+                        variant="link-delete"
+                        :disabled="categoryKeys.length <= 1"
+                        @click="confirmRemoveCategory(key)"
+                      >
+                        {{ adminStr(cfg, 'delete') }}
+                      </MrtButton>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </AdminTableScroll>
             <AdminInlineForm>
               <input
                 v-model="newCategoryLabel"
@@ -365,28 +392,30 @@ async function submit() {
 
             <h3 class="mrt-admin-prices-schema__heading">{{ adminStr(cfg, 'pricesAfternoonHeading') }}</h3>
             <p class="description">{{ adminStr(cfg, 'pricesAfternoonHint') }}</p>
-            <table class="widefat striped mrt-admin-prices-schema__table">
-              <thead>
-                <tr>
-                  <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
-                  <th>{{ adminStr(cfg, 'pricesAfternoonAmountCol') }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="key in categoryKeys" :key="`afternoon-${key}`">
-                  <td>{{ data.categories[key] }}</td>
-                  <td>
-                    <input
-                      v-model.number="data.afternoon_return[key]"
-                      type="number"
-                      min="0"
-                      step="1"
-                      class="small-text"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <AdminTableScroll>
+              <table class="widefat striped mrt-admin-prices-schema__table mrt-admin-responsive-table">
+                <thead>
+                  <tr>
+                    <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
+                    <th>{{ adminStr(cfg, 'pricesAfternoonAmountCol') }}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="key in categoryKeys" :key="`afternoon-${key}`">
+                    <td :data-label="adminStr(cfg, 'pricesSchemaLabelCol')">{{ data.categories[key] }}</td>
+                    <td :data-label="adminStr(cfg, 'pricesAfternoonAmountCol')">
+                      <input
+                        v-model.number="data.afternoon_return[key]"
+                        type="number"
+                        min="0"
+                        step="1"
+                        class="small-text"
+                      />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </AdminTableScroll>
           </AdminDisclosure>
 
           <AdminTableScroll>
@@ -401,7 +430,20 @@ async function submit() {
                 <tr>
                   <th>{{ adminStr(cfg, 'pricesZonesCol') }}</th>
                   <template v-for="cat in categoryKeys" :key="`z-${cat}`">
-                    <th v-for="zone in zones" :key="`${cat}-${zone}`">{{ zone }}</th>
+                    <th
+                      v-for="zone in zones"
+                      :key="`${cat}-${zone}`"
+                      :class="{
+                        'mrt-admin-price-zone--beyond-cap': zone > data.zone_cap,
+                      }"
+                      :title="
+                        zone > data.zone_cap
+                          ? adminFmtN(cfg, 'pricesZoneBeyondCapTitle', { 1: String(data.zone_cap) })
+                          : undefined
+                      "
+                    >
+                      {{ zone }}
+                    </th>
                   </template>
                 </tr>
               </thead>
@@ -412,7 +454,10 @@ async function submit() {
                     <td
                       v-for="zone in zones"
                       :key="`${ticket}-${cat}-${zone}`"
-                      :class="{ 'mrt-admin-price-cell--empty': cellIsEmpty(ticket, cat, zone) }"
+                      :class="{
+                        'mrt-admin-price-cell--empty': cellIsEmpty(ticket, cat, zone),
+                        'mrt-admin-price-zone--beyond-cap': zone > data.zone_cap,
+                      }"
                     >
                       <input
                         type="number"
@@ -473,5 +518,10 @@ async function submit() {
 
 .mrt-admin-price-cell--empty {
   background: #fcf9e8;
+}
+
+:deep(.mrt-admin-price-zone--beyond-cap) {
+  color: #787c82;
+  background: #f6f7f7;
 }
 </style>

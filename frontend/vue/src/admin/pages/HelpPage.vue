@@ -2,12 +2,14 @@
 import { computed, nextTick, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { adminConfig } from '../types';
-import { AdminPanel, MrtButton } from '../components/ui';
+import { AdminPanel, AdminTableScroll, MrtButton } from '../components/ui';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 
 const router = useRouter();
 const route = useRoute();
 
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 const help = computed(() => {
   if (!cfg.help) {
     throw new Error('mrtAdminVue.help config missing');
@@ -56,29 +58,31 @@ watch(
 </script>
 
 <template>
-  <div class="mrt-admin-page">
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ help.title }}</h1>
 
     <AdminPanel :title="help.panelWhat">
       <p>{{ help.intro }}</p>
-      <table class="widefat striped mrt-admin-help-table">
-        <thead>
-          <tr>
-            <th>{{ help.colPart }}</th>
-            <th>{{ help.colDescription }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{ help.partAdmin }}</td>
-            <td>{{ help.partAdminDesc }}</td>
-          </tr>
-          <tr>
-            <td>{{ help.partPublic }}</td>
-            <td>{{ help.partPublicDesc }}</td>
-          </tr>
-        </tbody>
-      </table>
+      <AdminTableScroll>
+        <table class="widefat striped mrt-admin-help-table mrt-admin-responsive-table">
+          <thead>
+            <tr>
+              <th>{{ help.colPart }}</th>
+              <th>{{ help.colDescription }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td :data-label="help.colPart">{{ help.partAdmin }}</td>
+              <td :data-label="help.colDescription">{{ help.partAdminDesc }}</td>
+            </tr>
+            <tr>
+              <td :data-label="help.colPart">{{ help.partPublic }}</td>
+              <td :data-label="help.colDescription">{{ help.partPublicDesc }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </AdminTableScroll>
     </AdminPanel>
 
     <AdminPanel

@@ -27,12 +27,14 @@ import { proceedIfDiscardAllowed } from '../composables/adminDiscardGuard';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
 type TrainTypesView = 'list' | 'edit' | 'create';
 
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 const items = ref<TrainTypeRow[]>([]);
 const iconKeys = ref<string[]>([]);
 const viewMode = ref<TrainTypesView>('list');
@@ -160,7 +162,7 @@ async function removeType(id: number) {
 </script>
 
 <template>
-  <div class="train-types-page">
+  <div class="mrt-admin-page train-types-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'trainTypesTitle') }}</h1>
 
     <AdminLoadState
@@ -177,6 +179,23 @@ async function removeType(id: number) {
           :title="adminStr(cfg, 'trainTypesEmptyTitle')"
           :message="adminStr(cfg, 'trainTypesEmptyMessage')"
         />
+
+        <ul v-else-if="isMobile" class="mrt-admin-card-list">
+          <li v-for="row in items" :key="row.id" class="mrt-admin-card-list__item">
+            <strong>{{ row.name }}</strong>
+            <p class="description">
+              <AdminTrainTypeCell :icon-key="row.icon_key" :name="row.name" />
+            </p>
+            <AdminRowActions v-if="cfg.canManage" stack>
+              <MrtButton context="admin" variant="secondary" @click="startEdit(row)">
+                {{ adminStr(cfg, 'edit') }}
+              </MrtButton>
+              <MrtButton context="admin" variant="link-delete" @click="removeType(row.id)">
+                {{ adminStr(cfg, 'delete') }}
+              </MrtButton>
+            </AdminRowActions>
+          </li>
+        </ul>
 
         <AdminTableScroll v-else>
           <table class="widefat striped train-types-page__table">

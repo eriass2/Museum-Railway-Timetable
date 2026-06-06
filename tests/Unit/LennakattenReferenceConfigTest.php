@@ -31,10 +31,24 @@ final class LennakattenReferenceConfigTest extends TestCase {
 
 	public function test_reference_price_schema_has_lennakatten_afternoon_and_zone_cap(): void {
 		$schema = MRT_lennakatten_reference_price_schema();
+		self::assertSame( array( 1, 2, 3 ), $schema['zones'] );
 		self::assertSame( 3, $schema['zone_cap'] );
 		self::assertSame( 160, $schema['afternoon_return']['adult'] );
 		self::assertSame( 140, $schema['afternoon_return']['student_senior'] );
 		self::assertSame( 60, $schema['afternoon_return']['child_4_15'] );
+	}
+
+	public function test_fixture_price_schema_has_three_zones_only(): void {
+		$package = MRT_csv_load_package( ABSPATH . 'testdata/fixtures/lennakatten' );
+		self::assertIsArray( $package );
+		$zones = array();
+		foreach ( (array) ( $package['files']['price_schema.csv'] ?? array() ) as $row ) {
+			if ( ( $row['kind'] ?? '' ) === 'zone' ) {
+				$zones[] = (int) ( $row['value'] ?? 0 );
+			}
+		}
+		sort( $zones );
+		self::assertSame( array( 1, 2, 3 ), $zones );
 	}
 
 	public function test_reference_price_matrix_matches_builtin(): void {

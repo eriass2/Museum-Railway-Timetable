@@ -7,6 +7,7 @@ import {
   adminPriceTableLabels,
   buildAdminPricePreviewDay,
   buildAdminPricePreviewTrip,
+  effectivePricingZones,
 } from '../utils/adminPricePreview';
 import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
@@ -21,9 +22,10 @@ const previewType = ref('single');
 const previewAfternoon = ref(false);
 
 const ticketKeys = computed(() => Object.keys(props.payload.ticket_types));
+const pricingZones = computed(() => effectivePricingZones(props.payload));
 
 watch(
-  () => props.payload.zones,
+  pricingZones,
   (zones) => {
     if (!zones.includes(previewZone.value)) {
       previewZone.value = zones[0] ?? 1;
@@ -66,7 +68,7 @@ const priceCfg = computed(() => adminPricePreviewCfg(cfg));
       <label>
         {{ adminStr(cfg, 'pricesPreviewZone') }}
         <select v-model.number="previewZone">
-          <option v-for="zone in payload.zones" :key="`preview-zone-${zone}`" :value="zone">
+          <option v-for="zone in pricingZones" :key="`preview-zone-${zone}`" :value="zone">
             {{ zone }}
           </option>
         </select>
@@ -121,5 +123,23 @@ const priceCfg = computed(() => adminPricePreviewCfg(cfg));
 
 .mrt-admin-prices-preview__afternoon {
   align-self: center;
+}
+
+@media (max-width: 782px) {
+  .mrt-admin-prices-preview__controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .mrt-admin-prices-preview__controls label {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mrt-admin-prices-preview__controls select {
+    width: 100%;
+    max-width: none;
+  }
 }
 </style>

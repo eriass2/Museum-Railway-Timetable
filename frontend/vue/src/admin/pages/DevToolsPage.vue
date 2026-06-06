@@ -9,10 +9,12 @@ import {
 } from '../api/adminRest';
 import { AdminPanel, AdminStatusMessage, AdminToolList, MrtButton } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminConfig } from '../types';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 
 const cfg = adminConfig();
+const { isMobile } = useMobileAdmin();
 const busy = ref('');
 const message = ref('');
 const error = ref('');
@@ -52,7 +54,7 @@ async function run(action: string, fn: () => Promise<unknown>) {
 </script>
 
 <template>
-  <div>
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'devTitle') }}</h1>
     <p v-if="!cfg.isDevMode" class="notice notice-warning">
       {{ adminStr(cfg, 'devNotAvailable') }}

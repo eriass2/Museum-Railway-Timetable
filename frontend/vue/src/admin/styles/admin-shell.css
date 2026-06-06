@@ -704,4 +704,74 @@
   .mrt-admin-page--mobile .form-table .button-primary {
     width: 100%;
   }
+
+  .mrt-admin-page--mobile .mrt-admin-import-export-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-import-export-options .mrt-ml-sm {
+    margin-left: 0;
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-prices-afternoon-status a {
+    display: inline-block;
+    margin-left: 0;
+    margin-top: 4px;
+  }
+
+  .mrt-admin-page--mobile .mrt-price-matrix-table input.small-text {
+    min-width: 3.5em;
+  }
+
+  .mrt-admin-page--mobile .train-types-page__field--slug .regular-text {
+    max-width: none;
+    width: 100%;
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-responsive-table thead {
+    display: none;
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-responsive-table tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    padding: 10px 12px;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-responsive-table tbody td {
+    display: block;
+    padding: 4px 0;
+    border: 0;
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-responsive-table tbody td[data-label]::before {
+    content: attr(data-label);
+    display: block;
+    margin-bottom: 2px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #50575e;
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-responsive-table tbody td:last-child {
+    margin-top: 6px;
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-responsive-table tbody td .regular-text,
+  .mrt-admin-page--mobile .mrt-admin-responsive-table tbody td .small-text {
+    width: 100%;
+    max-width: none;
+  }
+
+  .mrt-admin-page--mobile .mrt-admin-responsive-table tbody td .button {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
 }

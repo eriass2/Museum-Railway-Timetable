@@ -94,7 +94,7 @@ function onTabClick(next: TimetableEditorTab): void {
 </script>
 
 <template>
-  <div>
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1 v-if="!detail">{{ adminStr(cfg, 'editorTitle') }}</h1>
     <AdminLoadState
       :loading="loading"

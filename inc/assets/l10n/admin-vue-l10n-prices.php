@@ -40,7 +40,19 @@ function MRT_admin_vue_l10n_prices(): array {
 		'pricesZoneLabel'          => __( 'Zon', 'museum-railway-timetable' ),
 		'pricesZoneCapHeading'     => __( 'Max zoner vid prislookup', 'museum-railway-timetable' ),
 		'pricesZoneCapHint'        => __(
-			'Antal zoner som används vid prisberäkning (t.ex. 3 enligt taxa 2026). Högre zonnummer i matrisen kan ha samma belopp.',
+			'Antal zoner som används vid prisberäkning (t.ex. 3 enligt Lennakatten taxa 2026). Matriskolumner utöver cap kan finnas för andra operatörer.',
+			'museum-railway-timetable'
+		),
+		'pricesZoneCapStatus'      => __(
+			'Reseplaneraren använder max %1$d zoner vid prislookup (inställt under Prisstruktur).',
+			'museum-railway-timetable'
+		),
+		'pricesMatrixZoneCapNotice' => __(
+			'Matriskolumner över zon %1$d används inte vid prisberäkning. De kan spegla samma belopp som zon %1$d (t.ex. vid import).',
+			'museum-railway-timetable'
+		),
+		'pricesZoneBeyondCapTitle' => __(
+			'Används inte vid prislookup (max %1$d zoner).',
 			'museum-railway-timetable'
 		),
 		'pricesAfternoonHeading'   => __( 'Eftermiddags-retur', 'museum-railway-timetable' ),
@@ -68,7 +80,7 @@ function MRT_admin_vue_l10n_prices(): array {
 		'pricesPreviewType'      => __( 'Biljettyp', 'museum-railway-timetable' ),
 		'pricesCopyZoneHeading'  => __( 'Kopiera zonpriser', 'museum-railway-timetable' ),
 		'pricesCopyZoneHint'     => __(
-			'Kopiera alla belopp från en zonkolumn till en annan (t.ex. zon 3 → zon 4).',
+			'Kopiera alla belopp från en zonkolumn till en annan (t.ex. zon 2 → zon 3).',
 			'museum-railway-timetable'
 		),
 		'pricesCopyZoneFrom'     => __( 'Från zon', 'museum-railway-timetable' ),

@@ -8,8 +8,10 @@ import {
 } from '../components/ui';
 import ImportExportGuidePanels from '../components/import-export/ImportExportGuidePanels.vue';
 import { useImportExportPage } from '../composables/useImportExportPage';
+import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 
+const { isMobile } = useMobileAdmin();
 const {
   cfg,
   guide,
@@ -29,7 +31,7 @@ const {
 </script>
 
 <template>
-  <div class="mrt-admin-page">
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'importExportTitle') }}</h1>
     <p class="mrt-admin-page__lead">{{ guide.intro }}</p>
 

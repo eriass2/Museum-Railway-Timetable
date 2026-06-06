@@ -126,6 +126,7 @@ function MRT_lennakatten_reference_afternoon_return_prices(): array {
 function MRT_lennakatten_reference_price_schema(): array {
 	require_once MRT_PATH . 'inc/domain/pricing/price-schema.php';
 	$schema                      = MRT_get_default_price_schema();
+	$schema['zones']             = array( 1, 2, 3 );
 	$schema['zone_cap']          = 3;
 	$schema['afternoon_return']  = MRT_lennakatten_reference_afternoon_return_prices();
 	return $schema;

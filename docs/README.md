@@ -22,7 +22,8 @@ Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESI
 | [I18N_ACTION_PLAN.md](I18N_ACTION_PLAN.md) | Översättningar – publikt Vue (klart) och admin (kvar) |
 | [DATA_MODEL.md](DATA_MODEL.md) | Post types, meta, `mrt_stoptimes`, relationer |
 | [CSV_FORMAT.md](CSV_FORMAT.md) | Import/export av tidtabellsdata (zip, kolumner, lägen) |
-| [SHORTCODES.md](SHORTCODES.md) | Tre shortcodes: månad, översikt, wizard |
+| [SHORTCODES.md](SHORTCODES.md) | Shortcodes: månad, översikt, wizard, index |
+| [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | Plan: trafikmeddelanden-shortcode + admin (generella meddelanden + avvikelser) |
 | [REST_API.md](REST_API.md) | REST-only API — admin och publikt frontend |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i Vue-admin (steg-för-steg) |
 | [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsmeny, component demo, import |

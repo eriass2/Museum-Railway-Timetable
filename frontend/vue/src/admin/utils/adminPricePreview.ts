@@ -5,12 +5,29 @@ import type { PriceCfg } from '../../shared/priceTypes';
 import { adminStr } from './adminLabels';
 import type { AdminClientConfig } from '../types';
 
+/** Zone column used for fare lookup (capped by schema zone_cap). */
+export function resolvePricingZone(payload: PricesPayload, zone: number): number {
+  const cap = payload.zone_cap > 0 ? payload.zone_cap : zone;
+  return Math.max(1, Math.min(cap, zone));
+}
+
+/** Zones that affect journey pricing (matrix columns at or below zone_cap). */
+export function effectivePricingZones(payload: PricesPayload): number[] {
+  const cap = payload.zone_cap > 0 ? payload.zone_cap : 99;
+  return payload.zones.filter((zone) => zone <= cap);
+}
+
+export function hasMatrixZonesBeyondCap(payload: PricesPayload): boolean {
+  const cap = payload.zone_cap > 0 ? payload.zone_cap : 99;
+  return payload.zones.some((zone) => zone > cap);
+}
+
 export function priceMatrixRowForZone(
   payload: PricesPayload,
   ticketType: string,
   zone: number,
 ): Record<string, number | null> {
-  const zoneKey = Math.max(1, Math.min(payload.zone_cap, zone));
+  const zoneKey = resolvePricingZone(payload, zone);
   const row: Record<string, number | null> = {};
   for (const cat of Object.keys(payload.categories)) {
     row[cat] = payload.matrix[ticketType]?.[cat]?.[zoneKey] ?? null;
@@ -79,7 +96,8 @@ export function adminPriceTableLabels(
 ): PriceTableLabels {
   let titleSuffix = '';
   if (showZoneCount) {
-    titleSuffix = `(${adminStr(cfg, 'pricesZoneLabel', 'Zon')} ${zone})`;
+    const zoneKey = resolvePricingZone(payload, zone);
+    titleSuffix = `(${adminStr(cfg, 'pricesZoneLabel', 'Zon')} ${zoneKey})`;
   }
   return {
     title: adminStr(cfg, 'pricesPreviewTitle', 'Priser'),

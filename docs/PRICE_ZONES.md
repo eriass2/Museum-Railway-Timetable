@@ -1,6 +1,6 @@
 # Priszoner (Lennakatten taxa 2026)
 
-Stationer tilldelas priszoner **1–3** enligt Lennakatten. Priserna i admin och reseplaneraren använder max **tre zoner** (zon 4 i prismatrisen = samma pris som zon 3).
+Stationer tilldelas priszoner **1–3** enligt Lennakatten. Prismatrisen och prislookup använder **tre zoner** (`zone_cap` = 3).
 
 **Källa:** [lennakatten.se/biljetter](https://www.lennakatten.se/biljetter/) och zonöversikten nedan (Lennakatten grafisk taxa 2026).
 
