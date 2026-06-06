@@ -17,6 +17,7 @@ const {
   newRoute,
   sectionTab,
   editingRoute,
+  routesView,
   loading,
   error,
   load,
@@ -27,6 +28,8 @@ const {
   addRoute,
   editRoute,
   saveRoute,
+  startCreateRoute,
+  backToRoutesList,
   saveStationMeta,
   removeStation,
   removeRoute,
@@ -83,10 +86,12 @@ const {
         :stations="stations"
         :stations-by-id="stationsById"
         :station-title="stationTitle"
+        :view-mode="routesView"
         @add="addRoute"
         @edit="editRoute"
         @save="saveRoute"
-        @cancel-edit="editingRoute = null"
+        @start-create="startCreateRoute"
+        @back="backToRoutesList"
         @remove="removeRoute"
       />
     </AdminLoadState>

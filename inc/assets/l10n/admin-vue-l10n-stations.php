@@ -25,7 +25,7 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsEmptyStationsTitle' => __( 'Inga stationer', 'museum-railway-timetable' ),
 		'stationsEmptyStationsMsg'   => __( 'Lägg till din första station ovan.', 'museum-railway-timetable' ),
 		'stationsEmptyRoutesTitle'   => __( 'Inga rutter', 'museum-railway-timetable' ),
-		'stationsEmptyRoutesMsg'     => __( 'Skapa en rutt ovan och koppla stationer i redigeringsvyn.', 'museum-railway-timetable' ),
+		'stationsEmptyRoutesMsg'     => __( 'Skapa en rutt med knappen nedan och koppla stationer i redigeringsvyn.', 'museum-railway-timetable' ),
 		'stationsColName'            => __( 'Namn', 'museum-railway-timetable' ),
 		'stationsColType'            => __( 'Typ', 'museum-railway-timetable' ),
 		'stationsColLat'             => __( 'Lat', 'museum-railway-timetable' ),

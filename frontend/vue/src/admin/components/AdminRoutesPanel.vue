@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import {
+  AdminBackNav,
   AdminDisclosure,
   AdminEmptyState,
   AdminFormActions,
-  AdminInlineForm,
   AdminPanel,
   AdminRowActions,
   AdminTableScroll,
@@ -16,11 +16,14 @@ import { adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 import type { RouteRow, StationRow } from '../types';
 
+export type RoutesPanelView = 'list' | 'create' | 'edit';
+
 defineProps<{
   routes: RouteRow[];
   stations: StationRow[];
   stationsById: Map<number, { title: string; station_type: string }>;
   stationTitle: (stationId: number) => string;
+  viewMode: RoutesPanelView;
 }>();
 
 const newRoute = defineModel<RouteRow>('newRoute', { required: true });
@@ -28,9 +31,10 @@ const editingRoute = defineModel<RouteRow | null>('editingRoute', { required: tr
 
 const emit = defineEmits<{
   add: [];
+  back: [];
   edit: [route: RouteRow];
   save: [];
-  cancelEdit: [];
+  'start-create': [];
   remove: [route: RouteRow];
 }>();
 
@@ -58,18 +62,80 @@ function onEditRouteRemove(idx: number) {
 <template>
   <AdminPanel>
     <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabRoutes') }}</h2>
-    <div v-if="cfg.canManage" class="mrt-admin-route-create">
-      <AdminInlineForm>
+
+    <template v-if="viewMode === 'list'">
+      <AdminEmptyState
+        v-if="!routes.length"
+        :title="adminStr(cfg, 'stationsEmptyRoutesTitle')"
+        :message="adminStr(cfg, 'stationsEmptyRoutesMsg')"
+      />
+      <AdminTableScroll v-else>
+        <table class="widefat striped mrt-admin-routes-table">
+          <thead>
+            <tr>
+              <th>{{ adminStr(cfg, 'stationsColName') }}</th>
+              <th>{{ adminStr(cfg, 'stationsColStations') }}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="route in routes" :key="route.id">
+              <td>{{ route.title }}</td>
+              <td>
+                <RoutePreview
+                  :station-ids="route.station_ids"
+                  :stations-by-id="stationsById"
+                  :start-station-id="route.start_station"
+                  :end-station-id="route.end_station"
+                  compact
+                />
+              </td>
+              <td>
+                <AdminRowActions>
+                  <MrtButton
+                    v-if="cfg.canManage"
+                    context="admin"
+                    variant="secondary"
+                    @click="emit('edit', route)"
+                  >
+                    {{ adminStr(cfg, 'edit') }}
+                  </MrtButton>
+                  <MrtButton
+                    v-if="cfg.canManage"
+                    context="admin"
+                    variant="link-delete"
+                    @click="emit('remove', route)"
+                  >
+                    {{ adminStr(cfg, 'delete') }}
+                  </MrtButton>
+                </AdminRowActions>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </AdminTableScroll>
+      <AdminFormActions v-if="cfg.canManage">
+        <MrtButton context="admin" variant="primary" @click="emit('start-create')">
+          {{ adminStr(cfg, 'stationsNewRoute') }}
+        </MrtButton>
+      </AdminFormActions>
+    </template>
+
+    <template v-else-if="viewMode === 'create'">
+      <AdminBackNav @back="emit('back')" />
+      <h3 class="mrt-admin-route-editor__heading">{{ adminStr(cfg, 'stationsNewRoute') }}</h3>
+      <div class="mrt-admin-route-editor__section">
+        <label class="mrt-admin-route-editor__label" for="mrt-new-route-title">
+          {{ adminStr(cfg, 'stationsRouteNameLabel') }}
+        </label>
         <input
+          id="mrt-new-route-title"
           v-model="newRoute.title"
           type="text"
           class="regular-text"
           :placeholder="adminStr(cfg, 'stationsNewRoute')"
         />
-        <MrtButton context="admin" variant="primary" @click="emit('add')">
-          {{ adminStr(cfg, 'add') }}
-        </MrtButton>
-      </AdminInlineForm>
+      </div>
       <AdminDisclosure :summary="adminStr(cfg, 'stationsRouteCreateMoreFields')">
         <RouteStationOrderEditor
           v-model="newRoute"
@@ -80,87 +146,63 @@ function onEditRouteRemove(idx: number) {
           @remove="onNewRouteRemove"
         />
       </AdminDisclosure>
-    </div>
-    <AdminEmptyState
-      v-if="!routes.length"
-      :title="adminStr(cfg, 'stationsEmptyRoutesTitle')"
-      :message="adminStr(cfg, 'stationsEmptyRoutesMsg')"
-    />
-    <AdminTableScroll v-else>
-      <table class="widefat striped mrt-admin-routes-table">
-        <thead>
-          <tr>
-            <th>{{ adminStr(cfg, 'stationsColName') }}</th>
-            <th>{{ adminStr(cfg, 'stationsColStations') }}</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="route in routes" :key="route.id">
-            <td>{{ route.title }}</td>
-            <td>
-              <RoutePreview
-                :station-ids="route.station_ids"
-                :stations-by-id="stationsById"
-                :start-station-id="route.start_station"
-                :end-station-id="route.end_station"
-                compact
-              />
-            </td>
-            <td>
-              <AdminRowActions>
-                <MrtButton
-                  v-if="cfg.canManage"
-                  context="admin"
-                  variant="secondary"
-                  @click="emit('edit', route)"
-                >
-                  {{ adminStr(cfg, 'edit') }}
-                </MrtButton>
-                <MrtButton
-                  v-if="cfg.canManage"
-                  context="admin"
-                  variant="link-delete"
-                  @click="emit('remove', route)"
-                >
-                  {{ adminStr(cfg, 'delete') }}
-                </MrtButton>
-              </AdminRowActions>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </AdminTableScroll>
-  </AdminPanel>
+      <AdminFormActions>
+        <MrtButton context="admin" variant="primary" @click="emit('add')">
+          {{ adminStr(cfg, 'add') }}
+        </MrtButton>
+        <MrtButton context="admin" variant="secondary" @click="emit('back')">
+          {{ adminStr(cfg, 'cancel') }}
+        </MrtButton>
+      </AdminFormActions>
+    </template>
 
-  <AdminPanel
-    v-if="editingRoute"
-    class="mrt-admin-route-editor"
-    :title="adminFmt(cfg, 'stationsEditRouteTitle', editingRoute.title)"
-  >
-    <div class="mrt-admin-route-editor__section">
-      <label class="mrt-admin-route-editor__label" for="mrt-route-title">
-        {{ adminStr(cfg, 'stationsRouteNameLabel') }}
-      </label>
-      <input id="mrt-route-title" v-model="editingRoute.title" type="text" class="regular-text" />
-    </div>
+    <template v-else-if="viewMode === 'edit' && editingRoute">
+      <AdminBackNav @back="emit('back')" />
+      <h3 class="mrt-admin-route-editor__heading">
+        {{ adminFmt(cfg, 'stationsEditRouteTitle', editingRoute.title) }}
+      </h3>
+      <div class="mrt-admin-route-editor__section">
+        <label class="mrt-admin-route-editor__label" for="mrt-route-title">
+          {{ adminStr(cfg, 'stationsRouteNameLabel') }}
+        </label>
+        <input id="mrt-route-title" v-model="editingRoute.title" type="text" class="regular-text" />
+      </div>
 
-    <RouteStationOrderEditor
-      v-model="editingRoute"
-      :stations="stations"
-      :station-title="stationTitle"
-      id-prefix="mrt-route"
-      @move="onEditRouteMove"
-      @remove="onEditRouteRemove"
-    />
+      <RouteStationOrderEditor
+        v-model="editingRoute"
+        :stations="stations"
+        :station-title="stationTitle"
+        id-prefix="mrt-route"
+        @move="onEditRouteMove"
+        @remove="onEditRouteRemove"
+      />
 
-    <AdminFormActions>
-      <MrtButton context="admin" variant="primary" @click="emit('save')">
-        {{ adminStr(cfg, 'stationsSaveRoute') }}
-      </MrtButton>
-      <MrtButton context="admin" variant="secondary" @click="emit('cancelEdit')">
-        {{ adminStr(cfg, 'cancel') }}
-      </MrtButton>
-    </AdminFormActions>
+      <AdminFormActions>
+        <MrtButton context="admin" variant="primary" @click="emit('save')">
+          {{ adminStr(cfg, 'stationsSaveRoute') }}
+        </MrtButton>
+        <MrtButton context="admin" variant="secondary" @click="emit('back')">
+          {{ adminStr(cfg, 'cancel') }}
+        </MrtButton>
+      </AdminFormActions>
+    </template>
   </AdminPanel>
 </template>
+
+<style scoped>
+.mrt-admin-route-editor__heading {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mrt-admin-route-editor__section {
+  margin-bottom: 12px;
+}
+
+.mrt-admin-route-editor__label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+</style>

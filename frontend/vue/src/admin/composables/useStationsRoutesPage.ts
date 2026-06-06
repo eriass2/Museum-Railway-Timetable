@@ -15,6 +15,7 @@ import { useAdminRowFlash } from './useAdminRowFlash';
 import { useAdminSaveNotice } from './useAdminSaveNotice';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { emptyRouteDraft, emptyStationDraft } from '../utils/routeStationEditor';
+import type { RoutesPanelView } from '../components/AdminRoutesPanel.vue';
 import { adminConfig } from '../types';
 import type { RouteRow, StationRow } from '../types';
 
@@ -28,6 +29,7 @@ export function useStationsRoutesPage() {
   const newRoute = ref(emptyRouteDraft());
   const sectionTab = ref<'stations' | 'routes'>('stations');
   const editingRoute = ref<RouteRow | null>(null);
+  const routesView = ref<RoutesPanelView>('list');
 
   const { loading, error, data, load, reload } = useAdminResource({
     fetch: async () => {
@@ -84,6 +86,27 @@ export function useStationsRoutesPage() {
     await reload();
   }
 
+  function backToRoutesList(): void {
+    editingRoute.value = null;
+    newRoute.value = emptyRouteDraft();
+    routesView.value = 'list';
+  }
+
+  function startCreateRoute(): void {
+    if (!cfg.canManage) {
+      return;
+    }
+    editingRoute.value = null;
+    newRoute.value = emptyRouteDraft();
+    routesView.value = 'create';
+  }
+
+  watch(sectionTab, (tab, prev) => {
+    if (prev === 'routes' && tab !== 'routes') {
+      backToRoutesList();
+    }
+  });
+
   async function addRoute() {
     const draft = newRoute.value;
     if (!cfg.canManage || !draft.title.trim()) return;
@@ -93,13 +116,14 @@ export function useStationsRoutesPage() {
       start_station: draft.start_station || undefined,
       end_station: draft.end_station || undefined,
     });
-    newRoute.value = emptyRouteDraft();
+    backToRoutesList();
     await reload();
   }
 
   function editRoute(route: RouteRow) {
     sectionTab.value = 'routes';
     editingRoute.value = { ...route, station_ids: [...route.station_ids] };
+    routesView.value = 'edit';
   }
 
   async function saveRoute() {
@@ -112,7 +136,7 @@ export function useStationsRoutesPage() {
       end_station: editingRoute.value.end_station,
       station_ids: editingRoute.value.station_ids,
     });
-    editingRoute.value = null;
+    backToRoutesList();
     showSaveNotice(adminFmt(cfg, 'stationsRouteSaved', title));
     flashRow(routeId);
     await reload();
@@ -156,7 +180,7 @@ export function useStationsRoutesPage() {
     try {
       await deleteRoute(route.id);
       if (editingRoute.value?.id === route.id) {
-        editingRoute.value = null;
+        backToRoutesList();
       }
       await reload();
     } catch (e) {
@@ -173,6 +197,7 @@ export function useStationsRoutesPage() {
     newRoute,
     sectionTab,
     editingRoute,
+    routesView,
     loading,
     error,
     load,
@@ -183,6 +208,8 @@ export function useStationsRoutesPage() {
     addRoute,
     editRoute,
     saveRoute,
+    startCreateRoute,
+    backToRoutesList,
     saveStationMeta,
     removeStation,
     removeRoute,
