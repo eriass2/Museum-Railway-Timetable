@@ -14,8 +14,10 @@ cd frontend/vue
 npm run build
 npm run e2e:install   # first time
 npm run build         # required before e2e (serve uses dist/)
-npm run e2e           # static mounts (month, overview, wizard, index) + admin-nav
+npm run e2e           # static mounts (month, overview, wizard, index) + admin-nav + cancelled
 ```
+
+Cancelled-trip mounts (no WordPress): `/overview-cancelled`, `/wizard?debug=cancelled` — see `e2e/cancelled-mount.spec.ts`.
 
 Optional against Docker demo (all four shortcodes on one page):
 

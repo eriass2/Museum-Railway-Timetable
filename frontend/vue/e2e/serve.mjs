@@ -5,7 +5,7 @@ import http from 'node:http';
 import { readFileSync, existsSync } from 'node:fs';
 import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { buildSampleOverviewPayload } from './fixtures/sample-overview-payload.mjs';
+import { buildSampleOverviewPayload, buildCancelledOverviewPayload } from './fixtures/sample-overview-payload.mjs';
 import { buildAdminRestResponse } from './fixtures/admin-rest.mjs';
 import { MRT_REST_JSON_PREFIX } from '../shared/restNamespace.mjs';
 
@@ -166,6 +166,30 @@ function buildWizardConfig(requestUrl) {
         date: '2026-05-15',
         outbound: mockConnection,
         inbound: { ...mockConnection, service_id: 201, from_departure: '14:00', to_arrival: '15:30' },
+      },
+    };
+  }
+
+  if (debug === 'cancelled') {
+    config.wizard.debugPresets = {
+      cancelled: {
+        step: 'outbound',
+        tripType: 'single',
+        from: 1,
+        to: 2,
+        fromTitle: 'Uppsala',
+        toTitle: 'Märsta',
+        date: '2026-06-06',
+        outboundConnections: [
+          {
+            service_id: 301,
+            from_departure: '09:00',
+            to_arrival: '10:30',
+            duration_minutes: 90,
+            notice: 'Inställd',
+            is_cancelled: true,
+          },
+        ],
       },
     };
   }
@@ -349,8 +373,37 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
     return;
   }
 
+  if (pathOnly.endsWith('/journey/connection-detail') && req.method === 'POST') {
+    const raw = await readRequestBody(req);
+    let body = {};
+    try {
+      body = raw ? JSON.parse(raw) : {};
+    } catch {
+      body = {};
+    }
+    const serviceId = Number(body.service_id || 0);
+    const notice = serviceId === 301 ? 'Inställd' : '';
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(
+      JSON.stringify({
+        detail: {
+          stops: [
+            { station_title: 'Uppsala', departure_time: '09:00' },
+            { station_title: 'Märsta', arrival_time: '10:30' },
+          ],
+          duration_minutes: 90,
+        },
+        notice,
+        is_cancelled: notice !== '',
+      }),
+    );
+    return;
+  }
+
   let payload = { overview: buildSampleOverviewPayload('timetable') };
-  if (pathOnly.endsWith('/timetables/day')) {
+  if (pathOnly.endsWith('/timetables/2/overview')) {
+    payload = { overview: buildCancelledOverviewPayload('timetable') };
+  } else if (pathOnly.endsWith('/timetables/day')) {
     payload = { overview: buildSampleOverviewPayload('day') };
   }
   if (pathOnly.endsWith('/timetables/month')) {
@@ -394,6 +447,14 @@ function renderMonthHtml(requestUrl) {
   return renderAppHtml('month', config);
 }
 
+function renderOverviewCancelledHtml() {
+  return renderAppHtml('overview', {
+    ...buildOverviewConfig(),
+    timetableId: 2,
+    overview: buildCancelledOverviewPayload(),
+  });
+}
+
 function renderOverviewHtml() {
   return renderAppHtml('overview', buildOverviewConfig());
 }
@@ -425,6 +486,11 @@ http
     if (pathOnly === '/month') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(renderMonthHtml(rawUrl));
+      return;
+    }
+    if (pathOnly === '/overview-cancelled') {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(renderOverviewCancelledHtml());
       return;
     }
     if (pathOnly === '/overview') {

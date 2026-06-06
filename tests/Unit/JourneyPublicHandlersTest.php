@@ -91,6 +91,51 @@ final class JourneyPublicHandlersTest extends TestCase {
 		self::assertIsArray( $result );
 		self::assertCount( 2, $result['detail']['stops'] );
 		self::assertSame( 30, $result['detail']['duration_minutes'] );
+		self::assertFalse( $result['is_cancelled'] );
+	}
+
+	public function test_connection_detail_with_date_marks_cancelled_notice(): void {
+		$GLOBALS['mrt_test_posts'] = array(
+			101 => new WP_Post( (object) array( 'ID' => 101, 'post_title' => 'Alpha' ) ),
+			102 => new WP_Post( (object) array( 'ID' => 102, 'post_title' => 'Beta' ) ),
+		);
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_notices_by_date' => array( '2026-06-06' => 'Inställd' ),
+		);
+		$this->original_wpdb = $GLOBALS['wpdb'] ?? null;
+		$GLOBALS['wpdb']     = new JourneyPublicHandlersTestDb(
+			array(
+				array(
+					'station_post_id' => 101,
+					'stop_sequence'   => 1,
+					'departure_time'  => '09:00',
+					'arrival_time'    => null,
+					'pickup_allowed'  => 1,
+					'dropoff_allowed' => 1,
+				),
+				array(
+					'station_post_id' => 102,
+					'stop_sequence'   => 2,
+					'arrival_time'    => '09:30',
+					'departure_time'  => null,
+					'pickup_allowed'  => 1,
+					'dropoff_allowed' => 1,
+				),
+			)
+		);
+
+		$result = MRT_journey_connection_detail_response(
+			array(
+				'from_station' => '101',
+				'to_station'   => '102',
+				'service_id'   => '501',
+				'date'         => '2026-06-06',
+			)
+		);
+
+		self::assertIsArray( $result );
+		self::assertSame( 'Inställd', $result['notice'] );
+		self::assertTrue( $result['is_cancelled'] );
 	}
 
 	public function test_find_connections_delegates_single_trip_to_normalized_search(): void {

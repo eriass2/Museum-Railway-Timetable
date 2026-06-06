@@ -156,6 +156,29 @@ final class JourneyRequestParseTest extends TestCase {
         ]);
         self::assertIsArray($out);
         self::assertSame(88, $out['service_id']);
+        self::assertSame('', $out['date']);
+    }
+
+    public function test_parse_connection_detail_accepts_optional_date(): void {
+        $out = MRT_journey_parse_connection_detail_params([
+            'from_station' => '1',
+            'to_station'   => '2',
+            'service_id'   => '88',
+            'date'         => '2026-06-06',
+        ]);
+        self::assertIsArray($out);
+        self::assertSame('2026-06-06', $out['date']);
+    }
+
+    public function test_parse_connection_detail_rejects_invalid_date(): void {
+        $out = MRT_journey_parse_connection_detail_params([
+            'from_station' => '1',
+            'to_station'   => '2',
+            'service_id'   => '88',
+            'date'         => 'not-a-date',
+        ]);
+        self::assertInstanceOf(WP_Error::class, $out);
+        self::assertSame('mrt_journey_date', $out->get_error_code());
     }
 
     public function test_parse_connection_detail_invalid_service(): void {
