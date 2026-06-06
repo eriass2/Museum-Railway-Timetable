@@ -377,6 +377,17 @@ function onMobileSaved(message: string) {
     </AdminPanel>
     <h1 v-else-if="detail">{{ detail.title }}</h1>
 
+    <TimetableEditorDatesTab
+      v-if="detail && isMobile && cfg.canManage"
+      v-model:date-input="dateInput"
+      :can-manage="cfg.canManage"
+      :dates-dirty="datesDirty"
+      :dates="detail.dates"
+      @add="addDate"
+      @remove="removeDate"
+      @save="saveDates"
+    />
+
     <MobileTimetablePanel
       v-if="detail && isMobile"
       :timetable-id="timetableId"
