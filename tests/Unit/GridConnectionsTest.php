@@ -30,15 +30,22 @@ final class GridConnectionsTest extends TestCase {
 		self::assertCount( 1, MRT_bus_services_from_group( $group ) );
 	}
 
-	public function test_rail_grid_direction_inbound_from_faringe(): void {
+	public function test_rail_grid_direction_inbound_from_route_end_station(): void {
 		$GLOBALS['mrt_test_posts'] = array(
 			1 => new WP_Post( (object) array( 'ID' => 1, 'post_title' => 'Faringe' ) ),
 		);
-
-		self::assertSame(
-			'inbound',
-			MRT_timetable_rail_grid_direction( array( 'stations' => array( 1, 2 ) ) )
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'50|mrt_route_end_station' => '1',
+			'71|mrt_service_route_id'  => '50',
 		);
+		$inbound_group = array(
+			'stations' => array( 1, 2 ),
+			'services' => array(
+				array( 'service' => (object) array( 'ID' => 71 ) ),
+			),
+		);
+
+		self::assertSame( 'inbound', MRT_timetable_rail_grid_direction( $inbound_group ) );
 		self::assertSame(
 			'outbound',
 			MRT_timetable_rail_grid_direction( array( 'stations' => array( 2, 3 ) ) )

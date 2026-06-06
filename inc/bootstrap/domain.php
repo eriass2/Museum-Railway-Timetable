@@ -52,6 +52,7 @@ function MRT_load_domain_modules(): void {
 	require_once MRT_PATH . 'inc/infrastructure/wordpress/helpers-utils.php';
 	require_once MRT_PATH . 'inc/domain/datetime/datetime.php';
 	require_once MRT_PATH . 'inc/domain/station/stations.php';
+	require_once MRT_PATH . 'inc/domain/station/station-timetable-meta.php';
 	require_once MRT_PATH . 'inc/domain/route/routes.php';
 	require_once MRT_PATH . 'inc/domain/service/services.php';
 	require_once MRT_PATH . 'inc/domain/service/highlight.php';
