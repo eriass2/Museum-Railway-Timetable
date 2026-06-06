@@ -56,24 +56,20 @@ function segmentFromDetailPayload(
 export async function loadConnectionDetailSegments(params: LoadParams): Promise<LegSegment[]> {
   const legs = connectionLegs(params.connection);
   const legTpl = cfgStr(params.cfg, 'legSegmentLabel', 'Delsträcka %d');
-  const out: LegSegment[] = [];
 
   if (legs.length > 1) {
-    for (let i = 0; i < legs.length; i++) {
-      const leg = legs[i];
-      const data = await fetchConnectionLegDetail(params, leg);
-      if (!data) {
-        return [];
-      }
-      out.push(segmentFromDetailPayload(data, legTpl.replace('%d', String(i + 1)), leg));
+    const details = await Promise.all(legs.map((leg) => fetchConnectionLegDetail(params, leg)));
+    if (details.some((data) => !data)) {
+      return [];
     }
-    return out;
+    return details.map((data, i) =>
+      segmentFromDetailPayload(data!, legTpl.replace('%d', String(i + 1)), legs[i]),
+    );
   }
 
   const data = await fetchConnectionLegDetail(params, legs[0]);
   if (!data) {
     return [];
   }
-  out.push(segmentFromDetailPayload(data, '', legs[0]));
-  return out;
+  return [segmentFromDetailPayload(data, '', legs[0])];
 }

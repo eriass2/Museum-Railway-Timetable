@@ -64,6 +64,48 @@ describe('connectionDetailLoad', () => {
     expect(segments[0]?.stops).toHaveLength(1);
   });
 
+  it('returns empty when any multi-leg REST detail fails', async () => {
+    vi.mocked(mrtRestRequest)
+      .mockResolvedValueOnce({
+        success: true,
+        data: { detail: { stops: [] }, notice: '' },
+      })
+      .mockResolvedValueOnce({ success: false });
+
+    const connection: JourneyConnection = {
+      service_id: 0,
+      from_departure: '09:00',
+      to_arrival: '11:00',
+      legs: [
+        {
+          service_id: 1,
+          from_station_id: 1,
+          to_station_id: 3,
+          from_departure: '09:00',
+          to_arrival: '10:00',
+        },
+        {
+          service_id: 2,
+          from_station_id: 3,
+          to_station_id: 2,
+          from_departure: '10:15',
+          to_arrival: '11:00',
+        },
+      ],
+    };
+
+    const segments = await loadConnectionDetailSegments({
+      config,
+      cfg: { legSegmentLabel: 'Delsträcka %d', errorGeneric: 'Fel' },
+      connection,
+      legFrom: 1,
+      legTo: 2,
+    });
+
+    expect(segments).toEqual([]);
+    expect(mrtRestRequest).toHaveBeenCalledTimes(2);
+  });
+
   it('returns empty when REST detail fails', async () => {
     vi.mocked(mrtRestRequest).mockResolvedValue({ success: false });
 
