@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest';
 import type { StationRow } from '../src/admin/types';
 import {
   formatStationPriceZones,
+  resolveStationPriceZoneOptions,
   stationHasPriceZone,
+  stationMissingPriceZone,
   toggleStationPriceZone,
 } from '../src/admin/utils/stationPriceZones';
 
@@ -33,5 +35,11 @@ describe('stationPriceZones', () => {
     expect(formatStationPriceZones([])).toBe('—');
     expect(formatStationPriceZones([1, 2])).toBe('1, 2');
     expect(stationHasPriceZone({ ...row(), price_zones: [2] }, 2)).toBe(true);
+    expect(stationMissingPriceZone(row())).toBe(true);
+  });
+
+  it('resolves zone options from schema', () => {
+    expect(resolveStationPriceZoneOptions([3, 1])).toEqual([1, 3]);
+    expect(resolveStationPriceZoneOptions([])).toEqual([1, 2, 3, 4]);
   });
 });

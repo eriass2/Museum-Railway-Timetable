@@ -20,6 +20,8 @@ function mockCfg(): AdminClientConfig {
       setupStepRoutes: 'Skapa minst en rutt med stationer',
       setupStepTimetables: 'Skapa en tidtabell',
       setupStepServices: 'Lägg till turer i en tidtabell',
+      setupStepPrices: 'Konfigurera biljettpriser',
+      setupStepStationZones: 'Tilldela priszoner till alla stationer',
     },
   };
 }
@@ -47,9 +49,27 @@ describe('adminSetupSteps', () => {
         routes: 1,
         timetables: 3,
         services: 10,
+        prices_configured: 1,
+        stations_without_zones: 0,
       },
       mockCfg(),
     );
     expect(isAdminSetupComplete(steps)).toBe(true);
+  });
+
+  it('requires prices and station zones', () => {
+    const steps = buildAdminSetupSteps(
+      {
+        stations: 2,
+        routes: 1,
+        timetables: 3,
+        services: 10,
+        prices_configured: 0,
+        stations_without_zones: 1,
+      },
+      mockCfg(),
+    );
+    expect(steps.find((s) => s.id === 'prices')?.done).toBe(false);
+    expect(steps.find((s) => s.id === 'station_zones')?.done).toBe(false);
   });
 });
