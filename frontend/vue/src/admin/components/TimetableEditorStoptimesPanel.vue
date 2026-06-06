@@ -1,43 +1,89 @@
 <script setup lang="ts">
-import { AdminPanel } from './ui';
+import {
+  AdminBackNav,
+  AdminPanel,
+  AdminRowActions,
+  MrtButton,
+} from './ui';
 import StopTimesEditor from './StopTimesEditor.vue';
 import EditableTimetableOverview from './EditableTimetableOverview.vue';
+import { computed } from 'vue';
 import { adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 import type { TimetableDetail } from '../types';
 import type { TimetableOverviewPayload } from '../../types/timetableOverview';
 
-defineProps<{
+export type StoptimesPanelView = 'list' | 'detail';
+
+const props = defineProps<{
   detail: TimetableDetail;
   overview: TimetableOverviewPayload | null;
   gridOverviewLoading: boolean;
   canManage: boolean;
   canOperate: boolean;
+  viewMode: StoptimesPanelView;
 }>();
 
 const selectedServiceId = defineModel<number>('selectedServiceId', { required: true });
 
 const emit = defineEmits<{
+  back: [];
   gridToggle: [event: Event];
+  openDetail: [serviceId: number];
   refreshOverview: [];
 }>();
 
 const cfg = adminConfig();
+
+const selectedTripLabel = computed(() => {
+  const service = props.detail.services.find((row) => row.id === selectedServiceId.value);
+  if (!service) {
+    return adminStr(cfg, 'editorSelectTrip');
+  }
+  return `${service.service_number} — ${service.destination || service.route_name}`;
+});
 </script>
 
 <template>
   <AdminPanel class="mrt-vue-root">
-    <p class="description">{{ adminStr(cfg, 'editorStoptimesHint') }}</p>
-    <p class="mrt-admin-stoptimes-trip-picker">
-      <label for="mrt-stoptimes-service">{{ adminStr(cfg, 'editorStoptimesTripLabel') }}</label>
-      <select id="mrt-stoptimes-service" v-model.number="selectedServiceId">
-        <option :value="0">{{ adminStr(cfg, 'editorSelectTrip') }}</option>
-        <option v-for="s in detail.services" :key="s.id" :value="s.id">
-          {{ s.service_number }} — {{ s.destination || s.route_name }}
-        </option>
-      </select>
-    </p>
-    <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
+    <template v-if="viewMode === 'list'">
+      <p class="description">{{ adminStr(cfg, 'editorStoptimesHint') }}</p>
+      <table class="widefat striped">
+        <thead>
+          <tr>
+            <th>{{ adminStr(cfg, 'editorColTrip') }}</th>
+            <th>{{ adminStr(cfg, 'editorColRoute') }}</th>
+            <th>{{ adminStr(cfg, 'editorColDestination') }}</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="s in detail.services" :key="s.id">
+            <td>{{ s.service_number }}</td>
+            <td>{{ s.route_name }}</td>
+            <td>{{ s.destination || '—' }}</td>
+            <td>
+              <AdminRowActions>
+                <MrtButton
+                  context="admin"
+                  variant="secondary"
+                  @click="emit('openDetail', s.id)"
+                >
+                  {{ adminStr(cfg, 'editorStopptimes') }}
+                </MrtButton>
+              </AdminRowActions>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </template>
+
+    <template v-else>
+      <AdminBackNav @back="emit('back')" />
+      <p class="description mrt-admin-stoptimes-trip-label">{{ selectedTripLabel }}</p>
+      <StopTimesEditor v-if="selectedServiceId" :service-id="selectedServiceId" />
+    </template>
+
     <details class="mrt-mt-sm mrt-admin-stoptimes-grid" @toggle="emit('gridToggle', $event)">
       <summary>{{ adminStr(cfg, 'editorStoptimesGridSummary') }}</summary>
       <p class="description">{{ adminStr(cfg, 'editorStoptimesGridHint') }}</p>
@@ -51,3 +97,10 @@ const cfg = adminConfig();
     </details>
   </AdminPanel>
 </template>
+
+<style scoped>
+.mrt-admin-stoptimes-trip-label {
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+</style>

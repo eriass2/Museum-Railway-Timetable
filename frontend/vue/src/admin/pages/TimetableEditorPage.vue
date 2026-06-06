@@ -7,7 +7,6 @@ import TimetableEditorMetaPanel from '../components/TimetableEditorMetaPanel.vue
 import TimetableEditorStoptimesPanel from '../components/TimetableEditorStoptimesPanel.vue';
 import TimetableEditorDatesTab from '../components/timetable-editor/TimetableEditorDatesTab.vue';
 import TimetableEditorDeviationsTab from '../components/timetable-editor/TimetableEditorDeviationsTab.vue';
-import TimetableEditorTripEditForm from '../components/timetable-editor/TimetableEditorTripEditForm.vue';
 import TimetableEditorTripsTab from '../components/timetable-editor/TimetableEditorTripsTab.vue';
 import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
 import { AdminPanel, AdminStatusMessage } from '../components/ui';
@@ -32,6 +31,8 @@ const {
   destinations,
   editTrip,
   editDestinations,
+  tripsView,
+  stoptimesView,
   selectedServiceId,
   gridOverviewLoading,
   deviationRows,
@@ -49,8 +50,10 @@ const {
   loadOverview,
   onStoptimesGridToggle,
   loadEditDestinations,
+  startCreateTrip,
+  backToTripsList,
+  backToStoptimesList,
   startEditTrip,
-  cancelEditTrip,
   saveEditTrip,
   saveDates,
   saveMeta,
@@ -63,6 +66,11 @@ const {
   openStoptimes,
   onMobileSaved,
 } = useTimetableEditorPage(() => timetableId.value);
+
+function openStoptimesDetail(serviceId: number): void {
+  selectedServiceId.value = serviceId;
+  stoptimesView.value = 'detail';
+}
 
 const desktopTabs = computed(() => {
   if (isMobile.value) return [];
@@ -145,26 +153,21 @@ const desktopTabs = computed(() => {
       <TimetableEditorTripsTab
         v-if="detail && !isMobile && tab === 'trips'"
         v-model:new-trip="newTrip"
+        v-model:edit-trip="editTrip"
         :can-manage="cfg.canManage"
         :detail="detail"
         :destinations="destinations"
-        :editing-trip-id="editTrip?.service_id ?? 0"
+        :edit-destinations="editDestinations"
+        :view-mode="tripsView"
         :train-type-icon-key="trainTypeIconKey"
         @open-stoptimes="openStoptimes"
+        @start-create="startCreateTrip"
         @start-edit="startEditTrip"
+        @back="backToTripsList"
         @remove-trip="removeTrip"
         @add-trip="addTrip"
-      />
-
-      <TimetableEditorTripEditForm
-        v-if="detail && !isMobile && tab === 'trips' && editTrip"
-        v-model:draft="editTrip"
-        :detail="detail"
-        :destinations="editDestinations"
-        :train-type-icon-key="trainTypeIconKey"
-        @route-change="loadEditDestinations(editTrip.route_id, true)"
-        @save="saveEditTrip"
-        @cancel="cancelEditTrip"
+        @save-edit="saveEditTrip"
+        @route-change="editTrip && loadEditDestinations(editTrip.route_id, true)"
       />
 
       <TimetableEditorStoptimesPanel
@@ -175,8 +178,11 @@ const desktopTabs = computed(() => {
         :grid-overview-loading="gridOverviewLoading"
         :can-manage="cfg.canManage"
         :can-operate="cfg.canOperate"
+        :view-mode="stoptimesView"
         @grid-toggle="onStoptimesGridToggle"
         @refresh-overview="loadOverview"
+        @open-detail="openStoptimesDetail"
+        @back="backToStoptimesList"
       />
 
       <TimetableEditorDeviationsTab
