@@ -82,6 +82,14 @@ function MRT_admin_vue_l10n_editor(): array {
 		'editorSaveTrip'               => __( 'Spara tur', 'museum-railway-timetable' ),
 		'editorSavedTrip'              => __( 'Tur sparad', 'museum-railway-timetable' ),
 		'editorCancelEdit'             => __( 'Avbryt', 'museum-railway-timetable' ),
+		'editorHighlightSummary'       => __( 'Special markering i tidtabell', 'museum-railway-timetable' ),
+		'editorHighlightLabel'         => __( 'Etikett', 'museum-railway-timetable' ),
+		'editorHighlightColor'         => __( 'Färg', 'museum-railway-timetable' ),
+		'editorHighlightNote'          => __( 'Förklaring (utskrift)', 'museum-railway-timetable' ),
+		'editorHighlightHint'          => __(
+			'Tom etikett tar bort markeringen. Färg visas som vertikal rand i översikten.',
+			'museum-railway-timetable'
+		),
 		'editorRoutePrompt'            => __( '— Rutt —', 'museum-railway-timetable' ),
 		'editorTrainTypePrompt'        => __( '— Tågtyp —', 'museum-railway-timetable' ),
 		'editorDestinationPrompt'      => __( '— Destination —', 'museum-railway-timetable' ),

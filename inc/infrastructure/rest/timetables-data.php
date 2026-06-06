@@ -100,6 +100,7 @@ function MRT_rest_format_timetable_services( int $timetable_id ): array {
 			$service_number = (string) $service->ID;
 		}
 		$end_station_id  = (int) get_post_meta( $service->ID, 'mrt_service_end_station_id', true );
+		$highlight       = MRT_get_service_highlight( (int) $service->ID );
 		$rows[]          = array(
 			'id'                  => (int) $service->ID,
 			'title'               => (string) $service->post_title,
@@ -113,6 +114,9 @@ function MRT_rest_format_timetable_services( int $timetable_id ): array {
 				? MRT_get_train_type_symbol_key( $train_type_term )
 				: '',
 			'destination'         => ! empty( $dest['destination'] ) ? (string) $dest['destination'] : '',
+			'highlight_label'     => $highlight !== null ? (string) $highlight['label'] : '',
+			'highlight_color'     => $highlight !== null ? (string) $highlight['color'] : '',
+			'highlight_note'      => $highlight !== null ? (string) $highlight['note'] : '',
 		);
 	}
 	return $rows;

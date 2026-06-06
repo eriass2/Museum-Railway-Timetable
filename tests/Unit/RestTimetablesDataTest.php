@@ -208,6 +208,28 @@ final class RestTimetablesDataTest extends TestCase {
 		self::assertSame( 'B1', get_post_meta( 701, 'mrt_service_number', true ) );
 	}
 
+	public function test_update_timetable_service_saves_highlight(): void {
+		$this->boot_timetable_posts();
+
+		$result = MRT_rest_update_timetable_service(
+			10,
+			701,
+			array(
+				'route_id'        => 50,
+				'highlight_label' => "Thun's-expressen",
+				'highlight_color' => '#fff9c4',
+				'highlight_note'  => 'Till klädvaruhuset.',
+			)
+		);
+
+		self::assertIsArray( $result );
+		self::assertSame( "Thun's-expressen", $result['highlight_label'] );
+		self::assertSame(
+			"Thun's-expressen",
+			get_post_meta( 701, 'mrt_service_highlight_label', true )
+		);
+	}
+
 	public function test_format_train_type_options_ignores_wp_errors(): void {
 		$rows = MRT_rest_format_train_type_options( new WP_Error( 'fail', 'broken' ) );
 

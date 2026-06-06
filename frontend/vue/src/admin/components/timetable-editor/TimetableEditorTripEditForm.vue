@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import {
+  AdminDisclosure,
   AdminFormActions,
   AdminPanel,
   AdminTrainTypeSelect,
@@ -15,6 +16,9 @@ export type TripEditDraft = {
   route_id: number;
   train_type_id: number;
   end_station_id: number;
+  highlight_label: string;
+  highlight_color: string;
+  highlight_note: string;
 };
 
 defineProps<{
@@ -65,6 +69,51 @@ const emit = defineEmits<{
         <option :value="0">{{ adminStr(cfg, 'editorDestinationPrompt') }}</option>
         <option v-for="d in destinations" :key="d.id" :value="d.id">{{ d.name }}</option>
       </select>
+      <AdminDisclosure :summary="adminStr(cfg, 'editorHighlightSummary')">
+        <p class="description">{{ adminStr(cfg, 'editorHighlightHint') }}</p>
+        <p>
+          <label :for="`mrt-trip-hl-label-${draft.service_id}`">
+            {{ adminStr(cfg, 'editorHighlightLabel') }}
+          </label>
+          <input
+            :id="`mrt-trip-hl-label-${draft.service_id}`"
+            v-model="draft.highlight_label"
+            type="text"
+            class="regular-text"
+          />
+        </p>
+        <p>
+          <label :for="`mrt-trip-hl-color-${draft.service_id}`">
+            {{ adminStr(cfg, 'editorHighlightColor') }}
+          </label>
+          <input
+            :id="`mrt-trip-hl-color-${draft.service_id}`"
+            v-model="draft.highlight_color"
+            type="color"
+            :disabled="!draft.highlight_label.trim()"
+          />
+          <input
+            v-model="draft.highlight_color"
+            type="text"
+            class="regular-text mrt-admin-highlight-hex"
+            pattern="#[0-9a-fA-F]{3,8}"
+            placeholder="#fff9c4"
+            :disabled="!draft.highlight_label.trim()"
+          />
+        </p>
+        <p>
+          <label :for="`mrt-trip-hl-note-${draft.service_id}`">
+            {{ adminStr(cfg, 'editorHighlightNote') }}
+          </label>
+          <textarea
+            :id="`mrt-trip-hl-note-${draft.service_id}`"
+            v-model="draft.highlight_note"
+            rows="2"
+            class="large-text"
+            :disabled="!draft.highlight_label.trim()"
+          />
+        </p>
+      </AdminDisclosure>
       <AdminFormActions>
         <MrtButton context="admin" variant="primary" @click="emit('save')">
           {{ adminStr(cfg, 'editorSaveTrip') }}
@@ -86,5 +135,10 @@ const emit = defineEmits<{
 .mrt-admin-trip-edit__title {
   margin: 0 0 8px;
   font-size: 14px;
+}
+
+.mrt-admin-highlight-hex {
+  margin-left: 8px;
+  max-width: 7rem;
 }
 </style>

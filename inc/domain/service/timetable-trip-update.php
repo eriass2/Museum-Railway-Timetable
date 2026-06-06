@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
+require_once MRT_PATH . 'inc/domain/service/highlight.php';
 
 /**
  * Verify service belongs to timetable.
@@ -88,6 +89,14 @@ function MRT_apply_timetable_service_update( int $service_id, array $body ) {
 			'post_title' => $auto_title,
 		)
 	);
+
+	if (
+		array_key_exists( 'highlight_label', $body )
+		|| array_key_exists( 'highlight_color', $body )
+		|| array_key_exists( 'highlight_note', $body )
+	) {
+		MRT_apply_service_highlight_fields( $service_id, $body );
+	}
 
 	return true;
 }

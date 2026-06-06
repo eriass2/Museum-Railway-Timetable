@@ -45,18 +45,20 @@ function MRT_sanitize_highlight_color( string $color ): string {
 }
 
 /**
- * @param array<string, string> $row services.csv row
+ * Save or clear per-departure highlight meta.
+ *
+ * @param array<string, mixed> $fields highlight_label, highlight_color, highlight_note.
  */
-function MRT_csv_update_service_highlight_from_row( int $service_id, array $row ): void {
-	$label = sanitize_text_field( $row['highlight_label'] ?? '' );
+function MRT_apply_service_highlight_fields( int $service_id, array $fields ): void {
+	$label = sanitize_text_field( (string) ( $fields['highlight_label'] ?? '' ) );
 	if ( $label === '' ) {
 		delete_post_meta( $service_id, 'mrt_service_highlight_label' );
 		delete_post_meta( $service_id, 'mrt_service_highlight_color' );
 		delete_post_meta( $service_id, 'mrt_service_highlight_note' );
 		return;
 	}
-	$color = MRT_sanitize_highlight_color( (string) ( $row['highlight_color'] ?? '' ) );
-	$note  = sanitize_textarea_field( $row['highlight_note'] ?? '' );
+	$color = MRT_sanitize_highlight_color( (string) ( $fields['highlight_color'] ?? '' ) );
+	$note  = sanitize_textarea_field( (string) ( $fields['highlight_note'] ?? '' ) );
 	update_post_meta( $service_id, 'mrt_service_highlight_label', $label );
 	update_post_meta( $service_id, 'mrt_service_highlight_color', $color !== '' ? $color : '#fff9c4' );
 	if ( $note !== '' ) {
@@ -64,4 +66,11 @@ function MRT_csv_update_service_highlight_from_row( int $service_id, array $row 
 	} else {
 		delete_post_meta( $service_id, 'mrt_service_highlight_note' );
 	}
+}
+
+/**
+ * @param array<string, string> $row services.csv row
+ */
+function MRT_csv_update_service_highlight_from_row( int $service_id, array $row ): void {
+	MRT_apply_service_highlight_fields( $service_id, $row );
 }

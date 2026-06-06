@@ -13,6 +13,13 @@ import {
   updateTimetableService,
 } from '../api/adminRest';
 import type { TimetableDetail, TimetableServiceRow } from '../types';
+
+type TimetableServiceEditRow = TimetableServiceRow & {
+  end_station_id?: number;
+  highlight_label?: string;
+  highlight_color?: string;
+  highlight_note?: string;
+};
 import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminFormActions,
@@ -197,7 +204,7 @@ watch(
   },
 );
 
-function serviceNumberForEdit(service: TimetableServiceRow): string {
+function serviceNumberForEdit(service: TimetableServiceEditRow): string {
   return service.service_number === String(service.id) ? '' : service.service_number;
 }
 
@@ -209,7 +216,9 @@ async function loadEditDestinations(routeId: number, resetEnd = false): Promise<
 }
 
 async function startEditTrip(serviceId: number): Promise<void> {
-  const service = detail.value?.services.find((s) => s.id === serviceId);
+  const service = detail.value?.services.find((s) => s.id === serviceId) as
+    | TimetableServiceEditRow
+    | undefined;
   if (!service || !cfg.canManage) {
     return;
   }
@@ -219,6 +228,9 @@ async function startEditTrip(serviceId: number): Promise<void> {
     route_id: service.route_id,
     train_type_id: service.train_type_id,
     end_station_id: service.end_station_id ?? 0,
+    highlight_label: service.highlight_label ?? '',
+    highlight_color: service.highlight_color || '#fff9c4',
+    highlight_note: service.highlight_note ?? '',
   };
   await loadEditDestinations(service.route_id);
 }
@@ -237,6 +249,9 @@ async function saveEditTrip(): Promise<void> {
     train_type_id: editTrip.value.train_type_id || undefined,
     end_station_id: editTrip.value.end_station_id || undefined,
     service_number: editTrip.value.service_number,
+    highlight_label: editTrip.value.highlight_label.trim(),
+    highlight_color: editTrip.value.highlight_color,
+    highlight_note: editTrip.value.highlight_note,
   });
   editTrip.value = null;
   editDestinations.value = [];
