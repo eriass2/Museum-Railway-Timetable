@@ -23,7 +23,7 @@ export function priceMatrixHasAnyValue(payload: PricesPayload): boolean {
     for (const cat of Object.keys(payload.matrix[ticket] ?? {})) {
       for (const zone of payload.zones) {
         const value = payload.matrix[ticket]?.[cat]?.[zone];
-        if (value !== null && value !== undefined && value !== '') {
+        if (value !== null && value !== undefined) {
           return true;
         }
       }
@@ -64,7 +64,7 @@ export function buildAdminPricePreviewDay(
     return null;
   }
   const row = priceMatrixRowForZone(payload, 'day', zone);
-  const hasAny = Object.values(row).some((v) => v !== null && v !== '');
+  const hasAny = Object.values(row).some((v) => v !== null && v !== undefined);
   if (!hasAny) {
     return null;
   }
