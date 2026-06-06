@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
-import MrtTimeline from '../src/components/ui/MrtTimeline.vue';
+import MrtTimeline, { type MrtTimelineStop } from '../src/components/ui/MrtTimeline.vue';
 
-const stops = [
+const stops: MrtTimelineStop[] = [
   { station_title: 'Uppsala', departure_time: '10:00' },
   { station_title: 'Marielund', departure_time: '10:20' },
   { station_title: 'Selknä', departure_time: '10:40' },
@@ -15,7 +15,7 @@ async function renderTimeline(expanded = false): Promise<string> {
     render: () =>
       h(MrtTimeline, {
         stops,
-        formatTime: (s: (typeof stops)[number]) => s.departure_time || s.arrival_time || '',
+        formatTime: (s: MrtTimelineStop) => s.departure_time || s.arrival_time || '',
         showStopsLabel: 'Visa passerade stationer',
         hideStopsLabel: 'Dölj passerade stationer',
         startExpanded: expanded,
