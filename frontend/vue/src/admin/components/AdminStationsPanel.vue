@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router';
 import {
   AdminDisclosure,
   AdminEmptyState,
@@ -14,7 +15,7 @@ import { adminStr, adminFmtN } from '../utils/adminLabels';
 import {
   formatStationPriceZones,
   stationHasPriceZone,
-  STATION_PRICE_ZONE_OPTIONS,
+  stationMissingPriceZone,
   toggleStationPriceZone,
 } from '../utils/stationPriceZones';
 import { trainChangeEntryCount } from '../utils/stationTrainChange';
@@ -24,6 +25,7 @@ import type { StationRow } from '../types';
 
 defineProps<{
   stations: StationRow[];
+  priceZoneOptions: number[];
   isFlashed: (id: number) => boolean;
 }>();
 
@@ -49,6 +51,10 @@ function trainChangeSummary(st: StationRow): string {
 <template>
   <AdminPanel>
     <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabStations') }}</h2>
+    <p class="description">
+      {{ adminStr(cfg, 'stationsZonesHint') }}
+      <RouterLink to="/help">{{ adminStr(cfg, 'stationsZonesHelpLink') }}</RouterLink>
+    </p>
     <div v-if="cfg.canManage" class="mrt-admin-station-create">
       <AdminInlineForm>
         <input
@@ -91,7 +97,7 @@ function trainChangeSummary(st: StationRow): string {
             <span class="label">{{ adminStr(cfg, 'stationsColZones') }}</span>
             <span class="mrt-admin-zone-picks">
               <label
-                v-for="zone in STATION_PRICE_ZONE_OPTIONS"
+                v-for="zone in priceZoneOptions"
                 :key="`new-${zone}`"
                 class="mrt-admin-zone-picks__item"
               >
@@ -182,14 +188,14 @@ function trainChangeSummary(st: StationRow): string {
               <input v-if="cfg.canManage" v-model="st.bus_suffix" type="checkbox" />
               <span v-else>{{ st.bus_suffix ? adminStr(cfg, 'yes') : '—' }}</span>
             </td>
-            <td>
+            <td :class="{ 'mrt-admin-station-zones--missing': stationMissingPriceZone(st) }">
               <div
                 v-if="cfg.canManage"
                 class="mrt-admin-zone-picks"
                 :aria-label="adminStr(cfg, 'stationsColZones')"
               >
                 <label
-                  v-for="zone in STATION_PRICE_ZONE_OPTIONS"
+                  v-for="zone in priceZoneOptions"
                   :key="`${st.id}-${zone}`"
                   class="mrt-admin-zone-picks__item"
                 >
@@ -201,7 +207,12 @@ function trainChangeSummary(st: StationRow): string {
                   {{ zone }}
                 </label>
               </div>
-              <span v-else>{{ formatStationPriceZones(st.price_zones) }}</span>
+              <span v-else>
+                {{ formatStationPriceZones(st.price_zones) }}
+                <span v-if="stationMissingPriceZone(st)" class="mrt-admin-station-missing-zone">
+                  ({{ adminStr(cfg, 'stationsMissingZoneBadge') }})
+                </span>
+              </span>
             </td>
             <td>
               <input
@@ -231,3 +242,13 @@ function trainChangeSummary(st: StationRow): string {
     </AdminTableScroll>
   </AdminPanel>
 </template>
+
+<style scoped>
+.mrt-admin-station-zones--missing {
+  background: #fcf9e8;
+}
+
+.mrt-admin-station-missing-zone {
+  color: #996800;
+}
+</style>

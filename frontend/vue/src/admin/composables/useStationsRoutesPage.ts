@@ -4,20 +4,27 @@ import {
   createStation,
   deleteRoute,
   deleteStation,
+  getPrices,
   listRoutes,
   listStations,
   updateRoute,
   updateStation,
 } from '../api/adminRest';
 import { adminConfirm } from './adminConfirm';
+import { proceedIfDiscardAllowed } from './adminDiscardGuard';
 import { useAdminResource } from './useAdminResource';
 import { useAdminRowFlash } from './useAdminRowFlash';
 import { useAdminSaveNotice } from './useAdminSaveNotice';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { emptyRouteDraft, emptyStationDraft } from '../utils/routeStationEditor';
+import { resolveStationPriceZoneOptions, stationMissingPriceZone } from '../utils/stationPriceZones';
 import type { RoutesPanelView } from '../components/AdminRoutesPanel.vue';
 import { adminConfig } from '../types';
 import type { RouteRow, StationRow } from '../types';
+
+function routeDraftSnapshot(route: RouteRow): string {
+  return JSON.stringify(route);
+}
 
 export function useStationsRoutesPage() {
   const cfg = adminConfig();
@@ -30,11 +37,22 @@ export function useStationsRoutesPage() {
   const sectionTab = ref<'stations' | 'routes'>('stations');
   const editingRoute = ref<RouteRow | null>(null);
   const routesView = ref<RoutesPanelView>('list');
+  const routeFormSnapshot = ref('');
+  const priceZoneOptions = ref<number[]>([...resolveStationPriceZoneOptions(undefined)]);
+  const showMissingZonesOnly = ref(false);
 
   const { loading, error, data, load, reload } = useAdminResource({
     fetch: async () => {
-      const [s, r] = await Promise.all([listStations(), listRoutes()]);
-      return { stations: s.items, routes: r.items };
+      const [s, r, prices] = await Promise.all([
+        listStations(),
+        listRoutes(),
+        getPrices().catch(() => null),
+      ]);
+      return {
+        stations: s.items,
+        routes: r.items,
+        priceZones: prices?.zones,
+      };
     },
     errorMessage: (e) => adminErrorMessage(cfg, e, 'loadFailed'),
   });
@@ -45,6 +63,7 @@ export function useStationsRoutesPage() {
       if (!payload) {
         return;
       }
+      priceZoneOptions.value = resolveStationPriceZoneOptions(payload.priceZones);
       stations.value = payload.stations.map((row) => ({
         ...row,
         price_zones: row.price_zones ?? [],
@@ -64,6 +83,13 @@ export function useStationsRoutesPage() {
         ]),
       ),
   );
+
+  const visibleStations = computed(() => {
+    if (!showMissingZonesOnly.value) {
+      return stations.value;
+    }
+    return stations.value.filter((st) => stationMissingPriceZone(st));
+  });
 
   function stationTitle(stationId: number): string {
     return stations.value.find((s) => s.id === stationId)?.title || String(stationId);
@@ -86,10 +112,30 @@ export function useStationsRoutesPage() {
     await reload();
   }
 
+  function isRouteFormDirty(): boolean {
+    if (routesView.value === 'list') {
+      return false;
+    }
+    const current =
+      routesView.value === 'edit' && editingRoute.value
+        ? routeDraftSnapshot(editingRoute.value)
+        : routeDraftSnapshot(newRoute.value);
+    return current !== routeFormSnapshot.value;
+  }
+
   function backToRoutesList(): void {
     editingRoute.value = null;
     newRoute.value = emptyRouteDraft();
     routesView.value = 'list';
+    routeFormSnapshot.value = '';
+  }
+
+  async function requestBackToRoutesList(): Promise<boolean> {
+    if (routesView.value !== 'list' && !(await proceedIfDiscardAllowed(isRouteFormDirty()))) {
+      return false;
+    }
+    backToRoutesList();
+    return true;
   }
 
   function startCreateRoute(): void {
@@ -99,11 +145,12 @@ export function useStationsRoutesPage() {
     editingRoute.value = null;
     newRoute.value = emptyRouteDraft();
     routesView.value = 'create';
+    routeFormSnapshot.value = routeDraftSnapshot(newRoute.value);
   }
 
   watch(sectionTab, (tab, prev) => {
     if (prev === 'routes' && tab !== 'routes') {
-      backToRoutesList();
+      void requestBackToRoutesList();
     }
   });
 
@@ -124,6 +171,7 @@ export function useStationsRoutesPage() {
     sectionTab.value = 'routes';
     editingRoute.value = { ...route, station_ids: [...route.station_ids] };
     routesView.value = 'edit';
+    routeFormSnapshot.value = routeDraftSnapshot(editingRoute.value);
   }
 
   async function saveRoute() {
@@ -191,6 +239,9 @@ export function useStationsRoutesPage() {
   return {
     cfg,
     stations,
+    visibleStations,
+    priceZoneOptions,
+    showMissingZonesOnly,
     routes,
     saveMsg,
     newStation,
@@ -209,6 +260,7 @@ export function useStationsRoutesPage() {
     editRoute,
     saveRoute,
     startCreateRoute,
+    requestBackToRoutesList,
     backToRoutesList,
     saveStationMeta,
     removeStation,

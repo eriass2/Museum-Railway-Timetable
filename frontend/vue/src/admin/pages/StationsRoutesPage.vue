@@ -11,6 +11,9 @@ const { isMobile } = useMobileAdmin();
 const {
   cfg,
   stations,
+  visibleStations,
+  priceZoneOptions,
+  showMissingZonesOnly,
   routes,
   saveMsg,
   newStation,
@@ -29,6 +32,7 @@ const {
   editRoute,
   saveRoute,
   startCreateRoute,
+  requestBackToRoutesList,
   backToRoutesList,
   saveStationMeta,
   removeStation,
@@ -68,10 +72,18 @@ const {
         </a>
       </nav>
 
+      <div v-if="sectionTab === 'stations' && cfg.canManage" class="mrt-admin-stations-toolbar">
+        <label class="mrt-admin-stations-filter">
+          <input v-model="showMissingZonesOnly" type="checkbox" />
+          {{ adminStr(cfg, 'stationsFilterMissingZones') }}
+        </label>
+      </div>
+
       <AdminStationsPanel
         v-if="sectionTab === 'stations'"
         v-model:new-station="newStation"
-        :stations="stations"
+        :stations="visibleStations"
+        :price-zone-options="priceZoneOptions"
         :is-flashed="isFlashed"
         @add="addStation"
         @save="saveStationMeta"
@@ -91,9 +103,21 @@ const {
         @edit="editRoute"
         @save="saveRoute"
         @start-create="startCreateRoute"
-        @back="backToRoutesList"
+        @back="requestBackToRoutesList"
         @remove="removeRoute"
       />
     </AdminLoadState>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-stations-toolbar {
+  margin: 0 0 12px;
+}
+
+.mrt-admin-stations-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+</style>

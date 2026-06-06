@@ -37,6 +37,19 @@ export function buildAdminSetupSteps(
       done: (stats.services ?? 0) > 0,
       route: '/timetables',
     },
+    {
+      id: 'prices',
+      label: adminStr(cfg, 'setupStepPrices'),
+      done: (stats.prices_configured ?? 0) > 0,
+      route: '/prices',
+    },
+    {
+      id: 'station_zones',
+      label: adminStr(cfg, 'setupStepStationZones'),
+      done:
+        (stats.stations ?? 0) > 0 && (stats.stations_without_zones ?? 0) === 0,
+      route: '/stations-routes',
+    },
   ];
 }
 
