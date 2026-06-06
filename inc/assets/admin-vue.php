@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/assets/l10n/loader.php';
-require_once MRT_PATH . 'inc/assets/admin-vue-l10n-misc.php';
 
 /**
  * Admin page slugs that mount Vue.

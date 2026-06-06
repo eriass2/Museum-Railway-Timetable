@@ -47,7 +47,7 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `GET /journey/calendar` | Trafikdagar (publikt) |
 | `GET /journey/connection-detail` | Detalj (publikt); valfri `date` i body; svar med `notice`, `is_cancelled` |
 
-Implementation: `inc/infrastructure/rest/*.php`. Admin-klient: `frontend/vue/src/admin/api/adminRest.ts`.
+Implementation: `inc/infrastructure/rest/*.php` (en fil per resursområde, laddas via `loader.php`). Publika tidtabell-endpoints: `timetable-public.php` (`/timetables/day`, `/timetables/month`). Resesökning: `journey-public.php`. Admin-klient: `frontend/vue/src/admin/api/adminRest.ts`.
 
 ---
 

@@ -13,15 +13,28 @@ This document describes all data objects in the Museum Railway Timetable plugin 
 | Services & connections | `inc/domain/service/services.php`, `connections.php` |
 | Routes & stations | `inc/domain/route/routes.php`, `inc/domain/station/stations.php` |
 | Timetable overview grid | `inc/domain/timetable/view/` |
-| Journey search & prices | `inc/domain/journey/`, `inc/domain/pricing/prices.php` |
+| Journey search & prices | `inc/domain/journey/` (engine: `search.php` loader + `search-*.php`; normalize: `journey-normalize.php` loader + `journey-normalize-*.php`), `inc/domain/pricing/prices.php` |
+| Admin Vue l10n strings | `inc/assets/l10n/` (per-screen `admin-vue-l10n-*.php` + `loader.php`) |
 | Lennakatten import | `testdata/fixtures/lennakatten/`, `inc/import/csv/`, admin UI `inc/admin/tools/import-lennakatten.php` |
 
 ## Overview
 
 The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom Database Tables, and Post Meta to manage timetable data.
 
+### Trip vs service (terminology)
+
+The codebase uses both words for the same concept — one scheduled train run on a route for a given timetable day.
+
+| Context | Term | Examples |
+|---------|------|----------|
+| WordPress post type & REST paths | **service** | `mrt_service`, `GET /timetables/{id}/services`, `service_number` meta |
+| UI copy, docs, some PHP comments | **trip** | “Lägg till tur”, overview grid columns, journey wizard |
+| Database / import CSV | **service** | `services.csv`, `service_code` |
+
+**Rule of thumb:** prefer **service** in code identifiers (REST, CPT, meta keys, filenames). Use **trip** only in user-facing Swedish/English labels where it reads more naturally. Do not rename REST routes or post types without a dedicated migration.
+
 **New Data Model:**
-- A **Timetable** has one or more dates (days) when it applies and contains multiple trips (Services)
+- A **Timetable** has one or more dates (days) when it applies and contains multiple trips/services (`mrt_service`)
 - A **Service** (trip) belongs to one Timetable, has arrival/departure times (Stop Times), and a train type
 - A **Route** defines which stations are available (independent of timetable)
 - A **Station** is used in Routes and Stop Times

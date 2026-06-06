@@ -19,6 +19,12 @@ require_once ABSPATH . 'inc/infrastructure/rest/timetable-public.php';
 
 final class RestJourneyPublicTest extends TestCase
 {
+	protected function setUp(): void
+	{
+		require_once ABSPATH . 'inc/public/month-calendar/shortcode.php';
+		parent::setUp();
+	}
+
 	protected function tearDown(): void
 	{
 		unset( $GLOBALS['mrt_test_get_posts'] );
@@ -54,6 +60,17 @@ final class RestJourneyPublicTest extends TestCase
 		self::assertIsArray( $result );
 		self::assertSame( 'single', $result['trip_type'] );
 		self::assertSame( array(), $result['connections'] );
+	}
+
+	public function test_timetable_month_handler_rejects_invalid_month(): void
+	{
+		$request = new WP_REST_Request( 'GET', '/museum-railway-timetable/v1/timetables/month' );
+		$request->set_param( 'year', 2026 );
+		$request->set_param( 'month', 13 );
+
+		$result = MRT_rest_timetable_month_handler( $request );
+
+		self::assertInstanceOf( WP_Error::class, $result );
 	}
 
 	public function test_journey_search_response_propagates_validation_error(): void

@@ -155,6 +155,41 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertSame( 3, $result['end_station'] );
 	}
 
+	public function test_update_route_handler_applies_title_and_station_order(): void {
+		$post = new WP_Post(
+			(object) array(
+				'ID'         => 7,
+				'post_title' => 'Old title',
+				'post_type'  => MRT_POST_TYPE_ROUTE,
+			)
+		);
+		$GLOBALS['mrt_test_posts']     = array( 7 => $post );
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'7|mrt_route_stations'      => array( 1, 2 ),
+			'7|mrt_route_start_station' => 1,
+			'7|mrt_route_end_station'   => 2,
+		);
+
+		$request = new WP_REST_Request( 'PATCH', '/routes/7' );
+		$request['id'] = 7;
+		$request->set_json_params(
+			array(
+				'title'         => 'New title',
+				'station_ids'   => array( 2, 1, 3 ),
+				'start_station' => 2,
+				'end_station'   => 3,
+			)
+		);
+
+		$result = MRT_rest_update_route_handler( $request );
+
+		self::assertIsArray( $result );
+		self::assertSame( 'New title', $result['title'] );
+		self::assertSame( array( 2, 1, 3 ), $result['station_ids'] );
+		self::assertSame( 2, $result['start_station'] );
+		self::assertSame( 3, $result['end_station'] );
+	}
+
 	public function test_format_route_includes_station_ids(): void {
 		$post = new WP_Post(
 			(object) array(

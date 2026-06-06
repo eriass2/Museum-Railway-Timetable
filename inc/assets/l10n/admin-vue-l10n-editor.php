@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin Vue i18n: editor, mobile, dev tools, setup checklist, route preview, stop times.
+ * Admin Vue l10n: editor
  *
  * @package Museum_Railway_Timetable
  */
@@ -11,9 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * @return array<string, string>
- */
 function MRT_admin_vue_l10n_editor(): array {
 	return array(
 		'editorTitle'                => __( 'Tidtabell', 'museum-railway-timetable' ),

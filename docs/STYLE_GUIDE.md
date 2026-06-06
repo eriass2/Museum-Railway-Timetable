@@ -178,7 +178,10 @@ museum-railway-timetable/
 ├── inc/
 │   ├── bootstrap/                 # domain loader
 │   ├── domain/                    # affärslogik (journey, service, timetable, …)
+│   │   └── journey/engine/        # search.php (loader), search-results.php, search-bfs.php, search-find.php
+│   │   └── journey/               # journey-normalize.php (loader), journey-normalize-*.php
 │   ├── infrastructure/            # CPT, rest/, wordpress/
+│   ├── assets/l10n/               # admin-vue-l10n-*.php + loader.php (ersätter monolitiska l10n-filer)
 │   ├── admin/                     # app.php, menu.php, tools/
 │   ├── public/                    # month-calendar, timetable-overview, journey-wizard
 │   ├── import/lennakatten/
@@ -189,6 +192,10 @@ museum-railway-timetable/
 │   ├── admin.css                  # WP-admin skal (Vue-admin)
 │   ├── dist/vue/                  # Vite bundle (public + admin JS/CSS)
 │   └── icons/train-types/
+├── frontend/vue/src/admin/          # Vue admin SPA (pages, composables, components)
+│   ├── composables/               # t.ex. useStationsRoutesPage.ts
+│   ├── components/                # t.ex. AdminStationsPanel, RouteStationOrderEditor
+│   └── pages/                     # tunna route-vyer som delegerar till composables
 ├── frontend/vue/src/styles/       # Vue-ägd publik CSS (se §3 CSS)
 │   ├── mrt-public.css             # tokens + assets primitives + vue-shell
 │   ├── journey-wizard/            # wizard-moduler
