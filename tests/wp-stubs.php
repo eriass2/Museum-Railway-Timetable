@@ -512,9 +512,23 @@ if (!function_exists('apply_filters')) {
      * @return mixed
      */
     function apply_filters($hook_name, $value, ...$args) {
-        unset($hook_name, $args);
+        unset($args);
+        if ( isset( $GLOBALS['mrt_test_filters'][ $hook_name ] ) && is_callable( $GLOBALS['mrt_test_filters'][ $hook_name ] ) ) {
+            return $GLOBALS['mrt_test_filters'][ $hook_name ]( $value );
+        }
 
         return $value;
+    }
+}
+
+if ( ! function_exists( 'wp_json_encode' ) ) {
+    /**
+     * @param mixed $data
+     */
+    function wp_json_encode( $data, int $options = 0, int $depth = 512 ) {
+        unset( $depth );
+        $json = json_encode( $data, $options );
+        return is_string( $json ) ? $json : false;
     }
 }
 

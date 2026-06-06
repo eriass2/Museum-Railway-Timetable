@@ -72,14 +72,12 @@ function MRT_get_post_by_title( string $title, string $post_type ): ?WP_Post {
 function MRT_check_db_error( string $context = '' ): bool {
 	global $wpdb;
 	if ( $wpdb->last_error ) {
-		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-			$message = 'MRT: Database error';
-			if ( $context ) {
-				$message .= ' in ' . $context;
-			}
-			$message .= ': ' . $wpdb->last_error;
-			error_log( $message );
+		$message = 'Database error';
+		if ( $context !== '' ) {
+			$message .= ' in ' . $context;
 		}
+		$message .= ': ' . $wpdb->last_error;
+		MRT_log( $message );
 		return true;
 	}
 	return false;

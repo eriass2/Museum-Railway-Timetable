@@ -49,6 +49,7 @@ function MRT_load_timetable_view_domain_modules(): void {
  * Load all domain modules and shared infrastructure helpers.
  */
 function MRT_load_domain_modules(): void {
+	require_once MRT_PATH . 'inc/infrastructure/wordpress/log.php';
 	require_once MRT_PATH . 'inc/infrastructure/wordpress/helpers-utils.php';
 	require_once MRT_PATH . 'inc/domain/datetime/datetime.php';
 	require_once MRT_PATH . 'inc/domain/station/stations.php';
