@@ -89,7 +89,8 @@
   margin-top: 0;
 }
 
-.mrt-admin-station-create {
+.mrt-admin-station-create,
+.mrt-admin-route-create {
   margin-bottom: 12px;
 }
 

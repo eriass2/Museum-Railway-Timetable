@@ -60,10 +60,23 @@ function emptyStationDraft(): StationRow {
 }
 
 const newStation = ref<StationRow>(emptyStationDraft());
-const newRouteTitle = ref('');
+
+function emptyRouteDraft(): RouteRow {
+  return {
+    id: 0,
+    title: '',
+    start_station: 0,
+    end_station: 0,
+    station_ids: [],
+    stations: [],
+  };
+}
+
+const newRoute = ref<RouteRow>(emptyRouteDraft());
 const sectionTab = ref<'stations' | 'routes'>('stations');
 const editingRoute = ref<RouteRow | null>(null);
 const addStationToRoute = ref(0);
+const addStationToNewRoute = ref(0);
 
 const { loading, error, data, load, reload } = useAdminResource({
   fetch: async () => {
@@ -115,9 +128,16 @@ async function addStation() {
 }
 
 async function addRoute() {
-  if (!cfg.canManage || !newRouteTitle.value.trim()) return;
-  await createRoute({ title: newRouteTitle.value.trim(), station_ids: [] });
-  newRouteTitle.value = '';
+  const draft = newRoute.value;
+  if (!cfg.canManage || !draft.title.trim()) return;
+  await createRoute({
+    title: draft.title.trim(),
+    station_ids: draft.station_ids,
+    start_station: draft.start_station || undefined,
+    end_station: draft.end_station || undefined,
+  });
+  newRoute.value = emptyRouteDraft();
+  addStationToNewRoute.value = 0;
   await reload();
 }
 
@@ -178,14 +198,51 @@ function stationTitle(stationId: number): string {
   return stations.value.find((s) => s.id === stationId)?.title || String(stationId);
 }
 
-function routeStationRole(stationId: number): 'start' | 'end' | 'both' | null {
-  if (!editingRoute.value) return null;
-  const isStart = editingRoute.value.start_station > 0 && stationId === editingRoute.value.start_station;
-  const isEnd = editingRoute.value.end_station > 0 && stationId === editingRoute.value.end_station;
+function routeStationRoleFor(
+  route: Pick<RouteRow, 'start_station' | 'end_station'>,
+  stationId: number,
+): 'start' | 'end' | 'both' | null {
+  const isStart = route.start_station > 0 && stationId === route.start_station;
+  const isEnd = route.end_station > 0 && stationId === route.end_station;
   if (isStart && isEnd) return 'both';
   if (isStart) return 'start';
   if (isEnd) return 'end';
   return null;
+}
+
+function routeStationRole(stationId: number): 'start' | 'end' | 'both' | null {
+  if (!editingRoute.value) return null;
+  return routeStationRoleFor(editingRoute.value, stationId);
+}
+
+function moveNewRouteStation(idx: number, dir: -1 | 1) {
+  const next = idx + dir;
+  const ids = newRoute.value.station_ids;
+  if (next < 0 || next >= ids.length) return;
+  const copy = [...ids];
+  const tmp = copy[idx];
+  copy[idx] = copy[next];
+  copy[next] = tmp;
+  newRoute.value.station_ids = copy;
+}
+
+function appendStationToNewRoute() {
+  if (!addStationToNewRoute.value) return;
+  if (!newRoute.value.station_ids.includes(addStationToNewRoute.value)) {
+    newRoute.value.station_ids = [...newRoute.value.station_ids, addStationToNewRoute.value];
+  }
+  addStationToNewRoute.value = 0;
+}
+
+function removeStationFromNewRoute(idx: number) {
+  const sid = newRoute.value.station_ids[idx];
+  newRoute.value.station_ids = newRoute.value.station_ids.filter((_, i) => i !== idx);
+  if (newRoute.value.start_station === sid) {
+    newRoute.value.start_station = 0;
+  }
+  if (newRoute.value.end_station === sid) {
+    newRoute.value.end_station = 0;
+  }
 }
 
 async function saveStationMeta(st: StationRow) {
@@ -443,17 +500,125 @@ async function removeRoute(route: RouteRow) {
 
     <AdminPanel v-if="sectionTab === 'routes'">
       <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabRoutes') }}</h2>
-      <AdminInlineForm v-if="cfg.canManage">
-        <input
-          v-model="newRouteTitle"
-          type="text"
-          class="regular-text"
-          :placeholder="adminStr(cfg, 'stationsNewRoute')"
-        />
-        <MrtButton context="admin" variant="primary" @click="addRoute">
-          {{ adminStr(cfg, 'add') }}
-        </MrtButton>
-      </AdminInlineForm>
+      <div v-if="cfg.canManage" class="mrt-admin-route-create">
+        <AdminInlineForm>
+          <input
+            v-model="newRoute.title"
+            type="text"
+            class="regular-text"
+            :placeholder="adminStr(cfg, 'stationsNewRoute')"
+          />
+          <MrtButton context="admin" variant="primary" @click="addRoute">
+            {{ adminStr(cfg, 'add') }}
+          </MrtButton>
+        </AdminInlineForm>
+        <AdminDisclosure :summary="adminStr(cfg, 'stationsRouteCreateMoreFields')">
+          <fieldset class="mrt-admin-route-editor__section mrt-admin-route-editor__endpoints">
+            <legend>{{ adminStr(cfg, 'stationsRouteEndpointsLegend') }}</legend>
+            <p class="description">{{ adminStr(cfg, 'stationsRouteEndpointsHint') }}</p>
+            <div class="mrt-admin-route-editor__endpoint-fields">
+              <label class="mrt-admin-route-editor__label" for="mrt-new-route-start">
+                {{ adminStr(cfg, 'stationsRouteStart') }}
+              </label>
+              <select id="mrt-new-route-start" v-model.number="newRoute.start_station">
+                <option :value="0">—</option>
+                <option v-for="sid in newRoute.station_ids" :key="`new-start-${sid}`" :value="sid">
+                  {{ stationTitle(sid) }}
+                </option>
+              </select>
+              <label class="mrt-admin-route-editor__label" for="mrt-new-route-end">
+                {{ adminStr(cfg, 'stationsRouteEnd') }}
+              </label>
+              <select id="mrt-new-route-end" v-model.number="newRoute.end_station">
+                <option :value="0">—</option>
+                <option v-for="sid in newRoute.station_ids" :key="`new-end-${sid}`" :value="sid">
+                  {{ stationTitle(sid) }}
+                </option>
+              </select>
+            </div>
+          </fieldset>
+          <div class="mrt-admin-route-editor__section">
+            <h3 class="mrt-admin-route-editor__heading">{{ adminStr(cfg, 'stationsRouteOrderLegend') }}</h3>
+            <p class="description">{{ adminStr(cfg, 'stationsRouteOrderHint') }}</p>
+            <p v-if="!newRoute.station_ids.length" class="description mrt-admin-route-editor__empty">
+              {{ adminStr(cfg, 'stationsRouteEmptyStations') }}
+            </p>
+            <ol v-else class="mrt-admin-route-station-list">
+              <li
+                v-for="(sid, idx) in newRoute.station_ids"
+                :key="`new-${sid}`"
+                class="mrt-admin-route-station-row"
+              >
+                <span class="mrt-admin-route-station-row__order">{{ idx + 1 }}</span>
+                <span class="mrt-admin-route-station-row__name">{{ stationTitle(sid) }}</span>
+                <span v-if="routeStationRoleFor(newRoute, sid)" class="mrt-admin-route-station-row__badges">
+                  <span
+                    v-if="
+                      routeStationRoleFor(newRoute, sid) === 'start' ||
+                      routeStationRoleFor(newRoute, sid) === 'both'
+                    "
+                    class="mrt-admin-route-station-row__badge mrt-admin-route-station-row__badge--start"
+                  >
+                    {{ adminStr(cfg, 'routePreviewStart') }}
+                  </span>
+                  <span
+                    v-if="
+                      routeStationRoleFor(newRoute, sid) === 'end' ||
+                      routeStationRoleFor(newRoute, sid) === 'both'
+                    "
+                    class="mrt-admin-route-station-row__badge mrt-admin-route-station-row__badge--end"
+                  >
+                    {{ adminStr(cfg, 'routePreviewEnd') }}
+                  </span>
+                </span>
+                <AdminRowActions>
+                  <MrtButton
+                    context="admin"
+                    variant="secondary"
+                    :disabled="idx === 0"
+                    :aria-label="adminStr(cfg, 'stationsRouteMoveUp')"
+                    @click="moveNewRouteStation(idx, -1)"
+                  >
+                    ↑
+                  </MrtButton>
+                  <MrtButton
+                    context="admin"
+                    variant="secondary"
+                    :disabled="idx === newRoute.station_ids.length - 1"
+                    :aria-label="adminStr(cfg, 'stationsRouteMoveDown')"
+                    @click="moveNewRouteStation(idx, 1)"
+                  >
+                    ↓
+                  </MrtButton>
+                  <MrtButton
+                    context="admin"
+                    variant="link-delete"
+                    :aria-label="adminStr(cfg, 'stationsRouteRemoveStation')"
+                    @click="removeStationFromNewRoute(idx)"
+                  >
+                    ×
+                  </MrtButton>
+                </AdminRowActions>
+              </li>
+            </ol>
+            <AdminInlineForm class="mrt-admin-route-editor__add">
+              <select v-model.number="addStationToNewRoute">
+                <option :value="0">{{ adminStr(cfg, 'stationsAddStationPrompt') }}</option>
+                <option
+                  v-for="st in stations.filter((s) => !newRoute.station_ids.includes(s.id))"
+                  :key="`new-add-${st.id}`"
+                  :value="st.id"
+                >
+                  {{ st.title }}
+                </option>
+              </select>
+              <MrtButton context="admin" variant="secondary" @click="appendStationToNewRoute">
+                {{ adminStr(cfg, 'add') }}
+              </MrtButton>
+            </AdminInlineForm>
+          </div>
+        </AdminDisclosure>
+      </div>
       <AdminEmptyState
         v-if="!routes.length"
         :title="adminStr(cfg, 'stationsEmptyRoutesTitle')"

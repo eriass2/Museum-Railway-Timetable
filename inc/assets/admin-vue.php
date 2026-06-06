@@ -164,6 +164,7 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsNewStation'         => __( 'Ny station', 'museum-railway-timetable' ),
 		'stationsCreateMoreFields'   => __( 'Fler uppgifter (valfritt)', 'museum-railway-timetable' ),
 		'stationsNewRoute'           => __( 'Ny rutt', 'museum-railway-timetable' ),
+		'stationsRouteCreateMoreFields' => __( 'Stationer och ändpunkter (valfritt)', 'museum-railway-timetable' ),
 		'stationsEmptyStationsTitle' => __( 'Inga stationer', 'museum-railway-timetable' ),
 		'stationsEmptyStationsMsg'   => __( 'Lägg till din första station ovan.', 'museum-railway-timetable' ),
 		'stationsEmptyRoutesTitle'   => __( 'Inga rutter', 'museum-railway-timetable' ),
