@@ -766,7 +766,7 @@ async function removeRoute(route: RouteRow) {
           <select v-model.number="addStationToRoute">
             <option :value="0">{{ adminStr(cfg, 'stationsAddStationPrompt') }}</option>
             <option
-              v-for="st in stations.filter((s) => !editingRoute.station_ids.includes(s.id))"
+              v-for="st in stations.filter((s) => !(editingRoute?.station_ids ?? []).includes(s.id))"
               :key="st.id"
               :value="st.id"
             >
