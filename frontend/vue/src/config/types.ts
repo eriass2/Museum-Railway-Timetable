@@ -2,6 +2,9 @@
 export type MrtRestConfig = {
   restUrl?: string;
   restNonce?: string;
+  isDevMode?: boolean;
+  /** Present on public mount configs; used for dev logging source labels. */
+  app?: MrtVueApp;
   strings?: Record<string, string>;
   /** Lazy-loaded html2pdf bundle (assets/dist/vue/assets/trip-pdf.js). */
   tripPdfUrl?: string;

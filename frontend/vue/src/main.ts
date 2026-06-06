@@ -1,5 +1,10 @@
 import { createApp, type Component } from 'vue';
 import { parseMountConfig, type MrtVueApp, type MrtVueConfig } from './config';
+import {
+  configureMrtLogFromRestConfig,
+  installMrtErrorHandlers,
+  type MrtLogSource,
+} from './utils/mrtLog';
 import './styles/mrt-public.css';
 
 type AppLoader = () => Promise<Component<{ config: MrtVueConfig }>>;
@@ -18,7 +23,11 @@ async function mountRoot(el: HTMLElement): Promise<void> {
     return;
   }
   const App = await appLoaders[appId]();
-  createApp(App, { config }).mount(el);
+  const source = appId as MrtLogSource;
+  configureMrtLogFromRestConfig(config, source);
+  const app = createApp(App, { config });
+  installMrtErrorHandlers(app, source);
+  app.mount(el);
 }
 
 function bootVueApps(): void {

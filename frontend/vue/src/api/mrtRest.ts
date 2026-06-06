@@ -1,4 +1,5 @@
 import type { MrtRestConfig } from '../config/types';
+import { configureMrtLog, mrtLog, resolveMrtLogSource } from '../utils/mrtLog';
 import { resolveMrtString } from '../utils/mrtStrings';
 import { buildMrtRestUrlFromConfig, resolveMrtRestNonce } from './restUrl';
 
@@ -47,6 +48,31 @@ function errorMessage(json: unknown, status: number, config: MrtRestConfig): str
     : resolveMrtString(config, 'requestFailed', 'Begäran misslyckades.');
 }
 
+function logRestFailure(
+  config: MrtRestConfig,
+  init: MrtRestRequestInit,
+  status: number,
+  json: unknown,
+  kind: 'http' | 'network',
+): void {
+  if (!config.isDevMode) {
+    return;
+  }
+  configureMrtLog({
+    isDevMode: true,
+    defaultSource: resolveMrtLogSource(config),
+  });
+  mrtLog({
+    level: 'error',
+    source: resolveMrtLogSource(config),
+    message:
+      kind === 'network'
+        ? `REST ${init.method} ${init.path} network error`
+        : `REST ${init.method} ${init.path} → ${status}`,
+    context: kind === 'http' ? { response: json } : undefined,
+  });
+}
+
 function requestHeaders(method: 'GET' | 'POST', config: MrtRestConfig): Record<string, string> {
   const headers: Record<string, string> = {
     'X-WP-Nonce': resolveMrtRestNonce(config),
@@ -76,10 +102,12 @@ export async function mrtRestRequest<T>(
     const res = await fetch(url, requestInit);
     const json = await res.json().catch(() => null);
     if (!res.ok) {
+      logRestFailure(config, init, res.status, json, 'http');
       return { success: false, message: errorMessage(json, res.status, config) };
     }
     return { success: true, data: json as T };
   } catch {
+    logRestFailure(config, init, 0, null, 'network');
     return {
       success: false,
       message: resolveMrtString(config, 'networkError', 'Nätverksfel. Försök igen.'),

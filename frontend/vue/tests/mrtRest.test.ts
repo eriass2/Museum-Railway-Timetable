@@ -1,5 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { mrtRestRequest } from '../src/api/mrtRest';
+import { configureMrtLog, resetMrtLogForTests } from '../src/utils/mrtLog';
 
 const config = {
   restUrl: 'https://example.test/wp-json/museum-railway-timetable/v1/',
@@ -8,7 +9,9 @@ const config = {
 
 describe('mrtRestRequest', () => {
   afterEach(() => {
+    resetMrtLogForTests();
     vi.unstubAllGlobals();
+    vi.restoreAllMocks();
   });
 
   it('returns data on success', async () => {
@@ -39,13 +42,23 @@ describe('mrtRestRequest', () => {
         json: async () => ({ message: 'Serverfel' }),
       }),
     );
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+    configureMrtLog({ isDevMode: true, defaultSource: 'wizard' });
 
-    const res = await mrtRestRequest(config, {
-      method: 'GET',
-      path: 'timetables/1/overview',
-    });
+    const res = await mrtRestRequest(
+      { ...config, isDevMode: true, app: 'wizard' },
+      {
+        method: 'GET',
+        path: 'timetables/1/overview',
+      },
+    );
     expect(res.success).toBe(false);
     expect(res.message).toBe('Serverfel');
+    expect(errorSpy).toHaveBeenCalledWith(
+      '[MRT wizard]',
+      'REST GET timetables/1/overview → 500',
+      { response: { message: 'Serverfel' } },
+    );
   });
 
   it('includes journey legs in trip prices query string', async () => {
