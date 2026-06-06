@@ -18,6 +18,8 @@ require_once MRT_PATH . 'inc/import/csv/schema.php';
 require_once MRT_PATH . 'inc/import/csv/slugify.php';
 require_once MRT_PATH . 'inc/import/csv/reader.php';
 require_once MRT_PATH . 'inc/import/csv/writer.php';
+require_once MRT_PATH . 'inc/import/csv/manifest.php';
+require_once MRT_PATH . 'inc/import/csv/package-load.php';
 require_once MRT_PATH . 'inc/import/csv/package.php';
 require_once MRT_PATH . 'inc/import/csv/validate-manifest.php';
 require_once MRT_PATH . 'inc/import/csv/validate-codes.php';

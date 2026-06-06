@@ -159,7 +159,11 @@ watch([panelVisible, dayOverview, dayLoading], async ([visible, overview, loadin
     return;
   }
   await nextTick();
-  const el = panelRef.value?.$el as HTMLElement | undefined;
+  const panel = panelRef.value;
+  const el =
+    panel instanceof HTMLElement
+      ? panel
+      : (panel as { $el?: HTMLElement } | null)?.$el;
   el?.focus();
 });
 </script>

@@ -58,6 +58,15 @@ for (const token of forbiddenInEntry) {
   }
 }
 
+const expectedBase =
+  process.env.MRT_VITE_BASE ??
+  '/wp-content/plugins/museum-railway-timetable/assets/dist/vue/';
+if (!code.includes(expectedBase.replace(/\/$/, ''))) {
+  fail(
+    `entry bundle missing Vite base path (${expectedBase}) — check vite.config.ts base`,
+  );
+}
+
 const requiredInEntry = ['data-mrt-vue-app', 'import('];
 for (const token of requiredInEntry) {
   if (!code.includes(token)) {

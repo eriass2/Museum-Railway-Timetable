@@ -19,6 +19,7 @@ const appLoaders: Record<MrtVueApp, AppLoader> = {
 async function mountRoot(el: HTMLElement): Promise<void> {
   const appId = el.getAttribute('data-mrt-vue-app') as MrtVueApp | null;
   const config = parseMountConfig(el);
+  el.querySelector('script.mrt-vue-config')?.remove();
   if (!appId || !config || !appLoaders[appId]) {
     return;
   }
@@ -30,14 +31,17 @@ async function mountRoot(el: HTMLElement): Promise<void> {
   app.mount(el);
 }
 
-function bootVueApps(): void {
-  document.querySelectorAll<HTMLElement>('[data-mrt-vue-app]').forEach((el) => {
-    void mountRoot(el);
-  });
+async function bootVueApps(): Promise<void> {
+  const roots = document.querySelectorAll<HTMLElement>('[data-mrt-vue-app]');
+  for (const el of roots) {
+    await mountRoot(el);
+  }
 }
 
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', bootVueApps);
+  document.addEventListener('DOMContentLoaded', () => {
+    void bootVueApps();
+  });
 } else {
-  bootVueApps();
+  void bootVueApps();
 }

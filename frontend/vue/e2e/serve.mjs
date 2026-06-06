@@ -34,6 +34,8 @@ if (!existsSync(join(distDir, adminJsRel))) {
 
 const REST_PREFIX = MRT_REST_JSON_PREFIX;
 const port = Number(process.env.MRT_E2E_PORT || 5199);
+/** Must match frontend/vue/vite.config.ts base (Vite public path). */
+const VITE_PUBLIC_BASE = '/wp-content/plugins/museum-railway-timetable/assets/dist/vue/';
 
 function restClientConfig() {
   return {
@@ -429,7 +431,7 @@ function renderAppHtml(app, config) {
   <div class="mrt-vue-root" data-mrt-vue-app="${app}">
     <script type="application/json" class="mrt-vue-config">${JSON.stringify(config)}</script>
   </div>
-  <script type="module" src="/${jsRel}"></script>
+  <script type="module" src="${VITE_PUBLIC_BASE}${jsRel}"></script>
 </body>
 </html>`;
 }
@@ -512,7 +514,10 @@ http
       void handleRestRequest(req, res, pathOnly, rawUrl);
       return;
     }
-    const rel = pathOnly.replace(/^\//, '');
+    let rel = pathOnly.replace(/^\//, '');
+    if (pathOnly.startsWith(VITE_PUBLIC_BASE)) {
+      rel = pathOnly.slice(VITE_PUBLIC_BASE.length);
+    }
     const filePath = join(distDir, rel);
     if (!filePath.startsWith(distDir) || !existsSync(filePath)) {
       res.writeHead(404);

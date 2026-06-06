@@ -5,7 +5,13 @@ import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+/** Public URL path to dist (must match plugin_dir_url + assets/dist/vue/). */
+const viteBase =
+  process.env.MRT_VITE_BASE ??
+  '/wp-content/plugins/museum-railway-timetable/assets/dist/vue/';
+
 export default defineConfig({
+  base: viteBase,
   plugins: [vue()],
   resolve: {
     alias: {

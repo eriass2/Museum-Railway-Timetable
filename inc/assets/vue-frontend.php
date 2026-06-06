@@ -176,11 +176,13 @@ function MRT_enqueue_vue_frontend_assets(): void {
 		return;
 	}
 
+	// ES module entry must not get ?ver= — lazy chunks import ./main-*.js without query args;
+	// a mismatched URL would load Vue twice and break mount (runtime null refs).
   wp_enqueue_script(
     'mrt-vue-public',
     $base_url . $js_file,
     array(),
-    MRT_VERSION,
+    null,
     true
   );
   wp_script_add_data( 'mrt-vue-public', 'type', 'module' );
