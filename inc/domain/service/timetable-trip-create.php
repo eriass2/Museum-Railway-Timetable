@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/route/direction-labels.php';
+
 /**
  * Build auto title for new service.
  *
@@ -25,12 +27,24 @@ function MRT_build_service_auto_title( $route_id, $end_station_id, $direction ):
 	if ( $end_station_id > 0 ) {
 		$s    = get_post( $end_station_id );
 		$dest = $s ? ' → ' . $s->post_title : '';
-	} elseif ( $direction === 'dit' ) {
-		$dest = ' - ' . __( 'Dit', 'museum-railway-timetable' );
-	} elseif ( $direction === 'från' ) {
-		$dest = ' - ' . __( 'Från', 'museum-railway-timetable' );
+	} else {
+		$dest = MRT_service_direction_title_suffix( (string) $direction );
 	}
 	return $route_name . $dest;
+}
+
+/**
+ * Resolve destination display for add-service response.
+ *
+ * @param int    $end_station_id End station post ID.
+ * @param string $direction Direction ('dit' or 'från').
+ */
+function MRT_service_destination_display_label( int $end_station_id, string $direction ): string {
+	if ( $end_station_id > 0 ) {
+		$s = get_post( $end_station_id );
+		return $s ? $s->post_title : '—';
+	}
+	return MRT_service_direction_label_or_dash( $direction );
 }
 
 /**
@@ -47,22 +61,14 @@ function MRT_build_add_service_response( $service_id, $route_id, $train_type_id,
 	$service    = get_post( $service_id );
 	$route      = get_post( $route_id );
 	$train_type = $train_type_id > 0 ? get_term( $train_type_id, 'mrt_train_type' ) : null;
-	$dest_name  = '—';
-	if ( $end_station_id > 0 ) {
-		$s         = get_post( $end_station_id );
-		$dest_name = $s ? $s->post_title : '—';
-	} elseif ( $direction === 'dit' ) {
-		$dest_name = __( 'Dit', 'museum-railway-timetable' );
-	} elseif ( $direction === 'från' ) {
-		$dest_name = __( 'Från', 'museum-railway-timetable' );
-	}
+	$dest_name  = MRT_service_destination_display_label( (int) $end_station_id, (string) $direction );
 	return array(
 		'service_id'      => $service_id,
 		'service_title'   => $service ? $service->post_title : '',
 		'route_name'      => $route ? $route->post_title : '—',
 		'train_type_name' => $train_type ? $train_type->name : '—',
 		'destination'     => $dest_name,
-		'direction'       => $direction === 'dit' ? __( 'Dit', 'museum-railway-timetable' ) : ( $direction === 'från' ? __( 'Från', 'museum-railway-timetable' ) : '—' ),
+		'direction'       => MRT_service_direction_label_or_dash( (string) $direction ),
 		'edit_url'        => get_edit_post_link( $service_id, 'raw' ),
 	);
 }

@@ -19,12 +19,8 @@ function MRT_timetable_rail_group_to_json( array $group, string $dateYmd ): arra
 		$connection = MRT_build_rail_bus_connection_data( $group, $group['paired_branch'] );
 	}
 
-	$from_label = $view['from_station']
-		? sprintf( __( 'Från %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $view['from_station'] ) )
-		: '';
-	$to_label   = $view['to_station']
-		? sprintf( __( 'Till %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $view['to_station'] ) )
-		: '';
+	$from_label = $view['from_station'] ? MRT_station_from_label( $view['from_station'] ) : '';
+	$to_label   = $view['to_station'] ? MRT_station_to_label( $view['to_station'] ) : '';
 
 	return array(
 		'kind'       => 'rail',
@@ -118,9 +114,7 @@ function MRT_timetable_overview_rail_endpoint_row_json(
 	bool $use_from_display,
 	bool $use_to_display
 ): array {
-	$label = $kind === 'from'
-		? sprintf( __( 'Från %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $station ) )
-		: sprintf( __( 'Till %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $station ) );
+	$label = $kind === 'from' ? MRT_station_from_label( $station ) : MRT_station_to_label( $station );
 
 	return MRT_timetable_row_times_json(
 		$kind,
@@ -158,7 +152,7 @@ function MRT_timetable_overview_rail_rows_for_station(
 	if ( MRT_station_row_has_arrival_departure_split( $station_id, $services ) ) {
 		$rows[] = MRT_timetable_row_times_json(
 			'arrival',
-			sprintf( __( 'Till %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $station ) ),
+			MRT_station_to_label( $station ),
 			$station_id,
 			$services,
 			$info,
@@ -171,7 +165,7 @@ function MRT_timetable_overview_rail_rows_for_station(
 		}
 		$rows[] = MRT_timetable_row_times_json(
 			'departure',
-			sprintf( __( 'Från %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $station ) ),
+			MRT_station_from_label( $station ),
 			$station_id,
 			$services,
 			$info,

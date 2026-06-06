@@ -51,8 +51,8 @@ function MRT_timetable_branch_group_to_json( array $group, string $dateYmd ): ar
 	$result = array(
 		'kind'       => 'branch',
 		'routeLabel' => $view['route_label'],
-		'fromLabel'  => sprintf( __( 'Från %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $from_station ) ),
-		'toLabel'    => sprintf( __( 'Till %s', 'museum-railway-timetable' ), MRT_get_station_display_name( $to_station ) ),
+		'fromLabel'  => MRT_station_from_label( $from_station ),
+		'toLabel'    => MRT_station_to_label( $to_station ),
 		'trips'      => $trips,
 	);
 	if ( is_array( $mid ) && $mid['label'] !== '' ) {

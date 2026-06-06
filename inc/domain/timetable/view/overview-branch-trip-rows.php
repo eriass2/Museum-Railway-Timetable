@@ -24,10 +24,7 @@ function MRT_timetable_branch_mid_station( array $group ): ?array {
 	}
 	return array(
 		'post'  => $mid_post,
-		'label' => sprintf(
-			__( 'Från %s', 'museum-railway-timetable' ),
-			MRT_get_station_display_name( $mid_post )
-		),
+		'label' => MRT_station_from_label( $mid_post ),
 	);
 }
 

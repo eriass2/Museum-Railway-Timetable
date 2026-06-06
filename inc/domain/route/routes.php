@@ -223,11 +223,7 @@ function MRT_get_route_label_from_end_station( $route_id, $end_station_id ) {
 	$start_station    = $start_station_id ? get_post( $start_station_id ) : null;
 
 	if ( $start_station ) {
-		return sprintf(
-			__( 'Från %1$s Till %2$s', 'museum-railway-timetable' ),
-			$start_station->post_title,
-			$end_station_post->post_title
-		);
+		return MRT_route_from_to_label( $start_station->post_title, $end_station_post->post_title );
 	}
 
 	return sprintf( __( 'Route to %s', 'museum-railway-timetable' ), $end_station_post->post_title );
@@ -271,18 +267,10 @@ function MRT_get_route_label_from_direction( $route_id, $direction, $station_pos
 	$last_station  = end( $station_posts );
 
 	if ( $direction === 'dit' ) {
-		return sprintf(
-			__( 'Från %1$s Till %2$s', 'museum-railway-timetable' ),
-			$first_station->post_title,
-			$last_station->post_title
-		);
+		return MRT_route_from_to_label( $first_station->post_title, $last_station->post_title );
 	}
 
-	return sprintf(
-		__( 'Från %1$s Till %2$s', 'museum-railway-timetable' ),
-		$last_station->post_title,
-		$first_station->post_title
-	);
+	return MRT_route_from_to_label( $last_station->post_title, $first_station->post_title );
 }
 
 /**

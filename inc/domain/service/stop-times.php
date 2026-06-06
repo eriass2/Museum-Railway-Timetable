@@ -63,12 +63,8 @@ function MRT_get_service_destination( $service_id ) {
 
 	// Fallback to direction if no end station (backward compatibility)
 	if ( empty( $destination ) ) {
-		$direction = get_post_meta( $service_id, 'mrt_direction', true );
-		if ( $direction === 'dit' ) {
-			$destination = __( 'Dit', 'museum-railway-timetable' );
-		} elseif ( $direction === 'från' ) {
-			$destination = __( 'Från', 'museum-railway-timetable' );
-		}
+		$direction   = (string) get_post_meta( $service_id, 'mrt_direction', true );
+		$destination = MRT_service_direction_label( $direction );
 	}
 
 	return array(

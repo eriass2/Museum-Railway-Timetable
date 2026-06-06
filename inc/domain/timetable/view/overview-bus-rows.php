@@ -58,7 +58,7 @@ function MRT_timetable_junction_bus_rows_json(
 		return array(
 			MRT_timetable_bus_time_row_json(
 				'busDeparture',
-				sprintf( __( 'Från %s', 'museum-railway-timetable' ), $remote_label ),
+				MRT_from_place_label( $remote_label ),
 				$services,
 				$info,
 				$connection,
@@ -68,7 +68,7 @@ function MRT_timetable_junction_bus_rows_json(
 			),
 			MRT_timetable_bus_time_row_json(
 				'busArrival',
-				sprintf( __( 'Till %s', 'museum-railway-timetable' ), $junction_label ),
+				MRT_to_place_label( $junction_label ),
 				$services,
 				$info,
 				$connection,
@@ -82,7 +82,7 @@ function MRT_timetable_junction_bus_rows_json(
 	return array(
 		MRT_timetable_bus_time_row_json(
 			'busDeparture',
-			sprintf( __( 'Från %s', 'museum-railway-timetable' ), $junction_label ),
+			MRT_from_place_label( $junction_label ),
 			$services,
 			$info,
 			$connection,
@@ -92,7 +92,7 @@ function MRT_timetable_junction_bus_rows_json(
 		),
 		MRT_timetable_bus_time_row_json(
 			'busArrival',
-			sprintf( __( 'Till %s', 'museum-railway-timetable' ), $remote_label ),
+			MRT_to_place_label( $remote_label ),
 			$services,
 			$info,
 			$connection,
