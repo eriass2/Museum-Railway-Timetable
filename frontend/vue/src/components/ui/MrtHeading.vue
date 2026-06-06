@@ -3,8 +3,8 @@ defineOptions({ inheritAttrs: false });
 
 withDefaults(
   defineProps<{
-    level?: 'h2' | 'h3' | 'h4';
-    size?: 'lg' | 'md' | 'xl';
+    level?: 'h2' | 'h3' | 'h4' | 'h5';
+    size?: 'lg' | 'md' | 'xl' | 'sm';
     /** Centered hero title on wizard route surface. */
     variant?: 'default' | 'surface-title';
   }>(),
