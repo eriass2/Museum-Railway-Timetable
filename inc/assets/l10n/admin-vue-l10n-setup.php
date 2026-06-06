@@ -25,16 +25,3 @@ function MRT_admin_vue_l10n_setup(): array {
 		'setupStepServices'  => __( 'Lägg till turer i en tidtabell', 'museum-railway-timetable' ),
 	);
 }
-
-/**
- * @return array<string, string>
- */
-function MRT_admin_vue_l10n_route_preview(): array {
-	return array(
-		'routePreviewLabel' => __( 'Ruttens stationer', 'museum-railway-timetable' ),
-		'routePreviewEmpty' => __( 'Inga stationer på rutten.', 'museum-railway-timetable' ),
-		'routePreviewStart' => __( 'Start', 'museum-railway-timetable' ),
-		'routePreviewEnd'   => __( 'Slut', 'museum-railway-timetable' ),
-		'routePreviewBoth'  => __( 'Start/slut', 'museum-railway-timetable' ),
-	);
-}

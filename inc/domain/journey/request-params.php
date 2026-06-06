@@ -138,7 +138,7 @@ function MRT_journey_parse_calendar_month_params( array $input ) {
 
 /**
  * @param array<string, mixed> $input Request body.
- * @return array<string, int>|WP_Error
+ * @return array<string, int|string>|WP_Error
  */
 function MRT_journey_parse_connection_detail_params( array $input ) {
 	$pair = MRT_journey_parse_stations_pair( $input );

@@ -161,14 +161,17 @@ function MRT_rest_sanitize_client_log_context( $input ): array {
  * @param WP_REST_Request $request Request.
  */
 function MRT_rest_dev_client_log_handler( WP_REST_Request $request ) {
-	$body    = $request->get_json_params();
-	$message = is_array( $body ) ? sanitize_text_field( (string) ( $body['message'] ?? '' ) ) : '';
+	$body = $request->get_json_params();
+	if ( ! is_array( $body ) ) {
+		$body = array();
+	}
+	$message = sanitize_text_field( (string) ( $body['message'] ?? '' ) );
 	if ( $message === '' ) {
 		return new WP_Error( 'invalid', __( 'Log message is required.', MRT_TEXT_DOMAIN ), array( 'status' => 400 ) );
 	}
-	$source  = sanitize_key( (string) ( is_array( $body ) ? ( $body['source'] ?? 'admin' ) : 'admin' ) );
-	$level   = sanitize_key( (string) ( is_array( $body ) ? ( $body['level'] ?? 'error' ) : 'error' ) );
-	$context = is_array( $body ) ? MRT_rest_sanitize_client_log_context( $body['context'] ?? array() ) : array();
+	$source  = sanitize_key( (string) ( $body['source'] ?? 'admin' ) );
+	$level   = sanitize_key( (string) ( $body['level'] ?? 'error' ) );
+	$context = MRT_rest_sanitize_client_log_context( $body['context'] ?? array() );
 	MRT_log( '[vue:' . $source . '] ' . $message, $context, $level !== '' ? $level : 'error' );
 	return rest_ensure_response( array( 'logged' => true ) );
 }
