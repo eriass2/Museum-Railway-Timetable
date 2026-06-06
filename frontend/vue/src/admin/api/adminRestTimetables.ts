@@ -47,6 +47,22 @@ export function addTimetableService(
   );
 }
 
+export function updateTimetableService(
+  timetableId: number,
+  serviceId: number,
+  body: {
+    route_id: number;
+    train_type_id?: number;
+    end_station_id?: number;
+    service_number?: string;
+  },
+) {
+  return adminFetch<import('../types').TimetableServiceRow>(
+    `/timetables/${timetableId}/services/${serviceId}`,
+    { method: 'PATCH', body: JSON.stringify(body) },
+  );
+}
+
 export function removeTimetableService(timetableId: number, serviceId: number) {
   return adminFetch<{ removed: boolean }>(
     `/timetables/${timetableId}/services/${serviceId}`,

@@ -33,7 +33,7 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `GET|POST /stations`, `GET|PATCH|DELETE /stations/{id}` | Stationer |
 | `GET|POST /routes`, `GET|PATCH|DELETE /routes/{id}` | Rutter + stationordning |
 | `GET|POST /timetables`, `GET|PATCH|DELETE /timetables/{id}` | Tidtabeller |
-| `GET|POST /timetables/{id}/services` | Turer |
+| `GET|POST /timetables/{id}/services`, `PATCH|DELETE /timetables/{id}/services/{service_id}` | Turer |
 | `GET|PUT /services/{id}/stop-times` | Stopptider |
 | `PUT /services/{id}/departure` | Snabb avgångstid (mobil) |
 | `POST /operations/cancel-traffic` | Markera all trafik inställd för datum (mobil drift) |

@@ -162,6 +162,52 @@ final class RestTimetablesDataTest extends TestCase {
 		self::assertSame( 10, (int) get_post_meta( (int) $result['service_id'], 'mrt_service_timetable_id', true ) );
 	}
 
+	public function test_update_timetable_service_rejects_wrong_timetable(): void {
+		$this->boot_timetable_posts();
+
+		$result = MRT_rest_update_timetable_service( 99, 701, array( 'route_id' => 50 ) );
+
+		self::assertInstanceOf( WP_Error::class, $result );
+		self::assertSame( 'not_found', $result->get_error_code() );
+	}
+
+	public function test_update_timetable_service_requires_route(): void {
+		$this->boot_timetable_posts();
+
+		$result = MRT_rest_update_timetable_service( 10, 701, array() );
+
+		self::assertInstanceOf( WP_Error::class, $result );
+		self::assertSame( 'route', $result->get_error_code() );
+	}
+
+	public function test_update_timetable_service_updates_number_and_route(): void {
+		$this->boot_timetable_posts();
+		$GLOBALS['mrt_test_posts'][120] = new WP_Post(
+			(object) array(
+				'ID'         => 120,
+				'post_title' => 'Faringe',
+				'post_type'  => MRT_POST_TYPE_STATION,
+			)
+		);
+		$GLOBALS['mrt_test_post_meta']['50|mrt_route_stations']   = array( 110, 120 );
+		$GLOBALS['mrt_test_post_meta']['50|mrt_route_end_station'] = 120;
+
+		$result = MRT_rest_update_timetable_service(
+			10,
+			701,
+			array(
+				'route_id'       => 50,
+				'end_station_id' => 120,
+				'service_number' => 'B1',
+			)
+		);
+
+		self::assertIsArray( $result );
+		self::assertSame( 701, $result['id'] );
+		self::assertSame( 'B1', $result['service_number'] );
+		self::assertSame( 'B1', get_post_meta( 701, 'mrt_service_number', true ) );
+	}
+
 	public function test_format_train_type_options_ignores_wp_errors(): void {
 		$rows = MRT_rest_format_train_type_options( new WP_Error( 'fail', 'broken' ) );
 

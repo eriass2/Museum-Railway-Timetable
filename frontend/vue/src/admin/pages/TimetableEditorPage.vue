@@ -10,8 +10,9 @@ import {
   removeTimetableService,
   saveDeviations,
   updateTimetable,
+  updateTimetableService,
 } from '../api/adminRest';
-import type { TimetableDetail } from '../types';
+import type { TimetableDetail, TimetableServiceRow } from '../types';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminFormActions,
@@ -22,6 +23,9 @@ import {
 } from '../components/ui';
 import TimetableEditorDatesTab from '../components/timetable-editor/TimetableEditorDatesTab.vue';
 import TimetableEditorDeviationsTab from '../components/timetable-editor/TimetableEditorDeviationsTab.vue';
+import TimetableEditorTripEditForm, {
+  type TripEditDraft,
+} from '../components/timetable-editor/TimetableEditorTripEditForm.vue';
 import TimetableEditorTripsTab from '../components/timetable-editor/TimetableEditorTripsTab.vue';
 import StopTimesEditor from '../components/StopTimesEditor.vue';
 import EditableTimetableOverview from '../components/EditableTimetableOverview.vue';
@@ -54,6 +58,8 @@ const error = ref('');
 const dateInput = ref('');
 const newTrip = ref({ route_id: 0, train_type_id: 0, end_station_id: 0 });
 const destinations = ref<{ id: number; name: string }[]>([]);
+const editTrip = ref<TripEditDraft | null>(null);
+const editDestinations = ref<{ id: number; name: string }[]>([]);
 
 function trainTypeIconKey(typeId: number): string {
   if (typeId <= 0) {
@@ -190,6 +196,53 @@ watch(
     destinations.value = routeId ? (await getRouteDestinations(routeId)).destinations : [];
   },
 );
+
+function serviceNumberForEdit(service: TimetableServiceRow): string {
+  return service.service_number === String(service.id) ? '' : service.service_number;
+}
+
+async function loadEditDestinations(routeId: number, resetEnd = false): Promise<void> {
+  if (editTrip.value && resetEnd) {
+    editTrip.value.end_station_id = 0;
+  }
+  editDestinations.value = routeId ? (await getRouteDestinations(routeId)).destinations : [];
+}
+
+async function startEditTrip(serviceId: number): Promise<void> {
+  const service = detail.value?.services.find((s) => s.id === serviceId);
+  if (!service || !cfg.canManage) {
+    return;
+  }
+  editTrip.value = {
+    service_id: service.id,
+    service_number: serviceNumberForEdit(service),
+    route_id: service.route_id,
+    train_type_id: service.train_type_id,
+    end_station_id: service.end_station_id ?? 0,
+  };
+  await loadEditDestinations(service.route_id);
+}
+
+function cancelEditTrip(): void {
+  editTrip.value = null;
+  editDestinations.value = [];
+}
+
+async function saveEditTrip(): Promise<void> {
+  if (!editTrip.value || !cfg.canManage || editTrip.value.route_id <= 0) {
+    return;
+  }
+  await updateTimetableService(timetableId.value, editTrip.value.service_id, {
+    route_id: editTrip.value.route_id,
+    train_type_id: editTrip.value.train_type_id || undefined,
+    end_station_id: editTrip.value.end_station_id || undefined,
+    service_number: editTrip.value.service_number,
+  });
+  editTrip.value = null;
+  editDestinations.value = [];
+  await loadDetail();
+  showSaveNotice(adminStr(cfg, 'editorSavedTrip'));
+}
 
 async function saveDates() {
   if (!detail.value || !cfg.canManage) return;
@@ -350,10 +403,23 @@ function onMobileSaved(message: string) {
       :can-manage="cfg.canManage"
       :detail="detail"
       :destinations="destinations"
+      :editing-trip-id="editTrip?.service_id ?? 0"
       :train-type-icon-key="trainTypeIconKey"
       @open-stoptimes="openStoptimes"
+      @start-edit="startEditTrip"
       @remove-trip="removeTrip"
       @add-trip="addTrip"
+    />
+
+    <TimetableEditorTripEditForm
+      v-if="detail && !isMobile && tab === 'trips' && editTrip"
+      v-model:draft="editTrip"
+      :detail="detail"
+      :destinations="editDestinations"
+      :train-type-icon-key="trainTypeIconKey"
+      @route-change="loadEditDestinations(editTrip.route_id, true)"
+      @save="saveEditTrip"
+      @cancel="cancelEditTrip"
     />
 
     <AdminPanel v-if="detail && !isMobile && tab === 'stoptimes'" class="mrt-vue-root">

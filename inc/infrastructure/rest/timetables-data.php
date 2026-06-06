@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
+require_once MRT_PATH . 'inc/domain/service/timetable-trip-update.php';
 require_once MRT_PATH . 'inc/domain/route/destinations.php';
 
 /**
@@ -98,10 +99,12 @@ function MRT_rest_format_timetable_services( int $timetable_id ): array {
 		if ( $service_number === '' ) {
 			$service_number = (string) $service->ID;
 		}
+		$end_station_id  = (int) get_post_meta( $service->ID, 'mrt_service_end_station_id', true );
 		$rows[]          = array(
 			'id'                  => (int) $service->ID,
 			'title'               => (string) $service->post_title,
 			'service_number'      => $service_number,
+			'end_station_id'      => $end_station_id,
 			'route_id'            => $route_id,
 			'route_name'          => $route_id > 0 ? (string) get_the_title( $route_id ) : '',
 			'train_type_id'       => $train_type_id,
@@ -275,4 +278,26 @@ function MRT_rest_add_timetable_service( int $timetable_id, array $body ) {
 		$input['end_station_id'],
 		$input['direction']
 	);
+}
+
+/**
+ * @param array<string, mixed> $body Trip fields.
+ * @return array<string, mixed>|WP_Error
+ */
+function MRT_rest_update_timetable_service( int $timetable_id, int $service_id, array $body ) {
+	$post = MRT_get_timetable_service_post( $timetable_id, $service_id );
+	if ( is_wp_error( $post ) ) {
+		return $post;
+	}
+	$result = MRT_apply_timetable_service_update( $service_id, $body );
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	$rows = MRT_rest_format_timetable_services( $timetable_id );
+	foreach ( $rows as $row ) {
+		if ( (int) ( $row['id'] ?? 0 ) === $service_id ) {
+			return $row;
+		}
+	}
+	return new WP_Error( 'not_found', __( 'Service not found.', 'museum-railway-timetable' ), array( 'status' => 404 ) );
 }

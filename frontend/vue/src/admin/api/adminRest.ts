@@ -8,6 +8,7 @@ export {
   deleteTimetable,
   getTimetableOverview,
   addTimetableService,
+  updateTimetableService,
   removeTimetableService,
   getDeviations,
   saveDeviations,
@@ -35,7 +36,7 @@ export {
   deleteTrainType,
 } from './adminRestSettings';
 export type { SettingsPayload, PricesPayload } from './adminRestSettings';
-export { exportCsv, importCsv, clearAllData } from './adminRestImport';
+export { exportCsv, exportTemplateCsv, importCsv, clearAllData } from './adminRestImport';
 export {
   devClearDatabase,
   devImportLennakatten,

@@ -82,9 +82,16 @@ function MRT_rest_register_timetable_routes(): void {
 		MRT_REST_NAMESPACE,
 		'/timetables/(?P<id>\d+)/services/(?P<service_id>\d+)',
 		array(
-			'methods'             => WP_REST_Server::DELETABLE,
-			'callback'            => 'MRT_rest_remove_timetable_service_handler',
-			'permission_callback' => 'MRT_rest_can_manage',
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => 'MRT_rest_update_timetable_service_handler',
+				'permission_callback' => 'MRT_rest_can_manage',
+			),
+			array(
+				'methods'             => WP_REST_Server::DELETABLE,
+				'callback'            => 'MRT_rest_remove_timetable_service_handler',
+				'permission_callback' => 'MRT_rest_can_manage',
+			),
 		)
 	);
 
@@ -177,6 +184,23 @@ function MRT_rest_timetable_overview_handler( WP_REST_Request $request ) {
 function MRT_rest_add_timetable_service_handler( WP_REST_Request $request ) {
 	$id     = (int) $request['id'];
 	$result = MRT_rest_add_timetable_service( $id, (array) $request->get_json_params() );
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	return rest_ensure_response( $result );
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_update_timetable_service_handler( WP_REST_Request $request ) {
+	$timetable_id = (int) $request['id'];
+	$service_id   = (int) $request['service_id'];
+	$result       = MRT_rest_update_timetable_service(
+		$timetable_id,
+		$service_id,
+		(array) $request->get_json_params()
+	);
 	if ( is_wp_error( $result ) ) {
 		return $result;
 	}

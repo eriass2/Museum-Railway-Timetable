@@ -15,6 +15,7 @@ defineProps<{
   canManage: boolean;
   detail: TimetableDetail;
   destinations: { id: number; name: string }[];
+  editingTripId: number;
   trainTypeIconKey: (typeId: number) => string;
 }>();
 
@@ -27,6 +28,7 @@ const newTrip = defineModel<{
 
 const emit = defineEmits<{
   'open-stoptimes': [serviceId: number];
+  'start-edit': [serviceId: number];
   'remove-trip': [serviceId: number];
   'add-trip': [];
 }>();
@@ -57,6 +59,15 @@ const emit = defineEmits<{
           <td>{{ s.destination || '—' }}</td>
           <td>
             <AdminRowActions>
+              <MrtButton
+                v-if="canManage"
+                context="admin"
+                variant="secondary"
+                :disabled="editingTripId > 0 && editingTripId !== s.id"
+                @click="emit('start-edit', s.id)"
+              >
+                {{ adminStr(cfg, 'editorEditTrip') }}
+              </MrtButton>
               <MrtButton context="admin" variant="secondary" @click="emit('open-stoptimes', s.id)">
                 {{ adminStr(cfg, 'editorStopptimes') }}
               </MrtButton>
