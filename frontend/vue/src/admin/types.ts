@@ -36,6 +36,9 @@ export type AdminHelpContent = {
   panelShortcodes: string;
   panelFaq: string;
   panelMore: string;
+  panelPriceZones: string;
+  priceZonesIntro: string;
+  priceZonesSteps: string[];
   shortcodesIntro: string;
   shortcodesDevHint: string;
   shortcodeExample: string;

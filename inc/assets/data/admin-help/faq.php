@@ -23,7 +23,7 @@ function MRT_admin_vue_help_faq_items(): array {
 		array(
 			'q' => __( 'Vad betyder varningarna på översikten?', 'museum-railway-timetable' ),
 			'a' => __(
-				'De är dataproblem (t.ex. tidtabell utan datum, tur utan stopptider). Klicka på varningen för att gå till rätt sida och åtgärda.',
+				'De är dataproblem (t.ex. tidtabell utan datum, tur utan stopptider, tom prismatris eller station utan priszon). Klicka på varningen för att gå till rätt sida och åtgärda.',
 				'museum-railway-timetable'
 			),
 		),
@@ -87,7 +87,7 @@ function MRT_admin_vue_help_faq_items(): array {
 		array(
 			'q' => __( 'Hur fungerar priser och inställningar?', 'museum-railway-timetable' ),
 			'a' => __(
-				'Priser styr reseplanerarens prissammanfattning. Inställningar styr om pluginet är aktivt och hur lång väntetid som accepteras vid byte. Båda nås via menyn och kan exporteras med CSV.',
+				'Priser styr reseplanerarens prissammanfattning (matris + stationzoner). Inställningar styr plugin, byten och eftermiddagsgräns; returpris per kategori fylls i under Priser. Båda kan exporteras med CSV. Se avsnittet Priszoner och biljetter på denna sida.',
 				'museum-railway-timetable'
 			),
 			'aEditor' => __( 'Priser och inställningar kräver administratörsbehörighet.', 'museum-railway-timetable' ),

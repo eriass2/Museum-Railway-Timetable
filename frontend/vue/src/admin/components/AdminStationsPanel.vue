@@ -53,7 +53,9 @@ function trainChangeSummary(st: StationRow): string {
     <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabStations') }}</h2>
     <p class="description">
       {{ adminStr(cfg, 'stationsZonesHint') }}
-      <RouterLink to="/help">{{ adminStr(cfg, 'stationsZonesHelpLink') }}</RouterLink>
+      <RouterLink :to="{ path: '/help', query: { section: 'price-zones' } }">
+        {{ adminStr(cfg, 'stationsZonesHelpLink') }}
+      </RouterLink>
     </p>
     <div v-if="cfg.canManage" class="mrt-admin-station-create">
       <AdminInlineForm>

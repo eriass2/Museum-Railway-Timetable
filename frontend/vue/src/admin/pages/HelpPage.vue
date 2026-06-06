@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useRouter } from 'vue-router';
+import { computed, nextTick, onMounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { adminConfig } from '../types';
 import { AdminPanel, MrtButton } from '../components/ui';
 
 const router = useRouter();
+const route = useRoute();
 
 const cfg = adminConfig();
 const help = computed(() => {
@@ -32,6 +33,26 @@ function faqAnswer(item: (typeof help.value.faq)[number]): string {
 function openShortcodesGuide() {
   void router.push('/shortcodes');
 }
+
+function scrollToHelpSection(sectionId: string | undefined) {
+  if (!sectionId) {
+    return;
+  }
+  void nextTick(() => {
+    document.getElementById(`mrt-help-${sectionId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+
+onMounted(() => {
+  scrollToHelpSection(typeof route.query.section === 'string' ? route.query.section : undefined);
+});
+
+watch(
+  () => route.query.section,
+  (section) => {
+    scrollToHelpSection(typeof section === 'string' ? section : undefined);
+  },
+);
 </script>
 
 <template>
@@ -58,6 +79,17 @@ function openShortcodesGuide() {
           </tr>
         </tbody>
       </table>
+    </AdminPanel>
+
+    <AdminPanel
+      v-if="cfg.canManage"
+      :id="'mrt-help-price-zones'"
+      :title="help.panelPriceZones"
+    >
+      <p>{{ help.priceZonesIntro }}</p>
+      <ol class="mrt-admin-help-steps">
+        <li v-for="(step, i) in help.priceZonesSteps" :key="`price-zone-${i}`">{{ step }}</li>
+      </ol>
     </AdminPanel>
 
     <AdminPanel :title="help.panelAdmin">

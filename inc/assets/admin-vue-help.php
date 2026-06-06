@@ -90,6 +90,12 @@ function MRT_admin_vue_help_content(): array {
 			'Parametrar, exempel och rekommenderad sidstruktur finns i guiden under menyn Shortcodes.',
 			'museum-railway-timetable'
 		),
+		'panelPriceZones'    => __( 'Priszoner och biljetter', 'museum-railway-timetable' ),
+		'priceZonesIntro'    => __(
+			'Priser i reseplaneraren bygger på stationers priszoner och en prismatris. Zonantalet beräknas längs utresans hållplatser (gränsstationer kan ha två zoner). Se även docs/PRICE_ZONES.md i pluginets källkod.',
+			'museum-railway-timetable'
+		),
+		'priceZonesSteps'    => MRT_admin_vue_help_price_zones_steps(),
 		'adminSections'      => MRT_admin_vue_help_admin_sections(),
 		'workflowSteps'      => MRT_admin_vue_help_workflow_steps(),
 		'operations'         => MRT_admin_vue_help_operations(),

@@ -45,7 +45,7 @@ function MRT_admin_vue_help_admin_sections(): array {
 		array(
 			'title'     => __( 'Inställningar', 'museum-railway-timetable' ),
 			'body'      => __(
-				'Aktivera/inaktivera plugin, intern anteckning och min/max väntetid vid byte i reseplaneraren.',
+				'Aktivera/inaktivera plugin, operatörsnamn, biljett-URL, byten och eftermiddagsgräns för returpris (belopp under Priser).',
 				'museum-railway-timetable'
 			),
 			'adminOnly' => true,
@@ -53,7 +53,7 @@ function MRT_admin_vue_help_admin_sections(): array {
 		array(
 			'title'     => __( 'Priser', 'museum-railway-timetable' ),
 			'body'      => __(
-				'Prismatris (biljettyp × kategori × zoner) som reseplaneraren använder i sammanfattningssteget.',
+				'Prismatris, förhandsvisning, eftermiddags-retur och prisstruktur. Reseplaneraren visar priser i sammanfattningen.',
 				'museum-railway-timetable'
 			),
 			'adminOnly' => true,
@@ -86,6 +86,7 @@ function MRT_admin_vue_help_workflow_steps(): array {
 		__( 'Skapa en tidtabell och lägg till trafikdagar', 'museum-railway-timetable' ),
 		__( 'Lägg till turer (koppla rutt och destination)', 'museum-railway-timetable' ),
 		__( 'Fyll i stopptider i editorn (rutnät eller tabellvy)', 'museum-railway-timetable' ),
+		__( 'Konfigurera biljettpriser och tilldela priszoner till stationer', 'museum-railway-timetable' ),
 		__( 'Kontrollera förhandsvisningen — samma vy som på webbplatsen', 'museum-railway-timetable' ),
 		__( 'Publicera: lägg shortcodes på sidor (eller skapa sidor i utvecklingsläge)', 'museum-railway-timetable' ),
 	);
