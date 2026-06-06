@@ -37,7 +37,7 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `GET|PUT /services/{id}/stop-times` | Stopptider |
 | `PUT /services/{id}/departure` | Snabb avgångstid (mobil) |
 | `POST /operations/cancel-traffic` | Markera all trafik inställd för datum (mobil drift) |
-| `POST /dev/*` | Dev-verktyg (endast dev-läge): clear-db, import, demo-page, setup-navigation, sync-timetable-pages |
+| `POST /dev/*` | Dev-verktyg (endast dev-läge): clear-db, import, demo-page, setup-navigation, sync-timetable-pages, **client-log** |
 | `GET|POST /timetables/{id}/deviations` | Avvikelser |
 | `GET /timetables/{id}/overview` | Overview-JSON (samma som idag); kolumner/turer med `isCancelled`, print key med inställ-förklaring |
 | `GET|PUT /settings/prices` | Prismatris |

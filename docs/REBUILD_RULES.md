@@ -80,7 +80,7 @@ Presentation får rendera HTML men ska inte innehålla affärsregler. JS får h�
 
 - Vue/TypeScript-moduler i `frontend/vue/`; Vite bygger till IIFE i `assets/dist/vue/`.
 - Dela återanvändbar logik i Vue-utils/composables eller domänfunktioner i PHP — inte duplicera regler i klienten.
-- Ingen `console.log` i produktion utom bakom `window.mrtDebug`.
+- Ingen `console.log` i produktion utom bakom `mrtLog()` / `isDevMode` (se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md)).
 - JS ska inte duplicera sök-/pris-/datumregler från PHP.
 - Klient–server ska gå via **WordPress REST API** — se [REST_API.md](REST_API.md). Ingen `admin-ajax.php` / `wp_ajax_*`.
 - UI-rendering ska delas i små namngivna helpers.

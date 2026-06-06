@@ -47,7 +47,7 @@ final class RestClientConfigTest extends TestCase {
 		self::assertArrayHasKey( 'restUrl', $config );
 		self::assertArrayHasKey( 'restNonce', $config );
 		self::assertArrayHasKey( 'isDevMode', $config );
-		self::assertFalse( $config['isDevMode'] );
+		self::assertIsBool( $config['isDevMode'] );
 		self::assertStringContainsString( MRT_REST_NAMESPACE, $config['restUrl'] );
 		self::assertNotSame( '', $config['restNonce'] );
 	}

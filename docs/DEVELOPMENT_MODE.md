@@ -48,6 +48,22 @@ Publikt UI är **Vue-only** (jQuery-wizard-moduler är borttagna). Månad, över
 
 Per-komponent debug-sidor skapas fortfarande vid setup men listas under **Railway Timetable → Component demo page** (inte i front-menyn). Kör **Set up development menu** igen för att ta bort gamla debug-länkar ur menyn.
 
+## JS-debug
+
+I utvecklingsläge (`isDevMode` i Vue-config från `MRT_rest_client_config()`):
+
+- **Console:** `[MRT admin|wizard|…]` via `frontend/vue/src/utils/mrtLog.ts` — Vue `errorHandler`, ohanterade promise-rejections och REST-fel i `mrtRest.ts`.
+- **Server (admin):** samma fel skickas till `POST /dev/client-log` → `MRT_log()` → `wp-content/debug.log` (kräver `WP_DEBUG_LOG`).
+- **Publikt frontend:** console i dev-läge; ingen server-relay.
+
+Aktivera loggfil i Docker:
+
+```powershell
+docker compose run --rm wordpress-init wp --allow-root config set WP_DEBUG_LOG true --raw
+```
+
+(`docker-dev-reset.ps1` gör detta automatiskt.)
+
 Wizard-debug kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Presets: `inc/public/journey-wizard/debug-fixtures.php`, appliceras i Vue via `useWizardDebug.ts` och `createWizardStore` (`debug="date|outbound|return|summary"`).
 
 Block-tema med enbart Site Editor-navigation kan kräva manuell länk tills vidare.
@@ -105,7 +121,3 @@ WordPress i Docker är på **svenska** (`sv_SE`). Vid `docker compose up` instal
 4. **Component demo** – scrolla igenom alla tre block  
 
 Se [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md).
-
-## JS-debug
-
-I utvecklingsläge sätts `window.mrtDebug` i admin (för `console.log` i admin-skript enligt [REBUILD_RULES.md](REBUILD_RULES.md)).
