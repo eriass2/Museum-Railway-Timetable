@@ -18,10 +18,10 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function MRT_get_default_afternoon_return_prices(): array {
 	return array(
-		'adult'          => 160,
-		'child_4_15'     => 60,
+		'adult'          => 0,
+		'child_4_15'     => 0,
 		'child_0_3'      => 0,
-		'student_senior' => 140,
+		'student_senior' => 0,
 	);
 }
 
@@ -69,7 +69,7 @@ function MRT_get_default_price_schema(): array {
 			),
 		),
 		'zones'            => array( 1, 2, 3, 4 ),
-		'zone_cap'         => 3,
+		'zone_cap'         => 1,
 		'afternoon_return' => MRT_get_default_afternoon_return_prices(),
 	);
 }

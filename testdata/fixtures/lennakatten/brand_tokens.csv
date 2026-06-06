@@ -1,0 +1,28 @@
+token,value
+google_fonts,https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&family=Roboto:wght@400;500;700&display=swap
+--mrt-color-accent-400,#eae483
+--mrt-color-accent-500,#e3dc65
+--mrt-color-accent-600,var(--mrt-color-brand-gold)
+--mrt-color-accent-700,#c5bd44
+--mrt-color-brand-gold,#ddd24c
+--mrt-color-brand-green,#296310
+--mrt-color-brand-olive,#807c1c
+--mrt-color-focus-ring,#fff4d6
+--mrt-color-green-400,#42961a
+--mrt-color-green-500,#358015
+--mrt-color-green-600,var(--mrt-color-brand-green)
+--mrt-color-green-700,#245610
+--mrt-color-green-800,#214f0c
+--mrt-color-green-900,#183809
+--mrt-color-neutral-200,#b4b4b4
+--mrt-color-neutral-500,#787878
+--mrt-color-neutral-600,#787878
+--mrt-color-neutral-700,#505050
+--mrt-color-neutral-900,#000000
+--mrt-color-on-dark-link,#ffecb8
+--mrt-color-on-dark-muted,#e4efe2
+--mrt-color-traffic-green,var(--mrt-color-brand-green)
+--mrt-color-traffic-yellow,var(--mrt-color-brand-gold)
+--mrt-font-body,"""Roboto"", system-ui, -apple-system, ""Segoe UI"", sans-serif"
+--mrt-font-heading,"""Open Sans"", system-ui, -apple-system, ""Segoe UI"", sans-serif"
+--mrt-wizard-border,var(--mrt-color-neutral-200)

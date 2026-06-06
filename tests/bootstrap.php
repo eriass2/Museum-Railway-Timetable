@@ -28,6 +28,7 @@ define(
 
 require_once __DIR__ . '/wp-stubs.php';
 require_once __DIR__ . '/JourneyTestFixtures.php';
+require_once __DIR__ . '/LennakattenTestFixtures.php';
 
 if (!isset($GLOBALS['wpdb'])) {
     $GLOBALS['wpdb'] = new class {

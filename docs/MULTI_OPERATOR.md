@@ -42,3 +42,5 @@ Valfria framtida förbättringar — inte blockerande för ny operatör:
 | Eftermiddags-returpriser (belopp) | Redigerbart i Priser; defaultbelopp i schema kan vara operatörsspecifika |
 | `mrt_transfer_priority` | Meta/filter, ej admin/CSV |
 | Dokumentation | [BRAND_UI.md](design/BRAND_UI.md) / [STYLE_GUIDE.md](STYLE_GUIDE.md) beskriver fortfarande Lennakatten som primär profil |
+
+**Tester:** Lennakatten-referens via `MRT_lennakatten_reference_*()` + trait `MRT_Lennakatten_Test_Fixture` (`tests/LennakattenTestFixtures.php`). Guard: `LennakattenReferenceConfigTest`.

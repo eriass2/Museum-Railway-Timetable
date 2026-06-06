@@ -9,6 +9,9 @@
         "routes",
         "timetables",
         "services",
-        "stoptimes"
+        "stoptimes",
+        "settings",
+        "brand_tokens",
+        "prices"
     ]
 }

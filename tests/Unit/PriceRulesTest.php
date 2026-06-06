@@ -10,6 +10,17 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 final class PriceRulesTest extends TestCase {
+	use MRT_Lennakatten_Test_Fixture;
+
+	protected function setUp(): void {
+		parent::setUp();
+		$this->mrt_apply_lennakatten_options();
+	}
+
+	protected function tearDown(): void {
+		$this->mrt_clear_test_options();
+		parent::tearDown();
+	}
 
 	/**
 	 * @return array<string, array<string, array<int, int|null>>>
@@ -140,12 +151,9 @@ final class PriceRulesTest extends TestCase {
 	}
 
 	public function test_qualifies_for_afternoon_return_uses_settings_threshold(): void {
-		$GLOBALS['mrt_test_options'] = array(
-			'mrt_settings' => array( 'afternoon_return_threshold_minutes' => 960 ),
-		);
+		$GLOBALS['mrt_test_options']['mrt_settings']['afternoon_return_threshold_minutes'] = 960;
 		self::assertFalse( MRT_qualifies_for_afternoon_return( 'return', '15:30', '16:00' ) );
 		self::assertTrue( MRT_qualifies_for_afternoon_return( 'return', '16:00', '16:30' ) );
-		unset( $GLOBALS['mrt_test_options'] );
 	}
 
 	public function test_price_matrix_has_any_price(): void {
@@ -196,9 +204,6 @@ final class PriceRulesTest extends TestCase {
 	}
 
 	public function test_trip_prices_response_returns_single_trip(): void {
-		$GLOBALS['mrt_test_options'] = array(
-			'mrt_price_matrix' => MRT_sanitize_price_matrix( MRT_get_builtin_price_matrix() ),
-		);
 		$result = MRT_trip_prices_response( 1, 2, 'single' );
 		self::assertSame( 3, $result['zones'] );
 		self::assertNotNull( $result['trip'] );
@@ -207,9 +212,6 @@ final class PriceRulesTest extends TestCase {
 	}
 
 	public function test_trip_prices_response_includes_day_ticket(): void {
-		$GLOBALS['mrt_test_options'] = array(
-			'mrt_price_matrix' => MRT_sanitize_price_matrix( MRT_get_builtin_price_matrix() ),
-		);
 		$result = MRT_trip_prices_response( 1, 2, 'return', '15:00', '16:00', true );
 		self::assertNotNull( $result['trip'] );
 		self::assertTrue( $result['trip']['isAfternoonReturn'] );

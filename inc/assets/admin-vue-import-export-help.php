@@ -160,6 +160,11 @@ function MRT_admin_vue_import_export_package_files(): array {
 			'desc'     => __( 'Plugin-inställningar (export/import valfritt)', 'museum-railway-timetable' ),
 		),
 		array(
+			'file'     => 'brand_tokens.csv',
+			'required' => false,
+			'desc'     => __( 'Färger och typsnitt (--mrt-*-variabler + google_fonts)', 'museum-railway-timetable' ),
+		),
+		array(
 			'file'     => 'prices.csv',
 			'required' => false,
 			'desc'     => __( 'Prismatris för reseplaneraren', 'museum-railway-timetable' ),
@@ -182,7 +187,7 @@ function MRT_admin_vue_import_export_order_steps(): array {
 		'timetables.csv + timetable_dates.csv',
 		'services.csv + service_train_types.csv',
 		'stoptimes.csv',
-		'settings.csv → prices.csv (valfritt)',
+		'settings.csv → brand_tokens.csv → prices.csv (valfritt)',
 	);
 }
 

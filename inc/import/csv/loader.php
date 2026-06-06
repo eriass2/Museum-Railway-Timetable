@@ -31,6 +31,7 @@ require_once $csv_dir . 'entity-upsert.php';
 require_once $csv_dir . 'fixture-read.php';
 require_once $csv_dir . 'import-entities.php';
 require_once $csv_dir . 'import-entities-services.php';
+require_once $csv_dir . 'import-brand-tokens.php';
 require_once $csv_dir . 'import-override.php';
 require_once $csv_dir . 'importer.php';
 require_once $csv_dir . 'exporter.php';

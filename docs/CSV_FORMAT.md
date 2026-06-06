@@ -26,6 +26,7 @@ mrt-export/
 ├── service_train_types.csv
 ├── stoptimes.csv
 ├── settings.csv          # valfritt
+├── brand_tokens.csv      # valfritt (färger + typsnitt)
 ├── prices.csv            # valfritt
 └── icons/                # valfritt, tågtypsikoner
     └── angtag.svg
@@ -68,7 +69,7 @@ mrt-export/
 | `exported_at` | ISO 8601, informativt |
 | `plugin_version` | Plugin-version vid export, informativt |
 
-Tillåtna värden i `includes`: `stations`, `train_types`, `routes`, `timetables`, `services`, `stoptimes`, `settings`, `prices`.
+Tillåtna värden i `includes`: `stations`, `train_types`, `routes`, `timetables`, `services`, `stoptimes`, `settings`, `brand_tokens`, `prices`.
 
 ---
 
@@ -260,7 +261,34 @@ Vid uppdatering av tur **ersätts** alla stoptider för den turen.
 | `max_transfers` | int | Max antal byten (0–5) |
 | `afternoon_return_threshold_minutes` | int | Eftermiddagsgräns som minuter från midnatt (900 = kl 15:00) |
 
-### 4.11 `prices.csv` (valfritt)
+### 4.11 `brand_tokens.csv` (valfritt)
+
+Operatörens färger och typsnitt som CSS custom properties (`--mrt-*`). Exporteras tillsammans med inställningar när sparade tokens finns.
+
+| Kolumn | Oblig | Beskrivning |
+|--------|-------|-------------|
+| `token` | ja | `google_fonts` eller `--mrt-…` (prefix kan utelämnas i CSV) |
+| `value` | ja | Hex-färg, `var(--mrt-…)`, font-stack eller Google Fonts-URL |
+
+**Specialrad:**
+
+| Token | Värde |
+|-------|-------|
+| `google_fonts` | HTTPS-URL till `fonts.googleapis.com/css2…` (valfritt) |
+
+**Exempel:**
+
+```csv
+token,value
+google_fonts,https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap
+--mrt-color-brand-green,#296310
+--mrt-font-body,"Roboto", system-ui, sans-serif
+--mrt-font-heading,"Open Sans", system-ui, sans-serif
+```
+
+Importerade tokens ersätter neutral standard-CSS i frontend. Om både CSV-tokens och `MRT_LENNAKATTEN_BRAND` finns vinner CSV.
+
+### 4.12 `prices.csv` (valfritt)
 
 | Kolumn | Oblig | Beskrivning |
 |--------|-------|-------------|
@@ -269,7 +297,7 @@ Vid uppdatering av tur **ersätts** alla stoptider för den turen.
 | `zone` | ja | Zonnummer från schemat |
 | `amount_sek` | nej | Heltal; tomt = ej tillgänglig |
 
-### 4.12 `price_schema.csv` (valfritt, följer med priser-export)
+### 4.13 `price_schema.csv` (valfritt, följer med priser-export)
 
 Definierar biljettyper, kategorier, zoner och specialpriser. Importeras **före** `prices.csv`.
 

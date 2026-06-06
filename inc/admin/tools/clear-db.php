@@ -78,6 +78,7 @@ function MRT_clear_plugin_tables(): void {
  */
 function MRT_clear_plugin_options(): void {
 	delete_option( 'mrt_settings' );
+	delete_option( 'mrt_brand_tokens' );
 	delete_option( 'mrt_price_matrix' );
 	delete_option( 'mrt_price_schema' );
 	delete_option( 'mrt_components_demo_page_id' );

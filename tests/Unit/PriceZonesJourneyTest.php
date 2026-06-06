@@ -12,12 +12,19 @@ use PHPUnit\Framework\TestCase;
 final class PriceZonesJourneyTest extends TestCase {
 
 	use MRT_Journey_Test_Fixture;
+	use MRT_Lennakatten_Test_Fixture;
 
 	/** @var mixed */
 	private $mrt_original_wpdb = null;
 
+	protected function setUp(): void {
+		parent::setUp();
+		$this->mrt_apply_lennakatten_options();
+	}
+
 	protected function tearDown(): void {
 		$this->mrt_reset_journey_fixture();
+		$this->mrt_clear_test_options();
 		unset( $GLOBALS['mrt_test_post_meta'], $GLOBALS['mrt_test_posts'], $GLOBALS['mrt_test_get_posts'] );
 		parent::tearDown();
 	}

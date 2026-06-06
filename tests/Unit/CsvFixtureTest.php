@@ -10,16 +10,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 require_once dirname( __DIR__, 2 ) . '/scripts/csv-cli-stubs.php';
-require_once ABSPATH . 'inc/import/csv/schema.php';
-require_once ABSPATH . 'inc/import/csv/slugify.php';
-require_once ABSPATH . 'inc/import/csv/reader.php';
-require_once ABSPATH . 'inc/import/csv/writer.php';
-require_once ABSPATH . 'inc/import/csv/package.php';
-require_once ABSPATH . 'inc/import/csv/validate-manifest.php';
-require_once ABSPATH . 'inc/import/csv/validate-codes.php';
-require_once ABSPATH . 'inc/import/csv/validate-codes-entities.php';
-require_once ABSPATH . 'inc/import/csv/validate-references.php';
-require_once ABSPATH . 'inc/import/csv/fixture-read.php';
+require_once ABSPATH . 'inc/import/csv/loader.php';
 
 final class CsvFixtureTest extends TestCase {
 

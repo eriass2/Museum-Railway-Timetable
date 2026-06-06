@@ -48,8 +48,10 @@ final class TrainChangeTest extends TestCase {
 		);
 	}
 
-	public function test_train_change_map_for_station_title_returns_marielund_defaults(): void {
-		$map = MRT_train_change_map_for_station_title( 'Marielund' );
+	public function test_train_change_map_reference_data_includes_marielund(): void {
+		require_once ABSPATH . 'inc/import/lennakatten/reference-data.php';
+		$maps = MRT_lennakatten_reference_train_change_maps_by_station_title();
+		$map  = $maps['Marielund'] ?? array();
 
 		self::assertArrayHasKey( '71', $map );
 		self::assertSame( 'Dieseltåg', $map['71']['typeName'] );

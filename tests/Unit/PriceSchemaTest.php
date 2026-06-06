@@ -22,6 +22,8 @@ final class PriceSchemaTest extends TestCase {
 
 		self::assertSame( array( 'single', 'return', 'day' ), array_column( $schema['ticket_types'], 'key' ) );
 		self::assertSame( array( 1, 2, 3, 4 ), $schema['zones'] );
+		self::assertSame( 1, $schema['zone_cap'] );
+		self::assertSame( 0, $schema['afternoon_return']['adult'] );
 	}
 
 	public function test_sanitize_price_schema_from_admin_maps(): void {

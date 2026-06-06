@@ -16,6 +16,12 @@ if ( ! defined( 'MRT_REST_NAMESPACE' ) ) {
 require_once ABSPATH . 'inc/infrastructure/rest/pricing-public.php';
 
 final class RestPricingPublicTest extends TestCase {
+	use MRT_Lennakatten_Test_Fixture;
+
+	protected function tearDown(): void {
+		$this->mrt_clear_test_options();
+		parent::tearDown();
+	}
 
 	public function test_trip_prices_handler_rejects_invalid_station(): void {
 		$request = new WP_REST_Request( 'GET', '/museum-railway-timetable/v1/prices/trip' );
@@ -29,6 +35,7 @@ final class RestPricingPublicTest extends TestCase {
 	}
 
 	public function test_trip_prices_handler_returns_zone_matrix(): void {
+		$this->mrt_apply_lennakatten_options();
 		$request = new WP_REST_Request( 'GET', '/museum-railway-timetable/v1/prices/trip' );
 		$request->set_param( 'from_id', 1 );
 		$request->set_param( 'to_id', 2 );
@@ -46,6 +53,7 @@ final class RestPricingPublicTest extends TestCase {
 	}
 
 	public function test_trip_prices_handler_counts_zones_from_outbound_legs(): void {
+		$this->mrt_apply_lennakatten_options();
 		$GLOBALS['wpdb'] = new MRT_Journey_Test_Db(
 			array(
 				10 => array(

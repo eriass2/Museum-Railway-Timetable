@@ -40,4 +40,6 @@ composer csv:zip
 
 Import zip (same data): `../lennakatten.zip` — regenerate with `composer csv:zip` after CSV edits.
 
+**Also included:** `settings.csv`, `price_schema.csv`, and `prices.csv` (Lennakatten taxa 2026 + operatörsinställningar). See `inc/import/lennakatten/reference-data.php` for the PHP mirror used in PHPUnit.
+
 Format: [docs/CSV_FORMAT.md](../../docs/CSV_FORMAT.md).

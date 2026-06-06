@@ -13,9 +13,10 @@ use PHPUnit\Framework\TestCase;
  * Global MRT_* functions from inc/domain/pricing/prices.php (no namespace).
  */
 final class JourneyPricesTest extends TestCase {
+	use MRT_Lennakatten_Test_Fixture;
 
     protected function tearDown(): void {
-        unset($GLOBALS['mrt_test_options']);
+        $this->mrt_clear_test_options();
         parent::tearDown();
     }
 
@@ -85,13 +86,24 @@ final class JourneyPricesTest extends TestCase {
         self::assertNull($m['return']['adult']['1']);
     }
 
-    public function test_afternoon_return_prices_match_schema_defaults(): void {
+    public function test_neutral_afternoon_return_prices_are_zero(): void {
         $prices = MRT_get_afternoon_return_prices();
-        self::assertSame(160, $prices['adult']);
-        self::assertSame(60, $prices['child_4_15']);
+        self::assertSame(0, $prices['adult']);
+        self::assertSame(0, $prices['child_4_15']);
+    }
+
+    public function test_neutral_zone_cap_is_one(): void {
+        self::assertSame(1, MRT_price_zone_cap());
+    }
+
+    public function test_lennakatten_options_set_afternoon_and_zone_cap(): void {
+        $this->mrt_apply_lennakatten_options();
+        self::assertSame(160, MRT_get_afternoon_return_prices()['adult']);
+        self::assertSame(3, MRT_price_zone_cap());
     }
 
     public function test_price_zone_cap_limits_fare_lookup(): void {
+        $this->mrt_apply_lennakatten_options();
         self::assertSame(3, MRT_price_zone_cap());
         $m = MRT_get_default_price_matrix();
         self::assertNull($m['single']['adult']['1']);

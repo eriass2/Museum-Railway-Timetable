@@ -21,17 +21,19 @@ function MRT_csv_export_package( string $target_dir, array $options = array() ) 
 	$include_prices   = ! empty( $options['include_prices'] );
 	$include_settings = ! empty( $options['include_settings'] );
 	$tables           = MRT_csv_collect_export_tables( $include_prices, $include_settings );
+	$has_brand_tokens = isset( $tables['brand_tokens.csv'] );
 	$includes         = array_keys(
 		array_filter(
 			array(
-				'stations'    => true,
-				'train_types' => true,
-				'routes'      => true,
-				'timetables'  => true,
-				'services'    => true,
-				'stoptimes'   => true,
-				'settings'    => $include_settings,
-				'prices'      => $include_prices,
+				'stations'     => true,
+				'train_types'  => true,
+				'routes'       => true,
+				'timetables'   => true,
+				'services'     => true,
+				'stoptimes'    => true,
+				'settings'     => $include_settings,
+				'brand_tokens' => $has_brand_tokens,
+				'prices'       => $include_prices,
 			)
 		)
 	);
@@ -105,6 +107,10 @@ function MRT_csv_collect_export_tables( bool $include_prices, bool $include_sett
 	$tables['stoptimes.csv'] = MRT_csv_export_stoptimes( $maps );
 	if ( $include_settings ) {
 		$tables['settings.csv'] = MRT_csv_export_settings();
+		$brand_rows             = MRT_csv_export_brand_tokens();
+		if ( $brand_rows !== array() ) {
+			$tables['brand_tokens.csv'] = $brand_rows;
+		}
 	}
 	if ( $include_prices ) {
 		$tables['price_schema.csv'] = MRT_csv_export_price_schema();

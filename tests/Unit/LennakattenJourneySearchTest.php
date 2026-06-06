@@ -10,7 +10,8 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 require_once dirname( __DIR__, 2 ) . '/scripts/csv-cli-stubs.php';
-require_once ABSPATH . 'inc/import/csv/fixture-read.php';
+require_once ABSPATH . 'inc/import/csv/loader.php';
+require_once ABSPATH . 'inc/domain/journey/train-change.php';
 
 final class LennakattenJourneySearchTest extends TestCase {
 	use MRT_Journey_Test_Fixture;
@@ -388,7 +389,7 @@ final class LennakattenJourneySearchTest extends TestCase {
 			$service_code_to_id[ $service_code ]       = $next_service_id;
 			++$next_service_id;
 		}
-		$station_meta = $this->fixture_bus_hub_station_meta( $stations );
+		$station_meta = $this->fixture_station_hub_meta( $stations );
 		$this->mrt_use_journey_fixture(
 			$rows_by_service,
 			array( 900 => array( $date ) ),
@@ -476,6 +477,45 @@ final class LennakattenJourneySearchTest extends TestCase {
 			if ( $id > 0 ) {
 				$meta[ $id ] = array( 'mrt_station_bus_suffix' => '1' );
 			}
+		}
+		return $meta;
+	}
+
+	/**
+	 * @param array<string, int> $stations station_code => post ID
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function fixture_train_change_station_meta( array $stations ): array {
+		$meta       = array();
+		$maps_by_id = array();
+		foreach ( $this->fixture_files()['station_train_changes.csv'] ?? array() as $row ) {
+			$code = (string) ( $row['station_code'] ?? '' );
+			$from = (string) ( $row['from_service'] ?? '' );
+			$id   = $stations[ $code ] ?? 0;
+			if ( $id <= 0 || $from === '' ) {
+				continue;
+			}
+			$maps_by_id[ $id ][ $from ] = MRT_train_change_map_entry(
+				(string) ( $row['type_name'] ?? '' ),
+				(string) ( $row['to_service'] ?? '' )
+			);
+		}
+		foreach ( $maps_by_id as $station_id => $map ) {
+			$meta[ (int) $station_id ] = array(
+				MRT_station_train_change_map_meta_key() => MRT_sanitize_station_train_change_map( $map ),
+			);
+		}
+		return $meta;
+	}
+
+	/**
+	 * @param array<string, int> $stations station_code => post ID
+	 * @return array<int, array<string, mixed>>
+	 */
+	private function fixture_station_hub_meta( array $stations ): array {
+		$meta = $this->fixture_bus_hub_station_meta( $stations );
+		foreach ( $this->fixture_train_change_station_meta( $stations ) as $station_id => $fields ) {
+			$meta[ $station_id ] = array_merge( $meta[ $station_id ] ?? array(), $fields );
 		}
 		return $meta;
 	}

@@ -22,7 +22,7 @@ Se även [MULTI_OPERATOR.md](MULTI_OPERATOR.md) för produktplan och [ADMIN_WORK
    - `timetables.csv` + `timetable_dates.csv`
    - `services.csv` + `stoptimes.csv`
    - `train_types.csv`
-3. Valfritt: `prices.csv` + `price_schema.csv`, `settings.csv`
+3. Valfritt: `prices.csv` + `price_schema.csv`, `settings.csv`, `brand_tokens.csv`
 4. Valfritt: `station_train_changes.csv` — anslutande tåg i tidtabellsöversikten (t.ex. byte Marielund 71 → Dieseltåg 61)
 5. Importera i läge **merge** (första gången) eller **override** (ersätt fixture-data).
 
@@ -60,8 +60,9 @@ Se [SHORTCODES.md](SHORTCODES.md).
 ### Utseende (tema)
 
 - **Standard:** neutral blå/brass-profil i [`assets/mrt-color-tokens.css`](../assets/mrt-color-tokens.css) och systemtypsnitt.
+- **CSV:** `brand_tokens.csv` i importpaketet (färger + typsnitt, se [CSV_FORMAT.md](CSV_FORMAT.md)).
 - **Override:** sätt egna `--mrt-*`-variabler i child theme eller sajt-CSS.
-- **Lennakatten-profil (valfritt):** i `wp-config.php`:
+- **Lennakatten-profil (valfritt, dev):** i `wp-config.php`:
 
 ```php
 define( 'MRT_LENNAKATTEN_BRAND', true );
@@ -75,7 +76,9 @@ Färgreferens: [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
 
 ## 5. Dev/demo (Lennakatten)
 
-Under utveckling: **Dev tools → Importera Lennakatten-demo** fyller databasen med referensdata från `testdata/fixtures/lennakatten/` (inkl. `station_train_changes.csv`). Det ska **inte** användas som produktionsdefault.
+Under utveckling: **Dev tools → Importera Lennakatten-demo** fyller databasen med referensdata från `testdata/fixtures/lennakatten/` (tidtabeller, priser, inställningar, `station_train_changes.csv`). Det ska **inte** användas som produktionsdefault.
+
+PHP-referens för tester: `MRT_lennakatten_reference_*()` i `inc/import/lennakatten/reference-data.php`; PHPUnit-trait `MRT_Lennakatten_Test_Fixture`.
 
 Docker dev har `MRT_LENNAKATTEN_BRAND` aktiverat i `docker-compose.yml` så demo behåller Lennakatten-look.
 

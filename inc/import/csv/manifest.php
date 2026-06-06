@@ -25,6 +25,7 @@ function MRT_csv_manifest_include_order(): array {
 		'services',
 		'stoptimes',
 		'settings',
+		'brand_tokens',
 		'prices',
 	);
 }
@@ -45,6 +46,7 @@ function MRT_csv_file_to_include_entity( string $filename ): ?string {
 		'service_train_types.csv' => 'services',
 		'stoptimes.csv'           => 'stoptimes',
 		'settings.csv'            => 'settings',
+		'brand_tokens.csv'        => 'brand_tokens',
 		'prices.csv'              => 'prices',
 		'price_schema.csv'        => 'prices',
 	);

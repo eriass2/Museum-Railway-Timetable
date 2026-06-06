@@ -82,6 +82,9 @@ function MRT_csv_run_import( array $package ): array {
 	if ( in_array( 'settings', $includes, true ) ) {
 		MRT_csv_import_settings( $files );
 	}
+	if ( in_array( 'brand_tokens', $includes, true ) ) {
+		MRT_csv_import_brand_tokens( $files );
+	}
 	if ( in_array( 'prices', $includes, true ) ) {
 		MRT_csv_import_price_schema( $files );
 		MRT_csv_import_prices( $files );
