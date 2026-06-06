@@ -23,24 +23,8 @@ function MRT_csv_import_timetables( array $files, array &$maps ): int {
 	$count = 0;
 	foreach ( (array) ( $files['timetables.csv'] ?? array() ) as $row ) {
 		$code = MRT_csv_row_code( $row, 'timetable_code', 'title' );
-		$id   = MRT_csv_find_post_by_code( $code, MRT_POST_TYPE_TIMETABLE, $meta );
+		$id   = MRT_csv_upsert_post_by_code( $code, MRT_POST_TYPE_TIMETABLE, $meta, $row['title'] );
 		if ( $id <= 0 ) {
-			$id = wp_insert_post(
-				array(
-					'post_type'   => MRT_POST_TYPE_TIMETABLE,
-					'post_title'  => $row['title'],
-					'post_status' => 'publish',
-				)
-			);
-		} else {
-			wp_update_post(
-				array(
-					'ID' => $id,
-					'post_title' => $row['title'],
-				)
-			);
-		}
-		if ( ! $id || $id instanceof WP_Error ) {
 			continue;
 		}
 		$date_list = array();
@@ -70,27 +54,18 @@ function MRT_csv_import_services( array $files, array &$maps ): int {
 	}
 	$count = 0;
 	foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {
-		$code = MRT_csv_resolve_service_code( $row );
-		$id   = MRT_csv_find_post_by_code( $code, MRT_POST_TYPE_SERVICE, $meta );
+		$code  = MRT_csv_resolve_service_code( $row );
 		$title = MRT_csv_service_title( $row, $maps );
+		$id    = MRT_csv_upsert_post_by_code(
+			$code,
+			MRT_POST_TYPE_SERVICE,
+			$meta,
+			$title,
+			static function ( int $service_id ): void {
+				MRT_csv_clear_service_stoptimes( $service_id );
+			}
+		);
 		if ( $id <= 0 ) {
-			$id = wp_insert_post(
-				array(
-					'post_type'   => MRT_POST_TYPE_SERVICE,
-					'post_title'  => $title,
-					'post_status' => 'publish',
-				)
-			);
-		} else {
-			wp_update_post(
-				array(
-					'ID' => $id,
-					'post_title' => $title,
-				)
-			);
-			MRT_csv_clear_service_stoptimes( (int) $id );
-		}
-		if ( ! $id || $id instanceof WP_Error ) {
 			continue;
 		}
 		$route_code = $row['route_code'] ?? '';

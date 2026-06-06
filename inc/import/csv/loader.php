@@ -27,6 +27,7 @@ require_once $csv_dir . 'validate-codes.php';
 require_once $csv_dir . 'validate-codes-entities.php';
 require_once $csv_dir . 'validate-references.php';
 require_once $csv_dir . 'codes-store.php';
+require_once $csv_dir . 'entity-upsert.php';
 require_once $csv_dir . 'fixture-read.php';
 require_once $csv_dir . 'import-entities.php';
 require_once $csv_dir . 'import-entities-services.php';

@@ -108,6 +108,30 @@ final class CsvImportEntitiesTest extends TestCase {
 		);
 	}
 
+	public function test_import_stations_updates_existing_post_by_code(): void {
+		$this->boot_get_posts_by_code();
+		$maps  = array( 'station' => array(), 'route' => array(), 'timetable' => array(), 'service' => array() );
+		$files = array(
+			'stations.csv' => array(
+				array(
+					'station_code'    => 'alpha',
+					'name'            => 'Alpha',
+					'station_type'    => 'station',
+					'display_order'   => '1',
+					'bus_stop_marker' => '0',
+				),
+			),
+		);
+		MRT_csv_import_stations( $files, $maps );
+		$id = $maps['station']['alpha'];
+
+		$files['stations.csv'][0]['name'] = 'Alpha renamed';
+		MRT_csv_import_stations( $files, $maps );
+
+		self::assertSame( $id, $maps['station']['alpha'] );
+		self::assertSame( 'Alpha renamed', $GLOBALS['mrt_test_posts'][ $id ]->post_title );
+	}
+
 	public function test_import_routes_resolves_station_order(): void {
 		$this->boot_get_posts_by_code();
 		$maps = array(

@@ -20,24 +20,8 @@ function MRT_csv_import_stations( array $files, array &$maps ): int {
 	$count = 0;
 	foreach ( (array) ( $files['stations.csv'] ?? array() ) as $row ) {
 		$code = MRT_csv_row_code( $row, 'station_code', 'name' );
-		$id   = MRT_csv_find_post_by_code( $code, MRT_POST_TYPE_STATION, $meta );
+		$id   = MRT_csv_upsert_post_by_code( $code, MRT_POST_TYPE_STATION, $meta, $row['name'] );
 		if ( $id <= 0 ) {
-			$id = wp_insert_post(
-				array(
-					'post_type'   => MRT_POST_TYPE_STATION,
-					'post_title'  => $row['name'],
-					'post_status' => 'publish',
-				)
-			);
-		} else {
-			wp_update_post(
-				array(
-					'ID'         => $id,
-					'post_title' => $row['name'],
-				)
-			);
-		}
-		if ( ! $id || $id instanceof WP_Error ) {
 			continue;
 		}
 		MRT_csv_save_post_code( (int) $id, $meta, $code );
@@ -89,26 +73,10 @@ function MRT_csv_import_routes( array $files, array &$maps ): int {
 	$route_rows = (array) ( $files['routes.csv'] ?? array() );
 	$station_rows = MRT_csv_group_route_stations( $files );
 	foreach ( $route_rows as $row ) {
-		$code = MRT_csv_row_code( $row, 'route_code', 'title' );
-		$id   = MRT_csv_find_post_by_code( $code, MRT_POST_TYPE_ROUTE, $meta );
+		$code  = MRT_csv_row_code( $row, 'route_code', 'title' );
 		$title = $row['title'];
+		$id    = MRT_csv_upsert_post_by_code( $code, MRT_POST_TYPE_ROUTE, $meta, $title );
 		if ( $id <= 0 ) {
-			$id = wp_insert_post(
-				array(
-					'post_type'   => MRT_POST_TYPE_ROUTE,
-					'post_title'  => $title,
-					'post_status' => 'publish',
-				)
-			);
-		} else {
-			wp_update_post(
-				array(
-					'ID' => $id,
-					'post_title' => $title,
-				)
-			);
-		}
-		if ( ! $id || $id instanceof WP_Error ) {
 			continue;
 		}
 		$station_ids = MRT_csv_resolve_route_station_ids( $station_rows[ $code ] ?? array(), $maps );
