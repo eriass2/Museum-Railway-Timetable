@@ -14,6 +14,7 @@ import {
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useAdminFormDirty } from '../composables/useAdminFormDirty';
+import { useAdminUnsavedGuard } from '../composables/useAdminUnsavedGuard';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { minutesToTimeInput, timeInputToMinutes } from '../utils/settingsTime';
@@ -34,6 +35,7 @@ const form = ref<SettingsPayload>({
 });
 
 const { dirty, syncSnapshot } = useAdminFormDirty(form);
+useAdminUnsavedGuard(dirty);
 
 const { loading, error, data, load } = useAdminResource({
   beforeLoad: () => cfg.canManage,

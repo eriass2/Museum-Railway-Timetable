@@ -19,6 +19,7 @@ import { usePriceSchemaEditor } from '../composables/usePriceSchemaEditor';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useAdminFormDirty } from '../composables/useAdminFormDirty';
+import { useAdminUnsavedGuard } from '../composables/useAdminUnsavedGuard';
 import { adminConfirm } from '../composables/adminConfirm';
 import { adminErrorMessage, adminFmtN, adminStr } from '../utils/adminLabels';
 import { priceMatrixHasAnyValue } from '../utils/adminPricePreview';
@@ -36,6 +37,7 @@ const copyZoneFrom = ref<number | ''>('');
 const copyZoneTo = ref<number | ''>('');
 
 const { dirty, syncSnapshot } = useAdminFormDirty(data);
+useAdminUnsavedGuard(dirty);
 
 const { loading, error, load } = useAdminResource({
   beforeLoad: () => cfg.canManage,
