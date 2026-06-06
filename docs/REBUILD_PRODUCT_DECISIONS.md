@@ -111,3 +111,19 @@ Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 | Regler | Befintliga: pickup/dropoff, riktning mot mål, min/max bytestid, overshoot-filter. |
 | Avvikelser i poäng | **Ej ännu** — TODO kvar i `journey-scoring.php`. |
 | Presentation | Befintlig normalisering, wizard-filter och sortering; `legs[]` stöder N ben. |
+
+---
+
+## 11. Multi-operator (2026-06)
+
+**Beslut:** Pluginet ska kunna användas av **andra föreningar** utan Lennakatten i runtime. Lennakatten är **referensoperatör** — dev-import, fixture, designreferens — inte default vid tom databas.
+
+| Punkt | Värde |
+|-------|--------|
+| Dataplattform | Redan generisk: CSV + Vue-admin + REST |
+| Problem idag | Branding, builtin-priser, titel-fallbacks (zoner, tågbyte), affärsregler utan UI |
+| Tågbyte (2026-06) | Per-station meta `mrt_station_train_change_map` — **delvis**; REST/admin/CSV saknas; Marielund-default kvar i kod |
+| Plan och status | [MULTI_OPERATOR.md](MULTI_OPERATOR.md) (Tier A → B) |
+| Första leverans | Tier A: neutrala defaults, inga Lennakatten-fallbacks i produktion |
+
+**Princip:** *Fail empty* — saknas operatörsdata ska systemet vara neutralt eller varna, inte gissa Lennakatten.
