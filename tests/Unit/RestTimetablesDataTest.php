@@ -133,6 +133,22 @@ final class RestTimetablesDataTest extends TestCase {
 		self::assertSame( 'green', get_post_meta( $id, 'mrt_timetable_type', true ) );
 	}
 
+	public function test_add_timetable_service_stores_service_number(): void {
+		$this->boot_timetable_posts();
+
+		$result = MRT_rest_add_timetable_service(
+			10,
+			array(
+				'route_id'       => 50,
+				'service_number' => '77',
+			)
+		);
+
+		self::assertIsArray( $result );
+		$service_id = (int) $result['service_id'];
+		self::assertSame( '77', get_post_meta( $service_id, 'mrt_service_number', true ) );
+	}
+
 	public function test_add_timetable_service_requires_route(): void {
 		$this->boot_timetable_posts();
 

@@ -45,6 +45,29 @@ function MRT_sanitize_highlight_color( string $color ): string {
 }
 
 /**
+ * Persist optional service number and highlight meta from REST/CSV body.
+ *
+ * @param array<string, mixed> $body Request body.
+ */
+function MRT_apply_service_number_and_highlight_meta( int $service_id, array $body ): void {
+	if ( array_key_exists( 'service_number', $body ) ) {
+		$number = sanitize_text_field( (string) $body['service_number'] );
+		if ( $number === '' ) {
+			delete_post_meta( $service_id, 'mrt_service_number' );
+		} else {
+			update_post_meta( $service_id, 'mrt_service_number', $number );
+		}
+	}
+	if (
+		array_key_exists( 'highlight_label', $body )
+		|| array_key_exists( 'highlight_color', $body )
+		|| array_key_exists( 'highlight_note', $body )
+	) {
+		MRT_apply_service_highlight_fields( $service_id, $body );
+	}
+}
+
+/**
  * Save or clear per-departure highlight meta.
  *
  * @param array<string, mixed> $fields highlight_label, highlight_color, highlight_note.

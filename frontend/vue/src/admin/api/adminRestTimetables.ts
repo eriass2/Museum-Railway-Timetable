@@ -39,7 +39,15 @@ export function getTimetableOverview(id: number) {
 
 export function addTimetableService(
   timetableId: number,
-  body: { route_id: number; train_type_id?: number; end_station_id?: number },
+  body: {
+    route_id: number;
+    train_type_id?: number;
+    end_station_id?: number;
+    service_number?: string;
+    highlight_label?: string;
+    highlight_color?: string;
+    highlight_note?: string;
+  },
 ) {
   return adminFetch<Record<string, unknown>>(
     `/timetables/${timetableId}/services`,

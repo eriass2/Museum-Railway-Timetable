@@ -73,15 +73,6 @@ function MRT_apply_timetable_service_update( int $service_id, array $body ) {
 		wp_set_object_terms( $service_id, array(), MRT_TAXONOMY_TRAIN_TYPE );
 	}
 
-	if ( array_key_exists( 'service_number', $body ) ) {
-		$number = sanitize_text_field( (string) $body['service_number'] );
-		if ( $number === '' ) {
-			delete_post_meta( $service_id, 'mrt_service_number' );
-		} else {
-			update_post_meta( $service_id, 'mrt_service_number', $number );
-		}
-	}
-
 	$auto_title = MRT_build_service_auto_title( $route_id, $end_station_id, $direction );
 	wp_update_post(
 		array(
@@ -90,13 +81,7 @@ function MRT_apply_timetable_service_update( int $service_id, array $body ) {
 		)
 	);
 
-	if (
-		array_key_exists( 'highlight_label', $body )
-		|| array_key_exists( 'highlight_color', $body )
-		|| array_key_exists( 'highlight_note', $body )
-	) {
-		MRT_apply_service_highlight_fields( $service_id, $body );
-	}
+	MRT_apply_service_number_and_highlight_meta( $service_id, $body );
 
 	return true;
 }

@@ -282,6 +282,8 @@ function MRT_rest_add_timetable_service( int $timetable_id, array $body ) {
 	if ( $input['train_type_id'] > 0 ) {
 		wp_set_object_terms( $service_id, array( $input['train_type_id'] ), MRT_TAXONOMY_TRAIN_TYPE );
 	}
+	require_once MRT_PATH . 'inc/domain/service/highlight.php';
+	MRT_apply_service_number_and_highlight_meta( (int) $service_id, $body );
 	return MRT_build_add_service_response(
 		(int) $service_id,
 		$input['route_id'],

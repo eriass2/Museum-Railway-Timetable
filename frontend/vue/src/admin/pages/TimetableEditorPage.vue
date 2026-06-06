@@ -13,13 +13,6 @@ import {
   updateTimetableService,
 } from '../api/adminRest';
 import type { TimetableDetail, TimetableServiceRow } from '../types';
-
-type TimetableServiceEditRow = TimetableServiceRow & {
-  end_station_id?: number;
-  highlight_label?: string;
-  highlight_color?: string;
-  highlight_note?: string;
-};
 import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminFormActions,
@@ -34,6 +27,17 @@ import TimetableEditorTripEditForm, {
   type TripEditDraft,
 } from '../components/timetable-editor/TimetableEditorTripEditForm.vue';
 import TimetableEditorTripsTab from '../components/timetable-editor/TimetableEditorTripsTab.vue';
+import {
+  emptyTripDraft,
+  tripDraftToApiBody,
+} from '../components/timetable-editor/tripFormTypes';
+
+type TimetableServiceEditRow = TimetableServiceRow & {
+  end_station_id?: number;
+  highlight_label?: string;
+  highlight_color?: string;
+  highlight_note?: string;
+};
 import StopTimesEditor from '../components/StopTimesEditor.vue';
 import EditableTimetableOverview from '../components/EditableTimetableOverview.vue';
 import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
@@ -63,7 +67,7 @@ const overview = ref<TimetableOverviewPayload | null>(null);
 const loading = ref(true);
 const error = ref('');
 const dateInput = ref('');
-const newTrip = ref({ route_id: 0, train_type_id: 0, end_station_id: 0 });
+const newTrip = ref(emptyTripDraft());
 const destinations = ref<{ id: number; name: string }[]>([]);
 const editTrip = ref<TripEditDraft | null>(null);
 const editDestinations = ref<{ id: number; name: string }[]>([]);
@@ -244,15 +248,11 @@ async function saveEditTrip(): Promise<void> {
   if (!editTrip.value || !cfg.canManage || editTrip.value.route_id <= 0) {
     return;
   }
-  await updateTimetableService(timetableId.value, editTrip.value.service_id, {
-    route_id: editTrip.value.route_id,
-    train_type_id: editTrip.value.train_type_id || undefined,
-    end_station_id: editTrip.value.end_station_id || undefined,
-    service_number: editTrip.value.service_number,
-    highlight_label: editTrip.value.highlight_label.trim(),
-    highlight_color: editTrip.value.highlight_color,
-    highlight_note: editTrip.value.highlight_note,
-  });
+  await updateTimetableService(
+    timetableId.value,
+    editTrip.value.service_id,
+    tripDraftToApiBody(editTrip.value),
+  );
   editTrip.value = null;
   editDestinations.value = [];
   await loadDetail();
@@ -311,12 +311,10 @@ function removeDate(d: string) {
 }
 
 async function addTrip() {
-  if (!cfg.canManage) return;
-  await addTimetableService(timetableId.value, {
-    route_id: newTrip.value.route_id,
-    train_type_id: newTrip.value.train_type_id || undefined,
-    end_station_id: newTrip.value.end_station_id || undefined,
-  });
+  if (!cfg.canManage || newTrip.value.route_id <= 0) return;
+  await addTimetableService(timetableId.value, tripDraftToApiBody(newTrip.value));
+  newTrip.value = emptyTripDraft();
+  destinations.value = [];
   await loadDetail();
 }
 

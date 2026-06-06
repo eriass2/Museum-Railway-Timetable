@@ -4,9 +4,10 @@ import {
   AdminPanel,
   AdminRowActions,
   AdminTrainTypeCell,
-  AdminTrainTypeSelect,
   MrtButton,
 } from '../ui';
+import TimetableTripFieldsBlock from './TimetableTripFieldsBlock.vue';
+import type { TimetableTripDraft } from './tripFormTypes';
 import type { TimetableDetail } from '../../types';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
@@ -20,11 +21,7 @@ defineProps<{
 }>();
 
 const cfg = adminConfig();
-const newTrip = defineModel<{
-  route_id: number;
-  train_type_id: number;
-  end_station_id: number;
-}>('newTrip', { required: true });
+const newTrip = defineModel<TimetableTripDraft>('newTrip', { required: true });
 
 const emit = defineEmits<{
   'open-stoptimes': [serviceId: number];
@@ -85,21 +82,14 @@ const emit = defineEmits<{
       </tbody>
     </table>
     <div v-if="canManage" class="mrt-admin-trip-form">
-      <select v-model.number="newTrip.route_id">
-        <option :value="0">{{ adminStr(cfg, 'editorRoutePrompt') }}</option>
-        <option v-for="r in detail.routes" :key="r.id" :value="r.id">{{ r.title }}</option>
-      </select>
-      <AdminTrainTypeSelect
-        v-model="newTrip.train_type_id"
-        :train-types="detail.train_types"
-        :icon-key="trainTypeIconKey(newTrip.train_type_id)"
-        show-icon
-        empty-label-key="editorTrainTypePrompt"
+      <h3 class="mrt-admin-trip-form__title">{{ adminStr(cfg, 'editorAddTrip') }}</h3>
+      <TimetableTripFieldsBlock
+        v-model:draft="newTrip"
+        :detail="detail"
+        :destinations="destinations"
+        field-id-prefix="trip-new"
+        :train-type-icon-key="trainTypeIconKey"
       />
-      <select v-model.number="newTrip.end_station_id">
-        <option :value="0">{{ adminStr(cfg, 'editorDestinationPrompt') }}</option>
-        <option v-for="d in destinations" :key="d.id" :value="d.id">{{ d.name }}</option>
-      </select>
       <div class="mrt-admin-trip-form__actions">
         <MrtButton context="admin" variant="primary" @click="emit('add-trip')">
           {{ adminStr(cfg, 'editorAddTrip') }}
@@ -108,3 +98,10 @@ const emit = defineEmits<{
     </div>
   </AdminPanel>
 </template>
+
+<style scoped>
+.mrt-admin-trip-form__title {
+  margin: 12px 0 8px;
+  font-size: 14px;
+}
+</style>
