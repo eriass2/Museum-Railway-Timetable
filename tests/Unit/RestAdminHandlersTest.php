@@ -251,6 +251,8 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertArrayHasKey( 'matrix', $data );
 		self::assertArrayHasKey( 'ticket_types', $data );
 		self::assertArrayHasKey( 'zones', $data );
+		self::assertArrayHasKey( 'zone_cap', $data );
+		self::assertArrayHasKey( 'afternoon_return', $data );
 	}
 
 	public function test_save_prices_handler_persists_schema(): void {

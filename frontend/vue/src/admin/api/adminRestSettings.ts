@@ -23,13 +23,20 @@ export type PricesPayload = {
   ticket_types: Record<string, string>;
   categories: Record<string, string>;
   zones: number[];
+  zone_cap: number;
+  afternoon_return: Record<string, number | null>;
 };
 
 export function getPrices() {
   return adminFetch<PricesPayload>('/settings/prices');
 }
 
-export function savePrices(payload: Pick<PricesPayload, 'matrix' | 'ticket_types' | 'categories' | 'zones'>) {
+export function savePrices(
+  payload: Pick<
+    PricesPayload,
+    'matrix' | 'ticket_types' | 'categories' | 'zones' | 'zone_cap' | 'afternoon_return'
+  >,
+) {
   return adminFetch<PricesPayload>('/settings/prices', {
     method: 'PATCH',
     body: JSON.stringify(payload),

@@ -45,6 +45,7 @@ function MRT_csv_file_to_include_entity( string $filename ): ?string {
 		'stoptimes.csv'           => 'stoptimes',
 		'settings.csv'            => 'settings',
 		'prices.csv'              => 'prices',
+		'price_schema.csv'        => 'prices',
 	);
 	return $map[ $filename ] ?? null;
 }

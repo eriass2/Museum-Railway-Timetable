@@ -2,6 +2,17 @@ import type { Ref } from 'vue';
 import type { PricesPayload } from '../api/adminRest';
 import { slugPriceKey, uniquePriceKey } from '../utils/priceSchemaKeys';
 
+function ensureAfternoonReturnCells(data: PricesPayload): void {
+  if (!data.afternoon_return) {
+    data.afternoon_return = {};
+  }
+  for (const cat of Object.keys(data.categories)) {
+    if (data.afternoon_return[cat] === undefined) {
+      data.afternoon_return[cat] = null;
+    }
+  }
+}
+
 function ensureMatrixCells(data: PricesPayload): void {
   for (const ticket of Object.keys(data.ticket_types)) {
     if (!data.matrix[ticket]) {
@@ -18,6 +29,7 @@ function ensureMatrixCells(data: PricesPayload): void {
       }
     }
   }
+  ensureAfternoonReturnCells(data);
 }
 
 export function usePriceSchemaEditor(data: Ref<PricesPayload | null>) {
@@ -48,6 +60,7 @@ export function usePriceSchemaEditor(data: Ref<PricesPayload | null>) {
     }
     const key = uniquePriceKey(slugPriceKey(label.trim(), 'category'), data.value.categories);
     data.value.categories[key] = label.trim();
+    data.value.afternoon_return[key] = null;
     ensureMatrixCells(data.value);
   }
 
@@ -66,6 +79,9 @@ export function usePriceSchemaEditor(data: Ref<PricesPayload | null>) {
         nextMatrix[ticket] = row;
       }
     }
+    const nextAfternoon = { ...data.value.afternoon_return };
+    delete nextAfternoon[key];
+    data.value.afternoon_return = nextAfternoon;
     data.value.matrix = nextMatrix;
   }
 

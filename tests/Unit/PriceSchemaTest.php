@@ -54,9 +54,34 @@ final class PriceSchemaTest extends TestCase {
 				),
 			),
 			'zones'        => array( 1, 3 ),
+			'zone_cap'     => 2,
+			'afternoon_return' => array(
+				'adult' => 99,
+			),
 		);
 
 		self::assertSame( array( 'family' ), MRT_price_schema_ticket_keys() );
 		self::assertSame( array( 1, 3 ), MRT_price_schema_zone_keys() );
+		self::assertSame( 2, MRT_price_schema_zone_cap() );
+		self::assertSame( 99, MRT_price_schema_afternoon_return_prices()['adult'] );
+	}
+
+	public function test_afternoon_return_follows_category_keys(): void {
+		$schema = MRT_sanitize_price_schema_from_admin_maps(
+			array( 'single' => 'Enkel' ),
+			array( 'adult' => 'Vuxen', 'child' => 'Barn' ),
+			array( 1 ),
+			array(
+				'afternoon_return' => array(
+					'adult' => 120,
+					'child' => 40,
+				),
+			)
+		);
+
+		self::assertSame(
+			array( 'adult' => 120, 'child' => 40 ),
+			$schema['afternoon_return']
+		);
 	}
 }

@@ -90,10 +90,12 @@ function MRT_rest_get_prices_handler( WP_REST_Request $request ) {
 	unset( $request );
 	return rest_ensure_response(
 		array(
-			'matrix'          => MRT_get_price_matrix(),
-			'ticket_types'    => MRT_price_ticket_type_labels(),
-			'categories'      => MRT_price_category_labels(),
-			'zones'           => MRT_price_zone_keys(),
+			'matrix'           => MRT_get_price_matrix(),
+			'ticket_types'     => MRT_price_ticket_type_labels(),
+			'categories'       => MRT_price_category_labels(),
+			'zones'            => MRT_price_zone_keys(),
+			'zone_cap'         => MRT_price_zone_cap(),
+			'afternoon_return' => MRT_get_afternoon_return_prices(),
 		)
 	);
 }
@@ -112,7 +114,13 @@ function MRT_rest_save_prices_handler( WP_REST_Request $request ) {
 		$schema = MRT_sanitize_price_schema_from_admin_maps(
 			$body['ticket_types'],
 			$body['categories'],
-			array_map( 'intval', $body['zones'] )
+			array_map( 'intval', $body['zones'] ),
+			array(
+				'zone_cap'         => $body['zone_cap'] ?? null,
+				'afternoon_return' => isset( $body['afternoon_return'] ) && is_array( $body['afternoon_return'] )
+					? $body['afternoon_return']
+					: array(),
+			)
 		);
 		update_option( 'mrt_price_schema', $schema );
 	}

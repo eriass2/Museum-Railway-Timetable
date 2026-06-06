@@ -255,6 +255,56 @@ function MRT_csv_export_settings(): array {
 /**
  * @return array<int, array<string, string>>
  */
+function MRT_csv_export_price_schema(): array {
+	if ( ! function_exists( 'MRT_get_price_schema' ) ) {
+		require_once MRT_PATH . 'inc/domain/pricing/price-schema.php';
+	}
+	$schema = MRT_get_price_schema();
+	$rows   = array();
+	foreach ( $schema['ticket_types'] as $row ) {
+		$rows[] = array(
+			'kind'  => 'ticket_type',
+			'key'   => $row['key'],
+			'label' => $row['label'],
+			'value' => '',
+		);
+	}
+	foreach ( $schema['categories'] as $row ) {
+		$rows[] = array(
+			'kind'  => 'category',
+			'key'   => $row['key'],
+			'label' => $row['label'],
+			'value' => '',
+		);
+	}
+	foreach ( $schema['zones'] as $zone ) {
+		$rows[] = array(
+			'kind'  => 'zone',
+			'key'   => '',
+			'label' => '',
+			'value' => (string) $zone,
+		);
+	}
+	$rows[] = array(
+		'kind'  => 'zone_cap',
+		'key'   => '',
+		'label' => '',
+		'value' => (string) $schema['zone_cap'],
+	);
+	foreach ( $schema['afternoon_return'] as $key => $amount ) {
+		$rows[] = array(
+			'kind'  => 'afternoon_return',
+			'key'   => (string) $key,
+			'label' => '',
+			'value' => (string) (int) $amount,
+		);
+	}
+	return $rows;
+}
+
+/**
+ * @return array<int, array<string, string>>
+ */
 function MRT_csv_export_prices(): array {
 	if ( ! function_exists( 'MRT_get_price_matrix' ) ) {
 		require_once MRT_PATH . 'inc/domain/pricing/prices.php';

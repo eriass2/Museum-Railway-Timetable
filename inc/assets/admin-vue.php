@@ -128,6 +128,17 @@ function MRT_admin_vue_l10n_prices(): array {
 		'pricesNewCategoryPlaceholder' => __( 'Ny kategori', 'museum-railway-timetable' ),
 		'pricesNewZonePlaceholder' => __( 'Zonnummer', 'museum-railway-timetable' ),
 		'pricesZoneLabel'          => __( 'Zon', 'museum-railway-timetable' ),
+		'pricesZoneCapHeading'     => __( 'Max zoner vid prislookup', 'museum-railway-timetable' ),
+		'pricesZoneCapHint'        => __(
+			'Antal zoner som används vid prisberäkning (t.ex. 3 enligt taxa 2026). Högre zonnummer i matrisen kan ha samma belopp.',
+			'museum-railway-timetable'
+		),
+		'pricesAfternoonHeading'   => __( 'Eftermiddags-retur', 'museum-railway-timetable' ),
+		'pricesAfternoonHint'      => __(
+			'Fast pris per kategori när tur och retur avgår efter kl 15 (ersätter zonmatrisen för returbiljett).',
+			'museum-railway-timetable'
+		),
+		'pricesAfternoonAmountCol' => __( 'Pris (SEK)', 'museum-railway-timetable' ),
 	);
 }
 

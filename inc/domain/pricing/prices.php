@@ -43,7 +43,7 @@ function MRT_price_zone_keys() {
  * @return int
  */
 function MRT_price_zone_cap() {
-	return 3;
+	return MRT_price_schema_zone_cap();
 }
 
 /**
@@ -205,12 +205,7 @@ function MRT_get_station_price_zones_map(): array {
  * @return array<string, int>
  */
 function MRT_get_afternoon_return_prices() {
-	return array(
-		'adult'          => 160,
-		'child_4_15'     => 60,
-		'child_0_3'      => 0,
-		'student_senior' => 140,
-	);
+	return MRT_price_schema_afternoon_return_prices();
 }
 
 /**

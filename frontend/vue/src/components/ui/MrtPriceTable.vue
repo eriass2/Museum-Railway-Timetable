@@ -2,9 +2,8 @@
 import { computed, type MaybeRef, unref } from 'vue';
 import type { PriceTableLabels } from '../../shared/priceLabels';
 import {
-  PRICE_CAT_KEYS,
-  PRICE_TYPE_KEYS,
   formatPriceCell,
+  priceKeysFromMap,
   type DayTicketData,
   type TripPriceData,
 } from '../../shared/prices';
@@ -34,14 +33,18 @@ const cellCfg = computed((): PriceCfg => ({
   priceDash: labels.value.dash,
 }));
 
+const categoryKeys = computed(() => priceKeysFromMap(labels.value.categories));
+
 const visibleTypes = computed(() => {
   if (!priceData.value) {
     return [];
   }
+  const ticketKeys = priceKeysFromMap(labels.value.tickets);
   if (props.showAllTypes) {
-    return [...PRICE_TYPE_KEYS];
+    return ticketKeys;
   }
-  return PRICE_TYPE_KEYS.filter((tk) => tk === priceData.value!.activeType);
+  const active = priceData.value.activeType;
+  return ticketKeys.includes(active) ? [active] : [active];
 });
 
 const useListLayout = computed(() => !props.showAllTypes && visibleTypes.value.length === 1);
@@ -111,7 +114,7 @@ function dayPriceForCategory(catKey: string): string {
           {{ selectedTypeLabel }}
         </MrtHeading>
         <dl class="mrt-price-list">
-          <div v-for="ck in PRICE_CAT_KEYS" :key="ck" class="mrt-price-list__row">
+          <div v-for="ck in categoryKeys" :key="ck" class="mrt-price-list__row">
             <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
             <dd class="mrt-price-list__value">{{ priceForCategory(ck, listTicketType) }}</dd>
           </div>
@@ -122,7 +125,7 @@ function dayPriceForCategory(catKey: string): string {
           {{ dayTicketTitle }}
         </MrtHeading>
         <dl class="mrt-price-list">
-          <div v-for="ck in PRICE_CAT_KEYS" :key="`day-${ck}`" class="mrt-price-list__row">
+          <div v-for="ck in categoryKeys" :key="`day-${ck}`" class="mrt-price-list__row">
             <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
             <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
           </div>
@@ -132,7 +135,7 @@ function dayPriceForCategory(catKey: string): string {
 
     <template v-else>
       <dl v-if="useListLayout" class="mrt-price-list">
-        <div v-for="ck in PRICE_CAT_KEYS" :key="ck" class="mrt-price-list__row">
+        <div v-for="ck in categoryKeys" :key="ck" class="mrt-price-list__row">
           <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
           <dd class="mrt-price-list__value">{{ priceForCategory(ck, listTicketType) }}</dd>
         </div>
@@ -145,7 +148,7 @@ function dayPriceForCategory(catKey: string): string {
               <th scope="col" class="mrt-price-block__corner">
                 <span class="mrt-sr-only">{{ labels.typeColumnSr || labels.title }}</span>
               </th>
-              <th v-for="ck in PRICE_CAT_KEYS" :key="ck" scope="col">
+              <th v-for="ck in categoryKeys" :key="ck" scope="col">
                 {{ labels.categories[ck] || ck }}
               </th>
             </tr>
@@ -158,7 +161,7 @@ function dayPriceForCategory(catKey: string): string {
             >
               <th scope="row">{{ labels.tickets[tk] || tk }}</th>
               <td
-                v-for="ck in PRICE_CAT_KEYS"
+                v-for="ck in categoryKeys"
                 :key="ck"
                 :data-label="labels.categories[ck] || ck"
               >
@@ -174,7 +177,7 @@ function dayPriceForCategory(catKey: string): string {
           {{ dayTicketTitle }}
         </MrtHeading>
         <dl class="mrt-price-list">
-          <div v-for="ck in PRICE_CAT_KEYS" :key="`day-${ck}`" class="mrt-price-list__row">
+          <div v-for="ck in categoryKeys" :key="`day-${ck}`" class="mrt-price-list__row">
             <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
             <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
           </div>

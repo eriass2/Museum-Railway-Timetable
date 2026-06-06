@@ -237,10 +237,32 @@ Vid uppdatering av tur **ersätts** alla stoptider för den turen.
 
 | Kolumn | Oblig | Beskrivning |
 |--------|-------|-------------|
-| `ticket_type` | ja | `single` \| `return` \| `day` |
-| `category` | ja | `adult` \| `child_4_15` \| `child_0_3` \| `student_senior` |
-| `zone` | ja | `1`–`4` |
+| `ticket_type` | ja | Nyckel från `price_schema.csv` (t.ex. `single`) |
+| `category` | ja | Nyckel från `price_schema.csv` (t.ex. `adult`) |
+| `zone` | ja | Zonnummer från schemat |
 | `amount_sek` | nej | Heltal; tomt = ej tillgänglig |
+
+### 4.12 `price_schema.csv` (valfritt, följer med priser-export)
+
+Definierar biljettyper, kategorier, zoner och specialpriser. Importeras **före** `prices.csv`.
+
+| Kolumn | Oblig | Beskrivning |
+|--------|-------|-------------|
+| `kind` | ja | `ticket_type` \| `category` \| `zone` \| `zone_cap` \| `afternoon_return` |
+| `key` | nej | Nyckel (biljettyp/kategori) eller tom för `zone` / `zone_cap` |
+| `label` | nej | Visningsnamn för biljettyp/kategori |
+| `value` | nej | Zonnummer, zone_cap, eller belopp (eftermiddags-retur) |
+
+Exempel:
+
+```csv
+kind,key,label,value
+ticket_type,single,Enkelbiljett,
+category,adult,Vuxen,
+zone,,,1
+zone_cap,,,3
+afternoon_return,adult,,160
+```
 
 ---
 

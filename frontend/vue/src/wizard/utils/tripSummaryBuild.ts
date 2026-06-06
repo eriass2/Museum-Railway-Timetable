@@ -1,4 +1,4 @@
-import { PRICE_CAT_KEYS, formatPriceCell } from '../../shared/prices';
+import { formatPriceCell, priceKeysFromMap } from '../../shared/prices';
 import type { DayTicketData, TripPriceData } from '../../shared/prices';
 import type { PriceTableLabels } from '../../shared/priceLabels';
 import type { PriceCfg } from '../../shared/priceTypes';
@@ -66,7 +66,7 @@ function buildPriceRows(
   cfg: PriceCfg,
 ): { label: string; value: string }[] {
   const ticketType = data.activeType;
-  return PRICE_CAT_KEYS.map((key) => ({
+  return priceKeysFromMap(priceLabels.categories).map((key) => ({
     label: priceLabels.categories[key] || key,
     value: formatPriceCell(data.matrix[ticketType]?.[key], {
       ...cfg,
@@ -83,7 +83,7 @@ function buildDayPriceRows(
   if (!dayPrices.day) {
     return [];
   }
-  return PRICE_CAT_KEYS.map((key) => ({
+  return priceKeysFromMap(priceLabels.categories).map((key) => ({
     label: priceLabels.categories[key] || key,
     value: formatPriceCell(dayPrices.day![key], {
       ...cfg,

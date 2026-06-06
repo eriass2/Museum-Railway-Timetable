@@ -34,6 +34,7 @@ function MRT_csv_entity_files(): array {
 		'stoptimes'           => 'stoptimes.csv',
 		'settings'            => 'settings.csv',
 		'prices'              => 'prices.csv',
+		'price_schema'        => 'price_schema.csv',
 	);
 }
 
@@ -61,6 +62,7 @@ function MRT_csv_required_columns(): array {
 		),
 		'settings.csv'              => array( 'key', 'value' ),
 		'prices.csv'                => array( 'ticket_type', 'category', 'zone' ),
+		'price_schema.csv'          => array( 'kind', 'key' ),
 	);
 }
 
@@ -109,6 +111,7 @@ function MRT_csv_export_column_headers(): array {
 		),
 		'settings.csv'            => array( 'key', 'value' ),
 		'prices.csv'              => array( 'ticket_type', 'category', 'zone', 'amount_sek' ),
+		'price_schema.csv'        => array( 'kind', 'key', 'label', 'value' ),
 	);
 }
 

@@ -221,22 +221,118 @@ function MRT_csv_cast_setting_value( string $key, string $value ) {
 /**
  * @param array<string, array<int, array<string, string>>> $files
  */
+function MRT_csv_import_price_schema( array $files ): void {
+	if ( ! function_exists( 'MRT_sanitize_price_schema' ) ) {
+		require_once MRT_PATH . 'inc/domain/pricing/price-schema.php';
+	}
+	$rows = (array) ( $files['price_schema.csv'] ?? array() );
+	if ( $rows === array() ) {
+		return;
+	}
+	$current      = MRT_get_price_schema();
+	$ticket_types = $current['ticket_types'];
+	$categories   = $current['categories'];
+	$zones        = $current['zones'];
+	$zone_cap     = $current['zone_cap'];
+	$afternoon    = $current['afternoon_return'];
+	$has_tickets  = false;
+	$has_cats     = false;
+	$has_zones    = false;
+	$has_cap      = false;
+	$has_afternoon = false;
+	foreach ( $rows as $row ) {
+		$kind = sanitize_key( (string) ( $row['kind'] ?? '' ) );
+		$key  = sanitize_key( (string) ( $row['key'] ?? '' ) );
+		switch ( $kind ) {
+			case 'ticket_type':
+				if ( ! $has_tickets ) {
+					$ticket_types = array();
+					$has_tickets  = true;
+				}
+				if ( $key !== '' ) {
+					$ticket_types[] = array(
+						'key'   => $key,
+						'label' => sanitize_text_field( (string) ( $row['label'] ?? $key ) ),
+					);
+				}
+				break;
+			case 'category':
+				if ( ! $has_cats ) {
+					$categories = array();
+					$has_cats   = true;
+				}
+				if ( $key !== '' ) {
+					$categories[] = array(
+						'key'   => $key,
+						'label' => sanitize_text_field( (string) ( $row['label'] ?? $key ) ),
+					);
+				}
+				break;
+			case 'zone':
+				if ( ! $has_zones ) {
+					$zones     = array();
+					$has_zones = true;
+				}
+				$zone = (int) ( $row['value'] ?? $row['key'] ?? 0 );
+				if ( $zone >= 1 && $zone <= 99 ) {
+					$zones[] = $zone;
+				}
+				break;
+			case 'zone_cap':
+				$zone_cap = (int) ( $row['value'] ?? 0 );
+				$has_cap  = true;
+				break;
+			case 'afternoon_return':
+				if ( ! $has_afternoon ) {
+					$afternoon     = array();
+					$has_afternoon = true;
+				}
+				if ( $key !== '' ) {
+					$afternoon[ $key ] = (int) ( $row['value'] ?? 0 );
+				}
+				break;
+		}
+	}
+	update_option(
+		'mrt_price_schema',
+		MRT_sanitize_price_schema(
+			array(
+				'ticket_types'     => $ticket_types,
+				'categories'       => $categories,
+				'zones'            => $zones,
+				'zone_cap'         => $has_cap ? $zone_cap : $current['zone_cap'],
+				'afternoon_return' => $has_afternoon ? $afternoon : $current['afternoon_return'],
+			)
+		)
+	);
+}
+
+/**
+ * @param array<string, array<int, array<string, string>>> $files
+ */
 function MRT_csv_import_prices( array $files ): void {
-	if ( ! function_exists( 'MRT_get_default_price_matrix' ) ) {
+	if ( ! function_exists( 'MRT_get_price_matrix' ) ) {
 		require_once MRT_PATH . 'inc/domain/pricing/prices.php';
 	}
-	$matrix = MRT_get_default_price_matrix();
+	$matrix        = MRT_get_price_matrix();
+	$ticket_keys   = MRT_price_ticket_type_keys();
+	$category_keys = MRT_price_category_keys();
+	$zone_keys     = MRT_price_zone_keys();
 	foreach ( (array) ( $files['prices.csv'] ?? array() ) as $row ) {
-		$t = $row['ticket_type'] ?? '';
-		$c = $row['category'] ?? '';
+		$t = sanitize_key( (string) ( $row['ticket_type'] ?? '' ) );
+		$c = sanitize_key( (string) ( $row['category'] ?? '' ) );
 		$z = (int) ( $row['zone'] ?? 0 );
-		if ( ! isset( $matrix[ $t ][ $c ][ $z ] ) ) {
+		if (
+			! in_array( $t, $ticket_keys, true )
+			|| ! in_array( $c, $category_keys, true )
+			|| ! in_array( $z, $zone_keys, true )
+		) {
 			continue;
 		}
-		$amount = trim( $row['amount_sek'] ?? '' );
+		$amount = trim( (string) ( $row['amount_sek'] ?? '' ) );
 		$matrix[ $t ][ $c ][ $z ] = $amount === '' ? null : (int) $amount;
 	}
-	update_option( 'mrt_price_matrix', $matrix );
+	update_option( 'mrt_price_matrix', MRT_sanitize_price_matrix( $matrix ) );
 }
 
 /**

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatPriceCell } from '../src/shared/prices';
+import { formatPriceCell, priceKeysFromMap } from '../src/shared/prices';
 
 describe('formatPriceCell', () => {
   it('formats numeric prices with kr', () => {
@@ -8,5 +8,11 @@ describe('formatPriceCell', () => {
 
   it('returns dash for empty', () => {
     expect(formatPriceCell(null, { priceDash: '—' })).toBe('—');
+  });
+});
+
+describe('priceKeysFromMap', () => {
+  it('returns object keys in order', () => {
+    expect(priceKeysFromMap({ adult: 'Vuxen', child: 'Barn' })).toEqual(['adult', 'child']);
   });
 });

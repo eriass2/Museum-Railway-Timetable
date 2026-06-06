@@ -29,6 +29,12 @@ const { loading, error, load } = useAdminResource({
   deniedMessage: adminStr(cfg, 'pricesNoPermission'),
   fetch: async () => {
     const payload = await getPrices();
+    if (payload.zone_cap === undefined) {
+      payload.zone_cap = 3;
+    }
+    if (!payload.afternoon_return) {
+      payload.afternoon_return = {};
+    }
     data.value = payload;
     ensureMatrixCells(payload);
     return payload;
@@ -93,6 +99,8 @@ async function submit() {
       ticket_types: data.value.ticket_types,
       categories: data.value.categories,
       zones: data.value.zones,
+      zone_cap: data.value.zone_cap,
+      afternoon_return: data.value.afternoon_return,
     });
     ensureMatrixCells(data.value);
     showSaved(adminStr(cfg, 'saved'));
@@ -228,6 +236,41 @@ async function submit() {
             {{ adminStr(cfg, 'add') }}
           </MrtButton>
         </AdminInlineForm>
+
+        <h3 class="mrt-admin-prices-schema__heading">{{ adminStr(cfg, 'pricesZoneCapHeading') }}</h3>
+        <p class="description">{{ adminStr(cfg, 'pricesZoneCapHint') }}</p>
+        <input
+          v-model.number="data.zone_cap"
+          type="number"
+          min="1"
+          max="99"
+          class="small-text"
+        />
+
+        <h3 class="mrt-admin-prices-schema__heading">{{ adminStr(cfg, 'pricesAfternoonHeading') }}</h3>
+        <p class="description">{{ adminStr(cfg, 'pricesAfternoonHint') }}</p>
+        <table class="widefat striped mrt-admin-prices-schema__table">
+          <thead>
+            <tr>
+              <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
+              <th>{{ adminStr(cfg, 'pricesAfternoonAmountCol') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="key in categoryKeys" :key="`afternoon-${key}`">
+              <td>{{ data.categories[key] }}</td>
+              <td>
+                <input
+                  v-model.number="data.afternoon_return[key]"
+                  type="number"
+                  min="0"
+                  step="1"
+                  class="small-text"
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </AdminDisclosure>
 
       <table class="widefat striped mrt-price-matrix-table">

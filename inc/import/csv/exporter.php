@@ -106,6 +106,7 @@ function MRT_csv_collect_export_tables( bool $include_prices, bool $include_sett
 		$tables['settings.csv'] = MRT_csv_export_settings();
 	}
 	if ( $include_prices ) {
+		$tables['price_schema.csv'] = MRT_csv_export_price_schema();
 		$tables['prices.csv'] = MRT_csv_export_prices();
 	}
 	return $tables;

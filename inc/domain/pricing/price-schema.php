@@ -12,7 +12,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * @return array{ticket_types: array<int, array{key: string, label: string}>, categories: array<int, array{key: string, label: string}>, zones: array<int, int>}
+ * Default flat afternoon-return fares (tur och retur efter kl 15).
+ *
+ * @return array<string, int>
+ */
+function MRT_get_default_afternoon_return_prices(): array {
+	return array(
+		'adult'          => 160,
+		'child_4_15'     => 60,
+		'child_0_3'      => 0,
+		'student_senior' => 140,
+	);
+}
+
+/**
+ * @return array{
+ *     ticket_types: array<int, array{key: string, label: string}>,
+ *     categories: array<int, array{key: string, label: string}>,
+ *     zones: array<int, int>,
+ *     zone_cap: int,
+ *     afternoon_return: array<string, int>
+ * }
  */
 function MRT_get_default_price_schema(): array {
 	return array(
@@ -48,7 +68,9 @@ function MRT_get_default_price_schema(): array {
 				'label' => __( 'Student / pensionär', 'museum-railway-timetable' ),
 			),
 		),
-		'zones'        => array( 1, 2, 3, 4 ),
+		'zones'            => array( 1, 2, 3, 4 ),
+		'zone_cap'         => 3,
+		'afternoon_return' => MRT_get_default_afternoon_return_prices(),
 	);
 }
 
@@ -122,8 +144,45 @@ function MRT_sanitize_price_schema_zones( $zones ): array {
 }
 
 /**
+ * @param mixed $value Raw zone cap.
+ */
+function MRT_sanitize_price_schema_zone_cap( $value ): int {
+	$cap = (int) $value;
+	if ( $cap < 1 ) {
+		return 3;
+	}
+	return min( 99, $cap );
+}
+
+/**
+ * @param mixed              $input Raw afternoon-return map.
+ * @param array<int, string> $category_keys Valid category keys.
+ * @return array<string, int>
+ */
+function MRT_sanitize_price_schema_afternoon_return( $input, array $category_keys ): array {
+	$defaults = MRT_get_default_afternoon_return_prices();
+	$raw      = is_array( $input ) ? $input : array();
+	$out      = array();
+	foreach ( $category_keys as $key ) {
+		if ( ! array_key_exists( $key, $raw ) ) {
+			$out[ $key ] = $defaults[ $key ] ?? 0;
+			continue;
+		}
+		$n = (int) $raw[ $key ];
+		$out[ $key ] = max( 0, $n );
+	}
+	return $out;
+}
+
+/**
  * @param array<string, mixed> $input Stored or request schema.
- * @return array{ticket_types: array<int, array{key: string, label: string}>, categories: array<int, array{key: string, label: string}>, zones: array<int, int>}
+ * @return array{
+ *     ticket_types: array<int, array{key: string, label: string}>,
+ *     categories: array<int, array{key: string, label: string}>,
+ *     zones: array<int, int>,
+ *     zone_cap: int,
+ *     afternoon_return: array<string, int>
+ * }
  */
 function MRT_sanitize_price_schema( array $input ): array {
 	$defaults = MRT_get_default_price_schema();
@@ -134,23 +193,45 @@ function MRT_sanitize_price_schema( array $input ): array {
 		? MRT_sanitize_price_schema_label_rows( $input['categories'] )
 		: array();
 	$zones    = MRT_sanitize_price_schema_zones( $input['zones'] ?? array() );
+	$tickets  = $tickets !== array() ? $tickets : $defaults['ticket_types'];
+	$cats     = $cats !== array() ? $cats : $defaults['categories'];
+	$zones    = $zones !== array() ? $zones : $defaults['zones'];
+	$cat_keys = array_map(
+		static function ( array $row ): string {
+			return $row['key'];
+		},
+		$cats
+	);
 	return array(
-		'ticket_types' => $tickets !== array() ? $tickets : $defaults['ticket_types'],
-		'categories'   => $cats !== array() ? $cats : $defaults['categories'],
-		'zones'        => $zones !== array() ? $zones : $defaults['zones'],
+		'ticket_types'     => $tickets,
+		'categories'       => $cats,
+		'zones'            => $zones,
+		'zone_cap'         => MRT_sanitize_price_schema_zone_cap( $input['zone_cap'] ?? $defaults['zone_cap'] ),
+		'afternoon_return' => MRT_sanitize_price_schema_afternoon_return(
+			$input['afternoon_return'] ?? $defaults['afternoon_return'],
+			$cat_keys
+		),
 	);
 }
 
 /**
- * @param array<string, string> $ticket_types Key => label.
- * @param array<string, string> $categories Key => label.
- * @param array<int, int>       $zones Zone numbers.
- * @return array{ticket_types: array<int, array{key: string, label: string}>, categories: array<int, array{key: string, label: string}>, zones: array<int, int>}
+ * @param array<string, string>      $ticket_types Key => label.
+ * @param array<string, string>      $categories Key => label.
+ * @param array<int, int>            $zones Zone numbers.
+ * @param array<string, mixed>|null  $extras zone_cap, afternoon_return.
+ * @return array{
+ *     ticket_types: array<int, array{key: string, label: string}>,
+ *     categories: array<int, array{key: string, label: string}>,
+ *     zones: array<int, int>,
+ *     zone_cap: int,
+ *     afternoon_return: array<string, int>
+ * }
  */
 function MRT_sanitize_price_schema_from_admin_maps(
 	array $ticket_types,
 	array $categories,
-	array $zones
+	array $zones,
+	?array $extras = null
 ): array {
 	$ticket_rows = array();
 	foreach ( $ticket_types as $key => $label ) {
@@ -166,13 +247,20 @@ function MRT_sanitize_price_schema_from_admin_maps(
 			'label' => (string) $label,
 		);
 	}
-	return MRT_sanitize_price_schema(
-		array(
-			'ticket_types' => $ticket_rows,
-			'categories'   => $category_rows,
-			'zones'        => $zones,
-		)
+	$payload = array(
+		'ticket_types' => $ticket_rows,
+		'categories'   => $category_rows,
+		'zones'        => $zones,
 	);
+	if ( is_array( $extras ) ) {
+		if ( array_key_exists( 'zone_cap', $extras ) ) {
+			$payload['zone_cap'] = $extras['zone_cap'];
+		}
+		if ( isset( $extras['afternoon_return'] ) && is_array( $extras['afternoon_return'] ) ) {
+			$payload['afternoon_return'] = $extras['afternoon_return'];
+		}
+	}
+	return MRT_sanitize_price_schema( $payload );
 }
 
 /**
@@ -226,4 +314,20 @@ function MRT_price_schema_category_labels(): array {
 		$labels[ $row['key'] ] = $row['label'];
 	}
 	return $labels;
+}
+
+/**
+ * Max zones used for fare lookup (may be lower than matrix column count).
+ */
+function MRT_price_schema_zone_cap(): int {
+	return MRT_get_price_schema()['zone_cap'];
+}
+
+/**
+ * Flat afternoon-return fares keyed by passenger category.
+ *
+ * @return array<string, int>
+ */
+function MRT_price_schema_afternoon_return_prices(): array {
+	return MRT_get_price_schema()['afternoon_return'];
 }

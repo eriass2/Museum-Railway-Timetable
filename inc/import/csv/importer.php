@@ -79,6 +79,7 @@ function MRT_csv_run_import( array $package ): array {
 		MRT_csv_import_settings( $files );
 	}
 	if ( in_array( 'prices', $includes, true ) ) {
+		MRT_csv_import_price_schema( $files );
 		MRT_csv_import_prices( $files );
 	}
 	return $stats;
