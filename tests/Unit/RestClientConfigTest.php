@@ -31,6 +31,12 @@ if ( ! function_exists( 'esc_url_raw' ) ) {
 	}
 }
 
+if ( ! function_exists( 'MRT_is_development_mode' ) ) {
+	function MRT_is_development_mode(): bool {
+		return false;
+	}
+}
+
 require_once dirname( __DIR__, 2 ) . '/inc/infrastructure/rest/client-config.php';
 
 final class RestClientConfigTest extends TestCase {
@@ -40,6 +46,8 @@ final class RestClientConfigTest extends TestCase {
 
 		self::assertArrayHasKey( 'restUrl', $config );
 		self::assertArrayHasKey( 'restNonce', $config );
+		self::assertArrayHasKey( 'isDevMode', $config );
+		self::assertFalse( $config['isDevMode'] );
 		self::assertStringContainsString( MRT_REST_NAMESPACE, $config['restUrl'] );
 		self::assertNotSame( '', $config['restNonce'] );
 	}

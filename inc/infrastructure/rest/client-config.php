@@ -24,11 +24,12 @@ function MRT_rest_base_url(): string {
 /**
  * Shared REST bootstrap for public and admin Vue clients.
  *
- * @return array{restUrl: string, restNonce: string}
+ * @return array{restUrl: string, restNonce: string, isDevMode: bool}
  */
 function MRT_rest_client_config(): array {
 	return array(
 		'restUrl'   => MRT_rest_base_url(),
 		'restNonce' => wp_create_nonce( 'wp_rest' ),
+		'isDevMode' => MRT_is_development_mode(),
 	);
 }

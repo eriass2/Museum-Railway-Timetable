@@ -29,6 +29,7 @@ function MRT_rest_register_dev_tools_routes(): void {
 		'/dev/demo-page'              => 'MRT_rest_dev_demo_page_handler',
 		'/dev/setup-navigation'       => 'MRT_rest_dev_setup_navigation_handler',
 		'/dev/sync-timetable-pages'   => 'MRT_rest_dev_sync_timetable_pages_handler',
+		'/dev/client-log'             => 'MRT_rest_dev_client_log_handler',
 	);
 
 	foreach ( $routes as $path => $callback ) {
@@ -128,4 +129,46 @@ function MRT_rest_dev_sync_timetable_pages_handler( WP_REST_Request $request ) {
 			'timetable_page_ids' => array_map( 'intval', (array) ( $result['timetable_page_ids'] ?? array() ) ),
 		)
 	);
+}
+
+/**
+ * @param mixed $input Raw client context.
+ * @return array<string, scalar|null>
+ */
+function MRT_rest_sanitize_client_log_context( $input ): array {
+	if ( ! is_array( $input ) ) {
+		return array();
+	}
+	$out = array();
+	foreach ( $input as $key => $value ) {
+		$clean_key = sanitize_key( (string) $key );
+		if ( $clean_key === '' ) {
+			continue;
+		}
+		if ( is_scalar( $value ) || $value === null ) {
+			$out[ $clean_key ] = is_string( $value ) ? sanitize_text_field( $value ) : $value;
+			continue;
+		}
+		if ( is_array( $value ) ) {
+			$encoded = wp_json_encode( $value, JSON_UNESCAPED_UNICODE );
+			$out[ $clean_key ] = is_string( $encoded ) ? sanitize_text_field( $encoded ) : '';
+		}
+	}
+	return $out;
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_dev_client_log_handler( WP_REST_Request $request ) {
+	$body    = $request->get_json_params();
+	$message = is_array( $body ) ? sanitize_text_field( (string) ( $body['message'] ?? '' ) ) : '';
+	if ( $message === '' ) {
+		return new WP_Error( 'invalid', __( 'Log message is required.', MRT_TEXT_DOMAIN ), array( 'status' => 400 ) );
+	}
+	$source  = sanitize_key( (string) ( is_array( $body ) ? ( $body['source'] ?? 'admin' ) : 'admin' ) );
+	$level   = sanitize_key( (string) ( is_array( $body ) ? ( $body['level'] ?? 'error' ) : 'error' ) );
+	$context = is_array( $body ) ? MRT_rest_sanitize_client_log_context( $body['context'] ?? array() ) : array();
+	MRT_log( '[vue:' . $source . '] ' . $message, $context, $level !== '' ? $level : 'error' );
+	return rest_ensure_response( array( 'logged' => true ) );
 }
