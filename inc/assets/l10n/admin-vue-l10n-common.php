@@ -26,6 +26,7 @@ function MRT_admin_vue_l10n_common(): array {
 		'save'       => __( 'Spara', 'museum-railway-timetable' ),
 		'edit'       => __( 'Redigera', 'museum-railway-timetable' ),
 		'add'        => __( 'Lägg till', 'museum-railway-timetable' ),
+		'backToList' => __( 'Tillbaka till listan', 'museum-railway-timetable' ),
 		'yes'        => __( 'Ja', 'museum-railway-timetable' ),
 	);
 }
