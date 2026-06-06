@@ -55,6 +55,8 @@ I utvecklingsläge (`isDevMode` i Vue-config från `MRT_rest_client_config()`):
 - **Console:** `[MRT admin|wizard|…]` via `frontend/vue/src/utils/mrtLog.ts` — Vue `errorHandler`, ohanterade promise-rejections och REST-fel i `mrtRest.ts`.
 - **Server (admin):** samma fel skickas till `POST /dev/client-log` → `MRT_log()` → `wp-content/debug.log` (kräver `WP_DEBUG_LOG`).
 - **Publikt frontend:** console i dev-läge; ingen server-relay.
+- **PHP REST (500+):** `rest_post_dispatch` i `inc/infrastructure/rest/rest-log.php` — loggar plugin-routes med HTTP ≥ 500 (inte 400/404).
+- **CSV-import:** `MRT_csv_import_package()` loggar validerings- och laddningsfel via `MRT_log_wp_error()`.
 
 Aktivera loggfil i Docker:
 

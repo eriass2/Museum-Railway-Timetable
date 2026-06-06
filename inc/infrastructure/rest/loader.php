@@ -26,6 +26,7 @@ require_once MRT_PATH . 'inc/infrastructure/rest/train-types.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/import-export.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/dev-tools.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/operations.php';
+require_once MRT_PATH . 'inc/infrastructure/rest/rest-log.php';
 
 /**
  * Register all plugin REST routes.

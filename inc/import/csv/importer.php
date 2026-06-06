@@ -21,13 +21,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_csv_import_package( string $path, string $mode = 'merge', string $upload_filename = '' ) {
 	$package = MRT_csv_load_package( $path, $upload_filename );
 	if ( is_wp_error( $package ) ) {
+		MRT_log_wp_error( 'MRT_csv_import_package', $package );
 		return $package;
 	}
 	$existing = MRT_csv_existing_codes_from_db();
 	$result   = MRT_csv_validate_package( $package, $existing );
 	if ( ! $result['valid'] ) {
 		MRT_csv_close_package( $package );
-		return new WP_Error( 'mrt_csv_invalid', 'CSV validation failed.', $result['errors'] );
+		$error = new WP_Error( 'mrt_csv_invalid', 'CSV validation failed.', $result['errors'] );
+		MRT_log_wp_error( 'MRT_csv_import_package', $error );
+		return $error;
 	}
 	if ( $mode === 'override' ) {
 		MRT_csv_delete_orphans( $package );

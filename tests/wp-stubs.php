@@ -521,6 +521,16 @@ if (!function_exists('apply_filters')) {
     }
 }
 
+if ( ! function_exists( 'add_filter' ) ) {
+    /**
+     * @param callable $callback
+     */
+    function add_filter( $hook_name, $callback, $priority = 10, $accepted_args = 1 ) {
+        unset( $hook_name, $callback, $priority, $accepted_args );
+        return true;
+    }
+}
+
 if ( ! function_exists( 'wp_json_encode' ) ) {
     /**
      * @param mixed $data
@@ -578,8 +588,23 @@ if ( ! class_exists( 'WP_REST_Request' ) ) {
         /** @var array<string, mixed> */
         private array $json_params = array();
 
+        /** @var string */
+        private string $method = 'GET';
+
+        /** @var string */
+        private string $route = '';
+
         public function __construct( string $method = 'GET', string $route = '' ) {
-            unset( $method, $route );
+            $this->method = $method;
+            $this->route  = $route;
+        }
+
+        public function get_method(): string {
+            return $this->method;
+        }
+
+        public function get_route(): string {
+            return $this->route;
         }
 
         public function set_header( string $key, string $value ): void {
@@ -657,6 +682,33 @@ if ( ! function_exists( 'rest_ensure_response' ) ) {
      */
     function rest_ensure_response( $data ) {
         return $data;
+    }
+}
+
+if ( ! class_exists( 'WP_REST_Response' ) ) {
+    class WP_REST_Response {
+        /** @var mixed */
+        private $data;
+
+        /** @var int */
+        private int $status;
+
+        /**
+         * @param mixed $data
+         */
+        public function __construct( $data = null, int $status = 200 ) {
+            $this->data   = $data;
+            $this->status = $status;
+        }
+
+        public function get_status(): int {
+            return $this->status;
+        }
+
+        /** @return mixed */
+        public function get_data() {
+            return $this->data;
+        }
     }
 }
 
