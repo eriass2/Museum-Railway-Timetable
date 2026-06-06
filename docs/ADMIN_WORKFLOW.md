@@ -10,9 +10,9 @@ De flesta entitetslistor visar **en vy i taget**:
 
 - **Lista** – översikt med knappar för redigera / lägg till
 - **Detalj** – formulär för en post; **Tillbaka till listan** återgår till listan
-- Osparade ändringar i detaljvyn → bekräftelsedialog innan tillbaka (turer, rutter, tågtyper, stopptider m.m.)
+- Osparade ändringar i detaljvyn → bekräftelsedialog innan tillbaka (stationer, rutter, tågtyper, turer, stopptider m.m.)
 
-Undantag: **stationer** redigeras fortfarande inline i tabellen. **Inställningar** och **priser** är enkla formulär/spreadsheet utan list↔detalj.
+Undantag: **Inställningar** och **priser** är enkla formulär/spreadsheet utan list↔detalj.
 
 ---
 
@@ -20,12 +20,13 @@ Undantag: **stationer** redigeras fortfarande inline i tabellen. **Inställninga
 
 För en fungerande tidtabell behöver du:
 
-1. **Stationer** – var tågen stannar
+1. **Stationer** – var tågen stannar (inkl. priszoner)
 2. **Rutter** – sträckor med stationer i ordning
 3. **Tågtyper** (valfritt) – kategorisering och ikoner
 4. **Tidtabeller** – vilka dagar tidtabellen gäller
 5. **Turer** – tåg kopplade till tidtabell och rutt
 6. **Stopptider** – tider och hållplatser per tur
+7. **Priser** (admin) – biljettpriser och eftermiddags-retur
 
 ---
 
@@ -33,9 +34,12 @@ För en fungerande tidtabell behöver du:
 
 **Meny:** Railway Timetable → **Stationer & rutter** (`#/stations-routes`) → fliken **Stationer**
 
-1. Skriv stationsnamn i fältet **Ny station** och klicka **Lägg till**
-2. Redigera i tabellen: **Namn**, **Typ**, **Lat/Lng** (valfritt, för karta), **Buss** (suffix i visning), **Ordning**
-3. Klicka **Spara** på raden
+1. Klicka **Ny station** i listan
+2. Fyll i namn, typ, koordinater, priszoner och eventuellt tågbyte → **Lägg till**
+3. Befintlig station: **Redigera** → **Spara** eller **Tillbaka till listan**
+4. Kryssa i **Visa bara stationer utan priszon** för att hitta stationer som saknar zon
+
+Priszoner styr biljettpris i reseplaneraren. Gränsstationer kan ha två zoner. Mer info: **Hjälp** → avsnittet *Priszoner och biljetter* (`#/help?section=price-zones`).
 
 ---
 
@@ -131,6 +135,22 @@ I mobil editor:
 | Priser | `#/prices` | `manage_options` |
 | Import/export | `#/import-export` | `manage_options` |
 
+### Priser (`#/prices`)
+
+1. Fyll i **prismatrisen** (biljettyp × kategori × zon) eller importera taxa via Import/export
+2. Använd **Förhandsvisning** för att se hur priser visas i reseplaneraren
+3. **Eftermiddags-retur:** gräns under Inställningar, belopp per kategori under Prisstruktur
+4. **Kopiera zonpriser** om flera zonkolumner ska ha samma belopp
+5. **Spara priser** — osparade ändringar varnas vid navigering bort
+
+Översikten varnar om tom matris, stationer utan zon eller saknade eftermiddagspriser.
+
+### Inställningar (`#/settings`)
+
+- Plugin aktiv/inaktiv, operatörsnamn, biljett-URL
+- Min/max väntetid och max antal byten i reseplaneraren
+- **Eftermiddagsgräns (retur)** — länk till returpriser under Priser
+
 Redaktörer (`edit_posts`) ser dashboard, tidtabeller och stationer, och kan **inte** ändra grunddata – bara avvikelser och snabb avgångstid.
 
 ### Radera
@@ -157,7 +177,8 @@ All klient–server-kommunikation går via WordPress REST (`/wp-json/museum-rail
 
 | Problem | Kontroll |
 |---------|----------|
-| Varningar på dashboard | Följ länkarna under **Varningar** |
+| Varningar på dashboard | Följ länkarna under **Varningar** (även priser/zoner) |
+| Inga priser i reseplaneraren | Priser — fyll matris eller importera; kontrollera stationzoner |
 | Tur utan tider | Stopptider-fliken; kontrollera att rutten har stationer |
 | Ingen trafik idag | Lägg till dagens datum under **Trafikdagar** |
 | Legacy CPT-URL | Redirectar automatiskt till Vue-admin |
