@@ -76,14 +76,7 @@ function MRT_ensure_dev_smoke_pages(): array {
  * @return int[]
  */
 function MRT_dev_smoke_page_ids(): array {
-	$ids = array();
-	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
-		$page_id = (int) get_option( $spec['option'], 0 );
-		if ( $page_id > 0 && get_post( $page_id ) ) {
-			$ids[] = $page_id;
-		}
-	}
-	return $ids;
+	return MRT_option_backed_page_ids_from_specs( MRT_dev_smoke_page_specs() );
 }
 
 /**

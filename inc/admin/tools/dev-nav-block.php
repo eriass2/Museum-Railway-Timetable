@@ -81,13 +81,12 @@ function MRT_get_or_create_dev_wp_navigation_post() {
 		return $nav_id;
 	}
 
-	$menu_name = __( 'Museijärnväg (utveckling)', 'museum-railway-timetable' );
-	$nav_id    = wp_insert_post(
+	$nav_id = wp_insert_post(
 		wp_slash(
 			array(
 				'post_type'    => 'wp_navigation',
 				'post_status'  => 'publish',
-				'post_title'   => $menu_name,
+				'post_title'   => MRT_dev_nav_menu_title(),
 				'post_name'    => 'museum-railway-development',
 				'post_content' => '',
 			)

@@ -40,12 +40,8 @@ function MRT_get_assigned_nav_menu_id_for_theme(): int {
  * Whether a nav menu already links to a page.
  */
 function MRT_nav_menu_contains_page( int $menu_id, int $page_id ): bool {
-	$items = wp_get_nav_menu_items( $menu_id );
-	if ( ! is_array( $items ) ) {
-		return false;
-	}
-	foreach ( $items as $item ) {
-		if ( $item->object === 'page' && (int) $item->object_id === $page_id ) {
+	foreach ( MRT_get_nav_menu_page_items( $menu_id ) as $item ) {
+		if ( (int) $item->object_id === $page_id ) {
 			return true;
 		}
 	}
@@ -58,24 +54,12 @@ function MRT_nav_menu_contains_page( int $menu_id, int $page_id ): bool {
  * @return int Items removed.
  */
 function MRT_remove_broken_nav_menu_page_items( int $menu_id ): int {
-	$items = wp_get_nav_menu_items( $menu_id );
-	if ( ! is_array( $items ) ) {
-		return 0;
-	}
-	$removed = 0;
-	foreach ( $items as $item ) {
-		if ( $item->object !== 'page' ) {
-			continue;
+	return MRT_remove_nav_menu_page_items_where(
+		$menu_id,
+		static function ( int $page_id ): bool {
+			return $page_id <= 0 || ! get_post( $page_id );
 		}
-		$page_id = (int) $item->object_id;
-		if ( $page_id > 0 && get_post( $page_id ) ) {
-			continue;
-		}
-		if ( wp_delete_post( (int) $item->ID, true ) ) {
-			++$removed;
-		}
-	}
-	return $removed;
+	);
 }
 
 /**
@@ -89,23 +73,12 @@ function MRT_remove_pages_from_nav_menu( int $menu_id, array $page_ids ): int {
 		return 0;
 	}
 	$lookup = array_fill_keys( array_map( 'intval', $page_ids ), true );
-	$items  = wp_get_nav_menu_items( $menu_id );
-	if ( ! is_array( $items ) ) {
-		return 0;
-	}
-	$removed = 0;
-	foreach ( $items as $item ) {
-		if ( $item->object !== 'page' ) {
-			continue;
+	return MRT_remove_nav_menu_page_items_where(
+		$menu_id,
+		static function ( int $page_id ) use ( $lookup ): bool {
+			return isset( $lookup[ $page_id ] );
 		}
-		if ( ! isset( $lookup[ (int) $item->object_id ] ) ) {
-			continue;
-		}
-		if ( wp_delete_post( (int) $item->ID, true ) ) {
-			++$removed;
-		}
-	}
-	return $removed;
+	);
 }
 
 /**
@@ -119,62 +92,20 @@ function MRT_dedupe_nav_menu_page_links( int $menu_id, array $page_ids ): int {
 		return 0;
 	}
 	$lookup = array_fill_keys( array_map( 'intval', $page_ids ), true );
-	$items  = wp_get_nav_menu_items( $menu_id );
-	if ( ! is_array( $items ) ) {
-		return 0;
-	}
-	$seen    = array();
-	$removed = 0;
-	foreach ( $items as $item ) {
-		if ( $item->object !== 'page' ) {
-			continue;
-		}
-		$page_id = (int) $item->object_id;
-		if ( ! isset( $lookup[ $page_id ] ) ) {
-			continue;
-		}
-		if ( isset( $seen[ $page_id ] ) ) {
-			if ( wp_delete_post( (int) $item->ID, true ) ) {
-				++$removed;
+	$seen   = array();
+	return MRT_remove_nav_menu_page_items_where(
+		$menu_id,
+		static function ( int $page_id ) use ( $lookup, &$seen ): bool {
+			if ( ! isset( $lookup[ $page_id ] ) ) {
+				return false;
 			}
-			continue;
+			if ( isset( $seen[ $page_id ] ) ) {
+				return true;
+			}
+			$seen[ $page_id ] = true;
+			return false;
 		}
-		$seen[ $page_id ] = true;
-	}
-	return $removed;
-}
-
-/**
- * Append smoke pages to a nav menu (idempotent).
- *
- * @return int Number of items added.
- */
-function MRT_append_smoke_pages_to_nav_menu( int $menu_id ): int {
-	$added = 0;
-	foreach ( MRT_dev_smoke_page_specs() as $spec ) {
-		$page_id = (int) get_option( $spec['option'], 0 );
-		if ( $page_id <= 0 || ! get_post( $page_id ) ) {
-			continue;
-		}
-		if ( MRT_nav_menu_contains_page( $menu_id, $page_id ) ) {
-			continue;
-		}
-		$result = wp_update_nav_menu_item(
-			$menu_id,
-			0,
-			array(
-				'menu-item-title'     => $spec['menu_label'],
-				'menu-item-object'    => 'page',
-				'menu-item-object-id' => $page_id,
-				'menu-item-type'      => 'post_type',
-				'menu-item-status'    => 'publish',
-			)
-		);
-		if ( ! is_wp_error( $result ) ) {
-			++$added;
-		}
-	}
-	return $added;
+	);
 }
 
 /**
@@ -183,17 +114,10 @@ function MRT_append_smoke_pages_to_nav_menu( int $menu_id ): int {
  * @return int[]
  */
 function MRT_debug_page_ids(): array {
-	$ids = array();
 	if ( ! function_exists( 'MRT_component_debug_page_specs' ) ) {
-		return $ids;
+		return array();
 	}
-	foreach ( MRT_component_debug_page_specs() as $spec ) {
-		$page_id = (int) get_option( $spec['option'], 0 );
-		if ( $page_id > 0 && get_post( $page_id ) ) {
-			$ids[] = $page_id;
-		}
-	}
-	return $ids;
+	return MRT_option_backed_page_ids_from_specs( MRT_component_debug_page_specs() );
 }
 
 /**
@@ -207,8 +131,7 @@ function MRT_get_or_create_dev_nav_menu() {
 		return $stored;
 	}
 
-	$menu_name = __( 'Museijärnväg (utveckling)', 'museum-railway-timetable' );
-	$menu_id   = wp_create_nav_menu( $menu_name );
+	$menu_id = wp_create_nav_menu( MRT_dev_nav_menu_title() );
 	if ( is_wp_error( $menu_id ) ) {
 		return $menu_id;
 	}

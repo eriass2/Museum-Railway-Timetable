@@ -13,6 +13,7 @@ $dev_nav_dir = MRT_PATH . 'inc/admin/tools/';
 require_once $dev_nav_dir . 'dev-nav-constants.php';
 require_once $dev_nav_dir . 'dev-smoke-pages.php';
 require_once $dev_nav_dir . 'dev-nav-classic.php';
+require_once $dev_nav_dir . 'dev-nav-menu.php';
 require_once $dev_nav_dir . 'dev-nav-block.php';
 
 /**
@@ -48,12 +49,7 @@ function MRT_setup_development_navigation() {
 		MRT_assign_dev_menu_to_primary_if_unassigned( $menu_id );
 	}
 
-	$smoke_ids = MRT_dev_smoke_page_ids();
-	MRT_remove_broken_nav_menu_page_items( $menu_id );
-	MRT_remove_pages_from_nav_menu( $menu_id, MRT_debug_page_ids() );
-	MRT_dedupe_nav_menu_page_links( $menu_id, $smoke_ids );
-
-	$added = MRT_append_smoke_pages_to_nav_menu( $menu_id );
+	$added = MRT_sync_dev_smoke_pages_to_nav_menu( $menu_id );
 	MRT_sync_block_navigation_from_menu( $menu_id );
 	update_option( MRT_OPTION_DEV_NAV_MENU_ID, $menu_id );
 
