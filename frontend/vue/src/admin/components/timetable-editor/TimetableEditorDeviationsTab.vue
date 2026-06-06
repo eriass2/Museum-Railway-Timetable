@@ -8,7 +8,7 @@ import {
   AdminUnsavedBanner,
   MrtButton,
 } from '../ui';
-import type { TimetableDetail, TimetableServiceRow } from '../types';
+import type { TimetableDetail, TimetableServiceRow } from '../../types';
 import {
   createDeviationRow,
   formatDeviationTripLabel,
