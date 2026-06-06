@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment happy-dom
+ */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ref } from 'vue';
 import { useAdminResource } from '../src/admin/composables/useAdminResource';
@@ -5,6 +8,7 @@ import { adminConfirm, useAdminConfirmDialog } from '../src/admin/composables/ad
 import { useAdminSaveNotice } from '../src/admin/composables/useAdminSaveNotice';
 import { useAdminRowFlash } from '../src/admin/composables/useAdminRowFlash';
 import type { AdminClientConfig } from '../src/admin/types';
+import { withSetup } from './helpers/withSetup';
 
 const adminWindow: { mrtAdminVue?: AdminClientConfig } = {};
 
@@ -78,13 +82,15 @@ describe('adminConfirm', () => {
 describe('useAdminSaveNotice', () => {
   it('clears message after timeout', () => {
     vi.useFakeTimers();
-    const { saveMsg, show } = useAdminSaveNotice();
+    const { result, unmount } = withSetup(() => useAdminSaveNotice());
 
-    show('Sparat');
-    expect(saveMsg.value).toBe('Sparat');
+    result.show('Sparat');
+    expect(result.saveMsg.value).toBe('Sparat');
 
     vi.advanceTimersByTime(5000);
-    expect(saveMsg.value).toBe('');
+    expect(result.saveMsg.value).toBe('');
+
+    unmount();
   });
 });
 

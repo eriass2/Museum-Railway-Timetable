@@ -1,3 +1,6 @@
+/**
+ * @vitest-environment happy-dom
+ */
 import { computed, ref } from 'vue';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createWizardStore } from '../src/wizard/store/createWizardStore';
@@ -13,7 +16,9 @@ vi.mock('../src/wizard/composables/wizardCalendarLoad', async (importOriginal) =
   };
 });
 
+import { initWizardCalendar } from '../src/wizard/composables/wizardCalendarLoad';
 import { useWizardCalendar } from '../src/wizard/composables/useWizardCalendar';
+import { withSetup } from './helpers/withSetup';
 
 function wizardConfig(): WizardVueConfig {
   return {
@@ -58,10 +63,15 @@ describe('useWizardCalendar', () => {
     ctx.store.calYear = 2026;
     ctx.store.calMonth = 6;
 
-    const cal = useWizardCalendar(ctx.store, wizardConfig(), ctx.cfg);
+    const { result: cal, unmount } = withSetup(() =>
+      useWizardCalendar(ctx.store, wizardConfig(), ctx.cfg),
+    );
 
+    expect(initWizardCalendar).toHaveBeenCalled();
     expect(cal.monthTitle).toBeDefined();
     expect(cal.onPickDate).toBeTypeOf('function');
     expect(cal.shiftMonth).toBeTypeOf('function');
+
+    unmount();
   });
 });
