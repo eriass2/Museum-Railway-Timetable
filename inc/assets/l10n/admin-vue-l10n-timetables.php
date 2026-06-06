@@ -26,7 +26,7 @@ function MRT_admin_vue_l10n_timetables(): array {
 		'timetablesNamePlaceholder'    => __( 'Namn', 'museum-railway-timetable' ),
 		'timetablesCreateButton'       => __( 'Skapa', 'museum-railway-timetable' ),
 		'timetablesEmptyTitle'         => __( 'Inga tidtabeller', 'museum-railway-timetable' ),
-		'timetablesEmptyMessage'       => __( 'Skapa en tidtabell ovan för att komma igång.', 'museum-railway-timetable' ),
+		'timetablesEmptyMessage'       => __( 'Skapa en tidtabell med knappen nedan för att komma igång.', 'museum-railway-timetable' ),
 		'timetablesColName'            => __( 'Namn', 'museum-railway-timetable' ),
 		'timetablesColDates'           => __( 'Trafikdagar', 'museum-railway-timetable' ),
 		'timetablesColTrips'           => __( 'Turer', 'museum-railway-timetable' ),

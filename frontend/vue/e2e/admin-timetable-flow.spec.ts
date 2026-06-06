@@ -27,6 +27,7 @@ test.describe('Vue admin timetable flow', () => {
       timeout: 15_000,
     });
 
+    await page.getByRole('button', { name: 'Ny tidtabell' }).click();
     await page.getByPlaceholder('Namn').fill(uniqueTitle);
     await page.getByRole('button', { name: 'Skapa' }).click();
     await expect(page.locator('#mrt-tt-title')).toHaveValue(uniqueTitle, { timeout: 15_000 });
@@ -41,6 +42,7 @@ test.describe('Vue admin timetable flow', () => {
     await expect(page.getByText('Trafikdagar sparade')).toBeVisible({ timeout: 15_000 });
 
     await page.locator('.nav-tab', { hasText: 'Turer' }).click();
+    await page.getByRole('button', { name: 'Lägg till tur' }).click();
     const routeSelect = page.locator('.mrt-admin-trip-form select').first();
     await expect(routeSelect).toBeVisible({ timeout: 10_000 });
     const routeOptions = routeSelect.locator('option');
@@ -59,11 +61,7 @@ test.describe('Vue admin timetable flow', () => {
     });
 
     await page.locator('.nav-tab', { hasText: 'Stopptider' }).click();
-    const serviceSelect = page.locator('#mrt-stoptimes-service');
-    await expect(serviceSelect).toBeVisible({ timeout: 15_000 });
-    if ((await serviceSelect.locator('option').count()) > 1) {
-      await serviceSelect.selectOption({ index: 1 });
-    }
+    await page.getByRole('button', { name: 'Stopptider' }).first().click();
     const depInput = page.locator('.mrt-admin-stoptimes input[type="time"]').first();
     await expect(depInput).toBeVisible({ timeout: 15_000 });
     await depInput.fill('09:30');
