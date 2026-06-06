@@ -9,13 +9,10 @@ export function ymdFromParts(year: number, month: number, day: number): string {
   return `${year}-${pad2(month)}-${pad2(day)}`;
 }
 
+export { addCalendarMonths } from '../../utils/calendarDate';
+
 export function todayYearMonth(): { year: number; month: number } {
   const d = new Date();
-  return { year: d.getFullYear(), month: d.getMonth() + 1 };
-}
-
-export function addCalendarMonths(year: number, month: number, delta: number): { year: number; month: number } {
-  const d = new Date(year, month - 1 + delta, 1);
   return { year: d.getFullYear(), month: d.getMonth() + 1 };
 }
 

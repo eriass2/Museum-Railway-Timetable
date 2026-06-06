@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { countBookableDaysInMonth } from '../src/wizard/utils/wizardCalendarGrid';
 import {
-  addCalendarMonths,
   daysInMonth,
   formatYmdForDisplay,
   monthStartColumn,
@@ -17,10 +16,6 @@ describe('wizardDate', () => {
 
   it('ymdFromParts formats ISO date', () => {
     expect(ymdFromParts(2026, 5, 9)).toBe('2026-05-09');
-  });
-
-  it('addCalendarMonths rolls year', () => {
-    expect(addCalendarMonths(2026, 12, 1)).toEqual({ year: 2027, month: 1 });
   });
 
   it('daysInMonth handles leap year', () => {

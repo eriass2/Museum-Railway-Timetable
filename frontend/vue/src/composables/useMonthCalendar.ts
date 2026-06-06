@@ -3,7 +3,7 @@ import type { MonthLegendType, MonthVueConfig, MonthDayMeta } from '../config/ty
 import { useMrtRest } from './useMrtRest';
 import { resolveMrtString } from '../utils/mrtStrings';
 import { syncMonthCalendarQuery } from '../utils/monthCalendarQuery';
-import { addCalendarMonths } from '../wizard/utils/wizardDate';
+import { addCalendarMonths } from '../utils/calendarDate';
 
 export type MonthCalendarPayload = {
   year: number;
