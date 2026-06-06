@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once MRT_PATH . 'inc/domain/station/station-timetable-meta.php';
 require_once __DIR__ . '/grid-junction-match.php';
+require_once __DIR__ . '/grid-connection-rows.php';
 
 /**
  * @param array<string, mixed> $rail_group
@@ -168,49 +169,12 @@ function MRT_build_rail_bus_connection_data( array $rail_group, array $branch_gr
 	$rail_services = MRT_rail_services_from_group( $rail_group );
 	$bus_services  = MRT_bus_services_from_group( $branch_group );
 
-	$train_to_bus = array();
-	foreach ( $rail_services as $train_data ) {
-		$stop   = $train_data['stop_times'][ $junction_id ] ?? null;
-		$buses  = MRT_buses_for_train_at_junction(
-			is_array( $stop ) ? $stop : null,
-			$direction,
-			$junction_id,
-			$bus_services
-		);
-		$train_to_bus[] = array(
-			'train' => is_array( $stop ) ? MRT_build_train_link_entry( $train_data, $stop ) : array(
-				'service_number' => MRT_connection_service_number( $train_data ),
-				'time_display'   => '—',
-			),
-			'buses' => $buses,
-		);
-	}
-
-	$bus_to_train = array();
-	foreach ( $bus_services as $bus_data ) {
-		$from_id = (int) ( $branch_group['stations'][0] ?? 0 );
-		$stop    = $bus_data['stop_times'][ $junction_id ] ?? $bus_data['stop_times'][ $from_id ] ?? null;
-		$trains  = is_array( $stop )
-			? MRT_trains_for_bus_at_junction( $stop, $direction, $junction_id, $rail_services )
-			: array();
-		$bus_to_train[] = array(
-			'bus'    => is_array( $stop )
-				? array_merge( MRT_build_bus_link_entry( $bus_data, $stop ), array( 'destination' => MRT_get_bus_connection_destination_label( $bus_data ) ) )
-				: array(
-					'service_number' => MRT_connection_service_number( $bus_data ),
-					'time_display'   => '—',
-					'destination'    => MRT_get_bus_connection_destination_label( $bus_data ),
-				),
-			'trains' => $trains,
-		);
-	}
-
 	return array(
 		'junction_id'    => $junction_id,
 		'junction_label' => $label,
 		'direction'      => $direction,
-		'train_to_bus'     => $train_to_bus,
-		'bus_to_train'     => $bus_to_train,
+		'train_to_bus'   => MRT_build_train_to_bus_connection_rows( $rail_services, $bus_services, $junction_id, $direction ),
+		'bus_to_train'   => MRT_build_bus_to_train_connection_rows( $bus_services, $rail_services, $branch_group, $junction_id, $direction ),
 	);
 }
 
