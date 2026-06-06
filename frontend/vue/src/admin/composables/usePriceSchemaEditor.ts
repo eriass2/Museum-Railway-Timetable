@@ -111,6 +111,21 @@ export function usePriceSchemaEditor(data: Ref<PricesPayload | null>) {
     data.value.matrix = nextMatrix;
   }
 
+  function copyZonePrices(fromZone: number, toZone: number): void {
+    if (!data.value || fromZone === toZone) {
+      return;
+    }
+    if (!data.value.zones.includes(fromZone) || !data.value.zones.includes(toZone)) {
+      return;
+    }
+    for (const ticket of Object.keys(data.value.matrix)) {
+      for (const cat of Object.keys(data.value.matrix[ticket] ?? {})) {
+        data.value.matrix[ticket][cat][toZone] =
+          data.value.matrix[ticket][cat][fromZone] ?? null;
+      }
+    }
+  }
+
   return {
     addTicketType,
     removeTicketType,
@@ -118,6 +133,7 @@ export function usePriceSchemaEditor(data: Ref<PricesPayload | null>) {
     removeCategory,
     addZone,
     removeZone,
+    copyZonePrices,
     ensureMatrixCells,
   };
 }
