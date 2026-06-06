@@ -139,6 +139,15 @@ final class PriceRulesTest extends TestCase {
 		self::assertFalse( MRT_qualifies_for_afternoon_return( 'single', '15:00', '16:00' ) );
 	}
 
+	public function test_qualifies_for_afternoon_return_uses_settings_threshold(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array( 'afternoon_return_threshold_minutes' => 960 ),
+		);
+		self::assertFalse( MRT_qualifies_for_afternoon_return( 'return', '15:30', '16:00' ) );
+		self::assertTrue( MRT_qualifies_for_afternoon_return( 'return', '16:00', '16:30' ) );
+		unset( $GLOBALS['mrt_test_options'] );
+	}
+
 	public function test_price_matrix_has_any_price(): void {
 		self::assertFalse( MRT_price_matrix_has_any_price( array() ) );
 		self::assertTrue(

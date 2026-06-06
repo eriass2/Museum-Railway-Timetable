@@ -58,10 +58,14 @@ function MRT_rest_get_settings_handler( WP_REST_Request $request ) {
 	$opts = MRT_get_plugin_settings();
 	return rest_ensure_response(
 		array(
-			'enabled'              => ! empty( $opts['enabled'] ),
-			'note'                 => (string) ( $opts['note'] ?? '' ),
-			'min_transfer_minutes' => (int) ( $opts['min_transfer_minutes'] ?? 0 ),
-			'max_transfer_minutes' => (int) ( $opts['max_transfer_minutes'] ?? 120 ),
+			'enabled'                            => ! empty( $opts['enabled'] ),
+			'note'                               => (string) ( $opts['note'] ?? '' ),
+			'operator_name'                      => (string) ( $opts['operator_name'] ?? '' ),
+			'ticket_url'                         => (string) ( $opts['ticket_url'] ?? '' ),
+			'min_transfer_minutes'               => (int) ( $opts['min_transfer_minutes'] ?? 0 ),
+			'max_transfer_minutes'               => (int) ( $opts['max_transfer_minutes'] ?? 120 ),
+			'max_transfers'                      => (int) ( $opts['max_transfers'] ?? 2 ),
+			'afternoon_return_threshold_minutes' => MRT_afternoon_return_threshold_minutes(),
 		)
 	);
 }
@@ -73,10 +77,14 @@ function MRT_rest_save_settings_handler( WP_REST_Request $request ) {
 	$body   = (array) $request->get_json_params();
 	$saved  = MRT_sanitize_plugin_settings(
 		array(
-			'enabled'              => ! empty( $body['enabled'] ) ? '1' : '',
-			'note'                 => $body['note'] ?? '',
-			'min_transfer_minutes' => $body['min_transfer_minutes'] ?? null,
-			'max_transfer_minutes' => $body['max_transfer_minutes'] ?? null,
+			'enabled'                            => ! empty( $body['enabled'] ) ? '1' : '',
+			'note'                               => $body['note'] ?? '',
+			'operator_name'                      => $body['operator_name'] ?? null,
+			'ticket_url'                       => $body['ticket_url'] ?? null,
+			'min_transfer_minutes'             => $body['min_transfer_minutes'] ?? null,
+			'max_transfer_minutes'             => $body['max_transfer_minutes'] ?? null,
+			'max_transfers'                    => $body['max_transfers'] ?? null,
+			'afternoon_return_threshold_minutes' => $body['afternoon_return_threshold_minutes'] ?? null,
 		)
 	);
 	update_option( 'mrt_settings', $saved );

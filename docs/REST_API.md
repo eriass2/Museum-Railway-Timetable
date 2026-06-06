@@ -40,6 +40,8 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `POST /dev/*` | Dev-verktyg (endast dev-läge): clear-db, import, demo-page, setup-navigation, sync-timetable-pages, **client-log** |
 | `GET|POST /timetables/{id}/deviations` | Avvikelser |
 | `GET /timetables/{id}/overview` | Overview-JSON (samma som idag); kolumner/turer med `isCancelled`, print key med inställ-förklaring |
+| `GET|PATCH /settings` | Plugininställningar (`enabled`, `operator_name`, `ticket_url`, byten, eftermiddagsgräns) |
+| `GET|PATCH /stations/{id}` | Station inkl. `train_change_map`, `price_zones`, `bus_suffix` |
 | `GET|PUT /settings/prices` | Prismatris |
 | `POST /import/csv`, `GET /export/csv` | Import/export |
 | `POST /journey/search` | Resesökning (publikt); connections inkl. `notice`, `is_cancelled` |

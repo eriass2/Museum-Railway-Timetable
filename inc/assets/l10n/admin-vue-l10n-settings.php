@@ -23,6 +23,26 @@ function MRT_admin_vue_l10n_settings(): array {
 		'settingsNote'            => __( 'Anteckning', 'museum-railway-timetable' ),
 		'settingsMinTransfer'     => __( 'Min väntetid vid byte (min)', 'museum-railway-timetable' ),
 		'settingsMaxTransfer'     => __( 'Max väntetid vid byte (min)', 'museum-railway-timetable' ),
+		'settingsOperatorName'    => __( 'Operatörsnamn', 'museum-railway-timetable' ),
+		'settingsOperatorNameHint' => __(
+			'Visas som standardrubrik i reseplaneraren (”Planera resa med …”) om shortcode saknar route_title.',
+			'museum-railway-timetable'
+		),
+		'settingsTicketUrl'       => __( 'Biljett-URL', 'museum-railway-timetable' ),
+		'settingsTicketUrlHint'   => __(
+			'Global länk till biljettköp i reseplaneraren. Shortcode-attribut ticket_url har företräde.',
+			'museum-railway-timetable'
+		),
+		'settingsMaxTransfers'    => __( 'Max antal byten', 'museum-railway-timetable' ),
+		'settingsMaxTransfersHint' => __(
+			'Antal byten i en resa (2 = upp till tre tåg/ben). Resesökningsmotorn avvisar fler.',
+			'museum-railway-timetable'
+		),
+		'settingsAfternoonThreshold' => __( 'Eftermiddagsgräns (retur)', 'museum-railway-timetable' ),
+		'settingsAfternoonThresholdHint' => __(
+			'Tur och retur där båda benen avgår vid eller efter denna tid får eftermiddags-returpris (se Priser).',
+			'museum-railway-timetable'
+		),
 		'settingsImportHint'      => __(
 			'CSV-import/export finns under fliken Import/export i menyn.',
 			'museum-railway-timetable'

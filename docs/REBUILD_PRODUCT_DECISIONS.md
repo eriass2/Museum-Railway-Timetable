@@ -125,6 +125,6 @@ Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 | Tågbyte (2026-06) | Per-station meta `mrt_station_train_change_map` — **delvis**; REST/admin/CSV saknas; Marielund-default kvar i kod |
 | Plan och status | [MULTI_OPERATOR.md](MULTI_OPERATOR.md) (Tier A → B) |
 | Tier A (2026-06) | **Klart:** A1–A6 (neutral defaults, onboarding, brand pack) |
-| Tier B | **B1 klart:** train change admin/REST/CSV. Kvar: B2–B5 |
+| Tier B (2026-06) | **Klart:** B1–B5 (train change, settings, meta-handbok) |
 
 **Princip:** *Fail empty* — saknas operatörsdata ska systemet vara neutralt eller varna, inte gissa Lennakatten.

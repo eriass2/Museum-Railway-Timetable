@@ -3,8 +3,12 @@ import { adminFetch } from './adminRestCore';
 export type SettingsPayload = {
   enabled: boolean;
   note: string;
+  operator_name: string;
+  ticket_url: string;
   min_transfer_minutes: number;
   max_transfer_minutes: number;
+  max_transfers: number;
+  afternoon_return_threshold_minutes: number;
 };
 
 export function getSettings() {

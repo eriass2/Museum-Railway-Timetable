@@ -34,8 +34,9 @@ Mallen exporteras från admin eller via `composer csv:template`.
 
 | Uppgift | Var |
 |---------|-----|
+| Operatörsnamn och global biljett-URL | Admin → **Inställningar** |
 | Prismatris och prisstruktur | Admin → **Priser** |
-| Min/max bytestid | Admin → **Inställningar** |
+| Min/max bytestid, max antal byten, eftermiddagsgräns | Admin → **Inställningar** |
 | Priszoner per station | Admin → **Stationer & rutter** (eller CSV) |
 | Tågbyte per station | Admin → **Stationer & rutter** → Tågbyte (eller CSV) |
 
@@ -49,7 +50,8 @@ Saknas priser i databasen visas inga belopp i reseplaneraren (fail empty).
 
 | Shortcode | Syfte |
 |-----------|--------|
-| `[museum_journey_wizard route_title="Planera resa med …"]` | Reseplanerare |
+| `[museum_journey_wizard]` | Reseplanerare (rubrik från Inställningar → operatörsnamn, eller `route_title="…"`) |
+| `[museum_journey_wizard ticket_url="…"]` | Ev. sid-specifik biljett-URL (annars global URL i Inställningar) |
 | `[museum_timetable_month]` | Månadskalender |
 | `[museum_timetable_overview timetable_id="…"]` | Tryckt tidtabellsöversikt |
 
@@ -81,8 +83,78 @@ Docker dev har `MRT_LENNAKATTEN_BRAND` aktiverat i `docker-compose.yml` så demo
 
 ## 6. Checklista före go-live
 
+- [ ] Operatörsnamn och biljett-URL i Inställningar (eller `route_title` / `ticket_url` på shortcode)
 - [ ] Stationer, rutter, tidtabeller importerade och granskade i admin
 - [ ] Priser sparade eller importerade
-- [ ] `route_title` satt på wizard-shortcode
 - [ ] Ev. eget tema/ `--mrt-*` om standardprofilen inte räcker
 - [ ] Manuell rökning: [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md)
+
+---
+
+## 7. Stationmeta och byteslogik (handbok)
+
+Fält som styr priser, tidtabellsöversikt och reseplanerarens byten.
+
+### Priszoner (`price_zones`)
+
+| Var | CSV `stations.csv` kolumn `price_zones` | Admin → Station |
+|-----|----------------------------------------|-----------------|
+| Meta | `mrt_station_price_zones` (array 1–4) | Priszoner |
+
+Kommaseparerade zoner (max två per station). Tom = inga zoner → prislookup använder zon-tak. Se [PRICE_ZONES.md](PRICE_ZONES.md).
+
+### Tågbyte (`train_change_map`)
+
+| Var | CSV `station_train_changes.csv` | Admin → Tågbyte |
+|-----|--------------------------------|-----------------|
+| Meta | `mrt_station_train_change_map` | Anslutande tåg per avgående typ |
+
+Används i tidtabellsöversikten (”byte till …”). Se [CSV_FORMAT.md](CSV_FORMAT.md) §4.1b.
+
+### Busshållplats (`bus_stop_marker` / `bus_suffix`)
+
+| Var | CSV `bus_stop_marker` (0\|1) | Admin |
+|-----|------------------------------|-------|
+| Meta | `mrt_station_bus_suffix` | Busshållplats |
+
+**Effekt:**
+
+- Asterisk i tryckt tidtabell
+- Station tillåter byte i reseplaneraren
+- Tåg→buss vid busshubb: minsta väntetid **0 min** (tåg som ankommer + buss som avgår)
+- Högre prioritet som bytesstation (före andra hubbar)
+
+Modellera busslinje som egen rutt med turer typ `Buss` (inte som del av tågrutt).
+
+### Stationstyp (`station_type`)
+
+| Värde | Betydelse |
+|-------|-----------|
+| `station` | Vanlig station (standard) |
+| `halt` | Hållplats |
+| `depot` | Depå |
+| `museum` | Museiplats |
+
+Påverkar visning i admin; påverkar inte resesökning direkt.
+
+### Bytesstationer (hub) — implicit regler
+
+En station får användas som **mellanliggande byte** om något av följande gäller:
+
+1. `bus_stop_marker` = 1
+2. Meta `mrt_transfer_priority` satt (tal) — **ej i admin/CSV idag**; filter `mrt_transfer_priority` / `mrt_journey_station_allows_transfer`
+3. Station är **ruttändpunkt** (första/sista på någon rutt)
+4. Station har **tågbyte-karta** (`train_change_map`)
+
+Saknas hub-markering hittar reseplaneraren inte flerbenade resor via den stationen.
+
+### Inställningar som påverkar resesökning
+
+| Inställning | Nyckel | Standard |
+|-------------|--------|----------|
+| Min väntetid vid byte | `min_transfer_minutes` | 0 |
+| Max väntetid vid byte | `max_transfer_minutes` | 120 |
+| Max antal byten | `max_transfers` | 2 (tre ben) |
+| Eftermiddagsgräns retur | `afternoon_return_threshold_minutes` | 900 (kl 15:00) |
+
+Alla kan exporteras/importeras via `settings.csv`. Filter `mrt_journey_max_transfers` kan fortfarande override max byten.

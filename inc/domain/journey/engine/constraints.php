@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Maximum transfers allowed in one journey (default 2 = three legs).
  */
 function MRT_journey_engine_max_transfers(): int {
-	$max = 2;
+	$max = MRT_plugin_max_transfers();
 	return max( 0, (int) apply_filters( 'mrt_journey_max_transfers', $max ) );
 }
 

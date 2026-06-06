@@ -244,8 +244,21 @@ Vid uppdatering av tur **ersätts** alla stoptider för den turen.
 
 | Kolumn | Oblig | Beskrivning |
 |--------|-------|-------------|
-| `key` | ja | `enabled`, `note`, `min_transfer_minutes`, `max_transfer_minutes` |
+| `key` | ja | Se tabell nedan |
 | `value` | ja | Sträng, bool eller heltal enligt nyckel |
+
+**Tillåtna nycklar:**
+
+| Nyckel | Typ | Beskrivning |
+|--------|-----|-------------|
+| `enabled` | bool | Plugin aktivt |
+| `note` | string | Intern anteckning |
+| `operator_name` | string | Operatörsnamn (wizard-rubrik om shortcode saknar `route_title`) |
+| `ticket_url` | URL | Global biljett-URL i reseplaneraren |
+| `min_transfer_minutes` | int | Min väntetid vid byte |
+| `max_transfer_minutes` | int | Max väntetid vid byte |
+| `max_transfers` | int | Max antal byten (0–5) |
+| `afternoon_return_threshold_minutes` | int | Eftermiddagsgräns som minuter från midnatt (900 = kl 15:00) |
 
 ### 4.11 `prices.csv` (valfritt)
 

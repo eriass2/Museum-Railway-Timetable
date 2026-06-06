@@ -310,10 +310,14 @@ final class RestAdminHandlersTest extends TestCase {
 	public function test_get_settings_handler_returns_transfer_bounds(): void {
 		$GLOBALS['mrt_test_options'] = array(
 			'mrt_settings' => array(
-				'enabled'              => '1',
-				'note'                 => 'Test',
-				'min_transfer_minutes' => 5,
-				'max_transfer_minutes' => 90,
+				'enabled'                            => '1',
+				'note'                               => 'Test',
+				'operator_name'                      => 'Demo Railway',
+				'ticket_url'                         => 'https://example.com/tickets',
+				'min_transfer_minutes'               => 5,
+				'max_transfer_minutes'               => 90,
+				'max_transfers'                      => 1,
+				'afternoon_return_threshold_minutes' => 840,
 			),
 		);
 
@@ -321,8 +325,12 @@ final class RestAdminHandlersTest extends TestCase {
 
 		self::assertTrue( $data['enabled'] );
 		self::assertSame( 'Test', $data['note'] );
+		self::assertSame( 'Demo Railway', $data['operator_name'] );
+		self::assertSame( 'https://example.com/tickets', $data['ticket_url'] );
 		self::assertSame( 5, $data['min_transfer_minutes'] );
 		self::assertSame( 90, $data['max_transfer_minutes'] );
+		self::assertSame( 1, $data['max_transfers'] );
+		self::assertSame( 840, $data['afternoon_return_threshold_minutes'] );
 	}
 
 	public function test_get_prices_handler_includes_matrix_labels(): void {

@@ -239,7 +239,18 @@ function MRT_csv_export_stoptimes( array $maps ): array {
 function MRT_csv_export_settings(): array {
 	$settings = MRT_get_plugin_settings();
 	$rows     = array();
-	foreach ( array( 'enabled', 'note', 'min_transfer_minutes', 'max_transfer_minutes' ) as $key ) {
+	foreach (
+		array(
+			'enabled',
+			'note',
+			'operator_name',
+			'ticket_url',
+			'min_transfer_minutes',
+			'max_transfer_minutes',
+			'max_transfers',
+			'afternoon_return_threshold_minutes',
+		) as $key
+	) {
 		$val = $settings[ $key ] ?? '';
 		if ( is_bool( $val ) ) {
 			$val = $val ? '1' : '0';

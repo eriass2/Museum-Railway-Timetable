@@ -45,7 +45,7 @@ function MRT_admin_vue_l10n_prices(): array {
 		),
 		'pricesAfternoonHeading'   => __( 'Eftermiddags-retur', 'museum-railway-timetable' ),
 		'pricesAfternoonHint'      => __(
-			'Fast pris per kategori när tur och retur avgår efter kl 15 (ersätter zonmatrisen för returbiljett).',
+			'Fast pris per kategori när tur och retur avgår vid eller efter eftermiddagsgränsen (Inställningar). Ersätter zonmatrisen för returbiljett.',
 			'museum-railway-timetable'
 		),
 		'pricesAfternoonAmountCol' => __( 'Pris (SEK)', 'museum-railway-timetable' ),

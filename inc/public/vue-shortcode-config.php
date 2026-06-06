@@ -112,12 +112,26 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 
 	$route_title = isset( $parsed['route_title'] ) ? trim( (string) $parsed['route_title'] ) : '';
 	if ( $route_title === '' ) {
-		$route_title = __( 'Planera resa', 'museum-railway-timetable' );
+		$operator = MRT_plugin_operator_name();
+		if ( $operator !== '' ) {
+			$route_title = sprintf(
+				/* translators: %s: railway operator name */
+				__( 'Planera resa med %s', 'museum-railway-timetable' ),
+				$operator
+			);
+		} else {
+			$route_title = __( 'Planera resa', 'museum-railway-timetable' );
+		}
+	}
+
+	$ticket_url = isset( $parsed['ticket_url'] ) ? trim( (string) $parsed['ticket_url'] ) : '';
+	if ( $ticket_url === '' ) {
+		$ticket_url = MRT_plugin_ticket_url();
 	}
 
 	return array(
 		'stations'     => $station_rows,
-		'ticketUrl'    => isset( $parsed['ticket_url'] ) ? (string) $parsed['ticket_url'] : '',
+		'ticketUrl'    => $ticket_url,
 		'timetableId'      => isset( $parsed['timetable_id'] ) ? (int) $parsed['timetable_id'] : 0,
 		'timetablePageUrl' => isset( $parsed['timetable_page_url'] ) ? (string) $parsed['timetable_page_url'] : '',
 		'embedded'         => ! empty( $parsed['embedded'] ),

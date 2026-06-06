@@ -18,20 +18,27 @@ Beslut: [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) §11. Onboa
 | A5 | Neutral `--mrt-*` default + valfri Lennakatten brand pack | **Klar** |
 | A6 | Onboarding-dokumentation | **Klar** — [OPERATOR_ONBOARDING.md](OPERATOR_ONBOARDING.md) |
 
-## Tier B (pågår)
+## Tier B — klar
 
 | # | Uppgift | Status |
 |---|---------|--------|
 | B1 | Train change i admin + REST + CSV | **Klar** |
-| B2 | `operator_name`, global `ticket_url` i settings | Todo |
-| B3 | Inställning: eftermiddagsgräns | Todo |
-| B4 | Inställning: max byten (UI) | Todo |
-| B5 | Operatörshandbok (meta-fält) | Todo |
+| B2 | `operator_name`, global `ticket_url` i settings | **Klar** |
+| B3 | Inställning: eftermiddagsgräns | **Klar** — `afternoon_return_threshold_minutes` |
+| B4 | Inställning: max byten (UI) | **Klar** — `max_transfers` |
+| B5 | Operatörshandbok (meta-fält) | **Klar** — [OPERATOR_ONBOARDING.md](OPERATOR_ONBOARDING.md) §7 |
 
 ---
 
-## Nästa steg
+## Kvar (ej Tier B)
 
-1. **B2** — operatörsnamn / biljett-URL globalt
-2. **B3–B4** — affärsregler i inställningar
-3. **B5** — utöka onboarding med meta-fält (hub, buss, zoner)
+Valfria framtida förbättringar — inte blockerande för ny operatör:
+
+| Område | Nuvarande läge |
+|--------|----------------|
+| Resesökningspoäng | Filter `mrt_journey_score_weights`, ingen admin-UI |
+| Tidtabellsfärger | Heuristik från titel/kod (grön/gul/…), inte per tidtabell |
+| Tågtypikoner | Fast uppsättning steam/diesel/railbus/bus |
+| Eftermiddags-returpriser (belopp) | Redigerbart i Priser; defaultbelopp i schema kan vara operatörsspecifika |
+| `mrt_transfer_priority` | Meta/filter, ej admin/CSV |
+| Dokumentation | [BRAND_UI.md](design/BRAND_UI.md) / [STYLE_GUIDE.md](STYLE_GUIDE.md) beskriver fortfarande Lennakatten som primär profil |

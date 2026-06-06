@@ -8,6 +8,7 @@ import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
+import { minutesToTimeInput, timeInputToMinutes } from '../utils/settingsTime';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -16,8 +17,12 @@ const { saveMsg, show: showSaved } = useAdminSaveNotice();
 const form = ref<SettingsPayload>({
   enabled: true,
   note: '',
+  operator_name: '',
+  ticket_url: '',
   min_transfer_minutes: 0,
   max_transfer_minutes: 120,
+  max_transfers: 2,
+  afternoon_return_threshold_minutes: 900,
 });
 
 const { loading, error, data, load } = useAdminResource({
@@ -36,6 +41,11 @@ watch(
   },
   { immediate: true },
 );
+
+function onAfternoonTimeInput(event: Event) {
+  const target = event.target as HTMLInputElement;
+  form.value.afternoon_return_threshold_minutes = timeInputToMinutes(target.value);
+}
 
 async function submit() {
   error.value = '';
@@ -78,6 +88,27 @@ async function submit() {
             </td>
           </tr>
           <tr>
+            <th scope="row">{{ adminStr(cfg, 'settingsOperatorName') }}</th>
+            <td>
+              <input v-model="form.operator_name" type="text" class="regular-text" />
+              <p class="description">{{ adminStr(cfg, 'settingsOperatorNameHint') }}</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">{{ adminStr(cfg, 'settingsTicketUrl') }}</th>
+            <td>
+              <input v-model="form.ticket_url" type="url" class="large-text" />
+              <p class="description">{{ adminStr(cfg, 'settingsTicketUrlHint') }}</p>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">{{ adminStr(cfg, 'settingsMaxTransfers') }}</th>
+            <td>
+              <input v-model.number="form.max_transfers" type="number" min="0" max="5" />
+              <p class="description">{{ adminStr(cfg, 'settingsMaxTransfersHint') }}</p>
+            </td>
+          </tr>
+          <tr>
             <th scope="row">{{ adminStr(cfg, 'settingsMinTransfer') }}</th>
             <td>
               <input v-model.number="form.min_transfer_minutes" type="number" min="0" max="60" />
@@ -87,6 +118,17 @@ async function submit() {
             <th scope="row">{{ adminStr(cfg, 'settingsMaxTransfer') }}</th>
             <td>
               <input v-model.number="form.max_transfer_minutes" type="number" min="0" max="480" />
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">{{ adminStr(cfg, 'settingsAfternoonThreshold') }}</th>
+            <td>
+              <input
+                :value="minutesToTimeInput(form.afternoon_return_threshold_minutes)"
+                type="time"
+                @input="onAfternoonTimeInput"
+              />
+              <p class="description">{{ adminStr(cfg, 'settingsAfternoonThresholdHint') }}</p>
             </td>
           </tr>
         </tbody>

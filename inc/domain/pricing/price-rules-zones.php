@@ -29,7 +29,7 @@ function MRT_qualifies_for_afternoon_return(
 	string $trip_type,
 	string $outbound_departure,
 	string $inbound_departure,
-	int $threshold_minutes = 900
+	?int $threshold_minutes = null
 ): bool {
 	if ( $trip_type !== 'return' ) {
 		return false;
@@ -39,7 +39,8 @@ function MRT_qualifies_for_afternoon_return(
 	if ( $out_minutes === null || $in_minutes === null ) {
 		return false;
 	}
-	return $out_minutes >= $threshold_minutes && $in_minutes >= $threshold_minutes;
+	$threshold = $threshold_minutes ?? MRT_afternoon_return_threshold_minutes();
+	return $out_minutes >= $threshold && $in_minutes >= $threshold;
 }
 
 function MRT_zones_for_station_pair( int $from_id, int $to_id, array $station_zones_map ): int {

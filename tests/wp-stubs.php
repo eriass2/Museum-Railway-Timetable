@@ -804,6 +804,12 @@ if ( ! function_exists( 'esc_url' ) ) {
     }
 }
 
+if ( ! function_exists( 'esc_url_raw' ) ) {
+    function esc_url_raw( string $url ): string {
+        return esc_url( $url );
+    }
+}
+
 if ( ! class_exists( 'WP_Query' ) ) {
     class WP_Query {
         /** @var array<int, mixed> */

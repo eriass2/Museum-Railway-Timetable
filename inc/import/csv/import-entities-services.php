@@ -171,7 +171,16 @@ function MRT_csv_nullable_time( string $time ): ?string {
  * @param array<string, array<int, array<string, string>>> $files
  */
 function MRT_csv_import_settings( array $files ): void {
-	$allowed = array( 'enabled', 'note', 'min_transfer_minutes', 'max_transfer_minutes' );
+	$allowed = array(
+		'enabled',
+		'note',
+		'operator_name',
+		'ticket_url',
+		'min_transfer_minutes',
+		'max_transfer_minutes',
+		'max_transfers',
+		'afternoon_return_threshold_minutes',
+	);
 	$current = MRT_get_plugin_settings();
 	foreach ( (array) ( $files['settings.csv'] ?? array() ) as $row ) {
 		$key = $row['key'] ?? '';
@@ -187,7 +196,10 @@ function MRT_csv_cast_setting_value( string $key, string $value ) {
 	if ( $key === 'enabled' ) {
 		return in_array( strtolower( $value ), array( '1', 'true', 'yes' ), true );
 	}
-	if ( str_contains( $key, '_minutes' ) ) {
+	if ( $key === 'ticket_url' ) {
+		return esc_url_raw( $value );
+	}
+	if ( $key === 'max_transfers' || $key === 'afternoon_return_threshold_minutes' || str_contains( $key, '_minutes' ) ) {
 		return (int) $value;
 	}
 	return sanitize_text_field( $value );

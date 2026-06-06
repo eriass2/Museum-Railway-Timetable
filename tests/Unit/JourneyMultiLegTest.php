@@ -20,6 +20,7 @@ final class JourneyMultiLegTest extends TestCase {
 
     protected function tearDown(): void {
         $this->mrt_reset_journey_fixture();
+        unset( $GLOBALS['mrt_test_options'] );
         parent::tearDown();
     }
 
@@ -45,6 +46,13 @@ final class JourneyMultiLegTest extends TestCase {
 
     public function test_journey_engine_max_transfers_default_is_two(): void {
         self::assertSame(2, MRT_journey_engine_max_transfers());
+    }
+
+    public function test_journey_engine_max_transfers_reads_settings(): void {
+        $GLOBALS['mrt_test_options'] = array(
+            'mrt_settings' => array( 'max_transfers' => 1 ),
+        );
+        self::assertSame(1, MRT_journey_engine_max_transfers());
     }
 
     public function test_journey_find_stop_index_finds_station(): void {
