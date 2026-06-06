@@ -28,33 +28,39 @@ function MRT_station_train_change_map_meta_key(): string {
 }
 
 /**
+ * @param array<string, array<string, array{typeName: string, serviceNumber: string}>> $map
+ * @return array<string, array<string, array{typeName: string, serviceNumber: string}>>
+ */
+function MRT_train_change_maps_typed( array $map ): array {
+	return $map;
+}
+
+/**
+ * @return array{typeName: string, serviceNumber: string}
+ */
+function MRT_train_change_map_entry( string $type_name, string $service_number ): array {
+	return array(
+		'typeName'      => $type_name,
+		'serviceNumber' => $service_number,
+	);
+}
+
+/**
  * Bundled title defaults for Lennakatten (used when station meta is not set).
  *
  * @return array<string, array<string, array{typeName: string, serviceNumber: string}>>
  */
 function MRT_default_train_change_maps_by_station_title(): array {
-	/** @var array<string, array<string, array{typeName: string, serviceNumber: string}>> $map */
 	$map = array(
 		'Marielund' => array(
-			'71' => array(
-				'typeName'      => 'Dieseltåg',
-				'serviceNumber' => '61',
-			),
-			'63' => array(
-				'typeName'      => 'Rälsbuss',
-				'serviceNumber' => '97',
-			),
-			'60' => array(
-				'typeName'      => 'Ångtåg',
-				'serviceNumber' => '74',
-			),
-			'96' => array(
-				'typeName'      => 'Dieseltåg',
-				'serviceNumber' => '64',
-			),
+			'71' => MRT_train_change_map_entry( 'Dieseltåg', '61' ),
+			'63' => MRT_train_change_map_entry( 'Rälsbuss', '97' ),
+			'60' => MRT_train_change_map_entry( 'Ångtåg', '74' ),
+			'96' => MRT_train_change_map_entry( 'Dieseltåg', '64' ),
 		),
 	);
-	return $map;
+
+	return MRT_train_change_maps_typed( $map );
 }
 
 /**

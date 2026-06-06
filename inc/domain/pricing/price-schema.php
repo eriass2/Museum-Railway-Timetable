@@ -75,7 +75,13 @@ function MRT_get_default_price_schema(): array {
 }
 
 /**
- * @return array{ticket_types: array<int, array{key: string, label: string}>, categories: array<int, array{key: string, label: string}>, zones: array<int, int>}
+ * @return array{
+ *     ticket_types: array<int, array{key: string, label: string}>,
+ *     categories: array<int, array{key: string, label: string}>,
+ *     zones: array<int, int>,
+ *     zone_cap: int,
+ *     afternoon_return: array<string, int>
+ * }
  */
 function MRT_get_price_schema(): array {
 	$stored = get_option( 'mrt_price_schema', array() );
