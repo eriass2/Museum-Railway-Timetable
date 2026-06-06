@@ -246,6 +246,50 @@ function buildOverviewConfig() {
   };
 }
 
+function buildIndexConfig(options = {}) {
+  const showIntro = options.showIntro !== false;
+  return {
+    app: 'index',
+    ...restClientConfig(),
+    showIntro,
+    items: [
+      {
+        url: '/timetables/green',
+        label: 'Grön tidtabell',
+        meta: '12 juni, 19 juni',
+        modifier: 'green',
+        ariaHint: '12 juni, 19 juni',
+      },
+      {
+        url: '/timetables/yellow',
+        label: 'Gul tidtabell',
+        meta: '26 juni',
+        modifier: 'yellow',
+        ariaHint: '26 juni',
+      },
+      {
+        url: '',
+        label: 'Tidtabell utan sida',
+        meta: 'Ingen länk',
+        modifier: 'red',
+        ariaHint: 'Ingen publicerad sida',
+      },
+    ],
+    labels: {
+      intro: 'Välj en tidtabell för att se avgångar och trafikdagar.',
+      navAria: 'Tidtabeller',
+    },
+  };
+}
+
+function buildIndexEmptyConfig() {
+  return {
+    app: 'index',
+    ...restClientConfig(),
+    emptyMessage: 'Inga tidtabeller är publicerade ännu.',
+  };
+}
+
 function readRequestBody(req) {
   return new Promise((resolve) => {
     const chunks = [];
@@ -354,6 +398,15 @@ function renderOverviewHtml() {
   return renderAppHtml('overview', buildOverviewConfig());
 }
 
+function renderIndexHtml(requestUrl) {
+  const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
+  if (params.get('empty') === '1') {
+    return renderAppHtml('index', buildIndexEmptyConfig());
+  }
+  const showIntro = params.get('intro') !== '0';
+  return renderAppHtml('index', buildIndexConfig({ showIntro }));
+}
+
 const mime = {
   '.js': 'application/javascript',
   '.css': 'text/css',
@@ -377,6 +430,11 @@ http
     if (pathOnly === '/overview') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(renderOverviewHtml());
+      return;
+    }
+    if (pathOnly === '/index') {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(renderIndexHtml(rawUrl));
       return;
     }
     if (pathOnly === '/admin') {

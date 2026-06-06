@@ -14,7 +14,7 @@ cd frontend/vue
 npm run build
 npm run e2e:install   # first time
 npm run build         # required before e2e (serve uses dist/)
-npm run e2e           # includes admin-nav.spec.ts (static admin tabs)
+npm run e2e           # static mounts (month, overview, wizard, index) + admin-nav
 ```
 
 Optional against Docker demo (all four shortcodes on one page):
