@@ -19,7 +19,9 @@ const {
   newStation,
   newRoute,
   sectionTab,
+  editingStation,
   editingRoute,
+  stationsView,
   routesView,
   loading,
   error,
@@ -29,12 +31,14 @@ const {
   stationTitle,
   addStation,
   addRoute,
+  editStation,
   editRoute,
+  saveEditingStation,
   saveRoute,
+  startCreateStation,
   startCreateRoute,
+  requestBackToStationsList,
   requestBackToRoutesList,
-  backToRoutesList,
-  saveStationMeta,
   removeStation,
   removeRoute,
 } = useStationsRoutesPage();
@@ -72,7 +76,10 @@ const {
         </a>
       </nav>
 
-      <div v-if="sectionTab === 'stations' && cfg.canManage" class="mrt-admin-stations-toolbar">
+      <div
+        v-if="sectionTab === 'stations' && cfg.canManage && stationsView === 'list'"
+        class="mrt-admin-stations-toolbar"
+      >
         <label class="mrt-admin-stations-filter">
           <input v-model="showMissingZonesOnly" type="checkbox" />
           {{ adminStr(cfg, 'stationsFilterMissingZones') }}
@@ -82,11 +89,16 @@ const {
       <AdminStationsPanel
         v-if="sectionTab === 'stations'"
         v-model:new-station="newStation"
+        v-model:editing-station="editingStation"
         :stations="visibleStations"
         :price-zone-options="priceZoneOptions"
         :is-flashed="isFlashed"
+        :view-mode="stationsView"
         @add="addStation"
-        @save="saveStationMeta"
+        @edit="editStation"
+        @save="saveEditingStation"
+        @start-create="startCreateStation"
+        @back="requestBackToStationsList"
         @remove="removeStation"
       />
 

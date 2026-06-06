@@ -19,11 +19,24 @@ import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { emptyRouteDraft, emptyStationDraft } from '../utils/routeStationEditor';
 import { resolveStationPriceZoneOptions, stationMissingPriceZone } from '../utils/stationPriceZones';
 import type { RoutesPanelView } from '../components/AdminRoutesPanel.vue';
+import type { StationsPanelView } from '../components/AdminStationsPanel.vue';
 import { adminConfig } from '../types';
 import type { RouteRow, StationRow } from '../types';
 
 function routeDraftSnapshot(route: RouteRow): string {
   return JSON.stringify(route);
+}
+
+function stationDraftSnapshot(station: StationRow): string {
+  return JSON.stringify(station);
+}
+
+function cloneStationRow(station: StationRow): StationRow {
+  return {
+    ...station,
+    price_zones: [...(station.price_zones ?? [])],
+    train_change_map: { ...(station.train_change_map ?? {}) },
+  };
 }
 
 export function useStationsRoutesPage() {
@@ -35,8 +48,11 @@ export function useStationsRoutesPage() {
   const newStation = ref(emptyStationDraft());
   const newRoute = ref(emptyRouteDraft());
   const sectionTab = ref<'stations' | 'routes'>('stations');
+  const editingStation = ref<StationRow | null>(null);
   const editingRoute = ref<RouteRow | null>(null);
+  const stationsView = ref<StationsPanelView>('list');
   const routesView = ref<RoutesPanelView>('list');
+  const stationFormSnapshot = ref('');
   const routeFormSnapshot = ref('');
   const priceZoneOptions = ref<number[]>([...resolveStationPriceZoneOptions(undefined)]);
   const showMissingZonesOnly = ref(false);
@@ -95,6 +111,42 @@ export function useStationsRoutesPage() {
     return stations.value.find((s) => s.id === stationId)?.title || String(stationId);
   }
 
+  function isStationFormDirty(): boolean {
+    if (stationsView.value === 'list') {
+      return false;
+    }
+    const current =
+      stationsView.value === 'edit' && editingStation.value
+        ? stationDraftSnapshot(editingStation.value)
+        : stationDraftSnapshot(newStation.value);
+    return current !== stationFormSnapshot.value;
+  }
+
+  function backToStationsList(): void {
+    editingStation.value = null;
+    newStation.value = emptyStationDraft();
+    stationsView.value = 'list';
+    stationFormSnapshot.value = '';
+  }
+
+  async function requestBackToStationsList(): Promise<boolean> {
+    if (stationsView.value !== 'list' && !(await proceedIfDiscardAllowed(isStationFormDirty()))) {
+      return false;
+    }
+    backToStationsList();
+    return true;
+  }
+
+  function startCreateStation(): void {
+    if (!cfg.canManage) {
+      return;
+    }
+    editingStation.value = null;
+    newStation.value = emptyStationDraft();
+    stationsView.value = 'create';
+    stationFormSnapshot.value = stationDraftSnapshot(newStation.value);
+  }
+
   async function addStation() {
     const draft = newStation.value;
     if (!cfg.canManage || !draft.title.trim()) return;
@@ -108,7 +160,25 @@ export function useStationsRoutesPage() {
       price_zones: draft.price_zones,
       train_change_map: draft.train_change_map,
     });
-    newStation.value = emptyStationDraft();
+    backToStationsList();
+    await reload();
+  }
+
+  function editStation(station: StationRow) {
+    sectionTab.value = 'stations';
+    editingStation.value = cloneStationRow(station);
+    stationsView.value = 'edit';
+    stationFormSnapshot.value = stationDraftSnapshot(editingStation.value);
+  }
+
+  async function saveEditingStation() {
+    if (!editingStation.value || !cfg.canManage) return;
+    const title = editingStation.value.title;
+    const stationId = editingStation.value.id;
+    await updateStation(stationId, editingStation.value);
+    backToStationsList();
+    showSaveNotice(adminFmt(cfg, 'stationsStationSaved', title));
+    flashRow(stationId);
     await reload();
   }
 
@@ -149,6 +219,9 @@ export function useStationsRoutesPage() {
   }
 
   watch(sectionTab, (tab, prev) => {
+    if (prev === 'stations' && tab !== 'stations') {
+      void requestBackToStationsList();
+    }
     if (prev === 'routes' && tab !== 'routes') {
       void requestBackToRoutesList();
     }
@@ -190,13 +263,6 @@ export function useStationsRoutesPage() {
     await reload();
   }
 
-  async function saveStationMeta(st: StationRow) {
-    if (!cfg.canManage) return;
-    await updateStation(st.id, st);
-    showSaveNotice(adminFmt(cfg, 'stationsStationSaved', st.title));
-    flashRow(st.id);
-  }
-
   async function removeStation(st: StationRow) {
     if (!cfg.canManage) return;
     const ok = await adminConfirm({
@@ -209,6 +275,9 @@ export function useStationsRoutesPage() {
     error.value = '';
     try {
       await deleteStation(st.id);
+      if (editingStation.value?.id === st.id) {
+        backToStationsList();
+      }
       await reload();
     } catch (e) {
       error.value = adminErrorMessage(cfg, e, 'stationsDeleteStationFailed');
@@ -247,7 +316,9 @@ export function useStationsRoutesPage() {
     newStation,
     newRoute,
     sectionTab,
+    editingStation,
     editingRoute,
+    stationsView,
     routesView,
     loading,
     error,
@@ -257,12 +328,16 @@ export function useStationsRoutesPage() {
     stationTitle,
     addStation,
     addRoute,
+    editStation,
     editRoute,
+    saveEditingStation,
     saveRoute,
+    startCreateStation,
     startCreateRoute,
+    requestBackToStationsList,
     requestBackToRoutesList,
+    backToStationsList,
     backToRoutesList,
-    saveStationMeta,
     removeStation,
     removeRoute,
   };
