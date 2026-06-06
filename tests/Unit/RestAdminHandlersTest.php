@@ -189,12 +189,30 @@ final class RestAdminHandlersTest extends TestCase {
 		require_once ABSPATH . 'inc/admin/tools/dev-cli.php';
 
 		$GLOBALS['mrt_test_get_posts'] = static fn (): array => array();
+		$GLOBALS['mrt_test_options']   = array(
+			'mrt_price_schema' => array(
+				'ticket_types' => array(
+					array(
+						'key'   => 'family',
+						'label' => 'Familj',
+					),
+				),
+				'categories'   => array(
+					array(
+						'key'   => 'adult',
+						'label' => 'Vuxen',
+					),
+				),
+				'zones'        => array( 1, 2 ),
+			),
+		);
 
 		$response = MRT_rest_clear_plugin_data_handler( new WP_REST_Request( 'POST', '/data/clear' ) );
 		$data     = $response instanceof WP_REST_Response ? $response->get_data() : $response;
 
 		self::assertIsArray( $data );
 		self::assertTrue( $data['cleared'] ?? false );
+		self::assertFalse( get_option( 'mrt_price_schema', false ) );
 	}
 
 	public function test_get_dashboard_returns_payload_keys(): void {
