@@ -34,99 +34,80 @@ Testdata (`testdata/fixtures/lennakatten/`) och Lennakatten-tester **behålls** 
 | REST / klient-config | PHP → Vue mount JSON | `inc/assets/frontend.php`, `mrtRest.ts` |
 | Resesökmotor | BFS på importerad trafik | `inc/domain/journey/engine/` |
 
-### Delvis generiskt (mönster rätt, Lennakatten-fallback kvar)
+### Delvis generiskt
 
 | Område | Status | Detalj |
 |--------|--------|--------|
-| **Tågbyte (train change)** | Delvis | Per-station meta `mrt_station_train_change_map` i `inc/domain/journey/train-change.php`. Overview och bytes-hub använder `MRT_get_station_train_change_map()`. **Saknas:** REST-fält, admin-UI, CSV-kolumn. Fallback: hårdkodad Marielund-karta (`MRT_default_train_change_maps_by_station_title()`). |
-| **Priszoner** | Delvis | Meta/CSV fungerar. Tom meta → titel-fallback `MRT_default_station_price_zones_by_title()` (Lennakatten 2026). |
-| **Byteshubbar** | Delvis | Generella signaler: terminus, `mrt_transfer_priority`, buss-*, train-change-karta. Buss-shuttle (2 hållplatser + buss-flagga) är datamodell, exemplifierad med Selknä–Fjällnora i fixture. |
+| **Tågbyte (train change)** | Delvis | Meta `mrt_station_train_change_map`; **ingen titel-fallback**. Lennakatten-import sår meta via `MRT_lennakatten_seed_train_change_maps()`. **Saknas:** REST, admin-UI, CSV. |
+| **Priszoner** | Delvis | Meta/CSV; **ingen titel-fallback**. Tom meta = inga zoner. |
+| **Wizard-rubrik** | Delvis | Neutral default ”Planera resa”; shortcode `route_title` för operatörsnamn. |
+| **Prismatris** | Delvis | Tom default (`MRT_build_empty_price_matrix()`). Lennakatten-belopp kvar i `price-matrix-builtin.php` för referens/import. |
+| **Byteshubbar** | Delvis | Terminus, `mrt_transfer_priority`, buss-*, train-change-meta. |
 
 ### Fortfarande Lennakatten-låst (produktion)
 
 | Område | Var | Konfigurerbart idag? |
 |--------|-----|----------------------|
-| Wizard-rubrik | `inc/public/vue-shortcode-config.php` → `"Planera resa med Lennakatten"` | Nej (shortcode `hero_subtitle` finns, inte `routeTitle`) |
-| Publikt tema | `assets/mrt-color-tokens.css`, `assets/mrt-typography.css`, [design/BRAND_UI.md](design/BRAND_UI.md) | Nej |
-| Tom prismatris | `inc/domain/pricing/price-matrix-builtin.php` (Taxa 2026) | Belopp ja via admin; **default vid tom DB = Lennakatten** |
-| Tom prisstruktur-default | `MRT_get_default_price_schema()` | Struktur redigerbar; nycklar/defaults Lennakatten-typiska |
-| Eftermiddags-retur kl 15 | `MRT_qualifies_for_afternoon_return()` — tröskel `900` | Nej (belopp konfigurerbart) |
+| Publikt tema | `assets/mrt-color-tokens.css`, [design/BRAND_UI.md](design/BRAND_UI.md) | Nej |
+| Eftermiddags-retur kl 15 | `price-rules-matrix.php` — tröskel `900` | Nej (belopp i schema) |
+| Eftermiddags-retur-belopp (default schema) | `MRT_get_default_afternoon_return_prices()` | Via admin efter spar/import |
 | Max 2 byten, poängvikter | `engine/constraints.php`, `journey-scoring.php` | Bara WP-filter |
-| Tidtabellfärger (5 st) | `inc/domain/timetable/timetable-type.php`, Vue `calendarDay.ts`, CSS | Nej |
-| Tågtyp-ikoner (4 PNG + slug-map) | `inc/domain/train-type/icons.php`, `trainTypeIcons.ts` | Ikon per typ i admin; **uppsättningen** hårdkodad |
-| Inställd-text | `MRT_CANCEL_TRAFFIC_NOTICE = 'Inställd'` | Nej |
+| Tidtabellfärger (5 st) | `timetable-type.php`, Vue, CSS | Nej |
+| Tågtyp-ikoner (4 PNG + slug-map) | `train-type/icons.php` | Ikon per typ; uppsättning hårdkodad |
 
-### Avsiktligt Lennakatten (dev only — behåll)
+### Avsiktligt Lennakatten (dev only)
 
-- `POST /dev/import-lennakatten`, DevToolsPage
+- `POST /dev/import-lennakatten`, `inc/import/lennakatten/reference-data.php`
 - `inc/public/journey-wizard/debug-fixtures.php`
-- `inc/admin/tools/demo-page.php` m.fl.
 - `testdata/fixtures/lennakatten/`
 
 ---
 
 ## Faser
 
-### Tier A — “Annann förening kan ta det i bruk” (prioritet)
+### Tier A — “Annann förening kan ta det i bruk”
 
-| # | Uppgift | Status | Anteckning |
-|---|---------|--------|------------|
-| A1 | **Neutral wizard-rubrik** — generisk default + shortcode-attribut `route_title` (eller global `operator_name` i `mrt_settings`) | Todo | Idag: hårdkodad sträng + Vue-fallback |
-| A2 | **Tom/neutral pris-default** — builtin-matris tom eller uppenbart “ej konfigurerad”; dashboard-varning tills priser sparats/importerats | Todo | `MRT_get_default_price_matrix()` |
-| A3 | **Ta bort titel-fallback för priszoner** — tom meta = inga zoner (eller zon 1), inte Lennakatten-karta | Todo | `MRT_get_station_price_zones()`; ev. behåll karta endast i dev-import |
-| A4 | **Ta bort titel-fallback för tågbyte** — tom meta = ingen train-change-rad / ingen hub via karta | Todo | `MRT_get_station_train_change_map()`; Marielund-data → fixture/meta vid Lennakatten-import |
-| A5 | **Tema override** — dokumentera `--mrt-*` CSS-variabler; neutral default-palett i tokens (Lennakatten som valfri “brand pack” eller child theme) | Todo | Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) |
-| A6 | **Dokumentera onboarding** — “Ny förening”: CSV-import, shortcodes, inställningar | Todo | Kort avsnitt i DEVELOPER.md eller egen sida |
+| # | Uppgift | Status |
+|---|---------|--------|
+| A1 | Neutral wizard-rubrik + shortcode `route_title` | **Klar** |
+| A2 | Tom pris-default (`MRT_build_empty_price_matrix`) | **Klar** |
+| A3 | Ingen titel-fallback för priszoner | **Klar** |
+| A4 | Ingen titel-fallback för tågbyte; Lennakatten-import sår meta | **Klar** |
+| A5 | Tema override (neutral `--mrt-*` default) | Todo |
+| A6 | Onboarding-dokumentation för ny förening | Todo |
 
-**Definition of done Tier A:** Tom install + eget CSV → ingen Lennakatten-text, inga Lennakatten-priser/zoner/tågbyte i runtime.
+**Definition of done Tier A:** Tom install + eget CSV → ingen Lennakatten-text, inga Lennakatten-priser/zoner/tågbyte i runtime. *(Kvar: A5–A6, CSS-branding.)*
 
 ### Tier B — “Drift utan utvecklare”
 
-| # | Uppgift | Status | Anteckning |
-|---|---------|--------|------------|
-| B1 | **Train change i admin + REST + CSV** | Todo | Meta finns; `stations.php` saknar fält; ingen admin-UI |
-| B2 | **`operator_name`, `ticket_url`, ev. `brand_accent`** i `mrt_settings` | Todo | Biljett-URL idag bara shortcode |
-| B3 | **Inställning: eftermiddagsgräns** (minuter efter midnatt) | Todo | Ersätter hårdkodad 15:00 |
-| B4 | **Inställning: max byten** (UI för filter `mrt_journey_max_transfers`) | Todo | Default 2 i kod |
-| B5 | **Operatörshandbok** — vilka meta-fält styr buss-hub, bytesprioritet, zoner | Todo | DATA_MODEL + CSV_FORMAT |
+| # | Uppgift | Status |
+|---|---------|--------|
+| B1 | Train change i admin + REST + CSV | Todo |
+| B2 | `operator_name`, global `ticket_url` i `mrt_settings` | Todo |
+| B3 | Inställning: eftermiddagsgräns | Todo |
+| B4 | Inställning: max byten (UI) | Todo |
+| B5 | Operatörshandbok (meta-fält) | Todo |
 
-### Tier C — “Vilket prissystem som helst” (ej mål nu)
+### Tier C — Out of scope
 
-Medvetet **out of scope** tills behov finns: flat taxa utan zoner, helt annorlunda biljettyper, obegränsade tidtabellfärger. Zonmatris + kategorier täcker de flesta svenska museijärnvägar.
+Flat taxa utan zoner, obegränsade tidtabellfärger, vilket prissystem som helst.
 
 ---
 
-## Mönster att följa (train change visar vägen)
-
-Det nya lagret i `train-change.php` är rätt riktning:
+## Mönster
 
 ```
-Importerad / admin-data (meta)  →  används i runtime
-Tom meta                        →  neutralt (ej Lennakatten-karta)
-Lennakatten-exempel             →  endast dev-import / fixture
+Importerad / admin-data (meta)  →  runtime
+Tom meta                        →  neutralt (tomt)
+Lennakatten-exempel             →  reference-data.php + dev-import
 ```
 
-Samma mönster ska gälla **priszoner** och **defaults** generellt.
-
-**Undvik:** titelsträng som primärnyckel i produktion (`'Marielund'`, `'Uppsala Östra'`) — okej i fixture, farligt om station byter namn.
-
 ---
 
-## Vad som *inte* behöver generaliseras
+## Nästa steg
 
-- Resemotorns grund (pickup/dropoff, riktning, min/max byte, overshoot) — rimlig för linjebundna museijärnvägar
-- Fem tidtabellfärger — branschkonvention i Sverige; dokumentera snarare än obegränsad lista
-- Fyra tågtyp-ikoner — täcker normal trafik; nya ikoner = tillägg i kod + PNG
-- Lennakatten dev-import — värdefull demo, ska finnas kvar
-
----
-
-## Nästa steg (rekommenderad ordning)
-
-1. **A3 + A4** — ta bort titel-fallbacks (minimalt diff, störst säkerhetsvinst)
-2. **A2** — neutral pris-default + dashboard-varning
-3. **A1** — operatornamn / route_title
-4. **B1** — train change synlig i admin och CSV (meta finns redan)
-5. **A5** — neutral CSS-default
+1. **A5** — neutral CSS-default (Lennakatten som valfri profil)
+2. **A6** — kort onboarding i DEVELOPER.md
+3. **B1** — train change i admin/REST/CSV (meta finns)
 
 Uppdatera status i denna fil när steg levereras.

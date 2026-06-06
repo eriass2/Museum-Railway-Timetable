@@ -65,7 +65,7 @@ function onSearch(): void {
   >
     <MrtSurfaceCard>
       <MrtHeading level="h2" size="xl" variant="surface-title">
-        {{ cfgStr(cfg, 'routeTitle', 'Planera resa med Lennakatten') }}
+        {{ cfgStr(cfg, 'routeTitle', 'Planera resa') }}
       </MrtHeading>
 
       <MrtRouteLayout

@@ -33,12 +33,13 @@ function MRT_journey_wizard_sanitize_debug_attr( string $debug ): string {
 }
 
 /**
- * @return array{ticket_url: string, hero_subtitle: string, timetable_id: int, timetable_page_url: string, embedded: bool, debug: string}
+ * @return array{ticket_url: string, route_title: string, hero_subtitle: string, timetable_id: int, timetable_page_url: string, embedded: bool, debug: string}
  */
 function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 	$atts = shortcode_atts(
 		array(
 			'ticket_url'         => '',
+			'route_title'        => '',
 			'hero_subtitle'      => '',
 			'timetable_id'       => '',
 			'timetable'          => '',
@@ -51,9 +52,11 @@ function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 	);
 
 	$timetable_id = MRT_journey_wizard_resolve_timetable_id( $atts );
+	$route_title  = is_string( $atts['route_title'] ) ? trim( $atts['route_title'] ) : '';
 
 	return array(
 		'ticket_url'         => esc_url( $atts['ticket_url'] ),
+		'route_title'        => $route_title,
 		'hero_subtitle'      => is_string( $atts['hero_subtitle'] ) ? $atts['hero_subtitle'] : '',
 		'timetable_id'       => $timetable_id,
 		'timetable_page_url' => esc_url( is_string( $atts['timetable_page_url'] ) ? $atts['timetable_page_url'] : '' ),
@@ -84,6 +87,7 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 			$stations,
 			array(
 				'ticket_url'         => $ticket_url,
+				'route_title'        => isset( $parsed['route_title'] ) ? (string) $parsed['route_title'] : '',
 				'hero_subtitle'      => $hero_subtitle,
 				'timetable_id'       => $timetable_id,
 				'timetable_page_url' => isset( $parsed['timetable_page_url'] ) ? (string) $parsed['timetable_page_url'] : '',

@@ -20,8 +20,8 @@ Endast **Gunsta** och **Almunge** har två zoner (gränsstationer mellan prisban
 
 ## Implementation
 
-- **PHP-defaults:** `MRT_default_station_price_zones_by_title()` i `inc/domain/pricing/prices.php`
 - **Per station (meta/CSV):** `price_zones` — se [CSV_FORMAT.md](CSV_FORMAT.md)
+- **Referens (Lennakatten, dev/test):** `MRT_lennakatten_reference_station_price_zones_by_title()` i `inc/import/lennakatten/reference-data.php`
 - **Zonberäkning för resa:** `inc/domain/pricing/price-rules.php` — lägsta giltiga zontal längs betjänade hållplatser på **utresan**. Tur och retur använder samma zonband som utresan (A→B); återresan höjer inte zontalet.
 
 ## CSV-exempel (`stations.csv`)
@@ -34,7 +34,7 @@ almunge,Almunge,...,"2,3"
 marielund,Marielund,...,2
 ```
 
-Tom `price_zones` → titel-default ovan. Gränsstationer: kommaseparerade, max två värden.
+Tom `price_zones` → inga zoner (konfigurera via CSV/admin). Gränsstationer: kommaseparerade, max två värden.
 
 ## Backlog / TODO
 

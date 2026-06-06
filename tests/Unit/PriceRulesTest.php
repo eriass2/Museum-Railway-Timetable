@@ -187,6 +187,9 @@ final class PriceRulesTest extends TestCase {
 	}
 
 	public function test_trip_prices_response_returns_single_trip(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_price_matrix' => MRT_sanitize_price_matrix( MRT_get_builtin_price_matrix() ),
+		);
 		$result = MRT_trip_prices_response( 1, 2, 'single' );
 		self::assertSame( 3, $result['zones'] );
 		self::assertNotNull( $result['trip'] );
@@ -195,6 +198,9 @@ final class PriceRulesTest extends TestCase {
 	}
 
 	public function test_trip_prices_response_includes_day_ticket(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_price_matrix' => MRT_sanitize_price_matrix( MRT_get_builtin_price_matrix() ),
+		);
 		$result = MRT_trip_prices_response( 1, 2, 'return', '15:00', '16:00', true );
 		self::assertNotNull( $result['trip'] );
 		self::assertTrue( $result['trip']['isAfternoonReturn'] );

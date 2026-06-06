@@ -74,22 +74,16 @@ function MRT_get_station_price_zones_stored( int $station_id ): array {
 }
 
 /**
- * Effective zones: stored meta, else title default, else empty.
+ * Effective zones: stored meta only (empty when not configured).
  *
  * @return int[]
  */
 function MRT_get_station_price_zones( int $station_id ): array {
-	$stored = MRT_get_station_price_zones_stored( $station_id );
-	if ( $stored !== array() ) {
-		return $stored;
-	}
-	$title    = get_the_title( $station_id );
-	$defaults = MRT_default_station_price_zones_by_title();
-	return $defaults[ $title ] ?? array();
+	return MRT_get_station_price_zones_stored( $station_id );
 }
 
 /**
- * Persist zone list; empty list removes meta (revert to title defaults).
+ * Persist zone list; empty list removes meta.
  *
  * @param int[] $zones Zone numbers.
  */
@@ -103,7 +97,7 @@ function MRT_update_station_price_zones_meta( int $station_id, array $zones ): v
 }
 
 /**
- * Whether zones are explicitly stored (not title fallback).
+ * Whether zones are configured on the station.
  */
 function MRT_station_price_zones_is_custom( int $station_id ): bool {
 	return MRT_get_station_price_zones_stored( $station_id ) !== array();

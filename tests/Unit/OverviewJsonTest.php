@@ -77,6 +77,14 @@ final class OverviewJsonTest extends TestCase {
 	}
 
 	public function test_train_change_row_for_marielund_service_71(): void {
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'50|' . MRT_station_train_change_map_meta_key() => array(
+				'71' => array(
+					'typeName'      => 'Dieseltåg',
+					'serviceNumber' => '61',
+				),
+			),
+		);
 		$station = new WP_Post( (object) array( 'ID' => 50, 'post_title' => 'Marielund' ) );
 		$row     = MRT_timetable_train_change_row_json(
 			$station,

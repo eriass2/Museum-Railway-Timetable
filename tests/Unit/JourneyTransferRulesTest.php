@@ -68,6 +68,14 @@ final class JourneyTransferRulesTest extends TestCase {
 	}
 
 	public function test_station_allows_transfer_at_marielund_train_change_hub(): void {
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'50|' . MRT_station_train_change_map_meta_key() => array(
+				'71' => array(
+					'typeName'      => 'Dieseltåg',
+					'serviceNumber' => '61',
+				),
+			),
+		);
 		$GLOBALS['mrt_test_posts'] = array(
 			50 => (object) array( 'ID' => 50, 'post_title' => 'Marielund' ),
 		);

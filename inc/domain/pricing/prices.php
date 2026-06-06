@@ -47,7 +47,7 @@ function MRT_price_zone_cap() {
 }
 
 /**
- * 2025 Lennakatten fare table from Taxa 2025.
+ * Lennakatten reference fare table (Taxa 2026) — dev/tests only, not runtime default.
  *
  * @return array<string, array<string, array<int, int|null>>>
  */
@@ -59,12 +59,31 @@ function MRT_get_builtin_price_matrix() {
 }
 
 /**
- * Default matrix.
+ * Empty matrix shaped by the current price schema (all cells null).
+ *
+ * @return array<string, array<string, array<int, int|null>>>
+ */
+function MRT_build_empty_price_matrix(): array {
+	$matrix = array();
+	foreach ( MRT_price_ticket_type_keys() as $ticket_type ) {
+		$matrix[ $ticket_type ] = array();
+		foreach ( MRT_price_category_keys() as $category ) {
+			$matrix[ $ticket_type ][ $category ] = array();
+			foreach ( MRT_price_zone_keys() as $zone ) {
+				$matrix[ $ticket_type ][ $category ][ $zone ] = null;
+			}
+		}
+	}
+	return $matrix;
+}
+
+/**
+ * Default matrix for new installs (empty until configured or imported).
  *
  * @return array<string, array<string, array<int, int|null>>>
  */
 function MRT_get_default_price_matrix() {
-	return MRT_get_builtin_price_matrix();
+	return MRT_build_empty_price_matrix();
 }
 
 /**
@@ -149,33 +168,6 @@ function MRT_price_matrix_for_zone( array $matrix, int $zones ): array {
 		}
 	}
 	return $out;
-}
-
-/**
- * Default station zones per Lennakatten taxa 2026 (see docs/PRICE_ZONES.md).
- * Only Gunsta and Almunge span two zones (boundary stations).
- *
- * @return array<string, int[]>
- */
-function MRT_default_station_price_zones_by_title(): array {
-	return array(
-		'Uppsala Östra'   => array( 1 ),
-		'Fyrislund'       => array( 1 ),
-		'Årsta'           => array( 1 ),
-		'Skölsta'         => array( 1 ),
-		'Bärby'           => array( 1 ),
-		'Gunsta'          => array( 1, 2 ),
-		'Marielund'       => array( 2 ),
-		'Lövstahagen'     => array( 2 ),
-		'Selknä'          => array( 2 ),
-		'Löt'             => array( 2 ),
-		'Länna'           => array( 2 ),
-		'Fjällnora'       => array( 2 ),
-		'Almunge'         => array( 2, 3 ),
-		'Moga'            => array( 3 ),
-		'Faringe'         => array( 3 ),
-		'Linnés Hammarby' => array( 3 ),
-	);
 }
 
 require_once __DIR__ . '/station-zones.php';

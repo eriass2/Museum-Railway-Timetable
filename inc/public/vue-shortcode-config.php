@@ -110,6 +110,11 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 		? MRT_journey_wizard_script_localization()
 		: array();
 
+	$route_title = isset( $parsed['route_title'] ) ? trim( (string) $parsed['route_title'] ) : '';
+	if ( $route_title === '' ) {
+		$route_title = __( 'Planera resa', 'museum-railway-timetable' );
+	}
+
 	return array(
 		'stations'     => $station_rows,
 		'ticketUrl'    => isset( $parsed['ticket_url'] ) ? (string) $parsed['ticket_url'] : '',
@@ -124,7 +129,7 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 			'noStations'      => __( 'Inga stationer är tillgängliga.', 'museum-railway-timetable' ),
 			'needsJs'         => __( 'Reseplaneraren kräver JavaScript.', 'museum-railway-timetable' ),
 			'stepNavAria'     => __( 'Steg i reseplaneraren', 'museum-railway-timetable' ),
-			'routeTitle'         => __( 'Planera resa med Lennakatten', 'museum-railway-timetable' ),
+			'routeTitle'         => $route_title,
 			'routeIntro'         => __( 'Välj avgång, ankomst och om du reser enkel eller tur och retur.', 'museum-railway-timetable' ),
 			'from'               => __( 'Från', 'museum-railway-timetable' ),
 			'to'                 => __( 'Till', 'museum-railway-timetable' ),
