@@ -54,5 +54,6 @@ npm --prefix frontend/vue run e2e -- \
   e2e/overview-wp.spec.ts \
   e2e/month-wp.spec.ts \
   e2e/wizard-wp.spec.ts \
+  e2e/index-wp.spec.ts \
   e2e/admin-dashboard.spec.ts \
   e2e/admin-nav-wp.spec.ts
