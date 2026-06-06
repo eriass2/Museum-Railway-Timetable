@@ -17,7 +17,7 @@ npm run build         # required before e2e (serve uses dist/)
 npm run e2e           # includes admin-nav.spec.ts (static admin tabs)
 ```
 
-Optional against Docker demo (all three shortcodes on one page):
+Optional against Docker demo (all four shortcodes on one page):
 
 ```bash
 MRT_E2E_WP_DEMO_URL=http://127.0.0.1:8080/?page_id=… npm run e2e -- e2e/*-wp.spec.ts
@@ -48,6 +48,15 @@ Or run the full WP stack script from repo root: `bash scripts/ci-e2e-wp.sh`
 - [ ] Summary: times, prices, ticket CTA if URL set
 - [ ] Back buttons work on each step
 - [ ] Debug presets (if configured): `debug="date"`, `outbound`, `return`, `summary`
+
+## Timetable index (`index`)
+
+Shortcode: `[museum_timetable_index]`
+
+- [ ] Intro text shows when `intro="1"` (default)
+- [ ] List renders timetable links with labels and optional meta (dates)
+- [ ] Empty state message when no timetables exist
+- [ ] No console errors
 
 ## Build
 

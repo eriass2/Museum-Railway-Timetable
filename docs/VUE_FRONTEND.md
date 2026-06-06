@@ -1,12 +1,13 @@
 # Publikt Vue-frontend
 
-De tre publika shortcodes mountar Vue-appar från `assets/dist/vue/`:
+De fyra publika shortcodes mountar Vue-appar från `assets/dist/vue/`:
 
 | Shortcode | Vue app |
 |-----------|---------|
 | `[museum_timetable_month]` | `MonthCalendarApp.vue` |
 | `[museum_timetable_overview]` | `TimetableOverviewApp.vue` |
 | `[museum_journey_wizard]` | `JourneyWizardApp.vue` |
+| `[museum_timetable_index]` | `TimetableIndexApp.vue` |
 
 Legacy jQuery-frontend är borttagen; ingen PHP-toggle krävs.
 
@@ -16,7 +17,7 @@ Public styles are **bundled by Vite**, not enqueued from WordPress:
 
 - Source entry: `frontend/vue/src/styles/mrt-public.css`
 - Imports (unchanged on disk): `assets/train-type-icons.css`, `frontend-public.css`
-- Vue-owned: `frontend/vue/src/styles/month-calendar.css`, `frontend/vue/src/styles/timetable-overview.css`, `frontend/vue/src/styles/journey-wizard/`
+- Vue-owned: `frontend/vue/src/styles/month-calendar.css`, `frontend/vue/src/styles/timetable-overview.css`, `frontend/vue/src/styles/timetable-index.css`, `frontend/vue/src/styles/journey-wizard/`
 - Vue-only shell: `frontend/vue/src/styles/vue-shell.css`
 
 Styles ship in the Vite bundle (not separate `mrt-frontend-public` handles).
@@ -59,6 +60,7 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 
 ## Current scope
 
+- **Timetable index**: static list from PHP config (`items`, `labels`); no REST. See `[museum_timetable_index]` in `inc/public/timetable-index/`.
 - **Timetable overview** and **month day panel**: JSON from `mrt_timetable_overview_data` / `mrt_get_timetable_for_date`; UI in `components/overview/` + `styles/timetable-overview.css` (no `v-html`, no public PHP HTML).
 - **Month calendar** grid: config JSON in mount; day detail uses shared overview components.
 - **Journey wizard**: reactive store; REST via `mrtRestRequest` (`journey/search`, `journey/calendar`, `journey/connection-detail`). Client-side caches for calendar month and trip search avoid redundant refetch on back navigation — see [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md).
@@ -69,8 +71,10 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 ```
 frontend/vue/src/
   config/                    # parseMountConfig, typed configs per app
-  composables/               # useMrtRest, useWizardContext
+  composables/               # useMrtRest, useWizardContext, useMonthCalendar, useTimetableOverview
   components/ui/             # shared Mrt* primitives (see VUE_UI_COMPONENTS.md)
+  components/timetable-index/
+  utils/calendarDate.ts      # addCalendarMonths (month + wizard)
   utils/mrtStrings.ts        # resolveMrtString (strings / wizard / labels)
   wizard/
     store/                   # createWizardStore, wizardStoreGetters, route/steps/selections

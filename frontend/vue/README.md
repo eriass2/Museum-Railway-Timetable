@@ -9,6 +9,7 @@ Builds to `assets/dist/vue/` as a **single IIFE bundle** (classic WordPress `<sc
 | `month` | `MonthCalendarApp.vue` |
 | `overview` | `TimetableOverviewApp.vue` |
 | `wizard` | `JourneyWizardApp.vue` |
+| `index` | `TimetableIndexApp.vue` |
 
 ## Structure
 
@@ -17,8 +18,9 @@ src/
   config/       # Typed mount config + parseMountConfig
   api/          # restUrl, mrtRestRequest
   composables/  # useMrtRest, useWizardContext, useTimetableOverview
-  utils/        # calendarGrid, monthGrid, mrtStrings (resolveMrtString)
+  utils/        # calendarDate, calendarGrid, monthGrid, mrtStrings (resolveMrtString)
   components/ui/   # Shared UI primitives (MrtAlert, MrtSurfaceCard, …)
+  components/timetable-index/  # TimetableIndexApp view
   apps/
   wizard/       # store/, composables/, components/, utils/ (typed WizardCfg)
 ```

@@ -15,7 +15,7 @@ Kort guide för `frontend/vue/`. REST-policy: [REST_API.md](REST_API.md).
 | Översatt sträng från PHP | `src/utils/mrtStrings.ts` → `resolveMrtString()` |
 | Vue-state kring REST (loading/error) | `src/composables/useMrtRest.ts` |
 | Delad UI-komponent | `src/components/ui/` |
-| Kalender/grid (månad + wizard) | `src/utils/calendarGrid.ts`, `monthGrid.ts` |
+| Kalender/grid (månad + wizard) | `src/utils/calendarDate.ts`, `calendarGrid.ts`, `monthGrid.ts` |
 | Wizard-specifik logik | `src/wizard/utils/` eller `src/wizard/composables/` |
 | Admin-specifik logik | `src/admin/composables/` eller `src/admin/utils/` |
 | Priser / prismatris | `src/shared/prices.ts` |
