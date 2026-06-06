@@ -120,6 +120,19 @@ final class RestTimetablesDataTest extends TestCase {
 		);
 	}
 
+	public function test_create_timetable_stores_type(): void {
+		$id = MRT_rest_create_timetable(
+			array(
+				'title' => 'Green 2026',
+				'type'  => 'green',
+			)
+		);
+
+		self::assertIsInt( $id );
+		self::assertGreaterThan( 0, $id );
+		self::assertSame( 'green', get_post_meta( $id, 'mrt_timetable_type', true ) );
+	}
+
 	public function test_add_timetable_service_requires_route(): void {
 		$this->boot_timetable_posts();
 

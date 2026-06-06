@@ -94,6 +94,10 @@
   margin-bottom: 12px;
 }
 
+.mrt-admin-timetable-create select {
+  max-width: 14rem;
+}
+
 .mrt-admin-station-create__fields p {
   margin: 8px 0;
 }

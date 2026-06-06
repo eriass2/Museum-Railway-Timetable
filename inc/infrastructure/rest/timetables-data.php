@@ -181,6 +181,13 @@ function MRT_rest_create_timetable( array $body ) {
 	if ( $id instanceof WP_Error ) {
 		return $id;
 	}
+	if ( isset( $body['type'] ) ) {
+		$type    = sanitize_text_field( (string) $body['type'] );
+		$allowed = array( 'green', 'red', 'yellow', 'orange', '' );
+		if ( in_array( $type, $allowed, true ) ) {
+			update_post_meta( (int) $id, 'mrt_timetable_type', $type );
+		}
+	}
 	return (int) $id;
 }
 

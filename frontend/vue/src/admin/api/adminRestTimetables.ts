@@ -10,10 +10,10 @@ export function getTimetable(id: number) {
   return adminFetch<import('../types').TimetableDetail>(`/timetables/${id}`);
 }
 
-export function createTimetable(title: string) {
+export function createTimetable(body: { title: string; type?: string }) {
   return adminFetch<import('../types').TimetableDetail>('/timetables', {
     method: 'POST',
-    body: JSON.stringify({ title }),
+    body: JSON.stringify(body),
   });
 }
 

@@ -21,6 +21,15 @@ const router = useRouter();
 const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
 const newTitle = ref('');
+const newType = ref('');
+
+const timetableTypes = computed(() => [
+  { value: '', label: adminStr(cfg, 'editorTypeNone') },
+  { value: 'green', label: adminStr(cfg, 'editorTypeGreen') },
+  { value: 'yellow', label: adminStr(cfg, 'editorTypeYellow') },
+  { value: 'red', label: adminStr(cfg, 'editorTypeRed') },
+  { value: 'orange', label: adminStr(cfg, 'editorTypeOrange') },
+] as const);
 
 const { loading, error, data, load, reload } = useAdminResource({
   fetch: () => listTimetables(),
@@ -41,8 +50,12 @@ async function createNew() {
     return;
   }
   try {
-    const tt = await createTimetable(newTitle.value.trim());
+    const tt = await createTimetable({
+      title: newTitle.value.trim(),
+      type: newType.value || undefined,
+    });
     newTitle.value = '';
+    newType.value = '';
     await router.push(`/timetables/${tt.id}`);
   } catch (e) {
     error.value = adminErrorMessage(cfg, e, 'timetablesCreateFailed');
@@ -88,13 +101,18 @@ async function removeTimetable(id: number, title: string) {
       </p>
 
       <AdminPanel v-if="cfg.canManage" :title="adminStr(cfg, 'timetablesNewTitle')">
-        <AdminInlineForm>
+        <AdminInlineForm class="mrt-admin-timetable-create">
           <input
             v-model="newTitle"
             type="text"
             class="regular-text"
             :placeholder="adminStr(cfg, 'timetablesNamePlaceholder')"
           />
+          <select v-model="newType" :aria-label="adminStr(cfg, 'editorTypeLabel')">
+            <option v-for="opt in timetableTypes" :key="opt.value" :value="opt.value">
+              {{ opt.label }}
+            </option>
+          </select>
           <MrtButton context="admin" variant="primary" @click="createNew">
             {{ adminStr(cfg, 'timetablesCreateButton') }}
           </MrtButton>
