@@ -15,8 +15,9 @@ export function useTimetableOverview(config: MrtRestConfig) {
     }
     clearError();
     overview.value = null;
-    const res = await run<{ overview: TimetableOverviewPayload }>('mrt_timetable_overview_data', {
-      timetable_id: timetableId,
+    const res = await run<{ overview: TimetableOverviewPayload }>({
+      method: 'GET',
+      path: `timetables/${timetableId}/overview`,
     });
     if (res.success && res.data?.overview) {
       overview.value = res.data.overview;
@@ -31,9 +32,10 @@ export function useTimetableOverview(config: MrtRestConfig) {
     }
     clearError();
     overview.value = null;
-    const res = await run<{ overview: TimetableOverviewPayload }>('mrt_get_timetable_for_date', {
-      date: dateYmd,
-      train_type: trainType,
+    const res = await run<{ overview: TimetableOverviewPayload }>({
+      method: 'GET',
+      path: 'timetables/day',
+      query: { date: dateYmd, train_type: trainType },
     });
     if (res.success && res.data?.overview) {
       overview.value = res.data.overview;

@@ -8,68 +8,26 @@ export type MrtRestResponse<T> = {
   message?: string;
 };
 
-type RouteSpec = {
+export type MrtRestRequestInit = {
   method: 'GET' | 'POST';
-  path: (data: Record<string, string | number>) => string;
-  queryKeys?: string[];
+  path: string;
+  query?: Record<string, string | number>;
+  body?: Record<string, unknown>;
 };
 
-const ROUTES: Record<string, RouteSpec> = {
-  mrt_search_journey: { method: 'POST', path: () => 'journey/search' },
-  mrt_journey_calendar_month: { method: 'POST', path: () => 'journey/calendar' },
-  mrt_journey_connection_detail: {
-    method: 'POST',
-    path: () => 'journey/connection-detail',
-  },
-  mrt_timetable_overview_data: {
-    method: 'GET',
-    path: (d) => `timetables/${d.timetable_id}/overview`,
-  },
-  mrt_get_timetable_for_date: {
-    method: 'GET',
-    path: () => 'timetables/day',
-    queryKeys: ['date', 'train_type'],
-  },
-  mrt_get_timetable_month: {
-    method: 'GET',
-    path: () => 'timetables/month',
-    queryKeys: ['year', 'month', 'train_type', 'service', 'start_monday'],
-  },
-  mrt_trip_prices: {
-    method: 'GET',
-    path: () => 'prices/trip',
-    queryKeys: [
-      'from_id',
-      'to_id',
-      'trip_type',
-      'outbound_departure',
-      'inbound_departure',
-      'include_day',
-      'outbound_legs',
-      'inbound_legs',
-    ],
-  },
-};
-
-function buildUrl(
-  config: MrtRestConfig,
-  path: string,
-  data: Record<string, string | number>,
-  queryKeys?: string[],
-): string {
-  const query: Record<string, string | number> = {};
-  if (queryKeys) {
-    for (const key of queryKeys) {
-      if (data[key] !== undefined && data[key] !== '') {
-        query[key] = data[key];
-      }
+function compactQuery(
+  query?: Record<string, string | number>,
+): Record<string, string | number> | undefined {
+  if (!query) {
+    return undefined;
+  }
+  const out: Record<string, string | number> = {};
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined && value !== '') {
+      out[key] = value;
     }
   }
-  return buildMrtRestUrlFromConfig(
-    config,
-    path,
-    Object.keys(query).length ? query : undefined,
-  );
+  return Object.keys(out).length ? out : undefined;
 }
 
 function errorMessage(json: unknown, status: number, config: MrtRestConfig): string {
@@ -89,37 +47,33 @@ function errorMessage(json: unknown, status: number, config: MrtRestConfig): str
     : resolveMrtString(config, 'requestFailed', 'Begäran misslyckades.');
 }
 
-function unknownActionMessage(config: MrtRestConfig, action: string): string {
-  const template = resolveMrtString(config, 'unknownAction', 'Okänd åtgärd: %s');
-  return template.replace('%s', action);
+function requestHeaders(method: 'GET' | 'POST', config: MrtRestConfig): Record<string, string> {
+  const headers: Record<string, string> = {
+    'X-WP-Nonce': resolveMrtRestNonce(config),
+  };
+  if (method === 'POST') {
+    headers['Content-Type'] = 'application/json';
+  }
+  return headers;
 }
 
 export async function mrtRestRequest<T>(
   config: MrtRestConfig,
-  action: string,
-  data: Record<string, string | number> = {},
+  init: MrtRestRequestInit,
 ): Promise<MrtRestResponse<T>> {
-  const route = ROUTES[action];
-  if (!route) {
-    return { success: false, message: unknownActionMessage(config, action) };
-  }
-
-  const url = buildUrl(config, route.path(data), data, route.queryKeys);
-  const headers: Record<string, string> = {
-    'X-WP-Nonce': resolveMrtRestNonce(config),
-  };
-  const init: RequestInit = {
-    method: route.method,
-    headers,
+  const path = init.path.replace(/^\/+/, '');
+  const url = buildMrtRestUrlFromConfig(config, path, compactQuery(init.query));
+  const requestInit: RequestInit = {
+    method: init.method,
+    headers: requestHeaders(init.method, config),
     credentials: 'same-origin',
   };
-  if (route.method === 'POST') {
-    headers['Content-Type'] = 'application/json';
-    init.body = JSON.stringify(data);
+  if (init.method === 'POST') {
+    requestInit.body = JSON.stringify(init.body ?? {});
   }
 
   try {
-    const res = await fetch(url, init);
+    const res = await fetch(url, requestInit);
     const json = await res.json().catch(() => null);
     if (!res.ok) {
       return { success: false, message: errorMessage(json, res.status, config) };

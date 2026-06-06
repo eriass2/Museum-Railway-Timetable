@@ -5,8 +5,8 @@ vi.mock('../src/composables/useMrtRest', () => ({
   useMrtRest: () => ({
     loading: { value: false },
     error: { value: '' },
-    run: vi.fn(async (action: string) => {
-      if (action === 'mrt_timetable_overview_data') {
+    run: vi.fn(async (init: { path: string }) => {
+      if (init.path.includes('/overview')) {
         return {
           success: true,
           data: {

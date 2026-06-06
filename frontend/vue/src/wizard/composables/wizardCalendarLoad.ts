@@ -15,20 +15,18 @@ import {
   wizardCalendarCacheKey,
 } from '../utils/wizardCalendarCache';
 
-type AjaxRun = <T>(
-  action: string,
-  data?: Record<string, string | number>,
-) => Promise<{ success: boolean; data?: T; message?: string }>;
+import type { MrtRestRequestInit, MrtRestResponse } from '../../api/mrtRest';
+
+type RestRun = <T>(init: MrtRestRequestInit) => Promise<MrtRestResponse<T>>;
 
 export async function loadWizardCalendarMonth(
   store: WizardStore,
   cfg: ComputedRef<WizardCfg>,
   daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
-  run: AjaxRun,
+  run: RestRun,
   year: number,
   month: number,
-): Promise<void> {
-  store.calYear = year;
+): Promise<void> {  store.calYear = year;
   store.calMonth = month;
   if (store.debugCalendarDays) {
     daysMap.value = store.debugCalendarDays;
@@ -48,17 +46,17 @@ export async function loadWizardCalendarMonth(
     return;
   }
 
-  const res = await run<{ year: number; month: number; days: Record<string, CalendarDayInfo> }>(
-    'mrt_journey_calendar_month',
-    {
+  const res = await run<{ year: number; month: number; days: Record<string, CalendarDayInfo> }>({
+    method: 'POST',
+    path: 'journey/calendar',
+    body: {
       from_station: store.fromId,
       to_station: store.toId,
       year,
       month,
       trip_type: store.tripType,
     },
-  );
-  if (!res.success || !res.data) {
+  });  if (!res.success || !res.data) {
     store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel. Försök igen.'));
     return;
   }
@@ -92,7 +90,7 @@ export function shiftWizardCalendarMonth(
   store: WizardStore,
   cfg: ComputedRef<WizardCfg>,
   daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
-  run: AjaxRun,
+  run: RestRun,
   delta: number,
 ): void {
   const cm = addCalendarMonths(store.calYear, store.calMonth, delta);
@@ -103,7 +101,7 @@ export function goWizardCalendarToday(
   store: WizardStore,
   cfg: ComputedRef<WizardCfg>,
   daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
-  run: AjaxRun,
+  run: RestRun,
 ): void {
   const now = todayYearMonth();
   void loadWizardCalendarMonth(store, cfg, daysMap, run, now.year, now.month);
@@ -114,7 +112,7 @@ export function initWizardCalendar(
   config: WizardVueConfig,
   cfg: ComputedRef<WizardCfg>,
   daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
-  run: AjaxRun,
+  run: RestRun,
 ): void {
   if (!store.calYear) {
     const now = todayYearMonth();

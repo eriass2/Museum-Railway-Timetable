@@ -32,11 +32,11 @@ async function fetchConnectionLegDetail(
 ): Promise<ConnectionDetailPayload | null> {
   const from = leg.from_station_id || unref(params.legFrom);
   const to = leg.to_station_id || unref(params.legTo);
-  const res = await mrtRestRequest<ConnectionDetailPayload>(
-    params.config,
-    'mrt_journey_connection_detail',
-    { from_station: from, to_station: to, service_id: leg.service_id },
-  );
+  const res = await mrtRestRequest<ConnectionDetailPayload>(params.config, {
+    method: 'POST',
+    path: 'journey/connection-detail',
+    body: { from_station: from, to_station: to, service_id: leg.service_id },
+  });
   return res.success && res.data ? res.data : null;
 }
 

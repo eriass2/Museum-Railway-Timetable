@@ -66,10 +66,11 @@ export function useTripConnections(ctx: WizardInjection, legCtx: 'outbound' | 'r
       payload.outbound_arrival = arr;
     }
 
-    const res = await run<{ connections: JourneyConnection[] }>(
-      'mrt_search_journey',
-      payload,
-    );
+    const res = await run<{ connections: JourneyConnection[] }>({
+      method: 'POST',
+      path: 'journey/search',
+      body: payload,
+    });
     if (res.success) {
       const list = res.data?.connections || [];
       connections.value = list;

@@ -22,11 +22,10 @@ describe('mrtRestRequest', () => {
       }),
     );
 
-    const res = await mrtRestRequest<{ overview: { timetableId: number } }>(
-      config,
-      'mrt_timetable_overview_data',
-      { timetable_id: 1 },
-    );
+    const res = await mrtRestRequest<{ overview: { timetableId: number } }>(config, {
+      method: 'GET',
+      path: 'timetables/1/overview',
+    });
     expect(res.success).toBe(true);
     expect(res.data?.overview.timetableId).toBe(1);
   });
@@ -41,7 +40,10 @@ describe('mrtRestRequest', () => {
       }),
     );
 
-    const res = await mrtRestRequest(config, 'mrt_timetable_overview_data', { timetable_id: 1 });
+    const res = await mrtRestRequest(config, {
+      method: 'GET',
+      path: 'timetables/1/overview',
+    });
     expect(res.success).toBe(false);
     expect(res.message).toBe('Serverfel');
   });
@@ -56,12 +58,16 @@ describe('mrtRestRequest', () => {
     const legs = JSON.stringify([
       { service_id: 10, from_station_id: 1, to_station_id: 5 },
     ]);
-    await mrtRestRequest(config, 'mrt_trip_prices', {
-      from_id: 1,
-      to_id: 5,
-      trip_type: 'single',
-      outbound_legs: legs,
-      inbound_legs: '',
+    await mrtRestRequest(config, {
+      method: 'GET',
+      path: 'prices/trip',
+      query: {
+        from_id: 1,
+        to_id: 5,
+        trip_type: 'single',
+        outbound_legs: legs,
+        inbound_legs: '',
+      },
     });
 
     const [url] = fetchMock.mock.calls[0];
@@ -80,10 +86,37 @@ describe('mrtRestRequest', () => {
     });
     vi.stubGlobal('fetch', fetchMock);
 
-    await mrtRestRequest(config, 'mrt_timetable_overview_data', { timetable_id: 42 });
+    await mrtRestRequest(config, {
+      method: 'GET',
+      path: 'timetables/42/overview',
+    });
     const [url, init] = fetchMock.mock.calls[0];
     expect(String(url)).toContain('/timetables/42/overview');
     expect(init.method).toBe('GET');
     expect(init.headers['X-WP-Nonce']).toBe('test-nonce');
+  });
+
+  it('sends JSON body on POST journey search', async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({ connections: [] }),
+    });
+    vi.stubGlobal('fetch', fetchMock);
+
+    await mrtRestRequest(config, {
+      method: 'POST',
+      path: 'journey/search',
+      body: { from_station: 1, to_station: 2, date: '2026-05-01' },
+    });
+
+    const [url, init] = fetchMock.mock.calls[0];
+    expect(String(url)).toContain('/journey/search');
+    expect(init.method).toBe('POST');
+    expect(init.headers['Content-Type']).toBe('application/json');
+    expect(JSON.parse(String(init.body))).toEqual({
+      from_station: 1,
+      to_station: 2,
+      date: '2026-05-01',
+    });
   });
 });

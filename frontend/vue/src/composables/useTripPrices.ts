@@ -49,15 +49,19 @@ export function useTripPrices(
 
       loading.value = true;
       try {
-        const response = await mrtRestRequest<TripPricesApiResponse>(config.value, 'mrt_trip_prices', {
-          from_id: params.fromId,
-          to_id: params.toId,
-          trip_type: params.tripType,
-          outbound_departure: params.outboundDeparture ?? '',
-          inbound_departure: params.inboundDeparture ?? '',
-          include_day: params.includeDay ? 1 : 0,
-          outbound_legs: encodeTripPriceLegs(params.outboundLegs ?? []),
-          inbound_legs: encodeTripPriceLegs(params.inboundLegs ?? []),
+        const response = await mrtRestRequest<TripPricesApiResponse>(config.value, {
+          method: 'GET',
+          path: 'prices/trip',
+          query: {
+            from_id: params.fromId,
+            to_id: params.toId,
+            trip_type: params.tripType,
+            outbound_departure: params.outboundDeparture ?? '',
+            inbound_departure: params.inboundDeparture ?? '',
+            include_day: params.includeDay ? 1 : 0,
+            outbound_legs: encodeTripPriceLegs(params.outboundLegs ?? []),
+            inbound_legs: encodeTripPriceLegs(params.inboundLegs ?? []),
+          },
         });
         if (!response.success || !response.data) {
           trip.value = null;

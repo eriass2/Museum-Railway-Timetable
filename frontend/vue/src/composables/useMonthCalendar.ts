@@ -49,12 +49,16 @@ export function useMonthCalendar(config: MonthVueConfig) {
   async function loadMonth(targetYear: number, targetMonth: number): Promise<boolean> {
     clearError();
     const atts = config.atts || {};
-    const res = await run<MonthCalendarPayload>('mrt_get_timetable_month', {
-      year: targetYear,
-      month: targetMonth,
-      train_type: String(atts.train_type || ''),
-      service: String(atts.service || ''),
-      start_monday: atts.start_monday ? 1 : 0,
+    const res = await run<MonthCalendarPayload>({
+      method: 'GET',
+      path: 'timetables/month',
+      query: {
+        year: targetYear,
+        month: targetMonth,
+        train_type: String(atts.train_type || ''),
+        service: String(atts.service || ''),
+        start_monday: atts.start_monday ? 1 : 0,
+      },
     });
     if (!res.success || !res.data) {
       error.value = res.message || resolveMrtString(config, 'errorLoading', 'Kunde inte ladda kalendern.');

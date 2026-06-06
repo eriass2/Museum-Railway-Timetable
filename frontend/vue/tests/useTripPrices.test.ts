@@ -59,15 +59,18 @@ describe('useTripPrices', () => {
 
     expect(mrtRestRequest).toHaveBeenCalledWith(
       config.value,
-      'mrt_trip_prices',
       expect.objectContaining({
-        from_id: 1,
-        to_id: 2,
-        trip_type: 'return',
-        outbound_departure: '15:00',
-        inbound_departure: '16:00',
-        outbound_legs: '',
-        inbound_legs: '',
+        method: 'GET',
+        path: 'prices/trip',
+        query: expect.objectContaining({
+          from_id: 1,
+          to_id: 2,
+          trip_type: 'return',
+          outbound_departure: '15:00',
+          inbound_departure: '16:00',
+          outbound_legs: '',
+          inbound_legs: '',
+        }),
       }),
     );
     expect(zones.value).toBe(2);
@@ -94,10 +97,13 @@ describe('useTripPrices', () => {
 
     expect(mrtRestRequest).toHaveBeenCalledWith(
       config.value,
-      'mrt_trip_prices',
       expect.objectContaining({
-        outbound_legs: JSON.stringify(legs),
-        inbound_legs: '',
+        method: 'GET',
+        path: 'prices/trip',
+        query: expect.objectContaining({
+          outbound_legs: JSON.stringify(legs),
+          inbound_legs: '',
+        }),
       }),
     );
   });

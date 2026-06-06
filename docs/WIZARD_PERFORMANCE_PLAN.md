@@ -48,10 +48,10 @@ WordPress shortcode
 
 | Steg | Klient | REST-action | PHP |
 |------|--------|-------------|-----|
-| Datum | `wizardCalendarLoad.ts` | `mrt_journey_calendar_month` | `MRT_get_journey_calendar_month()` |
-| Utresa / återresa | `useTripConnections.ts` | `mrt_search_journey` | `MRT_journey_search_response()` |
-| Detalj (expand) | `connectionDetailLoad.ts` | `mrt_journey_connection_detail` | per ben, sekventiellt |
-| Sammanfattning | `useTripPrices()` | `mrt_trip_prices` | prissökning |
+| Datum | `wizardCalendarLoad.ts` | `POST journey/calendar` | `MRT_get_journey_calendar_month()` |
+| Utresa / återresa | `useTripConnections.ts` | `POST journey/search` | `MRT_journey_search_response()` |
+| Detalj (expand) | `connectionDetailLoad.ts` | `POST journey/connection-detail` | parallellt per ben (`Promise.all`) |
+| Sammanfattning | `useTripPrices()` | `GET prices/trip` | prissökning |
 
 ### Bundle (nu)
 
@@ -250,7 +250,7 @@ Vid import, sparande av tidtabell eller tjänst — rensa relevanta transients (
 
 - Memoize `stepLabels` / `contextLine` i `wizardStoreState.ts`
 - `WizardCalendarGrid.vue` — bind `asDay(cell)` en gång per cell
-- Prefetch `mrt_trip_prices` vid val av utresa/återresa (`wizardSelections.ts`)
+- Prefetch `GET prices/trip` vid val av utresa/återresa (`wizardSelections.ts`)
 
 ### Verifiering Fas 3
 

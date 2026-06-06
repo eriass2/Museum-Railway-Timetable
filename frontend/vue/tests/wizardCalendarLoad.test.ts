@@ -81,12 +81,16 @@ describe('wizardCalendarLoad', () => {
     expect(store.calYear).toBe(2026);
     expect(store.calMonth).toBe(6);
     expect(daysMap.value['2026-06-04']).toEqual({ status: 'ok', types: ['green'] });
-    expect(run).toHaveBeenCalledWith('mrt_journey_calendar_month', {
-      from_station: 1,
-      to_station: 2,
-      year: 2026,
-      month: 6,
-      trip_type: 'return',
+    expect(run).toHaveBeenCalledWith({
+      method: 'POST',
+      path: 'journey/calendar',
+      body: {
+        from_station: 1,
+        to_station: 2,
+        year: 2026,
+        month: 6,
+        trip_type: 'return',
+      },
     });
   });
 

@@ -9,7 +9,7 @@ Kort guide för `frontend/vue/`. REST-policy: [REST_API.md](REST_API.md).
 | Behöver du… | Lägg koden i… |
 |-------------|----------------|
 | Bygga REST-URL från PHP-config | `src/api/restUrl.ts` |
-| Anropa publikt REST (action-map) | `src/api/mrtRest.ts` |
+| Anropa publikt REST | `src/api/mrtRest.ts` → `mrtRestRequest({ method, path, query?, body? })` |
 | Anropa admin REST | `src/admin/api/adminRest.ts` |
 | Läsa mount-config från shortcode | `src/config/parseMountConfig.ts` |
 | Översatt sträng från PHP | `src/utils/mrtStrings.ts` → `resolveMrtString()` |

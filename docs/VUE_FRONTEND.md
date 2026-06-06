@@ -61,7 +61,7 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 ## Current scope
 
 - **Timetable index**: static list from PHP config (`items`, `labels`); no REST. See `[museum_timetable_index]` in `inc/public/timetable-index/`.
-- **Timetable overview** and **month day panel**: JSON from `mrt_timetable_overview_data` / `mrt_get_timetable_for_date`; UI in `components/overview/` + `styles/timetable-overview.css` (no `v-html`, no public PHP HTML).
+- **Timetable overview** and **month day panel**: JSON from `GET /timetables/{id}/overview` and `GET /timetables/day`; UI in `components/overview/` + `styles/timetable-overview.css` (no `v-html`, no public PHP HTML).
 - **Month calendar** grid: config JSON in mount; day detail uses shared overview components.
 - **Journey wizard**: reactive store; REST via `mrtRestRequest` (`journey/search`, `journey/calendar`, `journey/connection-detail`). Client-side caches for calendar month and trip search avoid redundant refetch on back navigation — see [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md).
 - **PHP HTML** timetable renderers removed; Vue-admin editor uses the same overview component as the public site.

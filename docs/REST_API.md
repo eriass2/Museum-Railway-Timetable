@@ -68,7 +68,7 @@ Implementation: `inc/infrastructure/rest/*.php`. Admin-klient: `frontend/vue/src
 | Tågtyper | `GET|POST /train-types`, `PATCH|DELETE /train-types/{id}` |
 | CSV | `POST /import/csv`, `GET /export/csv` |
 
-**Klient:** `frontend/vue/src/api/mrtRest.ts` (publikt); `frontend/vue/src/admin/api/adminRest.ts` (admin).
+**Klient:** `frontend/vue/src/api/mrtRest.ts` (publikt, REST-paths); `frontend/vue/src/admin/api/adminRest.ts` (admin).
 
 Publika routes kräver `X-WP-Nonce` (`wp_rest`) i frontend-config (`restUrl` + `restNonce` från `MRT_rest_client_config()` i PHP).
 

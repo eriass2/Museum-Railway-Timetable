@@ -65,12 +65,15 @@ describe('useTripConnections', () => {
     expect(connections.value).toHaveLength(1);
     expect(mrtRestRequest).toHaveBeenCalledWith(
       expect.anything(),
-      'mrt_search_journey',
       expect.objectContaining({
-        from_station: 1,
-        to_station: 2,
-        date: '2026-06-01',
-        trip_type: 'single',
+        method: 'POST',
+        path: 'journey/search',
+        body: expect.objectContaining({
+          from_station: 1,
+          to_station: 2,
+          date: '2026-06-01',
+          trip_type: 'single',
+        }),
       }),
     );
   });
@@ -92,10 +95,13 @@ describe('useTripConnections', () => {
 
     expect(mrtRestRequest).toHaveBeenCalledWith(
       expect.anything(),
-      'mrt_search_journey',
       expect.objectContaining({
-        trip_type: 'return',
-        outbound_arrival: '10:30',
+        method: 'POST',
+        path: 'journey/search',
+        body: expect.objectContaining({
+          trip_type: 'return',
+          outbound_arrival: '10:30',
+        }),
       }),
     );
   });

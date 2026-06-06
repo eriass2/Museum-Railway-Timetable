@@ -58,8 +58,11 @@ describe('useMonthCalendar', () => {
     expect(cal.dates.value[4]?.types).toEqual(['green']);
     expect(mrtRestRequest).toHaveBeenCalledWith(
       expect.anything(),
-      'mrt_get_timetable_month',
-      expect.objectContaining({ year: 2026, month: 7 }),
+      expect.objectContaining({
+        method: 'GET',
+        path: 'timetables/month',
+        query: expect.objectContaining({ year: 2026, month: 7 }),
+      }),
     );
   });
 
@@ -98,8 +101,11 @@ describe('useMonthCalendar', () => {
 
     expect(mrtRestRequest).toHaveBeenCalledWith(
       expect.anything(),
-      'mrt_get_timetable_month',
-      expect.objectContaining({ year: 2026, month: 7 }),
+      expect.objectContaining({
+        method: 'GET',
+        path: 'timetables/month',
+        query: expect.objectContaining({ year: 2026, month: 7 }),
+      }),
     );
   });
 });
