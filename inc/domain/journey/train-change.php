@@ -28,14 +28,6 @@ function MRT_station_train_change_map_meta_key(): string {
 }
 
 /**
- * @param array<string, array<string, array{typeName: string, serviceNumber: string}>> $map
- * @return array<string, array<string, array{typeName: string, serviceNumber: string}>>
- */
-function MRT_train_change_maps_typed( array $map ): array {
-	return $map;
-}
-
-/**
  * @return array{typeName: string, serviceNumber: string}
  */
 function MRT_train_change_map_entry( string $type_name, string $service_number ): array {
@@ -51,16 +43,39 @@ function MRT_train_change_map_entry( string $type_name, string $service_number )
  * @return array<string, array<string, array{typeName: string, serviceNumber: string}>>
  */
 function MRT_default_train_change_maps_by_station_title(): array {
-	$map = array(
-		'Marielund' => array(
-			'71' => MRT_train_change_map_entry( 'Dieseltåg', '61' ),
-			'63' => MRT_train_change_map_entry( 'Rälsbuss', '97' ),
-			'60' => MRT_train_change_map_entry( 'Ångtåg', '74' ),
-			'96' => MRT_train_change_map_entry( 'Dieseltåg', '64' ),
+	/** @var list<array{station: string, from: string, type: string, to: string}> $rows */
+	$rows = array(
+		array(
+			'station' => 'Marielund',
+			'from'    => '71',
+			'type'    => 'Dieseltåg',
+			'to'      => '61',
+		),
+		array(
+			'station' => 'Marielund',
+			'from'    => '63',
+			'type'    => 'Rälsbuss',
+			'to'      => '97',
+		),
+		array(
+			'station' => 'Marielund',
+			'from'    => '60',
+			'type'    => 'Ångtåg',
+			'to'      => '74',
+		),
+		array(
+			'station' => 'Marielund',
+			'from'    => '96',
+			'type'    => 'Dieseltåg',
+			'to'      => '64',
 		),
 	);
+	$map  = array();
+	foreach ( $rows as $row ) {
+		$map[ $row['station'] ][ $row['from'] ] = MRT_train_change_map_entry( $row['type'], $row['to'] );
+	}
 
-	return MRT_train_change_maps_typed( $map );
+	return $map;
 }
 
 /**
