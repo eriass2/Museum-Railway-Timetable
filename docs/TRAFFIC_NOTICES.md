@@ -1,8 +1,21 @@
-# Plan – trafikmeddelanden (shortcode)
+# Åtgärdsplan – trafikmeddelanden (shortcode)
 
 Shortcode på **startsidan** som visar generella trafikmeddelanden och tur-avvikelser för **idag**. Besökare ser en kompakt lista; tom vy visar «Inga meddelanden».
 
 **Relaterat:** [SHORTCODES.md](SHORTCODES.md), [REST_API.md](REST_API.md), [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), [DATA_MODEL.md](DATA_MODEL.md)
+
+---
+
+## Status
+
+| Fas | Beskrivning | Status |
+|-----|-------------|--------|
+| 0 | Plan och produktbeslut (detta dokument) | Klar |
+| 1 | Domän: `public-notices.php`, `aggregate.php`, PHPUnit | Ej påbörjad |
+| 2 | REST: public + admin routes, loader, PHPUnit | Ej påbörjad |
+| 3 | Admin: `TrafficNoticesPage.vue`, route, top-level-meny | Ej påbörjad |
+| 4 | Shortcode + Vue + CSS + tester | Ej påbörjad |
+| 5 | Docs: SHORTCODES, REST_API, ADMIN_WORKFLOW, admin help | Ej påbörjad |
 
 ---
 
@@ -241,14 +254,6 @@ Dev-verktyg: uppdatera «Synka tidtabellssidor» så startsidan får shortcoden 
 ---
 
 ## Implementation — faser
-
-| Fas | Innehåll | Status |
-|-----|----------|--------|
-| 1 | Domän: `public-notices.php`, `aggregate.php`, PHPUnit | Ej påbörjad |
-| 2 | REST: public + admin routes, loader, PHPUnit | Ej påbörjad |
-| 3 | Admin: `TrafficNoticesPage.vue`, route, meny, l10n | Ej påbörjad |
-| 4 | Shortcode + Vue + CSS + tester | Ej påbörjad |
-| 5 | Docs: SHORTCODES, REST_API, ADMIN_WORKFLOW, admin help | Ej påbörjad |
 
 ### Fas 1 — Domän (PHP)
 

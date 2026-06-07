@@ -13,22 +13,27 @@
 
 Designreferens: [mockups/](mockups/) och [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Tågtypsikoner: `assets/icons/train-types/`.
 
+## Åtgärdsplaner
+
+| Dokument | Innehåll |
+|----------|----------|
+| [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | Trafikmeddelanden-shortcode + admin (generella meddelanden + avvikelser) |
+| [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md) | Reseplanerare – prestanda (fas 1–4) |
+| [I18N_ACTION_PLAN.md](I18N_ACTION_PLAN.md) | Översättningar – publikt Vue (klart) och admin |
+
 ## Daglig utveckling
 
 | Dokument | Innehåll |
 |----------|----------|
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, bootstrap, `inc/`-struktur, testning |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | PHP/CSS/JS-konventioner (`.mrt-*`, `MRT_*`, säkerhet) |
-| [I18N_ACTION_PLAN.md](I18N_ACTION_PLAN.md) | Översättningar – publikt Vue (klart) och admin (kvar) |
 | [DATA_MODEL.md](DATA_MODEL.md) | Post types, meta, `mrt_stoptimes`, relationer |
 | [CSV_FORMAT.md](CSV_FORMAT.md) | Import/export av tidtabellsdata (zip, kolumner, lägen) |
 | [SHORTCODES.md](SHORTCODES.md) | Shortcodes: månad, översikt, wizard, index |
-| [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | Plan: trafikmeddelanden-shortcode + admin (generella meddelanden + avvikelser) |
 | [REST_API.md](REST_API.md) | REST-only API — admin och publikt frontend |
 | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i Vue-admin (steg-för-steg) |
 | [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Utvecklingsmeny, component demo, import |
 | [VUE_FRONTEND.md](VUE_FRONTEND.md) | Publikt Vue-frontend (build, bundle, integration) |
-| [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md) | Reseplanerare – prestanda (fas 1–4, status) |
 | [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) | Delade `Mrt*`-komponenter, tokens, alerts |
 | [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning i Docker |
 | [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG-krav per modul |
