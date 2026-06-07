@@ -35,8 +35,8 @@ Mallen exporteras från admin eller via `composer csv:template`.
 | Uppgift | Var |
 |---------|-----|
 | Operatörsnamn och global biljett-URL | Admin → **Inställningar** |
-| Prismatris och prisstruktur | Admin → **Priser** |
-| Min/max bytestid, max antal byten, eftermiddagsgräns | Admin → **Inställningar** |
+| Prismatris, prisstruktur och **eftermiddags-retur** (gräns + belopp) | Admin → **Priser** |
+| Min/max bytestid och max antal byten | Admin → **Inställningar** |
 | Priszoner per station | Admin → **Stationer & rutter** (eller CSV) |
 | Tågbyte per station | Admin → **Stationer & rutter** → Tågbyte (eller CSV) |
 
@@ -158,6 +158,6 @@ Saknas hub-markering hittar reseplaneraren inte flerbenade resor via den station
 | Min väntetid vid byte | `min_transfer_minutes` | 0 |
 | Max väntetid vid byte | `max_transfer_minutes` | 120 |
 | Max antal byten | `max_transfers` | 2 (tre ben) |
-| Eftermiddagsgräns retur | `afternoon_return_threshold_minutes` | 900 (kl 15:00) |
+| Eftermiddagsgräns retur | `afternoon_return_threshold_minutes` | 900 (kl 15:00) — admin: **Priser → Eftermiddags-retur** |
 
-Alla kan exporteras/importeras via `settings.csv`. Filter `mrt_journey_max_transfers` kan fortfarande override max byten.
+`min_transfer_minutes`, `max_transfer_minutes`, `max_transfers` och `afternoon_return_threshold_minutes` exporteras/importeras via `settings.csv`. Eftermiddags-retur-belopp ligger i `price_schema.csv` (`afternoon_return`). I admin redigeras gräns och belopp tillsammans under **Priser → Eftermiddags-retur**. Filter `mrt_journey_max_transfers` kan fortfarande override max byten.

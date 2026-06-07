@@ -50,9 +50,10 @@ Administratören kan ändra **prisbelopp** och **strukturen** via admin → Pris
 | **Kundkategorier** | Prisstruktur-panel | `mrt_price_schema` |
 | **Priszoner (matriskolumner)** | Prisstruktur-panel | `mrt_price_schema` |
 | **Max zoner vid lookup** | Prisstruktur-panel | `mrt_price_schema.zone_cap` |
-| **Eftermiddags-retur** | Prisstruktur-panel | `mrt_price_schema.afternoon_return` |
-| **Belopp** | Prismatris | `mrt_price_matrix` |
+| **Eftermiddags-retur (belopp)** | Eftermiddags-retur-panel | `mrt_price_schema.afternoon_return` |
+| **Eftermiddags-gräns (tur + retur)** | Eftermiddags-retur-panel (admin) | `mrt_settings.afternoon_return_threshold_minutes` |
+| **Belopp (zonmatris)** | Prismatris | `mrt_price_matrix` |
 
-**CSV:** `price_schema.csv` (struktur) + `prices.csv` (belopp) exporteras/importeras tillsammans med priser.
+**CSV:** `price_schema.csv` (struktur + eftermiddagsbelopp) + `prices.csv` (zonmatris) + `settings.csv` (eftermiddagsgräns m.m.). I admin ligger gräns och eftermiddagsbelopp på samma sida (**Priser → Eftermiddags-retur**).
 
 **Kod:** `inc/domain/pricing/price-schema.php`, admin `PricesPage.vue`, `MrtPriceTable.vue` (dynamiska nycklar från server-etiketter).
