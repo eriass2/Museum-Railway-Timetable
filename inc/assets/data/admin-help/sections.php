@@ -45,7 +45,7 @@ function MRT_admin_vue_help_admin_sections(): array {
 		array(
 			'title'     => __( 'Inställningar', 'museum-railway-timetable' ),
 			'body'      => __(
-				'Aktivera/inaktivera plugin, operatörsnamn, biljett-URL, byten och eftermiddagsgräns för returpris (belopp under Priser).',
+				'Aktivera/inaktivera plugin, operatörsnamn, biljett-URL och byten. Eftermiddags-retur konfigureras under Priser.',
 				'museum-railway-timetable'
 			),
 			'adminOnly' => true,

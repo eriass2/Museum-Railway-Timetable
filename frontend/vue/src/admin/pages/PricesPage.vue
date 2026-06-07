@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { RouterLink } from 'vue-router';
-import { getPrices, getSettings, savePrices } from '../api/adminRest';
-import type { PricesPayload } from '../api/adminRest';
+import { getPrices, getSettings, savePrices, saveSettings } from '../api/adminRest';
+import type { PricesPayload, SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
+import AdminPricesAfternoonPanel from '../components/AdminPricesAfternoonPanel.vue';
 import AdminPricesPreview from '../components/AdminPricesPreview.vue';
 import {
   AdminDisclosure,
@@ -27,29 +27,41 @@ import {
   hasMatrixZonesBeyondCap,
   priceMatrixHasAnyValue,
 } from '../utils/adminPricePreview';
-import { minutesToTimeInput } from '../utils/settingsTime';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
 const { saveMsg, show: showSaved } = useAdminSaveNotice();
 const data = ref<PricesPayload | null>(null);
+const settingsSnapshot = ref<SettingsPayload | null>(null);
 const afternoonThresholdMinutes = ref(900);
+const savedThresholdMinutes = ref(900);
 const newTicketLabel = ref('');
 const newCategoryLabel = ref('');
 const newZone = ref('');
 const copyZoneFrom = ref<number | ''>('');
 const copyZoneTo = ref<number | ''>('');
 
-const { dirty, syncSnapshot } = useAdminFormDirty(data);
+const { dirty: pricesDirty, syncSnapshot } = useAdminFormDirty(data);
+const thresholdDirty = computed(
+  () => afternoonThresholdMinutes.value !== savedThresholdMinutes.value,
+);
+const dirty = computed(() => pricesDirty.value || thresholdDirty.value);
 useAdminUnsavedGuard(dirty);
+
+function syncAllSnapshots() {
+  syncSnapshot();
+  savedThresholdMinutes.value = afternoonThresholdMinutes.value;
+}
 
 const { loading, error, load } = useAdminResource({
   beforeLoad: () => cfg.canManage,
   deniedMessage: adminStr(cfg, 'pricesNoPermission'),
   fetch: async () => {
     const [payload, settings] = await Promise.all([getPrices(), getSettings()]);
+    settingsSnapshot.value = { ...settings };
     afternoonThresholdMinutes.value = settings.afternoon_return_threshold_minutes;
+    savedThresholdMinutes.value = settings.afternoon_return_threshold_minutes;
     if (payload.zone_cap === undefined) {
       payload.zone_cap = 3;
     }
@@ -58,7 +70,7 @@ const { loading, error, load } = useAdminResource({
     }
     data.value = payload;
     ensureMatrixCells(payload);
-    syncSnapshot();
+    syncAllSnapshots();
     return payload;
   },
   errorMessage: (e) => {
@@ -84,12 +96,6 @@ const zones = computed(() => data.value?.zones ?? []);
 const matrixConfigured = computed(() => (data.value ? priceMatrixHasAnyValue(data.value) : false));
 const zonesBeyondCap = computed(() =>
   data.value ? hasMatrixZonesBeyondCap(data.value) : false,
-);
-
-const afternoonStatus = computed(() =>
-  adminFmtN(cfg, 'pricesAfternoonStatus', {
-    1: minutesToTimeInput(afternoonThresholdMinutes.value),
-  }),
 );
 
 function cellValue(ticket: string, category: string, zone: number): number | '' {
@@ -173,16 +179,32 @@ async function submit() {
   if (!data.value) return;
   error.value = '';
   try {
-    data.value = await savePrices({
-      matrix: data.value.matrix,
-      ticket_types: data.value.ticket_types,
-      categories: data.value.categories,
-      zones: data.value.zones,
-      zone_cap: data.value.zone_cap,
-      afternoon_return: data.value.afternoon_return,
-    });
+    const tasks: Promise<unknown>[] = [
+      savePrices({
+        matrix: data.value.matrix,
+        ticket_types: data.value.ticket_types,
+        categories: data.value.categories,
+        zones: data.value.zones,
+        zone_cap: data.value.zone_cap,
+        afternoon_return: data.value.afternoon_return,
+      }),
+    ];
+    if (settingsSnapshot.value && thresholdDirty.value) {
+      tasks.push(
+        saveSettings({
+          ...settingsSnapshot.value,
+          afternoon_return_threshold_minutes: afternoonThresholdMinutes.value,
+        }),
+      );
+    }
+    const results = await Promise.all(tasks);
+    data.value = results[0] as PricesPayload;
+    if (results[1]) {
+      settingsSnapshot.value = results[1] as SettingsPayload;
+      afternoonThresholdMinutes.value = settingsSnapshot.value.afternoon_return_threshold_minutes;
+    }
     ensureMatrixCells(data.value);
-    syncSnapshot();
+    syncAllSnapshots();
     showSaved(adminStr(cfg, 'saved'));
   } catch (e) {
     error.value = adminErrorMessage(cfg, e, 'saveFailed');
@@ -212,12 +234,13 @@ async function submit() {
             {{ adminStr(cfg, 'pricesDescription') }}
           </p>
 
-          <p class="mrt-admin-prices-afternoon-status description">
-            {{ afternoonStatus }}
-            <RouterLink to="/settings">{{ adminStr(cfg, 'pricesSettingsLink') }}</RouterLink>
-          </p>
-
           <AdminPricesPreview :payload="data" />
+
+          <AdminPricesAfternoonPanel
+            :payload="data"
+            :threshold-minutes="afternoonThresholdMinutes"
+            @update:threshold-minutes="afternoonThresholdMinutes = $event"
+          />
 
           <p v-if="matrixConfigured" class="description mrt-admin-prices-zone-cap-status">
             {{
@@ -389,33 +412,6 @@ async function submit() {
               max="99"
               class="small-text"
             />
-
-            <h3 class="mrt-admin-prices-schema__heading">{{ adminStr(cfg, 'pricesAfternoonHeading') }}</h3>
-            <p class="description">{{ adminStr(cfg, 'pricesAfternoonHint') }}</p>
-            <AdminTableScroll>
-              <table class="widefat striped mrt-admin-prices-schema__table mrt-admin-responsive-table">
-                <thead>
-                  <tr>
-                    <th>{{ adminStr(cfg, 'pricesSchemaLabelCol') }}</th>
-                    <th>{{ adminStr(cfg, 'pricesAfternoonAmountCol') }}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr v-for="key in categoryKeys" :key="`afternoon-${key}`">
-                    <td :data-label="adminStr(cfg, 'pricesSchemaLabelCol')">{{ data.categories[key] }}</td>
-                    <td :data-label="adminStr(cfg, 'pricesAfternoonAmountCol')">
-                      <input
-                        v-model.number="data.afternoon_return[key]"
-                        type="number"
-                        min="0"
-                        step="1"
-                        class="small-text"
-                      />
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </AdminTableScroll>
           </AdminDisclosure>
 
           <AdminTableScroll>
@@ -510,10 +506,6 @@ async function submit() {
   padding: 2px 8px;
   background: #f0f0f1;
   border-radius: 3px;
-}
-
-.mrt-admin-prices-afternoon-status :deep(a) {
-  margin-left: 6px;
 }
 
 .mrt-admin-price-cell--empty {

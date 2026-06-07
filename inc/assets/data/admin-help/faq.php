@@ -87,7 +87,7 @@ function MRT_admin_vue_help_faq_items(): array {
 		array(
 			'q' => __( 'Hur fungerar priser och inställningar?', 'museum-railway-timetable' ),
 			'a' => __(
-				'Priser styr reseplanerarens prissammanfattning (matris + stationzoner). Inställningar styr plugin, byten och eftermiddagsgräns; returpris per kategori fylls i under Priser. Båda kan exporteras med CSV. Se avsnittet Priszoner och biljetter på denna sida.',
+				'Priser styr reseplanerarens prissammanfattning (matris + stationzoner). Inställningar styr plugin och byten; eftermiddags-retur (gräns + belopp) under Priser. Båda kan exporteras med CSV. Se avsnittet Priszoner och biljetter på denna sida.',
 				'museum-railway-timetable'
 			),
 			'aEditor' => __( 'Priser och inställningar kräver administratörsbehörighet.', 'museum-railway-timetable' ),

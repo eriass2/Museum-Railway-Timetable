@@ -40,6 +40,11 @@ function MRT_get_plugin_settings(): array {
 	return array_merge( MRT_default_plugin_settings(), $stored );
 }
 
+function MRT_format_minutes_as_clock( int $minutes ): string {
+	$minutes = max( 0, min( 1439, $minutes ) );
+	return sprintf( '%02d:%02d', intdiv( $minutes, 60 ), $minutes % 60 );
+}
+
 /**
  * Minutes from midnight when afternoon-return pricing applies (default 15:00).
  */

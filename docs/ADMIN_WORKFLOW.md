@@ -139,7 +139,7 @@ I mobil editor:
 
 1. Fyll i **prismatrisen** (biljettyp × kategori × zon) eller importera taxa via Import/export
 2. Använd **Förhandsvisning** för att se hur priser visas i reseplaneraren
-3. **Eftermiddags-retur:** gräns under Inställningar, belopp per kategori under Prisstruktur
+3. **Eftermiddags-retur:** gräns, belopp och jämförelse under avsnittet *Eftermiddags-retur* på samma sida
 4. **Kopiera zonpriser** om flera zonkolumner ska ha samma belopp
 5. **Spara priser** — osparade ändringar varnas vid navigering bort
 
@@ -149,7 +149,7 @@ I mobil editor:
 
 - Plugin aktiv/inaktiv, operatörsnamn, biljett-URL
 - Min/max väntetid och max antal byten i reseplaneraren
-- **Eftermiddagsgräns (retur)** — länk till returpriser under Priser
+- **Eftermiddags-retur** — konfigureras under Priser (länk från Inställningar)
 
 Redaktörer (`edit_posts`) ser dashboard, tidtabeller och stationer, och kan **inte** ändra grunddata – bara avvikelser och snabb avgångstid.
 

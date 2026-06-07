@@ -25,7 +25,7 @@ function MRT_admin_vue_help_price_zones_steps(): array {
 			'museum-railway-timetable'
 		),
 		__(
-			'Eftermiddags-retur: gräns (t.ex. kl 15) under Inställningar, fast pris per kategori under Priser.',
+			'Eftermiddags-retur: gräns och fast pris per kategori under Priser → Eftermiddags-retur.',
 			'museum-railway-timetable'
 		),
 		__(

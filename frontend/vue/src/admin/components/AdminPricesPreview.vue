@@ -19,7 +19,6 @@ const props = defineProps<{
 const cfg = adminConfig();
 const previewZone = ref(1);
 const previewType = ref('single');
-const previewAfternoon = ref(false);
 
 const ticketKeys = computed(() => Object.keys(props.payload.ticket_types));
 const pricingZones = computed(() => effectivePricingZones(props.payload));
@@ -41,21 +40,14 @@ watch(ticketKeys, (keys) => {
 });
 
 const labels = computed(() =>
-  adminPriceTableLabels(cfg, props.payload, previewZone.value, !previewAfternoon.value),
+  adminPriceTableLabels(cfg, props.payload, previewZone.value, true),
 );
 
 const tripPrice = computed(() =>
-  buildAdminPricePreviewTrip(
-    props.payload,
-    previewType.value,
-    previewZone.value,
-    previewAfternoon.value,
-  ),
+  buildAdminPricePreviewTrip(props.payload, previewType.value, previewZone.value, false),
 );
 
-const dayPrice = computed(() =>
-  previewAfternoon.value ? null : buildAdminPricePreviewDay(props.payload, previewZone.value),
-);
+const dayPrice = computed(() => buildAdminPricePreviewDay(props.payload, previewZone.value));
 
 const priceCfg = computed(() => adminPricePreviewCfg(cfg));
 </script>
@@ -80,10 +72,6 @@ const priceCfg = computed(() => adminPricePreviewCfg(cfg));
             {{ payload.ticket_types[key] }}
           </option>
         </select>
-      </label>
-      <label v-if="previewType === 'return'" class="mrt-admin-prices-preview__afternoon">
-        <input v-model="previewAfternoon" type="checkbox" />
-        {{ adminStr(cfg, 'pricesAfternoonHeading') }}
       </label>
     </div>
     <MrtPriceTable
@@ -119,10 +107,6 @@ const priceCfg = computed(() => adminPricePreviewCfg(cfg));
   display: inline-flex;
   align-items: center;
   gap: 8px;
-}
-
-.mrt-admin-prices-preview__afternoon {
-  align-self: center;
 }
 
 @media (max-width: 782px) {

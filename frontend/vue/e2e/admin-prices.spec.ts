@@ -17,6 +17,8 @@ test.describe('Admin prices page (static mount)', () => {
     await expect(page.getByRole('heading', { name: /^priser$/i })).toBeVisible();
 
     await expect(page.locator('.mrt-admin-prices-preview')).toBeVisible();
+    await expect(page.locator('.mrt-admin-prices-afternoon')).toBeVisible();
+    await expect(page.locator('.mrt-admin-prices-afternoon input[type="time"]')).toBeVisible();
     const priceInput = page.locator('.mrt-price-matrix-table input[type="number"]').first();
     await expect(priceInput).toBeVisible();
     await priceInput.fill('999');

@@ -17,7 +17,6 @@ import { useAdminFormDirty } from '../composables/useAdminFormDirty';
 import { useAdminUnsavedGuard } from '../composables/useAdminUnsavedGuard';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
-import { minutesToTimeInput, timeInputToMinutes } from '../utils/settingsTime';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -54,11 +53,6 @@ watch(
   },
   { immediate: true },
 );
-
-function onAfternoonTimeInput(event: Event) {
-  const target = event.target as HTMLInputElement;
-  form.value.afternoon_return_threshold_minutes = timeInputToMinutes(target.value);
-}
 
 async function submit() {
   error.value = '';
@@ -139,13 +133,8 @@ async function submit() {
               <tr>
                 <th scope="row">{{ adminStr(cfg, 'settingsAfternoonThreshold') }}</th>
                 <td>
-                  <input
-                    :value="minutesToTimeInput(form.afternoon_return_threshold_minutes)"
-                    type="time"
-                    @input="onAfternoonTimeInput"
-                  />
                   <p class="description">
-                    {{ adminStr(cfg, 'settingsAfternoonThresholdHint') }}
+                    {{ adminStr(cfg, 'settingsAfternoonMovedHint') }}
                     <RouterLink to="/prices">{{ adminStr(cfg, 'settingsPricesLink') }}</RouterLink>
                   </p>
                 </td>

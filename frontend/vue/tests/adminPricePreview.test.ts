@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import type { PricesPayload } from '../src/admin/api/adminRest';
 import {
+  adminAfternoonVisitorNote,
   buildAdminPricePreviewTrip,
   effectivePricingZones,
   hasMatrixZonesBeyondCap,
@@ -80,5 +81,14 @@ describe('adminPricePreview', () => {
     const trip = buildAdminPricePreviewTrip(payload, 'return', 2, true);
     expect(trip.isAfternoonReturn).toBe(true);
     expect(trip.matrix.return?.adult).toBe(160);
+  });
+
+  it('formats visitor note with threshold time', () => {
+    const note = adminAfternoonVisitorNote(
+      { strings: { pricesAfternoonPublicNote: 'Gäller från kl %1$s.' } } as never,
+      900,
+    );
+    expect(note).toBe('Gäller från kl 15:00.');
+    expect(adminAfternoonVisitorNote({ strings: {} } as never, 0)).toBe('');
   });
 });

@@ -38,9 +38,9 @@ function MRT_admin_vue_l10n_settings(): array {
 			'Antal byten i en resa (2 = upp till tre tåg/ben). Resesökningsmotorn avvisar fler.',
 			'museum-railway-timetable'
 		),
-		'settingsAfternoonThreshold' => __( 'Eftermiddagsgräns (retur)', 'museum-railway-timetable' ),
-		'settingsAfternoonThresholdHint' => __(
-			'Tur och retur där båda benen avgår vid eller efter denna tid får eftermiddags-returpris (se Priser).',
+		'settingsAfternoonThreshold' => __( 'Eftermiddags-retur', 'museum-railway-timetable' ),
+		'settingsAfternoonMovedHint' => __(
+			'Gräns och priser konfigureras under Priser → Eftermiddags-retur.',
 			'museum-railway-timetable'
 		),
 		'settingsImportHint'      => __(

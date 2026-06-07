@@ -56,21 +56,37 @@ function MRT_admin_vue_l10n_prices(): array {
 			'museum-railway-timetable'
 		),
 		'pricesAfternoonHeading'   => __( 'Eftermiddags-retur', 'museum-railway-timetable' ),
-		'pricesAfternoonHint'      => __(
-			'Fast pris per kategori när tur och retur avgår vid eller efter eftermiddagsgränsen (Inställningar). Ersätter zonmatrisen för returbiljett.',
+		'pricesAfternoonRule'      => __(
+			'Returbiljett där tur och retur avgår vid eller efter gränsen får fast pris per kategori (ersätter zonmatrisen).',
 			'museum-railway-timetable'
 		),
+		'pricesAfternoonThreshold' => __( 'Avgångsgräns (tur och retur)', 'museum-railway-timetable' ),
+		'pricesAfternoonThresholdActive' => __(
+			'Aktiv när båda benen avgår vid eller efter kl %1$s.',
+			'museum-railway-timetable'
+		),
+		'pricesAfternoonDisabledHint' => __(
+			'Gräns 00:00 inaktiverar eftermiddags-retur (ingen särskild taxa).',
+			'museum-railway-timetable'
+		),
+		'pricesAfternoonPublicNote' => __(
+			'Eftermiddagsbiljett gäller tur och retur med avgång vid eller efter kl %1$s.',
+			'museum-railway-timetable'
+		),
+		'pricesAfternoonCompareTitle' => __( 'Jämförelse returpris', 'museum-railway-timetable' ),
+		'pricesAfternoonCompareHint' => __(
+			'Visar normal retur enligt zonmatris jämfört med eftermiddags-retur.',
+			'museum-railway-timetable'
+		),
+		'pricesAfternoonCompareNormal' => __( 'Normal retur (zonmatris)', 'museum-railway-timetable' ),
+		'pricesAfternoonCompareAfternoon' => __( 'Eftermiddags-retur', 'museum-railway-timetable' ),
+		'pricesAfternoonCompareCol' => __( 'Retur', 'museum-railway-timetable' ),
 		'pricesAfternoonAmountCol' => __( 'Pris (SEK)', 'museum-railway-timetable' ),
 		'pricesEmptyMatrix'      => __(
 			'Prismatrisen är tom. Importera taxa via Import/export eller fyll i beloppen nedan.',
 			'museum-railway-timetable'
 		),
 		'pricesUnsaved'          => __( 'Du har osparade prisändringar.', 'museum-railway-timetable' ),
-		'pricesAfternoonStatus'  => __(
-			'Eftermiddagsgräns: %1$s (Inställningar). Returpris gäller när båda benen avgår vid eller efter denna tid.',
-			'museum-railway-timetable'
-		),
-		'pricesSettingsLink'     => __( 'Ändra gräns i Inställningar', 'museum-railway-timetable' ),
 		'pricesPreviewTitle'     => __( 'Förhandsvisning (besökare)', 'museum-railway-timetable' ),
 		'pricesPreviewHint'      => __(
 			'Visar hur priserna presenteras i reseplaneraren för vald zon och biljettyp.',

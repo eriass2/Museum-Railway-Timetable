@@ -129,7 +129,11 @@ function MRT_journey_wizard_l10n_price(): array {
 		'afternoonReturnPrices' => MRT_get_afternoon_return_prices(),
 		'priceDayTitle'        => __( 'Heldagsbiljett', 'museum-railway-timetable' ),
 		'priceAfternoonReturnLabel' => __( 'Eftermiddagsbiljett (tur och retur)', 'museum-railway-timetable' ),
-		'priceAfternoonNote'   => __( 'Eftermiddagsbiljett gäller tur och retur med avgång efter kl 15 (ej evenemangsdagar).', 'museum-railway-timetable' ),
+		'priceAfternoonNote'   => sprintf(
+			/* translators: %s: time HH:MM when afternoon return applies */
+			__( 'Eftermiddagsbiljett gäller tur och retur med avgång vid eller efter kl %s.', 'museum-railway-timetable' ),
+			MRT_format_minutes_as_clock( MRT_afternoon_return_threshold_minutes() )
+		),
 		'priceZoneLabel'       => __( '%d zoner', 'museum-railway-timetable' ),
 		'priceTickets'         => MRT_price_ticket_type_labels(),
 		'priceCategories'      => MRT_price_category_labels(),
