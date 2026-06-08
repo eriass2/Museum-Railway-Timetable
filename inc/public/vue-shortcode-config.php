@@ -204,3 +204,26 @@ function MRT_vue_index_config( array $context ): array {
 		),
 	);
 }
+
+/**
+ * @param array<string, mixed> $context From MRT_traffic_notices_build_context().
+ * @return array<string, mixed>
+ */
+function MRT_vue_traffic_notices_config( array $context ): array {
+	$payload = isset( $context['payload'] ) && is_array( $context['payload'] ) ? $context['payload'] : array();
+	$atts    = isset( $context['atts'] ) && is_array( $context['atts'] ) ? $context['atts'] : array();
+
+	return array(
+		'referenceDate'  => (string) ( $payload['reference_date'] ?? '' ),
+		'days'           => (int) ( $payload['days'] ?? 1 ),
+		'showGeneral'    => ( $atts['show_general'] ?? '1' ) === '1' || ( $atts['show_general'] ?? '' ) === 'true',
+		'showDeviations' => ( $atts['show_deviations'] ?? '1' ) === '1' || ( $atts['show_deviations'] ?? '' ) === 'true',
+		'title'          => trim( (string) ( $atts['title'] ?? '' ) ),
+		'labels'         => array(
+			'empty'           => __( 'Inga meddelanden', 'museum-railway-timetable' ),
+			'loading'         => __( 'Laddar meddelanden…', 'museum-railway-timetable' ),
+			'error'           => __( 'Kunde inte ladda meddelanden.', 'museum-railway-timetable' ),
+			'deviationPrefix' => __( '%1$s — Tåg %2$s, %3$s', 'museum-railway-timetable' ),
+		),
+	);
+}

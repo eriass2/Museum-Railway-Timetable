@@ -46,6 +46,8 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `POST /import/csv`, `GET /export/csv` | Import/export |
 | `POST /journey/search` | Resesökning (publikt); connections inkl. `notice`, `is_cancelled` |
 | `GET /prices/trip` | Priser för vald resa (publikt, wizard) |
+| `GET /traffic-notices` | Trafikmeddelanden (publikt): generella + tur-avvikelser |
+| `GET|PUT /traffic-notices/messages` | Generella trafikmeddelanden (admin) |
 | `GET /journey/calendar` | Trafikdagar (publikt) |
 | `GET /journey/connection-detail` | Detalj (publikt); valfri `date` i body; svar med `notice`, `is_cancelled` |
 

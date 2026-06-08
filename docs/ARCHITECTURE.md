@@ -33,6 +33,7 @@ Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootst
 
 - **Enhetstester (PHPUnit):** Ren PHP i `tests/Unit/` mot `inc/domain/`; se `phpunit.xml.dist` och `composer test`.
 - **Ny affärsregel:** Lägg test i samma leverans när logiken är ren nog.
+- **Plan för kommande tester:** [TEST_IMPLEMENTATION_PLAN.md](TEST_IMPLEMENTATION_PLAN.md).
 - **CI:** `.github/workflows/ci.yml` kör `composer check`, `composer vue:check`, static Playwright E2E, och `e2e-wp` (publikt + Vue-admin mot Docker).
 - **Refaktor:** Validering som inte behöver `$_POST` ska vara namngivna `MRT_*`-funktioner (t.ex. `MRT_journey_validate_station_pair_ids` i `request-params.php`).
 

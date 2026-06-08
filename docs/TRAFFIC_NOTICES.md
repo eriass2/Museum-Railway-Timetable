@@ -11,11 +11,11 @@ Shortcode på **startsidan** som visar generella trafikmeddelanden och tur-avvik
 | Fas | Beskrivning | Status |
 |-----|-------------|--------|
 | 0 | Plan och produktbeslut (detta dokument) | Klar |
-| 1 | Domän: `public-notices.php`, `aggregate.php`, PHPUnit | Ej påbörjad |
-| 2 | REST: public + admin routes, loader, PHPUnit | Ej påbörjad |
-| 3 | Admin: `TrafficNoticesPage.vue`, route, top-level-meny | Ej påbörjad |
-| 4 | Shortcode + Vue + CSS + tester | Ej påbörjad |
-| 5 | Docs: SHORTCODES, REST_API, ADMIN_WORKFLOW, admin help | Ej påbörjad |
+| 1 | Domän: `public-notices.php`, `aggregate.php`, PHPUnit | Klar |
+| 2 | REST: public + admin routes, loader, PHPUnit | Klar |
+| 3 | Admin: `TrafficNoticesPage.vue`, route, top-level-meny | Klar |
+| 4 | Shortcode + Vue + CSS + tester | Klar |
+| 5 | Docs: SHORTCODES, REST_API, ADMIN_WORKFLOW, admin help | Klar |
 
 ---
 

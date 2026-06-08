@@ -14,6 +14,7 @@ const appLoaders: Record<MrtVueApp, AppLoader> = {
   overview: () => import('./apps/TimetableOverviewApp.vue').then((m) => m.default),
   wizard: () => import('./apps/JourneyWizardApp.vue').then((m) => m.default),
   index: () => import('./apps/TimetableIndexApp.vue').then((m) => m.default),
+  traffic_notices: () => import('./apps/TrafficNoticesApp.vue').then((m) => m.default),
 };
 
 async function mountRoot(el: HTMLElement): Promise<void> {

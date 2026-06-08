@@ -26,6 +26,8 @@ require_once MRT_PATH . 'inc/infrastructure/rest/train-types.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/import-export.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/dev-tools.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/operations.php';
+require_once MRT_PATH . 'inc/infrastructure/rest/traffic-notices-public.php';
+require_once MRT_PATH . 'inc/infrastructure/rest/traffic-notices-admin.php';
 require_once MRT_PATH . 'inc/infrastructure/rest/rest-log.php';
 
 /**
@@ -45,6 +47,8 @@ function MRT_register_rest_routes(): void {
 	MRT_rest_register_import_export_routes();
 	MRT_rest_register_dev_tools_routes();
 	MRT_rest_register_operations_routes();
+	MRT_rest_register_traffic_notices_public_routes();
+	MRT_rest_register_traffic_notices_admin_routes();
 }
 
 add_action( 'rest_api_init', 'MRT_register_rest_routes' );

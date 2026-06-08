@@ -205,7 +205,7 @@ function MRT_empty_frontend_shortcode_flags(): array {
  */
 function MRT_frontend_shortcode_flags_from_content( string $content ): array {
 	$flags      = MRT_empty_frontend_shortcode_flags();
-	$shortcodes = array( 'museum_timetable_month', 'museum_timetable_overview', 'museum_journey_wizard', 'museum_timetable_index' );
+	$shortcodes = array( 'museum_timetable_month', 'museum_timetable_overview', 'museum_journey_wizard', 'museum_timetable_index', 'museum_traffic_notices' );
 	foreach ( $shortcodes as $shortcode ) {
 		if ( ! has_shortcode( $content, $shortcode ) ) {
 			continue;
@@ -251,6 +251,10 @@ function MRT_frontend_script_localization(): array {
 		'ovColConnectingTrain'  => __( 'Anslutande tåg', 'museum-railway-timetable' ),
 		'ovTrainConnecting'     => __( 'Tåg %1$s %2$s', 'museum-railway-timetable' ),
 		'ovCardTrip'            => __( 'Tur %s', 'museum-railway-timetable' ),
+		'tnEmpty'               => __( 'Inga meddelanden', 'museum-railway-timetable' ),
+		'tnLoading'             => __( 'Laddar meddelanden…', 'museum-railway-timetable' ),
+		'tnError'               => __( 'Kunde inte ladda meddelanden.', 'museum-railway-timetable' ),
+		'tnDeviationLine'       => __( '%1$s — Tåg %2$s, %3$s', 'museum-railway-timetable' ),
 	);
 }
 

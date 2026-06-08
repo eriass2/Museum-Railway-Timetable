@@ -13,6 +13,7 @@ const tabs = computed(() => {
     { to: '/dashboard', label: adminStr(cfg, 'navOverview', 'Översikt') },
     { to: '/stations-routes', label: adminStr(cfg, 'navStationsRoutes', 'Stationer & rutter') },
     { to: '/timetables', label: adminStr(cfg, 'navTimetables', 'Tidtabeller') },
+    { to: '/traffic-notices', label: adminStr(cfg, 'navTrafficNotices', 'Trafikmeddelanden') },
     { to: '/shortcodes', label: adminStr(cfg, 'navShortcodes', 'Shortcodes') },
     { to: '/help', label: adminStr(cfg, 'navHelp', 'Hjälp') },
   ];
@@ -33,6 +34,9 @@ const tabs = computed(() => {
 function isActive(path: string): boolean {
   if (path === '/timetables') {
     return route.path.startsWith('/timetables');
+  }
+  if (path === '/traffic-notices') {
+    return route.path.startsWith('/traffic-notices');
   }
   return route.path === path || route.path.startsWith(`${path}/`);
 }

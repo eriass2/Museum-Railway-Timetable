@@ -1,8 +1,36 @@
 # Översikt över Shortcodes och Komponenter
 
-## Shortcodes (3 st)
+## Shortcodes (4 st)
 
-### 1. `[museum_timetable_month]` - Månadsvy
+### 1. `[museum_traffic_notices]` - Trafikmeddelanden
+
+Visar generella trafikmeddelanden och tur-avvikelser för idag (valfritt imorgon). Tom vy: «Inga meddelanden». Kräver JavaScript.
+
+**Användning:**
+```
+[museum_traffic_notices]
+```
+
+**Parametrar:**
+- `days` – `1` = idag (standard), `2` = idag + imorgon
+- `date` – Referensdatum `YYYY-MM-DD` (test; standard: WP-tid idag)
+- `show_general` – Visa generella meddelanden (`0` eller `1`, standard: `1`)
+- `show_deviations` – Visa tur-avvikelser (`0` eller `1`, standard: `1`)
+- `title` – Valfri rubrik ovanför listan
+
+**Exempel (startsida):**
+```
+[museum_traffic_notices]
+[museum_timetable_month ...]
+```
+
+Generella meddelanden redigeras i admin under **Trafikmeddelanden** (`#/traffic-notices`). Tur-avvikelser redigeras som tidigare under **Tidtabell → Avvikelser**.
+
+**Backend (REST):** `GET /museum-railway-timetable/v1/traffic-notices` (se [REST_API.md](REST_API.md)).
+
+---
+
+### 2. `[museum_timetable_month]` - Månadsvy
 Visar en kalendermånadsvy som visar vilka dagar som har turer.
 
 **Användning:**
@@ -33,7 +61,7 @@ Använd train type-slug från **Railway Timetable → Train Types** (demo-import
 
 ---
 
-### 2. `[museum_timetable_overview]` - Komplett Tidtabell
+### 3. `[museum_timetable_overview]` - Komplett Tidtabell
 Visar en komplett tidtabell-översikt grupperad per route och riktning.
 
 **Användning:**
@@ -64,7 +92,7 @@ Visar en komplett tidtabell-översikt grupperad per route och riktning.
 
 ---
 
-### 3. `[museum_journey_wizard]` - Reseplanerare (flersteg)
+### 4. `[museum_journey_wizard]` - Reseplanerare (flersteg)
 Mockup-liknande flöde: rutt → datum (kalender med trafiklägen) → utresa → ev. retur → sammanfattning med prismatris. Direktresor och byte. Tågtypsikoner i resultat. Kräver JavaScript.
 
 **Användning:**
@@ -107,7 +135,7 @@ Delad journey-domän och REST (används av wizarden):
 
 ## Frontend Assets
 
-Plugin laddar **en** Vite ES-modul (`assets/dist/vue/assets/main-*.js`) med CSS (importerad från `assets/*.css`). Varje Vue-app (`month`, `overview`, `wizard`, `index`) laddas som async chunk när shortcoden mountas på sidan.
+Plugin laddar **en** Vite ES-modul (`assets/dist/vue/assets/main-*.js`) med CSS (importerad från `assets/*.css`). Varje Vue-app (`month`, `overview`, `wizard`, `index`, `traffic_notices`) laddas som async chunk när shortcoden mountas på sidan.
 
 - **Enqueue:** `inc/assets/vue-frontend.php`, `inc/assets/frontend.php`
 - **Tågtypsikoner:** bundlade via `frontend/vue/src/styles/mrt-public.css`

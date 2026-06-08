@@ -27,6 +27,22 @@ För en fungerande tidtabell behöver du:
 5. **Turer** – tåg kopplade till tidtabell och rutt
 6. **Stopptider** – tider och hållplatser per tur
 7. **Priser** (admin) – biljettpriser och eftermiddags-retur
+8. **Trafikmeddelanden** (valfritt) – generella meddelanden på startsidan
+
+---
+
+## Trafikmeddelanden (generella)
+
+**Meny:** Railway Timetable → **Trafikmeddelanden** (`#/traffic-notices`)
+
+1. Klicka **Nytt meddelande**
+2. Skriv text (max 500 tecken), valfria datum **Gäller från/till**, kryssa i **Aktiv**
+3. **Spara** — meddelandet visas publikt via shortcode `[museum_traffic_notices]` när det är aktivt för dagens datum
+4. Använd **Upp/Ner** i listan för ordning; **Redigera** / **Ta bort** per rad
+
+Tur-avvikelser (inställd tur, ersättningsbuss m.m.) redigeras fortfarande under **Tidtabeller → [tidtabell] → Avvikelser**. De visas automatiskt i samma shortcode.
+
+Se [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) för datamodell och REST.
 
 ---
 

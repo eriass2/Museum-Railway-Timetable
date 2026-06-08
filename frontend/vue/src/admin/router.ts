@@ -10,6 +10,7 @@ import ImportExportPage from './pages/ImportExportPage.vue';
 import DevToolsPage from './pages/DevToolsPage.vue';
 import HelpPage from './pages/HelpPage.vue';
 import ShortcodesPage from './pages/ShortcodesPage.vue';
+import TrafficNoticesPage from './pages/TrafficNoticesPage.vue';
 import { adminConfig } from './types';
 
 export function createAdminRouter(initialRoute: string) {
@@ -18,6 +19,11 @@ export function createAdminRouter(initialRoute: string) {
     { path: '/', redirect: '/dashboard' },
     { path: '/dashboard', component: DashboardPage, name: 'dashboard' },
     { path: '/timetables', component: TimetableListPage, name: 'timetables' },
+    {
+      path: '/traffic-notices',
+      component: TrafficNoticesPage,
+      name: 'traffic-notices',
+    },
     {
       path: '/timetables/:id',
       component: TimetableEditorPage,
@@ -48,6 +54,7 @@ export function createAdminRouter(initialRoute: string) {
   const map: Record<string, string> = {
     dashboard: '/dashboard',
     timetables: '/timetables',
+    'traffic-notices': '/traffic-notices',
     'stations-routes': '/stations-routes',
     settings: '/settings',
     prices: '/prices',

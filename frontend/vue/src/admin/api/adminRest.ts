@@ -44,3 +44,8 @@ export {
   devSetupNavigation,
   devSyncTimetablePages,
 } from './adminRestDev';
+export {
+  listTrafficNoticeMessages,
+  saveTrafficNoticeMessages,
+} from './adminRestTrafficNotices';
+export type { PublicNoticeMessage } from './adminRestTrafficNotices';

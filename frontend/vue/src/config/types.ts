@@ -10,7 +10,7 @@ export type MrtRestConfig = {
   tripPdfUrl?: string;
 };
 
-export type MrtVueApp = 'month' | 'overview' | 'wizard' | 'index';
+export type MrtVueApp = 'month' | 'overview' | 'wizard' | 'index' | 'traffic_notices';
 
 export type MonthDayMeta = {
   running?: boolean;
@@ -90,7 +90,24 @@ export type IndexVueConfig = MrtRestConfig & {
   emptyMessage?: string;
 };
 
-export type MrtVueConfig = MonthVueConfig | OverviewVueConfig | WizardVueConfig | IndexVueConfig;
+import type { TrafficNoticesLabels } from '../types/trafficNotices';
+
+export type TrafficNoticesVueConfig = MrtRestConfig & {
+  app: 'traffic_notices';
+  referenceDate?: string;
+  days?: number;
+  showGeneral?: boolean;
+  showDeviations?: boolean;
+  title?: string;
+  labels?: TrafficNoticesLabels;
+};
+
+export type MrtVueConfig =
+  | MonthVueConfig
+  | OverviewVueConfig
+  | WizardVueConfig
+  | IndexVueConfig
+  | TrafficNoticesVueConfig;
 
 export function isMonthConfig(c: MrtVueConfig): c is MonthVueConfig {
   return c.app === 'month';
@@ -106,4 +123,8 @@ export function isWizardConfig(c: MrtVueConfig): c is WizardVueConfig {
 
 export function isIndexConfig(c: MrtVueConfig): c is IndexVueConfig {
   return c.app === 'index';
+}
+
+export function isTrafficNoticesConfig(c: MrtVueConfig): c is TrafficNoticesVueConfig {
+  return c.app === 'traffic_notices';
 }

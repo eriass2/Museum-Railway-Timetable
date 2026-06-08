@@ -101,7 +101,7 @@ function MRT_vue_trip_pdf_script_url(): ?string {
  * @return string HTML
  */
 function MRT_render_vue_mount( string $app, array $config ): string {
-	$allowed = array( 'month', 'overview', 'wizard', 'index' );
+	$allowed = array( 'month', 'overview', 'wizard', 'index', 'traffic_notices' );
 	if ( ! in_array( $app, $allowed, true ) ) {
 		return '';
 	}
@@ -134,7 +134,7 @@ function MRT_render_vue_mount( string $app, array $config ): string {
 		'<div class="mrt-vue-root mrt-vue-root--%1$s%3$s" data-mrt-vue-app="%1$s"><script type="application/json" class="mrt-vue-config">%2$s</script></div>',
 		esc_attr( $app ),
 		$json,
-		'overview' === $app || 'month' === $app || 'index' === $app ? ' alignwide' : ''
+		'overview' === $app || 'month' === $app || 'index' === $app || 'traffic_notices' === $app ? ' alignwide' : ''
 	);
 }
 
@@ -178,14 +178,14 @@ function MRT_enqueue_vue_frontend_assets(): void {
 
 	// ES module entry must not get ?ver= — lazy chunks import ./main-*.js without query args;
 	// a mismatched URL would load Vue twice and break mount (runtime null refs).
-  wp_enqueue_script(
-    'mrt-vue-public',
-    $base_url . $js_file,
-    array(),
-    null,
-    true
-  );
-  wp_script_add_data( 'mrt-vue-public', 'type', 'module' );
+	wp_enqueue_script(
+		'mrt-vue-public',
+		$base_url . $js_file,
+		array(),
+		null,
+		true
+	);
+	wp_script_add_data( 'mrt-vue-public', 'type', 'module' );
 }
 
 /**

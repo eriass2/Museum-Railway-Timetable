@@ -48,6 +48,7 @@ function MRT_admin_vue_script_localization(): array {
 		MRT_admin_vue_l10n_train_types(),
 		MRT_admin_vue_l10n_import_export(),
 		MRT_admin_vue_l10n_traffic(),
+		MRT_admin_vue_l10n_traffic_notices(),
 		MRT_admin_vue_l10n_editor(),
 		MRT_admin_vue_l10n_mobile(),
 		MRT_admin_vue_l10n_stop_times(),

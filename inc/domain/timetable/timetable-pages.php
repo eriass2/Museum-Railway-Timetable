@@ -120,7 +120,8 @@ function MRT_timetable_public_page_url( int $timetable_id ): string {
 function MRT_timetables_index_page_content(): string {
 	$heading = __( 'Alla tidtabeller', 'museum-railway-timetable' );
 
-	return "[museum_timetable_month legend=\"1\" show_counts=\"0\" nav=\"1\"]\n\n"
+	return "[museum_traffic_notices]\n\n"
+		. "[museum_timetable_month legend=\"1\" show_counts=\"0\" nav=\"1\"]\n\n"
 		. '<h2 class="mrt-timetable-index-secondary__title">' . esc_html( $heading ) . "</h2>\n"
 		. '[museum_timetable_index intro="0"]';
 }
