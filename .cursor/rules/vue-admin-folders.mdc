@@ -1,0 +1,60 @@
+---
+description: Vue admin folder structure — feature subfolders under layer dirs
+globs: frontend/vue/src/admin/**/*
+alwaysApply: false
+---
+
+# Vue admin – mappstruktur
+
+Admin (`frontend/vue/src/admin/`) använder **lager först**, med **funktionsmappar** när en sida växer.
+
+## Topplager (oförändrat)
+
+| Mapp | Innehåll |
+|------|----------|
+| `pages/` | Route-sidor, tunn glue |
+| `components/` | Vue-komponenter |
+| `composables/` | `use*Page`, guards, delad sidlogik |
+| `utils/` | Rena helpers (ingen Vue) |
+| `api/` | REST-klienter |
+
+## Funktionsmappar
+
+Skapa `kebab-case/`-undermapp när en admin-sida har **2+ egna filer i samma lager**:
+
+```
+components/traffic-notices/TrafficNoticesForm.vue
+components/timetable-editor/TimetableEditorTripsTab.vue
+composables/traffic-notices/useTrafficNoticesPage.ts
+utils/traffic-notices/trafficNoticesAdmin.ts
+```
+
+**Regler:**
+- Mappnamn = funktion/sida (`traffic-notices`, `import-export`, `timetable-editor`)
+- Inuti funktionsmappen: **inget `Admin`-prefix** — mappen ger kontext
+- Delade byggblock stannar i `components/ui/` (aldrig feature-mapp)
+- Sid-specifik logik i `composables/useXxxPage.ts` → flytta till `composables/<feature>/`
+- Sid-specifika helpers i `utils/` → flytta till `utils/<feature>/`
+- `pages/` och `api/` förblir platta (en fil per route/resurs)
+
+## När INTE skapa mapp
+
+- En ensam komponent/helper (`AdminLoadState.vue`, `adminConfirm.ts`)
+- Generella verktyg som används överallt (`adminLabels.ts`, `downloadBase64File.ts`)
+
+## Vid ny kod eller refaktorering
+
+1. Kolla om funktionen redan har en undermapp — lägg nya filer där
+2. Har sidan 2+ filer i samma lager? Gruppera dem
+3. Uppdatera alla imports och kör `.\scripts\vue-check.ps1`
+
+## Referens (trafikmeddelanden)
+
+```
+pages/TrafficNoticesPage.vue
+components/traffic-notices/TrafficNoticesForm.vue
+components/traffic-notices/TrafficNoticesList.vue
+composables/traffic-notices/useTrafficNoticesPage.ts
+utils/traffic-notices/trafficNoticesAdmin.ts
+api/adminRestTrafficNotices.ts
+```
