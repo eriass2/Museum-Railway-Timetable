@@ -122,4 +122,4 @@ WordPress i Docker är på **svenska** (`sv_SE`). Vid `docker compose up` instal
 3. Front-menyn ska visa **Component demo** och **Wizard smoke test** (inga Debug:-länkar)  
 4. **Component demo** – scrolla igenom alla tre block  
 
-Se [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md).
+Se [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [ACCESSIBILITY.md](ACCESSIBILITY.md).

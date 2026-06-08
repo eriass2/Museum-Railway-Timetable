@@ -2,6 +2,8 @@
 
 Builds to `assets/dist/vue/` as an **ES module** entry with **lazy chunks per app** (WordPress enqueues `type="module"`).
 
+WordPress-integration, enqueue och REST: **[docs/VUE_FRONTEND.md](../../docs/VUE_FRONTEND.md)**.
+
 ## Apps (`src/apps/`)
 
 | Mount `data-mrt-vue-app` | Component |

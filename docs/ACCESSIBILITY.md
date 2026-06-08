@@ -2,19 +2,70 @@
 
 Mål där det är tekniskt rimligt utan att duplicera temats ansvar. **Manuell rökning** vid release eller större tema-/CSS-ändringar.
 
-**Relaterat:** [SHORTCODES.md](SHORTCODES.md), [ARCHITECTURE.md](ARCHITECTURE.md), [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) (manuell logg).
+**Relaterat:** [SHORTCODES.md](SHORTCODES.md), [ARCHITECTURE.md](ARCHITECTURE.md), [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md).
 
 ---
 
-## Release-rökning (ca 15–30 min)
+## Snabb automatisk kontroll (kod)
 
-- [ ] **`[museum_journey_wizard]`** – Tabba igenom steg; kalender och fel; zoom 200 %; tågtypsikoner i resultat.
-- [ ] **`[museum_timetable_month]`** – Månadsnav; trafikdag med `aria-pressed`; panel under kalendern.
-- [ ] **`[museum_timetable_overview]`** – Region per rutt; `h3` + beskrivande namn på tidsceller i rutnät.
-- [ ] **`[museum_timetable_index]`** – Listan renderas (Vue); kort/länkar tabbbara; färgmarkör synlig.
-- [ ] **Admin** – Synlig `:focus-visible` på `MrtButton` / WP `.button` (t.ex. dashboard snabbstart).
-- [ ] **Miljö** – Samma tema/plugins som produktion; kort NVDA/VoiceOver-session.
-- [ ] **Översättningar** – Uppdatera `languages/*.po`, kompilera `.mo` (Poedit eller `msgfmt`).
+Kör före manuell rökning:
+
+```powershell
+php scripts/validate.php
+```
+
+Valideringen inkluderar statiska a11y-markörer i publika moduler (region, aria-live, wizard steg).
+
+**Miljö:** http://localhost:8080 — **Component demo** (månad, översikt, wizard) eller **Wizard smoke test**. Login: `admin` / `admin`.
+
+---
+
+## Manuell checklista (ca 15–30 min)
+
+### Wizard `[museum_journey_wizard]`
+
+- [ ] Tab genom steg 1→4; synlig fokus på knappar/länkar/select
+- [ ] Steglista: aktivt steg hörs/ser (`aria-current="step"`)
+- [ ] Kalender: dagknappar med begripligt `aria-label`; `aria-pressed` byts vid val
+- [ ] Felmeddelande läses upp (`role="alert"`)
+- [ ] Resultatkort / tabell: `caption` + `scope="col"` där tabell används
+- [ ] Tågtypsikoner stämmer (ång, diesel, rälsbuss, buss) per ben
+- [ ] Zoom 200 % – inget horisontellt klipp i hero/panel (embedded-läge på demo)
+
+### Månad `[museum_timetable_month]`
+
+- [ ] Månadsnav: länkar föregående/nästa med tydlig text
+- [ ] Trafikdag: `aria-pressed` på aktiv dag
+- [ ] Panel under kalender uppdateras utan att förlora kontext
+
+### Översikt `[museum_timetable_overview]`
+
+- [ ] Varje rutt: region + rubrik (`h3`)
+- [ ] Tidsceller har beskrivande `aria-label` (station + tåg + tid)
+- [ ] Tågtypsikoner syns i rutnätet
+
+### Tidtabellsindex `[museum_timetable_index]`
+
+- [ ] Minst ett kort synligt; länk/tab fungerar
+- [ ] Introtext och färgmarkör (grön/gul/röd/orange) syns
+
+### Admin
+
+- [ ] Railway Timetable → dashboard: `MrtButton` / WP `.button` har synlig `:focus-visible`
+- [ ] Import / demo / clear: formulär kan tabbas; fel/notice läsbara
+
+### Miljö
+
+- [ ] Samma tema/plugins som produktion; kort NVDA eller VoiceOver på wizard + en shortcode till
+- [ ] `.po` uppdaterade om nya strängar lagts till (Poedit eller `msgfmt`)
+
+---
+
+## Release-logg
+
+| Datum | Testare | Resultat | Anteckning |
+|-------|---------|----------|------------|
+| | | | |
 
 ---
 

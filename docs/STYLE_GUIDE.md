@@ -76,7 +76,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Struktur
 - **Varumärke och UI** – Se [design/BRAND_UI.md](design/BRAND_UI.md) (scope, formspråk, typografi, branding i texter).
 - **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
-- **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med scoped CSS; se [UI_LIBRARY.md](UI_LIBRARY.md) och [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md). Kvarvarande global modul-CSS: `assets/frontend/ui/` (wizard-steg, trips, kalender — barrel `ui-components.css`).
+- **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med scoped CSS; se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md). Kvarvarande global modul-CSS: `assets/frontend/ui/` (wizard-steg, trips, kalender — barrel `ui-components.css`).
 - **Legacy PHP** – `.mrt-alert` m.m. i `assets/frontend/components-base.css` (demo-verktyg, bygg-varningar).
 - **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
@@ -151,6 +151,9 @@ Admin (Vue, wp-admin):
 - **Text domain** – `museum-railway-timetable`
 - **Funktioner** – `__()`, `esc_html__()`, `esc_attr__()`, `_n()` etc.
 - **Kontext** – Använd `_x()` vid behov för kontextberoende strängar
+- **Vue publikt** – strängar från PHP (`strings`, `wizard`, `labels`) via `resolveMrtString()`; se [VUE_UTILS.md](VUE_UTILS.md)
+- **Vue admin** – `mrtAdminVue.strings` och `adminStr()`
+- **Underhåll** – efter nya PHP-strängar: `powershell -File .\scripts\make-i18n.ps1` (WP-CLI + msgmerge). `inc/assets/frontend.php` använder literal `'museum-railway-timetable'` så WP-CLI hittar strängarna (`MRT_TEXT_DOMAIN` plockas inte upp av `make-pot`)
 
 ### Databas
 - **Tabellprefix** – `$wpdb->prefix . 'mrt_stoptimes'`

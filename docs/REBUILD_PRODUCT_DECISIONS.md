@@ -95,7 +95,7 @@ Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 ## 8. Öppna punkter (ej blockerande)
 
 - Wizard finpolish mot PNG i `docs/mockups/` när designfiler finns.
-- [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-genomgång före ”live”.
+- [ACCESSIBILITY.md](ACCESSIBILITY.md) – manuell WCAG-genomgång före ”live”.
 
 ---
 

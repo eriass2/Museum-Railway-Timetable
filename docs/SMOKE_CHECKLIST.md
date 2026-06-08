@@ -47,4 +47,4 @@ docker compose up -d --build
 
 - Manuell rökning: wizard hela flödet (steg 3–4, byte t.ex. Uppsala Östra → Fjällnora via Selknä).
 - Frontend-polish mot mockup; designreferens i `docs/mockups/DESIGN_TOKENS.md`.
-- [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-logg.
+- [ACCESSIBILITY.md](ACCESSIBILITY.md) – manuell WCAG-checklista och release-logg.

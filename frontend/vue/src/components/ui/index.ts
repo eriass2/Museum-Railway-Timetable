@@ -1,7 +1,7 @@
 /**
  * Shared UI primitives — public shortcodes + Vue admin.
  *
- * @see docs/UI_LIBRARY.md
+ * @see docs/VUE_UI_COMPONENTS.md
  */
 export { default as MrtAlert } from './MrtAlert.vue';
 export { default as MrtAsyncState } from './MrtAsyncState.vue';

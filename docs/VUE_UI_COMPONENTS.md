@@ -1,6 +1,6 @@
 # Vue UI components (`frontend/vue/src/components/ui/`)
 
-Shared primitives for wizard, month calendar, overview, timetable index, and Vue admin. Wizard-specific wrappers live in `frontend/vue/src/wizard/components/`. **Shared library plan:** [UI_LIBRARY.md](UI_LIBRARY.md). Styles for colocated primitives live in SFC `<style scoped>` (MrtAlert, MrtButton, MrtDot, MrtSurfaceCard). Remaining shared modules: `assets/frontend/ui/` barrel (wizard, calendar, trips). See [UI_LIBRARY.md](UI_LIBRARY.md).
+Delat komponentbibliotek för wizard, månadskalender, översikt, tidtabellsindex och Vue-admin. Wizard-specifika wrappers ligger i `frontend/vue/src/wizard/components/`. Colocated primitiver har scoped CSS i SFC (`MrtAlert`, `MrtButton`, `MrtDot`, `MrtSurfaceCard`). Kvarvarande global modul-CSS: `assets/frontend/ui/` (wizard-steg, trips, kalender — barrel `ui-components.css`).
 
 ## Shared primitives (admin + public)
 
@@ -69,6 +69,40 @@ Defined in `assets/mrt-color-tokens.css`; wizard overrides in `frontend/vue/src/
 **Overview (`.mrt-ov-*`):** `frontend/vue/src/styles/timetable-overview.css` — `--mrt-ov-green`, `--mrt-ov-highlight`, `--mrt-ov-transfer`, `--mrt-ov-stripe`. Legacy aliases in `assets/frontend/tokens.css`.
 
 See also [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
+
+## Lager
+
+```
+assets/mrt-color-tokens.css     ← designsystem
+frontend/vue/src/components/
+├── ui/                         ← delade primitiver
+├── overview/                   ← domän (delat)
+├── timetable-index/            ← domän (publikt)
+└── admin/components/ui/        ← admin-specifikt
+```
+
+**Medvetet kvar som global CSS:** `timetable-overview.css`, wizard-shell, `.mrt-empty` (månadskalender).
+
+## Regler för nya komponenter
+
+1. **Nya primitiver** → `frontend/vue/src/components/ui/` med scoped CSS.
+2. **Tokens** → `assets/mrt-color-tokens.css` (aldrig nya hex i komponenter).
+3. **App-specifikt** → `frontend/vue/src/styles/<app>/`.
+4. **Admin-skals** → `admin/styles/admin-shell.css`.
+5. **Import** → `@/components/ui` (publik + admin).
+
+```vue
+<MrtButton context="public" variant="primary">Sök resa</MrtButton>
+<MrtButton context="admin" variant="primary">Spara</MrtButton>
+```
+
+### Checklista per ny primitiv
+
+- [ ] `context`-prop om admin + publik
+- [ ] Scoped CSS i SFC (inte ny fil i `assets/frontend/ui/`)
+- [ ] Tokens — inga nya hex
+- [ ] Vitest om klass-logik är icke-trivial
+- [ ] Uppdatera denna fil
 
 ## Rebuild
 
