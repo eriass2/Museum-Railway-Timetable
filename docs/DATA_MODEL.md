@@ -13,7 +13,7 @@ This document describes all data objects in the Museum Railway Timetable plugin 
 | Services & connections | `inc/domain/service/services.php`, `connections.php` |
 | Routes & stations | `inc/domain/route/routes.php`, `inc/domain/station/stations.php` |
 | Timetable overview grid | `inc/domain/timetable/view/` |
-| Journey search & prices | `inc/domain/journey/` (engine: `search.php` loader + `search-*.php`; normalize: `journey-normalize.php` loader + `journey-normalize-*.php`), `inc/domain/pricing/prices.php` |
+| Journey search & prices | `inc/domain/journey/` (engine + normalize loaders), `inc/domain/pricing/` (`prices.php`, `price-schema.php`, `price-rules.php`, `station-zones.php`) |
 | Admin Vue l10n strings | `inc/assets/l10n/` (per-screen `admin-vue-l10n-*.php` + `loader.php`) |
 | Lennakatten import | `testdata/fixtures/lennakatten/`, `inc/import/csv/`, admin UI `inc/admin/tools/import-lennakatten.php` |
 
@@ -193,6 +193,7 @@ TrainType
 - `mrt_lat` (float) - Latitude coordinate (optional)
 - `mrt_lng` (float) - Longitude coordinate (optional)
 - `mrt_display_order` (int) - Display order for sorting (default: 0)
+- `mrt_station_price_zones` (int[]) - Price zones for fare lookup (1–4, max two per station; empty = none). CSV column `price_zones`. See [PRICE_ZONES.md](PRICE_ZONES.md).
 
 **Relationships:**
 - **Many-to-Many** with `Service` via `mrt_stoptimes` table
@@ -402,29 +403,40 @@ service_post_id | station_post_id | stop_sequence | arrival_time | departure_tim
 
 ### 4.1 Plugin Settings (`mrt_settings`)
 
-**Description:** Stores plugin configuration options.
+**Description:** Global plugin configuration (journey rules, operator branding, transfer limits).
 
-**Storage:** WordPress `wp_options` table
+**Storage:** WordPress `wp_options` table. Code: `inc/infrastructure/wordpress/plugin-settings.php`.
 
-**Structure:**
-```php
-[
-    'enabled' => bool,  // Whether plugin is enabled
-    'note' => string   // Optional note/notice text
-]
-```
+**Notable keys:** `enabled`, `note`, `operator_name`, `ticket_url`, `min_transfer_minutes`, `max_transfer_minutes`, `max_transfers`, `afternoon_return_threshold_minutes` (default 900 = 15:00).
 
-**Default Values:**
-```php
-[
-    'enabled' => true,
-    'note' => ''
-]
-```
+**Usage:** Merged with defaults via `MRT_get_plugin_settings()`. Admin REST: `GET|PATCH /settings`. CSV: `settings.csv`.
 
-**Usage:**
-- Controls whether timetable functionality is active
-- Stores optional note text for display
+### 4.2 Price Schema (`mrt_price_schema`)
+
+**Description:** Configurable price structure — ticket types, customer categories, zone column keys, `zone_cap`, afternoon-return flat fares.
+
+**Storage:** `wp_options`. Code: `inc/domain/pricing/price-schema.php`.
+
+**Structure (simplified):** `ticket_types[]`, `categories[]`, `zones[]`, `zone_cap`, `afternoon_return` (per category key).
+
+**Usage:** Admin **Priser → Prisstruktur** and **Eftermiddags-retur**. Wizard labels and matrix columns come from schema. CSV: `price_schema.csv`. See [PRICE_ZONES.md](PRICE_ZONES.md).
+
+### 4.3 Price Matrix (`mrt_price_matrix`)
+
+**Description:** Fare amounts keyed by ticket type → category → zone number.
+
+**Storage:** `wp_options`. Code: `inc/domain/pricing/prices.php`.
+
+**Usage:** Admin **Priser → Prismatris**; public wizard via `GET prices/trip` and mount config `priceMatrix`. CSV: `prices.csv`.
+
+### 4.4 Pricing flow (journey wizard)
+
+1. Each station has `mrt_station_price_zones` (or empty).
+2. Outbound served stops → `MRT_price_zone_for_journey()` in `price-rules.php` (lowest valid zone along the leg; round-trip uses outbound band only).
+3. Schema `zone_cap` caps the matrix column used.
+4. Matrix + schema → line items in wizard summary.
+
+Details and Lennakatten reference zones: [PRICE_ZONES.md](PRICE_ZONES.md). Import columns: [CSV_FORMAT.md](CSV_FORMAT.md).
 
 ---
 

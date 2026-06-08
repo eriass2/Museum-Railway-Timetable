@@ -69,7 +69,7 @@ Se [STYLE_GUIDE.md](STYLE_GUIDE.md) §2 (PHP) för prefix (`MRT_` / `mrt_`), `AB
 
 ## 5. JavaScript-regler
 
-- Vue/TypeScript-moduler i `frontend/vue/`; Vite bygger till IIFE i `assets/dist/vue/`.
+- Vue/TypeScript-moduler i `frontend/vue/`; Vite bygger ES modules med lazy chunks till `assets/dist/vue/` (WordPress enqueue `type="module"`). Se [VUE_FRONTEND.md](VUE_FRONTEND.md).
 - Dela återanvändbar logik i Vue-utils/composables eller domänfunktioner i PHP — inte duplicera regler i klienten.
 - Ingen `console.log` i produktion utom bakom `mrtLog()` / `isDevMode` (se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md)).
 - JS ska inte duplicera sök-/pris-/datumregler från PHP.

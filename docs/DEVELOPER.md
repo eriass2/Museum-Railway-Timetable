@@ -18,22 +18,15 @@ composer check
 
 ## Dokumentation
 
-Fullständigt index: **[README.md](README.md)**.
+Fullständigt index: **[README.md](README.md)** (produkt, design, data, Vue, test, åtgärdsplaner).
+
+Snabbstart vid ny kod:
 
 | Dokument | Innehåll |
 |----------|----------|
-| [REBUILD_RULES.md](REBUILD_RULES.md) | Arkitektur, design, kvalitet (primär vid ny kod) |
+| [REBUILD_RULES.md](REBUILD_RULES.md) | Arkitektur, design, kvalitet |
+| [STYLE_GUIDE.md](STYLE_GUIDE.md) | PHP/CSS/JS, säkerhet, i18n |
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, bootstrap, `inc/`-struktur |
-| [STYLE_GUIDE.md](STYLE_GUIDE.md) | PHP/CSS/JS, `.mrt-*`, säkerhet |
-| [DATA_MODEL.md](DATA_MODEL.md) | Post types, meta, tabeller |
-| [SHORTCODES.md](SHORTCODES.md) | Månad, översikt, wizard |
-| [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md) | MVP-beslut (wizard-only m.m.) |
-| [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md) | Dev-meny, component demo |
-| [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) | Manuell rökning |
-| [ACCESSIBILITY.md](ACCESSIBILITY.md) | WCAG per modul |
-| [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) | Skapa tidtabell i admin |
-| [OPERATOR_ONBOARDING.md](OPERATOR_ONBOARDING.md) | Ny förening: import, tema, shortcodes |
-| [PHP_INSTALL_WINDOWS.md](PHP_INSTALL_WINDOWS.md) | PHP/Composer på Windows |
 
 ---
 

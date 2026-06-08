@@ -29,6 +29,15 @@ Tågtypsikoner: `assets/icons/train-types/`.
 | [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | Trafikmeddelanden-shortcode + admin (generella meddelanden + avvikelser) |
 | [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md) | Reseplanerare – prestanda (fas 1–4) |
 
+## Feedback / QA
+
+Betafeedback och granskningsloggar — **inte** aktiva utvecklingsplaner.
+
+| Dokument | Innehåll |
+|----------|----------|
+| [feedback/2026-06-05-reseplanerare-beta.md](feedback/2026-06-05-reseplanerare-beta.md) | Reseplanerare beta (juni 2026) — öppna deploy-verifieringar |
+| [feedback/2026-06-01-granskning.md](feedback/2026-06-01-granskning.md) | Granskning juni 2026 — majoriteten åtgärdad |
+
 ## Daglig utveckling
 
 | Dokument | Innehåll |

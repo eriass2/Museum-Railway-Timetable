@@ -11,11 +11,11 @@ Upplevd långsamhet i wizard (juni 2026). Planen täcker identifierade flaskhals
 | Område | Rotorsak | Prioritet |
 |--------|----------|-----------|
 | Kalender-API | Upp till 31 resesökningar per månad (tur/retur värre) | Hög |
-| Klient-refetch | Steg förstörs (`v-if`) och data hämtas om vid tillbaka | Hög |
-| Bundle | En IIFE (~223 KiB) med alla fyra publika Vue-appar | Medium |
-| Rendering | Många trip-kort med dold detaljkomponent | Låg–medium |
+| Klient-refetch | Steg förstörs (`v-if`) och data hämtas om vid tillbaka | Hög — **åtgärdat** (fas 1) |
+| Bundle | Monolitisk bundle laddade alla fyra Vue-appar | Medium — **åtgärdat** (fas 3: ES modules + lazy chunks) |
+| Rendering | Många trip-kort med dold detaljkomponent | Låg–medium — delvis (parallell detaljhämtning, fas 3) |
 
-**Rekommenderad ordning:** Fas 1 (klient-cache) → Fas 2 (server kalender) → Fas 3 (bundle + detaljer).
+**Kvar:** Fas 2 (server kalender) → Fas 4 (mätning och underhåll).
 
 ---
 
@@ -37,7 +37,7 @@ Upplevd långsamhet i wizard (juni 2026). Planen täcker identifierade flaskhals
 WordPress shortcode
   → inc/public/journey-wizard/shell.php
   → inc/public/vue-shortcode-config.php (inline JSON)
-  → assets/dist/vue/ (en IIFE-bundel)
+  → assets/dist/vue/ (ES module entry + lazy app-chunks)
   → frontend/vue/src/main.ts
   → JourneyWizardApp.vue
        → steg via v-if: route → date → outbound → (return) → summary
@@ -105,9 +105,9 @@ watch(() => store.step, (s) => { if (s === props.legCtx) void loadConnections();
 connections.value = []; // ger "Laddar…"-blink
 ```
 
-### 3. Monolitisk bundle
+### 3. Monolitisk bundle (åtgärdat, fas 3)
 
-Alla publika Vue-appar laddas även på wizard-sidor. Parse- och init-kostnad på första paint.
+Tidigare laddades alla publika Vue-appar på wizard-sidor. Nu: `format: 'es'`, dynamisk `import()` per `data-mrt-vue-app`, `type="module"` i WordPress. Se § Bundle (nu) ovan.
 
 ### 4. Rendering
 
