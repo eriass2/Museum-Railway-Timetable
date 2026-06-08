@@ -283,6 +283,8 @@ Dev-verktyg: uppdatera «Synka tidtabellssidor» så startsidan får shortcoden 
 - Admin help (shortcodes + ny sida)
 - Ev. component demo
 
+**Status:** Component demo inkluderar `[museum_traffic_notices]` som block 1 (uppdateras vid «Skapa/uppdatera demo-sida»).
+
 ---
 
 ## Medvetet utanför v1

@@ -146,11 +146,12 @@ Assets köas när motsvarande shortcode finns i sidans innehåll (eller när sho
 
 ## Component demo (utveckling)
 
-**Railway Timetable → Component demo page** (eller `docker-dev-reset.ps1`) skapar en sida med tre block:
+**Railway Timetable → Component demo page** (eller `docker-dev-reset.ps1`) skapar en sida med fyra block:
 
-1. Månadskalender  
-2. Tidtabellsöversikt (GRÖN efter Lennakatten-import)  
-3. Journey wizard (`embedded="1"`)
+1. Trafikmeddelanden  
+2. Månadskalender  
+3. Tidtabellsöversikt (GRÖN efter Lennakatten-import)  
+4. Journey wizard (`embedded="1"`)
 
 Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 

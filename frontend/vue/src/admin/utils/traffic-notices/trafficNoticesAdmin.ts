@@ -1,4 +1,4 @@
-import type { PublicNoticeMessage } from '../api/adminRestTrafficNotices';
+import type { PublicNoticeMessage } from '../../api/adminRestTrafficNotices';
 
 export const TRAFFIC_NOTICE_MAX_LENGTH = 500;
 

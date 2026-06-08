@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { PublicNoticeMessage } from '../api/adminRestTrafficNotices';
-import { AdminBackNav, AdminFormActions, AdminPanel, MrtButton } from './ui';
-import { adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
+import type { PublicNoticeMessage } from '../../api/adminRestTrafficNotices';
+import { AdminBackNav, AdminFormActions, AdminPanel, MrtButton } from '../ui';
+import { adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
 import {
   TRAFFIC_NOTICE_MAX_LENGTH,
   type TrafficNoticesViewMode,
-} from '../utils/trafficNoticesAdmin';
+} from '../../utils/traffic-notices/trafficNoticesAdmin';
 
 defineProps<{
   viewMode: Exclude<TrafficNoticesViewMode, 'list'>;

@@ -8,7 +8,7 @@ import {
   reorderMessages,
   renumberSortOrder,
   sortMessagesByOrder,
-} from '../src/admin/utils/trafficNoticesAdmin';
+} from '../src/admin/utils/traffic-notices/trafficNoticesAdmin';
 import type { PublicNoticeMessage } from '../src/admin/api/adminRestTrafficNotices';
 
 function row(overrides: Partial<PublicNoticeMessage> = {}): PublicNoticeMessage {

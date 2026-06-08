@@ -1,17 +1,18 @@
 <script setup lang="ts">
-import type { PublicNoticeMessage } from '../api/adminRestTrafficNotices';
+import type { PublicNoticeMessage } from '../../api/adminRestTrafficNotices';
 import {
   AdminEmptyState,
   AdminPanel,
   AdminRowActions,
   AdminTableScroll,
   MrtButton,
-} from './ui';
-import { adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
+} from '../ui';
+import { adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
 
 defineProps<{
   messages: PublicNoticeMessage[];
+  canOperate: boolean;
 }>();
 
 const emit = defineEmits<{
@@ -27,7 +28,7 @@ const cfg = adminConfig();
   <AdminPanel>
     <h2>{{ adminStr(cfg, 'trafficNoticesTitle') }}</h2>
     <p class="description">{{ adminStr(cfg, 'trafficNoticesIntro') }}</p>
-    <p>
+    <p v-if="canOperate">
       <MrtButton context="admin" variant="primary" @click="emit('create')">
         {{ adminStr(cfg, 'trafficNoticesNew') }}
       </MrtButton>
@@ -55,7 +56,7 @@ const cfg = adminConfig();
             <td>{{ row.active_to || '—' }}</td>
             <td>{{ row.enabled ? '✓' : '—' }}</td>
             <td>
-              <AdminRowActions>
+              <AdminRowActions v-if="canOperate">
                 <MrtButton
                   context="admin"
                   variant="secondary"

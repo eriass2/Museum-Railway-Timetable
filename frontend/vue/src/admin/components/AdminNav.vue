@@ -9,16 +9,23 @@ const router = useRouter();
 const cfg = adminConfig();
 
 const tabs = computed(() => {
-  const base = [
+  const items = [
     { to: '/dashboard', label: adminStr(cfg, 'navOverview', 'Översikt') },
     { to: '/stations-routes', label: adminStr(cfg, 'navStationsRoutes', 'Stationer & rutter') },
     { to: '/timetables', label: adminStr(cfg, 'navTimetables', 'Tidtabeller') },
-    { to: '/traffic-notices', label: adminStr(cfg, 'navTrafficNotices', 'Trafikmeddelanden') },
+  ];
+  if (cfg.canOperate) {
+    items.push({
+      to: '/traffic-notices',
+      label: adminStr(cfg, 'navTrafficNotices', 'Trafikmeddelanden'),
+    });
+  }
+  items.push(
     { to: '/shortcodes', label: adminStr(cfg, 'navShortcodes', 'Shortcodes') },
     { to: '/help', label: adminStr(cfg, 'navHelp', 'Hjälp') },
-  ];
+  );
   if (cfg.canManage) {
-    base.push(
+    items.push(
       { to: '/train-types', label: adminStr(cfg, 'navTrainTypes', 'Tågtyper') },
       { to: '/settings', label: adminStr(cfg, 'navSettings', 'Inställningar') },
       { to: '/prices', label: adminStr(cfg, 'navPrices', 'Priser') },
@@ -26,9 +33,9 @@ const tabs = computed(() => {
     );
   }
   if (cfg.canManage && cfg.isDevMode) {
-    base.push({ to: '/dev-tools', label: adminStr(cfg, 'navDev', 'Dev') });
+    items.push({ to: '/dev-tools', label: adminStr(cfg, 'navDev', 'Dev') });
   }
-  return base;
+  return items;
 });
 
 function isActive(path: string): boolean {

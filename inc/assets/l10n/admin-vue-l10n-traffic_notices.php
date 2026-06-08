@@ -38,5 +38,9 @@ function MRT_admin_vue_l10n_traffic_notices(): array {
 		'trafficNoticesInactive'      => __( 'Inaktiv', 'museum-railway-timetable' ),
 		'trafficNoticesCharCount'     => __( '%1$d / %2$d tecken', 'museum-railway-timetable' ),
 		'trafficNoticesDeleteConfirm' => __( 'Ta bort meddelandet?', 'museum-railway-timetable' ),
+		'trafficNoticesNoPermission'  => __(
+			'Du har inte behörighet att redigera trafikmeddelanden.',
+			'museum-railway-timetable'
+		),
 	);
 }

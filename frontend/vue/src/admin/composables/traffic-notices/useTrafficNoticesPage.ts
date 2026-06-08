@@ -3,12 +3,12 @@ import {
   listTrafficNoticeMessages,
   saveTrafficNoticeMessages,
   type PublicNoticeMessage,
-} from '../api/adminRestTrafficNotices';
-import { adminConfirm } from './adminConfirm';
-import { proceedIfDiscardAllowed } from './adminDiscardGuard';
-import { useAdminResource } from './useAdminResource';
-import { useAdminSaveNotice } from './useAdminSaveNotice';
-import { adminErrorMessage, adminFmtN, adminStr } from '../utils/adminLabels';
+} from '../../api/adminRestTrafficNotices';
+import { adminConfirm } from '../adminConfirm';
+import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
+import { useAdminResource } from '../useAdminResource';
+import { useAdminSaveNotice } from '../useAdminSaveNotice';
+import { adminErrorMessage, adminFmtN, adminStr } from '../../utils/adminLabels';
 import {
   applyDraftToMessages,
   createNoticeDraft,
@@ -20,8 +20,8 @@ import {
   sortMessagesByOrder,
   TRAFFIC_NOTICE_MAX_LENGTH,
   type TrafficNoticesViewMode,
-} from '../utils/trafficNoticesAdmin';
-import { adminConfig } from '../types';
+} from '../../utils/traffic-notices/trafficNoticesAdmin';
+import { adminConfig } from '../../types';
 
 export function useTrafficNoticesPage() {
   const cfg = adminConfig();
@@ -32,6 +32,8 @@ export function useTrafficNoticesPage() {
   const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
 
   const { loading, error, data, load } = useAdminResource({
+    beforeLoad: () => cfg.canOperate,
+    deniedMessage: adminStr(cfg, 'trafficNoticesNoPermission'),
     fetch: () => listTrafficNoticeMessages(),
     errorMessage: (e) => adminErrorMessage(cfg, e, 'loadFailed'),
   });
@@ -80,25 +82,34 @@ export function useTrafficNoticesPage() {
   }
 
   function startCreate(): void {
+    if (!cfg.canOperate) {
+      return;
+    }
     draft.value = createNoticeDraft(messages.value);
     viewMode.value = 'create';
     formSnapshot.value = messageDraftSnapshot(draft.value);
   }
 
   function startEdit(row: PublicNoticeMessage): void {
+    if (!cfg.canOperate) {
+      return;
+    }
     draft.value = { ...row };
     viewMode.value = 'edit';
     formSnapshot.value = messageDraftSnapshot(draft.value);
   }
 
   async function persistAll(next: PublicNoticeMessage[]): Promise<void> {
+    if (!cfg.canOperate) {
+      return;
+    }
     const saved = await saveTrafficNoticeMessages(renumberSortOrder(next));
     messages.value = sortMessagesByOrder(saved.messages);
     showSaveNotice(adminStr(cfg, 'trafficNoticesSaved'));
   }
 
   async function saveDraft(): Promise<void> {
-    if (!draft.value || !draft.value.text.trim() || viewMode.value === 'list') {
+    if (!cfg.canOperate || !draft.value || !draft.value.text.trim() || viewMode.value === 'list') {
       return;
     }
     const next = applyDraftToMessages(messages.value, draft.value, viewMode.value);
@@ -107,7 +118,7 @@ export function useTrafficNoticesPage() {
   }
 
   async function removeDraft(): Promise<void> {
-    if (!draft.value || viewMode.value !== 'edit') {
+    if (!cfg.canOperate || !draft.value || viewMode.value !== 'edit') {
       return;
     }
     const ok = await adminConfirm({
@@ -125,6 +136,9 @@ export function useTrafficNoticesPage() {
   }
 
   async function moveRow(index: number, direction: -1 | 1): Promise<void> {
+    if (!cfg.canOperate) {
+      return;
+    }
     const target = index + direction;
     if (target < 0 || target >= messages.value.length) {
       return;
