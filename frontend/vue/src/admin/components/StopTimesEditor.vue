@@ -84,7 +84,7 @@ watch(serviceId, () => {
 
     <AdminFormActions v-if="cfg.canManage || cfg.canOperate">
       <MrtButton context="admin" variant="primary" @click="save()">
-        {{ adminStr(cfg, 'stopTimesSave') }}
+        {{ adminStr(cfg, 'stopTimesSaveButton') }}
       </MrtButton>
     </AdminFormActions>
   </AdminLoadState>
