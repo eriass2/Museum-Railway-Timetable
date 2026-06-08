@@ -36,24 +36,17 @@ marielund,Marielund,...,2
 
 Tom `price_zones` → inga zoner (konfigurera via CSV/admin). Gränsstationer: kommaseparerade, max två värden.
 
-## Backlog / TODO
+## Admin-konfiguration
 
-### Konfigurerbar prisstruktur (inte bara belopp)
+Prisbelopp och struktur konfigureras i admin → **Priser** (`#/prices`). I admin-hjälpen: **Hjälp → Priszoner och biljetter** (`#/help?section=price-zones`).
 
-**Status:** Implementerad (admin, REST, reseplanerare, CSV).
+| Dimension | Panel | Lagring |
+|-----------|-------|---------|
+| Biljettyper, kundkategorier, zonkolumner, `zone_cap` | Prisstruktur | `mrt_price_schema` |
+| Eftermiddags-retur (belopp) | Eftermiddags-retur | `mrt_price_schema.afternoon_return` |
+| Eftermiddags-gräns (minuter) | Eftermiddags-retur | `mrt_settings.afternoon_return_threshold_minutes` |
+| Belopp (zonmatris) | Prismatris | `mrt_price_matrix` |
 
-Administratören kan ändra **prisbelopp** och **strukturen** via admin → Priser:
+**CSV:** `price_schema.csv`, `prices.csv`, `settings.csv` — se [CSV_FORMAT.md](CSV_FORMAT.md).
 
-| Dimension | Konfigurerbart via | Lagring |
-|-----------|-------------------|---------|
-| **Biljettyper** | Prisstruktur-panel | `mrt_price_schema` |
-| **Kundkategorier** | Prisstruktur-panel | `mrt_price_schema` |
-| **Priszoner (matriskolumner)** | Prisstruktur-panel | `mrt_price_schema` |
-| **Max zoner vid lookup** | Prisstruktur-panel | `mrt_price_schema.zone_cap` |
-| **Eftermiddags-retur (belopp)** | Eftermiddags-retur-panel | `mrt_price_schema.afternoon_return` |
-| **Eftermiddags-gräns (tur + retur)** | Eftermiddags-retur-panel (admin) | `mrt_settings.afternoon_return_threshold_minutes` |
-| **Belopp (zonmatris)** | Prismatris | `mrt_price_matrix` |
-
-**CSV:** `price_schema.csv` (struktur + eftermiddagsbelopp) + `prices.csv` (zonmatris) + `settings.csv` (eftermiddagsgräns m.m.). I admin ligger gräns och eftermiddagsbelopp på samma sida (**Priser → Eftermiddags-retur**).
-
-**Kod:** `inc/domain/pricing/price-schema.php`, admin `PricesPage.vue`, `MrtPriceTable.vue` (dynamiska nycklar från server-etiketter).
+**Kod:** `inc/domain/pricing/price-schema.php`, admin `PricesPage.vue`, `MrtPriceTable.vue`.

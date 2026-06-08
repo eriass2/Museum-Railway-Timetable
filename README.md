@@ -49,7 +49,7 @@ docker compose up -d --build   # http://localhost:8080 (admin / admin)
 .\scripts\check.ps1 -Vue       # PHP + Vue gate (Windows)
 ```
 
-Contributing: [CONTRIBUTING.md](CONTRIBUTING.md). Coding standards: [docs/REBUILD_RULES.md](docs/REBUILD_RULES.md), [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md).
+Contributing: [docs/DEVELOPER.md](docs/DEVELOPER.md#bidra). Coding standards: [docs/REBUILD_RULES.md](docs/REBUILD_RULES.md), [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md).
 
 ### Hooks and Filters
 

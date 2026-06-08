@@ -43,8 +43,22 @@ docker compose up -d --build
 - Lokal PHP 7.4 kör inte full `composer install`; använd Docker för PHPUnit/PHPStan.
 - Mockup-PNG finns inte i repot; wizard-stil är återställd från pre-purge CSS.
 
+## Vue – detaljerad checklista och E2E
+
+Per-app-manuell rökning (månad, översikt, wizard, index): **[frontend/vue/TESTING.md](../frontend/vue/TESTING.md)**.
+
+Snabb E2E utan WordPress (kräver `npm run build` först):
+
+```bash
+cd frontend/vue
+npm run e2e:install   # första gången
+npm run e2e
+```
+
+Mot Docker-demo: `MRT_E2E_WP_DEMO_URL=http://127.0.0.1:8080/… npm run e2e -- e2e/*-wp.spec.ts` eller `bash scripts/ci-e2e-wp.sh` från reporoten.
+
 ## Nästa steg
 
 - Manuell rökning: wizard hela flödet (steg 3–4, byte t.ex. Uppsala Östra → Fjällnora via Selknä).
-- Frontend-polish mot mockup; designreferens i `docs/mockups/DESIGN_TOKENS.md`.
+- Frontend-polish mot mockup; designreferens i [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md).
 - [ACCESSIBILITY.md](ACCESSIBILITY.md) – manuell WCAG-checklista och release-logg.

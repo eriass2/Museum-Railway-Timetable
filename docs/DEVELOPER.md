@@ -175,3 +175,11 @@ Kör detta efter `docker compose up -d --build` när ändringen påverkar admin,
 `MRT_TEXT_DOMAIN`, `MRT_POST_TYPE_*`, `MRT_TAXONOMY_TRAIN_TYPE`, `MRT_POST_TYPES`.
 
 PHP: `declare(strict_types=1)` där det passar.
+
+---
+
+## Bidra
+
+Följ [REBUILD_RULES.md](REBUILD_RULES.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Kör `composer check` (eller `.\scripts\check.ps1 -Vue`) innan pull request.
+
+Vid PR: använd checklistan i [`.github/pull_request_template.md`](../.github/pull_request_template.md) och säkerställ att `composer test` samt `php scripts/validate.php` är gröna.

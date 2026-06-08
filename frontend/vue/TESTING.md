@@ -1,31 +1,17 @@
 # Manual test checklist (Vue public UI)
 
-Run after `npm run check` and hard-refresh in the browser (Ctrl+F5).
+Detaljerad per-app-checklista. Översikt, Docker-smoke och automatiska kommandon: **[docs/SMOKE_CHECKLIST.md](../../docs/SMOKE_CHECKLIST.md)**.
+
+Kör efter `npm run check` och hård refresh i webbläsaren (Ctrl+F5).
 
 ## Environment
 
 - Demo page: `http://localhost:8080/?page_id=569` (or your local demosida)
 - Plugin active; Vue bundle built (`composer vue:build`)
 
-### Automated E2E (no WordPress)
+### Automated E2E
 
-```bash
-cd frontend/vue
-npm run build
-npm run e2e:install   # first time
-npm run build         # required before e2e (serve uses dist/)
-npm run e2e           # static mounts (month, overview, wizard, index) + admin-nav + cancelled
-```
-
-Cancelled-trip mounts (no WordPress): `/overview-cancelled`, `/wizard?debug=cancelled` — see `e2e/cancelled-mount.spec.ts`.
-
-Optional against Docker demo (all four shortcodes on one page):
-
-```bash
-MRT_E2E_WP_DEMO_URL=http://127.0.0.1:8080/?page_id=… npm run e2e -- e2e/*-wp.spec.ts
-```
-
-Or run the full WP stack script from repo root: `bash scripts/ci-e2e-wp.sh`
+Se [SMOKE_CHECKLIST.md](../../docs/SMOKE_CHECKLIST.md) § Vue – detaljerad checklista och E2E. Avbrutna resor (statiska mounts): `/overview-cancelled`, `/wizard?debug=cancelled` — `e2e/cancelled-mount.spec.ts`.
 
 ## Month calendar (`data-mrt-vue-app="month"`)
 

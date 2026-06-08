@@ -52,12 +52,10 @@ Presentation får rendera HTML men ska inte innehålla affärsregler. JS får h�
 
 ## 3. Kodstandard
 
-- Max 50 rader per funktion. Sikta på 20–35 rader.
-- En funktion gör en sak.
-- Namn ska beskriva domänbeteende, inte implementation.
-- Undvik anonyma långa callbacks; namnge dem.
-- Undvik fil > 300 rader där det finns naturliga moduler.
-- En loader-fil ska bara require:a moduler.
+Se [STYLE_GUIDE.md](STYLE_GUIDE.md) §1 (Clean Code) och §6 (Filstruktur) för namngivning, funktionslängd och filorganisation.
+
+Rebuild-specifikt:
+
 - Ny domänlogik ska ha enhetstest.
 - Nya renderhelpers ska testas när de har villkor/logik.
 
@@ -65,14 +63,7 @@ Presentation får rendera HTML men ska inte innehålla affärsregler. JS får h�
 
 ## 4. PHP-regler
 
-- Prefix `MRT_` för funktioner.
-- Prefix `mrt_` för hooks, meta keys, post types och taxonomier.
-- Alla PHP-filer utom specialfall ska ha `ABSPATH` guard.
-- Escape all output med `esc_html`, `esc_attr`, `esc_url`, `wp_kses_post`.
-- Sanera input med rätt WordPress-funktion.
-- Alla admin actions ska ha capability check och nonce.
-- SQL ska använda `$wpdb->prepare()` för parametrar.
-- Inga inline styles utom kontrollerade CSS-variabler där validatorn tillåter det.
+Se [STYLE_GUIDE.md](STYLE_GUIDE.md) §2 (PHP) för prefix (`MRT_` / `mrt_`), `ABSPATH`, escape/sanitize, nonces, capability och `$wpdb->prepare()`.
 
 ---
 
