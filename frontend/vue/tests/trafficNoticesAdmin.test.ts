@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest';
 import {
+  applyDraftToMessages,
+  createNoticeDraft,
+  noticeVisibilityLabelKey,
   noticeVisibleToday,
+  removeMessageById,
   reorderMessages,
   renumberSortOrder,
+  sortMessagesByOrder,
 } from '../src/admin/utils/trafficNoticesAdmin';
 import type { PublicNoticeMessage } from '../src/admin/api/adminRestTrafficNotices';
 
@@ -29,6 +34,50 @@ describe('noticeVisibleToday', () => {
     expect(noticeVisibleToday(bounded, '2026-06-05')).toBe(false);
     expect(noticeVisibleToday(bounded, '2026-06-06')).toBe(true);
     expect(noticeVisibleToday(bounded, '2026-06-08')).toBe(false);
+  });
+});
+
+describe('noticeVisibilityLabelKey', () => {
+  it('maps enabled and date bounds to label keys', () => {
+    expect(noticeVisibilityLabelKey(row({ enabled: false }))).toBe('trafficNoticesInactive');
+    expect(noticeVisibilityLabelKey(row({ active_from: '2099-01-01' }), '2026-06-06')).toBe(
+      'trafficNoticesHiddenToday',
+    );
+  });
+});
+
+describe('sortMessagesByOrder', () => {
+  it('sorts by sort_order ascending', () => {
+    const sorted = sortMessagesByOrder([
+      row({ id: 'b', sort_order: 20 }),
+      row({ id: 'a', sort_order: 10 }),
+    ]);
+    expect(sorted.map((item) => item.id)).toEqual(['a', 'b']);
+  });
+});
+
+describe('applyDraftToMessages', () => {
+  it('appends on create and replaces on edit', () => {
+    const existing = [row({ id: 'a', text: 'Old' })];
+    const created = applyDraftToMessages(existing, row({ id: 'b', text: 'New' }), 'create');
+    expect(created).toHaveLength(2);
+    const edited = applyDraftToMessages(existing, row({ id: 'a', text: 'Updated' }), 'edit');
+    expect(edited[0]?.text).toBe('Updated');
+  });
+});
+
+describe('createNoticeDraft', () => {
+  it('assigns sort_order above existing rows', () => {
+    const draft = createNoticeDraft([row({ sort_order: 30 })]);
+    expect(draft.sort_order).toBe(40);
+    expect(draft.text).toBe('');
+  });
+});
+
+describe('removeMessageById', () => {
+  it('drops the matching row', () => {
+    const next = removeMessageById([row({ id: 'a' }), row({ id: 'b' })], 'a');
+    expect(next.map((item) => item.id)).toEqual(['b']);
   });
 });
 
