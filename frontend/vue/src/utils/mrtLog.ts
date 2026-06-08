@@ -1,7 +1,7 @@
 import type { App } from 'vue';
 import type { MrtRestConfig } from '../config/types';
 
-export type MrtLogSource = 'admin' | 'wizard' | 'overview' | 'month' | 'index';
+export type MrtLogSource = 'admin' | 'wizard' | 'overview' | 'month' | 'index' | 'traffic_notices';
 export type MrtLogLevel = 'error' | 'warn' | 'info';
 
 export type MrtLogEntry = {

@@ -14,6 +14,25 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_admin_vue_help_shortcodes(): array {
 	return array(
 		array(
+			'tag'     => 'museum_traffic_notices',
+			'title'   => __( 'Trafikmeddelanden', 'museum-railway-timetable' ),
+			'summary' => __(
+				'Visar generella trafikmeddelanden och tur-avvikelser för idag (valfritt imorgon). Tom vy: «Inga meddelanden».',
+				'museum-railway-timetable'
+			),
+			'example' => '[museum_traffic_notices]',
+			'params'  => array(
+				array(
+					'name' => 'days',
+					'desc' => __( '1 = idag (standard), 2 = idag + imorgon', 'museum-railway-timetable' ),
+				),
+				array(
+					'name' => 'title',
+					'desc' => __( 'Valfri rubrik ovanför listan', 'museum-railway-timetable' ),
+				),
+			),
+		),
+		array(
 			'tag'     => 'museum_timetable_index',
 			'title'   => __( 'Lista tidtabeller', 'museum-railway-timetable' ),
 			'summary' => __(

@@ -114,7 +114,12 @@ async function saveDraft(): Promise<void> {
 
 async function removeDraft(): Promise<void> {
   if (!draft.value || viewMode.value !== 'edit') return;
-  if (!(await adminConfirm(adminStr(cfg, 'trafficNoticesDeleteConfirm')))) return;
+  if (!(await adminConfirm({
+    title: adminStr(cfg, 'trafficNoticesDelete'),
+    message: adminStr(cfg, 'trafficNoticesDeleteConfirm'),
+    confirmLabel: adminStr(cfg, 'delete'),
+    danger: true,
+  }))) return;
   const next = messages.value.filter((row) => row.id !== draft.value?.id);
   await persistAll(next);
   resetDraft();
@@ -145,9 +150,11 @@ function visibilityLabel(row: PublicNoticeMessage): string {
             {{ adminStr(cfg, 'trafficNoticesNew') }}
           </MrtButton>
         </p>
-        <AdminEmptyState v-if="messages.length === 0">
-          {{ adminStr(cfg, 'trafficNoticesEmpty') }}
-        </AdminEmptyState>
+        <AdminEmptyState
+          v-if="messages.length === 0"
+          :title="adminStr(cfg, 'trafficNoticesTitle')"
+          :message="adminStr(cfg, 'trafficNoticesEmpty')"
+        />
         <AdminTableScroll v-else>
           <table class="widefat striped">
             <thead>
