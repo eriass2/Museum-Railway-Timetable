@@ -137,15 +137,16 @@ function onEditRouteRemove(idx: number) {
         />
       </div>
       <AdminDisclosure :summary="adminStr(cfg, 'stationsRouteCreateMoreFields')">
-        <RouteStationOrderEditor
-          v-model="newRoute"
-          :stations="stations"
-          :station-title="stationTitle"
-          id-prefix="mrt-new-route"
-          @move="onNewRouteMove"
-          @remove="onNewRouteRemove"
-        />
+        <p class="description">{{ adminStr(cfg, 'stationsRouteOrderHint') }}</p>
       </AdminDisclosure>
+      <RouteStationOrderEditor
+        v-model="newRoute"
+        :stations="stations"
+        :station-title="stationTitle"
+        id-prefix="mrt-new-route"
+        @move="onNewRouteMove"
+        @remove="onNewRouteRemove"
+      />
       <AdminFormActions>
         <MrtButton context="admin" variant="primary" @click="emit('add')">
           {{ adminStr(cfg, 'add') }}

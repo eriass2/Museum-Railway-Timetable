@@ -76,6 +76,18 @@ export function useImportExportPage() {
     const input = ev.target as HTMLInputElement;
     const file = input.files?.[0];
     if (!file) return;
+    if (mode.value === 'override') {
+      const ok = await adminConfirm({
+        title: adminStr(cfg, 'importExportOverrideConfirmTitle'),
+        message: adminStr(cfg, 'importExportOverrideConfirmMessage'),
+        confirmLabel: adminStr(cfg, 'importExportImportTitle'),
+        danger: true,
+      });
+      if (!ok) {
+        input.value = '';
+        return;
+      }
+    }
     await runAction(async () => {
       const res = await importCsv(file, mode.value);
       const stats = Object.entries(res.stats)

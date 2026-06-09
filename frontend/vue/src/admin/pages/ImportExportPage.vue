@@ -81,8 +81,11 @@ const {
               {{ adminStr(cfg, 'importExportModeOverride') }}
             </label>
           </p>
-          <p class="description mrt-admin-import-warning">{{ guide.modeOverrideWarning }}</p>
+          <p class="description">{{ guide.modeOverrideWarning }}</p>
         </AdminDisclosure>
+        <p v-if="mode === 'override'" class="notice notice-warning mrt-admin-import-override-notice">
+          {{ guide.modeOverrideWarning }}
+        </p>
       </AdminPanel>
 
       <AdminPanel :title="adminStr(cfg, 'importExportExportTitle')">

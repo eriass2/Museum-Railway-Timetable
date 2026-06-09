@@ -230,6 +230,10 @@ export function useStationsRoutesPage() {
   async function addRoute() {
     const draft = newRoute.value;
     if (!cfg.canManage || !draft.title.trim()) return;
+    if (draft.station_ids.length < 2) {
+      error.value = adminStr(cfg, 'stationsRouteMinStations');
+      return;
+    }
     await createRoute({
       title: draft.title.trim(),
       station_ids: draft.station_ids,
@@ -249,6 +253,10 @@ export function useStationsRoutesPage() {
 
   async function saveRoute() {
     if (!editingRoute.value || !cfg.canManage) return;
+    if (editingRoute.value.station_ids.length < 2) {
+      error.value = adminStr(cfg, 'stationsRouteMinStations');
+      return;
+    }
     const title = editingRoute.value.title;
     const routeId = editingRoute.value.id;
     await updateRoute(routeId, {

@@ -39,6 +39,11 @@ function MRT_admin_vue_l10n_import_export(): array {
 		'importExportAdvancedMode'     => __( 'Avancerat importläge', 'museum-railway-timetable' ),
 		'importExportModeMerge'        => __( 'Slå ihop (uppdatera befintlig data)', 'museum-railway-timetable' ),
 		'importExportModeOverride'     => __( 'Ersätt (ta bort poster som saknas i filen)', 'museum-railway-timetable' ),
+		'importExportOverrideConfirmTitle' => __( 'Bekräfta ersättningsimport', 'museum-railway-timetable' ),
+		'importExportOverrideConfirmMessage' => __(
+			'Ersättningsläge tar bort data som inte finns i importfilen. Vill du fortsätta?',
+			'museum-railway-timetable'
+		),
 		'importExportExportSuccess'    => __( 'Export klar.', 'museum-railway-timetable' ),
 		'importExportExportFailed'     => __( 'Export misslyckades', 'museum-railway-timetable' ),
 		'importExportImportFailed'     => __( 'Import misslyckades', 'museum-railway-timetable' ),
