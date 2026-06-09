@@ -9,6 +9,7 @@ export { default as AdminFieldStack } from './AdminFieldStack.vue';
 export { default as AdminFlashRow } from './AdminFlashRow.vue';
 export { default as AdminFormActions } from './AdminFormActions.vue';
 export { default as AdminInlineField } from './AdminInlineField.vue';
+export { default as AdminMediaImageField } from './AdminMediaImageField.vue';
 export { default as AdminInlineForm } from './AdminInlineForm.vue';
 export { default as AdminPanel } from './AdminPanel.vue';
 export { default as AdminRowActions } from './AdminRowActions.vue';

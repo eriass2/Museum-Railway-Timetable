@@ -20,6 +20,7 @@ function MRT_default_plugin_settings(): array {
 		'note'                               => '',
 		'operator_name'                      => '',
 		'ticket_url'                         => '',
+		'hero_background_url'                => '',
 		'min_transfer_minutes'               => 0,
 		'max_transfer_minutes'               => 120,
 		'max_transfers'                      => 2,
@@ -79,6 +80,14 @@ function MRT_plugin_operator_name(): string {
 }
 
 /**
+ * Default hero background image URL for the journey wizard (empty when unset).
+ */
+function MRT_plugin_hero_background_url(): string {
+	$url = (string) ( MRT_get_plugin_settings()['hero_background_url'] ?? '' );
+	return $url !== '' ? esc_url( $url ) : '';
+}
+
+/**
  * Sanitize mrt_settings from Settings API form.
  *
  * @param array<string, mixed> $input Raw POST values
@@ -102,6 +111,9 @@ function MRT_sanitize_plugin_settings( $input ): array {
 		'note'                               => isset( $input['note'] ) ? sanitize_text_field( wp_unslash( $input['note'] ) ) : (string) $current['note'],
 		'operator_name'                      => isset( $input['operator_name'] ) ? sanitize_text_field( wp_unslash( $input['operator_name'] ) ) : (string) $current['operator_name'],
 		'ticket_url'                         => isset( $input['ticket_url'] ) ? esc_url_raw( wp_unslash( (string) $input['ticket_url'] ) ) : (string) $current['ticket_url'],
+		'hero_background_url'                => isset( $input['hero_background_url'] )
+			? esc_url_raw( wp_unslash( (string) $input['hero_background_url'] ) )
+			: (string) ( $current['hero_background_url'] ?? '' ),
 		'min_transfer_minutes'               => $min,
 		'max_transfer_minutes'               => $max,
 		'max_transfers'                      => MRT_sanitize_plugin_settings_max_transfers(

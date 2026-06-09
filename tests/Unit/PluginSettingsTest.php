@@ -45,6 +45,16 @@ final class PluginSettingsTest extends TestCase {
 		self::assertSame( 'https://example.com/tickets', $out['ticket_url'] );
 	}
 
+	public function test_plugin_hero_background_url_reads_settings(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'hero_background_url' => 'https://example.test/hero.jpg',
+			),
+		);
+
+		self::assertSame( 'https://example.test/hero.jpg', MRT_plugin_hero_background_url() );
+	}
+
 	public function test_sanitize_clamps_max_transfers_and_afternoon_threshold(): void {
 		$out = MRT_sanitize_plugin_settings(
 			array(

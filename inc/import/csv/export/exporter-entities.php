@@ -245,6 +245,7 @@ function MRT_csv_export_settings(): array {
 			'note',
 			'operator_name',
 			'ticket_url',
+			'hero_background_url',
 			'min_transfer_minutes',
 			'max_transfer_minutes',
 			'max_transfers',

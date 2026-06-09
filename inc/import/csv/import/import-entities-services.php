@@ -176,6 +176,7 @@ function MRT_csv_import_settings( array $files ): void {
 		'note',
 		'operator_name',
 		'ticket_url',
+		'hero_background_url',
 		'min_transfer_minutes',
 		'max_transfer_minutes',
 		'max_transfers',
@@ -196,7 +197,7 @@ function MRT_csv_cast_setting_value( string $key, string $value ) {
 	if ( $key === 'enabled' ) {
 		return in_array( strtolower( $value ), array( '1', 'true', 'yes' ), true );
 	}
-	if ( $key === 'ticket_url' ) {
+	if ( $key === 'ticket_url' || $key === 'hero_background_url' ) {
 		return esc_url_raw( $value );
 	}
 	if ( $key === 'max_transfers' || $key === 'afternoon_return_threshold_minutes' || str_contains( $key, '_minutes' ) ) {

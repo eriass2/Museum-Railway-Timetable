@@ -5,6 +5,7 @@ export type SettingsPayload = {
   note: string;
   operator_name: string;
   ticket_url: string;
+  hero_background_url: string;
   min_transfer_minutes: number;
   max_transfer_minutes: number;
   max_transfers: number;

@@ -135,7 +135,7 @@ function MRT_admin_vue_help_shortcodes(): array {
 				),
 				array(
 					'name' => 'hero_background_url',
-					'desc' => __( 'Valfri bakgrundsbild för hero (skalbar, täcker hela bredden). Utelämnas i inbäddat läge.', 'museum-railway-timetable' ),
+					'desc' => __( 'Bakgrundsbild för hero. Standard sätts under Inställningar; attributet har företräde. Ignoreras i inbäddat läge.', 'museum-railway-timetable' ),
 				),
 				array(
 					'name' => 'timetable_id',

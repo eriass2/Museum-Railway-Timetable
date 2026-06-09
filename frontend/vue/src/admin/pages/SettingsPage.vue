@@ -6,6 +6,7 @@ import type { SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminFormActions,
+  AdminMediaImageField,
   AdminPanel,
   AdminStatusMessage,
   AdminUnsavedBanner,
@@ -27,6 +28,7 @@ const form = ref<SettingsPayload>({
   note: '',
   operator_name: '',
   ticket_url: '',
+  hero_background_url: '',
   min_transfer_minutes: 0,
   max_transfer_minutes: 120,
   max_transfers: 2,
@@ -109,6 +111,13 @@ async function submit() {
                 <td>
                   <input v-model="form.ticket_url" type="url" class="large-text" />
                   <p class="description">{{ adminStr(cfg, 'settingsTicketUrlHint') }}</p>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">{{ adminStr(cfg, 'settingsHeroBackground') }}</th>
+                <td>
+                  <AdminMediaImageField v-model="form.hero_background_url" />
+                  <p class="description">{{ adminStr(cfg, 'settingsHeroBackgroundHint') }}</p>
                 </td>
               </tr>
               <tr>

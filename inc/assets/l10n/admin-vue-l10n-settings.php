@@ -41,6 +41,16 @@ function MRT_admin_vue_l10n_settings(): array {
 			'Global länk till biljettköp i reseplaneraren. Shortcode-attribut ticket_url har företräde.',
 			'museum-railway-timetable'
 		),
+		'settingsHeroBackground'       => __( 'Reseplanerare — bakgrundsbild', 'museum-railway-timetable' ),
+		'settingsHeroBackgroundHint'   => __(
+			'Valfri hero-bild (bred landskapsbild). Gäller när shortcode saknar hero_background_url. Ignoreras i inbäddat läge.',
+			'museum-railway-timetable'
+		),
+		'settingsHeroBackgroundChoose' => __( 'Välj bild…', 'museum-railway-timetable' ),
+		'settingsHeroBackgroundClear'  => __( 'Ta bort', 'museum-railway-timetable' ),
+		'settingsHeroBackgroundPickTitle'  => __( 'Välj bakgrundsbild', 'museum-railway-timetable' ),
+		'settingsHeroBackgroundPickButton' => __( 'Använd bild', 'museum-railway-timetable' ),
+		'settingsHeroBackgroundUrlPlaceholder' => __( 'https://…', 'museum-railway-timetable' ),
 		'settingsMaxTransfers'    => __( 'Max antal byten', 'museum-railway-timetable' ),
 		'settingsMaxTransfersHint' => __(
 			'Antal byten i en resa (2 = upp till tre tåg/ben). Resesökningsmotorn avvisar fler.',

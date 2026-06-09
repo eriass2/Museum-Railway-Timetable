@@ -110,6 +110,7 @@ function MRT_maybe_enqueue_admin_vue( string $hook ): void {
 		return;
 	}
 	MRT_enqueue_admin_css( $hook );
+	wp_enqueue_media();
 	MRT_enqueue_admin_vue_assets();
 }
 

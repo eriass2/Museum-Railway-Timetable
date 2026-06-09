@@ -57,6 +57,9 @@ function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 	$timetable_id = MRT_journey_wizard_resolve_timetable_id( $atts );
 	$route_title  = is_string( $atts['route_title'] ) ? trim( $atts['route_title'] ) : '';
 	$hero_bg      = is_string( $atts['hero_background_url'] ) ? esc_url( trim( $atts['hero_background_url'] ) ) : '';
+	if ( $hero_bg === '' ) {
+		$hero_bg = MRT_plugin_hero_background_url();
+	}
 	$hero_bg      = (string) apply_filters( 'mrt_journey_wizard_hero_background_url', $hero_bg, $atts );
 
 	return array(

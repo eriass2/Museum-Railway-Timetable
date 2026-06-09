@@ -835,3 +835,25 @@
     text-align: center;
   }
 }
+
+.mrt-admin-media-field {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 36rem;
+}
+
+.mrt-admin-media-field__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.mrt-admin-media-field__preview {
+  display: block;
+  width: 100%;
+  max-width: 24rem;
+  max-height: 8rem;
+  object-fit: cover;
+  border: 1px solid #c3c4c7;
+}

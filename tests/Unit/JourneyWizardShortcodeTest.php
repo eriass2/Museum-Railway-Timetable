@@ -151,6 +151,34 @@ final class JourneyWizardShortcodeTest extends TestCase {
 		self::assertSame( 'https://example.test/hero.jpg', $parsed['hero_background_url'] );
 	}
 
+	public function test_parse_shortcode_uses_hero_background_from_settings(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'hero_background_url' => 'https://example.test/from-settings.jpg',
+			),
+		);
+
+		$parsed = MRT_journey_wizard_parse_shortcode_atts( array() );
+
+		self::assertSame( 'https://example.test/from-settings.jpg', $parsed['hero_background_url'] );
+	}
+
+	public function test_parse_shortcode_attr_overrides_settings_hero_background(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'hero_background_url' => 'https://example.test/from-settings.jpg',
+			),
+		);
+
+		$parsed = MRT_journey_wizard_parse_shortcode_atts(
+			array(
+				'hero_background_url' => 'https://example.test/from-shortcode.jpg',
+			)
+		);
+
+		self::assertSame( 'https://example.test/from-shortcode.jpg', $parsed['hero_background_url'] );
+	}
+
 	public function test_render_shortcode_passes_hero_background_url(): void {
 		MRT_render_shortcode_journey_wizard(
 			array(
