@@ -1,10 +1,10 @@
-import type { PricesPayload } from '../api/adminRest';
-import type { DayTicketData, TripPriceData } from '../../shared/prices';
-import type { PriceTableLabels } from '../../shared/priceLabels';
-import type { PriceCfg } from '../../shared/priceTypes';
-import { adminFmtN, adminStr } from './adminLabels';
-import type { AdminClientConfig } from '../types';
-import { minutesToTimeInput } from './settingsTime';
+import type { PricesPayload } from '../../api/adminRest';
+import type { DayTicketData, TripPriceData } from '../../../shared/prices';
+import type { PriceTableLabels } from '../../../shared/priceLabels';
+import type { PriceCfg } from '../../../shared/priceTypes';
+import { adminFmtN, adminStr } from '../adminLabels';
+import type { AdminClientConfig } from '../../types';
+import { minutesToTimeInput } from '../settingsTime';
 
 /** Zone column used for fare lookup (capped by schema zone_cap). */
 export function resolvePricingZone(payload: PricesPayload, zone: number): number {

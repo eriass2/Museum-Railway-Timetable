@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import MrtPriceTable from '../../components/ui/MrtPriceTable.vue';
-import type { PricesPayload } from '../api/adminRest';
-import { AdminTableScroll } from './ui';
+import MrtPriceTable from '../../../components/ui/MrtPriceTable.vue';
+import type { PricesPayload } from '../../api/adminRest';
+import { AdminTableScroll } from '../ui';
 import {
   adminAfternoonVisitorNote,
   adminPricePreviewCfg,
   buildAdminPricePreviewTrip,
   effectivePricingZones,
-} from '../utils/adminPricePreview';
-import { adminFmtN, adminStr } from '../utils/adminLabels';
-import { minutesToTimeInput, timeInputToMinutes } from '../utils/settingsTime';
-import { adminConfig } from '../types';
+} from '../../utils/prices/adminPricePreview';
+import { adminFmtN, adminStr } from '../../utils/adminLabels';
+import { minutesToTimeInput, timeInputToMinutes } from '../../utils/settingsTime';
+import { adminConfig } from '../../types';
 
 const props = defineProps<{
   payload: PricesPayload;

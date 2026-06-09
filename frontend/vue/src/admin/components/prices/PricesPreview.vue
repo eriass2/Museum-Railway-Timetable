@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import MrtPriceTable from '../../components/ui/MrtPriceTable.vue';
-import type { PricesPayload } from '../api/adminRest';
+import MrtPriceTable from '../../../components/ui/MrtPriceTable.vue';
+import type { PricesPayload } from '../../api/adminRest';
 import {
   adminPricePreviewCfg,
   adminPriceTableLabels,
   buildAdminPricePreviewDay,
   buildAdminPricePreviewTrip,
   effectivePricingZones,
-} from '../utils/adminPricePreview';
-import { adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
+} from '../../utils/prices/adminPricePreview';
+import { adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
 
 const props = defineProps<{
   payload: PricesPayload;

@@ -1,6 +1,6 @@
 import type { Ref } from 'vue';
-import type { PricesPayload } from '../api/adminRest';
-import { slugPriceKey, uniquePriceKey } from '../utils/priceSchemaKeys';
+import type { PricesPayload } from '../../api/adminRest';
+import { slugPriceKey, uniquePriceKey } from '../../utils/prices/priceSchemaKeys';
 
 function ensureAfternoonReturnCells(data: PricesPayload): void {
   if (!data.afternoon_return) {

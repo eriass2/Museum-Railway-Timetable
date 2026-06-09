@@ -8,7 +8,7 @@ import {
   priceMatrixHasAnyValue,
   priceMatrixRowForZone,
   resolvePricingZone,
-} from '../src/admin/utils/adminPricePreview';
+} from '../src/admin/utils/prices/adminPricePreview';
 
 describe('adminPricePreview', () => {
   const payload: PricesPayload = {

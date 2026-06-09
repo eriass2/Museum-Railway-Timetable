@@ -3,8 +3,8 @@ import { computed, ref } from 'vue';
 import { getPrices, getSettings, savePrices, saveSettings } from '../api/adminRest';
 import type { PricesPayload, SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
-import AdminPricesAfternoonPanel from '../components/AdminPricesAfternoonPanel.vue';
-import AdminPricesPreview from '../components/AdminPricesPreview.vue';
+import PricesAfternoonPanel from '../components/prices/PricesAfternoonPanel.vue';
+import PricesPreview from '../components/prices/PricesPreview.vue';
 import {
   AdminDisclosure,
   AdminFormActions,
@@ -15,7 +15,7 @@ import {
   AdminUnsavedBanner,
   MrtButton,
 } from '../components/ui';
-import { usePriceSchemaEditor } from '../composables/usePriceSchemaEditor';
+import { usePriceSchemaEditor } from '../composables/prices/usePriceSchemaEditor';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useAdminFormDirty } from '../composables/useAdminFormDirty';
@@ -26,7 +26,7 @@ import { adminErrorMessage, adminFmtN, adminStr } from '../utils/adminLabels';
 import {
   hasMatrixZonesBeyondCap,
   priceMatrixHasAnyValue,
-} from '../utils/adminPricePreview';
+} from '../utils/prices/adminPricePreview';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -234,9 +234,9 @@ async function submit() {
             {{ adminStr(cfg, 'pricesDescription') }}
           </p>
 
-          <AdminPricesPreview :payload="data" />
+          <PricesPreview :payload="data" />
 
-          <AdminPricesAfternoonPanel
+          <PricesAfternoonPanel
             :payload="data"
             :threshold-minutes="afternoonThresholdMinutes"
             @update:threshold-minutes="afternoonThresholdMinutes = $event"
