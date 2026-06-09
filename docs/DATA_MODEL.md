@@ -12,7 +12,7 @@ This document describes all data objects in the Museum Railway Timetable plugin 
 | Stop times (custom table) | `inc/domain/service/stop-times.php` |
 | Services & connections | `inc/domain/service/services.php`, `connections.php` |
 | Routes & stations | `inc/domain/route/routes.php`, `inc/domain/station/stations.php` |
-| Timetable overview grid | `inc/domain/timetable/view/` |
+| Timetable overview grid | `inc/domain/timetable/view/overview/`, `grid/` |
 | Journey search & prices | `inc/domain/journey/` (engine + normalize loaders), `inc/domain/pricing/` (`prices.php`, `price-schema.php`, `price-rules.php`, `station-zones.php`) |
 | Admin Vue l10n strings | `inc/assets/l10n/` (per-screen `admin-vue-l10n-*.php` + `loader.php`) |
 | Lennakatten import | `testdata/fixtures/lennakatten/`, `inc/import/csv/`, admin UI `inc/admin/tools/import-lennakatten.php` |

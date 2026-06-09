@@ -38,10 +38,10 @@ function MRT_load_timetable_view_domain_modules(): void {
 	$view_dir = MRT_PATH . 'inc/domain/timetable/view/';
 	require_once $view_dir . 'prepare.php';
 	require_once $view_dir . 'group-view.php';
-	require_once $view_dir . 'grid-branch.php';
-	require_once $view_dir . 'grid-connections.php';
-	require_once $view_dir . 'grid-merge.php';
-	require_once $view_dir . 'overview-data.php';
+	require_once $view_dir . 'grid/grid-branch.php';
+	require_once $view_dir . 'grid/grid-connections.php';
+	require_once $view_dir . 'grid/grid-merge.php';
+	require_once $view_dir . 'overview/overview-data.php';
 	require_once MRT_PATH . 'inc/domain/timetable/timetable-pages.php';
 }
 

@@ -90,7 +90,7 @@ Valideringen inkluderar statiska a11y-markörer i publika moduler (region, aria-
 
 **Månad:** kalender-region; dagknappar med `aria-pressed`; panel `aria-busy` vid laddning. Filer: `inc/public/month-calendar/`, `frontend/vue/src/apps/MonthCalendarApp.vue`.
 
-**Översikt:** Vue-komponenter med `role="region"`, `h3` per rutt, semantisk tabell för branch-bussar. Filer: `inc/domain/timetable/view/overview-data.php`, `frontend/vue/src/components/overview/`.
+**Översikt:** Vue-komponenter med `role="region"`, `h3` per rutt, semantisk tabell för branch-bussar. Filer: `inc/domain/timetable/view/overview/overview-data.php`, `frontend/vue/src/components/overview/`.
 
 **Tidtabellsindex:** Vue-lista med `nav` + länkkort; `aria-label` per kort (titel + meta). Filer: `inc/public/timetable-index/`, `frontend/vue/src/apps/TimetableIndexApp.vue`.
 

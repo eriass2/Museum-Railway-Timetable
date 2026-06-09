@@ -9,11 +9,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/domain/timetable/view/grid-merge.php';
-require_once MRT_PATH . 'inc/domain/timetable/view/overview-print-key.php';
-require_once MRT_PATH . 'inc/domain/timetable/view/overview-bus-rows.php';
-require_once MRT_PATH . 'inc/domain/timetable/view/overview-rail-rows.php';
-require_once MRT_PATH . 'inc/domain/timetable/view/overview-branch-group.php';
+require_once MRT_PATH . 'inc/domain/timetable/view/grid/grid-merge.php';
+require_once __DIR__ . '/overview-print-key.php';
+require_once __DIR__ . '/overview-bus-rows.php';
+require_once __DIR__ . '/overview-rail-rows.php';
+require_once __DIR__ . '/overview-branch-group.php';
 
 /**
  * @param array<int, WP_Post> $services

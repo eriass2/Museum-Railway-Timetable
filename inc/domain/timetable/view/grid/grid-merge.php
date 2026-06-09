@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/domain/timetable/view/grid-branch.php';
+require_once __DIR__ . '/grid-branch.php';
 
 /**
  * @param array<string, array<string, mixed>> $grouped_services
