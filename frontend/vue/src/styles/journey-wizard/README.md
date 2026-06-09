@@ -7,6 +7,7 @@ Modular styles for `[museum_journey_wizard]`, imported from `JourneyWizardApp.vu
 | Modul | Innehåll |
 |-------|----------|
 | `base.css` | Shell, hero, embedded, fokus |
+| `hero-layout.css` | Desktop fullbredd, valfri hero-bakgrundsbild (J10) |
 | `wizard-shell.css` | Overrides på delade ui-components |
 | `controls-form.css` | Sök steg: stationer, restyp, combobox |
 | `controls-calendar.css` | Datumsteg, kalender |

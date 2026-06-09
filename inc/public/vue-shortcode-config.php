@@ -165,6 +165,8 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 
 	$beta_banner = MRT_vue_wizard_beta_banner( $parsed );
 
+	$hero_background_url = isset( $parsed['hero_background_url'] ) ? trim( (string) $parsed['hero_background_url'] ) : '';
+
 	return array(
 		'stations'     => $station_rows,
 		'ticketUrl'    => $ticket_url,
@@ -173,7 +175,8 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 		'timetablePageUrl' => isset( $parsed['timetable_page_url'] ) ? (string) $parsed['timetable_page_url'] : '',
 		'embedded'         => ! empty( $parsed['embedded'] ),
 		'debug'        => isset( $parsed['debug'] ) ? (string) $parsed['debug'] : '',
-		'heroSubtitle' => isset( $parsed['hero_subtitle'] ) ? (string) $parsed['hero_subtitle'] : '',
+		'heroSubtitle'       => isset( $parsed['hero_subtitle'] ) ? (string) $parsed['hero_subtitle'] : '',
+		'heroBackgroundUrl'  => $hero_background_url,
 		'startOfWeek'  => (int) get_option( 'start_of_week', 1 ),
 		'wizard'       => $wizard_l10n,
 		'labels'       => array(

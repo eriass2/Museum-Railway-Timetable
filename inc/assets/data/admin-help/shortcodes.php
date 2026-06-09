@@ -134,6 +134,10 @@ function MRT_admin_vue_help_shortcodes(): array {
 					'desc' => __( 'Kompakt layout inuti sidinnehåll (1/true)', 'museum-railway-timetable' ),
 				),
 				array(
+					'name' => 'hero_background_url',
+					'desc' => __( 'Valfri bakgrundsbild för hero (skalbar, täcker hela bredden). Utelämnas i inbäddat läge.', 'museum-railway-timetable' ),
+				),
+				array(
 					'name' => 'timetable_id',
 					'desc' => __( 'Legacy — inbäddad översikt under steg 1 (rekommenderas sällan)', 'museum-railway-timetable' ),
 				),

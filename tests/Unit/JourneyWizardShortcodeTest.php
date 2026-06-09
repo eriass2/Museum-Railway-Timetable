@@ -48,6 +48,7 @@ final class JourneyWizardShortcodeTest extends TestCase {
 		self::assertSame( '', $parsed['ticket_url'] );
 		self::assertSame( '', $parsed['route_title'] );
 		self::assertSame( '', $parsed['hero_subtitle'] );
+		self::assertSame( '', $parsed['hero_background_url'] );
 		self::assertSame( 0, $parsed['timetable_id'] );
 		self::assertSame( '', $parsed['timetable_page_url'] );
 		self::assertFalse( $parsed['embedded'] );
@@ -138,6 +139,29 @@ final class JourneyWizardShortcodeTest extends TestCase {
 		self::assertTrue( $GLOBALS['mrt_test_vue_mount']['config']['embedded'] ?? false );
 		self::assertSame( 'Test wizard', $GLOBALS['mrt_test_vue_mount']['config']['labels']['routeTitle'] ?? '' );
 		self::assertNull( $GLOBALS['mrt_test_vue_mount']['config']['betaBanner'] ?? null );
+	}
+
+	public function test_parse_shortcode_atts_escapes_hero_background_url(): void {
+		$parsed = MRT_journey_wizard_parse_shortcode_atts(
+			array(
+				'hero_background_url' => 'https://example.test/hero.jpg',
+			)
+		);
+
+		self::assertSame( 'https://example.test/hero.jpg', $parsed['hero_background_url'] );
+	}
+
+	public function test_render_shortcode_passes_hero_background_url(): void {
+		MRT_render_shortcode_journey_wizard(
+			array(
+				'hero_background_url' => 'https://example.test/hero.jpg',
+			)
+		);
+
+		self::assertSame(
+			'https://example.test/hero.jpg',
+			$GLOBALS['mrt_test_vue_mount']['config']['heroBackgroundUrl'] ?? ''
+		);
 	}
 
 	public function test_render_shortcode_passes_beta_banner_config(): void {

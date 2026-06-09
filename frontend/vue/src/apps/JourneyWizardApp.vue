@@ -31,6 +31,21 @@ const timetablePageUrl = String(props.config.timetablePageUrl || '');
 const betaBanner = props.config.betaBanner ?? null;
 const panelsRef = ref<HTMLElement | null>(null);
 
+const heroBackgroundUrl = computed(() => {
+  if (embedded) {
+    return '';
+  }
+  return String(props.config.heroBackgroundUrl || '').trim();
+});
+
+const heroSectionStyle = computed(() => {
+  const url = heroBackgroundUrl.value;
+  if (!url) {
+    return undefined;
+  }
+  return { '--mrt-wizard-hero-bg-image': `url(${JSON.stringify(url)})` };
+});
+
 const progressItems = computed(() => {
   const currentIndex = store.stepSequence.indexOf(store.step);
   return store.stepSequence.map((key, i) => ({
@@ -89,7 +104,11 @@ onMounted(() => {
     :data-start-of-week="String(config.startOfWeek ?? 1)"
     :data-wizard-debug="debug || undefined"
   >
-    <section class="mrt-journey-wizard__hero">
+    <section
+      class="mrt-journey-wizard__hero"
+      :class="{ 'mrt-journey-wizard__hero--has-bg': heroBackgroundUrl !== '' }"
+      :style="heroSectionStyle"
+    >
       <div class="mrt-journey-wizard__hero-inner">
         <noscript>
           <MrtAlert variant="info">
