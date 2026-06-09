@@ -307,6 +307,7 @@
 | 2026-06-09 | D1 | **B** — *Ingen trafik för din resa denna månad* / legend *Trafik för din resa* | Team |
 | 2026-06-09 | D18 | **A** — nästa: **A7** (auto slutstation), ev. A6; **J2** som CSS-polish; J8/A2 senare | Team |
 | 2026-06-09 | D13 | **A** — sista station med tid i ruttsordning; synkas vid stopptidssparande; dropdown borttagen | Team |
+| 2026-06-09 | D18 | **A6** — en angiven tid speglas till ankomst och avgång vid stopptidssparande | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 

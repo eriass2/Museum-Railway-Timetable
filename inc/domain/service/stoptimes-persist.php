@@ -12,6 +12,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
+ * When only arrival or departure is set, use the same time for both (A6).
+ *
+ * @return array{0: string, 1: string}
+ */
+function MRT_mirror_stoptime_arrival_departure( string $arrival, string $departure ): array {
+	if ( $arrival !== '' && $departure === '' ) {
+		$departure = $arrival;
+	} elseif ( $departure !== '' && $arrival === '' ) {
+		$arrival = $departure;
+	}
+	return array( $arrival, $departure );
+}
+
+/**
  * Normalize one submitted stop time row for save_all.
  *
  * @param array<string, mixed> $stop Stop data.
@@ -29,6 +43,7 @@ function MRT_normalize_stoptime_for_save_all( array $stop, int $sequence ) {
 	}
 	$arrival   = sanitize_text_field( $stop['arrival'] ?? '' );
 	$departure = sanitize_text_field( $stop['departure'] ?? '' );
+	list( $arrival, $departure ) = MRT_mirror_stoptime_arrival_departure( $arrival, $departure );
 	if ( ( $arrival && ! MRT_validate_time_hhmm( $arrival ) ) || ( $departure && ! MRT_validate_time_hhmm( $departure ) ) ) {
 		return new WP_Error( 'invalid_time', __( 'Invalid time format in stop times. Use HH:MM.', MRT_TEXT_DOMAIN ) );
 	}

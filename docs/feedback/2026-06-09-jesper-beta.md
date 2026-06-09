@@ -243,8 +243,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin / stopptider
 - **Typ:** UX
 - **Prioritet:** låg
-- **Status:** öppen
-- **Tekniskt:** Normalisera vid spara i stopptids-API / grid-redigerare.
+- **Status:** klar
+- **Tekniskt:** `MRT_mirror_stoptime_arrival_departure` i `stoptimes-persist.php` vid bulk-sparande (lista + grid).
 
 ---
 
@@ -318,7 +318,7 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 
 **D18 (2026-06-09):** Fas 1 först — **A7** ✓ (+ ev. A6); J2 polish. J8 skjuts.
 
-1. **Fas 1** — A1 ✓, A7 ✓, A6, A8 ✓ (färre manuella fält)
+1. **Fas 1** — A1 ✓, A7 ✓, A6 ✓, A8 ✓ (färre manuella fält)
 2. **Fas 2** — A2, A5 (grid som primär stopptidsinmatning)
 3. **Fas 3** — A3, A4, J4 (behovsuppehåll + reseplanerare)
 4. **Fas 4** — A9, A10 (publicera + anslutningar)
