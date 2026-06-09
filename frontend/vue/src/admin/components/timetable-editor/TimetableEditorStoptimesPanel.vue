@@ -7,19 +7,14 @@ import {
   MrtButton,
 } from '../ui';
 import StopTimesEditor from './StopTimesEditor.vue';
-import EditableTimetableOverview from './EditableTimetableOverview.vue';
 import { proceedIfDiscardAllowed } from '../../composables/adminDiscardGuard';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 import type { TimetableDetail } from '../../types';
-import type { TimetableOverviewPayload } from '../../../types/timetableOverview';
-
 export type StoptimesPanelView = 'list' | 'detail';
 
 const props = defineProps<{
   detail: TimetableDetail;
-  overview: TimetableOverviewPayload | null;
-  gridOverviewLoading: boolean;
   canManage: boolean;
   canOperate: boolean;
   viewMode: StoptimesPanelView;
@@ -29,9 +24,7 @@ const selectedServiceId = defineModel<number>('selectedServiceId', { required: t
 
 const emit = defineEmits<{
   back: [];
-  gridToggle: [event: Event];
   openDetail: [serviceId: number];
-  refreshOverview: [];
 }>();
 
 const cfg = adminConfig();
@@ -107,18 +100,6 @@ const selectedTripLabel = computed(() => {
         :service-id="selectedServiceId"
       />
     </template>
-
-    <details class="mrt-mt-sm mrt-admin-stoptimes-grid" open @toggle="emit('gridToggle', $event)">
-      <summary>{{ adminStr(cfg, 'editorStoptimesGridSummary') }}</summary>
-      <p class="description">{{ adminStr(cfg, 'editorStoptimesGridHint') }}</p>
-      <p v-if="gridOverviewLoading" class="description">{{ adminStr(cfg, 'editorLoading') }}</p>
-      <EditableTimetableOverview
-        v-else-if="overview"
-        :data="overview"
-        :readonly="!canManage && !canOperate"
-        @refresh-needed="emit('refreshOverview')"
-      />
-    </details>
   </AdminPanel>
 </template>
 

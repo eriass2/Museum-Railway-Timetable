@@ -7,6 +7,7 @@ import TimetableEditorMetaPanel from '../components/timetable-editor/TimetableEd
 import TimetableEditorStoptimesPanel from '../components/timetable-editor/TimetableEditorStoptimesPanel.vue';
 import TimetableEditorDatesTab from '../components/timetable-editor/TimetableEditorDatesTab.vue';
 import TimetableEditorDeviationsTab from '../components/timetable-editor/TimetableEditorDeviationsTab.vue';
+import TimetableEditorGridTab from '../components/timetable-editor/TimetableEditorGridTab.vue';
 import TimetableEditorTripsTab from '../components/timetable-editor/TimetableEditorTripsTab.vue';
 import MobileTimetablePanel from '../components/mobile/MobileTimetablePanel.vue';
 import { AdminPanel, AdminStatusMessage } from '../components/ui';
@@ -49,7 +50,6 @@ const {
   trainTypeIconKey,
   loadDetail,
   loadOverview,
-  onStoptimesGridToggle,
   startCreateTrip,
   requestBackToTripsList,
   requestBackToStoptimesList,
@@ -78,6 +78,7 @@ const desktopTabs = computed(() => {
   if (isMobile.value) return [];
   return [
     ['dates', adminStr(cfg, 'editorTabDates')],
+    ['grid', adminStr(cfg, 'editorTabGrid')],
     ['trips', adminStr(cfg, 'editorTabTrips')],
     ['stoptimes', adminStr(cfg, 'editorTabStoptimes')],
     ['deviations', adminStr(cfg, 'editorTabDeviations')],
@@ -156,6 +157,15 @@ function onTabClick(next: TimetableEditorTab): void {
         @save="saveDates"
       />
 
+      <TimetableEditorGridTab
+        v-if="detail && !isMobile && tab === 'grid'"
+        :overview="overview"
+        :loading="gridOverviewLoading"
+        :can-manage="cfg.canManage"
+        :can-operate="cfg.canOperate"
+        @refresh="loadOverview"
+      />
+
       <TimetableEditorTripsTab
         v-if="detail && !isMobile && tab === 'trips'"
         v-model:new-trip="newTrip"
@@ -178,13 +188,9 @@ function onTabClick(next: TimetableEditorTab): void {
         ref="stoptimesPanelRef"
         v-model:selected-service-id="selectedServiceId"
         :detail="detail"
-        :overview="overview"
-        :grid-overview-loading="gridOverviewLoading"
         :can-manage="cfg.canManage"
         :can-operate="cfg.canOperate"
         :view-mode="stoptimesView"
-        @grid-toggle="onStoptimesGridToggle"
-        @refresh-overview="loadOverview"
         @open-detail="openStoptimesDetail"
         @back="backToStoptimesList"
       />

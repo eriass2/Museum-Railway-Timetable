@@ -97,7 +97,7 @@ Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 **Fliken Turer** i tidtabellseditorn
 
 1. Klicka **Lägg till tur** (listan)
-2. Välj **Rutt**, **Tågtyp** (valfritt) och **Destination** → **Lägg till tur**
+2. Välj **Rutt** och **Tågtyp** (valfritt) → **Lägg till tur** (slutstation sätts från stopptider under **Turvy**)
 3. Befintlig tur: **Redigera** → **Spara tur** eller **Tillbaka till listan**
 4. **Stopptider** på en rad hoppar till stopptidsfliken för den turen
 
@@ -105,13 +105,17 @@ Ruttordningen styr vilka stationer som erbjuds vid stopptider.
 
 ## Steg 6: Stopptider
 
-**Fliken Stopptider**
+**Fliken Turvy** (primär inmatning)
+
+1. Öppna **Turvy** — alla turer visas sida vid sida som i tidtabellsöversikten
+2. Klicka på en cell för att ange ankomst/avgång, **Stannar** och P/A
+3. Tom cell utan tid = tåget stannar inte vid stationen
+
+**Fliken Stopptider** (en tur i taget)
 
 1. Listan visar alla turer – klicka **Stopptider** på en rad
 2. Redigera tider och hållplatser → **Spara stopptider**
 3. **Tillbaka till listan** (bekräftelse om osparade tider)
-
-**Rutnät** (hopfällbart under editorn): klicka i celler för att ändra tid, stannar och P/A (passagerare på/av).
 
 **Fliken Förhandsvisning** visar samma översikt som på webbplatsen (read-only).
 
@@ -151,7 +155,7 @@ Checklista när en **ny anslutningsbuss** ska in utöver befintlig tågtrafik:
 2. **Rutt** — skapa **två riktningar** (t.ex. Selknä → Linnés Hammarby och tillbaka). Lägg stationer i ordning; start/slut sätts automatiskt.
 3. **Tidtabell** — lägg till eller återanvänd befintlig (t.ex. GRÖN anslutningsbuss) under **Trafikdagar**.
 4. **Turer** — skapa bussturer kopplade till rutten och tidtabellen (tågnummer B5, B9, …).
-5. **Stopptider** — fyll tider vid bytehållplats (Selknä) och destination.
+5. **Turvy** — fyll tider vid bytehållplats (Selknä) och destination.
 6. **Buss/tåg-koppling** — kontrollera tidtabellsöversikt och reseplanerare: rätt buss ska följa rätt tåg per gren (inte Fjällnora-buss på Hammarby-resa).
 7. **Smoke** — sök resa i reseplaneraren på en dag med trafik; expandera detalj och jämför med tidtabell-PDF/översikt.
 

@@ -6,6 +6,11 @@ import { adminConfig } from '../../types';
 import { adminFmtN, adminStr } from '../../utils/adminLabels';
 import { MrtButton } from '../ui';
 import StopTimePaCheckbox from './StopTimePaCheckbox.vue';
+import {
+  finalizeGridCellEdit,
+  gridRowShowsArrival,
+  gridRowShowsDeparture,
+} from '../../utils/timetable-editor/gridCellEdit';
 
 const props = defineProps<{
   displayText: string;
@@ -35,14 +40,6 @@ function emptyDraft(): TimetableTimeCellEdit {
   };
 }
 
-function showDeparture(kind: string): boolean {
-  return kind === 'from' || kind === 'departure' || kind === 'station';
-}
-
-function showArrival(kind: string): boolean {
-  return kind === 'to' || kind === 'arrival' || kind === 'station';
-}
-
 function resetDraft(): void {
   const base = props.editor.mergeEdit(props.serviceId, props.stationId, props.edit, {});
   draft.arrival = props.editor.hhmmToInput(base.arrival);
@@ -67,19 +64,16 @@ async function save(): Promise<void> {
   }
   saving.value = true;
   try {
-    const payload: TimetableTimeCellEdit = {
-      stopsHere: draft.stopsHere,
-      arrival: props.editor.inputToHhmm(draft.arrival),
-      departure: props.editor.inputToHhmm(draft.departure),
-      pickupAllowed: draft.pickupAllowed,
-      dropoffAllowed: draft.dropoffAllowed,
-    };
-    if (payload.stopsHere && showDeparture(props.rowKind) && payload.departure) {
-      payload.stopsHere = true;
-    }
-    if (payload.stopsHere && showArrival(props.rowKind) && payload.arrival) {
-      payload.stopsHere = true;
-    }
+    const payload = finalizeGridCellEdit(
+      {
+        stopsHere: draft.stopsHere,
+        arrival: props.editor.inputToHhmm(draft.arrival),
+        departure: props.editor.inputToHhmm(draft.departure),
+        pickupAllowed: draft.pickupAllowed,
+        dropoffAllowed: draft.dropoffAllowed,
+      },
+      props.rowKind,
+    );
     await props.editor.applyCellEdit(props.serviceId, props.stationId, payload);
     emit('saved');
     closeDialog();
@@ -107,7 +101,10 @@ async function save(): Promise<void> {
         <input v-model="draft.stopsHere" type="checkbox" />
         {{ adminStr(cfg, 'stopTimesColStops') }}
       </label>
-      <label v-if="showArrival(rowKind)" class="mrt-ov-cell-dialog__field">
+      <p class="description mrt-ov-cell-dialog__empty-hint">
+        {{ adminStr(cfg, 'editorGridEmptyCellHint') }}
+      </p>
+      <label v-if="gridRowShowsArrival(rowKind)" class="mrt-ov-cell-dialog__field">
         <span>{{ adminStr(cfg, 'stopTimesColArrival') }}</span>
         <input
           v-model="draft.arrival"
@@ -117,7 +114,7 @@ async function save(): Promise<void> {
           @change="draft.stopsHere = true"
         />
       </label>
-      <label v-if="showDeparture(rowKind)" class="mrt-ov-cell-dialog__field">
+      <label v-if="gridRowShowsDeparture(rowKind)" class="mrt-ov-cell-dialog__field">
         <span>{{ adminStr(cfg, 'stopTimesColDeparture') }}</span>
         <input
           v-model="draft.departure"
@@ -195,6 +192,11 @@ async function save(): Promise<void> {
   font-size: 1rem;
   font-weight: 800;
   line-height: 1.3;
+}
+
+.mrt-ov-cell-dialog__empty-hint {
+  margin: 0;
+  font-size: 0.9rem;
 }
 
 .mrt-ov-cell-dialog__field {

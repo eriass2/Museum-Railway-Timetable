@@ -38,6 +38,7 @@ function MRT_admin_vue_l10n_editor_meta(): array {
 		'editorSaveMeta'             => __( 'Spara namn och typ', 'museum-railway-timetable' ),
 		'editorDeleteTimetable'      => __( 'Ta bort tidtabell', 'museum-railway-timetable' ),
 		'editorTabDates'             => __( 'Trafikdagar', 'museum-railway-timetable' ),
+		'editorTabGrid'              => __( 'Turvy', 'museum-railway-timetable' ),
 		'editorTabTrips'             => __( 'Turer', 'museum-railway-timetable' ),
 		'editorTabStoptimes'         => __( 'Stopptider', 'museum-railway-timetable' ),
 		'editorTabDeviations'        => __( 'Avvikelser', 'museum-railway-timetable' ),

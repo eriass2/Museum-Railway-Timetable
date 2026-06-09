@@ -35,7 +35,7 @@ export type TimetableServiceEditRow = TimetableServiceRow & {
 };
 
 export type StoptimesPanelView = 'list' | 'detail';
-export type TimetableEditorTab = 'dates' | 'trips' | 'stoptimes' | 'deviations' | 'preview';
+export type TimetableEditorTab = 'dates' | 'grid' | 'trips' | 'stoptimes' | 'deviations' | 'preview';
 
 function tripDraftSnapshot(draft: TripEditDraft | ReturnType<typeof emptyTripDraft>): string {
   return JSON.stringify(draft);
@@ -44,7 +44,7 @@ function tripDraftSnapshot(draft: TripEditDraft | ReturnType<typeof emptyTripDra
 export function useTimetableEditorPage(timetableId: () => number) {
   const router = useRouter();
   const cfg = adminConfig();
-  const tab = ref<'dates' | 'trips' | 'stoptimes' | 'deviations' | 'preview'>('dates');
+  const tab = ref<TimetableEditorTab>('dates');
   const detail = ref<TimetableDetail | null>(null);
   const overview = ref<TimetableOverviewPayload | null>(null);
   const loading = ref(true);
@@ -205,9 +205,8 @@ export function useTimetableEditorPage(timetableId: () => number) {
     tripFormSnapshot.value = tripDraftSnapshot(newTrip.value);
   }
 
-  async function onStoptimesGridToggle(event: Event): Promise<void> {
-    const el = event.target as HTMLDetailsElement;
-    if (!el.open || overview.value) {
+  async function loadOverviewForTab(refresh = false): Promise<void> {
+    if (!refresh && overview.value) {
       return;
     }
     gridOverviewLoading.value = true;
@@ -221,12 +220,10 @@ export function useTimetableEditorPage(timetableId: () => number) {
   }
 
   watch(tab, async (t) => {
-    if (t === 'preview' && !overview.value) {
-      try {
-        await loadOverview();
-      } catch (e) {
-        error.value = adminErrorMessage(cfg, e, 'editorOverviewLoadFailed');
-      }
+    if (t === 'grid') {
+      await loadOverviewForTab(true);
+    } else if (t === 'preview') {
+      await loadOverviewForTab(false);
     }
     if (t === 'deviations' && deviationRows.value.length === 0) {
       try {
@@ -395,7 +392,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
     trainTypeIconKey,
     loadDetail,
     loadOverview,
-    onStoptimesGridToggle,
+    loadOverviewForTab,
     startCreateTrip,
     requestBackToTripsList,
     requestBackToStoptimesList,

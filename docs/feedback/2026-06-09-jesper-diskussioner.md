@@ -164,7 +164,8 @@
 | **Alternativ** | A) Skapa minimal tur → fyll allt i grid · B) Behåll två vägar · C) Ny sida ”Trafikdataportal” separat från nuvarande editor |
 | **Insats** | Stor — **strategiskt admin-beslut** |
 | **Beslut av** | Produkt + utveckling |
-| **Status** | Öppen |
+| **Beslut** | **A** delvis — egen flik Turvy som primär stopptidsinmatning; turformulär kvar för rutt/tågtyp/tågnummer |
+| **Status** | **Beslutad** (fas 2 levererad) |
 
 ---
 
@@ -308,6 +309,7 @@
 | 2026-06-09 | D18 | **A** — nästa: **A7** (auto slutstation), ev. A6; **J2** som CSS-polish; J8/A2 senare | Team |
 | 2026-06-09 | D13 | **A** — sista station med tid i ruttsordning; synkas vid stopptidssparande; dropdown borttagen | Team |
 | 2026-06-09 | D18 | **A6** — en angiven tid speglas till ankomst och avgång vid stopptidssparande | Team |
+| 2026-06-09 | D10 | **A** delvis — flik Turvy primär; A5 tom cell = ingen stopp | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 
