@@ -13,7 +13,7 @@ if ( ! defined( 'MRT_REST_NAMESPACE' ) ) {
 	define( 'MRT_REST_NAMESPACE', 'museum-railway-timetable/v1' );
 }
 
-require_once ABSPATH . 'inc/infrastructure/rest/pricing-public.php';
+require_once ABSPATH . 'inc/infrastructure/rest/public/pricing-public.php';
 
 final class RestPricingPublicTest extends TestCase {
 	use MRT_Lennakatten_Test_Fixture;

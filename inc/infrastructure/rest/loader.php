@@ -11,24 +11,29 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/infrastructure/rest/client-config.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/permissions.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/dashboard.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/timetables.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/stations.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/routes.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/stop-times.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/journey-public.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/timetable-public.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/pricing-public.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/settings-admin.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/train-types.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/import-export.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/dev-tools.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/operations.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/traffic-notices-public.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/traffic-notices-admin.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/rest-log.php';
+$rest_dir = MRT_PATH . 'inc/infrastructure/rest/';
+
+require_once $rest_dir . 'shared/client-config.php';
+require_once $rest_dir . 'shared/permissions.php';
+require_once $rest_dir . 'shared/rest-log.php';
+
+require_once $rest_dir . 'admin/dashboard.php';
+require_once $rest_dir . 'admin/timetables.php';
+require_once $rest_dir . 'admin/stations.php';
+require_once $rest_dir . 'admin/routes.php';
+require_once $rest_dir . 'admin/stop-times.php';
+require_once $rest_dir . 'admin/settings-admin.php';
+require_once $rest_dir . 'admin/train-types.php';
+require_once $rest_dir . 'admin/import-export.php';
+require_once $rest_dir . 'admin/operations.php';
+require_once $rest_dir . 'admin/traffic-notices-admin.php';
+
+require_once $rest_dir . 'public/journey-public.php';
+require_once $rest_dir . 'public/timetable-public.php';
+require_once $rest_dir . 'public/pricing-public.php';
+require_once $rest_dir . 'public/traffic-notices-public.php';
+
+require_once $rest_dir . 'dev/dev-tools.php';
 
 /**
  * Register all plugin REST routes.

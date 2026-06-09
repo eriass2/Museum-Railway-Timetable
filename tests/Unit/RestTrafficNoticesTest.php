@@ -13,9 +13,9 @@ if ( ! defined( 'MRT_REST_NAMESPACE' ) ) {
 	define( 'MRT_REST_NAMESPACE', 'museum-railway-timetable/v1' );
 }
 
-require_once ABSPATH . 'inc/infrastructure/rest/permissions.php';
-require_once ABSPATH . 'inc/infrastructure/rest/traffic-notices-public.php';
-require_once ABSPATH . 'inc/infrastructure/rest/traffic-notices-admin.php';
+require_once ABSPATH . 'inc/infrastructure/rest/shared/permissions.php';
+require_once ABSPATH . 'inc/infrastructure/rest/public/traffic-notices-public.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/traffic-notices-admin.php';
 
 final class RestTrafficNoticesTest extends TestCase {
 	protected function tearDown(): void {

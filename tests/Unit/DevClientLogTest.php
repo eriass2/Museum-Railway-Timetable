@@ -15,7 +15,7 @@ if ( ! function_exists( 'MRT_is_development_mode' ) ) {
 	}
 }
 
-require_once ABSPATH . 'inc/infrastructure/rest/dev-tools.php';
+require_once ABSPATH . 'inc/infrastructure/rest/dev/dev-tools.php';
 
 final class DevClientLogTest extends TestCase {
 

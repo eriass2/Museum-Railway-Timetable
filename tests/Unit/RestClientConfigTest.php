@@ -37,7 +37,7 @@ if ( ! function_exists( 'MRT_is_development_mode' ) ) {
 	}
 }
 
-require_once dirname( __DIR__, 2 ) . '/inc/infrastructure/rest/client-config.php';
+require_once dirname( __DIR__, 2 ) . '/inc/infrastructure/rest/shared/client-config.php';
 
 final class RestClientConfigTest extends TestCase {
 

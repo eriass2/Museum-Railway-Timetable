@@ -13,8 +13,8 @@ if ( ! defined( 'MRT_REST_NAMESPACE' ) ) {
 	define( 'MRT_REST_NAMESPACE', 'museum-railway-timetable/v1' );
 }
 
-require_once ABSPATH . 'inc/infrastructure/rest/permissions.php';
-require_once ABSPATH . 'inc/infrastructure/rest/stop-times.php';
+require_once ABSPATH . 'inc/infrastructure/rest/shared/permissions.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/stop-times.php';
 
 final class RestStopTimesTest extends TestCase {
 

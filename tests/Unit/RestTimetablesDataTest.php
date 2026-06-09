@@ -17,8 +17,8 @@ if ( ! defined( 'MRT_TAXONOMY_TRAIN_TYPE' ) ) {
 	define( 'MRT_TAXONOMY_TRAIN_TYPE', 'mrt_train_type' );
 }
 
-require_once ABSPATH . 'inc/infrastructure/rest/timetables-data.php';
-require_once ABSPATH . 'inc/infrastructure/rest/timetables.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/timetables-data.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/timetables.php';
 
 final class RestTimetablesDataTest extends TestCase {
 

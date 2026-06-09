@@ -19,7 +19,7 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 ## Namespace och konventioner
 
 - **Namespace:** `museum-railway-timetable/v1` (URL: `/wp-json/museum-railway-timetable/v1/…`)
-- **Registrering:** `inc/infrastructure/rest/` (en fil per resursområde)
+- **Registrering:** `inc/infrastructure/rest/` (`shared/`, `admin/`, `public/`, `dev/`)
 - **Metoder:** GET för läsning, POST/PATCH/PUT för skrivning, DELETE där det passar
 - **Svar:** JSON; fel via `WP_Error` med HTTP-status (400 validering, 403 capability, 404 saknas, 500 oväntat)
 - **Validering:** Domänfunktioner i PHP; controllers sanerar input och mappar till domän
@@ -51,7 +51,7 @@ Museum Railway Timetable använder **WordPress REST API** för all klient–serv
 | `GET /journey/calendar` | Trafikdagar (publikt) |
 | `GET /journey/connection-detail` | Detalj (publikt); valfri `date` i body; svar med `notice`, `is_cancelled` |
 
-Implementation: `inc/infrastructure/rest/*.php` (en fil per resursområde, laddas via `loader.php`). Publika tidtabell-endpoints: `timetable-public.php` (`/timetables/day`, `/timetables/month`). Resesökning: `journey-public.php`. Admin-klient: `frontend/vue/src/admin/api/adminRest.ts`.
+Implementation: `inc/infrastructure/rest/admin/*.php`, `public/*.php`, m.fl., laddas via `loader.php`. Publika tidtabell-endpoints: `public/timetable-public.php` (`/timetables/day`, `/timetables/month`). Resesökning: `public/journey-public.php`. Admin-klient: `frontend/vue/src/admin/api/adminRest.ts`.
 
 ---
 

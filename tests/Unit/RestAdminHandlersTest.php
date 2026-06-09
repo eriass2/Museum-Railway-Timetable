@@ -16,14 +16,14 @@ if ( ! defined( 'MRT_TAXONOMY_TRAIN_TYPE' ) ) {
 	define( 'MRT_TAXONOMY_TRAIN_TYPE', 'mrt_train_type' );
 }
 
-require_once ABSPATH . 'inc/infrastructure/rest/permissions.php';
-require_once ABSPATH . 'inc/infrastructure/rest/stations.php';
-require_once ABSPATH . 'inc/infrastructure/rest/routes.php';
-require_once ABSPATH . 'inc/infrastructure/rest/operations.php';
-require_once ABSPATH . 'inc/infrastructure/rest/import-export.php';
-require_once ABSPATH . 'inc/infrastructure/rest/dashboard.php';
-require_once ABSPATH . 'inc/infrastructure/rest/settings-admin.php';
-require_once ABSPATH . 'inc/infrastructure/rest/train-types.php';
+require_once ABSPATH . 'inc/infrastructure/rest/shared/permissions.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/stations.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/routes.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/operations.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/import-export.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/dashboard.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/settings-admin.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/train-types.php';
 
 if ( ! function_exists( 'MRT_admin_app_url' ) ) {
 	function MRT_admin_app_url( string $path = '' ): string {

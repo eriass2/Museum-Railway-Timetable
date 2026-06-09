@@ -20,35 +20,43 @@ Admin (`frontend/vue/src/admin/`) använder **lager först**, med **funktionsmap
 
 ## Funktionsmappar
 
-Skapa `kebab-case/`-undermapp när en admin-sida har **2+ egna filer i samma lager**:
-
-```
-components/traffic-notices/TrafficNoticesForm.vue
-components/timetable-editor/TimetableEditorTripsTab.vue
-composables/traffic-notices/useTrafficNoticesPage.ts
-utils/traffic-notices/trafficNoticesAdmin.ts
-```
+Skapa `kebab-case/`-undermapp när en admin-sida har **2+ egna filer i samma lager**.
 
 **Regler:**
-- Mappnamn = funktion/sida (`traffic-notices`, `import-export`, `timetable-editor`)
+- Mappnamn = funktion/sida (`traffic-notices`, `timetable-editor`, `stations-routes`, …)
 - Inuti funktionsmappen: **inget `Admin`-prefix** — mappen ger kontext
 - Delade byggblock stannar i `components/ui/` (aldrig feature-mapp)
-- Sid-specifik logik i `composables/useXxxPage.ts` → flytta till `composables/<feature>/`
-- Sid-specifika helpers i `utils/` → flytta till `utils/<feature>/`
+- Sid-specifik `useXxxPage.ts` → `composables/<feature>/`
+- Sid-specifika helpers → `utils/<feature>/`
 - `pages/` och `api/` förblir platta (en fil per route/resurs)
+
+## Befintliga feature-mappar
+
+| Feature | Page | components/ | composables/ | utils/ |
+|---------|------|-------------|--------------|--------|
+| Trafikmeddelanden | `TrafficNoticesPage` | `traffic-notices/` | `traffic-notices/` | `traffic-notices/` |
+| Tidtabellsredigerare | `TimetableEditorPage` | `timetable-editor/` | `timetable-editor/` | `timetable-editor/` |
+| Stationer & linjer | `StationsRoutesPage` | `stations-routes/` | `stations-routes/` | `stations-routes/` |
+| Priser | `PricesPage` | `prices/` | `prices/` | `prices/` |
+| Import/export | `ImportExportPage` | `import-export/` | `import-export/` | — |
+
+Ny kod för ovan → lägg i befintlig undermapp, inte i rot.
 
 ## När INTE skapa mapp
 
 - En ensam komponent/helper (`AdminLoadState.vue`, `adminConfirm.ts`)
-- Generella verktyg som används överallt (`adminLabels.ts`, `downloadBase64File.ts`)
+- Generella verktyg (`adminLabels.ts`, `settingsTime.ts`, `downloadBase64File.ts`)
+- Delade composables (`useAdminResource`, `useAdminSaveNotice`, `adminDiscardGuard`, …)
+- Tvärgående mobil (`MobileTimetablePanel`, `useMobileAdmin`) — används på många sidor
+- Enskilda sidor utan utbrott (`TrainTypesPage`, `ShortcodesPage`, `SettingsPage`)
 
 ## Vid ny kod eller refaktorering
 
-1. Kolla om funktionen redan har en undermapp — lägg nya filer där
-2. Har sidan 2+ filer i samma lager? Gruppera dem
-3. Uppdatera alla imports och kör `.\scripts\vue-check.ps1`
+1. Finns feature-mapp? → lägg filen där
+2. Har sidan 2+ filer i samma lager? → skapa `kebab-case/`
+3. Uppdatera imports och kör `.\scripts\vue-check.ps1`
 
-## Referens (trafikmeddelanden)
+## Exempel (trafikmeddelanden)
 
 ```
 pages/TrafficNoticesPage.vue

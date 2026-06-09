@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once dirname( __DIR__, 2 ) . '/scripts/csv-cli-stubs.php';
 require_once ABSPATH . 'inc/import/csv/loader.php';
-require_once ABSPATH . 'inc/infrastructure/rest/csv-download.php';
+require_once ABSPATH . 'inc/infrastructure/rest/admin/csv-download.php';
 
 final class CsvImportHelpersTest extends TestCase {
 

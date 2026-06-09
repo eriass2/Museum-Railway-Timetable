@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/import/csv/loader.php';
-require_once MRT_PATH . 'inc/infrastructure/rest/csv-download.php';
+require_once __DIR__ . '/csv-download.php';
 
 /**
  * Register import/export routes.
