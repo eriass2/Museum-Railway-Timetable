@@ -160,7 +160,8 @@ function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year
 		return $cached;
 	}
 
-	$built = MRT_build_journey_calendar_month(
+	$started_at = microtime( true );
+	$built      = MRT_build_journey_calendar_month(
 		$from_station_id,
 		$to_station_id,
 		$year,
@@ -168,6 +169,50 @@ function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year
 		$trip_type
 	);
 	MRT_journey_calendar_month_cache_set( $cache_key, $built );
+	MRT_journey_calendar_maybe_log_slow_build(
+		$started_at,
+		$from_station_id,
+		$to_station_id,
+		$year,
+		$month,
+		$trip_type
+	);
 
 	return $built;
+}
+
+/**
+ * Log slow uncached calendar month builds in development (Fas 4 perf baseline).
+ *
+ * @param float  $started_at microtime(true) before build.
+ */
+function MRT_journey_calendar_maybe_log_slow_build(
+	float $started_at,
+	int $from_station_id,
+	int $to_station_id,
+	int $year,
+	int $month,
+	string $trip_type
+): void {
+	if ( ! MRT_is_development_mode() ) {
+		return;
+	}
+
+	$elapsed_ms = ( microtime( true ) - $started_at ) * 1000;
+	$threshold  = (int) apply_filters( 'mrt_journey_calendar_slow_ms', 500 );
+	if ( $elapsed_ms < $threshold ) {
+		return;
+	}
+
+	MRT_log(
+		sprintf( 'Slow journey calendar month build: %.0f ms', $elapsed_ms ),
+		array(
+			'from_station_id' => $from_station_id,
+			'to_station_id'   => $to_station_id,
+			'year'            => $year,
+			'month'           => $month,
+			'trip_type'       => $trip_type,
+		),
+		'warn'
+	);
 }

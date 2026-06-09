@@ -12,6 +12,7 @@ import WizardDateStep from '../wizard/components/WizardDateStep.vue';
 import WizardTripStep from '../wizard/components/WizardTripStep.vue';
 import WizardSummaryStep from '../wizard/components/WizardSummaryStep.vue';
 import { cfgStr } from '../wizard/utils/wizardLabels';
+import { logWizardStepInteractive } from '../wizard/utils/wizardStepTiming';
 
 const props = defineProps<{ config: WizardVueConfig }>();
 
@@ -39,9 +40,13 @@ const progressItems = computed(() => {
 
 watch(
   () => store.step,
-  async () => {
+  async (step) => {
+    const started = performance.now();
     await nextTick();
     const panel = panelsRef.value?.querySelector('.mrt-step-panel--active');
+    if (panel) {
+      logWizardStepInteractive(props.config, step, performance.now() - started);
+    }
     const focusEl = panel?.querySelector(
       '.mrt-step-progress__item.is-active, h2.mrt-heading--surface-title',
     ) as HTMLElement | null;

@@ -2,6 +2,7 @@ import type { MrtRestConfig } from '../config/types';
 import { configureMrtLog, mrtLog, resolveMrtLogSource } from '../utils/mrtLog';
 import { resolveMrtString } from '../utils/mrtStrings';
 import { buildMrtRestUrlFromConfig, resolveMrtRestNonce } from './restUrl';
+import { logMrtRestTiming } from './mrtRestTiming';
 
 export type MrtRestResponse<T> = {
   success: boolean;
@@ -98,16 +99,20 @@ export async function mrtRestRequest<T>(
     requestInit.body = JSON.stringify(init.body ?? {});
   }
 
+  const started = performance.now();
   try {
     const res = await fetch(url, requestInit);
     const json = await res.json().catch(() => null);
     if (!res.ok) {
       logRestFailure(config, init, res.status, json, 'http');
+      logMrtRestTiming(config, init, performance.now() - started, false);
       return { success: false, message: errorMessage(json, res.status, config) };
     }
+    logMrtRestTiming(config, init, performance.now() - started, true);
     return { success: true, data: json as T };
   } catch {
     logRestFailure(config, init, 0, null, 'network');
+    logMrtRestTiming(config, init, performance.now() - started, false);
     return {
       success: false,
       message: resolveMrtString(config, 'networkError', 'Nätverksfel. Försök igen.'),

@@ -64,6 +64,7 @@ Manual regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
 - **Timetable overview** and **month day panel**: JSON from `GET /timetables/{id}/overview` and `GET /timetables/day`; UI in `components/overview/` + `styles/timetable-overview.css` (no `v-html`, no public PHP HTML).
 - **Month calendar** grid: config JSON in mount; day detail uses shared overview components.
 - **Journey wizard**: reactive store; REST via `mrtRestRequest` (`journey/search`, `journey/calendar`, `journey/connection-detail`). Client-side caches for calendar month and trip search avoid redundant refetch on back navigation — see [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md).
+- **Dev perf logging** (wizard + REST): when `isDevMode` is true, browser console shows `[MRT wizard] REST …ms` per request and `wizard step interactive: …ms` on step changes. PHP dev logs slow uncached calendar builds (`mrt_journey_calendar_slow_ms`, default 500 ms).
 - **PHP HTML** timetable renderers removed; Vue-admin editor uses the same overview component as the public site.
 
 ## Wizard Vue layout
@@ -80,7 +81,7 @@ frontend/vue/src/
     store/                   # createWizardStore, wizardStoreGetters, route/steps/selections
     composables/             # useTripConnections, useWizardCalendar, useConnectionDetail, useWizardDebug
     components/              # step SFCs
-    utils/                   # wizardCalendarCache, tripConnectionsCache, …
+    utils/                   # wizardCalendarCache, tripConnectionsCache, wizardStepTiming, …
 ```
 
 Wizard performance roadmap: [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md).

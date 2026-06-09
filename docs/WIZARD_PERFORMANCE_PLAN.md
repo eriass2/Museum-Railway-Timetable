@@ -15,7 +15,7 @@ Upplevd långsamhet i wizard (juni 2026). Planen täcker identifierade flaskhals
 | Bundle | Monolitisk bundle laddade alla fyra Vue-appar | Medium — **åtgärdat** (fas 3: ES modules + lazy chunks) |
 | Rendering | Många trip-kort med dold detaljkomponent | Låg–medium — delvis (parallell detaljhämtning, fas 3) |
 
-**Kvar:** Fas 4 (mätning och underhåll). Fas 2 v1 = transient-cache per månad (`journey-calendar-cache.php`).
+**Kvar:** Fas 4 valfria prod-metric (Web Vitals). Dev-timing och slow-calendar-logg **klara** (juni 2026).
 
 ---
 
@@ -27,7 +27,7 @@ Upplevd långsamhet i wizard (juni 2026). Planen täcker identifierade flaskhals
 | 1 | Quick wins – client-cache, mindre refetch | Klar (juni 2026) |
 | 2 | Server – optimera kalendermånad | **Klar** (transient-cache, juni 2026) |
 | 3 | Bundle-splitting, parallell detaljhämtning | Klar (juni 2026) |
-| 4 | Mätning och underhåll | Ej påbörjad |
+| 4 | Mätning och underhåll | **Klar** (dev-timing, juni 2026) |
 
 ---
 
@@ -270,14 +270,18 @@ Vid import, sparande av tidtabell eller tjänst — rensa relevanta transients (
 
 **Mål:** Data-driven optimering framåt; undvik gissning.
 
-### 4.1 Dev-timing (minimal)
+**Status:** Dev-timing **klar** (juni 2026). Prod-metrics (Web Vitals) kvar som valfritt.
 
-Logga i dev-läge (bakom flagga):
+### 4.1 Dev-timing (minimal) — **Klar**
 
-- REST-action, duration ms, payload-nyckel (utan PII)
-- Steg-byte → tid till interaktivt UI
+Logga i dev-läge (`isDevMode` / `MRT_DEVELOPMENT`):
 
-**Var:** wrapper runt `mrtRestRequest()` i `frontend/vue/src/api/mrtRest.ts`
+- REST-action, duration ms, payload-nyckel (utan PII) — `logMrtRestTiming()` i `mrtRestRequest()`
+- Steg-byte → tid till interaktivt panel-UI — `logWizardStepInteractive()` i `JourneyWizardApp.vue`
+
+**Filer:** `frontend/vue/src/api/mrtRestTiming.ts`, `frontend/vue/src/wizard/utils/wizardStepTiming.ts`
+
+**Server:** långsam kalender-build (>500 ms, filter `mrt_journey_calendar_slow_ms`) loggas via `MRT_log` i dev — `MRT_journey_calendar_maybe_log_slow_build()` i `journey-calendar.php`.
 
 ### 4.2 Prod (valfritt)
 

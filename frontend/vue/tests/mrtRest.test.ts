@@ -33,6 +33,32 @@ describe('mrtRestRequest', () => {
     expect(res.data?.overview.timetableId).toBe(1);
   });
 
+  it('logs REST duration in dev mode on success', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({ connections: [] }),
+      }),
+    );
+    const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => undefined);
+    configureMrtLog({ isDevMode: true, defaultSource: 'wizard' });
+
+    await mrtRestRequest(
+      { ...config, isDevMode: true, app: 'wizard' },
+      { method: 'POST', path: 'journey/search', body: { from_station: 1, to_station: 2, date: '2026-05-01' } },
+    );
+
+    expect(infoSpy).toHaveBeenCalledWith(
+      '[MRT wizard]',
+      expect.stringMatching(/^REST \d+ms ok POST journey\/search$/),
+      expect.objectContaining({
+        ok: true,
+        key: 'POST journey/search | from=1&to=2&date=2026-05-01',
+      }),
+    );
+  });
+
   it('returns message on HTTP error', async () => {
     vi.stubGlobal(
       'fetch',
