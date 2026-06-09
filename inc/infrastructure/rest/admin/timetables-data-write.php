@@ -89,11 +89,7 @@ function MRT_rest_add_timetable_service( int $timetable_id, array $body ) {
 	$service_id = wp_insert_post(
 		array(
 			'post_type'   => MRT_POST_TYPE_SERVICE,
-			'post_title'  => MRT_build_service_auto_title(
-				$parsed['route_id'],
-				$parsed['end_station_id'],
-				$parsed['direction']
-			),
+			'post_title'  => MRT_build_service_auto_title( $parsed['route_id'], 0, '' ),
 			'post_status' => 'publish',
 		)
 	);
@@ -108,8 +104,8 @@ function MRT_rest_add_timetable_service( int $timetable_id, array $body ) {
 		(int) $service_id,
 		$parsed['route_id'],
 		$parsed['train_type_id'],
-		$parsed['end_station_id'],
-		$parsed['direction']
+		0,
+		''
 	);
 }
 

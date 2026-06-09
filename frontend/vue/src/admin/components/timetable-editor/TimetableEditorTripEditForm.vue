@@ -11,7 +11,6 @@ export type TripEditDraft = TimetableTripDraft & { service_id: number };
 withDefaults(
   defineProps<{
     detail: TimetableDetail;
-    destinations: { id: number; name: string }[];
     trainTypeIconKey: (typeId: number) => string;
     embedded?: boolean;
   }>(),
@@ -25,7 +24,6 @@ const cfg = adminConfig();
 const emit = defineEmits<{
   save: [];
   cancel: [];
-  'route-change': [];
 }>();
 </script>
 
@@ -40,10 +38,8 @@ const emit = defineEmits<{
     <TimetableTripFieldsBlock
       v-model:draft="draft"
       :detail="detail"
-      :destinations="destinations"
       :field-id-prefix="`trip-edit-${draft.service_id}`"
       :train-type-icon-key="trainTypeIconKey"
-      @route-change="emit('route-change')"
     />
     <AdminFormActions class="mrt-admin-trip-edit__actions">
       <MrtButton context="admin" variant="primary" @click="emit('save')">

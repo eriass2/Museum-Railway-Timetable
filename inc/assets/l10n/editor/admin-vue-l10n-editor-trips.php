@@ -41,9 +41,8 @@ function MRT_admin_vue_l10n_editor_trips(): array {
 		),
 		'editorRoutePrompt'       => __( '— Rutt —', 'museum-railway-timetable' ),
 		'editorTrainTypePrompt'   => __( '— Tågtyp —', 'museum-railway-timetable' ),
-		'editorDestinationPrompt' => __( '— Slutstation —', 'museum-railway-timetable' ),
-		'editorDestinationHint'   => __(
-			'Slutstation längs rutten. Behövs om turen inte går hela sträckan.',
+		'editorDestinationAuto'   => __(
+			'Slutstation sätts automatiskt från stopptider — sista stationen med tid.',
 			'museum-railway-timetable'
 		),
 		'editorStandardTrainType' => __( '— Standard —', 'museum-railway-timetable' ),

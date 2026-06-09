@@ -193,14 +193,15 @@
 
 ---
 
-### D13. Auto slutstation från stopptider (A7) 🟡
+### D13. Auto slutstation från stopptider (A7) 🟢
 
 | | |
 |---|---|
 | **Feedback** | Sista station med tid = turens slutstation |
 | **Fråga** | Gäller **sista stopp med tid**, eller sista där tåget stannar (`pickup`/`dropoff`)? Hur hanteras turer som vänder före ruttslut? |
+| **Beslut** | **Sista station med tid** (ankomst eller avgång) i ruttsordning; manuellt destinationsfält borttaget i turformulär |
 | **Beslut av** | Operatör + domän |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — A) härled vid sparande av stopptider (`MRT_sync_service_end_station_from_stops`) |
 
 ---
 
@@ -278,7 +279,8 @@
 | **Fråga** | Efter bytestid-fix (B1): admin Fas 1 (A1, A7, A8) eller reseplanerare quick wins (J7, J9, J1–J3)? |
 | **Förslag** | Parallellt: **J7+J9** (copy + font, liten) + **admin A1** (auto start/slut) medan **B2** utreds |
 | **Beslut av** | Team |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — A) avsluta admin Fas 1: **A7** (→ ev. A6), **J2** polish |
+| **Läge juni 2026** | B1–B3, J7/J9/J1, A1, A8, D2/D17 redan levererat i `experiment/vue-public-ui` |
 
 ---
 
@@ -303,6 +305,8 @@
 | 2026-06-09 | D2 | **A** — beta-banner ovanför steg-nav; valfri `beta_feedback_url` | Team |
 | 2026-06-09 | D17 | **C** — fixture B5/B9–B14, [LINNES_HAMMARBY.md](../LINNES_HAMMARBY.md), admin-checklista | Team |
 | 2026-06-09 | D1 | **B** — *Ingen trafik för din resa denna månad* / legend *Trafik för din resa* | Team |
+| 2026-06-09 | D18 | **A** — nästa: **A7** (auto slutstation), ev. A6; **J2** som CSS-polish; J8/A2 senare | Team |
+| 2026-06-09 | D13 | **A** — sista station med tid i ruttsordning; synkas vid stopptidssparande; dropdown borttagen | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 

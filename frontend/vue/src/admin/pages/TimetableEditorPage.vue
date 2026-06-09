@@ -29,9 +29,7 @@ const {
   error,
   dateInput,
   newTrip,
-  destinations,
   editTrip,
-  editDestinations,
   tripsView,
   stoptimesView,
   stoptimesPanelRef,
@@ -52,7 +50,6 @@ const {
   loadDetail,
   loadOverview,
   onStoptimesGridToggle,
-  loadEditDestinations,
   startCreateTrip,
   requestBackToTripsList,
   requestBackToStoptimesList,
@@ -165,8 +162,6 @@ function onTabClick(next: TimetableEditorTab): void {
         v-model:edit-trip="editTrip"
         :can-manage="cfg.canManage"
         :detail="detail"
-        :destinations="destinations"
-        :edit-destinations="editDestinations"
         :view-mode="tripsView"
         :train-type-icon-key="trainTypeIconKey"
         @open-stoptimes="openStoptimes"
@@ -176,7 +171,6 @@ function onTabClick(next: TimetableEditorTab): void {
         @remove-trip="removeTrip"
         @add-trip="addTrip"
         @save-edit="saveEditTrip"
-        @route-change="editTrip && loadEditDestinations(editTrip.route_id, true)"
       />
 
       <TimetableEditorStoptimesPanel

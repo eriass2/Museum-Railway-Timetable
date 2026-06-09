@@ -4,7 +4,6 @@ import {
   addTimetableService,
   deleteTimetable,
   getDeviations,
-  getRouteDestinations,
   getTimetable,
   getTimetableOverview,
   removeTimetableService,
@@ -30,7 +29,6 @@ import { adminErrorMessage, adminFmt, adminStr } from '../../utils/adminLabels';
 import type { TimetableOverviewPayload } from '../../../types/timetableOverview';
 
 export type TimetableServiceEditRow = TimetableServiceRow & {
-  end_station_id?: number;
   highlight_label?: string;
   highlight_color?: string;
   highlight_note?: string;
@@ -53,9 +51,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
   const error = ref('');
   const dateInput = ref('');
   const newTrip = ref(emptyTripDraft());
-  const destinations = ref<{ id: number; name: string }[]>([]);
   const editTrip = ref<TripEditDraft | null>(null);
-  const editDestinations = ref<{ id: number; name: string }[]>([]);
   const tripFormSnapshot = ref('');
   const tripsView = ref<TripsPanelView>('list');
   const stoptimesView = ref<StoptimesPanelView>('list');
@@ -154,9 +150,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
 
   function backToTripsList(): void {
     editTrip.value = null;
-    editDestinations.value = [];
     newTrip.value = emptyTripDraft();
-    destinations.value = [];
     tripsView.value = 'list';
     tripFormSnapshot.value = '';
   }
@@ -206,9 +200,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
       return;
     }
     editTrip.value = null;
-    editDestinations.value = [];
     newTrip.value = emptyTripDraft();
-    destinations.value = [];
     tripsView.value = 'create';
     tripFormSnapshot.value = tripDraftSnapshot(newTrip.value);
   }
@@ -245,23 +237,8 @@ export function useTimetableEditorPage(timetableId: () => number) {
     }
   });
 
-  watch(
-    () => newTrip.value.route_id,
-    async (routeId) => {
-      newTrip.value.end_station_id = 0;
-      destinations.value = routeId ? (await getRouteDestinations(routeId)).destinations : [];
-    },
-  );
-
   function serviceNumberForEdit(service: TimetableServiceEditRow): string {
     return service.service_number === String(service.id) ? '' : service.service_number;
-  }
-
-  async function loadEditDestinations(routeId: number, resetEnd = false): Promise<void> {
-    if (editTrip.value && resetEnd) {
-      editTrip.value.end_station_id = 0;
-    }
-    editDestinations.value = routeId ? (await getRouteDestinations(routeId)).destinations : [];
   }
 
   async function startEditTrip(serviceId: number): Promise<void> {
@@ -276,14 +253,12 @@ export function useTimetableEditorPage(timetableId: () => number) {
       service_number: serviceNumberForEdit(service),
       route_id: service.route_id,
       train_type_id: service.train_type_id,
-      end_station_id: service.end_station_id ?? 0,
       highlight_label: service.highlight_label ?? '',
       highlight_color: service.highlight_color || '#fff9c4',
       highlight_note: service.highlight_note ?? '',
     };
     tripFormSnapshot.value = tripDraftSnapshot(editTrip.value);
     tripsView.value = 'edit';
-    await loadEditDestinations(service.route_id);
   }
 
   async function cancelEditTrip(): Promise<void> {
@@ -400,9 +375,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
     error,
     dateInput,
     newTrip,
-    destinations,
     editTrip,
-    editDestinations,
     tripsView,
     stoptimesView,
     stoptimesPanelRef,
@@ -423,7 +396,6 @@ export function useTimetableEditorPage(timetableId: () => number) {
     loadDetail,
     loadOverview,
     onStoptimesGridToggle,
-    loadEditDestinations,
     startCreateTrip,
     requestBackToTripsList,
     requestBackToStoptimesList,

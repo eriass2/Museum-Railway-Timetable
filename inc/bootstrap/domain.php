@@ -63,6 +63,7 @@ function MRT_load_domain_modules(): void {
 	require_once MRT_PATH . 'inc/domain/service/stoptimes-persist.php';
 	require_once MRT_PATH . 'inc/domain/service/route-stoptimes-editor.php';
 	require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
+	require_once MRT_PATH . 'inc/domain/service/service-end-station.php';
 	require_once MRT_PATH . 'inc/domain/service/timetable-trip-fields.php';
 	require_once MRT_PATH . 'inc/domain/service/connections.php';
 	require_once MRT_PATH . 'inc/domain/route/destinations.php';

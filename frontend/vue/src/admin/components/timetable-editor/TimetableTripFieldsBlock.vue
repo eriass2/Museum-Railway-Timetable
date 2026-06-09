@@ -8,7 +8,6 @@ import { adminConfig } from '../../types';
 
 const props = defineProps<{
   detail: TimetableDetail;
-  destinations: { id: number; name: string }[];
   fieldIdPrefix: string;
   trainTypeIconKey: (typeId: number) => string;
 }>();
@@ -17,12 +16,7 @@ const draft = defineModel<TimetableTripDraft>('draft', { required: true });
 
 const cfg = adminConfig();
 
-const emit = defineEmits<{
-  'route-change': [];
-}>();
-
 const routeSelectId = computed(() => `${props.fieldIdPrefix}-route`);
-const destinationSelectId = computed(() => `${props.fieldIdPrefix}-dest`);
 const serviceNumberInputId = computed(() => `${props.fieldIdPrefix}-num`);
 const trainTypeSelectId = computed(() => `${props.fieldIdPrefix}-type`);
 
@@ -35,29 +29,11 @@ const selectedTrainTypeName = computed(
   <div class="mrt-admin-trip-fields">
     <p class="mrt-admin-trip-fields__field">
       <label :for="routeSelectId">{{ adminStr(cfg, 'editorColRoute') }}</label>
-      <select
-        :id="routeSelectId"
-        v-model.number="draft.route_id"
-        class="widefat"
-        @change="emit('route-change')"
-      >
+      <select :id="routeSelectId" v-model.number="draft.route_id" class="widefat">
         <option :value="0">{{ adminStr(cfg, 'editorRoutePrompt') }}</option>
         <option v-for="r in detail.routes" :key="r.id" :value="r.id">{{ r.title }}</option>
       </select>
-    </p>
-
-    <p class="mrt-admin-trip-fields__field">
-      <label :for="destinationSelectId">{{ adminStr(cfg, 'editorColDestination') }}</label>
-      <select
-        :id="destinationSelectId"
-        v-model.number="draft.end_station_id"
-        class="widefat"
-        :disabled="!draft.route_id"
-      >
-        <option :value="0">{{ adminStr(cfg, 'editorDestinationPrompt') }}</option>
-        <option v-for="d in destinations" :key="d.id" :value="d.id">{{ d.name }}</option>
-      </select>
-      <span class="description">{{ adminStr(cfg, 'editorDestinationHint') }}</span>
+      <span class="description">{{ adminStr(cfg, 'editorDestinationAuto') }}</span>
     </p>
 
     <p class="mrt-admin-trip-fields__field">

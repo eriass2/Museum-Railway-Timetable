@@ -180,14 +180,13 @@ final class RestTimetablesDataTest extends TestCase {
 		$result = MRT_rest_add_timetable_service(
 			10,
 			array(
-				'route_id'       => 50,
-				'end_station_id' => 120,
+				'route_id' => 50,
 			)
 		);
 
 		self::assertIsArray( $result );
 		self::assertGreaterThan( 0, $result['service_id'] );
-		self::assertSame( 'Faringe', $result['destination'] );
+		self::assertSame( '—', $result['destination'] );
 		self::assertSame( 10, (int) get_post_meta( (int) $result['service_id'], 'mrt_service_timetable_id', true ) );
 	}
 
@@ -226,7 +225,6 @@ final class RestTimetablesDataTest extends TestCase {
 			701,
 			array(
 				'route_id'       => 50,
-				'end_station_id' => 120,
 				'service_number' => 'B1',
 			)
 		);

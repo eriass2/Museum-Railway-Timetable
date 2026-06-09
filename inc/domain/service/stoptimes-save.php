@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once MRT_PATH . 'inc/domain/service/stoptimes-persist.php';
 require_once MRT_PATH . 'inc/domain/service/route-stoptimes-editor.php';
+require_once MRT_PATH . 'inc/domain/service/service-end-station.php';
 
 /**
  * Save all stop times for a service.
@@ -46,6 +47,7 @@ function MRT_save_service_stoptimes_bulk( int $service_id, array $stops ) {
 		MRT_cleanup_inserted_stoptimes_for_save_all( $wpdb, $inserted_ids );
 		return new WP_Error( 'db_delete', __( 'Failed to replace stop times.', MRT_TEXT_DOMAIN ) );
 	}
+	MRT_sync_service_end_station_from_stops( $service_id, $stops );
 	return true;
 }
 

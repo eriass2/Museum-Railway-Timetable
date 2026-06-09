@@ -21,8 +21,6 @@ export type TripsPanelView = 'list' | 'create' | 'edit';
 defineProps<{
   canManage: boolean;
   detail: TimetableDetail;
-  destinations: { id: number; name: string }[];
-  editDestinations: { id: number; name: string }[];
   trainTypeIconKey: (typeId: number) => string;
   viewMode: TripsPanelView;
 }>();
@@ -39,7 +37,6 @@ const emit = defineEmits<{
   'remove-trip': [serviceId: number];
   'add-trip': [];
   'save-edit': [];
-  'route-change': [];
 }>();
 </script>
 
@@ -107,7 +104,6 @@ const emit = defineEmits<{
         <TimetableTripFieldsBlock
           v-model:draft="newTrip"
           :detail="detail"
-          :destinations="destinations"
           field-id-prefix="trip-new"
           :train-type-icon-key="trainTypeIconKey"
         />
@@ -127,10 +123,8 @@ const emit = defineEmits<{
       <TimetableEditorTripEditForm
         v-model:draft="editDraft"
         :detail="detail"
-        :destinations="editDestinations"
         :train-type-icon-key="trainTypeIconKey"
         embedded
-        @route-change="emit('route-change')"
         @save="emit('save-edit')"
         @cancel="emit('back')"
       />
