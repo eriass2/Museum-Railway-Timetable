@@ -16,6 +16,7 @@ Shortcode på **startsidan** som visar generella trafikmeddelanden och tur-avvik
 | 3 | Admin: `TrafficNoticesPage.vue`, route, top-level-meny | Klar |
 | 4 | Shortcode + Vue + CSS + tester | Klar |
 | 5 | Docs: SHORTCODES, REST_API, ADMIN_WORKFLOW, admin help | Klar |
+| 6 | Statisk E2E-mount | Klar — `e2e/traffic-notices-mount.spec.ts`, `a11y-smoke` |
 
 ---
 

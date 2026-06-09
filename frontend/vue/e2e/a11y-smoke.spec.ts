@@ -6,6 +6,7 @@ const publicMounts = [
   { name: 'wizard date step', path: '/wizard?debug=date' },
   { name: 'month calendar', path: '/month' },
   { name: 'timetable overview', path: '/overview' },
+  { name: 'traffic notices', path: '/traffic-notices' },
 ] as const;
 
 for (const mount of publicMounts) {
