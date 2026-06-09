@@ -2,10 +2,12 @@ import { describe, expect, it } from 'vitest';
 import type { RouteRow } from '../src/admin/types';
 import {
   appendRouteStation,
+  deriveRouteTermini,
   emptyRouteDraft,
   moveRouteStation,
   removeRouteStation,
   routeStationRoleFor,
+  syncRouteTermini,
 } from '../src/admin/utils/stations-routes/routeStationEditor';
 
 describe('routeStationEditor', () => {
@@ -31,10 +33,28 @@ describe('routeStationEditor', () => {
     expect(appendRouteStation([1, 2], 2)).toEqual([1, 2]);
   });
 
-  it('removes station and clears matching endpoints', () => {
+  it('derives termini from first and last station', () => {
+    expect(deriveRouteTermini([10, 20, 30])).toEqual({
+      start_station: 10,
+      end_station: 30,
+    });
+    expect(deriveRouteTermini([])).toEqual({ start_station: 0, end_station: 0 });
+  });
+
+  it('syncRouteTermini overwrites manual endpoints', () => {
+    expect(
+      syncRouteTermini({
+        ...route(),
+        start_station: 30,
+        end_station: 10,
+      }),
+    ).toEqual(route());
+  });
+
+  it('removes station and re-derives termini', () => {
     const updated = removeRouteStation(route(), 0);
     expect(updated.station_ids).toEqual([20, 30]);
-    expect(updated.start_station).toBe(0);
+    expect(updated.start_station).toBe(20);
     expect(updated.end_station).toBe(30);
   });
 

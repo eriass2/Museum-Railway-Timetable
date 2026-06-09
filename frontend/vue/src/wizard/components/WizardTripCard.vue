@@ -72,7 +72,7 @@ async function toggleDetail(): Promise<void> {
       />
     </template>
     <template #side>
-      <MrtVehicleRow :items="vehicleItems" />
+      <MrtVehicleRow :items="vehicleItems" compact />
         <p v-if="doorToDoorMinutes !== null" class="mrt-trip-card__duration">
         {{ formatDuration(doorToDoorMinutes, cfg) }}
       </p>

@@ -2,7 +2,11 @@
 import { computed, ref } from 'vue';
 import { AdminInlineForm, AdminRowActions, MrtButton } from '../ui';
 import { adminStr } from '../../utils/adminLabels';
-import { appendRouteStation, routeStationRoleFor } from '../../utils/stations-routes/routeStationEditor';
+import {
+  appendRouteStation,
+  routeStationRoleFor,
+  syncRouteTermini,
+} from '../../utils/stations-routes/routeStationEditor';
 import { adminConfig } from '../../types';
 import type { RouteRow, StationRow } from '../../types';
 
@@ -27,37 +31,15 @@ const availableStations = computed(() =>
 
 function onAppend() {
   if (!addStationId.value) return;
-  route.value.station_ids = appendRouteStation(route.value.station_ids, addStationId.value);
+  route.value = syncRouteTermini({
+    ...route.value,
+    station_ids: appendRouteStation(route.value.station_ids, addStationId.value),
+  });
   addStationId.value = 0;
 }
 </script>
 
 <template>
-  <fieldset class="mrt-admin-route-editor__section mrt-admin-route-editor__endpoints">
-    <legend>{{ adminStr(cfg, 'stationsRouteEndpointsLegend') }}</legend>
-    <p class="description">{{ adminStr(cfg, 'stationsRouteEndpointsHint') }}</p>
-    <div class="mrt-admin-route-editor__endpoint-fields">
-      <label class="mrt-admin-route-editor__label" :for="`${idPrefix}-start`">
-        {{ adminStr(cfg, 'stationsRouteStart') }}
-      </label>
-      <select :id="`${idPrefix}-start`" v-model.number="route.start_station">
-        <option :value="0">—</option>
-        <option v-for="sid in route.station_ids" :key="`${idPrefix}-start-${sid}`" :value="sid">
-          {{ stationTitle(sid) }}
-        </option>
-      </select>
-      <label class="mrt-admin-route-editor__label" :for="`${idPrefix}-end`">
-        {{ adminStr(cfg, 'stationsRouteEnd') }}
-      </label>
-      <select :id="`${idPrefix}-end`" v-model.number="route.end_station">
-        <option :value="0">—</option>
-        <option v-for="sid in route.station_ids" :key="`${idPrefix}-end-${sid}`" :value="sid">
-          {{ stationTitle(sid) }}
-        </option>
-      </select>
-    </div>
-  </fieldset>
-
   <div class="mrt-admin-route-editor__section">
     <h3 class="mrt-admin-route-editor__heading">{{ adminStr(cfg, 'stationsRouteOrderLegend') }}</h3>
     <p class="description">{{ adminStr(cfg, 'stationsRouteOrderHint') }}</p>

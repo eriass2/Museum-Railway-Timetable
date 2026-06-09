@@ -16,7 +16,11 @@ import { useAdminResource } from '../useAdminResource';
 import { useAdminRowFlash } from '../useAdminRowFlash';
 import { useAdminSaveNotice } from '../useAdminSaveNotice';
 import { adminErrorMessage, adminFmt, adminStr } from '../../utils/adminLabels';
-import { emptyRouteDraft, emptyStationDraft } from '../../utils/stations-routes/routeStationEditor';
+import {
+  emptyRouteDraft,
+  emptyStationDraft,
+  syncRouteTermini,
+} from '../../utils/stations-routes/routeStationEditor';
 import { resolveStationPriceZoneOptions, stationMissingPriceZone } from '../../utils/stations-routes/stationPriceZones';
 import type { RoutesPanelView } from '../../components/stations-routes/RoutesPanel.vue';
 import type { StationsPanelView } from '../../components/stations-routes/StationsPanel.vue';
@@ -85,7 +89,7 @@ export function useStationsRoutesPage() {
         price_zones: row.price_zones ?? [],
         train_change_map: row.train_change_map ?? {},
       }));
-      routes.value = payload.routes.map((row) => ({ ...row }));
+      routes.value = payload.routes.map((row) => syncRouteTermini({ ...row }));
     },
     { immediate: true },
   );
@@ -234,11 +238,10 @@ export function useStationsRoutesPage() {
       error.value = adminStr(cfg, 'stationsRouteMinStations');
       return;
     }
+    const route = syncRouteTermini(draft);
     await createRoute({
-      title: draft.title.trim(),
-      station_ids: draft.station_ids,
-      start_station: draft.start_station || undefined,
-      end_station: draft.end_station || undefined,
+      title: route.title.trim(),
+      station_ids: route.station_ids,
     });
     backToRoutesList();
     await reload();
@@ -246,7 +249,10 @@ export function useStationsRoutesPage() {
 
   function editRoute(route: RouteRow) {
     sectionTab.value = 'routes';
-    editingRoute.value = { ...route, station_ids: [...route.station_ids] };
+    editingRoute.value = syncRouteTermini({
+      ...route,
+      station_ids: [...route.station_ids],
+    });
     routesView.value = 'edit';
     routeFormSnapshot.value = routeDraftSnapshot(editingRoute.value);
   }
@@ -259,11 +265,10 @@ export function useStationsRoutesPage() {
     }
     const title = editingRoute.value.title;
     const routeId = editingRoute.value.id;
+    const route = syncRouteTermini(editingRoute.value);
     await updateRoute(routeId, {
-      title: editingRoute.value.title,
-      start_station: editingRoute.value.start_station,
-      end_station: editingRoute.value.end_station,
-      station_ids: editingRoute.value.station_ids,
+      title: route.title,
+      station_ids: route.station_ids,
     });
     backToRoutesList();
     showSaveNotice(adminFmt(cfg, 'stationsRouteSaved', title));

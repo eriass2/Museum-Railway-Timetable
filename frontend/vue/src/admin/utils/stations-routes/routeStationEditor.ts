@@ -25,6 +25,22 @@ export function emptyRouteDraft(): RouteRow {
   };
 }
 
+export function deriveRouteTermini(
+  stationIds: number[],
+): Pick<RouteRow, 'start_station' | 'end_station'> {
+  if (!stationIds.length) {
+    return { start_station: 0, end_station: 0 };
+  }
+  return {
+    start_station: stationIds[0],
+    end_station: stationIds[stationIds.length - 1],
+  };
+}
+
+export function syncRouteTermini(route: RouteRow): RouteRow {
+  return { ...route, ...deriveRouteTermini(route.station_ids) };
+}
+
 export function routeStationRoleFor(
   route: Pick<RouteRow, 'start_station' | 'end_station'>,
   stationId: number,
@@ -57,12 +73,6 @@ export function appendRouteStation(ids: number[], stationId: number): number[] {
 }
 
 export function removeRouteStation(route: RouteRow, idx: number): RouteRow {
-  const sid = route.station_ids[idx];
   const station_ids = route.station_ids.filter((_, i) => i !== idx);
-  return {
-    ...route,
-    station_ids,
-    start_station: route.start_station === sid ? 0 : route.start_station,
-    end_station: route.end_station === sid ? 0 : route.end_station,
-  };
+  return syncRouteTermini({ ...route, station_ids });
 }

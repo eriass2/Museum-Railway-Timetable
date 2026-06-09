@@ -29,8 +29,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / resekort
 - **Typ:** UX
 - **Prioritet:** låg
-- **Status:** öppen
-- **Tekniskt:** `MrtVehicleRow` i `WizardTripCard.vue` — kompakt läge (ikoner utan fordonsnamn).
+- **Status:** beslutad (D7 C) — implementerad
+- **Tekniskt:** `MrtVehicleRow` med `compact` i `WizardTripCard.vue`; full text kvar i `WizardDetailSegment.vue`.
 
 ---
 
@@ -187,8 +187,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin / rutter
 - **Typ:** UX
 - **Prioritet:** medium
-- **Status:** öppen
-- **Tekniskt:** `RouteStationOrderEditor.vue` har dropdowns; meta `mrt_route_start_station` / `mrt_route_end_station`. Härleda från första/sista i `station_ids` vid spara.
+- **Status:** beslutad (D9 A) — implementerad
+- **Tekniskt:** Start/slut sätts automatiskt från första/sista i `station_ids` (admin + REST). Se [D9](2026-06-09-jesper-diskussioner.md#d9-auto-startslutstation-a1-).
 
 ---
 

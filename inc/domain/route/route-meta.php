@@ -33,6 +33,24 @@ function MRT_get_route_stations( $route_id ) {
 	return $route_stations;
 }
 
+/**
+ * @param array<int, mixed> $station_ids
+ * @return array{start: int, end: int}
+ */
+function MRT_derive_route_termini_from_station_ids( array $station_ids ): array {
+	$ids = array_values( array_filter( array_map( 'intval', $station_ids ) ) );
+	if ( $ids === array() ) {
+		return array(
+			'start' => 0,
+			'end'   => 0,
+		);
+	}
+	return array(
+		'start' => (int) $ids[0],
+		'end'   => (int) $ids[ count( $ids ) - 1 ],
+	);
+}
+
 function MRT_update_route_terminus_station_meta( int $route_id, int $station_id, string $meta_key ): void {
 	if ( $station_id > 0 ) {
 		update_post_meta( $route_id, $meta_key, $station_id );

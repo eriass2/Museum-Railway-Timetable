@@ -145,6 +145,13 @@
         max-width: 100%;
     }
 
+    .mrt-journey-wizard .mrt-vehicle-row--compact {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
     .mrt-journey-wizard .mrt-trip-card__duration {
         grid-area: duration;
         margin: 0;
@@ -168,7 +175,7 @@
         height: 18px;
     }
 
-    .mrt-journey-wizard .mrt-vehicle-row__item > span:last-child {
+    .mrt-journey-wizard .mrt-vehicle-row__item > .mrt-vehicle-row__label {
         min-width: 0;
         overflow-wrap: anywhere;
     }

@@ -125,7 +125,7 @@
 | **Feedback** | J1 — ikoner på en rad i grått fält, spara plats |
 | **Fråga** | Alltid ikoner only, eller bara mobil? Ska tooltip/aria innehålla full fordonsnamn? |
 | **Beslut av** | UX — låg risk att implementera med aria-labels |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — C) ikoner only i resekort, text i detaljvy |
 
 ---
 
@@ -151,7 +151,7 @@
 | **Fråga** | Om operatören ** medvetet** vill att start ≠ första station (sällsynt?) — behövs override eller räcker first/last alltid? |
 | **Anteckning** | Idag används start/slut för riktning (`MRT_calculate_direction_from_end_station`) |
 | **Beslut av** | Operatör / domän |
-| **Status** | Öppen — troligen ja till auto utan override |
+| **Status** | **Beslutad** — A) auto first/last, ingen override |
 
 ---
 
@@ -297,6 +297,8 @@
 | Datum | ID | Beslut | Ansvarig |
 |-------|-----|--------|----------|
 | 2026-06-09 | D5 | **A** — `font-weight: 700` i hela publika Vue-UI (planerare, kalender, tidtabell, priser) | Team |
+| 2026-06-09 | D7 | **C** — ikoner only i resekortets grå fält; full text i detaljvy; aria-label + title | Team |
+| 2026-06-09 | D9 | **A** — start/slut härleds från första/sista i `station_ids`; dropdowns borttagna | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 

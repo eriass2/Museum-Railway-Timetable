@@ -64,7 +64,7 @@ Priszoner styr biljettpris i reseplaneraren. Gränsstationer kan ha två zoner. 
 **Samma sida** – fliken **Rutter**
 
 1. Klicka **Ny rutt** i listan
-2. Ange namn och valfria stationer/ändpunkter → **Lägg till**
+2. Ange namn och lägg till stationer i ordning (minst två) → **Lägg till** — start och slut sätts automatiskt till första och sista stationen
 3. För befintlig rutt: **Redigera** → ändra namn och stationer → **Spara rutt**
 4. **Tillbaka till listan** avbryter utan att lämna sidan (bekräftelse om du ändrat något)
 

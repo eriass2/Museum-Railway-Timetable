@@ -11,7 +11,11 @@ import {
 } from '../ui';
 import RoutePreview from './RoutePreview.vue';
 import RouteStationOrderEditor from './RouteStationOrderEditor.vue';
-import { moveRouteStation, removeRouteStation } from '../../utils/stations-routes/routeStationEditor';
+import {
+  moveRouteStation,
+  removeRouteStation,
+  syncRouteTermini,
+} from '../../utils/stations-routes/routeStationEditor';
 import { adminFmt, adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 import type { RouteRow, StationRow } from '../../types';
@@ -41,7 +45,10 @@ const emit = defineEmits<{
 const cfg = adminConfig();
 
 function onNewRouteMove(idx: number, dir: -1 | 1) {
-  newRoute.value.station_ids = moveRouteStation(newRoute.value.station_ids, idx, dir);
+  newRoute.value = syncRouteTermini({
+    ...newRoute.value,
+    station_ids: moveRouteStation(newRoute.value.station_ids, idx, dir),
+  });
 }
 
 function onNewRouteRemove(idx: number) {
@@ -50,7 +57,10 @@ function onNewRouteRemove(idx: number) {
 
 function onEditRouteMove(idx: number, dir: -1 | 1) {
   if (!editingRoute.value) return;
-  editingRoute.value.station_ids = moveRouteStation(editingRoute.value.station_ids, idx, dir);
+  editingRoute.value = syncRouteTermini({
+    ...editingRoute.value,
+    station_ids: moveRouteStation(editingRoute.value.station_ids, idx, dir),
+  });
 }
 
 function onEditRouteRemove(idx: number) {

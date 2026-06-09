@@ -133,16 +133,14 @@ function MRT_rest_create_route_handler( WP_REST_Request $request ) {
  * @param array<string, mixed> $body Fields.
  */
 function MRT_rest_apply_route_meta( int $route_id, array $body ): void {
-	if ( isset( $body['start_station'] ) ) {
-		MRT_update_route_terminus_station_meta( $route_id, (int) $body['start_station'], 'mrt_route_start_station' );
+	if ( ! isset( $body['station_ids'] ) || ! is_array( $body['station_ids'] ) ) {
+		return;
 	}
-	if ( isset( $body['end_station'] ) ) {
-		MRT_update_route_terminus_station_meta( $route_id, (int) $body['end_station'], 'mrt_route_end_station' );
-	}
-	if ( isset( $body['station_ids'] ) && is_array( $body['station_ids'] ) ) {
-		$ids = array_values( array_filter( array_map( 'intval', $body['station_ids'] ) ) );
-		update_post_meta( $route_id, 'mrt_route_stations', $ids );
-	}
+	$ids      = array_values( array_filter( array_map( 'intval', $body['station_ids'] ) ) );
+	$termini  = MRT_derive_route_termini_from_station_ids( $ids );
+	update_post_meta( $route_id, 'mrt_route_stations', $ids );
+	MRT_update_route_terminus_station_meta( $route_id, $termini['start'], 'mrt_route_start_station' );
+	MRT_update_route_terminus_station_meta( $route_id, $termini['end'], 'mrt_route_end_station' );
 }
 
 /**

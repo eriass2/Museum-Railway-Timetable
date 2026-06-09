@@ -62,7 +62,7 @@ function MRT_admin_vue_l10n_stations(): array {
 		),
 		'stationsRouteOrderLegend'   => __( 'Stationer i ordning', 'museum-railway-timetable' ),
 		'stationsRouteOrderHint'     => __(
-			'Ordningen bestämmer i vilken följd tåget passerar hållplatserna. Använd pilarna för att ändra ordning.',
+			'Ordningen bestämmer i vilken följd tåget passerar hållplatserna. Första stationen blir start och sista blir slut (används för riktning dit/från i tidtabellen). Använd pilarna för att ändra ordning.',
 			'museum-railway-timetable'
 		),
 		'stationsRouteStart'         => __( 'Startstation', 'museum-railway-timetable' ),

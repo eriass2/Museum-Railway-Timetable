@@ -3,6 +3,7 @@ import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import MrtSummaryCard from '../src/components/ui/MrtSummaryCard.vue';
 import MrtDetailSegment from '../src/components/ui/MrtDetailSegment.vue';
+import MrtVehicleRow from '../src/components/ui/MrtVehicleRow.vue';
 
 async function render(
   component: Parameters<typeof h>[0],
@@ -20,6 +21,16 @@ describe('UI components (SSR smoke)', () => {
     });
     expect(html).toContain('mrt-summary-card');
     expect(html).toContain('Utresa');
+  });
+
+  it('MrtVehicleRow compact hides labels but keeps aria-label', async () => {
+    const html = await render(MrtVehicleRow, {
+      compact: true,
+      items: [{ kind: 'train', label: 'Museitåg 71', iconUrl: '/icon.svg' }],
+    });
+    expect(html).toContain('mrt-vehicle-row--compact');
+    expect(html).toContain('aria-label="Museitåg 71"');
+    expect(html).not.toContain('Museitåg 71</span>');
   });
 
   it('MrtDetailSegment renders title and notice', async () => {

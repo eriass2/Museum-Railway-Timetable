@@ -175,14 +175,12 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertSame( 'invalid', $result->get_error_code() );
 	}
 
-	public function test_create_route_handler_applies_station_order_and_endpoints(): void {
+	public function test_create_route_handler_derives_endpoints_from_station_order(): void {
 		$request = new WP_REST_Request( 'POST', '/routes' );
 		$request->set_json_params(
 			array(
-				'title'         => 'Uppsala – Faringe',
-				'station_ids'   => array( 1, 2, 3 ),
-				'start_station' => 1,
-				'end_station'   => 3,
+				'title'       => 'Uppsala – Faringe',
+				'station_ids' => array( 1, 2, 3 ),
 			)
 		);
 
@@ -215,8 +213,8 @@ final class RestAdminHandlersTest extends TestCase {
 			array(
 				'title'         => 'New title',
 				'station_ids'   => array( 2, 1, 3 ),
-				'start_station' => 2,
-				'end_station'   => 3,
+				'start_station' => 1,
+				'end_station'   => 1,
 			)
 		);
 
