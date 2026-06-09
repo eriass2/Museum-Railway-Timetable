@@ -148,6 +148,7 @@ watch(isMobile, (mobile) => {
                 {{ opt.label }}
               </option>
             </select>
+            <span class="description">{{ adminStr(cfg, 'editorTypeHint') }}</span>
           </p>
           <AdminFormActions>
             <MrtButton context="admin" variant="primary" @click="createNew">

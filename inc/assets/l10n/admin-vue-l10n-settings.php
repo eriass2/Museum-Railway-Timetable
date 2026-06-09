@@ -22,7 +22,15 @@ function MRT_admin_vue_l10n_settings(): array {
 		'settingsEnabledCheckbox' => __( 'Pluginet är aktivt', 'museum-railway-timetable' ),
 		'settingsNote'            => __( 'Anteckning', 'museum-railway-timetable' ),
 		'settingsMinTransfer'     => __( 'Min väntetid vid byte (min)', 'museum-railway-timetable' ),
+		'settingsMinTransferHint' => __(
+			'Extra buffert utöver schemalagda byten i tidtabellen. 0 = endast tidtabellens tider gäller.',
+			'museum-railway-timetable'
+		),
 		'settingsMaxTransfer'     => __( 'Max väntetid vid byte (min)', 'museum-railway-timetable' ),
+		'settingsMaxTransferHint' => __(
+			'Resor med längre väntetid mellan tåg/ben filtreras bort i reseplaneraren.',
+			'museum-railway-timetable'
+		),
 		'settingsOperatorName'    => __( 'Operatörsnamn', 'museum-railway-timetable' ),
 		'settingsOperatorNameHint' => __(
 			'Visas som standardrubrik i reseplaneraren (”Planera resa med …”) om shortcode saknar route_title.',

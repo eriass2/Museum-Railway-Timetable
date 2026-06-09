@@ -18,7 +18,7 @@ function MRT_admin_vue_l10n_editor_trips(): array {
 	return array(
 		'editorColRoute'          => __( 'Rutt', 'museum-railway-timetable' ),
 		'editorColTrainType'      => __( 'Tågtyp', 'museum-railway-timetable' ),
-		'editorColDestination'    => __( 'Destination', 'museum-railway-timetable' ),
+		'editorColDestination'    => __( 'Slutstation', 'museum-railway-timetable' ),
 		'editorStopptimes'        => __( 'Stopptider', 'museum-railway-timetable' ),
 		'editorAddTrip'           => __( 'Lägg till tur', 'museum-railway-timetable' ),
 		'editorEditTrip'          => __( 'Redigera', 'museum-railway-timetable' ),
@@ -41,7 +41,11 @@ function MRT_admin_vue_l10n_editor_trips(): array {
 		),
 		'editorRoutePrompt'       => __( '— Rutt —', 'museum-railway-timetable' ),
 		'editorTrainTypePrompt'   => __( '— Tågtyp —', 'museum-railway-timetable' ),
-		'editorDestinationPrompt' => __( '— Destination —', 'museum-railway-timetable' ),
+		'editorDestinationPrompt' => __( '— Slutstation —', 'museum-railway-timetable' ),
+		'editorDestinationHint'   => __(
+			'Slutstation längs rutten. Behövs om turen inte går hela sträckan.',
+			'museum-railway-timetable'
+		),
 		'editorStandardTrainType' => __( '— Standard —', 'museum-railway-timetable' ),
 	);
 }

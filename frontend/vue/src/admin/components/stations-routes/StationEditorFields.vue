@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { RouterLink } from 'vue-router';
 import { AdminDisclosure } from '../ui';
 import StationTrainChangeEditor from './StationTrainChangeEditor.vue';
 import { adminStr } from '../../utils/adminLabels';
@@ -70,6 +71,12 @@ const cfg = adminConfig();
     </p>
     <p>
       <span class="label">{{ adminStr(cfg, 'stationsColZones') }}</span>
+      <span class="description">
+        {{ adminStr(cfg, 'stationsZonesFormHint') }}
+        <RouterLink :to="{ path: '/help', query: { section: 'price-zones' } }">
+          {{ adminStr(cfg, 'stationsZonesHelpLink') }}
+        </RouterLink>
+      </span>
       <span class="mrt-admin-zone-picks">
         <label
           v-for="zone in priceZoneOptions"

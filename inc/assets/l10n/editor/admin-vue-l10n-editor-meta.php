@@ -31,6 +31,10 @@ function MRT_admin_vue_l10n_editor_meta(): array {
 		'editorTypeYellow'           => __( 'Gul tidtabell', 'museum-railway-timetable' ),
 		'editorTypeRed'              => __( 'Röd tidtabell', 'museum-railway-timetable' ),
 		'editorTypeOrange'           => __( 'Orange tidtabell', 'museum-railway-timetable' ),
+		'editorTypeHint'             => __(
+			'Typen styr färg på trafikdagar i månadskalendern och reseplaneraren (grön, gul, röd, orange).',
+			'museum-railway-timetable'
+		),
 		'editorSaveMeta'             => __( 'Spara namn och typ', 'museum-railway-timetable' ),
 		'editorDeleteTimetable'      => __( 'Ta bort tidtabell', 'museum-railway-timetable' ),
 		'editorTabDates'             => __( 'Trafikdagar', 'museum-railway-timetable' ),

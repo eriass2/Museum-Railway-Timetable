@@ -122,12 +122,14 @@ async function submit() {
                 <th scope="row">{{ adminStr(cfg, 'settingsMinTransfer') }}</th>
                 <td>
                   <input v-model.number="form.min_transfer_minutes" type="number" min="0" max="60" />
+                  <p class="description">{{ adminStr(cfg, 'settingsMinTransferHint') }}</p>
                 </td>
               </tr>
               <tr>
                 <th scope="row">{{ adminStr(cfg, 'settingsMaxTransfer') }}</th>
                 <td>
                   <input v-model.number="form.max_transfer_minutes" type="number" min="0" max="480" />
+                  <p class="description">{{ adminStr(cfg, 'settingsMaxTransferHint') }}</p>
                 </td>
               </tr>
               <tr>

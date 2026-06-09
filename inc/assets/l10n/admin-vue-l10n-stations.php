@@ -71,6 +71,10 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsRouteMoveDown'      => __( 'Flytta ner', 'museum-railway-timetable' ),
 		'stationsRouteRemoveStation' => __( 'Ta bort från rutt', 'museum-railway-timetable' ),
 		'stationsRouteEmptyStations' => __( 'Inga stationer ännu. Lägg till en station nedan.', 'museum-railway-timetable' ),
+		'stationsRouteMinStations'   => __(
+			'En rutt behöver minst två stationer. Lägg till stationer i ordningslistan.',
+			'museum-railway-timetable'
+		),
 		'stationsAddStationPrompt'   => __( 'Lägg till station...', 'museum-railway-timetable' ),
 		'stationsSaveRoute'          => __( 'Spara rutt', 'museum-railway-timetable' ),
 		'stationsTrainChangeSummary' => __( 'Tågbyte', 'museum-railway-timetable' ),
@@ -88,6 +92,10 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsTrainChangeAdd'     => __( 'Lägg till rad', 'museum-railway-timetable' ),
 		'stationsZonesHint'          => __(
 			'Priszoner styr biljettpris i reseplaneraren. Gränsstationer kan ha två zoner (t.ex. 1 och 2).',
+			'museum-railway-timetable'
+		),
+		'stationsZonesFormHint'      => __(
+			'Välj minst en zon om stationen ska ingå i prisberäkningen.',
 			'museum-railway-timetable'
 		),
 		'stationsZonesHelpLink'      => __( 'Läs om priszoner', 'museum-railway-timetable' ),
