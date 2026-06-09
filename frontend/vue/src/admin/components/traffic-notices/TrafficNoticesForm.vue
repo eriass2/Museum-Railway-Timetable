@@ -29,6 +29,7 @@ const cfg = adminConfig();
   <AdminPanel>
     <AdminBackNav @back="emit('back')" />
     <h2>{{ adminStr(cfg, 'trafficNoticesTitle') }}</h2>
+    <p class="notice notice-info">{{ adminStr(cfg, 'trafficNoticesVsDeviations') }}</p>
     <p class="description">{{ visibilityLabel }}</p>
     <p>
       <label>

@@ -24,6 +24,14 @@ function MRT_admin_vue_l10n_editor_deviations(): array {
 			'Inga avvikelser ännu. Lägg till med knappen nedan.',
 			'museum-railway-timetable'
 		),
+		'editorDeviationsIntro'     => __(
+			'Tur-avvikelser gäller ett visst datum och en tur (t.ex. inställt tåg). De visas tillsammans med generella trafikmeddelanden på webbplatsen.',
+			'museum-railway-timetable'
+		),
+		'editorDeviationsBatchHint' => __(
+			'Ändringar sparas inte förrän du klickar «Spara avvikelser».',
+			'museum-railway-timetable'
+		),
 		'editorEditDeviation'       => __( 'Redigera avvikelse', 'museum-railway-timetable' ),
 		'editorAddDeviation'        => __( 'Lägg till avvikelse', 'museum-railway-timetable' ),
 		'editorDeviationDatePrompt' => __( '— Datum —', 'museum-railway-timetable' ),

@@ -2,6 +2,7 @@
 import { computed, ref, watch } from 'vue';
 import {
   AdminBackNav,
+  AdminFieldStack,
   AdminFormActions,
   AdminPanel,
   AdminRowActions,
@@ -119,6 +120,8 @@ watch(
     <AdminUnsavedBanner :show="deviationsDirty" :message="adminStr(cfg, 'editorDeviationsUnsaved')" />
 
     <template v-if="viewMode === 'list'">
+      <p class="description">{{ adminStr(cfg, 'editorDeviationsIntro') }}</p>
+      <p class="description">{{ adminStr(cfg, 'editorDeviationsBatchHint') }}</p>
       <table v-if="rows.length" class="widefat striped">
         <thead>
           <tr>
@@ -167,25 +170,33 @@ watch(
             : adminStr(cfg, 'editorEditDeviation')
         }}
       </h3>
-      <div class="mrt-admin-deviation-detail">
-        <p v-if="viewMode === 'create'">
-          <label for="mrt-deviation-date">{{ adminStr(cfg, 'editorColDate') }}</label>
+      <div class="mrt-admin-trip-fields">
+        <AdminFieldStack
+          v-if="viewMode === 'create'"
+          :label="adminStr(cfg, 'editorColDate')"
+          label-for="mrt-deviation-date"
+        >
           <select
             id="mrt-deviation-date"
+            class="widefat"
             :value="draft.date"
             @change="updateDraftDate(($event.target as HTMLSelectElement).value)"
           >
             <option value="">{{ adminStr(cfg, 'editorDeviationDatePrompt') }}</option>
             <option v-for="d in dates" :key="d" :value="d">{{ d }}</option>
           </select>
-        </p>
-        <p v-else>
+        </AdminFieldStack>
+        <p v-else class="mrt-admin-trip-fields__field">
           <strong>{{ adminStr(cfg, 'editorColDate') }}:</strong> {{ draft.date }}
         </p>
-        <p v-if="viewMode === 'create'">
-          <label for="mrt-deviation-trip">{{ adminStr(cfg, 'editorColTrip') }}</label>
+        <AdminFieldStack
+          v-if="viewMode === 'create'"
+          :label="adminStr(cfg, 'editorColTrip')"
+          label-for="mrt-deviation-trip"
+        >
           <select
             id="mrt-deviation-trip"
+            class="widefat"
             :value="draft.service_id"
             @change="updateDraftTrip(Number(($event.target as HTMLSelectElement).value))"
           >
@@ -194,21 +205,21 @@ watch(
               {{ formatDeviationTripLabel(s) }}
             </option>
           </select>
-        </p>
-        <p v-else>
+        </AdminFieldStack>
+        <p v-else class="mrt-admin-trip-fields__field">
           <strong>{{ adminStr(cfg, 'editorColTrip') }}:</strong> {{ tripLabel(draft.service_id) }}
         </p>
-        <p>
-          <span class="mrt-admin-deviation-detail__label">{{ adminStr(cfg, 'editorColTrainType') }}</span>
+        <AdminFieldStack :label="adminStr(cfg, 'editorColTrainType')">
           <AdminTrainTypeSelect
             v-model="draft.train_type_id"
             show-icon
+            wide
             :icon-key="trainTypeIconKey(draft.train_type_id)"
             :train-types="trainTypes"
             :disabled="!canOperate"
           />
-        </p>
-        <p>
+        </AdminFieldStack>
+        <p class="mrt-admin-trip-fields__field">
           <label>
             <input
               type="checkbox"
@@ -219,8 +230,10 @@ watch(
             {{ adminStr(cfg, 'editorDeviationCancelled') }}
           </label>
         </p>
-        <p>
-          <label for="mrt-deviation-notice">{{ adminStr(cfg, 'editorColMessage') }}</label>
+        <AdminFieldStack
+          :label="adminStr(cfg, 'editorColMessage')"
+          label-for="mrt-deviation-notice"
+        >
           <input
             id="mrt-deviation-notice"
             v-model="draft.notice"
@@ -228,7 +241,7 @@ watch(
             class="regular-text"
             :disabled="!canOperate"
           />
-        </p>
+        </AdminFieldStack>
         <AdminFormActions v-if="canOperate">
           <MrtButton
             context="admin"
@@ -257,17 +270,6 @@ watch(
 .mrt-admin-deviation-detail__title {
   margin: 0 0 12px;
   font-size: 14px;
-  font-weight: 600;
-}
-
-.mrt-admin-deviation-detail p {
-  margin: 0 0 12px;
-}
-
-.mrt-admin-deviation-detail label,
-.mrt-admin-deviation-detail__label {
-  display: block;
-  margin-bottom: 4px;
   font-weight: 600;
 }
 </style>

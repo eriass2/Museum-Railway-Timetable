@@ -28,6 +28,7 @@ const cfg = adminConfig();
   <AdminPanel>
     <h2>{{ adminStr(cfg, 'trafficNoticesTitle') }}</h2>
     <p class="description">{{ adminStr(cfg, 'trafficNoticesIntro') }}</p>
+    <p class="notice notice-info">{{ adminStr(cfg, 'trafficNoticesVsDeviations') }}</p>
     <p v-if="canOperate">
       <MrtButton context="admin" variant="primary" @click="emit('create')">
         {{ adminStr(cfg, 'trafficNoticesNew') }}

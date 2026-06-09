@@ -21,6 +21,10 @@ function MRT_admin_vue_l10n_editor_dates(): array {
 			'museum-railway-timetable'
 		),
 		'editorDatesAdd'     => __( 'Lägg till datum', 'museum-railway-timetable' ),
+		'editorDatesBatchHint' => __(
+			'Datum läggs till i listan lokalt — klicka «Spara» för att spara trafikdagarna.',
+			'museum-railway-timetable'
+		),
 		'editorSavedDates'   => __( 'Trafikdagar sparade', 'museum-railway-timetable' ),
 	);
 }

@@ -277,16 +277,83 @@
   margin-top: 12px;
 }
 
+.mrt-admin-trip-fields {
+  display: grid;
+  gap: 12px;
+  max-width: 28rem;
+}
+
+.mrt-admin-trip-fields__field {
+  margin: 0;
+}
+
+.mrt-admin-trip-fields__field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mrt-admin-trip-fields__field .widefat,
+.mrt-admin-trip-fields__field .regular-text,
+.mrt-admin-trip-fields__field .large-text {
+  max-width: 100%;
+}
+
+.mrt-admin-trip-fields__field .description {
+  display: block;
+  margin-top: 4px;
+}
+
 .mrt-admin-trip-form {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
+}
+
+.mrt-admin-mobile-deviation-add {
+  display: grid;
+  gap: 12px;
+  max-width: 28rem;
+  margin-bottom: 12px;
+}
+
+.mrt-admin-mobile-desktop-hint {
+  margin-bottom: 12px;
+}
+
+.mrt-admin-help-toc {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  background: #f6f7f7;
+  border-left: 4px solid #2271b1;
+}
+
+.mrt-admin-help-toc__title {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.mrt-admin-help-toc ul {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.mrt-admin-prices-onboarding__title {
+  margin: 16px 0 8px;
+  font-size: 1em;
+}
+
+.mrt-admin-prices-onboarding__steps {
+  margin-bottom: 16px;
+}
+
+.mrt-admin-import-override-notice {
   margin-top: 12px;
 }
 
-.mrt-admin-trip-form__actions {
-  margin-left: auto;
+.mrt-admin-setup--complete {
+  margin-bottom: 16px;
 }
 
 .mrt-admin-setup__list {
@@ -375,15 +442,8 @@
 }
 
 @media (max-width: 782px) {
-  .mrt-admin-trip-form select,
-  .mrt-admin-trip-form .admin-inline-field,
-  .mrt-admin-trip-form__actions,
-  .mrt-admin-trip-form__actions .button {
-    width: 100%;
-  }
-
-  .mrt-admin-trip-form__actions {
-    margin-left: 0;
+  .mrt-admin-trip-fields {
+    max-width: none;
   }
 }
 

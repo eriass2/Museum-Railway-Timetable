@@ -108,7 +108,7 @@ const selectedTripLabel = computed(() => {
       />
     </template>
 
-    <details class="mrt-mt-sm mrt-admin-stoptimes-grid" @toggle="emit('gridToggle', $event)">
+    <details class="mrt-mt-sm mrt-admin-stoptimes-grid" open @toggle="emit('gridToggle', $event)">
       <summary>{{ adminStr(cfg, 'editorStoptimesGridSummary') }}</summary>
       <p class="description">{{ adminStr(cfg, 'editorStoptimesGridHint') }}</p>
       <p v-if="gridOverviewLoading" class="description">{{ adminStr(cfg, 'editorLoading') }}</p>

@@ -82,6 +82,8 @@ watch(serviceId, () => {
       </tbody>
     </table>
 
+    <p class="description">{{ adminStr(cfg, 'editorStoptimesPaLegend') }}</p>
+
     <AdminFormActions v-if="cfg.canManage || cfg.canOperate">
       <MrtButton context="admin" variant="primary" @click="save()">
         {{ adminStr(cfg, 'stopTimesSaveButton') }}

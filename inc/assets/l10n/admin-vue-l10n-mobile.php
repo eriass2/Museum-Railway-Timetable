@@ -18,6 +18,16 @@ function MRT_admin_vue_l10n_mobile(): array {
 		'mobileNoDeviations'         => __( 'Inga avvikelser för denna tidtabell.', 'museum-railway-timetable' ),
 		'mobileQuickDepartureTitle'  => __( 'Snabb avgångstid', 'museum-railway-timetable' ),
 		'mobileQuickDepartureHint'   => __( 'Ändra avgångstid vid första hållplatsen (mobil).', 'museum-railway-timetable' ),
+		'mobileQuickDepartureWarning' => __(
+			'Ändrar endast avgångstid från %s — övriga hållplatser påverkas inte.',
+			'museum-railway-timetable'
+		),
+		'mobileDeviationDateLabel'   => __( 'Datum', 'museum-railway-timetable' ),
+		'mobileDeviationTripLabel'   => __( 'Tur', 'museum-railway-timetable' ),
+		'mobileDesktopEditHint'      => __(
+			'Full redigering av turer och stopptider kräver bred skärm (desktop).',
+			'museum-railway-timetable'
+		),
 		'mobileTripLabel'            => __( 'Tur', 'museum-railway-timetable' ),
 		'mobileDepartureSuffix'      => __( 'avgång', 'museum-railway-timetable' ),
 		'mobileSaveDeparture'        => __( 'Spara avgångstid', 'museum-railway-timetable' ),

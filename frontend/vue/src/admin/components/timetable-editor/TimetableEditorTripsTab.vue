@@ -102,8 +102,8 @@ const emit = defineEmits<{
 
     <template v-else-if="viewMode === 'create'">
       <AdminBackNav @back="emit('back')" />
-      <div class="mrt-admin-trip-form">
-        <h3 class="mrt-admin-trip-form__title">{{ adminStr(cfg, 'editorAddTrip') }}</h3>
+      <div class="mrt-admin-trip-create">
+        <h3 class="mrt-admin-trip-create__title">{{ adminStr(cfg, 'editorAddTrip') }}</h3>
         <TimetableTripFieldsBlock
           v-model:draft="newTrip"
           :detail="detail"
@@ -111,7 +111,7 @@ const emit = defineEmits<{
           field-id-prefix="trip-new"
           :train-type-icon-key="trainTypeIconKey"
         />
-        <AdminFormActions>
+        <AdminFormActions class="mrt-admin-trip-create__actions">
           <MrtButton context="admin" variant="primary" @click="emit('add-trip')">
             {{ adminStr(cfg, 'editorAddTrip') }}
           </MrtButton>
@@ -139,8 +139,13 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
-.mrt-admin-trip-form__title {
-  margin: 0 0 8px;
+.mrt-admin-trip-create__title {
+  margin: 0 0 12px;
   font-size: 14px;
+  font-weight: 600;
+}
+
+.mrt-admin-trip-create__actions {
+  margin-top: 16px;
 }
 </style>

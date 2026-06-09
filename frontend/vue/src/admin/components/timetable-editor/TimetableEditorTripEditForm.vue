@@ -37,24 +37,22 @@ const emit = defineEmits<{
     <p v-else class="mrt-admin-trip-edit__title mrt-admin-trip-edit__title--embedded">
       {{ adminStr(cfg, 'editorEditTripTitle') }}
     </p>
-    <div class="mrt-admin-trip-form">
-      <TimetableTripFieldsBlock
-        v-model:draft="draft"
-        :detail="detail"
-        :destinations="destinations"
-        :field-id-prefix="`trip-edit-${draft.service_id}`"
-        :train-type-icon-key="trainTypeIconKey"
-        @route-change="emit('route-change')"
-      />
-      <AdminFormActions>
-        <MrtButton context="admin" variant="primary" @click="emit('save')">
-          {{ adminStr(cfg, 'editorSaveTrip') }}
-        </MrtButton>
-        <MrtButton context="admin" variant="secondary" @click="emit('cancel')">
-          {{ adminStr(cfg, 'editorCancelEdit') }}
-        </MrtButton>
-      </AdminFormActions>
-    </div>
+    <TimetableTripFieldsBlock
+      v-model:draft="draft"
+      :detail="detail"
+      :destinations="destinations"
+      :field-id-prefix="`trip-edit-${draft.service_id}`"
+      :train-type-icon-key="trainTypeIconKey"
+      @route-change="emit('route-change')"
+    />
+    <AdminFormActions class="mrt-admin-trip-edit__actions">
+      <MrtButton context="admin" variant="primary" @click="emit('save')">
+        {{ adminStr(cfg, 'editorSaveTrip') }}
+      </MrtButton>
+      <MrtButton context="admin" variant="secondary" @click="emit('cancel')">
+        {{ adminStr(cfg, 'editorCancelEdit') }}
+      </MrtButton>
+    </AdminFormActions>
   </div>
 </template>
 
@@ -77,5 +75,9 @@ const emit = defineEmits<{
 
 .mrt-admin-trip-edit__title--embedded {
   margin-bottom: 12px;
+}
+
+.mrt-admin-trip-edit__actions {
+  margin-top: 16px;
 }
 </style>

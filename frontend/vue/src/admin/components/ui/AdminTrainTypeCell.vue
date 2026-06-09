@@ -10,7 +10,8 @@ defineProps<{
 <template>
   <span class="admin-train-type-cell">
     <TrainTypeIcon v-if="iconKey" :icon-key="iconKey" :label="name || iconKey" />
-    <span>{{ name || '—' }}</span>
+    <span v-if="name" class="admin-train-type-cell__name">{{ name }}</span>
+    <span v-else-if="!iconKey" class="admin-train-type-cell__name">—</span>
   </span>
 </template>
 
@@ -19,5 +20,6 @@ defineProps<{
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  flex-shrink: 0;
 }
 </style>

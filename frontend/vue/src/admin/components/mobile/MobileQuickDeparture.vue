@@ -3,7 +3,7 @@ import { onMounted, ref, watch } from 'vue';
 import { getStopTimes, quickDeparture } from '../../api/adminRest';
 import type { TimetableServiceRow } from '../../types';
 import { adminConfig } from '../../types';
-import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
+import { adminErrorMessage, adminFmtN, adminStr } from '../../utils/adminLabels';
 import { AdminStatusMessage, MrtButton } from '../ui';
 
 const props = defineProps<{
@@ -69,6 +69,9 @@ async function save() {
   <div class="mrt-admin-mobile-departure">
     <h3>{{ adminStr(cfg, 'mobileQuickDepartureTitle') }}</h3>
     <p class="description">{{ adminStr(cfg, 'mobileQuickDepartureHint') }}</p>
+    <p v-if="serviceId && firstStopName" class="description">
+      {{ adminFmtN(cfg, 'mobileQuickDepartureWarning', { 1: firstStopName }) }}
+    </p>
     <AdminStatusMessage v-if="error" type="error" :message="error" />
     <p>
       <label for="mrt-mobile-service">{{ adminStr(cfg, 'mobileTripLabel') }}</label>

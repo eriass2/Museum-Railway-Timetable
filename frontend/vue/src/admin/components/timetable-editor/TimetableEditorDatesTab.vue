@@ -31,6 +31,7 @@ const emit = defineEmits<{
         {{ adminStr(cfg, 'save') }}
       </MrtButton>
     </AdminInlineForm>
+    <p v-if="canManage" class="description">{{ adminStr(cfg, 'editorDatesBatchHint') }}</p>
     <AdminDateList>
       <li v-for="d in dates" :key="d">
         <span>{{ d }}</span>

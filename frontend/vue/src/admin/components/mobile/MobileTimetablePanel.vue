@@ -145,6 +145,9 @@ async function saveDeviationChanges() {
 
 <template>
   <div class="mrt-admin-mobile-panel">
+    <p class="description mrt-admin-mobile-desktop-hint">
+      {{ adminStr(cfg, 'mobileDesktopEditHint') }}
+    </p>
     <AdminLoadState
       :loading="loading"
       :error="error"
@@ -168,17 +171,23 @@ async function saveDeviationChanges() {
 
       <div class="mrt-admin-mobile-deviations">
         <h3>{{ adminStr(cfg, 'mobileDeviationsTitle') }}</h3>
-        <div v-if="canOperate" class="mrt-admin-trip-form mrt-admin-mobile-deviation-add">
-          <select v-model="newDate" class="widefat">
-            <option value="">{{ adminStr(cfg, 'editorDeviationDatePrompt') }}</option>
-            <option v-for="d in detail.dates" :key="d" :value="d">{{ d }}</option>
-          </select>
-          <select v-model.number="newServiceId" class="widefat">
-            <option :value="0">{{ adminStr(cfg, 'editorSelectTrip') }}</option>
-            <option v-for="s in detail.services" :key="s.id" :value="s.id">
-              {{ formatDeviationTripLabel(s) }}
-            </option>
-          </select>
+        <div v-if="canOperate" class="mrt-admin-mobile-deviation-add">
+          <p class="mrt-admin-trip-fields__field">
+            <label for="mrt-mobile-dev-date">{{ adminStr(cfg, 'mobileDeviationDateLabel') }}</label>
+            <select id="mrt-mobile-dev-date" v-model="newDate" class="widefat">
+              <option value="">{{ adminStr(cfg, 'editorDeviationDatePrompt') }}</option>
+              <option v-for="d in detail.dates" :key="d" :value="d">{{ d }}</option>
+            </select>
+          </p>
+          <p class="mrt-admin-trip-fields__field">
+            <label for="mrt-mobile-dev-trip">{{ adminStr(cfg, 'mobileDeviationTripLabel') }}</label>
+            <select id="mrt-mobile-dev-trip" v-model.number="newServiceId" class="widefat">
+              <option :value="0">{{ adminStr(cfg, 'editorSelectTrip') }}</option>
+              <option v-for="s in detail.services" :key="s.id" :value="s.id">
+                {{ formatDeviationTripLabel(s) }}
+              </option>
+            </select>
+          </p>
           <MrtButton context="admin" variant="secondary" wide :disabled="!canAddDeviation" @click="addDeviation">
             {{ adminStr(cfg, 'editorAddDeviation') }}
           </MrtButton>

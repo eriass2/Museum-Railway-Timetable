@@ -5,6 +5,7 @@ export { default as AdminDateList } from './AdminDateList.vue';
 export { default as AdminDeviationRowFields } from './AdminDeviationRowFields.vue';
 export { default as AdminDisclosure } from './AdminDisclosure.vue';
 export { default as AdminEmptyState } from './AdminEmptyState.vue';
+export { default as AdminFieldStack } from './AdminFieldStack.vue';
 export { default as AdminFlashRow } from './AdminFlashRow.vue';
 export { default as AdminFormActions } from './AdminFormActions.vue';
 export { default as AdminInlineField } from './AdminInlineField.vue';

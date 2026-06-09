@@ -17,12 +17,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_admin_vue_l10n_editor_stoptimes(): array {
 	return array(
 		'editorStoptimesHint'        => __(
-			'Välj tur och redigera stopptider i tabellen nedan. Klicka «Spara stopptider» när du är klar.',
+			'Välj tur i listan och redigera stopptider i tabellen. Samma tider kan också ändras i matrisvyn nedan.',
 			'museum-railway-timetable'
 		),
-		'editorStoptimesGridSummary' => __( 'Matrisvy (alla turer)', 'museum-railway-timetable' ),
+		'editorStoptimesGridSummary' => __( 'Matrisvy — redigera alla turer', 'museum-railway-timetable' ),
 		'editorStoptimesGridHint'    => __(
-			'Klicka på en tid i matrisen för att redigera stopptiden.',
+			'Klicka på en tid i tidtabellsgriden för att redigera stopptiden för den turen.',
+			'museum-railway-timetable'
+		),
+		'editorStoptimesPaLegend'    => __(
+			'På = påstigning tillåten, Av = avstigning tillåten (gäller reseplaneraren).',
 			'museum-railway-timetable'
 		),
 		'editorStoptimesTripLabel'   => __( 'Tur:', 'museum-railway-timetable' ),
