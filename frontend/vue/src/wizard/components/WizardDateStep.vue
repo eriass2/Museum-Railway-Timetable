@@ -31,7 +31,7 @@ const showEmptyMonth = computed(() => !loading.value && !hasBookableDays.value);
 const legendItems = computed(() => [
   {
     swatchClass: 'mrt-legend-swatch--ok',
-    label: cfgStr(cfg, 'legendOk', 'Kan bokas för din resa'),
+    label: cfgStr(cfg, 'legendOk', 'Trafik för din resa'),
   },
   {
     swatchClass: 'mrt-legend-swatch--traffic',
@@ -75,7 +75,7 @@ function onBack(): void {
       />
       <MrtStatusMessage
         v-if="showEmptyMonth"
-        :message="cfgStr(cfg, 'calendarEmptyMonth', 'Inga bokningsbara dagar denna månad för din resa.')"
+        :message="cfgStr(cfg, 'calendarEmptyMonth', 'Ingen trafik för din resa denna månad.')"
         :hint="cfgStr(cfg, 'calendarEmptyHint', 'Byt månad med pilarna ovan.')"
       />
       <MrtLegend :items="legendItems" />

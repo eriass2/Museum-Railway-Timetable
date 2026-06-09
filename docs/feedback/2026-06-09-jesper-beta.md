@@ -96,8 +96,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / datumsteg
 - **Typ:** copy
 - **Prioritet:** medium
-- **Status:** öppen
-- **Tekniskt:** `calendarEmptyMonth`, `legendOk` i `WizardDateStep.vue` / `inc/assets/frontend.php`. Förslag: *”Inga resbara dagar…”* / *”Ingen trafik för din resa”*.
+- **Status:** beslutad (D1 B) — implementerad
+- **Tekniskt:** `calendarEmptyMonth`, `legendOk` i `vue-shortcode-config.php` / `WizardDateStep.vue`.
 
 ---
 
@@ -297,7 +297,7 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 | # | ID | Punkt | Insats |
 |---|-----|-------|--------|
 | 1 | J5 | Fel bytestid Selknä (flera byte) | Liten fix + test |
-| 2 | J7 | Copy ”bokningsbara” → ”resbara” | Liten |
+| 2 | J7 | Copy ”bokningsbar” → ”trafik för din resa” | Liten — klar |
 | 3 | J9 | Font-weight 700 | Liten (CSS) |
 | 4 | A1 | Auto start/slut vid rutt | Medel |
 | 5 | A7 | Auto slutstation från stopptider | Medel |

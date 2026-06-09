@@ -45,7 +45,7 @@
 | **Alternativ** | A) *Resbar* / *Inga resbara dagar* · B) *Trafik för din resa* · C) *Tillgänglig trafik* |
 | **Påverkan** | `inc/assets/frontend.php`, `WizardDateStep.vue`, ev. månadskalender |
 | **Beslut av** | Produkt/kommunikation (Jesper?) |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — B) *Ingen trafik för din resa…* / *Trafik för din resa* |
 
 **Förslag till diskussion:** Välj en term och uppdatera både gul legend (*”Kan … för din resa”*) och tomma meddelanden i samma anda.
 
@@ -302,6 +302,7 @@
 | 2026-06-09 | D12 | **C** — etiketter A–D i admin + publikt; numerisk fallback över D | Team |
 | 2026-06-09 | D2 | **A** — beta-banner ovanför steg-nav; valfri `beta_feedback_url` | Team |
 | 2026-06-09 | D17 | **C** — fixture B5/B9–B14, [LINNES_HAMMARBY.md](../LINNES_HAMMARBY.md), admin-checklista | Team |
+| 2026-06-09 | D1 | **B** — *Ingen trafik för din resa denna månad* / legend *Trafik för din resa* | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 

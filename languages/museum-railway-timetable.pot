@@ -2450,7 +2450,7 @@ msgid "Idag"
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:144
-msgid "Inga bokningsbara dagar denna månad för din resa."
+msgid "Ingen trafik för din resa denna månad."
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:145
@@ -2458,7 +2458,7 @@ msgid "Byt månad med pilarna ovan."
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:146
-msgid "Kan bokas för din resa"
+msgid "Trafik för din resa"
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:147
