@@ -43,7 +43,7 @@ test.describe('Vue admin timetable flow', () => {
 
     await page.locator('.nav-tab', { hasText: 'Turer' }).click();
     await page.getByRole('button', { name: 'Lägg till tur' }).click();
-    const routeSelect = page.locator('.mrt-admin-trip-form select').first();
+    const routeSelect = page.getByLabel(/^rutt$/i);
     await expect(routeSelect).toBeVisible({ timeout: 10_000 });
     const routeOptions = routeSelect.locator('option');
     const routeCount = await routeOptions.count();
@@ -51,7 +51,7 @@ test.describe('Vue admin timetable flow', () => {
       test.skip(true, 'No routes in database — import demo data first');
     }
     await routeSelect.selectOption({ index: 1 });
-    const destSelect = page.locator('.mrt-admin-trip-form select').nth(1);
+    const destSelect = page.getByLabel(/^slutstation$/i);
     if ((await destSelect.locator('option').count()) > 1) {
       await destSelect.selectOption({ index: 1 });
     }
