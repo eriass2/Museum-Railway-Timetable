@@ -1,5 +1,5 @@
 ﻿route_code,title,start_station_code,end_station_code
-uppsala-faringe,"Uppsala Östra – Faringe",uppsala-ostra,faringe
 faringe-uppsala-ostra,"Faringe – Uppsala Östra",faringe,uppsala-ostra
-selkna-fjallnora,"Selknä – Fjällnora",selkna,fjallnora
 fjallnora-selkna,"Fjällnora – Selknä",fjallnora,selkna
+selkna-fjallnora,"Selknä – Fjällnora",selkna,fjallnora
+uppsala-faringe,"Uppsala Östra – Faringe",uppsala-ostra,faringe

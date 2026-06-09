@@ -1,4 +1,4 @@
-service_code,sequence,station_code,arrival_time,departure_time,pickup_allowed,dropoff_allowed
+﻿service_code,sequence,station_code,arrival_time,departure_time,pickup_allowed,dropoff_allowed
 green-vard-71-out,1,uppsala-ostra,10:00,10:00,1,0
 green-vard-71-out,2,fyrislund,10:03,10:03,1,0
 green-vard-71-out,3,arsta,10:05,10:05,1,0

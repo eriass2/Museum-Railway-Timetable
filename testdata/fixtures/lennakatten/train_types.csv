@@ -1,6 +1,6 @@
 ﻿slug,name,icon_file
-angtag,Ångtåg,icons/steam.png
-ralsbuss,Rälsbuss,icons/railbus.png
-dieseltag,Dieseltåg,icons/diesel.png
-buss,Buss,icons/bus.png
 ang-diesel,Ång/diesel,icons/diesel.png
+angtag,Ångtåg,icons/steam.png
+buss,Buss,icons/bus.png
+dieseltag,Dieseltåg,icons/diesel.png
+ralsbuss,Rälsbuss,icons/railbus.png

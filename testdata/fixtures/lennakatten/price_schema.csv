@@ -1,11 +1,11 @@
-kind,key,label,value
+﻿kind,key,label,value
 ticket_type,single,Enkelbiljett,
 ticket_type,return,Returbiljett,
 ticket_type,day,Dagskort,
 category,adult,Vuxen,
-category,child_4_15,Barn 4–15,
-category,child_0_3,Barn 0–3,
-category,student_senior,Student / pensionär,
+category,child_4_15,"Barn 4–15",
+category,child_0_3,"Barn 0–3",
+category,student_senior,"Student / pensionär",
 zone,,,1
 zone,,,2
 zone,,,3
