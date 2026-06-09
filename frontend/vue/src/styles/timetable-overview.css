@@ -82,7 +82,7 @@
 .mrt-ov-route-title {
   margin: 0 0 0.25rem;
   font-size: 1.15rem;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.2;
 }
 
@@ -124,7 +124,7 @@
 .mrt-ov-grid-row--head .mrt-ov-station-col,
 .mrt-ov-grid-row--head .mrt-ov-col-head {
   background: var(--mrt-ov-highlight-strong);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .mrt-ov-grid-row--head + .mrt-ov-grid-row--head .mrt-ov-col-head {
@@ -139,7 +139,7 @@
 
 .mrt-ov-col-head--number {
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .mrt-ov-station-col {
@@ -215,7 +215,7 @@
 .mrt-ov-highlight-stripe__label {
   display: block;
   font-size: 0.62rem;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.1;
   text-align: center;
   writing-mode: vertical-rl;
@@ -323,7 +323,7 @@
 
 .mrt-ov-deviation-mark {
   margin-left: 0.15rem;
-  font-weight: 800;
+  font-weight: 700;
   text-decoration: none;
   cursor: help;
 }
@@ -341,7 +341,7 @@
   display: block;
   margin-top: 0.2rem;
   font-size: 0.68rem;
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.25;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -393,7 +393,7 @@
 
 .mrt-ov-branch-table thead th {
   background: var(--mrt-ov-highlight-strong);
-  font-weight: 800;
+  font-weight: 700;
   white-space: normal;
 }
 
@@ -429,7 +429,7 @@
 .mrt-ov-branch-card__trip {
   margin: 0 0 0.5rem;
   font-size: 0.95rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .mrt-ov-branch-card__times {
@@ -481,7 +481,7 @@
 .mrt-ov-print-key-title {
   margin: 0 0 0.75rem;
   font-size: 1rem;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .mrt-ov-print-key-table {
@@ -499,7 +499,7 @@
 .mrt-ov-print-key-table th {
   width: 30%;
   background: var(--mrt-wizard-surface, #fff);
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .mrt-ov-print-key-note {
@@ -588,7 +588,7 @@
 
   .mrt-ov-print-key-table td:first-child {
     padding-bottom: 0.25rem;
-    font-weight: 800;
+    font-weight: 700;
     background: var(--mrt-bg-lightest, #fafafa);
     border-bottom: 1px solid var(--mrt-border-default, #e8e8e8);
   }

@@ -37,11 +37,31 @@ function MRT_timetable_groups_link_branch_pairs( array $grouped_services ): arra
 			continue;
 		}
 
-		$grouped_services[ $main_key ]['paired_branch'] = $branch;
-		$grouped_services[ $branch_key ]['paired_rail'] = $grouped_services[ $main_key ];
+		if ( ! isset( $grouped_services[ $main_key ]['paired_branches'] ) ) {
+			$grouped_services[ $main_key ]['paired_branches'] = array();
+		}
+		$grouped_services[ $main_key ]['paired_branches'][] = $branch;
+		$grouped_services[ $main_key ]['paired_branch']    = $grouped_services[ $main_key ]['paired_branches'][0];
+		$grouped_services[ $branch_key ]['paired_rail']     = $grouped_services[ $main_key ];
 	}
 
 	return array_values( $grouped_services );
+}
+
+/**
+ * Branch shuttle groups paired with a main-line group (supports multiple branches).
+ *
+ * @param array<string, mixed> $group Rail group from grouped services.
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_timetable_rail_paired_branches( array $group ): array {
+	if ( ! empty( $group['paired_branches'] ) && is_array( $group['paired_branches'] ) ) {
+		return array_values( $group['paired_branches'] );
+	}
+	if ( ! empty( $group['paired_branch'] ) && is_array( $group['paired_branch'] ) ) {
+		return array( $group['paired_branch'] );
+	}
+	return array();
 }
 
 /**

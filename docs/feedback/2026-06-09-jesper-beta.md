@@ -3,7 +3,7 @@
 Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssnittet. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (juni 2026)  
-**Relaterat:** [2026-06-05-reseplanerare-beta.md](2026-06-05-reseplanerare-beta.md), [2026-06-08-admin-ux-audit.md](2026-06-08-admin-ux-audit.md), [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)
+**Relaterat:** [2026-06-05-reseplanerare-beta.md](2026-06-05-reseplanerare-beta.md), [2026-06-08-admin-ux-audit.md](2026-06-08-admin-ux-audit.md), [2026-06-09-jesper-buggar-plan.md](2026-06-09-jesper-buggar-plan.md), [2026-06-09-jesper-diskussioner.md](2026-06-09-jesper-diskussioner.md), [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)
 
 ---
 
@@ -51,8 +51,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / detaljvy
 - **Typ:** CSS
 - **Prioritet:** låg
-- **Status:** öppen
-- **Tekniskt:** Nodbredd (`1rem`) matchar inte kolumnvariabeln `--mrt-tl-node` som linjen räknas från (`assets/frontend/ui/trips.css`).
+- **Status:** klar (2026-06-09)
+- **Tekniskt:** Nodbredd (`1rem`) matchade inte kolumnvariabeln `--mrt-tl-node` — `justify-self: center` på `.mrt-timeline__node`.
 
 ---
 
@@ -74,9 +74,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / detaljvy
 - **Typ:** bugg
 - **Prioritet:** hög
-- **Status:** öppen
-- **Rotorsak:** API sätter `transfer_wait_minutes` bara för första bytet (leg 0→1) i `MRT_normalize_multi_leg_for_api()`. Frontend använder samma värde för alla byten i `transferWaitMinutes()` (`connectionLegDisplay.ts`) i stället för att räkna per leg-par.
-- **Fix:** Beräkna alltid väntetid från `legBefore.to_arrival` / `legAfter.from_departure` (eller per-leg i API).
+- **Status:** klar (2026-06-09)
+- **Fix:** `transferWaitMinutes()` beräknar alltid från leg-par; ignorerar connection-nivå `transfer_wait_minutes`.
 
 ---
 
@@ -119,8 +118,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / typografi
 - **Typ:** design
 - **Prioritet:** medium
-- **Status:** öppen
-- **Tekniskt:** `font-weight: 800` i bl.a. `journey-wizard/base.css`, `assets/frontend/ui/trips.css`, `assets/brand/lennakatten-typography.css` (laddar 700+800).
+- **Status:** beslutad (D5 A) — implementerad
+- **Tekniskt:** `font-weight: 700` i hela publika Vue-UI. Se [D5](2026-06-09-jesper-diskussioner.md#d5-font-weight-open-sans-700-).
 
 ---
 
@@ -288,8 +287,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin / tidtabell + stationer
 - **Typ:** produkt / utred
 - **Prioritet:** hög
-- **Status:** öppen
-- **Tekniskt:** `train_change_map` (manuell per station) + `grid-connections.php` (tid/plats). Saknar explicit koppling per riktning/gren. Se roadmap i prioriteringslistan nedan.
+- **Status:** klar (2026-06-09)
+- **Fix:** `paired_branches` i `grid-merge.php`; tidtabellsöversikt bygger bussrader per gren (Linnés Hammarby + Fjällnora).
 
 ---
 

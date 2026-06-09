@@ -32,7 +32,7 @@
     margin-bottom: 0.5rem;
     color: var(--mrt-wizard-text);
     font-size: 1.05rem;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .mrt-journey-wizard .mrt-surface .mrt-segmented {
@@ -96,7 +96,7 @@
     margin-bottom: 0.35rem;
     color: var(--mrt-wizard-text);
     font-size: 1.05rem;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .mrt-journey-wizard .mrt-surface .mrt-combobox__input {

@@ -129,7 +129,7 @@
     justify-content: center;
     min-height: 0;
     font-size: var(--mrt-month-day-font);
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.1;
 }
 
@@ -315,7 +315,7 @@
     .mrt-month .mrt-month-table thead th {
         padding: 0.45rem 0.1rem;
         font-size: 0.78rem;
-        font-weight: 800;
+        font-weight: 700;
         background: var(--mrt-bg-white, #fff);
         border-bottom: 2px solid var(--mrt-border-light);
     }

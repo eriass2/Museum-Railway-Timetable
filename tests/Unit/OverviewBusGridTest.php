@@ -90,6 +90,53 @@ final class OverviewBusGridTest extends TestCase {
 		self::assertNotNull( $main );
 		self::assertNotNull( $branch );
 		self::assertCount( 2, $main['paired_branch']['stations'] ?? array() );
+		self::assertCount( 1, MRT_timetable_rail_paired_branches( $main ) );
+	}
+
+	public function test_groups_link_branch_pairs_keeps_all_branches_on_main(): void {
+		$grouped = array(
+			'main'    => array(
+				'stations'  => array( 1, 9, 15, 20 ),
+				'direction' => 'outbound',
+				'services'  => array(
+					array(
+						'train_type' => (object) array( 'slug' => 'angtag' ),
+					),
+				),
+			),
+			'branch1' => array(
+				'stations'  => array( 9, 100 ),
+				'direction' => 'outbound',
+				'services'  => array(
+					array(
+						'train_type' => (object) array( 'slug' => 'buss' ),
+					),
+				),
+			),
+			'branch2' => array(
+				'stations'  => array( 9, 200 ),
+				'direction' => 'outbound',
+				'services'  => array(
+					array(
+						'train_type' => (object) array( 'slug' => 'buss' ),
+					),
+				),
+			),
+		);
+
+		$linked = MRT_timetable_groups_link_branch_pairs( $grouped );
+		$main   = null;
+		foreach ( $linked as $group ) {
+			if ( ! empty( $group['paired_branches'] ) ) {
+				$main = $group;
+				break;
+			}
+		}
+
+		self::assertNotNull( $main );
+		self::assertCount( 2, MRT_timetable_rail_paired_branches( $main ) );
+		self::assertSame( 100, MRT_timetable_rail_paired_branches( $main )[0]['stations'][1] ?? 0 );
+		self::assertSame( 200, MRT_timetable_rail_paired_branches( $main )[1]['stations'][1] ?? 0 );
 	}
 
 	public function test_groups_link_branch_pairs_skips_mismatched_direction(): void {

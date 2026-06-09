@@ -30,12 +30,8 @@ export function stationTitleLookup(
 export function transferWaitMinutes(
   legBefore: JourneyLeg,
   legAfter: JourneyLeg,
-  connection: JourneyConnection,
+  _connection: JourneyConnection,
 ): number | null {
-  const wait = connection.transfer_wait_minutes;
-  if (wait !== null && wait !== undefined && !Number.isNaN(Number(wait))) {
-    return Number(wait);
-  }
   return waitMinutesBetween(legBefore.to_arrival || '', legAfter.from_departure || '');
 }
 

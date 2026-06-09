@@ -212,7 +212,7 @@
 
     .mrt-journey-wizard .mrt-price-list__label {
         color: var(--mrt-wizard-text, #151515);
-        font-weight: 800;
+        font-weight: 700;
     }
 
     .mrt-journey-wizard .mrt-price-list__value {

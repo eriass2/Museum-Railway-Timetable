@@ -59,6 +59,48 @@ describe('buildTransferLabel', () => {
     expect(label).toBe('Byte vid Selknä · 8 min');
   });
 
+  it('uses per-leg times when connection transfer_wait_minutes is first-transfer only', () => {
+    const marielundSelknaStations = stationTitleLookup([
+      { id: 1, title: 'Uppsala Östra' },
+      { id: 2, title: 'Marielund' },
+      { id: 3, title: 'Selknä' },
+      { id: 4, title: 'Fjällnora' },
+    ]);
+    const threeLegConnection: JourneyConnection = {
+      service_id: 0,
+      connection_type: 'transfer',
+      transfer_station_id: 2,
+      transfer_wait_minutes: 10,
+      legs: [
+        {
+          service_id: 71,
+          to_station_id: 2,
+          to_arrival: '10:35',
+        },
+        {
+          service_id: 61,
+          from_station_id: 2,
+          from_departure: '10:45',
+          to_station_id: 3,
+          to_arrival: '10:50',
+        },
+        {
+          service_id: 701,
+          from_station_id: 3,
+          from_departure: '10:53',
+          to_station_id: 4,
+        },
+      ],
+    };
+    const [leg1, leg2, leg3] = threeLegConnection.legs!;
+    expect(
+      buildTransferLabel(leg1, leg2, threeLegConnection, marielundSelknaStations, transferStrings),
+    ).toBe('Byte vid Marielund · 10 min');
+    expect(
+      buildTransferLabel(leg2, leg3, threeLegConnection, marielundSelknaStations, transferStrings),
+    ).toBe('Byte vid Selknä · 3 min');
+  });
+
   it('falls back to computed wait when transfer_wait_minutes is missing', () => {
     const label = buildTransferLabel(
       { service_id: 0, to_station_id: 2, to_arrival: '17:14' },

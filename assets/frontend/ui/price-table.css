@@ -21,7 +21,7 @@
 }
 
 .mrt-price-block__title-trip {
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .mrt-price-block__title-suffix {
@@ -45,7 +45,7 @@
 .mrt-price-column__title {
     margin: 0 0 0.5rem;
     color: inherit;
-    font-weight: 800;
+    font-weight: 700;
     line-height: 1.25;
 }
 
@@ -119,7 +119,7 @@
 }
 
 .mrt-price-block__table thead th:not(.mrt-price-block__corner) {
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .mrt-price-block__table tbody tr {

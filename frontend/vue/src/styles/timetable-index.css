@@ -104,7 +104,7 @@
 
 .mrt-timetable-index__title {
   font-size: var(--mrt-font-lg, 1.125rem);
-  font-weight: 800;
+  font-weight: 700;
   line-height: 1.25;
   color: var(--mrt-color-green-800);
 }

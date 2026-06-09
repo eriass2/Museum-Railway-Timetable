@@ -45,7 +45,7 @@
     background: transparent;
     border-color: var(--mrt-color-neutral-200);
     font-size: 0.95rem;
-    font-weight: 800;
+    font-weight: 700;
 }
 
 .mrt-calendar-grid--wizard .mrt-calendar-grid__table td {
@@ -69,7 +69,7 @@
     color: var(--mrt-color-neutral-600);
     font-size: 1.15rem;
     line-height: 1;
-    font-weight: 800;
+    font-weight: 700;
     text-transform: none;
     padding: 0;
     box-sizing: border-box;
