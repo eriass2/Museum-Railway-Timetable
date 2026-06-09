@@ -19,6 +19,7 @@ require_once MRT_PATH . 'inc/assets/data/admin-help/loader.php';
 function MRT_admin_vue_help_content(): array {
 	return array(
 		'title'              => __( 'Hjälp', 'museum-railway-timetable' ),
+		'tocTitle'           => __( 'Innehåll', 'museum-railway-timetable' ),
 		'intro'              => __(
 			'Museum Railway Timetable hanterar tidtabellsdata i WordPress och viser den på webbplatsen via shortcodes. I admin skapar du stationer, rutter, tidtabeller och turer. Besökare kan se tidtabeller, kalender och söka resor med reseplaneraren.',
 			'museum-railway-timetable'

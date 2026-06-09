@@ -21,6 +21,7 @@ export type AdminHelpFaqItem = {
 
 export type AdminHelpContent = {
   title: string;
+  tocTitle: string;
   intro: string;
   panelWhat: string;
   colPart: string;

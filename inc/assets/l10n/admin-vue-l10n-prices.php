@@ -22,6 +22,15 @@ function MRT_admin_vue_l10n_prices(): array {
 			'Priser i SEK per biljettyp, passagerarkategori och antal zoner.',
 			'museum-railway-timetable'
 		),
+		'pricesHelpIntro'    => __(
+			'Tilldela priszoner på stationer först, fyll sedan i matrisen nedan.',
+			'museum-railway-timetable'
+		),
+		'pricesHelpLink'     => __( 'Läs om priszoner och biljetter', 'museum-railway-timetable' ),
+		'pricesOnboardingTitle' => __( 'Kom igång med priser', 'museum-railway-timetable' ),
+		'pricesOnboardingStep1' => __( 'Tilldela priszoner på varje station (Stationer & rutter).', 'museum-railway-timetable' ),
+		'pricesOnboardingStep2' => __( 'Fyll i prismatrisen nedan — rader är biljettyper × kategorier, kolumner är antal zoner.', 'museum-railway-timetable' ),
+		'pricesOnboardingStep3' => __( 'Kontrollera förhandsvisningen längre ner innan du sparar.', 'museum-railway-timetable' ),
 		'pricesTicketTypeCol' => __( 'Biljettyp', 'museum-railway-timetable' ),
 		'pricesZonesCol'      => __( 'Zoner', 'museum-railway-timetable' ),
 		'pricesSchemaSummary' => __( 'Prisstruktur (biljettyper, kategorier, zoner)', 'museum-railway-timetable' ),

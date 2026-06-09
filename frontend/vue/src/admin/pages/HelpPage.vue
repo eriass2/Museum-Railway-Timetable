@@ -61,7 +61,23 @@ watch(
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ help.title }}</h1>
 
-    <AdminPanel :title="help.panelWhat">
+    <nav class="mrt-admin-help-toc" :aria-label="help.tocTitle">
+      <p class="mrt-admin-help-toc__title">{{ help.tocTitle }}</p>
+      <ul>
+        <li><a href="#mrt-help-what" @click.prevent="scrollToHelpSection('what')">{{ help.panelWhat }}</a></li>
+        <li v-if="cfg.canManage">
+          <a href="#mrt-help-price-zones" @click.prevent="scrollToHelpSection('price-zones')">
+            {{ help.panelPriceZones }}
+          </a>
+        </li>
+        <li><a href="#mrt-help-admin" @click.prevent="scrollToHelpSection('admin')">{{ help.panelAdmin }}</a></li>
+        <li><a href="#mrt-help-workflow" @click.prevent="scrollToHelpSection('workflow')">{{ help.panelWorkflow }}</a></li>
+        <li><a href="#mrt-help-operations" @click.prevent="scrollToHelpSection('operations')">{{ help.panelOperations }}</a></li>
+        <li><a href="#mrt-help-faq" @click.prevent="scrollToHelpSection('faq')">{{ help.panelFaq }}</a></li>
+      </ul>
+    </nav>
+
+    <AdminPanel :id="'mrt-help-what'" :title="help.panelWhat">
       <p>{{ help.intro }}</p>
       <AdminTableScroll>
         <table class="widefat striped mrt-admin-help-table mrt-admin-responsive-table">
@@ -96,7 +112,7 @@ watch(
       </ol>
     </AdminPanel>
 
-    <AdminPanel :title="help.panelAdmin">
+    <AdminPanel :id="'mrt-help-admin'" :title="help.panelAdmin">
       <p class="description">{{ help.panelAdminHint }}</p>
       <dl class="mrt-admin-faq">
         <template v-for="section in visibleAdminSections" :key="section.title">
@@ -106,13 +122,13 @@ watch(
       </dl>
     </AdminPanel>
 
-    <AdminPanel :title="help.panelWorkflow">
+    <AdminPanel :id="'mrt-help-workflow'" :title="help.panelWorkflow">
       <ol class="mrt-admin-help-steps">
         <li v-for="(step, i) in help.workflowSteps" :key="i">{{ step }}</li>
       </ol>
     </AdminPanel>
 
-    <AdminPanel :title="help.panelOperations">
+    <AdminPanel :id="'mrt-help-operations'" :title="help.panelOperations">
       <ul class="mrt-admin-help-steps">
         <li v-for="item in help.operations" :key="item.title">
           <strong>{{ item.title }}</strong> {{ item.body }}
@@ -128,7 +144,7 @@ watch(
       </MrtButton>
     </AdminPanel>
 
-    <AdminPanel :title="help.panelFaq">
+    <AdminPanel :id="'mrt-help-faq'" :title="help.panelFaq">
       <dl class="mrt-admin-faq">
         <template v-for="(item, i) in help.faq" :key="i">
           <dt>{{ item.q }}</dt>

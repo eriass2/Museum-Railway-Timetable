@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { getPrices, getSettings, savePrices, saveSettings } from '../api/adminRest';
 import type { PricesPayload, SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
@@ -232,7 +233,18 @@ async function submit() {
 
           <p class="description">
             {{ adminStr(cfg, 'pricesDescription') }}
+            {{ adminStr(cfg, 'pricesHelpIntro') }}
+            <RouterLink :to="{ path: '/help', query: { section: 'price-zones' } }">
+              {{ adminStr(cfg, 'pricesHelpLink') }}
+            </RouterLink>
           </p>
+
+          <h2 class="mrt-admin-prices-onboarding__title">{{ adminStr(cfg, 'pricesOnboardingTitle') }}</h2>
+          <ol class="mrt-admin-help-steps mrt-admin-prices-onboarding__steps">
+            <li>{{ adminStr(cfg, 'pricesOnboardingStep1') }}</li>
+            <li>{{ adminStr(cfg, 'pricesOnboardingStep2') }}</li>
+            <li>{{ adminStr(cfg, 'pricesOnboardingStep3') }}</li>
+          </ol>
 
           <PricesPreview :payload="data" />
 
