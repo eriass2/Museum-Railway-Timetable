@@ -26,7 +26,7 @@ defineEmits<{ toggle: [] }>();
     v-bind="$attrs"
     @click="$emit('toggle')"
   >
-    {{ label }}
+    <span class="mrt-expand-trigger__label">{{ label }}</span>
     <span class="mrt-expand-trigger__chevron" aria-hidden="true" />
   </button>
 </template>

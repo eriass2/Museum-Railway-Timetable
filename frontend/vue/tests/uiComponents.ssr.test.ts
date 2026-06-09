@@ -3,6 +3,7 @@ import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
 import MrtSummaryCard from '../src/components/ui/MrtSummaryCard.vue';
 import MrtDetailSegment from '../src/components/ui/MrtDetailSegment.vue';
+import MrtExpandTrigger from '../src/components/ui/MrtExpandTrigger.vue';
 import MrtVehicleRow from '../src/components/ui/MrtVehicleRow.vue';
 import WizardBetaBanner from '../src/wizard/components/WizardBetaBanner.vue';
 
@@ -34,6 +35,16 @@ describe('UI components (SSR smoke)', () => {
     expect(html).toContain('mrt-journey-wizard__beta');
     expect(html).toContain('Beta');
     expect(html).toContain('href="mailto:test@example.com"');
+  });
+
+  it('MrtExpandTrigger renders label and chevron markup', async () => {
+    const html = await render(MrtExpandTrigger, {
+      expanded: false,
+      label: '2 byten',
+    });
+    expect(html).toContain('mrt-expand-trigger__label');
+    expect(html).toContain('2 byten');
+    expect(html).toContain('mrt-expand-trigger__chevron');
   });
 
   it('MrtVehicleRow compact hides labels but keeps aria-label', async () => {

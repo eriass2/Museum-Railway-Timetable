@@ -40,8 +40,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / resekort
 - **Typ:** CSS
 - **Prioritet:** låg
-- **Status:** öppen
-- **Tekniskt:** `.mrt-expand-trigger__chevron` i `assets/frontend/ui/trips.css`.
+- **Status:** klar
+- **Tekniskt:** `.mrt-expand-trigger__chevron` i `assets/frontend/ui/trips.css`; label i egen flex-rad + optisk `translateY` på pilen.
 
 ---
 

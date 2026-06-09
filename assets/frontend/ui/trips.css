@@ -463,16 +463,24 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 0.5rem;
     width: 100%;
     border: 0;
     border-top: 1px solid var(--mrt-wizard-border, #ddd);
-    padding: 0.45rem 0.9rem 0.65rem;
+    padding: 0.55rem 0.9rem;
     background: var(--mrt-color-neutral-100, #f3f3f3);
     color: #151515;
     font-size: 1.05rem;
     font-weight: 700;
+    line-height: 1.2;
     min-height: 0;
     cursor: pointer;
+}
+
+.mrt-expand-trigger__label {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: left;
 }
 
 .mrt-expand-trigger:hover {
@@ -484,11 +492,12 @@
     height: 1.1rem;
     border-right: 3px solid currentColor;
     border-bottom: 3px solid currentColor;
-    transform: rotate(45deg);
+    flex-shrink: 0;
+    transform: rotate(45deg) translateY(-0.1rem);
 }
 
 .mrt-expand-trigger.is-expanded .mrt-expand-trigger__chevron {
-    transform: rotate(225deg);
+    transform: rotate(225deg) translateY(-0.1rem);
 }
 
 .mrt-expand-trigger--link {
@@ -524,6 +533,7 @@
     border-width: 2px;
     flex-shrink: 0;
     opacity: 0.85;
+    transform: rotate(45deg);
 }
 
 .mrt-expand-trigger--link.is-expanded .mrt-expand-trigger__chevron {
