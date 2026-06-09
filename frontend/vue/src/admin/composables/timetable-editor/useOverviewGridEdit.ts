@@ -1,10 +1,10 @@
 import { ref } from 'vue';
-import { getStopTimes, saveStopTimes } from '../api/adminRest';
-import type { StopTimeRow } from '../types';
-import type { TimetableTimeCellEdit } from '../../types/timetableOverview';
-import { adminConfig } from '../types';
-import { adminErrorMessage, adminStr } from '../utils/adminLabels';
-import { stopTimesToApiPayload } from '../utils/stopTimesPayload';
+import { getStopTimes, saveStopTimes } from '../../api/adminRest';
+import type { StopTimeRow } from '../../types';
+import type { TimetableTimeCellEdit } from '../../../types/timetableOverview';
+import { adminConfig } from '../../types';
+import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
+import { stopTimesToApiPayload } from '../../utils/timetable-editor/stopTimesPayload';
 
 function hhmmToInput(value: string): string {
   if (!value || !/^\d{1,2}:\d{2}$/.test(value)) {

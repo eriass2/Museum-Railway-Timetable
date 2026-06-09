@@ -11,23 +11,23 @@ import {
   saveDeviations,
   updateTimetable,
   updateTimetableService,
-} from '../api/adminRest';
+} from '../../api/adminRest';
 import type { ComponentPublicInstance } from 'vue';
-import type { TripEditDraft } from '../components/timetable-editor/TimetableEditorTripEditForm.vue';
-import type { TripsPanelView } from '../components/timetable-editor/TimetableEditorTripsTab.vue';
+import type { TripEditDraft } from '../../components/timetable-editor/TimetableEditorTripEditForm.vue';
+import type { TripsPanelView } from '../../components/timetable-editor/TimetableEditorTripsTab.vue';
 import {
   emptyTripDraft,
   tripDraftToApiBody,
-} from '../components/timetable-editor/tripFormTypes';
-import { adminConfirm } from './adminConfirm';
-import { proceedIfDiscardAllowed } from './adminDiscardGuard';
-import { useAdminSaveNotice } from './useAdminSaveNotice';
+} from '../../components/timetable-editor/tripFormTypes';
+import { adminConfirm } from '../adminConfirm';
+import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
+import { useAdminSaveNotice } from '../useAdminSaveNotice';
 import { useTimetableEditorDirty } from './useTimetableEditorDirty';
-import { deviationsToSavePayload, type DeviationRow } from '../utils/deviationsPayload';
-import { adminConfig } from '../types';
-import type { TimetableDetail, TimetableServiceRow } from '../types';
-import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
-import type { TimetableOverviewPayload } from '../../types/timetableOverview';
+import { deviationsToSavePayload, type DeviationRow } from '../../utils/timetable-editor/deviationsPayload';
+import { adminConfig } from '../../types';
+import type { TimetableDetail, TimetableServiceRow } from '../../types';
+import { adminErrorMessage, adminFmt, adminStr } from '../../utils/adminLabels';
+import type { TimetableOverviewPayload } from '../../../types/timetableOverview';
 
 export type TimetableServiceEditRow = TimetableServiceRow & {
   end_station_id?: number;

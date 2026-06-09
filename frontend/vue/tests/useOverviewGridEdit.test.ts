@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { useOverviewGridEdit } from '../src/admin/composables/useOverviewGridEdit';
+import { useOverviewGridEdit } from '../src/admin/composables/timetable-editor/useOverviewGridEdit';
 import type { AdminClientConfig } from '../src/admin/types';
 
 vi.mock('../src/admin/api/adminRest', () => ({

@@ -6,7 +6,7 @@ import {
   hasDeviationRow,
   toggleCancelledDeviationNotice,
   type DeviationRow,
-} from '../src/admin/utils/deviationsPayload';
+} from '../src/admin/utils/timetable-editor/deviationsPayload';
 
 describe('deviationsToSavePayload', () => {
   it('groups rows by service and date', () => {

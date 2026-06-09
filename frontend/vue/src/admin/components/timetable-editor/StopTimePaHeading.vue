@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { adminConfig } from '../types';
-import { adminStr } from '../utils/adminLabels';
+import { adminConfig } from '../../types';
+import { adminStr } from '../../utils/adminLabels';
 
 const props = defineProps<{
   kind: 'pickup' | 'dropoff';

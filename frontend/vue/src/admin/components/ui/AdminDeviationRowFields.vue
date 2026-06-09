@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import AdminTrainTypeSelect from './AdminTrainTypeSelect.vue';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
-import { isCancelledDeviationNotice, toggleCancelledDeviationNotice } from '../../utils/deviationsPayload';
+import { isCancelledDeviationNotice, toggleCancelledDeviationNotice } from '../../utils/timetable-editor/deviationsPayload';
 
 const props = defineProps<{
   trainTypeId: number;

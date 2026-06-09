@@ -5,14 +5,14 @@ import {
   AdminPanel,
   AdminRowActions,
   MrtButton,
-} from './ui';
+} from '../ui';
 import StopTimesEditor from './StopTimesEditor.vue';
 import EditableTimetableOverview from './EditableTimetableOverview.vue';
-import { proceedIfDiscardAllowed } from '../composables/adminDiscardGuard';
-import { adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
-import type { TimetableDetail } from '../types';
-import type { TimetableOverviewPayload } from '../../types/timetableOverview';
+import { proceedIfDiscardAllowed } from '../../composables/adminDiscardGuard';
+import { adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
+import type { TimetableDetail } from '../../types';
+import type { TimetableOverviewPayload } from '../../../types/timetableOverview';
 
 export type StoptimesPanelView = 'list' | 'detail';
 

@@ -10,7 +10,7 @@ import {
   formatDeviationTripLabel,
   hasDeviationRow,
   type DeviationRow,
-} from '../utils/deviationsPayload';
+} from '../utils/timetable-editor/deviationsPayload';
 import { useAdminResource } from '../composables/useAdminResource';
 import AdminLoadState from './AdminLoadState.vue';
 import MobileQuickDeparture from './MobileQuickDeparture.vue';

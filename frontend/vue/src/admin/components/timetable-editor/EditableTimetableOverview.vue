@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { overviewUiLabels } from '../../shared/overviewUiLabels';
-import type { TimetableOverviewPayload } from '../../types/timetableOverview';
-import MrtOverviewBranchGroup from '../../components/overview/MrtOverviewBranchGroup.vue';
-import MrtOverviewPrintKey from '../../components/overview/MrtOverviewPrintKey.vue';
-import MrtTimetableOverviewShell from '../../components/overview/MrtTimetableOverviewShell.vue';
-import { AdminStatusMessage } from './ui';
+import { overviewUiLabels } from '../../../shared/overviewUiLabels';
+import type { TimetableOverviewPayload } from '../../../types/timetableOverview';
+import MrtOverviewBranchGroup from '../../../components/overview/MrtOverviewBranchGroup.vue';
+import MrtOverviewPrintKey from '../../../components/overview/MrtOverviewPrintKey.vue';
+import MrtTimetableOverviewShell from '../../../components/overview/MrtTimetableOverviewShell.vue';
+import { AdminStatusMessage } from '../ui';
 import EditableOverviewRailGroup from './EditableOverviewRailGroup.vue';
-import { useOverviewGridEdit } from '../composables/useOverviewGridEdit';
+import { useOverviewGridEdit } from '../../composables/timetable-editor/useOverviewGridEdit';
 
 defineProps<{
   data: TimetableOverviewPayload;

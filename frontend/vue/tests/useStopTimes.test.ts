@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ref } from 'vue';
-import { useStopTimes } from '../src/admin/composables/useStopTimes';
+import { useStopTimes } from '../src/admin/composables/timetable-editor/useStopTimes';
 import type { AdminClientConfig } from '../src/admin/types';
 
 vi.mock('../src/admin/api/adminRest', () => ({

@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { toRef, watch } from 'vue';
-import { adminConfig } from '../types';
-import { adminStr } from '../utils/adminLabels';
-import { useStopTimes } from '../composables/useStopTimes';
-import AdminLoadState from './AdminLoadState.vue';
-import { AdminFormActions, AdminStatusMessage, MrtButton } from './ui';
+import { adminConfig } from '../../types';
+import { adminStr } from '../../utils/adminLabels';
+import { useStopTimes } from '../../composables/timetable-editor/useStopTimes';
+import AdminLoadState from '../AdminLoadState.vue';
+import { AdminFormActions, AdminStatusMessage, MrtButton } from '../ui';
 import StopTimePaCheckbox from './StopTimePaCheckbox.vue';
 import StopTimePaHeading from './StopTimePaHeading.vue';
 

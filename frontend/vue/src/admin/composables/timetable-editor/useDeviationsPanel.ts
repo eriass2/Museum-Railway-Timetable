@@ -1,5 +1,5 @@
 import { computed, ref, type Ref } from 'vue';
-import type { TimetableServiceRow } from '../types';
+import type { TimetableServiceRow } from '../../types';
 import {
   createDeviationRow,
   formatDeviationTripLabel,
@@ -7,8 +7,8 @@ import {
   isCancelledDeviationNotice,
   toggleCancelledDeviationNotice,
   type DeviationRow,
-} from '../utils/deviationsPayload';
-import { proceedIfDiscardAllowed } from './adminDiscardGuard';
+} from '../../utils/timetable-editor/deviationsPayload';
+import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
 
 export type DeviationsPanelView = 'list' | 'edit' | 'create';
 

@@ -1,4 +1,4 @@
-import type { StopTimeRow } from '../types';
+import type { StopTimeRow } from '../../types';
 
 /** Map editor rows to REST stop-times payload. */
 export function stopTimesToApiPayload(rows: StopTimeRow[]): Record<string, unknown>[] {

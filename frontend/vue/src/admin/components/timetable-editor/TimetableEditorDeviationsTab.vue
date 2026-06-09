@@ -9,13 +9,13 @@ import {
   AdminUnsavedBanner,
   MrtButton,
 } from '../ui';
-import { useDeviationsPanel } from '../../composables/useDeviationsPanel';
+import { useDeviationsPanel } from '../../composables/timetable-editor/useDeviationsPanel';
 import type { TimetableDetail } from '../../types';
 import {
   formatDeviationTripLabel,
   isCancelledDeviationNotice,
   type DeviationRow,
-} from '../../utils/deviationsPayload';
+} from '../../utils/timetable-editor/deviationsPayload';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 

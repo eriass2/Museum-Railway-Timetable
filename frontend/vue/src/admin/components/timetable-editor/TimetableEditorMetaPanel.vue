@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { AdminFormActions, AdminPanel, AdminUnsavedBanner, MrtButton } from './ui';
-import { adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
+import { AdminFormActions, AdminPanel, AdminUnsavedBanner, MrtButton } from '../ui';
+import { adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
 
 defineProps<{
   metaDirty: boolean;

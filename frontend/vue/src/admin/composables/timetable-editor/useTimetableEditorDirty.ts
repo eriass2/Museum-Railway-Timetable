@@ -1,6 +1,6 @@
 import { computed, ref, type Ref } from 'vue';
-import type { TimetableDetail } from '../types';
-import type { DeviationRow } from '../utils/deviationsPayload';
+import type { TimetableDetail } from '../../types';
+import type { DeviationRow } from '../../utils/timetable-editor/deviationsPayload';
 
 export type TimetableEditorTab = 'dates' | 'trips' | 'stoptimes' | 'deviations' | 'preview';
 

@@ -1,9 +1,9 @@
 import { computed, ref, type Ref } from 'vue';
-import { getStopTimes, saveStopTimes } from '../api/adminRest';
-import type { StopTimeRow } from '../types';
-import { adminConfig } from '../types';
-import { adminErrorMessage, adminStr } from '../utils/adminLabels';
-import { stopTimesToApiPayload } from '../utils/stopTimesPayload';
+import { getStopTimes, saveStopTimes } from '../../api/adminRest';
+import type { StopTimeRow } from '../../types';
+import { adminConfig } from '../../types';
+import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
+import { stopTimesToApiPayload } from '../../utils/timetable-editor/stopTimesPayload';
 
 function rowsSnapshot(rows: StopTimeRow[]): string {
   return JSON.stringify(rows);

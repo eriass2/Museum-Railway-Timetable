@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { reactive, ref, useTemplateRef } from 'vue';
-import type { TimetableTimeCellEdit } from '../../types/timetableOverview';
-import type { OverviewGridEdit } from '../composables/useOverviewGridEdit';
-import { adminConfig } from '../types';
-import { adminFmtN, adminStr } from '../utils/adminLabels';
-import { MrtButton } from './ui';
+import type { TimetableTimeCellEdit } from '../../../types/timetableOverview';
+import type { OverviewGridEdit } from '../../composables/timetable-editor/useOverviewGridEdit';
+import { adminConfig } from '../../types';
+import { adminFmtN, adminStr } from '../../utils/adminLabels';
+import { MrtButton } from '../ui';
 import StopTimePaCheckbox from './StopTimePaCheckbox.vue';
 
 const props = defineProps<{

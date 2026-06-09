@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../types/timetableOverview';
-import type { OverviewGridEdit } from '../composables/useOverviewGridEdit';
-import { overviewUiLabels } from '../../shared/overviewUiLabels';
-import { overviewColumnIsCancelled } from '../../shared/overviewCancelled';
-import MrtOverviewRailGroupGrid from '../../components/overview/MrtOverviewRailGroupGrid.vue';
-import { trainTypeIconUrl } from '../../utils/overviewGrid';
-import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
+import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../../types/timetableOverview';
+import type { OverviewGridEdit } from '../../composables/timetable-editor/useOverviewGridEdit';
+import { overviewUiLabels } from '../../../shared/overviewUiLabels';
+import { overviewColumnIsCancelled } from '../../../shared/overviewCancelled';
+import MrtOverviewRailGroupGrid from '../../../components/overview/MrtOverviewRailGroupGrid.vue';
+import { trainTypeIconUrl } from '../../../utils/overviewGrid';
+import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../../shared/trainTypeIcons';
 import OverviewGridCellEditor from './OverviewGridCellEditor.vue';
 
 const labels = overviewUiLabels({});

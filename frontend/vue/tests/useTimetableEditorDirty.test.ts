@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { ref } from 'vue';
-import { useTimetableEditorDirty } from '../src/admin/composables/useTimetableEditorDirty';
+import { useTimetableEditorDirty } from '../src/admin/composables/timetable-editor/useTimetableEditorDirty';
 import type { TimetableDetail } from '../src/admin/types';
 
 function makeDetail(dates: string[]): TimetableDetail {

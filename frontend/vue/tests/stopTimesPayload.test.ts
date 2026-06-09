@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { stopTimesToApiPayload } from '../src/admin/utils/stopTimesPayload';
+import { stopTimesToApiPayload } from '../src/admin/utils/timetable-editor/stopTimesPayload';
 
 describe('stopTimesToApiPayload', () => {
   it('maps editor rows to REST stops', () => {
