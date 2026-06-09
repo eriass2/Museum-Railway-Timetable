@@ -39,6 +39,8 @@ Skapa `kebab-case/`-undermapp när en admin-sida har **2+ egna filer i samma lag
 | Stationer & linjer | `StationsRoutesPage` | `stations-routes/` | `stations-routes/` | `stations-routes/` |
 | Priser | `PricesPage` | `prices/` | `prices/` | `prices/` |
 | Import/export | `ImportExportPage` | `import-export/` | `import-export/` | — |
+| Dashboard | `DashboardPage` | `dashboard/` | — | `dashboard/` |
+| Mobil (tvärgående) | många sidor | `mobile/` | `mobile/` | — |
 
 Ny kod för ovan → lägg i befintlig undermapp, inte i rot.
 
@@ -47,7 +49,6 @@ Ny kod för ovan → lägg i befintlig undermapp, inte i rot.
 - En ensam komponent/helper (`AdminLoadState.vue`, `adminConfirm.ts`)
 - Generella verktyg (`adminLabels.ts`, `settingsTime.ts`, `downloadBase64File.ts`)
 - Delade composables (`useAdminResource`, `useAdminSaveNotice`, `adminDiscardGuard`, …)
-- Tvärgående mobil (`MobileTimetablePanel`, `useMobileAdmin`) — används på många sidor
 - Enskilda sidor utan utbrott (`TrainTypesPage`, `ShortcodesPage`, `SettingsPage`)
 
 ## Vid ny kod eller refaktorering

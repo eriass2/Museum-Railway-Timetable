@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue';
-import { getStopTimes, quickDeparture } from '../api/adminRest';
-import type { TimetableServiceRow } from '../types';
-import { adminConfig } from '../types';
-import { adminErrorMessage, adminStr } from '../utils/adminLabels';
-import { AdminStatusMessage, MrtButton } from './ui';
+import { getStopTimes, quickDeparture } from '../../api/adminRest';
+import type { TimetableServiceRow } from '../../types';
+import { adminConfig } from '../../types';
+import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
+import { AdminStatusMessage, MrtButton } from '../ui';
 
 const props = defineProps<{
   services: TimetableServiceRow[];

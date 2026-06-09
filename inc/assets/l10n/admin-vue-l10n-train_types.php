@@ -27,8 +27,11 @@ function MRT_admin_vue_l10n_train_types(): array {
 		'trainTypesNameLabel'       => __( 'Namn', 'museum-railway-timetable' ),
 		'trainTypesIconLabel'       => __( 'Ikon', 'museum-railway-timetable' ),
 		'trainTypesIconPickerAria'  => __( 'Välj ikon för tågtyp', 'museum-railway-timetable' ),
-		'trainTypesIconSteam'       => __( '�
-ngtåg', 'museum-railway-timetable' ),
+		'trainTypesIconSteam'       => __(
+			'�
+ngtåg',
+			'museum-railway-timetable'
+		),
 		'trainTypesIconDiesel'      => __( 'Diesel', 'museum-railway-timetable' ),
 		'trainTypesIconRailbus'     => __( 'Rälsbuss', 'museum-railway-timetable' ),
 		'trainTypesIconBus'         => __( 'Vägbuss', 'museum-railway-timetable' ),

@@ -1,21 +1,21 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
-import { getDeviations, listTrainTypes, saveDeviations } from '../api/adminRest';
-import type { TimetableDetail, TrainTypeRow } from '../types';
-import { adminConfig } from '../types';
-import { adminErrorMessage, adminStr } from '../utils/adminLabels';
+import { getDeviations, listTrainTypes, saveDeviations } from '../../api/adminRest';
+import type { TimetableDetail, TrainTypeRow } from '../../types';
+import { adminConfig } from '../../types';
+import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
 import {
   createDeviationRow,
   deviationsToSavePayload,
   formatDeviationTripLabel,
   hasDeviationRow,
   type DeviationRow,
-} from '../utils/timetable-editor/deviationsPayload';
-import { useAdminResource } from '../composables/useAdminResource';
-import AdminLoadState from './AdminLoadState.vue';
+} from '../../utils/timetable-editor/deviationsPayload';
+import { useAdminResource } from '../../composables/useAdminResource';
+import AdminLoadState from '../AdminLoadState.vue';
 import MobileQuickDeparture from './MobileQuickDeparture.vue';
 import MobileCancelTraffic from './MobileCancelTraffic.vue';
-import { AdminDeviationRowFields, AdminStatusMessage, MrtButton } from './ui';
+import { AdminDeviationRowFields, AdminStatusMessage, MrtButton } from '../ui';
 
 const props = defineProps<{
   timetableId: number;

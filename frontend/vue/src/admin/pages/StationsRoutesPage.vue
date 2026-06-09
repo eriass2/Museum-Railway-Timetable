@@ -4,7 +4,7 @@ import RoutesPanel from '../components/stations-routes/RoutesPanel.vue';
 import StationsPanel from '../components/stations-routes/StationsPanel.vue';
 import { AdminStatusMessage } from '../components/ui';
 import { useStationsRoutesPage } from '../composables/stations-routes/useStationsRoutesPage';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 
 const { isMobile } = useMobileAdmin();

@@ -1,6 +1,6 @@
 <?php
 /**
- * CSV package import orchestration (inc/import/csv/importer.php).
+ * CSV package import orchestration (inc/import/csv/import/importer.php).
  *
  * @package Museum_Railway_Timetable
  */

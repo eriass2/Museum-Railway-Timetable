@@ -128,7 +128,7 @@ Shortcodes kan användas i widgets genom text-widgets eller custom HTML-widgets.
 Delad journey-domän och REST (används av wizarden):
 
 - **Domän:** `inc/domain/journey/`
-- **REST:** `inc/infrastructure/rest/journey-public.php` (`/mrt/v1/journey/*`)
+- **REST:** `inc/infrastructure/rest/public/journey-public.php` (`/mrt/v1/journey/*`)
 - **Publik frontend (Vue):** `frontend/vue/` → `assets/dist/vue/` (se [VUE_FRONTEND.md](VUE_FRONTEND.md))
 
 ---

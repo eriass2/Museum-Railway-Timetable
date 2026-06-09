@@ -27,7 +27,7 @@ import { proceedIfDiscardAllowed } from '../composables/adminDiscardGuard';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminRowFlash } from '../composables/useAdminRowFlash';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 

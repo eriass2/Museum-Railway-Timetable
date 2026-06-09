@@ -267,7 +267,7 @@ final class RestAdminHandlersTest extends TestCase {
 
 	public function test_clear_plugin_data_handler_clears_plugin_data(): void {
 		require_once ABSPATH . 'inc/admin/tools/clear-db.php';
-		require_once ABSPATH . 'inc/admin/tools/dev-cli.php';
+		require_once ABSPATH . 'inc/admin/tools/dev/dev-cli.php';
 
 		$GLOBALS['mrt_test_get_posts'] = static fn (): array => array();
 		$GLOBALS['mrt_test_options']   = array(

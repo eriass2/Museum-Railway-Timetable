@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { cancelTrafficToday } from '../api/adminRest';
-import { adminConfirm } from '../composables/adminConfirm';
-import type { TrafficToday } from '../types';
-import { adminConfig } from '../types';
-import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
-import { MrtButton } from './ui';
+import { cancelTrafficToday } from '../../api/adminRest';
+import { adminConfirm } from '../../composables/adminConfirm';
+import type { TrafficToday } from '../../types';
+import { adminConfig } from '../../types';
+import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../../utils/adminLabels';
+import { MrtButton } from '../ui';
 
 const props = defineProps<{
   traffic: TrafficToday;

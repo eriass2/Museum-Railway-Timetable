@@ -20,7 +20,7 @@ import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useAdminFormDirty } from '../composables/useAdminFormDirty';
 import { useAdminUnsavedGuard } from '../composables/useAdminUnsavedGuard';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminConfirm } from '../composables/adminConfirm';
 import { adminErrorMessage, adminFmtN, adminStr } from '../utils/adminLabels';
 import {

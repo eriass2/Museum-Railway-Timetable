@@ -1,6 +1,6 @@
 <?php
 /**
- * CSV override import helpers (inc/import/csv/import-override.php).
+ * CSV override import helpers (inc/import/csv/import/import-override.php).
  *
  * @package Museum_Railway_Timetable
  */

@@ -4,10 +4,10 @@ import { useRouter } from 'vue-router';
 import {
   buildAdminSetupSteps,
   isAdminSetupComplete,
-} from '../utils/adminSetupSteps';
-import { adminConfig } from '../types';
-import { adminFmtN, adminStr } from '../utils/adminLabels';
-import { AdminPanel, MrtButton } from './ui';
+} from '../../utils/dashboard/adminSetupSteps';
+import { adminConfig } from '../../types';
+import { adminFmtN, adminStr } from '../../utils/adminLabels';
+import { AdminPanel, MrtButton } from '../ui';
 
 const props = defineProps<{
   stats: Record<string, number>;

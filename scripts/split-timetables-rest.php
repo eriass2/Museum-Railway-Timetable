@@ -1,7 +1,7 @@
 <?php
 $root = dirname( __DIR__ );
-$src  = file_get_contents( $root . '/inc/infrastructure/rest/timetables.php' );
-$dir  = $root . '/inc/infrastructure/rest/';
+$src  = file_get_contents( $root . '/inc/infrastructure/rest/admin/timetables.php' );
+$dir  = $root . '/inc/infrastructure/rest/admin/';
 
 require __DIR__ . '/lib/extract-php-functions.php';
 
@@ -60,7 +60,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/infrastructure/rest/timetables-data.php';
+require_once MRT_PATH . 'inc/infrastructure/rest/admin/timetables-data.php';
 require_once MRT_PATH . 'inc/domain/admin/timetable-deviations.php';
 require_once MRT_PATH . 'inc/domain/admin/delete-entities.php';
 require_once __DIR__ . '/timetables-register.php';

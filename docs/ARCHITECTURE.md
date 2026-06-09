@@ -74,7 +74,7 @@ inc/
 │   └── wordpress/          # environment, plugin-settings, helpers-utils
 ├── admin/
 │   ├── app.php, menu.php   # Vue shell + legacy redirects
-│   └── tools/              # demo, import, clear-db, dev-navigation, timetable-pages
+│   └── tools/              # demo, import, clear-db, dev/, timetable-pages
 ├── public/
 │   ├── month-calendar/
 │   ├── timetable-overview/

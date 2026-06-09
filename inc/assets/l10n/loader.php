@@ -23,7 +23,7 @@ require_once $l10n_dir . 'admin-vue-l10n-train_types.php';
 require_once $l10n_dir . 'admin-vue-l10n-import_export.php';
 require_once $l10n_dir . 'admin-vue-l10n-traffic.php';
 require_once $l10n_dir . 'admin-vue-l10n-traffic_notices.php';
-require_once $l10n_dir . 'admin-vue-l10n-editor.php';
+require_once $l10n_dir . 'editor/admin-vue-l10n-editor.php';
 require_once $l10n_dir . 'admin-vue-l10n-mobile.php';
 require_once $l10n_dir . 'admin-vue-l10n-stop_times.php';
 require_once $l10n_dir . 'admin-vue-l10n-dev.php';

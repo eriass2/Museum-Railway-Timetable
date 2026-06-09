@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$dev_nav_dir = MRT_PATH . 'inc/admin/tools/';
+$dev_nav_dir = __DIR__ . '/';
 require_once $dev_nav_dir . 'dev-nav-constants.php';
 require_once $dev_nav_dir . 'dev-smoke-pages.php';
 require_once $dev_nav_dir . 'dev-nav-classic.php';

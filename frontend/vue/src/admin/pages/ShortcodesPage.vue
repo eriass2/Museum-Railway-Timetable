@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { adminConfig } from '../types';
 import AdminShortcodesGuide from '../components/AdminShortcodesGuide.vue';
 import { AdminPanel, AdminTableScroll } from '../components/ui';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 
 const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();

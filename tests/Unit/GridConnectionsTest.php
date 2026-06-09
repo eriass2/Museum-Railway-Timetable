@@ -1,6 +1,6 @@
 <?php
 /**
- * Rail–bus grid connection helpers (inc/domain/timetable/view/grid-connections.php).
+ * Rail–bus grid connection helpers (inc/domain/timetable/view/grid/grid-connections.php).
  *
  * @package Museum_Railway_Timetable
  */

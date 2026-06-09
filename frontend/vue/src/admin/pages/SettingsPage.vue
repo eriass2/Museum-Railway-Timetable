@@ -15,7 +15,7 @@ import { useAdminResource } from '../composables/useAdminResource';
 import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
 import { useAdminFormDirty } from '../composables/useAdminFormDirty';
 import { useAdminUnsavedGuard } from '../composables/useAdminUnsavedGuard';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 

@@ -4,10 +4,10 @@ import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import { AdminActionBar, AdminPanel, MrtButton } from '../components/ui';
-import AdminSetupChecklist from '../components/AdminSetupChecklist.vue';
-import TrafficTodayPanel from '../components/TrafficTodayPanel.vue';
+import SetupChecklist from '../components/dashboard/SetupChecklist.vue';
+import TrafficTodayPanel from '../components/dashboard/TrafficTodayPanel.vue';
 import { useAdminResource } from '../composables/useAdminResource';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
 
@@ -57,7 +57,7 @@ function openRoute(hashRoute: string) {
         :can-operate="data.can_operate"
       />
 
-      <AdminSetupChecklist v-if="data.can_manage" :stats="data.stats" />
+      <SetupChecklist v-if="data.can_manage" :stats="data.stats" />
 
       <div
         v-if="isMobile"

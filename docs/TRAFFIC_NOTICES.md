@@ -263,8 +263,8 @@ Dev-verktyg: uppdatera «Synka tidtabellssidor» så startsidan får shortcoden 
 
 ### Fas 2 — REST
 
-- `inc/infrastructure/rest/traffic-notices-public.php`
-- `inc/infrastructure/rest/traffic-notices-admin.php`
+- `inc/infrastructure/rest/public/traffic-notices-public.php`
+- `inc/infrastructure/rest/admin/traffic-notices-admin.php`
 - Registrera i `loader.php`
 
 ### Fas 3 — Admin UI

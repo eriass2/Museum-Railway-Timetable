@@ -8,7 +8,7 @@ import {
 } from '../components/ui';
 import ImportExportGuidePanels from '../components/import-export/ImportExportGuidePanels.vue';
 import { useImportExportPage } from '../composables/import-export/useImportExportPage';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 
 const { isMobile } = useMobileAdmin();

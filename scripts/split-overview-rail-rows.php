@@ -1,7 +1,7 @@
 <?php
 $root = dirname( __DIR__ );
-$src  = file_get_contents( $root . '/inc/domain/timetable/view/overview-rail-rows.php' );
-$dir  = $root . '/inc/domain/timetable/view/';
+$src  = file_get_contents( $root . '/inc/domain/timetable/view/overview/overview-rail-rows.php' );
+$dir  = $root . '/inc/domain/timetable/view/overview/';
 
 require __DIR__ . '/lib/extract-php-functions.php';
 

@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { cancelTrafficToday } from '../api/adminRest';
-import { adminConfirm } from '../composables/adminConfirm';
-import type { TrafficToday } from '../types';
-import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
-import { AdminActionBar, AdminPanel, AdminStatusMessage, MrtButton } from './ui';
+import { cancelTrafficToday } from '../../api/adminRest';
+import { adminConfirm } from '../../composables/adminConfirm';
+import type { TrafficToday } from '../../types';
+import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
+import { AdminActionBar, AdminPanel, AdminStatusMessage, MrtButton } from '../ui';
 
 const props = defineProps<{
   traffic: TrafficToday;

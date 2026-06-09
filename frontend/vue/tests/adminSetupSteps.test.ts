@@ -3,7 +3,7 @@ import type { AdminClientConfig } from '../src/admin/types';
 import {
   buildAdminSetupSteps,
   isAdminSetupComplete,
-} from '../src/admin/utils/adminSetupSteps';
+} from '../src/admin/utils/dashboard/adminSetupSteps';
 
 function mockCfg(): AdminClientConfig {
   return {

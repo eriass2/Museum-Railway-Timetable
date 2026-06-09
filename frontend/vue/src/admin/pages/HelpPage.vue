@@ -3,7 +3,7 @@ import { computed, nextTick, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { adminConfig } from '../types';
 import { AdminPanel, AdminTableScroll, MrtButton } from '../components/ui';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 
 const router = useRouter();
 const route = useRoute();

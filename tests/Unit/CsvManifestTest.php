@@ -1,6 +1,6 @@
 <?php
 /**
- * CSV manifest inference and template export (inc/import/csv/manifest.php).
+ * CSV manifest inference and template export (inc/import/csv/package/manifest.php).
  *
  * @package Museum_Railway_Timetable
  */

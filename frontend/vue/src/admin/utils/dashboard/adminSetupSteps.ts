@@ -1,5 +1,5 @@
-import type { AdminClientConfig } from '../types';
-import { adminStr } from './adminLabels';
+import type { AdminClientConfig } from '../../types';
+import { adminStr } from '../adminLabels';
 
 export type AdminSetupStep = {
   id: string;

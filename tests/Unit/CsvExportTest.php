@@ -1,6 +1,6 @@
 <?php
 /**
- * Tests for CSV package export (inc/import/csv/exporter.php).
+ * Tests for CSV package export (inc/import/csv/export/exporter.php).
  *
  * @package Museum_Railway_Timetable
  */

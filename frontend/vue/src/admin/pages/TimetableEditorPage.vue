@@ -8,11 +8,11 @@ import TimetableEditorStoptimesPanel from '../components/timetable-editor/Timeta
 import TimetableEditorDatesTab from '../components/timetable-editor/TimetableEditorDatesTab.vue';
 import TimetableEditorDeviationsTab from '../components/timetable-editor/TimetableEditorDeviationsTab.vue';
 import TimetableEditorTripsTab from '../components/timetable-editor/TimetableEditorTripsTab.vue';
-import MobileTimetablePanel from '../components/MobileTimetablePanel.vue';
+import MobileTimetablePanel from '../components/mobile/MobileTimetablePanel.vue';
 import { AdminPanel, AdminStatusMessage } from '../components/ui';
 import { useTimetableEditorPage } from '../composables/timetable-editor/useTimetableEditorPage';
 import type { TimetableEditorTab } from '../composables/timetable-editor/useTimetableEditorPage';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 
 const props = defineProps<{ id: string }>();

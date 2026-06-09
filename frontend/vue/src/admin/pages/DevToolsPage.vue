@@ -9,7 +9,7 @@ import {
 } from '../api/adminRest';
 import { AdminPanel, AdminStatusMessage, AdminToolList, MrtButton } from '../components/ui';
 import { adminConfirm } from '../composables/adminConfirm';
-import { useMobileAdmin } from '../composables/useMobileAdmin';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminConfig } from '../types';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 

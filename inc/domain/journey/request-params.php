@@ -159,8 +159,11 @@ function MRT_journey_parse_connection_detail_params( array $input ) {
 			__( 'Invalid date.', 'museum-railway-timetable' )
 		);
 	}
-	return array_merge( $pair, array(
-		'service_id' => $service_id,
-		'date'       => $date,
-	) );
+	return array_merge(
+		$pair,
+		array(
+			'service_id' => $service_id,
+			'date'       => $date,
+		)
+	);
 }

@@ -1,7 +1,7 @@
 <?php
 $root = dirname( __DIR__ );
-$src  = file_get_contents( $root . '/inc/infrastructure/rest/timetables-data.php' );
-$dir  = $root . '/inc/infrastructure/rest/';
+$src  = file_get_contents( $root . '/inc/infrastructure/rest/admin/timetables-data.php' );
+$dir  = $root . '/inc/infrastructure/rest/admin/';
 
 require __DIR__ . '/lib/extract-php-functions.php';
 

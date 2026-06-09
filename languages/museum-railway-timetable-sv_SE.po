@@ -40,7 +40,7 @@ msgid "Tidtabell"
 msgstr "Tidtabell"
 
 #: inc/admin/menu.php:52 inc/admin/menu.php:53
-#: inc/admin/tools/dev-navigation.php:35 inc/assets/admin-vue.php:74
+#: inc/admin/tools/dev/dev-navigation.php:35 inc/assets/admin-vue.php:74
 msgid "Komponentdemo"
 msgstr "Komponentdemo"
 
@@ -199,14 +199,14 @@ msgid ""
 "priser i sammanfattning)."
 msgstr "Mockup-baserat: helt reseflöde (V1–V5) med kalender, sträckor, valfri retur, priser i sammanfattning)."
 
-#: inc/admin/tools/demo-page.php:207 inc/admin/tools/dev-navigation.php:62
-#: inc/admin/tools/dev-navigation.php:498
+#: inc/admin/tools/demo-page.php:207 inc/admin/tools/dev/dev-navigation.php:62
+#: inc/admin/tools/dev/dev-navigation.php:498
 #: inc/domain/timetable/timetable-pages.php:147
 #: inc/domain/timetable/timetable-pages.php:213
 msgid "Åtkomst nekad."
 msgstr "Åtkomst nekad."
 
-#: inc/admin/tools/demo-page.php:209 inc/admin/tools/dev-navigation.php:34
+#: inc/admin/tools/demo-page.php:209 inc/admin/tools/dev/dev-navigation.php:34
 msgid "Museijärnvägens tidtabell – komponentdemo"
 msgstr "Museijärnvägens tidtabell – komponentdemo"
 
@@ -265,26 +265,26 @@ msgstr "Utvecklingsmeny i front-end:"
 msgid "Utvecklingsverktyg"
 msgstr "Utvecklingsverktyg"
 
-#: inc/admin/tools/dev-cli.php:73
+#: inc/admin/tools/dev/dev-cli.php:73
 msgid "Utvecklingsåterställning kräver WP_DEBUG, MRT_DEVELOPMENT eller WP-CLI."
 msgstr "Utvecklingsåterställning kräver WP_DEBUG, MRT_DEVELOPMENT eller WP-CLI."
 
 #. translators: 1: stations, 2: routes, 3: timetables, 4: services
-#: inc/admin/tools/dev-cli.php:90
+#: inc/admin/tools/dev/dev-cli.php:90
 #, php-format
 msgid "Stationer: %1$d, Rutter: %2$d, Tidtabeller: %3$d, Turer: %4$d."
 msgstr "Stationer: %1$d, Rutter: %2$d, Tidtabeller: %3$d, Turer: %4$d."
 
-#: inc/admin/tools/dev-navigation.php:42 inc/admin/tools/dev-navigation.php:43
+#: inc/admin/tools/dev/dev-navigation.php:42 inc/admin/tools/dev/dev-navigation.php:43
 msgid "Wizard-smoketest"
 msgstr "Wizard-smoketest"
 
-#: inc/admin/tools/dev-navigation.php:262
-#: inc/admin/tools/dev-navigation.php:459
+#: inc/admin/tools/dev/dev-navigation.php:262
+#: inc/admin/tools/dev/dev-navigation.php:459
 msgid "Museijärnväg (utveckling)"
 msgstr "Museijärnväg (utveckling)"
 
-#: inc/admin/tools/dev-navigation.php:494
+#: inc/admin/tools/dev/dev-navigation.php:494
 msgid ""
 "Utvecklingsmeny är endast tillgänglig i utvecklingsläge (WP_DEBUG eller "
 "MRT_DEVELOPMENT) eller WP-CLI."
@@ -2172,7 +2172,7 @@ msgid "Vue build missing. Run npm install && npm run build in frontend/vue/."
 msgstr "Vue build missing. Run npm install && npm run build in frontend/vue/."
 
 #: inc/domain/admin/cancel-traffic.php:58
-#: inc/domain/timetable/view/overview-data.php:101
+#: inc/domain/timetable/view/overview/overview-data.php:101
 #: inc/public/month-calendar/shortcode.php:136
 #: inc/public/month-calendar/shortcode.php:146
 #: inc/public/month-calendar/shortcode.php:155
@@ -2200,13 +2200,13 @@ msgstr "Could not delete service."
 
 #: inc/domain/admin/delete-entities.php:69
 #: inc/domain/timetable/timetable-pages.php:182
-#: inc/domain/timetable/view/overview-data.php:70
+#: inc/domain/timetable/view/overview/overview-data.php:70
 msgid "Invalid timetable."
 msgstr "Invalid timetable."
 
 #: inc/domain/admin/delete-entities.php:73
-#: inc/infrastructure/rest/timetables-data.php:53
-#: inc/infrastructure/rest/timetables-data.php:182
+#: inc/infrastructure/rest/admin/timetables-data.php:53
+#: inc/infrastructure/rest/admin/timetables-data.php:182
 #: inc/public/timetable-overview/shortcode.php:36
 msgid "Timetable not found."
 msgstr "Timetable not found."
@@ -2216,12 +2216,12 @@ msgid "Could not delete timetable."
 msgstr "Could not delete timetable."
 
 #: inc/domain/admin/delete-entities.php:179
-#: inc/infrastructure/rest/pricing-public.php:68
+#: inc/infrastructure/rest/public/pricing-public.php:68
 msgid "Invalid station."
 msgstr "Invalid station."
 
 #: inc/domain/admin/delete-entities.php:183
-#: inc/infrastructure/rest/stations-routes.php:187
+#: inc/infrastructure/rest/admin/stations.php:187
 msgid "Station not found."
 msgstr "Station not found."
 
@@ -2234,12 +2234,12 @@ msgid "Could not delete station."
 msgstr "Could not delete station."
 
 #: inc/domain/admin/delete-entities.php:232
-#: inc/infrastructure/rest/timetables.php:240
+#: inc/infrastructure/rest/admin/timetables.php:240
 msgid "Invalid route."
 msgstr "Invalid route."
 
 #: inc/domain/admin/delete-entities.php:236
-#: inc/infrastructure/rest/stations-routes.php:303
+#: inc/infrastructure/rest/admin/stations.php:303
 msgid "Route not found."
 msgstr "Route not found."
 
@@ -2266,7 +2266,7 @@ msgid "Please select different stations for departure and arrival."
 msgstr "Vänligen välj olika stationer för avgång och ankomst."
 
 #: inc/domain/journey/request-params.php:73
-#: inc/infrastructure/rest/journey-public.php:111
+#: inc/infrastructure/rest/public/journey-public.php:111
 msgid "Please select a valid date."
 msgstr "Please select a valid date."
 
@@ -2390,66 +2390,66 @@ msgstr "ORANGE tidtabell"
 msgid "BLÅ tidtabell"
 msgstr "BLÅ tidtabell"
 
-#: inc/domain/timetable/view/overview-branch-group.php:33
-#: inc/domain/timetable/view/overview-branch-group.php:44
-#: inc/domain/timetable/view/overview-bus-rows.php:61
-#: inc/domain/timetable/view/overview-bus-rows.php:85
-#: inc/domain/timetable/view/overview-rail-rows.php:23
-#: inc/domain/timetable/view/overview-rail-rows.php:90
-#: inc/domain/timetable/view/overview-rail-rows.php:127
+#: inc/domain/timetable/view/overview/overview-branch-group.php:33
+#: inc/domain/timetable/view/overview/overview-branch-group.php:44
+#: inc/domain/timetable/view/overview/overview-bus-rows.php:61
+#: inc/domain/timetable/view/overview/overview-bus-rows.php:85
+#: inc/domain/timetable/view/overview/overview-rail-rows.php:23
+#: inc/domain/timetable/view/overview/overview-rail-rows.php:90
+#: inc/domain/timetable/view/overview/overview-rail-rows.php:127
 #, php-format
 msgid "Från %s"
 msgstr "Från %s"
 
-#: inc/domain/timetable/view/overview-branch-group.php:34
-#: inc/domain/timetable/view/overview-bus-rows.php:71
-#: inc/domain/timetable/view/overview-bus-rows.php:95
-#: inc/domain/timetable/view/overview-rail-rows.php:26
-#: inc/domain/timetable/view/overview-rail-rows.php:114
-#: inc/domain/timetable/view/overview-rail-rows.php:157
+#: inc/domain/timetable/view/overview/overview-branch-group.php:34
+#: inc/domain/timetable/view/overview/overview-bus-rows.php:71
+#: inc/domain/timetable/view/overview/overview-bus-rows.php:95
+#: inc/domain/timetable/view/overview/overview-rail-rows.php:26
+#: inc/domain/timetable/view/overview/overview-rail-rows.php:114
+#: inc/domain/timetable/view/overview/overview-rail-rows.php:157
 #, php-format
 msgid "Till %s"
 msgstr "Till %s"
 
-#: inc/domain/timetable/view/overview-data.php:25
+#: inc/domain/timetable/view/overview/overview-data.php:25
 msgid "No trips found."
 msgstr "No trips found."
 
-#: inc/domain/timetable/view/overview-data.php:31
+#: inc/domain/timetable/view/overview/overview-data.php:31
 msgid "No valid trips found."
 msgstr "No valid trips found."
 
-#: inc/domain/timetable/view/overview-data.php:89
+#: inc/domain/timetable/view/overview/overview-data.php:89
 msgid "No trips in this timetable."
 msgstr "No trips in this timetable."
 
 #. translators: %s: formatted date
-#: inc/domain/timetable/view/overview-data.php:109
+#: inc/domain/timetable/view/overview/overview-data.php:109
 #, php-format
 msgid "Timetable for %s"
 msgstr "Timetable for %s"
 
-#: inc/domain/timetable/view/overview-data.php:123
+#: inc/domain/timetable/view/overview/overview-data.php:123
 msgid "No services running on this date."
 msgstr "No services running on this date."
 
-#: inc/domain/timetable/view/overview-print-key.php:29
+#: inc/domain/timetable/view/overview/overview-print-key.php:29
 msgid "Stannar vid av- och påstigning när någon resenär ska på eller av."
 msgstr "Stannar vid av- och påstigning när någon resenär ska på eller av."
 
-#: inc/domain/timetable/view/overview-print-key.php:36
+#: inc/domain/timetable/view/overview/overview-print-key.php:36
 msgid "Stannar endast vid påstigning när någon resenär ska på."
 msgstr "Stannar endast vid påstigning när någon resenär ska på."
 
-#: inc/domain/timetable/view/overview-print-key.php:43
+#: inc/domain/timetable/view/overview/overview-print-key.php:43
 msgid "Busshållplats; anslutande bussar visas i egen tabell i tidtabellen."
 msgstr "Busshållplats; anslutande bussar visas i egen tabell i tidtabellen."
 
-#: inc/domain/timetable/view/overview-print-key.php:109
+#: inc/domain/timetable/view/overview/overview-print-key.php:109
 msgid "Deviation from planned train type on the selected day."
 msgstr "Deviation from planned train type on the selected day."
 
-#: inc/domain/timetable/view/overview-rail-rows.php:275
+#: inc/domain/timetable/view/overview/overview-rail-rows.php:275
 msgid "Tågbyte:"
 msgstr "Tågbyte:"
 
@@ -2473,21 +2473,21 @@ msgstr ""
 "Services: %4$d. Fixture data replaced; posts without a fixture code were "
 "removed."
 
-#: inc/infrastructure/rest/import-export.php:47
+#: inc/infrastructure/rest/admin/import-export.php:47
 msgid "No file uploaded."
 msgstr "No file uploaded."
 
-#: inc/infrastructure/rest/import-export.php:89
+#: inc/infrastructure/rest/admin/import-export.php:89
 msgid "Could not read export file."
 msgstr "Could not read export file."
 
-#: inc/infrastructure/rest/stations-routes.php:142
-#: inc/infrastructure/rest/stations-routes.php:263
-#: inc/infrastructure/rest/timetables-data.php:160
+#: inc/infrastructure/rest/admin/stations.php:142
+#: inc/infrastructure/rest/admin/stations.php:263
+#: inc/infrastructure/rest/admin/timetables-data.php:160
 msgid "Title is required."
 msgstr "Title is required."
 
-#: inc/infrastructure/rest/timetables-data.php:239
+#: inc/infrastructure/rest/admin/timetables-data.php:239
 msgid "Route is required."
 msgstr "Route is required."
 
