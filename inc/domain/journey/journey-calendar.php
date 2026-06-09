@@ -96,7 +96,7 @@ function MRT_journey_calendar_day_entry(
  * @param int $month Month 1-12
  * @return array<string, array{status: string, type: string}>
  */
-function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year, $month, string $trip_type = 'single' ) {
+function MRT_build_journey_calendar_month( $from_station_id, $to_station_id, $year, $month, string $trip_type = 'single' ) {
 	$out = array();
 	if ( $from_station_id <= 0 || $to_station_id <= 0 || $from_station_id === $to_station_id ) {
 		return $out;
@@ -123,4 +123,51 @@ function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year
 		);
 	}
 	return $out;
+}
+
+/**
+ * Per-day status for a calendar month (YYYY-MM-DD => status + type)
+ *
+ * @param int $from_station_id From station
+ * @param int $to_station_id To station
+ * @param int $year Year
+ * @param int $month Month 1-12
+ * @return array<string, array{status: string, type: string}>
+ */
+function MRT_get_journey_calendar_month( $from_station_id, $to_station_id, $year, $month, string $trip_type = 'single' ) {
+	$from_station_id = (int) $from_station_id;
+	$to_station_id   = (int) $to_station_id;
+	$year            = (int) $year;
+	$month           = (int) $month;
+	$trip_type       = ( $trip_type === 'return' ) ? 'return' : 'single';
+
+	if ( $from_station_id <= 0 || $to_station_id <= 0 || $from_station_id === $to_station_id ) {
+		return array();
+	}
+	if ( $year < 1970 || $year > 2100 || $month < 1 || $month > 12 ) {
+		return array();
+	}
+
+	$cache_key = MRT_journey_calendar_month_cache_key(
+		$from_station_id,
+		$to_station_id,
+		$year,
+		$month,
+		$trip_type
+	);
+	$cached = MRT_journey_calendar_month_cache_get( $cache_key );
+	if ( is_array( $cached ) ) {
+		return $cached;
+	}
+
+	$built = MRT_build_journey_calendar_month(
+		$from_station_id,
+		$to_station_id,
+		$year,
+		$month,
+		$trip_type
+	);
+	MRT_journey_calendar_month_cache_set( $cache_key, $built );
+
+	return $built;
 }

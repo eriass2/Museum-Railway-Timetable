@@ -15,7 +15,7 @@ Upplevd långsamhet i wizard (juni 2026). Planen täcker identifierade flaskhals
 | Bundle | Monolitisk bundle laddade alla fyra Vue-appar | Medium — **åtgärdat** (fas 3: ES modules + lazy chunks) |
 | Rendering | Många trip-kort med dold detaljkomponent | Låg–medium — delvis (parallell detaljhämtning, fas 3) |
 
-**Kvar:** Fas 2 (server kalender) → Fas 4 (mätning och underhåll).
+**Kvar:** Fas 4 (mätning och underhåll). Fas 2 v1 = transient-cache per månad (`journey-calendar-cache.php`).
 
 ---
 
@@ -25,7 +25,7 @@ Upplevd långsamhet i wizard (juni 2026). Planen täcker identifierade flaskhals
 |-----|-------------|--------|
 | 0 | Diagnostik och plan (detta dokument) | Klar |
 | 1 | Quick wins – client-cache, mindre refetch | Klar (juni 2026) |
-| 2 | Server – optimera kalendermånad | Ej påbörjad |
+| 2 | Server – optimera kalendermånad | **Klar** (transient-cache, juni 2026) |
 | 3 | Bundle-splitting, parallell detaljhämtning | Klar (juni 2026) |
 | 4 | Mätning och underhåll | Ej påbörjad |
 

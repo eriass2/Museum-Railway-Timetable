@@ -262,6 +262,78 @@ if ( ! function_exists( 'delete_option' ) ) {
 	}
 }
 
+if ( ! defined( 'HOUR_IN_SECONDS' ) ) {
+	define( 'HOUR_IN_SECONDS', 3600 );
+}
+
+if ( ! function_exists( 'get_transient' ) ) {
+	function get_transient( $transient ) {
+		if ( ! isset( $GLOBALS['mrt_test_transients'] ) || ! is_array( $GLOBALS['mrt_test_transients'] ) ) {
+			return false;
+		}
+		return $GLOBALS['mrt_test_transients'][ $transient ] ?? false;
+	}
+}
+
+if ( ! function_exists( 'set_transient' ) ) {
+	function set_transient( $transient, $value, $expiration ) {
+		if ( ! isset( $GLOBALS['mrt_test_transients'] ) || ! is_array( $GLOBALS['mrt_test_transients'] ) ) {
+			$GLOBALS['mrt_test_transients'] = array();
+		}
+		$GLOBALS['mrt_test_transients'][ $transient ] = $value;
+		return true;
+	}
+}
+
+if ( ! function_exists( 'delete_transient' ) ) {
+	function delete_transient( $transient ) {
+		if ( isset( $GLOBALS['mrt_test_transients'][ $transient ] ) ) {
+			unset( $GLOBALS['mrt_test_transients'][ $transient ] );
+		}
+		return true;
+	}
+}
+
+if ( ! function_exists( 'add_action' ) ) {
+	function add_action( $hook, $callback, $priority = 10, $accepted_args = 1 ) {
+		unset( $hook, $callback, $priority, $accepted_args );
+	}
+}
+
+if ( ! function_exists( 'add_filter' ) ) {
+	function add_filter( $hook, $callback, $priority = 10, $accepted_args = 1 ) {
+		unset( $hook, $callback, $priority, $accepted_args );
+	}
+}
+
+if ( ! function_exists( 'wp_is_post_revision' ) ) {
+	function wp_is_post_revision( $post ) {
+		return false;
+	}
+}
+
+if ( ! function_exists( 'wp_is_post_autosave' ) ) {
+	function wp_is_post_autosave( $post ) {
+		return false;
+	}
+}
+
+if ( ! function_exists( 'get_post_type' ) ) {
+	function get_post_type( $post = null ) {
+		if ( is_numeric( $post ) ) {
+			$id = (int) $post;
+			if ( isset( $GLOBALS['mrt_test_post_types'] ) && is_array( $GLOBALS['mrt_test_post_types'] ) && isset( $GLOBALS['mrt_test_post_types'][ $id ] ) ) {
+				return (string) $GLOBALS['mrt_test_post_types'][ $id ];
+			}
+			return '';
+		}
+		if ( is_object( $post ) && isset( $post->post_type ) ) {
+			return (string) $post->post_type;
+		}
+		return '';
+	}
+}
+
 if ( ! function_exists( 'get_post_meta' ) ) {
 	/**
 	 * Test overrides via $GLOBALS['mrt_test_post_meta'][ "{$id}|{$key}" ]

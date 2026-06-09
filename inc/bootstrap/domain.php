@@ -19,6 +19,7 @@ function MRT_load_journey_domain_modules(): void {
 	require_once $journey_dir . 'journey-detail.php';
 	require_once $journey_dir . 'journey-transfer-rules.php';
 	require_once $journey_dir . 'journey-calendar.php';
+	require_once $journey_dir . 'journey-calendar-cache.php';
 	require_once $journey_dir . 'journey-return.php';
 	require_once $journey_dir . 'train-change.php';
 	require_once $journey_dir . 'journey-multi-leg.php';
