@@ -400,8 +400,8 @@
 .mrt-timeline__node {
     position: relative;
     justify-self: center;
-    width: 1rem;
-    height: 1rem;
+    width: var(--mrt-tl-node);
+    height: var(--mrt-tl-node);
     margin-top: 0.2rem;
     border: 0.28rem solid #151515;
     border-radius: 50%;
@@ -439,8 +439,8 @@
 
     .mrt-timeline__node {
         justify-self: center;
-        width: 0.85rem;
-        height: 0.85rem;
+        width: var(--mrt-tl-node);
+        height: var(--mrt-tl-node);
         margin-top: 0.15rem;
         border-width: 0.22rem;
     }

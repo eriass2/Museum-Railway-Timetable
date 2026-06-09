@@ -53,3 +53,51 @@ export function goToStep(state: WizardStepState, next: WizardStep): void {
   state.clearError();
   state.step = next;
 }
+
+export type WizardProgressNavState = WizardStepState & {
+  stepSequence: WizardStep[];
+  dateYmd: string;
+  outbound: JourneyConnection | null;
+  inbound: JourneyConnection | null;
+};
+
+function wizardStepIndex(sequence: WizardStep[], step: WizardStep): number {
+  return sequence.indexOf(step);
+}
+
+/** Jump back to a completed step; clears downstream selections like the step back buttons. */
+export function navigateToCompletedWizardStep(
+  state: WizardProgressNavState,
+  target: WizardStep,
+): boolean {
+  const sequence = state.stepSequence;
+  const currentIndex = wizardStepIndex(sequence, state.step);
+  const targetIndex = wizardStepIndex(sequence, target);
+  if (targetIndex < 0 || targetIndex >= currentIndex) {
+    return false;
+  }
+
+  state.clearError();
+
+  const routeIndex = wizardStepIndex(sequence, 'route');
+  const dateIndex = wizardStepIndex(sequence, 'date');
+  const outboundIndex = wizardStepIndex(sequence, 'outbound');
+  const returnIndex = wizardStepIndex(sequence, 'return');
+
+  if (targetIndex <= routeIndex) {
+    state.dateYmd = '';
+    state.outbound = null;
+    state.inbound = null;
+  } else if (targetIndex <= dateIndex) {
+    state.outbound = null;
+    state.inbound = null;
+  } else if (targetIndex <= outboundIndex) {
+    state.outbound = null;
+    state.inbound = null;
+  } else if (returnIndex >= 0 && targetIndex <= returnIndex) {
+    state.inbound = null;
+  }
+
+  state.step = target;
+  return true;
+}

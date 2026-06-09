@@ -2,7 +2,12 @@ import { type ComputedRef, reactive } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
 import type { CalendarDayInfo, CalendarDayStatus, JourneyConnection, TripType, WizardStep } from '../types';
 import type { WizardCfg } from '../utils/wizardLabels';
-import { resetRouteSelections, validateWizardRoute, goToStep } from './wizardRoute';
+import {
+  goToStep,
+  navigateToCompletedWizardStep,
+  resetRouteSelections,
+  validateWizardRoute,
+} from './wizardRoute';
 import { applyInboundSelection, applyOutboundSelection } from './wizardSelections';
 import {
   wizardContextLine,
@@ -51,6 +56,9 @@ export function buildWizardStoreState(
     },
     goTo(next: WizardStep): void {
       goToStep(this, next);
+    },
+    navigateToStep(target: WizardStep): boolean {
+      return navigateToCompletedWizardStep(this, target);
     },
     validateRoute(fromId?: number, toId?: number): boolean {
       return validateWizardRoute(

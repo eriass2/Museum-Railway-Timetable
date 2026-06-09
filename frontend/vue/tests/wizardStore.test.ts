@@ -9,6 +9,7 @@ import {
   applyInboundSelection,
   applyOutboundSelection,
 } from '../src/wizard/store/wizardSelections';
+import { navigateToCompletedWizardStep } from '../src/wizard/store/wizardRoute';
 import type { JourneyConnection } from '../src/wizard/types';
 
 function wizardConfig(): WizardVueConfig {
@@ -90,5 +91,61 @@ describe('wizardSelections', () => {
 
     expect(store.inbound).toEqual(conn);
     expect(store.step).toBe('summary');
+  });
+});
+
+describe('navigateToCompletedWizardStep', () => {
+  const outbound: JourneyConnection = { service_id: 1, from_departure: '09:00', to_arrival: '10:00' };
+  const inbound: JourneyConnection = { service_id: 2, from_departure: '14:00', to_arrival: '15:00' };
+
+  it('ignores future and current steps', () => {
+    const { store } = createWizardStore(wizardConfig());
+    store.step = 'date';
+
+    expect(navigateToCompletedWizardStep(store, 'date')).toBe(false);
+    expect(navigateToCompletedWizardStep(store, 'outbound')).toBe(false);
+    expect(store.step).toBe('date');
+  });
+
+  it('jumps to route and clears downstream selections', () => {
+    const { store } = createWizardStore(wizardConfig());
+    store.step = 'summary';
+    store.dateYmd = '2026-06-04';
+    store.outbound = outbound;
+
+    expect(navigateToCompletedWizardStep(store, 'route')).toBe(true);
+
+    expect(store.step).toBe('route');
+    expect(store.dateYmd).toBe('');
+    expect(store.outbound).toBeNull();
+    expect(store.inbound).toBeNull();
+  });
+
+  it('jumps to date and keeps the selected day', () => {
+    const { store } = createWizardStore(wizardConfig());
+    store.step = 'summary';
+    store.dateYmd = '2026-06-04';
+    store.outbound = outbound;
+
+    expect(navigateToCompletedWizardStep(store, 'date')).toBe(true);
+
+    expect(store.step).toBe('date');
+    expect(store.dateYmd).toBe('2026-06-04');
+    expect(store.outbound).toBeNull();
+  });
+
+  it('jumps to return and clears inbound only', () => {
+    const { store } = createWizardStore(wizardConfig());
+    store.tripType = 'return';
+    store.step = 'summary';
+    store.dateYmd = '2026-06-04';
+    store.outbound = outbound;
+    store.inbound = inbound;
+
+    expect(navigateToCompletedWizardStep(store, 'return')).toBe(true);
+
+    expect(store.step).toBe('return');
+    expect(store.outbound).toEqual(outbound);
+    expect(store.inbound).toBeNull();
   });
 });

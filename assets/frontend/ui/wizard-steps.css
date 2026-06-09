@@ -54,10 +54,32 @@
     padding: 0;
 }
 
+.mrt-step-progress__wrap {
+    display: contents;
+}
+
 .mrt-step-progress__item {
     padding: 0.25rem 0.55rem;
     font-size: 0.8125rem;
     font-weight: 700;
+}
+
+button.mrt-step-progress__item {
+    margin: 0;
+    font: inherit;
+    line-height: inherit;
+    cursor: pointer;
+    text-align: inherit;
+}
+
+button.mrt-step-progress__item.is-done:hover {
+    color: var(--mrt-color-on-dark, #fff);
+    background: color-mix(in srgb, var(--mrt-wizard-yellow, var(--mrt-color-accent-600)) 22%, var(--mrt-color-green-800));
+}
+
+button.mrt-step-progress__item.is-done:focus-visible {
+    outline: 3px solid var(--mrt-wizard-focus);
+    outline-offset: 3px;
 }
 
 .mrt-step-progress__item.is-active {

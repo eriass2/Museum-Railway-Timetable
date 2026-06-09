@@ -12,6 +12,7 @@ import WizardDateStep from '../wizard/components/WizardDateStep.vue';
 import WizardTripStep from '../wizard/components/WizardTripStep.vue';
 import WizardBetaBanner from '../wizard/components/WizardBetaBanner.vue';
 import WizardSummaryStep from '../wizard/components/WizardSummaryStep.vue';
+import type { WizardStep } from '../wizard/types';
 import { cfgStr } from '../wizard/utils/wizardLabels';
 import { logWizardStepInteractive } from '../wizard/utils/wizardStepTiming';
 
@@ -61,6 +62,15 @@ watch(
   },
 );
 
+function stepGoToAria(label: string): string {
+  const template = cfgStr(cfg.value, 'stepGoTo', 'Gå till steg: %s');
+  return template.includes('%s') ? template.replace('%s', label) : `${template} ${label}`;
+}
+
+function onProgressSelect(key: string): void {
+  store.navigateToStep(key as WizardStep);
+}
+
 onMounted(() => {
   if (debug) {
     applyWizardDebugPreset(wizardCtx, debug);
@@ -97,6 +107,9 @@ onMounted(() => {
         <MrtStepProgress
           :items="progressItems"
           :nav-aria-label="cfgStr(cfg, 'stepNavAria', 'Steg i reseplaneraren')"
+          :readonly="false"
+          :step-go-to-aria="stepGoToAria"
+          @select="onProgressSelect"
         />
         <div ref="panelsRef" class="mrt-journey-wizard__panels">
           <WizardRouteStep

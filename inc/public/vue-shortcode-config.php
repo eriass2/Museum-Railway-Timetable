@@ -180,6 +180,7 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 			'noStations'      => __( 'Inga stationer är tillgängliga.', 'museum-railway-timetable' ),
 			'needsJs'         => __( 'Reseplaneraren kräver JavaScript.', 'museum-railway-timetable' ),
 			'stepNavAria'     => __( 'Steg i reseplaneraren', 'museum-railway-timetable' ),
+			'stepGoTo'        => __( 'Gå till steg: %s', 'museum-railway-timetable' ),
 			'routeTitle'         => $route_title,
 			'routeIntro'         => __( 'Välj avgång, ankomst och om du reser enkel eller tur och retur.', 'museum-railway-timetable' ),
 			'from'               => __( 'Från', 'museum-railway-timetable' ),

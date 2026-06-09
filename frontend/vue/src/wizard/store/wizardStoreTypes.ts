@@ -26,6 +26,7 @@ export type WizardStore = {
   clearError: () => void;
   showError: (message: string) => void;
   goTo: (next: WizardStep) => void;
+  navigateToStep: (target: WizardStep) => boolean;
   validateRoute: (fromId?: number, toId?: number) => boolean;
   setRoute: (
     from: number,

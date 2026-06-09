@@ -100,6 +100,7 @@ export type WizardCfgStringKey =
   | 'searchTrip'
   | 'timetablePageLink'
   | 'back'
+  | 'stepGoTo'
   | 'defaultTrainType'
   | 'veteranBus'
   | 'thisMonth'
