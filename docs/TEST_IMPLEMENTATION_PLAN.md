@@ -1,6 +1,6 @@
 # Plan — implementera tester
 
-**Datum:** 2026-06 (senast uppdaterad 2026-06-09)  
+**Datum:** 2026-06 (senast uppdaterad 2026-06-09)
 **Syfte:** Prioriterad plan för att täta kända luckor i testningen utan att skriva om det som redan fungerar.
 
 **Relaterat:** [DEVELOPER.md](DEVELOPER.md), [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md), [ARCHITECTURE.md](ARCHITECTURE.md) §3, [REBUILD_RULES.md](REBUILD_RULES.md) §7, [frontend/vue/TESTING.md](../frontend/vue/TESTING.md), [TODO.md](TODO.md).
@@ -20,9 +20,11 @@
 | B4 | E2E utökad tidtabellseditor | **Klar** |
 | B5 | Vitest trafikmeddelanden (admin) | **Klar** |
 | B6 | E2E trafikmeddelanden (admin + WP) | **Klar** |
-| C1–C3 | Kodtäckning, a11y-scan, prestanda | Valfritt |
+| C1 | PHP kodtäckning | **Klar** — `scripts/coverage.ps1`, [TEST_COVERAGE.md](TEST_COVERAGE.md) |
+| C2 | axe-playwright | **Klar** — `frontend/vue/e2e/a11y-smoke.spec.ts` (CI validate-jobb) |
+| C3 | Wizard prestanda-baseline | **Klar** — `frontend/vue/e2e/wizard-performance.spec.ts` |
 
-**Nästa steg:** Tier C (valfritt) — kodtäckning, a11y-scan, wizard prestanda-baseline.
+**Nästa steg:** Planen är genomförd (Tier A–C). Löpande: `.\scripts\check.ps1 -Vue` per PR.
 
 ---
 
@@ -32,7 +34,7 @@
 |-------|---------|--------|
 | PHP domän/REST | PHPUnit (`tests/Unit/`) | Stark — reseplanerare, priser, CSV, REST, dashboard, **trafikmeddelanden** |
 | Vue logik | Vitest (`frontend/vue/tests/`) | Bra — composables, utils, wizard, admin, **trafikmeddelanden**, **datetime** |
-| E2E | Playwright (`frontend/vue/e2e/`) | Delvis — mount + admin (dashboard, nav, priser, tidtabell, **trafikmeddelanden**) |
+| E2E | Playwright (`frontend/vue/e2e/`) | Mount + admin + **a11y-smoke** + **wizard-performance** + WP (`ci-e2e-wp.sh`) |
 | WordPress-integration | Docker + manuell smoke | Utanför PHPUnit (stubs, inte full WP) |
 | CI | `.github/workflows/ci.yml` | `composer check`, `vue:check`, Playwright + `ci-e2e-wp.sh` |
 
@@ -149,11 +151,11 @@ Körs i `scripts/ci-e2e-wp.sh` tillsammans med övrig WP-E2E.
 
 ## Tier C — Förbättra synlighet (valfritt)
 
-| ID | Uppgift | Hur |
-|----|---------|-----|
-| C1 | PHP kodtäckning | `docker compose --profile tools run --rm php-test vendor/bin/phpunit --coverage-text` — granska filer med 0 % i `inc/` |
-| C2 | axe-playwright | Accessibility-scan på demo-sidor i befintlig WP-E2E (komplement till [ACCESSIBILITY.md](ACCESSIBILITY.md)) |
-| C3 | Wizard prestanda-baseline | En Playwright-mätning: tid till kalender/resultat (se [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md)) |
+| ID | Uppgift | Hur | Status |
+|----|---------|-----|--------|
+| C1 | PHP kodtäckning | `.\scripts\coverage.ps1` — se [TEST_COVERAGE.md](TEST_COVERAGE.md) | **Klar** |
+| C2 | axe-playwright | `e2e/a11y-smoke.spec.ts` på `/wizard`, `/month`, `/overview` | **Klar** |
+| C3 | Wizard prestanda-baseline | `e2e/wizard-performance.spec.ts` — debug-presets, budget 3 s | **Klar** |
 
 Kodtäckning i CI är **inte** krav i v1 — använd som utforskande verktyg.
 
@@ -191,14 +193,14 @@ Kodtäckning i CI är **inte** krav i v1 — använd som utforskande verktyg.
 ## Prioriteringsordning
 
 ```
-C1–C3 (valfritt)
+(Klar — Tier A–C genomförda 2026-06-09)
 ```
 
 | Tier | Insats (uppskattning) | Vem |
 |------|------------------------|-----|
-| C | Löpande | Valfritt |
+| C | Löpande | Valfritt — levererat |
 
-Tier A och B är **klara** (2026-06-09).
+Tier A, B och C är **klara** (2026-06-09).
 
 ---
 

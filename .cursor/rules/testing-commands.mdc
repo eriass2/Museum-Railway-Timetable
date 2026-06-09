@@ -22,6 +22,7 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 | Host PHP 8.2+ (optional) | `.\scripts\test.ps1 -Local` |
 | Docker (explicit) | `docker compose --profile tools run --rm composer check` |
 | PHPCS only | `docker compose --profile tools run --rm composer phpcs` |
+| PHP coverage (exploratory) | `.\scripts\coverage.ps1` — PCOV in Docker; see `docs/TEST_COVERAGE.md` |
 
 ## Vue
 

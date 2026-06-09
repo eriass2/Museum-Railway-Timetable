@@ -50,6 +50,8 @@ COMMIT_MESSAGE.txt
 
 # PHPUnit
 .phpunit.cache/
+/coverage/
+coverage-output.txt
 
 # Python
 __pycache__/

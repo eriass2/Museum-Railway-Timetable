@@ -37,6 +37,13 @@ const port = Number(process.env.MRT_E2E_PORT || 5199);
 /** Must match frontend/vue/vite.config.ts base (Vite public path). */
 const VITE_PUBLIC_BASE = '/wp-content/plugins/museum-railway-timetable/assets/dist/vue/';
 
+const entryCssLinks = (entry?.css || [])
+  .map((rel) => {
+    const href = `${VITE_PUBLIC_BASE}${String(rel).replace(/^\//, '')}`;
+    return `<link rel="stylesheet" href="${href}" />`;
+  })
+  .join('\n  ');
+
 function restClientConfig() {
   return {
     restUrl: `http://127.0.0.1:${port}${REST_PREFIX}/`,
@@ -432,6 +439,7 @@ function renderAppHtml(app, config) {
 <head>
   <meta charset="utf-8" />
   <title>MRT ${app} e2e</title>
+  ${entryCssLinks}
 </head>
 <body>
   <div class="mrt-vue-root" data-mrt-vue-app="${app}">
