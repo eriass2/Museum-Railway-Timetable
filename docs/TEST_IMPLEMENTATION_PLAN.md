@@ -22,7 +22,7 @@
 | B6 | E2E trafikmeddelanden (admin + WP) | **Klar** |
 | C1–C3 | Kodtäckning, a11y-scan, prestanda | Valfritt |
 
-**Nästa steg:** Tier C (valfritt) eller komplettera trafikmeddelanden REST (403 m.m.).
+**Nästa steg:** Tier C (valfritt) — kodtäckning, a11y-scan, wizard prestanda-baseline.
 
 ---
 
@@ -36,7 +36,7 @@
 | WordPress-integration | Docker + manuell smoke | Utanför PHPUnit (stubs, inte full WP) |
 | CI | `.github/workflows/ci.yml` | `composer check`, `vue:check`, Playwright + `ci-e2e-wp.sh` |
 
-**Senast verifierat (Docker):** PHPUnit **448** tester, Vitest **243** tester (70 filer).
+**Senast verifierat (Docker):** PHPUnit **456** tester, Vitest **245** tester (71 filer).
 
 **Standard:** All körning sker i **Docker** — använd aldrig `-Local` om host-PHP saknas eller är &lt; 8.2.
 
@@ -88,7 +88,15 @@ PHP 8.2+ varnar när kod sätter **odeklarerade properties** på objekt. Test-st
 | `RestTrafficNoticesTest.php` | Ogiltigt datum, admin PUT sparar meddelanden |
 | `TrafficNoticesShortcodeTest.php` | Context defaults, tom HTML, generellt meddelande |
 
-**Ev. komplettering (låg prioritet):** fler REST-felkoder (403), aggregate med tur-avvikelser i samma payload.
+**Ev. komplettering (låg prioritet):** aggregate med tur-avvikelser i samma payload (kräver tung WP-fixture).
+
+### A3 / REST — komplettering (2026-06-09)
+
+| Testfil | Tillagt |
+|---------|---------|
+| `RestTrafficNoticesTest.php` | GET payload, days clamp, admin GET, 400/validation |
+| `RestPermissionsTest.php` | `can_edit_operations` nekas utan capability; publik nonce för traffic-notices |
+| `frontend/vue/tests/trafficNotices.test.ts` | Query params för publikt fetch-lager |
 
 ---
 
@@ -122,7 +130,7 @@ PHP 8.2+ varnar när kod sätter **odeklarerade properties** på objekt. Test-st
 
 **Levererat:** `frontend/vue/tests/trafficNoticesAdmin.test.ts` — synlighet, sortering, draft, reorder, renumber.
 
-**Ev. kvar (valfritt):** dedikerad test för `frontend/vue/src/api/trafficNotices.ts` (publikt fetch-lager).
+**Levererat:** `frontend/vue/tests/trafficNotices.test.ts` — publikt REST-anrop (query params).
 
 ---
 
@@ -205,6 +213,7 @@ Tier A och B är **klara** (2026-06-09).
 | PHP trafikmeddelanden | `tests/Unit/TrafficNoticesDomainTest.php` |
 | Vitest composable | `frontend/vue/tests/useStopTimes.test.ts` |
 | Vitest admin utils | `frontend/vue/tests/trafficNoticesAdmin.test.ts` |
+| Vitest traffic notices API | `frontend/vue/tests/trafficNotices.test.ts` |
 | Vitest delad datetime | `frontend/vue/tests/datetime.test.ts` |
 | E2E admin (WP) | `frontend/vue/e2e/admin-timetable-flow.spec.ts` |
 | E2E admin import | `frontend/vue/e2e/admin-import-export.spec.ts` |
@@ -222,5 +231,6 @@ Tier A och B är **klara** (2026-06-09).
 | 2026-06-08 | — | Plan skapad. PHPUnit ~441, Vitest 229. Deprecations i `WP_Post`-stub. |
 | 2026-06-09 | A3, B5, B6 | Trafikmeddelanden: PHPUnit (domän/REST/shortcode), Vitest admin, E2E admin + WP. Vitest 243. |
 | 2026-06-09 | A1, B1–B4 | WP_Post-stubs, wizard shortcode PHPUnit, E2E import/settings/tidtabell. PHPUnit 448, 0 deprecations. |
+| 2026-06-09 | REST + Vitest | Utökad `RestTrafficNoticesTest`, permissions, `trafficNotices.test.ts`. PHPUnit 456, Vitest 245. |
 
 Uppdatera tabellen när en tier är klar.

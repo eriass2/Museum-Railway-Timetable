@@ -46,6 +46,28 @@ final class RestPermissionsTest extends TestCase
 		self::assertTrue( MRT_rest_can_edit_operations() );
 	}
 
+	public function test_can_edit_operations_denies_without_capability(): void
+	{
+		$GLOBALS['mrt_test_current_user_can'] = static function ( string $cap ): bool {
+			unset( $cap );
+			return false;
+		};
+
+		self::assertFalse( MRT_rest_can_edit_operations() );
+	}
+
+	public function test_can_read_public_allows_traffic_notices_with_valid_nonce(): void
+	{
+		$GLOBALS['mrt_test_current_user_can'] = static function ( string $cap ): bool {
+			unset( $cap );
+			return false;
+		};
+		$request = new WP_REST_Request( 'GET', '/museum-railway-timetable/v1/traffic-notices' );
+		$request->set_header( 'X-WP-Nonce', 'unit-test-nonce' );
+
+		self::assertTrue( MRT_rest_can_read_public( $request ) );
+	}
+
 	public function test_can_read_public_allows_admin_without_nonce(): void
 	{
 		$GLOBALS['mrt_test_current_user_can'] = static function ( string $cap ): bool {
