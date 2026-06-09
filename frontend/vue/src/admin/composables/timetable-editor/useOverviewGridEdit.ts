@@ -5,22 +5,7 @@ import type { TimetableTimeCellEdit } from '../../../types/timetableOverview';
 import { adminConfig } from '../../types';
 import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
 import { stopTimesToApiPayload } from '../../utils/timetable-editor/stopTimesPayload';
-
-function hhmmToInput(value: string): string {
-  if (!value || !/^\d{1,2}:\d{2}$/.test(value)) {
-    return '';
-  }
-  const [h, m] = value.split(':');
-  return `${h.padStart(2, '0')}:${m}`;
-}
-
-function inputToHhmm(value: string): string {
-  if (!value) {
-    return '';
-  }
-  const [h, m] = value.split(':');
-  return `${h.padStart(2, '0')}:${m}`;
-}
+import { padHhmm } from '../../../utils/datetime';
 
 export function useOverviewGridEdit() {
   const cfg = adminConfig();
@@ -115,8 +100,8 @@ export function useOverviewGridEdit() {
     saving,
     error,
     message,
-    hhmmToInput,
-    inputToHhmm,
+    hhmmToInput: padHhmm,
+    inputToHhmm: padHhmm,
     applyCellEdit,
     mergeEdit,
     clearCache,

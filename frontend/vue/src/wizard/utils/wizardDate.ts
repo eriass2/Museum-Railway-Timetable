@@ -25,21 +25,7 @@ export function monthStartColumn(year: number, month: number, startOfWeek: numbe
   return (first.getDay() - startOfWeek + 7) % 7;
 }
 
-export function formatYmdForDisplay(
-  ymd: string,
-  monthNames?: string[],
-): string {
-  const p = ymd.split('-');
-  if (p.length !== 3) {
-    return ymd;
-  }
-  const mo = parseInt(p[1], 10);
-  const day = parseInt(p[2], 10);
-  if (monthNames && monthNames[mo - 1]) {
-    return `${day} ${monthNames[mo - 1]} ${p[0]}`;
-  }
-  return ymd;
-}
+export { formatYmdForDisplay } from '../../utils/datetime';
 
 export function calendarMonthTitle(year: number, month: number, monthNames?: string[]): string {
   const label = monthNames?.[month - 1] || String(month);

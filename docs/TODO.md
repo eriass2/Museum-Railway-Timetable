@@ -6,7 +6,7 @@ Kort lista över planerade förbättringar som inte är aktiva utvecklingsplaner
 
 ## Vue – gemensamma datetime/tid-utils
 
-**Status:** planerad  
+**Status:** genomförd (2026-06-09)  
 **Varför:** PHP har en central modul (`inc/domain/datetime/datetime.php`); Vue har samma logik utspridd på flera ställen med lite olika beteende.
 
 **Mål:** Skapa `frontend/vue/src/utils/datetime.ts` (eller liknande) med:
@@ -20,10 +20,10 @@ Kort lista över planerade förbättringar som inte är aktiva utvecklingsplaner
 
 **Acceptanskriterier:**
 
-- [ ] Nya Vitest-tester för delade funktioner
-- [ ] Befintliga tester (`wizardDate`, `settingsTime`, `useOverviewGridEdit`) gröna
-- [ ] Uppdatera [VUE_UTILS.md](VUE_UTILS.md) med pekare till nya modulen
-- [ ] Ingen beteendeförändring i produktion (refaktor, inte feature)
+- [x] Nya Vitest-tester för delade funktioner (`datetime.test.ts`)
+- [x] Befintliga tester (`wizardDate`, `settingsTime`, `useOverviewGridEdit`) gröna
+- [x] Uppdatera [VUE_UTILS.md](VUE_UTILS.md) med pekare till nya modulen
+- [x] Ingen beteendeförändring i produktion (refaktor, inte feature)
 
 **Relaterat:** Analys i chat 2026-06-09; PHP-referens i `tests/Unit/HelpersDatetimeTest.php`.
 
