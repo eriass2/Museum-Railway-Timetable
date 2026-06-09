@@ -67,5 +67,20 @@ test.describe('Vue admin timetable flow', () => {
     await depInput.fill('09:30');
     await page.getByRole('button', { name: 'Spara stopptider' }).click();
     await expect(page.getByText('Stopptider sparade')).toBeVisible({ timeout: 15_000 });
+
+    await page.locator('.nav-tab', { hasText: 'Turer' }).click();
+    await page.getByRole('button', { name: 'Redigera' }).first().click();
+    await page.getByLabel(/tågnummer/i).fill('E2E-99');
+    await page.getByRole('button', { name: 'Spara tur' }).click();
+    await expect(page.getByText('Tur sparad')).toBeVisible({ timeout: 15_000 });
+    await expect(page.locator('.widefat.striped tbody tr').first()).toContainText('E2E-99');
+
+    await page.locator('.nav-tab', { hasText: 'Avvikelser' }).click();
+    await page.getByRole('button', { name: 'Lägg till avvikelse' }).click();
+    await page.getByLabel(/inställt tåg/i).check();
+    await page.getByRole('button', { name: 'Lägg till avvikelse' }).click();
+    await expect(page.locator('.widefat.striped tbody tr')).toHaveCount(1, { timeout: 10_000 });
+    await page.getByRole('button', { name: 'Spara avvikelser' }).click();
+    await expect(page.getByText('Avvikelser sparade')).toBeVisible({ timeout: 15_000 });
   });
 });

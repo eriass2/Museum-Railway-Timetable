@@ -11,18 +11,18 @@
 
 | ID | Uppgift | Status |
 |----|---------|--------|
-| A1 | PHPUnit-deprecations (`WP_Post`-stub) | **Kvar** — 2 deprecations kvar |
+| A1 | PHPUnit-deprecations (`WP_Post`-stub) | **Klar** |
 | A2 | Docker-rutin i team | Process — `.\scripts\check.ps1 -Vue` |
 | A3 | Trafikmeddelanden PHPUnit | **Klar** |
-| B1 | Wizard-shortcode PHPUnit | **Kvar** |
-| B2 | E2E import/export | **Kvar** |
-| B3 | E2E inställningar | **Kvar** |
-| B4 | E2E utökad tidtabellseditor | **Kvar** |
+| B1 | Wizard-shortcode PHPUnit | **Klar** |
+| B2 | E2E import/export | **Klar** |
+| B3 | E2E inställningar | **Klar** |
+| B4 | E2E utökad tidtabellseditor | **Klar** |
 | B5 | Vitest trafikmeddelanden (admin) | **Klar** |
 | B6 | E2E trafikmeddelanden (admin + WP) | **Klar** |
 | C1–C3 | Kodtäckning, a11y-scan, prestanda | Valfritt |
 
-**Nästa steg:** A1 → B1 → B2.
+**Nästa steg:** Tier C (valfritt) eller komplettera trafikmeddelanden REST (403 m.m.).
 
 ---
 
@@ -36,7 +36,7 @@
 | WordPress-integration | Docker + manuell smoke | Utanför PHPUnit (stubs, inte full WP) |
 | CI | `.github/workflows/ci.yml` | `composer check`, `vue:check`, Playwright + `ci-e2e-wp.sh` |
 
-**Senast verifierat (Docker):** PHPUnit **441** tester, Vitest **243** tester (70 filer).
+**Senast verifierat (Docker):** PHPUnit **448** tester, Vitest **243** tester (70 filer).
 
 **Standard:** All körning sker i **Docker** — använd aldrig `-Local` om host-PHP saknas eller är &lt; 8.2.
 
@@ -72,7 +72,7 @@
 
 | ID | Uppgift | Filer | Status | Acceptanskriterium |
 |----|---------|-------|--------|-------------------|
-| A1 | Fixa PHPUnit-deprecations | `tests/wp-stubs.php` | **Kvar** | Deklarera `$post_title`, `$post_status` (och ev. `$post_name`) på `WP_Post`. Kör `.\scripts\test.ps1 --display-deprecations` — **0 deprecations**. |
+| A1 | Fixa PHPUnit-deprecations | `tests/wp-stubs.php` | **Klar** | `$post_title`, `$post_status`, `$post_name` på `WP_Post`; central `MRT_is_development_mode()` + fungerande `add_filter` i stubs. |
 | A2 | Bekräfta Docker-rutin i team | — | Process | Alla PR:er kör `.\scripts\check.ps1 -Vue` i Docker före merge. |
 | A3 | Trafikmeddelanden PHPUnit | `tests/Unit/TrafficNotices*.php`, `tests/Unit/RestTrafficNoticesTest.php` | **Klar** | Domän, REST, shortcode — se levererade tester nedan. |
 
@@ -96,82 +96,25 @@ PHP 8.2+ varnar när kod sätter **odeklarerade properties** på objekt. Test-st
 
 **Mål:** Automatisera det som idag mest förlitar sig på manuell admin-rökning.
 
-### B1 — Wizard-shortcode (PHPUnit) — **KVAR**
+### B1 — Wizard-shortcode (PHPUnit) — **KLAR**
 
-**Varför:** Månad, översikt och index har shortcode-tester; wizard (`inc/public/journey-wizard/shell.php`) saknar motsvarande.
+**Levererat:** `tests/Unit/JourneyWizardShortcodeTest.php` — defaults, bool, URL/titel, debug, resolve by title, Vue-mount.
 
-**Ny fil:** `tests/Unit/JourneyWizardShortcodeTest.php`
+### B2 — E2E: Import/export (admin) — **KLAR**
 
-**Mönster:** Kopiera upplägg från `tests/Unit/TimetableOverviewShortcodeTest.php` — mocka `MRT_render_vue_mount` via `$GLOBALS['mrt_test_vue_mount']`.
-
-| Testfall | Funktion / beteende |
-|----------|---------------------|
-| Defaults | `MRT_journey_wizard_parse_shortcode_atts([])` — tomma strängar, `embedded === false` |
-| Bool-attribut | `MRT_journey_wizard_shortcode_bool('1')`, `'yes'`, `'0'` |
-| URL/titel | `ticket_url` escapas, `route_title` trimmas |
-| Debug (dev) | `MRT_journey_wizard_sanitize_debug_attr` — tillåten preset vs ogiltig; tom utanför dev-läge |
-| Render | `MRT_render_shortcode_journey_wizard` — `app === 'wizard'`, config-nycklar (`timetableId`, `embedded`, …) |
-
-**Kör:**
-
-```powershell
-.\scripts\test.ps1 tests/Unit/JourneyWizardShortcodeTest.php
-```
+**Levererat:** `frontend/vue/e2e/admin-import-export.spec.ts` — merge-import av `testdata/fixtures/lennakatten.zip` (WP-Docker). Körs i `ci-e2e-wp.sh`.
 
 ---
 
-### B2 — E2E: Import/export (admin) — **KVAR**
+### B3 — E2E: Inställningar (admin) — **KLAR**
 
-**Varför:** CSV-import är affärskritisk; ingen automatiserad admin-täckning.
-
-**Ny fil:** `frontend/vue/e2e/admin-import-export.spec.ts`
-
-**Förutsättning:** WP-Docker (samma som `admin-timetable-flow.spec.ts`) — `MRT_E2E_WP_ADMIN_URL` eller demo-URL.
-
-| Steg | Förväntat |
-|------|-----------|
-| Logga in admin | `#mrt-admin-app` synlig |
-| Navigera `#/import-export` | Sida laddas |
-| Ladda upp liten fixture-zip | Success-meddelande / inga fel |
-| (Valfritt) Exportera mall | Fil/nedladdning eller bekräftelse |
-
-**Referens:** `frontend/vue/e2e/admin-timetable-flow.spec.ts`, `admin-helpers.ts`, `testdata/fixtures/`.
-
-**Kör mot Docker:**
-
-```powershell
-docker compose up -d --build
-cd frontend/vue
-npm run e2e:install
-npm run e2e -- e2e/admin-import-export.spec.ts
-```
+**Levererat:** `frontend/vue/e2e/admin-settings.spec.ts` (statisk mount) + mutable settings-fixture i `e2e/fixtures/admin-rest.mjs`.
 
 ---
 
-### B3 — E2E: Inställningar (admin) — **KVAR**
+### B4 — E2E: Utökad tidtabellseditor — **KLAR**
 
-**Ny fil:** `frontend/vue/e2e/admin-settings.spec.ts`
-
-| Steg | Förväntat |
-|------|-----------|
-| `#/settings` | Formulär synligt |
-| Ändra ett fält (t.ex. operatörsnamn) | Unsaved-banner om tillämpligt |
-| Spara | Success |
-| Ladda om route | Värde kvar |
-
-**Komplement (Vitest):** `frontend/vue/tests/settingsTime.test.ts` täcker tid — utöka utils om spar-logik flyttas dit.
-
----
-
-### B4 — E2E: Utöka tidtabellseditor — **KVAR**
-
-**Fil:** utöka `frontend/vue/e2e/admin-timetable-flow.spec.ts` (serial mode behålls).
-
-| Nytt scenario | Förväntat |
-|---------------|-----------|
-| Redigera befintlig tur | Fält uppdateras och sparas |
-| Lägg till avvikelse | Rad syns i listan |
-| Snabb avgång (mobil/desktop) | Panel svarar |
+**Levererat:** utökad `frontend/vue/e2e/admin-timetable-flow.spec.ts` — redigera tågnummer, lägg till avvikelse, spara avvikelser.
 
 ---
 
@@ -240,17 +183,14 @@ Kodtäckning i CI är **inte** krav i v1 — använd som utforskande verktyg.
 ## Prioriteringsordning
 
 ```
-A1 → B1 → B2 → B3 → B4 → C1–C3
+C1–C3 (valfritt)
 ```
 
 | Tier | Insats (uppskattning) | Vem |
 |------|------------------------|-----|
-| A1 | 0,5 h | Backend |
-| B1 | 0,5 dag | Backend |
-| B2–B4 | 2–4 dagar | Frontend + E2E |
 | C | Löpande | Valfritt |
 
-Trafikmeddelanden (A3, B5, B6) är **klara** — ta inte upp dem igen om inte ny funktion läggs till.
+Tier A och B är **klara** (2026-06-09).
 
 ---
 
@@ -261,11 +201,14 @@ Trafikmeddelanden (A3, B5, B6) är **klara** — ta inte upp dem igen om inte ny
 | PHP domän | `tests/Unit/PriceRulesTest.php` |
 | PHP REST | `tests/Unit/RestAdminHandlersTest.php` |
 | PHP shortcode | `tests/Unit/TimetableOverviewShortcodeTest.php` |
+| PHP wizard shortcode | `tests/Unit/JourneyWizardShortcodeTest.php` |
 | PHP trafikmeddelanden | `tests/Unit/TrafficNoticesDomainTest.php` |
 | Vitest composable | `frontend/vue/tests/useStopTimes.test.ts` |
 | Vitest admin utils | `frontend/vue/tests/trafficNoticesAdmin.test.ts` |
 | Vitest delad datetime | `frontend/vue/tests/datetime.test.ts` |
 | E2E admin (WP) | `frontend/vue/e2e/admin-timetable-flow.spec.ts` |
+| E2E admin import | `frontend/vue/e2e/admin-import-export.spec.ts` |
+| E2E admin settings | `frontend/vue/e2e/admin-settings.spec.ts` |
 | E2E admin trafikmeddelanden | `frontend/vue/e2e/admin-traffic-notices.spec.ts` |
 | E2E mount (utan WP) | `frontend/vue/e2e/wizard-mount.spec.ts` |
 | E2E shortcode (WP) | `frontend/vue/e2e/traffic-notices-wp.spec.ts` |
@@ -277,7 +220,7 @@ Trafikmeddelanden (A3, B5, B6) är **klara** — ta inte upp dem igen om inte ny
 | Datum | Tier | Notering |
 |-------|------|----------|
 | 2026-06-08 | — | Plan skapad. PHPUnit ~441, Vitest 229. Deprecations i `WP_Post`-stub. |
-| 2026-06-09 | A3, B5, B6 | Trafikmeddelanden: PHPUnit (domän/REST/shortcode), Vitest admin, E2E admin + WP. Vitest 243. A1 kvar (2 deprecations). |
-| | B1–B4 | Wizard-shortcode PHPUnit + import/settings/editor E2E — **nästa**. |
+| 2026-06-09 | A3, B5, B6 | Trafikmeddelanden: PHPUnit (domän/REST/shortcode), Vitest admin, E2E admin + WP. Vitest 243. |
+| 2026-06-09 | A1, B1–B4 | WP_Post-stubs, wizard shortcode PHPUnit, E2E import/settings/tidtabell. PHPUnit 448, 0 deprecations. |
 
 Uppdatera tabellen när en tier är klar.

@@ -357,6 +357,15 @@ function renderAdminHtml() {
 async function handleRestRequest(req, res, pathOnly, requestUrl) {
   const query = new URL(requestUrl, 'http://127.0.0.1').searchParams;
   const referer = String(req.headers.referer || '');
+  let postBody = null;
+  if (req.method === 'POST') {
+    const raw = await readRequestBody(req);
+    try {
+      postBody = raw ? JSON.parse(raw) : {};
+    } catch {
+      postBody = {};
+    }
+  }
   if (query.get('fail') === 'rest') {
     res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ message: 'REST-fel (e2e)' }));
@@ -368,7 +377,10 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
     return;
   }
 
-  const adminPayload = buildAdminRestResponse(pathOnly, REST_PREFIX);
+  const adminPayload = buildAdminRestResponse(pathOnly, REST_PREFIX, {
+    method: req.method || 'GET',
+    body: postBody,
+  });
   if (adminPayload !== null) {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify(adminPayload));
@@ -376,13 +388,7 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   }
 
   if (pathOnly.endsWith('/journey/connection-detail') && req.method === 'POST') {
-    const raw = await readRequestBody(req);
-    let body = {};
-    try {
-      body = raw ? JSON.parse(raw) : {};
-    } catch {
-      body = {};
-    }
+    const body = postBody || {};
     const serviceId = Number(body.service_id || 0);
     const notice = serviceId === 301 ? 'Inställd' : '';
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });

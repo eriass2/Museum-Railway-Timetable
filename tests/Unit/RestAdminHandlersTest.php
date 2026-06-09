@@ -37,12 +37,6 @@ if ( ! function_exists( 'home_url' ) ) {
 	}
 }
 
-if ( ! function_exists( 'MRT_is_development_mode' ) ) {
-	function MRT_is_development_mode(): bool {
-		return false;
-	}
-}
-
 final class RestAdminHandlersTest extends TestCase {
 
 	protected function tearDown(): void {

@@ -1,7 +1,31 @@
 /** Minimal admin REST fixtures for static Playwright mounts. */
 
-export function buildAdminRestResponse(pathOnly, restPrefix) {
+const defaultSettings = {
+  enabled: true,
+  note: '',
+  operator_name: '',
+  ticket_url: '',
+  min_transfer_minutes: 0,
+  max_transfer_minutes: 120,
+  max_transfers: 2,
+  afternoon_return_threshold_minutes: 900,
+};
+
+/** @type {typeof defaultSettings} */
+let settingsState = { ...defaultSettings };
+
+export function resetAdminRestFixtures() {
+  settingsState = { ...defaultSettings };
+}
+
+export function buildAdminRestResponse(pathOnly, restPrefix, options = {}) {
   const rel = pathOnly.slice(restPrefix.length).replace(/^\/+/, '').replace(/\/$/, '');
+  const method = String(options.method || 'GET').toUpperCase();
+
+  if (rel === 'settings' && method === 'POST') {
+    settingsState = { ...settingsState, ...(options.body || {}) };
+    return { ...settingsState };
+  }
 
   const routes = {
     dashboard: {
@@ -49,16 +73,7 @@ export function buildAdminRestResponse(pathOnly, restPrefix) {
         },
       ],
     },
-    settings: {
-      enabled: true,
-      note: '',
-      operator_name: '',
-      ticket_url: '',
-      min_transfer_minutes: 0,
-      max_transfer_minutes: 120,
-      max_transfers: 2,
-      afternoon_return_threshold_minutes: 900,
-    },
+    settings: { ...settingsState },
     'settings/prices': {
       matrix: {
         single: { adult: { 1: 100, 2: 150 }, child_4_15: { 1: 30, 2: 30 } },

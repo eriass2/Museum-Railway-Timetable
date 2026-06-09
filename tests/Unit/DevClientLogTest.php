@@ -9,15 +9,18 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-if ( ! function_exists( 'MRT_is_development_mode' ) ) {
-	function MRT_is_development_mode(): bool {
-		return true;
-	}
-}
-
 require_once ABSPATH . 'inc/infrastructure/rest/dev/dev-tools.php';
 
 final class DevClientLogTest extends TestCase {
+
+	protected function setUp(): void {
+		$GLOBALS['mrt_test_filters']['mrt_is_development_mode'] = static fn (): bool => true;
+	}
+
+	protected function tearDown(): void {
+		unset( $GLOBALS['mrt_test_filters'] );
+		parent::tearDown();
+	}
 
 	public function test_sanitize_client_log_context_keeps_scalars(): void {
 		$context = MRT_rest_sanitize_client_log_context(

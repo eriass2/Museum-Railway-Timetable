@@ -73,4 +73,5 @@ npm --prefix frontend/vue run e2e -- --workers=1 \
   e2e/admin-dashboard.spec.ts \
   e2e/admin-nav-wp.spec.ts \
   e2e/admin-traffic-notices.spec.ts \
+  e2e/admin-import-export.spec.ts \
   e2e/admin-timetable-flow.spec.ts

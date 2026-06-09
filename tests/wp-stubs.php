@@ -32,6 +32,15 @@ if ( ! class_exists( 'WP_Post' ) ) {
 		/** @var string */
 		public $post_type = '';
 
+		/** @var string */
+		public $post_title = '';
+
+		/** @var string */
+		public $post_status = 'publish';
+
+		/** @var string */
+		public $post_name = '';
+
 		/**
 		 * @param object|array<string, mixed>|null $data
 		 */
@@ -526,8 +535,22 @@ if ( ! function_exists( 'add_filter' ) ) {
 	 * @param callable $callback
 	 */
 	function add_filter( $hook_name, $callback, $priority = 10, $accepted_args = 1 ) {
-		unset( $hook_name, $callback, $priority, $accepted_args );
+		unset( $priority, $accepted_args );
+		if ( ! isset( $GLOBALS['mrt_test_filters'] ) || ! is_array( $GLOBALS['mrt_test_filters'] ) ) {
+			$GLOBALS['mrt_test_filters'] = array();
+		}
+		$GLOBALS['mrt_test_filters'][ $hook_name ] = $callback;
+
 		return true;
+	}
+}
+
+if ( ! function_exists( 'MRT_is_development_mode' ) ) {
+	function MRT_is_development_mode(): bool {
+		$from_config = ( defined( 'WP_DEBUG' ) && WP_DEBUG )
+			|| ( defined( 'MRT_DEVELOPMENT' ) && MRT_DEVELOPMENT );
+
+		return (bool) apply_filters( 'mrt_is_development_mode', $from_config );
 	}
 }
 
