@@ -184,6 +184,42 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '11:00', $fjar['arrival_time'] ?? '' );
 	}
 
+	public function test_find_connections_selkna_linnes_hammarby_on_green_buss_day(): void {
+		$this->boot_service_fixture( 'green-b5-bus-out', '2026-07-04' );
+		$stations = $this->station_ids();
+
+		$connections = MRT_find_connections(
+			$stations['selkna'],
+			$stations['linnes-hammarby'],
+			'2026-07-04'
+		);
+
+		self::assertNotEmpty( $connections );
+		self::assertSame( '10:53', $connections[0]['from_departure'] ?? '' );
+		self::assertSame( '11:00', $connections[0]['to_arrival'] ?? '' );
+	}
+
+	public function test_find_multi_leg_uppsala_linnes_hammarby_on_green_buss_day(): void {
+		$this->boot_fixture_services(
+			array( 'green-71-out', 'green-61-out', 'green-b5-bus-out' ),
+			'2026-07-04'
+		);
+		$stations = $this->station_ids();
+
+		$results = MRT_journey_find_normalized_connections(
+			$stations['uppsala-ostra'],
+			$stations['linnes-hammarby'],
+			'2026-07-04'
+		);
+
+		self::assertNotEmpty( $results, 'Expected Uppsala Östra → Linnés Hammarby via Marielund, Selknä' );
+		$first = $results[0];
+		self::assertSame( 'transfer', $first['connection_type'] ?? '' );
+		self::assertGreaterThanOrEqual( 2, count( $first['legs'] ?? array() ) );
+		self::assertSame( '10:53', $first['legs'][ count( $first['legs'] ) - 1 ]['from_departure'] ?? '' );
+		self::assertSame( '11:00', MRT_journey_normalized_arrival_hhmm( $first ) );
+	}
+
 	public function test_find_multi_leg_train_to_bus_at_selkna_on_green_buss_day(): void {
 		$this->boot_fixture_services(
 			array( 'green-61-out', 'green-b1-bus-out' ),

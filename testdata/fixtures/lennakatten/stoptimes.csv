@@ -595,3 +595,17 @@ green-b7-bus-in,1,fjallnora,14:42,14:42,1,0
 green-b7-bus-in,2,selkna,14:49,14:49,1,1
 green-b8-bus-in,1,fjallnora,16:38,16:38,1,0
 green-b8-bus-in,2,selkna,16:45,16:45,1,1
+green-b5-bus-out,1,selkna,10:53,10:53,1,0
+green-b5-bus-out,2,linnes-hammarby,11:00,11:00,1,1
+green-b10-bus-out,1,selkna,11:50,11:50,1,0
+green-b10-bus-out,2,linnes-hammarby,11:57,11:57,1,1
+green-b11-bus-out,1,selkna,13:40,13:40,1,0
+green-b11-bus-out,2,linnes-hammarby,13:47,13:47,1,1
+green-b12-bus-out,1,selkna,15:18,15:18,1,0
+green-b12-bus-out,2,linnes-hammarby,15:25,15:25,1,1
+green-b9-bus-in,1,linnes-hammarby,12:51,12:51,1,0
+green-b9-bus-in,2,selkna,12:58,12:58,1,1
+green-b13-bus-in,1,linnes-hammarby,14:42,14:42,1,0
+green-b13-bus-in,2,selkna,14:49,14:49,1,1
+green-b14-bus-in,1,linnes-hammarby,16:38,16:38,1,0
+green-b14-bus-in,2,selkna,16:45,16:45,1,1

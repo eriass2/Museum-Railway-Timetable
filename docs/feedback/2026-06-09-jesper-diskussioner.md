@@ -265,7 +265,7 @@
 | **Feedback** | J6, A0 — rutter/turer saknades; Jesper matade in manuellt |
 | **Fråga** | Är målet **CSV-import**, bättre **onboarding-checklista**, eller **operatörsmanual**? Ska vi leverera färdig fixture för Linnés Hammarby i repo? |
 | **Beslut av** | Operatör / projektledning |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — C) checklista + fixture + CSV-importväg |
 
 ---
 
@@ -301,6 +301,7 @@
 | 2026-06-09 | D9 | **A** — start/slut härleds från första/sista i `station_ids`; dropdowns borttagna | Team |
 | 2026-06-09 | D12 | **C** — etiketter A–D i admin + publikt; numerisk fallback över D | Team |
 | 2026-06-09 | D2 | **A** — beta-banner ovanför steg-nav; valfri `beta_feedback_url` | Team |
+| 2026-06-09 | D17 | **C** — fixture B5/B9–B14, [LINNES_HAMMARBY.md](../LINNES_HAMMARBY.md), admin-checklista | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 

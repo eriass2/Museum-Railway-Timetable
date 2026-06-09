@@ -85,8 +85,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Data / admin
 - **Typ:** data (operatör)
 - **Prioritet:** medium
-- **Status:** öppen
-- **Anteckning:** Jesper matade senare in turerna manuellt — se admin-feedback nedan. Reseplaneraren kan inte visa det som saknas i backend.
+- **Status:** beslutad (D17 C) — fixture + importguide
+- **Anteckning:** CSV-gren i `testdata/fixtures/lennakatten/`; import via `#/import-export`. Se [LINNES_HAMMARBY.md](../LINNES_HAMMARBY.md).
 
 ---
 

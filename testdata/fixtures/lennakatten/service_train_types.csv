@@ -29,6 +29,13 @@ green-b1-bus-out,buss
 green-b2-bus-out,buss
 green-b3-bus-out,buss
 green-b4-bus-out,buss
+green-b5-bus-out,buss
+green-b10-bus-out,buss
+green-b11-bus-out,buss
+green-b12-bus-out,buss
+green-b9-bus-in,buss
+green-b13-bus-in,buss
+green-b14-bus-in,buss
 yellow-101-out,ralsbuss
 yellow-103-out,ralsbuss
 green-vard-61-out,dieseltag

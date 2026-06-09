@@ -12,7 +12,7 @@ Timetable codes in the CSV package:
 |------|---------|
 | `green` | GRÖN rail – Saturdays |
 | `green-vard` | GRÖN rail – Wed/Thu summer (1/7–6/8) |
-| `green-buss` | GRÖN anslutningsbuss Selknä–Fjällnora (1/7–16/8, gröna trafikdagar) |
+| `green-buss` | GRÖN anslutningsbuss Selknä–Fjällnora **och** Selknä–Linnés Hammarby (1/7–16/8, gröna trafikdagar) |
 | `yellow` | GUL rail – Fridays |
 | `red` / `orange` | RÖD Sundays / ORANGE extra Friday trains |
 
@@ -39,6 +39,8 @@ composer csv:zip
 ```
 
 Import zip (same data): `../lennakatten.zip` — regenerate with `composer csv:zip` after CSV edits.
+
+**Linnés Hammarby:** buss B5/B9–B14 under `green-buss` — importguide [docs/LINNES_HAMMARBY.md](../../../docs/LINNES_HAMMARBY.md).
 
 **Also included:** `settings.csv`, `price_schema.csv`, and `prices.csv` (Lennakatten taxa 2026 + operatörsinställningar). See `inc/import/lennakatten/reference-data.php` for the PHP mirror used in PHPUnit.
 
