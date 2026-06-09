@@ -4,12 +4,12 @@ import {
   exportCsv,
   exportTemplateCsv,
   importCsv,
-} from '../api/adminRest';
-import { adminConfirm } from './adminConfirm';
-import { adminErrorMessage, adminFmtN, adminStr } from '../utils/adminLabels';
-import { downloadBase64Zip } from '../utils/downloadBase64File';
-import { adminConfig } from '../types';
-import type { AdminImportExportGuide } from '../types';
+} from '../../api/adminRest';
+import { adminConfirm } from '../adminConfirm';
+import { adminErrorMessage, adminFmtN, adminStr } from '../../utils/adminLabels';
+import { downloadBase64Zip } from '../../utils/downloadBase64File';
+import { adminConfig } from '../../types';
+import type { AdminImportExportGuide } from '../../types';
 
 export function useImportExportPage() {
   const cfg = adminConfig();
