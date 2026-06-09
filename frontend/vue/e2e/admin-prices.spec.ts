@@ -22,6 +22,7 @@ test.describe('Admin prices page (static mount)', () => {
     const priceInput = page.locator('.mrt-price-matrix-table input[type="number"]').first();
     await expect(priceInput).toBeVisible();
     await priceInput.fill('999');
+    await priceInput.blur();
 
     await expect(page.locator('.mrt-admin-unsaved')).toBeVisible();
   });

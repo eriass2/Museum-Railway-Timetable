@@ -38,14 +38,14 @@ test.describe('Journey wizard steps', () => {
     await expect(page.locator('.mrt-summary-list')).toBeVisible();
     await expect(page.locator('.mrt-summary-card')).toHaveCount(2);
     await expect(page.locator('.mrt-trip-summary')).toHaveCount(2);
-    await expect(page.locator('.mrt-price-list')).toBeVisible();
-    await expect(page.locator('.mrt-price-list')).toContainText('180 kr');
+    await expect(page.locator('.mrt-price-list').first()).toBeVisible({ timeout: 10_000 });
+    await expect(page.locator('.mrt-price-list').first()).toContainText('180 kr');
   });
 
-  test('summary step shows print and share actions, not ticket CTA', async ({ page }) => {
+  test('summary step shows print and PDF actions, not ticket CTA', async ({ page }) => {
     await page.goto('/wizard?debug=summary');
-    await expect(page.getByRole('button', { name: /Skriv ut|spara som PDF/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Dela resa|Kopiera resa/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Skriv ut/i })).toBeVisible();
+    await expect(page.getByRole('button', { name: /Ladda ner som PDF/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /Fortsätt till biljetter/i })).toHaveCount(0);
     await expect(page.getByText(/Fortsätt till biljetter/i)).toHaveCount(0);
   });

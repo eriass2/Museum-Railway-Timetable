@@ -1,0 +1,22 @@
+/** Minimal admin l10n for static Playwright mounts (matches key PHP admin-vue-l10n strings). */
+export const e2eAdminStrings = {
+  dashboardTitle: 'Museum Railway Timetable',
+  navStationsRoutes: 'Stationer',
+  navTimetables: 'Tidtabeller',
+  navShortcodes: 'Shortcodes',
+  navHelp: 'Hjälp',
+  navPrices: 'Priser',
+  navOverview: 'Översikt',
+  navImport: 'Import',
+  navSettings: 'Inställningar',
+  stationsTitle: 'Stationer & rutter',
+  timetablesTitle: 'Tidtabeller',
+  settingsTitle: 'Inställningar',
+  settingsOperatorName: 'Operatörsnamn',
+  settingsSaveButton: 'Spara inställningar',
+  saved: 'Sparat.',
+  settingsUnsaved: 'Du har osparade inställningsändringar.',
+  settingsLoading: 'Laddar inställningar…',
+  pricesTitle: 'Priser',
+  pricesUnsaved: 'Du har osparade prisändringar.',
+};

@@ -22,7 +22,7 @@ export function buildAdminRestResponse(pathOnly, restPrefix, options = {}) {
   const rel = pathOnly.slice(restPrefix.length).replace(/^\/+/, '').replace(/\/$/, '');
   const method = String(options.method || 'GET').toUpperCase();
 
-  if (rel === 'settings' && method === 'POST') {
+  if (rel === 'settings' && (method === 'POST' || method === 'PATCH')) {
     settingsState = { ...settingsState, ...(options.body || {}) };
     return { ...settingsState };
   }

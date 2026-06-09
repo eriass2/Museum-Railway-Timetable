@@ -7,6 +7,12 @@ import { join, dirname, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildSampleOverviewPayload, buildCancelledOverviewPayload } from './fixtures/sample-overview-payload.mjs';
 import { buildAdminRestResponse } from './fixtures/admin-rest.mjs';
+import { e2eAdminStrings } from './fixtures/admin-strings.mjs';
+import { e2eAdminHelp } from './fixtures/admin-help.mjs';
+import {
+  buildEmptyTrafficNoticesPayload,
+  buildSampleTrafficNoticesPayload,
+} from './fixtures/traffic-notices-payload.mjs';
 import { MRT_REST_JSON_PREFIX } from '../shared/restNamespace.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -34,6 +40,9 @@ if (!existsSync(join(distDir, adminJsRel))) {
 
 const REST_PREFIX = MRT_REST_JSON_PREFIX;
 const port = Number(process.env.MRT_E2E_PORT || 5199);
+
+/** Set when rendering /traffic-notices HTML (REST handler reads this). */
+let trafficNoticesFixture = 'sample';
 /** Must match frontend/vue/vite.config.ts base (Vite public path). */
 const VITE_PUBLIC_BASE = '/wp-content/plugins/museum-railway-timetable/assets/dist/vue/';
 
@@ -91,8 +100,8 @@ function buildWizardConfig(requestUrl) {
       priceTitle: 'Priser',
       priceDash: '—',
       priceZoneLabel: '%d zoner',
-      priceTickets: { adult: 'Vuxen' },
-      priceCategories: {},
+      priceTickets: { single: 'Enkel', return: 'Retur', day: 'Dagskort' },
+      priceCategories: { adult: 'Vuxen', child_4_15: 'Barn 4–15' },
       priceMatrixByZone: {
         single: { adult: { 2: 100 } },
         return: { adult: { 2: 180 } },
@@ -340,6 +349,41 @@ function buildAdminClientConfig() {
     canManage: true,
     canOperate: true,
     isDevMode: true,
+    strings: e2eAdminStrings,
+    help: e2eAdminHelp,
+  };
+}
+
+function buildTrafficNoticesConfig(options = {}) {
+  return {
+    app: 'traffic_notices',
+    ...restClientConfig(),
+    referenceDate: options.referenceDate ?? '2026-06-06',
+    days: options.days ?? 1,
+    showGeneral: options.showGeneral !== false,
+    showDeviations: options.showDeviations !== false,
+    title: options.title ?? '',
+    labels: {
+      empty: 'Inga meddelanden',
+      loading: 'Laddar meddelanden…',
+      error: 'Kunde inte ladda meddelanden.',
+    },
+  };
+}
+
+function buildTripPricesPayload(tripType) {
+  const matrix =
+    tripType === 'return'
+      ? { return: { adult: 180, child_4_15: 80 } }
+      : { single: { adult: 150, child_4_15: 40 } };
+  return {
+    zones: 2,
+    trip: {
+      matrix,
+      activeType: tripType === 'return' ? 'return' : 'single',
+      isAfternoonReturn: false,
+    },
+    day: { day: { adult: 280, child_4_15: 80 } },
   };
 }
 
@@ -365,7 +409,7 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   const query = new URL(requestUrl, 'http://127.0.0.1').searchParams;
   const referer = String(req.headers.referer || '');
   let postBody = null;
-  if (req.method === 'POST') {
+  if (req.method === 'POST' || req.method === 'PATCH') {
     const raw = await readRequestBody(req);
     try {
       postBody = raw ? JSON.parse(raw) : {};
@@ -391,6 +435,22 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   if (adminPayload !== null) {
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify(adminPayload));
+    return;
+  }
+
+  if (pathOnly.endsWith('/traffic-notices')) {
+    const empty = trafficNoticesFixture === 'empty';
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(
+      JSON.stringify(empty ? buildEmptyTrafficNoticesPayload() : buildSampleTrafficNoticesPayload()),
+    );
+    return;
+  }
+
+  if (pathOnly.endsWith('/prices/trip')) {
+    const tripType = String(query.get('trip_type') || 'single');
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify(buildTripPricesPayload(tripType)));
     return;
   }
 
@@ -471,6 +531,17 @@ function renderOverviewCancelledHtml() {
   });
 }
 
+function renderTrafficNoticesHtml(requestUrl) {
+  const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
+  trafficNoticesFixture = params.get('empty') === '1' ? 'empty' : 'sample';
+  return renderAppHtml(
+    'traffic_notices',
+    buildTrafficNoticesConfig({
+      title: params.get('title') ?? '',
+    }),
+  );
+}
+
 function renderOverviewHtml() {
   return renderAppHtml('overview', buildOverviewConfig());
 }
@@ -502,6 +573,11 @@ http
     if (pathOnly === '/month') {
       res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
       res.end(renderMonthHtml(rawUrl));
+      return;
+    }
+    if (pathOnly === '/traffic-notices') {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(renderTrafficNoticesHtml(rawUrl));
       return;
     }
     if (pathOnly === '/overview-cancelled') {

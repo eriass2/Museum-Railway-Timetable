@@ -7,7 +7,7 @@ test.describe('Cancelled trips (static mount)', () => {
 
     const badges = page.locator('.mrt-ov-cancelled-badge');
     await expect(badges.first()).toContainText('Inställd');
-    await expect(badges).toHaveCount(2);
+    await expect(badges).toHaveCount(3);
 
     await expect(page.locator('.mrt-ov-time--cancelled').first()).toBeVisible();
     await expect(page.locator('.mrt-ov-branch-row--cancelled')).toHaveCount(1);

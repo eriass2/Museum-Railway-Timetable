@@ -15,7 +15,7 @@ test.describe('Admin settings page (static mount)', () => {
     await expect(page).toHaveURL(/#\/settings/);
     await expect(page.getByRole('heading', { name: /^inställningar$/i })).toBeVisible();
 
-    const operatorInput = page.getByLabel(/operatörsnamn/i);
+    const operatorInput = page.locator('input.regular-text').first();
     await operatorInput.fill('E2E Operatör');
     await expect(page.locator('.mrt-admin-unsaved')).toBeVisible();
     await page.getByRole('button', { name: /spara inställningar/i }).click();
