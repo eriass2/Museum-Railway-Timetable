@@ -9,19 +9,19 @@ import {
   listStations,
   updateRoute,
   updateStation,
-} from '../api/adminRest';
-import { adminConfirm } from './adminConfirm';
-import { proceedIfDiscardAllowed } from './adminDiscardGuard';
-import { useAdminResource } from './useAdminResource';
-import { useAdminRowFlash } from './useAdminRowFlash';
-import { useAdminSaveNotice } from './useAdminSaveNotice';
-import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
-import { emptyRouteDraft, emptyStationDraft } from '../utils/routeStationEditor';
-import { resolveStationPriceZoneOptions, stationMissingPriceZone } from '../utils/stationPriceZones';
-import type { RoutesPanelView } from '../components/AdminRoutesPanel.vue';
-import type { StationsPanelView } from '../components/AdminStationsPanel.vue';
-import { adminConfig } from '../types';
-import type { RouteRow, StationRow } from '../types';
+} from '../../api/adminRest';
+import { adminConfirm } from '../adminConfirm';
+import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
+import { useAdminResource } from '../useAdminResource';
+import { useAdminRowFlash } from '../useAdminRowFlash';
+import { useAdminSaveNotice } from '../useAdminSaveNotice';
+import { adminErrorMessage, adminFmt, adminStr } from '../../utils/adminLabels';
+import { emptyRouteDraft, emptyStationDraft } from '../../utils/stations-routes/routeStationEditor';
+import { resolveStationPriceZoneOptions, stationMissingPriceZone } from '../../utils/stations-routes/stationPriceZones';
+import type { RoutesPanelView } from '../../components/stations-routes/RoutesPanel.vue';
+import type { StationsPanelView } from '../../components/stations-routes/StationsPanel.vue';
+import { adminConfig } from '../../types';
+import type { RouteRow, StationRow } from '../../types';
 
 function routeDraftSnapshot(route: RouteRow): string {
   return JSON.stringify(route);

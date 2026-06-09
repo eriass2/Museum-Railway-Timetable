@@ -6,7 +6,7 @@ import {
   moveRouteStation,
   removeRouteStation,
   routeStationRoleFor,
-} from '../src/admin/utils/routeStationEditor';
+} from '../src/admin/utils/stations-routes/routeStationEditor';
 
 describe('routeStationEditor', () => {
   const route = (): RouteRow => ({

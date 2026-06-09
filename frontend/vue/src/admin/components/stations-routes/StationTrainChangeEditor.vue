@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { MrtButton } from './ui';
-import { adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
+import { MrtButton } from '../ui';
+import { adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
 import {
   appendTrainChangeEntry,
   emptyTrainChangeEntry,
@@ -10,8 +10,8 @@ import {
   syncStationTrainChangeEntries,
   trainChangeMapToEntries,
   type TrainChangeEntry,
-} from '../utils/stationTrainChange';
-import type { StationRow } from '../types';
+} from '../../utils/stations-routes/stationTrainChange';
+import type { StationRow } from '../../types';
 
 const props = defineProps<{
   station: StationRow;

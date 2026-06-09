@@ -4,9 +4,9 @@ import {
   buildRoutePreviewNodes,
   routePreviewTypeLabel,
   type RoutePreviewNode,
-} from '../utils/routePreviewNodes';
-import { adminConfig } from '../types';
-import { adminStr } from '../utils/adminLabels';
+} from '../../utils/stations-routes/routePreviewNodes';
+import { adminConfig } from '../../types';
+import { adminStr } from '../../utils/adminLabels';
 
 const props = withDefaults(
   defineProps<{

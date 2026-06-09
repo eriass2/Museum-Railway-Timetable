@@ -4,7 +4,7 @@ import {
   trainChangeEntriesToMap,
   trainChangeEntryCount,
   trainChangeMapToEntries,
-} from '../src/admin/utils/stationTrainChange';
+} from '../src/admin/utils/stations-routes/stationTrainChange';
 
 describe('stationTrainChange', () => {
   it('converts map to entries and back', () => {

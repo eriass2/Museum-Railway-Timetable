@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import AdminStationEditorFields from './AdminStationEditorFields.vue';
+import StationEditorFields from './StationEditorFields.vue';
 import {
   AdminBackNav,
   AdminEmptyState,
@@ -10,15 +10,15 @@ import {
   AdminRowActions,
   AdminTableScroll,
   MrtButton,
-} from './ui';
-import { routePreviewTypeLabel } from '../utils/routePreviewNodes';
-import { adminFmt, adminStr } from '../utils/adminLabels';
+} from '../ui';
+import { routePreviewTypeLabel } from '../../utils/stations-routes/routePreviewNodes';
+import { adminFmt, adminStr } from '../../utils/adminLabels';
 import {
   formatStationPriceZones,
   stationMissingPriceZone,
-} from '../utils/stationPriceZones';
-import { adminConfig } from '../types';
-import type { StationRow } from '../types';
+} from '../../utils/stations-routes/stationPriceZones';
+import { adminConfig } from '../../types';
+import type { StationRow } from '../../types';
 
 export type StationsPanelView = 'list' | 'create' | 'edit';
 
@@ -108,7 +108,7 @@ const cfg = adminConfig();
     <template v-else-if="viewMode === 'create'">
       <AdminBackNav @back="emit('back')" />
       <h3 class="mrt-admin-station-editor__heading">{{ adminStr(cfg, 'stationsNewStation') }}</h3>
-      <AdminStationEditorFields
+      <StationEditorFields
         v-model="newStation"
         id-prefix="mrt-new-st"
         :price-zone-options="priceZoneOptions"
@@ -128,7 +128,7 @@ const cfg = adminConfig();
       <h3 class="mrt-admin-station-editor__heading">
         {{ adminFmt(cfg, 'stationsEditStationTitle', editingStation.title) }}
       </h3>
-      <AdminStationEditorFields
+      <StationEditorFields
         v-model="editingStation"
         id-prefix="mrt-edit-st"
         :price-zone-options="priceZoneOptions"

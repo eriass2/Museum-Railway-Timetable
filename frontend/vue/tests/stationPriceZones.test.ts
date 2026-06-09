@@ -6,7 +6,7 @@ import {
   stationHasPriceZone,
   stationMissingPriceZone,
   toggleStationPriceZone,
-} from '../src/admin/utils/stationPriceZones';
+} from '../src/admin/utils/stations-routes/stationPriceZones';
 
 describe('stationPriceZones', () => {
   const row = (): StationRow => ({

@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import AdminLoadState from '../components/AdminLoadState.vue';
-import AdminRoutesPanel from '../components/AdminRoutesPanel.vue';
-import AdminStationsPanel from '../components/AdminStationsPanel.vue';
+import RoutesPanel from '../components/stations-routes/RoutesPanel.vue';
+import StationsPanel from '../components/stations-routes/StationsPanel.vue';
 import { AdminStatusMessage } from '../components/ui';
-import { useStationsRoutesPage } from '../composables/useStationsRoutesPage';
+import { useStationsRoutesPage } from '../composables/stations-routes/useStationsRoutesPage';
 import { useMobileAdmin } from '../composables/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
 
@@ -86,7 +86,7 @@ const {
         </label>
       </div>
 
-      <AdminStationsPanel
+      <StationsPanel
         v-if="sectionTab === 'stations'"
         v-model:new-station="newStation"
         v-model:editing-station="editingStation"
@@ -102,7 +102,7 @@ const {
         @remove="removeStation"
       />
 
-      <AdminRoutesPanel
+      <RoutesPanel
         v-if="sectionTab === 'routes'"
         v-model:new-route="newRoute"
         v-model:editing-route="editingRoute"

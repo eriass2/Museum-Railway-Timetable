@@ -1,12 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createSSRApp, h } from 'vue';
 import { renderToString } from 'vue/server-renderer';
-import RoutePreview from '../src/admin/components/RoutePreview.vue';
+import RoutePreview from '../src/admin/components/stations-routes/RoutePreview.vue';
 import type { AdminClientConfig } from '../src/admin/types';
 import {
   buildRoutePreviewNodes,
   routePreviewTypeLabel,
-} from '../src/admin/utils/routePreviewNodes';
+} from '../src/admin/utils/stations-routes/routePreviewNodes';
 
 describe('routePreviewNodes', () => {
   const map = new Map([

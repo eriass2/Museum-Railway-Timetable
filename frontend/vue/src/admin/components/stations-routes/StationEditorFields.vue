@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { AdminDisclosure } from './ui';
+import { AdminDisclosure } from '../ui';
 import StationTrainChangeEditor from './StationTrainChangeEditor.vue';
-import { adminStr } from '../utils/adminLabels';
+import { adminStr } from '../../utils/adminLabels';
 import {
   stationHasPriceZone,
   toggleStationPriceZone,
-} from '../utils/stationPriceZones';
-import { adminConfig } from '../types';
-import type { StationRow } from '../types';
+} from '../../utils/stations-routes/stationPriceZones';
+import { adminConfig } from '../../types';
+import type { StationRow } from '../../types';
 
 defineProps<{
   priceZoneOptions: number[];

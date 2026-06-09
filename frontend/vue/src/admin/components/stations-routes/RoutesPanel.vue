@@ -8,13 +8,13 @@ import {
   AdminRowActions,
   AdminTableScroll,
   MrtButton,
-} from './ui';
+} from '../ui';
 import RoutePreview from './RoutePreview.vue';
 import RouteStationOrderEditor from './RouteStationOrderEditor.vue';
-import { moveRouteStation, removeRouteStation } from '../utils/routeStationEditor';
-import { adminFmt, adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
-import type { RouteRow, StationRow } from '../types';
+import { moveRouteStation, removeRouteStation } from '../../utils/stations-routes/routeStationEditor';
+import { adminFmt, adminStr } from '../../utils/adminLabels';
+import { adminConfig } from '../../types';
+import type { RouteRow, StationRow } from '../../types';
 
 export type RoutesPanelView = 'list' | 'create' | 'edit';
 

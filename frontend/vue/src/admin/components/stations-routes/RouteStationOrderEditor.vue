@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { AdminInlineForm, AdminRowActions, MrtButton } from './ui';
-import { adminStr } from '../utils/adminLabels';
-import { appendRouteStation, routeStationRoleFor } from '../utils/routeStationEditor';
-import { adminConfig } from '../types';
-import type { RouteRow, StationRow } from '../types';
+import { AdminInlineForm, AdminRowActions, MrtButton } from '../ui';
+import { adminStr } from '../../utils/adminLabels';
+import { appendRouteStation, routeStationRoleFor } from '../../utils/stations-routes/routeStationEditor';
+import { adminConfig } from '../../types';
+import type { RouteRow, StationRow } from '../../types';
 
 const route = defineModel<RouteRow>({ required: true });
 const props = defineProps<{

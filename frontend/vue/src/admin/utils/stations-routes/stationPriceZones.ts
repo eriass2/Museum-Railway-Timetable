@@ -1,4 +1,4 @@
-import type { StationRow } from '../types';
+import type { StationRow } from '../../types';
 
 export const DEFAULT_STATION_PRICE_ZONE_OPTIONS = [1, 2, 3, 4] as const;
 

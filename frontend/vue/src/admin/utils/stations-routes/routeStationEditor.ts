@@ -1,4 +1,4 @@
-import type { RouteRow, StationRow } from '../types';
+import type { RouteRow, StationRow } from '../../types';
 
 export function emptyStationDraft(): StationRow {
   return {
