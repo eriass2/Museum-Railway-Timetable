@@ -23,14 +23,14 @@ require_once ABSPATH . 'inc/import/csv/schema.php';
 require_once ABSPATH . 'inc/import/csv/slugify.php';
 require_once ABSPATH . 'inc/import/csv/reader.php';
 require_once ABSPATH . 'inc/import/csv/writer.php';
-require_once ABSPATH . 'inc/import/csv/package.php';
-require_once ABSPATH . 'inc/import/csv/validate-manifest.php';
-require_once ABSPATH . 'inc/import/csv/validate-codes.php';
-require_once ABSPATH . 'inc/import/csv/validate-codes-entities.php';
-require_once ABSPATH . 'inc/import/csv/validate-references.php';
+require_once ABSPATH . 'inc/import/csv/package/package.php';
+require_once ABSPATH . 'inc/import/csv/validate/validate-manifest.php';
+require_once ABSPATH . 'inc/import/csv/validate/validate-codes.php';
+require_once ABSPATH . 'inc/import/csv/validate/validate-codes-entities.php';
+require_once ABSPATH . 'inc/import/csv/validate/validate-references.php';
 require_once ABSPATH . 'inc/import/csv/codes-store.php';
-require_once ABSPATH . 'inc/import/csv/exporter-entities.php';
-require_once ABSPATH . 'inc/import/csv/exporter.php';
+require_once ABSPATH . 'inc/import/csv/export/exporter-entities.php';
+require_once ABSPATH . 'inc/import/csv/export/exporter.php';
 
 if ( ! function_exists( 'determine_locale' ) ) {
 	function determine_locale(): string {

@@ -23,7 +23,7 @@ function MRT_csv_ensure_fixture_read_deps(): void {
 	require_once $dir . 'schema.php';
 	require_once $dir . 'slugify.php';
 	require_once $dir . 'reader.php';
-	require_once $dir . 'package.php';
+	require_once $dir . 'package/package.php';
 	$loaded = true;
 }
 
