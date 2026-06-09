@@ -65,12 +65,12 @@ inc/
 │   ├── route/
 │   ├── service/            # services, stop-times, connections
 │   ├── station/
-│   ├── timetable/view/     # overview-data (+ print-key, rail/bus rows, branch), group-view, grid-merge, grid-connections
+│   ├── timetable/view/     # overview/, grid/, prepare, group-view
 │   ├── train-type/         # ikon-slugs
 │   └── admin/              # dashboard-data, deviations (REST backing)
 ├── infrastructure/
 │   ├── post-types/         # CPT + taxonomier
-│   ├── rest/               # admin + publikt REST
+│   ├── rest/               # shared/, admin/, public/, dev/
 │   └── wordpress/          # environment, plugin-settings, helpers-utils
 ├── admin/
 │   ├── app.php, menu.php   # Vue shell + legacy redirects
@@ -78,11 +78,15 @@ inc/
 ├── public/
 │   ├── month-calendar/
 │   ├── timetable-overview/
+│   ├── timetable-index/
+│   ├── traffic-notices/
 │   └── journey-wizard/
-├── import/lennakatten/     # referensdata + importer
+├── import/
+│   ├── csv/                # validate/, import/, export/, package/
+│   └── lennakatten/        # referensdata + importer
 ├── assets/                 # enqueue (anropas från inc/assets.php)
 ├── admin.php               # admin-bootstrap
-└── shortcodes.php          # registrerar tre shortcodes
+└── shortcodes.php          # registrerar fem shortcodes
 ```
 
 ### Publika shortcodes
@@ -91,17 +95,19 @@ inc/
 |-----------|--------|
 | `[museum_timetable_month]` | `inc/public/month-calendar/` |
 | `[museum_timetable_overview]` | `inc/public/timetable-overview/` |
+| `[museum_timetable_index]` | `inc/public/timetable-index/` |
+| `[museum_traffic_notices]` | `inc/public/traffic-notices/` |
 | `[museum_journey_wizard]` | `inc/public/journey-wizard/` |
 
 Rese-UI är endast wizard; `[museum_journey_planner]` finns inte längre (se [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md)).
 
 ### Admin (Vue)
 
-Vue-admin under `admin.php?page=mrt_app` (`frontend/vue/src/admin/`). REST via `inc/infrastructure/rest/` och `adminRest.ts`. Dev-verktyg (clear DB, import, tidtabellssidor) i Vue `#/dev-tools` via `POST /dev/*` (dev-läge). Legacy `?page=mrt_settings` redirectar till Vue.
+Vue-admin under `admin.php?page=mrt_app` (`frontend/vue/src/admin/`). REST via `inc/infrastructure/rest/` (`admin/`, `public/`, `shared/`, `dev/`) och `adminRest.ts`. Dev-verktyg (clear DB, import, tidtabellssidor) i Vue `#/dev-tools` via `POST /dev/*` (dev-läge). Legacy `?page=mrt_settings` redirectar till Vue.
 
 ### Timetable overview (Vue)
 
-`inc/domain/timetable/view/overview-data.php` (och moduler `overview-print-key.php`, `overview-rail-rows.php`, `overview-bus-rows.php`, `overview-branch-group.php`) bygger JSON (`MRT_get_timetable_overview_data`). Vue renderar i `frontend/vue/src/components/overview/`; admin editor och shortcode mountar samma komponent.
+`inc/domain/timetable/view/overview/overview-data.php` (och moduler under `overview/` och `grid/`) bygger JSON (`MRT_get_timetable_overview_data`). Vue renderar i `frontend/vue/src/components/overview/`; admin editor och shortcode mountar samma komponent.
 
 ---
 
