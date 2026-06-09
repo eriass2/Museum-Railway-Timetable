@@ -59,7 +59,7 @@
 | **Fråga** | Ska reseplaneraren märkas ”Beta” i UI? Var (sidhuvud, steg 1, footer)? Ska felrapportering länkas? |
 | **Alternativ** | A) Banner + kort text · B) Bara i WordPress-sidans titel · C) Ingen märkning, bara intern test-URL |
 | **Beslut av** | Produkt / Lennakatten |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — A) banner i planeraren; `beta="1"` på shortcode |
 
 ---
 
@@ -300,6 +300,7 @@
 | 2026-06-09 | D7 | **C** — ikoner only i resekortets grå fält; full text i detaljvy; aria-label + title | Team |
 | 2026-06-09 | D9 | **A** — start/slut härleds från första/sista i `station_ids`; dropdowns borttagna | Team |
 | 2026-06-09 | D12 | **C** — etiketter A–D i admin + publikt; numerisk fallback över D | Team |
+| 2026-06-09 | D2 | **A** — beta-banner ovanför steg-nav; valfri `beta_feedback_url` | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 

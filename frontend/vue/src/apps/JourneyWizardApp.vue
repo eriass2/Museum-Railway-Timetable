@@ -10,6 +10,7 @@ import { wizardKey } from '../wizard/injection';
 import WizardRouteStep from '../wizard/components/WizardRouteStep.vue';
 import WizardDateStep from '../wizard/components/WizardDateStep.vue';
 import WizardTripStep from '../wizard/components/WizardTripStep.vue';
+import WizardBetaBanner from '../wizard/components/WizardBetaBanner.vue';
 import WizardSummaryStep from '../wizard/components/WizardSummaryStep.vue';
 import { cfgStr } from '../wizard/utils/wizardLabels';
 import { logWizardStepInteractive } from '../wizard/utils/wizardStepTiming';
@@ -26,6 +27,7 @@ const hasStations = stations.length > 0;
 const embedded = Boolean(props.config.embedded);
 const debug = String(props.config.debug || '');
 const timetablePageUrl = String(props.config.timetablePageUrl || '');
+const betaBanner = props.config.betaBanner ?? null;
 const panelsRef = ref<HTMLElement | null>(null);
 
 const progressItems = computed(() => {
@@ -91,6 +93,7 @@ onMounted(() => {
           <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>
         </div>
         <template v-if="hasStations">
+        <WizardBetaBanner v-if="betaBanner" v-bind="betaBanner" />
         <MrtStepProgress
           :items="progressItems"
           :nav-aria-label="cfgStr(cfg, 'stepNavAria', 'Steg i reseplaneraren')"

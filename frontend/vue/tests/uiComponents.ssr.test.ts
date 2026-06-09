@@ -4,6 +4,7 @@ import { renderToString } from 'vue/server-renderer';
 import MrtSummaryCard from '../src/components/ui/MrtSummaryCard.vue';
 import MrtDetailSegment from '../src/components/ui/MrtDetailSegment.vue';
 import MrtVehicleRow from '../src/components/ui/MrtVehicleRow.vue';
+import WizardBetaBanner from '../src/wizard/components/WizardBetaBanner.vue';
 
 async function render(
   component: Parameters<typeof h>[0],
@@ -21,6 +22,18 @@ describe('UI components (SSR smoke)', () => {
     });
     expect(html).toContain('mrt-summary-card');
     expect(html).toContain('Utresa');
+  });
+
+  it('WizardBetaBanner renders badge and optional feedback link', async () => {
+    const html = await render(WizardBetaBanner, {
+      label: 'Beta',
+      text: 'Testas under säsongen.',
+      feedbackLabel: 'Rapportera',
+      feedbackUrl: 'mailto:test@example.com',
+    });
+    expect(html).toContain('mrt-journey-wizard__beta');
+    expect(html).toContain('Beta');
+    expect(html).toContain('href="mailto:test@example.com"');
   });
 
   it('MrtVehicleRow compact hides labels but keeps aria-label', async () => {

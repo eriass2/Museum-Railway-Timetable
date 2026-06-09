@@ -89,6 +89,40 @@ function MRT_vue_overview_config( int $timetable_id ): array {
 }
 
 /**
+ * @param array<string, mixed> $parsed Wizard shortcode parse result.
+ * @return array<string, mixed>|null
+ */
+function MRT_vue_wizard_beta_banner( array $parsed ): ?array {
+	$enabled = function_exists( 'MRT_journey_wizard_shortcode_bool' )
+		? MRT_journey_wizard_shortcode_bool( $parsed['beta'] ?? '' )
+		: false;
+	$enabled = (bool) apply_filters( 'mrt_journey_wizard_beta_banner_enabled', $enabled, $parsed );
+	if ( ! $enabled ) {
+		return null;
+	}
+
+	$feedback_url = isset( $parsed['beta_feedback_url'] ) ? trim( (string) $parsed['beta_feedback_url'] ) : '';
+	if ( $feedback_url === '' ) {
+		$feedback_url = (string) apply_filters( 'mrt_journey_wizard_beta_feedback_url', '', $parsed );
+	}
+	$feedback_url = $feedback_url !== '' ? esc_url( $feedback_url ) : '';
+
+	$banner = array(
+		'label' => __( 'Beta', 'museum-railway-timetable' ),
+		'text'  => __(
+			'Reseplaneraren testas under säsongen. Tider och priser kan ändras.',
+			'museum-railway-timetable'
+		),
+	);
+	if ( $feedback_url !== '' ) {
+		$banner['feedbackLabel'] = __( 'Rapportera fel eller förslag', 'museum-railway-timetable' );
+		$banner['feedbackUrl']   = $feedback_url;
+	}
+
+	return $banner;
+}
+
+/**
  * @param array<int>             $stations Station post IDs from MRT_get_all_stations().
  * @param array<string, mixed> $parsed   Wizard shortcode parse result.
  * @return array<string, mixed>
@@ -129,9 +163,12 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 		$ticket_url = MRT_plugin_ticket_url();
 	}
 
+	$beta_banner = MRT_vue_wizard_beta_banner( $parsed );
+
 	return array(
 		'stations'     => $station_rows,
 		'ticketUrl'    => $ticket_url,
+		'betaBanner'   => $beta_banner,
 		'timetableId'      => isset( $parsed['timetable_id'] ) ? (int) $parsed['timetable_id'] : 0,
 		'timetablePageUrl' => isset( $parsed['timetable_page_url'] ) ? (string) $parsed['timetable_page_url'] : '',
 		'embedded'         => ! empty( $parsed['embedded'] ),

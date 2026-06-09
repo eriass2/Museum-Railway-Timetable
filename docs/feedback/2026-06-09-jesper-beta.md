@@ -162,8 +162,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Produkt / lansering
 - **Typ:** produktbeslut
 - **Prioritet:** info
-- **Status:** besvarad (ingen kod)
-- **Svar:** Bra förslag — kan kombineras med befintlig betatest och feedback-dokumentation i `docs/feedback/`.
+- **Status:** beslutad (D2 A) — implementerad
+- **Svar:** Beta-banner i reseplaneraren via `[museum_journey_wizard beta="1" beta_feedback_url="…"]`. Filter: `mrt_journey_wizard_beta_banner_enabled`, `mrt_journey_wizard_beta_feedback_url`.
 
 ---
 

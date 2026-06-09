@@ -33,7 +33,7 @@ function MRT_journey_wizard_sanitize_debug_attr( string $debug ): string {
 }
 
 /**
- * @return array{ticket_url: string, route_title: string, hero_subtitle: string, timetable_id: int, timetable_page_url: string, embedded: bool, debug: string}
+ * @return array{ticket_url: string, route_title: string, hero_subtitle: string, timetable_id: int, timetable_page_url: string, embedded: bool, debug: string, beta: string, beta_feedback_url: string}
  */
 function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 	$atts = shortcode_atts(
@@ -46,6 +46,8 @@ function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 			'timetable_page_url' => '',
 			'embedded'           => '',
 			'debug'              => '',
+			'beta'               => '',
+			'beta_feedback_url'  => '',
 		),
 		(array) $atts,
 		'museum_journey_wizard'
@@ -62,6 +64,8 @@ function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 		'timetable_page_url' => esc_url( is_string( $atts['timetable_page_url'] ) ? $atts['timetable_page_url'] : '' ),
 		'embedded'           => MRT_journey_wizard_shortcode_bool( $atts['embedded'] ),
 		'debug'              => MRT_journey_wizard_sanitize_debug_attr( is_string( $atts['debug'] ) ? $atts['debug'] : '' ),
+		'beta'               => is_string( $atts['beta'] ) ? $atts['beta'] : '',
+		'beta_feedback_url'  => esc_url( is_string( $atts['beta_feedback_url'] ) ? $atts['beta_feedback_url'] : '' ),
 	);
 }
 
@@ -93,6 +97,8 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 				'timetable_page_url' => isset( $parsed['timetable_page_url'] ) ? (string) $parsed['timetable_page_url'] : '',
 				'embedded'           => $embedded,
 				'debug'              => $debug,
+				'beta'               => isset( $parsed['beta'] ) ? (string) $parsed['beta'] : '',
+				'beta_feedback_url'  => isset( $parsed['beta_feedback_url'] ) ? (string) $parsed['beta_feedback_url'] : '',
 			)
 		)
 	);

@@ -65,6 +65,13 @@ export type OverviewVueConfig = MrtRestConfig & {
 
 export type WizardStation = { id: number; title: string };
 
+export type WizardBetaBanner = {
+  label: string;
+  text: string;
+  feedbackLabel?: string;
+  feedbackUrl?: string;
+};
+
 export type WizardVueConfig = MrtRestConfig & {
   app: 'wizard';
   stations?: WizardStation[];
@@ -78,6 +85,7 @@ export type WizardVueConfig = MrtRestConfig & {
   startOfWeek?: number;
   wizard?: Record<string, unknown>;
   labels?: Record<string, string>;
+  betaBanner?: WizardBetaBanner | null;
 };
 
 import type { TimetableIndexItem, TimetableIndexLabels } from '../types/timetableIndex';
