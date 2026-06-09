@@ -1,9 +1,28 @@
 # Plan — implementera tester
 
-**Datum:** 2026-06  
+**Datum:** 2026-06 (senast uppdaterad 2026-06-09)  
 **Syfte:** Prioriterad plan för att täta kända luckor i testningen utan att skriva om det som redan fungerar.
 
-**Relaterat:** [DEVELOPER.md](DEVELOPER.md), [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md), [ARCHITECTURE.md](ARCHITECTURE.md) §3, [REBUILD_RULES.md](REBUILD_RULES.md) §7, [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).
+**Relaterat:** [DEVELOPER.md](DEVELOPER.md), [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md), [ARCHITECTURE.md](ARCHITECTURE.md) §3, [REBUILD_RULES.md](REBUILD_RULES.md) §7, [frontend/vue/TESTING.md](../frontend/vue/TESTING.md), [TODO.md](TODO.md).
+
+---
+
+## Statusöversikt
+
+| ID | Uppgift | Status |
+|----|---------|--------|
+| A1 | PHPUnit-deprecations (`WP_Post`-stub) | **Kvar** — 2 deprecations kvar |
+| A2 | Docker-rutin i team | Process — `.\scripts\check.ps1 -Vue` |
+| A3 | Trafikmeddelanden PHPUnit | **Klar** |
+| B1 | Wizard-shortcode PHPUnit | **Kvar** |
+| B2 | E2E import/export | **Kvar** |
+| B3 | E2E inställningar | **Kvar** |
+| B4 | E2E utökad tidtabellseditor | **Kvar** |
+| B5 | Vitest trafikmeddelanden (admin) | **Klar** |
+| B6 | E2E trafikmeddelanden (admin + WP) | **Klar** |
+| C1–C3 | Kodtäckning, a11y-scan, prestanda | Valfritt |
+
+**Nästa steg:** A1 → B1 → B2.
 
 ---
 
@@ -11,11 +30,13 @@
 
 | Lager | Verktyg | Status |
 |-------|---------|--------|
-| PHP domän/REST | PHPUnit (`tests/Unit/`) | Stark — reseplanerare, priser, CSV, REST, dashboard |
-| Vue logik | Vitest (`frontend/vue/tests/`) | Bra — composables, utils, wizard, admin-hjälpare |
-| E2E | Playwright (`frontend/vue/e2e/`) | Delvis — mount + några admin-flöden |
+| PHP domän/REST | PHPUnit (`tests/Unit/`) | Stark — reseplanerare, priser, CSV, REST, dashboard, **trafikmeddelanden** |
+| Vue logik | Vitest (`frontend/vue/tests/`) | Bra — composables, utils, wizard, admin, **trafikmeddelanden**, **datetime** |
+| E2E | Playwright (`frontend/vue/e2e/`) | Delvis — mount + admin (dashboard, nav, priser, tidtabell, **trafikmeddelanden**) |
 | WordPress-integration | Docker + manuell smoke | Utanför PHPUnit (stubs, inte full WP) |
-| CI | `.github/workflows/ci.yml` | `composer check`, `vue:check`, Playwright |
+| CI | `.github/workflows/ci.yml` | `composer check`, `vue:check`, Playwright + `ci-e2e-wp.sh` |
+
+**Senast verifierat (Docker):** PHPUnit **441** tester, Vitest **243** tester (70 filer).
 
 **Standard:** All körning sker i **Docker** — använd aldrig `-Local` om host-PHP saknas eller är &lt; 8.2.
 
@@ -49,15 +70,25 @@
 
 **Mål:** Grön CI utan varningar, stabil testinfrastruktur.
 
-| ID | Uppgift | Filer | Acceptanskriterium |
-|----|---------|-------|-------------------|
-| A1 | Fixa PHPUnit-deprecations | `tests/wp-stubs.php` | Lägg till deklarerade properties på `WP_Post`: t.ex. `$post_title`, `$post_status`. Kör `.\scripts\test.ps1 --display-deprecations` — **0 deprecations**. |
-| A2 | Bekräfta Docker-rutin i team | — | Alla PR:er kör `.\scripts\check.ps1 -Vue` i Docker före merge. |
-| A3 | Granska trafikmeddelanden-tester | `tests/Unit/TrafficNotices*.php`, `tests/Unit/RestTrafficNoticesTest.php` | Se [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) §Implementation — datumfilter, 500 tecken, tom lista, inställd-flagga, REST GET/PUT. |
+| ID | Uppgift | Filer | Status | Acceptanskriterium |
+|----|---------|-------|--------|-------------------|
+| A1 | Fixa PHPUnit-deprecations | `tests/wp-stubs.php` | **Kvar** | Deklarera `$post_title`, `$post_status` (och ev. `$post_name`) på `WP_Post`. Kör `.\scripts\test.ps1 --display-deprecations` — **0 deprecations**. |
+| A2 | Bekräfta Docker-rutin i team | — | Process | Alla PR:er kör `.\scripts\check.ps1 -Vue` i Docker före merge. |
+| A3 | Trafikmeddelanden PHPUnit | `tests/Unit/TrafficNotices*.php`, `tests/Unit/RestTrafficNoticesTest.php` | **Klar** | Domän, REST, shortcode — se levererade tester nedan. |
 
 ### A1 — teknisk not
 
-PHP 8.2+ varnar när kod sätter **odeklarerade properties** på objekt. Test-stubben `WP_Post` sätter `$post_title` / `$post_status` dynamiskt i flera REST-tester. Det är **inte** en produktionsbugg — fix i stubben räcker.
+PHP 8.2+ varnar när kod sätter **odeklarerade properties** på objekt. Test-stubben `WP_Post` sätter `$post_title` / `$post_status` dynamiskt i REST-tester (t.ex. `RestTimetablesDataTest`). Det är **inte** en produktionsbugg — fix i stubben räcker.
+
+### A3 — levererat (2026-06)
+
+| Testfil | Täcker |
+|---------|--------|
+| `TrafficNoticesDomainTest.php` | 500-tecken, datumfilter, aggregate, inställd-rad |
+| `RestTrafficNoticesTest.php` | Ogiltigt datum, admin PUT sparar meddelanden |
+| `TrafficNoticesShortcodeTest.php` | Context defaults, tom HTML, generellt meddelande |
+
+**Ev. komplettering (låg prioritet):** fler REST-felkoder (403), aggregate med tur-avvikelser i samma payload.
 
 ---
 
@@ -65,7 +96,7 @@ PHP 8.2+ varnar när kod sätter **odeklarerade properties** på objekt. Test-st
 
 **Mål:** Automatisera det som idag mest förlitar sig på manuell admin-rökning.
 
-### B1 — Wizard-shortcode (PHPUnit)
+### B1 — Wizard-shortcode (PHPUnit) — **KVAR**
 
 **Varför:** Månad, översikt och index har shortcode-tester; wizard (`inc/public/journey-wizard/shell.php`) saknar motsvarande.
 
@@ -89,7 +120,7 @@ PHP 8.2+ varnar när kod sätter **odeklarerade properties** på objekt. Test-st
 
 ---
 
-### B2 — E2E: Import/export (admin)
+### B2 — E2E: Import/export (admin) — **KVAR**
 
 **Varför:** CSV-import är affärskritisk; ingen automatiserad admin-täckning.
 
@@ -106,11 +137,10 @@ PHP 8.2+ varnar när kod sätter **odeklarerade properties** på objekt. Test-st
 
 **Referens:** `frontend/vue/e2e/admin-timetable-flow.spec.ts`, `admin-helpers.ts`, `testdata/fixtures/`.
 
-**Kör lokalt mot Docker:**
+**Kör mot Docker:**
 
 ```powershell
 docker compose up -d --build
-# … importera demo enligt SMOKE_CHECKLIST.md …
 cd frontend/vue
 npm run e2e:install
 npm run e2e -- e2e/admin-import-export.spec.ts
@@ -118,7 +148,7 @@ npm run e2e -- e2e/admin-import-export.spec.ts
 
 ---
 
-### B3 — E2E: Inställningar (admin)
+### B3 — E2E: Inställningar (admin) — **KVAR**
 
 **Ny fil:** `frontend/vue/e2e/admin-settings.spec.ts`
 
@@ -129,11 +159,11 @@ npm run e2e -- e2e/admin-import-export.spec.ts
 | Spara | Success |
 | Ladda om route | Värde kvar |
 
-**Komplement (Vitest):** `frontend/vue/tests/settingsTime.test.ts` täcker redan tid — utöka utils om spar-logik flyttas dit.
+**Komplement (Vitest):** `frontend/vue/tests/settingsTime.test.ts` täcker tid — utöka utils om spar-logik flyttas dit.
 
 ---
 
-### B4 — E2E: Utöka tidtabellseditor
+### B4 — E2E: Utöka tidtabellseditor — **KVAR**
 
 **Fil:** utöka `frontend/vue/e2e/admin-timetable-flow.spec.ts` (serial mode behålls).
 
@@ -145,16 +175,24 @@ npm run e2e -- e2e/admin-import-export.spec.ts
 
 ---
 
-### B5 — Vitest: trafikmeddelanden (admin + publik)
+### B5 — Vitest: trafikmeddelanden (admin) — **KLAR**
 
-**När A3 är granskad** — lägg klienttester om UI-logik inte täcks av PHP:
+**Levererat:** `frontend/vue/tests/trafficNoticesAdmin.test.ts` — synlighet, sortering, draft, reorder, renumber.
 
-| Fil att testa | Ny testfil (förslag) |
-|---------------|----------------------|
-| `frontend/vue/src/admin/utils/trafficNoticesAdmin.ts` | `frontend/vue/tests/trafficNoticesAdmin.test.ts` |
-| `frontend/vue/src/api/trafficNotices.ts` | mocka fetch i befintligt `mrtRest.test.ts`-mönster |
+**Ev. kvar (valfritt):** dedikerad test för `frontend/vue/src/api/trafficNotices.ts` (publikt fetch-lager).
 
-Komponenttest (`TrafficNoticesApp.vue`) är **valfritt** — prioritera utils och payload.
+---
+
+### B6 — E2E: Trafikmeddelanden — **KLAR**
+
+**Levererat (2026-06):**
+
+| Fil | Täcker |
+|-----|--------|
+| `frontend/vue/e2e/admin-traffic-notices.spec.ts` | Skapa meddelande, reorder, framtida datum, synlighet på index-sida |
+| `frontend/vue/e2e/traffic-notices-wp.spec.ts` | Shortcode mount på demo-sida |
+
+Körs i `scripts/ci-e2e-wp.sh` tillsammans med övrig WP-E2E.
 
 ---
 
@@ -195,21 +233,24 @@ Kodtäckning i CI är **inte** krav i v1 — använd som utforskande verktyg.
 - `composer vue:check`
 - Playwright E2E (mount + `ci-e2e-wp.sh`)
 
+**WP-E2E i CI** (`scripts/ci-e2e-wp.sh`): overview, month, wizard, index, traffic-notices, admin dashboard/nav/traffic-notices/timetable-flow.
+
 ---
 
 ## Prioriteringsordning
 
 ```
-A1 → A3 → B1 → B2 → B3 → B4 → B5 → C1–C3
+A1 → B1 → B2 → B3 → B4 → C1–C3
 ```
 
 | Tier | Insats (uppskattning) | Vem |
 |------|------------------------|-----|
-| A | 0,5–1 dag | Backend |
+| A1 | 0,5 h | Backend |
 | B1 | 0,5 dag | Backend |
 | B2–B4 | 2–4 dagar | Frontend + E2E |
-| B5 | 1 dag | Frontend (efter A3) |
 | C | Löpande | Valfritt |
+
+Trafikmeddelanden (A3, B5, B6) är **klara** — ta inte upp dem igen om inte ny funktion läggs till.
 
 ---
 
@@ -222,9 +263,12 @@ A1 → A3 → B1 → B2 → B3 → B4 → B5 → C1–C3
 | PHP shortcode | `tests/Unit/TimetableOverviewShortcodeTest.php` |
 | PHP trafikmeddelanden | `tests/Unit/TrafficNoticesDomainTest.php` |
 | Vitest composable | `frontend/vue/tests/useStopTimes.test.ts` |
-| Vitest admin | `frontend/vue/tests/adminComposables.test.ts` |
+| Vitest admin utils | `frontend/vue/tests/trafficNoticesAdmin.test.ts` |
+| Vitest delad datetime | `frontend/vue/tests/datetime.test.ts` |
 | E2E admin (WP) | `frontend/vue/e2e/admin-timetable-flow.spec.ts` |
+| E2E admin trafikmeddelanden | `frontend/vue/e2e/admin-traffic-notices.spec.ts` |
 | E2E mount (utan WP) | `frontend/vue/e2e/wizard-mount.spec.ts` |
+| E2E shortcode (WP) | `frontend/vue/e2e/traffic-notices-wp.spec.ts` |
 
 ---
 
@@ -233,5 +277,7 @@ A1 → A3 → B1 → B2 → B3 → B4 → B5 → C1–C3
 | Datum | Tier | Notering |
 |-------|------|----------|
 | 2026-06-08 | — | Plan skapad. PHPUnit ~441, Vitest 229. Deprecations i `WP_Post`-stub. |
+| 2026-06-09 | A3, B5, B6 | Trafikmeddelanden: PHPUnit (domän/REST/shortcode), Vitest admin, E2E admin + WP. Vitest 243. A1 kvar (2 deprecations). |
+| | B1–B4 | Wizard-shortcode PHPUnit + import/settings/editor E2E — **nästa**. |
 
 Uppdatera tabellen när en tier är klar.
