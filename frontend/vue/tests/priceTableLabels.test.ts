@@ -15,7 +15,7 @@ describe('priceTableLabelsFromCfg', () => {
       true,
     );
     expect(labels.title).toBe('Priser');
-    expect(labels.titleSuffix).toBe('(3 zoner)');
+    expect(labels.titleSuffix).toBe('(zon A–C)');
     expect(labels.tickets.single).toBe('Enkel');
     expect(labels.categories.adult).toBe('Vuxen');
   });

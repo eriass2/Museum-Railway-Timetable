@@ -9,6 +9,7 @@ import {
   buildAdminPricePreviewTrip,
   effectivePricingZones,
 } from '../../utils/prices/adminPricePreview';
+import { formatPriceZoneLabel } from '../../../shared/priceZoneLabels';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 
@@ -61,7 +62,7 @@ const priceCfg = computed(() => adminPricePreviewCfg(cfg));
         {{ adminStr(cfg, 'pricesPreviewZone') }}
         <select v-model.number="previewZone">
           <option v-for="zone in pricingZones" :key="`preview-zone-${zone}`" :value="zone">
-            {{ zone }}
+            {{ formatPriceZoneLabel(zone) }}
           </option>
         </select>
       </label>

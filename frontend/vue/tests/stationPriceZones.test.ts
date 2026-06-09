@@ -33,7 +33,7 @@ describe('stationPriceZones', () => {
 
   it('formats zone labels', () => {
     expect(formatStationPriceZones([])).toBe('—');
-    expect(formatStationPriceZones([1, 2])).toBe('1, 2');
+    expect(formatStationPriceZones([1, 2])).toBe('A, B');
     expect(stationHasPriceZone({ ...row(), price_zones: [2] }, 2)).toBe(true);
     expect(stationMissingPriceZone(row())).toBe(true);
   });

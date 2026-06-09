@@ -189,7 +189,7 @@
 | **Fråga** | Enbart admin/priser, eller också reseplanerarens prisblock? Vad med zon 4 om den finns i matrisen? |
 | **Anteckning** | Lagring kan vara numerisk; etikett är presentationslager |
 | **Beslut av** | Produkt / prissättning |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — C) A/B/C (+ D) i admin och reseplanerare |
 
 ---
 
@@ -299,6 +299,7 @@
 | 2026-06-09 | D5 | **A** — `font-weight: 700` i hela publika Vue-UI (planerare, kalender, tidtabell, priser) | Team |
 | 2026-06-09 | D7 | **C** — ikoner only i resekortets grå fält; full text i detaljvy; aria-label + title | Team |
 | 2026-06-09 | D9 | **A** — start/slut härleds från första/sista i `station_ids`; dropdowns borttagna | Team |
+| 2026-06-09 | D12 | **C** — etiketter A–D i admin + publikt; numerisk fallback över D | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 

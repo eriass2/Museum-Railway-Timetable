@@ -1,11 +1,12 @@
 import type { PriceTableLabels } from '../../shared/priceLabels';
+import { formatPriceZoneSpan } from '../../shared/priceZoneLabels';
 import type { WizardCfg } from './wizardCfgTypes';
 import { cfgRecord, cfgStr } from './wizardLabels';
 
 export function priceTableLabelsFromCfg(cfg: WizardCfg, zones: number, showZoneCount: boolean): PriceTableLabels {
   let titleSuffix = '';
   if (showZoneCount) {
-    titleSuffix = `(${cfgStr(cfg, 'priceZoneLabel', '%d zoner').replace('%d', String(zones))})`;
+    titleSuffix = `(${formatPriceZoneSpan(zones)})`;
   }
   return {
     title: cfgStr(cfg, 'priceTitle', 'Priser'),

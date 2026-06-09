@@ -265,8 +265,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin (+ ev. publik)
 - **Typ:** UX / copy
 - **Prioritet:** låg
-- **Status:** öppen
-- **Tekniskt:** Lagring `1–4` i `MRT_sanitize_station_price_zones`; visningslager i admin/priser.
+- **Status:** beslutad (D12 C) — implementerad
+- **Tekniskt:** Lagring numerisk; visning A–D via `formatPriceZoneLabel` i admin och reseplanerare.
 
 ---
 

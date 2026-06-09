@@ -24,6 +24,7 @@ import { useAdminUnsavedGuard } from '../composables/useAdminUnsavedGuard';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminConfirm } from '../composables/adminConfirm';
 import { adminErrorMessage, adminFmtN, adminStr } from '../utils/adminLabels';
+import { formatPriceZoneLabel } from '../../shared/priceZoneLabels';
 import {
   hasMatrixZonesBeyondCap,
   priceMatrixHasAnyValue,
@@ -277,7 +278,7 @@ async function submit() {
                 <select v-model.number="copyZoneFrom">
                   <option value="">—</option>
                   <option v-for="zone in zones" :key="`copy-from-${zone}`" :value="zone">
-                    {{ zone }}
+                    {{ formatPriceZoneLabel(zone) }}
                   </option>
                 </select>
               </label>
@@ -286,7 +287,7 @@ async function submit() {
                 <select v-model.number="copyZoneTo">
                   <option value="">—</option>
                   <option v-for="zone in zones" :key="`copy-to-${zone}`" :value="zone">
-                    {{ zone }}
+                    {{ formatPriceZoneLabel(zone) }}
                   </option>
                 </select>
               </label>
@@ -390,7 +391,7 @@ async function submit() {
             <h3 class="mrt-admin-prices-schema__heading">{{ adminStr(cfg, 'pricesZonesHeading') }}</h3>
             <p class="mrt-admin-prices-schema__zones">
               <span v-for="zone in zones" :key="`zone-${zone}`" class="mrt-admin-prices-schema__zone">
-                {{ adminStr(cfg, 'pricesZoneLabel', 'Zon') }} {{ zone }}
+                {{ adminStr(cfg, 'pricesZoneLabel', 'Zon') }} {{ formatPriceZoneLabel(zone) }}
                 <MrtButton
                   context="admin"
                   variant="link-delete"
@@ -450,7 +451,7 @@ async function submit() {
                           : undefined
                       "
                     >
-                      {{ zone }}
+                      {{ formatPriceZoneLabel(zone) }}
                     </th>
                   </template>
                 </tr>

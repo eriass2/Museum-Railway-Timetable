@@ -2,6 +2,7 @@
 import { RouterLink } from 'vue-router';
 import { AdminDisclosure } from '../ui';
 import StationTrainChangeEditor from './StationTrainChangeEditor.vue';
+import { formatPriceZoneLabel } from '../../../shared/priceZoneLabels';
 import { adminStr } from '../../utils/adminLabels';
 import {
   stationHasPriceZone,
@@ -88,7 +89,7 @@ const cfg = adminConfig();
             :checked="stationHasPriceZone(station, zone)"
             @change="toggleStationPriceZone(station, zone)"
           />
-          {{ zone }}
+          {{ formatPriceZoneLabel(zone) }}
         </label>
       </span>
     </p>

@@ -1,3 +1,4 @@
+import { formatPriceZoneList } from '../../../shared/priceZoneLabels';
 import type { StationRow } from '../../types';
 
 export const DEFAULT_STATION_PRICE_ZONE_OPTIONS = [1, 2, 3, 4] as const;
@@ -33,8 +34,5 @@ export function toggleStationPriceZone(st: StationRow, zone: number): void {
 }
 
 export function formatStationPriceZones(zones: number[] | undefined): string {
-  if (!zones?.length) {
-    return '—';
-  }
-  return zones.join(', ');
+  return formatPriceZoneList(zones ?? []);
 }

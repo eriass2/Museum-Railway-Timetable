@@ -1,3 +1,4 @@
+import { formatPriceZoneLabel } from '../../../shared/priceZoneLabels';
 import type { PricesPayload } from '../../api/adminRest';
 import type { DayTicketData, TripPriceData } from '../../../shared/prices';
 import type { PriceTableLabels } from '../../../shared/priceLabels';
@@ -98,7 +99,7 @@ export function adminPriceTableLabels(
   let titleSuffix = '';
   if (showZoneCount) {
     const zoneKey = resolvePricingZone(payload, zone);
-    titleSuffix = `(${adminStr(cfg, 'pricesZoneLabel', 'Zon')} ${zoneKey})`;
+    titleSuffix = `(${adminStr(cfg, 'pricesZoneLabel', 'Zon')} ${formatPriceZoneLabel(zoneKey)})`;
   }
   return {
     title: adminStr(cfg, 'pricesPreviewTitle', 'Priser'),

@@ -9,6 +9,7 @@ import {
   buildAdminPricePreviewTrip,
   effectivePricingZones,
 } from '../../utils/prices/adminPricePreview';
+import { formatPriceZoneLabel } from '../../../shared/priceZoneLabels';
 import { adminFmtN, adminStr } from '../../utils/adminLabels';
 import { minutesToTimeInput, timeInputToMinutes } from '../../utils/settingsTime';
 import { adminConfig } from '../../types';
@@ -128,7 +129,7 @@ function onThresholdInput(event: Event) {
       {{ adminStr(cfg, 'pricesPreviewZone') }}
       <select v-model.number="compareZone">
         <option v-for="zone in pricingZones" :key="`afternoon-compare-${zone}`" :value="zone">
-          {{ zone }}
+          {{ formatPriceZoneLabel(zone) }}
         </option>
       </select>
     </label>
