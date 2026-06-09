@@ -219,8 +219,9 @@
 | 3 | Exakt fotnot-text — Jespers formuleringar OK som standard? |
 | 4 | Gäller Ca bara i **detaljvy**, eller även i tidtabells-PDF och översikt? |
 | **Befintligt** | PHP: P/A/X i `MRT_stop_time_prefix_and_time_parts`; admin-grid: dialog + `StopTimePaCheckbox` |
-| **Beslut av** | Operatör + UX + utveckling — **blockerar** A3/J4 |
-| **Status** | Öppen |
+| **Beslut** | **A)** kryssrutor På/Av (befintlig modell); båda utan tid = X; båda med tid = Ca i detaljvy; fotnoter enligt Jespers text |
+| **Beslut av** | Operatör + UX + utveckling |
+| **Status** | **Beslutad** (fas 3 v1) |
 
 **Fotnoter (Jespers förslag — bekräfta):**
 
@@ -310,6 +311,7 @@
 | 2026-06-09 | D13 | **A** — sista station med tid i ruttsordning; synkas vid stopptidssparande; dropdown borttagen | Team |
 | 2026-06-09 | D18 | **A6** — en angiven tid speglas till ankomst och avgång vid stopptidssparande | Team |
 | 2026-06-09 | D10 | **A** delvis — flik Turvy primär; A5 tom cell = ingen stopp | Team |
+| 2026-06-09 | D14 | **A** — P/A-kryssrutor; Ca/X i wizard-detalj; Jespers fotnoter | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 

@@ -26,8 +26,18 @@ function MRT_admin_vue_l10n_stop_times(): array {
 		'stopTimesColDeparture' => __( 'Avgång', 'museum-railway-timetable' ),
 		'stopTimesColPickup'   => __( 'På', 'museum-railway-timetable' ),
 		'stopTimesColDropoff'  => __( 'Av', 'museum-railway-timetable' ),
-		'stopTimesPickupLabel' => __( 'Påstigning', 'museum-railway-timetable' ),
-		'stopTimesDropoffLabel' => __( 'Avstigning', 'museum-railway-timetable' ),
+		'stopTimesPickupLabel' => __(
+			'Påstigning (P) — behovsuppehåll endast påstigande',
+			'museum-railway-timetable'
+		),
+		'stopTimesDropoffLabel' => __(
+			'Avstigning (A) — behovsuppehåll endast avstigande',
+			'museum-railway-timetable'
+		),
+		'stopTimesOnRequestHint' => __(
+			'Båda ikryssade utan tid = X (behovsuppehåll). Båda med tid = Ca i reseplaneraren.',
+			'museum-railway-timetable'
+		),
 		'stopTimesGridEditTitle' => __( '%1$s · tur %2$s', 'museum-railway-timetable' ),
 	);
 }

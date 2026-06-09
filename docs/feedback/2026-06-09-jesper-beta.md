@@ -62,8 +62,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / detaljvy + data
 - **Typ:** feature
 - **Prioritet:** medium
-- **Status:** öppen
-- **Tekniskt:** Tidtabellsöversikten har P/A/X-prefix (`MRT_stop_time_prefix_and_time_parts`); journey-detalj-API skickar rå stopptider utan approx-flagga. Kräver backend + `WizardTimeline`.
+- **Status:** klar (fas 3 v1, detaljvy)
+- **Tekniskt:** Journey-detalj skickar `time_label` + behov-flaggor; `WizardTimeline` visar Ca/X; fotnoter i `WizardDetailSegment`.
 - **Koppling:** Admin A3 (behovsuppehåll → Ca).
 
 ---
@@ -209,8 +209,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin inmatning + reseplanerare visning
 - **Typ:** feature
 - **Prioritet:** medium
-- **Status:** öppen
-- **Tekniskt:** P/A/X finns i PHP för tidtabellsvisning; admin-grid använder dialog + kryssrutor. Kräver enhetlig inmatning, API-flagga, wizard-fotnot.
+- **Status:** klar (fas 3 v1, D14 A)
+- **Tekniskt:** På/Av-kryssrutor; båda + tid → Ca i wizard (`MRT_journey_stop_wizard_time_meta`); fotnoter i detaljvy.
 - **Koppling:** J4.
 
 ---
@@ -221,8 +221,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin / stopptider
 - **Typ:** feature (delvis finns)
 - **Prioritet:** medium
-- **Status:** öppen
-- **Tekniskt:** `pickup_allowed` / `dropoff_allowed` + `StopTimePaCheckbox`; textprefix i cell eller tydligare UI.
+- **Status:** klar (fas 3 v1)
+- **Tekniskt:** Tydligare P/A-etiketter + legend i Turvy/stopptider (`stopTimesOnRequestHint`).
 
 ---
 
@@ -320,7 +320,7 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 
 1. **Fas 1** — A1 ✓, A7 ✓, A6 ✓, A8 ✓ (färre manuella fält)
 2. **Fas 2** — A2 ✓, A5 ✓ (grid som primär stopptidsinmatning)
-3. **Fas 3** — A3, A4, J4 (behovsuppehåll + reseplanerare)
+3. **Fas 3** — A3 ✓, A4 ✓, J4 ✓ (behovsuppehåll v1 — detaljvy)
 4. **Fas 4** — A9, A10 (publicera + anslutningar)
 
 ---

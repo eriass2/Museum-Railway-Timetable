@@ -332,6 +332,15 @@
     font-weight: 700;
 }
 
+.mrt-detail-segment__footnotes {
+    margin: 0.65rem 0 0 var(--mrt-tl-content-start);
+    padding-left: 1.1rem;
+    color: #333333;
+    font-size: 0.95rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
 /* —— Timeline —— */
 .mrt-timeline {
     position: relative;

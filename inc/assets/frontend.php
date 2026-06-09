@@ -84,6 +84,14 @@ function MRT_journey_wizard_l10n_steps_and_trip(): array {
 		'changeAt'         => __( 'Byte vid %s', 'museum-railway-timetable' ),
 		'transferWait'     => __( '%d min byte', 'museum-railway-timetable' ),
 		'passedStations'   => __( 'passerade stationer', 'museum-railway-timetable' ),
+		'onRequestPickupFootnote'  => __(
+			'Behovsuppehåll, ge ett tecken till föraren om du vill stiga på.',
+			'museum-railway-timetable'
+		),
+		'onRequestDropoffFootnote' => __(
+			'Behovsuppehåll, säg till konduktören i god tid om du vill stiga av.',
+			'museum-railway-timetable'
+		),
 	);
 }
 

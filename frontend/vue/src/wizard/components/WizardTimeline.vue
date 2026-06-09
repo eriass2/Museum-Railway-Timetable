@@ -13,6 +13,9 @@ defineProps<{
 }>();
 
 function stationTime(s: TimelineStop): string {
+  if (s.time_label) {
+    return s.time_label;
+  }
   return formatTripClock(s.departure_time || s.arrival_time || '');
 }
 </script>

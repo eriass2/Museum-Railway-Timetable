@@ -31,16 +31,23 @@ function MRT_journey_find_stop_index( array $ordered, $station_id ) {
  * @return array<string, mixed>
  */
 function MRT_journey_map_stop_row( array $row ) {
+	require_once MRT_PATH . 'inc/domain/journey/stop-time-wizard-display.php';
 	$sid   = intval( $row['station_post_id'] );
 	$title = get_the_title( $sid ) ?: '';
+	$display = MRT_journey_stop_wizard_time_meta( $row );
 	return array(
-		'station_id'      => $sid,
-		'station_title'   => $title,
-		'stop_sequence'   => intval( $row['stop_sequence'] ),
-		'arrival_time'    => $row['arrival_time'] ? (string) $row['arrival_time'] : '',
-		'departure_time'  => $row['departure_time'] ? (string) $row['departure_time'] : '',
-		'pickup_allowed'  => ! empty( $row['pickup_allowed'] ),
-		'dropoff_allowed' => ! empty( $row['dropoff_allowed'] ),
+		'station_id'          => $sid,
+		'station_title'       => $title,
+		'stop_sequence'       => intval( $row['stop_sequence'] ),
+		'arrival_time'        => $row['arrival_time'] ? (string) $row['arrival_time'] : '',
+		'departure_time'      => $row['departure_time'] ? (string) $row['departure_time'] : '',
+		'pickup_allowed'      => ! empty( $row['pickup_allowed'] ),
+		'dropoff_allowed'     => ! empty( $row['dropoff_allowed'] ),
+		'time_label'          => $display['time_label'],
+		'approximate_time'    => $display['approximate_time'],
+		'on_request_pickup'   => $display['on_request_pickup'],
+		'on_request_dropoff'  => $display['on_request_dropoff'],
+		'on_request_both'     => $display['on_request_both'],
 	);
 }
 

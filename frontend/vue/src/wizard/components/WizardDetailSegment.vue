@@ -8,6 +8,7 @@ import { cfgStr } from '../utils/wizardLabels';
 import { formatDuration } from '../utils/format';
 import { legToVehicleItem } from '../utils/vehicle';
 import WizardTimeline from './WizardTimeline.vue';
+import { stopTimeFootnotesForSegment } from '../../shared/stopTimeFootnotes';
 
 const props = defineProps<{
   cfg: MaybeRef<WizardCfg>;
@@ -22,6 +23,10 @@ const segmentCancelled = computed(() => props.segment.isCancelled === true);
 
 const vehicleItems = computed(() =>
   props.segment.leg ? [legToVehicleItem(props.segment.leg, cfgRef.value)] : [],
+);
+
+const stopTimeFootnotes = computed(() =>
+  stopTimeFootnotesForSegment(props.segment.stops, cfgRef.value),
 );
 </script>
 
@@ -49,5 +54,8 @@ const vehicleItems = computed(() =>
       :start-expanded="false"
       :cancelled="segmentCancelled"
     />
+    <ul v-if="stopTimeFootnotes.length" class="mrt-detail-segment__footnotes">
+      <li v-for="(note, i) in stopTimeFootnotes" :key="i">{{ note }}</li>
+    </ul>
   </MrtDetailSegment>
 </template>

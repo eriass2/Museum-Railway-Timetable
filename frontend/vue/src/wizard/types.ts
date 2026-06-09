@@ -11,6 +11,11 @@ export type TimelineStop = {
   station_title?: string;
   departure_time?: string;
   arrival_time?: string;
+  time_label?: string;
+  approximate_time?: boolean;
+  on_request_pickup?: boolean;
+  on_request_dropoff?: boolean;
+  on_request_both?: boolean;
 };
 
 export type ConnectionDetailPayload = {

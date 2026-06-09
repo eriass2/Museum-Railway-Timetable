@@ -28,6 +28,8 @@ watch(serviceId, () => {
     @retry="load"
   >
     <AdminStatusMessage v-if="message" :message="message" />
+    <p class="description">{{ adminStr(cfg, 'editorStoptimesPaLegend') }}</p>
+    <p class="description">{{ adminStr(cfg, 'stopTimesOnRequestHint') }}</p>
 
     <table class="widefat striped mrt-admin-stoptimes">
       <thead>

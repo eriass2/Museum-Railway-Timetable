@@ -61,6 +61,8 @@ export type WizardCfgStringKey =
   | 'changeAt'
   | 'transferWait'
   | 'passedStations'
+  | 'onRequestPickupFootnote'
+  | 'onRequestDropoffFootnote'
   | 'colService'
   | 'colTrainType'
   | 'colDeparture'

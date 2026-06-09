@@ -20,6 +20,8 @@ const cfg = adminConfig();
 <template>
   <AdminPanel class="mrt-vue-root mrt-admin-grid-tab">
     <p class="description">{{ adminStr(cfg, 'editorGridHint') }}</p>
+    <p class="description">{{ adminStr(cfg, 'editorStoptimesPaLegend') }}</p>
+    <p class="description">{{ adminStr(cfg, 'stopTimesOnRequestHint') }}</p>
     <p v-if="loading" class="description">{{ adminStr(cfg, 'editorLoading') }}</p>
     <EditableTimetableOverview
       v-else-if="overview"

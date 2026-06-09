@@ -42,6 +42,8 @@ final class JourneyDetailTest extends TestCase {
 		self::assertSame( '09:00', $mapped['departure_time'] );
 		self::assertTrue( $mapped['pickup_allowed'] );
 		self::assertFalse( $mapped['dropoff_allowed'] );
+		self::assertSame( '09.00', $mapped['time_label'] );
+		self::assertTrue( $mapped['on_request_pickup'] );
 	}
 
 	public function test_connection_journey_detail_returns_empty_for_invalid_ids(): void {
