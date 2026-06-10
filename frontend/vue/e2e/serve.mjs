@@ -73,6 +73,7 @@ function buildWizardConfig(requestUrl) {
     timetableId: 0,
     embedded: true,
     debug,
+    feedbackEnabled: params.get('feedback') === '1',
     startOfWeek: 1,
     wizard: {
       stepRoute: 'Sök resa',
@@ -113,6 +114,17 @@ function buildWizardConfig(requestUrl) {
       tripReturn: 'Tur och retur',
       back: '← Tillbaka',
       stepDate: 'Välj datum',
+      feedbackButton: 'Rapportera fel eller förslag',
+      feedbackTitle: 'Rapportera fel eller förslag',
+      feedbackTypeBug: 'Fel / bugg',
+      feedbackTypeSuggestion: 'Förslag',
+      feedbackMessage: 'Beskrivning',
+      feedbackEmail: 'E-post (valfritt)',
+      feedbackPrivacy: 'Vi sparar din rapport för felsökning. E-post används bara om du fyller i den.',
+      feedbackSubmit: 'Skicka',
+      feedbackCancel: 'Avbryt',
+      feedbackThanks: 'Tack! Vi har tagit emot din rapport.',
+      feedbackError: 'Kunde inte skicka rapporten. Försök igen.',
     },
   };
 
@@ -423,6 +435,12 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   if (pathOnly.endsWith('/timetables/day') && referer.includes('fail=ajax')) {
     res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify({ message: 'Dag-REST-fel (e2e)' }));
+    return;
+  }
+
+  if (pathOnly.endsWith('/wizard/feedback') && req.method === 'POST') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ saved: true, id: 901 }));
     return;
   }
 

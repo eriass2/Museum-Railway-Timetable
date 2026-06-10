@@ -12,4 +12,13 @@ test.describe('Journey wizard (static mount)', () => {
     await expect(page.locator('#mrt_wizard_to')).toBeVisible();
     await expect(page.locator('.mrt-segmented')).toBeVisible();
   });
+
+  test('submits feedback from widget', async ({ page }) => {
+    await page.goto('/wizard?feedback=1');
+    await page.getByRole('button', { name: /Rapportera fel eller förslag/i }).click();
+    await expect(page.getByRole('dialog')).toBeVisible();
+    await page.getByLabel(/Beskrivning/i).fill('Datumsteget visar fel månad i kalendern.');
+    await page.getByRole('button', { name: /^Skicka$/i }).click();
+    await expect(page.getByText(/Tack! Vi har tagit emot din rapport/i)).toBeVisible();
+  });
 });
