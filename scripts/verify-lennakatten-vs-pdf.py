@@ -55,32 +55,37 @@ def compare_service(
         return [f"{service_code}: missing from stoptimes.csv"]
     if len(actual) != len(expected_stops):
         errors.append(f"{service_code}: expected {len(expected_stops)} stops, got {len(actual)}")
+    total = len(expected_stops)
     for idx, (station, arrival, departure, symbol) in enumerate(expected_stops):
         if idx >= len(actual):
             break
         row = actual[idx]
         seq = idx + 1
+        exp_arrival = "" if seq == 1 else arrival
+        exp_departure = "" if seq == total else departure
         if row["station_code"] != station:
             errors.append(f"{service_code} #{seq}: station {row['station_code']!r} != {station!r}")
-        if row["arrival_time"] != arrival:
-            errors.append(f"{service_code} #{seq} {station}: arrival {row['arrival_time']!r} != {arrival!r}")
-        if row["departure_time"] != departure:
+        if row["arrival_time"] != exp_arrival:
             errors.append(
-                f"{service_code} #{seq} {station}: departure {row['departure_time']!r} != {departure!r}"
+                f"{service_code} #{seq} {station}: arrival {row['arrival_time']!r} != {exp_arrival!r}"
+            )
+        if row["departure_time"] != exp_departure:
+            errors.append(
+                f"{service_code} #{seq} {station}: departure {row['departure_time']!r} != {exp_departure!r}"
             )
         exp_pu, exp_do = symbol_to_flags(
             symbol,
             is_origin=(seq == 1),
-            is_last=(seq == len(expected_stops)),
+            is_last=(seq == total),
             station=station,
             service_code=service_code,
         )
-        has_time = bool(arrival or departure)
+        has_time = bool(exp_arrival or exp_departure)
         exp_ank_pu, exp_ank_do, exp_avg_pu, exp_avg_do = four_modes_from_flags(
             exp_pu,
             exp_do,
             is_origin=(seq == 1),
-            is_last=(seq == len(expected_stops)),
+            is_last=(seq == total),
             has_time=has_time,
         )
         for field, expected in (

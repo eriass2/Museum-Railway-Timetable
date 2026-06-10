@@ -20,7 +20,12 @@ from lennakatten_anslag_tables import (
     YELLOW_RAIL_TRAIN_TYPES,
     service_definitions,
 )
-from lennakatten_symbols import UP_OUT, approximate_time_for_stop, four_modes_from_flags, symbol_to_flags
+from lennakatten_symbols import (
+    UP_OUT,
+    anslag_overlay_flags,
+    four_modes_from_flags,
+    symbol_to_flags,
+)
 
 B_PDF_PATH = Path(__file__).resolve().parents[1] / "testdata/reference-pdfs/Tidtabellsboken-del-B.pdf"
 
@@ -49,7 +54,7 @@ STATION_TOKEN = re.compile(
     r"\b(Uö|Fl|Ås|Sa|Ga|Ml|Lh|Slä|Löt|Lna|Alg|Mg|Frg|Lbr|B)\b"
 )
 SYMBOL_RE = re.compile(r"(?<![A-Za-zÅÄÖåäö])([pax])(?![A-Za-zÅÄÖåäö])", re.IGNORECASE)
-CIRCLE_CHARS = "ó○oO0°¾ÒÌ"
+CIRCLE_CHARS = "ó○"
 
 Mode = str  # none | scheduled | on_request
 
@@ -62,6 +67,7 @@ class BColumn:
     avg_symbol: str
     ank_time: str
     avg_time: str
+    implied_minute: str = ""
 
 
 @dataclass(frozen=True)
@@ -74,6 +80,21 @@ class BStop:
     avg_pickup_mode: Mode
     avg_dropoff_mode: Mode
     pass_through: bool = False
+    in_b_korplan: bool = False
+
+
+def _replace_stop(stop: BStop, **changes: object) -> BStop:
+    return BStop(
+        changes.get("station_code", stop.station_code),
+        changes.get("arrival", stop.arrival),
+        changes.get("departure", stop.departure),
+        changes.get("ank_pickup_mode", stop.ank_pickup_mode),
+        changes.get("ank_dropoff_mode", stop.ank_dropoff_mode),
+        changes.get("avg_pickup_mode", stop.avg_pickup_mode),
+        changes.get("avg_dropoff_mode", stop.avg_dropoff_mode),
+        changes.get("pass_through", stop.pass_through),
+        changes.get("in_b_korplan", stop.in_b_korplan),
+    )
 
 
 def _normalize_time(match: re.Match[str]) -> str:
@@ -151,8 +172,13 @@ def _parse_column(text: str) -> BColumn:
     if len(times) >= 2:
         return BColumn(ank_sym, avg_sym, times[0], times[1])
     if len(times) == 1:
-        return BColumn(ank_sym, avg_sym, "", times[0])
-    return BColumn(ank_sym, avg_sym, "", "")
+        return BColumn(ank_sym, avg_sym, "", times[0], "")
+    implied_minute = ""
+    if not times:
+        minute_match = re.search(r"ó\s*(\d{1,2})\b", cleaned)
+        if minute_match:
+            implied_minute = minute_match.group(1)
+    return BColumn(ank_sym, avg_sym, "", "", implied_minute)
 
 
 def _times_from_column(
@@ -203,22 +229,12 @@ def _column_to_stop(
         and ank_do == "none"
         and avg_pu == "none"
         and avg_do == "none"
-        and (
-            column.ank_symbol == "circle"
-            or column.avg_symbol == "circle"
-            or _has_circle(f"{column.ank_symbol} {column.avg_symbol}")
-        )
+        and (column.ank_symbol == "circle" or column.avg_symbol == "circle")
     )
-    return BStop(
-        station_code,
-        arrival,
-        departure,
-        ank_pu,
-        ank_do,
-        avg_pu,
-        avg_do,
-        pass_through,
+    in_b = pass_through or bool(arrival or departure) or not (
+        ank_pu == ank_do == avg_pu == avg_do == "none"
     )
+    return BStop(station_code, arrival, departure, ank_pu, ank_do, avg_pu, avg_do, pass_through, in_b)
 
 
 def _trim_endpoint_stops(stops: list[BStop]) -> list[BStop]:
@@ -240,7 +256,17 @@ def _trim_endpoint_stops(stops: list[BStop]) -> list[BStop]:
             avg_pu, avg_do = "none", "none"
             if arrival and ank_do == "none":
                 ank_do = "scheduled"
-        trimmed.append(BStop(stop.station_code, arrival, departure, ank_pu, ank_do, avg_pu, avg_do))
+        trimmed.append(
+            _replace_stop(
+                stop,
+                arrival=arrival,
+                departure=departure,
+                ank_pickup_mode=ank_pu,
+                ank_dropoff_mode=ank_do,
+                avg_pickup_mode=avg_pu,
+                avg_dropoff_mode=avg_do,
+            )
+        )
     return trimmed
 
 
@@ -291,6 +317,32 @@ def _filter_route(stops: list[BStop], direction: str) -> list[BStop]:
     return filtered
 
 
+def _apply_implied_minute(
+    stop: BStop,
+    column: BColumn,
+    last_hour: int | None,
+) -> tuple[BStop, int | None]:
+    if column.implied_minute and last_hour is not None and stop.pass_through:
+        clock = f"{last_hour:02d}:{int(column.implied_minute):02d}"
+        stop = _replace_stop(
+            stop,
+            arrival=clock,
+            departure=clock,
+            pass_through=False,
+            in_b_korplan=True,
+            ank_pickup_mode="scheduled",
+            ank_dropoff_mode="scheduled",
+            avg_pickup_mode="scheduled",
+            avg_dropoff_mode="scheduled",
+        )
+    hour = last_hour
+    if stop.departure:
+        hour = int(stop.departure.split(":")[0])
+    elif stop.arrival:
+        hour = int(stop.arrival.split(":")[0])
+    return stop, hour
+
+
 def _parse_korplan_block(lines: list[str], left_train: str, right_train: str, direction: str) -> dict[str, list[BStop]]:
     header_idx = next((i for i, line in enumerate(lines) if KORPLAN_HEADER.search(line)), None)
     if header_idx is None:
@@ -308,6 +360,7 @@ def _parse_korplan_block(lines: list[str], left_train: str, right_train: str, di
         anchors.append((idx, abbrev, station_code, left, right))
 
     parsed: dict[str, list[BStop]] = {left_train: [], right_train: []}
+    last_hour: dict[str, int | None] = {left_train: None, right_train: None}
     for pos, (line_idx, _abbrev, station_code, left, right) in enumerate(anchors):
         prev_idx = anchors[pos - 1][0] if pos > 0 else -1
         start = line_idx + 1
@@ -319,26 +372,32 @@ def _parse_korplan_block(lines: list[str], left_train: str, right_train: str, di
         )
         is_first = pos == 0
         is_last = pos == len(anchors) - 1
-        parsed[left_train].append(
-            _column_to_stop(
-                station_code,
-                _parse_column(left_text),
-                is_first=is_first,
-                is_last=is_last,
-                train_num=left_train,
-                direction=direction,
-            )
+        left_col = _parse_column(left_text)
+        right_col = _parse_column(right_text)
+        left_stop = _column_to_stop(
+            station_code,
+            left_col,
+            is_first=is_first,
+            is_last=is_last,
+            train_num=left_train,
+            direction=direction,
         )
-        parsed[right_train].append(
-            _column_to_stop(
-                station_code,
-                _parse_column(right_text),
-                is_first=is_first,
-                is_last=is_last,
-                train_num=right_train,
-                direction=direction,
-            )
+        right_stop = _column_to_stop(
+            station_code,
+            right_col,
+            is_first=is_first,
+            is_last=is_last,
+            train_num=right_train,
+            direction=direction,
         )
+        left_stop, last_hour[left_train] = _apply_implied_minute(
+            left_stop, left_col, last_hour[left_train]
+        )
+        right_stop, last_hour[right_train] = _apply_implied_minute(
+            right_stop, right_col, last_hour[right_train]
+        )
+        parsed[left_train].append(left_stop)
+        parsed[right_train].append(right_stop)
 
     return {
         train: _trim_endpoint_stops(_filter_route(stops, direction))
@@ -461,9 +520,7 @@ def _overlay_missing_times(stops: list[BStop], service_code: str) -> list[BStop]
                 is_last=(seq == total),
                 has_time=has_time,
             )
-        merged.append(
-            BStop(stop.station_code, arrival, departure, ank_pu, ank_do, avg_pu, avg_do, stop.pass_through)
-        )
+        merged.append(_replace_stop(stop, arrival=arrival, departure=departure, ank_pickup_mode=ank_pu, ank_dropoff_mode=ank_do, avg_pickup_mode=avg_pu, avg_dropoff_mode=avg_do))
     return merged
 
 
@@ -473,15 +530,7 @@ def _continuation_leg_from_marielund(stops: list[BStop]) -> list[BStop]:
         return stops
     leg2 = list(stops[ml_idx:])
     first = leg2[0]
-    leg2[0] = BStop(
-        first.station_code,
-        first.arrival,
-        first.departure,
-        first.ank_pickup_mode,
-        first.ank_dropoff_mode,
-        first.avg_pickup_mode,
-        first.avg_dropoff_mode,
-    )
+    leg2[0] = _replace_stop(leg2[0])
     return _trim_endpoint_stops(leg2)
 
 
@@ -524,11 +573,11 @@ def b_rail_service_stops(
             continue
         leg1 = list(stops[: ml_idx + 1])
         last = leg1[-1]
-        leg1[-1] = BStop(last.station_code, last.arrival, "", last.ank_pickup_mode, last.ank_dropoff_mode, "none", "none")
+        leg1[-1] = _replace_stop(last, departure="", avg_pickup_mode="none", avg_dropoff_mode="none")
         leg1 = _trim_endpoint_stops(leg1)
         leg2 = list(stops[ml_idx:])
         first = leg2[0]
-        leg2[0] = BStop(first.station_code, "", first.departure, "none", "none", first.avg_pickup_mode, first.avg_dropoff_mode)
+        leg2[0] = _replace_stop(first, arrival="", ank_pickup_mode="none", ank_dropoff_mode="none")
         leg2 = _trim_endpoint_stops(leg2)
         code = _service_code(timetable, train_num, direction)
         services[code] = _overlay_missing_times(leg1, code)
@@ -545,14 +594,18 @@ def b_stop_to_csv_row(
     *,
     total_stops: int,
 ) -> str:
-    has_time = bool(stop.arrival or stop.departure)
-    approx = approximate_time_for_stop(
+    arrival = "" if seq == 1 else stop.arrival
+    departure = "" if seq == total_stops else stop.departure
+    has_time = bool(arrival or departure)
+    approx, in_svc = anslag_overlay_flags(
+        in_b_korplan=stop.in_b_korplan,
         is_origin=(seq == 1),
         is_last=(seq == total_stops),
         has_time=has_time,
+        service_code=service_code,
     )
     return (
-        f"{service_code},{seq},{stop.station_code},{stop.arrival},{stop.departure},"
+        f"{service_code},{seq},{stop.station_code},{arrival},{departure},"
         f"{stop.ank_pickup_mode},{stop.ank_dropoff_mode},{stop.avg_pickup_mode},{stop.avg_dropoff_mode},"
-        f"{approx},1"
+        f"{approx},{in_svc}"
     )

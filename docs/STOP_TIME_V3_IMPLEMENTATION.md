@@ -1,6 +1,6 @@
 # Stopptider schema v3 — implementationsplan
 
-**Status:** Fas 2 klar (2026-06-10) — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
+**Status:** Fas 3 klar (2026-06-10) — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
 **Beslut:** [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)
 
 ## Faser (körordning)
@@ -9,7 +9,7 @@
 |------|----------|--------|
 | 1 | Kärnmodell + DB v3 | ✓ |
 | 2 | B-PDF → fixture (modes/tider) | ✓ `lennakatten_b_pdf.py`, `sync-lennakatten-rail-fixture.py` |
-| 3 | Anslag-overlay (Ca + `in_service_timetable`) | Kvar |
+| 3 | Anslag-overlay (Ca + `in_service_timetable`) | ✓ `anslag_overlay_flags`, sync |
 
 ## Tekniska regler (implementerade i kod)
 

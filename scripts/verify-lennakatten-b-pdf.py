@@ -8,6 +8,7 @@ import sys
 from pathlib import Path
 
 from lennakatten_b_pdf import BStop, b_rail_service_stops, parse_b_pdf
+from lennakatten_symbols import anslag_overlay_flags
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
@@ -19,6 +20,7 @@ MODE_FIELDS = (
     "avg_pickup_mode",
     "avg_dropoff_mode",
 )
+OVERLAY_FIELDS = ("approximate_time", "in_service_timetable")
 
 
 def load_stoptimes() -> dict[str, list[dict[str, str]]]:
@@ -32,15 +34,44 @@ def load_stoptimes() -> dict[str, list[dict[str, str]]]:
     return by_service
 
 
-def compare_stop(service_code: str, seq: int, expected: BStop, actual: dict[str, str]) -> list[str]:
+def expected_overlay(
+    service_code: str,
+    seq: int,
+    stop: BStop,
+    *,
+    total_stops: int,
+) -> tuple[str, str]:
+    arrival = "" if seq == 1 else stop.arrival
+    departure = "" if seq == total_stops else stop.departure
+    has_time = bool(arrival or departure)
+    approx, in_svc = anslag_overlay_flags(
+        in_b_korplan=stop.in_b_korplan,
+        is_origin=(seq == 1),
+        is_last=(seq == total_stops),
+        has_time=has_time,
+        service_code=service_code,
+    )
+    return str(approx), str(in_svc)
+
+
+def compare_stop(
+    service_code: str,
+    seq: int,
+    expected: BStop,
+    actual: dict[str, str],
+    *,
+    total_stops: int,
+) -> list[str]:
     errors: list[str] = []
     if actual["station_code"] != expected.station_code:
         errors.append(
             f"{service_code} #{seq}: station {actual['station_code']!r} != {expected.station_code!r}"
         )
+    exp_arrival = "" if seq == 1 else expected.arrival
+    exp_departure = "" if seq == total_stops else expected.departure
     for field, value in (
-        ("arrival_time", expected.arrival),
-        ("departure_time", expected.departure),
+        ("arrival_time", exp_arrival),
+        ("departure_time", exp_departure),
     ):
         if actual.get(field, "") != value:
             errors.append(
@@ -53,8 +84,13 @@ def compare_stop(service_code: str, seq: int, expected: BStop, actual: dict[str,
                 f"{service_code} #{seq} {expected.station_code}: {field} "
                 f"{actual.get(field, '')!r} != {getattr(expected, field)!r}"
             )
-    if actual.get("in_service_timetable", "") != "1":
-        errors.append(f"{service_code} #{seq} {expected.station_code}: in_service_timetable != 1")
+    exp_approx, exp_in_svc = expected_overlay(service_code, seq, expected, total_stops=total_stops)
+    for field, value in (("approximate_time", exp_approx), ("in_service_timetable", exp_in_svc)):
+        if actual.get(field, "") != value:
+            errors.append(
+                f"{service_code} #{seq} {expected.station_code}: {field} "
+                f"{actual.get(field, '')!r} != {value!r}"
+            )
     return errors
 
 
@@ -71,7 +107,7 @@ def compare_service(
     for idx, stop in enumerate(expected_stops):
         if idx >= len(actual):
             break
-        errors.extend(compare_stop(service_code, idx + 1, stop, actual[idx]))
+        errors.extend(compare_stop(service_code, idx + 1, stop, actual[idx], total_stops=len(expected_stops)))
     return errors
 
 
@@ -91,6 +127,22 @@ def verify_train_71_stickprov(stops: list[BStop]) -> list[str]:
     marielund = stops[-1]
     if marielund.arrival != "10:35" or marielund.departure != "":
         errors.append("green-71-out stickprov: marielund arrival 10:35, no departure")
+    if not marielund.in_b_korplan:
+        errors.append("green-71-out stickprov: marielund must be in B körplan")
+    barby = stops[4]
+    if barby.in_b_korplan and barby.departure == "10:23":
+        approx, in_svc = anslag_overlay_flags(
+            in_b_korplan=True,
+            is_origin=False,
+            is_last=False,
+            has_time=True,
+            service_code="green-71-out",
+        )
+        if approx != 1 or in_svc != 1:
+            errors.append("green-71-out stickprov: barby Ca + in_service from anslag overlay")
+    skolsta = stops[3]
+    if skolsta.pass_through and (skolsta.arrival or skolsta.departure):
+        errors.append("green-71-out stickprov: skolsta pass-through must have no times")
     return errors
 
 

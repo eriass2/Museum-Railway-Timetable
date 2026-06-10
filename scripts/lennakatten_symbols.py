@@ -38,6 +38,28 @@ def approximate_time_for_stop(*, is_origin: bool, is_last: bool, has_time: bool)
     return 0 if (is_origin or is_last) else 1
 
 
+def anslag_overlay_flags(
+    *,
+    in_b_korplan: bool,
+    is_origin: bool,
+    is_last: bool,
+    has_time: bool,
+    service_code: str,
+) -> tuple[int, int]:
+    """Return (approximate_time, in_service_timetable) per docs/STOP_TIME_SOURCES.md."""
+    if "-bus-" in service_code:
+        return 1, 0
+    in_svc = 1 if in_b_korplan else 0
+    approx = approximate_time_for_stop(
+        is_origin=is_origin,
+        is_last=is_last,
+        has_time=has_time,
+    )
+    if in_svc == 0:
+        approx = 1
+    return approx, in_svc
+
+
 def four_modes_from_flags(
     pickup: int,
     dropoff: int,
@@ -101,14 +123,13 @@ def stoptime_csv_row(
         is_last=(seq == total_stops),
         has_time=has_time,
     )
-    approx = approximate_time_for_stop(
+    approx, in_svc = anslag_overlay_flags(
+        in_b_korplan=False,
         is_origin=(seq == 1),
         is_last=(seq == total_stops),
         has_time=has_time,
+        service_code=service_code,
     )
-    in_svc = in_service_for_service(service_code)
-    if in_svc == 0:
-        approx = 1
     return (
         f"{service_code},{seq},{station},{arrival},{departure},"
         f"{ank_pu},{ank_do},{avg_pu},{avg_do},{approx},{in_svc}"

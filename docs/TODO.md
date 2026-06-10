@@ -31,14 +31,13 @@ Kort lista över planerade förbättringar som inte är aktiva utvecklingsplaner
 
 ## Stopptider — schema v3 (tidtabell B + anslag)
 
-**Status:** fas 2 klar (2026-06-10) — se [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md)
+**Status:** fas 3 klar (2026-06-10) — se [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md)
 
 **Beslutat (2026-06-10):** se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)
 
-**Kvar (fas 3):**
+**Kvar:**
 
-- [ ] Anslag-overlay automatiskt i sync (Ca + `in_service_timetable` där B saknar rad)
-- [ ] Dev-reset + omimport efter schema-byte i Docker-miljö
+- [ ] Dev-reset + omimport efter schema-byte i Docker-miljö (vid behov)
 
 ---
 
