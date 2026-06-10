@@ -50,19 +50,34 @@ function MRT_timetable_bus_time_row_json(
 	array $connection,
 	array $branch_group,
 	string $stop_role,
-	bool $use_departure
+	bool $use_departure,
+	?array $display_columns = null
 ): array {
 	$cells = array();
-	foreach ( $services as $idx => $service_data ) {
-		unset( $service_data );
-		$train_number = (string) ( $info[ $idx ]['service_number'] ?? '' );
-		$cells[]      = MRT_timetable_bus_time_cell_json(
-			$train_number,
-			$connection,
-			$branch_group,
-			$stop_role,
-			$use_departure
-		);
+	if ( $display_columns === null ) {
+		foreach ( $services as $idx => $service_data ) {
+			unset( $service_data );
+			$train_number = (string) ( $info[ $idx ]['service_number'] ?? '' );
+			$cells[]      = MRT_timetable_bus_time_cell_json(
+				$train_number,
+				$connection,
+				$branch_group,
+				$stop_role,
+				$use_departure
+			);
+		}
+	} else {
+		foreach ( $display_columns as $column ) {
+			$idx          = (int) $column['primary_idx'];
+			$train_number = (string) ( $info[ $idx ]['service_number'] ?? '' );
+			$cells[]      = MRT_timetable_bus_time_cell_json(
+				$train_number,
+				$connection,
+				$branch_group,
+				$stop_role,
+				$use_departure
+			);
+		}
 	}
 
 	return array(

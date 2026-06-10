@@ -34,7 +34,8 @@ function MRT_timetable_junction_bus_rows_json(
 	array $services,
 	array $info,
 	array $connection,
-	array $branch_group
+	array $branch_group,
+	?array $display_columns = null
 ): array {
 	$junction_id    = (int) ( $connection['junction_id'] ?? 0 );
 	$junction_label = (string) ( $connection['junction_label'] ?? '' );
@@ -54,7 +55,8 @@ function MRT_timetable_junction_bus_rows_json(
 				$connection,
 				$branch_group,
 				'remote',
-				true
+				true,
+				$display_columns
 			),
 			MRT_timetable_bus_time_row_json(
 				'busArrival',
@@ -64,7 +66,8 @@ function MRT_timetable_junction_bus_rows_json(
 				$connection,
 				$branch_group,
 				'junction',
-				false
+				false,
+				$display_columns
 			),
 		);
 	}
@@ -78,7 +81,8 @@ function MRT_timetable_junction_bus_rows_json(
 			$connection,
 			$branch_group,
 			'junction',
-			true
+			true,
+			$display_columns
 		),
 		MRT_timetable_bus_time_row_json(
 			'busArrival',
@@ -88,7 +92,8 @@ function MRT_timetable_junction_bus_rows_json(
 			$connection,
 			$branch_group,
 			'remote',
-			false
+			false,
+			$display_columns
 		),
 	);
 }

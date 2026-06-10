@@ -11,6 +11,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * @param array<int, array{primary_idx: int, continuation_idx: int|null, split_station_id: int}>|null $display_columns
+ * @param array<int, WP_Post>|null $station_posts
+ */
 function MRT_timetable_row_times_json(
 	string $kind,
 	string $label,
@@ -18,20 +22,35 @@ function MRT_timetable_row_times_json(
 	array $services,
 	array $info,
 	bool $use_from_display,
-	bool $use_to_display
+	bool $use_to_display,
+	?array $display_columns = null,
+	?array $station_posts = null
 ): array {
 	$cells = array();
-	foreach ( $services as $idx => $service_data ) {
-		unset( $idx, $info );
-		$stop    = $service_data['stop_times'][ $station_id ] ?? null;
-		$cells[] = MRT_timetable_time_cell_json( $stop, $use_from_display, $use_to_display, $kind );
+	if ( $display_columns === null || $station_posts === null ) {
+		foreach ( $services as $service_data ) {
+			$stop    = $service_data['stop_times'][ $station_id ] ?? null;
+			$cells[] = MRT_timetable_time_cell_json( $stop, $use_from_display, $use_to_display, $kind );
+		}
+	} else {
+		foreach ( $display_columns as $column ) {
+			$idx          = MRT_timetable_display_column_service_idx( $column, $station_id, $kind, $station_posts );
+			$service_data = $services[ $idx ] ?? array();
+			$stop         = $service_data['stop_times'][ $station_id ] ?? null;
+			$cell         = MRT_timetable_time_cell_json( $stop, $use_from_display, $use_to_display, $kind );
+			$service_id   = MRT_timetable_service_id_from_data( $service_data );
+			if ( $service_id > 0 ) {
+				$cell['serviceId'] = $service_id;
+			}
+			$cells[] = $cell;
+		}
 	}
 
 	return array(
-		'kind'       => $kind,
-		'label'      => $label,
-		'stationId'  => $station_id,
-		'cells'      => $cells,
+		'kind'      => $kind,
+		'label'     => $label,
+		'stationId' => $station_id,
+		'cells'     => $cells,
 	);
 }
 
@@ -88,10 +107,14 @@ function MRT_timetable_time_cell_text(
 	return MRT_format_stop_time_display( $stop, $row_kind );
 }
 
+/**
+ * @param array<int, array{primary_idx: int, continuation_idx: int|null, split_station_id: int}>|null $display_columns
+ */
 function MRT_timetable_train_change_row_json(
 	WP_Post $station,
 	array $services,
-	array $info
+	array $info,
+	?array $display_columns = null
 ): ?array {
 	$map = MRT_get_station_train_change_map( (int) $station->ID, $station );
 	if ( $map === array() ) {
@@ -99,12 +122,24 @@ function MRT_timetable_train_change_row_json(
 	}
 
 	$cells = array();
-	foreach ( $services as $idx => $service_data ) {
-		$number   = (string) ( $info[ $idx ]['service_number'] ?? '' );
-		$transfer = $map[ $number ] ?? null;
-		$cells[]  = array(
-			'vehicles' => $transfer ? array( MRT_timetable_vehicle_json( $transfer['typeName'], $transfer['serviceNumber'] ) ) : array(),
-		);
+	if ( $display_columns === null ) {
+		foreach ( $services as $idx => $service_data ) {
+			unset( $service_data );
+			$number   = (string) ( $info[ $idx ]['service_number'] ?? '' );
+			$transfer = $map[ $number ] ?? null;
+			$cells[]  = array(
+				'vehicles' => $transfer ? array( MRT_timetable_vehicle_json( $transfer['typeName'], $transfer['serviceNumber'] ) ) : array(),
+			);
+		}
+	} else {
+		foreach ( $display_columns as $column ) {
+			$idx      = (int) $column['primary_idx'];
+			$number   = (string) ( $info[ $idx ]['service_number'] ?? '' );
+			$transfer = $map[ $number ] ?? null;
+			$cells[]  = array(
+				'vehicles' => $transfer ? array( MRT_timetable_vehicle_json( $transfer['typeName'], $transfer['serviceNumber'] ) ) : array(),
+			);
+		}
 	}
 
 	return array(

@@ -31,6 +31,7 @@ defineProps<{
           width="20"
           height="20"
         />
+        <span class="mrt-ov-bus-ref__num">{{ row.cells[columnIndex].busServiceNumber }}</span>
       </span>
     </template>
     <template #transfer-cell="{ row, track, columnIndex }">

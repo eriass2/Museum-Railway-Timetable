@@ -45,6 +45,7 @@ const emit = defineEmits<{ saved: [] }>();
             width="20"
             height="20"
           />
+          <span class="mrt-ov-bus-ref__num">{{ row.cells[columnIndex].busServiceNumber }}</span>
         </span>
       </template>
       <OverviewGridCellEditor
@@ -53,7 +54,7 @@ const emit = defineEmits<{ saved: [] }>();
         :station-label="row.label"
         :service-number="group.columns[columnIndex].serviceNumber"
         :row-kind="row.kind"
-        :service-id="group.columns[columnIndex].serviceId!"
+        :service-id="row.cells[columnIndex].serviceId ?? group.columns[columnIndex].serviceId!"
         :station-id="row.stationId!"
         :edit="row.cells[columnIndex].edit"
         :editor="editor"

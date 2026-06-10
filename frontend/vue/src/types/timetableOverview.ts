@@ -18,6 +18,12 @@ export type TimetableOverviewColumn = {
   isSpecial: boolean;
   specialName: string;
   highlightColor: string;
+  continuation?: {
+    serviceId: number;
+    serviceNumber: string;
+    trainTypeName: string;
+    iconKey: string;
+  };
 };
 
 export type StopTimeMode = 'none' | 'scheduled' | 'on_request';
@@ -35,6 +41,7 @@ export type TimetableTimeCell = {
   text: string;
   approximateTime?: boolean;
   busServiceNumber?: string;
+  serviceId?: number;
   edit?: TimetableTimeCellEdit;
 };
 
