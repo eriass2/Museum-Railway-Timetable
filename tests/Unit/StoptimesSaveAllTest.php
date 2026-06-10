@@ -77,6 +77,29 @@ final class StoptimesSaveAllTest extends TestCase {
         self::assertSame('10:15', $result[0]['departure_time']);
     }
 
+    public function test_prepare_stoptimes_trims_origin_and_destination_times(): void {
+        $result = MRT_prepare_stoptimes_for_save_all([
+            [
+                'station_id' => 1,
+                'stops_here' => '1',
+                'departure' => '10:00',
+                'pickup' => '1',
+            ],
+            [
+                'station_id' => 2,
+                'stops_here' => '1',
+                'arrival' => '10:35',
+                'dropoff' => '1',
+            ],
+        ]);
+
+        self::assertIsArray($result);
+        self::assertNull($result[0]['arrival_time']);
+        self::assertSame('10:00', $result[0]['departure_time']);
+        self::assertSame('10:35', $result[1]['arrival_time']);
+        self::assertNull($result[1]['departure_time']);
+    }
+
     public function test_mirror_stoptime_leaves_both_empty_or_both_set(): void {
         self::assertSame(['', ''], MRT_mirror_stoptime_arrival_departure('', ''));
         self::assertSame(

@@ -112,6 +112,8 @@
   --mrt-ov-col-min: 3.35rem;
   --mrt-ov-col-max: 4.1rem;
   --mrt-ov-highlight-w: 1.15rem;
+  --mrt-ov-num-size: 1rem;
+  --mrt-ov-text-size: calc(var(--mrt-ov-num-size) * 0.5);
   display: grid;
   width: max(100%, var(--mrt-ov-grid-min, 30rem));
   background: #fff;
@@ -129,16 +131,14 @@
 
 .mrt-ov-grid-row--head + .mrt-ov-grid-row--head .mrt-ov-col-head {
   background: var(--mrt-ov-highlight);
-  font-size: 0.95rem;
 }
 
 .mrt-ov-grid-row--head + .mrt-ov-grid-row--head .mrt-ov-station-col {
   background: var(--mrt-ov-highlight);
-  font-size: 0.95rem;
 }
 
 .mrt-ov-col-head--number {
-  font-size: 1rem;
+  font-size: var(--mrt-ov-num-size);
   font-weight: 700;
 }
 
@@ -148,6 +148,7 @@
   z-index: 2;
   padding: var(--mrt-cell-padding-md, 0.4rem 0.55rem);
   border: 1px solid var(--mrt-border-default, #ccc);
+  font-size: var(--mrt-ov-text-size);
   font-weight: 700;
   background: #fff;
   border-right-width: 2px;
@@ -161,7 +162,7 @@
   padding: 0.4rem 0.25rem;
   border: 1px solid var(--mrt-border-default, #ccc);
   text-align: center;
-  font-size: 0.8rem;
+  font-size: var(--mrt-ov-text-size);
   font-weight: 600;
   display: flex;
   flex-direction: column;
@@ -214,7 +215,7 @@
 
 .mrt-ov-highlight-stripe__label {
   display: block;
-  font-size: 0.62rem;
+  font-size: var(--mrt-ov-text-size);
   font-weight: 700;
   line-height: 1.1;
   text-align: center;
@@ -224,7 +225,6 @@
 }
 
 .mrt-ov-highlight-stripe--span .mrt-ov-highlight-stripe__label {
-  font-size: clamp(0.6rem, 0.68rem, 0.75rem);
   line-height: 1.15;
   letter-spacing: 0.01em;
 }
@@ -269,6 +269,20 @@
 
 .mrt-ov-time {
   font-weight: 700;
+  white-space: nowrap;
+}
+
+.mrt-ov-time__label {
+  font-size: 0.5em;
+  font-weight: inherit;
+}
+
+.mrt-ov-time__sep {
+  font-size: 0.5em;
+}
+
+.mrt-ov-time__value {
+  font-size: 1em;
 }
 
 .mrt-ov-time--approximate {
@@ -286,6 +300,7 @@
   padding: var(--mrt-cell-padding-md, 0.4rem 0.3rem);
   border: 1px solid var(--mrt-border-default, #ccc);
   text-align: center;
+  font-size: var(--mrt-ov-num-size);
   font-variant-numeric: tabular-nums;
   min-width: 0;
 }
@@ -296,7 +311,6 @@
   align-items: center;
   justify-content: center;
   gap: 0.25rem;
-  font-size: 0.8rem;
   min-height: 3.5rem;
 }
 
@@ -313,13 +327,18 @@
   border-top: 1px dashed #bbb;
 }
 
-.mrt-ov-vehicle-type,
+.mrt-ov-vehicle-type {
+  font-size: var(--mrt-ov-text-size);
+  font-weight: 700;
+}
+
 .mrt-ov-vehicle-num {
+  font-size: var(--mrt-ov-num-size);
   font-weight: 700;
 }
 
 .mrt-ov-vehicle-detail {
-  font-size: 0.75rem;
+  font-size: var(--mrt-ov-text-size);
   line-height: 1.25;
 }
 
@@ -339,7 +358,7 @@
 .mrt-ov-deviation-note {
   display: block;
   margin-top: 0.2rem;
-  font-size: 0.68rem;
+  font-size: var(--mrt-ov-text-size);
   font-weight: 600;
   line-height: 1.25;
   color: var(--mrt-color-warning-800, #7a4f01);
@@ -348,7 +367,7 @@
 .mrt-ov-cancelled-badge {
   display: block;
   margin-top: 0.2rem;
-  font-size: 0.68rem;
+  font-size: var(--mrt-ov-text-size);
   font-weight: 700;
   line-height: 1.25;
   text-transform: uppercase;
@@ -543,10 +562,7 @@
   .mrt-ov-grid {
     --mrt-ov-station-w: 8.5rem;
     --mrt-ov-col-min: 3.25rem;
-  }
-
-  .mrt-ov-col-head {
-    font-size: 0.72rem;
+    --mrt-ov-num-size: 0.9rem;
   }
 
   .mrt-ov-icon {

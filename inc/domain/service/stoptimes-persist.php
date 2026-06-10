@@ -26,6 +26,24 @@ function MRT_mirror_stoptime_arrival_departure( string $arrival, string $departu
 }
 
 /**
+ * First stop shows departure only; last stop arrival only (matches anslagstidtabell).
+ *
+ * @param array<string, mixed> $row Prepared stop row.
+ */
+function MRT_trim_stoptime_row_endpoint_times( array $row, bool $is_first, bool $is_last ): array {
+	if ( $is_first && $is_last ) {
+		return $row;
+	}
+	if ( $is_first ) {
+		$row['arrival_time'] = null;
+	}
+	if ( $is_last ) {
+		$row['departure_time'] = null;
+	}
+	return $row;
+}
+
+/**
  * Normalize one submitted stop time row for save_all.
  *
  * @param array<string, mixed> $stop Stop data.
@@ -80,6 +98,16 @@ function MRT_prepare_stoptimes_for_save_all( array $stops ) {
 		if ( $row !== null ) {
 			$prepared[] = $row;
 			++$sequence;
+		}
+	}
+	$count = count( $prepared );
+	if ( $count > 0 ) {
+		foreach ( $prepared as $index => $row ) {
+			$prepared[ $index ] = MRT_trim_stoptime_row_endpoint_times(
+				$row,
+				$index === 0,
+				$index === $count - 1
+			);
 		}
 	}
 	return $prepared;

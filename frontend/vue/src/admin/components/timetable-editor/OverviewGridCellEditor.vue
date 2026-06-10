@@ -11,6 +11,7 @@ import {
   gridRowShowsArrival,
   gridRowShowsDeparture,
 } from '../../utils/timetable-editor/gridCellEdit';
+import MrtOverviewTimeDisplay from '../../../components/overview/MrtOverviewTimeDisplay.vue';
 
 const props = defineProps<{
   displayText: string;
@@ -93,7 +94,7 @@ async function save(): Promise<void> {
     :class="{ 'mrt-ov-cell-trigger--approximate': edit?.approximateTime }"
     @click="openDialog"
   >
-    {{ displayText || '—' }}
+    <MrtOverviewTimeDisplay :text="displayText || '—'" :approximate-time="edit?.approximateTime" />
   </button>
   <dialog ref="dialog" class="mrt-ov-cell-dialog" @cancel.prevent="closeDialog">
     <form class="mrt-ov-cell-dialog__form" @submit.prevent="save">

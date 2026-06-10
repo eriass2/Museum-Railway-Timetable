@@ -58,6 +58,11 @@ def stoptime_csv_row(
         is_last=(seq == total_stops),
         has_time=bool(arrival or departure),
     )
+    if total_stops > 1:
+        if seq == 1:
+            arrival = ""
+        if seq == total_stops:
+            departure = ""
     return (
         f"{service_code},{seq},{station},{arrival},{departure},"
         f"{pickup},{dropoff},{approx}"

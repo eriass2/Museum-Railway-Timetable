@@ -5,6 +5,7 @@ import { trainTypeIconUrl } from '../../utils/overviewGrid';
 import { overviewColumnIsCancelled } from '../../shared/overviewCancelled';
 import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
 import MrtOverviewRailGroupGrid from './MrtOverviewRailGroupGrid.vue';
+import MrtOverviewTimeDisplay from './MrtOverviewTimeDisplay.vue';
 
 defineProps<{
   group: TimetableRailGroup;
@@ -16,13 +17,11 @@ defineProps<{
 <template>
   <MrtOverviewRailGroupGrid :group="group" :icon-urls="iconUrls" :labels="labels">
     <template #time-cell="{ row, track, columnIndex }">
-      <span
-        class="mrt-ov-time"
-        :class="{
-          'mrt-ov-time--cancelled': overviewColumnIsCancelled(group.columns[columnIndex]),
-          'mrt-ov-time--approximate': row.cells[columnIndex].approximateTime,
-        }"
-      >{{ row.cells[columnIndex].text }}</span>
+      <MrtOverviewTimeDisplay
+        :text="row.cells[columnIndex].text"
+        :approximate-time="row.cells[columnIndex].approximateTime"
+        :cancelled="overviewColumnIsCancelled(group.columns[columnIndex])"
+      />
       <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
         <img
           v-if="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"

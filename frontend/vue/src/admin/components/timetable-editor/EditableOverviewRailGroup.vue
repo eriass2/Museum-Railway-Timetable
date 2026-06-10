@@ -7,6 +7,7 @@ import MrtOverviewRailGroupGrid from '../../../components/overview/MrtOverviewRa
 import { trainTypeIconUrl } from '../../../utils/overviewGrid';
 import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../../shared/trainTypeIcons';
 import OverviewGridCellEditor from './OverviewGridCellEditor.vue';
+import MrtOverviewTimeDisplay from '../../../components/overview/MrtOverviewTimeDisplay.vue';
 
 const labels = overviewUiLabels({});
 
@@ -30,13 +31,11 @@ const emit = defineEmits<{ saved: [] }>();
   >
     <template #time-cell="{ row, columnIndex }">
       <template v-if="readonly || !row.stationId || !group.columns[columnIndex].serviceId">
-        <span
-          class="mrt-ov-time"
-          :class="{
-            'mrt-ov-time--cancelled': overviewColumnIsCancelled(group.columns[columnIndex]),
-            'mrt-ov-time--approximate': row.cells[columnIndex].approximateTime,
-          }"
-        >{{ row.cells[columnIndex].text }}</span>
+        <MrtOverviewTimeDisplay
+          :text="row.cells[columnIndex].text"
+          :approximate-time="row.cells[columnIndex].approximateTime"
+          :cancelled="overviewColumnIsCancelled(group.columns[columnIndex])"
+        />
         <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
           <img
             v-if="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
