@@ -47,6 +47,8 @@ Betafeedback och granskningsloggar — **inte** aktiva utvecklingsplaner.
 | [ARCHITECTURE.md](ARCHITECTURE.md) | Lager, bootstrap, `inc/`-struktur, testning |
 | [STYLE_GUIDE.md](STYLE_GUIDE.md) | PHP/CSS/JS-konventioner (`.mrt-*`, `MRT_*`, säkerhet, i18n) |
 | [DATA_MODEL.md](DATA_MODEL.md) | Post types, meta, `mrt_stoptimes`, relationer |
+| [STOP_TIME_CA.md](STOP_TIME_CA.md) | Ca-fält, visning, anslagstypografi |
+| [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md) | **Skiss:** tidtabell B + anslag, schema v3 stopptider |
 | [PRICE_ZONES.md](PRICE_ZONES.md) | Priszoner (Lennakatten), zonlookup, admin/CSV |
 | [CSV_FORMAT.md](CSV_FORMAT.md) | Import/export av tidtabellsdata (zip, kolumner, lägen) |
 | [SHORTCODES.md](SHORTCODES.md) | Shortcodes: månad, översikt, wizard, index |

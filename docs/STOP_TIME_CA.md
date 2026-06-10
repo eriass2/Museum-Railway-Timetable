@@ -62,5 +62,6 @@ Referens: `testdata/reference-pdfs/Anslagstidtabell-2026.pdf`, se [testdata/refe
 ## Relaterat
 
 - [DATA_MODEL.md](DATA_MODEL.md) § stop times
+- [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md) — **skiss:** tidtabell B + anslag, schema v3 (`pickup_mode` / `dropoff_mode`)
 - Jesper J4 — Ca vid hållplatser utan exakt tid i tjänstetidtabell
 - Validering 2026-06-10 — Marielund ska inte ha Ca; felaktig härledning från P+A borttagen

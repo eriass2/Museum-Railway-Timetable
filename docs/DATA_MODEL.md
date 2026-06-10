@@ -372,6 +372,8 @@ CREATE TABLE {prefix}_mrt_stoptimes (
 - `dropoff_allowed` (TINYINT) - Whether passengers can alight (default: 1)
 - `approximate_time` (TINYINT) - Show **Ca** prefix in journey wizard (default: 0). See [STOP_TIME_CA.md](STOP_TIME_CA.md).
 
+**Planerat (schema v3):** Ta bort `pickup_allowed` / `dropoff_allowed`; inför `ank_pickup_mode`, `ank_dropoff_mode`, `avg_pickup_mode`, `avg_dropoff_mode` (`none` | `scheduled` | `on_request`) från [Tidtabellsboken-del-B.pdf](../testdata/reference-pdfs/Tidtabellsboken-del-B.pdf); anslag som overlay för Ca. Rent byte — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md).
+
 **Relationships:**
 - **Many-to-One** with `Service` (via `service_post_id`)
 - **Many-to-One** with `Station` (via `station_post_id`)

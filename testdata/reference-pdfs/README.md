@@ -7,6 +7,7 @@ Officiellt tidtabellsunderlag (Lennakatten) för verifiering av testdata och imp
 | Fil | Beskrivning |
 |-----|-------------|
 | **`Anslagstidtabell-2026.pdf`** | Samlad anslagstidtabell 2026: trafikdagkalender, GRÖN, RÖD, GUL, ORANGE och anslutningsbussar |
+| **`Tidtabellsboken-del-B.pdf`** | Tidtabell B / tjänstetidtabeller (körplan) — **primär källa** för stopptider schema v3; se [STOP_TIME_SOURCES.md](../../docs/STOP_TIME_SOURCES.md) |
 
 Trafikdagsregler enligt anslagstidtabellen:
 
@@ -43,13 +44,16 @@ composer test -- tests/Unit/LennakattenJourneySearchTest.php tests/Unit/CsvFixtu
 
 Kanonisk data:
 
-| Innehåll | Modul |
-|----------|--------|
-| Stopptider GRÖN/GUL/RÖD/ORANGE + GRÖN-buss | `scripts/lennakatten_anslag_tables.py` |
-| Bussfönster och `green-buss`-datum | `scripts/lennakatten_calendar.py` |
-| P/X-symboler | `scripts/lennakatten_symbols.py` |
+| Innehåll | Modul | Källa (mål) |
+|----------|--------|-------------|
+| Stopptider GRÖN/GUL/RÖD/ORANGE + GRÖN-buss | `scripts/lennakatten_anslag_tables.py` | Anslag (övergång) |
+| P/X-symboler / modes | `scripts/lennakatten_symbols.py` | Anslag → v3 modes; **mål:** B-PDF |
+| Bussfönster och `green-buss`-datum | `scripts/lennakatten_calendar.py` | Anslag |
+| Verifiering mot B | *(planerat)* | `Tidtabellsboken-del-B.pdf`, referenstur **71** |
 
-**Bussar:** Endast GRÖN-tabellens blå stjärnrader (Selknä* / Fjällnora*). Ingen GUL-buss i PDF.
+**Bussar:** Anslutningsbuss Selknä* / Fjällnora* — klockslag från **anslag**; hel tur `in_service_timetable = 0` ⇒ Ca. B-PDF har bussanslutningsnotiser i tågkörplan men inga B1-tider.
+
+**Rälsbuss** (t.ex. GRÖN 93, 97) behandlas som övriga tåg; målkälla vid v3 är **B**.
 
 ### Referensresor (automatiskt stickprov)
 
@@ -59,4 +63,5 @@ Kanonisk data:
 | RÖD | 81 | Uppsala Östra → Marielund 10:00–10:35 | 2026-07-05 |
 | ORANGE | 73 | Uppsala Östra → Marielund 11:15–11:47 | (CSV-tider) |
 
-P/X-regler och Ca (fet = fast tid, normal vikt = ungefärlig): `docs/CSV_FORMAT.md`, `docs/STOP_TIME_CA.md`.
+P/X-regler och Ca (fet = fast tid, normal vikt = ungefärlig): `docs/CSV_FORMAT.md`, `docs/STOP_TIME_CA.md`.  
+Stopptidsmodell v3 (B + anslag): `docs/STOP_TIME_SOURCES.md`.
