@@ -48,3 +48,41 @@ Kort lista över planerade förbättringar som inte är aktiva utvecklingsplaner
 - [ ] Tabell + kort intro tillagd i vald doc-fil
 - [ ] Korslänk från [VUE_UTILS.md](VUE_UTILS.md) eller [ARCHITECTURE.md](ARCHITECTURE.md) så PHP- och Vue-guiden hittas parallellt
 - [ ] Ingen kodändring — enbart dokumentation
+
+---
+
+## Reseplanerare — feedback-widget (FAB)
+
+**Status:** planerad (beslut 2026-06-10)  
+**Plan:** [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md)  
+**Relaterat:** J13 / D2 i [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md)
+
+Besökare rapporterar buggar/förslag via flytande knapp i reseplaneraren; sparas i WordPress (`mrt_feedback` CPT). Oberoende av beta-banner — båda styrs i admin.
+
+**Beslut:** e-post valfri; GDPR-text i panel; e-postnotis till team → v2.
+
+### Fas 1 — Backend + admin-inställning
+
+- [ ] `wizard_feedback_enabled` i `mrt_settings` + REST + SettingsPage
+- [ ] CPT `mrt_feedback` (private) + meta-fält
+- [ ] `POST /mrt/v1/wizard/feedback` (nonce, rate limit, honeypot)
+- [ ] CSV import/export av `wizard_feedback_enabled`
+
+### Fas 2 — Publik Vue-widget
+
+- [ ] `WizardFeedbackFab.vue` + `WizardFeedbackPanel.vue` + CSS
+- [ ] `useWizardFeedback.ts` — submit + tack-meddelande
+- [ ] GDPR-text i panelen
+- [ ] Automatisk kontext (sida, steg, route snapshot)
+- [ ] Vitest/SSR-tester
+
+### Fas 3 — Admin-lista
+
+- [ ] REST: lista, detalj, PATCH status
+- [ ] Admin-sida Feedback (meny eller under Dashboard)
+- [ ] Status: Ny / Läst / Åtgärdad / Avvisad
+
+### Framtida utveckling (v2)
+
+- [ ] E-postnotis (`wp_mail`) till konfigurerbar adress vid ny rapport
+- [ ] Export feedback till CSV

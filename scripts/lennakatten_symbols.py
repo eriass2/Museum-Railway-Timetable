@@ -1,6 +1,14 @@
-"""P/X stop symbols from Anslagstidtabell-2026.pdf (see docs/CSV_FORMAT.md)."""
+"""P/X stop symbols from Anslagstidtabell-2026.pdf (see docs/CSV_FORMAT.md).
+
+approximate_time (Ca): bold time in PDF -> 0, normal weight -> 1 (docs/STOP_TIME_CA.md).
+"""
 
 from __future__ import annotations
+
+STOPTIMES_CSV_HEADER = (
+    "service_code,sequence,station_code,arrival_time,departure_time,"
+    "pickup_allowed,dropoff_allowed,approximate_time"
+)
 
 UP_OUT = [
     "uppsala-ostra",
@@ -20,6 +28,40 @@ UP_OUT = [
 ]
 
 FAR_IN = list(reversed(UP_OUT))
+
+
+def approximate_time_for_stop(*, is_origin: bool, is_last: bool, has_time: bool) -> int:
+    """Map PDF typography: origin/destination bold (fixed) vs intermediate normal (Ca)."""
+    if not has_time:
+        return 0
+    return 0 if (is_origin or is_last) else 1
+
+
+def stoptime_csv_row(
+    service_code: str,
+    seq: int,
+    station: str,
+    arrival: str,
+    departure: str,
+    symbol: str,
+    *,
+    total_stops: int,
+) -> str:
+    """One stoptimes.csv row with P/A and approximate_time."""
+    pickup, dropoff = symbol_to_flags(
+        symbol,
+        is_origin=(seq == 1),
+        is_last=(seq == total_stops),
+    )
+    approx = approximate_time_for_stop(
+        is_origin=(seq == 1),
+        is_last=(seq == total_stops),
+        has_time=bool(arrival or departure),
+    )
+    return (
+        f"{service_code},{seq},{station},{arrival},{departure},"
+        f"{pickup},{dropoff},{approx}"
+    )
 
 
 def symbol_to_flags(symbol: str, *, is_origin: bool, is_last: bool) -> tuple[int, int]:

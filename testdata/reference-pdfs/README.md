@@ -59,4 +59,4 @@ Kanonisk data:
 | RÖD | 81 | Uppsala Östra → Marielund 10:00–10:35 | 2026-07-05 |
 | ORANGE | 73 | Uppsala Östra → Marielund 11:15–11:47 | (CSV-tider) |
 
-P/X-regler: `docs/CSV_FORMAT.md`.
+P/X-regler och Ca (fet = fast tid, normal vikt = ungefärlig): `docs/CSV_FORMAT.md`, `docs/STOP_TIME_CA.md`.

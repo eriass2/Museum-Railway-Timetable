@@ -113,6 +113,26 @@ function MRT_station_row_has_arrival_departure_split( int $station_id, array $se
 }
 
 /**
+ * @param array<string, mixed> $stop_time
+ */
+function MRT_stop_time_display_pickup_allowed( array $stop_time ): bool {
+	if ( array_key_exists( 'pickup_allowed', $stop_time ) ) {
+		return ! empty( $stop_time['pickup_allowed'] );
+	}
+	return true;
+}
+
+/**
+ * @param array<string, mixed> $stop_time
+ */
+function MRT_stop_time_display_dropoff_allowed( array $stop_time ): bool {
+	if ( array_key_exists( 'dropoff_allowed', $stop_time ) ) {
+		return ! empty( $stop_time['dropoff_allowed'] );
+	}
+	return true;
+}
+
+/**
  * Stop row for "Från" (departure time).
  *
  * @param array<string, mixed>|null $stop_time
@@ -129,10 +149,11 @@ function MRT_get_from_row_display_stop_time( $stop_time ) {
 		return $stop_time;
 	}
 	return array(
-		'arrival_time'    => '',
-		'departure_time'  => MRT_format_time_display( $time_to_show ),
-		'pickup_allowed'  => true,
-		'dropoff_allowed' => true,
+		'arrival_time'     => '',
+		'departure_time'   => MRT_format_time_display( $time_to_show ),
+		'pickup_allowed'   => MRT_stop_time_display_pickup_allowed( $stop_time ),
+		'dropoff_allowed'  => MRT_stop_time_display_dropoff_allowed( $stop_time ),
+		'approximate_time' => ! empty( $stop_time['approximate_time'] ),
 	);
 }
 
@@ -153,10 +174,11 @@ function MRT_get_to_row_display_stop_time( $stop_time ) {
 		return $stop_time;
 	}
 	return array(
-		'arrival_time'    => MRT_format_time_display( $time_to_show ),
-		'departure_time'  => '',
-		'pickup_allowed'  => true,
-		'dropoff_allowed' => true,
+		'arrival_time'     => MRT_format_time_display( $time_to_show ),
+		'departure_time'   => '',
+		'pickup_allowed'   => MRT_stop_time_display_pickup_allowed( $stop_time ),
+		'dropoff_allowed'  => MRT_stop_time_display_dropoff_allowed( $stop_time ),
+		'approximate_time' => ! empty( $stop_time['approximate_time'] ),
 	);
 }
 

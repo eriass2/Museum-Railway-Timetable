@@ -9,5 +9,6 @@ export function stopTimesToApiPayload(rows: StopTimeRow[]): Record<string, unkno
     departure: s.departure_time || '',
     pickup: s.pickup_allowed ? '1' : '',
     dropoff: s.dropoff_allowed ? '1' : '',
+    approximate: s.approximate_time ? '1' : '',
   }));
 }

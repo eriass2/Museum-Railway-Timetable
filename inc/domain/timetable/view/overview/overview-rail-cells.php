@@ -36,23 +36,29 @@ function MRT_timetable_row_times_json(
 }
 
 function MRT_timetable_time_cell_json( $stop, bool $use_from_display = false, bool $use_to_display = false ): array {
-	$cell = array( 'text' => MRT_timetable_time_cell_text( $stop, $use_from_display, $use_to_display ) );
+	$cell = array(
+		'text'            => MRT_timetable_time_cell_text( $stop, $use_from_display, $use_to_display ),
+		'approximateTime' => false,
+	);
 	if ( ! is_array( $stop ) ) {
 		$cell['edit'] = array(
-			'arrival'        => '',
-			'departure'      => '',
-			'stopsHere'      => false,
-			'pickupAllowed'  => true,
-			'dropoffAllowed' => true,
+			'arrival'         => '',
+			'departure'       => '',
+			'stopsHere'       => false,
+			'pickupAllowed'   => true,
+			'dropoffAllowed'  => true,
+			'approximateTime' => false,
 		);
 		return $cell;
 	}
-	$cell['edit'] = array(
-		'arrival'        => (string) ( $stop['arrival_time'] ?? '' ),
-		'departure'      => (string) ( $stop['departure_time'] ?? '' ),
-		'stopsHere'      => true,
-		'pickupAllowed'  => ! empty( $stop['pickup_allowed'] ),
-		'dropoffAllowed' => ! empty( $stop['dropoff_allowed'] ),
+	$cell['approximateTime'] = ! empty( $stop['approximate_time'] );
+	$cell['edit']            = array(
+		'arrival'         => (string) ( $stop['arrival_time'] ?? '' ),
+		'departure'       => (string) ( $stop['departure_time'] ?? '' ),
+		'stopsHere'       => true,
+		'pickupAllowed'   => ! empty( $stop['pickup_allowed'] ),
+		'dropoffAllowed'  => ! empty( $stop['dropoff_allowed'] ),
+		'approximateTime' => ! empty( $stop['approximate_time'] ),
 	);
 	return $cell;
 }

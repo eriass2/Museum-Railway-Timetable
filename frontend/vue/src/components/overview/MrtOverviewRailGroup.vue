@@ -18,7 +18,10 @@ defineProps<{
     <template #time-cell="{ row, track, columnIndex }">
       <span
         class="mrt-ov-time"
-        :class="{ 'mrt-ov-time--cancelled': overviewColumnIsCancelled(group.columns[columnIndex]) }"
+        :class="{
+          'mrt-ov-time--cancelled': overviewColumnIsCancelled(group.columns[columnIndex]),
+          'mrt-ov-time--approximate': row.cells[columnIndex].approximateTime,
+        }"
       >{{ row.cells[columnIndex].text }}</span>
       <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
         <img

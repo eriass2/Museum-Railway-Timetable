@@ -63,6 +63,24 @@
 
 ---
 
+### D2b. Feedback-widget (FAB) 🟢
+
+| | |
+|---|---|
+| **Feedback** | J13 — samla in buggar och förslag under betatest |
+| **Fråga** | Hur ska feedback samlas in? Oberoende av beta-banner? E-post? GDPR? |
+| **Beslut av** | Produkt / team (2026-06-10) |
+| **Status** | **Beslutad** — se [WIZARD_FEEDBACK_SKETCH.md](../WIZARD_FEEDBACK_SKETCH.md) |
+
+| Beslut | |
+|--------|---|
+| Feedback vs beta | Oberoende admin-toggles |
+| E-post | Valfritt |
+| GDPR-text | Ja, i panelen |
+| E-postnotis till team | v2 (framtida utveckling) |
+
+---
+
 ## 2. Reseplanerare — design
 
 ### D3. Desktop-layout — full bredd 🟡

@@ -230,16 +230,28 @@ Flera rader per tur om flera tågtyper ska kopplas.
 | `departure_time` | nej | time | `HH:MM` eller tomt |
 | `pickup_allowed` | ja | 0\|1 | Får stiga på |
 | `dropoff_allowed` | ja | 0\|1 | Får stiga av |
+| `approximate_time` | nej | 0\|1 | Visa **Ca** före tiden i reseplaneraren (default 0) |
 
 Vid uppdatering av tur **ersätts** alla stoptider för den turen.
 
-**Hjälp vid avskrift från tryckt tabell (P/X):**
+**Hjälp vid avskrift från anslagstidtabell (PDF):**
 
-| Symbol i PDF | `pickup_allowed` | `dropoff_allowed` |
-|--------------|------------------|-------------------|
-| P | 1 | 0 |
-| X | 1 | 1 |
-| (tom) | 1 | 1 |
+**Typografi (Ca vs fast tid)** — gäller när tid finns angiven:
+
+| Utseende i PDF | `approximate_time` |
+|----------------|---------------------|
+| **Fet** tidssiffra | **0** (fast) |
+| Normal vikt | **1** (Ca, ungefärlig) |
+
+Stationer i tabellen är också fetstil; det ska **inte** tolkas som fast tid. Se [STOP_TIME_CA.md](STOP_TIME_CA.md).
+
+**P/X-symboler (på-/avstigning):**
+
+| Symbol i PDF | `pickup_allowed` | `dropoff_allowed` | `approximate_time` |
+|--------------|------------------|-------------------|---------------------|
+| P | 1 | 0 | enligt typografi ovan |
+| X (utan tid) | 1 | 1 | 0 |
+| Tid + P/A enligt tabell | 1 | 1 | **fet → 0**, **normal → 1** |
 
 ### 4.10 `settings.csv` (valfritt)
 

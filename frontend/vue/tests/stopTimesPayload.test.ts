@@ -14,6 +14,7 @@ describe('stopTimesToApiPayload', () => {
           departure_time: '10:05',
           pickup_allowed: true,
           dropoff_allowed: false,
+          approximate_time: true,
         },
       ]),
     ).toEqual([
@@ -24,6 +25,7 @@ describe('stopTimesToApiPayload', () => {
         departure: '10:05',
         pickup: '1',
         dropoff: '',
+        approximate: '1',
       },
     ]);
   });

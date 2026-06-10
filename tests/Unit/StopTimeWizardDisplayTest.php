@@ -25,17 +25,47 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertTrue( $meta['on_request_both'] );
 	}
 
-	public function test_both_flags_with_time_shows_ca_prefix(): void {
+	public function test_approximate_flag_shows_ca_prefix(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array(
-				'pickup_allowed'  => 1,
-				'dropoff_allowed' => 1,
-				'departure_time'  => '10:13',
+				'pickup_allowed'   => 1,
+				'dropoff_allowed'  => 1,
+				'departure_time'   => '10:13',
+				'approximate_time' => 1,
 			)
 		);
 
 		self::assertSame( 'Ca 10.13', $meta['time_label'] );
 		self::assertTrue( $meta['approximate_time'] );
+	}
+
+	public function test_fixed_time_without_approximate_flag(): void {
+		$meta = MRT_journey_stop_wizard_time_meta(
+			array(
+				'pickup_allowed'   => 1,
+				'dropoff_allowed'  => 1,
+				'departure_time'   => '10:35',
+				'approximate_time' => 0,
+			)
+		);
+
+		self::assertSame( '10.35', $meta['time_label'] );
+		self::assertFalse( $meta['approximate_time'] );
+	}
+
+	public function test_arrival_preference_at_terminus(): void {
+		$meta = MRT_journey_stop_wizard_time_meta(
+			array(
+				'arrival_time'     => '10:35',
+				'departure_time'   => '10:45',
+				'pickup_allowed'   => 1,
+				'dropoff_allowed'  => 1,
+				'approximate_time' => 0,
+			),
+			'arrival'
+		);
+
+		self::assertSame( '10.35', $meta['time_label'] );
 	}
 
 	public function test_pickup_only_sets_on_request_pickup(): void {
@@ -58,7 +88,8 @@ final class StopTimeWizardDisplayTest extends TestCase {
 				'pickup_allowed'  => 0,
 				'dropoff_allowed' => 1,
 				'arrival_time'    => '09:30',
-			)
+			),
+			'arrival'
 		);
 
 		self::assertSame( '09.30', $meta['time_label'] );

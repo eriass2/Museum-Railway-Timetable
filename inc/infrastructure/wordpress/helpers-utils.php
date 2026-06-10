@@ -153,5 +153,10 @@ function MRT_format_stop_time_display( ?array $stop_time ): string {
 
 	[$symbol_prefix, $time_str] = MRT_stop_time_prefix_and_time_parts( $stop_time );
 
-	return $symbol_prefix . $time_str;
+	$display = $symbol_prefix . $time_str;
+	if ( ! empty( $stop_time['approximate_time'] ) && $time_str !== '' && $time_str !== 'X' ) {
+		return 'Ca ' . $display;
+	}
+
+	return $display;
 }

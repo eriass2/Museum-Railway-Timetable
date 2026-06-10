@@ -1,7 +1,7 @@
 # Skiss — feedback i reseplaneraren
 
-**Status:** skiss (ej implementerad)  
-**Relaterat:** [2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) (J13, D2), beta-banner (admin: `wizard_beta_enabled`)
+**Status:** beslutad — redo att implementera  
+**Relaterat:** [2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) (J13, D2), beta-banner (admin: `wizard_beta_enabled`), [TODO.md](TODO.md)
 
 ## Mål
 
@@ -55,6 +55,10 @@ Beta-bannern (informationsrad) och feedback-widgeten (insamling) är **två sepa
 │  ┌────────────────────────────┐  │
 │  └────────────────────────────┘  │
 │                                  │
+│  Vi sparar din rapport för       │
+│  felsökning. E-post används bara │
+│  om du fyller i den.             │
+│                                  │
 │  [ Avbryt ]     [ Skicka ]       │
 └──────────────────────────────────┘
 ```
@@ -62,6 +66,8 @@ Beta-bannern (informationsrad) och feedback-widgeten (insamling) är **två sepa
 - **Mobil:** panel glider upp från botten (bottom sheet), full bredd.
 - **Desktop:** centrerad dialog ~24rem, fokusfälla + Escape stänger.
 - **Efter skickat:** kort bekräftelse ("Tack! Vi har tagit emot din rapport.") — panel stängs efter ~2 s.
+- **GDPR-text:** visas i panelen (beslutat) — *"Vi sparar din rapport för felsökning. E-post används bara om du fyller i den."*
+- **E-post:** valfritt (beslutat).
 
 ### 3. Automatisk kontext (sparas, visas inte för användaren)
 
@@ -174,18 +180,20 @@ sequenceDiagram
 
 ---
 
-## Öppna frågor
+## Beslut (2026-06-10)
 
-1. **Ska feedback-knappen visas utan beta-banner?** Förslag: ja — oberoende toggles.
-2. **E-post obligatorisk?** Förslag: nej (lägre tröskel); admin kan svara manuellt om angiven.
-3. **Notifiering till team?** v2: `wp_mail` till konfigurerbar adress vid ny rapport.
-4. **GDPR:** kort text i panelen: *"Vi sparar din rapport för felsökning. E-post används bara om du fyller i den."*
+| # | Fråga | Beslut |
+|---|-------|--------|
+| 1 | Ska feedback-knappen visas utan beta-banner? | **Ja** — oberoende admin-toggles (`wizard_beta_enabled` / `wizard_feedback_enabled`) |
+| 2 | E-post obligatorisk? | **Nej** — valfritt fält |
+| 3 | Notifiering till team vid ny rapport? | **Framtida utveckling** (v2) — `wp_mail` till konfigurerbar adress |
+| 4 | GDPR-text i panelen? | **Ja** — se formulärskiss ovan |
 
 ---
 
-## Implementationsordning (förslag)
+## Implementationsordning
 
 1. Admin: `wizard_feedback_enabled` + REST lagring (CPT + POST)
-2. Vue: FAB + panel + submit
-3. Admin: Feedback-lista
-4. (v2) E-postnotis, export CSV
+2. Vue: FAB + panel + submit (inkl. GDPR-text)
+3. Admin: Feedback-lista (status: Ny / Läst / Åtgärdad / Avvisad)
+4. **Framtida utveckling:** e-postnotis vid ny rapport, export CSV

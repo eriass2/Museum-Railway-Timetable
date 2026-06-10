@@ -348,9 +348,10 @@ CREATE TABLE {prefix}_mrt_stoptimes (
     stop_sequence INT NOT NULL,
     arrival_time CHAR(5) NULL,
     departure_time CHAR(5) NULL,
-    pickup_allowed TINYINT(1) DEFAULT 1,
-    dropoff_allowed TINYINT(1) DEFAULT 1,
-    PRIMARY KEY (id),
+        pickup_allowed TINYINT(1) DEFAULT 1,
+        dropoff_allowed TINYINT(1) DEFAULT 1,
+        approximate_time TINYINT(1) DEFAULT 0,
+        PRIMARY KEY (id),
     KEY service_seq (service_post_id, stop_sequence),
     KEY station (station_post_id)
 )
@@ -369,6 +370,7 @@ CREATE TABLE {prefix}_mrt_stoptimes (
   - Example: "09:20" or NULL
 - `pickup_allowed` (TINYINT) - Whether passengers can board (default: 1)
 - `dropoff_allowed` (TINYINT) - Whether passengers can alight (default: 1)
+- `approximate_time` (TINYINT) - Show **Ca** prefix in journey wizard (default: 0). See [STOP_TIME_CA.md](STOP_TIME_CA.md).
 
 **Relationships:**
 - **Many-to-One** with `Service` (via `service_post_id`)

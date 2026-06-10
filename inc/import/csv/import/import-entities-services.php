@@ -154,10 +154,11 @@ function MRT_csv_import_stoptimes( array $files, array $maps ): void {
 				'stop_sequence'   => (int) ( $row['sequence'] ?? 0 ),
 				'arrival_time'    => MRT_csv_nullable_time( $row['arrival_time'] ?? '' ),
 				'departure_time'  => MRT_csv_nullable_time( $row['departure_time'] ?? '' ),
-				'pickup_allowed'  => (int) ( $row['pickup_allowed'] ?? 1 ),
-				'dropoff_allowed' => (int) ( $row['dropoff_allowed'] ?? 1 ),
+				'pickup_allowed'   => (int) ( $row['pickup_allowed'] ?? 1 ),
+				'dropoff_allowed'  => (int) ( $row['dropoff_allowed'] ?? 1 ),
+				'approximate_time' => (int) ( $row['approximate_time'] ?? 0 ),
 			),
-			array( '%d', '%d', '%d', '%s', '%s', '%d', '%d' )
+			array( '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d' )
 		);
 	}
 }
@@ -177,6 +178,7 @@ function MRT_csv_import_settings( array $files ): void {
 		'operator_name',
 		'ticket_url',
 		'hero_background_url',
+		'wizard_beta_enabled',
 		'min_transfer_minutes',
 		'max_transfer_minutes',
 		'max_transfers',
@@ -194,7 +196,7 @@ function MRT_csv_import_settings( array $files ): void {
 }
 
 function MRT_csv_cast_setting_value( string $key, string $value ) {
-	if ( $key === 'enabled' ) {
+	if ( $key === 'enabled' || $key === 'wizard_beta_enabled' ) {
 		return in_array( strtolower( $value ), array( '1', 'true', 'yes' ), true );
 	}
 	if ( $key === 'ticket_url' || $key === 'hero_background_url' ) {

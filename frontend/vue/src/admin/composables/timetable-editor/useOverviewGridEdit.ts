@@ -42,6 +42,7 @@ export function useOverviewGridEdit() {
         departure_time: edit.departure,
         pickup_allowed: edit.pickupAllowed,
         dropoff_allowed: edit.dropoffAllowed,
+        approximate_time: edit.approximateTime,
       };
       rows.push(row);
     }
@@ -53,6 +54,7 @@ export function useOverviewGridEdit() {
     row.departure_time = edit.departure;
     row.pickup_allowed = edit.pickupAllowed;
     row.dropoff_allowed = edit.dropoffAllowed;
+    row.approximate_time = edit.approximateTime;
     cache.value.set(serviceId, [...rows]);
     await persistService(serviceId);
   }
@@ -86,10 +88,15 @@ export function useOverviewGridEdit() {
       stopsHere: false,
       pickupAllowed: true,
       dropoffAllowed: true,
+      approximateTime: false,
     };
     void serviceId;
     void stationId;
-    return { ...base, ...patch };
+    return {
+      ...base,
+      approximateTime: base.approximateTime ?? false,
+      ...patch,
+    };
   }
 
   function clearCache(): void {

@@ -47,7 +47,7 @@ describe('useOverviewGridEdit', () => {
 
   it('mergeEdit applies patch over existing cell', () => {
     const { mergeEdit } = useOverviewGridEdit();
-    const merged = mergeEdit(1, 2, { arrival: '09:00', departure: '', stopsHere: true, pickupAllowed: true, dropoffAllowed: true }, {
+    const merged = mergeEdit(1, 2, { arrival: '09:00', departure: '', stopsHere: true, pickupAllowed: true, dropoffAllowed: true, approximateTime: false }, {
       departure: '09:05',
     });
     expect(merged.departure).toBe('09:05');
@@ -67,6 +67,7 @@ describe('useOverviewGridEdit', () => {
           departure_time: '09:00',
           pickup_allowed: true,
           dropoff_allowed: true,
+          approximate_time: false,
         },
       ],
     });
@@ -82,6 +83,7 @@ describe('useOverviewGridEdit', () => {
           departure_time: '09:15',
           pickup_allowed: true,
           dropoff_allowed: true,
+          approximate_time: false,
         },
       ],
     });
@@ -93,6 +95,7 @@ describe('useOverviewGridEdit', () => {
       stopsHere: true,
       pickupAllowed: true,
       dropoffAllowed: true,
+      approximateTime: false,
     });
 
     expect(getStopTimes).toHaveBeenCalledWith(501);
@@ -119,6 +122,7 @@ describe('useOverviewGridEdit', () => {
           departure_time: '09:00',
           pickup_allowed: true,
           dropoff_allowed: true,
+          approximate_time: false,
         },
       ],
     });
@@ -132,6 +136,7 @@ describe('useOverviewGridEdit', () => {
       stopsHere: true,
       pickupAllowed: true,
       dropoffAllowed: true,
+      approximateTime: false,
     };
     const { applyCellEdit, clearCache } = useOverviewGridEdit();
     await applyCellEdit(501, 101, edit);

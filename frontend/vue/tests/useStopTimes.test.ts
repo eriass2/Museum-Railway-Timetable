@@ -52,6 +52,7 @@ describe('useStopTimes', () => {
           departure_time: '09:00',
           pickup_allowed: true,
           dropoff_allowed: true,
+          approximate_time: false,
         },
       ],
     });
@@ -76,6 +77,7 @@ describe('useStopTimes', () => {
         departure_time: '09:15',
         pickup_allowed: true,
         dropoff_allowed: true,
+        approximate_time: false,
       },
     ];
     vi.mocked(saveStopTimes).mockResolvedValue({ route_id: 50, stations: rows });

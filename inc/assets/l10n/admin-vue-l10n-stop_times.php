@@ -35,7 +35,12 @@ function MRT_admin_vue_l10n_stop_times(): array {
 			'museum-railway-timetable'
 		),
 		'stopTimesOnRequestHint' => __(
-			'Båda ikryssade utan tid = X (behovsuppehåll). Båda med tid = Ca i reseplaneraren.',
+			'Båda ikryssade utan tid = X (behovsuppehåll). Kryssa i Ca för ungefärlig tid (normal vikt i anslagstidtabellen; fet = fast).',
+			'museum-railway-timetable'
+		),
+		'stopTimesColApproximate' => __( 'Ca', 'museum-railway-timetable' ),
+		'stopTimesApproximateLabel' => __(
+			'Ca — ungefärlig tid i reseplaneraren',
 			'museum-railway-timetable'
 		),
 		'stopTimesGridEditTitle' => __( '%1$s · tur %2$s', 'museum-railway-timetable' ),

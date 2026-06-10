@@ -164,7 +164,7 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Typ:** produktbeslut
 - **Prioritet:** info
 - **Status:** beslutad (D2 A) — implementerad
-- **Svar:** Beta-banner i reseplaneraren styrs under **Inställningar → Visa beta-banner**. Filter: `mrt_journey_wizard_beta_banner_enabled`. Feedback samlas in via separat widget — se [WIZARD_FEEDBACK_SKETCH.md](../WIZARD_FEEDBACK_SKETCH.md).
+- **Svar:** Beta-banner styrs under **Inställningar → Visa beta-banner** (`wizard_beta_enabled`). Feedback-widget (FAB) är separat toggle — beslut 2026-06-10: oberoende toggles, valfri e-post, GDPR-text i panel, e-postnotis v2. Se [WIZARD_FEEDBACK_SKETCH.md](../WIZARD_FEEDBACK_SKETCH.md) och [TODO.md](../TODO.md).
 
 ---
 

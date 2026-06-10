@@ -9,6 +9,7 @@ function edit(overrides: Partial<TimetableTimeCellEdit> = {}): TimetableTimeCell
     stopsHere: false,
     pickupAllowed: true,
     dropoffAllowed: true,
+    approximateTime: false,
     ...overrides,
   };
 }

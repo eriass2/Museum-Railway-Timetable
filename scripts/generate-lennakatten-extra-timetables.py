@@ -15,7 +15,7 @@ from lennakatten_anslag_tables import (
     RED_IN_TIMES,
     RED_OUT_TIMES,
 )
-from lennakatten_symbols import FAR_IN, UP_OUT, symbol_to_flags, symbols_for_train
+from lennakatten_symbols import FAR_IN, STOPTIMES_CSV_HEADER, UP_OUT, stoptime_csv_row, symbol_to_flags, symbols_for_train
 
 ROOT = Path(__file__).resolve().parents[1] / "testdata" / "fixtures" / "lennakatten"
 
@@ -35,12 +35,23 @@ def stoptime_rows(
     symbols = (symbols + [""] * count)[:count]
     active = [(station, time, symbol) for station, time, symbol in zip(stations, times, symbols) if time]
     for idx, (station, time, symbol) in enumerate(active):
+        seq = idx + 1
         pickup, dropoff = symbol_to_flags(
             symbol,
-            is_origin=(idx == 0),
-            is_last=(idx == len(active) - 1),
+            is_origin=(seq == 1),
+            is_last=(seq == len(active)),
         )
-        rows.append(f"{service_code},{idx + 1},{station},{time},{time},{pickup},{dropoff}")
+        rows.append(
+            stoptime_csv_row(
+                service_code,
+                seq,
+                station,
+                time,
+                time,
+                symbol,
+                total_stops=len(active),
+            )
+        )
     return rows
 
 
@@ -141,7 +152,7 @@ def main() -> None:
     train_types_lines = train_types_path.read_text(encoding="utf-8").splitlines()
 
     header_svc = services_lines[0]
-    header_st = stoptimes_lines[0]
+    header_st = STOPTIMES_CSV_HEADER
     header_tt = train_types_lines[0]
 
     kept_services: list[str] = [header_svc]

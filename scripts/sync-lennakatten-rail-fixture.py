@@ -12,29 +12,22 @@ from lennakatten_anslag_tables import (
     service_definitions,
     service_train_type_rows,
 )
-from lennakatten_symbols import symbol_to_flags
+from lennakatten_symbols import STOPTIMES_CSV_HEADER, stoptime_csv_row
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
 
 
 def stop_rows(service_code: str, stops: list[tuple[str, str, str, str]]) -> list[str]:
-    rows: list[str] = []
-    for seq, (station, arrival, departure, symbol) in enumerate(stops, start=1):
-        pickup, dropoff = symbol_to_flags(
-            symbol,
-            is_origin=(seq == 1),
-            is_last=(seq == len(stops)),
-        )
-        rows.append(
-            f"{service_code},{seq},{station},{arrival},{departure},{pickup},{dropoff}"
-        )
-    return rows
+    total = len(stops)
+    return [
+        stoptime_csv_row(service_code, seq, station, arrival, departure, symbol, total_stops=total)
+        for seq, (station, arrival, departure, symbol) in enumerate(stops, start=1)
+    ]
 
 
-def replace_synced_lines(existing: list[str], new_rows: list[str]) -> list[str]:
-    header = existing[0]
-    kept = [header]
+def replace_synced_lines(existing: list[str], new_rows: list[str], *, header: str | None = None) -> list[str]:
+    kept = [header if header is not None else existing[0]]
     for line in existing[1:]:
         if not line.strip():
             continue
@@ -76,6 +69,7 @@ def main() -> int:
             replace_synced_lines(
                 stoptimes_path.read_text(encoding="utf-8-sig").splitlines(),
                 stoptime_rows,
+                header=STOPTIMES_CSV_HEADER,
             )
         )
         + "\n",

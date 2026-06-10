@@ -26,10 +26,12 @@ export type TimetableTimeCellEdit = {
   stopsHere: boolean;
   pickupAllowed: boolean;
   dropoffAllowed: boolean;
+  approximateTime: boolean;
 };
 
 export type TimetableTimeCell = {
   text: string;
+  approximateTime?: boolean;
   busServiceNumber?: string;
   edit?: TimetableTimeCellEdit;
 };

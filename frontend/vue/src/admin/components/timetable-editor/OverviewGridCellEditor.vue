@@ -37,6 +37,7 @@ function emptyDraft(): TimetableTimeCellEdit {
     stopsHere: false,
     pickupAllowed: true,
     dropoffAllowed: true,
+    approximateTime: false,
   };
 }
 
@@ -47,6 +48,7 @@ function resetDraft(): void {
   draft.stopsHere = base.stopsHere;
   draft.pickupAllowed = base.pickupAllowed;
   draft.dropoffAllowed = base.dropoffAllowed;
+  draft.approximateTime = base.approximateTime;
 }
 
 function openDialog(): void {
@@ -71,6 +73,7 @@ async function save(): Promise<void> {
         departure: props.editor.inputToHhmm(draft.departure),
         pickupAllowed: draft.pickupAllowed,
         dropoffAllowed: draft.dropoffAllowed,
+        approximateTime: draft.approximateTime,
       },
       props.rowKind,
     );
@@ -84,7 +87,12 @@ async function save(): Promise<void> {
 </script>
 
 <template>
-  <button type="button" class="mrt-ov-cell-trigger" @click="openDialog">
+  <button
+    type="button"
+    class="mrt-ov-cell-trigger"
+    :class="{ 'mrt-ov-cell-trigger--approximate': edit?.approximateTime }"
+    @click="openDialog"
+  >
     {{ displayText || '—' }}
   </button>
   <dialog ref="dialog" class="mrt-ov-cell-dialog" @cancel.prevent="closeDialog">
@@ -124,6 +132,10 @@ async function save(): Promise<void> {
           @change="draft.stopsHere = true"
         />
       </label>
+      <label class="mrt-ov-cell-dialog__field mrt-ov-cell-dialog__field--check">
+        <input v-model="draft.approximateTime" type="checkbox" :disabled="!draft.stopsHere" />
+        {{ adminStr(cfg, 'stopTimesApproximateLabel') }}
+      </label>
       <div class="mrt-ov-cell-dialog__pa">
         <StopTimePaCheckbox
           v-model="draft.pickupAllowed"
@@ -162,6 +174,10 @@ async function save(): Promise<void> {
   font-weight: 700;
   cursor: pointer;
   text-align: center;
+}
+
+.mrt-ov-cell-trigger--approximate {
+  font-weight: 400;
 }
 
 .mrt-ov-cell-trigger:hover,

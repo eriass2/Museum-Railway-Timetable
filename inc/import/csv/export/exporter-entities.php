@@ -226,8 +226,9 @@ function MRT_csv_export_stoptimes( array $maps ): array {
 			'station_code'    => MRT_csv_id_to_station_code( (int) ( $st['station_post_id'] ?? 0 ), $maps ),
 			'arrival_time'    => (string) ( $st['arrival_time'] ?? '' ),
 			'departure_time'  => (string) ( $st['departure_time'] ?? '' ),
-			'pickup_allowed'  => (string) (int) ( $st['pickup_allowed'] ?? 1 ),
-			'dropoff_allowed' => (string) (int) ( $st['dropoff_allowed'] ?? 1 ),
+			'pickup_allowed'    => (string) (int) ( $st['pickup_allowed'] ?? 1 ),
+			'dropoff_allowed'   => (string) (int) ( $st['dropoff_allowed'] ?? 1 ),
+			'approximate_time'  => (string) (int) ( $st['approximate_time'] ?? 0 ),
 		);
 	}
 	return $rows;
@@ -246,6 +247,7 @@ function MRT_csv_export_settings(): array {
 			'operator_name',
 			'ticket_url',
 			'hero_background_url',
+			'wizard_beta_enabled',
 			'min_transfer_minutes',
 			'max_transfer_minutes',
 			'max_transfers',

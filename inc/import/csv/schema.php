@@ -118,6 +118,7 @@ function MRT_csv_export_column_headers(): array {
 			'departure_time',
 			'pickup_allowed',
 			'dropoff_allowed',
+			'approximate_time',
 		),
 		'settings.csv'            => array( 'key', 'value' ),
 		'brand_tokens.csv'        => array( 'token', 'value' ),

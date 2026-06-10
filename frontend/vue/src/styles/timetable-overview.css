@@ -267,6 +267,14 @@
   object-fit: contain;
 }
 
+.mrt-ov-time {
+  font-weight: 700;
+}
+
+.mrt-ov-time--approximate {
+  font-weight: 400;
+}
+
 .mrt-ov-grid-row--transfer .mrt-ov-transfer-cell--empty {
   background: #fff;
   min-height: 0;

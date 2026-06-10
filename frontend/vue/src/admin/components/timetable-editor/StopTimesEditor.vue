@@ -40,6 +40,7 @@ watch(serviceId, () => {
           <th>{{ adminStr(cfg, 'stopTimesColDeparture') }}</th>
           <th scope="col"><StopTimePaHeading kind="pickup" /></th>
           <th scope="col"><StopTimePaHeading kind="dropoff" /></th>
+          <th>{{ adminStr(cfg, 'stopTimesColApproximate') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -78,6 +79,13 @@ watch(serviceId, () => {
               kind="dropoff"
               :show-label="false"
               :disabled="!cfg.canManage"
+            />
+          </td>
+          <td>
+            <input
+              v-model="row.approximate_time"
+              type="checkbox"
+              :disabled="!cfg.canManage && !cfg.canOperate"
             />
           </td>
         </tr>

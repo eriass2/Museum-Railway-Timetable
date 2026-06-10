@@ -21,7 +21,7 @@ function MRT_admin_vue_l10n_editor_stoptimes(): array {
 			'museum-railway-timetable'
 		),
 		'editorGridHint'             => __(
-			'Redigera ankomst- och avgångstider för alla turer i samma vy. Klicka på en cell för att ändra tid, stannar och P/A.',
+			'Redigera ankomst- och avgångstider för alla turer i samma vy. Klicka på en cell för tid, Ca (ungefärlig), stannar och P/A. Fet tid = fast, normal vikt = Ca (som i anslagstidtabellen).',
 			'museum-railway-timetable'
 		),
 		'editorGridEmpty'            => __(

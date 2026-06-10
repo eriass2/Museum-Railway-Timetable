@@ -99,7 +99,40 @@ final class JourneyDetailTest extends TestCase {
 		self::assertCount( 3, $detail['stops'] );
 		self::assertSame( 'Alpha', $detail['stops'][0]['station_title'] );
 		self::assertSame( 'Gamma', $detail['stops'][2]['station_title'] );
+		self::assertSame( '09.45', $detail['stops'][2]['time_label'] );
 		self::assertSame( 45, $detail['duration_minutes'] );
+	}
+
+	public function test_connection_journey_detail_uses_arrival_at_last_stop(): void {
+		$GLOBALS['mrt_test_posts'] = array(
+			101 => new WP_Post( (object) array( 'ID' => 101, 'post_title' => 'Start' ) ),
+			102 => new WP_Post( (object) array( 'ID' => 102, 'post_title' => 'End' ) ),
+		);
+		$this->boot_stop_times_db(
+			array(
+				array(
+					'station_post_id' => 101,
+					'stop_sequence'   => 1,
+					'departure_time'  => '10:00',
+					'pickup_allowed'  => 1,
+					'dropoff_allowed' => 0,
+				),
+				array(
+					'station_post_id'  => 102,
+					'stop_sequence'    => 2,
+					'arrival_time'     => '10:35',
+					'departure_time'   => '10:45',
+					'pickup_allowed'   => 1,
+					'dropoff_allowed'  => 1,
+					'approximate_time' => 0,
+				),
+			)
+		);
+
+		$detail = MRT_get_connection_journey_detail( 501, 101, 102 );
+
+		self::assertSame( '10.35', $detail['stops'][1]['time_label'] );
+		self::assertFalse( $detail['stops'][1]['approximate_time'] );
 	}
 
 	public function test_connection_journey_detail_rejects_backwards_slice(): void {

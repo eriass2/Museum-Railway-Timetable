@@ -48,6 +48,41 @@ final class OverviewJsonTest extends TestCase {
 		self::assertStringContainsString( '09.30', MRT_timetable_time_cell_text( $stop, false, true ) );
 	}
 
+	public function test_time_cell_json_shows_ca_prefix_and_approximate_flag(): void {
+		$cell = MRT_timetable_time_cell_json(
+			array(
+				'arrival_time'     => '10:13',
+				'departure_time'   => '10:13',
+				'pickup_allowed'   => 1,
+				'dropoff_allowed'  => 1,
+				'approximate_time' => 1,
+			),
+			false,
+			false
+		);
+
+		self::assertStringStartsWith( 'Ca ', $cell['text'] );
+		self::assertTrue( $cell['approximateTime'] );
+		self::assertTrue( $cell['edit']['approximateTime'] );
+	}
+
+	public function test_time_cell_json_from_row_preserves_approximate_in_text(): void {
+		$cell = MRT_timetable_time_cell_json(
+			array(
+				'arrival_time'     => '10:13',
+				'departure_time'   => '10:15',
+				'pickup_allowed'   => 1,
+				'dropoff_allowed'  => 1,
+				'approximate_time' => 1,
+			),
+			true,
+			false
+		);
+
+		self::assertStringStartsWith( 'Ca ', $cell['text'] );
+		self::assertTrue( $cell['approximateTime'] );
+	}
+
 	public function test_row_times_json_builds_cells_per_service(): void {
 		$row = MRT_timetable_row_times_json(
 			'from',

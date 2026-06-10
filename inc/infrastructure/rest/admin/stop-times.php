@@ -103,8 +103,9 @@ function MRT_rest_normalize_stops_payload( array $stops ): array {
 			'stops_here'  => ! empty( $stop['stops_here'] ) ? '1' : '0',
 			'arrival'     => (string) ( $stop['arrival'] ?? $stop['arrival_time'] ?? '' ),
 			'departure'   => (string) ( $stop['departure'] ?? $stop['departure_time'] ?? '' ),
-			'pickup'      => ! empty( $stop['pickup'] ?? $stop['pickup_allowed'] ) ? '1' : '',
-			'dropoff'     => ! empty( $stop['dropoff'] ?? $stop['dropoff_allowed'] ) ? '1' : '',
+			'pickup'           => ! empty( $stop['pickup'] ?? $stop['pickup_allowed'] ) ? '1' : '',
+			'dropoff'          => ! empty( $stop['dropoff'] ?? $stop['dropoff_allowed'] ) ? '1' : '',
+			'approximate'      => ! empty( $stop['approximate'] ?? $stop['approximate_time'] ) ? '1' : '',
 		);
 	}
 	return $normalized;
@@ -136,6 +137,7 @@ function MRT_rest_quick_departure_handler( WP_REST_Request $request ) {
 			'departure'  => $is_first ? $departure : (string) ( $row['departure_time'] ?? '' ),
 			'pickup'     => ! empty( $row['pickup_allowed'] ) ? '1' : '',
 			'dropoff'    => ! empty( $row['dropoff_allowed'] ) ? '1' : '',
+			'approximate' => ! empty( $row['approximate_time'] ) ? '1' : '',
 		);
 	}
 	$result = MRT_save_service_stoptimes_bulk( $id, $stops );

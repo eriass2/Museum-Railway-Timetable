@@ -36,27 +36,8 @@ register_deactivation_hook( __FILE__, 'MRT_deactivate' );
  * Creates custom database tables and sets default options
  */
 function MRT_activate() {
-	// Create custom DB tables and default options if needed
-	global $wpdb;
-	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-	$charset = $wpdb->get_charset_collate();
-
-	$stoptimes = $wpdb->prefix . 'mrt_stoptimes';
-	$sql       = "CREATE TABLE $stoptimes (
-        id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-        service_post_id BIGINT UNSIGNED NOT NULL,
-        station_post_id BIGINT UNSIGNED NOT NULL,
-        stop_sequence INT NOT NULL,
-        arrival_time CHAR(5) NULL,
-        departure_time CHAR(5) NULL,
-        pickup_allowed TINYINT(1) DEFAULT 1,
-        dropoff_allowed TINYINT(1) DEFAULT 1,
-        PRIMARY KEY (id),
-        KEY service_seq (service_post_id, stop_sequence),
-        KEY station (station_post_id)
-    ) $charset;";
-
-	dbDelta( $sql );
+	require_once MRT_PATH . 'inc/infrastructure/wordpress/db-schema.php';
+	MRT_install_stoptimes_table();
 
 	require_once MRT_PATH . 'inc/infrastructure/wordpress/plugin-settings.php';
 	if ( get_option( 'mrt_settings' ) === false ) {

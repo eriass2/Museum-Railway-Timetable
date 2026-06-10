@@ -66,8 +66,9 @@ function MRT_build_stoptimes_station_rows( array $route_stations, array $existin
 			'stops_here'      => $stops_here,
 			'arrival_time'    => $st ? $st['arrival_time'] : '',
 			'departure_time'  => $st ? $st['departure_time'] : '',
-			'pickup_allowed'  => $st ? ! empty( $st['pickup_allowed'] ) : true,
-			'dropoff_allowed' => $st ? ! empty( $st['dropoff_allowed'] ) : true,
+			'pickup_allowed'   => $st ? ! empty( $st['pickup_allowed'] ) : true,
+			'dropoff_allowed'  => $st ? ! empty( $st['dropoff_allowed'] ) : true,
+			'approximate_time' => $st ? ! empty( $st['approximate_time'] ) : false,
 		);
 	}
 	return $stations;

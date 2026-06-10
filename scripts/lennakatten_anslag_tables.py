@@ -60,9 +60,10 @@ def split_stops_at_marielund(stops: list[Stop]) -> tuple[list[Stop], list[Stop]]
     idx = next((i for i, stop in enumerate(stops) if stop[0] == MARIELUND), None)
     if idx is None:
         raise ValueError("marielund not found in stop list")
-    leg1 = stops[: idx + 1]
-    _station, _arr, dep, _sym = stops[idx]
-    leg2 = [(MARIELUND, dep, dep, "P")] + stops[idx + 1 :]
+    leg1 = list(stops[: idx + 1])
+    station, arr, dep, sym = leg1[-1]
+    leg1[-1] = (station, arr, "", sym)
+    leg2 = [(MARIELUND, "", dep, "P")] + stops[idx + 1 :]
     return leg1, leg2
 
 

@@ -7,7 +7,7 @@ import sys
 from pathlib import Path
 
 from lennakatten_anslag_tables import service_definitions
-from lennakatten_symbols import symbol_to_flags
+from lennakatten_symbols import STOPTIMES_CSV_HEADER, stoptime_csv_row
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
@@ -17,17 +17,11 @@ SYNC_PREFIXES = ("green-", "yellow-")
 
 
 def stop_rows(service_code: str, stops: list[tuple[str, str, str, str]]) -> list[str]:
-    rows: list[str] = []
-    for seq, (station, arrival, departure, symbol) in enumerate(stops, start=1):
-        pickup, dropoff = symbol_to_flags(
-            symbol,
-            is_origin=(seq == 1),
-            is_last=(seq == len(stops)),
-        )
-        rows.append(
-            f"{service_code},{seq},{station},{arrival},{departure},{pickup},{dropoff}"
-        )
-    return rows
+    total = len(stops)
+    return [
+        stoptime_csv_row(service_code, seq, station, arrival, departure, symbol, total_stops=total)
+        for seq, (station, arrival, departure, symbol) in enumerate(stops, start=1)
+    ]
 
 
 def is_synced_service(code: str, synced: set[str]) -> bool:
@@ -45,8 +39,7 @@ def main() -> int:
 
     synced_codes = set(generated.keys())
     lines = STOPTIMES.read_text(encoding="utf-8-sig").splitlines()
-    header = lines[0]
-    kept: list[str] = [header]
+    kept: list[str] = [STOPTIMES_CSV_HEADER]
 
     for line in lines[1:]:
         if not line.strip():

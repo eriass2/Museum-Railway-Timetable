@@ -206,6 +206,7 @@ export type StopTimeRow = {
   departure_time: string;
   pickup_allowed: boolean;
   dropoff_allowed: boolean;
+  approximate_time: boolean;
 };
 
 export type TrainTypeRow = {

@@ -49,14 +49,16 @@ function MRT_normalize_stoptime_for_save_all( array $stop, int $sequence ) {
 	}
 	$pickup  = isset( $stop['pickup'] ) && $stop['pickup'] == '1' ? 1 : 0;
 	$dropoff = isset( $stop['dropoff'] ) && $stop['dropoff'] == '1' ? 1 : 0;
+	$approx  = ! empty( $stop['approximate'] ) || ! empty( $stop['approximate_time'] ) ? 1 : 0;
 
 	return array(
-		'station_post_id' => $station_id,
-		'stop_sequence'   => $sequence,
-		'arrival_time'    => $arrival ?: null,
-		'departure_time'  => $departure ?: null,
-		'pickup_allowed'  => $pickup,
-		'dropoff_allowed' => $dropoff,
+		'station_post_id'  => $station_id,
+		'stop_sequence'    => $sequence,
+		'arrival_time'     => $arrival ?: null,
+		'departure_time'   => $departure ?: null,
+		'pickup_allowed'   => $pickup,
+		'dropoff_allowed'  => $dropoff,
+		'approximate_time' => $approx,
 	);
 }
 
@@ -99,10 +101,11 @@ function MRT_insert_prepared_stoptime_for_save_all( $wpdb, array $row, int $serv
 			'stop_sequence'   => $row['stop_sequence'],
 			'arrival_time'    => $row['arrival_time'],
 			'departure_time'  => $row['departure_time'],
-			'pickup_allowed'  => $row['pickup_allowed'],
-			'dropoff_allowed' => $row['dropoff_allowed'],
+			'pickup_allowed'   => $row['pickup_allowed'],
+			'dropoff_allowed'  => $row['dropoff_allowed'],
+			'approximate_time' => $row['approximate_time'] ?? 0,
 		),
-		array( '%d', '%d', '%d', '%s', '%s', '%d', '%d' )
+		array( '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d' )
 	);
 	if ( $result === false ) {
 		MRT_check_db_error( 'MRT_save_service_stoptimes_bulk' );
