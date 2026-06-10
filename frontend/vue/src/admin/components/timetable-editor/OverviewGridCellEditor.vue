@@ -5,7 +5,7 @@ import type { OverviewGridEdit } from '../../composables/timetable-editor/useOve
 import { adminConfig } from '../../types';
 import { adminFmtN, adminStr } from '../../utils/adminLabels';
 import { MrtButton } from '../ui';
-import StopTimePaCheckbox from './StopTimePaCheckbox.vue';
+import StopTimeModeSelect from './StopTimeModeSelect.vue';
 import {
   finalizeGridCellEdit,
   gridRowShowsArrival,
@@ -36,8 +36,8 @@ function emptyDraft(): TimetableTimeCellEdit {
     arrival: '',
     departure: '',
     stopsHere: false,
-    pickupAllowed: true,
-    dropoffAllowed: true,
+    pickupMode: 'scheduled',
+    dropoffMode: 'scheduled',
     approximateTime: false,
   };
 }
@@ -47,8 +47,8 @@ function resetDraft(): void {
   draft.arrival = props.editor.hhmmToInput(base.arrival);
   draft.departure = props.editor.hhmmToInput(base.departure);
   draft.stopsHere = base.stopsHere;
-  draft.pickupAllowed = base.pickupAllowed;
-  draft.dropoffAllowed = base.dropoffAllowed;
+  draft.pickupMode = base.pickupMode;
+  draft.dropoffMode = base.dropoffMode;
   draft.approximateTime = base.approximateTime;
 }
 
@@ -72,8 +72,8 @@ async function save(): Promise<void> {
         stopsHere: draft.stopsHere,
         arrival: props.editor.inputToHhmm(draft.arrival),
         departure: props.editor.inputToHhmm(draft.departure),
-        pickupAllowed: draft.pickupAllowed,
-        dropoffAllowed: draft.dropoffAllowed,
+        pickupMode: draft.pickupMode,
+        dropoffMode: draft.dropoffMode,
         approximateTime: draft.approximateTime,
       },
       props.rowKind,
@@ -138,13 +138,13 @@ async function save(): Promise<void> {
         {{ adminStr(cfg, 'stopTimesApproximateLabel') }}
       </label>
       <div class="mrt-ov-cell-dialog__pa">
-        <StopTimePaCheckbox
-          v-model="draft.pickupAllowed"
+        <StopTimeModeSelect
+          v-model="draft.pickupMode"
           kind="pickup"
           :disabled="!draft.stopsHere"
         />
-        <StopTimePaCheckbox
-          v-model="draft.dropoffAllowed"
+        <StopTimeModeSelect
+          v-model="draft.dropoffMode"
           kind="dropoff"
           :disabled="!draft.stopsHere"
         />

@@ -7,8 +7,9 @@ export function stopTimesToApiPayload(rows: StopTimeRow[]): Record<string, unkno
     stops_here: s.stops_here ? '1' : '0',
     arrival: s.arrival_time || '',
     departure: s.departure_time || '',
-    pickup: s.pickup_allowed ? '1' : '',
-    dropoff: s.dropoff_allowed ? '1' : '',
+    pickup_mode: s.pickup_mode,
+    dropoff_mode: s.dropoff_mode,
     approximate: s.approximate_time ? '1' : '',
+    in_service_timetable: s.in_service_timetable === false ? 0 : 1,
   }));
 }

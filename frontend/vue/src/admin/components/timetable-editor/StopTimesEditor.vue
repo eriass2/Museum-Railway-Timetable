@@ -5,7 +5,7 @@ import { adminStr } from '../../utils/adminLabels';
 import { useStopTimes } from '../../composables/timetable-editor/useStopTimes';
 import AdminLoadState from '../AdminLoadState.vue';
 import { AdminFormActions, AdminStatusMessage, MrtButton } from '../ui';
-import StopTimePaCheckbox from './StopTimePaCheckbox.vue';
+import StopTimeModeSelect from './StopTimeModeSelect.vue';
 import StopTimePaHeading from './StopTimePaHeading.vue';
 
 const props = defineProps<{ serviceId: number }>();
@@ -66,18 +66,16 @@ watch(serviceId, () => {
             />
           </td>
           <td>
-            <StopTimePaCheckbox
-              v-model="row.pickup_allowed"
+            <StopTimeModeSelect
+              v-model="row.pickup_mode"
               kind="pickup"
-              :show-label="false"
               :disabled="!cfg.canManage"
             />
           </td>
           <td>
-            <StopTimePaCheckbox
-              v-model="row.dropoff_allowed"
+            <StopTimeModeSelect
+              v-model="row.dropoff_mode"
               kind="dropoff"
-              :show-label="false"
               :disabled="!cfg.canManage"
             />
           </td>

@@ -20,12 +20,14 @@ export type TimetableOverviewColumn = {
   highlightColor: string;
 };
 
+export type StopTimeMode = 'none' | 'scheduled' | 'on_request';
+
 export type TimetableTimeCellEdit = {
   arrival: string;
   departure: string;
   stopsHere: boolean;
-  pickupAllowed: boolean;
-  dropoffAllowed: boolean;
+  pickupMode: StopTimeMode;
+  dropoffMode: StopTimeMode;
   approximateTime: boolean;
 };
 

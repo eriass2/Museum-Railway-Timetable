@@ -197,6 +197,8 @@ export type RouteRow = {
   stations: { id: number; name: string }[];
 };
 
+export type StopTimeMode = 'none' | 'scheduled' | 'on_request';
+
 export type StopTimeRow = {
   id: number;
   name: string;
@@ -204,9 +206,10 @@ export type StopTimeRow = {
   stops_here: boolean;
   arrival_time: string;
   departure_time: string;
-  pickup_allowed: boolean;
-  dropoff_allowed: boolean;
+  pickup_mode: StopTimeMode;
+  dropoff_mode: StopTimeMode;
   approximate_time: boolean;
+  in_service_timetable?: boolean;
 };
 
 export type TrainTypeRow = {

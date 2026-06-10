@@ -17,7 +17,7 @@ function MRT_admin_vue_l10n_stop_times(): array {
 		'stopTimesSaved'       => __( 'Stopptider sparade', 'museum-railway-timetable' ),
 		'stopTimesSaveButton'  => __( 'Spara stopptider', 'museum-railway-timetable' ),
 		'stopTimesOperatorHint' => __(
-			'Som operatör kan du ändra tider och om tåget stannar. På/Av (påstigning/avstigning) kräver administratörsbehörighet.',
+			'Som operatör kan du ändra tider och om tåget stannar. På/Av-lägen kräver administratörsbehörighet.',
 			'museum-railway-timetable'
 		),
 		'stopTimesColStops'    => __( 'Stannar', 'museum-railway-timetable' ),
@@ -34,8 +34,11 @@ function MRT_admin_vue_l10n_stop_times(): array {
 			'Avstigning (A) — behovsuppehåll endast avstigande',
 			'museum-railway-timetable'
 		),
+		'stopTimeModeNone'       => __( 'Nej', 'museum-railway-timetable' ),
+		'stopTimeModeScheduled'  => __( 'Ja (fast)', 'museum-railway-timetable' ),
+		'stopTimeModeOnRequest'  => __( 'Ja (behov)', 'museum-railway-timetable' ),
 		'stopTimesOnRequestHint' => __(
-			'Båda ikryssade utan tid = X (behovsuppehåll). Kryssa i Ca för ungefärlig tid (normal vikt i anslagstidtabellen; fet = fast).',
+			'Båda behov utan tid = X. Ca = ungefärlig tid (J4 / utanför tjänstetidtabell).',
 			'museum-railway-timetable'
 		),
 		'stopTimesColApproximate' => __( 'Ca', 'museum-railway-timetable' ),
