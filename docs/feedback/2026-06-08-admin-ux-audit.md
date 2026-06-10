@@ -5,6 +5,8 @@
 **Metod:** Kodgenomgång av komponenter, sidor och mönster; jämförelse med `docs/ADMIN_WORKFLOW.md` och feedback-dokument. Ingen live-användartest i denna omgång.  
 **Åtgärdsplan:** [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)
 
+**Implementeringsstatus (2026-06-10):** Koduppgifter UX-1.1 … UX-4.3 genomförda enligt [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md). **Kvar:** manuell acceptans (UX-5.1), rolltest `can_operate` (UX-5.3).
+
 **Statusnycklar**
 
 | Symbol | Betydelse |
@@ -496,17 +498,33 @@ Endast dev-läge. Knapp-lista med confirm på clear. Ingen operatör-UX-granskni
 
 ---
 
-## Nästa steg (implementation)
+## Implementerat (2026-06-10)
 
-Om teamet vill gå från rapport till fix, föreslås denna ordning:
+| Audit-rekommendation | Uppgift | Status |
+|----------------------|---------|--------|
+| Destination → Slutstation | UX-1.1 | ☑ |
+| Hint tidtabellstyp → kalenderfärg | UX-1.2 | ☑ |
+| Hints transfer-inställningar | UX-1.3 | ☑ |
+| Priser — hjälplänk + onboarding | UX-1.4, UX-3.1 | ☑ |
+| Station — priszon-hint i formulär | UX-1.5 | ☑ |
+| Avvikelser form + batch-intro | UX-2.1, UX-2.2 | ☑ |
+| Mobil avvikelse-labels + snabb avgång-varning | UX-2.3, UX-2.4 | ☑ |
+| Stopptider P/A-legend + synligare grid | UX-2.5 | ☑ |
+| Trafikdagar batch-hint | UX-2.6 | ☑ |
+| Trafikmeddelanden vs avvikelser | UX-2.7 | ☑ |
+| Hjälp TOC, dashboard checklist, mobil FAQ | UX-3.2–3.4 | ☑ |
+| Rutt skapa — validering | UX-4.1 | ☑ |
+| Import override confirm | UX-4.2 | ☑ |
+| Gemensam `AdminFieldStack` | UX-4.3 | ☑ |
 
-1. **L10n:** `editorColDestination` → Slutstation (+ prompt/hint)
-2. **Avvikelser:** applicera `mrt-admin-trip-fields` på detaljformulär; labels på mobil add-rad
-3. **Stopptider:** legend för P/A; grid `<details open>` eller tydligare CTA
-4. **Meta + skapa tidtabell:** hint om tidtabellstyp → kalenderfärg
-5. **Trafikmeddelanden:** informationsruta om skillnad mot avvikelser
-6. **Inställningar:** hints på transfer-fält
+**Ej genomfört / kvar:**
+
+- Manuell visuell granskning enligt [§ rekommenderad ordning](#rekommenderad-visuell-granskningsordning-45-min) (UX-5.1)
+- Rolltest `can_operate` (UX-5.3)
+- Ev. ruttprefix i turformulär när rutt vald (audit §4d — ej planerad)
+- Priser steg-för-steg-wizard (audit §7 — framtida)
+- Trafikmeddelanden publik preview (audit §6 — ej planerad)
 
 ---
 
-*Genererad från kodbasen `frontend/vue/src/admin/` 2026-06-08. Uppdatera efter manuell granskning eller UX-ändringar.*
+*Genererad från kodbasen `frontend/vue/src/admin/` 2026-06-08. Senast uppdaterad 2026-06-10 efter [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md).*

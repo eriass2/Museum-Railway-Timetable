@@ -379,11 +379,11 @@ Därefter fas 1 rest + fas 4.1.
 
 ## Definition of done (hela planen)
 
-- [ ] Alla P0- och P1-uppgifter UX-1.1 … UX-4.1 markerade klara
-- [ ] `.\scripts\check.ps1 -Vue` grön
-- [ ] Manuell acceptans enligt audit §11 genomförd (desktop + mobil)
-- [ ] Rolltest `can_operate` dokumenterat OK
-- [ ] Audit-dokument uppdaterat med "Implementerat"-notiser eller länk hit
+- [x] Alla P0- och P1-uppgifter UX-1.1 … UX-4.1 markerade klara
+- [ ] `.\scripts\check.ps1 -Vue` grön (senaste körning ej dokumenterad här)
+- [ ] Manuell acceptans enligt audit §11 genomförd (desktop + mobil) — UX-5.1
+- [ ] Rolltest `can_operate` dokumenterat OK — UX-5.3
+- [x] Audit-dokument uppdaterat med "Implementerat"-notiser (2026-06-10)
 
 ---
 

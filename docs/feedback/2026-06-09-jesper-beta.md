@@ -3,21 +3,22 @@
 Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssnittet. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (juni 2026)  
+**Senast uppdaterad:** 2026-06-10 — status synkad mot kod och [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)  
 **Relaterat:** [2026-06-05-reseplanerare-beta.md](2026-06-05-reseplanerare-beta.md), [2026-06-08-admin-ux-audit.md](2026-06-08-admin-ux-audit.md), [2026-06-09-jesper-buggar-plan.md](2026-06-09-jesper-buggar-plan.md), [2026-06-09-jesper-diskussioner.md](2026-06-09-jesper-diskussioner.md), [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)
 
 ---
 
 ## Sammanfattning
 
-| Kategori | Antal | Kommentar |
-|----------|-------|-----------|
-| Reseplanerare — buggar | 1 | Fel bytestid vid flera byte (Selknä) |
-| Reseplanerare — UI / copy | 8 | Ikoner, centrering, Ca-tider, steg-nav, copy, font, layout |
-| Reseplanerare — data | 1 | Linnés Hammarby (rutt saknas i admin) |
-| Admin — onboarding / friktion | 2 | Många steg; bussanslutningar otydliga |
-| Admin — produktförslag | 9 | Auto-fält, Samtrafiken-grid, X/P/A, zoner A/B/C, publicera |
-| Framtida scope | 3 | Bakgrundsbild, trafikstörningar (UL-lik), beta-lansering |
-| Produktbeslut | 1 | Provlansera reseplaneraren som beta under säsongen |
+| Kategori | Antal | Klar | Kvar |
+|----------|-------|------|------|
+| Reseplanerare — buggar | 1 | 1 (J5) | — |
+| Reseplanerare — UI / copy | 8 | 8 (J1–J4, J7–J10) | — |
+| Reseplanerare — data | 1 | 1 (J6 fixture) | operatörsdata |
+| Admin — onboarding / friktion | 2 | delvis (A10) | A0 |
+| Admin — produktförslag | 9 | 8 (A1–A8, A10) | A9 |
+| Framtida scope | 3 | 1 (J13 beta) | J11 |
+| Produktbeslut | 1 | 1 (J13) | — |
 
 ---
 
@@ -107,8 +108,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / navigation
 - **Typ:** UX
 - **Prioritet:** medium
-- **Status:** öppen
-- **Tekniskt:** `MrtStepProgress` är `readonly: true`; behöver navigation till tidigare steg i `JourneyWizardApp.vue` / wizard store.
+- **Status:** klar (2026-06-10)
+- **Tekniskt:** `MrtStepProgress` med `:readonly="false"`; klick på klara steg navigerar tillbaka i `JourneyWizardApp.vue` / wizard store.
 
 ---
 
@@ -129,8 +130,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Reseplanerare / layout
 - **Typ:** design
 - **Prioritet:** låg–medium
-- **Status:** öppen
-- **Tekniskt:** Hero max ~58rem; solid `--mrt-wizard-green-dark`. Kräver layoutbeslut + bildasset.
+- **Status:** klar (2026-06-10)
+- **Tekniskt:** Desktop hero full bredd (`hero-layout.css`); valfri bakgrundsbild via `--mrt-wizard-hero-bg-image` (shortcode/settings + admin mediaväljare).
 
 ---
 
@@ -254,8 +255,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin / turer
 - **Typ:** UX
 - **Prioritet:** medium
-- **Status:** öppen
-- **Tekniskt:** Idag manuellt `end_station_id` i `TimetableTripFieldsBlock` / `mrt_service_end_station_id`. Härleda från stopptider vid spara.
+- **Status:** klar (2026-06-09, D13 A)
+- **Tekniskt:** `MRT_sync_service_end_station_from_stops()` vid stopptidssparande; manuellt destinationsfält borttaget i turformulär. Se [D13](2026-06-09-jesper-diskussioner.md#d13-auto-slutstation-från-stopptider-a7-).
 
 ---
 
@@ -294,23 +295,23 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 
 ## Prioriterad genomgångslista
 
-| # | ID | Punkt | Insats |
-|---|-----|-------|--------|
-| 1 | J5 | Fel bytestid Selknä (flera byte) | Liten fix + test |
-| 2 | J7 | Copy ”bokningsbar” → ”trafik för din resa” | Liten — klar |
-| 3 | J9 | Font-weight 700 | Liten (CSS) |
-| 4 | A1 | Auto start/slut vid rutt | Medel |
-| 5 | A7 | Auto slutstation från stopptider | Medel |
-| 6 | A8 | Zon-etiketter A/B/C | Liten (UI) |
-| 7 | J1–J3 | Ikoner, pil, tidslinje | Liten (CSS) |
-| 8 | J8 | Klickbara steg | Medel |
-| 9 | A2 | Samtrafiken-grid som primär vy | Stor |
-| 10 | A3–A6 | X/P/A, tom rad, en tid räcker | Medel–stor |
-| 11 | A9 | Utkast/publicera tidtabell | Stor |
-| 12 | A10 | Buss/tåg per riktning och gren | Stor |
-| 13 | J4 + A3 | Ca + fotnot behovsuppehåll | Medel–stor |
-| 14 | J10 | Desktop fullbredd + bakgrundsbild | Design + asset |
-| 15 | J11 | Trafikstörningar UL-lik | Framtida |
+| # | ID | Punkt | Insats | Status |
+|---|-----|-------|--------|--------|
+| 1 | J5 | Fel bytestid Selknä (flera byte) | Liten fix + test | ☑ |
+| 2 | J7 | Copy ”bokningsbar” → ”trafik för din resa” | Liten | ☑ |
+| 3 | J9 | Font-weight 700 | Liten (CSS) | ☑ |
+| 4 | A1 | Auto start/slut vid rutt | Medel | ☑ |
+| 5 | A7 | Auto slutstation från stopptider | Medel | ☑ |
+| 6 | A8 | Zon-etiketter A/B/C | Liten (UI) | ☑ |
+| 7 | J1–J3 | Ikoner, pil, tidslinje | Liten (CSS) | ☑ |
+| 8 | J8 | Klickbara steg | Medel | ☑ |
+| 9 | A2 | Samtrafiken-grid som primär vy | Stor | ☑ delvis |
+| 10 | A3–A6 | X/P/A, tom rad, en tid räcker | Medel–stor | ☑ |
+| 11 | A9 | Utkast/publicera tidtabell | Stor | öppen |
+| 12 | A10 | Buss/tåg per riktning och gren | Stor | ☑ |
+| 13 | J4 + A3 | Ca + fotnot behovsuppehåll | Medel–stor | ☑ |
+| 14 | J10 | Desktop fullbredd + bakgrundsbild | Design + asset | ☑ |
+| 15 | J11 | Trafikstörningar UL-lik | Framtida | parkerad |
 
 ---
 
@@ -321,15 +322,17 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 1. **Fas 1** — A1 ✓, A7 ✓, A6 ✓, A8 ✓ (färre manuella fält)
 2. **Fas 2** — A2 ✓, A5 ✓ (grid som primär stopptidsinmatning)
 3. **Fas 3** — A3 ✓, A4 ✓, J4 ✓ (behovsuppehåll v1 — detaljvy)
-4. **Fas 4** — A9, A10 (publicera + anslutningar)
+4. **Fas 4** — A10 ✓; **A9** (publicera/utkast) kvar
 
 ---
 
 ## Nästa steg
 
-- [ ] Bocka av **Status** per punkt efter genomgång
+- [x] Bocka av **Status** per punkt efter genomgång (2026-06-10)
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 - [ ] Parallellt: Jesper fortsätter mata in Linnés Hammarby-data — verifiera reseplanerare efter komplett rutt/turer/stopptider
+- [ ] **Öppna punkter:** A9 (publicera), A0 (onboarding-friktion), J11 (trafikstörningar)
+- [ ] Manuell smoke enligt [buggplan](2026-06-09-jesper-buggar-plan.md#verifiering-gemensam-checklista)
 
 ---
 

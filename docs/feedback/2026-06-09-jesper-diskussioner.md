@@ -74,7 +74,7 @@
 | **Alternativ** | A) Paneler 100 % bredd inom hero · B) Max ~72rem centrerat · C) Som idag men bredare (~58→72rem) |
 | **Påverkan** | `journey-wizard/base.css`, `responsive.css`, inbäddat läge (`embedded`) |
 | **Beslut av** | Design / Jesper (grafisk profil) |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — A) hero full bredd desktop; valfri bakgrundsbild via settings/mediaväljare (J10) |
 
 ---
 
@@ -87,7 +87,7 @@
 | **Behov** | Bildasset (upplösning, beskärning mobil/desktop), ev. `background-size: cover` + overlay för läsbarhet |
 | **Alternativ** | A) En fast profilbild · B) CSS gradient + subtil textur · C) Behåll flat grön tills asset finns |
 | **Beslut av** | Design — **blockerar** J10-implementation |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — A) valfri profilbild via admin/settings; flat grön fallback |
 
 ---
 
@@ -114,7 +114,7 @@
 | **Regler att bestämma** | • Tillbaka till *route* — rensa allt? · Till *date* — behåll from/to? · Till *outbound* — behåll datum? · *Return* — bara vid tur/retur |
 | **Påverkan** | Wizard store, `MrtStepProgress`, tillgänglighet (fokus, aria) |
 | **Beslut av** | UX + utveckling |
-| **Status** | Öppen |
+| **Status** | **Beslutad** — klara steg klickbara tillbaka; framtida steg låsta (J8) |
 
 ---
 
@@ -312,6 +312,9 @@
 | 2026-06-09 | D18 | **A6** — en angiven tid speglas till ankomst och avgång vid stopptidssparande | Team |
 | 2026-06-09 | D10 | **A** delvis — flik Turvy primär; A5 tom cell = ingen stopp | Team |
 | 2026-06-09 | D14 | **A** — P/A-kryssrutor; Ca/X i wizard-detalj; Jespers fotnoter | Team |
+| 2026-06-10 | D3 | **A** — hero full bredd desktop (J10) | Team |
+| 2026-06-10 | D4 | **A** — valfri bakgrundsbild via settings/mediaväljare; grön fallback | Team |
+| 2026-06-10 | D6 | Klara wizard-steg klickbara tillbaka; framtida steg låsta (J8) | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 
@@ -319,6 +322,6 @@
 
 ## Nästa steg
 
-- [ ] Boka avstämning med Jesper / operatör kring D1, D4, D8, D14
+- [ ] Boka avstämning med Jesper / operatör kring D8, D11 (D1, D3, D4, D6, D14 avgjorda)
 - [ ] Efter B2-utredning: uppdatera D15 med konkret rekommendation
-- [ ] Flytta avgjorda punkter till beslutslogg och uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md)
+- [x] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) — 2026-06-10

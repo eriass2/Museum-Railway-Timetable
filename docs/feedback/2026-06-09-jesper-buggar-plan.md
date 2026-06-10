@@ -198,7 +198,7 @@ Efter alla PR:
 - [ ] `.\scripts\vue-check.ps1` — Vitest + build
 - [ ] Manuell smoke: Uppsala Östra → Fjällnora (3 ben), expandera detalj
 - [ ] Manuell smoke: Uppsala Östra → Linnés Hammarby (efter komplett data)
-- [ ] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J5, A10, J3)
+- [x] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J5, A10, J3) — 2026-06-10
 
 ---
 
