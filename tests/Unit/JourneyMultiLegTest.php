@@ -138,15 +138,16 @@ final class JourneyMultiLegTest extends TestCase {
             [
                 11 => [
                     $this->mrt_stop( 11, self::ST_UPPSALA, 1, null, '10:00' ),
-                    [
-                        'service_post_id' => 11,
-                        'station_post_id' => self::ST_FYRISLUND,
-                        'stop_sequence'   => 2,
-                        'arrival_time'    => '10:05',
-                        'departure_time'  => '10:06',
-                        'pickup_allowed'  => 1,
-                        'dropoff_allowed' => 0,
-                    ],
+                    array_merge(
+                        [
+                            'service_post_id' => 11,
+                            'station_post_id' => self::ST_FYRISLUND,
+                            'stop_sequence'   => 2,
+                            'arrival_time'    => '10:05',
+                            'departure_time'  => '10:06',
+                        ],
+                        MRT_test_stop_modes_pickup_only()
+                    ),
                     $this->mrt_stop( 11, self::ST_MARIELUND, 3, '10:35', '10:36' ),
                     $this->mrt_stop( 11, self::ST_FARINGE, 4, '11:30', null ),
                 ],

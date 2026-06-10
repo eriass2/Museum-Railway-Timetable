@@ -58,9 +58,8 @@ final class LennakattenJourneySearchTest extends TestCase {
 			$service_code = $case[0];
 			$station_code = $case[1];
 			$row = $this->fixture_stop_row( $service_code, $station_code );
-			self::assertSame(
-				'1',
-				$row['dropoff_allowed'] ?? '',
+			self::assertTrue(
+				MRT_stop_time_allows_dropoff( $row ),
 				"{$service_code} at {$station_code} must allow dropoff per Anslagstidtabell"
 			);
 		}
@@ -410,14 +409,15 @@ final class LennakattenJourneySearchTest extends TestCase {
 				$station_code = (string) ( $stop['station_code'] ?? '' );
 				$station_id   = $stations[ $station_code ] ?? 0;
 				self::assertGreaterThan( 0, $station_id, "Unknown station {$station_code}" );
-				$rows[] = array(
-					'service_post_id' => $next_service_id,
-					'station_post_id' => $station_id,
-					'stop_sequence'   => (int) ( $stop['sequence'] ?? 0 ),
-					'arrival_time'    => (string) ( $stop['arrival_time'] ?? '' ),
-					'departure_time'  => (string) ( $stop['departure_time'] ?? '' ),
-					'pickup_allowed'  => (int) ( $stop['pickup_allowed'] ?? 1 ),
-					'dropoff_allowed' => (int) ( $stop['dropoff_allowed'] ?? 1 ),
+				$rows[] = array_merge(
+					array(
+						'service_post_id' => $next_service_id,
+						'station_post_id' => $station_id,
+						'stop_sequence'   => (int) ( $stop['sequence'] ?? 0 ),
+						'arrival_time'    => (string) ( $stop['arrival_time'] ?? '' ),
+						'departure_time'  => (string) ( $stop['departure_time'] ?? '' ),
+					),
+					MRT_test_stop_mode_columns_from_fixture( $stop )
 				);
 			}
 			$rows_by_service[ $next_service_id ]       = $rows;

@@ -262,13 +262,14 @@ final class StoptimesSaveBulkEditorDb {
 		$query = (string) $query;
 		if ( preg_match( '/service_post_id = (\d+)/', $query, $m ) && (int) $m[1] === 501 ) {
 			return array(
-				array(
-					'station_post_id' => 101,
-					'stop_sequence'   => 1,
-					'arrival_time'    => null,
-					'departure_time'  => '09:00',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array(
+						'station_post_id' => 101,
+						'stop_sequence'   => 1,
+						'arrival_time'    => null,
+						'departure_time'  => '09:00',
+					),
+					MRT_test_stop_modes_both_scheduled()
 				),
 			);
 		}

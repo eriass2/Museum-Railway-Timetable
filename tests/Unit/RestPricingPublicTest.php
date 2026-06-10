@@ -57,23 +57,25 @@ final class RestPricingPublicTest extends TestCase {
 		$GLOBALS['wpdb'] = new MRT_Journey_Test_Db(
 			array(
 				10 => array(
-					array(
-						'service_post_id' => 10,
-						'station_post_id' => 1,
-						'stop_sequence'   => 1,
-						'arrival_time'    => null,
-						'departure_time'  => '09:00',
-						'pickup_allowed'  => 1,
-						'dropoff_allowed' => 1,
+					array_merge(
+						array(
+							'service_post_id' => 10,
+							'station_post_id' => 1,
+							'stop_sequence'   => 1,
+							'arrival_time'    => null,
+							'departure_time'  => '09:00',
+						),
+						MRT_test_stop_modes_both_scheduled()
 					),
-					array(
-						'service_post_id' => 10,
-						'station_post_id' => 4,
-						'stop_sequence'   => 2,
-						'arrival_time'    => '10:00',
-						'departure_time'  => null,
-						'pickup_allowed'  => 1,
-						'dropoff_allowed' => 1,
+					array_merge(
+						array(
+							'service_post_id' => 10,
+							'station_post_id' => 4,
+							'stop_sequence'   => 2,
+							'arrival_time'    => '10:00',
+							'departure_time'  => null,
+						),
+						MRT_test_stop_modes_both_scheduled()
 					),
 				),
 			)

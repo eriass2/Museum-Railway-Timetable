@@ -68,7 +68,7 @@ final class CsvManifestTest extends TestCase {
 
 	public function test_stage_single_csv_upload_creates_package_dir(): void {
 		$this->tmpdir = sys_get_temp_dir() . '/mrt-single-src-' . wp_generate_password( 6, false );
-		file_put_contents( $this->tmpdir, "service_code,sequence,station_code,pickup_allowed,dropoff_allowed\n" );
+		file_put_contents( $this->tmpdir, "service_code,sequence,station_code,ank_pickup_mode,ank_dropoff_mode,avg_pickup_mode,avg_dropoff_mode\n" );
 
 		$opened = MRT_csv_stage_single_csv_upload( $this->tmpdir, 'stoptimes.csv' );
 		self::assertIsArray( $opened );
@@ -82,7 +82,7 @@ final class CsvManifestTest extends TestCase {
 		$src = sys_get_temp_dir() . '/mrt-single-src-' . wp_generate_password( 6, false );
 		file_put_contents(
 			$src,
-			"service_code,sequence,station_code,pickup_allowed,dropoff_allowed\nx,1,y,1,1\n"
+			"service_code,sequence,station_code,ank_pickup_mode,ank_dropoff_mode,avg_pickup_mode,avg_dropoff_mode\nx,1,y,scheduled,scheduled,scheduled,scheduled\n"
 		);
 
 		$package = MRT_csv_load_package( $src, 'stoptimes.csv' );

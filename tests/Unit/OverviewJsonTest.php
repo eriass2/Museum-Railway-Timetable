@@ -25,17 +25,18 @@ final class OverviewJsonTest extends TestCase {
 
 	public function test_time_cell_json_includes_edit_payload(): void {
 		$cell = MRT_timetable_time_cell_json(
-			array(
-				'arrival_time'    => '09:30',
-				'departure_time'  => '',
-				'pickup_allowed'  => 1,
-				'dropoff_allowed' => 0,
+			array_merge(
+				array(
+					'arrival_time'   => '09:30',
+					'departure_time' => '',
+				),
+				MRT_test_stop_modes_pickup_only()
 			)
 		);
 
 		self::assertSame( '09:30', $cell['edit']['arrival'] );
 		self::assertTrue( $cell['edit']['stopsHere'] );
-		self::assertFalse( $cell['edit']['dropoffAllowed'] );
+		self::assertSame( 'none', $cell['edit']['dropoffMode'] );
 	}
 
 	public function test_time_cell_text_uses_from_and_to_display(): void {
@@ -49,11 +50,12 @@ final class OverviewJsonTest extends TestCase {
 	}
 
 	public function test_from_row_omits_pickup_only_symbol_at_trip_start(): void {
-		$stop = array(
-			'departure_time'  => '10:00',
-			'arrival_time'    => '',
-			'pickup_allowed'  => 1,
-			'dropoff_allowed' => 0,
+		$stop = array_merge(
+			array(
+				'departure_time' => '10:00',
+				'arrival_time'   => '',
+			),
+			MRT_test_stop_modes_pickup_only()
 		);
 
 		self::assertSame(
@@ -64,12 +66,13 @@ final class OverviewJsonTest extends TestCase {
 
 	public function test_approximate_time_puts_ca_next_to_digits_after_restrictions(): void {
 		$cell = MRT_timetable_time_cell_json(
-			array(
-				'departure_time'   => '11:13',
-				'arrival_time'     => '',
-				'pickup_allowed'   => 1,
-				'dropoff_allowed'  => 0,
-				'approximate_time' => 1,
+			array_merge(
+				array(
+					'departure_time'   => '11:13',
+					'arrival_time'     => '',
+					'approximate_time' => 1,
+				),
+				MRT_test_stop_modes_pickup_only()
 			),
 			false,
 			false,
@@ -80,11 +83,12 @@ final class OverviewJsonTest extends TestCase {
 	}
 
 	public function test_departure_row_keeps_pickup_only_symbol_mid_trip(): void {
-		$stop = array(
-			'departure_time'  => '10:00',
-			'arrival_time'    => '09:58',
-			'pickup_allowed'  => 1,
-			'dropoff_allowed' => 0,
+		$stop = array_merge(
+			array(
+				'departure_time' => '10:00',
+				'arrival_time'   => '09:58',
+			),
+			MRT_test_stop_modes_pickup_only()
 		);
 
 		self::assertSame(
@@ -95,12 +99,13 @@ final class OverviewJsonTest extends TestCase {
 
 	public function test_time_cell_json_shows_ca_prefix_and_approximate_flag(): void {
 		$cell = MRT_timetable_time_cell_json(
-			array(
-				'arrival_time'     => '10:13',
-				'departure_time'   => '10:13',
-				'pickup_allowed'   => 1,
-				'dropoff_allowed'  => 1,
-				'approximate_time' => 1,
+			array_merge(
+				array(
+					'arrival_time'     => '10:13',
+					'departure_time'   => '10:13',
+					'approximate_time' => 1,
+				),
+				MRT_test_stop_modes_both_scheduled()
 			),
 			false,
 			false
@@ -113,12 +118,13 @@ final class OverviewJsonTest extends TestCase {
 
 	public function test_time_cell_json_from_row_preserves_approximate_in_text(): void {
 		$cell = MRT_timetable_time_cell_json(
-			array(
-				'arrival_time'     => '10:13',
-				'departure_time'   => '10:15',
-				'pickup_allowed'   => 1,
-				'dropoff_allowed'  => 1,
-				'approximate_time' => 1,
+			array_merge(
+				array(
+					'arrival_time'     => '10:13',
+					'departure_time'   => '10:15',
+					'approximate_time' => 1,
+				),
+				MRT_test_stop_modes_both_scheduled()
 			),
 			true,
 			false
@@ -136,11 +142,12 @@ final class OverviewJsonTest extends TestCase {
 			array(
 				array(
 					'stop_times' => array(
-						101 => array(
-							'departure_time'  => '09:00',
-							'arrival_time'    => '',
-							'pickup_allowed'  => 1,
-							'dropoff_allowed' => 1,
+						101 => array_merge(
+							array(
+								'departure_time' => '09:00',
+								'arrival_time'   => '',
+							),
+							MRT_test_stop_modes_both_scheduled()
 						),
 					),
 				),

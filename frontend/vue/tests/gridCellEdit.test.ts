@@ -7,8 +7,8 @@ function edit(overrides: Partial<TimetableTimeCellEdit> = {}): TimetableTimeCell
     arrival: '',
     departure: '',
     stopsHere: false,
-    pickupAllowed: true,
-    dropoffAllowed: true,
+    pickupMode: 'scheduled',
+    dropoffMode: 'scheduled',
     approximateTime: false,
     ...overrides,
   };

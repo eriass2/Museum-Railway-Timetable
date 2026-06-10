@@ -118,14 +118,15 @@ final class StoptimesSaveAllTest extends TestCase {
                 return false;
             }
         };
-        $row = [
-            'station_post_id' => 2,
-            'stop_sequence' => 1,
-            'arrival_time' => '09:00',
-            'departure_time' => null,
-            'pickup_allowed' => 1,
-            'dropoff_allowed' => 1,
-        ];
+        $row = array_merge(
+            [
+                'station_post_id' => 2,
+                'stop_sequence' => 1,
+                'arrival_time' => '09:00',
+                'departure_time' => null,
+            ],
+            MRT_test_stop_modes_both_scheduled()
+        );
 
         self::assertFalse(MRT_insert_prepared_stoptime_for_save_all($wpdb, $row, 10));
     }
@@ -141,14 +142,15 @@ final class StoptimesSaveAllTest extends TestCase {
                 return 1;
             }
         };
-        $row = [
-            'station_post_id' => 2,
-            'stop_sequence' => 1,
-            'arrival_time' => '09:00',
-            'departure_time' => null,
-            'pickup_allowed' => 1,
-            'dropoff_allowed' => 1,
-        ];
+        $row = array_merge(
+            [
+                'station_post_id' => 2,
+                'stop_sequence' => 1,
+                'arrival_time' => '09:00',
+                'departure_time' => null,
+            ],
+            MRT_test_stop_modes_both_scheduled()
+        );
 
         self::assertSame(88, MRT_insert_prepared_stoptime_for_save_all($wpdb, $row, 10));
     }

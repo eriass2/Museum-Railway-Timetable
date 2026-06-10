@@ -31,17 +31,14 @@ Kort lista över planerade förbättringar som inte är aktiva utvecklingsplaner
 
 ## Stopptider — schema v3 (tidtabell B + anslag)
 
-**Status:** skiss — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
-**Varför:** `pickup_allowed` / `dropoff_allowed` kan inte skilja fast (⊗, ⓟ, ⓐ) från behov (x, p, a); Ca ska komma från anslag, struktur från Bok B.
+**Status:** fas 1 klar (2026-06-10) — se [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md)
 
-**Beslutat (2026-06-10):** se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md) — B-PDF, fyra Ank/Avg-modes, rent byte v3, referenstur GRÖN **71**, anslutningsbuss `in_service_timetable = 0` ⇒ Ca.
+**Beslutat (2026-06-10):** se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)
 
-**Nästa steg (ej live — rent byte):**
+**Kvar (fas 2–3):**
 
-- [ ] Schema v3: `ank_*` / `avg_*` modes + `in_service_timetable`; ta bort legacy-booleans
-- [ ] PHP, REST, Vue-admin, CSV och fixture i samma svep; verifiera tur **71**
-- [ ] Dev-reset + omimport efter schema-byte
-- [ ] Skript B-PDF → fixture; anslag-overlay för Ca
+- [ ] Skript B-PDF → fixture; anslag-overlay automatiskt i sync
+- [ ] Dev-reset + omimport efter schema-byte i Docker-miljö
 
 ---
 

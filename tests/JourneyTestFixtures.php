@@ -118,8 +118,8 @@ final class MRT_Journey_Test_Db {
 			return false;
 		}
 		return (int) $from['stop_sequence'] < (int) $to['stop_sequence']
-			&& ! empty( $from['pickup_allowed'] )
-			&& ! empty( $to['dropoff_allowed'] );
+			&& MRT_stop_time_allows_pickup( $from )
+			&& MRT_stop_time_allows_dropoff( $to );
 	}
 
 	private function connection_row( int $service_id, array $from, array $to ): array {
@@ -160,6 +160,9 @@ trait MRT_Journey_Test_Fixture {
 		array $routes = array(),
 		array $service_routes = array()
 	): void {
+		if ( function_exists( 'MRT_bump_journey_calendar_cache_version' ) ) {
+			MRT_bump_journey_calendar_cache_version();
+		}
 		$this->mrt_original_wpdb = $GLOBALS['wpdb'] ?? null;
 		$service_timetables      = $this->mrt_service_timetables( array_keys( $rows_by_service ), $service_timetables );
 		$GLOBALS['wpdb']         = new MRT_Journey_Test_Db( $rows_by_service );
@@ -178,7 +181,10 @@ trait MRT_Journey_Test_Fixture {
 		if ( $this->mrt_original_wpdb !== null ) {
 			$GLOBALS['wpdb'] = $this->mrt_original_wpdb;
 		}
-		unset( $GLOBALS['mrt_test_post_meta'], $GLOBALS['mrt_test_get_posts'] );
+		unset( $GLOBALS['mrt_test_post_meta'], $GLOBALS['mrt_test_get_posts'], $GLOBALS['mrt_test_transients'] );
+		if ( function_exists( 'MRT_bump_journey_calendar_cache_version' ) ) {
+			MRT_bump_journey_calendar_cache_version();
+		}
 	}
 
 	protected function mrt_hub_station_meta( int ...$station_ids ): array {
@@ -190,14 +196,15 @@ trait MRT_Journey_Test_Fixture {
 	}
 
 	protected function mrt_stop( int $service_id, int $station_id, int $sequence, ?string $arrival, ?string $departure ): array {
-		return array(
-			'service_post_id' => $service_id,
-			'station_post_id' => $station_id,
-			'stop_sequence'   => $sequence,
-			'arrival_time'    => $arrival,
-			'departure_time'  => $departure,
-			'pickup_allowed'  => 1,
-			'dropoff_allowed' => 1,
+		return array_merge(
+			array(
+				'service_post_id' => $service_id,
+				'station_post_id' => $station_id,
+				'stop_sequence'   => $sequence,
+				'arrival_time'    => $arrival,
+				'departure_time'  => $departure,
+			),
+			MRT_test_stop_modes_both_scheduled()
 		);
 	}
 

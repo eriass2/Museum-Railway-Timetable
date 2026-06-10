@@ -1,13 +1,14 @@
 """P/X stop symbols from Anslagstidtabell-2026.pdf (see docs/CSV_FORMAT.md).
 
-approximate_time (Ca): bold time in PDF -> 0, normal weight -> 1 (docs/STOP_TIME_CA.md).
+Schema v3 modes + approximate_time / in_service_timetable (docs/STOP_TIME_SOURCES.md).
 """
 
 from __future__ import annotations
 
 STOPTIMES_CSV_HEADER = (
     "service_code,sequence,station_code,arrival_time,departure_time,"
-    "pickup_allowed,dropoff_allowed,approximate_time"
+    "ank_pickup_mode,ank_dropoff_mode,avg_pickup_mode,avg_dropoff_mode,"
+    "approximate_time,in_service_timetable"
 )
 
 UP_OUT = [
@@ -37,6 +38,38 @@ def approximate_time_for_stop(*, is_origin: bool, is_last: bool, has_time: bool)
     return 0 if (is_origin or is_last) else 1
 
 
+def four_modes_from_flags(
+    pickup: int,
+    dropoff: int,
+    *,
+    is_origin: bool,
+    is_last: bool,
+    has_time: bool,
+) -> tuple[str, str, str, str]:
+    """Return ank_pickup, ank_dropoff, avg_pickup, avg_dropoff."""
+    if pickup and dropoff and not has_time:
+        pu, do = "on_request", "on_request"
+    elif pickup and not dropoff:
+        pu, do = "on_request", "none"
+    elif not pickup and dropoff:
+        pu, do = "none", "on_request"
+    elif pickup and dropoff:
+        pu, do = "scheduled", "scheduled"
+    else:
+        pu, do = "none", "none"
+
+    if is_origin:
+        return ("none", "none", pu, "none")
+    if is_last:
+        return ("none", do, "none", "none")
+    return (pu, do, pu, do)
+
+
+def in_service_for_service(service_code: str) -> int:
+    """Anslutningsbuss: not in tidtabell B (J4 Ca)."""
+    return 0 if "-bus-" in service_code else 1
+
+
 def stoptime_csv_row(
     service_code: str,
     seq: int,
@@ -47,7 +80,7 @@ def stoptime_csv_row(
     *,
     total_stops: int,
 ) -> str:
-    """One stoptimes.csv row with P/A and approximate_time."""
+    """One stoptimes.csv row with v3 modes."""
     pickup, dropoff = symbol_to_flags(
         symbol,
         is_origin=(seq == 1),
@@ -55,19 +88,30 @@ def stoptime_csv_row(
         station=station,
         service_code=service_code,
     )
-    approx = approximate_time_for_stop(
-        is_origin=(seq == 1),
-        is_last=(seq == total_stops),
-        has_time=bool(arrival or departure),
-    )
     if total_stops > 1:
         if seq == 1:
             arrival = ""
         if seq == total_stops:
             departure = ""
+    has_time = bool(arrival or departure)
+    ank_pu, ank_do, avg_pu, avg_do = four_modes_from_flags(
+        pickup,
+        dropoff,
+        is_origin=(seq == 1),
+        is_last=(seq == total_stops),
+        has_time=has_time,
+    )
+    approx = approximate_time_for_stop(
+        is_origin=(seq == 1),
+        is_last=(seq == total_stops),
+        has_time=has_time,
+    )
+    in_svc = in_service_for_service(service_code)
+    if in_svc == 0:
+        approx = 1
     return (
         f"{service_code},{seq},{station},{arrival},{departure},"
-        f"{pickup},{dropoff},{approx}"
+        f"{ank_pu},{ank_do},{avg_pu},{avg_do},{approx},{in_svc}"
     )
 
 

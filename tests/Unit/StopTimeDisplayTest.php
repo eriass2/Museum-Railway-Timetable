@@ -20,10 +20,9 @@ final class StopTimeDisplayTest extends TestCase {
 		self::assertSame(
 			'P 10.00',
 			MRT_format_stop_time_display(
-				array(
-					'departure_time'  => '10:00',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 0,
+				array_merge(
+					array( 'departure_time' => '10:00' ),
+					MRT_test_stop_modes_pickup_only()
 				),
 				'departure'
 			)
@@ -34,10 +33,9 @@ final class StopTimeDisplayTest extends TestCase {
 		self::assertSame(
 			'10.00',
 			MRT_format_stop_time_display(
-				array(
-					'departure_time'  => '10:00',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 0,
+				array_merge(
+					array( 'departure_time' => '10:00' ),
+					MRT_test_stop_modes_pickup_only()
 				),
 				'from'
 			)
@@ -48,11 +46,12 @@ final class StopTimeDisplayTest extends TestCase {
 		self::assertSame(
 			'P Ca 11.13',
 			MRT_format_stop_time_display(
-				array(
-					'departure_time'   => '11:13',
-					'pickup_allowed'   => 1,
-					'dropoff_allowed'  => 0,
-					'approximate_time' => 1,
+				array_merge(
+					array(
+						'departure_time'   => '11:13',
+						'approximate_time' => 1,
+					),
+					MRT_test_stop_modes_pickup_only()
 				),
 				'departure'
 			)
@@ -63,10 +62,9 @@ final class StopTimeDisplayTest extends TestCase {
 		self::assertSame(
 			'09.30',
 			MRT_format_stop_time_display(
-				array(
-					'arrival_time'    => '09:30',
-					'pickup_allowed'  => 0,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array( 'arrival_time' => '09:30' ),
+					MRT_test_stop_modes_dropoff_only()
 				),
 				'to'
 			)
@@ -76,12 +74,7 @@ final class StopTimeDisplayTest extends TestCase {
 	public function test_on_request_without_time_shows_x(): void {
 		self::assertSame(
 			'X',
-			MRT_format_stop_time_display(
-				array(
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 1,
-				)
-			)
+			MRT_format_stop_time_display( MRT_test_stop_modes_both_on_request() )
 		);
 	}
 
@@ -89,10 +82,9 @@ final class StopTimeDisplayTest extends TestCase {
 		self::assertSame(
 			'|',
 			MRT_format_stop_time_display(
-				array(
-					'departure_time'  => '10:00',
-					'pickup_allowed'  => 0,
-					'dropoff_allowed' => 0,
+				array_merge(
+					array( 'departure_time' => '10:00' ),
+					MRT_test_stop_modes_none()
 				)
 			)
 		);

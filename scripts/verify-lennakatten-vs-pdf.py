@@ -9,7 +9,7 @@ from pathlib import Path
 
 from lennakatten_anslag_tables import pdf_service_definitions
 from lennakatten_calendar import expected_green_buss_dates
-from lennakatten_symbols import symbol_to_flags
+from lennakatten_symbols import four_modes_from_flags, symbol_to_flags
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
@@ -68,18 +68,32 @@ def compare_service(
             errors.append(
                 f"{service_code} #{seq} {station}: departure {row['departure_time']!r} != {departure!r}"
             )
-        exp_pu, exp_do = expected_flags(
+        exp_pu, exp_do = symbol_to_flags(
             symbol,
             is_origin=(seq == 1),
             is_last=(seq == len(expected_stops)),
             station=station,
             service_code=service_code,
         )
-        if row["pickup_allowed"] != exp_pu or row["dropoff_allowed"] != exp_do:
-            errors.append(
-                f"{service_code} #{seq} {station}: flags {row['pickup_allowed']}/{row['dropoff_allowed']} "
-                f"!= {exp_pu}/{exp_do} (symbol {symbol!r})"
-            )
+        has_time = bool(arrival or departure)
+        exp_ank_pu, exp_ank_do, exp_avg_pu, exp_avg_do = four_modes_from_flags(
+            exp_pu,
+            exp_do,
+            is_origin=(seq == 1),
+            is_last=(seq == len(expected_stops)),
+            has_time=has_time,
+        )
+        for field, expected in (
+            ("ank_pickup_mode", exp_ank_pu),
+            ("ank_dropoff_mode", exp_ank_do),
+            ("avg_pickup_mode", exp_avg_pu),
+            ("avg_dropoff_mode", exp_avg_do),
+        ):
+            if row.get(field, "") != expected:
+                errors.append(
+                    f"{service_code} #{seq} {station}: {field} {row.get(field)!r} != {expected!r} "
+                    f"(symbol {symbol!r})"
+                )
     return errors
 
 

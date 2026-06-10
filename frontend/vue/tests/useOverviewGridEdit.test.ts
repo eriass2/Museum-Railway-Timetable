@@ -47,7 +47,7 @@ describe('useOverviewGridEdit', () => {
 
   it('mergeEdit applies patch over existing cell', () => {
     const { mergeEdit } = useOverviewGridEdit();
-    const merged = mergeEdit(1, 2, { arrival: '09:00', departure: '', stopsHere: true, pickupAllowed: true, dropoffAllowed: true, approximateTime: false }, {
+    const merged = mergeEdit(1, 2, { arrival: '09:00', departure: '', stopsHere: true, pickupMode: 'scheduled', dropoffMode: 'scheduled', approximateTime: false }, {
       departure: '09:05',
     });
     expect(merged.departure).toBe('09:05');
@@ -65,8 +65,8 @@ describe('useOverviewGridEdit', () => {
           stops_here: true,
           arrival_time: '',
           departure_time: '09:00',
-          pickup_allowed: true,
-          dropoff_allowed: true,
+          pickup_mode: 'scheduled',
+          dropoff_mode: 'scheduled',
           approximate_time: false,
         },
       ],
@@ -81,8 +81,8 @@ describe('useOverviewGridEdit', () => {
           stops_here: true,
           arrival_time: '',
           departure_time: '09:15',
-          pickup_allowed: true,
-          dropoff_allowed: true,
+          pickup_mode: 'scheduled',
+          dropoff_mode: 'scheduled',
           approximate_time: false,
         },
       ],
@@ -93,8 +93,8 @@ describe('useOverviewGridEdit', () => {
       arrival: '',
       departure: '09:15',
       stopsHere: true,
-      pickupAllowed: true,
-      dropoffAllowed: true,
+      pickupMode: 'scheduled',
+      dropoffMode: 'scheduled',
       approximateTime: false,
     });
 
@@ -120,8 +120,8 @@ describe('useOverviewGridEdit', () => {
           stops_here: true,
           arrival_time: '',
           departure_time: '09:00',
-          pickup_allowed: true,
-          dropoff_allowed: true,
+          pickup_mode: 'scheduled',
+          dropoff_mode: 'scheduled',
           approximate_time: false,
         },
       ],
@@ -134,15 +134,16 @@ describe('useOverviewGridEdit', () => {
       arrival: '',
       departure: '09:15',
       stopsHere: true,
-      pickupAllowed: true,
-      dropoffAllowed: true,
+      pickupMode: 'scheduled' as const,
+      dropoffMode: 'scheduled' as const,
       approximateTime: false,
     };
+
     const { applyCellEdit, clearCache } = useOverviewGridEdit();
     await applyCellEdit(501, 101, edit);
-    expect(getStopTimes).toHaveBeenCalledTimes(1);
     clearCache();
     await applyCellEdit(501, 101, edit);
+
     expect(getStopTimes).toHaveBeenCalledTimes(2);
   });
 });

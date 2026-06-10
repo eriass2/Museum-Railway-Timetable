@@ -12,8 +12,8 @@ describe('stopTimesToApiPayload', () => {
           stops_here: true,
           arrival_time: '10:00',
           departure_time: '10:05',
-          pickup_allowed: true,
-          dropoff_allowed: false,
+          pickup_mode: 'on_request',
+          dropoff_mode: 'none',
           approximate_time: true,
         },
       ]),
@@ -23,9 +23,10 @@ describe('stopTimesToApiPayload', () => {
         stops_here: '1',
         arrival: '10:00',
         departure: '10:05',
-        pickup: '1',
-        dropoff: '',
+        pickup_mode: 'on_request',
+        dropoff_mode: 'none',
         approximate: '1',
+        in_service_timetable: 1,
       },
     ]);
   });

@@ -27,21 +27,22 @@ final class JourneyDetailTest extends TestCase {
 			101 => new WP_Post( (object) array( 'ID' => 101, 'post_title' => 'Alpha' ) ),
 		);
 		$mapped = MRT_journey_map_stop_row(
-			array(
-				'station_post_id' => 101,
-				'stop_sequence'   => 1,
-				'arrival_time'    => null,
-				'departure_time'  => '09:00',
-				'pickup_allowed'  => 1,
-				'dropoff_allowed' => 0,
+			array_merge(
+				array(
+					'station_post_id' => 101,
+					'stop_sequence'   => 1,
+					'arrival_time'    => null,
+					'departure_time'  => '09:00',
+				),
+				MRT_test_stop_modes_pickup_only()
 			)
 		);
 
 		self::assertSame( 101, $mapped['station_id'] );
 		self::assertSame( 'Alpha', $mapped['station_title'] );
 		self::assertSame( '09:00', $mapped['departure_time'] );
-		self::assertTrue( $mapped['pickup_allowed'] );
-		self::assertFalse( $mapped['dropoff_allowed'] );
+		self::assertSame( 'on_request', $mapped['pickup_mode'] );
+		self::assertSame( 'none', $mapped['dropoff_mode'] );
 		self::assertSame( '09.00', $mapped['time_label'] );
 		self::assertTrue( $mapped['on_request_pickup'] );
 	}
@@ -67,29 +68,32 @@ final class JourneyDetailTest extends TestCase {
 		);
 		$this->boot_stop_times_db(
 			array(
-				array(
-					'station_post_id' => 101,
-					'stop_sequence'   => 1,
-					'arrival_time'    => null,
-					'departure_time'  => '09:00',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array(
+						'station_post_id' => 101,
+						'stop_sequence'   => 1,
+						'arrival_time'    => null,
+						'departure_time'  => '09:00',
+					),
+					MRT_test_stop_modes_both_scheduled()
 				),
-				array(
-					'station_post_id' => 102,
-					'stop_sequence'   => 2,
-					'arrival_time'    => '09:20',
-					'departure_time'  => '09:22',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array(
+						'station_post_id' => 102,
+						'stop_sequence'   => 2,
+						'arrival_time'    => '09:20',
+						'departure_time'  => '09:22',
+					),
+					MRT_test_stop_modes_both_scheduled()
 				),
-				array(
-					'station_post_id' => 103,
-					'stop_sequence'   => 3,
-					'arrival_time'    => '09:45',
-					'departure_time'  => null,
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array(
+						'station_post_id' => 103,
+						'stop_sequence'   => 3,
+						'arrival_time'    => '09:45',
+						'departure_time'  => null,
+					),
+					MRT_test_stop_modes_both_scheduled()
 				),
 			)
 		);
@@ -110,21 +114,23 @@ final class JourneyDetailTest extends TestCase {
 		);
 		$this->boot_stop_times_db(
 			array(
-				array(
-					'station_post_id' => 101,
-					'stop_sequence'   => 1,
-					'departure_time'  => '10:00',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 0,
+				array_merge(
+					array(
+						'station_post_id' => 101,
+						'stop_sequence'   => 1,
+						'departure_time'  => '10:00',
+					),
+					MRT_test_stop_modes_pickup_only()
 				),
-				array(
-					'station_post_id'  => 102,
-					'stop_sequence'    => 2,
-					'arrival_time'     => '10:35',
-					'departure_time'   => '10:45',
-					'pickup_allowed'   => 1,
-					'dropoff_allowed'  => 1,
-					'approximate_time' => 0,
+				array_merge(
+					array(
+						'station_post_id'  => 102,
+						'stop_sequence'    => 2,
+						'arrival_time'     => '10:35',
+						'departure_time'   => '10:45',
+						'approximate_time' => 0,
+					),
+					MRT_test_stop_modes_both_scheduled()
 				),
 			)
 		);
@@ -142,19 +148,21 @@ final class JourneyDetailTest extends TestCase {
 		);
 		$this->boot_stop_times_db(
 			array(
-				array(
-					'station_post_id' => 101,
-					'stop_sequence'   => 1,
-					'departure_time'  => '10:00',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 0,
+				array_merge(
+					array(
+						'station_post_id' => 101,
+						'stop_sequence'   => 1,
+						'departure_time'  => '10:00',
+					),
+					MRT_test_stop_modes_pickup_only()
 				),
-				array(
-					'station_post_id' => 102,
-					'stop_sequence'   => 2,
-					'arrival_time'    => '10:35',
-					'pickup_allowed'  => 0,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array(
+						'station_post_id' => 102,
+						'stop_sequence'   => 2,
+						'arrival_time'    => '10:35',
+					),
+					MRT_test_stop_modes_dropoff_only()
 				),
 			)
 		);

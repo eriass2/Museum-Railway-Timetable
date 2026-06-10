@@ -98,23 +98,25 @@ final class TimetableOverviewDataTest extends TestCase {
 		$this->original_wpdb = $GLOBALS['wpdb'] ?? null;
 		$GLOBALS['wpdb']     = new TimetableOverviewDataTestDb(
 			array(
-				array(
-					'service_post_id' => 501,
-					'station_post_id' => 101,
-					'stop_sequence'   => 1,
-					'arrival_time'    => null,
-					'departure_time'  => '09:00',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array(
+						'service_post_id' => 501,
+						'station_post_id' => 101,
+						'stop_sequence'   => 1,
+						'arrival_time'    => null,
+						'departure_time'  => '09:00',
+					),
+					MRT_test_stop_modes_both_scheduled()
 				),
-				array(
-					'service_post_id' => 501,
-					'station_post_id' => 102,
-					'stop_sequence'   => 2,
-					'arrival_time'    => '09:30',
-					'departure_time'  => null,
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array(
+						'service_post_id' => 501,
+						'station_post_id' => 102,
+						'stop_sequence'   => 2,
+						'arrival_time'    => '09:30',
+						'departure_time'  => null,
+					),
+					MRT_test_stop_modes_both_scheduled()
 				),
 			)
 		);

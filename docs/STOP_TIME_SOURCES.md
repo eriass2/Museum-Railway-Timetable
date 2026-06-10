@@ -1,7 +1,7 @@
 # Stopptider — källor och datamodell (skiss)
 
 **Datum:** 2026-06-10 (uppdaterad med produktbeslut)  
-**Status:** Skiss / beslutunderlag — **ej implementerat** (schema v3)  
+**Status:** Fas 1 implementerad (2026-06-10) — se [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md)  
 **Relaterat:** [STOP_TIME_CA.md](STOP_TIME_CA.md), [DATA_MODEL.md](DATA_MODEL.md) §3.1, [CSV_FORMAT.md](CSV_FORMAT.md)
 
 ## Bakgrund

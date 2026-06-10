@@ -71,11 +71,12 @@ final class GridConnectionsTest extends TestCase {
 			array(
 				'service'    => (object) array( 'ID' => 501 ),
 				'stop_times' => array(
-					$junction_id => array(
-						'departure_time'  => '10:15',
-						'arrival_time'    => '',
-						'pickup_allowed'  => 1,
-						'dropoff_allowed' => 1,
+					$junction_id => array_merge(
+						array(
+							'departure_time' => '10:15',
+							'arrival_time'   => '',
+						),
+						MRT_test_stop_modes_both_scheduled()
 					),
 				),
 			),

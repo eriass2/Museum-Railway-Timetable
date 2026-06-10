@@ -43,17 +43,19 @@ final class OverviewRailBranchTest extends TestCase {
 					'service'    => $GLOBALS['mrt_test_posts'][501],
 					'train_type' => $GLOBALS['mrt_test_terms'][20],
 					'stop_times' => array(
-						101 => array(
-							'departure_time'  => '09:00',
-							'arrival_time'    => '',
-							'pickup_allowed'  => 1,
-							'dropoff_allowed' => 1,
+						101 => array_merge(
+							array(
+								'departure_time' => '09:00',
+								'arrival_time'   => '',
+							),
+							MRT_test_stop_modes_both_scheduled()
 						),
-						102 => array(
-							'arrival_time'    => '09:30',
-							'departure_time'  => '',
-							'pickup_allowed'  => 1,
-							'dropoff_allowed' => 1,
+						102 => array_merge(
+							array(
+								'arrival_time'   => '09:30',
+								'departure_time' => '',
+							),
+							MRT_test_stop_modes_both_scheduled()
 						),
 					),
 				),
@@ -84,17 +86,19 @@ final class OverviewRailBranchTest extends TestCase {
 					'service'    => $GLOBALS['mrt_test_posts'][502],
 					'train_type' => $GLOBALS['mrt_test_terms'][21],
 					'stop_times' => array(
-						9  => array(
-							'departure_time'  => '10:53',
-							'arrival_time'    => '',
-							'pickup_allowed'  => 1,
-							'dropoff_allowed' => 1,
+						9  => array_merge(
+							array(
+								'departure_time' => '10:53',
+								'arrival_time'   => '',
+							),
+							MRT_test_stop_modes_both_scheduled()
 						),
-						15 => array(
-							'arrival_time'    => '11:00',
-							'departure_time'  => '',
-							'pickup_allowed'  => 1,
-							'dropoff_allowed' => 1,
+						15 => array_merge(
+							array(
+								'arrival_time'   => '11:00',
+								'departure_time' => '',
+							),
+							MRT_test_stop_modes_both_scheduled()
 						),
 					),
 				),

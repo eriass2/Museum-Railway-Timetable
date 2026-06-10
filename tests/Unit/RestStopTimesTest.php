@@ -42,20 +42,22 @@ final class RestStopTimesTest extends TestCase {
 					'stops_here'       => true,
 					'arrival_time'     => '09:00',
 					'departure_time'   => '09:02',
-					'pickup_allowed'   => true,
-					'dropoff_allowed'  => false,
+					'pickup_mode'      => 'on_request',
+					'dropoff_mode'     => 'none',
 				),
 			)
 		);
 
 		self::assertSame(
 			array(
-				'station_id' => 12,
-				'stops_here' => '1',
-				'arrival'    => '09:00',
-				'departure'  => '09:02',
-				'pickup'     => '1',
-				'dropoff'    => '',
+				'station_id'           => 12,
+				'stops_here'           => '1',
+				'arrival'              => '09:00',
+				'departure'            => '09:02',
+				'pickup_mode'          => 'on_request',
+				'dropoff_mode'         => 'none',
+				'approximate'          => '',
+				'in_service_timetable' => 1,
 			),
 			$rows[0]
 		);
@@ -87,13 +89,14 @@ final class RestStopTimesTest extends TestCase {
 	public function test_get_stop_times_handler_returns_station_rows(): void {
 		$this->boot_stop_times_fixture(
 			array(
-				array(
-					'station_post_id' => 101,
-					'stop_sequence'   => 1,
-					'arrival_time'    => null,
-					'departure_time'  => '09:00',
-					'pickup_allowed'  => 1,
-					'dropoff_allowed' => 1,
+				array_merge(
+					array(
+						'station_post_id' => 101,
+						'stop_sequence'   => 1,
+						'arrival_time'    => null,
+						'departure_time'  => '09:00',
+					),
+					MRT_test_stop_modes_both_scheduled()
 				),
 			)
 		);
@@ -120,8 +123,8 @@ final class RestStopTimesTest extends TestCase {
 						'station_id' => 101,
 						'stops_here' => true,
 						'departure'  => '25:99',
-						'pickup'     => true,
-						'dropoff'    => true,
+						'pickup_mode'  => 'scheduled',
+						'dropoff_mode' => 'scheduled',
 					),
 				),
 			)

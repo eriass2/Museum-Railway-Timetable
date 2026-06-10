@@ -104,7 +104,7 @@ final class CsvExportTest extends TestCase {
 
 		$manifest = json_decode( (string) file_get_contents( $this->export_dir . '/manifest.json' ), true );
 		self::assertIsArray( $manifest );
-		self::assertSame( '1', $manifest['format_version'] ?? '' );
+		self::assertSame( '2', $manifest['format_version'] ?? '' );
 		self::assertContains( 'stations', $manifest['includes'] ?? array() );
 
 		$package = MRT_csv_load_package( $this->export_dir );
