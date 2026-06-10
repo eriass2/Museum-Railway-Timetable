@@ -1,6 +1,6 @@
 # Skiss — feedback i reseplaneraren
 
-**Status:** beslutad — redo att implementera  
+**Status:** v1 implementerad (2026-06-10); v2 kvar: e-postnotis och CSV-export  
 **Relaterat:** [2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) (J13, D2), beta-banner (admin: `wizard_beta_enabled`), [TODO.md](TODO.md)
 
 ## Mål

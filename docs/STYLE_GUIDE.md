@@ -60,6 +60,15 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **PHPDoc** för alla funktioner med `@param`, `@return`, `@throws`
 - **Text domain** – Alltid `museum-railway-timetable` för översättningar
 
+### PHP util-snabbguide
+
+| Modul | Användning |
+|-------|------------|
+| `inc/domain/datetime/datetime.php` | Validering och beräkning av datum/tid (ISO, HH:MM) |
+| `inc/infrastructure/wordpress/log.php` | Dev-loggning (`MRT_log`, bakom `WP_DEBUG`) |
+| `inc/infrastructure/wordpress/helpers-utils.php` | Alerts, post-uppslag, tidtabellsvisning (P/A/X, HH.MM) |
+| `inc/domain/journey/request-params.php` | REST-body-validering för reseplanerare |
+
 ### Övrigt
 - **Inga inline styles** i PHP – använd CSS-klasser
 - **Inga `echo` av oräddad data** – alltid escape först
