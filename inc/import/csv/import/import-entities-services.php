@@ -184,6 +184,7 @@ function MRT_csv_import_settings( array $files ): void {
 		'ticket_url',
 		'hero_background_url',
 		'wizard_beta_enabled',
+		'wizard_feedback_enabled',
 		'min_transfer_minutes',
 		'max_transfer_minutes',
 		'max_transfers',
@@ -201,7 +202,7 @@ function MRT_csv_import_settings( array $files ): void {
 }
 
 function MRT_csv_cast_setting_value( string $key, string $value ) {
-	if ( $key === 'enabled' || $key === 'wizard_beta_enabled' ) {
+	if ( in_array( $key, array( 'enabled', 'wizard_beta_enabled', 'wizard_feedback_enabled' ), true ) ) {
 		return in_array( strtolower( $value ), array( '1', 'true', 'yes' ), true );
 	}
 	if ( $key === 'ticket_url' || $key === 'hero_background_url' ) {

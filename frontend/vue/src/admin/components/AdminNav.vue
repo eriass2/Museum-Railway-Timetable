@@ -28,6 +28,7 @@ const tabs = computed(() => {
     items.push(
       { to: '/train-types', label: adminStr(cfg, 'navTrainTypes', 'Tågtyper') },
       { to: '/settings', label: adminStr(cfg, 'navSettings', 'Inställningar') },
+      { to: '/feedback', label: adminStr(cfg, 'navFeedback', 'Feedback') },
       { to: '/prices', label: adminStr(cfg, 'navPrices', 'Priser') },
       { to: '/import-export', label: adminStr(cfg, 'navImportExport', 'Import/export') },
     );

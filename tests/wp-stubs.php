@@ -41,6 +41,9 @@ if ( ! class_exists( 'WP_Post' ) ) {
 		/** @var string */
 		public $post_name = '';
 
+		/** @var string */
+		public $post_content = '';
+
 		/**
 		 * @param object|array<string, mixed>|null $data
 		 */
@@ -508,6 +511,7 @@ if ( ! function_exists( 'wp_insert_post' ) ) {
 			(object) array(
 				'ID'          => $id,
 				'post_title'  => (string) ( $postarr['post_title'] ?? '' ),
+				'post_content' => (string) ( $postarr['post_content'] ?? '' ),
 				'post_type'   => (string) ( $postarr['post_type'] ?? 'post' ),
 				'post_status' => (string) ( $postarr['post_status'] ?? 'publish' ),
 			)

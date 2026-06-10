@@ -20,6 +20,7 @@ define( 'MRT_POST_TYPE_STATION', 'mrt_station' );
 define( 'MRT_POST_TYPE_ROUTE', 'mrt_route' );
 define( 'MRT_POST_TYPE_TIMETABLE', 'mrt_timetable' );
 define( 'MRT_POST_TYPE_SERVICE', 'mrt_service' );
+define( 'MRT_POST_TYPE_FEEDBACK', 'mrt_feedback' );
 
 /** Taxonomies */
 define( 'MRT_TAXONOMY_TRAIN_TYPE', 'mrt_train_type' );
@@ -32,6 +33,7 @@ define(
 		MRT_POST_TYPE_ROUTE,
 		MRT_POST_TYPE_TIMETABLE,
 		MRT_POST_TYPE_SERVICE,
+		MRT_POST_TYPE_FEEDBACK,
 	)
 );
 

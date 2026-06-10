@@ -17,6 +17,7 @@ final class PluginSettingsTest extends TestCase {
 	public function test_default_transfer_limits(): void {
 		$defaults = MRT_default_plugin_settings();
 		self::assertFalse( $defaults['wizard_beta_enabled'] );
+		self::assertFalse( $defaults['wizard_feedback_enabled'] );
 		self::assertSame( 0, $defaults['min_transfer_minutes'] );
 		self::assertSame( 120, $defaults['max_transfer_minutes'] );
 		self::assertSame( 2, $defaults['max_transfers'] );
@@ -64,6 +65,16 @@ final class PluginSettingsTest extends TestCase {
 		);
 
 		self::assertTrue( MRT_plugin_wizard_beta_enabled() );
+	}
+
+	public function test_plugin_wizard_feedback_enabled_reads_settings(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'wizard_feedback_enabled' => true,
+			),
+		);
+
+		self::assertTrue( MRT_plugin_wizard_feedback_enabled() );
 	}
 
 	public function test_sanitize_clamps_max_transfers_and_afternoon_threshold(): void {

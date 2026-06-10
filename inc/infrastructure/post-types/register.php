@@ -19,6 +19,7 @@ add_action(
 		MRT_register_route_post_type();
 		MRT_register_timetable_post_type();
 		MRT_register_service_post_type();
+		MRT_register_feedback_post_type();
 		MRT_register_train_type_taxonomy();
 	}
 );
@@ -162,6 +163,26 @@ function MRT_register_service_post_type(): void {
 			'show_in_menu' => false,
 			'menu_icon'    => 'dashicons-clock',
 			'supports'     => array( 'title' ),
+			'show_in_rest' => false,
+		)
+	);
+}
+
+function MRT_register_feedback_post_type(): void {
+	register_post_type(
+		MRT_POST_TYPE_FEEDBACK,
+		array(
+			'labels'       => array(
+				'name'          => __( 'Feedback', MRT_TEXT_DOMAIN ),
+				'singular_name' => __( 'Feedback', MRT_TEXT_DOMAIN ),
+				'all_items'     => __( 'All Feedback', MRT_TEXT_DOMAIN ),
+				'edit_item'     => __( 'Edit Feedback', MRT_TEXT_DOMAIN ),
+				'not_found'     => __( 'No feedback found', MRT_TEXT_DOMAIN ),
+			),
+			'public'       => false,
+			'show_ui'      => false,
+			'show_in_menu' => false,
+			'supports'     => array( 'title', 'editor' ),
 			'show_in_rest' => false,
 		)
 	);

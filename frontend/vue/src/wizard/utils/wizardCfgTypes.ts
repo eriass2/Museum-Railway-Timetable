@@ -116,7 +116,18 @@ export type WizardCfgStringKey =
   | 'summaryPdfError'
   | 'summaryPricesHeading'
   | 'calPrevAria'
-  | 'calNextAria';
+  | 'calNextAria'
+  | 'feedbackButton'
+  | 'feedbackTitle'
+  | 'feedbackTypeBug'
+  | 'feedbackTypeSuggestion'
+  | 'feedbackMessage'
+  | 'feedbackEmail'
+  | 'feedbackPrivacy'
+  | 'feedbackSubmit'
+  | 'feedbackCancel'
+  | 'feedbackThanks'
+  | 'feedbackError';
 
 /** Merged PHP wizard + labels JSON for the journey wizard UI. */
 export type WizardCfg = Partial<Record<WizardCfgStringKey, string>> & {

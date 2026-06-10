@@ -49,3 +49,5 @@ export {
   saveTrafficNoticeMessages,
 } from './adminRestTrafficNotices';
 export type { PublicNoticeMessage } from './adminRestTrafficNotices';
+export { listFeedback, updateFeedbackStatus } from './adminRestFeedback';
+export type { FeedbackItem, FeedbackStatus } from './adminRestFeedback';

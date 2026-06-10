@@ -204,4 +204,16 @@ final class JourneyWizardShortcodeTest extends TestCase {
 		self::assertIsArray( $banner );
 		self::assertSame( 'Beta', $banner['label'] ?? '' );
 	}
+
+	public function test_render_shortcode_passes_feedback_enabled_from_settings(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'wizard_feedback_enabled' => true,
+			),
+		);
+
+		MRT_render_shortcode_journey_wizard( array() );
+
+		self::assertTrue( $GLOBALS['mrt_test_vue_mount']['config']['feedbackEnabled'] ?? false );
+	}
 }

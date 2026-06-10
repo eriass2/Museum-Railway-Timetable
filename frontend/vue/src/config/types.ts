@@ -84,6 +84,7 @@ export type WizardVueConfig = MrtRestConfig & {
   /** Optional cover image for the full-bleed hero (non-embedded). */
   heroBackgroundUrl?: string;
   heroSubtitle?: string;
+  feedbackEnabled?: boolean;
   startOfWeek?: number;
   wizard?: Record<string, unknown>;
   labels?: Record<string, string>;

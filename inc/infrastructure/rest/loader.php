@@ -32,6 +32,7 @@ require_once $rest_dir . 'public/journey-public.php';
 require_once $rest_dir . 'public/timetable-public.php';
 require_once $rest_dir . 'public/pricing-public.php';
 require_once $rest_dir . 'public/traffic-notices-public.php';
+require_once $rest_dir . 'public/wizard-feedback.php';
 
 require_once $rest_dir . 'dev/dev-tools.php';
 
@@ -54,6 +55,7 @@ function MRT_register_rest_routes(): void {
 	MRT_rest_register_operations_routes();
 	MRT_rest_register_traffic_notices_public_routes();
 	MRT_rest_register_traffic_notices_admin_routes();
+	MRT_rest_register_wizard_feedback_routes();
 }
 
 add_action( 'rest_api_init', 'MRT_register_rest_routes' );
