@@ -6,6 +6,7 @@ import MrtDetailSegment from '../src/components/ui/MrtDetailSegment.vue';
 import MrtExpandTrigger from '../src/components/ui/MrtExpandTrigger.vue';
 import MrtVehicleRow from '../src/components/ui/MrtVehicleRow.vue';
 import WizardBetaBanner from '../src/wizard/components/WizardBetaBanner.vue';
+import WizardFeedbackWidget from '../src/wizard/components/WizardFeedbackWidget.vue';
 
 async function render(
   component: Parameters<typeof h>[0],
@@ -45,6 +46,17 @@ describe('UI components (SSR smoke)', () => {
     expect(html).toContain('mrt-expand-trigger__label');
     expect(html).toContain('2 byten');
     expect(html).toContain('mrt-expand-trigger__chevron');
+  });
+
+  it('WizardFeedbackWidget renders feedback button', async () => {
+    const html = await render(WizardFeedbackWidget, {
+      config: {
+        app: 'wizard',
+        labels: { feedbackButton: 'Rapportera fel eller förslag' },
+      },
+    });
+    expect(html).toContain('mrt-wizard-feedback__fab');
+    expect(html).toContain('Rapportera fel eller förslag');
   });
 
   it('MrtVehicleRow compact hides labels but keeps aria-label', async () => {
