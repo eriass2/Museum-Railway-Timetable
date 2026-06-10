@@ -150,13 +150,14 @@
   padding: var(--mrt-cell-padding-md, 0.4rem 0.55rem);
   border: 1px solid var(--mrt-border-default, #ccc);
   font-size: var(--mrt-ov-num-size);
-  font-weight: 700;
+  font-weight: 400;
   background: #fff;
   border-right-width: 2px;
 }
 
 .mrt-ov-grid-row--head .mrt-ov-station-col {
   z-index: 3;
+  font-weight: 600;
 }
 
 .mrt-ov-col-head {
@@ -237,7 +238,7 @@
 
 .mrt-ov-grid-row--transfer .mrt-ov-station-col {
   background: var(--mrt-ov-transfer-label);
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .mrt-ov-grid-row--bus .mrt-ov-station-col,
@@ -247,7 +248,7 @@
 
 .mrt-ov-grid-row--bus .mrt-ov-station-col {
   background: var(--mrt-ov-bus-label);
-  font-weight: 700;
+  font-weight: 400;
 }
 
 .mrt-ov-bus-ref {
@@ -273,7 +274,7 @@
   align-items: baseline;
   flex-wrap: nowrap;
   max-width: 100%;
-  font-weight: 700;
+  font-weight: 400;
   line-height: 1;
   white-space: nowrap;
 }
@@ -282,8 +283,16 @@
 .mrt-ov-time__suffix {
   flex: 0 0 auto;
   font-size: var(--mrt-ov-footnote-size);
-  font-weight: inherit;
+  font-weight: 400;
   line-height: 1;
+}
+
+.mrt-ov-time__ca {
+  margin-right: 0.12em;
+}
+
+.mrt-ov-time__suffix {
+  margin-left: 0.12em;
 }
 
 .mrt-ov-time__prefix {
@@ -295,11 +304,7 @@
 .mrt-ov-time__value {
   flex: 0 1 auto;
   font-size: 1em;
-  font-weight: 700;
-}
-
-.mrt-ov-time--approximate {
-  font-weight: 400;
+  font-weight: inherit;
 }
 
 .mrt-ov-grid-row--transfer .mrt-ov-transfer-cell--empty {

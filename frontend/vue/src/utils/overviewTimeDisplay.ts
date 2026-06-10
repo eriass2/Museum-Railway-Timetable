@@ -75,7 +75,7 @@ export function formatOverviewTimeValue(parts: OverviewTimeParts, approximateTim
   return parts.value;
 }
 
-/** P/A/X footnote after the clock time. */
+/** P/A/X footnote mark (spacing via `.mrt-ov-time__suffix` margin). */
 export function formatOverviewTimeSuffix(parts: OverviewTimeParts): string {
   return parts.suffix;
 }

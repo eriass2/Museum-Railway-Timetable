@@ -26,7 +26,7 @@ const suffix = computed(() => formatOverviewTimeSuffix(parts.value));
       'mrt-ov-time--approximate': showCa,
     }"
   >
-    <span v-if="showCa" class="mrt-ov-time__ca">Ca </span
+    <span v-if="showCa" class="mrt-ov-time__ca">Ca</span
     ><span class="mrt-ov-time__value">{{ timeDigits }}</span
     ><span v-if="suffix" class="mrt-ov-time__suffix">{{ suffix }}</span>
   </span>
