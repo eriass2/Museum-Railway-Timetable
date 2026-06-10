@@ -8,9 +8,17 @@ cd "$(dirname "$0")/.."
 echo ""
 echo "=== MRT dev reset (clear + import + smoke menu) ==="
 
-docker compose up -d
+docker compose up -d --build
 echo "Waiting for WordPress..."
 sleep 12
+
+echo ""
+echo "--- Build Vue public bundle (CSS + JS) ---"
+docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
+
+echo ""
+echo "--- Swedish locale (sv_SE) ---"
+docker compose run --rm wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh
 
 echo ""
 echo "--- Reset and import ---"

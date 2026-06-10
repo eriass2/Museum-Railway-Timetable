@@ -13,6 +13,10 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 Write-Host "Waiting for WordPress init..." -ForegroundColor Gray
 Start-Sleep -Seconds 20
 
+Write-Host "`n--- Build Vue public bundle (CSS + JS) ---" -ForegroundColor Cyan
+docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify" 2>&1 | Out-Host
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
 Write-Host "`n--- Import demo data ---" -ForegroundColor Cyan
 docker compose run --rm wordpress-init wp --allow-root eval "MRT_run_lennakatten_import();" 2>&1 | Out-Host
 
@@ -22,8 +26,9 @@ $demoOut | Out-Host
 $demoUrl = ($demoOut | Select-String -Pattern 'http\S+' | Select-Object -Last 1).Matches.Value
 
 Write-Host "`n--- Composer check (PHP 8.2) ---" -ForegroundColor Cyan
-docker compose run --rm composer install --no-interaction 2>&1 | Out-Host
-docker compose run --rm composer check 2>&1 | Out-Host
+docker compose --profile tools run --rm composer install --no-interaction 2>&1 | Out-Host
+docker compose --profile tools run --rm composer check 2>&1 | Out-Host
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 $pages = @(
     @{ Name = "Wizard test"; Url = "http://localhost:8080/?p=39" },
@@ -37,13 +42,13 @@ Write-Host "`n--- HTTP checks ---" -ForegroundColor Cyan
 foreach ($p in $pages) {
     try {
         $r = Invoke-WebRequest -Uri $p.Url -UseBasicParsing -TimeoutSec 20
-        $wizardCss = $r.Content -match 'journey-wizard\.css'
-        $publicCss = $r.Content -match 'frontend-public\.css'
-        Write-Host ("  OK {0} ({1}) wizard-css={2} public-css={3}" -f $p.Name, $r.StatusCode, $wizardCss, $publicCss) -ForegroundColor Green
+        $vueBundle = $r.Content -match 'assets/dist/vue|mrt-vue-public'
+        $vueMount = $r.Content -match 'data-mrt-vue-app'
+        Write-Host ("  OK {0} ({1}) vue-bundle={2} vue-mount={3}" -f $p.Name, $r.StatusCode, $vueBundle, $vueMount) -ForegroundColor Green
     } catch {
         Write-Host ("  FAIL {0}: {1}" -f $p.Name, $_.Exception.Message) -ForegroundColor Red
     }
 }
 
-Write-Host "`nAdmin: http://localhost:8080/wp-admin/admin.php?page=mrt_settings (admin / admin)" -ForegroundColor Gray
+Write-Host "`nAdmin: http://localhost:8080/wp-admin/admin.php?page=mrt_app (admin / admin)" -ForegroundColor Gray
 Write-Host "Done.`n" -ForegroundColor Cyan

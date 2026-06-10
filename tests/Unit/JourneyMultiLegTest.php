@@ -20,6 +20,7 @@ final class JourneyMultiLegTest extends TestCase {
 
     protected function tearDown(): void {
         $this->mrt_reset_journey_fixture();
+        unset( $GLOBALS['mrt_test_options'] );
         parent::tearDown();
     }
 
@@ -41,6 +42,17 @@ final class JourneyMultiLegTest extends TestCase {
 
     public function test_find_multi_leg_exclude_direct_skips_wrap(): void {
         self::assertSame([], MRT_find_multi_leg_connections(1, 2, '2026-06-01', 5, false));
+    }
+
+    public function test_journey_engine_max_transfers_default_is_two(): void {
+        self::assertSame(2, MRT_journey_engine_max_transfers());
+    }
+
+    public function test_journey_engine_max_transfers_reads_settings(): void {
+        $GLOBALS['mrt_test_options'] = array(
+            'mrt_settings' => array( 'max_transfers' => 1 ),
+        );
+        self::assertSame(1, MRT_journey_engine_max_transfers());
     }
 
     public function test_journey_find_stop_index_finds_station(): void {
@@ -95,11 +107,7 @@ final class JourneyMultiLegTest extends TestCase {
     }
 
     public function test_append_transfer_options_no_ops_when_no_services(): void {
-        $results = [];
-        $seen = [];
-        MRT_journey_append_transfer_options($results, $seen, 1, 2, '2026-06-01', 5);
-        self::assertSame([], $results);
-        self::assertSame([], $seen);
+        self::assertSame([], MRT_find_multi_leg_connections(1, 2, '2026-06-01', 5, false));
     }
 
     public function test_find_multi_leg_returns_direct_connection(): void {
@@ -119,8 +127,94 @@ final class JourneyMultiLegTest extends TestCase {
         self::assertSame('10:00', $results[0]['legs'][0]['to_arrival']);
     }
 
+    private const ROUTE_MAIN = 500;
+    private const ST_UPPSALA = 10;
+    private const ST_FYRISLUND = 11;
+    private const ST_MARIELUND = 12;
+    private const ST_FARINGE = 50;
+
+    public function test_find_multi_leg_rejects_backtrack_past_pickup_only_destination(): void {
+        $this->mrt_use_journey_fixture(
+            [
+                11 => [
+                    $this->mrt_stop( 11, self::ST_UPPSALA, 1, null, '10:00' ),
+                    array_merge(
+                        [
+                            'service_post_id' => 11,
+                            'station_post_id' => self::ST_FYRISLUND,
+                            'stop_sequence'   => 2,
+                            'arrival_time'    => '10:05',
+                            'departure_time'  => '10:06',
+                        ],
+                        MRT_test_stop_modes_pickup_only()
+                    ),
+                    $this->mrt_stop( 11, self::ST_MARIELUND, 3, '10:35', '10:36' ),
+                    $this->mrt_stop( 11, self::ST_FARINGE, 4, '11:30', null ),
+                ],
+                22 => [
+                    $this->mrt_stop( 22, self::ST_FARINGE, 1, null, '12:00' ),
+                    $this->mrt_stop( 22, self::ST_MARIELUND, 2, '12:30', '12:31' ),
+                    $this->mrt_stop( 22, self::ST_FYRISLUND, 3, '13:00', '13:01' ),
+                    $this->mrt_stop( 22, self::ST_UPPSALA, 4, '13:36', null ),
+                ],
+            ],
+            [900 => [self::DATE]],
+            [],
+            [],
+            [],
+            [
+                self::ROUTE_MAIN => [
+                    self::ST_UPPSALA,
+                    self::ST_FYRISLUND,
+                    self::ST_MARIELUND,
+                    self::ST_FARINGE,
+                ],
+            ],
+            [11 => self::ROUTE_MAIN, 22 => self::ROUTE_MAIN]
+        );
+
+        $results = MRT_find_multi_leg_connections(
+            self::ST_UPPSALA,
+            self::ST_FYRISLUND,
+            self::DATE,
+            5,
+            true
+        );
+
+        self::assertSame( [], $results );
+    }
+
+    public function test_find_multi_leg_rejects_transfer_in_opposite_direction(): void {
+        $mid  = 101;
+        $goal = 303;
+
+        $this->mrt_use_journey_fixture(
+            [
+                11 => [
+                    $this->mrt_stop(11, $mid, 1, null, '09:00'),
+                    $this->mrt_stop(11, self::ST_UPPSALA, 2, '10:00', null),
+                ],
+                22 => [
+                    $this->mrt_stop(22, self::ST_UPPSALA, 1, null, '10:10'),
+                    $this->mrt_stop(22, $mid, 2, '10:30', null),
+                    $this->mrt_stop(22, $goal, 3, '11:00', null),
+                ],
+            ],
+            [900 => [self::DATE]],
+            [],
+            $this->mrt_hub_station_meta(self::ST_UPPSALA),
+            [],
+            [self::ROUTE_MAIN => [self::ST_UPPSALA, $mid, $goal]],
+            [11 => self::ROUTE_MAIN, 22 => self::ROUTE_MAIN]
+        );
+
+        $results = MRT_find_multi_leg_connections($mid, $goal, self::DATE, 5, false);
+
+        self::assertSame([], $results);
+    }
+
     public function test_find_multi_leg_returns_transfer_at_shared_station(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('10:10'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('10:10'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
@@ -131,15 +225,24 @@ final class JourneyMultiLegTest extends TestCase {
     }
 
     public function test_find_multi_leg_rejects_transfer_before_minimum_time(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('10:04'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('10:04'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
         self::assertSame([], $results);
     }
 
+    public function test_find_multi_leg_accepts_three_minute_transfer_at_default_minimum(): void {
+        $this->mrt_use_journey_fixture($this->transferRows('10:03'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
+
+        $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 3, false);
+
+        self::assertCount(1, $results);
+        self::assertSame('10:03', $results[0]['legs'][1]['from_departure']);
+    }
+
     public function test_find_multi_leg_accepts_transfer_at_minimum_time(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('10:05'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('10:05'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
@@ -197,7 +300,7 @@ final class JourneyMultiLegTest extends TestCase {
     }
 
     public function test_find_multi_leg_rejects_transfer_above_max_wait(): void {
-        $this->mrt_use_journey_fixture($this->transferRows('12:30'), [900 => [self::DATE]]);
+        $this->mrt_use_journey_fixture($this->transferRows('12:30'), [900 => [self::DATE]], [], $this->mrt_hub_station_meta(self::X));
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
@@ -230,8 +333,56 @@ final class JourneyMultiLegTest extends TestCase {
 
         $results = MRT_find_multi_leg_connections(self::A, self::B, self::DATE, 5, false);
 
-        self::assertGreaterThanOrEqual(2, count($results));
+        self::assertCount(1, $results);
         self::assertSame($hub, $results[0]['transfer_station_id']);
+    }
+
+    public function test_find_multi_leg_skips_transfer_at_non_hub_intermediate_stop(): void {
+        $mid = 252;
+        $this->mrt_use_journey_fixture(
+            array(
+                11 => array(
+                    $this->mrt_stop( 11, self::A, 1, null, '09:00' ),
+                    $this->mrt_stop( 11, $mid, 2, '09:30', null ),
+                    $this->mrt_stop( 11, self::B, 3, '10:30', null ),
+                ),
+                22 => array(
+                    $this->mrt_stop( 22, $mid, 1, null, '09:45' ),
+                    $this->mrt_stop( 22, self::B, 2, '10:00', null ),
+                ),
+            ),
+            array( 900 => array( self::DATE ) )
+        );
+
+        $results = MRT_find_multi_leg_connections( self::A, self::B, self::DATE, 5, false );
+
+        self::assertSame( array(), $results );
+    }
+
+    public function test_find_multi_leg_allows_transfer_at_marked_hub_stop(): void {
+        $mid = 252;
+        $this->mrt_use_journey_fixture(
+            array(
+                11 => array(
+                    $this->mrt_stop( 11, self::A, 1, null, '09:00' ),
+                    $this->mrt_stop( 11, $mid, 2, '09:30', null ),
+                    $this->mrt_stop( 11, self::B, 3, '10:30', null ),
+                ),
+                22 => array(
+                    $this->mrt_stop( 22, $mid, 1, null, '09:45' ),
+                    $this->mrt_stop( 22, self::B, 2, '10:00', null ),
+                ),
+            ),
+            array( 900 => array( self::DATE ) ),
+            array(),
+            $this->mrt_hub_station_meta( $mid )
+        );
+
+        $results = MRT_find_multi_leg_connections( self::A, self::B, self::DATE, 5, false );
+
+        self::assertCount( 1, $results );
+        self::assertSame( 'transfer', $results[0]['connection_type'] );
+        self::assertSame( $mid, $results[0]['transfer_station_id'] );
     }
 
     public function test_journey_calendar_month_marks_ok_traffic_without_match_and_none(): void {
@@ -250,13 +401,55 @@ final class JourneyMultiLegTest extends TestCase {
         ], [
             11 => 900,
             22 => 901,
+        ], [], [
+            900 => 'green',
+            901 => 'yellow',
         ]);
 
         $month = MRT_get_journey_calendar_month(self::A, self::B, 2026, 6);
 
-        self::assertSame('ok', $month['2026-06-01']);
-        self::assertSame('traffic_no_match', $month['2026-06-02']);
-        self::assertSame('none', $month['2026-06-03']);
+        self::assertSame('ok', $month['2026-06-01']['status'] ?? '');
+        self::assertSame('green', $month['2026-06-01']['type'] ?? '');
+        self::assertSame('traffic_no_match', $month['2026-06-02']['status'] ?? '');
+        self::assertSame('yellow', $month['2026-06-02']['type'] ?? '');
+        self::assertSame('none', $month['2026-06-03']['status'] ?? '');
+        self::assertSame('', $month['2026-06-03']['type'] ?? '');
+    }
+
+    public function test_journey_calendar_month_return_marks_one_way_only_days_as_traffic_no_match(): void {
+        $this->mrt_use_journey_fixture(
+            [
+                11 => [
+                    $this->mrt_stop( 11, self::A, 1, null, '09:00' ),
+                    $this->mrt_stop( 11, self::B, 2, '10:00', null ),
+                ],
+                22 => [
+                    $this->mrt_stop( 22, self::B, 1, null, '11:00' ),
+                    $this->mrt_stop( 22, self::A, 2, '12:00', null ),
+                ],
+                33 => [
+                    $this->mrt_stop( 33, self::A, 1, null, '17:00' ),
+                    $this->mrt_stop( 33, self::B, 2, '18:07', null ),
+                ],
+            ],
+            [
+                900 => [ '2026-06-01' ],
+                901 => [ '2026-06-02' ],
+            ],
+            [
+                11 => 900,
+                22 => 900,
+                33 => 901,
+            ]
+        );
+
+        $single = MRT_get_journey_calendar_month( self::A, self::B, 2026, 6, 'single' );
+        $return = MRT_get_journey_calendar_month( self::A, self::B, 2026, 6, 'return' );
+
+        self::assertSame( 'ok', $single['2026-06-01']['status'] ?? '' );
+        self::assertSame( 'ok', $single['2026-06-02']['status'] ?? '' );
+        self::assertSame( 'ok', $return['2026-06-01']['status'] ?? '' );
+        self::assertSame( 'traffic_no_match', $return['2026-06-02']['status'] ?? '' );
     }
 
     /**

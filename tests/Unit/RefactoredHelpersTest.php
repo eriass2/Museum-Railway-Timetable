@@ -10,7 +10,6 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 require_once ABSPATH . 'inc/domain/route/routes.php';
-require_once ABSPATH . 'inc/domain/journey/journey-connection-display.php';
 
 final class RefactoredHelpersTest extends TestCase {
 
@@ -40,6 +39,40 @@ final class RefactoredHelpersTest extends TestCase {
 		self::assertSame( 'från', MRT_route_direction_from_station_order( $route_stations, $endpoints, 20 ) );
 		self::assertSame( 'dit', MRT_route_direction_from_station_order( $route_stations, $endpoints, 30 ) );
 		self::assertSame( '', MRT_route_direction_from_station_order( $route_stations, $endpoints, 99 ) );
+	}
+
+	public function test_route_leg_travels_towards_station(): void {
+		$route_id = 77;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			$route_id . '|mrt_route_stations' => array( 10, 101, 303 ),
+		);
+
+		self::assertTrue( MRT_route_leg_travels_towards_station( $route_id, 101, 303, 303 ) );
+		self::assertFalse( MRT_route_leg_travels_towards_station( $route_id, 101, 10, 303 ) );
+	}
+
+	public function test_journey_transfer_overshoots_destination(): void {
+		$route_id = 77;
+		$uppsala  = 10;
+		$fyris    = 11;
+		$marie    = 12;
+		$faringe  = 50;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			$route_id . '|mrt_route_stations' => array( $uppsala, $fyris, $marie, $faringe ),
+		);
+
+		self::assertTrue(
+			MRT_journey_transfer_overshoots_destination( $route_id, $uppsala, $faringe, $fyris )
+		);
+		self::assertTrue(
+			MRT_journey_transfer_overshoots_destination( $route_id, $uppsala, $marie, $fyris )
+		);
+		self::assertFalse(
+			MRT_journey_transfer_overshoots_destination( $route_id, $uppsala, $marie, $faringe )
+		);
+		self::assertFalse(
+			MRT_journey_transfer_overshoots_destination( $route_id, $uppsala, $fyris, $marie )
+		);
 	}
 
 	public function test_route_label_from_shared_service_end_station(): void {
@@ -79,20 +112,5 @@ final class RefactoredHelpersTest extends TestCase {
 		);
 
 		self::assertSame( '', MRT_get_route_label_from_services_end_station( 77, $services ) );
-	}
-
-	public function test_journey_connection_display_helpers(): void {
-		$row = array(
-			'from_departure' => '09:05',
-			'from_arrival'   => '',
-			'to_arrival'     => '',
-			'to_departure'   => '10:15',
-			'destination'    => '',
-			'direction'      => 'Faringe',
-		);
-
-		self::assertSame( '09.05', MRT_journey_connection_departure_display( $row ) );
-		self::assertSame( '10.15', MRT_journey_connection_arrival_display( $row ) );
-		self::assertSame( 'Faringe', MRT_journey_connection_destination_display( $row ) );
 	}
 }

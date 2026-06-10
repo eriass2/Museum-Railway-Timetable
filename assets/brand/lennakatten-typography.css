@@ -1,0 +1,12 @@
+/**
+ * Lennakatten typography overrides (optional brand pack).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&family=Roboto:wght@400;500;700&display=swap");
+
+:root {
+    --mrt-font-body: "Roboto", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mrt-font-heading: "Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+}

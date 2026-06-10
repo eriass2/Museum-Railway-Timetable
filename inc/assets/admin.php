@@ -70,114 +70,12 @@ function MRT_enqueue_admin_css( string $hook ): void {
 }
 
 /**
- * Enqueue admin JavaScript files.
- */
-function MRT_enqueue_admin_js(): void {
-	$a = MRT_assets_base_url();
-	wp_register_script( 'mrt-string-utils', $a . 'mrt-string-utils.js', array(), MRT_VERSION, true );
-	wp_register_script( 'mrt-date-utils', $a . 'mrt-date-utils.js', array(), MRT_VERSION, true );
-	MRT_enqueue_admin_feature_scripts( $a );
-	MRT_enqueue_admin_entry_script( $a );
-}
-
-/**
- * Enqueue admin feature scripts.
- */
-function MRT_enqueue_admin_feature_scripts( string $asset_url ): void {
-	wp_enqueue_script( 'mrt-admin-utils', $asset_url . 'admin-utils.js', array( 'jquery', 'mrt-date-utils', 'mrt-string-utils' ), MRT_VERSION, true );
-	wp_enqueue_script( 'mrt-admin-route-ui', $asset_url . 'admin-route-ui.js', array( 'mrt-admin-utils', 'jquery' ), MRT_VERSION, true );
-	wp_enqueue_script( 'mrt-admin-stoptimes-ui', $asset_url . 'admin-stoptimes-ui.js', array( 'mrt-admin-utils', 'jquery' ), MRT_VERSION, true );
-	wp_enqueue_script( 'mrt-admin-timetable-services', $asset_url . 'admin-timetable-services-ui.js', array( 'mrt-admin-utils', 'jquery' ), MRT_VERSION, true );
-	wp_enqueue_script( 'mrt-admin-service-edit', $asset_url . 'admin-service-edit.js', array( 'mrt-admin-utils', 'jquery' ), MRT_VERSION, true );
-}
-
-/**
- * Enqueue admin entry script.
- */
-function MRT_enqueue_admin_entry_script( string $asset_url ): void {
-	wp_enqueue_script(
-		'mrt-admin',
-		$asset_url . 'admin.js',
-		array(
-			'mrt-admin-utils',
-			'mrt-admin-route-ui',
-			'mrt-admin-stoptimes-ui',
-			'mrt-admin-timetable-services',
-			'mrt-admin-service-edit',
-			'jquery',
-		),
-		MRT_VERSION,
-		true
-	);
-}
-
-/**
- * Strings passed to mrtAdmin (admin bundle).
- *
- * @return array<string, string>
- */
-function MRT_admin_script_localization(): array {
-	return array(
-		'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
-		'invalidTimeFormat'            => __( 'Invalid format. Use HH:MM (e.g., 09:15)', MRT_TEXT_DOMAIN ),
-		'fixTimeFormats'               => __( 'Please fix invalid time formats before saving. Use HH:MM format (e.g., 09:15).', MRT_TEXT_DOMAIN ),
-		'saveServiceToUpdateStations'  => __( 'Please save the service to update available stations from the selected route.', MRT_TEXT_DOMAIN ),
-		'pleaseSelectStation'          => __( 'Please select a station.', MRT_TEXT_DOMAIN ),
-		'stationAlreadyOnRoute'        => __( 'This station is already on the route.', MRT_TEXT_DOMAIN ),
-		'pleaseFillStationAndSequence' => __( 'Please fill in Station and Sequence.', MRT_TEXT_DOMAIN ),
-		'errorSavingStopTime'          => __( 'Error saving stop time.', MRT_TEXT_DOMAIN ),
-		'errorAddingStopTime'          => __( 'Error adding stop time.', MRT_TEXT_DOMAIN ),
-		'confirmDeleteStopTime'        => __( 'Are you sure you want to delete this stop time?', MRT_TEXT_DOMAIN ),
-		'errorDeletingStopTime'        => __( 'Error deleting stop time.', MRT_TEXT_DOMAIN ),
-		'pleaseSelectRoute'            => __( 'Please select a route.', MRT_TEXT_DOMAIN ),
-		'securityTokenMissing'         => __( 'Security token missing. Please refresh the page.', MRT_TEXT_DOMAIN ),
-		'confirmRemoveTrip'            => __( 'Are you sure you want to remove this trip from the timetable?', MRT_TEXT_DOMAIN ),
-		'errorRemovingTrip'            => __( 'Error removing trip.', MRT_TEXT_DOMAIN ),
-		'networkError'                 => __( 'Network error. Please try again.', MRT_TEXT_DOMAIN ),
-		'moveUp'                       => __( 'Move up', MRT_TEXT_DOMAIN ),
-		'moveDown'                     => __( 'Move down', MRT_TEXT_DOMAIN ),
-		'remove'                       => __( 'Remove', MRT_TEXT_DOMAIN ),
-		'loadingStations'              => __( 'Loading stations...', MRT_TEXT_DOMAIN ),
-		'noRouteSelected'              => __( 'No route selected. Select a route to configure stop times.', MRT_TEXT_DOMAIN ),
-		'noStationsOnRoute'            => __( 'No stations found on this route.', MRT_TEXT_DOMAIN ),
-		'errorLoadingStations'         => __( 'Error loading stations. Please refresh the page.', MRT_TEXT_DOMAIN ),
-		'stopTimeSavedSuccessfully'    => __( 'Stop time saved successfully.', MRT_TEXT_DOMAIN ),
-		'stopTimeAddedSuccessfully'    => __( 'Stop time added successfully.', MRT_TEXT_DOMAIN ),
-		'endStationsSavedSuccessfully' => __( 'End stations saved successfully.', MRT_TEXT_DOMAIN ),
-		'selectDestination'            => __( '— Select Destination —', MRT_TEXT_DOMAIN ),
-		'selectRouteFirst'             => __( 'Select a route first', MRT_TEXT_DOMAIN ),
-		'loading'                      => __( 'Loading...', MRT_TEXT_DOMAIN ),
-		'errorLoadingDestinations'     => __( 'Error loading destinations', MRT_TEXT_DOMAIN ),
-		'saving'                       => __( 'Saving...', MRT_TEXT_DOMAIN ),
-		'adding'                       => __( 'Adding...', MRT_TEXT_DOMAIN ),
-		'timeHint'                     => __( 'Leave empty if train stops but time is not fixed', MRT_TEXT_DOMAIN ),
-		'pickup'                       => __( 'Pickup', MRT_TEXT_DOMAIN ),
-		'dropoff'                      => __( 'Dropoff', MRT_TEXT_DOMAIN ),
-		'edit'                         => __( 'Edit', MRT_TEXT_DOMAIN ),
-		'tripAdded'                    => __( 'Trip added successfully.', MRT_TEXT_DOMAIN ),
-		'tripRemoved'                  => __( 'Trip removed successfully.', MRT_TEXT_DOMAIN ),
-		'saved'                        => __( '✓ Saved', MRT_TEXT_DOMAIN ),
-	);
-}
-
-/**
- * Enqueue admin assets.
+ * Enqueue admin assets (CSS only; Vue admin bundle via admin-vue.php).
  */
 function MRT_enqueue_admin_assets( string $hook ): void {
 	if ( ! MRT_should_load_admin_assets( $hook ) ) {
 		return;
 	}
 	MRT_enqueue_admin_css( $hook );
-	MRT_enqueue_admin_js();
-	$l10n = MRT_admin_script_localization();
-	if ( MRT_allow_script_debug() ) {
-		$l10n['developmentMode'] = '1';
-	}
-	wp_localize_script( 'mrt-admin', 'mrtAdmin', $l10n );
-	wp_add_inline_script(
-		'mrt-admin',
-		'window.mrtDebug = !!(window.mrtAdmin && window.mrtAdmin.developmentMode);',
-		'before'
-	);
 }
 add_action( 'admin_enqueue_scripts', 'MRT_enqueue_admin_assets' );

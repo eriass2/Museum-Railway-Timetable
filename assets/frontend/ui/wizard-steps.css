@@ -1,0 +1,213 @@
+/**
+ * wizard-steps
+ * @package Museum_Railway_Timetable
+ */
+/* â€”â€” Step header â€”â€” */
+.mrt-step-header {
+    display: grid;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+}
+
+.mrt-step-header__back {
+    justify-self: start;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--mrt-color-on-dark, #fff);
+    font-size: 1.15rem;
+    font-weight: 700;
+    min-height: 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
+.mrt-step-header__back:hover {
+    color: var(--mrt-color-on-dark-link, #f5e6a8);
+}
+
+.mrt-step-header__context {
+    margin: 0;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--mrt-color-on-dark-muted, rgba(255, 255, 255, 0.85));
+}
+
+/* â€”â€” Step progress â€”â€” */
+.mrt-step-nav {
+    margin: 0 0 0.75rem;
+}
+
+.mrt-step-nav--readonly {
+    pointer-events: none;
+    user-select: none;
+}
+
+.mrt-step-progress {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    justify-content: center;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.mrt-step-progress__wrap {
+    display: contents;
+}
+
+.mrt-step-progress__item {
+    padding: 0.25rem 0.55rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+}
+
+button.mrt-step-progress__item {
+    margin: 0;
+    font: inherit;
+    line-height: inherit;
+    cursor: pointer;
+    text-align: inherit;
+}
+
+button.mrt-step-progress__item.is-done:hover {
+    color: var(--mrt-color-on-dark, #fff);
+    background: color-mix(in srgb, var(--mrt-wizard-yellow, var(--mrt-color-accent-600)) 22%, var(--mrt-color-green-800));
+}
+
+button.mrt-step-progress__item.is-done:focus-visible {
+    outline: 3px solid var(--mrt-wizard-focus);
+    outline-offset: 3px;
+}
+
+.mrt-step-progress__item.is-active {
+    color: var(--mrt-wizard-text, #151515);
+    background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
+    border: 2px solid var(--mrt-color-accent-700, #c9a01a);
+}
+
+.mrt-step-progress__item.is-done {
+    color: var(--mrt-color-on-dark-link, #e8f0ea);
+    background: var(--mrt-color-green-800);
+    border: 2px solid var(--mrt-color-accent-500);
+}
+
+.mrt-step-progress__item:not(.is-active):not(.is-done) {
+    color: var(--mrt-color-on-dark, #fff);
+    background: var(--mrt-color-green-800);
+    border: 2px solid var(--mrt-color-border-on-dark, rgba(255, 255, 255, 0.35));
+}
+
+/* â€”â€” Field + combobox â€”â€” */
+.mrt-field {
+    margin: 0;
+}
+
+.mrt-field__label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.mrt-combobox {
+    position: relative;
+}
+
+.mrt-combobox__input {
+    width: 100%;
+    min-height: 3rem;
+    padding: 0.65rem 0.85rem;
+    border: 2px solid var(--mrt-color-border-on-surface, #ccc);
+    border-radius: 0;
+    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-wizard-text, #151515);
+    font-size: 1.05rem;
+    line-height: 1.3;
+    box-sizing: border-box;
+}
+
+.mrt-combobox__input::placeholder {
+    color: var(--mrt-color-placeholder, #767676);
+    opacity: 1;
+}
+
+.mrt-combobox__list {
+    position: absolute;
+    z-index: 20;
+    left: 0;
+    right: 0;
+    top: calc(100% + 2px);
+    margin: 0;
+    padding: 0;
+    max-height: 14rem;
+    overflow-y: auto;
+    list-style: none;
+    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-wizard-text, #151515);
+    border: 1px solid var(--mrt-wizard-border, #ccc);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.mrt-combobox__option {
+    padding: 0.65rem 0.85rem;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.mrt-combobox__option:hover,
+.mrt-combobox__option[aria-selected='true'] {
+    background: color-mix(in srgb, var(--mrt-color-accent-500) 35%, transparent);
+}
+
+/* â€”â€” Segmented control â€”â€” */
+.mrt-segmented-field {
+    border: 0;
+    padding: 0;
+    margin: 0 0 1.5rem;
+}
+
+.mrt-segmented-field__legend {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+.mrt-segmented {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+    gap: 0;
+    width: 100%;
+    border: 2px solid var(--mrt-color-border-on-surface, #ccc);
+}
+
+.mrt-segmented__option {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    min-height: 3.25rem;
+    margin: 0;
+    padding: 0.5rem 0.75rem;
+    border: 0;
+    border-radius: 0;
+    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-wizard-text, #151515);
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.2;
+    cursor: pointer;
+}
+
+.mrt-segmented__option + .mrt-segmented__option {
+    border-left: 2px solid var(--mrt-color-border-on-surface, #ccc);
+}
+
+.mrt-segmented__option.is-active {
+    background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
+    color: var(--mrt-color-on-accent);
+}
+

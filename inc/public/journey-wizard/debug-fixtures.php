@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/import/csv/fixture-read.php';
+
 /**
  * Resolve Lennakatten demo station pair (after import).
  *
@@ -37,7 +39,7 @@ function MRT_debug_lennakatten_station_pair(): array {
  * Example traffic date from Lennakatten import.
  */
 function MRT_debug_lennakatten_sample_date(): string {
-	$dates = function_exists( 'MRT_import_get_timetable_dates' ) ? MRT_import_get_timetable_dates() : array();
+	$dates = MRT_csv_fixture_green_dates();
 	return ! empty( $dates[0] ) ? (string) $dates[0] : '2026-05-30';
 }
 

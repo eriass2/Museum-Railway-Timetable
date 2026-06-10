@@ -16,14 +16,10 @@
 .mrt-journey-wizard__vehicle-icon {
     display: block;
     width: auto;
-    height: 0.85rem;
-    max-width: 2.1rem;
+    height: 1.35rem;
+    max-width: 2.85rem;
     flex-shrink: 0;
+    align-self: center;
     object-fit: contain;
 }
 
-.mrt-journey-wizard__timetable .mrt-train-type-icon-img {
-    height: 0.95rem;
-    max-width: 2.15rem;
-    margin-bottom: 0.08rem;
-}

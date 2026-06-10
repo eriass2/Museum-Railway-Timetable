@@ -22,9 +22,12 @@
         "phpstan": "phpstan analyse --memory-limit=1G",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
-        "check": ["@plugin-check", "@phpstan", "@test", "@test:js"],
+        "check": ["@plugin-check", "@phpstan", "@test"],
         "lint": ["@phpstan", "@phpcs"],
-        "test": "phpunit",
-        "test:js": "node --test tests/js/*.mjs"
+        "test": "@php vendor/bin/phpunit",
+        "vue:build": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run build",
+        "vue:check": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run check",
+        "csv:validate": "php scripts/csv-validate.php",
+        "csv:zip": "bash scripts/csv-package-zip.sh"
     }
 }

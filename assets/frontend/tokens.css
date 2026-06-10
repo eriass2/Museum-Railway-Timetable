@@ -1,17 +1,20 @@
 ﻿/**
- * Design Tokens ÔÇô f├ñrger, spacing, typografi
+ * Design Tokens – färger, spacing, typografi
  * Importeras av admin-base.css
  *
  * @package Museum_Railway_Timetable
  */
 
+@import url("../mrt-color-tokens.css");
+@import url("../mrt-typography.css");
+
 :root {
-    /* Primary Colors */
-    --mrt-green-primary: #2d5016;
+    /* Primary Colors (legacy aliases → Lennakatten brand) */
+    --mrt-green-primary: var(--mrt-color-brand-green);
     --mrt-green-light: #9ad29a;
     --mrt-green-border: #6fb36f;
-    --mrt-green-dark: #1e3410;
-    --mrt-green-hover: #2d7a3d;
+    --mrt-green-dark: var(--mrt-color-green-800);
+    --mrt-green-hover: var(--mrt-color-green-500);
     --mrt-blue-primary: #2271b1;
     --mrt-success: #46b450;
 
@@ -107,7 +110,7 @@
     --mrt-from-to-col-bg: #90caf9;
     --mrt-transfer-bg: var(--mrt-special-bg);
     --mrt-transfer-col-bg: #fff59d;
-    --mrt-route-header-end: #3a6b1f;
+    --mrt-route-header-end: var(--mrt-color-green-700);
 
     /* Overlays */
     --mrt-overlay-white-15: rgba(255, 255, 255, 0.15);

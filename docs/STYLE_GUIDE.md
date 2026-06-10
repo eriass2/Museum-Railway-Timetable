@@ -4,6 +4,8 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 
 **Arkitektur och rebuild-design:** [REBUILD_RULES.md](REBUILD_RULES.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Denna guide fokuserar på namngivning, säkerhet och filkonventioner så att regler inte dupliceras.
 
+**Visuell design:** [design/BRAND_UI.md](design/BRAND_UI.md) (Lennakatten profil → plugin-UI), [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) (tokens i `assets/mrt-color-tokens.css`). Mockups i `docs/mockups/` är arkiverad referens.
+
 ---
 
 ## 1. Clean Code – Generella regler
@@ -50,7 +52,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **ABSPATH** – Alla PHP-filer (utom `uninstall.php`) ska ha: `if (!defined('ABSPATH')) { exit; }`
 - **Escape all output** – Använd `esc_html()`, `esc_attr()`, `esc_url()` etc.
 - **Sanitize input** – `sanitize_text_field()`, `intval()`, `wp_kses()` etc.
-- **Nonces** – Alla formulär och AJAX-anrop ska använda nonces
+- **Nonces** – Formulär och REST-anrop ska använda nonces (`X-WP-Nonce` / `wp_rest`)
 - **Capability checks** – `current_user_can()` för admin-funktioner
 - **SQL** – Alltid `$wpdb->prepare()` för parametriserade queries
 
@@ -68,21 +70,42 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 
 ### Namnkonventioner
 - **Prefix** – Alla klasser: `.mrt-` (t.ex. `.mrt-timetable-overview`)
-- **BEM-liknande** – `.mrt-block--modifier` (t.ex. `.mrt-btn--primary`)
+- **BEM-liknande** – `.mrt-block--modifier` (t.ex. `.mrt-accent-btn--primary`, `MrtButton` med `variant`)
 - **Variabler** – CSS custom properties med `--mrt-` prefix
 
 ### Struktur
-- **Rebuild-status** – Nuvarande utseendeimplementation är purgad. Ny CSS ska byggas från mockups enligt `REBUILD_RULES.md`.
-- **UI-klasser** – Nya klasser ska använda `.mrt-*` och vara BEM-liknande där det behövs.
-- **CSS-variabler** – Använd semantiska `--mrt-*` tokens när ny design byggs upp.
+- **Varumärke och UI** – Se [design/BRAND_UI.md](design/BRAND_UI.md) (scope, formspråk, typografi, branding i texter).
+- **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
+- **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med scoped CSS; se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md). Kvarvarande global modul-CSS: `assets/frontend/ui/` (wizard-steg, trips, kalender — barrel `ui-components.css`).
+- **Legacy PHP** – `.mrt-alert` m.m. i `assets/frontend/components-base.css` (demo-verktyg, bygg-varningar).
+- **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
 - **Inga inline styles** – All styling i CSS-filer.
 
+### Publik UI (wizard m.fl.)
+- **Primär accent:** `--mrt-color-accent-600` (`#DDD24C`) — Lennakatten varumärkesguld för CTA, aktivt steg och vald restyp (sparsamt; se [BRAND_UI.md](design/BRAND_UI.md)).
+- **Text på guld:** `--mrt-color-on-accent` (**svart**), enligt [grafisk profil](https://lennakatten.se/grafisk-profil/) och [BRAND_UI.md](design/BRAND_UI.md).
+- **Vue-bundle:** Publik CSS under `frontend/vue/src/styles/` → `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + vue-shell); varje app importerar egen modul (`month-calendar.css`, `journey-wizard.css`, `timetable-overview.css`, `timetable-index.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
+- **Månadskalender-CSS:** `frontend/vue/src/styles/month-calendar.css` — `.mrt-month-*`, `.mrt-month-day*` (tidtabellstyp-färger); importeras från `MonthCalendarApp.vue`. Wizard använder `.mrt-calendar-day--*` (bokningsbar/trafik/ingen).
+- **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — `base.css`, `wizard-shell.css`, `controls-form.css` (sök steg), `controls-calendar.css`, `steps-*.css`, `responsive.css`. Importeras från `JourneyWizardApp.vue`.
+- **Tidtabellsöversikt-CSS:** `frontend/vue/src/styles/timetable-overview.css` — block `.mrt-ov-*`, importeras från `MrtTimetableOverviewView.vue`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
+- **Färgtokens:** `assets/mrt-color-tokens.css` importeras först i `mrt-public.css`. Se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) och [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
+- **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i `controls-form.css` (scoped under `.mrt-journey-wizard .mrt-surface`).
+
 ### Exempel
+
+Publik (Vue):
+
 ```html
-<button class="mrt-button mrt-button--primary">Spara</button>
-<div class="mrt-card">...</div>
-<div class="mrt-form-field">...</div>
+<!-- Prefer MrtButton in Vue templates -->
+<button class="mrt-accent-btn mrt-accent-btn--primary">Sök resa</button>
+```
+
+Admin (Vue, wp-admin):
+
+```html
+<!-- MrtButton context="admin" → WP-klasser -->
+<button class="button button-primary">Spara</button>
 ```
 
 ---
@@ -90,26 +113,30 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ## 4. JavaScript
 
 ### Struktur
-- **IIFE** – Wrappas i Immediately Invoked Function Expression
-- **jQuery** – Använd `$` för DOM-manipulation
+- **Vue + TypeScript** – Publikt frontend och admin i `frontend/vue/` (Vite → `assets/dist/vue/`)
+- **Ingen jQuery-frontend** – DOM och state hanteras i Vue-komponenter
 - **Ingen `console.log`** i produktion – endast med debug-flagga
 
 ### Namnkonventioner
 - **camelCase** för variabler och funktioner
 - **Prefix** för plugin-specifika: `mrtAdmin`, `mrtFrontend` etc.
 
-### Event och AJAX
-- **Nonces** – Skicka alltid med AJAX-anrop
+### Event och REST
+- **Nonces** – Skicka `X-WP-Nonce` (restNonce) på REST-anrop
 - **Felhantering** – Hantera nätverksfel och visa användarvänliga meddelanden
 
-### Delade util-moduler (`assets/mrt-*.js`)
-- **`mrt-string-utils.js`** – `window.MRTStringUtils.escapeHtml` (XSS-säker text i HTML-strängar). **`admin-utils.js`** `escapeHtml` delegerar hit.
-- **`mrt-date-utils.js`** – `window.MRTDateUtils` (format av `YYYY-MM-DD`, kalenderbyggstenar, `validateHhMm` för `HH:MM`). **`admin-utils.js`** `validateTimeFormat` delegerar till `MRTDateUtils.validateHhMm`.
-- **`mrt-frontend-api.js`** – `window.MRTFrontendApi`: `getAjaxUrl`, `getNonce`, `msg` (strängar från `mrtFrontend`), `post` med valfri override av URL/nonce (t.ex. wizard). Laddas före `frontend.js`; används av `frontend.js` och kan användas av andra frontend-skript med samma beroenden.
-- **`admin-utils.js`** – `window.MRTAdminUtils.msg(key, fallback)` för strängar från `mrtAdmin` (samma mönster som `MRTFrontendApi.msg`). Använd i admin-moduler i stället för upprepade `typeof mrtAdmin`-tester.
-- **Lägg ny återanvändbar logik** i rätt util-fil i stället för att duplicera i flera skript.
-- **Enqueue** – `inc/assets.php` laddar `inc/assets/loader.php` (admin + frontend enqueue) (admin: bl.a. `mrt-string-utils` före `mrt-admin-utils`; frontend: `mrt-string-utils` + `mrt-frontend-api` före `mrt-frontend`; wizard + tidtabellsöversikt även `train-type-icons.css`).
-- **JS-tester (valfritt)** – `composer test:js` kör `node --test tests/js/` (Node 18+); täcker delade util-filer utan browser.
+### Delade util-moduler
+- **Datum/tid och strängar** – Vue-utils under `frontend/vue/src/` (t.ex. `wizardDate.ts`, `mrtStrings.ts`); testas med Vitest (`npm test` i `frontend/vue/`).
+
+### Admin (Vue)
+- **Vue-admin** – `frontend/vue/src/admin/` byggt till `assets/dist/vue/assets/admin.js` (`vite.admin.config.ts`).
+- **REST** – `adminRest.ts` mot `inc/infrastructure/rest/`; nonce via `mrtAdminVue`.
+- **CSS** – `assets/admin.css` (WP-native skal) + `admin-shell.css` i Vue-bundeln.
+
+### Publikt frontend (Vue)
+- **Ingen jQuery-frontend** – månad, översikt, index och wizard mountar Vue (`frontend/vue/`, byggt till `assets/dist/vue/`).
+- **REST** – Vue anropar `wp-json/museum-railway-timetable/v1/` med nonce från mount-config.
+- **CSS** – Vite-bundel; källfiler under `frontend/vue/src/styles/` (se §3 CSS).
 
 ---
 
@@ -124,6 +151,9 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Text domain** – `museum-railway-timetable`
 - **Funktioner** – `__()`, `esc_html__()`, `esc_attr__()`, `_n()` etc.
 - **Kontext** – Använd `_x()` vid behov för kontextberoende strängar
+- **Vue publikt** – strängar från PHP (`strings`, `wizard`, `labels`) via `resolveMrtString()`; se [VUE_UTILS.md](VUE_UTILS.md)
+- **Vue admin** – `mrtAdminVue.strings` och `adminStr()`
+- **Underhåll** – efter nya PHP-strängar: `powershell -File .\scripts\make-i18n.ps1` (WP-CLI + msgmerge). `inc/assets/frontend.php` använder literal `'museum-railway-timetable'` så WP-CLI hittar strängarna (`MRT_TEXT_DOMAIN` plockas inte upp av `make-pot`)
 
 ### Databas
 - **Tabellprefix** – `$wpdb->prefix . 'mrt_stoptimes'`
@@ -136,7 +166,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Mappar
 - **Använd mappar** – Organisera kod efter ansvar (`inc/domain/`, `inc/admin/`, `inc/infrastructure/`, `inc/public/`)
 - **En fil per ansvar** – Varje mapp innehåller filer med tydligt, sammanhörande ansvar
-- **Loader-filer** – Tunna loaders (`inc/infrastructure/ajax.php`, `inc/admin/meta-boxes.php`) require:ar undermappar
+- **Loader-filer** – Tunna loaders (`inc/infrastructure/rest/loader.php`, `inc/bootstrap/domain.php`) require:ar undermappar
 
 ### Struktur
 
@@ -151,19 +181,29 @@ museum-railway-timetable/
 ├── inc/
 │   ├── bootstrap/                 # domain loader
 │   ├── domain/                    # affärslogik (journey, service, timetable, …)
-│   ├── infrastructure/            # CPT, ajax/, wordpress/
-│   ├── admin/                     # dashboard/, meta-boxes/, tools/
+│   │   └── journey/engine/        # search.php (loader), search-results.php, search-bfs.php, search-find.php
+│   │   └── journey/               # journey-normalize.php (loader), journey-normalize-*.php
+│   ├── infrastructure/            # CPT, rest/, wordpress/
+│   ├── assets/l10n/               # admin-vue-l10n-*.php + loader.php (ersätter monolitiska l10n-filer)
+│   ├── admin/                     # app.php, menu.php, tools/
 │   ├── public/                    # month-calendar, timetable-overview, journey-wizard
 │   ├── import/lennakatten/
 │   ├── assets/                    # enqueue-hjälpare
 │   ├── admin.php, shortcodes.php, assets.php
 │   └── constants.php
 ├── assets/
-│   ├── admin.css, admin.js, admin-*.js
-│   ├── frontend.js, frontend-public.css, frontend-overview.css
-│   ├── journey-wizard.js, journey-wizard.css, journey-wizard/
-│   ├── mrt-string-utils.js, mrt-date-utils.js, mrt-frontend-api.js
+│   ├── admin.css                  # WP-admin skal (Vue-admin)
+│   ├── dist/vue/                  # Vite bundle (public + admin JS/CSS)
 │   └── icons/train-types/
+├── frontend/vue/src/admin/          # Vue admin SPA (pages, composables, components)
+│   ├── composables/               # t.ex. useStationsRoutesPage.ts
+│   ├── components/                # t.ex. AdminStationsPanel, RouteStationOrderEditor
+│   └── pages/                     # tunna route-vyer som delegerar till composables
+├── frontend/vue/src/styles/       # Vue-ägd publik CSS (se §3 CSS)
+│   ├── mrt-public.css             # tokens + assets primitives + vue-shell
+│   ├── journey-wizard/            # wizard-moduler
+│   ├── timetable-overview.css     # .mrt-ov-* tidtabell
+│   └── timetable-index.css        # .mrt-timetable-index__*
 └── languages/
 ```
 
@@ -175,7 +215,7 @@ museum-railway-timetable/
 - [ ] PHPDoc på alla nya funktioner
 - [ ] All output escaped
 - [ ] All input sanitized
-- [ ] Nonces på formulär/AJAX
+- [ ] Nonces på REST-anrop (X-WP-Nonce)
 - [ ] Inga inline styles
 - [ ] CSS-klasser med `.mrt-` prefix
 - [ ] Funktioner med `MRT_` prefix
@@ -187,6 +227,9 @@ museum-railway-timetable/
 ## 8. Referenser
 
 - **REBUILD_RULES.md** – Rebuild-regler för kod, design och kvalitet
+- **VUE_UI_COMPONENTS.md** – Vue-komponenter, tokens och alerts
+- **design/BRAND_UI.md** – Lennakatten UI-regler (scope, formspråk, branding)
+- **design/COLOR_PALETTE.md** – Färgpalett och kontrast
 - [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/wordpress-coding-standards/)
 - [WordPress Plugin Handbook](https://developer.wordpress.org/plugins/)
 - [Clean Code (Robert C. Martin)](https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882)

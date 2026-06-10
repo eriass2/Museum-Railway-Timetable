@@ -2,7 +2,7 @@
 
 This document describes all data objects in the Museum Railway Timetable plugin and their relationships.
 
-**Plugin code:** Data is read and written via `inc/domain/` (business rules) and `inc/infrastructure/` (WordPress adapters). Admin UI: `inc/admin/meta-boxes/`. See [ARCHITECTURE.md](ARCHITECTURE.md).
+**Plugin code:** Data is read and written via `inc/domain/` (business rules) and `inc/infrastructure/` (WordPress adapters). Admin UI: Vue SPA under `frontend/vue/src/admin/` (REST-backed). See [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Code map (where logic lives)
 
@@ -12,16 +12,29 @@ This document describes all data objects in the Museum Railway Timetable plugin 
 | Stop times (custom table) | `inc/domain/service/stop-times.php` |
 | Services & connections | `inc/domain/service/services.php`, `connections.php` |
 | Routes & stations | `inc/domain/route/routes.php`, `inc/domain/station/stations.php` |
-| Timetable overview grid | `inc/domain/timetable/view/` |
-| Journey search & prices | `inc/domain/journey/`, `inc/domain/pricing/prices.php` |
-| Lennakatten import | `inc/import/lennakatten/`, admin UI `inc/admin/tools/import-lennakatten.php` |
+| Timetable overview grid | `inc/domain/timetable/view/overview/`, `grid/` |
+| Journey search & prices | `inc/domain/journey/` (engine + normalize loaders), `inc/domain/pricing/` (`prices.php`, `price-schema.php`, `price-rules.php`, `station-zones.php`) |
+| Admin Vue l10n strings | `inc/assets/l10n/` (per-screen `admin-vue-l10n-*.php` + `loader.php`) |
+| Lennakatten import | `testdata/fixtures/lennakatten/`, `inc/import/csv/`, admin UI `inc/admin/tools/import-lennakatten.php` |
 
 ## Overview
 
 The plugin uses a combination of WordPress Custom Post Types, Taxonomies, Custom Database Tables, and Post Meta to manage timetable data.
 
+### Trip vs service (terminology)
+
+The codebase uses both words for the same concept — one scheduled train run on a route for a given timetable day.
+
+| Context | Term | Examples |
+|---------|------|----------|
+| WordPress post type & REST paths | **service** | `mrt_service`, `GET /timetables/{id}/services`, `service_number` meta |
+| UI copy, docs, some PHP comments | **trip** | “Lägg till tur”, overview grid columns, journey wizard |
+| Database / import CSV | **service** | `services.csv`, `service_code` |
+
+**Rule of thumb:** prefer **service** in code identifiers (REST, CPT, meta keys, filenames). Use **trip** only in user-facing Swedish/English labels where it reads more naturally. Do not rename REST routes or post types without a dedicated migration.
+
 **New Data Model:**
-- A **Timetable** has one or more dates (days) when it applies and contains multiple trips (Services)
+- A **Timetable** has one or more dates (days) when it applies and contains multiple trips/services (`mrt_service`)
 - A **Service** (trip) belongs to one Timetable, has arrival/departure times (Stop Times), and a train type
 - A **Route** defines which stations are available (independent of timetable)
 - A **Station** is used in Routes and Stop Times
@@ -180,6 +193,7 @@ TrainType
 - `mrt_lat` (float) - Latitude coordinate (optional)
 - `mrt_lng` (float) - Longitude coordinate (optional)
 - `mrt_display_order` (int) - Display order for sorting (default: 0)
+- `mrt_station_price_zones` (int[]) - Price zones for fare lookup (1–4, max two per station; empty = none). CSV column `price_zones`. See [PRICE_ZONES.md](PRICE_ZONES.md).
 
 **Relationships:**
 - **Many-to-Many** with `Service` via `mrt_stoptimes` table
@@ -334,9 +348,10 @@ CREATE TABLE {prefix}_mrt_stoptimes (
     stop_sequence INT NOT NULL,
     arrival_time CHAR(5) NULL,
     departure_time CHAR(5) NULL,
-    pickup_allowed TINYINT(1) DEFAULT 1,
-    dropoff_allowed TINYINT(1) DEFAULT 1,
-    PRIMARY KEY (id),
+        pickup_allowed TINYINT(1) DEFAULT 1,
+        dropoff_allowed TINYINT(1) DEFAULT 1,
+        approximate_time TINYINT(1) DEFAULT 0,
+        PRIMARY KEY (id),
     KEY service_seq (service_post_id, stop_sequence),
     KEY station (station_post_id)
 )
@@ -355,6 +370,9 @@ CREATE TABLE {prefix}_mrt_stoptimes (
   - Example: "09:20" or NULL
 - `pickup_allowed` (TINYINT) - Whether passengers can board (default: 1)
 - `dropoff_allowed` (TINYINT) - Whether passengers can alight (default: 1)
+- `approximate_time` (TINYINT) - Show **Ca** prefix in journey wizard (default: 0). See [STOP_TIME_CA.md](STOP_TIME_CA.md).
+
+**Planerat (schema v3):** Ta bort `pickup_allowed` / `dropoff_allowed`; inför `ank_pickup_mode`, `ank_dropoff_mode`, `avg_pickup_mode`, `avg_dropoff_mode` (`none` | `scheduled` | `on_request`) från [Tidtabellsboken-del-B.pdf](../testdata/reference-pdfs/Tidtabellsboken-del-B.pdf); anslag som overlay för Ca. Rent byte — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md).
 
 **Relationships:**
 - **Many-to-One** with `Service` (via `service_post_id`)
@@ -389,29 +407,40 @@ service_post_id | station_post_id | stop_sequence | arrival_time | departure_tim
 
 ### 4.1 Plugin Settings (`mrt_settings`)
 
-**Description:** Stores plugin configuration options.
+**Description:** Global plugin configuration (journey rules, operator branding, transfer limits).
 
-**Storage:** WordPress `wp_options` table
+**Storage:** WordPress `wp_options` table. Code: `inc/infrastructure/wordpress/plugin-settings.php`.
 
-**Structure:**
-```php
-[
-    'enabled' => bool,  // Whether plugin is enabled
-    'note' => string   // Optional note/notice text
-]
-```
+**Notable keys:** `enabled`, `note`, `operator_name`, `ticket_url`, `min_transfer_minutes`, `max_transfer_minutes`, `max_transfers`, `afternoon_return_threshold_minutes` (default 900 = 15:00).
 
-**Default Values:**
-```php
-[
-    'enabled' => true,
-    'note' => ''
-]
-```
+**Usage:** Merged with defaults via `MRT_get_plugin_settings()`. Admin REST: `GET|PATCH /settings`. CSV: `settings.csv`.
 
-**Usage:**
-- Controls whether timetable functionality is active
-- Stores optional note text for display
+### 4.2 Price Schema (`mrt_price_schema`)
+
+**Description:** Configurable price structure — ticket types, customer categories, zone column keys, `zone_cap`, afternoon-return flat fares.
+
+**Storage:** `wp_options`. Code: `inc/domain/pricing/price-schema.php`.
+
+**Structure (simplified):** `ticket_types[]`, `categories[]`, `zones[]`, `zone_cap`, `afternoon_return` (per category key).
+
+**Usage:** Admin **Priser → Prisstruktur** and **Eftermiddags-retur**. Wizard labels and matrix columns come from schema. CSV: `price_schema.csv`. See [PRICE_ZONES.md](PRICE_ZONES.md).
+
+### 4.3 Price Matrix (`mrt_price_matrix`)
+
+**Description:** Fare amounts keyed by ticket type → category → zone number.
+
+**Storage:** `wp_options`. Code: `inc/domain/pricing/prices.php`.
+
+**Usage:** Admin **Priser → Prismatris**; public wizard via `GET prices/trip` and mount config `priceMatrix`. CSV: `prices.csv`.
+
+### 4.4 Pricing flow (journey wizard)
+
+1. Each station has `mrt_station_price_zones` (or empty).
+2. Outbound served stops → `MRT_price_zone_for_journey()` in `price-rules.php` (lowest valid zone along the leg; round-trip uses outbound band only).
+3. Schema `zone_cap` caps the matrix column used.
+4. Matrix + schema → line items in wizard summary.
+
+Details and Lennakatten reference zones: [PRICE_ZONES.md](PRICE_ZONES.md). Import columns: [CSV_FORMAT.md](CSV_FORMAT.md).
 
 ---
 
@@ -512,9 +541,9 @@ The plugin provides a visual overview of timetables that groups services (trips)
 
 - **Groups trips** by route and direction (e.g., "Från Uppsala Ö Till Marielund")
 - **Displays train types** with PNG icons (`assets/icons/train-types/`) for each trip
-- **Shows times** for each station, with "X" indicating null/unspecified times
-- **Available in admin** as a preview meta box on Timetable edit screens
-- **Rendered by** `MRT_render_timetable_overview()` in `inc/domain/timetable/view/overview.php`
+- **Shows times** for each station, with inline bus connections at junction stations
+- **Available in admin** via Vue editor preview tab (same component as public shortcode)
+- **Public + admin rendering** via JSON (`MRT_get_timetable_overview_data`) and `frontend/vue/src/components/overview/`
 
 ### Display Flow
 1. **Shortcode** → Queries timetables for a specific date
@@ -535,8 +564,9 @@ The plugin provides a visual overview of timetables that groups services (trips)
 
 ### Service Functions
 - `MRT_services_running_on_date()` - Find services active on a date
-- `MRT_get_services_for_station()` - Get services stopping at station
-- `MRT_next_running_day_for_station()` - Find next service day for station
+- `MRT_find_connections()` - Direct trips between two stations on a date
+- `MRT_find_connecting_services()` - Transfer candidates at a junction station
+- `MRT_get_journey_calendar_month()` - Month calendar status for a station pair (wizard)
 
 
 ---
@@ -580,8 +610,8 @@ The plugin provides a visual overview of timetables that groups services (trips)
 
 **Implementerat (2026-05):**
 
-- **`[museum_journey_wizard]`** – publikt flöde (rutt, datum, utresa, retur, priser). Domän: `inc/domain/journey/`, AJAX i `inc/infrastructure/ajax/`.
-- Direktresor och enkelbyte; min/max bytestid via inställningar och filter.
+- **`[museum_journey_wizard]`** – publikt flöde (rutt, datum, utresa, retur, priser). Domän: `inc/domain/journey/`, REST i `inc/infrastructure/rest/public/journey-public.php`.
+- Direktresor och byte (max 2 byten / 3 ben via `inc/domain/journey/engine/`); min/max bytestid via inställningar och filter.
 - Tågtypsikoner via `inc/domain/train-type/icons.php`.
 
 **Use Cases (täcks av wizard):**

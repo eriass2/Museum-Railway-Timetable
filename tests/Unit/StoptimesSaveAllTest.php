@@ -44,6 +44,68 @@ final class StoptimesSaveAllTest extends TestCase {
         self::assertCount(1, $result);
         self::assertSame(2, $result[0]['station_post_id']);
         self::assertSame(1, $result[0]['stop_sequence']);
+        self::assertSame('09:00', $result[0]['arrival_time']);
+        self::assertSame('09:00', $result[0]['departure_time']);
+        self::assertSame(0, $result[0]['approximate_time']);
+    }
+
+    public function test_prepare_stoptimes_persists_approximate_flag(): void {
+        $result = MRT_prepare_stoptimes_for_save_all([
+            [
+                'station_id' => 2,
+                'stops_here' => '1',
+                'arrival' => '10:13',
+                'approximate' => '1',
+            ],
+        ]);
+
+        self::assertIsArray($result);
+        self::assertSame(1, $result[0]['approximate_time']);
+    }
+
+    public function test_prepare_stoptimes_mirrors_departure_only_to_arrival(): void {
+        $result = MRT_prepare_stoptimes_for_save_all([
+            [
+                'station_id' => 3,
+                'stops_here' => '1',
+                'departure' => '10:15',
+            ],
+        ]);
+
+        self::assertIsArray($result);
+        self::assertSame('10:15', $result[0]['arrival_time']);
+        self::assertSame('10:15', $result[0]['departure_time']);
+    }
+
+    public function test_prepare_stoptimes_trims_origin_and_destination_times(): void {
+        $result = MRT_prepare_stoptimes_for_save_all([
+            [
+                'station_id' => 1,
+                'stops_here' => '1',
+                'departure' => '10:00',
+                'pickup' => '1',
+            ],
+            [
+                'station_id' => 2,
+                'stops_here' => '1',
+                'arrival' => '10:35',
+                'dropoff' => '1',
+            ],
+        ]);
+
+        self::assertIsArray($result);
+        self::assertNull($result[0]['arrival_time']);
+        self::assertSame('10:00', $result[0]['departure_time']);
+        self::assertSame('10:35', $result[1]['arrival_time']);
+        self::assertNull($result[1]['departure_time']);
+    }
+
+    public function test_mirror_stoptime_leaves_both_empty_or_both_set(): void {
+        self::assertSame(['', ''], MRT_mirror_stoptime_arrival_departure('', ''));
+        self::assertSame(
+            ['09:00', '09:30'],
+            MRT_mirror_stoptime_arrival_departure('09:00', '09:30')
+        );
     }
 
     public function test_insert_prepared_stoptime_reports_failure(): void {
@@ -56,14 +118,15 @@ final class StoptimesSaveAllTest extends TestCase {
                 return false;
             }
         };
-        $row = [
-            'station_post_id' => 2,
-            'stop_sequence' => 1,
-            'arrival_time' => '09:00',
-            'departure_time' => null,
-            'pickup_allowed' => 1,
-            'dropoff_allowed' => 1,
-        ];
+        $row = array_merge(
+            [
+                'station_post_id' => 2,
+                'stop_sequence' => 1,
+                'arrival_time' => '09:00',
+                'departure_time' => null,
+            ],
+            MRT_test_stop_modes_both_scheduled()
+        );
 
         self::assertFalse(MRT_insert_prepared_stoptime_for_save_all($wpdb, $row, 10));
     }
@@ -79,14 +142,15 @@ final class StoptimesSaveAllTest extends TestCase {
                 return 1;
             }
         };
-        $row = [
-            'station_post_id' => 2,
-            'stop_sequence' => 1,
-            'arrival_time' => '09:00',
-            'departure_time' => null,
-            'pickup_allowed' => 1,
-            'dropoff_allowed' => 1,
-        ];
+        $row = array_merge(
+            [
+                'station_post_id' => 2,
+                'stop_sequence' => 1,
+                'arrival_time' => '09:00',
+                'departure_time' => null,
+            ],
+            MRT_test_stop_modes_both_scheduled()
+        );
 
         self::assertSame(88, MRT_insert_prepared_stoptime_for_save_all($wpdb, $row, 10));
     }

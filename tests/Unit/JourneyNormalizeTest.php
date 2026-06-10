@@ -14,7 +14,7 @@ final class JourneyNormalizeTest extends TestCase {
         parent::tearDown();
     }
 
-    public function test_total_duration_from_legs_sums(): void {
+    public function test_total_duration_from_legs_door_to_door(): void {
         $legs = [
             [
                 'from_departure' => '08:00',
@@ -25,7 +25,7 @@ final class JourneyNormalizeTest extends TestCase {
                 'to_arrival' => '09:45',
             ],
         ];
-        self::assertSame(75, MRT_normalize_total_duration_from_legs($legs));
+        self::assertSame(105, MRT_normalize_total_duration_from_legs($legs));
     }
 
     public function test_total_duration_from_legs_null_if_segment_invalid(): void {
@@ -61,7 +61,7 @@ final class JourneyNormalizeTest extends TestCase {
         $out = MRT_normalize_multi_leg_for_api($item, '2026-04-01');
         self::assertSame('transfer', $out['connection_type']);
         self::assertSame(5, $out['transfer_station_id']);
-        self::assertSame(70, $out['duration_minutes']);
+        self::assertSame(90, $out['duration_minutes']);
         self::assertSame('10:00', $out['departure']);
         self::assertSame('11:30', $out['arrival']);
         self::assertSame('10:00', $out['from_departure']);
@@ -85,6 +85,20 @@ final class JourneyNormalizeTest extends TestCase {
         ];
         $out = MRT_normalize_multi_leg_for_api($item, '2026-01-01');
         self::assertSame("Delay", $out['notice']);
+    }
+
+    public function test_normalize_multi_leg_uses_date_specific_notice(): void {
+        $GLOBALS['mrt_test_post_meta'] = [
+            '10|mrt_service_notice' => 'Global',
+            '10|mrt_service_notices_by_date' => ['2026-06-15' => 'Ersatt lok'],
+        ];
+        $item = [
+            'legs' => [
+                ['service_id' => 10, 'from_departure' => '08:00', 'to_arrival' => '08:20', 'train_type' => 'a'],
+            ],
+        ];
+        $out = MRT_normalize_multi_leg_for_api($item, '2026-06-15');
+        self::assertSame('Ersatt lok', $out['notice']);
     }
 
     public function test_flatten_wrapped_direct_connection(): void {
@@ -149,6 +163,112 @@ final class JourneyNormalizeTest extends TestCase {
         self::assertSame('09:00', $out['from_departure']);
         self::assertSame('10:00', $out['to_arrival']);
         self::assertSame('Test Service', $out['service_name']);
+    }
+
+    public function test_filter_wizard_drops_transfer_when_direct_same_departure(): void {
+        $connections = array(
+            array(
+                'connection_type' => 'direct',
+                'from_departure' => '10:03',
+                'to_arrival' => '11:10',
+                'departure' => '10:03',
+                'arrival' => '11:10',
+            ),
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '10:03',
+                'to_arrival' => '11:54',
+                'departure' => '10:03',
+                'arrival' => '11:54',
+            ),
+        );
+
+        $filtered = MRT_journey_filter_wizard_connections( $connections );
+
+        self::assertCount( 1, $filtered );
+        self::assertSame( 'direct', $filtered[0]['connection_type'] );
+    }
+
+    public function test_filter_wizard_keeps_fastest_transfer_per_departure(): void {
+        $connections = array(
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '09:14',
+                'to_arrival' => '11:54',
+                'departure' => '09:14',
+                'arrival' => '11:54',
+            ),
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '09:14',
+                'to_arrival' => '11:10',
+                'departure' => '09:14',
+                'arrival' => '11:10',
+            ),
+        );
+
+        $filtered = MRT_journey_filter_wizard_connections( $connections );
+
+        self::assertCount( 1, $filtered );
+        self::assertSame( '11:10', $filtered[0]['to_arrival'] );
+    }
+
+    public function test_filter_wizard_drops_transfer_when_direct_reaches_same_arrival_later(): void {
+        $connections = array(
+            array(
+                'connection_type' => 'direct',
+                'from_departure' => '10:03',
+                'to_arrival' => '11:10',
+                'departure' => '10:03',
+                'arrival' => '11:10',
+            ),
+            array(
+                'connection_type' => 'direct',
+                'from_departure' => '14:13',
+                'to_arrival' => '15:31',
+                'departure' => '14:13',
+                'arrival' => '15:31',
+            ),
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '13:36',
+                'to_arrival' => '15:31',
+                'departure' => '13:36',
+                'arrival' => '15:31',
+            ),
+        );
+
+        $filtered = MRT_journey_filter_wizard_connections( $connections );
+
+        self::assertCount( 2, $filtered );
+        $types = array_column( $filtered, 'connection_type' );
+        self::assertSame( array( 'direct', 'direct' ), $types );
+    }
+
+    public function test_filter_wizard_keeps_transfer_before_first_direct(): void {
+        $connections = array(
+            array(
+                'connection_type' => 'transfer',
+                'from_departure' => '09:14',
+                'to_arrival' => '11:10',
+                'departure' => '09:14',
+                'arrival' => '11:10',
+            ),
+            array(
+                'connection_type' => 'direct',
+                'from_departure' => '10:03',
+                'to_arrival' => '11:10',
+                'departure' => '10:03',
+                'arrival' => '11:10',
+            ),
+        );
+
+        $filtered = MRT_journey_filter_wizard_connections( $connections );
+
+        self::assertCount( 2, $filtered );
+        $types = array_column( $filtered, 'connection_type' );
+        self::assertContains( 'transfer', $types );
+        self::assertContains( 'direct', $types );
     }
 
 }

@@ -115,11 +115,19 @@ function MRT_find_return_connections(
 	if ( $earliest === null ) {
 		return array();
 	}
-	return MRT_return_journey_normalized_after_turnaround(
+	$normalized = MRT_return_journey_normalized_after_turnaround(
 		$raw,
 		$dateYmd,
 		(int) $to_station_id,
 		(int) $from_station_id,
+		$earliest
+	);
+	$normalized = MRT_journey_filter_wizard_connections( $normalized );
+	return MRT_journey_sort_return_connections(
+		$normalized,
+		(int) $to_station_id,
+		(int) $from_station_id,
+		$dateYmd,
 		$earliest
 	);
 }

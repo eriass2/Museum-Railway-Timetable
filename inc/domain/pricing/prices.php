@@ -8,13 +8,15 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
+require_once __DIR__ . '/price-schema.php';
+
 /**
  * Ticket-type keys (rows in mockup price table)
  *
  * @return string[]
  */
 function MRT_price_ticket_type_keys() {
-	return array( 'single', 'return', 'day' );
+	return MRT_price_schema_ticket_keys();
 }
 
 /**
@@ -23,7 +25,7 @@ function MRT_price_ticket_type_keys() {
  * @return string[]
  */
 function MRT_price_category_keys() {
-	return array( 'adult', 'child_4_15', 'child_0_3', 'student_senior' );
+	return MRT_price_schema_category_keys();
 }
 
 /**
@@ -32,11 +34,20 @@ function MRT_price_category_keys() {
  * @return int[]
  */
 function MRT_price_zone_keys() {
-	return array( 1, 2, 3, 4 );
+	return MRT_price_schema_zone_keys();
 }
 
 /**
- * 2025 Lennakatten fare table from Taxa 2025.
+ * Max zones used for fare lookup (2026 taxa: three price bands).
+ *
+ * @return int
+ */
+function MRT_price_zone_cap() {
+	return MRT_price_schema_zone_cap();
+}
+
+/**
+ * Lennakatten reference fare table (Taxa 2026) — dev/tests only, not runtime default.
  *
  * @return array<string, array<string, array<int, int|null>>>
  */
@@ -48,12 +59,31 @@ function MRT_get_builtin_price_matrix() {
 }
 
 /**
- * Default matrix.
+ * Empty matrix shaped by the current price schema (all cells null).
+ *
+ * @return array<string, array<string, array<int, int|null>>>
+ */
+function MRT_build_empty_price_matrix(): array {
+	$matrix = array();
+	foreach ( MRT_price_ticket_type_keys() as $ticket_type ) {
+		$matrix[ $ticket_type ] = array();
+		foreach ( MRT_price_category_keys() as $category ) {
+			$matrix[ $ticket_type ][ $category ] = array();
+			foreach ( MRT_price_zone_keys() as $zone ) {
+				$matrix[ $ticket_type ][ $category ][ $zone ] = null;
+			}
+		}
+	}
+	return $matrix;
+}
+
+/**
+ * Default matrix for new installs (empty until configured or imported).
  *
  * @return array<string, array<string, array<int, int|null>>>
  */
 function MRT_get_default_price_matrix() {
-	return MRT_get_builtin_price_matrix();
+	return MRT_build_empty_price_matrix();
 }
 
 /**
@@ -122,27 +152,33 @@ function MRT_get_price_matrix() {
 }
 
 /**
- * Full zone matrix plus active trip and zone.
- *
- * @param array<string, mixed> $args trip => single|return|day, from_station_id, to_station_id
- * @return array<string, mixed> matrix, active_ticket_type, active_row
+ * Whether any cell in the stored price matrix has a value.
  */
-function MRT_get_prices_for_context( $args = array() ) {
-	$trip = isset( $args['trip'] ) ? sanitize_key( (string) $args['trip'] ) : 'single';
-	if ( ! in_array( $trip, MRT_price_ticket_type_keys(), true ) ) {
-		$trip = 'single';
+function MRT_price_matrix_is_configured(): bool {
+	$matrix = MRT_get_price_matrix();
+	foreach ( MRT_price_ticket_type_keys() as $ticket_type ) {
+		foreach ( MRT_price_category_keys() as $category ) {
+			foreach ( MRT_price_zone_keys() as $zone ) {
+				$value = $matrix[ $ticket_type ][ $category ][ $zone ] ?? null;
+				if ( $value !== null && $value !== '' ) {
+					return true;
+				}
+			}
+		}
 	}
-	$full  = MRT_get_price_matrix();
-	$zones = MRT_price_zones_for_station_pair(
-		(int) ( $args['from_station_id'] ?? 0 ),
-		(int) ( $args['to_station_id'] ?? 0 )
-	);
-	return array(
-		'matrix'             => $full,
-		'active_ticket_type' => $trip,
-		'active_zone'        => $zones,
-		'active_row'         => MRT_price_matrix_for_zone( $full, $zones )[ $trip ],
-	);
+	return false;
+}
+
+/**
+ * Whether any afternoon-return category price is set above zero.
+ */
+function MRT_afternoon_return_prices_configured(): bool {
+	foreach ( MRT_get_afternoon_return_prices() as $price ) {
+		if ( (int) $price > 0 ) {
+			return true;
+		}
+	}
+	return false;
 }
 
 /**
@@ -153,7 +189,7 @@ function MRT_get_prices_for_context( $args = array() ) {
  * @return array<string, array<string, int|null>>
  */
 function MRT_price_matrix_for_zone( array $matrix, int $zones ): array {
-	$zone_key = max( 1, min( 4, $zones ) );
+	$zone_key = max( 1, min( MRT_price_zone_cap(), $zones ) );
 	$out      = array();
 	foreach ( MRT_price_ticket_type_keys() as $t ) {
 		$out[ $t ] = array();
@@ -164,31 +200,7 @@ function MRT_price_matrix_for_zone( array $matrix, int $zones ): array {
 	return $out;
 }
 
-/**
- * Default station zones. Boundary stations are listed in both neighboring zones.
- *
- * @return array<string, int[]>
- */
-function MRT_default_station_price_zones_by_title(): array {
-	return array(
-		'Uppsala Östra'   => array( 1 ),
-		'Fyrislund'       => array( 1 ),
-		'Årsta'           => array( 1, 2 ),
-		'Skölsta'         => array( 2 ),
-		'Bärby'           => array( 2 ),
-		'Gunsta'          => array( 2, 3 ),
-		'Marielund'       => array( 3 ),
-		'Lövstahagen'     => array( 3 ),
-		'Selknä'          => array( 3 ),
-		'Löt'             => array( 3 ),
-		'Länna'           => array( 3 ),
-		'Fjällnora'       => array( 3 ),
-		'Almunge'         => array( 3, 4 ),
-		'Moga'            => array( 4 ),
-		'Faringe'         => array( 4 ),
-		'Linnés Hammarby' => array( 4 ),
-	);
-}
+require_once __DIR__ . '/station-zones.php';
 
 /**
  * Station zones keyed by WordPress station ID for frontend localization.
@@ -200,48 +212,22 @@ function MRT_get_station_price_zones_map(): array {
 	if ( ! function_exists( 'MRT_get_all_stations' ) ) {
 		return $map;
 	}
-	$by_title = MRT_default_station_price_zones_by_title();
 	foreach ( MRT_get_all_stations() as $station_id ) {
-		$title = get_the_title( (int) $station_id );
-		if ( isset( $by_title[ $title ] ) ) {
-			$map[ (int) $station_id ] = $by_title[ $title ];
+		$zones = MRT_get_station_price_zones( (int) $station_id );
+		if ( $zones !== array() ) {
+			$map[ (int) $station_id ] = $zones;
 		}
 	}
 	return $map;
 }
 
 /**
- * Cheapest zone count between two station zone sets.
+ * Flat afternoon return fares (tur och retur efter kl 15).
  *
- * Boundary station rule: a station on a zone line counts as either zone, while
- * passing the boundary means entering the next zone.
- *
- * @param int[] $from_zones Possible zones for origin
- * @param int[] $to_zones Possible zones for destination
- * @return int
+ * @return array<string, int>
  */
-function MRT_price_zones_between_zone_sets( array $from_zones, array $to_zones ): int {
-	$best = 4;
-	foreach ( $from_zones as $from_zone ) {
-		foreach ( $to_zones as $to_zone ) {
-			$span = abs( (int) $to_zone - (int) $from_zone ) + 1;
-			$best = min( $best, $span );
-		}
-	}
-	return max( 1, min( 4, $best ) );
-}
-
-/**
- * Number of price zones for a station pair.
- *
- * @return int
- */
-function MRT_price_zones_for_station_pair( int $from_station_id, int $to_station_id ): int {
-	$map = MRT_get_station_price_zones_map();
-	if ( ! isset( $map[ $from_station_id ], $map[ $to_station_id ] ) ) {
-		return 4;
-	}
-	return MRT_price_zones_between_zone_sets( $map[ $from_station_id ], $map[ $to_station_id ] );
+function MRT_get_afternoon_return_prices() {
+	return MRT_price_schema_afternoon_return_prices();
 }
 
 /**
@@ -250,11 +236,7 @@ function MRT_price_zones_for_station_pair( int $from_station_id, int $to_station
  * @return array<string, string>
  */
 function MRT_price_ticket_type_labels() {
-	return array(
-		'single' => __( 'Single ticket', 'museum-railway-timetable' ),
-		'return' => __( 'Return ticket', 'museum-railway-timetable' ),
-		'day'    => __( 'Day pass', 'museum-railway-timetable' ),
-	);
+	return MRT_price_schema_ticket_labels();
 }
 
 /**
@@ -263,10 +245,7 @@ function MRT_price_ticket_type_labels() {
  * @return array<string, string>
  */
 function MRT_price_category_labels() {
-	return array(
-		'adult'          => __( 'Adult', 'museum-railway-timetable' ),
-		'child_4_15'     => __( 'Child 7–15', 'museum-railway-timetable' ),
-		'child_0_3'      => __( 'Child 0–6', 'museum-railway-timetable' ),
-		'student_senior' => __( 'Student / senior 65+', 'museum-railway-timetable' ),
-	);
+	return MRT_price_schema_category_labels();
 }
+
+require_once __DIR__ . '/price-rules.php';

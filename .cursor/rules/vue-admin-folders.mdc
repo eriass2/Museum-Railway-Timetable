@@ -1,0 +1,69 @@
+---
+description: Vue admin folder structure — feature subfolders under layer dirs
+globs: frontend/vue/src/admin/**/*
+alwaysApply: false
+---
+
+# Vue admin – mappstruktur
+
+Admin (`frontend/vue/src/admin/`) använder **lager först**, med **funktionsmappar** när en sida växer.
+
+## Topplager (oförändrat)
+
+| Mapp | Innehåll |
+|------|----------|
+| `pages/` | Route-sidor, tunn glue |
+| `components/` | Vue-komponenter |
+| `composables/` | `use*Page`, guards, delad sidlogik |
+| `utils/` | Rena helpers (ingen Vue) |
+| `api/` | REST-klienter |
+
+## Funktionsmappar
+
+Skapa `kebab-case/`-undermapp när en admin-sida har **2+ egna filer i samma lager**.
+
+**Regler:**
+- Mappnamn = funktion/sida (`traffic-notices`, `timetable-editor`, `stations-routes`, …)
+- Inuti funktionsmappen: **inget `Admin`-prefix** — mappen ger kontext
+- Delade byggblock stannar i `components/ui/` (aldrig feature-mapp)
+- Sid-specifik `useXxxPage.ts` → `composables/<feature>/`
+- Sid-specifika helpers → `utils/<feature>/`
+- `pages/` och `api/` förblir platta (en fil per route/resurs)
+
+## Befintliga feature-mappar
+
+| Feature | Page | components/ | composables/ | utils/ |
+|---------|------|-------------|--------------|--------|
+| Trafikmeddelanden | `TrafficNoticesPage` | `traffic-notices/` | `traffic-notices/` | `traffic-notices/` |
+| Tidtabellsredigerare | `TimetableEditorPage` | `timetable-editor/` | `timetable-editor/` | `timetable-editor/` |
+| Stationer & linjer | `StationsRoutesPage` | `stations-routes/` | `stations-routes/` | `stations-routes/` |
+| Priser | `PricesPage` | `prices/` | `prices/` | `prices/` |
+| Import/export | `ImportExportPage` | `import-export/` | `import-export/` | — |
+| Dashboard | `DashboardPage` | `dashboard/` | — | `dashboard/` |
+| Mobil (tvärgående) | många sidor | `mobile/` | `mobile/` | — |
+
+Ny kod för ovan → lägg i befintlig undermapp, inte i rot.
+
+## När INTE skapa mapp
+
+- En ensam komponent/helper (`AdminLoadState.vue`, `adminConfirm.ts`)
+- Generella verktyg (`adminLabels.ts`, `settingsTime.ts`, `downloadBase64File.ts`)
+- Delade composables (`useAdminResource`, `useAdminSaveNotice`, `adminDiscardGuard`, …)
+- Enskilda sidor utan utbrott (`TrainTypesPage`, `ShortcodesPage`, `SettingsPage`)
+
+## Vid ny kod eller refaktorering
+
+1. Finns feature-mapp? → lägg filen där
+2. Har sidan 2+ filer i samma lager? → skapa `kebab-case/`
+3. Uppdatera imports och kör `.\scripts\vue-check.ps1`
+
+## Exempel (trafikmeddelanden)
+
+```
+pages/TrafficNoticesPage.vue
+components/traffic-notices/TrafficNoticesForm.vue
+components/traffic-notices/TrafficNoticesList.vue
+composables/traffic-notices/useTrafficNoticesPage.ts
+utils/traffic-notices/trafficNoticesAdmin.ts
+api/adminRestTrafficNotices.ts
+```

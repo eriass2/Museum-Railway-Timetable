@@ -21,12 +21,17 @@ services:
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress
       WORDPRESS_DEBUG: "1"
+      WORDPRESS_CONFIG_EXTRA: |
+        define( 'WPLANG', 'sv_SE' );
+        define( 'MRT_DEVELOPMENT', true );
+        define( 'MRT_LENNAKATTEN_BRAND', true );
     volumes:
       - wordpress_data:/var/www/html
       - ./:/var/www/html/wp-content/plugins/museum-railway-timetable
 
   wordpress-init:
     image: wordpress:cli-php8.2
+    user: root
     depends_on:
       - db
       - wordpress
@@ -43,6 +48,7 @@ services:
     volumes:
       - wordpress_data:/var/www/html
       - ./:/var/www/html/wp-content/plugins/museum-railway-timetable
+      - ./docker/ensure-sv-locale.sh:/usr/local/bin/mrt-ensure-sv-locale.sh:ro
     command: >
       sh -c '
         until [ -f wp-config.php ] && wp --allow-root db check >/dev/null 2>&1; do
@@ -55,11 +61,15 @@ services:
             --admin_user="$${WORDPRESS_ADMIN_USER}" \
             --admin_password="$${WORDPRESS_ADMIN_PASSWORD}" \
             --admin_email="$${WORDPRESS_ADMIN_EMAIL}" \
+            --locale=sv_SE \
             --skip-email;
         fi;
+        sh /usr/local/bin/mrt-ensure-sv-locale.sh;
         wp --allow-root plugin activate museum-railway-timetable;
+        wp --allow-root rewrite structure '/%postname%/' --hard;
       '
 
+  # PHP tooling — no Node. Do not run composer vue:* here; use the vue service.
   composer:
     image: composer:2
     entrypoint:
@@ -70,6 +80,28 @@ services:
     volumes:
       - ./:/app
     command: install
+
+  # PHPUnit with PHP 8.2 — matches CI (see scripts/test.ps1).
+  php-test:
+    image: php:8.2-cli
+    profiles:
+      - tools
+    working_dir: /app
+    volumes:
+      - ./:/app
+    entrypoint:
+      - php
+
+  # Node 22 — Vue build/check. Examples:
+  #   docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"
+  #   docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
+  vue:
+    image: node:22-alpine
+    profiles:
+      - tools
+    working_dir: /app/frontend/vue
+    volumes:
+      - ./:/app
 
 volumes:
   db_data:

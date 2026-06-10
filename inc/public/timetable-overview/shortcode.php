@@ -36,5 +36,5 @@ function MRT_render_shortcode_overview( $atts ) {
 		return MRT_render_alert( __( 'Timetable not found.', 'museum-railway-timetable' ), 'error' );
 	}
 
-	return MRT_render_timetable_overview( $timetable_id );
+	return MRT_render_vue_mount( 'overview', MRT_vue_overview_config( $timetable_id ) );
 }

@@ -1,0 +1,238 @@
+/**
+ * Journey wizard – summary step contextual overrides.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-journey-wizard__step-head {
+    margin-bottom: 0.15rem;
+}
+
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-price-block {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--mrt-color-neutral-300, #ccc);
+}
+
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-price-block + .mrt-price-block {
+    margin-top: 1rem;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.mrt-journey-wizard .mrt-step-panel[data-wizard-step="summary"] .mrt-price-block__note {
+    color: var(--mrt-color-neutral-700, #444);
+}
+
+.mrt-journey-wizard .mrt-summary-print-title,
+.mrt-journey-wizard .mrt-summary-print-meta {
+    display: none;
+}
+
+.mrt-journey-wizard .mrt-summary-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.75rem;
+}
+
+.mrt-journey-wizard .mrt-summary-actions .mrt-accent-btn {
+    display: inline-flex;
+    min-width: min(100%, 14rem);
+    min-height: 2.85rem;
+    padding: 0.5rem 1.25rem;
+    font-size: 1.05rem;
+}
+
+.mrt-journey-wizard .mrt-summary-actions__feedback {
+    margin: 0.75rem 0 0;
+    text-align: center;
+    font-size: 0.95rem;
+    color: var(--mrt-color-text-muted, #555);
+}
+
+html.mrt-print-summary #mrt-print-clone {
+    display: none;
+}
+
+@media print {
+    @page {
+        margin: 14mm 12mm;
+        size: A4 portrait;
+    }
+
+    html.mrt-print-summary body > *:not(#mrt-print-clone) {
+        display: none !important;
+    }
+
+    html.mrt-print-summary #mrt-print-clone {
+        display: block !important;
+        position: static;
+        visibility: visible;
+        left: auto;
+        overflow: visible;
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        color: #000;
+        font-family: var(--mrt-font-body);
+        font-size: 9.5pt;
+        line-height: 1.35;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-summary-print-title {
+        display: block;
+        margin: 0 0 2mm;
+        font-family: var(--mrt-font-heading);
+        font-size: 14pt;
+        font-weight: var(--mrt-font-weight-heading-strong);
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-summary-print-meta {
+        display: block;
+        margin: 0 0 5mm;
+        padding-bottom: 3mm;
+        border-bottom: 1px solid #ccc;
+        font-size: 9pt;
+        color: #333;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-summary-list {
+        display: grid;
+        gap: 3mm;
+        margin: 0 0 4mm;
+        grid-template-columns: 1fr;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-summary-list--round-trip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-summary-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin: 0;
+        padding: 3mm 4mm;
+        border: 1px solid #bbb;
+        border-radius: 0;
+        box-shadow: none;
+        background: #fff;
+        color: #000;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-summary-card__heading {
+        margin: 0 0 1.5mm;
+        font-size: 8.5pt;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: #1f4d2e;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-trip-summary__time {
+        margin: 0 0 1mm;
+        font-size: 11pt;
+        font-weight: 700;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-trip-summary__route,
+    html.mrt-print-summary #mrt-print-clone .mrt-trip-summary__date {
+        margin: 0 0 1mm;
+        font-size: 9pt;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list {
+        margin-top: 2mm;
+        padding-top: 2mm;
+        border-top: 1px dotted #ccc;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__icon,
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__icon-fallback {
+        display: none;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__leg {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__vehicle {
+        font-size: 8.5pt;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__time {
+        font-size: 9pt;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__route {
+        font-size: 8pt;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-connection-leg-list__transfer {
+        font-size: 8pt;
+        background: #fff9c4;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-block {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin: 0;
+        padding: 4mm 0 0;
+        border-top: 1px solid #ccc;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-block__title {
+        margin: 0 0 2mm;
+        font-size: 9.5pt;
+        font-weight: 700;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-columns--split {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 3mm;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-column__title {
+        margin: 0 0 1.5mm;
+        font-size: 8.5pt;
+        font-weight: 700;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-list {
+        display: table;
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+        padding: 0;
+        background: transparent;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-list__row {
+        display: table-row;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-list__label,
+    html.mrt-print-summary #mrt-print-clone .mrt-price-list__value {
+        display: table-cell;
+        margin: 0;
+        padding: 1mm 0;
+        border-bottom: 1px solid #eee;
+        font-size: 8.5pt;
+        vertical-align: top;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-list__value {
+        text-align: right;
+        white-space: nowrap;
+        width: 28%;
+        font-weight: 700;
+    }
+
+    html.mrt-print-summary #mrt-print-clone .mrt-price-block__note {
+        margin: 2mm 0 0;
+        font-size: 8pt;
+        color: #444;
+    }
+}

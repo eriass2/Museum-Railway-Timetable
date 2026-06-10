@@ -1,0 +1,175 @@
+<?php
+/**
+ * Stop time display symbols (P, A, Ca, X, |) for timetable overview and grid.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+declare(strict_types=1);
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
+
+/**
+ * P/A footnote flags for wizard timeline (endpoint-aware, behovsuppehåll preserved at destination).
+ *
+ * @return array{pickup_restriction: bool, dropoff_restriction: bool, on_request_both: bool}
+ */
+function MRT_stop_time_restriction_footnote_flags(
+	bool $pickup_on_request,
+	bool $dropoff_on_request,
+	bool $has_time,
+	bool $is_first_in_leg = false,
+	bool $is_last_in_leg = false
+): array {
+	$both_no_time = $pickup_on_request && $dropoff_on_request && ! $has_time;
+	$pickup_only  = $pickup_on_request && ! $dropoff_on_request;
+	$dropoff_only = ! $pickup_on_request && $dropoff_on_request;
+
+	if ( $both_no_time ) {
+		return array(
+			'pickup_restriction'  => ! $is_first_in_leg,
+			'dropoff_restriction' => ! $is_last_in_leg,
+			'on_request_both'     => true,
+		);
+	}
+
+	return array(
+		'pickup_restriction'  => $pickup_only && ! $is_first_in_leg,
+		'dropoff_restriction' => $dropoff_only,
+		'on_request_both'     => false,
+	);
+}
+
+/**
+ * P/A prefix when pickup or dropoff is on-request (behov).
+ *
+ * @param array<string, mixed> $stop_time Stop row with mode columns.
+ */
+function MRT_stop_time_restriction_prefix(
+	array $stop_time,
+	bool $hide_pickup_only = false,
+	bool $hide_dropoff_only = false
+): string {
+	$pickup_or  = MRT_stop_time_on_request_pickup( $stop_time );
+	$dropoff_or = MRT_stop_time_on_request_dropoff( $stop_time );
+
+	if ( $pickup_or && ! $dropoff_or && ! $hide_pickup_only ) {
+		return 'P ';
+	}
+	if ( ! $pickup_or && $dropoff_or && ! $hide_dropoff_only ) {
+		return 'A ';
+	}
+	return '';
+}
+
+/**
+ * Clock time, X (on request), or empty when no time is shown.
+ *
+ * @param array<string, mixed> $stop_time Stop row with mode columns.
+ */
+function MRT_stop_time_clock_fragment( array $stop_time ): string {
+	$arrival    = (string) ( $stop_time['arrival_time'] ?? '' );
+	$departure  = (string) ( $stop_time['departure_time'] ?? '' );
+	$pickup_or  = MRT_stop_time_on_request_pickup( $stop_time );
+	$dropoff_or = MRT_stop_time_on_request_dropoff( $stop_time );
+
+	if ( $departure !== '' ) {
+		return MRT_format_time_display( $departure );
+	}
+	if ( $arrival !== '' ) {
+		return MRT_format_time_display( $arrival );
+	}
+	if ( $pickup_or && $dropoff_or ) {
+		return 'X';
+	}
+	return '';
+}
+
+/**
+ * @return array{0: string, 1: string} [restriction_prefix, time_fragment]
+ */
+function MRT_stop_time_prefix_and_time_parts(
+	array $stop_time,
+	bool $hide_pickup_only_symbol = false,
+	bool $hide_dropoff_only_symbol = false
+): array {
+	$time_str = MRT_stop_time_clock_fragment( $stop_time );
+	if ( $time_str === 'X' ) {
+		return array( '', 'X' );
+	}
+
+	return array(
+		MRT_stop_time_restriction_prefix( $stop_time, $hide_pickup_only_symbol, $hide_dropoff_only_symbol ),
+		$time_str,
+	);
+}
+
+/**
+ * Restriction suffix after the clock time (P, A, or X).
+ *
+ * @param array<string, mixed> $stop_time Stop row with mode columns.
+ */
+function MRT_stop_time_restriction_suffix(
+	array $stop_time,
+	bool $hide_pickup_only = false,
+	bool $hide_dropoff_only = false
+): string {
+	$pickup_or  = MRT_stop_time_on_request_pickup( $stop_time );
+	$dropoff_or = MRT_stop_time_on_request_dropoff( $stop_time );
+	$time_str   = MRT_stop_time_clock_fragment( $stop_time );
+	$has_time   = $time_str !== '' && $time_str !== 'X';
+
+	if ( $pickup_or && $dropoff_or ) {
+		return $has_time ? ' X' : '';
+	}
+	if ( $pickup_or && ! $dropoff_or && ! $hide_pickup_only ) {
+		return ' P';
+	}
+	if ( ! $pickup_or && $dropoff_or && ! $hide_dropoff_only ) {
+		return ' A';
+	}
+	return '';
+}
+
+/**
+ * Format one stop time for timetable cells (Ca, P/A/X suffix, |, —).
+ *
+ * @param array<string, mixed>|null $stop_time Stop row with mode columns.
+ * @param string                    $row_kind  Overview row kind: `from` hides P, `to` hides A.
+ * @return string Formatted display (e.g. "Ca 10.13 P", "Ca 10.09 X", "X", "|", "—").
+ */
+function MRT_format_stop_time_display( ?array $stop_time, string $row_kind = '' ): string {
+	if ( ! $stop_time ) {
+		return '—';
+	}
+
+	$stop_time = MRT_stop_time_row_with_defaults( $stop_time );
+	$time_str  = MRT_stop_time_clock_fragment( $stop_time );
+
+	if ( ! MRT_stop_time_allows_pickup( $stop_time ) && ! MRT_stop_time_allows_dropoff( $stop_time ) ) {
+		return $time_str === '' ? '|' : '—';
+	}
+
+	if ( $time_str === 'X' ) {
+		return 'X';
+	}
+
+	if ( $time_str === '' ) {
+		return '—';
+	}
+
+	$core = $time_str;
+	if ( ! empty( $stop_time['approximate_time'] ) ) {
+		$core = 'Ca ' . $core;
+	}
+
+	return $core . MRT_stop_time_restriction_suffix(
+		$stop_time,
+		$row_kind === 'from',
+		$row_kind === 'to'
+	);
+}

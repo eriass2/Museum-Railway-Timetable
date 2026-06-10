@@ -1,0 +1,60 @@
+/**
+ * Journey wizard — desktop hero full width and optional background image (J10).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-wizard__hero--has-bg {
+    position: relative;
+    background-color: var(--mrt-wizard-green-dark);
+    background-image: var(--mrt-wizard-hero-bg-image);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.mrt-journey-wizard__hero--has-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    /* Light tint so the photo stays visible (UL has none; we keep brand green for contrast). */
+    background: color-mix(in srgb, var(--mrt-wizard-green-dark) 30%, transparent);
+    pointer-events: none;
+}
+
+@media (min-width: 48.0625rem) {
+    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero--has-bg {
+        background-attachment: fixed;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mrt-journey-wizard__hero--has-bg {
+        background-attachment: scroll;
+    }
+}
+
+.mrt-journey-wizard__hero--has-bg > .mrt-journey-wizard__hero-inner {
+    position: relative;
+    z-index: 1;
+}
+
+@media (min-width: 48.0625rem) {
+    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero-inner {
+        width: 100%;
+        max-width: none;
+    }
+
+    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__beta,
+    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__errors {
+        max-width: none;
+    }
+
+    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-step-panel,
+    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-step-panel--search,
+    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-step-panel--wide {
+        width: 100%;
+        max-width: none;
+        background: transparent;
+    }
+}

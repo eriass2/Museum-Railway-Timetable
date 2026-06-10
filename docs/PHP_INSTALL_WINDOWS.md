@@ -113,3 +113,24 @@ composer install
 php scripts\validate.php
 composer phpstan
 ```
+
+---
+
+## PHPUnit på Windows
+
+PHPUnit ska **köras i terminalen**, inte öppnas som fil.
+
+| Gör så här | Kommando |
+|------------|----------|
+| Rekommenderat (Windows) | `.\scripts\test.ps1` — Docker som standard; `-Local` för host PHP 8.2+ |
+| Full PHP gate | `.\scripts\check.ps1` |
+| Vue gate | `.\scripts\vue-check.ps1` |
+| Lokal PHP 8.2+ | `composer test` |
+| Docker manuellt (PHP 8.2, samma som CI) | `docker compose --profile tools run --rm php-test vendor/bin/phpunit` |
+| En testfil via wrapper | `.\scripts\test.ps1 tests/Unit/SomeTest.php` |
+
+**Undvik** att dubbelklicka på `vendor\bin\phpunit` eller köra den utan `php` — Windows frågar då vilket program som ska *öppna* filen (den har inget `.exe`-ändelse).
+
+`composer test` och `php-test` kör internt `php vendor/bin/phpunit`, vilket är rätt sätt.
+
+PHPUnit 11 kräver **PHP 8.2+**. Om `php -v` visar 7.x (vanligt med äldre XAMPP): uppgradera PHP i PATH eller använd Docker-raden ovan.

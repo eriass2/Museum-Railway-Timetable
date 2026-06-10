@@ -8,11 +8,13 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
+require_once MRT_PATH . 'inc/import/csv/fixture-read.php';
+
 /** Option key for stored demo page post ID */
 define( 'MRT_OPTION_COMPONENTS_DEMO_PAGE_ID', 'mrt_components_demo_page_id' );
 
 /**
- * Admin submenu slug for the component demo screen (must match add_submenu_page)
+ * Admin page slug for the component demo screen (hidden menu; linked from Vue AdminNav)
  *
  * @return string
  */
@@ -49,12 +51,31 @@ function MRT_redirect_components_demo_admin_canonical_url() {
 add_action( 'admin_init', 'MRT_redirect_components_demo_admin_canonical_url', 0 );
 
 /**
+ * Hidden admin page: ensure WP admin header gets a non-null title.
+ */
+function MRT_components_demo_admin_set_title(): void {
+	if ( ! is_admin() ) {
+		return;
+	}
+	$page = isset( $_GET['page'] ) ? sanitize_key( wp_unslash( (string) $_GET['page'] ) ) : '';
+	if ( $page !== MRT_components_demo_menu_slug() ) {
+		return;
+	}
+	global $title;
+	// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited -- Sets admin screen title for component demo page.
+	$title = __( 'Komponentdemosida', 'museum-railway-timetable' );
+}
+
+add_action( 'admin_init', 'MRT_components_demo_admin_set_title', 1 );
+
+/**
  * Timetable post title used by Lennakatten import (overview shortcode)
  *
  * @return string
  */
 function MRT_demo_lennakatten_timetable_title() {
-	return 'GRÖN TIDTABELL 2026';
+	$title = MRT_csv_fixture_timetable_title( 'green' );
+	return $title !== '' ? $title : 'GRÖN TIDTABELL 2026';
 }
 
 /**
@@ -64,11 +85,11 @@ function MRT_demo_lennakatten_timetable_title() {
  */
 function MRT_get_components_demo_mockup_legend_html() {
 	$items = array(
-		__( 'Journey wizard — route → date → trips → summary (see docs/SHORTCODES.md).', 'museum-railway-timetable' ),
-		__( 'Month calendar & timetable overview — timetable/mockup views (not the full “book a trip” flow).', 'museum-railway-timetable' ),
+		__( 'Resewizard — rutt → datum → turer → sammanfattning (se docs/SHORTCODES.md).', 'museum-railway-timetable' ),
+		__( 'Månadskalender och tidtabellsöversikt — tidtabells-/mockupvyer (inte hela flödet ”boka resa”).', 'museum-railway-timetable' ),
 	);
 	$out   = '<div class="mrt-alert mrt-alert-info mrt-mb-lg"><p><strong>' .
-		esc_html__( 'Mockup alignment', 'museum-railway-timetable' ) .
+		esc_html__( 'Mockup-anpassning', 'museum-railway-timetable' ) .
 		'</strong></p><ul class="mrt-demo-mockup-list">';
 	foreach ( $items as $text ) {
 		$out .= '<li>' . esc_html( $text ) . '</li>';
@@ -93,39 +114,39 @@ function MRT_demo_mockup_caption( $label ) {
  * @return string HTML
  */
 function MRT_get_components_demo_journey_test_data_html() {
-	$dates     = function_exists( 'MRT_import_get_timetable_dates' ) ? MRT_import_get_timetable_dates() : array();
+	$dates     = MRT_csv_fixture_green_dates();
 	$example   = ! empty( $dates[0] ) ? $dates[0] : '2026-05-30';
 	$date_list = ! empty( $dates ) ? implode( ', ', array_slice( $dates, 0, 5 ) ) : $example;
 	if ( count( $dates ) > 5 ) {
 		$date_list .= ' …';
 	}
 	$out  = '<div class="mrt-alert mrt-alert-info mrt-mb-lg"><p><strong>' .
-		esc_html__( 'Trying the journey wizard', 'museum-railway-timetable' ) .
+		esc_html__( 'Testa resewizard', 'museum-railway-timetable' ) .
 		'</strong></p><ul class="mrt-demo-mockup-list">';
 	$out .= '<li>' . sprintf(
 		/* translators: %s: timetable title e.g. GRÖN TIDTABELL 2026 */
-		esc_html__( 'Run %s from the Railway Timetable admin menu so stations, routes, and services exist.', 'museum-railway-timetable' ),
+		esc_html__( 'Kör %s från Tidtabell-menyn i admin så att stationer, rutter och turer finns.', 'museum-railway-timetable' ),
 		'<code>' . esc_html( MRT_demo_lennakatten_timetable_title() ) . '</code>'
 	) . '</li>';
 	$out .= '<li>' . esc_html__(
-		'In the wizard, choose stations on the same line (e.g. From: Uppsala Östra, To: Faringe). If either station is missing, the import did not finish.',
+		'I wizarden, välj stationer på samma linje (t.ex. Från: Uppsala Östra, Till: Faringe). Saknas någon station har importen inte slutförts.',
 		'museum-railway-timetable'
 	) . '</li>';
 	$out .= '<li>' . sprintf(
 		/* translators: %1$s: example YYYY-MM-DD, %2$s: list of sample dates */
 		esc_html__(
-			'Pick a traffic day: the GRÖN import includes dates such as %2$s. Example first day: %1$s. Use the wizard calendar’s previous/next month buttons until that month appears, then choose a green (available) day for your pair.',
+			'Välj en trafikdag: GRÖN-importen innehåller datum som %2$s. Exempel första dag: %1$s. Använd wizardens knappar föregående/nästa månad tills den månaden syns, välj sedan en grön (tillgänglig) dag för ditt par.',
 			'museum-railway-timetable'
 		),
 		'<code>' . esc_html( $example ) . '</code>',
 		esc_html( $date_list )
 	) . '</li>';
 	$out .= '<li>' . esc_html__(
-		'If you see “No connections on this date”, the pair or date has no matching service — try the example stations and a listed traffic day.',
+		'Om du ser ”Inga anslutningar detta datum” saknas matchande tur för paret eller datumet — prova exempelstationerna och ett listat trafikdag.',
 		'museum-railway-timetable'
 	) . '</li>';
 	$out .= '<li>' . esc_html__(
-		'The month calendar in section 1 has Previous month / Next month links (?mrt_month= in the URL).',
+		'Månadskalendern i avsnitt 1 har länkar Föregående månad / Nästa månad (?mrt_month= i URL:en).',
 		'museum-railway-timetable'
 	) . '</li>';
 	$out .= '</ul></div>';
@@ -143,7 +164,7 @@ function MRT_get_components_demo_page_content() {
 	$intro = sprintf(
 		/* translators: %s: timetable title after Lennakatten import */
 		__(
-			'This page lists all public timetable shortcodes. For realistic data, run Import Lennakatten (Railway Timetable menu). The timetable overview expects a timetable titled "%s".',
+			'Sidan listar alla publika tidtabell-shortcodes. För realistisk data, kör Importera Lennakatten (Tidtabell-menyn). Tidtabellsöversikten förväntar en tidtabell med titeln ”%s”.',
 			'museum-railway-timetable'
 		),
 		$tt
@@ -152,18 +173,18 @@ function MRT_get_components_demo_page_content() {
 		'<p>' . esc_html( $intro ) . '</p>',
 		MRT_get_components_demo_mockup_legend_html(),
 		MRT_get_components_demo_journey_test_data_html(),
-		'<h2>' . esc_html__( '1. Month calendar', 'museum-railway-timetable' ) . '</h2>',
-		MRT_demo_mockup_caption( __( 'Mockup: calendar / traffic days (timetable context, not the journey booking flow).', 'museum-railway-timetable' ) ),
+		'<h2>' . esc_html__( '1. Trafikmeddelanden', 'museum-railway-timetable' ) . '</h2>',
+		MRT_demo_mockup_caption( __( 'Mockup: generella meddelanden och tur-avvikelser för idag.', 'museum-railway-timetable' ) ),
+		'[museum_traffic_notices]',
+		'<h2>' . esc_html__( '2. Månadskalender', 'museum-railway-timetable' ) . '</h2>',
+		MRT_demo_mockup_caption( __( 'Mockup: kalender / trafikdagar (tidtabellskontext, inte bokningsflödet).', 'museum-railway-timetable' ) ),
 		'[museum_timetable_month show_counts="1" legend="1"]',
-		'<h2>' . esc_html__( '2. Timetable overview', 'museum-railway-timetable' ) . '</h2>',
-		MRT_demo_mockup_caption( __( 'Mockup: printed-style overview (routes, directions, times).', 'museum-railway-timetable' ) ),
+		'<h2>' . esc_html__( '3. Tidtabellsöversikt', 'museum-railway-timetable' ) . '</h2>',
+		MRT_demo_mockup_caption( __( 'Mockup: tryckt översikt (rutter, riktningar, tider).', 'museum-railway-timetable' ) ),
 		sprintf( '[museum_timetable_overview timetable="%s"]', esc_attr( $tt ) ),
-		'<h2>' . esc_html__( '3. Journey wizard (multi-step)', 'museum-railway-timetable' ) . '</h2>',
-		MRT_demo_mockup_caption( __( 'Mockup-based: full journey flow (V1–V5) with calendar, legs, optional return, prices in summary).', 'museum-railway-timetable' ) ),
-		sprintf(
-			'[museum_journey_wizard timetable="%s" embedded="1" hero_subtitle="Step 1 — route and trip type (mockup: sok-din-resa)."]',
-			esc_attr( $tt )
-		),
+		'<h2>' . esc_html__( '4. Resewizard (flerstegs)', 'museum-railway-timetable' ) . '</h2>',
+		MRT_demo_mockup_caption( __( 'Mockup-baserat: helt reseflöde (V1–V5) med kalender, sträckor, valfri retur, priser i sammanfattning).', 'museum-railway-timetable' ) ),
+		'[museum_journey_wizard embedded="1"]',
 	);
 	return implode( "\n\n", $lines );
 }
@@ -186,28 +207,11 @@ function MRT_ensure_components_demo_page_cli() {
  * @return int|WP_Error Post ID or error
  */
 function MRT_ensure_components_demo_page() {
-	if ( ! current_user_can( 'manage_options' ) ) {
-		return new WP_Error( 'mrt_cap', __( 'Permission denied.', 'museum-railway-timetable' ) );
-	}
-	$title   = __( 'Museum Railway Timetable – component demo', 'museum-railway-timetable' );
-	$content = MRT_get_components_demo_page_content();
-	$post_id = (int) get_option( MRT_OPTION_COMPONENTS_DEMO_PAGE_ID, 0 );
-	$postarr = array(
-		'post_type'    => 'page',
-		'post_status'  => 'publish',
-		'post_title'   => $title,
-		'post_content' => $content,
+	return MRT_ensure_option_backed_page(
+		MRT_OPTION_COMPONENTS_DEMO_PAGE_ID,
+		__( 'Museijärnvägens tidtabell – komponentdemo', 'museum-railway-timetable' ),
+		'MRT_get_components_demo_page_content'
 	);
-	if ( $post_id > 0 && get_post( $post_id ) && get_post_type( $post_id ) === 'page' ) {
-		$postarr['ID'] = $post_id;
-		$result        = wp_update_post( wp_slash( $postarr ), true );
-	} else {
-		$result = wp_insert_post( wp_slash( $postarr ), true );
-		if ( ! is_wp_error( $result ) ) {
-			update_option( MRT_OPTION_COMPONENTS_DEMO_PAGE_ID, (int) $result );
-		}
-	}
-	return $result;
 }
 
 /**
@@ -223,7 +227,7 @@ function MRT_render_demo_page_admin_links( $post ) {
 	?>
 	<hr>
 	<p>
-		<strong><?php esc_html_e( 'Demo page', 'museum-railway-timetable' ); ?>:</strong>
+		<strong><?php esc_html_e( 'Demosida', 'museum-railway-timetable' ); ?>:</strong>
 		<?php echo esc_html( get_the_title( $post ) ); ?>
 		(<?php echo esc_html( $post->post_status ); ?>)
 	</p>
@@ -234,14 +238,14 @@ function MRT_render_demo_page_admin_links( $post ) {
 	?>
 	<p>
 		<a class="button button-primary" href="<?php echo esc_url( $view_url ); ?>">
-			<?php esc_html_e( 'View page', 'museum-railway-timetable' ); ?>
+			<?php esc_html_e( 'Visa sida', 'museum-railway-timetable' ); ?>
 		</a>
 		<a class="button" href="<?php echo esc_url( get_edit_post_link( $post->ID, 'raw' ) ); ?>">
-			<?php esc_html_e( 'Edit page', 'museum-railway-timetable' ); ?>
+			<?php esc_html_e( 'Redigera sida', 'museum-railway-timetable' ); ?>
 		</a>
 		<?php if ( $post->post_status !== 'publish' ) : ?>
 			<a class="button" href="<?php echo esc_url( get_preview_post_link( $post ) ); ?>">
-				<?php esc_html_e( 'Preview draft', 'museum-railway-timetable' ); ?>
+				<?php esc_html_e( 'Förhandsgranska utkast', 'museum-railway-timetable' ); ?>
 			</a>
 		<?php endif; ?>
 	</p>
@@ -255,10 +259,10 @@ function MRT_render_demo_page_admin_links( $post ) {
  */
 function MRT_render_components_demo_admin_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
-		wp_die( esc_html__( 'You do not have permission to access this page.', 'museum-railway-timetable' ) );
+		wp_die( esc_html__( 'Du har inte behörighet att öppna den här sidan.', 'museum-railway-timetable' ) );
 	}
 	if ( ! MRT_is_development_mode() ) {
-		wp_die( esc_html__( 'Component demo tools require development mode (WP_DEBUG or MRT_DEVELOPMENT).', 'museum-railway-timetable' ) );
+		wp_die( esc_html__( 'Komponentdemo-verktyg kräver utvecklingsläge (WP_DEBUG eller MRT_DEVELOPMENT).', 'museum-railway-timetable' ) );
 	}
 	$notice      = '';
 	$notice_type = '';
@@ -271,7 +275,7 @@ function MRT_render_components_demo_admin_page() {
 			$notice_type = 'success';
 			$notice      = sprintf(
 				/* translators: %d: WordPress page ID */
-				__( 'Demo page saved successfully (page ID %d). Use View page below.', 'museum-railway-timetable' ),
+				__( 'Demosida sparad (sid-ID %d). Använd Visa sida nedan.', 'museum-railway-timetable' ),
 				(int) $res
 			);
 		}
@@ -280,8 +284,8 @@ function MRT_render_components_demo_admin_page() {
 	$post    = ( $page_id > 0 ) ? get_post( $page_id ) : null;
 	?>
 	<div class="wrap">
-		<h1><?php esc_html_e( 'Component demo page', 'museum-railway-timetable' ); ?></h1>
-		<p><?php esc_html_e( 'Creates or updates a published page with every public shortcode for local testing and QA.', 'museum-railway-timetable' ); ?></p>
+		<h1><?php esc_html_e( 'Komponentdemosida', 'museum-railway-timetable' ); ?></h1>
+		<p><?php esc_html_e( 'Skapar eller uppdaterar en publicerad sida med alla publika shortcodes för lokal test och QA.', 'museum-railway-timetable' ); ?></p>
 		<?php if ( $notice !== '' ) : ?>
 			<?php $cls = ( $notice_type === 'success' ) ? 'notice-success' : 'notice-error'; ?>
 			<div class="notice <?php echo esc_attr( $cls ); ?> is-dismissible"><p><?php echo esc_html( $notice ); ?></p></div>
@@ -290,16 +294,20 @@ function MRT_render_components_demo_admin_page() {
 			<?php wp_nonce_field( 'mrt_components_demo', 'mrt_components_demo_nonce' ); ?>
 			<p>
 				<button type="submit" name="mrt_create_demo_page" class="button button-primary" value="1">
-					<?php esc_html_e( 'Create or update demo page', 'museum-railway-timetable' ); ?>
+					<?php esc_html_e( 'Skapa eller uppdatera demosida', 'museum-railway-timetable' ); ?>
 				</button>
 			</p>
 		</form>
 		<?php MRT_render_demo_page_admin_links( $post ); ?>
 		<?php if ( MRT_is_development_mode() ) : ?>
-			<h2><?php esc_html_e( 'Component debug pages', 'museum-railway-timetable' ); ?></h2>
+			<h2><?php esc_html_e( 'Komponentdebug-sidor', 'museum-railway-timetable' ); ?></h2>
 			<?php MRT_render_component_debug_page_admin_links(); ?>
-			<h2><?php esc_html_e( 'Front-end menu (development)', 'museum-railway-timetable' ); ?></h2>
-			<?php MRT_render_setup_dev_navigation_button( 'components_demo' ); ?>
+			<p class="description">
+				<?php esc_html_e( 'Utvecklingsmeny i front-end:', 'museum-railway-timetable' ); ?>
+				<a href="<?php echo esc_url( MRT_admin_app_url( '/dev-tools' ) ); ?>">
+					<?php esc_html_e( 'Utvecklingsverktyg', 'museum-railway-timetable' ); ?>
+				</a>
+			</p>
 		<?php endif; ?>
 	</div>
 	<?php

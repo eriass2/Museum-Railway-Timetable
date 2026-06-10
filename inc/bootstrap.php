@@ -29,7 +29,7 @@ function MRT_bootstrap_load_app(): void {
 	require_once MRT_PATH . 'inc/infrastructure/post-types.php';
 	require_once MRT_PATH . 'inc/assets.php';
 	require_once MRT_PATH . 'inc/admin.php';
-	require_once MRT_PATH . 'inc/infrastructure/ajax.php';
+	require_once MRT_PATH . 'inc/infrastructure/rest/loader.php';
 	require_once MRT_PATH . 'inc/shortcodes.php';
 }
 
@@ -37,6 +37,8 @@ function MRT_bootstrap_load_app(): void {
  * Load all plugin modules (called from museum-railway-timetable.php).
  */
 function MRT_bootstrap_load(): void {
+	require_once MRT_PATH . 'inc/infrastructure/wordpress/db-schema.php';
+	add_action( 'plugins_loaded', 'MRT_maybe_upgrade_db_schema', 5 );
 	MRT_bootstrap_load_domain();
 	MRT_bootstrap_load_app();
 }

@@ -1,6 +1,6 @@
 # Produktbeslut (rebuild)
 
-Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid ändring.
+Beslut för MVP och produktinriktning. Uppdatera vid ändring.
 
 **Datum:** 2026-05 (arbete på `main`, stegvis i nuvarande plugin)
 
@@ -26,10 +26,18 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 
 ## 3. Admin: import vs manuell inmatning
 
-**Beslut:** **Import + manuell korrigering.**
+**Beslut:** **Import + Vue-admin för korrigering** (ersätter CPT/meta boxes).
 
-- Lennakatten-import (`inc/admin/tools/import-lennakatten.php`) för test/demo-data.
-- Meta boxes kvar för stationer, rutter, tidtabeller, turer, stopptider.
+- Lennakatten-import och CSV kvar; dev-verktyg enligt [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
+- Vue-admin (klar 2026-05): [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), REST enligt [REST_API.md](REST_API.md).
+
+---
+
+## 3b. API: REST, ingen AJAX
+
+**Beslut:** All klient–server-kommunikation via **WordPress REST API**. AJAX-lagret är borttaget (2026-05).
+
+- Policy och route-tabell: [REST_API.md](REST_API.md).
 
 ---
 
@@ -54,7 +62,7 @@ Beslut för MVP enligt [REBUILD_SKETCH.md](REBUILD_SKETCH.md). Uppdatera vid än
 
 ## 6. Buss Selknä* ↔ Fjällnora* (reseplanerare)
 
-**Beslut:** Modellera som **egen bussrutt** (`Selknä – Fjällnora` / retur) med turer typ `Buss` i importen (`reference-data.php`).
+**Beslut:** Modellera som **egen bussrutt** (`Selknä – Fjällnora` / retur) med turer typ `Buss` i Lennakatten CSV-fixturen (`testdata/fixtures/lennakatten/`).
 
 Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 
@@ -69,7 +77,54 @@ Se [DATA_MODEL.md](DATA_MODEL.md) och import-PDF.
 
 ---
 
+## 9. Admin Vue (2026-05)
+
+**Beslut:** Vue **ersätter** WordPress CPT-admin. **Status: implementerat** (dashboard, tidtabeller, stationer/rutter, priser, import/export, dev-verktyg).
+
+| Punkt | Värde |
+|-------|--------|
+| Arbetsflöde | [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) |
+| API | [REST_API.md](REST_API.md) |
+| Routing | Hash (`#/dashboard`) under `admin.php?page=mrt_app` |
+| Behörighet | `manage_options` fullt; `edit_posts` begränsat (avvikelser, en avgångstid) |
+| Språk | Svenska primärt |
+| E2E | Playwright (CI + `frontend/vue/e2e/`) |
+
+---
+
 ## 8. Öppna punkter (ej blockerande)
 
 - Wizard finpolish mot PNG i `docs/mockups/` när designfiler finns.
-- [ACCESSIBILITY_SMOKE.md](ACCESSIBILITY_SMOKE.md) – manuell WCAG-genomgång före ”live”.
+- [ACCESSIBILITY.md](ACCESSIBILITY.md) – manuell WCAG-genomgång före ”live”.
+
+---
+
+## 10. Resesökmotor (journey engine, 2026-06)
+
+**Beslut:** Ny BFS-motor i `inc/domain/journey/engine/` bakom oförändrat REST-API.
+
+| Punkt | Värde |
+|-------|--------|
+| Max antal byten | **2** (3 ben). Filter: `mrt_journey_max_transfers`. |
+| Progressiv djupning | Kalender: direkt först, sedan 1 byte, sedan 2. Wizard: alla träffar upp till max. |
+| Bytesstation | Hub (terminus, buss-*, `mrt_transfer_priority`) vid mellanliggande byte; slutstation kräver inte hub. |
+| Regler | Befintliga: pickup/dropoff, riktning mot mål, min/max bytestid, overshoot-filter. |
+| Avvikelser i poäng | **Ej ännu** — TODO kvar i `journey-scoring.php`. |
+| Presentation | Befintlig normalisering, wizard-filter och sortering; `legs[]` stöder N ben. |
+
+---
+
+## 11. Multi-operator (2026-06)
+
+**Beslut:** Pluginet ska kunna användas av **andra föreningar** utan Lennakatten i runtime. Lennakatten är **referensoperatör** — dev-import, fixture, designreferens — inte default vid tom databas.
+
+| Punkt | Värde |
+|-------|--------|
+| Dataplattform | Redan generisk: CSV + Vue-admin + REST |
+| Problem idag | Branding, builtin-priser, titel-fallbacks (zoner, tågbyte), affärsregler utan UI |
+| Tågbyte (2026-06) | Per-station meta `mrt_station_train_change_map` — **delvis**; REST/admin/CSV saknas; Marielund-default kvar i kod |
+| Plan och status | [MULTI_OPERATOR.md](MULTI_OPERATOR.md) (Tier A → B) |
+| Tier A (2026-06) | **Klart:** A1–A6 (neutral defaults, onboarding, brand pack) |
+| Tier B (2026-06) | **Klart:** B1–B5 (train change, settings, meta-handbok) |
+
+**Princip:** *Fail empty* — saknas operatörsdata ska systemet vara neutralt eller varna, inte gissa Lennakatten.

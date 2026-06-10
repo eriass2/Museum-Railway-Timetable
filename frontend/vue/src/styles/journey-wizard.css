@@ -1,0 +1,16 @@
+/**
+ * Journey wizard styles (Vue-owned).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+@import './journey-wizard/base.css';
+@import './journey-wizard/hero-layout.css';
+@import './journey-wizard/wizard-shell.css';
+@import './journey-wizard/controls-form.css';
+@import './journey-wizard/controls-calendar.css';
+@import './journey-wizard/trips-detail-summary.css';
+@import './journey-wizard/steps-outbound-return.css';
+@import './journey-wizard/steps-summary.css';
+@import './journey-wizard/responsive.css';
+@import './journey-wizard/sharp-corners.css';

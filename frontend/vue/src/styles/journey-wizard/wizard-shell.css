@@ -1,0 +1,34 @@
+/**
+ * Journey wizard — overrides on shared ui-components.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-wizard .mrt-step-panel--wide {
+    width: min(100%, 54rem);
+}
+
+.mrt-journey-wizard .mrt-step-header__back {
+    color: var(--mrt-color-accent-500);
+}
+
+.mrt-journey-wizard .mrt-step-header__back:hover {
+    color: var(--mrt-color-on-dark);
+}
+
+.mrt-journey-wizard .mrt-step-panel--search .mrt-accent-btn--primary {
+    min-width: 12rem;
+    padding: 0.85rem 2rem;
+    font-size: 1.05rem;
+    letter-spacing: 0.04em;
+}
+
+.mrt-journey-wizard .mrt-segmented-field__legend {
+    color: var(--mrt-wizard-text);
+}
+
+.mrt-journey-wizard .mrt-step-panel--search .mrt-surface .mrt-segmented-field__legend,
+.mrt-journey-wizard .mrt-step-panel--search .mrt-field__label {
+    color: var(--mrt-wizard-text);
+}
+

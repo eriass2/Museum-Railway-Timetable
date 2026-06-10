@@ -18,30 +18,26 @@ $required_files = [
     'inc/assets.php',
     'inc/admin.php',
     'inc/admin/menu.php',
-    'inc/admin/settings.php',
-    'inc/admin/admin-list.php',
     'inc/admin/tools/clear-db.php',
     'inc/admin/tools/demo-page.php',
-    'inc/admin/tools/dev-navigation.php',
-    'inc/admin/tools/dev-cli.php',
+    'inc/admin/tools/dev/dev-navigation.php',
+    'inc/admin/tools/dev/dev-cli.php',
     'scripts/docker-dev-reset.ps1',
     'inc/admin/tools/import-lennakatten.php',
     'inc/infrastructure/wordpress/environment.php',
+    'inc/infrastructure/wordpress/log.php',
     'inc/infrastructure/wordpress/plugin-settings.php',
     'inc/assets/loader.php',
     'inc/shortcodes.php',
     'inc/infrastructure/post-types.php',
-    'inc/infrastructure/ajax.php',
-    'inc/admin/meta-boxes.php',
+    'inc/infrastructure/rest/loader.php',
+    'inc/admin/app.php',
+    'inc/infrastructure/post-types/cpt-admin-tweaks.php',
     'inc/bootstrap.php',
     'inc/bootstrap/domain.php',
     'inc/infrastructure/wordpress/helpers-utils.php',
+    'inc/domain/service/stop-time-display.php',
     'assets/train-type-icons.css',
-    'assets/admin-utils.js',
-    'assets/admin-route-ui.js',
-    'assets/admin-stoptimes-ui.js',
-    'assets/admin-timetable-services-ui.js',
-    'assets/admin.js',
     'languages/museum-railway-timetable.pot',
     'languages/museum-railway-timetable-sv_SE.po',
 ];
@@ -167,8 +163,8 @@ echo "\n7. Checking CSS files...\n";
 $css_files = [
     'assets/train-type-icons.css',
     'assets/frontend-public.css',
-    'assets/frontend-overview.css',
-    'assets/journey-wizard.css',
+    'frontend/vue/src/styles/month-calendar.css',
+    'frontend/vue/src/styles/journey-wizard.css',
     'assets/admin.css',
 ];
 foreach ($css_files as $css_file) {
@@ -187,38 +183,12 @@ foreach ($css_files as $css_file) {
     }
 }
 
-// 8. Check JS files exist and are valid
-echo "\n8. Checking JavaScript files...\n";
-$admin_js_files = [
-    'assets/admin-utils.js',
-    'assets/admin-route-ui.js',
-    'assets/admin-stoptimes-ui.js',
-    'assets/admin-timetable-services-ui.js',
-    'assets/admin.js',
-];
-foreach ($admin_js_files as $js_file) {
-    $checks++;
-    if (file_exists($js_file)) {
-        $js = file_get_contents($js_file);
-        if (strlen($js) > 0) {
-            echo "  ✅ $js_file\n";
-        } else {
-            $errors[] = "JS file is empty: $js_file";
-            echo "  ❌ $js_file is empty\n";
-        }
-    } else {
-        $errors[] = "JS file missing: $js_file";
-        echo "  ❌ $js_file missing\n";
-    }
-}
-
 // Accessibility markers in public UI (static smoke)
 echo "\n7. Checking accessibility markers in public modules...\n";
 $a11y_markers = array(
-	'inc/public/journey-wizard/shell.php'       => array( 'role="alert"', 'aria-live="assertive"' ),
-	'inc/public/journey-wizard/steps.php'       => array( 'role="region"', 'aria-labelledby' ),
-	'inc/public/month-calendar/shortcode.php'   => array( 'aria-pressed', 'role="region"' ),
-	'assets/frontend/components-ui.css'         => array( ':focus-visible' ),
+	'inc/public/journey-wizard/shell.php'       => array( 'MRT_render_vue_mount', 'museum_journey_wizard' ),
+	'inc/public/month-calendar/shortcode.php'   => array( 'MRT_render_vue_mount', 'museum_timetable_month' ),
+	'assets/frontend/ui/primitives.css'         => array( ':focus-visible' ),
 );
 
 foreach ( $a11y_markers as $file => $needles ) {

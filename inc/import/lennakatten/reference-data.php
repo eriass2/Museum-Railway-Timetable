@@ -1,239 +1,185 @@
 <?php
 /**
- * Lennakatten import – static data (stations, routes, services)
+ * Lennakatten reference data for dev import and tests (not runtime defaults).
  *
  * @package Museum_Railway_Timetable
  */
 
+declare(strict_types=1);
+
 if ( ! defined( 'ABSPATH' ) ) {
-	exit; }
+	exit;
+}
+
+require_once MRT_PATH . 'inc/domain/journey/train-change.php';
 
 /**
- * Get stations data for import [name, display_order, bus_suffix?]
+ * Station price zones per Lennakatten taxa 2026 (see docs/PRICE_ZONES.md).
  *
- * @return array
+ * @return array<string, int[]>
  */
-function MRT_import_get_stations_data() {
+function MRT_lennakatten_reference_station_price_zones_by_title(): array {
 	return array(
-		array( 'Uppsala Östra', 1 ),
-		array( 'Fyrislund', 2 ),
-		array( 'Årsta', 3 ),
-		array( 'Skölsta', 4 ),
-		array( 'Bärby', 5 ),
-		array( 'Gunsta', 6 ),
-		array( 'Marielund', 7 ),
-		array( 'Lövstahagen', 8 ),
-		array( 'Selknä', 9, true ),
-		array( 'Löt', 10 ),
-		array( 'Länna', 11 ),
-		array( 'Almunge', 12 ),
-		array( 'Moga', 13 ),
-		array( 'Faringe', 14 ),
-		array( 'Fjällnora', 15, true ),
-		array( 'Linnés Hammarby', 16, true ),
+		'Uppsala Östra'   => array( 1 ),
+		'Fyrislund'       => array( 1 ),
+		'Årsta'           => array( 1 ),
+		'Skölsta'         => array( 1 ),
+		'Bärby'           => array( 1 ),
+		'Gunsta'          => array( 1, 2 ),
+		'Marielund'       => array( 2 ),
+		'Lövstahagen'     => array( 2 ),
+		'Selknä'          => array( 2 ),
+		'Löt'             => array( 2 ),
+		'Länna'           => array( 2 ),
+		'Fjällnora'       => array( 2 ),
+		'Almunge'         => array( 2, 3 ),
+		'Moga'            => array( 3 ),
+		'Faringe'         => array( 3 ),
+		'Linnés Hammarby' => array( 3 ),
 	);
 }
 
 /**
- * Get train types for import [name => slug]
+ * Train-change rows at transfer stations (overview + journey hub hints).
  *
- * @return array
+ * @return array<string, array<string, array{typeName: string, serviceNumber: string}>>
  */
-function MRT_import_get_train_types() {
-	return array(
-		'Ångtåg'     => 'angtag',
-		'Rälsbuss'   => 'ralsbuss',
-		'Dieseltåg'  => 'dieseltag',
-		'Buss'       => 'buss',
-		'Ång/diesel' => 'ang-diesel',
-	);
-}
-
-/**
- * Get timetable dates for GRÖN
- *
- * @return array
- */
-function MRT_import_get_timetable_dates() {
-	return MRT_import_get_green_timetable_dates();
-}
-
-/**
- * Get timetable dates for GRÖN (lördagar).
- *
- * @return array<int, string>
- */
-function MRT_import_get_green_timetable_dates(): array {
-	$dates = array( '2026-05-30', '2026-05-31', '2026-06-06', '2026-06-13', '2026-06-20', '2026-07-04', '2026-07-11', '2026-07-18', '2026-08-01', '2026-08-08', '2026-08-15', '2026-09-05', '2026-09-12', '2026-09-19', '2026-09-26' );
-	sort( $dates );
-	return $dates;
-}
-
-/**
- * Get timetable dates for GUL (fredagar, lågtrafik).
- *
- * Based on traffic-day codes C and D in Tidtabellsboken del B.
- *
- * @return array<int, string>
- */
-function MRT_import_get_yellow_timetable_dates(): array {
-	$dates = array(
-		'2026-05-29',
-		'2026-06-05',
-		'2026-06-12',
-		'2026-06-26',
-		'2026-07-03',
-		'2026-07-10',
-		'2026-07-17',
-		'2026-07-24',
-		'2026-07-31',
-		'2026-08-07',
-		'2026-08-14',
-		'2026-08-21',
-		'2026-08-28',
-		'2026-09-04',
-		'2026-09-11',
-		'2026-09-18',
-		'2026-09-25',
-	);
-	sort( $dates );
-	return $dates;
-}
-
-/**
- * Get services Uppsala → Faringe [num, train_type, times, symbols]
- *
- * @return array
- */
-function MRT_import_get_services_out() {
-	return array(
-		array( '71', 'Ångtåg', array( array( 10, 0 ), array( 10, 3 ), array( 10, 5 ), array( 10, 9 ), array( 10, 23 ), array( 10, 24 ), array( 10, 35, 10, 45 ), array( 10, 46 ), array( 10, 50 ), array( 10, 54 ), array( 10, 57 ), array( 11, 10 ), array( 11, 14 ), array( 11, 25 ) ), array( 'P', 'P', 'X', '', 'X', '', '', 'P', '', 'X', '', '', 'X', '' ) ),
-		array( '93', 'Rälsbuss', array( array( 11, 10 ), array( 11, 13 ), array( 11, 15 ), array( 11, 18 ), array( 11, 28 ), array( 11, 29 ), array( 11, 37 ), array( 11, 42 ), array( 11, 43 ), array( 11, 47 ), array( 11, 50 ), array( 11, 54 ), array( 12, 4 ), array( 12, 7 ), array( 12, 17 ) ), array( 'P', 'P', 'X', '', 'X', '', '', 'X', '', '', 'X', '', '', 'X', '' ) ),
-		array( '75', 'Ångtåg', array( array( 12, 38 ), array( 12, 41 ), array( 12, 43 ), array( 12, 47 ), array( 13, 0 ), array( 13, 1 ), array( 13, 10, 13, 32 ), array( 13, 33 ), array( 13, 37 ), array( 13, 41 ), array( 13, 47 ), array( 14, 0 ), array( 14, 4 ), array( 14, 15 ) ), array( 'P', 'P', 'X', '', 'X', '', '', 'X', '', '', 'X', '', '', 'X', '' ) ),
-		array( '63', 'Dieseltåg', array( array( 14, 10 ), array( 14, 13 ), array( 14, 15 ), array( 14, 19 ), array( 14, 30 ), array( 14, 31 ), array( 14, 40, 15, 10 ), array( 15, 11 ), array( 15, 15 ), array( 15, 18 ), array( 15, 21 ), array( 15, 31 ), array( 15, 34 ), array( 15, 43 ) ), array( 'P', 'P', 'X', '', 'X', '', '', 'X', '', '', 'X', '', '', 'X', '' ) ),
-		array( '65', 'Dieseltåg', array( array( 15, 55 ), array( 15, 58 ), array( 16, 0 ), array( 16, 4 ), array( 16, 13 ), array( 16, 14 ), array( 16, 23, 17, 0 ), array( 17, 1 ), array( 17, 4 ), array( 17, 8 ), array( 17, 11 ), array( 17, 22 ), array( 17, 26 ), array( 17, 37 ) ), array( 'P', 'P', 'X', '', 'X', '', '', 'X', '', '', 'X', '', '', 'X', '' ) ),
-		array( '79', 'Ång/diesel', array( array( 18, 7 ), array( 18, 10 ), array( 18, 12 ), array( 18, 16 ), array( 18, 25 ), array( 18, 26 ), array( 18, 35, 18, 50 ), array( 18, 51 ), array( 18, 54 ), array( 18, 57 ), array( 19, 1 ), array( 19, 12 ), array( 19, 16 ), array( 19, 27 ) ), array( 'X', 'X', 'X', '', 'X', '', '', 'X', '', '', 'X', '', '', 'X', '' ) ),
-	);
-}
-
-/**
- * Get services Faringe → Uppsala
- *
- * @return array
- */
-function MRT_import_get_services_in() {
-	return array(
-		array( '70', 'Ångtåg', array( array( 7, 55 ), array( 8, 2 ), array( 8, 14 ), array( 8, 25 ), array( 8, 27 ), array( 8, 31 ), array( 8, 34 ), array( 8, 38, 8, 53 ), array( 8, 58 ), array( 9, 1 ), array( 9, 8 ), array( 9, 12 ), array( 9, 14 ), array( 9, 23 ) ), array( 'X', 'X', '', 'X', 'X', 'X', 'X', '', 'X', '', 'X', 'X', 'X', '' ) ),
-		array( '60', 'Dieseltåg', array( array( 9, 40 ), array( 9, 47 ), array( 9, 57 ), array( 10, 8 ), array( 10, 10 ), array( 10, 14 ), array( 10, 17 ), array( 10, 20, 11, 45 ), array( 11, 50 ), array( 11, 53 ), array( 12, 0 ), array( 12, 4 ), array( 12, 6 ), array( 12, 17 ) ), array( 'X', 'X', '', 'X', 'X', 'X', 'X', '', 'X', '', 'X', 'X', 'X', '' ) ),
-		array( '62', 'Dieseltåg', array( array( 12, 27 ), array( 12, 34 ), array( 12, 41 ), array( 12, 54 ), array( 12, 56 ), array( 13, 1 ), array( 13, 4 ), array( 13, 7, 13, 15 ), array( 13, 20 ), array( 13, 23 ), array( 13, 30 ), array( 13, 34 ), array( 13, 36 ), array( 13, 47 ) ), array( 'X', 'X', '', '', '', 'X', 'X', '', 'X', '', '', 'X', 'X', '' ) ),
-		array( '96', 'Rälsbuss', array( array( 14, 25 ), array( 14, 31 ), array( 14, 36 ), array( 14, 46 ), array( 14, 47 ), array( 14, 52 ), array( 14, 55 ), array( 14, 58, 15, 5 ), array( 15, 10 ), array( 15, 13 ), array( 15, 20 ), array( 15, 24 ), array( 15, 26 ), array( 15, 37 ) ), array( 'X', 'X', '', 'X', 'X', 'X', 'X', '', 'X', '', '', '', 'X', '' ) ),
-		array( '78', 'Ång/diesel', array( array( 16, 13 ), array( 16, 20 ), array( 16, 28 ), array( 16, 41 ), array( 16, 43 ), array( 16, 48 ), array( 16, 51 ), array( 16, 55, 17, 15 ), array( 17, 20 ), array( 17, 23 ), array( 17, 30 ), array( 17, 34 ), array( 17, 36 ), array( 17, 47 ) ), array( 'X', 'X', '', 'X', 'X', 'X', 'X', '', 'X', '', '', '', 'X', '' ) ),
-	);
-}
-
-/**
- * Get GUL Friday services Uppsala → Faringe.
- *
- * @return array<int, array<int, mixed>>
- */
-function MRT_import_get_yellow_services_out(): array {
-	return array(
-		array( '101', 'Rälsbuss', array( array( 16, 45 ), array( 16, 48 ), array( 16, 50 ), array( 16, 53 ), array( 17, 3 ), array( 17, 4 ), array( 17, 10 ), array( 17, 11 ), array( 17, 14 ), array( 17, 17 ), array( 17, 23 ), array( 17, 33 ), array( 17, 36 ), array( 17, 45 ) ), array( 'P', 'P', 'P', 'X', '', 'X', 'X', 'X', 'X', 'X', '', '', 'X', '' ) ),
-		array( '103', 'Rälsbuss', array( array( 21, 35 ), array( 21, 38 ), array( 21, 40 ), array( 21, 43 ), array( 21, 50 ), array( 21, 51 ), array( 21, 58 ), array( 21, 59 ), array( 22, 2 ), array( 22, 5 ), array( 22, 8 ), array( 22, 18 ), array( 22, 21 ), array( 22, 32 ) ), array( 'P', 'P', 'P', 'X', '', 'X', 'X', 'X', 'X', 'X', 'X', '', 'X', '' ) ),
-	);
-}
-
-/**
- * Get GUL Friday services Faringe → Uppsala.
- *
- * @return array<int, array<int, mixed>>
- */
-function MRT_import_get_yellow_services_in(): array {
-	return array(
-		array( '100', 'Rälsbuss', array( array( 15, 30 ), array( 15, 36 ), array( 15, 42 ), array( 15, 52 ), array( 15, 53 ), array( 15, 57 ), array( 16, 0 ), array( 16, 3 ), array( 16, 8 ), array( 16, 10 ), array( 16, 16 ), array( 16, 19 ), array( 16, 21 ), array( 16, 30 ) ), array( 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', 'X', '', 'X', 'X', 'X', '' ) ),
-		array( '102', 'Rälsbuss', array( array( 20, 10 ), array( 20, 16 ), array( 20, 22 ), array( 20, 37 ), array( 20, 38 ), array( 20, 42 ), array( 20, 45 ), array( 20, 47 ), array( 20, 51 ), array( 20, 54 ), array( 21, 0 ), array( 21, 3 ), array( 21, 5 ), array( 21, 15 ) ), array( 'X', 'X', 'X', '', 'X', 'X', 'X', 'X', 'X', '', 'X', 'X', 'X', '' ) ),
-	);
-}
-
-/**
- * Bus shuttle Selknä* → Fjällnora* (GRÖN). Times allow transfer from main-line trains at Selknä.
- *
- * @return array<int, array<int, mixed>>
- */
-function MRT_import_get_green_bus_services_out(): array {
-	return array(
-		array( 'B1', 'Buss', array( array( 11, 52 ), array( 12, 0 ) ), array( 'P', 'X' ) ),
-		array( 'B2', 'Buss', array( array( 13, 42 ), array( 13, 50 ) ), array( 'P', 'X' ) ),
-		array( 'B3', 'Buss', array( array( 15, 8 ), array( 15, 16 ) ), array( 'P', 'X' ) ),
-		array( 'B4', 'Buss', array( array( 18, 58 ), array( 19, 6 ) ), array( 'P', 'X' ) ),
-	);
-}
-
-/**
- * Bus shuttle Fjällnora* → Selknä* (GRÖN).
- *
- * @return array<int, array<int, mixed>>
- */
-function MRT_import_get_green_bus_services_in(): array {
-	return array(
-		array( 'B5', 'Buss', array( array( 11, 32 ), array( 11, 40 ) ), array( 'P', 'X' ) ),
-		array( 'B6', 'Buss', array( array( 13, 22 ), array( 13, 30 ) ), array( 'P', 'X' ) ),
-		array( 'B7', 'Buss', array( array( 14, 48 ), array( 14, 56 ) ), array( 'P', 'X' ) ),
-		array( 'B8', 'Buss', array( array( 17, 38 ), array( 17, 46 ) ), array( 'P', 'X' ) ),
-	);
-}
-
-/**
- * Bus shuttle Selknä* → Fjällnora* (GUL fredagar).
- *
- * @return array<int, array<int, mixed>>
- */
-function MRT_import_get_yellow_bus_services_out(): array {
-	return array(
-		array( 'B1', 'Buss', array( array( 17, 22 ), array( 17, 30 ) ), array( 'P', 'X' ) ),
-		array( 'B2', 'Buss', array( array( 22, 14 ), array( 22, 22 ) ), array( 'P', 'X' ) ),
-	);
-}
-
-/**
- * Bus shuttle Fjällnora* → Selknä* (GUL fredagar).
- *
- * @return array<int, array<int, mixed>>
- */
-function MRT_import_get_yellow_bus_services_in(): array {
-	return array(
-		array( 'B3', 'Buss', array( array( 17, 0 ), array( 17, 8 ) ), array( 'P', 'X' ) ),
-		array( 'B4', 'Buss', array( array( 21, 52 ), array( 22, 0 ) ), array( 'P', 'X' ) ),
-	);
-}
-
-/**
- * Get importable timetable definitions.
- *
- * New reference PDFs in the same shape should generally become another item here:
- * type, title, dates, outbound services, inbound services.
- *
- * @return array<string, array<string, mixed>>
- */
-function MRT_import_get_timetable_definitions(): array {
-	return array(
-		'green'  => array(
-			'title'            => 'GRÖN TIDTABELL 2026',
-			'label'            => __( 'GRÖN', 'museum-railway-timetable' ),
-			'dates'            => MRT_import_get_green_timetable_dates(),
-			'services_out'     => MRT_import_get_services_out(),
-			'services_in'      => MRT_import_get_services_in(),
-			'bus_services_out' => MRT_import_get_green_bus_services_out(),
-			'bus_services_in'  => MRT_import_get_green_bus_services_in(),
+function MRT_lennakatten_reference_train_change_maps_by_station_title(): array {
+	/** @var list<array{station: string, from: string, type: string, to: string}> $rows */
+	$rows = array(
+		array(
+			'station' => 'Marielund',
+			'from'    => '71',
+			'type'    => 'Dieseltåg',
+			'to'      => '61',
 		),
-		'yellow' => array(
-			'title'            => 'GUL TIDTABELL 2026',
-			'label'            => __( 'GUL', 'museum-railway-timetable' ),
-			'dates'            => MRT_import_get_yellow_timetable_dates(),
-			'services_out'     => MRT_import_get_yellow_services_out(),
-			'services_in'      => MRT_import_get_yellow_services_in(),
-			'bus_services_out' => MRT_import_get_yellow_bus_services_out(),
-			'bus_services_in'  => MRT_import_get_yellow_bus_services_in(),
+		array(
+			'station' => 'Marielund',
+			'from'    => '63',
+			'type'    => 'Rälsbuss',
+			'to'      => '97',
 		),
+		array(
+			'station' => 'Marielund',
+			'from'    => '60',
+			'type'    => 'Ångtåg',
+			'to'      => '74',
+		),
+		array(
+			'station' => 'Marielund',
+			'from'    => '96',
+			'type'    => 'Dieseltåg',
+			'to'      => '64',
+		),
+	);
+	$map  = array();
+	foreach ( $rows as $row ) {
+		$map[ $row['station'] ][ $row['from'] ] = MRT_train_change_map_entry( $row['type'], $row['to'] );
+	}
+
+	return $map;
+}
+
+/**
+ * Lennakatten plugin settings for dev import and tests (not runtime defaults).
+ *
+ * @return array<string, mixed>
+ */
+function MRT_lennakatten_reference_plugin_settings(): array {
+	return array(
+		'enabled'                            => true,
+		'note'                               => '',
+		'operator_name'                      => 'Lennakatten',
+		'ticket_url'                         => 'https://www.lennakatten.se/biljetter/',
+		'min_transfer_minutes'               => 0,
+		'max_transfer_minutes'               => 120,
+		'max_transfers'                      => 2,
+		'afternoon_return_threshold_minutes' => 900,
+	);
+}
+
+/**
+ * Flat afternoon-return fares (Lennakatten taxa 2026).
+ *
+ * @return array<string, int>
+ */
+function MRT_lennakatten_reference_afternoon_return_prices(): array {
+	return array(
+		'adult'          => 160,
+		'child_4_15'     => 60,
+		'child_0_3'      => 0,
+		'student_senior' => 140,
+	);
+}
+
+/**
+ * Price schema for Lennakatten reference (taxa 2026, zone cap 3).
+ *
+ * @return array{
+ *     ticket_types: array<int, array{key: string, label: string}>,
+ *     categories: array<int, array{key: string, label: string}>,
+ *     zones: array<int, int>,
+ *     zone_cap: int,
+ *     afternoon_return: array<string, int>
+ * }
+ */
+function MRT_lennakatten_reference_price_schema(): array {
+	require_once MRT_PATH . 'inc/domain/pricing/price-schema.php';
+	$schema                      = MRT_get_default_price_schema();
+	$schema['zones']             = array( 1, 2, 3 );
+	$schema['zone_cap']          = 3;
+	$schema['afternoon_return']  = MRT_lennakatten_reference_afternoon_return_prices();
+	return $schema;
+}
+
+/**
+ * Full Lennakatten fare matrix (see price-matrix-builtin.php).
+ *
+ * @return array<string, array<string, array<int, int|null>>>
+ */
+function MRT_lennakatten_reference_price_matrix(): array {
+	require_once MRT_PATH . 'inc/domain/pricing/prices.php';
+	return MRT_get_builtin_price_matrix();
+}
+
+/**
+ * Lennakatten brand CSS tokens for dev import and tests (not runtime defaults).
+ *
+ * @return array{google_fonts: string, tokens: array<string, string>}
+ */
+function MRT_lennakatten_reference_brand_tokens(): array {
+	require_once MRT_PATH . 'inc/assets/brand-tokens-data.php';
+	return MRT_sanitize_brand_tokens_storage(
+		array(
+			'google_fonts' => 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@700;800&family=Roboto:wght@400;500;700&display=swap',
+			'tokens'       => array(
+				'--mrt-color-brand-green'     => '#296310',
+				'--mrt-color-brand-gold'      => '#ddd24c',
+				'--mrt-color-brand-olive'     => '#807c1c',
+				'--mrt-color-green-900'       => '#183809',
+				'--mrt-color-green-800'       => '#214f0c',
+				'--mrt-color-green-700'       => '#245610',
+				'--mrt-color-green-600'       => 'var(--mrt-color-brand-green)',
+				'--mrt-color-green-500'       => '#358015',
+				'--mrt-color-green-400'       => '#42961a',
+				'--mrt-color-accent-700'      => '#c5bd44',
+				'--mrt-color-accent-600'      => 'var(--mrt-color-brand-gold)',
+				'--mrt-color-accent-500'      => '#e3dc65',
+				'--mrt-color-accent-400'      => '#eae483',
+				'--mrt-color-neutral-200'     => '#b4b4b4',
+				'--mrt-color-neutral-500'     => '#787878',
+				'--mrt-color-neutral-600'     => '#787878',
+				'--mrt-color-neutral-700'     => '#505050',
+				'--mrt-color-neutral-900'     => '#000000',
+				'--mrt-color-traffic-green'   => 'var(--mrt-color-brand-green)',
+				'--mrt-color-traffic-yellow'  => 'var(--mrt-color-brand-gold)',
+				'--mrt-color-on-dark-muted'   => '#e4efe2',
+				'--mrt-color-on-dark-link'    => '#ffecb8',
+				'--mrt-color-focus-ring'      => '#fff4d6',
+				'--mrt-wizard-border'         => 'var(--mrt-color-neutral-200)',
+				'--mrt-font-body'             => '"Roboto", system-ui, -apple-system, "Segoe UI", sans-serif',
+				'--mrt-font-heading'          => '"Open Sans", system-ui, -apple-system, "Segoe UI", sans-serif',
+			),
+		)
 	);
 }

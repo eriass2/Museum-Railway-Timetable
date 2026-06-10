@@ -1,0 +1,342 @@
+/**
+ * Month calendar app styles ([museum_timetable_month]).
+ *
+ * Timetable-type colours and layout live here — not in journey-wizard CSS.
+ * Wizard date step uses `.mrt-calendar-day--*` (ok/traffic/none); this app uses
+ * `.mrt-month-day` + `.mrt-day-bar--*` for timetable types.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-month {
+    --mrt-month-cell-min-height: 5rem;
+    --mrt-month-day-font: 1.15rem;
+    --mrt-month-bar-height: 0.75rem;
+    --mrt-month-bar-single-height: 1.15rem;
+}
+
+.mrt-month-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--mrt-spacing-sm);
+    margin-bottom: var(--mrt-spacing-md);
+}
+
+.mrt-month-nav__title {
+    flex: 1 1 10rem;
+    margin: 0;
+    min-width: 0;
+    text-align: center;
+}
+
+.mrt-month-nav__prev,
+.mrt-month-nav__next {
+    flex-shrink: 0;
+}
+
+.mrt-month__grid-wrap {
+    position: relative;
+}
+
+.mrt-month__grid--loading {
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.mrt-month__grid--loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    cursor: wait;
+}
+
+.mrt-month .mrt-month-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.mrt-month .mrt-month-table th,
+.mrt-month .mrt-month-table td {
+    border: 1px solid var(--mrt-border-light);
+    width: 14.285%;
+    vertical-align: top;
+    height: auto;
+    min-height: var(--mrt-month-cell-min-height);
+    padding: 0;
+    overflow: visible;
+}
+
+.mrt-month .mrt-month-table thead th {
+    background: var(--mrt-bg-lightest);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.01em;
+    padding: 0.5rem 0.2rem;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.mrt-month .mrt-month-table__caption {
+    caption-side: top;
+    text-align: left;
+    font-weight: 600;
+    padding: var(--mrt-spacing-xs) 0;
+}
+
+.mrt-month .mrt-day-cell--inactive,
+.mrt-month .mrt-day-cell--running {
+    padding: 0;
+    vertical-align: stretch;
+}
+
+.mrt-month .mrt-month-day {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    min-height: var(--mrt-month-cell-min-height);
+    height: 100%;
+    margin: 0;
+    padding: 0.4rem 0.25rem 0;
+    border: none;
+    text-align: center;
+    font: inherit;
+    color: inherit;
+}
+
+.mrt-month .mrt-month-day--inactive {
+    background: var(--mrt-bg-lightest);
+    color: var(--mrt-text-tertiary);
+    cursor: default;
+    justify-content: center;
+}
+
+.mrt-month .mrt-month-day.mrt-running {
+    background: #fff;
+    color: var(--mrt-text-primary, #151515);
+}
+
+.mrt-month .mrt-month-day__num {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    font-size: var(--mrt-month-day-font);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.mrt-month .mrt-month-day--inactive .mrt-month-day__num {
+    opacity: 0.55;
+    font-weight: 700;
+}
+
+.mrt-month .mrt-month-day__bars {
+    display: flex;
+    flex-shrink: 0;
+    gap: 2px;
+    width: 100%;
+    height: var(--mrt-month-bar-height);
+    margin-top: auto;
+}
+
+.mrt-month .mrt-month-day__bar {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: var(--mrt-month-bar-height);
+    border-radius: 0;
+}
+
+.mrt-month .mrt-month-day--has-types:not(.mrt-month-day--multi-types) .mrt-month-day__bars {
+    height: var(--mrt-month-bar-single-height);
+}
+
+.mrt-month .mrt-month-day--has-types:not(.mrt-month-day--multi-types) .mrt-month-day__bar {
+    min-height: var(--mrt-month-bar-single-height);
+}
+
+/* Timetable type colours — month only (wizard uses .mrt-calendar-day--*) */
+.mrt-month .mrt-month-day__bar--green {
+    background: var(--mrt-cal-traffic-green-bg);
+}
+
+.mrt-month .mrt-month-day__bar--yellow {
+    background: var(--mrt-cal-traffic-yellow-bg);
+}
+
+.mrt-month .mrt-month-day__bar--red {
+    background: var(--mrt-cal-traffic-red-bg);
+}
+
+.mrt-month .mrt-month-day__bar--orange {
+    background: var(--mrt-cal-traffic-orange-bg);
+}
+
+.mrt-month .mrt-month-day__bar--blue {
+    background: var(--mrt-cal-traffic-blue-bg);
+}
+
+.mrt-month .mrt-month-day--green {
+    background: var(--mrt-cal-traffic-green-bg);
+    color: var(--mrt-cal-traffic-green-fg);
+}
+
+.mrt-month .mrt-month-day--yellow {
+    background: var(--mrt-cal-traffic-yellow-bg);
+    color: var(--mrt-cal-traffic-yellow-fg);
+}
+
+.mrt-month .mrt-month-day--red {
+    background: var(--mrt-cal-traffic-red-bg);
+    color: var(--mrt-cal-traffic-red-fg);
+}
+
+.mrt-month .mrt-month-day--orange {
+    background: var(--mrt-cal-traffic-orange-bg);
+    color: var(--mrt-cal-traffic-orange-fg);
+}
+
+.mrt-month .mrt-month-day--blue {
+    background: var(--mrt-cal-traffic-blue-bg);
+    color: var(--mrt-cal-traffic-blue-fg);
+}
+
+.mrt-month .mrt-month-day--clickable {
+    cursor: pointer;
+    transition: box-shadow 0.2s ease, background-color 0.15s ease;
+}
+
+.mrt-month .mrt-month-day--clickable:hover {
+    box-shadow: inset 0 0 0 2px var(--mrt-border-light);
+}
+
+.mrt-month .mrt-month-day--clickable:focus-visible {
+    outline: 2px solid var(--mrt-blue-primary);
+    outline-offset: 2px;
+    z-index: 1;
+}
+
+.mrt-month .mrt-month-day--clickable.is-selected {
+    box-shadow: inset 0 0 0 3px var(--mrt-green-primary, #296310);
+    z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .mrt-month .mrt-month-day--clickable {
+        transition: none;
+    }
+}
+
+.mrt-month .mrt-day-timetable {
+    margin: var(--mrt-spacing-md) 0;
+}
+
+.mrt-month .mrt-day-timetable-container {
+    margin-top: var(--mrt-spacing-xl);
+}
+
+.mrt-month .mrt-empty {
+    background: var(--mrt-bg-lightest);
+}
+
+@media (max-width: 40rem) {
+    .mrt-month {
+        --mrt-month-cell-min-height: 3.1rem;
+        --mrt-month-day-font: 1.05rem;
+        --mrt-month-bar-height: 0.55rem;
+        --mrt-month-bar-single-height: 0.9rem;
+    }
+
+    .mrt-month .mrt-calendar-nav {
+        padding: 0.75rem 0.5rem 0.55rem;
+        gap: 0.5rem;
+    }
+
+    .mrt-month .mrt-calendar-nav__title {
+        font-size: clamp(1.2rem, 5vw, 1.55rem);
+    }
+
+    .mrt-month .mrt-calendar-nav__prev,
+    .mrt-month .mrt-calendar-nav__next {
+        width: 2.65rem;
+        height: 2.65rem;
+        font-size: 1.4rem;
+    }
+
+    .mrt-month__grid-wrap {
+        border: 1px solid var(--mrt-border-light);
+        border-radius: 0;
+        overflow: hidden;
+        box-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
+    }
+
+    .mrt-month .mrt-month-table {
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+    .mrt-month .mrt-month-table__caption {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .mrt-month .mrt-month-table th,
+    .mrt-month .mrt-month-table td {
+        border-width: 0 1px 1px 0;
+    }
+
+    .mrt-month .mrt-month-table tr:first-child th {
+        border-top: 0;
+    }
+
+    .mrt-month .mrt-month-table th:last-child,
+    .mrt-month .mrt-month-table td:last-child {
+        border-right: 0;
+    }
+
+    .mrt-month .mrt-month-table tr:last-child td {
+        border-bottom: 0;
+    }
+
+    .mrt-month .mrt-month-table thead th {
+        padding: 0.45rem 0.1rem;
+        font-size: 0.78rem;
+        font-weight: 700;
+        background: var(--mrt-bg-white, #fff);
+        border-bottom: 2px solid var(--mrt-border-light);
+    }
+
+    .mrt-month .mrt-month-day {
+        padding: 0.25rem 0.15rem 0;
+    }
+}
+
+@media (min-width: 40.01rem) and (max-width: 56rem) {
+    .mrt-month {
+        --mrt-month-cell-min-height: 4.25rem;
+        --mrt-month-day-font: 1.1rem;
+    }
+}
+
+/* Lennakatten formspråk — räta hörn (docs/design/BRAND_UI.md) */
+.mrt-month .mrt-ui-alert,
+.mrt-month .mrt-surface--box,
+.mrt-month .mrt-calendar-nav__prev,
+.mrt-month .mrt-calendar-nav__next,
+.mrt-month .mrt-calendar-nav__link {
+    border-radius: 0;
+}

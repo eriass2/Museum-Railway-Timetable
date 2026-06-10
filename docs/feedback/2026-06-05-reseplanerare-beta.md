@@ -1,0 +1,256 @@
+# Feedback – reseplanerare beta (juni 2026)
+
+Ny omgång feedback efter tur/retur-kalender och övriga förbättringar. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
+
+**Källor:** mail/skärmdumpar från betatest  
+**Relaterat:** [2026-06-01-granskning.md](2026-06-01-granskning.md)
+
+---
+
+## Sammanfattning
+
+| Kategori | Antal | Kommentar |
+|----------|-------|-----------|
+| Buggar / fel | 5 | Zoner, busskoppling Selknä, ev. byte Marielund |
+| UI / copy | 6 | Klippning, bussnamn, byte-etikett, passerade stationer, restid |
+| Design / profil | 0 | — |
+| PDF / export | 0 | — |
+| Data / tidtabell | 1 | Fjällnora — ej sökgräns, datat styr antal |
+| Framtida scope | 1 | Gångvägar + karta |
+| Redan åtgärdat | 1 | Tur/retur-kalender (grå dagar) |
+| Frågor | 1 | Hur matas data in? |
+
+---
+
+## R1. Tur och retur – grå dagar utan återresa
+
+- **Originaltext:** Om man söker tur och retur borde dagar utan möjlig återresa vara gråa (t.ex. Uppsala Ö–Fyrislund där bara 18:07 går ut men ingen retur finns).
+- **Område:** Reseplanerare / kalender
+- **Typ:** bugg / UX
+- **Prioritet:** medium
+- **Status:** åtgärdad
+- **Svar:** Kalender-API tar `trip_type`; dagar markeras `traffic_no_match` om ingen utresa har giltig retur samma dag. Tester: `JourneyMultiLegTest`, `wizardCalendarLoad.test.ts`.
+
+---
+
+## R2. ”Direktresa” trots byte (t.ex. 71 → 61 i Marielund)
+
+- **Originaltext:** Reseplaneraren visar alla resor som direktresor. Ångtåg 71 står som ”ångtåg 71 mot Faringe” när man i själva verket får byta till 61 i Marielund.
+- **Område:** Reseplanerare / sökning / copy
+- **Typ:** bugg eller missförstånd — **utred**
+- **Prioritet:** hög
+- **Status:** klar (2026-06-05)
+- **Anteckning:** Fixture delad vid Marielund: t.ex. `green-71-out` (→ Marielund) + `green-61-out` (Marielund → Faringe). Resesökningsmotorn hittar riktigt byte; PDF-byteskarta kvar för tidtabellsöversikt.
+
+---
+
+## R3. Sidor avklippta på mobil
+
+- **Originaltext:** Sidorna höger/vänster blir lite avklippta (t.ex. ”Uppsala Östra → …” klippt till vänster).
+- **Område:** Reseplanerare / mobil CSS
+- **Typ:** UI
+- **Prioritet:** medium
+- **Status:** klar (2026-06-05)
+- **Anteckning:** Orsak: full-bleed `100vw` + `overflow-x: hidden` gav horisontell förskjutning och klippte vänsterkant. Fix: full-bleed endast ≥48rem, bättre radbrytning i steg-header och rutt-rad, mer sidpadding på mobil.
+
+---
+
+## R4. ”Visa passerade stationer” – placering
+
+- **Originaltext:** Flytta länken till mellan avgångs- och ankomststation (mer intuitivt än längst ned).
+- **Område:** Reseplanerare / tidslinje
+- **Typ:** UX
+- **Prioritet:** låg–medium
+- **Status:** klar
+- **Svar:** `MrtTimeline` visar expand-länken mellan första och sista stopp när listan är ihopfälld; vid expandering ligger ”Dölj …” kvar efter avgångsstationen, före mellanliggande håll.
+
+---
+
+## R5. Bussnamn – ”Veteranbuss mot …”
+
+- **Originaltext:** Bussar har inget nummer; hellre ”Veteranbuss mot Fjällnora” än ”Buss B3 mot Fjällnora”.
+- **Område:** Reseplanerare / copy
+- **Typ:** UX / copy
+- **Prioritet:** låg (enkel kodändring)
+- **Status:** klar
+- **Svar:** `legVehicleLabel()` visar ”Veteranbuss mot …” för buss-ben (slug/typ `buss`), utan linjenummer. Översättningsnyckel `veteranBus`.
+
+---
+
+## R6. Fel buss i Selknä – 113 min väntan
+
+- **Originaltext:** Reseplaneraren föreslår 113 min väntan på buss i Selknä trots anslutning efter ~3 min.
+- **Område:** Reseplanerare / sökning / tidtabell
+- **Typ:** bugg — **utred**
+- **Prioritet:** hög
+- **Status:** klar (2026-06-05)
+- **Anteckning:** Orsak: global `min_transfer_minutes` > 3 avvisade B2 (11:50) med exakt 3 min byte tåg→buss. Fix: 0 min min-byte vid busshub (`mrt_station_bus_suffix`) för tåg→buss. Tester med min=4.
+
+---
+
+## R7. Minsta bytestid – 0 min?
+
+- **Originaltext:** Borde min bytestid vara 0 min?
+- **Område:** Inställningar / sökning
+- **Typ:** produktbeslut
+- **Prioritet:** låg
+- **Status:** klar
+- **Svar:** **Ja** — standard `min_transfer_minutes` är **0**. Tidtabellens schemalagda byten styr; operatör kan höja i admin om buffert önskas. Tåg→buss vid busshub har fortfarande egen 0-min-regel (R6).
+
+---
+
+## R8. Restid vs klockslag (44 min vs 11:10–13:47)
+
+- **Originaltext:** Restiden visar 44 min (körsträckor) medan klockslagen 11:10–13:47 inkluderar väntetid.
+- **Område:** Reseplanerare / visning
+- **Typ:** UX / ev. bugg (förvirrande)
+- **Prioritet:** medium
+- **Status:** klar
+- **Svar:** Resekortet visar nu **dörr-till-dörr** (första avgång → sista ankomst), samma som klockintervallet. Per ben i detaljvyn behåller körsträcka. API: `MRT_normalize_total_duration_from_legs()` räknar elapsed, inte summa leg.
+
+---
+
+## R9. Byte-etikett – ”1 byte”, ”2 byten”
+
+- **Originaltext:** Där det står ”Byte”, visa ”1 byte”, ”2 byten” osv.
+- **Område:** Reseplanerare / copy
+- **Typ:** UX
+- **Prioritet:** låg
+- **Status:** klar
+- **Svar:** Expanderingsknappen på resekort visar `1 byte` / `N byten` utifrån antal ben minus ett (`formatTransferTripLabel`).
+
+---
+
+## R10. Få avgångar till Fjällnora (bara tre)
+
+- **Originaltext:** Ser bara tre första avgångarna — inläsningsfel från tidtabellen?
+- **Område:** Tidtabell / sökning
+- **Typ:** utred data
+- **Prioritet:** medium
+- **Status:** klar (2026-06-05)
+- **Svar:** **Ingen sökgräns** i wizard eller REST. Fixture (grön vardag, Uppsala Östra → Fjällnora, alla tåg + buss B1–B4): **fyra** giltiga kopplingar — 10:00 (71+61+B1), 11:10 (93+B2), 12:38 (75+B3), 14:10 (63+97+B4). Tre träffar = troligen annat datum, ofullständig import i produktion, eller att en tåg+buss-koppling saknas i datat — inte UI-begränsning. Test: `LennakattenJourneySearchTest::test_find_uppsala_fjallnora_green_weekday_lists_all_train_bus_connections`.
+
+---
+
+## R11. Gångvägar (framtida)
+
+- **Originaltext:** Gång Selknä–Fjällnora när buss saknas; ev. Thun's, Länna bruk. Kräver kartfunktion — stort extrajobb.
+- **Område:** Reseplanerare / ny resetypsmodell
+- **Typ:** framtida scope
+- **Prioritet:** låg (inte nu)
+- **Status:** parkerad
+
+---
+
+## R12. Typsnitt enligt grafisk profil
+
+- **Originaltext:** Typsnitten ska följa profilen. Färgerna i reseplaneraren upplevs som OK.
+- **Område:** Global typografi
+- **Typ:** design
+- **Prioritet:** medium
+- **Status:** klar (2026-06-05)
+- **Referens:** https://lennakatten.se/grafisk-profil/
+- **Svar:** **Samma punkt som G2 (juni)** — inte borttagen. Roboto/Open Sans laddas via `mrt-typography.css`. R12 i betatesten var troligen (a) knappar/input som inte ärver `font-family` (webbläsare default), (b) WP-tema som slår igenom utanför `.mrt-vue-root`, eller (c) Google Fonts blockerad (cookie/annonsblockerare). Fix: explicit typografi-import i Vue-bundle, `font-family: inherit` på formulärelement, utskrift via tokens.
+- **Verifiering (senare):** På **test3**-sidan — DevTools → Network: `fonts.googleapis.com` / Roboto + Open Sans laddas; Computed på wizard-knapp/rubrik ska visa rätt `font-family` (inte bara temats).
+
+---
+
+## R13. Kalenderfärger ≠ profilfärger
+
+- **Originaltext:** I kalendern stämmer gult/grönt inte med profilfärgerna (reseplaneraren OK).
+- **Område:** Kalender (månad + wizard datumsteg)
+- **Typ:** design
+- **Prioritet:** medium
+- **Status:** klar (2026-06-05)
+- **Svar:** Månadskalendern (`[museum_timetable_month]`) använde `color-mix` mot vitt — gav bleka grön/gul istället för profilens `--mrt-color-traffic-*`. Enkeltyp-dagar använder nu solid trafikfärg + korrekt förgrund (`--mrt-cal-traffic-*-fg`). Reseplanerarens datumsteg oförändrat (guld = bokningsbar dag enligt BRAND_UI).
+
+---
+
+## R14. PDF-export på mobil
+
+- **Originaltext:** Utskriftslayout på mobil i stället för PDF i ny flik; Dela ger ful textfil.
+- **Område:** Sammanfattningssteg / export
+- **Typ:** önskemål / begränsning i nuvarande lösning
+- **Prioritet:** medium
+- **Status:** klar (2026-06-05)
+- **Svar:** Mobil (≤48rem): **Skriv ut / spara som PDF** öppnar formaterad resa i **ny flik** och triggar utskrift där (Spara som PDF i webbläsaren). Skriv ut-klonen döljs på skärmen under desktop-utskrift. **Dela resa** försöker dela `.html`-fil (formaterad) via Web Share när stöds; annars oförändrad plaintext/kopiera. Ingen jsPDF — samma G10-beslut.
+
+---
+
+## R15. Fel zon/pris (Uppsala–Fjällnora)
+
+- **Originaltext:** Visar 1 zon när det ska vara 2. Förslag: matris med alla reserelationer → antal zoner.
+- **Område:** Prisberäkning
+- **Typ:** bugg
+- **Prioritet:** hög
+- **Status:** åtgärdad
+- **Svar:** `MRT_zones_pair_span()` räknade intilliggande zoner (1→2) som 1 biljettzon; ska vara 2 (110 kr vuxen enkel). Gränsstationer (Gunsta) kan fortfarande ge 1 zon via optimal zon-tilldelning längs rutten. Tester: `PriceRulesTest`, `PriceZonesJourneyTest`.
+
+---
+
+## R16. Barn 0–6 → 0–3 år (etikett)
+
+- **Originaltext:** Prislistan säger fortfarande 0–6 år; ska vara 0–3.
+- **Område:** Priser / copy
+- **Typ:** bugg (fel label)
+- **Prioritet:** låg (en rad)
+- **Status:** klar
+- **Svar:** Etikett i `MRT_price_category_labels()` ändrad till ”Barn 0–3” (nyckeln `child_0_3` oförändrad).
+
+---
+
+## R17. Hur matas data in? (fråga)
+
+- **Originaltext:** Gör man PDF som AI läser eller via interface?
+- **Område:** Admin / onboarding
+- **Typ:** fråga
+- **Prioritet:** info
+- **Status:** besvarad (ingen åtgärd)
+- **Svar:** **Admin-gränssnitt** (Vue SPA) + valfritt **CSV-import/export**. Ingen PDF/AI-läsning. Se `docs/ADMIN_WORKFLOW.md`, `docs/CSV_FORMAT.md`.
+
+---
+
+## Prioriterad genomgångslista
+
+Gå igenom i denna ordning (högsta affärs-/användarvärde först):
+
+| # | ID | Punkt | Insats |
+|---|-----|-------|--------|
+| 1 | R15 | Zon/pris Uppsala–Fjällnora | ~~Medium~~ ✓ |
+| 2 | R6 | Busskoppling Selknä (113 min) | Klar |
+| 3 | R2 | Direktresa vs byte Marielund | Klar (fixture) |
+| 4 | R8 | Restid inkl. väntetid / tydligare | Klar |
+| 5 | R16 | Barn 0–3 etikett | Klar |
+| 6 | R5 | Veteranbuss-namn | Klar |
+| 7 | R9 | ”1 byte” / ”2 byten” | Klar |
+| 8 | R4 | Placering ”Visa passerade stationer” | Klar |
+| 9 | R3 | Mobil klippning | Klar (CSS) |
+| 10 | R10 | Få avgångar Fjällnora | Klar (4 koppl. fixture) |
+| 11 | R7 | Min bytestid 0 min? | Klar (default 0) |
+| 12 | R13 | Kalenderfärger vs profil | Klar (månadskalender) |
+| 13 | R12 | Typsnitt | Klar (G2 + arv) |
+| 14 | R14 | Riktig PDF på mobil | Klar (ny flik + HTML-dela) |
+| 15 | R11 | Gångvägar + karta | Framtida |
+
+**Klart:** R1–R10, R12, R13–R17 (fråga besvarad).
+
+---
+
+## Nästa steg
+
+- [ ] **R12 — test3:** Verifiera att Google Fonts (Roboto/Open Sans) laddas på test3-sidan efter deploy
+- [ ] **R14 — test3/mobil:** Verifiera ny flik + HTML-dela efter deploy
+- [ ] Uppdatera **Status** och **Svar** under respektive punkt efter varje genomgång
+- [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
+
+---
+
+## Bilder (denna omgång)
+
+| Beskrivning | Kopplad punkt |
+|-------------|---------------|
+| Direktresa, ångtåg 71, mobil klippning | R2, R3 |
+| Byte Selknä, buss B3, 113 min, 44 min | R5, R6, R8, R9 |
+| Dela/utskrift textfil | R14 |
+
+> Lägg ev. skärmdumpar i `docs/feedback/images/` med datum i filnamn.

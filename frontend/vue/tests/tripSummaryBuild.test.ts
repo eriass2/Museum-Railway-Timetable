@@ -1,0 +1,54 @@
+import { describe, expect, it } from 'vitest';
+import { buildTripSummaryInput, buildTripSummaryLegs } from '../src/wizard/utils/tripSummaryBuild';
+import type { WizardStore } from '../src/wizard/store/wizardStoreTypes';
+
+const storeStub = {
+  fromTitle: 'Uppsala Östra',
+  toTitle: 'Fjällnora',
+  dateYmd: '2026-06-05',
+  tripType: 'single',
+  config: { stations: [{ id: 1, title: 'Uppsala Östra' }] },
+  outbound: {
+    service_id: 1,
+    from_departure: '10:00',
+    to_arrival: '11:25',
+    legs: [
+      {
+        service_id: 71,
+        service_number: '71',
+        train_type: 'Ångtåg',
+        from_station_id: 1,
+        to_station_id: 2,
+        from_departure: '10:00',
+        to_arrival: '10:35',
+        destination: 'Marielund',
+      },
+    ],
+  },
+  inbound: null,
+} as unknown as WizardStore;
+
+describe('tripSummaryBuild', () => {
+  it('builds legs from store selections', () => {
+    const legs = buildTripSummaryLegs(storeStub, {}, '6 juni 2026');
+    expect(legs).toHaveLength(1);
+    expect(legs[0].route).toBe('Uppsala Östra → Fjällnora');
+    expect(legs[0].timeRange).toBe('10.00 – 11.25');
+  });
+
+  it('builds PDF/text input with title and legs', () => {
+    const input = buildTripSummaryInput({
+      store: storeStub,
+      cfg: { stepSummary: 'Din resa', outboundHeading: 'Utresa' },
+      dateText: '6 juni 2026',
+      tripTypeLabel: 'Enkel resa',
+      priceData: null,
+      dayPrices: null,
+      priceLabels: { categories: {}, tickets: {}, dash: '—', title: '', titleSuffix: '', note: '', typeColumnSr: '' },
+    });
+    expect(input.title).toBe('Din resa');
+    expect(input.downloadName).toBe('Uppsala Östra → Fjällnora 2026-06-05');
+    expect(input.legs[0].heading).toBe('Utresa');
+    expect(input.priceSection).toBeUndefined();
+  });
+});

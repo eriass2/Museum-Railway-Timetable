@@ -13,14 +13,9 @@
 .mrt-w-200 { width: 200px; min-width: 200px; }
 
 @media (max-width: 768px) {
-    .mrt-form-fields {
-        flex-direction: column;
-    }
-    .mrt-form-field {
+    .mrt-w-150,
+    .mrt-w-200 {
         width: 100%;
-    }
-    .mrt-btn--primary,
-    .mrt-btn--block {
-        width: 100%;
+        min-width: 0;
     }
 }

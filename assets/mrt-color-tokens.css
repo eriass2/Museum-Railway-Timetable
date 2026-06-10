@@ -1,0 +1,69 @@
+/**
+ * Museum Railway – neutral public UI colour tokens (default).
+ *
+ * Override via theme/child theme or enqueue optional brand pack
+ * (see assets/brand/lennakatten-color-tokens.css).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+:root {
+    /* --- Neutral heritage profile (not operator-specific) --- */
+    --mrt-color-brand-green: #1e4d6b;
+    --mrt-color-brand-gold: #c9a227;
+    --mrt-color-brand-olive: #4a6670;
+
+    --mrt-color-green-900: #0f2a3d;
+    --mrt-color-green-800: #163a52;
+    --mrt-color-green-700: #1a4460;
+    --mrt-color-green-600: var(--mrt-color-brand-green);
+    --mrt-color-green-500: #286089;
+    --mrt-color-green-400: #35739c;
+
+    --mrt-color-accent-700: #b89222;
+    --mrt-color-accent-600: var(--mrt-color-brand-gold);
+    --mrt-color-accent-500: #d4b44a;
+    --mrt-color-accent-400: #e0c56e;
+
+    --mrt-color-neutral-100: #ffffff;
+    --mrt-color-neutral-200: #e2e8f0;
+    --mrt-color-neutral-500: #64748b;
+    --mrt-color-neutral-600: #64748b;
+    --mrt-color-neutral-700: #334155;
+    --mrt-color-neutral-900: #0f172a;
+
+    --mrt-color-olive-600: var(--mrt-color-brand-olive);
+    --mrt-color-orange-600: #c9740c;
+    --mrt-color-traffic-green: #296310;
+    --mrt-color-traffic-yellow: #ddd24c;
+    --mrt-color-traffic-red: #b42318;
+    --mrt-color-traffic-orange: var(--mrt-color-orange-600);
+    --mrt-color-error-bg: #fde8e8;
+    --mrt-color-error-text: #7a1212;
+
+    --mrt-color-on-dark: #ffffff;
+    --mrt-color-on-dark-muted: #e2e8f0;
+    --mrt-color-on-dark-link: #f5e6a8;
+    --mrt-color-on-accent: #000000;
+    --mrt-color-on-green: #ffffff;
+    --mrt-color-on-olive: #ffffff;
+
+    --mrt-color-placeholder: var(--mrt-color-neutral-600);
+    --mrt-color-border-on-surface: var(--mrt-color-neutral-500);
+    --mrt-color-border-on-dark: rgba(255, 255, 255, 0.62);
+
+    --mrt-color-focus-ring: #fef3c7;
+    --mrt-color-focus-offset: var(--mrt-color-green-700);
+
+    --mrt-wizard-green: var(--mrt-color-green-600);
+    --mrt-wizard-green-dark: var(--mrt-color-green-800);
+    --mrt-wizard-olive: var(--mrt-color-brand-olive);
+    --mrt-wizard-yellow: var(--mrt-color-accent-600);
+    --mrt-wizard-yellow-bright: var(--mrt-color-accent-500);
+    --mrt-wizard-orange: var(--mrt-color-traffic-orange);
+    --mrt-wizard-surface: var(--mrt-color-neutral-100);
+    --mrt-wizard-surface-muted: var(--mrt-color-neutral-200);
+    --mrt-wizard-text: var(--mrt-color-neutral-900);
+    --mrt-wizard-border: var(--mrt-color-neutral-200);
+    --mrt-wizard-focus: var(--mrt-color-focus-ring);
+}

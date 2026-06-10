@@ -11,8 +11,8 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 | Lager | Roll | Exempel |
 |--------|------|---------|
 | **Domän** | Regler oberoende av WordPress och UI | Prismatris, datum/tid, connection-sökning, normalisering, tidtabellsrutnät |
-| **Infrastruktur** | WP-adapters: CPT, AJAX, inställningar, helpers | `MRT_ajax_*`, `inc/infrastructure/post-types/` |
-| **Admin / public** | Meta boxes, dashboard, shortcodes, enqueue | `inc/admin/meta-boxes/`, `inc/public/journey-wizard/` |
+| **Infrastruktur** | WP-adapters: CPT, REST, inställningar, helpers | `inc/infrastructure/rest/`, `inc/infrastructure/post-types/` |
+| **Admin / public** | Vue-admin, dev-verktyg (REST), shortcodes, enqueue | `inc/admin/`, `frontend/vue/src/admin/`, `inc/public/journey-wizard/` |
 
 **Vid ändringar:** Om en funktion kan beskrivas och testas utan `echo` och utan `$_POST` ska den ligga i **`inc/domain/`** (prefix `MRT_*`), inte i template-strängar eller JS.
 
@@ -23,7 +23,7 @@ Kort riktlinje för **Museum Railway Timetable** så att ansvar fördelas tydlig
 `museum-railway-timetable.php` → `inc/bootstrap.php`:
 
 1. **`MRT_bootstrap_load_domain()`** – `inc/bootstrap/domain.php` laddar domänmoduler (journey, timetable view, service, route, station, pricing, datetime).
-2. **`MRT_bootstrap_load_app()`** – miljö, inställningar, CPT, assets, admin, AJAX, shortcodes.
+2. **`MRT_bootstrap_load_app()`** – miljö, inställningar, CPT, assets, admin, REST, shortcodes.
 
 Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootstrap.
 
@@ -33,18 +33,19 @@ Inga legacy-loaders (`inc/functions/`, `inc/cpt/`, …) – allt går via bootst
 
 - **Enhetstester (PHPUnit):** Ren PHP i `tests/Unit/` mot `inc/domain/`; se `phpunit.xml.dist` och `composer test`.
 - **Ny affärsregel:** Lägg test i samma leverans när logiken är ren nog.
-- **CI:** `.github/workflows/ci.yml` kör `composer check` (validate, PHPStan, PHPUnit, JS-tester).
-- **Refaktor:** Validering som inte behöver `$_POST` ska vara namngivna `MRT_*`-funktioner (t.ex. `MRT_journey_validate_station_pair_ids` i `journey-parse.php`).
+- **Plan för kommande tester:** [TEST_IMPLEMENTATION_PLAN.md](TEST_IMPLEMENTATION_PLAN.md).
+- **CI:** `.github/workflows/ci.yml` kör `composer check`, `composer vue:check`, static Playwright E2E, och `e2e-wp` (publikt + Vue-admin mot Docker).
+- **Refaktor:** Validering som inte behöver `$_POST` ska vara namngivna `MRT_*`-funktioner (t.ex. `MRT_journey_validate_station_pair_ids` i `request-params.php`).
 
 ---
 
 ## 4. Affärskritisk kod och UI
 
-- **PHP:** Shortcode och AJAX ska **samla input → anropa domän → rendera**.
+- **PHP:** Shortcode och REST ska **samla input → anropa domän → returnera JSON/HTML**.
 - **JavaScript:** Servern är sanning för sökning, priser och giltiga datum; klienten visar svar och fel.
 - **Gemensam regel:** En implementation i PHP, inte copy-paste mellan admin och publikt.
 
-**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` (3) Tunt lager i shortcode/AJAX (4) UI visar och skickar parametrar.
+**Checklista för ny funktion:** (1) Logik i `inc/domain/…` (2) Tester i `tests/Unit/` (3) Tunt lager i shortcode/REST (4) UI visar och skickar parametrar. Se [REST_API.md](REST_API.md) och [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md).
 
 ---
 
@@ -64,26 +65,28 @@ inc/
 │   ├── route/
 │   ├── service/            # services, stop-times, connections
 │   ├── station/
-│   ├── timetable/view/     # prepare, grid, overview
-│   └── train-type/         # ikon-slugs
+│   ├── timetable/view/     # overview/, grid/, prepare, group-view
+│   ├── train-type/         # ikon-slugs
+│   └── admin/              # dashboard-data, deviations (REST backing)
 ├── infrastructure/
 │   ├── post-types/         # CPT + taxonomier
-│   ├── ajax/               # journey, stoptimes, timetable, route, …
+│   ├── rest/               # shared/, admin/, public/, dev/
 │   └── wordpress/          # environment, plugin-settings, helpers-utils
 ├── admin/
-│   ├── dashboard/
-│   ├── meta-boxes/
-│   ├── tools/              # demo, import, clear-db, dev-navigation
-│   ├── menu.php, settings.php, admin-list.php
-│   └── meta-boxes.php      # loader för meta-box-filer
+│   ├── app.php, menu.php   # Vue shell + legacy redirects
+│   └── tools/              # demo, import, clear-db, dev/, timetable-pages
 ├── public/
 │   ├── month-calendar/
 │   ├── timetable-overview/
+│   ├── timetable-index/
+│   ├── traffic-notices/
 │   └── journey-wizard/
-├── import/lennakatten/     # referensdata + importer
+├── import/
+│   ├── csv/                # validate/, import/, export/, package/
+│   └── lennakatten/        # referensdata + importer
 ├── assets/                 # enqueue (anropas från inc/assets.php)
 ├── admin.php               # admin-bootstrap
-└── shortcodes.php          # registrerar tre shortcodes
+└── shortcodes.php          # registrerar fem shortcodes
 ```
 
 ### Publika shortcodes
@@ -92,13 +95,19 @@ inc/
 |-----------|--------|
 | `[museum_timetable_month]` | `inc/public/month-calendar/` |
 | `[museum_timetable_overview]` | `inc/public/timetable-overview/` |
+| `[museum_timetable_index]` | `inc/public/timetable-index/` |
+| `[museum_traffic_notices]` | `inc/public/traffic-notices/` |
 | `[museum_journey_wizard]` | `inc/public/journey-wizard/` |
 
 Rese-UI är endast wizard; `[museum_journey_planner]` finns inte längre (se [REBUILD_PRODUCT_DECISIONS.md](REBUILD_PRODUCT_DECISIONS.md)).
 
-### Journey AJAX
+### Admin (Vue)
 
-`inc/infrastructure/ajax/journey.php`, `journey-parse.php` – JSON till `assets/journey-wizard/` (`mrt_search_journey`, kalender, connection detail).
+Vue-admin under `admin.php?page=mrt_app` (`frontend/vue/src/admin/`). REST via `inc/infrastructure/rest/` (`admin/`, `public/`, `shared/`, `dev/`) och `adminRest.ts`. Dev-verktyg (clear DB, import, tidtabellssidor) i Vue `#/dev-tools` via `POST /dev/*` (dev-läge). Legacy `?page=mrt_settings` redirectar till Vue.
+
+### Timetable overview (Vue)
+
+`inc/domain/timetable/view/overview/overview-data.php` (och moduler under `overview/` och `grid/`) bygger JSON (`MRT_get_timetable_overview_data`). Vue renderar i `frontend/vue/src/components/overview/`; admin editor och shortcode mountar samma komponent.
 
 ---
 

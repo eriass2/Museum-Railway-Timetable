@@ -1,0 +1,82 @@
+import { computed, ref, type Ref } from 'vue';
+import { getStopTimes, saveStopTimes } from '../../api/adminRest';
+import type { StopTimeRow } from '../../types';
+import { adminConfig } from '../../types';
+import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
+import { stopTimesToApiPayload } from '../../utils/timetable-editor/stopTimesPayload';
+
+function rowsSnapshot(rows: StopTimeRow[]): string {
+  return JSON.stringify(rows);
+}
+
+export function useStopTimes(serviceId: Ref<number>) {
+  const cfg = adminConfig();
+  const stations = ref<StopTimeRow[]>([]);
+  const savedSnapshot = ref('');
+  const loading = ref(false);
+  const error = ref('');
+  const message = ref('');
+
+  const isDirty = computed(() => rowsSnapshot(stations.value) !== savedSnapshot.value);
+
+  function syncSnapshot(): void {
+    savedSnapshot.value = rowsSnapshot(stations.value);
+  }
+
+  async function load() {
+    const id = serviceId.value;
+    if (!id) {
+      stations.value = [];
+      savedSnapshot.value = '';
+      loading.value = false;
+      return;
+    }
+    loading.value = true;
+    error.value = '';
+    message.value = '';
+    try {
+      const res = await getStopTimes(id);
+      stations.value = res.stations;
+      syncSnapshot();
+    } catch (e) {
+      error.value = adminErrorMessage(cfg, e, 'genericError');
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  function resolveQuickEdit(explicit: boolean): boolean {
+    if (!cfg.canManage && cfg.canOperate) {
+      return true;
+    }
+    return !explicit;
+  }
+
+  async function save(explicit = true) {
+    const id = serviceId.value;
+    if (!id || (!cfg.canManage && !cfg.canOperate)) {
+      return;
+    }
+    error.value = '';
+    try {
+      const res = await saveStopTimes(
+        id,
+        stopTimesToApiPayload(stations.value),
+        resolveQuickEdit(explicit),
+      );
+      stations.value = res.stations;
+      syncSnapshot();
+      message.value = adminStr(cfg, 'stopTimesSaved');
+    } catch (e) {
+      error.value = adminErrorMessage(cfg, e, 'saveFailed');
+    }
+  }
+
+  async function persistRows(id: number, rows: StopTimeRow[], quickEdit = false): Promise<StopTimeRow[]> {
+    error.value = '';
+    const res = await saveStopTimes(id, stopTimesToApiPayload(rows), quickEdit);
+    return res.stations;
+  }
+
+  return { stations, loading, error, message, isDirty, load, save, persistRows };
+}

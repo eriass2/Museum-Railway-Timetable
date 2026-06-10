@@ -1,8 +1,36 @@
 # Översikt över Shortcodes och Komponenter
 
-## Shortcodes (3 st)
+## Shortcodes (4 st)
 
-### 1. `[museum_timetable_month]` - Månadsvy
+### 1. `[museum_traffic_notices]` - Trafikmeddelanden
+
+Visar generella trafikmeddelanden och tur-avvikelser för idag (valfritt imorgon). Tom vy: «Inga meddelanden». Kräver JavaScript.
+
+**Användning:**
+```
+[museum_traffic_notices]
+```
+
+**Parametrar:**
+- `days` – `1` = idag (standard), `2` = idag + imorgon
+- `date` – Referensdatum `YYYY-MM-DD` (test; standard: WP-tid idag)
+- `show_general` – Visa generella meddelanden (`0` eller `1`, standard: `1`)
+- `show_deviations` – Visa tur-avvikelser (`0` eller `1`, standard: `1`)
+- `title` – Valfri rubrik ovanför listan
+
+**Exempel (startsida):**
+```
+[museum_traffic_notices]
+[museum_timetable_month ...]
+```
+
+Generella meddelanden redigeras i admin under **Trafikmeddelanden** (`#/traffic-notices`). Tur-avvikelser redigeras som tidigare under **Tidtabell → Avvikelser**.
+
+**Backend (REST):** `GET /museum-railway-timetable/v1/traffic-notices` (se [REST_API.md](REST_API.md)).
+
+---
+
+### 2. `[museum_timetable_month]` - Månadsvy
 Visar en kalendermånadsvy som visar vilka dagar som har turer.
 
 **Användning:**
@@ -33,7 +61,7 @@ Använd train type-slug från **Railway Timetable → Train Types** (demo-import
 
 ---
 
-### 2. `[museum_timetable_overview]` - Komplett Tidtabell
+### 3. `[museum_timetable_overview]` - Komplett Tidtabell
 Visar en komplett tidtabell-översikt grupperad per route och riktning.
 
 **Användning:**
@@ -64,22 +92,24 @@ Visar en komplett tidtabell-översikt grupperad per route och riktning.
 
 ---
 
-### 3. `[museum_journey_wizard]` - Reseplanerare (flersteg)
+### 4. `[museum_journey_wizard]` - Reseplanerare (flersteg)
 Mockup-liknande flöde: rutt → datum (kalender med trafiklägen) → utresa → ev. retur → sammanfattning med prismatris. Direktresor och byte. Tågtypsikoner i resultat. Kräver JavaScript.
 
 **Användning:**
 ```
-[museum_journey_wizard ticket_url="https://example.com/biljetter" hero_subtitle="" timetable_id="123"]
+[museum_journey_wizard ticket_url="https://example.com/biljetter" timetable_page_url="https://example.com/tidtabell"]
 ```
 
 **Parametrar:**
-- `ticket_url` – Länk till biljett/bokning (valfritt; knapp i sista steget)
-- `hero_subtitle` – Underrubrik steg 1 (valfritt)
-- `timetable_id` – Visar utfällbar tidtabellsöversikt under sökformuläret på steg 1 (valfritt)
+- `route_title` – Rubrik på steg 1 (standard: ”Planera resa”). Exempel: `route_title="Planera resa med Lennakatten"`
+- `ticket_url` – *(inaktiverat)* Reserverat attribut; knappen visas inte i nuvarande version
+- `timetable_page_url` – Länk till separat tidtabellssida (valfritt; visas under sök på steg 1)
+- `hero_subtitle` – *(föråldrad, ignoreras)* – användes tidigare som underrubrik
+- `timetable_id` – *(legacy)* – inbäddad tidtabell under steg 1; rekommenderas inte i Vue-flödet
 - `timetable` – Samma som `timetable_id` men med exakt tidtabellstitel (valfritt)
 - `embedded` – `1` / `true` för kompakt layout inuti sidinnehåll (t.ex. component demo), utan fullbredds-hero
 
-**Backend (AJAX):** `mrt_search_journey`, `mrt_journey_calendar_month`, `mrt_journey_connection_detail` (se [Journey – backend](#journey--backend)).
+**Backend (REST):** `GET /mrt/v1/journey/search`, `GET /mrt/v1/journey/calendar`, `GET /mrt/v1/journey/connection-detail` (se [Journey – backend](#journey--backend)).
 
 **Se även:** [ACCESSIBILITY.md](ACCESSIBILITY.md) (WCAG, release-rökning)
 
@@ -95,33 +125,33 @@ Shortcodes kan användas i widgets genom text-widgets eller custom HTML-widgets.
 
 ## Journey – backend
 
-Delad journey-domän och AJAX (används av wizarden):
+Delad journey-domän och REST (används av wizarden):
 
 - **Domän:** `inc/domain/journey/`
-- **AJAX:** `inc/infrastructure/ajax/journey.php`, `journey-parse.php`
-- **Delade JS:** `mrt-string-utils.js`, `mrt-date-utils.js`, `mrt-frontend-api.js`, `assets/journey-wizard/` (moduler, se README där)
+- **REST:** `inc/infrastructure/rest/public/journey-public.php` (`/mrt/v1/journey/*`)
+- **Publik frontend (Vue):** `frontend/vue/` → `assets/dist/vue/` (se [VUE_FRONTEND.md](VUE_FRONTEND.md))
 
 ---
 
 ## Frontend Assets
 
-Vid användning på webbplatsen laddar plugin relevanta filer via `inc/assets.php`, bland annat:
+Plugin laddar **en** Vite ES-modul (`assets/dist/vue/assets/main-*.js`) med CSS (importerad från `assets/*.css`). Varje Vue-app (`month`, `overview`, `wizard`, `index`, `traffic_notices`) laddas som async chunk när shortcoden mountas på sidan.
 
-- **Månad:** `assets/frontend.js` (kalender-AJAX)
-- **Wizard:** `assets/journey-wizard/*.js` + `assets/journey-wizard.css`
-- **Tågtypsikoner:** `assets/train-type-icons.css`
+- **Enqueue:** `inc/assets/vue-frontend.php`, `inc/assets/frontend.php`
+- **Tågtypsikoner:** bundlade via `frontend/vue/src/styles/mrt-public.css`
 
-Assets köas när motsvarande shortcode finns på sidan (eller via filter `mrt_should_enqueue_frontend_assets`).
+Assets köas när motsvarande shortcode finns i sidans innehåll (eller när shortcode renderas / filter `mrt_should_enqueue_frontend_assets`).
 
 ---
 
 ## Component demo (utveckling)
 
-**Railway Timetable → Component demo page** (eller `docker-dev-reset.ps1`) skapar en sida med tre block:
+**Railway Timetable → Component demo page** (eller `docker-dev-reset.ps1`) skapar en sida med fyra block:
 
-1. Månadskalender  
-2. Tidtabellsöversikt (GRÖN efter Lennakatten-import)  
-3. Journey wizard (`embedded="1"`)
+1. Trafikmeddelanden  
+2. Månadskalender  
+3. Tidtabellsöversikt (GRÖN efter Lennakatten-import)  
+4. Journey wizard (`embedded="1"`)
 
 Se [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 

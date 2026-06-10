@@ -15,6 +15,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Supported train-type icon keys (assets/icons/train-types/{key}.png).
  *
+ * Icon keys (steam|diesel|railbus|bus) differ from WP train type slugs
+ * (angtag|ralsbuss|dieseltag|buss). Slug → icon mapping: MRT_train_type_slug_icon_map().
+ * Vue mirror: frontend/vue/src/shared/trainTypeIcons.ts
+ *
  * @return array<int, string>
  */
 function MRT_train_type_icon_keys(): array {
@@ -99,6 +103,10 @@ function MRT_get_train_type_symbol_key( ?WP_Term $train_type ): string {
 	if ( ! $train_type ) {
 		return '';
 	}
+	$stored = get_term_meta( (int) $train_type->term_id, 'mrt_icon_key', true );
+	if ( is_string( $stored ) && $stored !== '' && in_array( $stored, MRT_train_type_icon_keys(), true ) ) {
+		return $stored;
+	}
 	return MRT_resolve_train_type_symbol_key( $train_type->name, $train_type->slug );
 }
 
@@ -113,34 +121,32 @@ function MRT_get_train_type_symbol_key_from_label( string $label ): string {
 }
 
 /**
- * <img> markup for a train-type icon.
- *
- * @param string $key    steam|diesel|railbus|bus
- * @param string $alt    Accessible label (empty when decorative)
+ * @return WP_Term|null
  */
-function MRT_train_type_icon_img( string $key, string $alt = '' ): string {
-	if ( $key === '' ) {
-		return '';
+function MRT_get_train_type_term_by_slug( string $slug ): ?WP_Term {
+	$term = get_term_by( 'slug', $slug, 'mrt_train_type' );
+	if ( ! $term || is_wp_error( $term ) ) {
+		return null;
 	}
-	$class = 'mrt-train-type-icon-img mrt-train-type-icon-img--' . sanitize_html_class( $key );
-	return sprintf(
-		'<img src="%s" class="%s" width="48" height="24" decoding="async" alt="%s" />',
-		esc_url( MRT_train_type_icon_url( $key ) ),
-		esc_attr( $class ),
-		esc_attr( $alt )
-	);
+	return $term;
 }
 
 /**
- * Icon HTML for a train type term (timetable grids, admin).
+ * Resolve a printed label (e.g. Dieseltåg) to a train type term.
  *
- * @param WP_Term|null $train_type Train type term object
- * @return string Icon HTML or empty string
+ * @return WP_Term|null
  */
-function MRT_get_train_type_icon( ?WP_Term $train_type ): string {
-	if ( ! $train_type ) {
-		return '';
+function MRT_get_train_type_term_by_label( string $label ): ?WP_Term {
+	$slug_map = array(
+		'Dieseltåg'  => 'dieseltag',
+		'Rälsbuss'   => 'ralsbuss',
+		'Ångtåg'     => 'angtag',
+		'Ång/diesel' => 'ang-diesel',
+		'Buss'       => 'buss',
+	);
+	$slug = $slug_map[ $label ] ?? '';
+	if ( $slug === '' ) {
+		return null;
 	}
-	$key = MRT_get_train_type_symbol_key( $train_type );
-	return MRT_train_type_icon_img( $key, $train_type->name );
+	return MRT_get_train_type_term_by_slug( $slug );
 }

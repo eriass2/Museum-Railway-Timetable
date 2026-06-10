@@ -16,15 +16,30 @@ Set-Location $root
 Write-Host "`n=== MRT dev reset (clear + import + smoke menu) ===" -ForegroundColor Cyan
 
 if (-not $SkipCompose) {
-    docker compose up -d
+    docker compose up -d --build
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     Write-Host "Waiting for WordPress..." -ForegroundColor Gray
     Start-Sleep -Seconds 12
 }
 
-Write-Host "`n--- Enable WP_DEBUG (required for fixture debug pages) ---" -ForegroundColor Cyan
+Write-Host "`n--- Build Vue public bundle (CSS + JS) ---" -ForegroundColor Cyan
+$prevEap = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify" 2>&1 | ForEach-Object { Write-Host $_ }
+$vueExit = $LASTEXITCODE
+$ErrorActionPreference = $prevEap
+if ($vueExit -ne 0) { exit $vueExit }
+
+Write-Host "`n--- Swedish locale (sv_SE) ---" -ForegroundColor Cyan
+$ErrorActionPreference = 'Continue'
+docker compose run --rm wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh 2>&1 | ForEach-Object { Write-Host $_ }
+$ErrorActionPreference = 'Stop'
+
+Write-Host "`n--- Enable WP_DEBUG (development) ---" -ForegroundColor Cyan
+$ErrorActionPreference = 'Continue'
 docker compose run --rm --user root wordpress-init wp --allow-root config set WP_DEBUG true --raw 2>&1 | ForEach-Object { Write-Host $_ }
 docker compose run --rm --user root wordpress-init wp --allow-root config set WP_DEBUG_LOG true --raw 2>&1 | ForEach-Object { Write-Host $_ }
+$ErrorActionPreference = 'Stop'
 
 Write-Host "`n--- Reset and import ---" -ForegroundColor Cyan
 $eval = "if (!function_exists('MRT_dev_reset_and_import_cli')) { fwrite(STDERR, 'Plugin not active or dev-cli not loaded'.PHP_EOL); exit(1); } MRT_dev_reset_and_import_cli();"

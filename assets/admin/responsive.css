@@ -9,17 +9,6 @@
    ========================================================================== */
 
 @media screen and (max-width: 782px) {
-    .mrt-month-table th,
-    .mrt-month-table td {
-        height: 60px;
-        padding: var(--mrt-spacing-xs);
-        font-size: var(--mrt-font-sm);
-    }
-
-    .mrt-month-table .mrt-daynum {
-        font-size: var(--mrt-font-xs);
-    }
-
     .mrt-table {
         font-size: var(--mrt-font-base);
     }
@@ -157,12 +146,6 @@
 }
 
 @media screen and (max-width: 480px) {
-    .mrt-month-table th,
-    .mrt-month-table td {
-        height: 50px;
-        font-size: var(--mrt-font-xs);
-    }
-
     .mrt-legend {
         font-size: var(--mrt-font-xs);
     }

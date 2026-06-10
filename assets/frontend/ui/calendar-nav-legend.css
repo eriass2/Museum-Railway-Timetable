@@ -1,0 +1,139 @@
+/**
+ * calendar-nav-legend
+ * @package Museum_Railway_Timetable
+ */
+/* â€”â€” Calendar nav â€”â€” */
+.mrt-calendar-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 1rem 1.25rem 0.75rem;
+}
+
+.mrt-calendar-nav__title {
+    flex: 1;
+    margin: 0;
+    text-align: center;
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.mrt-calendar-nav__prev,
+.mrt-calendar-nav__next {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    padding: 0;
+    border: 2px solid var(--mrt-color-border-on-surface, #ccc);
+    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-color-green-700, #1f4d2e);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    min-height: 0;
+    text-decoration: none;
+    cursor: pointer;
+    box-sizing: border-box;
+}
+
+.mrt-calendar-nav__prev:hover,
+.mrt-calendar-nav__next:hover,
+.mrt-calendar-nav__link:hover {
+    background: var(--mrt-color-neutral-200, #eee);
+}
+
+.mrt-calendar-nav__link {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.7rem;
+    border: 1px solid var(--mrt-border-default, #ccc);
+    background: var(--mrt-bg-lighter, #f5f5f5);
+    color: var(--mrt-text-secondary, #333);
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.mrt-calendar-nav__today {
+    margin-left: auto;
+    padding: 0.35rem 0.7rem;
+    border: 2px solid var(--mrt-color-border-on-surface, #ccc);
+    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-color-green-700, #1f4d2e);
+    font-size: 0.95rem;
+    font-weight: 700;
+    min-height: 0;
+    cursor: pointer;
+}
+
+/* â€”â€” Legend â€”â€” */
+.mrt-legend-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    margin: 0;
+    padding: 0.75rem 1.25rem 1.15rem;
+    list-style: none;
+}
+
+.mrt-legend-list__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.95rem;
+}
+
+.mrt-legend-list__swatch {
+    flex-shrink: 0;
+    width: 1.65rem;
+    height: 1.65rem;
+}
+
+.mrt-legend-swatch--ok {
+    background: var(--mrt-cal-traffic-yellow-bg, var(--mrt-wizard-yellow, var(--mrt-color-accent-600)));
+    border: 0;
+}
+
+.mrt-legend-swatch--traffic {
+    background: var(--mrt-cal-traffic-muted-bg, var(--mrt-color-neutral-200, #e0e0e0));
+    border: 0;
+}
+
+.mrt-legend-swatch--none {
+    background: var(--mrt-wizard-surface, #fff);
+    border: 2px solid var(--mrt-color-neutral-500, #767676);
+}
+
+.mrt-legend__hint {
+    margin: 0.25rem 0 0;
+    padding: 0 1.25rem;
+    font-size: 0.875rem;
+    color: var(--mrt-color-neutral-600, #555);
+}
+
+.mrt-legend__hint:first-of-type {
+    margin-top: 0;
+}
+
+.mrt-trip-type-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 1.85rem;
+    height: 1.85rem;
+    line-height: 0;
+}
+
+.mrt-trip-type-icon svg {
+    display: block;
+    width: 1.85rem;
+    height: 1.85rem;
+}
+

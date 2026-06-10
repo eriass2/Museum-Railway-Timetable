@@ -1,0 +1,50 @@
+/**
+ * Museum Railway – neutral typography (system fonts by default).
+ *
+ * Optional Lennakatten fonts: assets/brand/lennakatten-typography.css
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+:root {
+    --mrt-font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mrt-font-heading: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mrt-font-weight-body: 400;
+    --mrt-font-weight-heading: 700;
+    --mrt-font-weight-heading-strong: 800;
+}
+
+.mrt-vue-root,
+.mrt-has-shortcodes,
+.mrt-month,
+.mrt-journey-wizard,
+.mrt-ov,
+.mrt-timetable-index,
+.mrt-admin-app {
+    font-family: var(--mrt-font-body);
+    font-weight: var(--mrt-font-weight-body);
+}
+
+.mrt-vue-root :where(button, input, select, textarea) {
+    font-family: inherit;
+}
+
+.mrt-heading,
+.mrt-ov-banner,
+.mrt-ov-route-title,
+.mrt-ov-day-title,
+.mrt-month-nav__title,
+.mrt-ov-print-key-title,
+.mrt-ov-col-head--number,
+.mrt-step-header__title,
+.mrt-calendar-nav__title {
+    font-family: var(--mrt-font-heading);
+    font-weight: var(--mrt-font-weight-heading);
+}
+
+.mrt-heading--md,
+.mrt-heading--xl,
+.mrt-heading--surface-title,
+.mrt-ov-route-title {
+    font-weight: var(--mrt-font-weight-heading-strong);
+}

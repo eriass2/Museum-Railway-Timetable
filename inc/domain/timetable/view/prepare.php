@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * @param WP_Post      $service
  * @param WP_Term|null $train_type
- * @return array{classes: array<int, string>, is_special: bool, special_name: string, service_number: string|int}
+ * @return array{classes: array<int, string>, is_special: bool, special_name: string, highlight_label: string, highlight_color: string, highlight_note: string, service_number: string|int}
  */
 function MRT_prepare_service_train_display( WP_Post $service, $train_type ): array {
 	$service_number = get_post_meta( $service->ID, 'mrt_service_number', true );
@@ -23,30 +23,24 @@ function MRT_prepare_service_train_display( WP_Post $service, $train_type ): arr
 		$service_number = $service->ID;
 	}
 
-	$classes      = array( 'mrt-service-col' );
-	$is_special   = false;
-	$special_name = '';
-	if ( $train_type ) {
-		$train_type_slug       = $train_type->slug;
-		$train_type_name_lower = strtolower( $train_type->name );
-		if ( $train_type_slug === 'buss' ) {
-			$classes[] = 'mrt-service-bus';
-		} elseif ( strpos( $train_type_name_lower, 'express' ) !== false || strpos( $service->post_title, 'express' ) !== false ) {
-			$classes[]  = 'mrt-service-special';
-			$is_special = true;
-			if ( strpos( strtolower( $service->post_title ), 'express' ) !== false ) {
-				$special_name = 'Express';
-			} elseif ( strpos( strtolower( $service->post_title ), 'thun' ) !== false ) {
-				$special_name = "Thun's-expressen";
-			}
-		}
+	$classes = array( 'mrt-service-col' );
+	if ( $train_type && $train_type->slug === 'buss' ) {
+		$classes[] = 'mrt-service-bus';
+	}
+
+	$highlight = MRT_get_service_highlight( (int) $service->ID );
+	if ( $highlight !== null ) {
+		$classes[] = 'mrt-service-highlight';
 	}
 
 	return array(
-		'classes'        => $classes,
-		'is_special'     => $is_special,
-		'special_name'   => $special_name,
-		'service_number' => $service_number,
+		'classes'          => $classes,
+		'is_special'         => $highlight !== null,
+		'special_name'       => $highlight['label'] ?? '',
+		'highlight_label'    => $highlight['label'] ?? '',
+		'highlight_color'    => $highlight['color'] ?? '',
+		'highlight_note'     => $highlight['note'] ?? '',
+		'service_number'     => $service_number,
 	);
 }
 
@@ -90,9 +84,6 @@ function MRT_prepare_service_info( array $services_list, string $dateYmd ): arra
 		$train_type              = $service_data['train_type'];
 		$disp                    = MRT_prepare_service_train_display( $service, $train_type );
 		$service_classes[ $idx ] = $disp['classes'];
-		if ( in_array( (string) $disp['service_number'], array( '93', '96' ), true ) ) {
-			$service_classes[ $idx ][] = 'mrt-service-thuns';
-		}
 
 		$service_stop_times = $service_data['stop_times'] ?? array();
 		$destination_data   = MRT_get_service_destination( $service->ID );
@@ -102,13 +93,25 @@ function MRT_prepare_service_info( array $services_list, string $dateYmd ): arra
 			$all_connections[ $idx ] = $connections;
 		}
 
+		$default_train_type = MRT_get_service_default_train_type( (int) $service->ID );
+		$is_deviation       = $dateYmd !== '' && MRT_service_has_train_type_deviation( (int) $service->ID, $dateYmd );
+		$deviation_notice   = $dateYmd !== '' ? MRT_get_service_notice_for_date( (int) $service->ID, $dateYmd ) : '';
+		$is_cancelled       = $dateYmd !== '' && MRT_notice_indicates_cancelled( $deviation_notice );
+
 		$service_info[ $idx ] = array(
-			'service'        => $service,
-			'train_type'     => $train_type,
-			'service_number' => $disp['service_number'],
-			'is_special'     => $disp['is_special'],
-			'special_name'   => $disp['special_name'],
-			'destination'    => $destination_data['destination'] ?? '',
+			'service'                => $service,
+			'train_type'             => $train_type,
+			'default_train_type'     => $default_train_type,
+			'is_deviation'           => $is_deviation,
+			'deviation_notice'       => $deviation_notice,
+			'is_cancelled'           => $is_cancelled,
+			'service_number'         => $disp['service_number'],
+			'is_special'             => $disp['is_special'],
+			'special_name'           => $disp['special_name'],
+			'highlight_label'        => $disp['highlight_label'],
+			'highlight_color'        => $disp['highlight_color'],
+			'highlight_note'         => $disp['highlight_note'],
+			'destination'            => $destination_data['destination'] ?? '',
 		);
 	}
 

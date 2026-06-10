@@ -67,9 +67,9 @@ final class JourneyConnectionPermissionFlagsTest extends TestCase {
         $connections = MRT_find_connections(1, 2, '2026-06-01');
 
         self::assertCount(1, $connections);
-        self::assertStringContainsString('from_st.pickup_allowed = 1', $GLOBALS['wpdb']->last_query);
-        self::assertStringContainsString('to_st.dropoff_allowed = 1', $GLOBALS['wpdb']->last_query);
-        self::assertStringNotContainsString('from_st.pickup_allowed = 1 OR from_st.dropoff_allowed = 1', $GLOBALS['wpdb']->last_query);
-        self::assertStringNotContainsString('to_st.pickup_allowed = 1 OR to_st.dropoff_allowed = 1', $GLOBALS['wpdb']->last_query);
+        self::assertStringContainsString("from_st.avg_pickup_mode IN ('scheduled','on_request')", $GLOBALS['wpdb']->last_query);
+        self::assertStringContainsString("to_st.avg_dropoff_mode IN ('scheduled','on_request')", $GLOBALS['wpdb']->last_query);
+        self::assertStringNotContainsString('from_st.pickup_allowed = 1', $GLOBALS['wpdb']->last_query);
+        self::assertStringNotContainsString('to_st.dropoff_allowed = 1', $GLOBALS['wpdb']->last_query);
     }
 }

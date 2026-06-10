@@ -1,18 +1,26 @@
-# Journey wizard – design tokens (från nuvarande CSS)
+# Journey wizard – design tokens
 
-Extraherat från `assets/journey-wizard/base.css` och relaterade moduler. Uppdatera när mockup-PNG finns i `docs/mockups/`.
+Komponent-specifika tokens. **Färgpalett (källa):** [docs/design/COLOR_PALETTE.md](../design/COLOR_PALETTE.md) och `assets/mrt-color-tokens.css`.
 
-## Färger
+## Färger (alias)
 
-| Token | Värde | Användning |
-|-------|--------|------------|
-| `--mrt-jw-green` | `#1c650f` | Primär grön |
-| `--mrt-jw-green-dark` | `#15530b` | Panelbakgrund |
-| `--mrt-jw-yellow` | `#e3d449` | Accent, aktivt steg, CTA |
-| `--mrt-jw-orange` | `#f39813` | (reserverad accent) |
-| `--mrt-jw-surface` | `#ffffff` | Ljusa ytor i steg |
-| `--mrt-jw-text` | `#141414` | Brödtext på ljus yta |
-| `--mrt-jw-focus` | `#fff4a3` | Fokusring |
+Wizard-CSS använder `--mrt-wizard-*` som pekar på `--mrt-color-*` i token-filen.
+
+| Token | Mappar till | Användning |
+|-------|-------------|------------|
+| `--mrt-wizard-green` | `green-600` | Varumärkesgrön |
+| `--mrt-wizard-green-dark` | `green-700` | Hero / mörk panel |
+| `--mrt-wizard-yellow` | `accent-600` (`#DDD24C`) | CTA, aktivt steg, vald restyp — **svart text** |
+| `--mrt-wizard-yellow-bright` | `accent-500` | Highlight / klara steg på mörk bakgrund |
+| `--mrt-wizard-surface` | `neutral-100` | Formulärfält |
+| `--mrt-wizard-text` | `neutral-900` | Brödtext på ljus yta |
+| `--mrt-wizard-focus` | `focus-ring` | Fokusring |
+
+## Restyp (steg 1)
+
+- Segmentknappar: `steps-route.css` (`.mrt-journey-wizard__trip-type-segmented`)
+- Ikoner: `frontend/vue/src/wizard/components/WizardTripTypeIcon.vue` — SVG, `currentColor` (enkel = pil höger, tur/retur = pilar båda håll)
+- Storlek: ~1,85 rem, vertikalt centrerad i knappen (`.mrt-journey-wizard__trip-type-icon`)
 
 ## Typografi
 
@@ -27,32 +35,34 @@ Extraherat från `assets/journey-wizard/base.css` och relaterade moduler. Uppdat
 
 ## Kalender (steg datum)
 
-- Grön = trafik för vald resa (`--ok`)
-- Gul/orange traffic = trafik men ej vald resa
-- Grå = ingen trafik
+- Vit **kalenderkort** på grön panel (`__calendar-card` i `controls-calendar.css`)
+- **Guld** (`accent-600`) = trafik för vald resa (`--day--ok`), vit siffra
+- **Ljusgrå** = trafik men ej vald resa (`--day--traffic`)
+- **Vit + grå text** = ingen trafik (`--day--none`)
+- Månadspilar: platta, gröna — inte 3D-grå chevrons
 
-Se `assets/journey-wizard/controls-calendar.css`.
+Se `frontend/vue/src/styles/journey-wizard/controls-calendar.css`.
 
 ## Utresa / återresa
 
 - Vit turkort med skugga på grön panel (`trips-detail-summary.css`)
 - **Välj →**: gul knapp (`controls-calendar.css` `.mrt-journey-wizard__btn-select`)
-- Tider med punkt: `10.00 → 10.57` (`trip-card.js` `formatTripClock`)
+- Tider med punkt: `10.00 → 10.57`
 - Byte: fordon badges med `→` mellan (`mrt-journey-wizard__vehicle-sep`)
 - Vald utresa-kort på retursteget: gul kant, mörkgrön bakgrund (`steps-outbound-return.css`)
 - Aktivt steg i steglistan: gul bakgrund + fokusring vid `aria-current="step"`
-- Expanderat kort: tidslinje med punkt-tider, `∨ visa passerade stationer`, **Priser**-tabell i kortet (`connection-detail.js`, `prices.js` `compactTitle`)
+- Expanderat kort: tidslinje med punkt-tider, visa/dölj hållplatser, **Priser**-tabell i kortet
 
 ## Sammanfattning (`Din resa`)
 
-- Vit **Utresa** / **Återresa**-kort i lista (`summaryLegCardHtml`, `steps-summary.css`)
+- Vit **Utresa** / **Återresa**-kort i lista (`steps-summary.css`)
 - **Priser** på grön panel: vit rubrik, vit tabell-yta, markerad tur/retur-rad
 - Prisceller med `kr`-suffix
 - Gul **Fortsätt till biljetter**-CTA centrerad under tabellen
 
 ## Återresa (`valj-aterresa.png`)
 
-- **Vald utresa:** vit kort med gul kant ovanför listan (`steps-outbound-return.css`, `selectedTripHtml`)
+- **Vald utresa:** vit kort med gul kant ovanför listan
 - Returkort: samma som utresa
 - **Byte i detalj:** `%d min byte` från `transfer_wait_minutes` (API)
 - **Varning:** `⚠` + fet text vid t.ex. brandrisk (`notice--warning`)

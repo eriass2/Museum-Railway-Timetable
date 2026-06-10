@@ -1,0 +1,106 @@
+# REST API – policy
+
+Museum Railway Timetable använder **WordPress REST API** för all klient–server-kommunikation. **Ingen `admin-ajax.php` / `wp_ajax_*`** — pluginet registrerar inga AJAX-actions.
+
+---
+
+## Beslut
+
+| Beslut | Värde |
+|--------|--------|
+| Transport | WordPress REST API (`/wp-json/…`) |
+| AJAX | **Förbjudet** — inga `wp_ajax_*` kvar |
+| Publikt frontend (Vue) | REST + cookie/nonce där användaren är inloggad; publika läs-endpoints utan auth |
+| Admin (Vue) | REST + `X-WP-Nonce` (`wp_rest`) + capability checks |
+| Domänlogik | Oförändrat i `inc/domain/` — REST-controllers är tunna adapters |
+
+---
+
+## Namespace och konventioner
+
+- **Namespace:** `museum-railway-timetable/v1` (URL: `/wp-json/museum-railway-timetable/v1/…`)
+- **Registrering:** `inc/infrastructure/rest/` (`shared/`, `admin/`, `public/`, `dev/`)
+- **Metoder:** GET för läsning, POST/PATCH/PUT för skrivning, DELETE där det passar
+- **Svar:** JSON; fel via `WP_Error` med HTTP-status (400 validering, 403 capability, 404 saknas, 500 oväntat)
+- **Validering:** Domänfunktioner i PHP; controllers sanerar input och mappar till domän
+- **Säkerhet:** `permission_callback` per route; aldrig lita på klientvalidering ensam
+
+### Exempel på resurser (målbild)
+
+| Route (prefix `/museum-railway-timetable/v1`) | Syfte |
+|-----------------------------------------------|--------|
+| `GET /dashboard` | Status, varningar, snabbstatistik |
+| `GET|POST /stations`, `GET|PATCH|DELETE /stations/{id}` | Stationer |
+| `GET|POST /routes`, `GET|PATCH|DELETE /routes/{id}` | Rutter + stationordning |
+| `GET|POST /timetables`, `GET|PATCH|DELETE /timetables/{id}` | Tidtabeller |
+| `GET|POST /timetables/{id}/services`, `PATCH|DELETE /timetables/{id}/services/{service_id}` | Turer |
+| `GET|PUT /services/{id}/stop-times` | Stopptider |
+| `PUT /services/{id}/departure` | Snabb avgångstid (mobil) |
+| `POST /operations/cancel-traffic` | Markera all trafik inställd för datum (mobil drift) |
+| `POST /dev/*` | Dev-verktyg (endast dev-läge): clear-db, import, demo-page, setup-navigation, sync-timetable-pages, **client-log** |
+| `GET|POST /timetables/{id}/deviations` | Avvikelser |
+| `GET /timetables/{id}/overview` | Overview-JSON (samma som idag); kolumner/turer med `isCancelled`, print key med inställ-förklaring |
+| `GET|PATCH /settings` | Plugininställningar (`enabled`, `operator_name`, `ticket_url`, byten, eftermiddagsgräns) |
+| `GET|PATCH /stations/{id}` | Station inkl. `train_change_map`, `price_zones`, `bus_suffix` |
+| `GET|PUT /settings/prices` | Prismatris |
+| `POST /import/csv`, `GET /export/csv` | Import/export |
+| `POST /journey/search` | Resesökning (publikt); connections inkl. `notice`, `is_cancelled` |
+| `GET /prices/trip` | Priser för vald resa (publikt, wizard) |
+| `GET /traffic-notices` | Trafikmeddelanden (publikt): generella + tur-avvikelser |
+| `GET|PUT /traffic-notices/messages` | Generella trafikmeddelanden (admin) |
+| `GET /journey/calendar` | Trafikdagar (publikt) |
+| `GET /journey/connection-detail` | Detalj (publikt); valfri `date` i body; svar med `notice`, `is_cancelled` |
+
+Implementation: `inc/infrastructure/rest/admin/*.php`, `public/*.php`, m.fl., laddas via `loader.php`. Publika tidtabell-endpoints: `public/timetable-public.php` (`/timetables/day`, `/timetables/month`). Resesökning: `public/journey-public.php`. Admin-klient: `frontend/vue/src/admin/api/adminRest.ts`.
+
+---
+
+## Migration från AJAX
+
+**Status (2026-05):** AJAX-lagret är borttaget. Publikt Vue och admin använder REST under `museum-railway-timetable/v1`.
+
+| Tidigare AJAX action | REST |
+|--------------------|------|
+| `mrt_search_journey` | `POST /journey/search` |
+| `mrt_journey_calendar_month` | `POST /journey/calendar` |
+| `mrt_journey_connection_detail` | `POST /journey/connection-detail` |
+| `mrt_trip_prices` | `GET /prices/trip?from_id=&to_id=&trip_type=&…` |
+| `mrt_get_timetable_for_date` | `GET /timetables/day?date=&train_type=` |
+| `mrt_get_timetable_month` | `GET /timetables/month?year=&month=&train_type=&service=&start_monday=` |
+| `mrt_timetable_overview_data` | `GET /timetables/{id}/overview` |
+| Admin stopptider/turer/rutter | Se tabellen ovan (admin routes) |
+| Tågtyper | `GET|POST /train-types`, `PATCH|DELETE /train-types/{id}` |
+| CSV | `POST /import/csv`, `GET /export/csv` |
+
+**Klient:** `frontend/vue/src/api/mrtRest.ts` (publikt, REST-paths); `frontend/vue/src/admin/api/adminRest.ts` (admin).
+
+Publika routes kräver `X-WP-Nonce` (`wp_rest`) i frontend-config (`restUrl` + `restNonce` från `MRT_rest_client_config()` i PHP).
+
+---
+
+## Definition of done (ny endpoint)
+
+Nya REST-endpoints ska uppfylla:
+
+- Route med `permission_callback` och input-validering
+- Domänlogik i befintlig `MRT_*`-funktion (ingen duplicering)
+- PHPUnit där beteendet är icke-trivialt
+- Vue/klient anropar REST — inga AJAX-actions
+
+Befintliga routes i tabellen ovan uppfyller detta (2026-05).
+
+---
+
+## Förbjudet i ny kod
+
+- `add_action( 'wp_ajax_*' )` / `wp_ajax_nopriv_*`
+- `admin_url( 'admin-ajax.php' )` i enqueue/localize
+- `fetch( ajaxurl, { action: 'mrt_*' } )` i JS/TS
+
+---
+
+## Referenser
+
+- [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md) — Vue-admin arbetsflöde
+- [ARCHITECTURE.md](ARCHITECTURE.md) — lager och adapters
+- [WordPress REST API Handbook](https://developer.wordpress.org/rest-api/)

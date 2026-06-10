@@ -50,12 +50,24 @@ COMMIT_MESSAGE.txt
 
 # PHPUnit
 .phpunit.cache/
+/coverage/
+coverage-output.txt
+
+# Python
+__pycache__/
+*.pyc
 
 # Composer
 /vendor/
+
+# Vue experiment (keep built assets/dist/vue in repo)
+frontend/vue/node_modules/
 
 # gettext merge backups
 *.po~
 
 # Deploy config (user-specific Local path)
 local/deploy.config.json
+
+# Release zips (scripts/build-release.ps1)
+/release/

@@ -1,0 +1,245 @@
+@media (max-width: 48rem) {
+    .mrt-journey-wizard__hero {
+        padding: 1rem;
+    }
+
+    .mrt-journey-wizard .mrt-step-panel,
+    .mrt-journey-wizard .mrt-step-panel--search,
+    .mrt-journey-wizard .mrt-step-panel--wide {
+        width: 100%;
+        min-width: 0;
+        padding: 0.75rem 0.85rem 1.1rem;
+        box-sizing: border-box;
+    }
+
+    .mrt-journey-wizard .mrt-step-header,
+    .mrt-journey-wizard .mrt-step-header__context,
+    .mrt-journey-wizard .mrt-trip-summary,
+    .mrt-journey-wizard .mrt-trip-summary__route {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .mrt-journey-wizard .mrt-step-header__context,
+    .mrt-journey-wizard .mrt-trip-summary__route {
+        overflow-wrap: anywhere;
+    }
+
+    .mrt-journey-wizard .mrt-step-nav {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin-inline: 0;
+        overflow: visible;
+    }
+
+    .mrt-journey-wizard .mrt-step-progress {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.35rem;
+        width: 100%;
+        max-width: 100%;
+        justify-content: stretch;
+    }
+
+    .mrt-journey-wizard .mrt-step-progress__item:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+        width: calc(50% - 0.175rem);
+        justify-self: center;
+    }
+
+    .mrt-journey-wizard .mrt-heading--surface-title {
+        font-size: 1.8rem;
+    }
+
+    .mrt-journey-wizard .mrt-calendar-nav {
+        flex-wrap: wrap;
+        padding: 0.9rem 0.9rem 0;
+    }
+
+    .mrt-journey-wizard .mrt-calendar-nav,
+    .mrt-calendar-grid--wizard,
+    .mrt-journey-wizard .mrt-legend-list {
+        padding-inline: 0.65rem;
+    }
+
+    .mrt-journey-wizard .mrt-legend-list {
+        padding-bottom: 1.2rem;
+    }
+
+    .mrt-calendar-grid--wizard .mrt-calendar-grid__table th {
+        font-size: 0.85rem;
+        padding: 0.25rem 0;
+    }
+
+    .mrt-calendar-grid--wizard .mrt-calendar-day {
+        max-width: 100%;
+        min-width: 0;
+        min-height: 2.35rem;
+        font-size: 1rem;
+    }
+
+    .mrt-journey-wizard .mrt-surface:not(.mrt-surface--flush) {
+        padding: 0.85rem 0.75rem;
+        min-width: 0;
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    .mrt-journey-wizard .mrt-surface .mrt-segmented {
+        grid-template-columns: 1fr;
+    }
+
+    .mrt-journey-wizard .mrt-surface .mrt-segmented__option + .mrt-segmented__option {
+        border-left: 0;
+        border-top: 2px solid var(--mrt-color-border-on-surface, #767676);
+    }
+
+    .mrt-journey-wizard .mrt-surface .mrt-segmented__option {
+        justify-content: flex-start;
+        padding: 0.65rem 0.85rem;
+        font-size: 0.975rem;
+    }
+
+    .mrt-journey-wizard .mrt-step-progress__item {
+        box-sizing: border-box;
+        width: 100%;
+        min-width: 0;
+        font-size: 0.72rem;
+        line-height: 1.25;
+        padding: 0.35rem 0.35rem;
+        text-align: center;
+        white-space: normal;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__head,
+    .mrt-journey-wizard .mrt-selected-trip__card {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        padding: 0.85rem 0.75rem;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__copy,
+    .mrt-journey-wizard .mrt-trip-card__side {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__side {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        grid-template-areas:
+            "vehicles vehicles"
+            "duration button";
+        align-items: center;
+        gap: 0.55rem 0.75rem;
+    }
+
+    .mrt-journey-wizard .mrt-vehicle-row {
+        grid-area: vehicles;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 0.35rem;
+        max-width: 100%;
+    }
+
+    .mrt-journey-wizard .mrt-vehicle-row--compact {
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__duration {
+        grid-area: duration;
+        margin: 0;
+        font-size: 1.15rem;
+    }
+
+    .mrt-journey-wizard .mrt-trip-card__side > .mrt-accent-btn {
+        grid-area: button;
+        justify-self: end;
+        min-width: min(100%, 8.5rem);
+    }
+
+    .mrt-journey-wizard .mrt-vehicle-row__item {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .mrt-journey-wizard .mrt-vehicle-row__icon {
+        flex-shrink: 0;
+        width: 36px;
+        height: 18px;
+    }
+
+    .mrt-journey-wizard .mrt-vehicle-row__item > .mrt-vehicle-row__label {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .mrt-journey-wizard .mrt-detail-panel {
+        padding: 0.85rem 0.5rem 0.75rem;
+        overflow-x: hidden;
+    }
+
+    .mrt-journey-wizard .mrt-detail-segment__meta .mrt-vehicle-row {
+        justify-content: flex-start;
+        width: 100%;
+    }
+
+    @media (max-width: 22.5rem) {
+        .mrt-journey-wizard .mrt-trip-card__side {
+            grid-template-columns: minmax(0, 1fr);
+            grid-template-areas:
+                "vehicles"
+                "duration"
+                "button";
+        }
+
+        .mrt-journey-wizard .mrt-trip-card__side > .mrt-accent-btn {
+            grid-area: button;
+            justify-self: stretch;
+            width: 100%;
+        }
+    }
+
+    .mrt-journey-wizard .mrt-price-list {
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    .mrt-journey-wizard .mrt-price-list__row {
+        padding: 0.55rem 0;
+        border-bottom-color: var(--mrt-color-neutral-300, #ccc);
+    }
+
+    .mrt-journey-wizard .mrt-price-list__label {
+        color: var(--mrt-wizard-text, #151515);
+        font-weight: 700;
+    }
+
+    .mrt-journey-wizard .mrt-price-list__value {
+        color: var(--mrt-wizard-text, #151515);
+    }
+
+    .mrt-journey-wizard .mrt-price-block__title {
+        font-size: 1.05rem;
+    }
+
+    .mrt-journey-wizard .mrt-summary-card__heading {
+        font-size: 0.9rem;
+    }
+
+    .mrt-journey-wizard .mrt-summary-list--round-trip {
+        grid-template-columns: 1fr;
+    }
+
+    .mrt-journey-wizard .mrt-price-columns--split {
+        grid-template-columns: 1fr;
+    }
+
+}

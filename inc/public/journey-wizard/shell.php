@@ -1,6 +1,6 @@
 <?php
 /**
- * Journey wizard shortcode helpers.
+ * Journey wizard shortcode (Vue mount).
  *
  * @package Museum_Railway_Timetable
  */
@@ -33,114 +33,43 @@ function MRT_journey_wizard_sanitize_debug_attr( string $debug ): string {
 }
 
 /**
- * @return array{ticket_url: string, hero_subtitle: string, timetable_id: int, embedded: bool, debug: string}
+ * @return array{ticket_url: string, route_title: string, hero_subtitle: string, hero_background_url: string, timetable_id: int, timetable_page_url: string, embedded: bool, debug: string}
  */
 function MRT_journey_wizard_parse_shortcode_atts( $atts ): array {
 	$atts = shortcode_atts(
 		array(
-			'ticket_url'    => '',
-			'hero_subtitle' => '',
-			'timetable_id'  => '',
-			'timetable'     => '',
-			'embedded'      => '',
-			'debug'         => '',
+			'ticket_url'           => '',
+			'route_title'          => '',
+			'hero_subtitle'        => '',
+			'hero_background_url'  => '',
+			'timetable_id'         => '',
+			'timetable'            => '',
+			'timetable_page_url'   => '',
+			'embedded'             => '',
+			'debug'                => '',
 		),
 		(array) $atts,
 		'museum_journey_wizard'
 	);
 
 	$timetable_id = MRT_journey_wizard_resolve_timetable_id( $atts );
+	$route_title  = is_string( $atts['route_title'] ) ? trim( $atts['route_title'] ) : '';
+	$hero_bg      = is_string( $atts['hero_background_url'] ) ? esc_url( trim( $atts['hero_background_url'] ) ) : '';
+	if ( $hero_bg === '' ) {
+		$hero_bg = MRT_plugin_hero_background_url();
+	}
+	$hero_bg      = (string) apply_filters( 'mrt_journey_wizard_hero_background_url', $hero_bg, $atts );
 
 	return array(
-		'ticket_url'    => esc_url( $atts['ticket_url'] ),
-		'hero_subtitle' => is_string( $atts['hero_subtitle'] ) ? $atts['hero_subtitle'] : '',
-		'timetable_id'  => $timetable_id,
-		'embedded'      => MRT_journey_wizard_shortcode_bool( $atts['embedded'] ),
-		'debug'         => MRT_journey_wizard_sanitize_debug_attr( is_string( $atts['debug'] ) ? $atts['debug'] : '' ),
+		'ticket_url'           => esc_url( $atts['ticket_url'] ),
+		'route_title'          => $route_title,
+		'hero_subtitle'        => is_string( $atts['hero_subtitle'] ) ? $atts['hero_subtitle'] : '',
+		'hero_background_url'  => $hero_bg,
+		'timetable_id'         => $timetable_id,
+		'timetable_page_url' => esc_url( is_string( $atts['timetable_page_url'] ) ? $atts['timetable_page_url'] : '' ),
+		'embedded'           => MRT_journey_wizard_shortcode_bool( $atts['embedded'] ),
+		'debug'              => MRT_journey_wizard_sanitize_debug_attr( is_string( $atts['debug'] ) ? $atts['debug'] : '' ),
 	);
-}
-
-/**
- * @return array<string, string>
- */
-function MRT_journey_wizard_step_element_ids( string $u ): array {
-	return array(
-		'route_title' => $u . '-route-t',
-		'route_panel' => $u . '-route-p',
-		'date_title'  => $u . '-date-t',
-		'date_panel'  => $u . '-date-p',
-		'out_title'   => $u . '-out-t',
-		'out_panel'   => $u . '-out-p',
-		'ret_title'   => $u . '-ret-t',
-		'ret_panel'   => $u . '-ret-p',
-		'sum_title'   => $u . '-sum-t',
-		'sum_panel'   => $u . '-sum-p',
-	);
-}
-
-/**
- * Render journey wizard outer shell and step panels.
- *
- * @param string                $uid Unique element id prefix
- * @param array<string, string> $ids Step element ids
- * @param array<int>            $stations Station post IDs
- * @param string                $hero_subtitle Optional subtitle on step 1
- * @param int                   $timetable_id Optional timetable ID
- * @param string                $ticket_url Ticket purchase URL
- * @param bool                  $embedded Compact layout inside page content (no full-bleed hero).
- * @param string                $debug Development preset key (date|outbound|return|summary).
- * @return string HTML
- */
-function MRT_render_journey_wizard_shell( $uid, array $ids, array $stations, $hero_subtitle, $timetable_id, $ticket_url, $embedded = false, $debug = '' ) {
-	$root_class = 'mrt-journey-wizard mrt-my-lg';
-	if ( $embedded ) {
-		$root_class .= ' mrt-journey-wizard--embedded';
-	}
-	if ( $debug !== '' ) {
-		$root_class .= ' mrt-journey-wizard--debug';
-	}
-	ob_start();
-	?>
-	<div
-		class="<?php echo esc_attr( $root_class ); ?>"
-		data-ticket-url="<?php echo $ticket_url ? esc_attr( $ticket_url ) : ''; ?>"
-		data-start-of-week="<?php echo esc_attr( (string) (int) get_option( 'start_of_week', '1' ) ); ?>"
-		<?php echo $debug !== '' ? ' data-wizard-debug="' . esc_attr( $debug ) . '"' : ''; ?>
-	>
-		<section class="mrt-journey-wizard__hero">
-			<div class="mrt-journey-wizard__hero-inner">
-				<noscript>
-					<p class="mrt-alert mrt-alert-info"><?php esc_html_e( 'This planner needs JavaScript enabled.', 'museum-railway-timetable' ); ?></p>
-				</noscript>
-				<div id="<?php echo esc_attr( $uid ); ?>-errors" class="mrt-journey-wizard__errors" role="alert" aria-live="assertive" aria-relevant="additions text"></div>
-				<nav class="mrt-journey-wizard__nav" aria-label="<?php esc_attr_e( 'Trip planner steps', 'museum-railway-timetable' ); ?>">
-					<ol class="mrt-journey-wizard__steps" data-wizard-steps></ol>
-				</nav>
-				<div class="mrt-journey-wizard__panels">
-					<?php
-					MRT_render_journey_wizard_step_route(
-						$stations,
-						$ids['route_title'],
-						$ids['route_panel'],
-						$hero_subtitle,
-						$timetable_id
-					);
-					MRT_render_journey_wizard_step_date( $ids['date_title'], $ids['date_panel'] );
-					MRT_render_journey_wizard_step_placeholders(
-						$ids['out_title'],
-						$ids['out_panel'],
-						$ids['ret_title'],
-						$ids['ret_panel'],
-						$ids['sum_title'],
-						$ids['sum_panel']
-					);
-					?>
-				</div>
-			</div>
-		</section>
-	</div>
-	<?php
-	return (string) ob_get_clean();
 }
 
 /**
@@ -158,11 +87,21 @@ function MRT_render_shortcode_journey_wizard( $atts ) {
 	$debug         = isset( $parsed['debug'] ) ? (string) $parsed['debug'] : '';
 
 	$stations = MRT_get_all_stations();
-	if ( empty( $stations ) ) {
-		return '<p class="mrt-alert mrt-alert-info">' . esc_html__( 'No stations are available.', 'museum-railway-timetable' ) . '</p>';
-	}
-	$uid = wp_unique_id( 'mrtjw' );
-	$ids = MRT_journey_wizard_step_element_ids( $uid );
 
-	return MRT_render_journey_wizard_shell( $uid, $ids, $stations, $hero_subtitle, $timetable_id, $ticket_url, $embedded, $debug );
+	return MRT_render_vue_mount(
+		'wizard',
+		MRT_vue_wizard_config(
+			$stations,
+			array(
+				'ticket_url'         => $ticket_url,
+				'route_title'        => isset( $parsed['route_title'] ) ? (string) $parsed['route_title'] : '',
+				'hero_subtitle'      => $hero_subtitle,
+				'timetable_id'       => $timetable_id,
+				'timetable_page_url' => isset( $parsed['timetable_page_url'] ) ? (string) $parsed['timetable_page_url'] : '',
+				'embedded'           => $embedded,
+				'debug'              => $debug,
+				'hero_background_url'  => isset( $parsed['hero_background_url'] ) ? (string) $parsed['hero_background_url'] : '',
+			)
+		)
+	);
 }

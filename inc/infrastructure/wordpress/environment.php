@@ -16,6 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Filter: mrt_is_development_mode
  *
  * @return bool
+ * @phpstan-impure
  */
 function MRT_is_development_mode(): bool {
 	$from_config = ( defined( 'WP_DEBUG' ) && WP_DEBUG )
@@ -25,10 +26,22 @@ function MRT_is_development_mode(): bool {
 }
 
 /**
- * Whether browser console debug is allowed (admin JS).
+ * Use post-name permalinks in development when still on WordPress "plain" URLs.
  *
- * @return bool
+ * Without this, paths like /wizard-smoke-test/ are not resolved and the static
+ * front page (Tidtabeller) is shown instead.
+ *
+ * @return bool True when structure was updated and rewrite rules flushed.
  */
-function MRT_allow_script_debug(): bool {
-	return MRT_is_development_mode();
+function MRT_ensure_pretty_permalinks(): bool {
+	if ( ! MRT_is_development_mode() ) {
+		return false;
+	}
+	$structure = (string) get_option( 'permalink_structure', '' );
+	if ( $structure !== '' ) {
+		return false;
+	}
+	update_option( 'permalink_structure', '/%postname%/' );
+	flush_rewrite_rules( true );
+	return true;
 }
