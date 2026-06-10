@@ -34,7 +34,7 @@ function stepAria(
     :aria-label="navAriaLabel"
   >
     <ol class="mrt-step-progress" role="list">
-      <li v-for="item in items" :key="item.key" class="mrt-step-progress__wrap" role="presentation">
+      <li v-for="item in items" :key="item.key" class="mrt-step-progress__wrap">
         <button
           v-if="isClickable(item, readonly)"
           type="button"
