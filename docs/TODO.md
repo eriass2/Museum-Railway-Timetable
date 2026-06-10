@@ -104,43 +104,37 @@ Besökare rapporterar buggar/förslag via flytande knapp i reseplaneraren; spara
 
 ## Tidtabellsöversikt — sammanslagna kolumner vid tågbyte
 
-**Status:** planerad (2026-06-10)  
-**Varför:** Turer som bara avgår efter bytesstation (t.ex. 64, 74 från Marielund) visas som egna, mest tomma kolumner längst till vänster. PDF-referensen visar dem som fortsättning i samma kolumn som ankommande tåg (60→74, 96→64). Resesökningsmotorn och datamodellen (separata tjänster + stopptider) är redan korrekta — felet är presentationslogiken.
+**Status:** kärna klar (2026-06-10), commit `9a44dda` — manuell PDF-validering + polish kvar  
+**Varför:** Turer som bara avgår efter bytesstation (t.ex. 64, 74 från Marielund) visas som egna, mest tomma kolumner längst till vänster. PDF-referensen visar dem som fortsättning i samma kolumn som ankommande tåg (60→74, 96→64). Resesökningsmotorn och datamodellen (separata tjänster + stopptider) är redan korrekta — felet var presentationslogiken.
 
-**Befintligt stöd:** `train_change_map` per station (`mrt_station_train_change_map`), admin (`StationTrainChangeEditor.vue`), CSV (`station_train_changes.csv`). Används idag **endast** för tågbyte-raden, inte för kolumnsammanslagning.
+**Befintligt stöd:** `train_change_map` per station (`mrt_station_train_change_map`), admin (`StationTrainChangeEditor.vue`), CSV (`station_train_changes.csv`). Används för tågbyte-raden **och** kolumnsammanslagning (`overview-column-merge.php`).
 
 **Mål:** PDF-lik vy — en kolumn = en resa genom bytespunkten. Tjänster markerade som `to_service` i kartan döljs som egna kolumner; övre segment (→ Marielund) visar parent, nedre segment (Marielund →) visar continuation.
 
-**Relaterat:** Analys i chat 2026-06-10; Lennakatten-fixture `testdata/fixtures/lennakatten/station_train_changes.csv` (60→74, 96→64); [CSV_FORMAT.md](CSV_FORMAT.md) §4.1b; [OPERATOR_ONBOARDING.md](OPERATOR_ONBOARDING.md) § Tågbyte.
+**Relaterat:** Lennakatten-fixture `testdata/fixtures/lennakatten/station_train_changes.csv` (60→74, 96→64, 71→61, 63→97); [CSV_FORMAT.md](CSV_FORMAT.md) §4.1b; [OPERATOR_ONBOARDING.md](OPERATOR_ONBOARDING.md) § Tågbyte.
 
-### Fas 0 — Sorteringsfix (valfri, kan köras separat)
+**Nyckelfiler:** `inc/domain/timetable/view/overview/overview-column-merge.php`, `overview-rail-columns.php`, `overview-rail-cells.php`, `overview-rail-rows.php`, `tests/Unit/OverviewColumnMergeTest.php`.
 
-- [ ] I `MRT_sort_timetable_services_by_first_station_time` (`group-view.php`): tom avgång vid route-start → sortera **sist**, inte först
+### Fas 0 — Sorteringsfix ✓
 
-### Fas 1 — PHP: kolumn-sammanslagning (kärna)
+- [x] I `MRT_sort_timetable_services_by_first_station_time` (`group-view.php`): tom avgång vid route-start → sortera **sist**
 
-Ny modul `inc/domain/timetable/view/overview/overview-column-merge.php`:
+### Fas 1 — PHP: kolumn-sammanslagning (kärna) ✓
 
-- [ ] Bygg omvänd karta från `train_change_map`: `{ '74' => '60', '64' => '96' }`
-- [ ] Exkludera continuation-only tjänster från kolumnlistan
-- [ ] `display_columns` med `primary_idx` + valfri `continuation_idx`
-- [ ] Sortera kolumner på parent-tid vid första stationen (tom tid sist)
-- [ ] Per rad: välj rätt tjänst — före/inkl. ankomst Marielund → primary; efter avgång Marielund → continuation
-- [ ] Integrera i `group-view.php`, `overview-rail-columns.php`, `overview-rail-cells.php`, `overview-rail-rows.php`
-- [ ] `require_once` i `inc/bootstrap/domain.php`
-- [ ] Utan konfigurerad map: oförändrat beteende (fail empty)
+- [x] `overview-column-merge.php` — omvänd karta, `display_columns`, per-rad service_idx
+- [x] Integrerat i columns/rows/cells + bussrader (primary_idx för busslookup)
+- [x] Utan map: en kolumn per tjänst (fallback)
+- [ ] `require_once` i `inc/bootstrap/domain.php` — **ej nödvändigt**; laddas via `overview-rail-rows.php`
 
-### Fas 2 — JSON-kontrakt
+### Fas 2 — JSON-kontrakt ✓
 
-- [ ] `TimetableOverviewColumn.continuation?` — `{ serviceId, serviceNumber, trainTypeName, iconKey }`
-- [ ] `TimetableTimeCell.serviceId?` — vilken tjänst cellen tillhör (krävs för inline-redigering i sammanslagen kolumn)
-- [ ] Bakåtkompatibelt: publik vy kan ignorera nya fält
+- [x] `TimetableOverviewColumn.continuation?`
+- [x] `TimetableTimeCell.serviceId?`
 
-### Fas 3 — Vue: admin-redigering
+### Fas 3 — Vue: admin-redigering ✓
 
-- [ ] `types/timetableOverview.ts` — nya fält
-- [ ] `EditableOverviewRailGroup.vue` — använd `cell.serviceId ?? column.serviceId` i `OverviewGridCellEditor`
-- [ ] Publik `MrtOverviewRailGroupGrid.vue` — ingen ändring (huvud visar primary)
+- [x] `types/timetableOverview.ts`
+- [x] `EditableOverviewRailGroup.vue` — `cell.serviceId ?? column.serviceId`
 
 ### Fas 4 — Admin & validering (polish)
 
@@ -149,22 +143,41 @@ Ny modul `inc/domain/timetable/view/overview/overview-column-merge.php`:
 
 ### Fas 5 — Tester
 
-Ny `tests/Unit/OverviewColumnMergeTest.php` (Lennakatten-scenario):
-
-- [ ] 7 tjänster Faringe→Uppsala → 5 kolumner (64, 74 dolda)
-- [ ] Kolumnordning: 70, 60, 62, 96, 78 — inte 64/74 först
-- [ ] Marielund ankomst från primary (60: 10.20); avgång från continuation (74: 11.45)
-- [ ] Tågbyte-rad: 74 under kolumn 60, 64 under kolumn 96
-- [ ] Inkoming riktning: 71→61 vid Marielund
-- [ ] Tom map → en kolumn per tjänst (fallback)
+- [x] `tests/Unit/OverviewColumnMergeTest.php` — Lennakatten-scenario (enhetstester)
 - [ ] E2E/admin: redigering efter Marielund sparar rätt `serviceId`
 
-**Acceptanskriterier:**
+**Acceptanskriterier (överlämning):**
 
-- [ ] GRÖN tidtabell Faringe→Uppsala matchar PDF-kolumnantal och ordning
-- [ ] Resesökningsmotorn opåverkad (ingen datamodelländring)
-- [ ] `.\scripts\check.ps1` och `.\scripts\vue-check.ps1` gröna
-
-**Uppskattad insats:** ~1–1,5 dag (fas 1+5 tillsammans, sedan fas 3, fas 0/4 valfritt).
+- [ ] **Manuell check:** GRÖN tidtabell 2026-06-06 — Faringe→Uppsala 5 kolumner (70, 60, 62, 96, 78); tur 71 ut utan kolumn 61; Marielund ankomst/avgång i samma kolumn
+- [ ] Kör `.\scripts\docker-dev-reset.ps1 -SkipCompose` om lokal miljö visar gammalt
+- [x] Resesökningsmotorn opåverkad (ingen datamodelländring)
+- [x] PHPUnit + vue-check gröna (2026-06-10)
 
 **Medvetet utanför scope (v1):** auto-detektera koppling utan map; dubbelt tågnummer i kolumnhuvud; ändringar i resesökningsmotorn.
+
+---
+
+## Tidtabellsöversikt — buss vid knutpunkt (Selknä m.fl.)
+
+**Status:** fix klar (2026-06-10), commit `8c8a30a` — manuell validering kvar  
+**Varför:** Bussrader byggdes som **två rader per bussgren** med tider i **alla** tågkolumner samtidigt → staplade “Från Selknä / Till Fjällnora”-rader med blandade tider (tur 62/96/60).
+
+**Lösning:** En avgång/ankomst-radpar **per matchat tåg–buss-par**; sparse celler (`—` i övriga kolumner). Flera grenar (Fjällnora, Linnés Hammarby) sorteras på bussavgång i `MRT_timetable_junction_bus_rows_for_station`.
+
+**Nyckelfiler:** `overview-bus-junction.php`, `overview-bus-stops.php`, `overview-rail-rows.php`; test `TimetableOverviewHelpersTest::test_junction_bus_rows_use_one_pair_per_matched_train`.
+
+**Överlämning:**
+
+- [ ] **Manuell check:** Selknä på inbound GRÖN — tur 60 → B5/Linnés Hammarby, tur 62 → B3/Fjällnora, tur 96 → B4/Fjällnora; inga delade rader med korsade tider
+- [ ] Ev. framtida polish: destination i radetikett när flera grenar har samma “Från Selknä”-text (idag skiljs de genom sparse kolumner + sortering)
+- [ ] Thun's-expressen vertikal etikett — layout i `MrtOverviewRailGroupGrid.vue` / CSS (ej ändrad i denna fix)
+
+---
+
+## Tidtabellsöversikt — typografi (Turvy)
+
+**Status:** klar (2026-06-10), commits `6d91237` (stationer + tider normal vikt; Ca/P/A/X spacing)
+
+- [x] Stationer och klockslag utan fetstil
+- [x] Vue-byggd CSS i `frontend/vue/src/styles/timetable-overview.css`
+
