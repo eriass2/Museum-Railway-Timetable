@@ -41,10 +41,19 @@ export function parseOverviewTimeText(text: string): OverviewTimeParts {
 }
 
 /**
- * Restriction labels (P/A) before Ca; Ca sits closest to the time digits.
+ * P/A restriction prefix only (Ca is rendered adjacent to the time digits).
  */
-export function formatOverviewTimePrefix(parts: OverviewTimeParts, approximateTime = false): string {
-  const restrictions = parts.restrictions.length ? `${parts.restrictions.join(' ')} ` : '';
-  const approximate = approximateTime || parts.approximate ? 'Ca ' : '';
-  return `${restrictions}${approximate}`;
+export function formatOverviewTimePrefix(parts: OverviewTimeParts): string {
+  return parts.restrictions.length ? `${parts.restrictions.join(' ')} ` : '';
+}
+
+/**
+ * Time value with Ca immediately before the digits when approximate.
+ */
+export function formatOverviewTimeValue(parts: OverviewTimeParts, approximateTime = false): string {
+  const showCa = approximateTime || parts.approximate;
+  if (showCa && parts.value !== 'X' && parts.value !== '|' && parts.value !== '—') {
+    return `Ca ${parts.value}`;
+  }
+  return parts.value;
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { formatOverviewTimePrefix, parseOverviewTimeText } from '../../utils/overviewTimeDisplay';
+import { formatOverviewTimePrefix, formatOverviewTimeValue, parseOverviewTimeText } from '../../utils/overviewTimeDisplay';
 
 const props = defineProps<{
   text: string;
@@ -9,7 +9,8 @@ const props = defineProps<{
 }>();
 
 const parts = computed(() => parseOverviewTimeText(props.text));
-const prefix = computed(() => formatOverviewTimePrefix(parts.value, props.approximateTime));
+const prefix = computed(() => formatOverviewTimePrefix(parts.value));
+const timeValue = computed(() => formatOverviewTimeValue(parts.value, props.approximateTime));
 </script>
 
 <template>
@@ -21,6 +22,6 @@ const prefix = computed(() => formatOverviewTimePrefix(parts.value, props.approx
     }"
   >
     <span v-if="prefix" class="mrt-ov-time__prefix">{{ prefix }}</span
-    ><span class="mrt-ov-time__value">{{ parts.value }}</span>
+    ><span class="mrt-ov-time__value">{{ timeValue }}</span>
   </span>
 </template>
