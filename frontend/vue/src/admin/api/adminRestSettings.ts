@@ -6,6 +6,7 @@ export type SettingsPayload = {
   operator_name: string;
   ticket_url: string;
   hero_background_url: string;
+  wizard_beta_enabled: boolean;
   min_transfer_minutes: number;
   max_transfer_minutes: number;
   max_transfers: number;

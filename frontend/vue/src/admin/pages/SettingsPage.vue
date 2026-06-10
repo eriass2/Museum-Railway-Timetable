@@ -29,6 +29,7 @@ const form = ref<SettingsPayload>({
   operator_name: '',
   ticket_url: '',
   hero_background_url: '',
+  wizard_beta_enabled: false,
   min_transfer_minutes: 0,
   max_transfer_minutes: 120,
   max_transfers: 2,
@@ -118,6 +119,16 @@ async function submit() {
                 <td>
                   <AdminMediaImageField v-model="form.hero_background_url" />
                   <p class="description">{{ adminStr(cfg, 'settingsHeroBackgroundHint') }}</p>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">{{ adminStr(cfg, 'settingsWizardBeta') }}</th>
+                <td>
+                  <label>
+                    <input v-model="form.wizard_beta_enabled" type="checkbox" />
+                    {{ adminStr(cfg, 'settingsWizardBetaCheckbox') }}
+                  </label>
+                  <p class="description">{{ adminStr(cfg, 'settingsWizardBetaHint') }}</p>
                 </td>
               </tr>
               <tr>

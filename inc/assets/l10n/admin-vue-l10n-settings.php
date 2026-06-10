@@ -51,6 +51,12 @@ function MRT_admin_vue_l10n_settings(): array {
 		'settingsHeroBackgroundPickTitle'  => __( 'Välj bakgrundsbild', 'museum-railway-timetable' ),
 		'settingsHeroBackgroundPickButton' => __( 'Använd bild', 'museum-railway-timetable' ),
 		'settingsHeroBackgroundUrlPlaceholder' => __( 'https://…', 'museum-railway-timetable' ),
+		'settingsWizardBeta'          => __( 'Reseplanerare — beta', 'museum-railway-timetable' ),
+		'settingsWizardBetaCheckbox'  => __( 'Visa beta-banner i reseplaneraren', 'museum-railway-timetable' ),
+		'settingsWizardBetaHint'      => __(
+			'Informationsbanner ovanför steg-navigeringen. Feedback samlas in via den flytande rapportknappen (när den är aktiverad).',
+			'museum-railway-timetable'
+		),
 		'settingsMaxTransfers'    => __( 'Max antal byten', 'museum-railway-timetable' ),
 		'settingsMaxTransfersHint' => __(
 			'Antal byten i en resa (2 = upp till tre tåg/ben). Resesökningsmotorn avvisar fler.',

@@ -59,7 +59,7 @@
 | **Fråga** | Ska reseplaneraren märkas ”Beta” i UI? Var (sidhuvud, steg 1, footer)? Ska felrapportering länkas? |
 | **Alternativ** | A) Banner + kort text · B) Bara i WordPress-sidans titel · C) Ingen märkning, bara intern test-URL |
 | **Beslut av** | Produkt / Lennakatten |
-| **Status** | **Beslutad** — A) banner i planeraren; `beta="1"` på shortcode |
+| **Status** | **Beslutad** — A) banner i planeraren; admin-inställning `wizard_beta_enabled` |
 
 ---
 

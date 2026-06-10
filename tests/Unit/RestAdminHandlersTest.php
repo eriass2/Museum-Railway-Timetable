@@ -307,6 +307,7 @@ final class RestAdminHandlersTest extends TestCase {
 				'operator_name'                      => 'Demo Railway',
 				'ticket_url'                         => 'https://example.com/tickets',
 				'hero_background_url'                => 'https://example.com/hero.jpg',
+				'wizard_beta_enabled'                => true,
 				'min_transfer_minutes'               => 5,
 				'max_transfer_minutes'               => 90,
 				'max_transfers'                      => 1,
@@ -321,6 +322,7 @@ final class RestAdminHandlersTest extends TestCase {
 		self::assertSame( 'Demo Railway', $data['operator_name'] );
 		self::assertSame( 'https://example.com/tickets', $data['ticket_url'] );
 		self::assertSame( 'https://example.com/hero.jpg', $data['hero_background_url'] );
+		self::assertTrue( $data['wizard_beta_enabled'] );
 		self::assertSame( 5, $data['min_transfer_minutes'] );
 		self::assertSame( 90, $data['max_transfer_minutes'] );
 		self::assertSame( 1, $data['max_transfers'] );

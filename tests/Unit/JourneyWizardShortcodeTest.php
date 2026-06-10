@@ -38,7 +38,7 @@ require_once ABSPATH . 'inc/public/vue-shortcode-config.php';
 final class JourneyWizardShortcodeTest extends TestCase {
 
 	protected function tearDown(): void {
-		unset( $GLOBALS['mrt_test_vue_mount'], $GLOBALS['mrt_test_wp_query_posts'], $GLOBALS['mrt_test_filters'] );
+		unset( $GLOBALS['mrt_test_vue_mount'], $GLOBALS['mrt_test_wp_query_posts'], $GLOBALS['mrt_test_filters'], $GLOBALS['mrt_test_options'] );
 		parent::tearDown();
 	}
 
@@ -53,8 +53,6 @@ final class JourneyWizardShortcodeTest extends TestCase {
 		self::assertSame( '', $parsed['timetable_page_url'] );
 		self::assertFalse( $parsed['embedded'] );
 		self::assertSame( '', $parsed['debug'] );
-		self::assertSame( '', $parsed['beta'] );
-		self::assertSame( '', $parsed['beta_feedback_url'] );
 	}
 
 	public function test_shortcode_bool_parses_common_truthy_values(): void {
@@ -110,18 +108,19 @@ final class JourneyWizardShortcodeTest extends TestCase {
 		self::assertNull( MRT_vue_wizard_beta_banner( array() ) );
 	}
 
-	public function test_vue_wizard_beta_banner_includes_feedback_when_enabled(): void {
-		$banner = MRT_vue_wizard_beta_banner(
-			array(
-				'beta'              => '1',
-				'beta_feedback_url' => 'mailto:beta@example.test',
-			)
+	public function test_vue_wizard_beta_banner_when_admin_setting_enabled(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'wizard_beta_enabled' => true,
+			),
 		);
+
+		$banner = MRT_vue_wizard_beta_banner( array() );
 
 		self::assertIsArray( $banner );
 		self::assertSame( 'Beta', $banner['label'] );
 		self::assertStringContainsString( 'testas', strtolower( (string) $banner['text'] ) );
-		self::assertSame( 'mailto:beta@example.test', $banner['feedbackUrl'] );
+		self::assertArrayNotHasKey( 'feedbackUrl', $banner );
 	}
 
 	public function test_render_shortcode_mounts_wizard_app(): void {
@@ -192,16 +191,17 @@ final class JourneyWizardShortcodeTest extends TestCase {
 		);
 	}
 
-	public function test_render_shortcode_passes_beta_banner_config(): void {
-		MRT_render_shortcode_journey_wizard(
-			array(
-				'beta'              => '1',
-				'beta_feedback_url' => 'https://example.test/feedback',
-			)
+	public function test_render_shortcode_passes_beta_banner_from_settings(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'wizard_beta_enabled' => true,
+			),
 		);
+
+		MRT_render_shortcode_journey_wizard( array() );
 
 		$banner = $GLOBALS['mrt_test_vue_mount']['config']['betaBanner'] ?? null;
 		self::assertIsArray( $banner );
-		self::assertSame( 'https://example.test/feedback', $banner['feedbackUrl'] ?? '' );
+		self::assertSame( 'Beta', $banner['label'] ?? '' );
 	}
 }

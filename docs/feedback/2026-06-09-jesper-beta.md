@@ -164,7 +164,7 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Typ:** produktbeslut
 - **Prioritet:** info
 - **Status:** beslutad (D2 A) — implementerad
-- **Svar:** Beta-banner i reseplaneraren via `[museum_journey_wizard beta="1" beta_feedback_url="…"]`. Filter: `mrt_journey_wizard_beta_banner_enabled`, `mrt_journey_wizard_beta_feedback_url`.
+- **Svar:** Beta-banner i reseplaneraren styrs under **Inställningar → Visa beta-banner**. Filter: `mrt_journey_wizard_beta_banner_enabled`. Feedback samlas in via separat widget — se [WIZARD_FEEDBACK_SKETCH.md](../WIZARD_FEEDBACK_SKETCH.md).
 
 ---
 
