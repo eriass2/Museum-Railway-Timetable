@@ -169,6 +169,71 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertSame( '11.00', $rows[1]['cells'][0]['text'] );
 	}
 
+	public function test_junction_bus_rows_use_one_pair_per_matched_train(): void {
+		$junction_id = 9;
+		$remote_id   = 15;
+		$branch      = array(
+			'stations' => array( $junction_id, $remote_id ),
+			'services' => array(
+				array(
+					'service'    => (object) array( 'ID' => 501 ),
+					'stop_times' => array(
+						$junction_id => array( 'departure_time' => '13:40' ),
+						$remote_id   => array( 'arrival_time' => '13:47' ),
+					),
+				),
+				array(
+					'service'    => (object) array( 'ID' => 502 ),
+					'stop_times' => array(
+						$junction_id => array( 'departure_time' => '15:18' ),
+						$remote_id   => array( 'arrival_time' => '15:25' ),
+					),
+				),
+			),
+		);
+		$connection = array(
+			'junction_id'    => $junction_id,
+			'junction_label' => 'Selknä*',
+			'direction'      => 'outbound',
+			'train_to_bus'   => array(
+				array(
+					'train' => array( 'service_number' => '62' ),
+					'buses' => array( array( 'service_number' => 'B3' ) ),
+				),
+				array(
+					'train' => array( 'service_number' => '96' ),
+					'buses' => array( array( 'service_number' => 'B4' ) ),
+				),
+			),
+		);
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_number' => 'B3',
+			'502|mrt_service_number' => 'B4',
+			'9|mrt_station_bus_suffix'  => '1',
+			'15|mrt_station_bus_suffix' => '1',
+		);
+		$GLOBALS['mrt_test_posts'] = array(
+			15 => (object) array(
+				'ID'         => 15,
+				'post_title' => 'Fjällnora',
+			),
+		);
+		$info = array(
+			array( 'service_number' => '62' ),
+			array( 'service_number' => '96' ),
+		);
+
+		$rows = MRT_timetable_junction_bus_rows_json( array(), $info, $connection, $branch );
+
+		self::assertCount( 4, $rows );
+		self::assertSame( '13.40', $rows[0]['cells'][0]['text'] );
+		self::assertSame( '—', $rows[0]['cells'][1]['text'] );
+		self::assertSame( '13.47', $rows[1]['cells'][0]['text'] );
+		self::assertSame( '15.18', $rows[2]['cells'][1]['text'] );
+		self::assertSame( '—', $rows[2]['cells'][0]['text'] );
+		self::assertSame( '15.25', $rows[3]['cells'][1]['text'] );
+	}
+
 	/**
 	 * @return array<string, mixed>
 	 */

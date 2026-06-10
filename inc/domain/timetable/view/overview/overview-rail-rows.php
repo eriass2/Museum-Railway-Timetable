@@ -227,17 +227,15 @@ function MRT_timetable_append_junction_bus_rows(
 	int $station_id,
 	array $display_columns
 ): array {
-	foreach ( $paired_branches as $branch_group ) {
-		if ( ! is_array( $branch_group ) ) {
-			continue;
-		}
-		$connection = MRT_build_rail_bus_connection_data( $rail_group, $branch_group );
-		if ( ! MRT_timetable_station_is_bus_junction( $connection, $branch_group, $station_id ) ) {
-			continue;
-		}
-		foreach ( MRT_timetable_junction_bus_rows_json( $services, $info, $connection, $branch_group, $display_columns ) as $bus_row ) {
-			$rows[] = $bus_row;
-		}
+	unset( $services );
+	foreach ( MRT_timetable_junction_bus_rows_for_station(
+		$info,
+		$rail_group,
+		$paired_branches,
+		$station_id,
+		$display_columns
+	) as $bus_row ) {
+		$rows[] = $bus_row;
 	}
 	return $rows;
 }

@@ -99,14 +99,34 @@ function MRT_timetable_bus_time_cell_json(
 		return array( 'text' => '—' );
 	}
 
-	$bus       = $buses[0];
-	$bus_data  = MRT_find_bus_service_in_branch( $branch_group, (string) $bus['service_number'] );
-	$stop      = MRT_timetable_bus_stop_for_role( $connection, $branch_group, $bus_data, $stop_role );
-	$cell      = array(
-		'text'             => MRT_timetable_bus_stop_display_time( $stop, $use_departure ),
-		'busServiceNumber' => (string) $bus['service_number'],
+	$bus      = $buses[0];
+	$bus_data = MRT_find_bus_service_in_branch( $branch_group, (string) $bus['service_number'] );
+	return MRT_timetable_bus_time_cell_from_bus_data(
+		$connection,
+		$branch_group,
+		$bus_data,
+		$stop_role,
+		$use_departure,
+		(string) $bus['service_number']
 	);
-	return $cell;
+}
+
+function MRT_timetable_bus_time_cell_from_bus_data(
+	array $connection,
+	array $branch_group,
+	?array $bus_data,
+	string $stop_role,
+	bool $use_departure,
+	string $bus_service_number
+): array {
+	if ( ! is_array( $bus_data ) ) {
+		return array( 'text' => '—' );
+	}
+	$stop = MRT_timetable_bus_stop_for_role( $connection, $branch_group, $bus_data, $stop_role );
+	return array(
+		'text'             => MRT_timetable_bus_stop_display_time( $stop, $use_departure ),
+		'busServiceNumber' => $bus_service_number,
+	);
 }
 
 function MRT_timetable_bus_stop_for_role(
