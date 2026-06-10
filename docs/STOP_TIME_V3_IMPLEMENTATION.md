@@ -1,19 +1,15 @@
 # Stopptider schema v3 — implementationsplan
 
-**Status:** Fas 1 klar (2026-06-10)  
+**Status:** Fas 2 klar (2026-06-10) — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
 **Beslut:** [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)
 
 ## Faser (körordning)
 
-| Steg | Innehåll | Filer |
-|------|----------|-------|
-| 1 | Kärnmodell + DB v3 | `stop-time-modes.php`, `db-schema.php` |
-| 2 | CSV import/export/validate | `schema.php`, `import-entities-services.php`, `exporter-entities.php`, `validate-references.php` |
-| 3 | Persist + display + journey | `stoptimes-persist.php`, `stop-time-display.php`, `constraints.php`, `journey-detail.php`, `stop-time-wizard-display.php` |
-| 4 | REST + editor + overview | `stop-times.php`, `route-stoptimes-editor.php`, `overview-rail-cells.php` |
-| 5 | Vue admin (effective modes) | `types.ts`, `stopTimesPayload.ts`, `StopTimesEditor.vue`, grid edit |
-| 6 | Fixture sync | `lennakatten_symbols.py`, `stoptimes.csv` |
-| 7 | Tester + `.\scripts\check.ps1` | PHPUnit + Vitest |
+| Steg | Innehåll | Status |
+|------|----------|--------|
+| 1 | Kärnmodell + DB v3 | ✓ |
+| 2 | B-PDF → fixture (modes/tider) | ✓ `lennakatten_b_pdf.py`, `sync-lennakatten-rail-fixture.py` |
+| 3 | Anslag-overlay (Ca + `in_service_timetable`) | Kvar |
 
 ## Tekniska regler (implementerade i kod)
 

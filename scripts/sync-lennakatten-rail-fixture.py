@@ -12,13 +12,14 @@ from lennakatten_anslag_tables import (
     service_definitions,
     service_train_type_rows,
 )
+from lennakatten_b_pdf import b_rail_service_stops, b_stop_to_csv_row, parse_b_pdf
 from lennakatten_symbols import STOPTIMES_CSV_HEADER, stoptime_csv_row
 
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
 
 
-def stop_rows(service_code: str, stops: list[tuple[str, str, str, str]]) -> list[str]:
+def anslag_bus_stop_rows(service_code: str, stops: list[tuple[str, str, str, str]]) -> list[str]:
     total = len(stops)
     return [
         stoptime_csv_row(service_code, seq, station, arrival, departure, symbol, total_stops=total)
@@ -26,15 +27,30 @@ def stop_rows(service_code: str, stops: list[tuple[str, str, str, str]]) -> list
     ]
 
 
+def b_rail_stop_rows() -> list[str]:
+    rows: list[str] = []
+    by_train, directions = parse_b_pdf()
+    services = b_rail_service_stops(by_train, directions)
+    for service_code in sorted(services):
+        stops = services[service_code]
+        total = len(stops)
+        for seq, stop in enumerate(stops, start=1):
+            rows.append(b_stop_to_csv_row(service_code, seq, stop, total_stops=total))
+    return rows
+
+
+def synced_bus_codes() -> set[str]:
+    return {code for code, _tt, _route, _stops in service_definitions() if "-bus-" in code}
+
+
 def replace_synced_lines(existing: list[str], new_rows: list[str], *, header: str | None = None) -> list[str]:
+    bus_codes = synced_bus_codes()
     kept = [header if header is not None else existing[0]]
     for line in existing[1:]:
         if not line.strip():
             continue
         code = line.split(",", 1)[0]
-        if is_synced_green_yellow_rail(code) or (
-            code.startswith("green-b") and "-bus-" in code
-        ):
+        if is_synced_green_yellow_rail(code) or code in bus_codes:
             continue
         kept.append(line)
     kept.extend(new_rows)
@@ -46,9 +62,11 @@ def main() -> int:
         print(f"Missing fixture: {FIXTURE}", file=sys.stderr)
         return 1
 
-    stoptime_rows: list[str] = []
+    stoptime_rows: list[str] = b_rail_stop_rows()
     for service_code, _tt, _route, stops in service_definitions():
-        stoptime_rows.extend(stop_rows(service_code, stops))
+        if "-bus-" not in service_code:
+            continue
+        stoptime_rows.extend(anslag_bus_stop_rows(service_code, stops))
 
     services_path = FIXTURE / "services.csv"
     stoptimes_path = FIXTURE / "stoptimes.csv"

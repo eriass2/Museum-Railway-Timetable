@@ -7,7 +7,7 @@ import csv
 import sys
 from pathlib import Path
 
-from lennakatten_anslag_tables import pdf_service_definitions
+from lennakatten_anslag_tables import is_synced_green_yellow_rail, pdf_service_definitions
 from lennakatten_calendar import expected_green_buss_dates
 from lennakatten_symbols import four_modes_from_flags, symbol_to_flags
 
@@ -148,11 +148,13 @@ def main() -> int:
 
     dates_by_code = load_timetable_dates()
     for service_code, _tt, _route, stops in services:
+        if is_synced_green_yellow_rail(service_code):
+            continue
         failures.extend(compare_service(service_code, stops, by_service.get(service_code)))
     failures.extend(verify_green_buss_calendar(dates_by_code))
 
     print(f"PDF present: {PDF.is_file()}  readable: {pdf_readable()}")
-    print(f"Checked {len(services)} GRÖN/GUL/RÖD/ORANGE rail and bus services against Anslagstidtabell")
+    print(f"Checked {len(services)} Anslagstidtabell services (RÖD/ORANGE rail + GRÖN/GUL bus; GRÖN/GUL rail via B-PDF)")
     print(
         f"Checked green-buss calendar: {len(dates_by_code.get('green-buss', []))} days "
         "(1/7-16/8 on green traffic days)"
@@ -166,7 +168,7 @@ def main() -> int:
             print(f"... and {len(failures) - 80} more")
         return 1
 
-    print("All GRÖN/GUL/RÖD/ORANGE rail and bus services match Anslagstidtabell.")
+    print("All Anslagstidtabell-backed services match (bus + RÖD/ORANGE rail).")
     return 0
 
 
