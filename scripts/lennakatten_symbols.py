@@ -31,11 +31,27 @@ UP_OUT = [
 FAR_IN = list(reversed(UP_OUT))
 
 
-def approximate_time_for_stop(*, is_origin: bool, is_last: bool, has_time: bool) -> int:
-    """Map PDF typography: origin/destination bold (fixed) vs intermediate normal (Ca)."""
+def approximate_time_for_stop(
+    *,
+    is_origin: bool,
+    is_last: bool,
+    has_time: bool,
+    has_b_time: bool,
+    service_code: str,
+    in_b_korplan: bool,
+) -> int:
+    """Ca only on intermediate stops without clock times in tidtabell B (fas 4)."""
+    if "-bus-" in service_code:
+        return 1 if has_time else 0
     if not has_time:
         return 0
-    return 0 if (is_origin or is_last) else 1
+    if not in_b_korplan:
+        return 1
+    if is_origin or is_last:
+        return 0
+    if has_b_time:
+        return 0
+    return 1
 
 
 def anslag_overlay_flags(
@@ -44,19 +60,21 @@ def anslag_overlay_flags(
     is_origin: bool,
     is_last: bool,
     has_time: bool,
+    has_b_time: bool,
     service_code: str,
 ) -> tuple[int, int]:
     """Return (approximate_time, in_service_timetable) per docs/STOP_TIME_SOURCES.md."""
     if "-bus-" in service_code:
-        return 1, 0
+        return (1 if has_time else 0), 0
     in_svc = 1 if in_b_korplan else 0
     approx = approximate_time_for_stop(
         is_origin=is_origin,
         is_last=is_last,
         has_time=has_time,
+        has_b_time=has_b_time,
+        service_code=service_code,
+        in_b_korplan=in_b_korplan,
     )
-    if in_svc == 0:
-        approx = 1
     return approx, in_svc
 
 
@@ -128,6 +146,7 @@ def stoptime_csv_row(
         is_origin=(seq == 1),
         is_last=(seq == total_stops),
         has_time=has_time,
+        has_b_time=False,
         service_code=service_code,
     )
     return (

@@ -121,7 +121,20 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertTrue( $meta['on_request_dropoff'] );
 	}
 
-	public function test_dropoff_only_sets_on_request_dropoff(): void {
+	public function test_on_request_with_time_shows_ca_and_x_suffix(): void {
+		$meta = MRT_journey_stop_wizard_time_meta(
+			array_merge(
+				array(
+					'arrival_time'     => '10:09',
+					'departure_time'   => '10:09',
+					'approximate_time' => 1,
+				),
+				MRT_test_stop_modes_both_on_request()
+			)
+		);
+
+		self::assertSame( 'Ca 10.09 X', $meta['time_label'] );
+	}
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array_merge(
 				array( 'arrival_time' => '09:30' ),

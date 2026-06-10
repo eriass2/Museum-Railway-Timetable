@@ -250,7 +250,7 @@ green-b1-bus-out,2,fjallnora,11:00,,none,on_request,none,none,1,0
 | **1** | Schema v3 + kod + fixture (v3 CSV) + reset; verifiera **tur 71** |
 | **2** | Skript: `Tidtabellsboken-del-B.pdf` → modes/tider |
 | **3** | Anslag-overlay: Ca + `in_service_timetable` i sync — ✓ (justeras i fas 4) |
-| **4** | Ca/visning: ingen fet-typografi, pass-through + Ca, cellordning, Turvy-CSS — planerad |
+| **4** | Ca/visning: Ca-regler, Skölsta X, cellordning, Turvy-CSS — ✓ |
 
 **Ur scope v3:** obevakad station (●), spår, signaler, tågmöten-kolumn (train_change_map räcker för byte-rad; sammanslagna kolumner → [TODO.md](TODO.md)).
 

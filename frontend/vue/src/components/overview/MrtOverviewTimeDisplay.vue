@@ -1,6 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { formatOverviewTimePrefix, formatOverviewTimeValue, parseOverviewTimeText } from '../../utils/overviewTimeDisplay';
+import {
+  formatOverviewTimeSuffix,
+  formatOverviewTimeValue,
+  parseOverviewTimeText,
+} from '../../utils/overviewTimeDisplay';
 
 const props = defineProps<{
   text: string;
@@ -9,8 +13,9 @@ const props = defineProps<{
 }>();
 
 const parts = computed(() => parseOverviewTimeText(props.text));
-const prefix = computed(() => formatOverviewTimePrefix(parts.value));
-const timeValue = computed(() => formatOverviewTimeValue(parts.value, props.approximateTime));
+const showCa = computed(() => props.approximateTime || parts.value.approximate);
+const timeDigits = computed(() => formatOverviewTimeValue(parts.value, props.approximateTime).replace(/^Ca\s+/, ''));
+const suffix = computed(() => formatOverviewTimeSuffix(parts.value));
 </script>
 
 <template>
@@ -18,10 +23,11 @@ const timeValue = computed(() => formatOverviewTimeValue(parts.value, props.appr
     class="mrt-ov-time"
     :class="{
       'mrt-ov-time--cancelled': cancelled,
-      'mrt-ov-time--approximate': approximateTime,
+      'mrt-ov-time--approximate': showCa,
     }"
   >
-    <span v-if="prefix" class="mrt-ov-time__prefix">{{ prefix }}</span
-    ><span class="mrt-ov-time__value">{{ timeValue }}</span>
+    <span v-if="showCa" class="mrt-ov-time__ca">Ca </span
+    ><span class="mrt-ov-time__value">{{ timeDigits }}</span
+    ><span v-if="suffix" class="mrt-ov-time__suffix">{{ suffix }}</span>
   </span>
 </template>

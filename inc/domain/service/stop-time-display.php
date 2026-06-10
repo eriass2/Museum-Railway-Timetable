@@ -72,9 +72,9 @@ function MRT_stop_time_restriction_prefix(
  * @param array<string, mixed> $stop_time Stop row with mode columns.
  */
 function MRT_stop_time_clock_fragment( array $stop_time ): string {
-	$arrival   = (string) ( $stop_time['arrival_time'] ?? '' );
-	$departure = (string) ( $stop_time['departure_time'] ?? '' );
-	$pickup_or = MRT_stop_time_on_request_pickup( $stop_time );
+	$arrival    = (string) ( $stop_time['arrival_time'] ?? '' );
+	$departure  = (string) ( $stop_time['departure_time'] ?? '' );
+	$pickup_or  = MRT_stop_time_on_request_pickup( $stop_time );
 	$dropoff_or = MRT_stop_time_on_request_dropoff( $stop_time );
 
 	if ( $departure !== '' ) {
@@ -109,11 +109,38 @@ function MRT_stop_time_prefix_and_time_parts(
 }
 
 /**
- * Format one stop time for timetable cells (P/A, Ca, X, |, —).
+ * Restriction suffix after the clock time (P, A, or X).
+ *
+ * @param array<string, mixed> $stop_time Stop row with mode columns.
+ */
+function MRT_stop_time_restriction_suffix(
+	array $stop_time,
+	bool $hide_pickup_only = false,
+	bool $hide_dropoff_only = false
+): string {
+	$pickup_or  = MRT_stop_time_on_request_pickup( $stop_time );
+	$dropoff_or = MRT_stop_time_on_request_dropoff( $stop_time );
+	$time_str   = MRT_stop_time_clock_fragment( $stop_time );
+	$has_time   = $time_str !== '' && $time_str !== 'X';
+
+	if ( $pickup_or && $dropoff_or ) {
+		return $has_time ? ' X' : '';
+	}
+	if ( $pickup_or && ! $dropoff_or && ! $hide_pickup_only ) {
+		return ' P';
+	}
+	if ( ! $pickup_or && $dropoff_or && ! $hide_dropoff_only ) {
+		return ' A';
+	}
+	return '';
+}
+
+/**
+ * Format one stop time for timetable cells (Ca, P/A/X suffix, |, —).
  *
  * @param array<string, mixed>|null $stop_time Stop row with mode columns.
  * @param string                    $row_kind  Overview row kind: `from` hides P, `to` hides A.
- * @return string Formatted display (e.g. "P Ca 10.13", "X", "|", "—").
+ * @return string Formatted display (e.g. "Ca 10.13 P", "Ca 10.09 X", "X", "|", "—").
  */
 function MRT_format_stop_time_display( ?array $stop_time, string $row_kind = '' ): string {
 	if ( ! $stop_time ) {
@@ -121,19 +148,28 @@ function MRT_format_stop_time_display( ?array $stop_time, string $row_kind = '' 
 	}
 
 	$stop_time = MRT_stop_time_row_with_defaults( $stop_time );
+	$time_str  = MRT_stop_time_clock_fragment( $stop_time );
+
 	if ( ! MRT_stop_time_allows_pickup( $stop_time ) && ! MRT_stop_time_allows_dropoff( $stop_time ) ) {
-		return '|';
+		return $time_str === '' ? '|' : '—';
 	}
 
-	[$symbol_prefix, $time_str] = MRT_stop_time_prefix_and_time_parts(
+	if ( $time_str === 'X' ) {
+		return 'X';
+	}
+
+	if ( $time_str === '' ) {
+		return '—';
+	}
+
+	$core = $time_str;
+	if ( ! empty( $stop_time['approximate_time'] ) ) {
+		$core = 'Ca ' . $core;
+	}
+
+	return $core . MRT_stop_time_restriction_suffix(
 		$stop_time,
 		$row_kind === 'from',
 		$row_kind === 'to'
 	);
-
-	if ( ! empty( $stop_time['approximate_time'] ) && $time_str !== '' && $time_str !== 'X' ) {
-		return $symbol_prefix . 'Ca ' . $time_str;
-	}
-
-	return $symbol_prefix . $time_str;
 }

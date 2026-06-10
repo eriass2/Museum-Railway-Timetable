@@ -1,52 +1,63 @@
 import { describe, expect, it } from 'vitest';
-import { formatOverviewTimePrefix, formatOverviewTimeValue, parseOverviewTimeText } from '../src/utils/overviewTimeDisplay';
+import {
+  formatOverviewTimeSuffix,
+  formatOverviewTimeValue,
+  parseOverviewTimeText,
+} from '../src/utils/overviewTimeDisplay';
 
 describe('parseOverviewTimeText', () => {
-  it('parses P and Ca before a time; Ca is rendered with the digits', () => {
-    const parts = parseOverviewTimeText('P Ca 11.13');
+  it('parses Ca before time and X suffix', () => {
+    const parts = parseOverviewTimeText('Ca 10.09 X');
     expect(parts).toEqual({
-      restrictions: ['P'],
       approximate: true,
-      value: '11.13',
+      value: '10.09',
+      suffix: 'X',
     });
-    expect(formatOverviewTimePrefix(parts)).toBe('P ');
-    expect(formatOverviewTimeValue(parts)).toBe('Ca 11.13');
+    expect(formatOverviewTimeValue(parts)).toBe('Ca 10.09');
+    expect(formatOverviewTimeSuffix(parts)).toBe('X');
   });
 
-  it('accepts legacy Ca-before-P strings and keeps Ca next to the time', () => {
-    const parts = parseOverviewTimeText('Ca P 11.13');
+  it('parses Ca before time and P suffix', () => {
+    const parts = parseOverviewTimeText('Ca 11.13 P');
     expect(parts).toEqual({
-      restrictions: ['P'],
       approximate: true,
       value: '11.13',
+      suffix: 'P',
     });
-    expect(formatOverviewTimePrefix(parts)).toBe('P ');
-    expect(formatOverviewTimeValue(parts)).toBe('Ca 11.13');
+  });
+
+  it('accepts legacy prefix strings and normalizes to suffix layout', () => {
+    const parts = parseOverviewTimeText('P Ca 11.13');
+    expect(parts).toEqual({
+      approximate: true,
+      value: '11.13',
+      suffix: 'P',
+    });
   });
 
   it('keeps a plain time as value only', () => {
     expect(parseOverviewTimeText('10.00')).toEqual({
-      restrictions: [],
       approximate: false,
       value: '10.00',
+      suffix: '',
     });
   });
 
   it('keeps special symbols as value only', () => {
     expect(parseOverviewTimeText('X')).toEqual({
-      restrictions: [],
       approximate: false,
       value: 'X',
+      suffix: '',
     });
     expect(parseOverviewTimeText('|')).toEqual({
-      restrictions: [],
       approximate: false,
       value: '|',
+      suffix: '',
     });
     expect(parseOverviewTimeText('—')).toEqual({
-      restrictions: [],
       approximate: false,
       value: '—',
+      suffix: '',
     });
   });
 });

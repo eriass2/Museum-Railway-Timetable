@@ -79,7 +79,7 @@ final class OverviewJsonTest extends TestCase {
 			'departure'
 		);
 
-		self::assertSame( 'P Ca 11.13', $cell['text'] );
+		self::assertSame( 'Ca 11.13 P', $cell['text'] );
 	}
 
 	public function test_departure_row_keeps_pickup_only_symbol_mid_trip(): void {
@@ -92,7 +92,7 @@ final class OverviewJsonTest extends TestCase {
 		);
 
 		self::assertSame(
-			'P 10.00',
+			'10.00 P',
 			MRT_timetable_time_cell_text( $stop, true, false, 'departure' )
 		);
 	}

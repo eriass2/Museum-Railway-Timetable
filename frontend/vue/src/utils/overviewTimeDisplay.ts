@@ -1,54 +1,71 @@
 /**
- * Split overview time cell text into restriction labels (P, A), Ca, and the time value.
+ * Split overview time cell text into Ca, clock digits, and footnote suffix (P, A, X).
  *
  * @package Museum_Railway_Timetable
  */
 
 export type OverviewTimeParts = {
-  restrictions: string[];
   approximate: boolean;
   value: string;
+  suffix: string;
 };
 
-const PREFIX_TOKEN = /^(Ca|P|A)\s+/;
+const LEGACY_PREFIX = /^(Ca|P|A)\s+/;
+const SUFFIX_TOKEN = /\s+(P|A|X)$/;
 
 /**
- * @param text Formatted stop time from API (e.g. "P Ca 11.13", "Ca 10.00", "X", "—").
+ * @param text Formatted stop time from API (e.g. "Ca 10.09 X", "10.00 P", "X", "—").
  */
 export function parseOverviewTimeText(text: string): OverviewTimeParts {
   const trimmed = text.trim();
   if (trimmed === '' || trimmed === '—' || trimmed === '|' || trimmed === 'X') {
-    return { restrictions: [], approximate: false, value: trimmed === '' ? '—' : trimmed };
+    return {
+      approximate: false,
+      value: trimmed === '' ? '—' : trimmed,
+      suffix: '',
+    };
   }
 
-  const labels: string[] = [];
   let rest = trimmed;
-
-  while (PREFIX_TOKEN.test(rest)) {
-    const match = rest.match(PREFIX_TOKEN);
+  const legacyLabels: string[] = [];
+  while (LEGACY_PREFIX.test(rest)) {
+    const match = rest.match(LEGACY_PREFIX);
     if (!match) {
       break;
     }
-    labels.push(match[1]);
+    legacyLabels.push(match[1]);
     rest = rest.slice(match[0].length);
   }
 
+  let approximate = legacyLabels.includes('Ca');
+  let suffix = '';
+  const suffixMatch = rest.match(SUFFIX_TOKEN);
+  if (suffixMatch) {
+    suffix = suffixMatch[1];
+    rest = rest.slice(0, -suffixMatch[0].length);
+  } else if (legacyLabels.includes('P') || legacyLabels.includes('A')) {
+    suffix = legacyLabels.find((label) => label === 'P' || label === 'A') ?? '';
+  }
+
+  if (rest.startsWith('Ca ')) {
+    approximate = true;
+    rest = rest.slice(3);
+  }
+
   return {
-    restrictions: labels.filter((label) => label === 'P' || label === 'A'),
-    approximate: labels.includes('Ca'),
+    approximate,
     value: rest,
+    suffix,
   };
 }
 
-/**
- * P/A restriction prefix only (Ca is rendered adjacent to the time digits).
- */
+/** @deprecated Use formatOverviewTimeSuffix — kept for callers migrating from prefix layout. */
 export function formatOverviewTimePrefix(parts: OverviewTimeParts): string {
-  return parts.restrictions.length ? `${parts.restrictions.join(' ')} ` : '';
+  return '';
 }
 
 /**
- * Time value with Ca immediately before the digits when approximate.
+ * Clock digits with Ca immediately before when approximate.
  */
 export function formatOverviewTimeValue(parts: OverviewTimeParts, approximateTime = false): string {
   const showCa = approximateTime || parts.approximate;
@@ -56,4 +73,9 @@ export function formatOverviewTimeValue(parts: OverviewTimeParts, approximateTim
     return `Ca ${parts.value}`;
   }
   return parts.value;
+}
+
+/** P/A/X footnote after the clock time. */
+export function formatOverviewTimeSuffix(parts: OverviewTimeParts): string {
+  return parts.suffix;
 }

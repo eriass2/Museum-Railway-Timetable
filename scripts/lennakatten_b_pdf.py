@@ -81,6 +81,7 @@ class BStop:
     avg_dropoff_mode: Mode
     pass_through: bool = False
     in_b_korplan: bool = False
+    has_b_time: bool = False
 
 
 def _replace_stop(stop: BStop, **changes: object) -> BStop:
@@ -94,6 +95,7 @@ def _replace_stop(stop: BStop, **changes: object) -> BStop:
         changes.get("avg_dropoff_mode", stop.avg_dropoff_mode),
         changes.get("pass_through", stop.pass_through),
         changes.get("in_b_korplan", stop.in_b_korplan),
+        changes.get("has_b_time", stop.has_b_time),
     )
 
 
@@ -234,7 +236,19 @@ def _column_to_stop(
     in_b = pass_through or bool(arrival or departure) or not (
         ank_pu == ank_do == avg_pu == avg_do == "none"
     )
-    return BStop(station_code, arrival, departure, ank_pu, ank_do, avg_pu, avg_do, pass_through, in_b)
+    has_b_time = bool(arrival or departure)
+    return BStop(
+        station_code,
+        arrival,
+        departure,
+        ank_pu,
+        ank_do,
+        avg_pu,
+        avg_do,
+        pass_through,
+        in_b,
+        has_b_time,
+    )
 
 
 def _trim_endpoint_stops(stops: list[BStop]) -> list[BStop]:
@@ -481,6 +495,14 @@ def _modes_from_anslag_symbol(
     is_last: bool,
     has_time: bool,
 ) -> tuple[str, str, str, str]:
+    if symbol == "X" and has_time:
+        return four_modes_from_flags(
+            1,
+            1,
+            is_origin=is_first,
+            is_last=is_last,
+            has_time=False,
+        )
     pickup, dropoff = symbol_to_flags(symbol, is_origin=is_first, is_last=is_last)
     return four_modes_from_flags(
         pickup,
@@ -500,10 +522,35 @@ def _overlay_missing_times(stops: list[BStop], service_code: str) -> list[BStop]
     total = len(stops)
     merged: list[BStop] = []
     for seq, stop in enumerate(stops, start=1):
-        if stop.pass_through:
-            merged.append(stop)
-            continue
+        is_first = seq == 1
+        is_last = seq == total
         arr, dep, symbol = anslag.get(stop.station_code, ("", "", ""))
+        if stop.pass_through:
+            arrival = arr
+            departure = dep
+            has_time = bool(arrival or departure)
+            if not has_time:
+                merged.append(stop)
+                continue
+            ank_pu, ank_do, avg_pu, avg_do = _modes_from_anslag_symbol(
+                symbol,
+                is_first=is_first,
+                is_last=is_last,
+                has_time=True,
+            )
+            merged.append(
+                _replace_stop(
+                    stop,
+                    arrival=arrival,
+                    departure=departure,
+                    ank_pickup_mode=ank_pu,
+                    ank_dropoff_mode=ank_do,
+                    avg_pickup_mode=avg_pu,
+                    avg_dropoff_mode=avg_do,
+                    pass_through=False,
+                )
+            )
+            continue
         arrival = stop.arrival or arr
         departure = stop.departure or dep
         has_time = bool(arrival or departure)
@@ -516,11 +563,21 @@ def _overlay_missing_times(stops: list[BStop], service_code: str) -> list[BStop]
         if _stop_modes_are_bare(stop) and has_time:
             ank_pu, ank_do, avg_pu, avg_do = _modes_from_anslag_symbol(
                 symbol,
-                is_first=(seq == 1),
-                is_last=(seq == total),
+                is_first=is_first,
+                is_last=is_last,
                 has_time=has_time,
             )
-        merged.append(_replace_stop(stop, arrival=arrival, departure=departure, ank_pickup_mode=ank_pu, ank_dropoff_mode=ank_do, avg_pickup_mode=avg_pu, avg_dropoff_mode=avg_do))
+        merged.append(
+            _replace_stop(
+                stop,
+                arrival=arrival,
+                departure=departure,
+                ank_pickup_mode=ank_pu,
+                ank_dropoff_mode=ank_do,
+                avg_pickup_mode=avg_pu,
+                avg_dropoff_mode=avg_do,
+            )
+        )
     return merged
 
 
@@ -602,6 +659,7 @@ def b_stop_to_csv_row(
         is_origin=(seq == 1),
         is_last=(seq == total_stops),
         has_time=has_time,
+        has_b_time=stop.has_b_time,
         service_code=service_code,
     )
     return (

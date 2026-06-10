@@ -62,6 +62,12 @@ function MRT_journey_stop_wizard_time_meta(
 	} elseif ( $has_time ) {
 		$formatted  = MRT_format_time_display( $time_raw );
 		$time_label = $approximate ? 'Ca ' . $formatted : $formatted;
+		if (
+			MRT_stop_time_on_request_pickup( $row )
+			&& MRT_stop_time_on_request_dropoff( $row )
+		) {
+			$time_label .= ' X';
+		}
 	}
 
 	return array(

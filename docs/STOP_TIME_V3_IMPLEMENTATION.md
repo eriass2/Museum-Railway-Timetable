@@ -1,6 +1,6 @@
 # Stopptider schema v3 — implementationsplan
 
-**Status:** Fas 3 klar; **fas 4 planerad** (2026-06-10) — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
+**Status:** Fas 4 implementerad (2026-06-10) — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
 **Beslut:** [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md), [STOP_TIME_CA.md](STOP_TIME_CA.md)
 
 ## Faser (körordning)
@@ -10,7 +10,7 @@
 | 1 | Kärnmodell + DB v3 | ✓ |
 | 2 | B-PDF → fixture (modes/tider) | ✓ |
 | 3 | Anslag-overlay (Ca + `in_service_timetable`) | ✓ (justeras i fas 4) |
-| 4 | Ca/visning enligt nya beslut | Planerad |
+| 4 | Ca/visning enligt nya beslut | ✓ |
 
 ## Fas 4 — Ca, ○/anslag, visning (2026-06-10)
 
@@ -47,7 +47,7 @@
 | Stopp | Förväntat |
 |-------|-----------|
 | Uppsala Ö | `10.00` (+ P efter tid på from-rad) |
-| Barby | `Ca 10.23` (om ingen B-tid) |
+| Barby | `10.23` (B-tid, ingen Ca) |
 | Skölsta | **`Ca 10.09 X`** |
 | Marielund | `10.35` (to-rad) |
 

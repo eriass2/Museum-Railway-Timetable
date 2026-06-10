@@ -49,6 +49,7 @@ def expected_overlay(
         is_origin=(seq == 1),
         is_last=(seq == total_stops),
         has_time=has_time,
+        has_b_time=stop.has_b_time,
         service_code=service_code,
     )
     return str(approx), str(in_svc)
@@ -130,19 +131,23 @@ def verify_train_71_stickprov(stops: list[BStop]) -> list[str]:
     if not marielund.in_b_korplan:
         errors.append("green-71-out stickprov: marielund must be in B körplan")
     barby = stops[4]
-    if barby.in_b_korplan and barby.departure == "10:23":
-        approx, in_svc = anslag_overlay_flags(
-            in_b_korplan=True,
-            is_origin=False,
-            is_last=False,
-            has_time=True,
-            service_code="green-71-out",
-        )
-        if approx != 1 or in_svc != 1:
-            errors.append("green-71-out stickprov: barby Ca + in_service from anslag overlay")
+    if barby.departure != "10:23":
+        errors.append("green-71-out stickprov: barby departure 10:23 from anslag/B overlay")
+    approx, in_svc = anslag_overlay_flags(
+        in_b_korplan=barby.in_b_korplan,
+        is_origin=False,
+        is_last=False,
+        has_time=True,
+        has_b_time=barby.has_b_time,
+        service_code="green-71-out",
+    )
+    if approx != 0 or in_svc != 1:
+        errors.append("green-71-out stickprov: barby no Ca when B has clock times")
     skolsta = stops[3]
-    if skolsta.pass_through and (skolsta.arrival or skolsta.departure):
-        errors.append("green-71-out stickprov: skolsta pass-through must have no times")
+    if skolsta.arrival != "10:09" or skolsta.departure != "10:09":
+        errors.append("green-71-out stickprov: skolsta 10:09 from anslag overlay")
+    if skolsta.avg_pickup_mode != "on_request" or skolsta.avg_dropoff_mode != "on_request":
+        errors.append("green-71-out stickprov: skolsta X modes from anslag")
     return errors
 
 
