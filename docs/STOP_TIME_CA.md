@@ -1,15 +1,15 @@
 # Stopptider — Ca (ungefärlig tid)
 
-**Datum:** 2026-06-10  
-**Beslut:** Explicit fält `approximate_time` i stället för att härleda Ca från P/A-kryssrutor.
+**Datum:** 2026-06-10 (uppdaterad fas 4)  
+**Beslut:** Explicit fält `approximate_time`. Programmet tolkar **inte** fet/normal typografi från anslag-PDF.
 
 ## Fält
 
 | Kolumn | Typ | Standard | Betydelse |
 |--------|-----|----------|-----------|
-| `approximate_time` | 0\|1 | 0 | Visa **Ca** före tiden i reseplaneraren och tidtabellsöversikt |
+| `approximate_time` | 0\|1 | 0 | Visa **Ca** före klockslaget i reseplaneraren och tidtabellsöversikt |
 
-Lagras i `{prefix}_mrt_stoptimes` tillsammans med `arrival_time`, `departure_time`, `pickup_allowed`, `dropoff_allowed`.
+Lagras i `{prefix}_mrt_stoptimes` tillsammans med tider och fyra mode-fält (schema v3).
 
 ## Regler
 
@@ -19,49 +19,64 @@ Lagras i `{prefix}_mrt_stoptimes` tillsammans med `arrival_time`, `departure_tim
 | 1 | HH:MM | `Ca 10.13` (Ca direkt före siffrorna) |
 | — | ingen tid, P+A | `X` (behovsuppehåll) |
 
-**P/A** styr fortfarande på-/avstigningsrestriktioner och fotnoter (P enbart, A enbart, X utan tid). **Ca** styrs enbart av `approximate_time`.
+**P/A/X** styrs av modes/fotnoter. **Ca** styrs enbart av `approximate_time`.
+
+## När sätts Ca? (sync)
+
+| Stopp | Ca? |
+|-------|-----|
+| **Start/slut** med klockslag i **tidtabell B** | **Nej** (`0`) |
+| **Mellanstation** med klockslag i **B** | **Nej** (`0`) |
+| **Mellanstation utan** klockslag i **B**, tid från anslag | **Ja** (`1`) |
+| Stopp saknas i B (`in_service_timetable = 0`) | **Ja** (`1`) |
+| **Anslutningsbuss** (hel tur utanför B) | **Ja** (`1`) på alla stopp |
+
+**Fet text** i anslag-PDF används **inte**.
+
+Se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md) §5 och beslut #14.
+
+## ○ i B + anslag (Skölsta, tur 71)
+
+- **B:** ○ — inga klockslag i tabell B (mellanstation).
+- **Anslag:** **10:09** + symbol **X**.
+- **Data:** tider + `approximate_time = 1` + modes från anslag (**on_request** / **X**).
+- **Visning:** **`Ca 10.09 X`** — **inte** `\|`.
+
+`\|` gäller fortfarande när **ingen tid** finns och inget trafikutbyte (○ utan anslagstid).
+
+## Cellordning och typografi
+
+| Del | Placering | Storlek |
+|-----|-----------|---------|
+| **Ca** | Direkt **före** klockslaget | Liten |
+| **Klockslag** | Efter Ca (om Ca) | Normal i tidcellen |
+| **P / A / X** | **Efter** klockslaget | Liten (superscript-lik) |
+| **Stationsnamn** (Turvy) | Stationskolumn | **Normal** |
+
+**Mål:** `Ca 10.23 P`, `Ca 10.09 X`, `10.00 P` (start utan Ca).
 
 ## P/A vid ändhållplatser
 
-| Position i turen / resebenet | P (enbart påstigning) | A (enbart avstigning) |
-|------------------------------|----------------------|------------------------|
-| **Start** (Från / första stopp) | Döljs | Visas om relevant |
-| **Mellan** | Visas om relevant | Visas om relevant |
-| **Slut** (Till / sista stopp) | Visas om relevant | Döljs som **prefix** i cell |
-
-Gäller **P/A-prefix** i tidtabellsöversikt (`from`/`to`-rader). I reseplaneraren visas fortfarande **A-fotnot** vid sista stoppet när hållplatsen är behovsuppehåll endast avstigande (t.ex. Selknä på rälsbuss — säg till konduktören). Underliggande `pickup_allowed` / `dropoff_allowed` ändras inte.
+| Position | P | A / X |
+|----------|---|-------|
+| **Start** (`from`) | Döljs som prefix | Efter tid om relevant |
+| **Mellan** | Efter tid | Efter tid |
+| **Slut** (`to`) | Efter tid | Döljs som prefix |
 
 ## Slutstopp i reseben
 
-Sista stoppet i ett reseben visar **ankomsttid** (`arrival_time`), inte avgång — t.ex. Marielund 10:35 för tåg 71.
+Sista stoppet visar **ankomsttid** — t.ex. Marielund **`10.35`** (ingen Ca om tid finns i B).
 
 ## Admin
 
 - **Stopptider-tabell:** kolumn **Ca**
-- **Turvy (grid):** checkbox *Ca — ungefärlig tid i reseplaneraren* i celldialog
+- **Turvy (grid):** checkbox *Ca — ungefärlig tid i reseplaneraren*
 
 ## CSV
 
-Se [CSV_FORMAT.md](CSV_FORMAT.md) § stoptimes — valfri kolumn `approximate_time` (default 0).
-
-## Anslagstidtabell (PDF / tryckt anslagstavla)
-
-Vid avskrift från Lennakatten-anslagstidtabellen gäller typografi, inte bara P/X-symboler:
-
-| Utseende i PDF | Betydelse | `approximate_time` |
-|----------------|-----------|---------------------|
-| **Fet** tid | Fast tid | **0** |
-| Normal vikt | Ungefärlig tid (Ca) | **1** |
-
-Stationer är också fetstil i PDF — det gäller **inte** stopptiderna. Titta på själva tidssiffrorna.
-
-I reseplaneraren och tidtabellsöversikt visas Ca **direkt före** klockslaget (`Ca 10.13`, eller `P`/`A` före och `Ca 10.13` efter). Ca ska aldrig separeras visuellt från tidssiffrorna.
-
-Referens: `testdata/reference-pdfs/Anslagstidtabell-2026.pdf`, se [testdata/reference-pdfs/README.md](../testdata/reference-pdfs/README.md).
+Se [CSV_FORMAT.md](CSV_FORMAT.md) § stoptimes.
 
 ## Relaterat
 
-- [DATA_MODEL.md](DATA_MODEL.md) § stop times
-- [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md) — **skiss:** tidtabell B + anslag, schema v3 (`pickup_mode` / `dropoff_mode`)
-- Jesper J4 — Ca vid hållplatser utan exakt tid i tjänstetidtabell
-- Validering 2026-06-10 — Marielund ska inte ha Ca; felaktig härledning från P+A borttagen
+- [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)
+- [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md) — fas 4

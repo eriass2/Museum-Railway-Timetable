@@ -236,22 +236,25 @@ Vid uppdatering av tur **ersätts** alla stoptider för den turen.
 
 **Hjälp vid avskrift från anslagstidtabell (PDF):**
 
-**Typografi (Ca vs fast tid)** — gäller när tid finns angiven:
+**Ca (ungefärlig tid):**
 
-| Utseende i PDF | `approximate_time` |
-|----------------|---------------------|
-| **Fet** tidssiffra | **0** (fast) |
-| Normal vikt | **1** (Ca, ungefärlig) |
+| Situation | `approximate_time` |
+|-----------|---------------------|
+| Start/slut med klockslag i tidtabell B | **0** |
+| Mellanstation med klockslag i B | **0** |
+| Mellanstation **utan** klockslag i B, tid från anslag | **1** |
+| Stopp saknas i B / hel anslutningsbuss | **1** |
 
-Stationer i tabellen är också fetstil; det ska **inte** tolkas som fast tid. Se [STOP_TIME_CA.md](STOP_TIME_CA.md).
+Programmet tolkar **inte** fet vs normal typografi. Se [STOP_TIME_CA.md](STOP_TIME_CA.md).
 
 **P/X-symboler (på-/avstigning):**
 
 | Symbol i PDF | `pickup_allowed` | `dropoff_allowed` | `approximate_time` |
 |--------------|------------------|-------------------|---------------------|
-| P | 1 | 0 | enligt typografi ovan |
+| P | 1 | 0 | **0** om B-tid (start); **1** om mellanstation utan B-tid |
 | X (utan tid) | 1 | 1 | 0 |
-| Tid + P/A enligt tabell | 1 | 1 | **fet → 0**, **normal → 1** |
+| X **med** tid (anslag, t.ex. Skölsta) | 1 | 1 | **1** (mellanstation utan B-tid) |
+| Tid + P/A enligt tabell | 1 | 1 | **0** om B-tid; **1** om enbart anslag |
 
 ### 4.10 `settings.csv` (valfritt)
 

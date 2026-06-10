@@ -31,13 +31,19 @@ Kort lista över planerade förbättringar som inte är aktiva utvecklingsplaner
 
 ## Stopptider — schema v3 (tidtabell B + anslag)
 
-**Status:** fas 3 klar (2026-06-10) — se [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md)
+**Status:** fas 3 klar; **fas 4 planerad** (2026-06-10) — se [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md)
 
-**Beslutat (2026-06-10):** se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)
+**Beslutat (2026-06-10):** se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md), [STOP_TIME_CA.md](STOP_TIME_CA.md)
 
-**Kvar:**
+### Fas 4 — Ca/visning (kvar)
 
-- [ ] Dev-reset + omimport efter schema-byte i Docker-miljö (vid behov)
+- [ ] Sync: Ca **endast mellanstation utan B-tid**; ○ får anslag-tid + symbol (Skölsta → `Ca 10.09 X`)
+- [ ] PHP/Vue: `Ca` + tid + P/A/X suffix; Turvy-CSS stationsnamn
+- [ ] Fixture + tester; dev-reset
+
+**Kvar (övrigt):**
+
+- [ ] Dev-reset + omimport efter fas 4 i Docker-miljö
 
 ---
 

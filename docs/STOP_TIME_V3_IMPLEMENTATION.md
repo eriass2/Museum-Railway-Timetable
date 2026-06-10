@@ -1,27 +1,58 @@
 # Stopptider schema v3 — implementationsplan
 
-**Status:** Fas 3 klar (2026-06-10) — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
-**Beslut:** [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)
+**Status:** Fas 3 klar; **fas 4 planerad** (2026-06-10) — se [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
+**Beslut:** [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md), [STOP_TIME_CA.md](STOP_TIME_CA.md)
 
 ## Faser (körordning)
 
 | Steg | Innehåll | Status |
 |------|----------|--------|
 | 1 | Kärnmodell + DB v3 | ✓ |
-| 2 | B-PDF → fixture (modes/tider) | ✓ `lennakatten_b_pdf.py`, `sync-lennakatten-rail-fixture.py` |
-| 3 | Anslag-overlay (Ca + `in_service_timetable`) | ✓ `anslag_overlay_flags`, sync |
+| 2 | B-PDF → fixture (modes/tider) | ✓ |
+| 3 | Anslag-overlay (Ca + `in_service_timetable`) | ✓ (justeras i fas 4) |
+| 4 | Ca/visning enligt nya beslut | Planerad |
 
-## Tekniska regler (implementerade i kod)
+## Fas 4 — Ca, ○/anslag, visning (2026-06-10)
 
-- **Effective:** `max(avg, ank)` per riktning (`none` < `scheduled` < `on_request`).
-- **Resesök:** `allows_*` = effective ≠ `none` (både `scheduled` och `on_request` giltiga).
-- **Visning P/A:** prefix/fotnot endast vid `on_request`.
-- **`in_service_timetable = 0`:** tvingar `approximate_time = 1`.
-- **Admin:** förenklad redigering via `pickup_mode` / `dropoff_mode` → expanderas till fyra kolumner vid spar.
-- **Anslutningsbuss:** `in_service_timetable = 0` på hel tur i CSV-sync.
+**Produktbeslut (senaste):**
 
-## Verifiering
+1. **Ca** endast **mellanstationer utan klockslag i tidtabell B** (plus buss / `in_service = 0`).
+2. **Skölsta (71):** `Ca 10.09 X` — anslag **X** + tid; inte `\|`.
+3. Cellordning: **Ca före** tid, **P/A/X efter**; Turvy-CSS (station normal storlek).
 
-- Tur **71** GRÖN: tider, modes, Ca
-- Buss B1: Ca på alla stopp, P på Selknä
-- `.\scripts\check.ps1 -Vue`
+### Data / sync (Python)
+
+- [ ] `anslag_overlay_flags()` / `approximate_time_for_stop()` — Ca endast om mellanstation **och** saknar B-tid (`has_b_time` flagga)
+- [ ] `_overlay_missing_times()` — overlay även ○/pass-through; fyll tider; **modes från anslag** när B har ○
+- [ ] Regenerera fixture + uppdatera verify-skript (Skölsta: `approximate_time=1`, modes on_request, tid 10:09)
+- [ ] Barby m.fl.: Ca endast där B saknar klockslag
+
+### Visning (PHP)
+
+- [ ] `MRT_format_stop_time_display()` — `Ca` + tid + suffix (P/A/X); inte `P Ca …`
+- [ ] Ta bort `\|` när tid + X (on_request båda)
+
+### Visning (Vue + CSS)
+
+- [ ] `overviewTimeDisplay.ts` — Ca före, fotnot efter; stöd **X** som suffix
+- [ ] `timetable-overview.css` — fix `--mrt-ov-text-size` på stationskolumn
+
+### Tester
+
+- [ ] Tur **71:** Uppsala Ö `10.00`, Barby `Ca 10.23`, Skölsta `Ca 10.09 X`, Marielund `10.35`
+- [ ] Vue + PHP unit tests; dev-reset
+
+## Verifiering (referenstur 71)
+
+| Stopp | Förväntat |
+|-------|-----------|
+| Uppsala Ö | `10.00` (+ P efter tid på from-rad) |
+| Barby | `Ca 10.23` (om ingen B-tid) |
+| Skölsta | **`Ca 10.09 X`** |
+| Marielund | `10.35` (to-rad) |
+
+Buss B1: Ca på alla stopp (hel tur utanför B).
+
+## Relaterat (ej fas 4)
+
+- Sammanslagna Turvy-kolumner (71→61) → [TODO.md](TODO.md)
