@@ -40,6 +40,8 @@ def stoptime_rows(
             symbol,
             is_origin=(seq == 1),
             is_last=(seq == len(active)),
+            station=station,
+            service_code=service_code,
         )
         rows.append(
             stoptime_csv_row(

@@ -27,8 +27,21 @@ def load_stoptimes() -> dict[str, list[dict[str, str]]]:
     return by_service
 
 
-def expected_flags(symbol: str, *, is_origin: bool, is_last: bool) -> tuple[str, str]:
-    pickup, dropoff = symbol_to_flags(symbol, is_origin=is_origin, is_last=is_last)
+def expected_flags(
+    symbol: str,
+    *,
+    is_origin: bool,
+    is_last: bool,
+    station: str = "",
+    service_code: str = "",
+) -> tuple[str, str]:
+    pickup, dropoff = symbol_to_flags(
+        symbol,
+        is_origin=is_origin,
+        is_last=is_last,
+        station=station,
+        service_code=service_code,
+    )
     return str(pickup), str(dropoff)
 
 
@@ -59,6 +72,8 @@ def compare_service(
             symbol,
             is_origin=(seq == 1),
             is_last=(seq == len(expected_stops)),
+            station=station,
+            service_code=service_code,
         )
         if row["pickup_allowed"] != exp_pu or row["dropoff_allowed"] != exp_do:
             errors.append(

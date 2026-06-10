@@ -30,11 +30,16 @@ function MRT_journey_find_stop_index( array $ordered, $station_id ) {
  * @param array<string, mixed> $row DB row
  * @return array<string, mixed>
  */
-function MRT_journey_map_stop_row( array $row, string $time_preference = 'departure' ) {
+function MRT_journey_map_stop_row(
+	array $row,
+	string $time_preference = 'departure',
+	bool $is_first_in_leg = false,
+	bool $is_last_in_leg = false
+) {
 	require_once MRT_PATH . 'inc/domain/journey/stop-time-wizard-display.php';
 	$sid     = intval( $row['station_post_id'] );
 	$title   = get_the_title( $sid ) ?: '';
-	$display = MRT_journey_stop_wizard_time_meta( $row, $time_preference );
+	$display = MRT_journey_stop_wizard_time_meta( $row, $time_preference, $is_first_in_leg, $is_last_in_leg );
 	return array(
 		'station_id'          => $sid,
 		'station_title'       => $title,
@@ -83,8 +88,8 @@ function MRT_get_connection_journey_detail( $service_id, $from_station_id, $to_s
 	$slice = array_slice( $ordered, $from_i, $to_i - $from_i + 1 );
 	$last_i = count( $slice ) - 1;
 	foreach ( $slice as $i => $row ) {
-		$pref               = $i === $last_i ? 'arrival' : 'departure';
-		$out['stops'][] = MRT_journey_map_stop_row( $row, $pref );
+		$pref           = $i === $last_i ? 'arrival' : 'departure';
+		$out['stops'][] = MRT_journey_map_stop_row( $row, $pref, $i === 0, $i === $last_i );
 	}
 	$first                   = $slice[0];
 	$last                    = $slice[ count( $slice ) - 1 ];

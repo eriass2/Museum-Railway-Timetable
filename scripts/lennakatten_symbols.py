@@ -52,6 +52,8 @@ def stoptime_csv_row(
         symbol,
         is_origin=(seq == 1),
         is_last=(seq == total_stops),
+        station=station,
+        service_code=service_code,
     )
     approx = approximate_time_for_stop(
         is_origin=(seq == 1),
@@ -69,7 +71,14 @@ def stoptime_csv_row(
     )
 
 
-def symbol_to_flags(symbol: str, *, is_origin: bool, is_last: bool) -> tuple[int, int]:
+def symbol_to_flags(
+    symbol: str,
+    *,
+    is_origin: bool,
+    is_last: bool,
+    station: str = "",
+    service_code: str = "",
+) -> tuple[int, int]:
     """Map PDF symbol to pickup_allowed, dropoff_allowed."""
     if is_origin:
         return (1, 0)
@@ -77,6 +86,11 @@ def symbol_to_flags(symbol: str, *, is_origin: bool, is_last: bool) -> tuple[int
         return (1, 1)
     if symbol == "P":
         return (1, 0)
+    if symbol == "X" and station == "selkna" and service_code:
+        if "-out" in service_code:
+            return (0, 1)
+        if "-in" in service_code:
+            return (1, 0)
     return (1, 1)
 
 

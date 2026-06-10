@@ -16,20 +16,20 @@ export type TripFootnoteEntry = {
 };
 
 export function segmentNeedsPickupFootnote(stops: StopTimeFootnoteStop[]): boolean {
-  return stops.some((s) => s.on_request_pickup || s.on_request_both);
+  return stops.some((s) => s.on_request_pickup);
 }
 
 export function segmentNeedsDropoffFootnote(stops: StopTimeFootnoteStop[]): boolean {
-  return stops.some((s) => s.on_request_dropoff || s.on_request_both);
+  return stops.some((s) => s.on_request_dropoff);
 }
 
 /** Superscript markers shown next to station names in the timeline. */
 export function footnoteMarksForStop(stop: StopTimeFootnoteStop): FootnoteMark[] {
   const marks: FootnoteMark[] = [];
-  if (stop.on_request_pickup || stop.on_request_both) {
+  if (stop.on_request_pickup) {
     marks.push('P');
   }
-  if (stop.on_request_dropoff || stop.on_request_both) {
+  if (stop.on_request_dropoff) {
     marks.push('A');
   }
   return marks;

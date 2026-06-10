@@ -82,6 +82,53 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertFalse( $meta['on_request_dropoff'] );
 	}
 
+	public function test_pickup_only_at_trip_start_hides_pickup_footnote(): void {
+		$meta = MRT_journey_stop_wizard_time_meta(
+			array(
+				'pickup_allowed'  => 1,
+				'dropoff_allowed' => 0,
+				'departure_time'  => '09:00',
+			),
+			'departure',
+			true,
+			false
+		);
+
+		self::assertFalse( $meta['on_request_pickup'] );
+	}
+
+	public function test_dropoff_only_at_trip_end_keeps_dropoff_footnote(): void {
+		$meta = MRT_journey_stop_wizard_time_meta(
+			array(
+				'pickup_allowed'  => 0,
+				'dropoff_allowed' => 1,
+				'arrival_time'    => '09:30',
+			),
+			'arrival',
+			false,
+			true
+		);
+
+		self::assertTrue( $meta['on_request_dropoff'] );
+	}
+
+	public function test_on_request_x_at_trip_start_keeps_dropoff_footnote_only(): void {
+		$meta = MRT_journey_stop_wizard_time_meta(
+			array(
+				'pickup_allowed'  => 1,
+				'dropoff_allowed' => 1,
+			),
+			'departure',
+			true,
+			false
+		);
+
+		self::assertSame( 'X', $meta['time_label'] );
+		self::assertTrue( $meta['on_request_both'] );
+		self::assertFalse( $meta['on_request_pickup'] );
+		self::assertTrue( $meta['on_request_dropoff'] );
+	}
+
 	public function test_dropoff_only_sets_on_request_dropoff(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array(

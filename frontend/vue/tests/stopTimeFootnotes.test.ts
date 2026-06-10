@@ -12,8 +12,10 @@ describe('stopTimeFootnotes', () => {
     onRequestDropoffFootnote: 'Säg till konduktören vid avstigning.',
   };
 
-  it('footnoteMarksForStop returns P and A for on_request_both', () => {
-    expect(footnoteMarksForStop({ on_request_both: true })).toEqual(['P', 'A']);
+  it('footnoteMarksForStop returns P and A when both restrictions apply', () => {
+    expect(
+      footnoteMarksForStop({ on_request_pickup: true, on_request_dropoff: true }),
+    ).toEqual(['P', 'A']);
   });
 
   it('footnoteMarksForStop returns P only for pickup', () => {
@@ -22,7 +24,11 @@ describe('stopTimeFootnotes', () => {
 
   it('tripFootnotesFromStops deduplicates marks across stops', () => {
     const entries = tripFootnotesFromStops(
-      [{ on_request_pickup: true }, { on_request_dropoff: true }, { on_request_both: true }],
+      [
+        { on_request_pickup: true },
+        { on_request_dropoff: true },
+        { on_request_pickup: true, on_request_dropoff: true },
+      ],
       cfg,
     );
     expect(entries).toEqual([

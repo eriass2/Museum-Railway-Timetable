@@ -16,10 +16,20 @@ Lagras i `{prefix}_mrt_stoptimes` tillsammans med `arrival_time`, `departure_tim
 | `approximate_time` | Tid | Wizard / översikt |
 |--------------------|-----|-------------------|
 | 0 | HH:MM | `10.35` |
-| 1 | HH:MM | `Ca 10.13` |
+| 1 | HH:MM | `Ca 10.13` (Ca direkt före siffrorna) |
 | — | ingen tid, P+A | `X` (behovsuppehåll) |
 
 **P/A** styr fortfarande på-/avstigningsrestriktioner och fotnoter (P enbart, A enbart, X utan tid). **Ca** styrs enbart av `approximate_time`.
+
+## P/A vid ändhållplatser
+
+| Position i turen / resebenet | P (enbart påstigning) | A (enbart avstigning) |
+|------------------------------|----------------------|------------------------|
+| **Start** (Från / första stopp) | Döljs | Visas om relevant |
+| **Mellan** | Visas om relevant | Visas om relevant |
+| **Slut** (Till / sista stopp) | Visas om relevant | Döljs som **prefix** i cell |
+
+Gäller **P/A-prefix** i tidtabellsöversikt (`from`/`to`-rader). I reseplaneraren visas fortfarande **A-fotnot** vid sista stoppet när hållplatsen är behovsuppehåll endast avstigande (t.ex. Selknä på rälsbuss — säg till konduktören). Underliggande `pickup_allowed` / `dropoff_allowed` ändras inte.
 
 ## Slutstopp i reseben
 
@@ -45,7 +55,7 @@ Vid avskrift från Lennakatten-anslagstidtabellen gäller typografi, inte bara P
 
 Stationer är också fetstil i PDF — det gäller **inte** stopptiderna. Titta på själva tidssiffrorna.
 
-I reseplaneraren visas Ca som prefix (`Ca 10.13`). I digital tidtabellsöversikt kan samma skillnad speglas med fet vs normal vikt (ej implementerat ännu).
+I reseplaneraren och tidtabellsöversikt visas Ca **direkt före** klockslaget (`Ca 10.13`, eller `P`/`A` före och `Ca 10.13` efter). Ca ska aldrig separeras visuellt från tidssiffrorna.
 
 Referens: `testdata/reference-pdfs/Anslagstidtabell-2026.pdf`, se [testdata/reference-pdfs/README.md](../testdata/reference-pdfs/README.md).
 

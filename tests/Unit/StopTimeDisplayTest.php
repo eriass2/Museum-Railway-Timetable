@@ -59,6 +59,20 @@ final class StopTimeDisplayTest extends TestCase {
 		);
 	}
 
+	public function test_to_row_hides_dropoff_only_prefix(): void {
+		self::assertSame(
+			'09.30',
+			MRT_format_stop_time_display(
+				array(
+					'arrival_time'    => '09:30',
+					'pickup_allowed'  => 0,
+					'dropoff_allowed' => 1,
+				),
+				'to'
+			)
+		);
+	}
+
 	public function test_on_request_without_time_shows_x(): void {
 		self::assertSame(
 			'X',
