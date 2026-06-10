@@ -135,6 +135,8 @@ final class StopTimeWizardDisplayTest extends TestCase {
 
 		self::assertSame( 'Ca 10.09 X', $meta['time_label'] );
 	}
+
+	public function test_dropoff_only_with_time_keeps_dropoff_footnote(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array_merge(
 				array( 'arrival_time' => '09:30' ),
