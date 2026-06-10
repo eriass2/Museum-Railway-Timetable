@@ -50,8 +50,8 @@ function MRT_timetable_time_cell_json(
 			'arrival'         => '',
 			'departure'       => '',
 			'stopsHere'       => false,
-			'pickupAllowed'   => true,
-			'dropoffAllowed'  => true,
+			'pickupMode'      => 'scheduled',
+			'dropoffMode'     => 'scheduled',
 			'approximateTime' => false,
 		);
 		return $cell;
@@ -61,8 +61,8 @@ function MRT_timetable_time_cell_json(
 		'arrival'         => (string) ( $stop['arrival_time'] ?? '' ),
 		'departure'       => (string) ( $stop['departure_time'] ?? '' ),
 		'stopsHere'       => true,
-		'pickupAllowed'   => ! empty( $stop['pickup_allowed'] ),
-		'dropoffAllowed'  => ! empty( $stop['dropoff_allowed'] ),
+		'pickupMode'      => MRT_stop_time_effective_pickup( $stop ),
+		'dropoffMode'     => MRT_stop_time_effective_dropoff( $stop ),
 		'approximateTime' => ! empty( $stop['approximate_time'] ),
 	);
 	return $cell;

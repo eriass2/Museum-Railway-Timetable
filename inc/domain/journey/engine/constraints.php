@@ -76,10 +76,10 @@ function MRT_journey_constraint_stop_permissions(
 	if ( ! is_array( $from ) || ! is_array( $to ) ) {
 		return false;
 	}
-	if ( (int) ( $from['pickup_allowed'] ?? 0 ) !== 1 ) {
+	if ( ! MRT_stop_time_allows_pickup( $from ) ) {
 		return false;
 	}
-	return (int) ( $to['dropoff_allowed'] ?? 0 ) === 1;
+	return MRT_stop_time_allows_dropoff( $to );
 }
 
 /**

@@ -99,13 +99,14 @@ function MRT_rest_normalize_stops_payload( array $stops ): array {
 			continue;
 		}
 		$normalized[] = array(
-			'station_id'  => (int) ( $stop['station_id'] ?? $stop['id'] ?? 0 ),
-			'stops_here'  => ! empty( $stop['stops_here'] ) ? '1' : '0',
-			'arrival'     => (string) ( $stop['arrival'] ?? $stop['arrival_time'] ?? '' ),
-			'departure'   => (string) ( $stop['departure'] ?? $stop['departure_time'] ?? '' ),
-			'pickup'           => ! empty( $stop['pickup'] ?? $stop['pickup_allowed'] ) ? '1' : '',
-			'dropoff'          => ! empty( $stop['dropoff'] ?? $stop['dropoff_allowed'] ) ? '1' : '',
-			'approximate'      => ! empty( $stop['approximate'] ?? $stop['approximate_time'] ) ? '1' : '',
+			'station_id'             => (int) ( $stop['station_id'] ?? $stop['id'] ?? 0 ),
+			'stops_here'             => ! empty( $stop['stops_here'] ) ? '1' : '0',
+			'arrival'                => (string) ( $stop['arrival'] ?? $stop['arrival_time'] ?? '' ),
+			'departure'              => (string) ( $stop['departure'] ?? $stop['departure_time'] ?? '' ),
+			'pickup_mode'            => (string) ( $stop['pickup_mode'] ?? 'scheduled' ),
+			'dropoff_mode'           => (string) ( $stop['dropoff_mode'] ?? 'scheduled' ),
+			'approximate'            => ( ! empty( $stop['approximate'] ?? null ) || ! empty( $stop['approximate_time'] ?? null ) ) ? '1' : '',
+			'in_service_timetable'   => isset( $stop['in_service_timetable'] ) ? (int) $stop['in_service_timetable'] : 1,
 		);
 	}
 	return $normalized;
@@ -131,13 +132,14 @@ function MRT_rest_quick_departure_handler( WP_REST_Request $request ) {
 	foreach ( $payload['stations'] as $row ) {
 		$is_first = $stops === array();
 		$stops[]  = array(
-			'station_id' => (int) $row['id'],
-			'stops_here' => $row['stops_here'] || $is_first ? '1' : '0',
-			'arrival'    => (string) ( $row['arrival_time'] ?? '' ),
-			'departure'  => $is_first ? $departure : (string) ( $row['departure_time'] ?? '' ),
-			'pickup'     => ! empty( $row['pickup_allowed'] ) ? '1' : '',
-			'dropoff'    => ! empty( $row['dropoff_allowed'] ) ? '1' : '',
-			'approximate' => ! empty( $row['approximate_time'] ) ? '1' : '',
+			'station_id'           => (int) $row['id'],
+			'stops_here'           => $row['stops_here'] || $is_first ? '1' : '0',
+			'arrival'              => (string) ( $row['arrival_time'] ?? '' ),
+			'departure'            => $is_first ? $departure : (string) ( $row['departure_time'] ?? '' ),
+			'pickup_mode'          => (string) ( $row['pickup_mode'] ?? 'scheduled' ),
+			'dropoff_mode'         => (string) ( $row['dropoff_mode'] ?? 'scheduled' ),
+			'approximate'          => ! empty( $row['approximate_time'] ) ? '1' : '',
+			'in_service_timetable' => ! empty( $row['in_service_timetable'] ) ? 1 : 0,
 		);
 	}
 	$result = MRT_save_service_stoptimes_bulk( $id, $stops );

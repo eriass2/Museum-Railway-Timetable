@@ -65,18 +65,35 @@ function MRT_normalize_stoptime_for_save_all( array $stop, int $sequence ) {
 	if ( ( $arrival && ! MRT_validate_time_hhmm( $arrival ) ) || ( $departure && ! MRT_validate_time_hhmm( $departure ) ) ) {
 		return new WP_Error( 'invalid_time', __( 'Invalid time format in stop times. Use HH:MM.', MRT_TEXT_DOMAIN ) );
 	}
-	$pickup  = isset( $stop['pickup'] ) && $stop['pickup'] == '1' ? 1 : 0;
-	$dropoff = isset( $stop['dropoff'] ) && $stop['dropoff'] == '1' ? 1 : 0;
+	$pickup  = sanitize_text_field( $stop['pickup_mode'] ?? '' );
+	$dropoff = sanitize_text_field( $stop['dropoff_mode'] ?? '' );
 	$approx  = ! empty( $stop['approximate'] ) || ! empty( $stop['approximate_time'] ) ? 1 : 0;
+	$in_svc  = isset( $stop['in_service_timetable'] ) ? (int) $stop['in_service_timetable'] : 1;
 
-	return array(
-		'station_post_id'  => $station_id,
-		'stop_sequence'    => $sequence,
-		'arrival_time'     => $arrival ?: null,
-		'departure_time'   => $departure ?: null,
-		'pickup_allowed'   => $pickup,
-		'dropoff_allowed'  => $dropoff,
-		'approximate_time' => $approx,
+	$modes = MRT_stop_time_modes_from_input(
+		array(
+			'pickup_mode'            => $pickup !== '' ? $pickup : 'scheduled',
+			'dropoff_mode'           => $dropoff !== '' ? $dropoff : 'scheduled',
+			'approximate_time'       => $approx,
+			'in_service_timetable'   => $in_svc,
+			'ank_pickup_mode'        => $stop['ank_pickup_mode'] ?? null,
+			'ank_dropoff_mode'       => $stop['ank_dropoff_mode'] ?? null,
+			'avg_pickup_mode'        => $stop['avg_pickup_mode'] ?? null,
+			'avg_dropoff_mode'       => $stop['avg_dropoff_mode'] ?? null,
+		)
+	);
+	if ( is_wp_error( $modes ) ) {
+		return $modes;
+	}
+
+	return array_merge(
+		array(
+			'station_post_id'  => $station_id,
+			'stop_sequence'    => $sequence,
+			'arrival_time'     => $arrival ?: null,
+			'departure_time'   => $departure ?: null,
+		),
+		MRT_stop_time_mode_db_fields( $modes )
 	);
 }
 
@@ -123,17 +140,17 @@ function MRT_insert_prepared_stoptime_for_save_all( $wpdb, array $row, int $serv
 	$table  = $wpdb->prefix . 'mrt_stoptimes';
 	$result = $wpdb->insert(
 		$table,
-		array(
-			'service_post_id' => $service_id,
-			'station_post_id' => $row['station_post_id'],
-			'stop_sequence'   => $row['stop_sequence'],
-			'arrival_time'    => $row['arrival_time'],
-			'departure_time'  => $row['departure_time'],
-			'pickup_allowed'   => $row['pickup_allowed'],
-			'dropoff_allowed'  => $row['dropoff_allowed'],
-			'approximate_time' => $row['approximate_time'] ?? 0,
+		array_merge(
+			array(
+				'service_post_id' => $service_id,
+				'station_post_id' => $row['station_post_id'],
+				'stop_sequence'   => $row['stop_sequence'],
+				'arrival_time'    => $row['arrival_time'],
+				'departure_time'  => $row['departure_time'],
+			),
+			MRT_stop_time_mode_db_fields( $row )
 		),
-		array( '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d' )
+		array( '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d' )
 	);
 	if ( $result === false ) {
 		MRT_check_db_error( 'MRT_save_service_stoptimes_bulk' );

@@ -161,8 +161,8 @@ function MRT_find_connections( $from_station_id, $to_station_id, $dateYmd ) {
         INNER JOIN $table to_st ON from_st.service_post_id = to_st.service_post_id
         WHERE from_st.station_post_id = %d AND to_st.station_post_id = %d
           AND from_st.service_post_id IN ($in) AND from_st.stop_sequence < to_st.stop_sequence
-          AND from_st.pickup_allowed = 1
-          AND to_st.dropoff_allowed = 1
+          AND (from_st.avg_pickup_mode IN ('scheduled','on_request') OR from_st.ank_pickup_mode IN ('scheduled','on_request'))
+          AND (to_st.avg_dropoff_mode IN ('scheduled','on_request') OR to_st.ank_dropoff_mode IN ('scheduled','on_request'))
         ORDER BY COALESCE(from_st.departure_time, from_st.arrival_time) ASC, from_st.stop_sequence ASC
     ",
 		$from_station_id,

@@ -11,13 +11,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
+require_once MRT_PATH . 'inc/domain/service/stop-time-display.php';
+
 /**
  * Public display meta for one stop in journey detail (A3/J4).
  *
  * @param array<string, mixed> $row DB stop row or mapped subset.
- * @param string               $time_preference `departure` (default) or `arrival` for timeline label.
- * @param bool                 $is_first_in_leg First stop in the journey slice (hide P footnote / pickup-only).
- * @param bool                 $is_last_in_leg  Last stop in the journey slice (trim redundant P at start; A behov kept at end).
  * @return array{
  *   time_label: string,
  *   approximate_time: bool,
@@ -32,13 +32,11 @@ function MRT_journey_stop_wizard_time_meta(
 	bool $is_first_in_leg = false,
 	bool $is_last_in_leg = false
 ): array {
-	require_once MRT_PATH . 'inc/domain/service/stop-time-display.php';
-	$pickup    = ! empty( $row['pickup_allowed'] );
-	$dropoff   = ! empty( $row['dropoff_allowed'] );
-	$arrival   = isset( $row['arrival_time'] ) && $row['arrival_time'] !== '' && $row['arrival_time'] !== null
+	$row       = MRT_stop_time_row_with_defaults( $row );
+	$arrival   = isset( $row['arrival_time'] ) && $row['arrival_time'] !== ''
 		? (string) $row['arrival_time']
 		: '';
-	$departure = isset( $row['departure_time'] ) && $row['departure_time'] !== '' && $row['departure_time'] !== null
+	$departure = isset( $row['departure_time'] ) && $row['departure_time'] !== ''
 		? (string) $row['departure_time']
 		: '';
 	$time_raw  = $time_preference === 'arrival'
@@ -48,8 +46,8 @@ function MRT_journey_stop_wizard_time_meta(
 	$approximate = ! empty( $row['approximate_time'] );
 
 	$restrictions       = MRT_stop_time_restriction_footnote_flags(
-		$pickup,
-		$dropoff,
+		MRT_stop_time_on_request_pickup( $row ),
+		MRT_stop_time_on_request_dropoff( $row ),
 		$has_time,
 		$is_first_in_leg,
 		$is_last_in_leg

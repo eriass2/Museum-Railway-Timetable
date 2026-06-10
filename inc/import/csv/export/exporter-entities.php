@@ -220,15 +220,22 @@ function MRT_csv_export_stoptimes( array $maps ): array {
 		if ( $code === '' ) {
 			continue;
 		}
-		$rows[] = array(
-			'service_code'    => $code,
-			'sequence'        => (string) (int) ( $st['stop_sequence'] ?? 0 ),
-			'station_code'    => MRT_csv_id_to_station_code( (int) ( $st['station_post_id'] ?? 0 ), $maps ),
-			'arrival_time'    => (string) ( $st['arrival_time'] ?? '' ),
-			'departure_time'  => (string) ( $st['departure_time'] ?? '' ),
-			'pickup_allowed'    => (string) (int) ( $st['pickup_allowed'] ?? 1 ),
-			'dropoff_allowed'   => (string) (int) ( $st['dropoff_allowed'] ?? 1 ),
-			'approximate_time'  => (string) (int) ( $st['approximate_time'] ?? 0 ),
+		$rows[] = array_merge(
+			array(
+				'service_code'   => $code,
+				'sequence'       => (string) (int) ( $st['stop_sequence'] ?? 0 ),
+				'station_code'   => MRT_csv_id_to_station_code( (int) ( $st['station_post_id'] ?? 0 ), $maps ),
+				'arrival_time'   => (string) ( $st['arrival_time'] ?? '' ),
+				'departure_time' => (string) ( $st['departure_time'] ?? '' ),
+			),
+			array(
+				'ank_pickup_mode'        => (string) ( $st['ank_pickup_mode'] ?? 'none' ),
+				'ank_dropoff_mode'       => (string) ( $st['ank_dropoff_mode'] ?? 'none' ),
+				'avg_pickup_mode'        => (string) ( $st['avg_pickup_mode'] ?? 'scheduled' ),
+				'avg_dropoff_mode'       => (string) ( $st['avg_dropoff_mode'] ?? 'scheduled' ),
+				'approximate_time'       => (string) (int) ( $st['approximate_time'] ?? 0 ),
+				'in_service_timetable'   => (string) (int) ( $st['in_service_timetable'] ?? 1 ),
+			)
 		);
 	}
 	return $rows;

@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
+
 /**
  * @param array<string, mixed>      $resolved
  * @param array<string, mixed>      $package
@@ -184,6 +186,15 @@ function MRT_csv_validate_stoptime_refs( array $files, array $stations, array $s
 		$seen[ $key ] = true;
 		MRT_csv_validate_time_field( $row, 'arrival_time', $errors );
 		MRT_csv_validate_time_field( $row, 'departure_time', $errors );
+		foreach ( array( 'ank_pickup_mode', 'ank_dropoff_mode', 'avg_pickup_mode', 'avg_dropoff_mode' ) as $field ) {
+			$val = $row[ $field ] ?? '';
+			if ( $val === '' ) {
+				continue;
+			}
+			if ( ! MRT_stop_time_mode_is_valid( $val ) ) {
+				MRT_csv_add_row_error( $row, "Invalid {$field} (expected none, scheduled, or on_request).", $errors );
+			}
+		}
 	}
 }
 

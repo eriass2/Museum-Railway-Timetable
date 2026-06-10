@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** @return string */
 function MRT_db_schema_version(): string {
-	return '2';
+	return '3';
 }
 
 /**
@@ -32,9 +32,12 @@ function MRT_install_stoptimes_table(): void {
         stop_sequence INT NOT NULL,
         arrival_time CHAR(5) NULL,
         departure_time CHAR(5) NULL,
-        pickup_allowed TINYINT(1) DEFAULT 1,
-        dropoff_allowed TINYINT(1) DEFAULT 1,
+        ank_pickup_mode VARCHAR(16) NOT NULL DEFAULT 'none',
+        ank_dropoff_mode VARCHAR(16) NOT NULL DEFAULT 'none',
+        avg_pickup_mode VARCHAR(16) NOT NULL DEFAULT 'scheduled',
+        avg_dropoff_mode VARCHAR(16) NOT NULL DEFAULT 'scheduled',
         approximate_time TINYINT(1) DEFAULT 0,
+        in_service_timetable TINYINT(1) DEFAULT 1,
         PRIMARY KEY (id),
         KEY service_seq (service_post_id, stop_sequence),
         KEY station (station_post_id)

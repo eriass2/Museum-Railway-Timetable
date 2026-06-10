@@ -13,7 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 /** @return string */
 function MRT_csv_format_version(): string {
-	return '1';
+	return '2';
 }
 
 /**
@@ -60,8 +60,10 @@ function MRT_csv_required_columns(): array {
 			'service_code',
 			'sequence',
 			'station_code',
-			'pickup_allowed',
-			'dropoff_allowed',
+			'ank_pickup_mode',
+			'ank_dropoff_mode',
+			'avg_pickup_mode',
+			'avg_dropoff_mode',
 		),
 		'settings.csv'              => array( 'key', 'value' ),
 		'brand_tokens.csv'          => array( 'token', 'value' ),
@@ -116,9 +118,12 @@ function MRT_csv_export_column_headers(): array {
 			'station_code',
 			'arrival_time',
 			'departure_time',
-			'pickup_allowed',
-			'dropoff_allowed',
+			'ank_pickup_mode',
+			'ank_dropoff_mode',
+			'avg_pickup_mode',
+			'avg_dropoff_mode',
 			'approximate_time',
+			'in_service_timetable',
 		),
 		'settings.csv'            => array( 'key', 'value' ),
 		'brand_tokens.csv'        => array( 'token', 'value' ),

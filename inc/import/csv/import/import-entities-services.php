@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/service/highlight.php';
+require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
 
 /**
  * @param array<string, array<int, array<string, string>>> $files
@@ -146,19 +147,23 @@ function MRT_csv_import_stoptimes( array $files, array $maps ): void {
 		if ( $svc_id <= 0 || $st_id <= 0 ) {
 			continue;
 		}
+		$modes = MRT_stop_time_modes_from_input( $row );
+		if ( is_wp_error( $modes ) ) {
+			continue;
+		}
 		$wpdb->insert(
 			$table,
-			array(
-				'service_post_id' => $svc_id,
-				'station_post_id' => $st_id,
-				'stop_sequence'   => (int) ( $row['sequence'] ?? 0 ),
-				'arrival_time'    => MRT_csv_nullable_time( $row['arrival_time'] ?? '' ),
-				'departure_time'  => MRT_csv_nullable_time( $row['departure_time'] ?? '' ),
-				'pickup_allowed'   => (int) ( $row['pickup_allowed'] ?? 1 ),
-				'dropoff_allowed'  => (int) ( $row['dropoff_allowed'] ?? 1 ),
-				'approximate_time' => (int) ( $row['approximate_time'] ?? 0 ),
+			array_merge(
+				array(
+					'service_post_id' => $svc_id,
+					'station_post_id' => $st_id,
+					'stop_sequence'   => (int) ( $row['sequence'] ?? 0 ),
+					'arrival_time'    => MRT_csv_nullable_time( $row['arrival_time'] ?? '' ),
+					'departure_time'  => MRT_csv_nullable_time( $row['departure_time'] ?? '' ),
+				),
+				MRT_stop_time_mode_db_fields( $modes )
 			),
-			array( '%d', '%d', '%d', '%s', '%s', '%d', '%d', '%d' )
+			array( '%d', '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%s', '%d', '%d' )
 		);
 	}
 }

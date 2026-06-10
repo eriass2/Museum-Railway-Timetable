@@ -55,20 +55,26 @@ function MRT_build_stoptimes_station_rows( array $route_stations, array $existin
 
 	$stations = array();
 	foreach ( $station_posts as $index => $station ) {
-		$st         = $existing_stoptimes[ $station->ID ] ?? null;
+		$st = $existing_stoptimes[ $station->ID ] ?? null;
 		$stops_here = $st !== null;
 		$sequence   = $st ? $st['stop_sequence'] : ( $index + 1 );
+		$modes      = $st ? MRT_stop_time_editor_api_row( $st ) : array(
+			'pickup_mode'          => 'scheduled',
+			'dropoff_mode'         => 'scheduled',
+			'approximate_time'     => false,
+			'in_service_timetable' => true,
+		);
 
-		$stations[] = array(
-			'id'              => $station->ID,
-			'name'            => $station->post_title,
-			'sequence'        => $sequence,
-			'stops_here'      => $stops_here,
-			'arrival_time'    => $st ? $st['arrival_time'] : '',
-			'departure_time'  => $st ? $st['departure_time'] : '',
-			'pickup_allowed'   => $st ? ! empty( $st['pickup_allowed'] ) : true,
-			'dropoff_allowed'  => $st ? ! empty( $st['dropoff_allowed'] ) : true,
-			'approximate_time' => $st ? ! empty( $st['approximate_time'] ) : false,
+		$stations[] = array_merge(
+			array(
+				'id'             => $station->ID,
+				'name'           => $station->post_title,
+				'sequence'       => $sequence,
+				'stops_here'     => $stops_here,
+				'arrival_time'   => $st ? $st['arrival_time'] : '',
+				'departure_time' => $st ? $st['departure_time'] : '',
+			),
+			$modes
 		);
 	}
 	return $stations;
