@@ -84,8 +84,8 @@ function MRT_timetable_branch_trip_json(
 
 	return array(
 		'trip'             => (string) ( $info['service_number'] ?? '' ),
-		'fromTime'         => MRT_format_stop_time_display( MRT_get_from_row_display_stop_time( $from_stop ) ),
-		'toTime'           => MRT_format_stop_time_display( MRT_get_to_row_display_stop_time( $to_stop ) ),
+		'fromTime'         => MRT_format_stop_time_display( MRT_get_from_row_display_stop_time( $from_stop ), 'from' ),
+		'toTime'           => MRT_format_stop_time_display( MRT_get_to_row_display_stop_time( $to_stop ), 'to' ),
 		'midTime'          => $mid_time,
 		'isCancelled'      => ! empty( $info['is_cancelled'] ),
 		'deviationNotice'  => (string) ( $info['deviation_notice'] ?? '' ),

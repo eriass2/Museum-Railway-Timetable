@@ -1,20 +1,38 @@
 import { describe, expect, it } from 'vitest';
-import { stopTimeFootnotesForSegment } from '../src/shared/stopTimeFootnotes';
+import {
+  footnoteMarksForStop,
+  stopTimeFootnotesForSegment,
+  tripFootnotesFromStops,
+} from '../src/shared/stopTimeFootnotes';
 import type { WizardCfg } from '../src/wizard/utils/wizardCfgTypes';
 
-describe('stopTimeFootnotesForSegment', () => {
+describe('stopTimeFootnotes', () => {
   const cfg: WizardCfg = {
     onRequestPickupFootnote: 'Ge tecken till föraren vid påstigning.',
     onRequestDropoffFootnote: 'Säg till konduktören vid avstigning.',
   };
 
-  it('returns pickup footnote when on_request_pickup is set', () => {
-    const notes = stopTimeFootnotesForSegment([{ on_request_pickup: true }], cfg);
-    expect(notes).toEqual(['Ge tecken till föraren vid påstigning.']);
+  it('footnoteMarksForStop returns P and A for on_request_both', () => {
+    expect(footnoteMarksForStop({ on_request_both: true })).toEqual(['P', 'A']);
   });
 
-  it('returns both footnotes for on_request_both', () => {
-    const notes = stopTimeFootnotesForSegment([{ on_request_both: true }], cfg);
-    expect(notes).toHaveLength(2);
+  it('footnoteMarksForStop returns P only for pickup', () => {
+    expect(footnoteMarksForStop({ on_request_pickup: true })).toEqual(['P']);
+  });
+
+  it('tripFootnotesFromStops deduplicates marks across stops', () => {
+    const entries = tripFootnotesFromStops(
+      [{ on_request_pickup: true }, { on_request_dropoff: true }, { on_request_both: true }],
+      cfg,
+    );
+    expect(entries).toEqual([
+      { mark: 'P', text: cfg.onRequestPickupFootnote },
+      { mark: 'A', text: cfg.onRequestDropoffFootnote },
+    ]);
+  });
+
+  it('stopTimeFootnotesForSegment returns footnote texts only', () => {
+    const notes = stopTimeFootnotesForSegment([{ on_request_pickup: true }], cfg);
+    expect(notes).toEqual(['Ge tecken till föraren vid påstigning.']);
   });
 });

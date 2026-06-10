@@ -268,20 +268,23 @@
 }
 
 .mrt-ov-time {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  max-width: 100%;
   font-weight: 700;
+  line-height: 1;
   white-space: nowrap;
 }
 
-.mrt-ov-time__label {
+.mrt-ov-time__prefix {
+  flex: 0 0 auto;
   font-size: 0.5em;
   font-weight: inherit;
 }
 
-.mrt-ov-time__sep {
-  font-size: 0.5em;
-}
-
 .mrt-ov-time__value {
+  flex: 0 1 auto;
   font-size: 1em;
 }
 
@@ -302,6 +305,8 @@
   text-align: center;
   font-size: var(--mrt-ov-num-size);
   font-variant-numeric: tabular-nums;
+  line-height: 1;
+  white-space: nowrap;
   min-width: 0;
 }
 

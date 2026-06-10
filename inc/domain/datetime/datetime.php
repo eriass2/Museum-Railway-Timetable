@@ -110,3 +110,16 @@ function MRT_format_duration_minutes( $dep, $arr ) {
 	$diff = $a - $d;
 	return $diff >= 0 ? $diff : null;
 }
+
+/**
+ * Convert time format from HH:MM to HH.MM for public display.
+ *
+ * @param string|null $time Time in HH:MM format or null.
+ * @return string Time in HH.MM format or empty string.
+ */
+function MRT_format_time_display( ?string $time ): string {
+	if ( empty( $time ) ) {
+		return '';
+	}
+	return str_replace( ':', '.', $time );
+}

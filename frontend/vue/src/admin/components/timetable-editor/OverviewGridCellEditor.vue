@@ -163,7 +163,9 @@ async function save(): Promise<void> {
 
 <style scoped>
 .mrt-ov-cell-trigger {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   margin: 0;
   padding: 0.15rem 0.25rem;
@@ -173,6 +175,8 @@ async function save(): Promise<void> {
   color: inherit;
   font: inherit;
   font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
   text-align: center;
 }

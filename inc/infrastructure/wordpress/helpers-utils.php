@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * Utility helper functions for Museum Railway Timetable
+ * Generic WordPress infrastructure helpers.
  *
  * @package Museum_Railway_Timetable
  */
@@ -24,9 +24,9 @@ require_once MRT_PATH . 'inc/domain/train-type/icons.php';
  */
 function MRT_render_alert( string $message, string $type = 'error', string $extra_classes = '' ): string {
 	$allowed_types = array( 'error', 'info', 'warning' );
-	$type          = in_array( $type, $allowed_types ) ? $type : 'error';
+	$type          = in_array( $type, $allowed_types, true ) ? $type : 'error';
 	$classes       = 'mrt-alert mrt-alert-' . $type;
-	if ( ! empty( $extra_classes ) ) {
+	if ( $extra_classes !== '' ) {
 		$classes .= ' ' . esc_attr( $extra_classes );
 	}
 	$role = ( $type === 'info' ) ? 'status' : 'alert';
@@ -42,7 +42,7 @@ function MRT_render_alert( string $message, string $type = 'error', string $extr
  * @return WP_Post|null Post object or null if not found
  */
 function MRT_get_post_by_title( string $title, string $post_type ): ?WP_Post {
-	if ( empty( $title ) || empty( $post_type ) ) {
+	if ( $title === '' || $post_type === '' ) {
 		return null;
 	}
 	$query = new WP_Query(
@@ -81,82 +81,4 @@ function MRT_check_db_error( string $context = '' ): bool {
 		return true;
 	}
 	return false;
-}
-
-/**
- * Convert time format from HH:MM to HH.MM
- *
- * @param string|null $time Time in HH:MM format or null
- * @return string Time in HH.MM format or empty string
- */
-function MRT_format_time_display( ?string $time ): string {
-	if ( empty( $time ) ) {
-		return '';
-	}
-	return str_replace( ':', '.', $time );
-}
-
-/**
- * Format time display for a stop time
- * Determines the appropriate symbol (P, A, X, |) and formats the time
- *
- * @param array|null $stop_time Stop time data array with keys: arrival_time, departure_time, pickup_allowed, dropoff_allowed
- * @return string Formatted time display (e.g., "10.13", "P 10.13", "X", "|", "—")
- */
-/**
- * Prefix (P/A) and time fragment for a stopping row.
- *
- * @return array{0: string, 1: string} [symbol_prefix, time_str]
- */
-function MRT_stop_time_prefix_and_time_parts( array $stop_time ): array {
-	$arrival         = $stop_time['arrival_time'] ?? '';
-	$departure       = $stop_time['departure_time'] ?? '';
-	$pickup_allowed  = ! empty( $stop_time['pickup_allowed'] );
-	$dropoff_allowed = ! empty( $stop_time['dropoff_allowed'] );
-
-	$symbol_prefix = '';
-	if ( $pickup_allowed && ! $dropoff_allowed ) {
-		$symbol_prefix = 'P ';
-	} elseif ( ! $pickup_allowed && $dropoff_allowed ) {
-		$symbol_prefix = 'A ';
-	}
-
-	if ( $departure ) {
-		$time_str = $departure;
-	} elseif ( $arrival ) {
-		$time_str = $arrival;
-	} elseif ( $pickup_allowed && $dropoff_allowed ) {
-		return array( '', 'X' );
-	} else {
-		$time_str = '';
-	}
-
-	if ( $time_str !== '' && $time_str !== 'X' ) {
-		$time_str = MRT_format_time_display( $time_str );
-	}
-
-	return array( $symbol_prefix, $time_str );
-}
-
-function MRT_format_stop_time_display( ?array $stop_time ): string {
-	if ( ! $stop_time ) {
-		return '—';
-	}
-
-	$pickup_allowed  = ! empty( $stop_time['pickup_allowed'] );
-	$dropoff_allowed = ! empty( $stop_time['dropoff_allowed'] );
-	$stops_here      = $pickup_allowed || $dropoff_allowed;
-
-	if ( ! $stops_here ) {
-		return '|';
-	}
-
-	[$symbol_prefix, $time_str] = MRT_stop_time_prefix_and_time_parts( $stop_time );
-
-	$display = $symbol_prefix . $time_str;
-	if ( ! empty( $stop_time['approximate_time'] ) && $time_str !== '' && $time_str !== 'X' ) {
-		return 'Ca ' . $display;
-	}
-
-	return $display;
 }

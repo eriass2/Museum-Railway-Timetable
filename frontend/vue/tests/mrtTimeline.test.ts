@@ -38,4 +38,23 @@ describe('MrtTimeline', () => {
     expect(html).toContain('Selknä');
     expect(html).toContain('Dölj passerade stationer');
   });
+
+  it('renders footnote marks on stops that need them', async () => {
+    const app = createSSRApp({
+      render: () =>
+        h(MrtTimeline, {
+          stops: [
+            { station_title: 'Skolsta', on_request_pickup: true },
+            { station_title: 'Faringe', on_request_dropoff: true },
+          ],
+          formatTime: () => '10:00',
+          showStopsLabel: 'Visa',
+          hideStopsLabel: 'Dölj',
+        }),
+    });
+    const html = await renderToString(app);
+    expect(html).toContain('mrt-timeline__mark');
+    expect(html).toContain('>P<');
+    expect(html).toContain('>A<');
+  });
 });

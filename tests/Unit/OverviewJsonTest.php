@@ -48,6 +48,51 @@ final class OverviewJsonTest extends TestCase {
 		self::assertStringContainsString( '09.30', MRT_timetable_time_cell_text( $stop, false, true ) );
 	}
 
+	public function test_from_row_omits_pickup_only_symbol_at_trip_start(): void {
+		$stop = array(
+			'departure_time'  => '10:00',
+			'arrival_time'    => '',
+			'pickup_allowed'  => 1,
+			'dropoff_allowed' => 0,
+		);
+
+		self::assertSame(
+			'10.00',
+			MRT_timetable_time_cell_text( $stop, true, false, 'from' )
+		);
+	}
+
+	public function test_approximate_time_puts_ca_next_to_digits_after_restrictions(): void {
+		$cell = MRT_timetable_time_cell_json(
+			array(
+				'departure_time'   => '11:13',
+				'arrival_time'     => '',
+				'pickup_allowed'   => 1,
+				'dropoff_allowed'  => 0,
+				'approximate_time' => 1,
+			),
+			false,
+			false,
+			'departure'
+		);
+
+		self::assertSame( 'P Ca 11.13', $cell['text'] );
+	}
+
+	public function test_departure_row_keeps_pickup_only_symbol_mid_trip(): void {
+		$stop = array(
+			'departure_time'  => '10:00',
+			'arrival_time'    => '09:58',
+			'pickup_allowed'  => 1,
+			'dropoff_allowed' => 0,
+		);
+
+		self::assertSame(
+			'P 10.00',
+			MRT_timetable_time_cell_text( $stop, true, false, 'departure' )
+		);
+	}
+
 	public function test_time_cell_json_shows_ca_prefix_and_approximate_flag(): void {
 		$cell = MRT_timetable_time_cell_json(
 			array(

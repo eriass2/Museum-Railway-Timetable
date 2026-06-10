@@ -1,31 +1,48 @@
 import { describe, expect, it } from 'vitest';
-import { parseOverviewTimeText } from '../src/utils/overviewTimeDisplay';
+import { formatOverviewTimePrefix, parseOverviewTimeText } from '../src/utils/overviewTimeDisplay';
 
 describe('parseOverviewTimeText', () => {
-  it('splits Ca and P prefixes from a time', () => {
-    expect(parseOverviewTimeText('Ca P 11.13')).toEqual({
-      labels: ['Ca', 'P'],
+  it('parses P and Ca before a time with Ca closest to digits in display order', () => {
+    expect(parseOverviewTimeText('P Ca 11.13')).toEqual({
+      restrictions: ['P'],
+      approximate: true,
       value: '11.13',
     });
+    expect(formatOverviewTimePrefix(parseOverviewTimeText('P Ca 11.13'))).toBe('P Ca ');
   });
 
-  it('splits Ca and A prefixes from a time', () => {
-    expect(parseOverviewTimeText('Ca A 09.30')).toEqual({
-      labels: ['Ca', 'A'],
-      value: '09.30',
+  it('accepts legacy Ca-before-P strings and still orders P before Ca', () => {
+    expect(parseOverviewTimeText('Ca P 11.13')).toEqual({
+      restrictions: ['P'],
+      approximate: true,
+      value: '11.13',
     });
+    expect(formatOverviewTimePrefix(parseOverviewTimeText('Ca P 11.13'))).toBe('P Ca ');
   });
 
   it('keeps a plain time as value only', () => {
     expect(parseOverviewTimeText('10.00')).toEqual({
-      labels: [],
+      restrictions: [],
+      approximate: false,
       value: '10.00',
     });
   });
 
   it('keeps special symbols as value only', () => {
-    expect(parseOverviewTimeText('X')).toEqual({ labels: [], value: 'X' });
-    expect(parseOverviewTimeText('|')).toEqual({ labels: [], value: '|' });
-    expect(parseOverviewTimeText('—')).toEqual({ labels: [], value: '—' });
+    expect(parseOverviewTimeText('X')).toEqual({
+      restrictions: [],
+      approximate: false,
+      value: 'X',
+    });
+    expect(parseOverviewTimeText('|')).toEqual({
+      restrictions: [],
+      approximate: false,
+      value: '|',
+    });
+    expect(parseOverviewTimeText('—')).toEqual({
+      restrictions: [],
+      approximate: false,
+      value: '—',
+    });
   });
 });

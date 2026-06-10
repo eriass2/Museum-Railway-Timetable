@@ -36,6 +36,7 @@ $required_files = [
     'inc/bootstrap.php',
     'inc/bootstrap/domain.php',
     'inc/infrastructure/wordpress/helpers-utils.php',
+    'inc/domain/service/stop-time-display.php',
     'assets/train-type-icons.css',
     'languages/museum-railway-timetable.pot',
     'languages/museum-railway-timetable-sv_SE.po',

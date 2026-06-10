@@ -11,8 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/infrastructure/wordpress/helpers-utils.php';
-
 /**
  * Public display meta for one stop in journey detail (A3/J4).
  *

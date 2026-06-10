@@ -7,6 +7,7 @@ import type { JourneyConnection } from '../types';
 import { cfgStr } from '../utils/wizardLabels';
 import { useConnectionDetail } from '../composables/useConnectionDetail';
 import WizardDetailSegment from './WizardDetailSegment.vue';
+import { tripFootnotesFromStops } from '../../shared/stopTimeFootnotes';
 
 const props = defineProps<{
   connection: JourneyConnection;
@@ -36,6 +37,13 @@ const {
   dateYmd,
 });
 
+const tripFootnotes = computed(() =>
+  tripFootnotesFromStops(
+    segments.value.flatMap((seg) => seg.stops),
+    cfg.value,
+  ),
+);
+
 defineExpose({ ensureLoaded });
 </script>
 
@@ -55,6 +63,16 @@ defineExpose({ ensureLoaded });
           :show-transfer="isMulti && si < segments.length - 1"
           :transfer-text="transferLabelAt(si)"
         />
+        <dl v-if="tripFootnotes.length" class="mrt-detail-footnotes">
+          <div
+            v-for="entry in tripFootnotes"
+            :key="entry.mark"
+            class="mrt-detail-footnotes__row"
+          >
+            <dt class="mrt-detail-footnotes__mark">{{ entry.mark }}</dt>
+            <dd class="mrt-detail-footnotes__text">{{ entry.text }}</dd>
+          </div>
+        </dl>
       </template>
     </MrtAsyncState>
   </MrtDetailPanel>

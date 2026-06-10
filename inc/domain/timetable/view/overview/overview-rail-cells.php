@@ -24,7 +24,7 @@ function MRT_timetable_row_times_json(
 	foreach ( $services as $idx => $service_data ) {
 		unset( $idx, $info );
 		$stop    = $service_data['stop_times'][ $station_id ] ?? null;
-		$cells[] = MRT_timetable_time_cell_json( $stop, $use_from_display, $use_to_display );
+		$cells[] = MRT_timetable_time_cell_json( $stop, $use_from_display, $use_to_display, $kind );
 	}
 
 	return array(
@@ -35,9 +35,14 @@ function MRT_timetable_row_times_json(
 	);
 }
 
-function MRT_timetable_time_cell_json( $stop, bool $use_from_display = false, bool $use_to_display = false ): array {
+function MRT_timetable_time_cell_json(
+	$stop,
+	bool $use_from_display = false,
+	bool $use_to_display = false,
+	string $row_kind = ''
+): array {
 	$cell = array(
-		'text'            => MRT_timetable_time_cell_text( $stop, $use_from_display, $use_to_display ),
+		'text'            => MRT_timetable_time_cell_text( $stop, $use_from_display, $use_to_display, $row_kind ),
 		'approximateTime' => false,
 	);
 	if ( ! is_array( $stop ) ) {
@@ -63,19 +68,24 @@ function MRT_timetable_time_cell_json( $stop, bool $use_from_display = false, bo
 	return $cell;
 }
 
-function MRT_timetable_time_cell_text( $stop, bool $use_from_display, bool $use_to_display ): string {
+function MRT_timetable_time_cell_text(
+	$stop,
+	bool $use_from_display,
+	bool $use_to_display,
+	string $row_kind = ''
+): string {
 	if ( ! is_array( $stop ) ) {
 		return '—';
 	}
 	if ( $use_from_display ) {
 		$display = MRT_get_from_row_display_stop_time( $stop );
-		return MRT_format_stop_time_display( $display ?? $stop );
+		return MRT_format_stop_time_display( $display ?? $stop, $row_kind );
 	}
 	if ( $use_to_display ) {
 		$display = MRT_get_to_row_display_stop_time( $stop );
-		return MRT_format_stop_time_display( $display ?? $stop );
+		return MRT_format_stop_time_display( $display ?? $stop, $row_kind );
 	}
-	return MRT_format_stop_time_display( $stop );
+	return MRT_format_stop_time_display( $stop, $row_kind );
 }
 
 function MRT_timetable_train_change_row_json(

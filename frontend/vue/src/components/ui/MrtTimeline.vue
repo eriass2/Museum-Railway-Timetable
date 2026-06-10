@@ -1,11 +1,15 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import MrtExpandTrigger from './MrtExpandTrigger.vue';
+import { footnoteMarksForStop, type FootnoteMark } from '../../shared/stopTimeFootnotes';
 
 export type MrtTimelineStop = {
   station_title?: string;
   departure_time?: string;
   arrival_time?: string;
+  on_request_pickup?: boolean;
+  on_request_dropoff?: boolean;
+  on_request_both?: boolean;
 };
 
 type TimelineItem =
@@ -66,6 +70,10 @@ const timelineItems = computed((): TimelineItem[] => {
 
   return items;
 });
+
+function marksForStop(stop: MrtTimelineStop): FootnoteMark[] {
+  return footnoteMarksForStop(stop);
+}
 </script>
 
 <template>
@@ -78,7 +86,14 @@ const timelineItems = computed((): TimelineItem[] => {
       >
         <time class="mrt-timeline__time">{{ formatTime(item.stop) }}</time>
         <span class="mrt-timeline__node" aria-hidden="true" />
-        <span class="mrt-timeline__station">{{ item.stop.station_title }}</span>
+        <span class="mrt-timeline__station">
+          {{ item.stop.station_title }}
+          <sup
+            v-for="mark in marksForStop(item.stop)"
+            :key="mark"
+            class="mrt-timeline__mark"
+          >{{ mark }}</sup>
+        </span>
       </div>
       <div v-else class="mrt-timeline__toggle">
         <MrtExpandTrigger
