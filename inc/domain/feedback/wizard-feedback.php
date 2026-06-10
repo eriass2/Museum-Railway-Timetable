@@ -163,7 +163,7 @@ function MRT_feedback_format_item( int $post_id ): array {
 	return array(
 		'id'          => $post_id,
 		'title'       => $post ? (string) $post->post_title : '',
-		'message'     => $post ? (string) ( $post->post_content ?? '' ) : '',
+		'message'     => $post ? (string) $post->post_content : '',
 		'type'        => (string) get_post_meta( $post_id, MRT_FEEDBACK_META_TYPE, true ),
 		'email'       => (string) get_post_meta( $post_id, MRT_FEEDBACK_META_EMAIL, true ),
 		'page_url'    => (string) get_post_meta( $post_id, MRT_FEEDBACK_META_PAGE_URL, true ),
