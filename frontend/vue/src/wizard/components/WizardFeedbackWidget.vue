@@ -7,7 +7,7 @@ import { cfgStr } from '../utils/wizardLabels';
 import type { WizardCfgStringKey } from '../utils/wizardCfgTypes';
 
 const props = defineProps<{ config: WizardVueConfig }>();
-const wizard = inject(wizardKey);
+const wizard = inject(wizardKey, null);
 
 const open = ref(false);
 const submitting = ref(false);
