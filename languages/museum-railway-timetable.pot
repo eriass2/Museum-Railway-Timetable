@@ -1892,11 +1892,15 @@ msgstr ""
 msgid "Delsträcka %d"
 msgstr ""
 
-#: inc/assets/frontend.php:121
-msgid "Priset bygger på lägsta giltiga zontal för den valda resan (max tre zoner enligt taxa 2026). Pensionär gäller från 65 år."
+#: inc/assets/frontend.php:132
+msgid "Biljettpriset beror på hur många zoner din resa går igenom. Som mest kan en resa gå igenom tre zoner."
 msgstr ""
 
-#: inc/assets/frontend.php:127
+#: inc/assets/frontend.php:133
+msgid "Pensionär gäller från 65 år."
+msgstr ""
+
+#: inc/assets/frontend.php:139
 msgid "Heldagsbiljett"
 msgstr ""
 

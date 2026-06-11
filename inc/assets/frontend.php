@@ -129,7 +129,8 @@ function MRT_journey_wizard_l10n_price(): array {
 	return array(
 		'priceTableTypeColumn' => __( 'Biljettyp', 'museum-railway-timetable' ),
 		'priceTitle'           => __( 'Priser', 'museum-railway-timetable' ),
-		'priceNote'            => __( 'Priset bygger på lägsta giltiga zontal för den valda resan (max tre zoner enligt taxa 2026). Pensionär gäller från 65 år.', 'museum-railway-timetable' ),
+		'priceNote'            => __( 'Biljettpriset beror på hur många zoner din resa går igenom. Som mest kan en resa gå igenom tre zoner.', 'museum-railway-timetable' ),
+		'priceNoteSenior'      => __( 'Pensionär gäller från 65 år.', 'museum-railway-timetable' ),
 		'priceDash'            => '—',
 		'priceMatrix'          => MRT_price_matrix_for_zone( MRT_get_price_matrix(), MRT_price_zone_cap() ),
 		'priceMatrixByZone'    => MRT_get_price_matrix(),

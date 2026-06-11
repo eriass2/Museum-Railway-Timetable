@@ -2053,15 +2053,19 @@ msgstr "Visa hållplatser och tider för %s"
 msgid "Delsträcka %d"
 msgstr "Delsträcka %d"
 
-#: inc/assets/frontend.php:121
+#: inc/assets/frontend.php:132
 msgid ""
-"Priset bygger på lägsta giltiga zontal för den valda resan (max tre zoner "
-"enligt taxa 2026). Pensionär gäller från 65 år."
+"Biljettpriset beror på hur många zoner din resa går igenom. Som mest kan en "
+"resa gå igenom tre zoner."
 msgstr ""
-"Priset bygger på lägsta giltiga zontal för den valda resan (max tre zoner "
-"enligt taxa 2026). Pensionär gäller från 65 år."
+"Biljettpriset beror på hur många zoner din resa går igenom. Som mest kan en "
+"resa gå igenom tre zoner."
 
-#: inc/assets/frontend.php:127
+#: inc/assets/frontend.php:133
+msgid "Pensionär gäller från 65 år."
+msgstr "Pensionär gäller från 65 år."
+
+#: inc/assets/frontend.php:139
 msgid "Heldagsbiljett"
 msgstr "Heldagsbiljett"
 

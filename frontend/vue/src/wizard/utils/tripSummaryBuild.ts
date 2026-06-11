@@ -92,6 +92,19 @@ function buildDayPriceRows(
   })).filter((row) => row.value && row.value !== '—');
 }
 
+function buildPriceSectionNote(
+  priceData: TripPriceData,
+  priceLabels: PriceTableLabels,
+  priceCfg: PriceCfg,
+): string | undefined {
+  const main = priceData.isAfternoonReturn ? priceCfg.priceAfternoonNote : priceLabels.note;
+  const senior = priceLabels.seniorNote?.trim() ?? '';
+  if (main && senior) {
+    return `${main}\n${senior}`;
+  }
+  return main || senior || undefined;
+}
+
 /** Plain-text/PDF input from wizard store + loaded prices. */
 export function buildTripSummaryInput(params: BuildTripSummaryInputParams): TripSummaryTextInput {
   const { store, cfg, dateText, tripTypeLabel, priceData, dayPrices, priceLabels } = params;
@@ -119,7 +132,7 @@ export function buildTripSummaryInput(params: BuildTripSummaryInputParams): Trip
           heading: cfgStr(cfg, 'summaryPricesHeading', 'Priser'),
           ticketTypeLabel,
           rows: buildPriceRows(priceData, priceLabels, priceCfg),
-          note: priceData.isAfternoonReturn ? priceCfg.priceAfternoonNote : priceLabels.note,
+          note: buildPriceSectionNote(priceData, priceLabels, priceCfg),
           dayTicketHeading: dayPrices
             ? priceCfg.priceDayTitle || priceLabels.tickets.day || 'Heldagsbiljett'
             : undefined,

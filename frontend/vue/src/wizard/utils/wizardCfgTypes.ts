@@ -81,6 +81,7 @@ export type WizardCfgStringKey =
   | 'priceTableTypeColumn'
   | 'priceTitle'
   | 'priceNote'
+  | 'priceNoteSenior'
   | 'priceDash'
   | 'priceZoneLabel'
   | 'needsJs'

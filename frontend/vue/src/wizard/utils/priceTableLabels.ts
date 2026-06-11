@@ -13,6 +13,7 @@ export function priceTableLabelsFromCfg(cfg: WizardCfg, zones: number, showZoneC
     titleSuffix,
     typeColumnSr: cfgStr(cfg, 'priceTableTypeColumn', ''),
     note: cfgStr(cfg, 'priceNote', ''),
+    seniorNote: cfgStr(cfg, 'priceNoteSenior', ''),
     dash: cfgStr(cfg, 'priceDash', '—'),
     tickets: cfgRecord(cfg, 'priceTickets'),
     categories: cfgRecord(cfg, 'priceCategories'),

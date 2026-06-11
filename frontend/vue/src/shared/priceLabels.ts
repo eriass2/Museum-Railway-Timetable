@@ -4,6 +4,7 @@ export type PriceTableLabels = {
   titleSuffix: string;
   typeColumnSr: string;
   note: string;
+  seniorNote?: string;
   dash: string;
   tickets: Record<string, string>;
   categories: Record<string, string>;

@@ -75,6 +75,8 @@ const priceNote = computed(() => {
   return labels.value.note;
 });
 
+const priceSeniorNote = computed(() => labels.value.seniorNote ?? '');
+
 function priceForCategory(catKey: string, ticketType: string): string {
   if (!priceData.value) {
     return '';
@@ -187,6 +189,9 @@ function dayPriceForCategory(catKey: string): string {
 
     <p v-if="priceNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
       {{ priceNote }}
+    </p>
+    <p v-if="priceSeniorNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
+      {{ priceSeniorNote }}
     </p>
   </div>
 </template>
