@@ -31,6 +31,40 @@ test.describe('Journey wizard steps', () => {
     await expect(page.locator('[data-wizard-step="date"]')).toBeVisible();
   });
 
+  test('progress states share one pill style hierarchy', async ({ page }) => {
+    await page.goto('/wizard?debug=date');
+    const styles = await page.locator('.mrt-step-progress__item').evaluateAll((els) =>
+      els.map((el) => {
+        const style = window.getComputedStyle(el);
+        return {
+          text: el.textContent?.trim() || '',
+          active: el.classList.contains('is-active'),
+          done: el.classList.contains('is-done'),
+          background: style.backgroundColor,
+          color: style.color,
+          borderWidth: style.borderTopWidth,
+          minHeight: style.minHeight,
+          paddingBlock: `${style.paddingTop} ${style.paddingBottom}`,
+          paddingInline: `${style.paddingLeft} ${style.paddingRight}`,
+        };
+      }),
+    );
+    const active = styles.find((style) => style.active);
+    const done = styles.find((style) => style.done);
+    const future = styles.find((style) => !style.active && !style.done);
+
+    expect(active?.text).toMatch(/välj datum/i);
+    expect(done?.text).toMatch(/sök resa/i);
+    expect(future?.text).toMatch(/välj utresa/i);
+    expect(new Set(styles.map((style) => style.borderWidth))).toHaveLength(1);
+    expect(new Set(styles.map((style) => style.minHeight))).toHaveLength(1);
+    expect(new Set(styles.map((style) => style.paddingBlock))).toHaveLength(1);
+    expect(new Set(styles.map((style) => style.paddingInline))).toHaveLength(1);
+    expect(done?.color).toBe(active?.color);
+    expect(done?.background).not.toBe('rgb(22, 58, 82)');
+    expect(future?.background).not.toBe(active?.background);
+  });
+
   test('return step shows selected outbound banner', async ({ page }) => {
     await page.goto('/wizard?debug=return');
     await expect(page.locator('.mrt-selected-trip[data-wizard-return-summary]')).toBeVisible();

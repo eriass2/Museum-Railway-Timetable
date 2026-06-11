@@ -62,9 +62,16 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 0.25rem 0.55rem;
+    min-height: 2rem;
+    padding: 0.3rem 0.65rem;
+    border: 2px solid transparent;
+    background: var(--mrt-color-green-800);
+    color: var(--mrt-color-on-dark, #fff);
+    box-sizing: border-box;
     font-size: 0.8125rem;
     font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
 }
 
 button.mrt-step-progress__item {
@@ -76,8 +83,8 @@ button.mrt-step-progress__item {
 }
 
 button.mrt-step-progress__item.is-done:hover {
-    color: var(--mrt-color-on-dark, #fff);
-    background: color-mix(in srgb, var(--mrt-wizard-yellow, var(--mrt-color-accent-600)) 22%, var(--mrt-color-green-800));
+    background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
+    color: var(--mrt-color-on-accent, #111);
 }
 
 button.mrt-step-progress__item.is-done:focus-visible {
@@ -86,20 +93,20 @@ button.mrt-step-progress__item.is-done:focus-visible {
 }
 
 .mrt-step-progress__item.is-active {
-    color: var(--mrt-wizard-text, #151515);
     background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
-    border: 2px solid var(--mrt-color-accent-700, #c9a01a);
+    color: var(--mrt-color-on-accent, #111);
+    border-color: var(--mrt-color-accent-700, #c9a01a);
 }
 
 .mrt-step-progress__item.is-done {
-    color: var(--mrt-color-on-dark-link, #e8f0ea);
-    background: var(--mrt-color-green-800);
-    border: 2px solid var(--mrt-color-accent-500);
+    background: color-mix(in srgb, var(--mrt-wizard-yellow, var(--mrt-color-accent-600)) 72%, var(--mrt-color-green-800));
+    color: var(--mrt-color-on-accent, #111);
+    border-color: var(--mrt-color-accent-500);
 }
 
 .mrt-step-progress__item:not(.is-active):not(.is-done) {
-    color: var(--mrt-color-on-dark, #fff);
     background: var(--mrt-color-green-800);
+    color: var(--mrt-color-on-dark, #fff);
     border: 2px solid var(--mrt-color-border-on-dark, rgba(255, 255, 255, 0.35));
 }
 
