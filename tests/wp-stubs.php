@@ -172,6 +172,19 @@ if ( ! function_exists( 'date_i18n' ) ) {
 	}
 }
 
+if ( ! function_exists( 'wp_date' ) ) {
+	/**
+	 * @param string         $format
+	 * @param int|string|bool $timestamp
+	 * @param DateTimeZone|null $timezone
+	 */
+	function wp_date( $format, $timestamp = null, $timezone = null ) {
+		unset( $timezone );
+		$ts = $timestamp === null ? time() : (int) $timestamp;
+		return date( $format, $ts );
+	}
+}
+
 if ( ! function_exists( 'get_the_title' ) ) {
 	/**
 	 * @param int|WP_Post $post

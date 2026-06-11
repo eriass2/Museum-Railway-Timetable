@@ -10,6 +10,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 require_once ABSPATH . 'inc/import/lennakatten/reference-data.php';
+require_once ABSPATH . 'inc/import/lennakatten/traffic-demo-data.php';
 require_once dirname( __DIR__, 2 ) . '/scripts/csv-cli-stubs.php';
 require_once ABSPATH . 'inc/import/csv/loader.php';
 
@@ -116,6 +117,19 @@ final class LennakattenReferenceConfigTest extends TestCase {
 		$expected = $ref['tokens'];
 		ksort( $expected );
 		self::assertSame( $expected, $tokens );
+	}
+
+	public function test_reference_traffic_demo_has_notices_and_deviations(): void {
+		$notices = MRT_lennakatten_reference_public_notices();
+		self::assertCount( 2, $notices );
+		self::assertSame( 'demo-glassrea', $notices[1]['id'] );
+		self::assertSame( '2026-06-06', $notices[1]['active_from'] );
+
+		$deviations = MRT_lennakatten_reference_service_deviations();
+		self::assertArrayHasKey( 'green-71-out', $deviations );
+		self::assertSame( 'Inställd', $deviations['green-71-out']['2026-06-06'] );
+		self::assertSame( 'Inställd', $deviations['green-97-out']['2026-06-06'] );
+		self::assertSame( 'Ersättningsbuss', $deviations['green-75-out']['2026-06-06'] );
 	}
 
 	public function test_production_defaults_stay_neutral(): void {

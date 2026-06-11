@@ -11,7 +11,7 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 **Beslut:** 2026-06-11 — [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) §5–7  
 **Modell:** **Två källor → en feed** — (A) auto från tur-avvikelser + (B) manuella trafikmeddelanden. **Webb only**, ingen wizard.
 
-- [ ] **Fas 1:** Domän/API — disruption feed, 90 dagars horisont, gruppering tågnummer
+- [x] **Fas 1:** Domän/API — disruption feed, 90 dagars horisont, gruppering tågnummer
 - [ ] **Fas 2:** Publik Vue — UL-lik feed (ersätter flat `MrtTrafficNoticesView`)
 - [ ] **Fas 3:** Shortcode `horizon_days`, docs, ev. dedikerad sida
 - [ ] **Fas 4:** Admin — förhandsvisning av samma feed

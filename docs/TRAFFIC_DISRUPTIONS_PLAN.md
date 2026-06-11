@@ -197,7 +197,7 @@ Exempel (målbild):
 | Fas | Innehåll | Status |
 |-----|----------|--------|
 | **0** | Plan + beslut §5–7 | ☑ 2026-06-11 |
-| **1** | Domän/API: **disruption feed** — källor A+B, 90-dagars fönster, gruppering tågnummer, sortering Pågår/Kommande | Ej påbörjad |
+| **1** | Domän/API: **disruption feed** — källor A+B, 90-dagars fönster, gruppering tågnummer, sortering Pågår/Kommande | ☑ 2026-06-11 |
 | **2** | Publik Vue: UL-lik feed — ersätter/utökar `MrtTrafficNoticesView` | Efter fas 1 |
 | **3** | Shortcode `horizon_days`, docs, ev. dedikerad sida | Efter fas 2 |
 | **4** | Admin: förhandsvisning av samma feed + länkar till redigering | Efter fas 2 |
@@ -223,5 +223,5 @@ Exempel (målbild):
 
 - [x] Spika riktning: webb only, två källor (§5) — 2026-06-11
 - [ ] Jesper: snabb OK på målbild §5.2 och 90 dagar
-- [ ] Fas 1 — disruption feed (API/domän)
+- [x] Fas 1 — disruption feed (API/domän) — `disruption-feed.php`, `GET /traffic-disruptions/feed`, Lennakatten demo-data
 - [ ] Fas 2 — UL-lik Vue-feed på webben
