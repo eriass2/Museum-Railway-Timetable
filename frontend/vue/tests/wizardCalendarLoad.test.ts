@@ -118,10 +118,12 @@ describe('wizardCalendarLoad', () => {
     }));
 
     await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
+    await vi.waitFor(() => expect(run.mock.calls.length).toBeGreaterThanOrEqual(4));
     const callsAfterFirst = run.mock.calls.length;
     await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
+    await vi.waitFor(() => expect(run.mock.calls.length).toBe(callsAfterFirst + 1));
 
-    expect(run.mock.calls.length).toBe(callsAfterFirst);
+    expect(run.mock.calls.length).toBe(callsAfterFirst + 1);
     expect(daysMap.value['2026-06-04']).toEqual({ status: 'ok', types: ['green'] });
   });
 
