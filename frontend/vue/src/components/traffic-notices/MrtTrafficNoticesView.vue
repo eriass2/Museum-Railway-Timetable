@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { fetchTrafficNotices } from '@/api/trafficNotices';
-import type { TrafficNoticesPayload } from '@/api/trafficNotices';
+import { fetchDisruptionFeed } from '@/api/disruptionFeed';
+import type { DisruptionFeedItem, DisruptionFeedPayload } from '@/api/disruptionFeed';
 import MrtAlert from '@/components/ui/MrtAlert.vue';
 import type { MrtRestConfig } from '@/config/types';
 import type { TrafficNoticesLabels } from '@/types/trafficNotices';
@@ -9,9 +9,7 @@ import type { TrafficNoticesLabels } from '@/types/trafficNotices';
 const props = defineProps<{
   config: MrtRestConfig & {
     referenceDate?: string;
-    days?: number;
-    showGeneral?: boolean;
-    showDeviations?: boolean;
+    horizonDays?: number;
     title?: string;
     labels?: TrafficNoticesLabels;
   };
@@ -19,40 +17,40 @@ const props = defineProps<{
 
 const loading = ref(true);
 const error = ref('');
-const payload = ref<TrafficNoticesPayload | null>(null);
+const payload = ref<DisruptionFeedPayload | null>(null);
 
 const labels = computed(() => ({
   empty: props.config.labels?.empty ?? 'Inga meddelanden',
   loading: props.config.labels?.loading ?? 'Laddar meddelanden…',
   error: props.config.labels?.error ?? 'Kunde inte ladda meddelanden.',
-  deviationPrefix:
-    props.config.labels?.deviationPrefix ?? '%1$s — Tåg %2$s, %3$s',
+  sectionOngoing: props.config.labels?.sectionOngoing ?? 'Pågår nu',
+  sectionUpcoming: props.config.labels?.sectionUpcoming ?? 'Kommande',
 }));
 
-const showDayHeadings = computed(
-  () => (payload.value?.by_date.length ?? 0) > 1 || (props.config.days ?? 1) > 1,
-);
+const horizonDays = computed(() => props.config.horizonDays ?? 90);
 
-function formatDeviationLine(
-  notice: string,
-  serviceNumber: string,
-  routeLabel: string,
-): string {
-  const template = labels.value.deviationPrefix;
-  return template
-    .replace('%1$s', notice)
-    .replace('%2$s', serviceNumber)
-    .replace('%3$s', routeLabel);
+function itemClasses(item: DisruptionFeedItem): Record<string, boolean> {
+  return {
+    'mrt-traffic-notices__feed-item--cancelled': item.kind === 'cancelled',
+    'mrt-traffic-notices__feed-item--deviation': item.kind === 'deviation',
+    'mrt-traffic-notices__feed-item--info': item.kind === 'info',
+  };
+}
+
+function showBody(item: DisruptionFeedItem): boolean {
+  const body = item.body.trim();
+  if (body === '') {
+    return false;
+  }
+  return body !== item.headline.trim();
 }
 
 async function load(): Promise<void> {
   loading.value = true;
   error.value = '';
-  const res = await fetchTrafficNotices(props.config, {
+  const res = await fetchDisruptionFeed(props.config, {
     date: props.config.referenceDate,
-    days: props.config.days ?? 1,
-    showGeneral: props.config.showGeneral !== false,
-    showDeviations: props.config.showDeviations !== false,
+    horizonDays: horizonDays.value,
   });
   loading.value = false;
   if (!res.success || !res.data) {
@@ -82,36 +80,53 @@ onMounted(() => {
     <p v-else-if="payload?.is_empty" class="mrt-traffic-notices__empty">
       {{ labels.empty }}
     </p>
-    <ul v-else-if="payload" class="mrt-traffic-notices__list">
-      <li
-        v-for="item in payload.general"
-        :key="item.id"
-        class="mrt-traffic-notices__item mrt-traffic-notices__item--general"
+    <div v-else-if="payload" class="mrt-traffic-notices__feed">
+      <section
+        v-if="payload.ongoing.length"
+        class="mrt-traffic-notices__section"
+        :aria-label="labels.sectionOngoing"
       >
-        {{ item.text }}
-      </li>
-      <template v-for="group in payload.by_date" :key="group.date">
-        <li
-          v-if="showDayHeadings"
-          class="mrt-traffic-notices__day-heading"
-        >
-          <span>{{ group.date_label }}</span>
-        </li>
-        <li
-          v-for="deviation in group.deviations"
-          :key="`${group.date}-${deviation.service_id}`"
-          class="mrt-traffic-notices__item mrt-traffic-notices__item--deviation"
-          :class="{ 'mrt-traffic-notices__item--cancelled': deviation.is_cancelled }"
-        >
-          {{
-            formatDeviationLine(
-              deviation.notice,
-              deviation.service_number,
-              deviation.route_label,
-            )
-          }}
-        </li>
-      </template>
-    </ul>
+        <h3 class="mrt-traffic-notices__section-title">
+          {{ labels.sectionOngoing }}
+        </h3>
+        <ul class="mrt-traffic-notices__list">
+          <li
+            v-for="item in payload.ongoing"
+            :key="item.id"
+            class="mrt-traffic-notices__feed-item"
+            :class="itemClasses(item)"
+          >
+            <p class="mrt-traffic-notices__date">{{ item.date_label }}</p>
+            <p class="mrt-traffic-notices__headline">{{ item.headline }}</p>
+            <p v-if="showBody(item)" class="mrt-traffic-notices__body">
+              {{ item.body }}
+            </p>
+          </li>
+        </ul>
+      </section>
+      <section
+        v-if="payload.upcoming.length"
+        class="mrt-traffic-notices__section"
+        :aria-label="labels.sectionUpcoming"
+      >
+        <h3 class="mrt-traffic-notices__section-title">
+          {{ labels.sectionUpcoming }}
+        </h3>
+        <ul class="mrt-traffic-notices__list">
+          <li
+            v-for="item in payload.upcoming"
+            :key="item.id"
+            class="mrt-traffic-notices__feed-item"
+            :class="itemClasses(item)"
+          >
+            <p class="mrt-traffic-notices__date">{{ item.date_label }}</p>
+            <p class="mrt-traffic-notices__headline">{{ item.headline }}</p>
+            <p v-if="showBody(item)" class="mrt-traffic-notices__body">
+              {{ item.body }}
+            </p>
+          </li>
+        </ul>
+      </section>
+    </div>
   </div>
 </template>

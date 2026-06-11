@@ -10,8 +10,8 @@ import { buildAdminRestResponse } from './fixtures/admin-rest.mjs';
 import { e2eAdminStrings } from './fixtures/admin-strings.mjs';
 import { e2eAdminHelp } from './fixtures/admin-help.mjs';
 import {
-  buildEmptyTrafficNoticesPayload,
-  buildSampleTrafficNoticesPayload,
+  buildEmptyDisruptionFeedPayload,
+  buildSampleDisruptionFeedPayload,
 } from './fixtures/traffic-notices-payload.mjs';
 import { MRT_REST_JSON_PREFIX } from '../shared/restNamespace.mjs';
 
@@ -369,14 +369,14 @@ function buildTrafficNoticesConfig(options = {}) {
     app: 'traffic_notices',
     ...restClientConfig(),
     referenceDate: options.referenceDate ?? '2026-06-06',
-    days: options.days ?? 1,
-    showGeneral: options.showGeneral !== false,
-    showDeviations: options.showDeviations !== false,
+    horizonDays: options.horizonDays ?? 90,
     title: options.title ?? '',
     labels: {
       empty: 'Inga meddelanden',
       loading: 'Laddar meddelanden…',
       error: 'Kunde inte ladda meddelanden.',
+      sectionOngoing: 'Pågår nu',
+      sectionUpcoming: 'Kommande',
     },
   };
 }
@@ -454,11 +454,20 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
     return;
   }
 
+  if (pathOnly.endsWith('/traffic-disruptions/feed')) {
+    const empty = query.get('date') === 'e2e-empty';
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(
+      JSON.stringify(empty ? buildEmptyDisruptionFeedPayload() : buildSampleDisruptionFeedPayload()),
+    );
+    return;
+  }
+
   if (pathOnly.endsWith('/traffic-notices')) {
     const empty = query.get('date') === 'e2e-empty';
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(
-      JSON.stringify(empty ? buildEmptyTrafficNoticesPayload() : buildSampleTrafficNoticesPayload()),
+      JSON.stringify(empty ? buildEmptyDisruptionFeedPayload() : buildSampleDisruptionFeedPayload()),
     );
     return;
   }

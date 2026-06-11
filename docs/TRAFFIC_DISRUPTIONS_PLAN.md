@@ -1,6 +1,6 @@
 # Trafikstörningar v2 — UL-referens och Jesper J11
 
-**Status:** beslutad riktning (2026-06-11) — webb only, två källor; implementation ej påbörjad  
+**Status:** fas 1–2 implementerade (2026-06-11) — webb only, två källor  
 **Källa:** [2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) J11, [2026-06-09-jesper-diskussioner.md](feedback/2026-06-09-jesper-diskussioner.md) D16  
 **Föregångare (v1, klar):** [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) — shortcode + generella meddelanden + dagens tur-avvikelser
 
@@ -198,8 +198,8 @@ Exempel (målbild):
 |-----|----------|--------|
 | **0** | Plan + beslut §5–7 | ☑ 2026-06-11 |
 | **1** | Domän/API: **disruption feed** — källor A+B, 90-dagars fönster, gruppering tågnummer, sortering Pågår/Kommande | ☑ 2026-06-11 |
-| **2** | Publik Vue: UL-lik feed — ersätter/utökar `MrtTrafficNoticesView` | Efter fas 1 |
-| **3** | Shortcode `horizon_days`, docs, ev. dedikerad sida | Efter fas 2 |
+| **2** | Publik Vue: UL-lik feed — ersätter/utökar `MrtTrafficNoticesView` | ☑ 2026-06-11 |
+| **3** | Shortcode `horizon_days`, docs, ev. dedikerad sida | Pågår — `horizon_days` i shortcode, docs kvar |
 | **4** | Admin: förhandsvisning av samma feed + länkar till redigering | Efter fas 2 |
 
 **Medvetet utanför v2:** reseplanerare, GPS/realtime, push, ny CPT, Gutenberg-block, Trafikverket-feed.
@@ -224,4 +224,5 @@ Exempel (målbild):
 - [x] Spika riktning: webb only, två källor (§5) — 2026-06-11
 - [ ] Jesper: snabb OK på målbild §5.2 och 90 dagar
 - [x] Fas 1 — disruption feed (API/domän) — `disruption-feed.php`, `GET /traffic-disruptions/feed`, Lennakatten demo-data
-- [ ] Fas 2 — UL-lik Vue-feed på webben
+- [x] Fas 2 — UL-lik Vue-feed på webben (`MrtTrafficNoticesView` → disruption feed)
+- [ ] Fas 3 — shortcode/docs (`horizon_days` attribut finns; full docs + ev. sida)

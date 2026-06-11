@@ -13,13 +13,13 @@ require_once ABSPATH . 'inc/public/traffic-notices/shortcode.php';
 
 final class TrafficNoticesShortcodeTest extends TestCase {
 	protected function tearDown(): void {
-		delete_option( 'mrt_public_notices' );
+		delete_option( MRT_OPTION_PUBLIC_NOTICES );
 		parent::tearDown();
 	}
 
-	public function test_build_context_defaults_days_to_one(): void {
+	public function test_build_context_defaults_horizon_days_to_ninety(): void {
 		$context = MRT_traffic_notices_build_context( array() );
-		self::assertSame( '1', $context['atts']['days'] );
+		self::assertSame( '90', $context['atts']['horizon_days'] );
 		self::assertTrue( $context['payload']['is_empty'] );
 	}
 
@@ -27,27 +27,30 @@ final class TrafficNoticesShortcodeTest extends TestCase {
 		$html = MRT_render_traffic_notices_html(
 			array(
 				'is_empty' => true,
-				'general'  => array(),
-				'by_date'  => array(),
+				'ongoing'  => array(),
+				'upcoming' => array(),
 			)
 		);
 		self::assertStringContainsString( 'mrt-traffic-notices__empty', $html );
 	}
 
-	public function test_render_html_includes_general_notice(): void {
+	public function test_render_html_includes_feed_item(): void {
 		$html = MRT_render_traffic_notices_html(
 			array(
 				'is_empty' => false,
-				'general'  => array(
+				'ongoing'  => array(
 					array(
-						'id'   => '1',
-						'text' => 'Baninfo',
+						'id'          => 'notice-1',
+						'kind'        => 'info',
+						'date_label'  => '6 Jun 2026',
+						'headline'    => 'Baninfo',
+						'body'        => 'Baninfo',
 					),
 				),
-				'by_date'  => array(),
-				'days'     => 1,
+				'upcoming' => array(),
 			)
 		);
 		self::assertStringContainsString( 'Baninfo', $html );
+		self::assertStringContainsString( 'mrt-traffic-notices__section-title', $html );
 	}
 }

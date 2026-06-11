@@ -255,18 +255,18 @@ function MRT_vue_index_config( array $context ): array {
 function MRT_vue_traffic_notices_config( array $context ): array {
 	$payload = isset( $context['payload'] ) && is_array( $context['payload'] ) ? $context['payload'] : array();
 	$atts    = isset( $context['atts'] ) && is_array( $context['atts'] ) ? $context['atts'] : array();
+	$horizon = (int) ( $payload['horizon_days'] ?? $atts['horizon_days'] ?? MRT_DISRUPTION_FEED_DEFAULT_HORIZON );
 
 	return array(
-		'referenceDate'  => (string) ( $payload['reference_date'] ?? '' ),
-		'days'           => (int) ( $payload['days'] ?? 1 ),
-		'showGeneral'    => ( $atts['show_general'] ?? '1' ) === '1' || ( $atts['show_general'] ?? '' ) === 'true',
-		'showDeviations' => ( $atts['show_deviations'] ?? '1' ) === '1' || ( $atts['show_deviations'] ?? '' ) === 'true',
-		'title'          => trim( (string) ( $atts['title'] ?? '' ) ),
-		'labels'         => array(
+		'referenceDate' => (string) ( $payload['reference_date'] ?? '' ),
+		'horizonDays'   => max( 1, min( MRT_DISRUPTION_FEED_MAX_HORIZON, $horizon ) ),
+		'title'         => trim( (string) ( $atts['title'] ?? '' ) ),
+		'labels'        => array(
 			'empty'           => __( 'Inga meddelanden', 'museum-railway-timetable' ),
 			'loading'         => __( 'Laddar meddelanden…', 'museum-railway-timetable' ),
 			'error'           => __( 'Kunde inte ladda meddelanden.', 'museum-railway-timetable' ),
-			'deviationPrefix' => __( '%1$s — Tåg %2$s, %3$s', 'museum-railway-timetable' ),
+			'sectionOngoing'  => __( 'Pågår nu', 'museum-railway-timetable' ),
+			'sectionUpcoming' => __( 'Kommande', 'museum-railway-timetable' ),
 		),
 	);
 }

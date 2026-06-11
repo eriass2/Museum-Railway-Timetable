@@ -17,14 +17,18 @@ function MRT_admin_vue_help_shortcodes(): array {
 			'tag'     => 'museum_traffic_notices',
 			'title'   => __( 'Trafikmeddelanden', 'museum-railway-timetable' ),
 			'summary' => __(
-				'Visar generella trafikmeddelanden och tur-avvikelser för idag (valfritt imorgon). Tom vy: «Inga meddelanden».',
+				'UL-lik trafikinfo-feed: pågående och kommande störningar (90 dagar som standard). Tom vy: «Inga meddelanden».',
 				'museum-railway-timetable'
 			),
 			'example' => '[museum_traffic_notices]',
 			'params'  => array(
 				array(
-					'name' => 'days',
-					'desc' => __( '1 = idag (standard), 2 = idag + imorgon', 'museum-railway-timetable' ),
+					'name' => 'horizon_days',
+					'desc' => __( 'Antal dagar framåt från referensdatum (standard 90, max 365)', 'museum-railway-timetable' ),
+				),
+				array(
+					'name' => 'date',
+					'desc' => __( 'Referensdatum YYYY-MM-DD (standard idag)', 'museum-railway-timetable' ),
 				),
 				array(
 					'name' => 'title',

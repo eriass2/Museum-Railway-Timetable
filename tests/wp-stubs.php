@@ -148,6 +148,17 @@ if ( ! function_exists( 'sanitize_key' ) ) {
 	}
 }
 
+if ( ! function_exists( 'sanitize_html_class' ) ) {
+	/**
+	 * @param string $class
+	 * @param string $fallback
+	 */
+	function sanitize_html_class( $class, $fallback = '' ): string {
+		$class = (string) preg_replace( '/[^A-Za-z0-9_-]/', '', (string) $class );
+		return $class !== '' ? $class : (string) $fallback;
+	}
+}
+
 if ( ! function_exists( '_n' ) ) {
 	/**
 	 * @param string $single

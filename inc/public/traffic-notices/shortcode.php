@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-require_once MRT_PATH . 'inc/domain/traffic-notices/aggregate.php';
+require_once MRT_PATH . 'inc/domain/traffic-notices/disruption-feed.php';
 
 /**
  * @param array<string, string> $atts Shortcode attributes.
@@ -20,8 +20,9 @@ require_once MRT_PATH . 'inc/domain/traffic-notices/aggregate.php';
 function MRT_traffic_notices_build_context( array $atts ): array {
 	$atts = shortcode_atts(
 		array(
-			'days'            => '1',
+			'horizon_days'    => '90',
 			'date'            => '',
+			'days'            => '1',
 			'show_general'    => '1',
 			'show_deviations' => '1',
 			'title'           => '',
@@ -34,16 +35,16 @@ function MRT_traffic_notices_build_context( array $atts ): array {
 	if ( $reference_date === '' ) {
 		$reference_date = MRT_get_current_datetime()['date'];
 	}
-	$days            = max( 1, min( 2, (int) $atts['days'] ) );
-	$show_general    = $atts['show_general'] === '1' || $atts['show_general'] === 'true';
-	$show_deviations = $atts['show_deviations'] === '1' || $atts['show_deviations'] === 'true';
-	$payload         = MRT_traffic_notices_aggregate( $reference_date, $days, $show_general, $show_deviations );
+	$horizon_days = max( 1, min( MRT_DISRUPTION_FEED_MAX_HORIZON, (int) $atts['horizon_days'] ) );
+	$payload      = MRT_disruption_feed_build( $reference_date, $horizon_days );
 	if ( is_wp_error( $payload ) ) {
 		$payload = array(
 			'reference_date' => $reference_date,
-			'days'           => $days,
-			'general'        => array(),
-			'by_date'        => array(),
+			'horizon_days'   => $horizon_days,
+			'end_date'       => $reference_date,
+			'ongoing'        => array(),
+			'upcoming'       => array(),
+			'items'          => array(),
 			'is_empty'       => true,
 		);
 	}
@@ -59,8 +60,8 @@ function MRT_traffic_notices_build_context( array $atts ): array {
  * @return string
  */
 function MRT_render_shortcode_traffic_notices( $atts ): string {
-	$context = MRT_traffic_notices_build_context( (array) $atts );
-	$mount   = MRT_render_vue_mount( 'traffic_notices', MRT_vue_traffic_notices_config( $context ) );
+	$context  = MRT_traffic_notices_build_context( (array) $atts );
+	$mount    = MRT_render_vue_mount( 'traffic_notices', MRT_vue_traffic_notices_config( $context ) );
 	$noscript = MRT_render_traffic_notices_noscript( $context );
 	return $mount . $noscript;
 }
@@ -81,12 +82,12 @@ function MRT_render_traffic_notices_noscript( array $context ): string {
 }
 
 /**
- * @param array<string, mixed> $payload Aggregate payload.
+ * @param array<string, mixed> $payload Disruption feed payload.
  */
 function MRT_render_traffic_notices_html( array $payload, string $title = '' ): string {
 	$is_empty = ! empty( $payload['is_empty'] );
-	$general  = isset( $payload['general'] ) && is_array( $payload['general'] ) ? $payload['general'] : array();
-	$by_date  = isset( $payload['by_date'] ) && is_array( $payload['by_date'] ) ? $payload['by_date'] : array();
+	$ongoing  = isset( $payload['ongoing'] ) && is_array( $payload['ongoing'] ) ? $payload['ongoing'] : array();
+	$upcoming = isset( $payload['upcoming'] ) && is_array( $payload['upcoming'] ) ? $payload['upcoming'] : array();
 
 	$out = '<div class="mrt-traffic-notices">';
 	if ( $title !== '' ) {
@@ -97,38 +98,58 @@ function MRT_render_traffic_notices_html( array $payload, string $title = '' ): 
 		$out .= '</div>';
 		return $out;
 	}
+	$out .= '<div class="mrt-traffic-notices__feed">';
+	$out .= MRT_render_disruption_feed_section_html(
+		__( 'Pågår nu', 'museum-railway-timetable' ),
+		$ongoing
+	);
+	$out .= MRT_render_disruption_feed_section_html(
+		__( 'Kommande', 'museum-railway-timetable' ),
+		$upcoming
+	 );
+	$out .= '</div></div>';
+	return $out;
+}
+
+/**
+ * @param list<array<string, mixed>> $items Feed items.
+ */
+function MRT_render_disruption_feed_section_html( string $heading, array $items ): string {
+	if ( $items === array() ) {
+		return '';
+	}
+	$out = '<section class="mrt-traffic-notices__section">';
+	$out .= '<h3 class="mrt-traffic-notices__section-title">' . esc_html( $heading ) . '</h3>';
 	$out .= '<ul class="mrt-traffic-notices__list">';
-	foreach ( $general as $item ) {
+	foreach ( $items as $item ) {
 		if ( ! is_array( $item ) ) {
 			continue;
 		}
-		$text = trim( (string) ( $item['text'] ?? '' ) );
-		if ( $text === '' ) {
-			continue;
-		}
-		$out .= '<li class="mrt-traffic-notices__item mrt-traffic-notices__item--general">' . esc_html( $text ) . '</li>';
+		$out .= MRT_render_disruption_feed_item_html( $item );
 	}
-	foreach ( $by_date as $group ) {
-		if ( ! is_array( $group ) ) {
-			continue;
-		}
-		$show_heading = count( $by_date ) > 1 || (int) ( $payload['days'] ?? 1 ) > 1;
-		if ( $show_heading && ! empty( $group['date_label'] ) ) {
-			$out .= '<li class="mrt-traffic-notices__day-heading"><span>' . esc_html( (string) $group['date_label'] ) . '</span></li>';
-		}
-		$deviations = isset( $group['deviations'] ) && is_array( $group['deviations'] ) ? $group['deviations'] : array();
-		foreach ( $deviations as $deviation ) {
-			if ( ! is_array( $deviation ) ) {
-				continue;
-			}
-			$classes = 'mrt-traffic-notices__item mrt-traffic-notices__item--deviation';
-			if ( ! empty( $deviation['is_cancelled'] ) ) {
-				$classes .= ' mrt-traffic-notices__item--cancelled';
-			}
-			$line = MRT_traffic_notice_deviation_line_text( $deviation );
-			$out .= '<li class="' . esc_attr( $classes ) . '">' . esc_html( $line ) . '</li>';
-		}
+	$out .= '</ul></section>';
+	return $out;
+}
+
+/**
+ * @param array<string, mixed> $item Feed item.
+ */
+function MRT_render_disruption_feed_item_html( array $item ): string {
+	$kind     = (string) ( $item['kind'] ?? 'info' );
+	$classes  = 'mrt-traffic-notices__feed-item mrt-traffic-notices__feed-item--' . sanitize_html_class( $kind );
+	$headline = trim( (string) ( $item['headline'] ?? '' ) );
+	$body     = trim( (string) ( $item['body'] ?? '' ) );
+	$date     = trim( (string) ( $item['date_label'] ?? '' ) );
+	$out      = '<li class="' . esc_attr( $classes ) . '">';
+	if ( $date !== '' ) {
+		$out .= '<p class="mrt-traffic-notices__date">' . esc_html( $date ) . '</p>';
 	}
-	$out .= '</ul></div>';
+	if ( $headline !== '' ) {
+		$out .= '<p class="mrt-traffic-notices__headline">' . esc_html( $headline ) . '</p>';
+	}
+	if ( $body !== '' && $body !== $headline ) {
+		$out .= '<p class="mrt-traffic-notices__body">' . esc_html( $body ) . '</p>';
+	}
+	$out .= '</li>';
 	return $out;
 }
