@@ -331,8 +331,87 @@ function MRT_timetable_ensure_standalone_bus_boarding_time(
 			$row_info,
 			$station_posts
 		);
+		if ( MRT_timetable_standalone_bus_rows_already_show_boarding( $rows, (int) $col_idx ) ) {
+			continue;
+		}
+		$rows = MRT_timetable_insert_standalone_bus_departure_row(
+			$rows,
+			(int) $col_idx,
+			$service_data,
+			$row_info,
+			$display_columns
+		);
 	}
 	return $rows;
+}
+
+/**
+ * Inbound B14 may have no train-linked busDeparture row; insert Från Linnés before the junction station.
+ *
+ * @param array<int, array{primary_idx: int, continuation_idx: int|null, split_station_id: int}> $display_columns
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_timetable_insert_standalone_bus_departure_row(
+	array $rows,
+	int $col_idx,
+	array $service_data,
+	array $info,
+	array $display_columns
+): array {
+	$boarding_id = MRT_timetable_standalone_bus_boarding_station_id( $service_data );
+	if ( $boarding_id <= 0 ) {
+		return $rows;
+	}
+	$boarding_post = get_post( $boarding_id );
+	if ( ! $boarding_post instanceof WP_Post ) {
+		return $rows;
+	}
+	$junction_id = (int) ( $info['overview_pass_from_station_id'] ?? 0 );
+	$insert_at   = MRT_timetable_standalone_bus_departure_insert_index( $rows, $junction_id );
+	$cells       = array();
+	foreach ( $display_columns as $idx => $column ) {
+		unset( $column );
+		if ( $idx === $col_idx ) {
+			$cell = array(
+				'text'            => MRT_timetable_standalone_bus_boarding_time_text( $service_data, $boarding_id ),
+				'approximateTime' => false,
+			);
+			$service_id = MRT_timetable_service_id_from_data( $service_data );
+			if ( $service_id > 0 ) {
+				$cell['serviceId'] = $service_id;
+			}
+			$cells[] = $cell;
+			continue;
+		}
+		$cells[] = array( 'text' => '—' );
+	}
+	$new_row = array(
+		'kind'  => 'busDeparture',
+		'label' => MRT_station_from_label( $boarding_post ),
+		'cells' => $cells,
+	);
+	array_splice( $rows, $insert_at, 0, array( $new_row ) );
+	return $rows;
+}
+
+/**
+ * @param array<int, array<string, mixed>> $rows
+ */
+function MRT_timetable_standalone_bus_departure_insert_index( array $rows, int $junction_station_id ): int {
+	if ( $junction_station_id <= 0 ) {
+		return count( $rows );
+	}
+	foreach ( $rows as $idx => $row ) {
+		$kind       = (string) ( $row['kind'] ?? '' );
+		$station_id = (int) ( $row['stationId'] ?? 0 );
+		if ( $station_id !== $junction_station_id ) {
+			continue;
+		}
+		if ( $kind === 'arrival' || $kind === 'station' ) {
+			return $idx;
+		}
+	}
+	return count( $rows );
 }
 
 /**

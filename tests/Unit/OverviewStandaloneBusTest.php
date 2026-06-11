@@ -176,6 +176,42 @@ final class OverviewStandaloneBusTest extends TestCase {
 		);
 	}
 
+	public function test_standalone_bus_inserts_departure_row_when_no_junction_bus_departure_exists(): void {
+		$GLOBALS['mrt_test_post_meta'] = array(
+			self::LINNES_ID . '|mrt_station_bus_suffix' => '1',
+		);
+		$service_data = $this->b14_service_data();
+		$info         = array(
+			'standalone_overview_column'        => true,
+			'overview_pass_from_station_id'   => self::MARIELUND_ID,
+		);
+		$rows = array(
+			array(
+				'kind'       => 'arrival',
+				'label'      => 'Till Marielund',
+				'stationId'  => self::MARIELUND_ID,
+				'cells'      => array( array( 'text' => '10.20' ), array( 'text' => '—' ) ),
+			),
+		);
+		$display_columns = array(
+			array( 'primary_idx' => 0, 'continuation_idx' => null, 'split_station_id' => 0 ),
+			array( 'primary_idx' => 1, 'continuation_idx' => null, 'split_station_id' => 0 ),
+		);
+		$view = array(
+			'service_info'  => array( array(), $info ),
+			'services_list' => array( array(), $service_data ),
+			'station_posts' => array(
+				$this->station_post( self::MARIELUND_ID, 'Marielund' ),
+			),
+		);
+
+		$patched = MRT_timetable_patch_standalone_bus_junction_rows( $rows, $display_columns, $view );
+
+		self::assertSame( 'busDeparture', $patched[0]['kind'] ?? '' );
+		self::assertStringContainsString( '16.20', (string) ( $patched[0]['cells'][1]['text'] ?? '' ) );
+		self::assertSame( 'arrival', $patched[1]['kind'] ?? '' );
+	}
+
 	public function test_standalone_bus_boarding_fallback_fills_linnes_bus_departure_row(): void {
 		$GLOBALS['mrt_test_post_meta'] = array(
 			self::LINNES_ID . '|mrt_station_bus_suffix' => '1',

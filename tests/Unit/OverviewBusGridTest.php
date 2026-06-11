@@ -247,6 +247,60 @@ final class OverviewBusGridTest extends TestCase {
 		);
 	}
 
+	public function test_find_main_group_pairs_fjallnora_branches_to_matching_main_direction(): void {
+		$uppsala   = 14;
+		$faringe   = 1;
+		$selkna    = 9;
+		$fjallnora = 15;
+		$route_out = 50;
+		$route_in  = 60;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			$route_out . '|mrt_route_start_station' => $uppsala,
+			$route_out . '|mrt_route_end_station'   => $faringe,
+			$route_in . '|mrt_route_start_station'  => $faringe,
+			$route_in . '|mrt_route_end_station'   => $uppsala,
+			$uppsala . '|mrt_display_order'        => 1,
+			$faringe . '|mrt_display_order'        => 14,
+		);
+		$train = array(
+			'train_type' => (object) array( 'slug' => 'angtag' ),
+		);
+		$bus = array(
+			'train_type' => (object) array( 'slug' => 'buss' ),
+		);
+		$grouped = array(
+			'main_out' => array(
+				'route_id'    => $route_out,
+				'branch_code' => 'main',
+				'stations'    => array( $uppsala, 12, 11, $selkna, 5, $faringe ),
+				'services'    => array( $train ),
+			),
+			'main_in'  => array(
+				'route_id'    => $route_in,
+				'branch_code' => 'main',
+				'stations'    => array( $faringe, 5, $selkna, 11, $uppsala ),
+				'services'    => array( $train ),
+			),
+			'fj_out'   => array(
+				'stations' => array( $selkna, $fjallnora ),
+				'services' => array( $bus ),
+			),
+			'fj_in'    => array(
+				'stations' => array( $fjallnora, $selkna ),
+				'services' => array( $bus ),
+			),
+		);
+
+		self::assertSame(
+			'main_out',
+			MRT_timetable_find_main_group_for_branch( $grouped, $grouped['fj_out'], 'fj_out' )
+		);
+		self::assertSame(
+			'main_in',
+			MRT_timetable_find_main_group_for_branch( $grouped, $grouped['fj_in'], 'fj_in' )
+		);
+	}
+
 	public function test_find_main_group_prefers_matching_travel_direction_on_tie(): void {
 		$uppsala  = 14;
 		$marielund = 8;

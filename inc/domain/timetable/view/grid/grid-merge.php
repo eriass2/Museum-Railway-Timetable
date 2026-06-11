@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/grid-branch.php';
+require_once __DIR__ . '/grid-connections.php';
 require_once MRT_PATH . 'inc/domain/route/route-meta.php';
 
 /**
@@ -101,7 +102,11 @@ function MRT_timetable_find_main_group_for_branch( array $grouped_services, arra
 		}
 
 		$main_stations = array_map( 'intval', (array) ( $group['stations'] ?? array() ) );
-		$score         = MRT_timetable_branch_main_pair_score( $main_stations, $branch_station_ids );
+		$connector     = MRT_timetable_branch_junction_connector_direction( $branch_station_ids, $main_stations );
+		if ( $connector !== '' && MRT_timetable_rail_grid_direction( $group ) !== $connector ) {
+			continue;
+		}
+		$score = MRT_timetable_branch_main_pair_score( $main_stations, $branch_station_ids );
 		if ( $score > $best_score ) {
 			$best_score = $score;
 			$best_key   = (string) $key;
@@ -141,4 +146,27 @@ function MRT_timetable_branch_main_pair_score( array $main_stations, array $bran
 	}
 
 	return $main_len;
+}
+
+/**
+ * Outbound branches depart the junction; inbound branches arrive at it.
+ *
+ * @param array<int, int> $branch_station_ids
+ * @param array<int, int> $main_stations
+ */
+function MRT_timetable_branch_junction_connector_direction( array $branch_station_ids, array $main_stations ): string {
+	if ( count( $branch_station_ids ) < 2 ) {
+		return '';
+	}
+	$branch_start = (int) $branch_station_ids[0];
+	$branch_end   = (int) $branch_station_ids[ count( $branch_station_ids ) - 1 ];
+	$start_on     = in_array( $branch_start, $main_stations, true );
+	$end_on       = in_array( $branch_end, $main_stations, true );
+	if ( $start_on && ! $end_on ) {
+		return 'outbound';
+	}
+	if ( ! $start_on && $end_on ) {
+		return 'inbound';
+	}
+	return '';
 }

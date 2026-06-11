@@ -247,6 +247,72 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertFalse( MRT_timetable_branch_matches_junction_flow( $outbound, $junction_id, 'inbound' ) );
 	}
 
+	public function test_junction_bus_rows_for_station_shows_inbound_branch_on_inbound_rail(): void {
+		$junction_id = 9;
+		$fjallnora   = 15;
+		$faringe     = 1;
+		$route_in    = 60;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_number'     => 'B6',
+			'62|mrt_service_number'      => '62',
+			$route_in . '|mrt_route_start_station' => $faringe,
+			$route_in . '|mrt_route_end_station'  => 14,
+			$faringe . '|mrt_display_order'       => 14,
+			'14|mrt_display_order'                => 1,
+			'9|mrt_station_bus_suffix'            => '1',
+			'15|mrt_station_bus_suffix'           => '1',
+		);
+		$GLOBALS['mrt_test_posts'] = array(
+			15 => (object) array( 'ID' => 15, 'post_title' => 'Fjällnora' ),
+		);
+		$rail_group = array(
+			'route_id' => $route_in,
+			'stations' => array( $faringe, 5, $junction_id, 14 ),
+			'services' => array(
+				array(
+					'service'    => (object) array( 'ID' => 62 ),
+					'train_type' => (object) array( 'slug' => 'dieseltag' ),
+					'stop_times' => array(
+						$junction_id => array(
+							'arrival_time'   => '13:01',
+							'departure_time' => '13:04',
+						),
+					),
+				),
+			),
+		);
+		$paired_branches = array(
+			array(
+				'stations' => array( $fjallnora, $junction_id ),
+				'services' => array(
+					array(
+						'service'    => (object) array( 'ID' => 501 ),
+						'train_type' => (object) array( 'slug' => 'buss' ),
+						'stop_times' => array(
+							$fjallnora   => array( 'departure_time' => '12:51' ),
+							$junction_id => array( 'arrival_time' => '12:58' ),
+						),
+					),
+				),
+			),
+		);
+		$info            = array( array( 'service_number' => '62' ) );
+		$display_columns = array( array( 'primary_idx' => 0, 'continuation_idx' => null, 'split_station_id' => 0 ) );
+		$rows            = MRT_timetable_junction_bus_rows_for_station(
+			$info,
+			$rail_group,
+			$paired_branches,
+			$junction_id,
+			$display_columns
+		);
+
+		self::assertCount( 2, $rows );
+		self::assertSame( 'busDeparture', $rows[0]['kind'] );
+		self::assertStringContainsString( '12.51', (string) ( $rows[0]['cells'][0]['text'] ?? '' ) );
+		self::assertSame( 'busArrival', $rows[1]['kind'] );
+		self::assertStringContainsString( '12.58', (string) ( $rows[1]['cells'][0]['text'] ?? '' ) );
+	}
+
 	public function test_junction_bus_rows_for_station_skips_arrival_only_branch_on_outbound_rail(): void {
 		$junction_id = 9;
 		$fjallnora   = 15;
