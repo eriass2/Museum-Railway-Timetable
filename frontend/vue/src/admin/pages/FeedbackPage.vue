@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue';
-import { listFeedback, updateFeedbackStatus } from '../api/adminRest';
+import { exportFeedbackCsv, listFeedback, updateFeedbackStatus } from '../api/adminRest';
 import type { FeedbackItem, FeedbackStatus } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import { AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
 import { adminConfig } from '../types';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
+import { downloadBase64Csv } from '../utils/downloadBase64File';
 
 const cfg = adminConfig();
 const loading = ref(false);
+const exporting = ref(false);
 const error = ref('');
 const saveMsg = ref('');
 const items = ref<FeedbackItem[]>([]);
@@ -42,6 +44,21 @@ async function setStatus(item: FeedbackItem, status: FeedbackStatus) {
     saveMsg.value = adminStr(cfg, 'saved', 'Sparat.');
   } catch (e) {
     error.value = adminErrorMessage(cfg, e, 'saveFailed');
+  }
+}
+
+async function onExportCsv() {
+  exporting.value = true;
+  error.value = '';
+  saveMsg.value = '';
+  try {
+    const res = await exportFeedbackCsv();
+    downloadBase64Csv(res.filename, res.content_base64);
+    saveMsg.value = adminStr(cfg, 'feedbackExportSuccess', 'CSV exporterad.');
+  } catch (e) {
+    error.value = adminErrorMessage(cfg, e, 'feedbackExportFailed');
+  } finally {
+    exporting.value = false;
   }
 }
 
@@ -105,6 +122,15 @@ onMounted(() => void load());
         <p>
           <MrtButton context="admin" variant="secondary" type="button" @click="load">
             {{ adminStr(cfg, 'refresh', 'Uppdatera') }}
+          </MrtButton>
+          <MrtButton
+            context="admin"
+            variant="secondary"
+            type="button"
+            :disabled="exporting"
+            @click="onExportCsv"
+          >
+            {{ adminStr(cfg, 'feedbackExportButton', 'Exportera CSV') }}
           </MrtButton>
         </p>
         <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />

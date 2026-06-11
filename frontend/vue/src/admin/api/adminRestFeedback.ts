@@ -24,3 +24,7 @@ export function updateFeedbackStatus(id: number, status: FeedbackStatus) {
     body: JSON.stringify({ status }),
   });
 }
+
+export function exportFeedbackCsv() {
+  return adminFetch<{ filename: string; content_base64: string }>('/feedback/export');
+}

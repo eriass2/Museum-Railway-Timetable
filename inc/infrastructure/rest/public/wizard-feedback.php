@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/feedback/wizard-feedback.php';
+require_once MRT_PATH . 'inc/domain/feedback/feedback-export.php';
 
 /**
  * Register wizard feedback REST routes.
@@ -24,6 +25,15 @@ function MRT_rest_register_wizard_feedback_routes(): void {
 			'methods'             => WP_REST_Server::CREATABLE,
 			'callback'            => 'MRT_rest_wizard_feedback_create_handler',
 			'permission_callback' => 'MRT_rest_can_read_public',
+		)
+	);
+	register_rest_route(
+		MRT_REST_NAMESPACE,
+		'/feedback/export',
+		array(
+			'methods'             => WP_REST_Server::READABLE,
+			'callback'            => 'MRT_rest_feedback_export_handler',
+			'permission_callback' => 'MRT_rest_can_manage',
 		)
 	);
 	register_rest_route(
@@ -94,6 +104,14 @@ function MRT_rest_feedback_client_ip( WP_REST_Request $request ): string {
 		return trim( explode( ',', $forwarded )[0] );
 	}
 	return isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : 'unknown';
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_feedback_export_handler( WP_REST_Request $request ) {
+	unset( $request );
+	return rest_ensure_response( MRT_feedback_export_download_payload() );
 }
 
 /**

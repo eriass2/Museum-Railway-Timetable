@@ -1,6 +1,6 @@
 # Skiss — feedback i reseplaneraren
 
-**Status:** v1 implementerad (2026-06-10); v2 kvar: e-postnotis och CSV-export  
+**Status:** v1 implementerad (2026-06-10); v2 kvar: e-postnotis  
 **Relaterat:** [2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) (J13, D2), beta-banner (admin: `wizard_beta_enabled`), [TODO.md](TODO.md)
 
 ## Mål
@@ -141,6 +141,7 @@ Admin:
 
 ```
 GET  /mrt/v1/feedback          — lista (manage_options)
+GET  /mrt/v1/feedback/export   — CSV (manage_options)
 GET  /mrt/v1/feedback/{id}     — detalj
 PATCH /mrt/v1/feedback/{id}    — status
 ```
@@ -196,4 +197,4 @@ sequenceDiagram
 1. Admin: `wizard_feedback_enabled` + REST lagring (CPT + POST)
 2. Vue: FAB + panel + submit (inkl. GDPR-text)
 3. Admin: Feedback-lista (status: Ny / Läst / Åtgärdad / Avvisad)
-4. **Framtida utveckling:** e-postnotis vid ny rapport, export CSV
+4. **Framtida utveckling:** e-postnotis vid ny rapport

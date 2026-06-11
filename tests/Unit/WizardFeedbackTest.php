@@ -18,6 +18,7 @@ if ( ! defined( 'MRT_POST_TYPE_FEEDBACK' ) ) {
 
 require_once ABSPATH . 'inc/infrastructure/rest/shared/permissions.php';
 require_once ABSPATH . 'inc/domain/feedback/wizard-feedback.php';
+require_once ABSPATH . 'inc/domain/feedback/feedback-export.php';
 require_once ABSPATH . 'inc/infrastructure/rest/public/wizard-feedback.php';
 
 final class WizardFeedbackTest extends TestCase {
@@ -107,5 +108,36 @@ final class WizardFeedbackTest extends TestCase {
 		$result = MRT_rest_wizard_feedback_rate_limited( $request );
 		self::assertInstanceOf( WP_Error::class, $result );
 		self::assertSame( 429, $result->get_error_data()['status'] ?? 0 );
+	}
+
+	public function test_export_csv_includes_saved_reports(): void {
+		$created = MRT_feedback_create(
+			array(
+				'type'       => 'bug',
+				'message'    => 'Priset verkar inte stämma i sammanfattningen.',
+				'email'      => 'test@example.com',
+				'wizardStep' => 'summary',
+				'context'    => array(
+					'fromStationId' => '1',
+					'toStationId'   => '2',
+					'date'          => '2026-06-06',
+					'tripType'      => 'return',
+				),
+			)
+		);
+		$post_id = (int) $created['id'];
+		$GLOBALS['mrt_test_get_posts'] = static fn (): array => array( $post_id );
+
+		$csv = MRT_feedback_export_csv();
+		self::assertStringStartsWith( "\xEF\xBB\xBF", $csv );
+		self::assertStringContainsString( 'Priset verkar inte stämma', $csv );
+		self::assertStringContainsString( 'test@example.com', $csv );
+		self::assertStringContainsString( 'summary', $csv );
+		self::assertStringContainsString( '2026-06-06', $csv );
+
+		$response = MRT_rest_feedback_export_handler( new WP_REST_Request( 'GET', '/feedback/export' ) );
+		$data     = $response instanceof WP_REST_Response ? $response->get_data() : $response;
+		self::assertSame( 'mrt-feedback-' . gmdate( 'Y-m-d' ) . '.csv', $data['filename'] );
+		self::assertNotSame( '', $data['content_base64'] );
 	}
 }

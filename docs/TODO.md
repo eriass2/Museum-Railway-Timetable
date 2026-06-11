@@ -19,18 +19,6 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ---
 
-## Reseplanerare — feedback-widget (v2, CSV)
-
-**Beslut:** D2b (2026-06-10) — [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md) § Beslut  
-**Status:** v1 klar; CSV-export kvar  
-**Källa:** J13 — [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md)
-
-- [ ] Admin: export feedback till CSV
-
-*(E-postnotis → se **Mycket senare**.)*
-
----
-
 ## Stopptider — schema v3 (drift efter fas 4)
 
 **Beslut:** Fas 4 klar (2026-06-10) — [STOP_TIME_CA.md](STOP_TIME_CA.md), [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
@@ -150,6 +138,7 @@ Plocka **inte** upp förrän kärnflöden är stabila, manuella checks i TODO ov
 | Vue — gemensamma datetime/tid-utils | 2026-06-09 | [VUE_UTILS.md](VUE_UTILS.md), `frontend/vue/src/utils/datetime.ts` |
 | PHP — utils-snabbguide i dokumentation | 2026-06-10 | [STYLE_GUIDE.md](STYLE_GUIDE.md) |
 | Reseplanerare — feedback-widget v1 | 2026-06-10 | [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md), J13/D2b |
+| Reseplanerare — feedback CSV-export | 2026-06-11 | `#/feedback`, `GET /feedback/export` |
 | Tidtabellsöversikt — typografi (Turvy) | 2026-06-10 | `timetable-overview.css`, commit `6d91237` |
 | Tidtabellsöversikt — kolumnsammanslagning (kärna) | 2026-06-10 | commit `9a44dda`, `OverviewColumnMergeTest` |
 | Tidtabellsöversikt — bussrader per tågkolumn (Selkné) | 2026-06-10 | commit `8c8a30a`, `TimetableOverviewHelpersTest` |
