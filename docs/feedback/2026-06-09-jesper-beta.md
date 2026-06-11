@@ -139,11 +139,12 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 ### J11. Trafikstörningar — UL-lik lista
 
 - **Originaltext:** UI för trafikstörningar bör utvecklas — lista på nuvarande och kommande störningar, ange vilka tåg som berörs (likt UL).
-- **Område:** Admin + publik visning
+- **Område:** Publik webb (shortcode / ev. egen sida) — **inte** reseplaneraren
 - **Typ:** framtida scope
 - **Prioritet:** låg
-- **Status:** parkerad
-- **Tekniskt:** `TimetableEditorDeviationsTab`, trafikmeddelanden — grund finns, behöver utvecklas.
+- **Status:** **beslutad riktning** (2026-06-11) — implementation enligt [TRAFFIC_DISRUPTIONS_PLAN.md](../TRAFFIC_DISRUPTIONS_PLAN.md); väntar Jesper-validering målbild + fas 1
+- **Beslut:** Webb only; **två källor → en feed** — (A) auto från tur-avvikelser + (B) manuella trafikmeddelanden; 90 dagars horisont; gruppering tågnummer; ingen wizard/realtime
+- **Tekniskt:** v1 shortcode + `aggregate.php` finns; v2 = disruption feed API + UL-lik Vue-feed
 
 ---
 
@@ -313,7 +314,7 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 | 12 | A10 | Buss/tåg per riktning och gren | Stor | ☑ (+ Selknä 2026-06-10) |
 | 13 | J4 + A3 | Ca + fotnot behovsuppehåll | Medel–stor | ☑ |
 | 14 | J10 | Desktop fullbredd + bakgrundsbild | Design + asset | ☑ |
-| 15 | J11 | Trafikstörningar UL-lik | Framtida | parkerad |
+| 15 | J11 | Trafikstörningar UL-lik | Framtida | beslutad riktning — [plan](../TRAFFIC_DISRUPTIONS_PLAN.md) |
 | 16 | J12 | Samtrafiken-lik överblick (Turvy) | Stor | ☑ (+ PDF-lik vy 2026-06-10) |
 
 ---
@@ -335,7 +336,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - [x] Turvy-uppföljning: kolumnsammanslagning, Selknä-bussrader, typografi (2026-06-10)
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 - [ ] Parallellt: Jesper fortsätter mata in Linnés Hammarby-data — verifiera reseplanerare efter komplett rutt/turer/stopptider
-- [ ] **Öppna punkter:** A9 (publicera), A0 (onboarding-friktion), J11 (trafikstörningar)
+- [ ] **Öppna punkter:** A9 (publicera), A0 (onboarding-friktion)
+- [ ] **J11:** Jesper OK på målbild §5.2 + 90 dagar; sedan fas 1 — [TRAFFIC_DISRUPTIONS_PLAN.md](../TRAFFIC_DISRUPTIONS_PLAN.md)
 - [ ] Manuell smoke: Selknä-buss + Marielund-kolumner enligt [TODO.md](../TODO.md) och [buggplan](2026-06-09-jesper-buggar-plan.md#verifiering-gemensam-checklista)
 
 ---

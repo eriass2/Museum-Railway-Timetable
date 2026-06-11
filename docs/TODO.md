@@ -2,7 +2,20 @@
 
 Kort lista över **öppna** punkter där **produkt/beslut redan är spikat** — implementation eller verifiering återstår. Genomfört arbete finns i arkivet längst ner och i respektive plan/doc.
 
-Punkter **utan** beslut (J11 UL-lik störningar m.fl.) listas separat eller i **[TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md)**. **Mycket senare** — parkerade tills kärnflöden är verifierade och produktbeslut finns.
+Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills kärnflöden är verifierade och produktbeslut finns.
+
+---
+
+## Trafikstörningar — UL-lik feed (webb, J11)
+
+**Beslut:** 2026-06-11 — [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) §5–7  
+**Modell:** **Två källor → en feed** — (A) auto från tur-avvikelser + (B) manuella trafikmeddelanden. **Webb only**, ingen wizard.
+
+- [ ] **Fas 1:** Domän/API — disruption feed, 90 dagars horisont, gruppering tågnummer
+- [ ] **Fas 2:** Publik Vue — UL-lik feed (ersätter flat `MrtTrafficNoticesView`)
+- [ ] **Fas 3:** Shortcode `horizon_days`, docs, ev. dedikerad sida
+- [ ] **Fas 4:** Admin — förhandsvisning av samma feed
+- [ ] Jesper: snabb OK på målbild och 90 dagar
 
 ---
 
@@ -70,6 +83,47 @@ Punkter **utan** beslut (J11 UL-lik störningar m.fl.) listas separat eller i **
 
 ---
 
+## Admin — utökad datakvalitet (dashboard)
+
+**Beslut:** 2026-06-11 — utöka befintliga dashboard-varningar (`dashboard-warnings.php`)  
+**Syfte:** Fånga halvfärdig/inkonsistent data innan wizard, Turvy och reseplanerare misslyckas tyst (t.ex. Selkné, Marielund, Linnés Hammarby)
+
+**Nyckelfiler:** `inc/domain/admin/dashboard-warnings.php`, `DashboardWarningsTest.php`, `DashboardPage.vue`
+
+- [ ] Varning: stopptider matchar inte rutten (för få/för många stationer per tur)
+- [ ] Varning: `train_change_map` pekar på tågnummer/tågtyp som inte finns
+- [ ] Varning: byteshub utan bussmarkering **och** utan tågbyte (risk: inga flerbenade resor)
+- [ ] Varning: tidtabell utan kommande trafikdagar
+- [ ] Varning: bussrutt utan motsvarande tågförbindelse vid knutpunkt (där flerben krävs)
+
+---
+
+## Reseplanerare — kalender → wizard (förifyllt datum)
+
+**Beslut:** 2026-06-11 — länka publik månad-/dagsvy till wizard med datum (ev. senare `from`/`to`)  
+**Syfte:** Resenär ska inte behöva välja datum igen efter klick i kalendern
+
+**Nyckelfiler:** månadskalender-shortcode/Vue, `JourneyWizardApp` / wizard store, ev. `SHORTCODES.md`
+
+- [ ] Länk «Planera resa» (eller liknande) från månadskalender/dagsvy med `date` till wizard
+- [ ] Wizard läser query/hash och förifyller datum i steg 2
+- [ ] Docs + manuell smoke: kalender → wizard med rätt datum
+
+---
+
+## Reseplanerare — tydligare «ingen resa hittades»
+
+**Beslut:** 2026-06-11 — kontextmeddelanden per orsak i stället för generiskt tomt svar  
+**Syfte:** Resenär (och support) ska förstå *varför* inget förslag visas
+
+**Nyckelfiler:** journey REST/sök, wizard trip-steg, l10n
+
+- [ ] API/skikt: skilj orsaker där möjligt (ingen trafik dag X, ingen koppling/byte, inga matchande turer)
+- [ ] Wizard: visa tydlig copy per orsak (svenska)
+- [ ] Manuell smoke: minst «ingen trafik» och «ingen koppling» (t.ex. ofärdig busslinje)
+
+---
+
 ## Mycket senare (förutsättningar / produktbeslut saknas)
 
 Plocka **inte** upp förrän kärnflöden är stabila, manuella checks i TODO ovan är klara, och ev. produktbeslut är tagna.
@@ -84,9 +138,7 @@ Plocka **inte** upp förrän kärnflöden är stabila, manuella checks i TODO ov
 
 ## Saknar produktbeslut (ej i backlog tills beslut)
 
-| ID | Punkt | Var beslut saknas |
-|----|-------|-------------------|
-| J11 / D16 | UL-lik störningslista | Plan: [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) — väntar Jesper-validering §5–7 |
+*(Tomt — J11/D16 har beslutad riktning i [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md).)*
 
 ---
 

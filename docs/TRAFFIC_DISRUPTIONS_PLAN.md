@@ -1,6 +1,6 @@
 # Trafikstörningar v2 — UL-referens och Jesper J11
 
-**Status:** plan (produktbeslut D16 delvis öppen)  
+**Status:** beslutad riktning (2026-06-11) — webb only, två källor; implementation ej påbörjad  
 **Källa:** [2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) J11, [2026-06-09-jesper-diskussioner.md](feedback/2026-06-09-jesper-diskussioner.md) D16  
 **Föregångare (v1, klar):** [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) — shortcode + generella meddelanden + dagens tur-avvikelser
 
@@ -13,7 +13,8 @@ Jesper efterfrågar en **UL-lik** trafikstörningsvy. Detta dokument beskriver:
 1. **Vad UL gör** (referens för operatör och utveckling)
 2. **Vad Lennakatten-pluginet redan har** (v1)
 3. **Tolkning** — vad J11 sannolikt betyder i vår kontext
-4. **Gap** som v2 skulle behöva täcka (innan implementation)
+4. **Gap** v1 → v2 (§6)
+5. **Beslutad riktning** — webb only, två källor (§5–7)
 
 ---
 
@@ -38,15 +39,15 @@ Exempel från UL:s aktuellt-flöde (förenklat):
 
 **UL:s princip:** Resenären ska snabbt se *vad*, *när*, *var* och **vilka linjer/turer** som drabbas — utan att öppna tidtabellen.
 
-### 2.2 UL-appen / reseplanerare
+### 2.2 UL-appen / reseplanerare (referens — **ej vår scope**)
 
 | UL-element | Hur det fungerar |
 |------------|------------------|
 | **Störning vid sökresultat** | Trafikstörningar visas **tillsammans med reseförslag** — inte bara på en separat infosida. |
 | **Favoriter** | Sparade resor visar om det finns störning **på just den resan**. |
-| **Tidsuppdatering** | Vid försening: gammal tid överstruken, ny tid visas (realtime — utöver vår scope). |
+| **Tidsuppdatering** | Vid försening: gammal tid överstruken, ny tid visas (realtime). |
 
-Jesper nämner uttryckligen **UI för trafikstörningar** och **UL-lik lista** — primärt en **informationslista**, men UL-appen visar att koppling till **reseplaneraren** också är en naturlig förlängning (D16 öppen).
+Jesper nämner **UL-lik lista** på **webben** (J11). Vi tar **inte** med reseplanerare, realtime eller push — se **beslut §5**.
 
 ### 2.3 UL vs Lennakatten — översättning
 
@@ -72,8 +73,8 @@ Se [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md). Kort:
 | **Reseplaneraren** | Visar **inte** automatisk störningslista; avvikelse kan påverka sökresultat indirekt via data. |
 | **Turvy / PDF** | Avvikelser markeras per kolumn (inställt, notis). |
 
-**Styrkor v1:** Turkoppling finns i datamodellen; operatör kan redan mata in störningar.  
-**Svagheter vs UL:** Ingen samlad «aktuellt»-feed med **kommande** veckor; ingen tydlig **gruppering av flera tåg** i en störning; wizard saknar UL-lik varning; admin har **två begrepp** (trafikmeddelande vs tur-avvikelse).
+**Styrkor v1:** Turkoppling finns i datamodellen; operatör kan redan mata in störningar; API slår redan ihop **två källor** (`MRT_traffic_notices_aggregate`).  
+**Svagheter vs UL:** Ingen samlad «aktuellt»-feed med **kommande** veckor; ingen tydlig **gruppering av flera tåg**; flat punktlista istället för UL-layout; max **2 dagar** i shortcode; admin har **två inmatningsställen** (meddelanden vs avvikelser) utan gemensam översikt.
 
 ---
 
@@ -94,104 +95,116 @@ Jesper säger **inte** uttryckligen: live-spårning, karta, push-notiser, eller 
 
 ---
 
-## 5. Tolkning — vad Jesper sannolikt vill ha (v2-mål)
+## 5. Beslutad riktning (2026-06-11)
 
-Utifrån J11 + UL-referens + v1-gap — **hypotes** att validera med Jesper:
+### 5.0 Scope — webb only
 
-### 5.1 Publik «trafikinfo»-lista (huvudbehov)
+| Beslut | |
+|--------|---|
+| **Publik vy** | UL-lik **feed på webben** (shortcode / ev. egen sida) — som UL «Aktuellt» |
+| **Reseplaneraren** | **Nej** — ingen banner, ingen träff-varning, ingen realtime |
+| **Realtime / karta / push** | **Nej** — utanför scope |
 
-En sida eller sektion (startsida eller egen undersida) som liknar UL **Aktuellt**:
+### 5.1 Datamodell — två källor, en publik lista
 
-- **Lista** sorterad på datum (pågående först, sedan kommande)
-- Varje post har:
-  - **Rubrik** (kort, självförklarande)
-  - **Datum/intervall** («24–27 oktober», «från 7 april tills vidare»)
-  - **Berörda tåg/turer** — uttryckligen, t.ex. «Tåg 71, 73, 96» eller «All trafik Faringe–Uppsala»
-  - **Kort brödtext** + ev. länk till mer info
-- Typer som UL: **inställt**, **ersättningsbuss**, **hållplats ändrad**, **planerat banarbete**, **generell info**
+v2 bygger på **befintlig data**. Ingen ny CPT «störning» i v2a — bara bättre **presentation och gruppering** i API/feed.
 
-**Inte nödvändigtvis:** UL:s fulla nyhets-CMS, kartor, realtime.
+```
+Operatör: Tur-avvikelse (Tidtabell → Avvikelser)  ──┐
+Operatör: Trafikmeddelande (#/traffic-notices)     ──┼──► disruption feed ──► UL-lik webb-lista
+System: grupperar, sorterar, datumintervall          ──┘
+```
 
-### 5.2 Kommande störningar (tidshorisont)
+| Källa | Inmatning (oförändrad) | Publik feed |
+|-------|------------------------|-------------|
+| **A — Tur-avvikelser** | Tidtabell → **Avvikelser** (per tur + datum: inställt, ersättningstyp, text) | **Auto-genererade** rader — t.ex. *Inställd — Tåg 71*, *Ersättningsbuss — Tåg 73* |
+| **B — Systemmeddelanden** | **Trafikmeddelanden** (`#/traffic-notices`) — fri text, `active_from`/`active_to`, sortering | **Manuella** rader — glassrea, baninfo, «all trafik …» |
 
-v1 visar max **2 dagar** (`days="1|2"`). UL visar **månader** framåt.
+**Sammanfogning:** samma princip som v1 (`aggregate.php`), utökad med:
 
-Jesper vill troligen:
+- längre **tidshorisont** (standard **90 dagar**, konfigurerbart)
+- **UL-lik layout** (datum, rubrik, berörda tåg)
+- **gruppering** — flera turer med samma avvikelsetext/datum → *«Tåg 71, 73, 96»* i en rad
 
-- Se **planerade** avvikelser som operatören redan lagt in för framtida datum
-- Ev. **generella meddelanden** med `active_from`/`active_to` över längre perioder (delvis redan möjligt i v1 — men presenteras som flat lista utan «kommande»-gruppering)
+**Inmatning ändras inte** — operatör fortsätter mata avvikelser respektive meddelanden där de gör idag.
 
-### 5.3 Berörda tåg tydligt
+### 5.2 Publik «trafikinfo»-feed (UL Aktuellt)
 
-Idag: en avvikelse = **en tur** × **ett datum**. UL: en **händelse** kan nämna **många linjer** i samma rubrik.
+En sektion på startsidan (shortcode) eller egen undersida:
 
-Jesper vill troligen minst:
+- **Lista** sorterad på datum — **Pågår nu** | **Kommande**
+- Varje post:
+  - **Datum/intervall** (dag eller `från–till`)
+  - **Rubrik** med **berörda tågnummer** (71, 96, B3 …)
+  - **Kort brödtext** (från avvikelse-notice eller meddelande-text)
+  - Ev. typ: *Inställt* / *Ersättning* / *Info*
 
-- Publik text där **tågnummer syns i rubriken eller i en tag-lista**
-- För operatör: antingen flera turer kopplade till samma «störning», eller smart gruppering vid visning
+Exempel (målbild):
 
-*(Datamodell beslut — se §6.)*
+```
+15 okt 2026
+  Inställd trafik — Tåg 71, 73, 96
+  Tåg inställda pga banarbete …
 
-### 5.4 Reseplaneraren (sekundärt / fas 2?)
+1 jul – 16 aug 2026
+  Baninfo — Tåg B3, B4
+  Buss ersätter vid Selknä …
+```
 
-UL visar störning **vid sökresultat**. Jesper nämnde inte wizard uttryckligen i J11, men D16 frågar om det.
+### 5.3 Berörda tåg
 
-**Mild tolkning (v2a):** Banner eller länk «Se trafikstörningar» i planeraren.  
-**UL-lik tolkning (v2b):** Varning på träff om valt datum/tur har avvikelse.
+- **Från avvikelser (A):** tågnummer från `mrt_service_number` + route; gruppera rader med samma notice + datum(intervall)
+- **Från meddelanden (B):** operatören skriver tågnummer i texten vid behov (som UL skriver linjenummer i rubriken)
 
-Rekommendation: **v2a först** (lista + shortcode/sida), **v2b** efter avstämning.
+### 5.4 Admin — inmatning och översikt
 
-### 5.5 Admin (operatör)
-
-Jesper upplevde friktion i **inmatning** generellt (A0). För J11 specifikt:
-
-- Tydligare **en portal** för «vad ska resenären veta?» — idag split: Trafikmeddelanden vs Tidtabell → Avvikelser
-- Audit rekommenderade redan förklarande text (UX-2.7 ☑) — men inte UL-lik **översikt**
-
-Troligt önskemål: **en lista** i admin med samma logik som publik vy (nu + kommande), med länk till redigering av underliggande tur-avvikelse eller generellt meddelande.
-
----
-
-## 6. Gap: v1 → Jesper/UL
-
-| UL / Jesper | v1 idag | Gap |
-|-------------|---------|-----|
-| Aktuellt-feed med datum i rubrik | Punktlista, ingen rubrik/datum per rad för avvikelser | Presentationslager |
-| Kommande veckor/månader | Max 2 dagar | Utöka datumintervall i API/shortcode |
-| Flera linjer/tåg per störning | En tur per avvikelse-rad | Gruppering eller ny entitet «störning» |
-| Planerade banarbeten (intervall) | Generellt meddelande med from/to **eller** många enstaka tur-datum | Bättre mallar / gruppering |
-| Störning i reseplanerare | Saknas | Wizard-integration (fas 2) |
-| En admin-översikt | Två menyer/flikar | Ev. samlad «Trafikinfo»-vy |
+- **Inmatning:** oförändrad (Avvikelser + Trafikmeddelanden)
+- **Översikt (önskad):** samma feed som publik vy, med länk till redigering — **fas 4** (valfritt blocker för fas 1–2)
 
 ---
 
-## 7. Öppna produktfrågor (D16)
+## 6. Gap: v1 → beslutad v2
 
-Innan implementation — **bekräfta med Jesper/operatör**:
-
-| # | Fråga | Förslag (default att diskutera) |
-|---|--------|----------------------------------|
-| 1 | **Var publiceras listan?** | Utöka shortcode + ev. egen WP-sida «Trafikstörningar»; behåll ovanför kalender på startsidan |
-| 2 | **Tidshorisont?** | Visa alla aktiva + kommande inom **90 dagar** (konfigurerbart) |
-| 3 | **Datamodell** | **B) Utöka presentation** — behåll tur-avvikelser + generella meddelanden; gruppera i API till «händelser» utan ny CPT i v2a |
-| 4 | **Wizard?** | v2a: länk/banner; v2b: varning på träff om avvikelse på datum/tur |
-| 5 | **Realtime/försening?** | **Nej** — utanför scope (UL-app-funktion vi inte har data för) |
-| 6 | **Operatörsflöde** | v2a: publik lista först; admin-översikt v2b |
+| UL / Jesper | v1 idag | v2 (beslut) |
+|-------------|---------|-------------|
+| Aktuellt-feed med datum i rubrik | Punktlista, ingen rubrik/datum per rad för avvikelser | UL-lik feed-komponent |
+| Kommande veckor/månader | Max 2 dagar | **90 dagar** (`horizon_days`) |
+| Flera linjer/tåg per störning | En tur per avvikelse-rad | **Gruppering** i API (källa A) |
+| Planerade banarbeten (intervall) | Källa B med `active_from`/`active_to` **eller** många tur-datum i A | Källa B + grupperad A |
+| Störning i reseplanerare | Saknas | **Medvetet nej** (§5.0) |
+| En admin-översikt | Två inmatningsmenyer | Förhandsvisning av feed (fas 4) |
 
 ---
 
-## 8. Föreslagen fasindelning (ej påbörjad)
+## 7. Produktbeslut (D16)
 
-| Fas | Innehåll | Beror på |
-|-----|----------|----------|
-| **0** | Detta dokument + Jesper-validering av §5–7 | — |
-| **1** | Domän/API: «disruption feed» — slå ihop generella + tur-avvikelser, datumintervall, sortering, gruppering per dag/vecka | Beslut #2–3 |
-| **2** | Publik Vue-vy: UL-lik lista (rubrik, datum, berörda tåg, brödtext) — ersätter/utökar flat `MrtTrafficNoticesView` | Fas 1 |
-| **3** | Shortcode-parametrar, ev. dedikerad sida, docs | Fas 2 |
-| **4** | Wizard: banner eller träff-varning | Beslut #4 |
-| **5** | Admin: samlad översikt «kommande störningar» | Fas 1–2 |
+| # | Fråga | Beslut (2026-06-11) |
+|---|--------|------------------------|
+| 1 | **Var publiceras?** | **Webb only** — shortcode (startsidan) + ev. egen WP-sida «Trafikstörningar» |
+| 2 | **Reseplaneraren?** | **Nej** — ingen integration i wizard |
+| 3 | **Tidshorisont?** | **90 dagar** (konfigurerbart shortcode-param) — nu + kommande |
+| 4 | **Datamodell?** | **Två befintliga källor** (§5.1): auto från tur-avvikelser + manuella trafikmeddelanden; gruppering i API, ingen ny CPT i v2a |
+| 5 | **Realtime/försening?** | **Nej** |
+| 6 | **Operatörsflöde inmatning?** | **Oförändrat** — Avvikelser + Trafikmeddelanden |
+| 7 | **Admin-översikt?** | **Önskad** — samma feed som publik (**fas 4**); inte blocker för fas 1–2 |
 
-**Medvetet utanför v2:** GPS/spårning, push, automatisk Trafikverket-feed, Gutenberg-block (samma som v1).
+**Kvar att validera med Jesper:** målbild §5.2 (layout/rubriker) och 90-dagars horisont räcker för «kommande».
+
+---
+
+## 8. Föreslagen fasindelning
+
+| Fas | Innehåll | Status |
+|-----|----------|--------|
+| **0** | Plan + beslut §5–7 | ☑ 2026-06-11 |
+| **1** | Domän/API: **disruption feed** — källor A+B, 90-dagars fönster, gruppering tågnummer, sortering Pågår/Kommande | Ej påbörjad |
+| **2** | Publik Vue: UL-lik feed — ersätter/utökar `MrtTrafficNoticesView` | Efter fas 1 |
+| **3** | Shortcode `horizon_days`, docs, ev. dedikerad sida | Efter fas 2 |
+| **4** | Admin: förhandsvisning av samma feed + länkar till redigering | Efter fas 2 |
+
+**Medvetet utanför v2:** reseplanerare, GPS/realtime, push, ny CPT, Gutenberg-block, Trafikverket-feed.
+
+**Nyckelfiler (troliga):** `inc/domain/traffic-notices/aggregate.php` (utöka), ny `disruption-feed.php`, `MrtTrafficNoticesView.vue` / ny feed-komponent, `TrafficNoticesDomainTest.php`.
 
 ---
 
@@ -199,16 +212,16 @@ Innan implementation — **bekräfta med Jesper/operatör**:
 
 | Doc | Roll |
 |-----|------|
-| [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | v1 — implementerad bas |
-| [TODO.md](TODO.md) | J11/D16 — spåras här tills beslut + fas 0 klara |
-| [ADMIN_UX_ACTION_PLAN.md](ADMIN_UX_ACTION_PLAN.md) UX-2.7 | Trafikmeddelanden vs avvikelser — förklaring redan i admin |
+| [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | v1 — implementerad bas (källor A+B, flat lista) |
+| [TODO.md](TODO.md) | J11/D16 — aktiv plan, fas 1 nästa |
+| [ADMIN_UX_ACTION_PLAN.md](ADMIN_UX_ACTION_PLAN.md) UX-2.7 | Trafikmeddelanden vs avvikelser — förklaring i admin |
 | [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) | J11 original |
 
 ---
 
 ## 10. Nästa steg
 
-- [ ] Jesper/operatör: bekräfta tolkning §5 (särskilt tidshorisont och wizard)
-- [ ] Spika D16-defaults i §7
-- [ ] Uppdatera [TODO.md](TODO.md) — flytta J11 från «saknar beslut» till aktiv plan när §7 är OK
-- [ ] Fas 1 — domän/API (efter beslut)
+- [x] Spika riktning: webb only, två källor (§5) — 2026-06-11
+- [ ] Jesper: snabb OK på målbild §5.2 och 90 dagar
+- [ ] Fas 1 — disruption feed (API/domän)
+- [ ] Fas 2 — UL-lik Vue-feed på webben

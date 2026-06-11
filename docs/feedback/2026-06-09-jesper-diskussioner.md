@@ -265,15 +265,15 @@
 
 ## 7. Trafikstörningar och avvikelser (J11)
 
-### D16. UL-lik störningslista 🟡
+### D16. UL-lik störningslista 🟢
 
 | | |
 |---|---|
 | **Feedback** | Lista nuvarande/kommande störningar; ange berörda tåg |
-| **Fråga** | Utöka **trafikmeddelanden** (`TrafficNoticesPage`), **tur-avvikelser** i editorn, eller ny sida? Ska störningar synas i reseplaneraren automatiskt? |
-| **Befintligt** | Avvikelser per tur/datum; publika trafikmeddelanden — begreppen överlappar (se admin-audit) |
-| **Beslut av** | Produkt — scope utanför Jesper-buggfix |
-| **Status** | Parkerad |
+| **Beslut (2026-06-11)** | **Webb only** — UL-lik feed på shortcode/ev. egen sida. **Två källor → en feed:** (A) auto från tur-avvikelser + (B) manuella trafikmeddelanden. **90 dagars** horisont. Gruppering tågnummer i API. **Ingen** integration i reseplaneraren, realtime eller push. Inmatning oförändrad (Avvikelser + Trafikmeddelanden). |
+| **Plan** | [TRAFFIC_DISRUPTIONS_PLAN.md](../TRAFFIC_DISRUPTIONS_PLAN.md) §5–7 |
+| **Kvar** | Jesper-validering målbild §5.2; implementation fas 1–4 |
+| **Status** | **Beslutad riktning** — implementation ej påbörjad |
 
 ---
 
