@@ -38,7 +38,7 @@ function MRT_admin_vue_l10n_settings(): array {
 		),
 		'settingsTicketUrl'       => __( 'Biljett-URL', 'museum-railway-timetable' ),
 		'settingsTicketUrlHint'   => __(
-			'Global länk till biljettköp i reseplaneraren. Shortcode-attribut ticket_url har företräde.',
+			'Valfri länk till operatörens biljettsida. Visar knappen ”Mer information om biljettköp” i sammanfattningen (infosida, inte onlinebokning). Shortcode-attribut ticket_url har företräde.',
 			'museum-railway-timetable'
 		),
 		'settingsHeroBackground'       => __( 'Reseplanerare — bakgrundsbild', 'museum-railway-timetable' ),

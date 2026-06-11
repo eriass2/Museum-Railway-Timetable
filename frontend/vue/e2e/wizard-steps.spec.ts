@@ -53,7 +53,7 @@ test.describe('Journey wizard steps', () => {
     await page.goto('/wizard?debug=summary');
     await expect(page.getByRole('button', { name: /Skriv ut/i })).toBeVisible();
     await expect(page.getByRole('button', { name: /Ladda ner som PDF/i })).toBeVisible();
-    await expect(page.getByRole('button', { name: /Fortsätt till biljetter/i })).toHaveCount(0);
-    await expect(page.getByText(/Fortsätt till biljetter/i)).toHaveCount(0);
+    await expect(page.getByRole('button', { name: /Mer information om biljettköp/i })).toHaveCount(0);
+    await expect(page.getByText(/Mer information om biljettköp/i)).toHaveCount(0);
   });
 });

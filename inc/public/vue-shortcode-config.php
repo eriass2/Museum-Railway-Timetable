@@ -200,7 +200,7 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 			'stepOutbound'    => __( 'Välj utresa', 'museum-railway-timetable' ),
 			'stepReturn'      => __( 'Välj återresa', 'museum-railway-timetable' ),
 			'stepSummary'     => __( 'Din resa', 'museum-railway-timetable' ),
-			'ticketCta'       => __( 'Fortsätt till biljetter', 'museum-railway-timetable' ),
+			'ticketCta'       => __( 'Mer information om biljettköp', 'museum-railway-timetable' ),
 			'summaryPrint'    => __( 'Skriv ut', 'museum-railway-timetable' ),
 			'summaryDownloadPdf' => __( 'Ladda ner som PDF', 'museum-railway-timetable' ),
 			'summaryPdfError' => __( 'Kunde inte skapa PDF. Försök igen eller använd Skriv ut.', 'museum-railway-timetable' ),

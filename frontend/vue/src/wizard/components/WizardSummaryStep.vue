@@ -42,7 +42,7 @@ const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
 
 const ticketUrl = computed(() => (config.ticketUrl || '').trim());
 
-const ticketCtaLabel = computed(() => cfgStr(cfg, 'ticketCta', 'Fortsätt till biljetter'));
+const ticketCtaLabel = computed(() => cfgStr(cfg, 'ticketCta', 'Mer information om biljettköp'));
 
 
 

@@ -2469,8 +2469,8 @@ msgstr ""
 msgid "Ingen trafik"
 msgstr ""
 
-#: inc/public/vue-shortcode-config.php:152
-msgid "Fortsätt till biljetter"
+#: inc/public/vue-shortcode-config.php:203
+msgid "Mer information om biljettköp"
 msgstr ""
 
 #: inc/public/vue-shortcode-config.php:153
