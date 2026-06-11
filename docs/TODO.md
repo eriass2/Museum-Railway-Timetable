@@ -2,7 +2,7 @@
 
 Kort lista över **öppna** punkter där **produkt/beslut redan är spikat** — implementation eller verifiering återstår. Genomfört arbete finns i arkivet längst ner och i respektive plan/doc.
 
-Punkter **utan** beslut (A0 onboarding, J11 UL-lik störningar m.fl.) listas separat. **Mycket senare** — parkerade tills förutsättningar och produktbeslut finns.
+Punkter **utan** beslut (J11 UL-lik störningar m.fl.) listas separat. **Mycket senare** — parkerade tills kärnflöden är verifierade och produktbeslut finns.
 
 ---
 
@@ -76,7 +76,8 @@ Plocka **inte** upp förrän kärnflöden är stabila, manuella checks i TODO ov
 
 | ID | Punkt | Varför senare |
 |----|-------|----------------|
-| A9 / D11 | Publicera-knapp / utkast tidtabell | Kräver D11 (`draft` vs meta vs staging) **och** stabil admin/onboarding (A0/D8) innan utkast/publicera kan designas säkert — [diskussioner D11](feedback/2026-06-09-jesper-diskussioner.md#d11-publicera-knapp--utkast-a9-) |
+| A0 / D8 | Onboarding-friktion (en vs två rutter per linje) | Kräver D8-domänbeslut (en rutt vs returrutt-knapp vs CSV-first); A1/A7/A10/Turvy redan levererat — [diskussioner D8](feedback/2026-06-09-jesper-diskussioner.md#d8-rutt-en-eller-två-rutter-per-linje-) |
+| A9 / D11 | Publicera-knapp / utkast tidtabell | Kräver D11 (`draft` vs meta vs staging) **och** stabil admin/onboarding innan utkast/publicera kan designas säkert — [diskussioner D11](feedback/2026-06-09-jesper-diskussioner.md#d11-publicera-knapp--utkast-a9-) |
 | D2b v2 | Feedback — e-postnotis vid ny rapport | `wp_mail` + konfigurerbar adress; låg prioritet när admin-lista räcker — [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md) |
 
 ---
@@ -85,7 +86,6 @@ Plocka **inte** upp förrän kärnflöden är stabila, manuella checks i TODO ov
 
 | ID | Punkt | Var beslut saknas |
 |----|-------|-------------------|
-| A0 / D8 | Onboarding-friktion (rutt per riktning) | Domänmodell — [diskussioner D8](feedback/2026-06-09-jesper-diskussioner.md#d8-rutt-en-eller-två-rutter-per-linje-) |
 | J11 / D16 | UL-lik störningslista i reseplaneraren | Parkerad — [diskussioner D16](feedback/2026-06-09-jesper-diskussioner.md#d16-ul-lik-störningslista-) |
 
 ---
