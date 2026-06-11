@@ -79,6 +79,7 @@ final class LennakattenReferenceConfigTest extends TestCase {
 		$ref = MRT_lennakatten_reference_plugin_settings();
 		self::assertSame( (string) $ref['operator_name'], $map['operator_name'] );
 		self::assertSame( (string) $ref['ticket_url'], $map['ticket_url'] );
+		self::assertSame( (string) $ref['hero_background_url'], $map['hero_background_url'] );
 		self::assertSame( (string) $ref['max_transfers'], $map['max_transfers'] );
 		self::assertSame(
 			(string) $ref['afternoon_return_threshold_minutes'],
@@ -130,6 +131,14 @@ final class LennakattenReferenceConfigTest extends TestCase {
 		self::assertSame( 'Inställd', $deviations['green-71-out']['2026-06-06'] );
 		self::assertSame( 'Inställd', $deviations['green-97-out']['2026-06-06'] );
 		self::assertSame( 'Ersättningsbuss', $deviations['green-75-out']['2026-06-06'] );
+	}
+
+	public function test_csv_import_resolves_plugin_relative_hero_background_url(): void {
+		if ( ! defined( 'MRT_URL' ) ) {
+			define( 'MRT_URL', 'https://example.test/wp-content/plugins/museum-railway-timetable/' );
+		}
+		$resolved = MRT_csv_resolve_hero_background_url( MRT_testdata_wizard_hero_background_relative_path() );
+		self::assertStringContainsString( 'testdata/images/wizard-hero-bosshus.jpg', $resolved );
 	}
 
 	public function test_production_defaults_stay_neutral(): void {

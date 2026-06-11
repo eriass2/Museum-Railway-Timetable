@@ -35,6 +35,35 @@ function MRT_csv_lennakatten_fixture_path(): string {
 }
 
 /**
+ * Relative plugin path to the bundled wizard hero background image.
+ */
+function MRT_testdata_wizard_hero_background_relative_path(): string {
+	return 'testdata/images/wizard-hero-bosshus.jpg';
+}
+
+/**
+ * Public URL for a plugin-bundled testdata asset (empty when missing or unsafe path).
+ */
+function MRT_testdata_asset_url( string $relative_path ): string {
+	$relative_path = ltrim( $relative_path, '/' );
+	if ( $relative_path === '' || str_contains( $relative_path, '..' ) ) {
+		return '';
+	}
+	$full = MRT_PATH . $relative_path;
+	if ( ! is_readable( $full ) ) {
+		return '';
+	}
+	return esc_url( MRT_URL . $relative_path );
+}
+
+/**
+ * Public URL for the bundled wizard hero background image.
+ */
+function MRT_testdata_wizard_hero_background_url(): string {
+	return MRT_testdata_asset_url( MRT_testdata_wizard_hero_background_relative_path() );
+}
+
+/**
  * Loaded fixture package (cached).
  *
  * @return array<string, mixed>

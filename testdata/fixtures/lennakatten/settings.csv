@@ -3,6 +3,7 @@ enabled,1
 note,
 operator_name,Lennakatten
 ticket_url,https://www.lennakatten.se/biljetter/
+hero_background_url,testdata/images/wizard-hero-bosshus.jpg
 min_transfer_minutes,0
 max_transfer_minutes,120
 max_transfers,2

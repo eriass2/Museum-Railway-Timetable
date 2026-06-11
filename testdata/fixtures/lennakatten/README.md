@@ -45,7 +45,7 @@ Import zip (same data): `../lennakatten.zip` — regenerate with `composer csv:z
 
 **Linnés Hammarby:** buss B9–B14 under `red-buss` (söndagar) — importguide [docs/LINNES_HAMMARBY.md](../../../docs/LINNES_HAMMARBY.md).
 
-**Also included:** `settings.csv`, `price_schema.csv`, and `prices.csv` (Lennakatten taxa 2026 + operatörsinställningar). See `inc/import/lennakatten/reference-data.php` for the PHP mirror used in PHPUnit.
+**Also included:** `settings.csv`, `price_schema.csv`, and `prices.csv` (Lennakatten taxa 2026 + operatörsinställningar). `settings.csv` sätter `hero_background_url` till `testdata/images/wizard-hero-bosshus.jpg` (Bosshus-bild i plugin-mappen). See `inc/import/lennakatten/reference-data.php` for the PHP mirror used in PHPUnit.
 
 **Traffic demo (not in CSV):** After import, `MRT_lennakatten_apply_traffic_demo_data()` seeds trafikmeddelanden (B) and tur-avvikelser (A) for manual/PHPUnit testing of the UL-like disruption feed — see `inc/import/lennakatten/traffic-demo-data.php`. Reference date **2026-06-06**: glassrea + inställda turer 71/97, ersättningsbuss tur 75; upcoming baninfo Jul–Aug and inställd tur 71 on **2026-07-04**.
 

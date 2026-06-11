@@ -274,6 +274,7 @@ Programmet tolkar **inte** fet vs normal typografi. Se [STOP_TIME_CA.md](STOP_TI
 | `note` | string | Intern anteckning |
 | `operator_name` | string | Operatörsnamn (wizard-rubrik om shortcode saknar `route_title`) |
 | `ticket_url` | URL | Global biljett-URL i reseplaneraren |
+| `hero_background_url` | URL | Valfri hero-bakgrund i reseplaneraren. Absolut `https://…` eller plugin-relativ testdata-sökväg (t.ex. `testdata/images/wizard-hero-bosshus.jpg`) som löses mot `MRT_URL` vid import |
 | `min_transfer_minutes` | int | Min väntetid vid byte |
 | `max_transfer_minutes` | int | Max väntetid vid byte |
 | `max_transfers` | int | Max antal byten (0–5) |

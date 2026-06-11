@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/journey/train-change.php';
+require_once MRT_PATH . 'inc/import/csv/fixture-read.php';
 
 /**
  * Station price zones per Lennakatten taxa 2026 (see docs/PRICE_ZONES.md).
@@ -91,6 +92,7 @@ function MRT_lennakatten_reference_plugin_settings(): array {
 		'note'                               => '',
 		'operator_name'                      => 'Lennakatten',
 		'ticket_url'                         => 'https://www.lennakatten.se/biljetter/',
+		'hero_background_url'                => MRT_testdata_wizard_hero_background_relative_path(),
 		'min_transfer_minutes'               => 0,
 		'max_transfer_minutes'               => 120,
 		'max_transfers'                      => 2,

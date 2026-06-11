@@ -16,6 +16,7 @@ require_once MRT_PATH . 'inc/domain/line/line-route-resolve.php';
 require_once MRT_PATH . 'inc/domain/service/highlight.php';
 require_once MRT_PATH . 'inc/domain/service/overview-column.php';
 require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
+require_once MRT_PATH . 'inc/import/csv/fixture-read.php';
 
 /**
  * @param array<string, array<int, array<string, string>>> $files
@@ -260,12 +261,30 @@ function MRT_csv_import_settings( array $files ): void {
 	update_option( 'mrt_settings', $current );
 }
 
+/**
+ * Resolve hero background URL from absolute URL or plugin-relative testdata path.
+ */
+function MRT_csv_resolve_hero_background_url( string $value ): string {
+	$value = trim( $value );
+	if ( $value === '' ) {
+		return '';
+	}
+	if ( str_starts_with( $value, 'http://' ) || str_starts_with( $value, 'https://' ) ) {
+		return esc_url_raw( $value );
+	}
+	$url = MRT_testdata_asset_url( $value );
+	return $url !== '' ? esc_url_raw( $url ) : '';
+}
+
 function MRT_csv_cast_setting_value( string $key, string $value ) {
 	if ( in_array( $key, array( 'enabled', 'wizard_beta_enabled', 'wizard_feedback_enabled' ), true ) ) {
 		return in_array( strtolower( $value ), array( '1', 'true', 'yes' ), true );
 	}
-	if ( $key === 'ticket_url' || $key === 'hero_background_url' ) {
+	if ( $key === 'ticket_url' ) {
 		return esc_url_raw( $value );
+	}
+	if ( $key === 'hero_background_url' ) {
+		return MRT_csv_resolve_hero_background_url( $value );
 	}
 	if ( $key === 'max_transfers' || $key === 'afternoon_return_threshold_minutes' || str_contains( $key, '_minutes' ) ) {
 		return (int) $value;
