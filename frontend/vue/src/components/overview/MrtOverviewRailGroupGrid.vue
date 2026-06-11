@@ -97,20 +97,20 @@ function cancelledNoticeDetail(index: number): boolean {
             />
             <div
               v-else
-              class="mrt-ov-col-head"
+              class="mrt-ov-col-head mrt-ov-col-head--type"
               :class="{ 'mrt-ov-col-head--cancelled': columnCancelled(track.columnIndex) }"
               :style="{ ...overviewGridCellStyle(ti), ...overviewHeadRowStyle(1) }"
             >
               <img
                 v-if="trainTypeIconUrl(iconUrls, group.columns[track.columnIndex].iconKey)"
-                class="mrt-ov-icon"
+                class="mrt-ov-icon mrt-ov-icon--head"
                 :class="{ 'mrt-ov-icon--cancelled': columnCancelled(track.columnIndex) }"
                 :src="trainTypeIconUrl(iconUrls, group.columns[track.columnIndex].iconKey)"
                 :alt="group.columns[track.columnIndex].trainTypeName"
-                width="36"
-                height="36"
+                width="28"
+                height="28"
               />
-              <span>
+              <span class="mrt-ov-col-head__type-name">
                 {{ group.columns[track.columnIndex].trainTypeName }}
                 <abbr
                   v-if="showDeviationMeta && group.columns[track.columnIndex].isDeviation"
@@ -225,7 +225,11 @@ function cancelledNoticeDetail(index: number): boolean {
               <div
                 v-if="track.kind === 'train'"
                 class="mrt-ov-transfer-cell"
-                :class="{ 'mrt-ov-transfer-cell--empty': !row.cells[track.columnIndex].vehicles.length }"
+                :class="{
+                  'mrt-ov-transfer-cell--empty': !row.cells[track.columnIndex].vehicles.length,
+                  'mrt-ov-transfer-cell--change-type': row.kind === 'trainChangeType',
+                  'mrt-ov-transfer-cell--change-number': row.kind === 'trainChangeNumber',
+                }"
                 :style="overviewGridCellStyle(ti)"
               >
                 <slot

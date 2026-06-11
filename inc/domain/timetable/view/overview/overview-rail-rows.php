@@ -169,9 +169,8 @@ function MRT_timetable_overview_rail_rows_for_station(
 			$display_columns,
 			$station_posts
 		);
-		$transfer = MRT_timetable_train_change_row_json( $station, $services, $info, $display_columns );
-		if ( $transfer !== null ) {
-			$rows[] = $transfer;
+		foreach ( MRT_timetable_train_change_rows_json( $station, $services, $info, $display_columns ) as $transfer_row ) {
+			$rows[] = $transfer_row;
 		}
 		$rows[] = MRT_timetable_row_times_json(
 			'departure',

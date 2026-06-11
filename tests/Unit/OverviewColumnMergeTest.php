@@ -81,19 +81,19 @@ final class OverviewColumnMergeTest extends TestCase {
 		$view            = $this->inbound_view_without_map();
 		$display_columns = MRT_timetable_build_display_columns( $view );
 		$station         = new WP_Post( (object) array( 'ID' => self::MARIELUND_ID, 'post_title' => 'Marielund' ) );
-		$row             = MRT_timetable_train_change_row_json(
+		$rows = MRT_timetable_train_change_rows_json(
 			$station,
 			$view['services_list'],
 			$view['service_info'],
 			$display_columns
 		);
 
-		self::assertIsArray( $row );
-		self::assertCount( 5, $row['cells'] );
+		self::assertCount( 2, $rows );
+		self::assertCount( 5, $rows[0]['cells'] );
 		$idx_60 = $this->column_index_for_service( $view, $display_columns, '60' );
 		$idx_96 = $this->column_index_for_service( $view, $display_columns, '96' );
-		self::assertSame( '74', $row['cells'][ $idx_60 ]['vehicles'][0]['serviceNumber'] );
-		self::assertSame( '64', $row['cells'][ $idx_96 ]['vehicles'][0]['serviceNumber'] );
+		self::assertSame( '74', $rows[0]['cells'][ $idx_60 ]['vehicles'][0]['serviceNumber'] );
+		self::assertSame( '64', $rows[0]['cells'][ $idx_96 ]['vehicles'][0]['serviceNumber'] );
 	}
 
 	public function test_outbound_merge_for_service_71_to_61(): void {

@@ -71,7 +71,7 @@ export type TimetableOverviewRow =
       cells: TimetableTimeCell[];
     }
   | {
-      kind: 'trainChange' | 'busConnection';
+      kind: 'trainChangeType' | 'trainChangeNumber' | 'busConnection';
       label: string;
       cells: TimetableTransferCell[];
     };

@@ -110,42 +110,70 @@ function MRT_timetable_time_cell_text(
 /**
  * @param array<int, array{primary_idx: int, continuation_idx: int|null, split_station_id: int}>|null $display_columns
  */
-function MRT_timetable_train_change_row_json(
+/**
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_timetable_train_change_rows_json(
 	WP_Post $station,
 	array $services,
 	array $info,
 	?array $display_columns = null
-): ?array {
+): array {
 	$map = MRT_get_station_train_change_map( (int) $station->ID, $station );
 	if ( $map === array() ) {
-		return null;
+		return array();
 	}
 
+	$cells = MRT_timetable_train_change_cells_json( $map, $services, $info, $display_columns );
+	$label = __( 'Tågbyte:', 'museum-railway-timetable' );
+
+	return array(
+		array(
+			'kind'  => 'trainChangeType',
+			'label' => $label,
+			'cells' => $cells,
+		),
+		array(
+			'kind'  => 'trainChangeNumber',
+			'label' => '',
+			'cells' => $cells,
+		),
+	);
+}
+
+/**
+ * @return array<int, array{vehicles: array<int, array<string, string>>}>
+ */
+function MRT_timetable_train_change_cells_json(
+	array $map,
+	array $services,
+	array $info,
+	?array $display_columns
+): array {
 	$cells = array();
 	if ( $display_columns === null ) {
 		foreach ( $services as $idx => $service_data ) {
 			unset( $service_data );
-			$number   = (string) ( $info[ $idx ]['service_number'] ?? '' );
-			$transfer = $map[ $number ] ?? null;
-			$cells[]  = array(
-				'vehicles' => $transfer ? array( MRT_timetable_vehicle_json( $transfer['typeName'], $transfer['serviceNumber'] ) ) : array(),
-			);
+			$cells[] = MRT_timetable_train_change_cell_json( $map, (string) ( $info[ $idx ]['service_number'] ?? '' ) );
 		}
-	} else {
-		foreach ( $display_columns as $column ) {
-			$idx      = (int) $column['primary_idx'];
-			$number   = (string) ( $info[ $idx ]['service_number'] ?? '' );
-			$transfer = $map[ $number ] ?? null;
-			$cells[]  = array(
-				'vehicles' => $transfer ? array( MRT_timetable_vehicle_json( $transfer['typeName'], $transfer['serviceNumber'] ) ) : array(),
-			);
-		}
+		return $cells;
 	}
+	foreach ( $display_columns as $column ) {
+		$idx     = (int) $column['primary_idx'];
+		$cells[] = MRT_timetable_train_change_cell_json( $map, (string) ( $info[ $idx ]['service_number'] ?? '' ) );
+	}
+	return $cells;
+}
 
+/**
+ * @return array{vehicles: array<int, array<string, string>>}
+ */
+function MRT_timetable_train_change_cell_json( array $map, string $service_number ): array {
+	$transfer = $map[ $service_number ] ?? null;
 	return array(
-		'kind'  => 'trainChange',
-		'label' => __( 'Tågbyte:', 'museum-railway-timetable' ),
-		'cells' => $cells,
+		'vehicles' => $transfer
+			? array( MRT_timetable_vehicle_json( $transfer['typeName'], $transfer['serviceNumber'] ) )
+			: array(),
 	);
 }
 

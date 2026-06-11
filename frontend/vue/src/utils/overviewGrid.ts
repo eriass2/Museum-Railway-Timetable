@@ -9,13 +9,24 @@ export type OverviewGridTrack =
 export function isTimeRow(
   row: TimetableOverviewRow,
 ): row is Extract<TimetableOverviewRow, { cells: { text: string }[] }> {
-  return row.kind !== 'trainChange' && row.kind !== 'busConnection';
+  return (
+    row.kind !== 'trainChangeType' &&
+    row.kind !== 'trainChangeNumber' &&
+    row.kind !== 'busConnection'
+  );
 }
 
 export function isTransferRow(
   row: TimetableOverviewRow,
-): row is Extract<TimetableOverviewRow, { kind: 'trainChange' | 'busConnection' }> {
-  return row.kind === 'trainChange' || row.kind === 'busConnection';
+): row is Extract<
+  TimetableOverviewRow,
+  { kind: 'trainChangeType' | 'trainChangeNumber' | 'busConnection' }
+> {
+  return (
+    row.kind === 'trainChangeType' ||
+    row.kind === 'trainChangeNumber' ||
+    row.kind === 'busConnection'
+  );
 }
 
 export function isBusRow(row: TimetableOverviewRow): boolean {
@@ -30,7 +41,11 @@ export function overviewRowClass(row: TimetableOverviewRow, rowIndex = 0): strin
     classes.push('mrt-ov-grid-row--to');
   } else if (row.kind === 'busDeparture' || row.kind === 'busArrival') {
     classes.push('mrt-ov-grid-row--bus');
-  } else if (row.kind === 'trainChange' || row.kind === 'busConnection') {
+  } else if (row.kind === 'trainChangeType') {
+    classes.push('mrt-ov-grid-row--transfer', 'mrt-ov-grid-row--transfer-type');
+  } else if (row.kind === 'trainChangeNumber') {
+    classes.push('mrt-ov-grid-row--transfer', 'mrt-ov-grid-row--transfer-number');
+  } else if (row.kind === 'busConnection') {
     classes.push('mrt-ov-grid-row--transfer');
   } else if (row.kind === 'station' && rowIndex % 2 === 0) {
     classes.push('mrt-ov-grid-row--alt');

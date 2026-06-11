@@ -62,7 +62,8 @@ describe('overviewGrid tracks', () => {
     const rows: TimetableOverviewRow[] = [
       { kind: 'from', label: 'Från A', cells: [{ text: '10:00' }, { text: '11:00' }] },
       { kind: 'station', label: 'B', cells: [{ text: '10:10' }, { text: '11:10' }] },
-      { kind: 'trainChange', label: 'Tågbyte:', cells: [{ vehicles: [] }, { vehicles: [] }] },
+      { kind: 'trainChangeType', label: 'Tågbyte:', cells: [{ vehicles: [] }, { vehicles: [] }] },
+      { kind: 'trainChangeNumber', label: '', cells: [{ vehicles: [] }, { vehicles: [] }] },
       { kind: 'station', label: 'C', cells: [{ text: '10:20' }, { text: '11:20' }] },
       { kind: 'to', label: 'Till D', cells: [{ text: '10:30' }, { text: '11:30' }] },
     ];
@@ -74,16 +75,17 @@ describe('overviewGrid tracks', () => {
     const spans = buildHighlightStripeSpans(rows, tracks);
     expect(spans).toHaveLength(2);
     expect(spans[0]).toMatchObject({ rowIndex: 0, rowSpan: 2, label: "Thun's-expressen" });
-    expect(spans[1]).toMatchObject({ rowIndex: 3, rowSpan: 2 });
+    expect(spans[1]).toMatchObject({ rowIndex: 4, rowSpan: 2 });
   });
 
   it('splitOverviewRowSegments breaks at transfer rows', () => {
     const rows: TimetableOverviewRow[] = [
       { kind: 'from', label: 'A', cells: [] },
-      { kind: 'trainChange', label: 'Byte', cells: [] },
+      { kind: 'trainChangeType', label: 'Byte', cells: [] },
+      { kind: 'trainChangeNumber', label: '', cells: [] },
       { kind: 'to', label: 'B', cells: [] },
     ];
-    expect(splitOverviewRowSegments(rows)).toEqual([[0], [2]]);
+    expect(splitOverviewRowSegments(rows)).toEqual([[0], [3]]);
   });
 
   it('styles bus inline rows separately from train transfers', () => {

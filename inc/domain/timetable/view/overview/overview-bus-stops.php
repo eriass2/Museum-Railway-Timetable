@@ -152,10 +152,11 @@ function MRT_timetable_bus_stop_display_time( $stop, bool $use_departure ): stri
 	if ( ! is_array( $stop ) ) {
 		return '—';
 	}
+	$row_kind = $use_departure ? 'from' : 'to';
 	if ( $use_departure ) {
 		$display = MRT_get_from_row_display_stop_time( $stop );
-		return MRT_format_stop_time_display( $display ?? $stop );
+		return MRT_format_stop_time_display( $display ?? $stop, $row_kind );
 	}
 	$display = MRT_get_to_row_display_stop_time( $stop );
-	return MRT_format_stop_time_display( $display ?? $stop );
+	return MRT_format_stop_time_display( $display ?? $stop, $row_kind );
 }

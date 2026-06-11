@@ -173,15 +173,16 @@ final class OverviewJsonTest extends TestCase {
 			),
 		);
 		$station = new WP_Post( (object) array( 'ID' => 50, 'post_title' => 'Marielund' ) );
-		$row     = MRT_timetable_train_change_row_json(
+		$rows = MRT_timetable_train_change_rows_json(
 			$station,
 			array( array() ),
 			array( array( 'service_number' => '71' ) )
 		);
 
-		self::assertIsArray( $row );
-		self::assertSame( 'trainChange', $row['kind'] );
-		self::assertSame( '61', $row['cells'][0]['vehicles'][0]['serviceNumber'] );
+		self::assertCount( 2, $rows );
+		self::assertSame( 'trainChangeType', $rows[0]['kind'] );
+		self::assertSame( 'trainChangeNumber', $rows[1]['kind'] );
+		self::assertSame( '61', $rows[0]['cells'][0]['vehicles'][0]['serviceNumber'] );
 	}
 
 	public function test_vehicle_json_uses_train_type_icon_key(): void {

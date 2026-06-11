@@ -394,6 +394,20 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertSame( 'Till Linnés Hammarby*', $rows[1]['label'] );
 	}
 
+	public function test_junction_bus_departure_hides_pickup_suffix_on_from_row(): void {
+		$stop = array_merge(
+			array(
+				'departure_time'   => '10:53',
+				'approximate_time' => true,
+			),
+			MRT_test_stop_modes_pickup_only()
+		);
+
+		$display = MRT_timetable_bus_stop_display_time( $stop, true );
+
+		self::assertSame( 'Ca 10.53', $display );
+	}
+
 	/**
 	 * @return array<string, mixed>
 	 */

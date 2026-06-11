@@ -10,7 +10,9 @@ $cells   = array(
 	'MRT_timetable_row_times_json',
 	'MRT_timetable_time_cell_json',
 	'MRT_timetable_time_cell_text',
-	'MRT_timetable_train_change_row_json',
+	'MRT_timetable_train_change_rows_json',
+	'MRT_timetable_train_change_cells_json',
+	'MRT_timetable_train_change_cell_json',
 	'MRT_timetable_vehicle_json',
 );
 $rows    = array(
