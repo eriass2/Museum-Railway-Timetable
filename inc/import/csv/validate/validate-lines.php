@@ -95,6 +95,43 @@ function MRT_csv_validate_service_line_codes(
 }
 
 /**
+ * @param array<string, bool> $lines
+ * @param array<string, bool> $stations
+ */
+function MRT_csv_validate_branch_junction_rows(
+	array $files,
+	array $lines,
+	array $stations,
+	array &$errors
+): void {
+	$main_stations = MRT_csv_ordered_line_station_codes( $files, 'main' );
+	foreach ( (array) ( $files['branch_junctions.csv'] ?? array() ) as $row ) {
+		$line_code = trim( (string) ( $row['line_code'] ?? '' ) );
+		$junction  = trim( (string) ( $row['junction_station_code'] ?? '' ) );
+		if ( $line_code !== '' && ! isset( $lines[ $line_code ] ) ) {
+			MRT_csv_add_row_error( $row, "Unknown line_code \"{$line_code}\".", $errors );
+		}
+		if ( $junction !== '' && ! isset( $stations[ $junction ] ) ) {
+			MRT_csv_add_row_error( $row, "Unknown junction_station_code \"{$junction}\".", $errors );
+		}
+		if ( $line_code === '' || $junction === '' ) {
+			continue;
+		}
+		$line_kind = trim( (string) ( $lines[ $line_code ]['kind'] ?? '' ) );
+		if ( $line_kind !== '' && $line_kind !== 'branch' ) {
+			MRT_csv_add_row_error( $row, 'branch_junctions applies only to branch lines.', $errors );
+		}
+		$branch_stations = MRT_csv_ordered_line_station_codes( $files, $line_code );
+		if ( $branch_stations !== array() && ! in_array( $junction, $branch_stations, true ) ) {
+			MRT_csv_add_row_error( $row, 'junction_station_code must appear on the branch line.', $errors );
+		}
+		if ( $main_stations !== array() && ! in_array( $junction, $main_stations, true ) ) {
+			MRT_csv_add_row_error( $row, 'junction_station_code must appear on main line.', $errors );
+		}
+	}
+}
+
+/**
  * Main corridor line must list the same stations as faringe-uppsala-ostra route.
  *
  * @param array<string, array<int, array<string, string>>> $files

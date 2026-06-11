@@ -41,6 +41,7 @@ function MRT_csv_file_to_include_entity( string $filename ): ?string {
 		'train_types.csv'         => 'train_types',
 		'lines.csv'               => 'lines',
 		'line_stations.csv'       => 'lines',
+		'branch_junctions.csv'    => 'lines',
 		'routes.csv'              => 'routes',
 		'route_stations.csv'      => 'routes',
 		'timetables.csv'          => 'timetables',

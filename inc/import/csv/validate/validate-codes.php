@@ -57,7 +57,7 @@ function MRT_csv_resolve_package_codes( array $package, array &$errors ): array 
 function MRT_csv_validate_required_files( array $includes, array $files, array &$errors ): void {
 	$need = array(
 		'stations'   => array( 'stations.csv' ),
-		'lines'      => array( 'lines.csv', 'line_stations.csv' ),
+		'lines'      => array( 'lines.csv', 'line_stations.csv', 'branch_junctions.csv' ),
 		'routes'     => array( 'routes.csv', 'route_stations.csv' ),
 		'timetables' => array( 'timetables.csv', 'timetable_dates.csv' ),
 		'services'   => array( 'services.csv', 'service_train_types.csv' ),

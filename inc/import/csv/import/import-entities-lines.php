@@ -22,6 +22,7 @@ function MRT_csv_import_lines( array $files ): int {
 		return 0;
 	}
 	$station_rows = MRT_csv_group_by_field( $files, 'line_stations.csv', 'line_code' );
+	$junctions    = MRT_csv_branch_junctions_by_line( $files );
 	$registry     = array();
 	foreach ( $line_rows as $row ) {
 		$code = trim( (string) ( $row['line_code'] ?? '' ) );
@@ -43,12 +44,36 @@ function MRT_csv_import_lines( array $files ): int {
 				$codes[] = $station_code;
 			}
 		}
-		$registry[ $code ] = array(
+		$entry = array(
 			'title'         => sanitize_text_field( (string) ( $row['title'] ?? '' ) ),
 			'kind'          => sanitize_key( (string) ( $row['kind'] ?? '' ) ),
 			'station_codes' => $codes,
 		);
+		$junction = $junctions[ $code ] ?? null;
+		if ( is_array( $junction ) ) {
+			$entry['junction_station_code'] = (string) ( $junction['junction_station_code'] ?? '' );
+			$entry['requires_transfer']     = (bool) ( $junction['requires_transfer'] ?? false );
+		}
+		$registry[ $code ] = $entry;
 	}
 	MRT_set_line_registry( $registry );
 	return count( $registry );
+}
+
+/**
+ * @return array<string, array{junction_station_code: string, requires_transfer: bool}>
+ */
+function MRT_csv_branch_junctions_by_line( array $files ): array {
+	$map = array();
+	foreach ( (array) ( $files['branch_junctions.csv'] ?? array() ) as $row ) {
+		$line_code = trim( (string) ( $row['line_code'] ?? '' ) );
+		if ( $line_code === '' ) {
+			continue;
+		}
+		$map[ $line_code ] = array(
+			'junction_station_code' => trim( (string) ( $row['junction_station_code'] ?? '' ) ),
+			'requires_transfer'     => in_array( strtolower( (string) ( $row['requires_transfer'] ?? '' ) ), array( '1', 'true', 'yes' ), true ),
+		);
+	}
+	return $map;
 }

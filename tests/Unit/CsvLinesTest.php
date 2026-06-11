@@ -57,6 +57,47 @@ final class CsvLinesTest extends TestCase {
 		}
 	}
 
+	public function test_lennakatten_bus_services_declare_transfer_branch_line_codes(): void {
+		$expected = array(
+			'green-b1-bus-out' => 'fjallnora',
+			'green-b6-bus-in'  => 'fjallnora',
+			'red-b9-bus-out'   => 'linnes-marielund',
+			'red-b12-bus-in'   => 'linnes-marielund',
+		);
+		$files = (array) ( MRT_csv_load_package( ABSPATH . 'testdata/fixtures/lennakatten' )['files'] ?? array() );
+		$by_code = array();
+		foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {
+			$by_code[ (string) ( $row['service_code'] ?? '' ) ] = (string) ( $row['line_code'] ?? '' );
+		}
+		foreach ( $expected as $service_code => $line_code ) {
+			self::assertSame( $line_code, $by_code[ $service_code ] ?? '', $service_code );
+		}
+	}
+
+	public function test_import_lines_persists_branch_junctions(): void {
+		$files = array(
+			'lines.csv' => array(
+				array( 'line_code' => 'fjallnora', 'title' => 'Selkné – Fjällnora', 'kind' => 'branch' ),
+			),
+			'line_stations.csv' => array(
+				array( 'line_code' => 'fjallnora', 'sequence' => '1', 'station_code' => 'selkna' ),
+				array( 'line_code' => 'fjallnora', 'sequence' => '2', 'station_code' => 'fjallnora' ),
+			),
+			'branch_junctions.csv' => array(
+				array(
+					'line_code'               => 'fjallnora',
+					'junction_station_code'   => 'selkna',
+					'requires_transfer'       => '1',
+				),
+			),
+		);
+
+		MRT_csv_import_lines( $files );
+		$registry = MRT_get_line_registry();
+		self::assertSame( 'selkna', $registry['fjallnora']['junction_station_code'] ?? '' );
+		self::assertTrue( (bool) ( $registry['fjallnora']['requires_transfer'] ?? false ) );
+	}
+
 	public function test_import_lines_persists_registry(): void {
 		$files = array(
 			'lines.csv' => array(

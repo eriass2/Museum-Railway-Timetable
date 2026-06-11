@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once __DIR__ . '/grid-branch.php';
 require_once __DIR__ . '/grid-connections.php';
+require_once MRT_PATH . 'inc/domain/line/line-csv.php';
 require_once MRT_PATH . 'inc/domain/route/route-meta.php';
 
 /**
@@ -93,8 +94,18 @@ function MRT_timetable_group_is_main_corridor( array $group ): bool {
  */
 function MRT_timetable_find_main_group_for_branch( array $grouped_services, array $branch, string $branch_key ): ?string {
 	$branch_station_ids = array_map( 'intval', (array) ( $branch['stations'] ?? array() ) );
-	$best_key           = null;
-	$best_score         = -1;
+	$line_code          = MRT_timetable_group_line_code( $branch );
+	$junction_id        = MRT_line_junction_station_id_for_group( $branch, $line_code );
+	if ( $junction_id > 0 ) {
+		return MRT_timetable_find_main_group_by_line_junction(
+			$grouped_services,
+			$branch_key,
+			$branch_station_ids,
+			$junction_id
+		);
+	}
+	$best_key   = null;
+	$best_score = -1;
 
 	foreach ( $grouped_services as $key => $group ) {
 		if ( $key === $branch_key || ! MRT_timetable_group_is_main_corridor( $group ) ) {
@@ -114,6 +125,32 @@ function MRT_timetable_find_main_group_for_branch( array $grouped_services, arra
 	}
 
 	return $best_key;
+}
+
+/**
+ * @param array<int, int> $branch_station_ids
+ */
+function MRT_timetable_find_main_group_by_line_junction(
+	array $grouped_services,
+	string $branch_key,
+	array $branch_station_ids,
+	int $junction_id
+): ?string {
+	foreach ( $grouped_services as $key => $group ) {
+		if ( $key === $branch_key || ! MRT_timetable_group_is_main_corridor( $group ) ) {
+			continue;
+		}
+		$main_stations = array_map( 'intval', (array) ( $group['stations'] ?? array() ) );
+		if ( ! in_array( $junction_id, $main_stations, true ) ) {
+			continue;
+		}
+		$connector = MRT_timetable_branch_junction_connector_direction( $branch_station_ids, $main_stations );
+		if ( $connector !== '' && MRT_timetable_rail_grid_direction( $group ) !== $connector ) {
+			continue;
+		}
+		return (string) $key;
+	}
+	return null;
 }
 
 /**

@@ -1,6 +1,6 @@
 # Linjer och grenar — refactor-plan (Lennakatten)
 
-**Status:** Spikad domänriktning (2026-06-11). Fas 1 (`lines.csv` pilot) implementerad; Fas 2–4 återstår.  
+**Status:** Spikad domänriktning (2026-06-11). Fas 1–2 implementerade (pilot); Fas 3–4 återstår.  
 **Syfte:** Ersätta dagens många shuttle-`route` + overview-heuristik med en tydlig modell innan go-live.  
 **Relaterat:** [DATA_MODEL.md](DATA_MODEL.md) §1.4b, [CSV_FORMAT.md](CSV_FORMAT.md), [LINNES_HAMMARBY.md](LINNES_HAMMARBY.md).
 
@@ -129,11 +129,11 @@ services.csv
 - Import: `mrt_line_registry` + `mrt_service_line_code`; `route` kvar som alias
 - Tester: fixture validate + journey oförändrat beteende
 
-### Fas 2 — transfer-grenar
+### Fas 2 — transfer-grenar ✓
 
 - `fjallnora` + `linnes-marielund` med `branch_junctions.csv`
-- Flytta B1–B8, B9–B13 från shuttle-routes
-- Overview: para ihop via `junction_on_main`, inte station-score
+- B1–B8, B9–B13: `line_code` på transfer-grenar (`route_code` kvar)
+- Overview: `MRT_timetable_find_main_group_by_line_junction` när registry har junction
 - **Selkné:** endast Fjällnora. **Marielund:** endast Linnés-shuttle.
 
 ### Fas 3 — Linnés → Uppsala direkt
