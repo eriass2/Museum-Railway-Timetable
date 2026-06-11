@@ -6,6 +6,12 @@ export type TrainChangeEntry = {
   to_service: string;
 };
 
+export type TrainChangeValidation = {
+  incompleteRows: number[];
+  duplicateFromServices: string[];
+  duplicateToServices: string[];
+};
+
 export function emptyTrainChangeEntry(): TrainChangeEntry {
   return { from_service: '', type_name: '', to_service: '' };
 }
@@ -33,6 +39,39 @@ export function trainChangeEntriesToMap(entries: TrainChangeEntry[]): TrainChang
     map[from] = { typeName: type, serviceNumber: to };
   }
   return map;
+}
+
+function duplicateValues(values: string[]): string[] {
+  const seen = new Set<string>();
+  const dupes = new Set<string>();
+  for (const value of values) {
+    if (seen.has(value)) {
+      dupes.add(value);
+    }
+    seen.add(value);
+  }
+  return [...dupes];
+}
+
+export function validateTrainChangeEntries(entries: TrainChangeEntry[]): TrainChangeValidation {
+  const incompleteRows: number[] = [];
+  const completeRows: TrainChangeEntry[] = [];
+  entries.forEach((row, index) => {
+    const values = [row.from_service, row.type_name, row.to_service].map((value) => value.trim());
+    if (values.every((value) => value === '')) {
+      return;
+    }
+    if (values.some((value) => value === '')) {
+      incompleteRows.push(index + 1);
+      return;
+    }
+    completeRows.push(row);
+  });
+  return {
+    incompleteRows,
+    duplicateFromServices: duplicateValues(completeRows.map((row) => row.from_service.trim())),
+    duplicateToServices: duplicateValues(completeRows.map((row) => row.to_service.trim())),
+  };
 }
 
 export function trainChangeEntryCount(map: TrainChangeMap | undefined): number {
