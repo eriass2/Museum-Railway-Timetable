@@ -107,6 +107,55 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ---
 
+## Reseplanerare — holistisk cache (J14)
+
+**Beslut:** 2026-06-11 — generisk resurs-cache (klient + server), inte fler specialfall per resetyp  
+**Källa:** [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md) J14  
+**Plan:** [WIZARD_CACHE_REFACTOR.md](WIZARD_CACHE_REFACTOR.md) · [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md)
+
+**Problem (kort):** Fragmenterade `Map` + PHP-transient; refresh nollställer klient; separata nycklar per `trip_type`; kall kalender 4–8 s. Tillfällig prefetch single↔return ska ersättas av policy.
+
+**Skiss — målbild**
+
+```
+  Wizard-steg                    PHP
+  ───────────                    ───
+  composables ──► ResourceCache ──► REST ──► MRT_journey_cache ──► transient
+       ▲              │  ▲ miss              │         │ miss
+       │              │  │                   │         ▼
+  cacheGeneration ────┘  prefetchPolicy       │    domän (engine)
+  (bootstrap)                               hit
+```
+
+| Lager | Nu | Efter refaktor |
+|-------|-----|----------------|
+| Klient session | `wizardCalendarCache`, `tripConnectionsCache` | `ResourceCache` + `prefetchPolicy` |
+| Server | transient bara kalender | `MRT_journey_cache_*` för alla wizard-REST |
+| Invalidering | version-bump (PHP only) | `cacheGeneration` → klient + server |
+| Kall compute | 4–8 s kalender | R4: optimerad tur/retur-dag (parallellt) |
+
+**Nyckelfiler (mål):** `inc/domain/journey/journey-cache.php`, `frontend/vue/src/wizard/cache/resourceCache.ts`, `prefetchPolicy.ts`, `cacheKeys.ts`
+
+- [ ] **R1:** PHP-facad + `cacheGeneration` i wizard-config; Vue `ResourceCache`; migrera kalender + resesök; ta bort duplicerade Maps
+- [ ] **R2:** Server-cache för `journey/search`
+- [ ] **R3:** sessionStorage + stale-while-revalidate (valfritt)
+- [ ] **R4:** Domän — snabb `has_round_trip` / delad daglogik (kall kalender &lt; ~2 s)
+- [ ] Ta bort tillfällig prefetch i `wizardCalendarLoad.ts` när R1 policy finns
+- [ ] Manuell smoke: enkel + tur/retur, byta månad, refresh — likvärdig upplevelse
+
+---
+
+## Reseplanerare — stegindikator (stepper)
+
+**Syfte:** Enhetlig visuell hierarki — idag ser klart / aktivt / kommande steg ut som tre helt olika knapptyper.
+
+**Nyckelfiler:** `assets/frontend/ui/wizard-steps.css`, `frontend/vue/src/styles/journey-wizard/controls-form.css`, `steps-outbound-return.css`, `MrtStepProgress.vue`
+
+- [ ] Enhetlig stepper-stil för `is-done`, `is-active` och framtida steg (just nu t.ex. gul kant + gul text vs gul fylld vs mörk utan kant)
+- [ ] Manuell check: alla fem steg i flödet — samma typografi, padding och kontrast
+
+---
+
 ## Reseplanerare — kalender → wizard (förifyllt datum)
 
 **Beslut:** 2026-06-11 — länka publik månad-/dagsvy till wizard med datum (ev. senare `from`/`to`)  
