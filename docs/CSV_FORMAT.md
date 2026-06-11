@@ -164,6 +164,9 @@ Saknas `icon_file` eller filen i zip → plugin-default för slug om den finns.
 | `title` | ja | string | Ruttens namn |
 | `start_station_code` | nej | string | Terminus (kan härledas från `route_stations`) |
 | `end_station_code` | nej | string | Terminus |
+| `branch_code` | nej | string | Logisk **gren** som flera shuttle-rutter kan dela. Tom på huvudkorridor om ej grupperad. Se [DATA_MODEL.md](DATA_MODEL.md) §1.4b. |
+
+**Exempel (Lennakatten):** `main` (Faringe–Uppsala), `fjallnora` (Selkné–Fjällnora), `linnes-hammarby` (alla Linnés-shuttles inkl. B14 till Uppsala).
 
 ### 4.4 `route_stations.csv`
 

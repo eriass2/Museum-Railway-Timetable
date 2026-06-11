@@ -12,7 +12,7 @@ Stationen fanns i fixturen men saknade rutt, turer och stopptider — därför v
 
 | Fil | Innehåll |
 |-----|----------|
-| `routes.csv` | `selkna-linnes-hammarby`, `linnes-hammarby-selkna` |
+| `routes.csv` | Linnés-shuttles med `branch_code=linnes-hammarby` (Selkné-, Marielund- och Uppsala-ben) |
 | `services.csv` | B5, B9–B14 under `red-buss` |
 | `stoptimes.csv` | Selknä ↔ Linnés Hammarby |
 | `timetable_dates.csv` | Samma söndagar som `red` inom 1/7–16/8 |

@@ -1,10 +1,10 @@
-﻿route_code,title,start_station_code,end_station_code
-faringe-uppsala-ostra,"Faringe – Uppsala Östra",faringe,uppsala-ostra
-fjallnora-selkna,"Fjällnora – Selknä",fjallnora,selkna
-selkna-fjallnora,"Selknä – Fjällnora",selkna,fjallnora
-selkna-linnes-hammarby,"Selknä – Linnés Hammarby",selkna,linnes-hammarby
-linnes-hammarby-selkna,"Linnés Hammarby – Selknä",linnes-hammarby,selkna
-marielund-linnes-hammarby,"Marielund – Linnés Hammarby",marielund,linnes-hammarby
-linnes-hammarby-marielund,"Linnés Hammarby – Marielund",linnes-hammarby,marielund
-linnes-hammarby-uppsala-ostra,"Linnés Hammarby – Uppsala Östra",linnes-hammarby,uppsala-ostra
-uppsala-faringe,"Uppsala Östra – Faringe",uppsala-ostra,faringe
+﻿route_code,title,start_station_code,end_station_code,branch_code
+faringe-uppsala-ostra,"Faringe – Uppsala Östra",faringe,uppsala-ostra,main
+fjallnora-selkna,"Fjällnora – Selknä",fjallnora,selkna,fjallnora
+selkna-fjallnora,"Selknä – Fjällnora",selkna,fjallnora,fjallnora
+selkna-linnes-hammarby,"Selknä – Linnés Hammarby",selkna,linnes-hammarby,linnes-hammarby
+linnes-hammarby-selkna,"Linnés Hammarby – Selkné",linnes-hammarby,selkna,linnes-hammarby
+marielund-linnes-hammarby,"Marielund – Linnés Hammarby",marielund,linnes-hammarby,linnes-hammarby
+linnes-hammarby-marielund,"Linnés Hammarby – Marielund",linnes-hammarby,marielund,linnes-hammarby
+linnes-hammarby-uppsala-ostra,"Linnés Hammarby – Uppsala Östra",linnes-hammarby,uppsala-ostra,linnes-hammarby
+uppsala-faringe,"Uppsala Östra – Faringe",uppsala-ostra,faringe,main

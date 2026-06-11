@@ -286,6 +286,7 @@ TrainType
 - `mrt_route_stations` (array) - Array of station post IDs in order
   - Defines which stations are on the route and their sequence
   - Example: `[123, 456, 789]` means station 123 is first, 456 is second, etc.
+- `mrt_route_branch_code` (string, optional) - Logical branch group; see §1.4b
 
 **Relationships:**
 - **One-to-Many** with `Service` (via `mrt_service_route_id` meta field)
@@ -299,6 +300,35 @@ TrainType
 - Simplifies stop time configuration - user selects which stations the train stops at
 - Routes can be reused for multiple services across different timetables
 - Routes can work in both directions (create separate routes for each direction if needed)
+
+#### 1.4b Corridors and branch groups (`branch_code`)
+
+A **route** is one directed path (station sequence) used by services. A **branch group** is the geographic spur passengers think of as one line — e.g. Selkné–Fjällnora or Linnés Hammarby.
+
+The plugin does **not** replace routes with branches. Journeys and stop times stay on concrete routes. `branch_code` links several short shuttle routes to the same logical branch for import, docs, and (later) overview pairing.
+
+**Meta field (optional):** `mrt_route_branch_code` (string) — imported from `routes.csv` → `branch_code`.
+
+**Lennakatten — three corridors:**
+
+| `branch_code` | Geographic branch | Routes | Junction on main line | Typical timetable |
+|---------------|-------------------|--------|----------------------|-------------------|
+| `main` | Faringe ↔ Uppsala Östra (14 stations) | `faringe-uppsala-ostra`, `uppsala-faringe` | — (this *is* the corridor) | `red`, `green`, `yellow`, `orange` |
+| `fjallnora` | Selkné ↔ Fjällnora (2 stations) | `selkna-fjallnora`, `fjallnora-selkna` | Selkné | `green-buss` |
+| `linnes-hammarby` | Linnés Hammarby shuttles | `selkna-linnes-hammarby`, `linnes-hammarby-selkna`, `marielund-linnes-hammarby`, `linnes-hammarby-marielund`, `linnes-hammarby-uppsala-ostra` | Selkné **and** Marielund; B14 extends to Uppsala (2-stop route + overview metadata) | `red-buss` |
+
+```
+MAIN (rail)     Faringe ── … ── Selkné ── … ── Marielund ── … ── Uppsala Östra
+                         ↑                    ↑
+FJÄLLNORA (bus)         Selkné ↔ Fjällnora
+LINNÉS (bus)             Selkné ↔ Linnés (B5)
+                         Marielund ↔ Linnés (B9–B13)
+                         Linnés → Uppsala (B14)
+```
+
+**Code vs geography:** `MRT_timetable_group_is_branch_shuttle()` means “bus-only route with 2–3 stops”, not `branch_code`. Overview pairing still uses junction heuristics today; `branch_code` is the hook for grouping without guessing.
+
+See also [LINNES_HAMMARBY.md](LINNES_HAMMARBY.md).
 
 ---
 
@@ -674,7 +704,8 @@ wp_posts (mrt_route)
     ├─ post_title
     └─ post_type = 'mrt_route'
         └─ wp_postmeta
-            └─ mrt_route_stations (array of station IDs)
+            ├─ mrt_route_stations (array of station IDs)
+            └─ mrt_route_branch_code (optional branch group)
 
 wp_posts (mrt_service)
     ├─ ID (PK)

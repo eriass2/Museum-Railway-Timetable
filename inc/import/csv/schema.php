@@ -96,7 +96,7 @@ function MRT_csv_export_column_headers(): array {
 			'to_service',
 		),
 		'train_types.csv'         => array( 'slug', 'name', 'icon_file' ),
-		'routes.csv'              => array( 'route_code', 'title', 'start_station_code', 'end_station_code' ),
+		'routes.csv'              => array( 'route_code', 'title', 'start_station_code', 'end_station_code', 'branch_code' ),
 		'route_stations.csv'      => array( 'route_code', 'sequence', 'station_code' ),
 		'timetables.csv'          => array( 'timetable_code', 'title', 'colour_type' ),
 		'timetable_dates.csv'     => array( 'timetable_code', 'date' ),

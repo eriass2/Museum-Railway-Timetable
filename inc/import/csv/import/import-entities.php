@@ -85,6 +85,7 @@ function MRT_csv_import_routes( array $files, array &$maps ): int {
 			update_post_meta( $id, 'mrt_route_start_station', $station_ids[0] );
 			update_post_meta( $id, 'mrt_route_end_station', $station_ids[ count( $station_ids ) - 1 ] );
 		}
+		MRT_csv_apply_route_branch_from_row( (int) $id, $row );
 		MRT_csv_save_post_code( (int) $id, $meta, $code );
 		$maps['route'][ $code ] = (int) $id;
 		++$count;

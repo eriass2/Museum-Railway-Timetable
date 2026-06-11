@@ -36,6 +36,28 @@ final class CsvFixtureTest extends TestCase {
 		self::assertTrue( $result['valid'], json_encode( $result['errors'] ) );
 	}
 
+	public function test_lennakatten_routes_declare_branch_codes(): void {
+		$expected = array(
+			'faringe-uppsala-ostra'        => 'main',
+			'uppsala-faringe'              => 'main',
+			'fjallnora-selkna'             => 'fjallnora',
+			'selkna-fjallnora'             => 'fjallnora',
+			'selkna-linnes-hammarby'       => 'linnes-hammarby',
+			'linnes-hammarby-selkna'       => 'linnes-hammarby',
+			'marielund-linnes-hammarby'    => 'linnes-hammarby',
+			'linnes-hammarby-marielund'    => 'linnes-hammarby',
+			'linnes-hammarby-uppsala-ostra' => 'linnes-hammarby',
+		);
+		$seen = array();
+		foreach ( $this->fixture_files()['routes.csv'] ?? array() as $row ) {
+			$code = (string) ( $row['route_code'] ?? '' );
+			$seen[ $code ] = (string) ( $row['branch_code'] ?? '' );
+		}
+		ksort( $expected );
+		ksort( $seen );
+		self::assertSame( $expected, $seen );
+	}
+
 	public function test_yellow_timetable_dates_cover_friday_codes_c_and_d(): void {
 		$dates = MRT_csv_fixture_timetable_dates( 'yellow' );
 

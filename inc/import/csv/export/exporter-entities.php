@@ -67,6 +67,7 @@ function MRT_csv_export_routes( array &$tables, array &$maps ): void {
 			'title'              => $post->post_title,
 			'start_station_code' => $start,
 			'end_station_code'   => $end,
+			'branch_code'        => MRT_route_branch_code( (int) $post->ID ),
 		);
 		$seq = 1;
 		foreach ( $station_ids as $sid ) {

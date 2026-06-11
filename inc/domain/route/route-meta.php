@@ -58,3 +58,19 @@ function MRT_update_route_terminus_station_meta( int $route_id, int $station_id,
 	}
 	delete_post_meta( $route_id, $meta_key );
 }
+
+function MRT_route_branch_code( int $route_id ): string {
+	return trim( (string) get_post_meta( $route_id, 'mrt_route_branch_code', true ) );
+}
+
+/**
+ * @param array<string, mixed> $row routes.csv row.
+ */
+function MRT_csv_apply_route_branch_from_row( int $route_id, array $row ): void {
+	$code = trim( (string) ( $row['branch_code'] ?? '' ) );
+	if ( $code !== '' ) {
+		update_post_meta( $route_id, 'mrt_route_branch_code', sanitize_text_field( $code ) );
+		return;
+	}
+	delete_post_meta( $route_id, 'mrt_route_branch_code' );
+}
