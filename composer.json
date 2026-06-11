@@ -19,10 +19,11 @@
     },
     "scripts": {
         "plugin-check": "php scripts/validate.php",
-        "phpstan": "phpstan analyse --memory-limit=1G",
+        "phpstan": "phpstan analyse --memory-limit=1G --no-progress",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
         "check": ["@plugin-check", "@phpstan", "@test"],
+        "check:all": ["@check", "@phpcs"],
         "lint": ["@phpstan", "@phpcs"],
         "test": "@php vendor/bin/phpunit",
         "vue:build": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run build",

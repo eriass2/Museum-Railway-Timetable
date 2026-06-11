@@ -50,6 +50,92 @@ function Get-MrtLocalPhpVersion {
     return $version
 }
 
+function Assert-MrtLocalPhpMin {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $MinVersion
+    )
+
+    $version = Get-MrtLocalPhpVersion
+    if (-not $version) {
+        Write-Host 'Local PHP not in PATH. Omit -Local to use Docker.' -ForegroundColor Red
+        exit 1
+    }
+    if ([version]$version -lt [version]$MinVersion) {
+        Write-Host "Local PHP $version < $MinVersion. Omit -Local to use Docker." -ForegroundColor Red
+        exit 1
+    }
+    return $version
+}
+
+function Get-MrtNpmCiShellSnippet {
+    return @'
+if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ] || ! cmp -s package-lock.json node_modules/.package-lock.json 2>/dev/null; then npm ci; fi
+'@.Trim()
+}
+
+function Get-MrtVueShellCommand {
+    param(
+        [ValidateSet('Check', 'Build', 'BuildVerify')]
+        [string] $Mode = 'Check'
+    )
+
+    $npmCi = Get-MrtNpmCiShellSnippet
+    switch ($Mode) {
+        'Check' { return '{0} && npm run check' -f $npmCi }
+        'Build' { return '{0} && npm run build' -f $npmCi }
+        'BuildVerify' { return '{0} && npm run build && npm run verify' -f $npmCi }
+    }
+}
+
+function Test-MrtWordPressContainerRunning {
+    $running = Invoke-MrtDockerCompose -ComposeArgs @(
+        'ps', '--status', 'running', '-q', 'wordpress'
+    ) -ReturnOutput
+    if ($null -eq $running) {
+        return $false
+    }
+    foreach ($line in @($running)) {
+        if ($line -match '\S') {
+            return $true
+        }
+    }
+    return $false
+}
+
+function Get-MrtToolsServiceRunArgs {
+    param([Parameter(Mandatory = $true)] [string] $Service)
+
+    return @('--profile', 'tools', 'run', '--rm', '--no-deps', $Service)
+}
+
+function Get-MrtWordPressInitRunArgs {
+    param(
+        [switch] $NoTty,
+        [switch] $AsRoot,
+        [string] $Entrypoint = 'wp'
+    )
+
+    $composeArgs = @('run', '--rm')
+    if ($NoTty) {
+        $composeArgs += '--no-TTY'
+    }
+    if (Test-MrtWordPressContainerRunning) {
+        $composeArgs += '--no-deps'
+    }
+    if ($AsRoot) {
+        $composeArgs += '--user', 'root'
+    }
+    if ($Entrypoint -ne 'wp') {
+        $composeArgs += '--entrypoint', $Entrypoint
+    }
+    $composeArgs += 'wordpress-init'
+    if ($Entrypoint -eq 'wp') {
+        $composeArgs += '--allow-root'
+    }
+    return $composeArgs
+}
+
 function Invoke-MrtDockerCompose {
     param(
         [Parameter(Mandatory = $true)]
@@ -86,6 +172,25 @@ function Invoke-MrtDockerCompose {
     return $LASTEXITCODE
 }
 
+function Invoke-MrtDockerToolsService {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Service,
+        [Parameter(Mandatory = $true)]
+        [string[]] $RunArgs,
+        [switch] $ExitOnError,
+        [switch] $StreamOutput,
+        [switch] $ReturnOutput
+    )
+
+    $composeArgs = Get-MrtToolsServiceRunArgs -Service $Service
+    if ($RunArgs.Count -gt 0) {
+        $composeArgs += $RunArgs
+    }
+    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError `
+        -StreamOutput:$StreamOutput -ReturnOutput:$ReturnOutput
+}
+
 function Invoke-MrtDockerComposer {
     param(
         [Parameter(Mandatory = $true)]
@@ -95,9 +200,37 @@ function Invoke-MrtDockerComposer {
         [switch] $ReturnOutput
     )
 
-    $composeArgs = @('--profile', 'tools', 'run', '--rm', 'composer') + $ComposerArgs
-    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError `
-        -StreamOutput:$StreamOutput -ReturnOutput:$ReturnOutput
+    Invoke-MrtDockerToolsService -Service 'composer' -RunArgs $ComposerArgs `
+        -ExitOnError:$ExitOnError -StreamOutput:$StreamOutput -ReturnOutput:$ReturnOutput
+}
+
+function Invoke-MrtWithDockerDefault {
+    param(
+        [switch] $Local,
+        [Parameter(Mandatory = $true)]
+        [scriptblock] $DockerAction,
+        [Parameter(Mandatory = $true)]
+        [scriptblock] $LocalAction,
+        [string] $DockerHint,
+        [string] $DockerUnavailableMessage = 'Docker is not running.',
+        [switch] $DockerUnavailableWarning
+    )
+
+    if (-not $Local) {
+        if (-not (Test-MrtDockerAvailable)) {
+            $color = if ($DockerUnavailableWarning) { 'Yellow' } else { 'Red' }
+            Write-Host $DockerUnavailableMessage -ForegroundColor $color
+            exit 1
+        }
+        if ($DockerHint) {
+            Write-Host $DockerHint -ForegroundColor Cyan
+        }
+        & $DockerAction | Out-Null
+        exit $LASTEXITCODE
+    }
+
+    & $LocalAction | Out-Null
+    exit $LASTEXITCODE
 }
 
 function Ensure-MrtVendor {
@@ -117,32 +250,75 @@ function Ensure-MrtVendor {
 }
 
 function Start-MrtDockerStack {
-    param([switch] $ExitOnError)
+    param(
+        [switch] $ExitOnError,
+        [switch] $Build
+    )
 
-    Invoke-MrtDockerCompose -ComposeArgs @('up', '-d', '--build') -ExitOnError:$ExitOnError
+    $composeArgs = @('up', '-d')
+    if ($Build) {
+        $composeArgs += '--build'
+    }
+    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError
+}
+
+function Test-MrtHttpUrlReady {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Url,
+        [int] $TimeoutSec = 5
+    )
+
+    try {
+        $response = Invoke-WebRequest -Uri $Url -UseBasicParsing -TimeoutSec $TimeoutSec -ErrorAction Stop
+        return ($response.StatusCode -ge 200 -and $response.StatusCode -lt 500)
+    } catch {
+        return $false
+    }
+}
+
+function Wait-MrtUntilDeadline {
+    param(
+        [Parameter(Mandatory = $true)]
+        [datetime] $Deadline,
+        [Parameter(Mandatory = $true)]
+        [scriptblock] $Test,
+        [int] $IntervalSec = 2
+    )
+
+    while ((Get-Date) -lt $Deadline) {
+        if (& $Test) {
+            return $true
+        }
+        Start-Sleep -Seconds $IntervalSec
+    }
+    return $false
 }
 
 function Wait-MrtWordPressReady {
     param(
         [int] $TimeoutSec = 120,
-        [int] $IntervalSec = 3
+        [int] $IntervalSec = 2
     )
 
     Write-Host 'Waiting for WordPress...' -ForegroundColor Gray
-    $attempts = [math]::Max(1, [math]::Ceiling($TimeoutSec / $IntervalSec))
+    $loginUrl = "$script:MrtDevSiteUrl/wp-login.php"
+    $deadline = (Get-Date).AddSeconds($TimeoutSec)
 
-    for ($i = 1; $i -le $attempts; $i++) {
-        & docker compose run --rm --no-TTY wordpress-init wp --allow-root core is-installed 2>$null | Out-Null
-        if ($LASTEXITCODE -eq 0) {
-            return
-        }
-        if ($i -lt $attempts) {
-            Start-Sleep -Seconds $IntervalSec
-        }
+    if (-not (Wait-MrtUntilDeadline -Deadline $deadline -IntervalSec $IntervalSec -Test {
+            Test-MrtHttpUrlReady -Url $loginUrl
+        })) {
+        Write-Host "WordPress did not respond at $loginUrl within ${TimeoutSec}s." -ForegroundColor Red
+        exit 1
     }
 
-    Write-Host "WordPress did not become ready within ${TimeoutSec}s." -ForegroundColor Red
-    exit 1
+    if (-not (Wait-MrtUntilDeadline -Deadline $deadline -IntervalSec $IntervalSec -Test {
+            Invoke-MrtWpCli -WpArgs @('core', 'is-installed') -NoTty | Out-Null
+            return ($LASTEXITCODE -eq 0)
+        })) {
+        Write-Host "WordPress did not become ready within ${TimeoutSec}s." -ForegroundColor Red
+        exit 1
+    }
 }
 
 function Invoke-MrtWpCli {
@@ -150,23 +326,14 @@ function Invoke-MrtWpCli {
         [Parameter(Mandatory = $true)]
         [string[]] $WpArgs,
         [switch] $AsRoot,
+        [switch] $NoTty,
         [string] $Entrypoint = 'wp',
         [switch] $StreamOutput,
         [switch] $ReturnOutput,
         [switch] $ExitOnError
     )
 
-    $composeArgs = @('run', '--rm', '--no-TTY')
-    if ($AsRoot) {
-        $composeArgs += '--user', 'root'
-    }
-    if ($Entrypoint -ne 'wp') {
-        $composeArgs += '--entrypoint', $Entrypoint
-    }
-    $composeArgs += 'wordpress-init'
-    if ($Entrypoint -eq 'wp') {
-        $composeArgs += '--allow-root'
-    }
+    $composeArgs = Get-MrtWordPressInitRunArgs -NoTty:$NoTty -AsRoot:$AsRoot -Entrypoint $Entrypoint
     $composeArgs += $WpArgs
 
     Invoke-MrtDockerCompose -ComposeArgs $composeArgs -StreamOutput:$StreamOutput `
@@ -196,10 +363,7 @@ function Get-MrtDemoPageUrl {
 
 function Invoke-MrtEnsureSvLocale {
     Write-MrtStep -Title 'Swedish locale (sv_SE)'
-    Invoke-MrtDockerCompose -ComposeArgs @(
-        'run', '--rm', 'wordpress-init',
-        'sh', '/usr/local/bin/mrt-ensure-sv-locale.sh'
-    ) -StreamOutput
+    Invoke-MrtWpCli -Entrypoint 'sh' -WpArgs @('/usr/local/bin/mrt-ensure-sv-locale.sh') -StreamOutput
 }
 
 function Set-MrtWpDebug {
@@ -218,7 +382,7 @@ function Invoke-MrtDevResetImport {
         "fwrite(STDERR, 'Plugin not active or dev-cli not loaded'.PHP_EOL); exit(1);",
         '} MRT_dev_reset_and_import_cli();'
     ) -join ' '
-    Invoke-MrtWpCli -WpArgs @('eval', $eval) -StreamOutput -ExitOnError
+    Invoke-MrtWpCli -WpArgs @('eval', $eval) -NoTty -StreamOutput -ExitOnError
 }
 
 function Invoke-MrtDockerPhpUnit {
@@ -228,15 +392,11 @@ function Invoke-MrtDockerPhpUnit {
     )
 
     Write-Host 'Running PHPUnit in Docker (php:8.2-cli)...' -ForegroundColor Cyan
-    $composeArgs = @(
-        '--profile', 'tools', 'run', '--rm', 'php-test',
-        'vendor/bin/phpunit'
-    )
+    $runArgs = @('vendor/bin/phpunit')
     if ($PhpUnitArgs.Count -gt 0) {
-        $composeArgs += $PhpUnitArgs
+        $runArgs += $PhpUnitArgs
     }
-
-    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError
+    Invoke-MrtDockerToolsService -Service 'php-test' -RunArgs $runArgs -ExitOnError:$ExitOnError
 }
 
 function Invoke-MrtDockerPhpTest {
@@ -247,8 +407,8 @@ function Invoke-MrtDockerPhpTest {
         [switch] $StreamOutput
     )
 
-    $composeArgs = @('--profile', 'tools', 'run', '--rm', 'php-test') + $PhpArgs
-    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError -StreamOutput:$StreamOutput
+    Invoke-MrtDockerToolsService -Service 'php-test' -RunArgs $PhpArgs `
+        -ExitOnError:$ExitOnError -StreamOutput:$StreamOutput
 }
 
 function Invoke-MrtDockerPhpUnitWithPcov {
@@ -264,10 +424,11 @@ pecl install pcov >/dev/null && docker-php-ext-enable pcov >/dev/null &&
 vendor/bin/phpunit
 '@ -replace "`r`n", ' '
 
-    Invoke-MrtDockerCompose -ComposeArgs @(
-        '--profile', 'tools', 'run', '--rm', '--entrypoint', 'sh', 'php-test',
-        '-c', "$shellCmd $($PhpUnitArgs -join ' ')"
-    ) -StreamOutput -ExitOnError:$ExitOnError
+    $composeArgs = @(
+        '--profile', 'tools', 'run', '--rm', '--no-deps',
+        '--entrypoint', 'sh', 'php-test', '-c', "$shellCmd $($PhpUnitArgs -join ' ')"
+    )
+    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -StreamOutput -ExitOnError:$ExitOnError
 }
 
 function Invoke-MrtDockerVue {
@@ -278,12 +439,6 @@ function Invoke-MrtDockerVue {
         [switch] $StreamOutput
     )
 
-    $shellCmd = switch ($Mode) {
-        'Check' { 'npm ci && npm run check' }
-        'Build' { 'npm ci && npm run build' }
-        'BuildVerify' { 'npm ci && npm run build && npm run verify' }
-    }
-
     $label = switch ($Mode) {
         'Check' { 'Vue check' }
         'Build' { 'Vue build' }
@@ -291,9 +446,8 @@ function Invoke-MrtDockerVue {
     }
 
     Write-Host "Running $label in Docker (node:22-alpine)..." -ForegroundColor Cyan
-    Invoke-MrtDockerCompose -ComposeArgs @(
-        '--profile', 'tools', 'run', '--rm', 'vue',
-        'sh', '-c', $shellCmd
+    Invoke-MrtDockerToolsService -Service 'vue' -RunArgs @(
+        'sh', '-c', (Get-MrtVueShellCommand -Mode $Mode)
     ) -ExitOnError:$ExitOnError -StreamOutput:$StreamOutput
 }
 

@@ -93,8 +93,8 @@ services:
       - php
 
   # Node 22 — Vue build/check. Examples:
-  #   docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"
-  #   docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
+  #   docker compose --profile tools run --rm --no-deps vue sh -c "<npm ci if needed> && npm run check"
+  #   docker compose --profile tools run --rm --no-deps vue sh -c "<npm ci if needed> && npm run build && npm run verify"
   vue:
     image: node:22-alpine
     profiles:

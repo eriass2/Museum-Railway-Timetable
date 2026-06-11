@@ -14,17 +14,13 @@ Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 Assert-MrtDockerAvailable
 Ensure-MrtVendor
 
-Write-Host 'Running composer check in Docker...' -ForegroundColor Cyan
-$checkArgs = @('check')
+$composerScript = if ($SkipPhpcs) { 'check' } else { 'check:all' }
+Write-Host "Running composer $composerScript in Docker..." -ForegroundColor Cyan
+$checkArgs = @($composerScript)
 if ($Passthrough.Count -gt 0) {
     $checkArgs += $Passthrough
 }
 Invoke-MrtDockerComposer -ComposerArgs $checkArgs -ExitOnError
-
-if (-not $SkipPhpcs) {
-    Write-Host 'Running PHPCS in Docker...' -ForegroundColor Cyan
-    Invoke-MrtDockerComposer -ComposerArgs @('phpcs') -ExitOnError
-}
 
 Write-Host 'PHP check OK.' -ForegroundColor Green
 

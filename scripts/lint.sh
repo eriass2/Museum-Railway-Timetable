@@ -15,14 +15,12 @@ if [ "$use_local" -eq 1 ]; then
 		echo "Run 'composer install' first."
 		exit 1
 	fi
-	echo "Running PHPStan..."
+	echo "Running composer lint..."
 	./vendor/bin/phpstan analyse --no-progress
-	echo "Running PHPCS..."
 	./vendor/bin/phpcs
 	echo "Lint OK."
 	exit 0
 fi
 
-echo "Running PHPStan in Docker..."
 mrt_lint_docker
 echo "Lint OK."

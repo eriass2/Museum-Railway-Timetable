@@ -6,10 +6,7 @@ Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 Assert-MrtDockerAvailable
 Ensure-MrtVendor
 
-Write-Host 'Running PHPStan in Docker...'
-Invoke-MrtDockerComposer -ComposerArgs @('phpstan', '--', '--no-progress') -ExitOnError
+Write-Host 'Running composer lint in Docker...' -ForegroundColor Cyan
+Invoke-MrtDockerComposer -ComposerArgs @('lint') -ExitOnError
 
-Write-Host 'Running PHPCS in Docker...'
-Invoke-MrtDockerComposer -ComposerArgs @('phpcs') -ExitOnError
-
-Write-Host 'Lint OK.'
+Write-Host 'Lint OK.' -ForegroundColor Green

@@ -2,53 +2,105 @@
 # Shared Docker helpers for bash scripts.
 # Usage: . "$(dirname "$0")/lib/mrt-docker.sh"
 
+MRT_DEV_SITE_URL="${MRT_DEV_SITE_URL:-http://localhost:8080}"
+
+MRT_NPM_CI_SNIPPET='if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ] || ! cmp -s package-lock.json node_modules/.package-lock.json 2>/dev/null; then npm ci; fi'
+
+mrt_npm_ci_snippet="$MRT_NPM_CI_SNIPPET"
+
+mrt_wordpress_running() {
+	docker compose ps --status running -q wordpress 2>/dev/null | grep -q .
+}
+
+mrt_compose_run_no_deps_if_up() {
+	if mrt_wordpress_running; then
+		docker compose run --rm --no-deps "$@"
+	else
+		docker compose run --rm "$@"
+	fi
+}
+
+mrt_tools_run() {
+	docker compose --profile tools run --rm --no-deps "$@"
+}
+
+mrt_vue_shell() {
+	mode="$1"
+	case "$mode" in
+	Check) printf '%s && npm run check' "$MRT_NPM_CI_SNIPPET" ;;
+	Build) printf '%s && npm run build' "$MRT_NPM_CI_SNIPPET" ;;
+	BuildVerify) printf '%s && npm run build && npm run verify' "$MRT_NPM_CI_SNIPPET" ;;
+	*) return 1 ;;
+	esac
+}
+
 mrt_docker_up() {
-	docker compose up -d --build
+	docker compose up -d "$@"
+}
+
+mrt_wait_until() {
+	deadline="$1"
+	interval="$2"
+	shift 2
+
+	while [ "$(date +%s)" -lt "$deadline" ]; do
+		if "$@"; then
+			return 0
+		fi
+		sleep "$interval"
+	done
+	return 1
+}
+
+mrt_http_ready() {
+	curl -sf -o /dev/null --max-time 5 "$1" 2>/dev/null
+}
+
+mrt_wp_installed() {
+	mrt_compose_run_no_deps_if_up --no-TTY wordpress-init wp --allow-root core is-installed >/dev/null 2>&1
 }
 
 mrt_wait_wordpress() {
 	timeout="${1:-120}"
-	interval="${2:-5}"
+	interval="${2:-2}"
+	login_url="${MRT_DEV_SITE_URL}/wp-login.php"
+	deadline=$(( $(date +%s) + timeout ))
+
 	echo "Waiting for WordPress..."
-	i=1
-	max=$((timeout / interval))
-	while [ "$i" -le "$max" ]; do
-		if docker compose run --rm --no-TTY wordpress-init wp --allow-root core is-installed >/dev/null 2>&1; then
-			return 0
-		fi
-		if [ "$i" -eq "$max" ]; then
-			echo "WordPress did not become ready within ${timeout}s." >&2
-			return 1
-		fi
-		sleep "$interval"
-		i=$((i + 1))
-	done
+	if ! mrt_wait_until "$deadline" "$interval" mrt_http_ready "$login_url"; then
+		echo "WordPress did not respond at ${login_url} within ${timeout}s." >&2
+		return 1
+	fi
+	if ! mrt_wait_until "$deadline" "$interval" mrt_wp_installed; then
+		echo "WordPress did not become ready within ${timeout}s." >&2
+		return 1
+	fi
 }
 
 mrt_wp_eval() {
-	docker compose run --rm --no-TTY wordpress-init wp --allow-root eval "$1"
+	mrt_compose_run_no_deps_if_up --no-TTY wordpress-init wp --allow-root eval "$1"
 }
 
 mrt_vue_check() {
 	echo "Running Vue check in Docker (node:22-alpine)..."
-	docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"
+	mrt_tools_run vue sh -c "$(mrt_vue_shell Check)"
 }
 
 mrt_vue_build_verify() {
-	docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
+	mrt_tools_run vue sh -c "$(mrt_vue_shell BuildVerify)"
 }
 
 mrt_lint_docker() {
-	docker compose --profile tools run --rm composer phpstan -- --no-progress
-	docker compose --profile tools run --rm composer phpcs
+	echo "Running composer lint in Docker..."
+	mrt_tools_run composer lint
 }
 
 mrt_ensure_sv_locale() {
-	docker compose run --rm wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh
+	mrt_compose_run_no_deps_if_up wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh
 }
 
 mrt_dev_reset_import() {
-	docker compose run --rm wordpress-init wp --allow-root eval \
+	mrt_compose_run_no_deps_if_up --no-TTY wordpress-init wp --allow-root eval \
 		"if (!function_exists('MRT_dev_reset_and_import_cli')) { fwrite(STDERR, 'Plugin not active or dev-cli not loaded'.PHP_EOL); exit(1); } MRT_dev_reset_and_import_cli();"
 }
 

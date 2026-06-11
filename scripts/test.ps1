@@ -12,36 +12,18 @@ Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 
 Ensure-MrtVendor
 
-$phpVersion = $null
-if ($Local) {
-    $phpVersion = Get-MrtLocalPhpVersion
-    if (-not $phpVersion) {
-        Write-Host 'Local PHP not in PATH. Omit -Local to use Docker.' -ForegroundColor Red
-        exit 1
-    }
-    if ([version]$phpVersion -lt [version]'8.2') {
-        Write-Host "Local PHP $phpVersion < 8.2. Omit -Local to use Docker." -ForegroundColor Red
-        exit 1
-    }
-}
-
-if (-not $Local) {
-    if (-not (Test-MrtDockerAvailable)) {
-        if ($phpVersion) {
-            Write-Host "Local PHP is $phpVersion; PHPUnit 11 needs PHP 8.2+. Docker is not running." -ForegroundColor Red
+Invoke-MrtWithDockerDefault -Local:$Local `
+    -DockerHint 'Using Docker (php:8.2-cli). Pass -Local to run on host PHP.' `
+    -DockerUnavailableMessage 'PHP not in PATH and Docker is not running.' `
+    -DockerAction {
+        Invoke-MrtDockerPhpUnit -PhpUnitArgs $Passthrough -ExitOnError
+    } `
+    -LocalAction {
+        Assert-MrtLocalPhpMin -MinVersion '8.2' | Out-Null
+        Write-Host 'Running PHPUnit locally (composer test)...'
+        if ($Passthrough.Count -gt 0) {
+            & composer test -- @Passthrough
         } else {
-            Write-Host 'PHP not in PATH and Docker is not running.' -ForegroundColor Red
+            & composer test
         }
-        exit 1
     }
-    Write-Host 'Using Docker (php:8.2-cli). Pass -Local to run on host PHP.' -ForegroundColor Cyan
-    Invoke-MrtDockerPhpUnit -PhpUnitArgs $Passthrough -ExitOnError
-}
-
-Write-Host 'Running PHPUnit locally (composer test)...'
-if ($Passthrough.Count -gt 0) {
-    & composer test -- @Passthrough
-} else {
-    & composer test
-}
-exit $LASTEXITCODE

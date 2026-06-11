@@ -6,7 +6,8 @@
 #   powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1 -SkipCompose
 
 param(
-    [switch] $SkipCompose
+    [switch] $SkipCompose,
+    [switch] $Build
 )
 
 $ErrorActionPreference = 'Stop'
@@ -16,7 +17,7 @@ Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 Write-Host "`n=== MRT dev reset (clear + import + smoke menu) ===" -ForegroundColor Cyan
 
 if (-not $SkipCompose) {
-    Start-MrtDockerStack -ExitOnError
+    Start-MrtDockerStack -ExitOnError -Build:$Build
     Wait-MrtWordPressReady
 }
 
