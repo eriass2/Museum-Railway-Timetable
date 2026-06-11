@@ -2,24 +2,19 @@
 
 Kort lista över **öppna** punkter där **produkt/beslut redan är spikat** — implementation eller verifiering återstår. Genomfört arbete finns i arkivet längst ner och i respektive plan/doc.
 
-Punkter **utan** beslut (A9 publicera, A0 onboarding, J11 UL-lik störningar m.fl.) listas separat — plocka inte upp dem förrän D8/D11/D16 är avgjorda.
+Punkter **utan** beslut (A0 onboarding, J11 UL-lik störningar m.fl.) listas separat. **Mycket senare** — parkerade tills förutsättningar och produktbeslut finns.
 
 ---
 
-## Reseplanerare — feedback-widget (v2)
+## Reseplanerare — feedback-widget (v2, CSV)
 
 **Beslut:** D2b (2026-06-10) — [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md) § Beslut  
-**Status:** v1 klar; v2 ej påbörjad  
+**Status:** v1 klar; CSV-export kvar  
 **Källa:** J13 — [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md)
 
-| Beslut | Implementation |
-|--------|----------------|
-| E-postnotis till team vid ny rapport | `wp_mail` till **konfigurerbar adress** i admin (settings) |
-| Export | Feedback-rapporter till **CSV** (admin) |
-
-- [ ] Setting: e-postadress för notis + toggle
-- [ ] `wp_mail` vid `POST /mrt/v1/wizard/feedback` (rate limit behålls)
 - [ ] Admin: export feedback till CSV
+
+*(E-postnotis → se **Mycket senare**.)*
 
 ---
 
@@ -75,11 +70,21 @@ Punkter **utan** beslut (A9 publicera, A0 onboarding, J11 UL-lik störningar m.f
 
 ---
 
+## Mycket senare (förutsättningar / produktbeslut saknas)
+
+Plocka **inte** upp förrän kärnflöden är stabila, manuella checks i TODO ovan är klara, och ev. produktbeslut är tagna.
+
+| ID | Punkt | Varför senare |
+|----|-------|----------------|
+| A9 / D11 | Publicera-knapp / utkast tidtabell | Kräver D11 (`draft` vs meta vs staging) **och** stabil admin/onboarding (A0/D8) innan utkast/publicera kan designas säkert — [diskussioner D11](feedback/2026-06-09-jesper-diskussioner.md#d11-publicera-knapp--utkast-a9-) |
+| D2b v2 | Feedback — e-postnotis vid ny rapport | `wp_mail` + konfigurerbar adress; låg prioritet när admin-lista räcker — [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md) |
+
+---
+
 ## Saknar produktbeslut (ej i backlog tills beslut)
 
 | ID | Punkt | Var beslut saknas |
 |----|-------|-------------------|
-| A9 / D11 | Publicera-knapp / utkast tidtabell | `draft` vs meta vs staging — [diskussioner D11](feedback/2026-06-09-jesper-diskussioner.md#d11-publicera-knapp--utkast-a9-) |
 | A0 / D8 | Onboarding-friktion (rutt per riktning) | Domänmodell — [diskussioner D8](feedback/2026-06-09-jesper-diskussioner.md#d8-rutt-en-eller-två-rutter-per-linje-) |
 | J11 / D16 | UL-lik störningslista i reseplaneraren | Parkerad — [diskussioner D16](feedback/2026-06-09-jesper-diskussioner.md#d16-ul-lik-störningslista-) |
 
