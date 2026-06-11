@@ -26,3 +26,11 @@ def expected_green_buss_dates(green_rail: list[str], green_vard_rail: list[str])
     candidates = {parse_iso(d) for d in green_rail} | {parse_iso(d) for d in green_vard_rail}
     buss = sorted(d for d in candidates if in_green_buss_window(d))
     return [d.isoformat() for d in buss]
+
+
+def expected_red_buss_dates(red_rail: list[str]) -> list[str]:
+    """Linnés Hammarby-buss på röda söndagar inom bussfönstret (1/7–16/8)."""
+    buss = sorted(
+        parse_iso(d) for d in red_rail if in_green_buss_window(parse_iso(d))
+    )
+    return [d.isoformat() for d in buss]

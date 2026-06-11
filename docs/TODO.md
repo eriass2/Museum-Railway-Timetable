@@ -169,7 +169,8 @@ Besökare rapporterar buggar/förslag via flytande knapp i reseplaneraren; spara
 
 **Överlämning:**
 
-- [ ] **Manuell check:** Selknä på inbound GRÖN — tur 60 → B5/Linnés Hammarby, tur 62 → B3/Fjällnora, tur 96 → B4/Fjällnora; inga delade rader med korsade tider
+- [ ] **Manuell check:** Selknä på inbound GRÖN (grön bussdag) — tur 62 → B3/Fjällnora, tur 96 → B4/Fjällnora; inga delade rader med korsade tider
+- [ ] **Manuell check:** Selknä på inbound RÖD (söndag) — Linnés Hammarby-buss (B5) visas; **inte** på gröna bussdagar
 - [ ] Ev. framtida polish: destination i radetikett när flera grenar har samma “Från Selknä”-text (idag skiljs de genom sparse kolumner + sortering)
 - [ ] Thun's-expressen vertikal etikett — layout i `MrtOverviewRailGroupGrid.vue` / CSS (ej ändrad i denna fix)
 

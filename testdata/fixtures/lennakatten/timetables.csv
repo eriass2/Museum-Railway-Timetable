@@ -1,5 +1,6 @@
 ﻿timetable_code,title,colour_type
 green-buss,"GRÖN ANSLUTNINGSBUSS 2026",green
+red-buss,"RÖD ANSLUTNINGSBUSS 2026 (Linnés Hammarby)",red
 green,"GRÖN TIDTABELL 2026 (lördag)",green
 green-vard,"GRÖN TIDTABELL 2026 (ons/tors)",green
 yellow,"GUL TIDTABELL 2026",yellow

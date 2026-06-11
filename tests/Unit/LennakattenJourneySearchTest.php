@@ -183,8 +183,23 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '11:00', $fjar['arrival_time'] ?? '' );
 	}
 
-	public function test_find_connections_selkna_linnes_hammarby_on_green_buss_day(): void {
-		$this->boot_service_fixture( 'green-b5-bus-out', '2026-07-04' );
+	public function test_find_connections_selkna_linnes_hammarby_on_red_sunday(): void {
+		$this->boot_service_fixture( 'red-b5-bus-out', self::DATE_RED );
+		$stations = $this->station_ids();
+
+		$connections = MRT_find_connections(
+			$stations['selkna'],
+			$stations['linnes-hammarby'],
+			self::DATE_RED
+		);
+
+		self::assertNotEmpty( $connections );
+		self::assertSame( '10:53', $connections[0]['from_departure'] ?? '' );
+		self::assertSame( '11:00', $connections[0]['to_arrival'] ?? '' );
+	}
+
+	public function test_linnes_bus_not_running_on_green_buss_saturday(): void {
+		$this->boot_service_fixture( 'red-b5-bus-out', self::DATE_RED );
 		$stations = $this->station_ids();
 
 		$connections = MRT_find_connections(
@@ -193,25 +208,23 @@ final class LennakattenJourneySearchTest extends TestCase {
 			'2026-07-04'
 		);
 
-		self::assertNotEmpty( $connections );
-		self::assertSame( '10:53', $connections[0]['from_departure'] ?? '' );
-		self::assertSame( '11:00', $connections[0]['to_arrival'] ?? '' );
+		self::assertSame( array(), $connections, 'Linnés bus runs Sundays only, not green-buss Saturdays' );
 	}
 
-	public function test_find_multi_leg_uppsala_linnes_hammarby_on_green_buss_day(): void {
+	public function test_find_multi_leg_uppsala_linnes_hammarby_on_red_sunday(): void {
 		$this->boot_fixture_services(
-			array( 'green-71-out', 'green-61-out', 'green-b5-bus-out' ),
-			'2026-07-04'
+			array( 'red-81-out', 'red-b5-bus-out' ),
+			self::DATE_RED
 		);
 		$stations = $this->station_ids();
 
 		$results = MRT_journey_find_normalized_connections(
 			$stations['uppsala-ostra'],
 			$stations['linnes-hammarby'],
-			'2026-07-04'
+			self::DATE_RED
 		);
 
-		self::assertNotEmpty( $results, 'Expected Uppsala Östra → Linnés Hammarby via Marielund, Selknä' );
+		self::assertNotEmpty( $results, 'Expected Uppsala Östra → Linnés Hammarby via Selknä on red Sunday' );
 		$first = $results[0];
 		self::assertSame( 'transfer', $first['connection_type'] ?? '' );
 		self::assertGreaterThanOrEqual( 2, count( $first['legs'] ?? array() ) );

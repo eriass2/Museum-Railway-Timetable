@@ -6,13 +6,16 @@ Guide för att få in **bussgrenen Selknä ↔ Linnés Hammarby** i admin och re
 
 Stationen fanns i fixturen men saknade rutt, turer och stopptider — därför visade reseplaneraren inga resor (J6). Grenen är **inte** i Anslagstidtabell-PDF:ens Fjällnora-bussar; tider i repot speglar Selknä-avgångar parallellt med Fjällnora-bussarna tills operatören bekräftar officiella tider.
 
+**Trafikdagar:** Linnés Hammarby-bussen kör **bara söndagar** (röda trafikdagar) inom bussfönstret 1 juli–16 augusti — inte på gröna bussdagar (lördag/ons/tors).
+
 ## Dev / test (fixture i repo)
 
 | Fil | Innehåll |
 |-----|----------|
 | `routes.csv` | `selkna-linnes-hammarby`, `linnes-hammarby-selkna` |
-| `services.csv` | B5, B9–B14 under `green-buss` |
+| `services.csv` | B5, B9–B14 under `red-buss` |
 | `stoptimes.csv` | Selknä ↔ Linnés Hammarby |
+| `timetable_dates.csv` | Samma söndagar som `red` inom 1/7–16/8 |
 
 Efter ändring:
 
@@ -40,10 +43,10 @@ Dev-reset importerar hela paketet: `.\scripts\docker-dev-reset.ps1`
 
 5. **Importera** → kontrollera:
    - Stationer & rutter: grenen syns
-   - Tidtabell `GRÖN ANSLUTNINGSBUSS 2026`: bussar B5/B9–B14
-   - Reseplanerare: Uppsala Östra → Linnés Hammarby på grön bussdag (t.ex. 2026-07-04)
+   - Tidtabell `RÖD ANSLUTNINGSBUSS 2026 (Linnés Hammarby)`: bussar B5/B9–B14
+   - Reseplanerare: Uppsala Östra → Linnés Hammarby på **röd söndag** (t.ex. 2026-07-05)
 
-6. Verifiera **buss/tåg-koppling** vid Selknä mot Fjällnora-grenen (A10 / B2)
+6. Verifiera **buss/tåg-koppling** vid Selknä mot Fjällnora-grenen (A10 / B2) — Fjällnora-bussar ska **inte** visas på samma dag som Linnés om de inte trafikerar
 
 ## Manuell inmatning (alternativ)
 
