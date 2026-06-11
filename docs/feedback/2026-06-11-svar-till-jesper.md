@@ -17,7 +17,7 @@ Tack för mailet 10/6. Kort status:
 
 **Ditt mail 10/6**
 
-- **Seg planerare (J14)** — flaskhalsen är kalenderladdning (särskilt tur/retur). Vi har förbättrat cache och prefetch; första laddning per ny rutt/månad kan fortfarande ta några sekunder. *Känns det långsamt vid månadsbyte, tur/retur-valet, eller vid själva resesökningen?*
+- **Seg planerare (J14)** — åtgärdat med holistisk cache (klient + server), prefetch och cache-warming. Kall laddning per ny rutt/månad är nu ~under en sekund i våra tester. *Hör av dig om något fortfarande känns segt i praktiken.*
 - **Biljettcopy (J15–J18)** — noterat. Innan vi bygger admin-redigerbar text behöver vi kort svar:
   1. Var ska copy redigeras — Inställningar, Priser eller per station?
   2. Ska pensionär 65+ finnas kvar i zonförklaringen?

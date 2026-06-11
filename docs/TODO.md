@@ -6,53 +6,6 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ---
 
-## Trafikstörningar — Jesper-validering (J11)
-
-**Beslut:** 2026-06-11 — [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) §5–7  
-**Status:** Fas 1–4 **klara** (2026-06-11). Väntar snabb OK på målbild §5.2 och 90 dagars horisont.
-
-- [ ] Jesper: snabb OK på målbild och 90 dagar — se [svar till Jesper](feedback/2026-06-11-svar-till-jesper.md)
-
----
-
-## Reseplanerare — holistisk cache (J14)
-
-**Beslut:** 2026-06-11 — generisk resurs-cache (klient + server), inte fler specialfall per resetyp  
-**Källa:** [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md) J14  
-**Plan:** [WIZARD_CACHE_REFACTOR.md](WIZARD_CACHE_REFACTOR.md) · [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md)
-
-**Problem (kort):** Fragmenterade `Map` + PHP-transient; refresh nollställer klient; separata nycklar per `trip_type`; kall kalender 4–8 s. Tillfällig prefetch single↔return ska ersättas av policy.
-
-**Skiss — målbild**
-
-```
-  Wizard-steg                    PHP
-  ───────────                    ───
-  composables ──► ResourceCache ──► REST ──► MRT_journey_cache ──► transient
-       ▲              │  ▲ miss              │         │ miss
-       │              │  │                   │         ▼
-  cacheGeneration ────┘  prefetchPolicy       │    domän (engine)
-  (bootstrap)                               hit
-```
-
-| Lager | Nu | Efter refaktor |
-|-------|-----|----------------|
-| Klient session | `wizardCalendarCache`, `tripConnectionsCache` | `ResourceCache` + `prefetchPolicy` |
-| Server | transient bara kalender | `MRT_journey_cache_*` för alla wizard-REST |
-| Invalidering | version-bump (PHP only) | `cacheGeneration` → klient + server |
-| Kall compute | 4–8 s kalender | R4: optimerad tur/retur-dag (parallellt) |
-
-**Nyckelfiler (mål):** `inc/domain/journey/journey-cache.php`, `frontend/vue/src/wizard/cache/resourceCache.ts`, `prefetchPolicy.ts`, `cacheKeys.ts`
-
-- [x] **R1:** PHP-facad + `cacheGeneration` i wizard-config; Vue `ResourceCache`; migrera kalender + resesök; ta bort duplicerade Maps (2026-06-11)
-- [x] **R2:** Server-cache för `journey/search` (2026-06-11)
-- [x] **R3:** sessionStorage + stale-while-revalidate (2026-06-11)
-- [x] **R4:** Domän — snabb `has_round_trip` / per-dag transient (2026-06-11)
-- [x] Ta bort tillfällig prefetch i `wizardCalendarLoad.ts` — ersatt av `prefetchPolicy.ts` (2026-06-11)
-- [ ] Manuell smoke: enkel + tur/retur, byta månad, refresh — likvärdig upplevelse
-
----
-
 ## Reseplanerare — copy & biljettinfo (J15–J18)
 
 **Källa:** [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md)  
@@ -82,7 +35,7 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 
 ## Saknar produktbeslut (ej i backlog tills beslut)
 
-*(Tomt — J11/D16 har beslutad riktning i [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md).)*
+*(Tomt — D16 har beslutad riktning i [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md). Jesper OK J11 väntar svar i [svar till Jesper](feedback/2026-06-11-svar-till-jesper.md).)*
 
 ---
 
@@ -99,7 +52,7 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Tidtabellsöversikt — bussrader per tågkolumn (Selkné) | 2026-06-10 | commit `8c8a30a`, `TimetableOverviewHelpersTest` |
 | Jesper beta — reseplanerare + admin (J1–J10, A1–A8, A10) | 2026-06-10 | [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) |
 | Turvy — highlight-kolumn (Thun's-expressen, J1) | 2026-06-01 | Smal vertikal etikett + fast kolumnbredd — [granskning J1](feedback/2026-06-01-granskning.md), `MrtOverviewRailGroupGrid.vue`, `timetable-overview.css` |
-| Trafikstörningar v2 — fas 1–4 (UL-lik feed) | 2026-06-11 | [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) |
+| Trafikstörningar J11 — UL-lik feed (fas 1–4, 90 d, admin preview) | 2026-06-11 | [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md), `/trafikstorningar`, `#/traffic-notices` |
 | Stopptider schema v3 — drift + tur 71 GRÖN | 2026-06-11 | [STOP_TIME_CA.md](STOP_TIME_CA.md), [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md) |
 | Tidtabellsöversikt — sammanslagna kolumner (Marielund) | 2026-06-11 | Manuell check Faringe→Uppsala 2026-06-06 |
 | Tidtabellsöversikt — buss vid knutpunkt (Selkné) | 2026-06-11 | Manuell check GRÖN + RÖD mot PDF |
@@ -107,5 +60,5 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Reseplanerare — smoke efter buggfixar (B1–B3) | 2026-06-11 | [feedback/2026-06-09-jesper-buggar-plan.md](feedback/2026-06-09-jesper-buggar-plan.md) |
 | Linnés Hammarby — operatörsdata + verifiering | 2026-06-11 | [LINNES_HAMMARBY.md](LINNES_HAMMARBY.md) |
 | Admin — utökad datakvalitet (dashboard) | 2026-06-11 | `dashboard-warnings.php`, `dashboard-warnings-quality.php` |
-| Reseplanerare J14 — tillfällig prefetch single↔return | 2026-06-11 | `wizardCalendarLoad.ts` — ersätts av [WIZARD_CACHE_REFACTOR.md](WIZARD_CACHE_REFACTOR.md) |
+| Reseplanerare J14 — holistisk cache (R1–R4, prefetch, warm) | 2026-06-11 | [WIZARD_CACHE_REFACTOR.md](WIZARD_CACHE_REFACTOR.md), `journey-cache.php`, `resourceCache.ts`, `scripts/warm-journey-cache.php`, commits `fb52993`, `8f3228e` |
 | Reseplanerare — enhetlig stepper (pill-storlek/typografi) | 2026-06-11 | `wizard-steps.css`, `MrtStepProgress.vue`, commit `6cf1c64` |

@@ -144,7 +144,7 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Publik webb (shortcode / ev. egen sida) — **inte** reseplaneraren
 - **Typ:** framtida scope
 - **Prioritet:** låg
-- **Status:** **implementerad** (fas 1–4, 2026-06-11) — väntar Jesper OK på målbild §5.2 + 90 dagar
+- **Status:** **klar** (fas 1–4 + intern smoke, 2026-06-11) — Jesper OK på målbild §5.2 + 90 dagar väntar svar
 - **Beslut:** Webb only; **två källor → en feed** — (A) auto från tur-avvikelser + (B) manuella trafikmeddelanden; 90 dagars horisont; gruppering tågnummer; ingen wizard/realtime
 - **Tekniskt:** Disruption feed API + UL-lik Vue-feed + admin-förhandsvisning. Se [TRAFFIC_DISRUPTIONS_PLAN.md](../TRAFFIC_DISRUPTIONS_PLAN.md).
 - **Svar:** Levererat enligt plan — behöver din snabba OK innan vi betraktar J11 som stängd. Se [svar till Jesper](2026-06-11-svar-till-jesper.md).
@@ -318,7 +318,7 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 | 12 | A10 | Buss/tåg per riktning och gren | Stor | ☑ (+ Selknä 2026-06-10) |
 | 13 | J4 + A3 | Ca + fotnot behovsuppehåll | Medel–stor | ☑ |
 | 14 | J10 | Desktop fullbredd + bakgrundsbild | Design + asset | ☑ |
-| 15 | J11 | Trafikstörningar UL-lik | Stor | ☑ fas 1–4 — Jesper OK kvar |
+| 15 | J11 | Trafikstörningar UL-lik | Stor | ☑ (Jesper OK väntar svar) |
 | 16 | J12 | Samtrafiken-lik överblick (Turvy) | Stor | ☑ (+ manuell check 2026-06-11) |
 
 ---

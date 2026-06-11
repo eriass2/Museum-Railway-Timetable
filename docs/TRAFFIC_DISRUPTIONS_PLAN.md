@@ -188,7 +188,7 @@ Exempel (målbild):
 | 6 | **Operatörsflöde inmatning?** | **Oförändrat** — Avvikelser + Trafikmeddelanden |
 | 7 | **Admin-översikt?** | **Önskad** — samma feed som publik (**fas 4**); inte blocker för fas 1–2 |
 
-**Kvar att validera med Jesper:** målbild §5.2 (layout/rubriker) och 90-dagars horisont räcker för «kommande».
+**Kvar (extern):** Jesper bekräftar målbild §5.2 (layout/rubriker) och att 90 dagar räcker — se [svar till Jesper](feedback/2026-06-11-svar-till-jesper.md). Intern smoke: PHPUnit + Vitest gröna; `/trafikstorningar` 200 efter sid-synk.
 
 ---
 
@@ -223,7 +223,7 @@ Exempel (målbild):
 ## 10. Nästa steg
 
 - [x] Spika riktning: webb only, två källor (§5) — 2026-06-11
-- [ ] Jesper: snabb OK på målbild §5.2 och 90 dagar
+- [ ] Jesper: snabb OK på målbild §5.2 och 90 dagar (mailutkast skickat — väntar svar)
 - [x] Fas 1 — disruption feed (API/domän) — `disruption-feed.php`, `GET /traffic-disruptions/feed`, Lennakatten demo-data
 - [x] Fas 2 — UL-lik Vue-feed på webben (`MrtTrafficNoticesView` → disruption feed)
 - [x] Fas 3 — shortcode/docs + dedikerad WP-sida
