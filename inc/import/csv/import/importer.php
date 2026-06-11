@@ -49,6 +49,7 @@ function MRT_csv_run_import( array $package ): array {
 	$files    = (array) ( $package['files'] ?? array() );
 	$stats    = array(
 		'stations'   => 0,
+		'lines'      => 0,
 		'routes'     => 0,
 		'timetables' => 0,
 		'services'   => 0,
@@ -66,6 +67,9 @@ function MRT_csv_run_import( array $package ): array {
 	}
 	if ( in_array( 'train_types', $includes, true ) ) {
 		MRT_csv_import_train_types( $files );
+	}
+	if ( in_array( 'lines', $includes, true ) ) {
+		$stats['lines'] = MRT_csv_import_lines( $files );
 	}
 	if ( in_array( 'routes', $includes, true ) ) {
 		$stats['routes'] = MRT_csv_import_routes( $files, $maps );

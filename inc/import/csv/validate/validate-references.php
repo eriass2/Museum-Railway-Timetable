@@ -28,11 +28,16 @@ function MRT_csv_validate_references(
 	$files     = (array) ( $package['files'] ?? array() );
 	$includes  = (array) ( $package['manifest']['includes'] ?? array() );
 	$stations  = MRT_csv_merged_code_set( 'stations', $resolved, $existing_codes );
+	$lines     = MRT_csv_merged_code_set( 'lines', $resolved, $existing_codes );
 	$routes    = MRT_csv_merged_code_set( 'routes', $resolved, $existing_codes );
 	$timetables = MRT_csv_merged_code_set( 'timetables', $resolved, $existing_codes );
 	$services  = MRT_csv_merged_code_set( 'services', $resolved, $existing_codes );
 	$train     = $resolved['train_slugs'] ?? array();
 
+	if ( in_array( 'lines', $includes, true ) ) {
+		MRT_csv_validate_line_station_rows( $files, $lines, $stations, $errors );
+		MRT_csv_validate_main_line_station_order( $files, $errors );
+	}
 	if ( in_array( 'routes', $includes, true ) ) {
 		MRT_csv_validate_route_station_rows( $files, $stations, $routes, $errors );
 	}
@@ -41,6 +46,9 @@ function MRT_csv_validate_references(
 	}
 	if ( in_array( 'services', $includes, true ) ) {
 		MRT_csv_validate_service_rows( $files, $stations, $routes, $timetables, $train, $errors );
+		if ( in_array( 'lines', $includes, true ) ) {
+			MRT_csv_validate_service_line_codes( $files, $lines, MRT_csv_routes_branch_codes( $resolved ), $errors );
+		}
 	}
 	if ( in_array( 'stoptimes', $includes, true ) ) {
 		MRT_csv_validate_stoptime_refs( $files, $stations, $services, $errors );
@@ -57,6 +65,9 @@ function MRT_csv_merged_code_set( string $type, array $resolved, ?array $existin
 	$from = array();
 	if ( $type === 'stations' ) {
 		$from = array_fill_keys( array_keys( (array) ( $resolved['stations'] ?? array() ) ), true );
+	}
+	if ( $type === 'lines' ) {
+		$from = array_fill_keys( array_keys( (array) ( $resolved['lines'] ?? array() ) ), true );
 	}
 	if ( $type === 'routes' ) {
 		$from = array_fill_keys( array_keys( (array) ( $resolved['routes'] ?? array() ) ), true );

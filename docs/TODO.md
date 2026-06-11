@@ -59,7 +59,7 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 - [x] Interim: `branch_code` på routes + pairing mot main (`1bba45c`, `9dffdc6`)
 - [x] B5 borttagen — Linnés endast via Marielund ([LINES_REFACTOR_PLAN.md](LINES_REFACTOR_PLAN.md) §1)
-- [ ] Fas 1: `lines.csv` + Lennakatten-pilot
+- [x] Fas 1: `lines.csv` + Lennakatten-pilot
 - [ ] Fas 2–3: transfer-grenar + B14 utan korridor-meta
 - [ ] Fas 4: deprecated `route`, D8 en linje per sträcka
 

@@ -1,6 +1,6 @@
 # Linjer och grenar — refactor-plan (Lennakatten)
 
-**Status:** Spikad domänriktning (2026-06-11), ej implementerad.  
+**Status:** Spikad domänriktning (2026-06-11). Fas 1 (`lines.csv` pilot) implementerad; Fas 2–4 återstår.  
 **Syfte:** Ersätta dagens många shuttle-`route` + overview-heuristik med en tydlig modell innan go-live.  
 **Relaterat:** [DATA_MODEL.md](DATA_MODEL.md) §1.4b, [CSV_FORMAT.md](CSV_FORMAT.md), [LINNES_HAMMARBY.md](LINNES_HAMMARBY.md).
 
@@ -121,11 +121,12 @@ services.csv
 - Pairing: buss-shuttles bara mot `main`-korridor
 - Dokumentation §1.4b i DATA_MODEL
 
-### Fas 1 — `line` i CSV (pilot Lennakatten)
+### Fas 1 — `line` i CSV (pilot Lennakatten) ✓
 
 - Inför `lines.csv` + `line_stations.csv`
 - `main` = befintlig 14-stationslista (en gång)
 - Tåg-services: `line_code=main` (mapping från `route_code`)
+- Import: `mrt_line_registry` + `mrt_service_line_code`; `route` kvar som alias
 - Tester: fixture validate + journey oförändrat beteende
 
 ### Fas 2 — transfer-grenar

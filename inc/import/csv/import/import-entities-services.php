@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/line/line-csv.php';
 require_once MRT_PATH . 'inc/domain/service/highlight.php';
 require_once MRT_PATH . 'inc/domain/service/overview-column.php';
 require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
@@ -54,7 +55,8 @@ function MRT_csv_import_services( array $files, array &$maps ): int {
 	foreach ( $train_rows as $trow ) {
 		$by_service[ $trow['service_code'] ?? '' ][] = $trow['train_type_slug'] ?? '';
 	}
-	$count = 0;
+	$routes_branch = MRT_csv_routes_branch_from_file( $files );
+	$count         = 0;
 	foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {
 		$code  = MRT_csv_resolve_service_code( $row );
 		$title = MRT_csv_service_title( $row, $maps );
@@ -77,6 +79,12 @@ function MRT_csv_import_services( array $files, array &$maps ): int {
 		update_post_meta( $id, 'mrt_service_timetable_id', (int) ( $maps['timetable'][ $tt_code ] ?? 0 ) );
 		update_post_meta( $id, 'mrt_service_end_station_id', (int) ( $maps['station'][ $end_code ] ?? 0 ) );
 		update_post_meta( $id, 'mrt_service_number', sanitize_text_field( $row['service_number'] ?? '' ) );
+		$line_code = MRT_csv_resolve_service_line_code( $row, $routes_branch );
+		if ( $line_code !== '' ) {
+			update_post_meta( $id, MRT_service_line_code_meta_key(), $line_code );
+		} else {
+			delete_post_meta( $id, MRT_service_line_code_meta_key() );
+		}
 		MRT_csv_update_service_highlight_from_row( (int) $id, $row );
 		MRT_csv_apply_service_overview_column_from_row( (int) $id, $row, $maps );
 		MRT_csv_assign_service_train_types( (int) $id, $by_service[ $code ] ?? array() );
@@ -100,6 +108,21 @@ function MRT_csv_service_title( array $row, array $maps ): string {
 	$prefix   = $route instanceof WP_Post ? $route->post_title : ( $row['route_code'] ?? 'Service' );
 	$num      = $row['service_number'] ?? '';
 	return trim( $prefix . ' ' . $num );
+}
+
+/**
+ * @return array<string, string>
+ */
+function MRT_csv_routes_branch_from_file( array $files ): array {
+	$branch = array();
+	foreach ( (array) ( $files['routes.csv'] ?? array() ) as $row ) {
+		$code = trim( (string) ( $row['route_code'] ?? '' ) );
+		if ( $code === '' ) {
+			continue;
+		}
+		$branch[ $code ] = trim( (string) ( $row['branch_code'] ?? '' ) );
+	}
+	return $branch;
 }
 
 function MRT_csv_resolve_service_code( array $row ): string {

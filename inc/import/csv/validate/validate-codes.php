@@ -20,6 +20,7 @@ function MRT_csv_resolve_package_codes( array $package, array &$errors ): array 
 	$includes = (array) ( $package['manifest']['includes'] ?? array() );
 	$resolved = array(
 		'stations'    => array(),
+		'lines'       => array(),
 		'routes'      => array(),
 		'timetables'  => array(),
 		'services'    => array(),
@@ -32,6 +33,9 @@ function MRT_csv_resolve_package_codes( array $package, array &$errors ): array 
 	}
 	if ( in_array( 'train_types', $includes, true ) ) {
 		MRT_csv_resolve_train_types( $files, $resolved, $errors );
+	}
+	if ( in_array( 'lines', $includes, true ) ) {
+		MRT_csv_resolve_lines( $files, $resolved, $errors );
 	}
 	if ( in_array( 'routes', $includes, true ) ) {
 		MRT_csv_resolve_routes( $files, $resolved, $errors );
@@ -53,6 +57,7 @@ function MRT_csv_resolve_package_codes( array $package, array &$errors ): array 
 function MRT_csv_validate_required_files( array $includes, array $files, array &$errors ): void {
 	$need = array(
 		'stations'   => array( 'stations.csv' ),
+		'lines'      => array( 'lines.csv', 'line_stations.csv' ),
 		'routes'     => array( 'routes.csv', 'route_stations.csv' ),
 		'timetables' => array( 'timetables.csv', 'timetable_dates.csv' ),
 		'services'   => array( 'services.csv', 'service_train_types.csv' ),

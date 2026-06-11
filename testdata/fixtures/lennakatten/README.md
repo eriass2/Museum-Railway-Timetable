@@ -4,6 +4,8 @@ Test/demo timetable data for development (`docker-dev-reset`, Import Lennakatten
 
 **Source of truth:** edit the CSV files here directly.
 
+**Lines (Fas 1):** `lines.csv` + `line_stations.csv` define the canonical `main` corridor (14 stations). Rail services set `line_code=main` in `services.csv`; bus shuttles still use `route_code` only until Fas 2.
+
 **Reference PDF:** `testdata/reference-pdfs/Anslagstidtabell-2026.pdf` (kalender + alla tidtabeller).
 
 Timetable codes in the CSV package:
