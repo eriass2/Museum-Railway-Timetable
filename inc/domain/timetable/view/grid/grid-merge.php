@@ -24,8 +24,13 @@ function MRT_timetable_groups_link_branch_pairs( array $grouped_services ): arra
 		}
 	}
 
+	require_once MRT_PATH . 'inc/domain/service/overview-column.php';
+
 	foreach ( $branch_keys as $branch_key ) {
 		$branch   = $grouped_services[ $branch_key ];
+		if ( MRT_timetable_group_is_standalone_overview_column_shuttle( $branch ) ) {
+			continue;
+		}
 		$main_key = MRT_timetable_find_main_group_for_branch( $grouped_services, $branch, $branch_key );
 		if ( $main_key === null ) {
 			continue;

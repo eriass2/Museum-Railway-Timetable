@@ -14,11 +14,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/overview-column-merge.php';
 require_once __DIR__ . '/overview-rail-columns.php';
 require_once __DIR__ . '/overview-rail-cells.php';
+require_once __DIR__ . '/overview-standalone-bus.php';
 
-function MRT_timetable_rail_group_to_json( array $group, string $dateYmd ): array {
-	$view             = MRT_prepare_timetable_group_view( $group, $dateYmd );
-	$display_columns  = MRT_timetable_build_display_columns( $view );
-	$paired_branches  = MRT_timetable_rail_paired_branches( $group );
+function MRT_timetable_rail_group_to_json( array $group, string $dateYmd, array $grouped_services = array() ): array {
+	$view            = MRT_prepare_timetable_group_view( $group, $dateYmd );
+	$view            = MRT_timetable_view_merge_standalone_buses( $view, $group, $grouped_services, $dateYmd );
+	$display_columns = MRT_timetable_build_display_columns( $view );
+	$display_columns = MRT_timetable_append_standalone_bus_display_columns( $view, $display_columns );
+	$paired_branches = MRT_timetable_rail_paired_branches( $group );
 	$from_label       = $view['from_station'] ? MRT_station_from_label( $view['from_station'] ) : '';
 	$to_label         = $view['to_station'] ? MRT_station_to_label( $view['to_station'] ) : '';
 
@@ -89,6 +92,8 @@ function MRT_timetable_overview_rail_rows_json(
 		$display_columns,
 		$station_posts
 	);
+
+	$rows = MRT_timetable_patch_standalone_bus_junction_rows( $rows, $display_columns, $view );
 
 	return array_values( array_filter( $rows ) );
 }

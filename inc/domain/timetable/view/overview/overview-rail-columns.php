@@ -25,12 +25,16 @@ function MRT_timetable_overview_columns_json( array $view, array $display_column
 		$service = $services[ $idx ]['service'] ?? null;
 		$tt      = $info['train_type'] ?? null;
 		$default = $info['default_train_type'] ?? null;
-		$column  = array(
+		$standalone = ! empty( $info['standalone_overview_column'] );
+		$column     = array(
 			'serviceId'            => $service instanceof WP_Post ? (int) $service->ID : 0,
-			'serviceNumber'        => (string) ( $info['service_number'] ?? '' ),
-			'trainTypeName'        => $tt ? $tt->name : '',
-			'trainTypeSlug'        => $tt ? $tt->slug : '',
-			'iconKey'              => $tt ? MRT_get_train_type_symbol_key( $tt ) : 'diesel',
+			'serviceNumber'        => $standalone ? '' : (string) ( $info['service_number'] ?? '' ),
+			'isStandaloneBus'      => $standalone,
+			'trainTypeName'        => $standalone
+				? __( 'Buss', 'museum-railway-timetable' )
+				: ( $tt ? $tt->name : '' ),
+			'trainTypeSlug'        => $standalone ? 'buss' : ( $tt ? $tt->slug : '' ),
+			'iconKey'              => $standalone ? 'buss' : ( $tt ? MRT_get_train_type_symbol_key( $tt ) : 'diesel' ),
 			'plannedTrainTypeName' => $default ? $default->name : '',
 			'isDeviation'          => ! empty( $info['is_deviation'] ),
 			'isCancelled'          => ! empty( $info['is_cancelled'] ),

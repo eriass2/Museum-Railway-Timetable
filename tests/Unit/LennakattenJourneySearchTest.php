@@ -183,6 +183,21 @@ final class LennakattenJourneySearchTest extends TestCase {
 		self::assertSame( '11:00', $fjar['arrival_time'] ?? '' );
 	}
 
+	public function test_find_connections_linnes_hammarby_uppsala_direct_on_red_sunday(): void {
+		$this->boot_service_fixture( 'red-b14-bus-in', self::DATE_RED );
+		$stations = $this->station_ids();
+
+		$connections = MRT_find_connections(
+			$stations['linnes-hammarby'],
+			$stations['uppsala-ostra'],
+			self::DATE_RED
+		);
+
+		self::assertNotEmpty( $connections );
+		self::assertSame( '16:20', $connections[0]['from_departure'] ?? '' );
+		self::assertSame( '16:45', $connections[0]['to_arrival'] ?? '' );
+	}
+
 	public function test_find_connections_selkna_linnes_hammarby_on_red_sunday(): void {
 		$this->boot_service_fixture( 'red-b5-bus-out', self::DATE_RED );
 		$stations = $this->station_ids();

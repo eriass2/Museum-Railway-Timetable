@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/service/highlight.php';
+require_once MRT_PATH . 'inc/domain/service/overview-column.php';
 require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
 
 /**
@@ -77,6 +78,7 @@ function MRT_csv_import_services( array $files, array &$maps ): int {
 		update_post_meta( $id, 'mrt_service_end_station_id', (int) ( $maps['station'][ $end_code ] ?? 0 ) );
 		update_post_meta( $id, 'mrt_service_number', sanitize_text_field( $row['service_number'] ?? '' ) );
 		MRT_csv_update_service_highlight_from_row( (int) $id, $row );
+		MRT_csv_apply_service_overview_column_from_row( (int) $id, $row, $maps );
 		MRT_csv_assign_service_train_types( (int) $id, $by_service[ $code ] ?? array() );
 		MRT_csv_save_post_code( (int) $id, $meta, $code );
 		$maps['service'][ $code ] = (int) $id;

@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/service/overview-column.php';
+
 /**
  * @return array<int, array<string, string>>
  */
@@ -164,6 +166,11 @@ function MRT_csv_export_services( array &$tables, array &$maps ): void {
 			'highlight_label'  => (string) get_post_meta( $post->ID, 'mrt_service_highlight_label', true ),
 			'highlight_color'  => (string) get_post_meta( $post->ID, 'mrt_service_highlight_color', true ),
 			'highlight_note'   => (string) get_post_meta( $post->ID, 'mrt_service_highlight_note', true ),
+			'overview_column'  => MRT_service_has_overview_column( (int) $post->ID ) ? '1' : '',
+			'overview_pass_from_station' => MRT_csv_id_to_station_code(
+				MRT_service_overview_pass_from_station_id( (int) $post->ID ),
+				$maps
+			),
 		);
 		$terms = wp_get_object_terms( $post->ID, MRT_TAXONOMY_TRAIN_TYPE );
 		if ( ! is_wp_error( $terms ) ) {

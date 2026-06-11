@@ -1,5 +1,11 @@
 service_code,train_type_slug
 red-b5-bus-out,buss
+red-b9-bus-out,buss
+red-b10-bus-out,buss
+red-b11-bus-out,buss
+red-b12-bus-in,buss
+red-b13-bus-in,buss
+red-b14-bus-in,buss
 red-81-out,angtag
 red-91-out,ralsbuss
 red-83-out,angtag

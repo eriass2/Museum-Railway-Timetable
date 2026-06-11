@@ -110,6 +110,8 @@ function MRT_csv_export_column_headers(): array {
 			'highlight_label',
 			'highlight_color',
 			'highlight_note',
+			'overview_column',
+			'overview_pass_from_station',
 		),
 		'service_train_types.csv' => array( 'service_code', 'train_type_slug' ),
 		'stoptimes.csv'           => array(

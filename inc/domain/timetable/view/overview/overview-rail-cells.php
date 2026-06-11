@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once __DIR__ . '/overview-standalone-bus.php';
+
 /**
  * @param array<int, array{primary_idx: int, continuation_idx: int|null, split_station_id: int}>|null $display_columns
  * @param array<int, WP_Post>|null $station_posts
@@ -36,9 +38,25 @@ function MRT_timetable_row_times_json(
 		foreach ( $display_columns as $column ) {
 			$idx          = MRT_timetable_display_column_service_idx( $column, $station_id, $kind, $station_posts );
 			$service_data = $services[ $idx ] ?? array();
-			$stop         = $service_data['stop_times'][ $station_id ] ?? null;
-			$cell         = MRT_timetable_time_cell_json( $stop, $use_from_display, $use_to_display, $kind );
-			$service_id   = MRT_timetable_service_id_from_data( $service_data );
+			$row_info     = $info[ $idx ] ?? array();
+			if ( ! empty( $row_info['standalone_overview_column'] ) ) {
+				$cell = array(
+					'text' => MRT_timetable_standalone_bus_cell_text(
+						$service_data,
+						$row_info,
+						$station_id,
+						$kind,
+						$station_posts,
+						$use_from_display,
+						$use_to_display
+					),
+					'approximateTime' => false,
+				);
+			} else {
+				$stop = $service_data['stop_times'][ $station_id ] ?? null;
+				$cell = MRT_timetable_time_cell_json( $stop, $use_from_display, $use_to_display, $kind );
+			}
+			$service_id = MRT_timetable_service_id_from_data( $service_data );
 			if ( $service_id > 0 ) {
 				$cell['serviceId'] = $service_id;
 			}

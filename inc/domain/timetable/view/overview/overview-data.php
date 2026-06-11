@@ -35,12 +35,17 @@ function MRT_build_timetable_overview_payload( array $services, string $dateYmd,
 	$grouped = MRT_timetable_groups_link_branch_pairs( $grouped );
 	usort( $grouped, 'MRT_sort_timetable_groups_source_order' );
 
+	require_once MRT_PATH . 'inc/domain/service/overview-column.php';
+
 	$groups = array();
 	foreach ( $grouped as $group ) {
 		if ( MRT_timetable_group_is_branch_shuttle( $group ) && ! empty( $group['paired_rail'] ) ) {
 			continue;
 		}
-		$groups[] = MRT_timetable_overview_group_to_json( $group, $dateYmd );
+		if ( MRT_timetable_group_is_standalone_overview_column_shuttle( $group ) ) {
+			continue;
+		}
+		$groups[] = MRT_timetable_overview_group_to_json( $group, $dateYmd, $grouped );
 	}
 
 	$tt     = (string) ( $meta['timetableType'] ?? '' );
@@ -145,9 +150,9 @@ function MRT_timetable_type_banner_text( string $type ): array {
  * @param array<string, mixed> $group
  * @return array<string, mixed>
  */
-function MRT_timetable_overview_group_to_json( array $group, string $dateYmd ): array {
+function MRT_timetable_overview_group_to_json( array $group, string $dateYmd, array $grouped_services = array() ): array {
 	if ( MRT_timetable_group_is_branch_shuttle( $group ) ) {
 		return MRT_timetable_branch_group_to_json( $group, $dateYmd );
 	}
-	return MRT_timetable_rail_group_to_json( $group, $dateYmd );
+	return MRT_timetable_rail_group_to_json( $group, $dateYmd, $grouped_services );
 }

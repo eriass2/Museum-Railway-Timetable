@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/service/overview-column.php';
+
 /**
  * @param array<int, WP_Post> $station_posts
  * @return array<string, array{primary: string, station_id: int}>
@@ -106,8 +108,15 @@ function MRT_timetable_sort_display_columns( array $columns, array $services_lis
  * @param array<int, array<string, mixed>> $services_list
  */
 function MRT_timetable_display_column_sort_time( array $column, array $services_list, int $first_station_id ): string {
-	$idx  = (int) $column['primary_idx'];
-	$data = $services_list[ $idx ] ?? array();
+	$idx     = (int) $column['primary_idx'];
+	$data    = $services_list[ $idx ] ?? array();
+	$service = $data['service'] ?? null;
+	if ( $service instanceof WP_Post && MRT_service_has_overview_column( (int) $service->ID ) ) {
+		$dep = MRT_timetable_standalone_bus_boarding_departure( $data, array() );
+		if ( $dep !== '' ) {
+			return $dep;
+		}
+	}
 	$stop = $data['stop_times'][ $first_station_id ] ?? array();
 	return MRT_stop_effective_departure( is_array( $stop ) ? $stop : array() );
 }
@@ -124,8 +133,12 @@ function MRT_timetable_build_display_columns( array $view ): array {
 	$num_to_idx     = MRT_timetable_service_number_index_map( $info );
 	$forward_lookup = MRT_timetable_train_change_forward_by_station( $station_posts );
 	$columns        = array();
+	$rail_count     = (int) ( $view['rail_service_count'] ?? count( $info ) );
 
 	foreach ( $info as $idx => $row ) {
+		if ( $idx >= $rail_count ) {
+			break;
+		}
 		$num = (string) ( $row['service_number'] ?? '' );
 		if ( $num !== '' && isset( $reverse[ $num ] ) ) {
 			continue;

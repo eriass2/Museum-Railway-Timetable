@@ -1,5 +1,11 @@
-service_code,timetable_code,route_code,service_number,end_station_code,title,highlight_label,highlight_color,highlight_note
-red-b5-bus-out,red-buss,selkna-linnes-hammarby,B5,linnes-hammarby,,,,
+service_code,timetable_code,route_code,service_number,end_station_code,title,highlight_label,highlight_color,highlight_note,overview_column,overview_pass_from_station
+red-b5-bus-out,red-buss,selkna-linnes-hammarby,B5,linnes-hammarby,,,,,,
+red-b9-bus-out,red-buss,marielund-linnes-hammarby,B9,linnes-hammarby,,,,,,
+red-b10-bus-out,red-buss,marielund-linnes-hammarby,B10,linnes-hammarby,,,,,,
+red-b11-bus-out,red-buss,marielund-linnes-hammarby,B11,linnes-hammarby,,,,,,
+red-b12-bus-in,red-buss,linnes-hammarby-marielund,B12,marielund,,,,,,
+red-b13-bus-in,red-buss,linnes-hammarby-marielund,B13,marielund,,,,,,
+red-b14-bus-in,red-buss,linnes-hammarby-uppsala-ostra,B14,uppsala-ostra,,,,,1,marielund
 red-81-out,red,uppsala-faringe,81,faringe,
 red-91-out,red,uppsala-faringe,91,faringe,
 red-83-out,red,uppsala-faringe,83,faringe,

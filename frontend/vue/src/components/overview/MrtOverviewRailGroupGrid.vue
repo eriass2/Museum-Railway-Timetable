@@ -142,7 +142,8 @@ function cancelledNoticeDetail(index: number): boolean {
               :class="{ 'mrt-ov-col-head--cancelled': columnCancelled(track.columnIndex) }"
               :style="{ ...overviewGridCellStyle(ti), ...overviewHeadRowStyle(2) }"
             >
-              {{ group.columns[track.columnIndex].serviceNumber }}
+              <template v-if="group.columns[track.columnIndex].isStandaloneBus">&nbsp;</template>
+              <template v-else>{{ group.columns[track.columnIndex].serviceNumber }}</template>
               <span
                 v-if="showDeviationMeta && columnCancelled(track.columnIndex)"
                 class="mrt-ov-cancelled-badge"

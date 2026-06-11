@@ -18,6 +18,7 @@ export type TimetableOverviewColumn = {
   isSpecial: boolean;
   specialName: string;
   highlightColor: string;
+  isStandaloneBus?: boolean;
   continuation?: {
     serviceId: number;
     serviceNumber: string;
