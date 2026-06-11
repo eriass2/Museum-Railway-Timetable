@@ -154,7 +154,7 @@ Checklista när en **ny anslutningsbuss** ska in utöver befintlig tågtrafik:
 1. **Station** — finns den? (`#/stations-routes` → Stationer). Busshållplats: kryssa **Buss** om det gäller.
 2. **Rutt** — skapa **två riktningar** (t.ex. Selknä → Linnés Hammarby och tillbaka). Lägg stationer i ordning; start/slut sätts automatiskt.
 3. **Tidtabell** — lägg till eller återanvänd befintlig (t.ex. GRÖN anslutningsbuss) under **Trafikdagar**.
-4. **Turer** — skapa bussturer kopplade till rutten och tidtabellen (tågnummer B5, B9, …).
+4. **Turer** — skapa bussturer kopplade till rutten och tidtabellen (tågnummer B9, …).
 5. **Turvy** — fyll tider vid bytehållplats (Selknä) och destination.
 6. **Buss/tåg-koppling** — kontrollera tidtabellsöversikt och reseplanerare: rätt buss ska följa rätt tåg per gren (inte Fjällnora-buss på Hammarby-resa).
 7. **Smoke** — sök resa i reseplaneraren på en dag med trafik; expandera detalj och jämför med tidtabell-PDF/översikt.
