@@ -148,11 +148,12 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 ## Reseplanerare — stegindikator (stepper)
 
 **Syfte:** Enhetlig visuell hierarki — idag ser klart / aktivt / kommande steg ut som tre helt olika knapptyper.
+**Status:** klar (2026-06-11) — gemensam pill-stil, klara steg gul/accentfärgade och fortsatt klickbara.
 
 **Nyckelfiler:** `assets/frontend/ui/wizard-steps.css`, `frontend/vue/src/styles/journey-wizard/controls-form.css`, `steps-outbound-return.css`, `MrtStepProgress.vue`
 
-- [ ] Enhetlig stepper-stil för `is-done`, `is-active` och framtida steg (just nu t.ex. gul kant + gul text vs gul fylld vs mörk utan kant)
-- [ ] Manuell check: alla fem steg i flödet — samma typografi, padding och kontrast
+- [x] Enhetlig stepper-stil för `is-done`, `is-active` och framtida steg
+- [x] Manuell check: alla fem steg i flödet — samma typografi, padding och kontrast
 
 ---
 
