@@ -183,6 +183,30 @@ final class OverviewBusGridTest extends TestCase {
 		self::assertSame( array(), $result['trips'] );
 	}
 
+	public function test_find_main_group_prefers_matching_travel_direction_on_tie(): void {
+		$uppsala  = 14;
+		$marielund = 8;
+		$faringe  = 1;
+		$linnes   = 16;
+		$main_out = array(
+			'stations' => array( $uppsala, 13, 12, 11, 10, 9, $marielund, 7, 6, 5, 4, 3, 2, $faringe ),
+		);
+		$main_in  = array(
+			'stations' => array( $faringe, 2, 3, 4, 5, 6, 7, $marielund, 9, 10, 11, 12, 13, $uppsala ),
+		);
+		$out_branch = array( 'stations' => array( $marielund, $linnes ) );
+		$in_branch  = array( 'stations' => array( $linnes, $marielund ) );
+
+		self::assertGreaterThan(
+			MRT_timetable_branch_main_pair_score( $main_in['stations'], $out_branch['stations'] ),
+			MRT_timetable_branch_main_pair_score( $main_out['stations'], $out_branch['stations'] )
+		);
+		self::assertGreaterThan(
+			MRT_timetable_branch_main_pair_score( $main_out['stations'], $in_branch['stations'] ),
+			MRT_timetable_branch_main_pair_score( $main_in['stations'], $in_branch['stations'] )
+		);
+	}
+
 	public function test_find_bus_service_in_branch(): void {
 		$branch = array(
 			'services' => array(

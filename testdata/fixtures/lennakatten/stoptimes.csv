@@ -61,14 +61,7 @@ red-95-out,3,arsta,13:35,13:35,on_request,none,on_request,none,1,0
 red-95-out,4,skolsta,13:38,13:38,scheduled,scheduled,scheduled,scheduled,1,0
 red-95-out,5,barby,13:48,13:48,scheduled,scheduled,scheduled,scheduled,1,0
 red-95-out,6,gunsta,13:49,13:49,scheduled,scheduled,scheduled,scheduled,1,0
-red-95-out,7,marielund,13:57,13:57,scheduled,scheduled,scheduled,scheduled,1,0
-red-95-out,8,lovstahagen,15:44,15:44,scheduled,scheduled,scheduled,scheduled,1,0
-red-95-out,9,selkna,15:47,15:47,scheduled,scheduled,scheduled,scheduled,1,0
-red-95-out,10,lot,15:50,15:50,scheduled,scheduled,scheduled,scheduled,1,0
-red-95-out,11,lanna,15:53,15:53,scheduled,scheduled,scheduled,scheduled,1,0
-red-95-out,12,almunge,16:03,16:03,scheduled,scheduled,scheduled,scheduled,1,0
-red-95-out,13,moga,16:07,16:07,scheduled,scheduled,scheduled,scheduled,1,0
-red-95-out,14,faringe,16:15,,none,scheduled,none,none,1,0
+red-95-out,7,marielund,13:57,,none,scheduled,none,none,1,0
 red-99-out,1,uppsala-ostra,,15:20,none,none,on_request,none,1,0
 red-99-out,2,fyrislund,15:23,15:23,scheduled,scheduled,scheduled,scheduled,1,0
 red-99-out,3,arsta,15:25,15:25,scheduled,scheduled,scheduled,scheduled,1,0

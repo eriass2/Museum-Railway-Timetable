@@ -75,7 +75,7 @@ function MRT_timetable_rail_paired_branches( array $group ): array {
 function MRT_timetable_find_main_group_for_branch( array $grouped_services, array $branch, string $branch_key ): ?string {
 	$branch_station_ids = array_map( 'intval', (array) ( $branch['stations'] ?? array() ) );
 	$best_key           = null;
-	$best_count         = 0;
+	$best_score         = -1;
 
 	foreach ( $grouped_services as $key => $group ) {
 		if ( $key === $branch_key || MRT_timetable_group_is_branch_shuttle( $group ) ) {
@@ -83,26 +83,44 @@ function MRT_timetable_find_main_group_for_branch( array $grouped_services, arra
 		}
 
 		$main_stations = array_map( 'intval', (array) ( $group['stations'] ?? array() ) );
-		if ( count( $main_stations ) < 3 ) {
-			continue;
-		}
-
-		$overlap = array_intersect( $branch_station_ids, $main_stations );
-		if ( $overlap === array() ) {
-			continue;
-		}
-
-		$branch_start = $branch_station_ids[0] ?? 0;
-		$branch_end   = (int) ( $branch_station_ids[ count( $branch_station_ids ) - 1 ] ?? 0 );
-		if ( ! in_array( $branch_start, $main_stations, true ) && ! in_array( $branch_end, $main_stations, true ) ) {
-			continue;
-		}
-
-		if ( count( $main_stations ) > $best_count ) {
-			$best_count = count( $main_stations );
+		$score         = MRT_timetable_branch_main_pair_score( $main_stations, $branch_station_ids );
+		if ( $score > $best_score ) {
+			$best_score = $score;
 			$best_key   = (string) $key;
 		}
 	}
 
 	return $best_key;
+}
+
+/**
+ * Prefer the main line whose travel direction matches the branch connector.
+ *
+ * @param array<int, int> $main_stations
+ * @param array<int, int> $branch_station_ids
+ */
+function MRT_timetable_branch_main_pair_score( array $main_stations, array $branch_station_ids ): int {
+	if ( count( $main_stations ) < 3 || count( $branch_station_ids ) < 2 ) {
+		return -1;
+	}
+
+	$branch_start = $branch_station_ids[0];
+	$branch_end   = (int) $branch_station_ids[ count( $branch_station_ids ) - 1 ];
+	$start_on     = in_array( $branch_start, $main_stations, true );
+	$end_on       = in_array( $branch_end, $main_stations, true );
+	if ( ! $start_on && ! $end_on ) {
+		return -1;
+	}
+
+	$main_len = count( $main_stations );
+	if ( $start_on && ! $end_on ) {
+		$idx = array_search( $branch_start, $main_stations, true );
+		return $idx === false ? -1 : ( ( $main_len - 1 - (int) $idx ) * 1000 ) + $main_len;
+	}
+	if ( ! $start_on && $end_on ) {
+		$idx = array_search( $branch_end, $main_stations, true );
+		return $idx === false ? -1 : ( (int) $idx * 1000 ) + $main_len;
+	}
+
+	return $main_len;
 }

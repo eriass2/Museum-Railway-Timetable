@@ -12,7 +12,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/timetable/view/grid/grid-branch.php';
-require_once MRT_PATH . 'inc/domain/timetable/view/grid/grid-connections.php';
 
 function MRT_service_has_overview_column( int $service_id ): bool {
 	return (int) get_post_meta( $service_id, 'mrt_service_overview_column', true ) === 1;
@@ -75,20 +74,22 @@ function MRT_timetable_standalone_bus_entries_for_rail_group(
 }
 
 /**
- * Standalone bus columns belong on the inbound rail grid where the bus alights on the main line.
+ * Standalone bus columns belong on the rail grid whose terminus is the bus alight station.
  *
  * @param array<string, mixed> $service_data
  * @param array<string, mixed> $rail_group
  */
 function MRT_timetable_standalone_bus_matches_rail_group( array $service_data, array $rail_group ): bool {
-	if ( MRT_timetable_rail_grid_direction( $rail_group ) !== 'inbound' ) {
-		return false;
-	}
 	$rail_ids = array_map( 'intval', (array) ( $rail_group['stations'] ?? array() ) );
 	if ( $rail_ids === array() ) {
 		return false;
 	}
-	return MRT_timetable_standalone_bus_alight_station_on_route( $service_data, $rail_ids ) > 0;
+	$alight_id = MRT_timetable_standalone_bus_alight_station_on_route( $service_data, $rail_ids );
+	if ( $alight_id <= 0 ) {
+		return false;
+	}
+	$last_id = (int) $rail_ids[ count( $rail_ids ) - 1 ];
+	return $alight_id === $last_id;
 }
 
 /**
