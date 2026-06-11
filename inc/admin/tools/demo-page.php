@@ -174,8 +174,13 @@ function MRT_get_components_demo_page_content() {
 		MRT_get_components_demo_mockup_legend_html(),
 		MRT_get_components_demo_journey_test_data_html(),
 		'<h2>' . esc_html__( '1. Trafikmeddelanden', 'museum-railway-timetable' ) . '</h2>',
-		MRT_demo_mockup_caption( __( 'Mockup: generella meddelanden och tur-avvikelser för idag.', 'museum-railway-timetable' ) ),
-		'[museum_traffic_notices]',
+		MRT_demo_mockup_caption(
+			__(
+				'Mockup: UL-lik feed (Pågår nu / Kommande, 90 dagar). Demo med referensdatum 2026-06-06.',
+				'museum-railway-timetable'
+			)
+		),
+		'[museum_traffic_notices date="2026-06-06"]',
 		'<h2>' . esc_html__( '2. Månadskalender', 'museum-railway-timetable' ) . '</h2>',
 		MRT_demo_mockup_caption( __( 'Mockup: kalender / trafikdagar (tidtabellskontext, inte bokningsflödet).', 'museum-railway-timetable' ) ),
 		'[museum_timetable_month show_counts="1" legend="1"]',

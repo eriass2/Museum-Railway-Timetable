@@ -136,6 +136,32 @@ function MRT_disruption_feed_notice_headline( string $text ): string {
 }
 
 /**
+ * Body text to show under headline (omit text already covered by the headline).
+ *
+ * @param array<string, mixed> $item Feed item.
+ */
+function MRT_disruption_feed_item_body_display( array $item ): string {
+	$body     = trim( (string) ( $item['body'] ?? '' ) );
+	$headline = trim( (string) ( $item['headline'] ?? '' ) );
+	if ( $body === '' || $body === $headline ) {
+		return '';
+	}
+	$source = (string) ( $item['source'] ?? '' );
+	if ( $source === 'deviation' && stripos( $headline, $body ) !== false ) {
+		return '';
+	}
+	if ( $source === 'general' ) {
+		$lines      = preg_split( '/\R/u', $body );
+		$first_line = trim( (string) ( $lines[0] ?? '' ) );
+		if ( $first_line === $headline ) {
+			array_shift( $lines );
+			return trim( implode( "\n", $lines ) );
+		}
+	}
+	return $body;
+}
+
+/**
  * @return list<array<string, mixed>>
  */
 function MRT_disruption_feed_items_from_deviations( string $reference_date, string $end_date ): array {

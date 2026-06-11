@@ -1,5 +1,9 @@
 <script setup lang="ts">
 import type { DisruptionFeedItem } from '@/api/disruptionFeed';
+import {
+  disruptionFeedItemBodyDisplay,
+  disruptionFeedShowBody,
+} from '@/utils/disruptionFeedDisplay';
 
 export type DisruptionFeedEditHint = {
   path: string;
@@ -28,11 +32,11 @@ function itemClasses(item: DisruptionFeedItem): Record<string, boolean> {
 }
 
 function showBody(item: DisruptionFeedItem): boolean {
-  const body = item.body.trim();
-  if (body === '') {
-    return false;
-  }
-  return body !== item.headline.trim();
+  return disruptionFeedShowBody(item);
+}
+
+function bodyText(item: DisruptionFeedItem): string {
+  return disruptionFeedItemBodyDisplay(item);
 }
 
 function editHref(hint: DisruptionFeedEditHint): string {
@@ -62,7 +66,7 @@ function editHref(hint: DisruptionFeedEditHint): string {
           <p class="mrt-traffic-notices__date">{{ item.date_label }}</p>
           <p class="mrt-traffic-notices__headline">{{ item.headline }}</p>
           <p v-if="showBody(item)" class="mrt-traffic-notices__body">
-            {{ item.body }}
+            {{ bodyText(item) }}
           </p>
           <p v-if="editForItem?.(item)" class="mrt-traffic-notices__edit-link">
             <a :href="editHref(editForItem(item)!)">{{ editForItem(item)!.label }}</a>
@@ -88,7 +92,7 @@ function editHref(hint: DisruptionFeedEditHint): string {
           <p class="mrt-traffic-notices__date">{{ item.date_label }}</p>
           <p class="mrt-traffic-notices__headline">{{ item.headline }}</p>
           <p v-if="showBody(item)" class="mrt-traffic-notices__body">
-            {{ item.body }}
+            {{ bodyText(item) }}
           </p>
           <p v-if="editForItem?.(item)" class="mrt-traffic-notices__edit-link">
             <a :href="editHref(editForItem(item)!)">{{ editForItem(item)!.label }}</a>

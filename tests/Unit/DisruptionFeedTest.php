@@ -91,6 +91,33 @@ final class DisruptionFeedTest extends TestCase {
 		self::assertSame( MRT_DISRUPTION_FEED_MAX_HORIZON, $result['horizon_days'] );
 	}
 
+	public function test_item_body_display_hides_redundant_deviation_notice(): void {
+		$item = array(
+			'source'   => 'deviation',
+			'headline' => 'Inställd trafik — Tåg 71',
+			'body'     => 'Inställd',
+		);
+		self::assertSame( '', MRT_disruption_feed_item_body_display( $item ) );
+	}
+
+	public function test_item_body_display_strips_first_line_for_general_notice(): void {
+		$item = array(
+			'source'   => 'general',
+			'headline' => 'Baninfo sommar',
+			'body'     => "Baninfo sommar\nBerörda anslutningar: Uppsala",
+		);
+		self::assertSame( 'Berörda anslutningar: Uppsala', MRT_disruption_feed_item_body_display( $item ) );
+	}
+
+	public function test_item_body_display_returns_full_body_when_not_redundant(): void {
+		$item = array(
+			'source'   => 'general',
+			'headline' => 'Glassrea',
+			'body'     => 'Glassrea på stationen idag.',
+		);
+		self::assertSame( 'Glassrea på stationen idag.', MRT_disruption_feed_item_body_display( $item ) );
+	}
+
 	/**
 	 * @param array<int, array{number: string, notices: array<string, string>}> $services
 	 */

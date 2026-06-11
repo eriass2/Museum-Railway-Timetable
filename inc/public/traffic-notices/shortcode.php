@@ -147,8 +147,9 @@ function MRT_render_disruption_feed_item_html( array $item ): string {
 	if ( $headline !== '' ) {
 		$out .= '<p class="mrt-traffic-notices__headline">' . esc_html( $headline ) . '</p>';
 	}
-	if ( $body !== '' && $body !== $headline ) {
-		$out .= '<p class="mrt-traffic-notices__body">' . esc_html( $body ) . '</p>';
+	$body_display = MRT_disruption_feed_item_body_display( $item );
+	if ( $body_display !== '' ) {
+		$out .= '<p class="mrt-traffic-notices__body">' . esc_html( $body_display ) . '</p>';
 	}
 	$out .= '</li>';
 	return $out;
