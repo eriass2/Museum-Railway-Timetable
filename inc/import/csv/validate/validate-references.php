@@ -38,6 +38,7 @@ function MRT_csv_validate_references(
 		MRT_csv_validate_line_station_rows( $files, $lines, $stations, $errors );
 		MRT_csv_validate_branch_junction_rows( $files, $lines, $stations, $errors );
 		MRT_csv_validate_main_line_station_order( $files, $errors );
+		MRT_csv_validate_pattern_line_corridor_stations( $files, $lines, $stations, $errors );
 	}
 	if ( in_array( 'routes', $includes, true ) ) {
 		MRT_csv_validate_route_station_rows( $files, $stations, $routes, $errors );

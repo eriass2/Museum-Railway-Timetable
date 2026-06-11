@@ -102,7 +102,7 @@ function MRT_csv_export_column_headers(): array {
 			'to_service',
 		),
 		'train_types.csv'         => array( 'slug', 'name', 'icon_file' ),
-		'lines.csv'               => array( 'line_code', 'title', 'kind' ),
+		'lines.csv'               => array( 'line_code', 'title', 'kind', 'overview_corridor_after_station' ),
 		'line_stations.csv'       => array( 'line_code', 'sequence', 'station_code' ),
 		'branch_junctions.csv'    => array( 'line_code', 'junction_station_code', 'requires_transfer' ),
 		'routes.csv'              => array( 'route_code', 'title', 'start_station_code', 'end_station_code', 'branch_code' ),

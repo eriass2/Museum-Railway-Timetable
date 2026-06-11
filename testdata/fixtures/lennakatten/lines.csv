@@ -1,4 +1,5 @@
-line_code,title,kind
-main,"Faringe – Uppsala Östra",main
-fjallnora,"Selkné – Fjällnora",branch
-linnes-marielund,"Marielund – Linnés Hammarby",branch
+line_code,title,kind,overview_corridor_after_station
+main,"Faringe – Uppsala Östra",main,
+fjallnora,"Selkné – Fjällnora",branch,
+linnes-marielund,"Marielund – Linnés Hammarby",branch,
+linnes-uppsala,"Linnés Hammarby – Uppsala Östra",pattern,marielund

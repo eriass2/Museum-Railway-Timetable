@@ -44,7 +44,7 @@ final class CsvFixtureTest extends TestCase {
 			'selkna-fjallnora'              => 'fjallnora',
 			'marielund-linnes-hammarby'     => 'linnes-hammarby',
 			'linnes-hammarby-marielund'     => 'linnes-hammarby',
-			'linnes-hammarby-uppsala-ostra' => 'linnes-hammarby',
+			'linnes-uppsala'                => '',
 		);
 		$seen = array();
 		foreach ( $this->fixture_files()['routes.csv'] ?? array() as $row ) {

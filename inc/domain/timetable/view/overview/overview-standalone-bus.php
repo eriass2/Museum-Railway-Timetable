@@ -47,8 +47,9 @@ function MRT_timetable_view_merge_standalone_buses(
 			continue;
 		}
 		$view['service_info'][ $idx ]['standalone_overview_column'] = true;
-		$view['service_info'][ $idx ]['overview_pass_from_station_id'] = MRT_service_overview_pass_from_station_id(
-			(int) $service->ID
+		$view['service_info'][ $idx ]['overview_pass_from_station_id'] = MRT_timetable_standalone_corridor_after_station_id(
+			(int) $service->ID,
+			(array) ( $view['station_posts'] ?? array() )
 		);
 	}
 

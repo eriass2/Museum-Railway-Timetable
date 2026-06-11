@@ -120,6 +120,96 @@ final class CsvLinesTest extends TestCase {
 		self::assertSame( array( 'faringe', 'uppsala-ostra' ), $registry['main']['station_codes'] ?? array() );
 	}
 
+	public function test_b14_declares_linnes_uppsala_pattern_without_overview_csv_meta(): void {
+		$files = (array) ( MRT_csv_load_package( ABSPATH . 'testdata/fixtures/lennakatten' )['files'] ?? array() );
+		$b14   = null;
+		foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {
+			if ( ( $row['service_code'] ?? '' ) === 'red-b14-bus-in' ) {
+				$b14 = $row;
+				break;
+			}
+		}
+		self::assertIsArray( $b14 );
+		self::assertSame( 'linnes-uppsala', (string) ( $b14['line_code'] ?? '' ) );
+		self::assertSame( 'linnes-uppsala', (string) ( $b14['route_code'] ?? '' ) );
+		self::assertSame( '', (string) ( $b14['overview_column'] ?? '' ) );
+		self::assertSame( '', (string) ( $b14['overview_pass_from_station'] ?? '' ) );
+	}
+
+	public function test_import_lines_persists_pattern_corridor_after_station(): void {
+		$files = array(
+			'lines.csv' => array(
+				array(
+					'line_code'                      => 'linnes-uppsala',
+					'title'                          => 'Linnés Hammarby – Uppsala Östra',
+					'kind'                           => 'pattern',
+					'overview_corridor_after_station' => 'marielund',
+				),
+			),
+			'line_stations.csv' => array(
+				array( 'line_code' => 'linnes-uppsala', 'sequence' => '1', 'station_code' => 'linnes-hammarby' ),
+				array( 'line_code' => 'linnes-uppsala', 'sequence' => '2', 'station_code' => 'uppsala-ostra' ),
+			),
+		);
+
+		MRT_csv_import_lines( $files );
+		$registry = MRT_get_line_registry();
+		self::assertSame( 'pattern', $registry['linnes-uppsala']['kind'] ?? '' );
+		self::assertSame( 'marielund', $registry['linnes-uppsala']['overview_corridor_after_station_code'] ?? '' );
+		self::assertFalse( (bool) ( $registry['linnes-uppsala']['requires_transfer'] ?? true ) );
+	}
+
+	public function test_import_service_sets_overview_column_from_pattern_line(): void {
+		$this->boot_posts();
+		MRT_set_line_registry(
+			array(
+				'linnes-uppsala' => array(
+					'title'         => 'Linnés Hammarby – Uppsala Östra',
+					'kind'          => 'pattern',
+					'station_codes' => array( 'linnes-hammarby', 'uppsala-ostra' ),
+				),
+			)
+		);
+		$maps  = array(
+			'station'   => array( 'linnes-hammarby' => 8, 'uppsala-ostra' => 14 ),
+			'route'     => array( 'linnes-uppsala' => 70 ),
+			'timetable' => array( 'red' => 20 ),
+			'service'   => array(),
+		);
+		$files = array(
+			'routes.csv' => array(
+				array(
+					'route_code'         => 'linnes-uppsala',
+					'title'              => 'Linnés Hammarby – Uppsala Östra',
+					'branch_code'        => '',
+				),
+			),
+			'services.csv' => array(
+				array(
+					'service_code'     => 'red-b14-bus-in',
+					'timetable_code'   => 'red',
+					'route_code'       => 'linnes-uppsala',
+					'line_code'        => 'linnes-uppsala',
+					'service_number'   => 'B14',
+					'end_station_code' => 'uppsala-ostra',
+				),
+			),
+			'service_train_types.csv' => array(
+				array( 'service_code' => 'red-b14-bus-in', 'train_type_slug' => 'red-buss' ),
+			),
+		);
+		$term                      = new WP_Term();
+		$term->term_id             = 6002;
+		$term->slug                = 'red-buss';
+		$GLOBALS['mrt_test_terms'] = array( 6002 => $term );
+
+		MRT_csv_import_services( $files, $maps );
+		$service_id = $maps['service']['red-b14-bus-in'] ?? 0;
+		self::assertGreaterThan( 0, $service_id );
+		self::assertTrue( MRT_service_has_overview_column( (int) $service_id ) );
+		self::assertSame( 0, MRT_service_overview_pass_from_station_id( (int) $service_id ) );
+	}
+
 	public function test_import_service_sets_line_code_meta_for_main_train(): void {
 		$this->boot_posts();
 		$maps  = array(

@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/timetable/view/grid/grid-branch.php';
+require_once MRT_PATH . 'inc/domain/line/line-csv.php';
 
 function MRT_service_has_overview_column( int $service_id ): bool {
 	return (int) get_post_meta( $service_id, 'mrt_service_overview_column', true ) === 1;
@@ -19,6 +20,30 @@ function MRT_service_has_overview_column( int $service_id ): bool {
 
 function MRT_service_overview_pass_from_station_id( int $service_id ): int {
 	return (int) get_post_meta( $service_id, 'mrt_service_overview_pass_from_station_id', true );
+}
+
+function MRT_service_uses_standalone_overview_column( int $service_id ): bool {
+	if ( $service_id <= 0 ) {
+		return false;
+	}
+	if ( MRT_service_has_overview_column( $service_id ) ) {
+		return true;
+	}
+	return MRT_line_is_direct_pattern( MRT_get_service_line_code( $service_id ) );
+}
+
+/**
+ * PDF corridor layout: after which main-line station the standalone column shows "|".
+ *
+ * @param array<int, WP_Post> $station_posts
+ */
+function MRT_timetable_standalone_corridor_after_station_id( int $service_id, array $station_posts ): int {
+	$legacy = MRT_service_overview_pass_from_station_id( $service_id );
+	if ( $legacy > 0 ) {
+		return $legacy;
+	}
+	$corridor_code = MRT_line_overview_corridor_after_station_code( MRT_get_service_line_code( $service_id ) );
+	return MRT_station_post_id_from_code( $corridor_code, $station_posts );
 }
 
 /**
@@ -60,7 +85,7 @@ function MRT_timetable_standalone_bus_entries_for_rail_group(
 		}
 		foreach ( (array) ( $group['services'] ?? array() ) as $service_data ) {
 			$service = $service_data['service'] ?? null;
-			if ( ! $service instanceof WP_Post || ! MRT_service_has_overview_column( (int) $service->ID ) ) {
+			if ( ! $service instanceof WP_Post || ! MRT_service_uses_standalone_overview_column( (int) $service->ID ) ) {
 				continue;
 			}
 			if ( ! MRT_timetable_standalone_bus_matches_rail_group( $service_data, $rail_group ) ) {
@@ -119,7 +144,7 @@ function MRT_timetable_group_is_standalone_overview_column_shuttle( array $group
 	}
 	foreach ( (array) ( $group['services'] ?? array() ) as $service_data ) {
 		$service = $service_data['service'] ?? null;
-		if ( $service instanceof WP_Post && MRT_service_has_overview_column( (int) $service->ID ) ) {
+		if ( $service instanceof WP_Post && MRT_service_uses_standalone_overview_column( (int) $service->ID ) ) {
 			return true;
 		}
 	}

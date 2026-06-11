@@ -4,7 +4,7 @@ red-b10-bus-out,red-buss,marielund-linnes-hammarby,linnes-marielund,B10,linnes-h
 red-b11-bus-out,red-buss,marielund-linnes-hammarby,linnes-marielund,B11,linnes-hammarby,,,,,,
 red-b12-bus-in,red-buss,linnes-hammarby-marielund,linnes-marielund,B12,marielund,,,,,,
 red-b13-bus-in,red-buss,linnes-hammarby-marielund,linnes-marielund,B13,marielund,,,,,,
-red-b14-bus-in,red-buss,linnes-hammarby-uppsala-ostra,,B14,uppsala-ostra,,,,,1,marielund
+red-b14-bus-in,red-buss,linnes-uppsala,linnes-uppsala,B14,uppsala-ostra,,,,,,
 red-81-out,red,uppsala-faringe,main,81,faringe,
 red-91-out,red,uppsala-faringe,main,91,faringe,
 red-83-out,red,uppsala-faringe,main,83,faringe,

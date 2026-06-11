@@ -136,11 +136,11 @@ services.csv
 - Overview: `MRT_timetable_find_main_group_by_line_junction` när registry har junction
 - **Selkné:** endast Fjällnora. **Marielund:** endast Linnés-shuttle.
 
-### Fas 3 — Linnés → Uppsala direkt
+### Fas 3 — Linnés → Uppsala direkt ✓
 
 - B14 som `linnes-uppsala`, `requires_transfer=false`
 - Ta bort `linnes-hammarby-uppsala-ostra` route, `overview_pass_from_station`, korridor-`\|` som datakrav
-- Behåll ev. PDF-layout i overview-lager med explicit `display_mode=standalone_column`
+- PDF-korridor `|` via `overview_corridor_after_station` på pattern-linjen i registry
 
 ### Fas 4 — städning
 

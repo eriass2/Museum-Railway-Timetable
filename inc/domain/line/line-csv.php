@@ -78,6 +78,9 @@ function MRT_csv_resolve_service_line_code( array $row, array $routes_by_code ):
 	if ( $branch_line !== '' ) {
 		return $branch_line;
 	}
+	if ( $route_code === 'linnes-uppsala' ) {
+		return 'linnes-uppsala';
+	}
 	if ( in_array( $route_code, MRT_csv_main_corridor_route_codes(), true ) ) {
 		return 'main';
 	}
@@ -129,6 +132,41 @@ function MRT_line_junction_station_id_for_group( array $group, string $line_code
 		$code = trim( (string) get_post_meta( $station_id, 'mrt_station_code', true ) );
 		if ( $code === $junction_code ) {
 			return $station_id;
+		}
+	}
+	return 0;
+}
+
+function MRT_line_registry_entry( string $line_code ): array {
+	if ( $line_code === '' ) {
+		return array();
+	}
+	$registry = MRT_get_line_registry();
+	$entry    = $registry[ $line_code ] ?? array();
+	return is_array( $entry ) ? $entry : array();
+}
+
+function MRT_line_is_direct_pattern( string $line_code ): bool {
+	return ( MRT_line_registry_entry( $line_code )['kind'] ?? '' ) === 'pattern';
+}
+
+function MRT_line_overview_corridor_after_station_code( string $line_code ): string {
+	return trim( (string) ( MRT_line_registry_entry( $line_code )['overview_corridor_after_station_code'] ?? '' ) );
+}
+
+/**
+ * @param array<int, WP_Post> $station_posts
+ */
+function MRT_station_post_id_from_code( string $station_code, array $station_posts ): int {
+	if ( $station_code === '' ) {
+		return 0;
+	}
+	foreach ( $station_posts as $station ) {
+		if ( ! $station instanceof WP_Post ) {
+			continue;
+		}
+		if ( trim( (string) get_post_meta( (int) $station->ID, 'mrt_station_code', true ) ) === $station_code ) {
+			return (int) $station->ID;
 		}
 	}
 	return 0;

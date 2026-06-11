@@ -34,6 +34,13 @@ function MRT_csv_resolve_lines( array $files, array &$resolved, array &$errors )
 			MRT_csv_add_row_error( $row, 'Invalid line kind (expected main, branch, or pattern).', $errors );
 			continue;
 		}
+		$corridor = trim( (string) ( $row['overview_corridor_after_station'] ?? '' ) );
+		if ( $kind === 'pattern' && $corridor === '' ) {
+			MRT_csv_add_row_error( $row, 'Pattern lines require overview_corridor_after_station.', $errors );
+		}
+		if ( $kind !== 'pattern' && $corridor !== '' ) {
+			MRT_csv_add_row_error( $row, 'overview_corridor_after_station applies only to pattern lines.', $errors );
+		}
 		$resolved['lines'][ $code ] = $row;
 	}
 }
@@ -137,6 +144,37 @@ function MRT_csv_validate_branch_junction_rows(
  * @param array<string, array<int, array<string, string>>> $files
  * @param array<int, array{file: string, line: int, message: string}> $errors
  */
+function MRT_csv_validate_pattern_line_corridor_stations(
+	array $files,
+	array $lines,
+	array $stations,
+	array &$errors
+): void {
+	$main_stations = MRT_csv_ordered_line_station_codes( $files, 'main' );
+	foreach ( (array) ( $files['lines.csv'] ?? array() ) as $row ) {
+		$code = trim( (string) ( $row['line_code'] ?? '' ) );
+		if ( $code === '' || ( $row['kind'] ?? '' ) !== 'pattern' ) {
+			continue;
+		}
+		$corridor = trim( (string) ( $row['overview_corridor_after_station'] ?? '' ) );
+		if ( $corridor === '' ) {
+			continue;
+		}
+		if ( ! isset( $stations[ $corridor ] ) ) {
+			MRT_csv_add_row_error( $row, "Unknown overview_corridor_after_station \"{$corridor}\".", $errors );
+			continue;
+		}
+		if ( $main_stations !== array() && ! in_array( $corridor, $main_stations, true ) ) {
+			MRT_csv_add_row_error( $row, 'overview_corridor_after_station must appear on main line.', $errors );
+		}
+		$line_stations = MRT_csv_ordered_line_station_codes( $files, $code );
+		$route_rows    = MRT_csv_ordered_route_station_codes( $files, $code );
+		if ( $route_rows !== array() && $line_stations !== array() && $line_stations !== $route_rows ) {
+			MRT_csv_add_row_error( $row, 'pattern line_stations must match route_stations order.', $errors );
+		}
+	}
+}
+
 function MRT_csv_validate_main_line_station_order( array $files, array &$errors ): void {
 	if ( empty( $files['lines.csv'] ) || empty( $files['line_stations.csv'] ) ) {
 		return;

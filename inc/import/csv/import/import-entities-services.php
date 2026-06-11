@@ -85,8 +85,8 @@ function MRT_csv_import_services( array $files, array &$maps ): int {
 		} else {
 			delete_post_meta( $id, MRT_service_line_code_meta_key() );
 		}
+		MRT_csv_apply_service_overview_display_from_line( (int) $id, $line_code, $row );
 		MRT_csv_update_service_highlight_from_row( (int) $id, $row );
-		MRT_csv_apply_service_overview_column_from_row( (int) $id, $row, $maps );
 		MRT_csv_assign_service_train_types( (int) $id, $by_service[ $code ] ?? array() );
 		MRT_csv_save_post_code( (int) $id, $meta, $code );
 		$maps['service'][ $code ] = (int) $id;
@@ -108,6 +108,27 @@ function MRT_csv_service_title( array $row, array $maps ): string {
 	$prefix   = $route instanceof WP_Post ? $route->post_title : ( $row['route_code'] ?? 'Service' );
 	$num      = $row['service_number'] ?? '';
 	return trim( $prefix . ' ' . $num );
+}
+
+/**
+ * Pattern lines get a standalone overview column; legacy overview_column CSV still supported.
+ *
+ * @param array<string, mixed> $row
+ */
+function MRT_csv_apply_service_overview_display_from_line( int $service_id, string $line_code, array $row ): void {
+	$csv_flag = ! empty( $row['overview_column'] ) && (string) $row['overview_column'] !== '0';
+	if ( $csv_flag ) {
+		update_post_meta( $service_id, 'mrt_service_overview_column', 1 );
+		delete_post_meta( $service_id, 'mrt_service_overview_pass_from_station_id' );
+		return;
+	}
+	if ( $line_code !== '' && MRT_line_is_direct_pattern( $line_code ) ) {
+		update_post_meta( $service_id, 'mrt_service_overview_column', 1 );
+		delete_post_meta( $service_id, 'mrt_service_overview_pass_from_station_id' );
+		return;
+	}
+	delete_post_meta( $service_id, 'mrt_service_overview_column' );
+	delete_post_meta( $service_id, 'mrt_service_overview_pass_from_station_id' );
 }
 
 /**

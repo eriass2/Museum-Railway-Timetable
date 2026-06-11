@@ -44,15 +44,22 @@ function MRT_csv_import_lines( array $files ): int {
 				$codes[] = $station_code;
 			}
 		}
+		$kind  = sanitize_key( (string) ( $row['kind'] ?? '' ) );
 		$entry = array(
 			'title'         => sanitize_text_field( (string) ( $row['title'] ?? '' ) ),
-			'kind'          => sanitize_key( (string) ( $row['kind'] ?? '' ) ),
+			'kind'          => $kind,
 			'station_codes' => $codes,
 		);
+		$corridor_after = trim( (string) ( $row['overview_corridor_after_station'] ?? '' ) );
+		if ( $corridor_after !== '' ) {
+			$entry['overview_corridor_after_station_code'] = $corridor_after;
+		}
 		$junction = $junctions[ $code ] ?? null;
 		if ( is_array( $junction ) ) {
 			$entry['junction_station_code'] = (string) ( $junction['junction_station_code'] ?? '' );
 			$entry['requires_transfer']     = (bool) ( $junction['requires_transfer'] ?? false );
+		} elseif ( $kind === 'pattern' ) {
+			$entry['requires_transfer'] = false;
 		}
 		$registry[ $code ] = $entry;
 	}

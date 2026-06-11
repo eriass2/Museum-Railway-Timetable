@@ -61,7 +61,7 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 - [x] B5 borttagen — Linnés endast via Marielund ([LINES_REFACTOR_PLAN.md](LINES_REFACTOR_PLAN.md) §1)
 - [x] Fas 1: `lines.csv` + Lennakatten-pilot
 - [x] Fas 2: transfer-grenar (`fjallnora`, `linnes-marielund`, `branch_junctions.csv`)
-- [ ] Fas 3: B14 som `linnes-uppsala` utan korridor-meta
+- [x] Fas 3: B14 som `linnes-uppsala` utan korridor-meta
 - [ ] Fas 4: deprecated `route`, D8 en linje per sträcka
 
 ---
