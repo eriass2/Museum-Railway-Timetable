@@ -1,47 +1,88 @@
 # TODO – teknisk skuld och förbättringar
 
-Kort lista över **öppna** punkter. Genomförda arbeten finns i respektive plan/doc (t.ex. [TEST_IMPLEMENTATION_PLAN.md](TEST_IMPLEMENTATION_PLAN.md), [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md)).
+Kort lista över **öppna** punkter där **produkt/beslut redan är spikat** — implementation eller verifiering återstår. Genomfört arbete finns i arkivet längst ner och i respektive plan/doc.
 
----
-
-## Stopptider — schema v3 (tidtabell B + anslag)
-
-**Status:** fas 4 klar (2026-06-10) — se [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md), [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md), [STOP_TIME_CA.md](STOP_TIME_CA.md)
-
-- [ ] Dev-reset + omimport efter fas 4 i Docker-miljö
+Punkter **utan** beslut (A9 publicera, A0 onboarding, J11 UL-lik störningar m.fl.) listas separat — plocka inte upp dem förrän D8/D11/D16 är avgjorda.
 
 ---
 
 ## Reseplanerare — feedback-widget (v2)
 
-**Status:** v1 klar (2026-06-10) — se [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md)
+**Beslut:** D2b (2026-06-10) — [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md) § Beslut  
+**Status:** v1 klar; v2 ej påbörjad  
+**Källa:** J13 — [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md)
 
-- [ ] E-postnotis (`wp_mail`) till konfigurerbar adress vid ny rapport
-- [ ] Export feedback till CSV
+| Beslut | Implementation |
+|--------|----------------|
+| E-postnotis till team vid ny rapport | `wp_mail` till **konfigurerbar adress** i admin (settings) |
+| Export | Feedback-rapporter till **CSV** (admin) |
+
+- [ ] Setting: e-postadress för notis + toggle
+- [ ] `wp_mail` vid `POST /mrt/v1/wizard/feedback` (rate limit behålls)
+- [ ] Admin: export feedback till CSV
+
+---
+
+## Stopptider — schema v3 (drift efter fas 4)
+
+**Beslut:** Fas 4 klar (2026-06-10) — [STOP_TIME_CA.md](STOP_TIME_CA.md), [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)  
+**Status:** Kod klar; Docker-miljö ska synkas mot ny fixture
+
+- [ ] Dev-reset + omimport efter fas 4: `.\scripts\docker-dev-reset.ps1 -SkipCompose`
+- [ ] **Verifiering tur 71** (referens enligt [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md)): Uppsala Ö `10.00`, Barby `10.23`, Skölsta `Ca 10.09 X`, Marielund `10.35`
 
 ---
 
 ## Tidtabellsöversikt — sammanslagna kolumner vid tågbyte
 
-**Status:** kärna klar (2026-06-10), commit `9a44dda` — manuell PDF-validering + polish kvar  
-**Varför:** Continuation-turer (t.ex. 64, 74 från Marielund) ska visas i samma kolumn som ankommande tåg, inte som egna tomma kolumner.
+**Beslut:** PDF-lik vy — continuation-turer (64, 74 från Marielund) i **samma kolumn** som ankommande tåg via `train_change_map`; kärna levererad (`9a44dda`)  
+**Källa:** [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) J12/A2, fixture Lennakatten `station_train_changes.csv`
 
-**Nyckelfiler:** `overview-column-merge.php`, `overview-rail-columns.php`, `overview-rail-cells.php`, `overview-rail-rows.php`, `tests/Unit/OverviewColumnMergeTest.php`
+**Nyckelfiler:** `overview-column-merge.php`, `overview-rail-columns.php`, `overview-rail-cells.php`, `overview-rail-rows.php`
 
 - [ ] E2E/admin: redigering efter Marielund sparar rätt `serviceId`
 - [ ] **Manuell check:** GRÖN tidtabell 2026-06-06 — Faringe→Uppsala 5 kolumner (70, 60, 62, 96, 78); tur 71 ut utan kolumn 61; Marielund ankomst/avgång i samma kolumn
-- [ ] Kör `.\scripts\docker-dev-reset.ps1 -SkipCompose` om lokal miljö visar gammalt
+- [ ] Kör dev-reset om lokal miljö visar gammalt (se ovan)
 
 ---
 
-## Tidtabellsöversikt — buss vid knutpunkt (Selknä m.fl.)
+## Tidtabellsöversikt — buss vid knutpunkt (Selknä)
 
-**Status:** fix klar (2026-06-10), commit `8c8a30a` — manuell validering kvar  
-**Nyckelfiler:** `overview-bus-junction.php`, `overview-bus-stops.php`, `overview-rail-rows.php`
+**Beslut:** D15 **A** (2026-06-10) — busstider i **rätt tågkolumn** per gren; kod klar (`8c8a30a`, `d62dd87`, `f1c35e9`)  
+**Källa:** A10/Jesper buggplan B2 — [feedback/2026-06-09-jesper-buggar-plan.md](feedback/2026-06-09-jesper-buggar-plan.md)
 
-- [ ] **Manuell check:** Selknä inbound GRÖN — tur 62 → B3/Fjällnora, tur 96 → B4/Fjällnora; inga delade rader med korsade tider
-- [ ] **Manuell check:** Selknä inbound RÖD (söndag) — Linnés Hammarby-buss (B5) visas; **inte** på gröna bussdagar
-- [ ] Thun's-expressen vertikal etikett — layout i `MrtOverviewRailGroupGrid.vue` / CSS
+- [ ] **Manuell check GRÖN:** Selknä inbound — tur 62 → B3/Fjällnora, tur 96 → B4/Fjällnora; inga delade rader med korsade tider
+- [ ] **Manuell check RÖD:** Selkné inbound söndag — Linnés Hammarby (B5) visas; **inte** på gröna bussdagar
+
+---
+
+## Reseplanerare — smoke efter buggfixar
+
+**Beslut:** B1–B3 klara i kod; acceptanskriterier definierade i buggplanen  
+**Källa:** [feedback/2026-06-09-jesper-buggar-plan.md](feedback/2026-06-09-jesper-buggar-plan.md)
+
+- [ ] **Manuell smoke:** Uppsala Östra → Fjällnora (3 ben) — byte Marielund ≈ 10 min, byte Selkné ≈ 3 min (J5/B1)
+- [ ] **Manuell smoke:** Uppsala Östra → Linnés Hammarby — efter Jesper fyllt i komplett rutt/turer/stopptider (J6, D17 C)
+
+---
+
+## Linnés Hammarby — operatörsdata + verifiering
+
+**Beslut:** D17 **C** (2026-06-09) — fixture B5/B9–B14, [LINNES_HAMMARBY.md](LINNES_HAMMARBY.md), import via `#/import-export`  
+**Status:** Verktyg klart; Jesper matar in data
+
+- [ ] Verifiera reseplanerare + Turvy när rutt/turer/stopptider för Linnés Hammarby är kompletta i admin
+
+---
+
+## Saknar produktbeslut (ej i backlog tills beslut)
+
+| ID | Punkt | Var beslut saknas |
+|----|-------|-------------------|
+| A9 / D11 | Publicera-knapp / utkast tidtabell | `draft` vs meta vs staging — [diskussioner D11](feedback/2026-06-09-jesper-diskussioner.md#d11-publicera-knapp--utkast-a9-) |
+| A0 / D8 | Onboarding-friktion (rutt per riktning) | Domänmodell — [diskussioner D8](feedback/2026-06-09-jesper-diskussioner.md#d8-rutt-en-eller-två-rutter-per-linje-) |
+| J11 / D16 | UL-lik störningslista i reseplaneraren | Parkerad — [diskussioner D16](feedback/2026-06-09-jesper-diskussioner.md#d16-ul-lik-störningslista-) |
+| — | Thun's-expressen vertikal etikett (Turvy) | Layoutbeslut saknas — ej Jesper-scope v1 |
 
 ---
 
@@ -51,7 +92,8 @@ Kort lista över **öppna** punkter. Genomförda arbeten finns i respektive plan
 |--------|------|----------|
 | Vue — gemensamma datetime/tid-utils | 2026-06-09 | [VUE_UTILS.md](VUE_UTILS.md), `frontend/vue/src/utils/datetime.ts` |
 | PHP — utils-snabbguide i dokumentation | 2026-06-10 | [STYLE_GUIDE.md](STYLE_GUIDE.md) |
-| Reseplanerare — feedback-widget v1 | 2026-06-10 | [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md), [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) J13 |
-| Tidtabellsöversikt — typografi (Turvy) | 2026-06-10 | `frontend/vue/src/styles/timetable-overview.css`, commit `6d91237` |
-| Tidtabellsöversikt — kolumnsammanslagning (kärna) | 2026-06-10 | commit `9a44dda`, PHPUnit + vue-check gröna |
-| Tidtabellsöversikt — bussrader per tågkolumn (Selknä) | 2026-06-10 | commit `8c8a30a`, `TimetableOverviewHelpersTest` |
+| Reseplanerare — feedback-widget v1 | 2026-06-10 | [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md), J13/D2b |
+| Tidtabellsöversikt — typografi (Turvy) | 2026-06-10 | `timetable-overview.css`, commit `6d91237` |
+| Tidtabellsöversikt — kolumnsammanslagning (kärna) | 2026-06-10 | commit `9a44dda`, `OverviewColumnMergeTest` |
+| Tidtabellsöversikt — bussrader per tågkolumn (Selkné) | 2026-06-10 | commit `8c8a30a`, `TimetableOverviewHelpersTest` |
+| Jesper beta — reseplanerare + admin (J1–J10, A1–A8, A10) | 2026-06-10 | [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) |
