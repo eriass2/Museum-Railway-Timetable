@@ -122,6 +122,8 @@ export type WizardCfgStringKey =
   | 'feedbackTypeBug'
   | 'feedbackTypeSuggestion'
   | 'feedbackMessage'
+  | 'feedbackMessageHint'
+  | 'feedbackMessageTooShort'
   | 'feedbackEmail'
   | 'feedbackPrivacy'
   | 'feedbackSubmit'

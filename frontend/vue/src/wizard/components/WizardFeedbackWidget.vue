@@ -18,7 +18,13 @@ const message = ref('');
 const email = ref('');
 const website = ref('');
 
-const canSubmit = computed(() => message.value.trim().length >= 10 && !submitting.value);
+const MESSAGE_MIN_LENGTH = 10;
+
+const messageLength = computed(() => message.value.trim().length);
+const canSubmit = computed(() => messageLength.value >= MESSAGE_MIN_LENGTH && !submitting.value);
+const showMessageHint = computed(
+  () => messageLength.value > 0 && messageLength.value < MESSAGE_MIN_LENGTH,
+);
 
 function label(key: WizardCfgStringKey, fallback: string): string {
   return cfgStr(wizard?.cfg ?? {}, key, fallback);
@@ -113,7 +119,25 @@ async function submit(): Promise<void> {
 
           <label class="mrt-wizard-feedback__field">
             <span>{{ label('feedbackMessage', 'Beskrivning') }} *</span>
-            <textarea v-model="message" required minlength="10" rows="5" />
+            <textarea
+              v-model="message"
+              required
+              :minlength="MESSAGE_MIN_LENGTH"
+              rows="5"
+              :aria-describedby="showMessageHint ? 'mrt-wizard-feedback-message-hint' : undefined"
+            />
+            <span
+              v-if="showMessageHint"
+              id="mrt-wizard-feedback-message-hint"
+              class="mrt-wizard-feedback__hint mrt-wizard-feedback__hint--warn"
+              role="status"
+            >
+              {{ label('feedbackMessageTooShort', 'Minst 10 tecken krävs.') }}
+              ({{ messageLength }}/{{ MESSAGE_MIN_LENGTH }})
+            </span>
+            <span v-else class="mrt-wizard-feedback__hint">
+              {{ label('feedbackMessageHint', 'Minst 10 tecken.') }}
+            </span>
           </label>
 
           <label class="mrt-wizard-feedback__field">

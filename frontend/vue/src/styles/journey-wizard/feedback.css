@@ -84,6 +84,17 @@
     left: -9999px;
 }
 
+.mrt-wizard-feedback__hint {
+    margin: 0;
+    font-size: 0.875rem;
+    color: var(--mrt-color-muted-text, #5a5a5a);
+}
+
+.mrt-wizard-feedback__hint--warn {
+    color: var(--mrt-color-error-text, #7a1212);
+    font-weight: 700;
+}
+
 .mrt-wizard-feedback__privacy,
 .mrt-wizard-feedback__thanks {
     margin: 0;

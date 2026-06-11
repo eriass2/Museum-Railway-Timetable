@@ -119,6 +119,8 @@ function buildWizardConfig(requestUrl) {
       feedbackTypeBug: 'Fel / bugg',
       feedbackTypeSuggestion: 'Förslag',
       feedbackMessage: 'Beskrivning',
+      feedbackMessageHint: 'Minst 10 tecken.',
+      feedbackMessageTooShort: 'Minst 10 tecken krävs.',
       feedbackEmail: 'E-post (valfritt)',
       feedbackPrivacy: 'Vi sparar din rapport för felsökning. E-post används bara om du fyller i den.',
       feedbackSubmit: 'Skicka',
