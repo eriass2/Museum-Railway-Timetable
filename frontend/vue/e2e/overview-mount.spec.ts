@@ -9,7 +9,7 @@ test.describe('Timetable overview (static mount)', () => {
     await expect(page.locator('.mrt-ov-grid-row--bus .mrt-ov-station-col').first()).toContainText(
       'Från Selknä*',
     );
-    await expect(page.locator('.mrt-ov-bus-ref')).toHaveCount(2);
+    await expect(page.locator('.mrt-ov-bus-station-icon')).toHaveCount(2);
     await expect(page.locator('.mrt-ov-group--branch')).toHaveCount(0);
     await expect(page.locator('.mrt-ov-print-key-title')).toContainText('Förklaringar');
   });

@@ -4,8 +4,6 @@ import type { OverviewGridEdit } from '../../composables/timetable-editor/useOve
 import { overviewUiLabels } from '../../../shared/overviewUiLabels';
 import { overviewColumnIsCancelled } from '../../../shared/overviewCancelled';
 import MrtOverviewRailGroupGrid from '../../../components/overview/MrtOverviewRailGroupGrid.vue';
-import { trainTypeIconUrl } from '../../../utils/overviewGrid';
-import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../../shared/trainTypeIcons';
 import OverviewGridCellEditor from './OverviewGridCellEditor.vue';
 import MrtOverviewTimeDisplay from '../../../components/overview/MrtOverviewTimeDisplay.vue';
 
@@ -36,17 +34,6 @@ const emit = defineEmits<{ saved: [] }>();
           :approximate-time="row.cells[columnIndex].approximateTime"
           :cancelled="overviewColumnIsCancelled(group.columns[columnIndex])"
         />
-        <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
-          <img
-            v-if="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
-            class="mrt-ov-bus-ref__icon"
-            :src="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
-            alt=""
-            width="20"
-            height="20"
-          />
-          <span class="mrt-ov-bus-ref__num">{{ row.cells[columnIndex].busServiceNumber }}</span>
-        </span>
       </template>
       <OverviewGridCellEditor
         v-else

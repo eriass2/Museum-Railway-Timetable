@@ -149,76 +149,120 @@ function MRT_timetable_sort_junction_bus_links( array $links ): array {
 }
 
 /**
- * @param array<string, mixed> $link
  * @return array<int, array<string, mixed>>
  */
-function MRT_timetable_junction_bus_row_pair_json( array $link, int $column_count ): array {
-	$column_index = (int) $link['column_index'];
-	$inbound      = ! empty( $link['inbound'] );
-	$junction     = (string) ( $link['junction_label'] ?? '' );
-	$remote       = (string) ( $link['remote_label'] ?? '' );
+function MRT_timetable_empty_bus_row_cells( int $column_count ): array {
+	$cells = array();
+	for ( $i = 0; $i < $column_count; $i++ ) {
+		$cells[] = array( 'text' => '—' );
+	}
+	return $cells;
+}
 
-	if ( $inbound ) {
-		$departure_label = MRT_from_place_label( $remote );
-		$arrival_label   = MRT_to_place_label( $junction );
-		$dep_role        = 'remote';
-		$arr_role        = 'junction';
-	} else {
-		$departure_label = MRT_from_place_label( $junction );
-		$arrival_label   = MRT_to_place_label( $remote );
-		$dep_role        = 'junction';
-		$arr_role        = 'remote';
+/**
+ * One Från/Till row pair per bus branch; times merged into the matching train columns.
+ *
+ * @param array<int, array<string, mixed>> $links
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_timetable_junction_bus_merged_rows_json( array $links, int $column_count ): array {
+	if ( $links === array() ) {
+		return array();
 	}
 
-	$departure_cells = MRT_timetable_sparse_bus_cells(
-		$column_count,
-		$column_index,
-		MRT_timetable_bus_time_cell_from_bus_data(
+	$groups = array();
+	$order  = array();
+	foreach ( $links as $link ) {
+		$key = (string) ( $link['remote_label'] ?? '' );
+		if ( ! isset( $groups[ $key ] ) ) {
+			$groups[ $key ] = array();
+			$order[]        = $key;
+		}
+		$groups[ $key ][] = $link;
+	}
+
+	$rows = array();
+	foreach ( $order as $key ) {
+		$rows = array_merge( $rows, MRT_timetable_junction_bus_merged_row_pair_json( $groups[ $key ], $column_count ) );
+	}
+	return $rows;
+}
+
+/**
+ * @param array<int, array<string, mixed>> $links
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_timetable_junction_bus_merged_row_pair_json( array $links, int $column_count ): array {
+	if ( $links === array() ) {
+		return array();
+	}
+
+	$first   = $links[0];
+	$inbound = ! empty( $first['inbound'] );
+	$roles   = MRT_timetable_junction_bus_row_roles( $first, $inbound );
+	$cells   = array(
+		'departure' => MRT_timetable_empty_bus_row_cells( $column_count ),
+		'arrival'   => MRT_timetable_empty_bus_row_cells( $column_count ),
+	);
+
+	foreach ( $links as $link ) {
+		$column_index = (int) ( $link['column_index'] ?? -1 );
+		if ( $column_index < 0 || $column_index >= $column_count ) {
+			continue;
+		}
+		$cells['departure'][ $column_index ] = MRT_timetable_bus_time_cell_from_bus_data(
 			$link['connection'],
 			$link['branch_group'],
 			$link['bus_data'],
-			$dep_role,
+			$roles['dep_role'],
 			true,
 			(string) $link['bus']['service_number']
-		)
-	);
-	$arrival_cells = MRT_timetable_sparse_bus_cells(
-		$column_count,
-		$column_index,
-		MRT_timetable_bus_time_cell_from_bus_data(
+		);
+		$cells['arrival'][ $column_index ] = MRT_timetable_bus_time_cell_from_bus_data(
 			$link['connection'],
 			$link['branch_group'],
 			$link['bus_data'],
-			$arr_role,
+			$roles['arr_role'],
 			false,
 			(string) $link['bus']['service_number']
-		)
-	);
+		);
+	}
 
 	return array(
 		array(
 			'kind'  => 'busDeparture',
-			'label' => $departure_label,
-			'cells' => $departure_cells,
+			'label' => $roles['departure_label'],
+			'cells' => $cells['departure'],
 		),
 		array(
 			'kind'  => 'busArrival',
-			'label' => $arrival_label,
-			'cells' => $arrival_cells,
+			'label' => $roles['arrival_label'],
+			'cells' => $cells['arrival'],
 		),
 	);
 }
 
 /**
- * @param array<string, mixed> $filled_cell
- * @return array<int, array<string, mixed>>
+ * @param array<string, mixed> $link
+ * @return array{departure_label: string, arrival_label: string, dep_role: string, arr_role: string}
  */
-function MRT_timetable_sparse_bus_cells( int $column_count, int $column_index, array $filled_cell ): array {
-	$cells = array();
-	for ( $i = 0; $i < $column_count; $i++ ) {
-		$cells[] = $i === $column_index ? $filled_cell : array( 'text' => '—' );
+function MRT_timetable_junction_bus_row_roles( array $link, bool $inbound ): array {
+	$junction = (string) ( $link['junction_label'] ?? '' );
+	$remote   = (string) ( $link['remote_label'] ?? '' );
+	if ( $inbound ) {
+		return array(
+			'departure_label' => MRT_from_place_label( $remote ),
+			'arrival_label'   => MRT_to_place_label( $junction ),
+			'dep_role'        => 'remote',
+			'arr_role'        => 'junction',
+		);
 	}
-	return $cells;
+	return array(
+		'departure_label' => MRT_from_place_label( $junction ),
+		'arrival_label'   => MRT_to_place_label( $remote ),
+		'dep_role'        => 'junction',
+		'arr_role'        => 'remote',
+	);
 }
 
 /**
@@ -235,17 +279,11 @@ function MRT_timetable_junction_bus_rows_json(
 	?array $display_columns = null
 ): array {
 	unset( $services );
-	$links         = MRT_timetable_collect_junction_bus_links( $info, $connection, $branch_group, $display_columns );
-	$column_count  = $display_columns !== null ? count( $display_columns ) : count( $info );
-	$links         = MRT_timetable_sort_junction_bus_links( $links );
-	$rows          = array();
-
-	foreach ( $links as $link ) {
-		foreach ( MRT_timetable_junction_bus_row_pair_json( $link, $column_count ) as $row ) {
-			$rows[] = $row;
-		}
-	}
-	return $rows;
+	$links        = MRT_timetable_sort_junction_bus_links(
+		MRT_timetable_collect_junction_bus_links( $info, $connection, $branch_group, $display_columns )
+	);
+	$column_count = $display_columns !== null ? count( $display_columns ) : count( $info );
+	return MRT_timetable_junction_bus_merged_rows_json( $links, $column_count );
 }
 
 /**
@@ -281,13 +319,8 @@ function MRT_timetable_junction_bus_rows_for_station(
 		}
 	}
 
-	$rows = array();
-	foreach ( MRT_timetable_sort_junction_bus_links( MRT_timetable_dedupe_junction_bus_links_by_column( $links ) ) as $link ) {
-		foreach ( MRT_timetable_junction_bus_row_pair_json( $link, $column_count ) as $row ) {
-			$rows[] = $row;
-		}
-	}
-	return $rows;
+	$links = MRT_timetable_sort_junction_bus_links( MRT_timetable_dedupe_junction_bus_links_by_column( $links ) );
+	return MRT_timetable_junction_bus_merged_rows_json( $links, $column_count );
 }
 
 /**

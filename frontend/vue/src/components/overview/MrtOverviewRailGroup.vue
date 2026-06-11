@@ -3,7 +3,6 @@ import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
 import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../types/timetableOverview';
 import { trainTypeIconUrl } from '../../utils/overviewGrid';
 import { overviewColumnIsCancelled } from '../../shared/overviewCancelled';
-import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
 import MrtOverviewRailGroupGrid from './MrtOverviewRailGroupGrid.vue';
 import MrtOverviewTimeDisplay from './MrtOverviewTimeDisplay.vue';
 
@@ -22,17 +21,6 @@ defineProps<{
         :approximate-time="row.cells[columnIndex].approximateTime"
         :cancelled="overviewColumnIsCancelled(group.columns[columnIndex])"
       />
-      <span v-if="row.cells[columnIndex].busServiceNumber" class="mrt-ov-bus-ref">
-        <img
-          v-if="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
-          class="mrt-ov-bus-ref__icon"
-          :src="trainTypeIconUrl(iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG)"
-          alt=""
-          width="20"
-          height="20"
-        />
-        <span class="mrt-ov-bus-ref__num">{{ row.cells[columnIndex].busServiceNumber }}</span>
-      </span>
     </template>
     <template #transfer-cell="{ row, track, columnIndex }">
       <div

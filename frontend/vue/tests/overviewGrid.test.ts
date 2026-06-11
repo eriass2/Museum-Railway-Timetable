@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   buildHighlightStripeSpans,
   buildOverviewGridTracks,
+  isBusRow,
   isTimeRow,
   overviewGridMinWidth,
   overviewGridTemplateColumns,
@@ -89,6 +90,8 @@ describe('overviewGrid tracks', () => {
     expect(overviewRowClass({ kind: 'busDeparture', label: 'Från Selknä*', cells: [] })).toContain(
       'mrt-ov-grid-row--bus',
     );
+    expect(isBusRow({ kind: 'busArrival', label: 'Till Fjällnora*', cells: [] })).toBe(true);
+    expect(isBusRow({ kind: 'station', label: 'Selknä', cells: [] })).toBe(false);
     expect(isTimeRow({ kind: 'busArrival', label: 'Till Fjällnora*', cells: [] })).toBe(true);
   });
 });

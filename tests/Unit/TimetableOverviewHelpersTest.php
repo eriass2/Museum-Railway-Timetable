@@ -169,7 +169,7 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertSame( '11.00', $rows[1]['cells'][0]['text'] );
 	}
 
-	public function test_junction_bus_rows_use_one_pair_per_matched_train(): void {
+	public function test_junction_bus_rows_merge_matched_trains_into_two_rows(): void {
 		$junction_id = 9;
 		$remote_id   = 15;
 		$branch      = array(
@@ -225,13 +225,15 @@ final class TimetableOverviewHelpersTest extends TestCase {
 
 		$rows = MRT_timetable_junction_bus_rows_json( array(), $info, $connection, $branch );
 
-		self::assertCount( 4, $rows );
+		self::assertCount( 2, $rows );
+		self::assertSame( 'busDeparture', $rows[0]['kind'] );
+		self::assertSame( 'Från Selknä*', $rows[0]['label'] );
 		self::assertSame( '13.40', $rows[0]['cells'][0]['text'] );
-		self::assertSame( '—', $rows[0]['cells'][1]['text'] );
+		self::assertSame( '15.18', $rows[0]['cells'][1]['text'] );
+		self::assertSame( 'busArrival', $rows[1]['kind'] );
+		self::assertSame( 'Till Fjällnora*', $rows[1]['label'] );
 		self::assertSame( '13.47', $rows[1]['cells'][0]['text'] );
-		self::assertSame( '15.18', $rows[2]['cells'][1]['text'] );
-		self::assertSame( '—', $rows[2]['cells'][0]['text'] );
-		self::assertSame( '15.25', $rows[3]['cells'][1]['text'] );
+		self::assertSame( '15.25', $rows[1]['cells'][1]['text'] );
 	}
 
 	public function test_branch_matches_junction_flow_for_outbound_and_inbound(): void {

@@ -163,7 +163,7 @@ Besökare rapporterar buggar/förslag via flytande knapp i reseplaneraren; spara
 **Status:** fix klar (2026-06-10), commit `8c8a30a` — manuell validering kvar  
 **Varför:** Bussrader byggdes som **två rader per bussgren** med tider i **alla** tågkolumner samtidigt → staplade “Från Selknä / Till Fjällnora”-rader med blandade tider (tur 62/96/60).
 
-**Lösning:** En avgång/ankomst-radpar **per matchat tåg–buss-par**; sparse celler (`—` i övriga kolumner). Flera grenar (Fjällnora, Linnés Hammarby) sorteras på bussavgång i `MRT_timetable_junction_bus_rows_for_station`.
+**Lösning:** Två rader per bussgren (Från/Till knutpunkt) med tider i **rätt tågkolumn**; `—` där ingen buss matchar. Flera grenar (Fjällnora, Linnés Hammarby) = två rader vardera, sorterade på bussavgång.
 
 **Nyckelfiler:** `overview-bus-junction.php`, `overview-bus-stops.php`, `overview-rail-rows.php`; test `TimetableOverviewHelpersTest::test_junction_bus_rows_use_one_pair_per_matched_train`.
 
@@ -171,7 +171,6 @@ Besökare rapporterar buggar/förslag via flytande knapp i reseplaneraren; spara
 
 - [ ] **Manuell check:** Selknä på inbound GRÖN (grön bussdag) — tur 62 → B3/Fjällnora, tur 96 → B4/Fjällnora; inga delade rader med korsade tider
 - [ ] **Manuell check:** Selknä på inbound RÖD (söndag) — Linnés Hammarby-buss (B5) visas; **inte** på gröna bussdagar
-- [ ] Ev. framtida polish: destination i radetikett när flera grenar har samma “Från Selknä”-text (idag skiljs de genom sparse kolumner + sortering)
 - [ ] Thun's-expressen vertikal etikett — layout i `MrtOverviewRailGroupGrid.vue` / CSS (ej ändrad i denna fix)
 
 ---

@@ -246,41 +246,22 @@
   background: var(--mrt-ov-bus-bg);
 }
 
-.mrt-ov-grid-row--bus .mrt-ov-time-cell {
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.1rem;
-  padding-block: 0.35rem;
-}
-
 .mrt-ov-grid-row--bus .mrt-ov-station-col {
   background: var(--mrt-ov-bus-label);
   font-weight: 400;
 }
 
-.mrt-ov-bus-ref {
+.mrt-ov-station-col--bus {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-  margin-top: 0;
-  font-size: 0.72rem;
-  font-weight: 400;
-  line-height: 1;
-  color: var(--mrt-color-neutral-900, #000);
+  gap: 0.35rem;
 }
 
-.mrt-ov-bus-ref__icon {
+.mrt-ov-bus-station-icon {
   width: 1.2rem;
   height: auto;
   flex-shrink: 0;
   object-fit: contain;
-}
-
-.mrt-ov-bus-ref__num {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.01em;
 }
 
 .mrt-ov-time {

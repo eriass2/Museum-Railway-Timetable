@@ -18,6 +18,10 @@ export function isTransferRow(
   return row.kind === 'trainChange' || row.kind === 'busConnection';
 }
 
+export function isBusRow(row: TimetableOverviewRow): boolean {
+  return row.kind === 'busDeparture' || row.kind === 'busArrival';
+}
+
 export function overviewRowClass(row: TimetableOverviewRow, rowIndex = 0): string {
   const classes: string[] = [];
   if (row.kind === 'from' || row.kind === 'departure') {

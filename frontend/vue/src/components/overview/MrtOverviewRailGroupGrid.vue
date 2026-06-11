@@ -4,11 +4,13 @@ import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../types/
 import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
 import { formatDeviationPlanned } from '../../shared/overviewUiLabels';
 import { overviewColumnIsCancelled } from '../../shared/overviewCancelled';
+import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
 import {
   buildHighlightStripeSpans,
   buildOverviewGridTracks,
   highlightStripeSpanAt,
   highlightStripeSpanStyle,
+  isBusRow,
   isTimeRow,
   isTransferRow,
   overviewGridCellStyle,
@@ -41,6 +43,7 @@ function deviationTitle(plannedName: string | undefined): string {
 const gridTracks = computed(() => buildOverviewGridTracks(props.group.columns));
 const gridStyle = computed(() => overviewGridStyle(props.group.columns));
 const highlightSpans = computed(() => buildHighlightStripeSpans(props.group.rows, gridTracks.value));
+const busIconUrl = computed(() => trainTypeIconUrl(props.iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG));
 
 function stripeSpan(rowIndex: number, trackIndex: number) {
   return highlightStripeSpanAt(highlightSpans.value, rowIndex, trackIndex);
@@ -172,7 +175,21 @@ function cancelledNoticeDetail(index: number): boolean {
           class="mrt-ov-grid-row"
           :class="overviewRowClass(row, ri)"
         >
-          <div class="mrt-ov-station-col" :style="overviewStationColumnStyle()">{{ row.label }}</div>
+          <div
+            class="mrt-ov-station-col"
+            :class="{ 'mrt-ov-station-col--bus': isBusRow(row) }"
+            :style="overviewStationColumnStyle()"
+          >
+            <img
+              v-if="isBusRow(row) && busIconUrl"
+              class="mrt-ov-bus-station-icon"
+              :src="busIconUrl"
+              alt=""
+              width="20"
+              height="20"
+            />
+            <span>{{ row.label }}</span>
+          </div>
           <template v-if="isTimeRow(row)">
             <template v-for="(track, ti) in gridTracks" :key="`time-${ri}-${ti}`">
               <div
