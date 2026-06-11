@@ -2,6 +2,7 @@
 
 - **`deploy.ps1`** – Kopierar plugin till din Local-site (`inc`, `assets`, `languages`, huvudfiler).
 - **`deploy.config.example.json`** – Kopiera till `deploy.config.json` och sätt `localPath` och `localUrl`. `deploy.config.json` är gitignored.
+- **`live-deploy.config.example.json`** – Kopiera till `live-deploy.config.json` för live/staging (test3 m.fl.). Används av `scripts/live-deploy.ps1` (gitignored).
 
 Om du får **“running scripts is disabled”** (Execution Policy), kör med bypass:
 

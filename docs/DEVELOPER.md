@@ -90,6 +90,22 @@ PHP + Vue: `.\scripts\check.ps1 -Vue`
 
 Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
 
+### Live test / staging (test3)
+
+Synka plugin till en riktig WordPress utan zip — som Docker volume mount (ingen data-reset):
+
+1. Kopiera `local/live-deploy.config.example.json` → `local/live-deploy.config.json`
+2. Sätt `targetType`: `local` (sökväg/UNC) eller `ssh` (`sshHost` + `remotePath`)
+3. Kör:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\live-deploy.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\live-deploy.ps1 -SkipBuild   # bara PHP/assets
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\live-deploy.ps1 -Watch       # auto vid filändring
+```
+
+Bygger Vue vid behov (samma som `docker-dev-reset`), kopierar `inc`, `assets`, `languages` m.m. För full omstart med import: `docker-dev-reset.ps1` lokalt eller WP-CLI på servern.
+
 ### Dev reset (clear + import + smoke menu)
 
 Efter ändringar i import, rutter eller demosidor – ett kommando för agent/utvecklare:

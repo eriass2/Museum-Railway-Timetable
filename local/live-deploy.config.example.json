@@ -1,0 +1,8 @@
+{
+  "targetType": "local",
+  "localPath": "C:\\path\\to\\wp-content\\plugins\\museum-railway-timetable",
+  "siteUrl": "https://test3.example.com",
+  "sshHost": "user@example.com",
+  "sshPort": 22,
+  "remotePath": "/var/www/html/wp-content/plugins/museum-railway-timetable"
+}
