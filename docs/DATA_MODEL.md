@@ -315,14 +315,13 @@ The plugin does **not** replace routes with branches. Journeys and stop times st
 |---------------|-------------------|--------|----------------------|-------------------|
 | `main` | Faringe ↔ Uppsala Östra (14 stations) | `faringe-uppsala-ostra`, `uppsala-faringe` | — (this *is* the corridor) | `red`, `green`, `yellow`, `orange` |
 | `fjallnora` | Selkné ↔ Fjällnora (2 stations) | `selkna-fjallnora`, `fjallnora-selkna` | Selkné | `green-buss` |
-| `linnes-hammarby` | Linnés Hammarby shuttles | `selkna-linnes-hammarby`, `linnes-hammarby-selkna`, `marielund-linnes-hammarby`, `linnes-hammarby-marielund`, `linnes-hammarby-uppsala-ostra` | Selkné **and** Marielund; B14 extends to Uppsala (2-stop route + overview metadata) | `red-buss` |
+| `linnes-hammarby` | Linnés Hammarby shuttles | `marielund-linnes-hammarby`, `linnes-hammarby-marielund`, `linnes-hammarby-uppsala-ostra` | Marielund (transfer); B14 direct to Uppsala (overview metadata interim) | `red-buss` |
 
 ```
 MAIN (rail)     Faringe ── … ── Selkné ── … ── Marielund ── … ── Uppsala Östra
                          ↑                    ↑
 FJÄLLNORA (bus)         Selkné ↔ Fjällnora
-LINNÉS (bus)             Selkné ↔ Linnés (B5)
-                         Marielund ↔ Linnés (B9–B13)
+LINNÉS (bus)             Marielund ↔ Linnés (B9–B13)
                          Linnés → Uppsala (B14)
 ```
 

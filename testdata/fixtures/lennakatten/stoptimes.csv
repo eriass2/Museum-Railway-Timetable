@@ -1,6 +1,4 @@
 service_code,sequence,station_code,arrival_time,departure_time,ank_pickup_mode,ank_dropoff_mode,avg_pickup_mode,avg_dropoff_mode,approximate_time,in_service_timetable
-red-b5-bus-out,1,selkna,,10:53,none,none,on_request,none,1,0
-red-b5-bus-out,2,linnes-hammarby,11:00,,none,scheduled,none,none,1,0
 red-b9-bus-out,1,marielund,,10:40,none,none,on_request,none,1,0
 red-b9-bus-out,2,linnes-hammarby,11:05,,none,scheduled,none,none,1,0
 red-b10-bus-out,1,marielund,,11:32,none,none,on_request,none,1,0

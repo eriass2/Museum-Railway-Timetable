@@ -38,14 +38,12 @@ final class CsvFixtureTest extends TestCase {
 
 	public function test_lennakatten_routes_declare_branch_codes(): void {
 		$expected = array(
-			'faringe-uppsala-ostra'        => 'main',
-			'uppsala-faringe'              => 'main',
-			'fjallnora-selkna'             => 'fjallnora',
-			'selkna-fjallnora'             => 'fjallnora',
-			'selkna-linnes-hammarby'       => 'linnes-hammarby',
-			'linnes-hammarby-selkna'       => 'linnes-hammarby',
-			'marielund-linnes-hammarby'    => 'linnes-hammarby',
-			'linnes-hammarby-marielund'    => 'linnes-hammarby',
+			'faringe-uppsala-ostra'         => 'main',
+			'uppsala-faringe'               => 'main',
+			'fjallnora-selkna'              => 'fjallnora',
+			'selkna-fjallnora'              => 'fjallnora',
+			'marielund-linnes-hammarby'     => 'linnes-hammarby',
+			'linnes-hammarby-marielund'     => 'linnes-hammarby',
 			'linnes-hammarby-uppsala-ostra' => 'linnes-hammarby',
 		);
 		$seen = array();

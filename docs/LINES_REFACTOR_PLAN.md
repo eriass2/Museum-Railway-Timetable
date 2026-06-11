@@ -45,9 +45,9 @@ LINNÉS (transfer @ Marielund)
 | `\|` / `overview_pass_from_station` som data | PDF-**layout** ovanpå direkt ben — inte att bussen kör main-linjen |
 | En `linnes-hammarby`-`branch_code` för allt | **2+1** nedan |
 
-### Öppen verifiering
+### B5 borttagen (2026-06-11)
 
-- **B5 (Selkné–Linnés)** i fixture — passar **inte** i modellen ovan. Bekräfta med operatör: trafikerar den? Ska den bort eller vara separat engångstur?
+**B5 (Selkné–Linnés)** fanns i fixture men passar **inte** i domänmodellen (Linnés nås via **Marielund**). Tur, rutter `selkna-linnes-hammarby` / `linnes-hammarby-selkna` och tillhörande stoptider är borttagna. Resa Uppsala → Linnés går via tåg till Marielund + B9 (eller motsv.).
 
 ---
 
@@ -143,7 +143,7 @@ services.csv
 
 ### Fas 4 — städning
 
-- Ta bort överflödiga routes (inkl. ev. B5 efter operatörsbeslut)
+- Ta bort överflödiga routes (B5/Selkné–Linnés redan borttagen)
 - D8: en linje per sträcka, riktning härledd
 - Uppdatera admin (Turvy väljer `line`, inte dubbel route)
 
@@ -163,7 +163,7 @@ services.csv
 
 ## 7. Beslut att ta innan kod
 
-1. **B5** — behåll, flytta eller ta bort?
+1. ~~**B5**~~ — borttagen enligt §1.
 2. **`route` bort helt** eller alias för `line` under övergång?
 3. **PDF `\|` för B14** — kvar som ren layout utan korridor-meta?
 

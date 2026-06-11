@@ -15,7 +15,7 @@ Stationen fanns i fixturen men saknade rutt, turer och stopptider — därför v
 | Fil | Innehåll |
 |-----|----------|
 | `routes.csv` | Linnés-shuttles med `branch_code=linnes-hammarby` (Selkné-, Marielund- och Uppsala-ben) |
-| `services.csv` | B5, B9–B14 under `red-buss` |
+| `services.csv` | B9–B14 under `red-buss` (ingen Selkné–Linnés-buss; se [LINES_REFACTOR_PLAN.md](LINES_REFACTOR_PLAN.md)) |
 | `stoptimes.csv` | Selknä ↔ Linnés Hammarby |
 | `timetable_dates.csv` | Samma söndagar som `red` inom 1/7–16/8 |
 
@@ -45,7 +45,7 @@ Dev-reset importerar hela paketet: `.\scripts\docker-dev-reset.ps1`
 
 5. **Importera** → kontrollera:
    - Stationer & rutter: grenen syns
-   - Tidtabell `RÖD ANSLUTNINGSBUSS 2026 (Linnés Hammarby)`: bussar B5/B9–B14
+   - Tidtabell `RÖD ANSLUTNINGSBUSS 2026 (Linnés Hammarby)`: bussar B9–B14
    - Reseplanerare: Uppsala Östra → Linnés Hammarby på **röd söndag** (t.ex. 2026-07-05)
 
 6. Verifiera **buss/tåg-koppling** vid Selknä mot Fjällnora-grenen (A10 / B2) — Fjällnora-bussar ska **inte** visas på samma dag som Linnés om de inte trafikerar

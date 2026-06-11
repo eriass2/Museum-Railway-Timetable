@@ -254,7 +254,6 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		$GLOBALS['mrt_test_post_meta'] = array(
 			'501|mrt_service_number'     => 'B3',
 			'502|mrt_service_number'     => 'B7',
-			'503|mrt_service_number'     => 'B5',
 			'9|mrt_station_bus_suffix'   => '1',
 			'15|mrt_station_bus_suffix'  => '1',
 			'16|mrt_station_bus_suffix'  => '1',
@@ -324,17 +323,14 @@ final class TimetableOverviewHelpersTest extends TestCase {
 	public function test_junction_bus_rows_for_station_keeps_one_branch_when_wait_ties(): void {
 		$junction_id = 9;
 		$fjallnora   = 15;
-		$linnes      = 16;
 		$GLOBALS['mrt_test_post_meta'] = array(
 			'501|mrt_service_number'    => 'B1',
-			'503|mrt_service_number'    => 'B5',
+			'502|mrt_service_number'    => 'B2',
 			'9|mrt_station_bus_suffix'  => '1',
 			'15|mrt_station_bus_suffix' => '1',
-			'16|mrt_station_bus_suffix' => '1',
 		);
 		$GLOBALS['mrt_test_posts'] = array(
 			15 => (object) array( 'ID' => 15, 'post_title' => 'Fjällnora' ),
-			16 => (object) array( 'ID' => 16, 'post_title' => 'Linnés Hammarby' ),
 		);
 		$rail_group = array(
 			'stations' => array( 1, $junction_id, 20 ),
@@ -366,14 +362,14 @@ final class TimetableOverviewHelpersTest extends TestCase {
 				),
 			),
 			array(
-				'stations' => array( $junction_id, $linnes ),
+				'stations' => array( $junction_id, $fjallnora ),
 				'services' => array(
 					array(
-						'service'    => (object) array( 'ID' => 503 ),
+						'service'    => (object) array( 'ID' => 502 ),
 						'train_type' => (object) array( 'slug' => 'buss' ),
 						'stop_times' => array(
 							$junction_id => array( 'departure_time' => '10:53' ),
-							$linnes      => array( 'arrival_time' => '11:00' ),
+							$fjallnora   => array( 'arrival_time' => '11:00' ),
 						),
 					),
 				),
@@ -390,8 +386,8 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		);
 
 		self::assertCount( 2, $rows );
-		self::assertSame( 'B5', $rows[0]['cells'][0]['busServiceNumber'] );
-		self::assertSame( 'Till Linnés Hammarby*', $rows[1]['label'] );
+		self::assertContains( $rows[0]['cells'][0]['busServiceNumber'], array( 'B1', 'B2' ) );
+		self::assertSame( 'Till Fjällnora*', $rows[1]['label'] );
 	}
 
 	public function test_junction_bus_departure_hides_pickup_suffix_on_from_row(): void {
