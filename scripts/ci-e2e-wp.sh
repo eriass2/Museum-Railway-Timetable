@@ -4,21 +4,13 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
+. "$(dirname "$0")/lib/mrt-docker.sh"
 
 echo "=== ci-e2e-wp: starting Docker ==="
-docker compose up -d --build
+mrt_docker_up
 
 echo "=== ci-e2e-wp: waiting for WordPress ==="
-for i in $(seq 1 60); do
-  if docker compose run --rm --no-TTY wordpress-init wp --allow-root core is-installed >/dev/null 2>&1; then
-    break
-  fi
-  if [ "$i" -eq 60 ]; then
-    echo "WordPress did not become ready in time" >&2
-    exit 1
-  fi
-  sleep 5
-done
+mrt_wait_wordpress 300 5
 
 echo "=== ci-e2e-wp: import + demo page ==="
 docker compose run --rm --no-TTY wordpress-init wp --allow-root eval \

@@ -7,55 +7,29 @@ param(
     [string[]]$Passthrough
 )
 
-$ErrorActionPreference = "Stop"
-Set-Location $PSScriptRoot\..
+$ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
+Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 
-function Test-DockerAvailable {
-    & docker info 2>$null | Out-Null
-    return $LASTEXITCODE -eq 0
-}
+Assert-MrtDockerAvailable
+Ensure-MrtVendor
 
-function Invoke-DockerComposer {
-    param(
-        [string[]]$ComposerArgs
-    )
-
-    $dockerArgs = @(
-        'compose', '--profile', 'tools', 'run', '--rm', 'composer'
-    ) + $ComposerArgs
-    & docker @dockerArgs
-    if ($LASTEXITCODE -ne 0) {
-        exit $LASTEXITCODE
-    }
-}
-
-if (-not (Test-DockerAvailable)) {
-    Write-Host "Docker is not running. Start Docker Desktop and retry." -ForegroundColor Red
-    exit 1
-}
-
-if (-not (Test-Path vendor)) {
-    Write-Host "vendor/ missing - installing via Docker..." -ForegroundColor Yellow
-    Invoke-DockerComposer -ComposerArgs @('install', '--no-interaction')
-}
-
-Write-Host "Running composer check in Docker..." -ForegroundColor Cyan
+Write-Host 'Running composer check in Docker...' -ForegroundColor Cyan
 $checkArgs = @('check')
 if ($Passthrough.Count -gt 0) {
     $checkArgs += $Passthrough
 }
-Invoke-DockerComposer -ComposerArgs $checkArgs
+Invoke-MrtDockerComposer -ComposerArgs $checkArgs -ExitOnError
 
 if (-not $SkipPhpcs) {
-    Write-Host "Running PHPCS in Docker..." -ForegroundColor Cyan
-    Invoke-DockerComposer -ComposerArgs @('phpcs')
+    Write-Host 'Running PHPCS in Docker...' -ForegroundColor Cyan
+    Invoke-MrtDockerComposer -ComposerArgs @('phpcs') -ExitOnError
 }
 
-Write-Host "PHP check OK." -ForegroundColor Green
+Write-Host 'PHP check OK.' -ForegroundColor Green
 
 if ($Vue) {
-    $vueCheck = Join-Path $PSScriptRoot "vue-check.ps1"
-    & $vueCheck
+    & (Join-Path $PSScriptRoot 'vue-check.ps1')
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }

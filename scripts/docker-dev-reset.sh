@@ -4,26 +4,23 @@
 
 set -e
 cd "$(dirname "$0")/.."
+. "$(dirname "$0")/lib/mrt-docker.sh"
 
 echo ""
 echo "=== MRT dev reset (clear + import + smoke menu) ==="
 
-docker compose up -d --build
-echo "Waiting for WordPress..."
-sleep 12
+mrt_docker_up
+mrt_wait_wordpress
 
 echo ""
 echo "--- Build Vue public bundle (CSS + JS) ---"
-docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
+mrt_vue_build_verify
 
 echo ""
-echo "--- Swedish locale (sv_SE) ---"
-docker compose run --rm wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh
+mrt_ensure_sv_locale
 
 echo ""
-echo "--- Reset and import ---"
-docker compose run --rm wordpress-init wp --allow-root eval \
-  "if (!function_exists('MRT_dev_reset_and_import_cli')) { fwrite(STDERR, 'Plugin not active'.PHP_EOL); exit(1); } MRT_dev_reset_and_import_cli();"
+mrt_dev_reset_import
 
 echo ""
 echo "Done. Front: http://localhost:8080  Admin: http://localhost:8080/wp-admin (admin / admin)"

@@ -4,19 +4,16 @@ param(
     [string[]]$Passthrough
 )
 
-$ErrorActionPreference = "Stop"
-Set-Location $PSScriptRoot\..
+$ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
+Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 
-if (-not (Test-Path vendor)) {
-    Write-Host "vendor/ missing. Run composer install first." -ForegroundColor Red
+if (-not (Test-Path (Join-Path (Get-MrtRepoRoot) 'vendor'))) {
+    Write-Host 'vendor/ missing. Run composer install first.' -ForegroundColor Red
     exit 1
 }
 
-& docker info 2>$null | Out-Null
-if ($LASTEXITCODE -ne 0) {
-    Write-Host "Docker is not running. Coverage requires Docker (php:8.2-cli + PCOV)." -ForegroundColor Red
-    exit 1
-}
+Assert-MrtDockerAvailable -Message 'Docker is not running. Coverage requires Docker (php:8.2-cli + PCOV).'
 
 New-Item -ItemType Directory -Force -Path coverage | Out-Null
 
@@ -25,26 +22,8 @@ if ($Passthrough.Count -gt 0) {
     $phpUnitArgs += $Passthrough
 }
 
-Write-Host "Running PHPUnit with PCOV in Docker..." -ForegroundColor Cyan
-$shellCmd = @'
-apt-get update -qq && apt-get install -y -qq $PHPIZE_DEPS >/dev/null &&
-pecl install pcov >/dev/null && docker-php-ext-enable pcov >/dev/null &&
-vendor/bin/phpunit
-'@ -replace "`r`n", ' '
+Invoke-MrtDockerPhpUnitWithPcov -PhpUnitArgs $phpUnitArgs -ExitOnError
 
-$dockerArgs = @(
-    'compose', '--profile', 'tools', 'run', '--rm', '--entrypoint', 'sh', 'php-test',
-    '-c', "$shellCmd $($phpUnitArgs -join ' ')"
-)
-$prevEap = $ErrorActionPreference
-$ErrorActionPreference = 'Continue'
-& docker @dockerArgs 2>&1 | ForEach-Object { Write-Host $_ }
-$dockerExit = $LASTEXITCODE
-$ErrorActionPreference = $prevEap
-if ($dockerExit -ne 0) {
-    exit $dockerExit
-}
-
-Write-Host ""
+Write-Host ''
 & php scripts/coverage-summary.php coverage/clover.xml
 exit $LASTEXITCODE

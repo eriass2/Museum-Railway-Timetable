@@ -15,98 +15,11 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$projectRoot = Split-Path -Parent $PSScriptRoot
-Set-Location $projectRoot
+. (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
+$projectRoot = Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 
-$pluginSlug = "museum-railway-timetable"
-$pluginItems = @(
-    "$pluginSlug.php",
-    "uninstall.php",
-    "inc",
-    "assets",
-    "languages"
-)
-
-function Test-DockerAvailable {
-    & docker info 2>$null | Out-Null
-    return $LASTEXITCODE -eq 0
-}
-
-function Test-NpmAvailable {
-    try {
-        & npm --version 2>$null | Out-Null
-        return $LASTEXITCODE -eq 0
-    } catch {
-        return $false
-    }
-}
-
-function Get-PluginVersion {
-    $main = Join-Path $projectRoot "$pluginSlug.php"
-    if (-not (Test-Path $main)) {
-        throw "Missing $pluginSlug.php"
-    }
-    $content = Get-Content $main -Raw
-    if ($content -match "define\s*\(\s*'MRT_VERSION'\s*,\s*'([^']+)'\s*\)") {
-        return $Matches[1]
-    }
-    if ($content -match '\* Version:\s*([0-9.]+)') {
-        return $Matches[1]
-    }
-    return "0.0.0"
-}
-
-function Invoke-VueBuild {
-    if ($UseDocker -or -not (Test-NpmAvailable)) {
-        if (-not (Test-DockerAvailable)) {
-            throw "npm not in PATH and Docker is not running. Install Node or start Docker."
-        }
-        Write-Host "`n--- Vue build (Docker) ---" -ForegroundColor Cyan
-        & docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
-        if ($LASTEXITCODE -ne 0) {
-            throw "Vue build failed in Docker (exit $LASTEXITCODE)."
-        }
-        return
-    }
-
-    Write-Host "`n--- Vue build (local npm) ---" -ForegroundColor Cyan
-    & composer vue:build
-    if ($LASTEXITCODE -ne 0) {
-        throw "composer vue:build failed (exit $LASTEXITCODE)."
-    }
-
-    Push-Location (Join-Path $projectRoot "frontend/vue")
-    try {
-        & npm run verify
-        if ($LASTEXITCODE -ne 0) {
-            throw "npm run verify failed (exit $LASTEXITCODE)."
-        }
-    } finally {
-        Pop-Location
-    }
-}
-
-function Test-VueArtifacts {
-    $adminJs = Join-Path $projectRoot "assets/dist/vue/assets/admin.js"
-    $manifest = Join-Path $projectRoot "assets/dist/vue/.vite/manifest.json"
-    if (-not (Test-Path $adminJs)) {
-        throw "Missing $adminJs - run without -SkipBuild or build Vue manually."
-    }
-    if (-not (Test-Path $manifest)) {
-        throw "Missing Vue manifest at assets/dist/vue/.vite/manifest.json"
-    }
-    $manifestJson = Get-Content $manifest -Raw | ConvertFrom-Json
-    $mainKey = ($manifestJson.PSObject.Properties | Where-Object { $_.Name -like "src/main.*" } | Select-Object -First 1).Name
-    if (-not $mainKey) {
-        throw "Vue manifest has no main entry (src/main.ts)."
-    }
-    $mainFile = $manifestJson.$mainKey.file
-    $mainPath = Join-Path $projectRoot "assets/dist/vue/$mainFile"
-    if (-not (Test-Path $mainPath)) {
-        throw "Missing public bundle: assets/dist/vue/$mainFile"
-    }
-    Write-Host "  Vue OK: admin.js + $mainFile" -ForegroundColor Green
-}
+$pluginSlug = $script:MrtPluginSlug
+$pluginItems = $script:MrtPluginItems
 
 function Invoke-PluginValidate {
     Write-Host "`n--- Plugin validate ---" -ForegroundColor Cyan
@@ -230,7 +143,7 @@ function New-LinuxZipViaDocker {
         [string] $ZipPath
     )
 
-    if (-not (Test-DockerAvailable)) {
+    if (-not (Test-MrtDockerAvailable)) {
         return $false
     }
 
@@ -300,16 +213,16 @@ function New-ReleaseZip {
 
 Write-Host "`n=== Museum Railway Timetable - release build ===" -ForegroundColor Cyan
 
-$version = Get-PluginVersion
+$version = Get-MrtPluginVersion
 Write-Host "Version: $version" -ForegroundColor Gray
 
 if (-not $SkipBuild) {
-    Invoke-VueBuild
+    Invoke-MrtVueBuild -UseDocker:$UseDocker
 } else {
     Write-Host "`n--- Vue build skipped (-SkipBuild) ---" -ForegroundColor Yellow
 }
 
-Test-VueArtifacts
+Test-MrtVueArtifacts
 
 if (-not $SkipValidate) {
     Invoke-PluginValidate

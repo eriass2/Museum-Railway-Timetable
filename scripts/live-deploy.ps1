@@ -17,34 +17,14 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$projectRoot = Split-Path -Parent (Split-Path -Parent $MyInvocation.MyCommand.Path)
-Set-Location $projectRoot
+. (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
+$projectRoot = Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 
-$pluginSlug = "museum-railway-timetable"
-$pluginItems = @(
-    "$pluginSlug.php",
-    "uninstall.php",
-    "inc",
-    "assets",
-    "languages"
-)
+$pluginSlug = $script:MrtPluginSlug
+$pluginItems = $script:MrtPluginItems
 
 if (-not $ConfigPath) {
     $ConfigPath = Join-Path $projectRoot "local/live-deploy.config.json"
-}
-
-function Test-DockerAvailable {
-    & docker info 2>$null | Out-Null
-    return $LASTEXITCODE -eq 0
-}
-
-function Test-NpmAvailable {
-    try {
-        & npm --version 2>$null | Out-Null
-        return $LASTEXITCODE -eq 0
-    } catch {
-        return $false
-    }
 }
 
 function Get-LiveDeployConfig {
@@ -62,60 +42,6 @@ function Get-LiveDeployConfig {
         Write-Host "ERROR: Could not parse $Path - $($_.Exception.Message)" -ForegroundColor Red
         exit 1
     }
-}
-
-function Invoke-VueBuild {
-    if ($UseDocker -or -not (Test-NpmAvailable)) {
-        if (-not (Test-DockerAvailable)) {
-            throw "npm not in PATH and Docker is not running. Install Node, start Docker, or pass -UseDocker."
-        }
-        Write-Host "`n--- Vue build (Docker) ---" -ForegroundColor Cyan
-        & docker compose --profile tools run --rm vue sh -c 'npm ci && npm run build && npm run verify'
-        if ($LASTEXITCODE -ne 0) {
-            throw "Vue build failed in Docker (exit $LASTEXITCODE)."
-        }
-        return
-    }
-
-    Write-Host "`n--- Vue build (local npm) ---" -ForegroundColor Cyan
-    & composer vue:build
-    if ($LASTEXITCODE -ne 0) {
-        throw "composer vue:build failed (exit $LASTEXITCODE)."
-    }
-
-    Push-Location (Join-Path $projectRoot "frontend/vue")
-    try {
-        & npm run verify
-        if ($LASTEXITCODE -ne 0) {
-            throw "npm run verify failed (exit $LASTEXITCODE)."
-        }
-    } finally {
-        Pop-Location
-    }
-}
-
-function Sync-PluginItemLocal {
-    param(
-        [string] $SourceRoot,
-        [string] $TargetRoot,
-        [string] $Item
-    )
-
-    $src = Join-Path $SourceRoot $Item
-    $dst = Join-Path $TargetRoot $Item
-
-    if (-not (Test-Path $src)) {
-        Write-Host "  Skip (missing): $Item" -ForegroundColor Yellow
-        return $false
-    }
-
-    if (Test-Path $dst) {
-        Remove-Item $dst -Recurse -Force -ErrorAction SilentlyContinue
-    }
-
-    Copy-Item -Path $src -Destination $dst -Recurse -Force
-    Write-Host "  Copied: $Item" -ForegroundColor Green
-    return $true
 }
 
 function Sync-PluginItemSsh {
@@ -174,7 +100,7 @@ function Invoke-PluginSync {
 
             Write-Host "  Target (local): $target" -ForegroundColor Gray
             foreach ($item in $pluginItems) {
-                if (Sync-PluginItemLocal -SourceRoot $projectRoot -TargetRoot $target -Item $item) {
+                if (Copy-MrtPluginItem -SourceRoot $projectRoot -TargetRoot $target -Item $item) {
                     $copied++
                 }
             }
@@ -221,12 +147,12 @@ function Invoke-LiveDeploy {
     Write-Host "  Source: $projectRoot" -ForegroundColor Gray
 
     if ($BuildVue) {
-        Invoke-VueBuild
+        Invoke-MrtVueBuild -UseDocker:$UseDocker
     } elseif (-not $SkipBuild) {
         $distAdmin = Join-Path $projectRoot "assets/dist/vue/assets/admin.js"
         if (-not (Test-Path $distAdmin)) {
             Write-Host "No Vue build found - building first." -ForegroundColor Yellow
-            Invoke-VueBuild
+            Invoke-MrtVueBuild -UseDocker:$UseDocker
         }
     }
 
