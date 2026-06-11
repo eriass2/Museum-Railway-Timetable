@@ -1,5 +1,5 @@
 import { computed, onMounted, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import {
   addTimetableService,
   deleteTimetable,
@@ -38,12 +38,31 @@ export type TimetableServiceEditRow = TimetableServiceRow & {
 export type StoptimesPanelView = 'list' | 'detail';
 export type TimetableEditorTab = 'dates' | 'grid' | 'trips' | 'stoptimes' | 'deviations' | 'preview';
 
+const TIMETABLE_EDITOR_TABS: TimetableEditorTab[] = [
+  'dates',
+  'grid',
+  'trips',
+  'stoptimes',
+  'deviations',
+  'preview',
+];
+
+function parseTimetableEditorTab(value: unknown): TimetableEditorTab | null {
+  if (typeof value !== 'string') {
+    return null;
+  }
+  return TIMETABLE_EDITOR_TABS.includes(value as TimetableEditorTab)
+    ? (value as TimetableEditorTab)
+    : null;
+}
+
 function tripDraftSnapshot(draft: TripEditDraft | ReturnType<typeof emptyTripDraft>): string {
   return JSON.stringify(draft);
 }
 
 export function useTimetableEditorPage(timetableId: () => number) {
   const router = useRouter();
+  const route = useRoute();
   const cfg = adminConfig();
   const tab = ref<TimetableEditorTab>('dates');
   const detail = ref<TimetableDetail | null>(null);
@@ -126,8 +145,22 @@ export function useTimetableEditorPage(timetableId: () => number) {
   }
 
   onMounted(() => {
+    const initialTab = parseTimetableEditorTab(route.query.tab);
+    if (initialTab) {
+      tab.value = initialTab;
+    }
     void loadDetail();
   });
+
+  watch(
+    () => route.query.tab,
+    (nextTab) => {
+      const parsed = parseTimetableEditorTab(nextTab);
+      if (parsed) {
+        tab.value = parsed;
+      }
+    },
+  );
 
   watch(timetableId, () => {
     selectedServiceId.value = 0;

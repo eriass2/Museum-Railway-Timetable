@@ -97,13 +97,13 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 **Beslut:** 2026-06-11 — utöka befintliga dashboard-varningar (`dashboard-warnings.php`)  
 **Syfte:** Fånga halvfärdig/inkonsistent data innan wizard, Turvy och reseplanerare misslyckas tyst (t.ex. Selkné, Marielund, Linnés Hammarby)
 
-**Nyckelfiler:** `inc/domain/admin/dashboard-warnings.php`, `DashboardWarningsTest.php`, `DashboardPage.vue`
+**Nyckelfiler:** `inc/domain/admin/dashboard-warnings.php`, `dashboard-warnings-quality.php`, `DashboardWarningsTest.php`, `DashboardPage.vue`
 
-- [ ] Varning: stopptider matchar inte rutten (för få/för många stationer per tur)
-- [ ] Varning: `train_change_map` pekar på tågnummer/tågtyp som inte finns
-- [ ] Varning: byteshub utan bussmarkering **och** utan tågbyte (risk: inga flerbenade resor)
-- [ ] Varning: tidtabell utan kommande trafikdagar
-- [ ] Varning: bussrutt utan motsvarande tågförbindelse vid knutpunkt (där flerben krävs)
+- [x] Varning: stopptider matchar inte rutten (för få/för många stationer per tur)
+- [x] Varning: `train_change_map` pekar på tågnummer/tågtyp som inte finns
+- [x] Varning: byteshub utan bussmarkering **och** utan tågbyte (risk: inga flerbenade resor)
+- [x] Varning: tidtabell utan kommande trafikdagar
+- [x] Varning: bussrutt utan motsvarande tågförbindelse vid knutpunkt (där flerben krävs)
 
 ---
 

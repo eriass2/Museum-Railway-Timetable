@@ -1,6 +1,8 @@
-# Åtgärdsplan – trafikmeddelanden (shortcode)
+# Trafikmeddelanden och trafikstörningar (shortcode)
 
-Shortcode på **startsidan** som visar generella trafikmeddelanden och tur-avvikelser för **idag**. Besökare ser en kompakt lista; tom vy visar «Inga meddelanden».
+Shortcode på **startsidan** och ev. **egen sida** (`/trafikstorningar`) som visar UL-lik feed: generella meddelanden + tur-avvikelser, **Pågår nu** / **Kommande**, 90 dagars horisont. Tom vy: «Inga meddelanden».
+
+**v2 (J11):** [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) — disruption feed API + Vue. v1 flat lista (`GET /traffic-notices`, max 2 dagar) finns kvar för bakåtkompatibilitet.
 
 **Relaterat:** [SHORTCODES.md](SHORTCODES.md), [REST_API.md](REST_API.md), [ADMIN_WORKFLOW.md](ADMIN_WORKFLOW.md), [DATA_MODEL.md](DATA_MODEL.md)
 
@@ -25,7 +27,7 @@ Shortcode på **startsidan** som visar generella trafikmeddelanden och tur-avvik
 | Fråga | Beslut |
 |-------|--------|
 | Rubrik | Ingen standardrubrik — shortcode visar bara listan (valfri `title`-parameter) |
-| Datumomfång | `days="1"` som standard (endast idag); `days="2"` opt-in för idag + imorgon |
+| Datumomfång | **`horizon_days="90"`** (standard); max 365. Legacy `days` (1–2) används inte längre av shortcode. |
 | Admin-placering | Ny **top-level**-meny: **Trafikmeddelanden** (`#/traffic-notices`) |
 | Max längd meddelande | **500 tecken** (ren text) |
 | Sortering generella meddelanden | **`sort_order`** + **Upp/Ner-knappar** i listan (ingen drag-and-drop) |
@@ -51,11 +53,13 @@ Tur-avvikelser redigeras fortsatt i **Tidtabell → Avvikelser** (oförändrat a
 
 | Parameter | Standard | Beskrivning |
 |-----------|----------|-------------|
-| `days` | `1` | `1` = idag, `2` = idag + imorgon |
+| `horizon_days` | `90` | Antal dagar framåt från referensdatum (max 365) |
 | `date` | *(WP-tid idag)* | Referensdatum `YYYY-MM-DD` (test) |
-| `show_general` | `1` | Visa generella meddelanden |
-| `show_deviations` | `1` | Visa tur-avvikelser |
-| `title` | *(tom)* | Valfri rubrik ovanför listan |
+| `title` | *(tom)* | Valfri rubrik ovanför feeden |
+| `days` | `1` | *Legacy — ignoreras av v2 shortcode* |
+| `show_general` / `show_deviations` | `1` | *Legacy — v2 feed visar alltid båda källor* |
+
+**Dedikerad sida:** Skapas vid «Synka tidtabellssidor» — slug `trafikstorningar`, innehåll `[museum_traffic_notices title="Trafikstörningar"]`. Länk läggs i primärmenyn om tema har tilldelad meny.
 
 **Exempel (startsida):**
 
@@ -64,27 +68,30 @@ Tur-avvikelser redigeras fortsatt i **Tidtabell → Avvikelser** (oförändrat a
 [museum_timetable_month ...]
 ```
 
-**Med imorgon och rubrik:**
+**Med kortare horisont och rubrik:**
 
 ```
-[museum_traffic_notices days="2" title="Trafikinfo"]
+[museum_traffic_notices horizon_days="30" title="Trafikinfo"]
 ```
 
 ---
 
-## Publikt utseende
+## Publikt utseende (v2)
 
-**Med innehåll (standard, utan `title`):**
+**Med innehåll:**
 
 ```
-• Glassrean i caféet kl 14–16!
-• Banan stängd vid Fjällnora pga evenemang
+Pågår nu
+  6 jun 2026
+  Glassrean i caféet kl 14–16!
 
-• Inställd — Tåg 71, Uppsala Ö → Marielund
-• Ersättningsbuss — Tåg 73, Marielund → Selknä
+  Idag
+  Inställd trafik — Tåg 71, 97
+
+Kommande
+  1 jul – 16 aug 2026
+  Buss ersätter tåg vid Selkné …
 ```
-
-Med `days="2"` grupperas avvikelser under dagsrubriker («Idag …», «Imorgon …»). Generella meddelanden visas alltid överst (gäller valda dagar enligt `active_from` / `active_to`).
 
 **Tom:**
 
@@ -94,10 +101,10 @@ Inga meddelanden
 
 **Design:**
 
-- Kompakt lista — passar ovanför kalendern.
-- Inställda turer: samma visuella språk som tidtabell/reseplanerare (badge/genomstrykning).
-- Generella meddelanden utan turkoppling först, därefter avvikelser.
-- `<noscript>`-fallback med server-renderad lista (samma mönster som övriga shortcodes).
+- Sektioner **Pågår nu** / **Kommande** (UL-lik).
+- Datum/intervall, rubrik med tågnummer, valfri brödtext.
+- Inställda turer: genomstrykning på rubrik.
+- `<noscript>`-fallback med samma sektioner.
 
 ---
 
@@ -225,7 +232,9 @@ Tur-avvikelser redigeras **inte** här.
 | REST-klient | `frontend/vue/src/api/mrtRest.ts` |
 | Registrering | `inc/shortcodes.php`, `main.ts` loader `traffic_notices` |
 
-Flöde: mount → `GET /traffic-notices` → render → tom = «Inga meddelanden».
+Flöde: mount → `GET /traffic-disruptions/feed` → render sektioner → tom = «Inga meddelanden».
+
+**Admin (fas 4):** `#/traffic-notices` visar **Publik förhandsvisning** (samma feed + redigeringslänkar). API: `GET /traffic-notices/feed` (admin, med `edit` per rad).
 
 ---
 

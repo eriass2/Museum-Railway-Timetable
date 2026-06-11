@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/traffic-notices/public-notices.php';
+require_once MRT_PATH . 'inc/domain/traffic-notices/disruption-feed-admin.php';
 
 /**
  * Register admin traffic notices routes.
@@ -30,6 +31,28 @@ function MRT_rest_register_traffic_notices_admin_routes(): void {
 				'methods'             => WP_REST_Server::EDITABLE,
 				'callback'            => 'MRT_rest_traffic_notices_messages_put_handler',
 				'permission_callback' => 'MRT_rest_can_edit_operations',
+			),
+		)
+	);
+	register_rest_route(
+		MRT_REST_NAMESPACE,
+		'/traffic-notices/feed',
+		array(
+			'methods'             => WP_REST_Server::READABLE,
+			'callback'            => 'MRT_rest_traffic_notices_feed_get_handler',
+			'permission_callback' => 'MRT_rest_can_edit_operations',
+			'args'                => array(
+				'date'         => array(
+					'type'              => 'string',
+					'required'          => false,
+					'sanitize_callback' => 'sanitize_text_field',
+				),
+				'horizon_days' => array(
+					'type'              => 'integer',
+					'required'          => false,
+					'default'           => MRT_DISRUPTION_FEED_DEFAULT_HORIZON,
+					'sanitize_callback' => 'absint',
+				),
 			),
 		)
 	);
@@ -66,4 +89,21 @@ function MRT_rest_traffic_notices_messages_put_handler( WP_REST_Request $request
 			'messages' => $saved,
 		)
 	);
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ */
+function MRT_rest_traffic_notices_feed_get_handler( WP_REST_Request $request ) {
+	$date = (string) $request->get_param( 'date' );
+	if ( $date === '' ) {
+		$date = MRT_get_current_datetime()['date'];
+	}
+	$horizon_days = (int) $request->get_param( 'horizon_days' );
+
+	$result = MRT_disruption_feed_for_admin( $date, $horizon_days );
+	if ( is_wp_error( $result ) ) {
+		return $result;
+	}
+	return rest_ensure_response( $result );
 }

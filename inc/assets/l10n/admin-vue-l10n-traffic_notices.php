@@ -16,9 +16,17 @@ function MRT_admin_vue_l10n_traffic_notices(): array {
 		'navTrafficNotices'           => __( 'Trafikmeddelanden', 'museum-railway-timetable' ),
 		'trafficNoticesTitle'         => __( 'Trafikmeddelanden', 'museum-railway-timetable' ),
 		'trafficNoticesIntro'         => __(
-			'Generella meddelanden visas på startsidan via shortcoden [museum_traffic_notices].',
+			'Generella meddelanden och tur-avvikelser slås ihop till samma publika feed som shortcoden [museum_traffic_notices] (90 dagar).',
 			'museum-railway-timetable'
 		),
+		'trafficNoticesFeedTitle'     => __( 'Publik förhandsvisning', 'museum-railway-timetable' ),
+		'trafficNoticesFeedIntro'     => __(
+			'Samma lista som besökare ser på webben (Pågår nu / Kommande). Länkar går till redigering här eller under Tidtabeller → Avvikelser.',
+			'museum-railway-timetable'
+		),
+		'trafficNoticesFeedEmpty'     => __( 'Inga störningar i feeden just nu.', 'museum-railway-timetable' ),
+		'trafficNoticesFeedOngoing'   => __( 'Pågår nu', 'museum-railway-timetable' ),
+		'trafficNoticesFeedUpcoming'  => __( 'Kommande', 'museum-railway-timetable' ),
 		'trafficNoticesVsDeviations'  => __(
 			'Tur-avvikelser (inställd tur, ersättningsfordon) redigeras under Tidtabeller → välj tidtabell → Avvikelser.',
 			'museum-railway-timetable'

@@ -2,9 +2,9 @@
 
 ## Shortcodes (4 st)
 
-### 1. `[museum_traffic_notices]` - Trafikmeddelanden
+### 1. `[museum_traffic_notices]` - Trafikstörningar (UL-lik feed)
 
-Visar generella trafikmeddelanden och tur-avvikelser för idag (valfritt imorgon). Tom vy: «Inga meddelanden». Kräver JavaScript.
+Visar generella trafikmeddelanden och tur-avvikelser i sektionerna **Pågår nu** / **Kommande** (standard 90 dagar). Tom vy: «Inga meddelanden». Kräver JavaScript.
 
 **Användning:**
 ```
@@ -12,11 +12,10 @@ Visar generella trafikmeddelanden och tur-avvikelser för idag (valfritt imorgon
 ```
 
 **Parametrar:**
-- `days` – `1` = idag (standard), `2` = idag + imorgon
-- `date` – Referensdatum `YYYY-MM-DD` (test; standard: WP-tid idag)
-- `show_general` – Visa generella meddelanden (`0` eller `1`, standard: `1`)
-- `show_deviations` – Visa tur-avvikelser (`0` eller `1`, standard: `1`)
-- `title` – Valfri rubrik ovanför listan
+- `horizon_days` – dagar framåt från referensdatum (standard `90`, max `365`)
+- `date` – referensdatum `YYYY-MM-DD` (test; standard: WP-tid idag)
+- `title` – valfri rubrik ovanför feeden
+- `days`, `show_general`, `show_deviations` – legacy (ignoreras av v2 shortcode)
 
 **Exempel (startsida):**
 ```
@@ -24,9 +23,11 @@ Visar generella trafikmeddelanden och tur-avvikelser för idag (valfritt imorgon
 [museum_timetable_month ...]
 ```
 
-Generella meddelanden redigeras i admin under **Trafikmeddelanden** (`#/traffic-notices`). Tur-avvikelser redigeras som tidigare under **Tidtabell → Avvikelser**.
+**Egen sida:** skapas vid admin «Synka tidtabellssidor» (`/trafikstorningar`).
 
-**Backend (REST):** `GET /museum-railway-timetable/v1/traffic-notices` (se [REST_API.md](REST_API.md)).
+Generella meddelanden redigeras i admin under **Trafikmeddelanden** (`#/traffic-notices`, inkl. publik förhandsvisning). Tur-avvikelser redigeras under **Tidtabell → Avvikelser**.
+
+**Backend (REST):** `GET /museum-railway-timetable/v1/traffic-disruptions/feed` (publikt). Legacy: `GET /traffic-notices` (max 2 dagar). Se [REST_API.md](REST_API.md) och [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md).
 
 ---
 

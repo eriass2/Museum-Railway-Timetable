@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/admin/dashboard-warnings.php';
+require_once MRT_PATH . 'inc/domain/admin/dashboard-warnings-quality.php';
 require_once MRT_PATH . 'inc/domain/admin/cancel-traffic.php';
 
 /**
@@ -53,7 +54,12 @@ function MRT_collect_dashboard_warnings(): array {
 		MRT_dashboard_warnings_timetables_without_trips(),
 		MRT_dashboard_warnings_trips_without_stoptimes(),
 		MRT_dashboard_warnings_routes_without_stations(),
-		MRT_dashboard_warnings_pricing()
+		MRT_dashboard_warnings_pricing(),
+		MRT_dashboard_warnings_trip_stoptimes_route_mismatch(),
+		MRT_dashboard_warnings_train_change_map_invalid(),
+		MRT_dashboard_warnings_transfer_hub_unconfigured(),
+		MRT_dashboard_warnings_timetables_no_upcoming_dates(),
+		MRT_dashboard_warnings_bus_without_rail_junction()
 	);
 }
 

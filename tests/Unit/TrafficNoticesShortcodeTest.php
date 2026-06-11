@@ -10,6 +10,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 require_once ABSPATH . 'inc/public/traffic-notices/shortcode.php';
+require_once ABSPATH . 'inc/domain/timetable/timetable-pages.php';
 
 final class TrafficNoticesShortcodeTest extends TestCase {
 	protected function tearDown(): void {
@@ -21,6 +22,11 @@ final class TrafficNoticesShortcodeTest extends TestCase {
 		$context = MRT_traffic_notices_build_context( array() );
 		self::assertSame( '90', $context['atts']['horizon_days'] );
 		self::assertTrue( $context['payload']['is_empty'] );
+	}
+
+	public function test_traffic_disruptions_page_content_includes_shortcode(): void {
+		$content = MRT_traffic_disruptions_page_content();
+		self::assertStringContainsString( '[museum_traffic_notices', $content );
 	}
 
 	public function test_render_html_shows_empty_message(): void {

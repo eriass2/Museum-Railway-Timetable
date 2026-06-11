@@ -57,6 +57,15 @@
   opacity: 0.85;
 }
 
+.mrt-traffic-notices__edit-link {
+  margin: 0.35rem 0 0;
+  font-size: var(--mrt-font-size-sm, 0.875rem);
+}
+
+.mrt-traffic-notices__edit-link a {
+  color: var(--mrt-color-brand-green, #296310);
+}
+
 .mrt-traffic-notices__empty {
   margin: 0;
   color: var(--mrt-color-muted, #555);

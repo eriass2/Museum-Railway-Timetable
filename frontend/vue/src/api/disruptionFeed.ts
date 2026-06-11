@@ -15,6 +15,11 @@ export type DisruptionFeedItem = {
   body: string;
   train_numbers: string[];
   service_ids: number[];
+  edit?: {
+    path: string;
+    label: string;
+    query?: Record<string, string>;
+  };
 };
 
 export type DisruptionFeedPayload = {

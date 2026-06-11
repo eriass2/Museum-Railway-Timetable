@@ -12,6 +12,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Option: post ID for the timetables index page */
 define( 'MRT_OPTION_TIMETABLES_INDEX_PAGE_ID', 'mrt_timetables_index_page_id' );
 
+/** Option: post ID for the public traffic disruptions page */
+define( 'MRT_OPTION_TRAFFIC_DISRUPTIONS_PAGE_ID', 'mrt_traffic_disruptions_page_id' );
+
 /** Post meta on mrt_timetable: linked public page ID */
 define( 'MRT_META_TIMETABLE_PAGE_ID', 'mrt_timetable_page_id' );
 
@@ -127,6 +130,28 @@ function MRT_timetables_index_page_content(): string {
 }
 
 /**
+ * Dedicated traffic disruptions page (UL feed, full horizon).
+ */
+function MRT_traffic_disruptions_page_content(): string {
+	$title = __( 'Trafikstörningar', 'museum-railway-timetable' );
+	return sprintf( '[museum_traffic_notices title="%s"]', esc_attr( $title ) );
+}
+
+/**
+ * Create or update the public traffic disruptions page.
+ *
+ * @return int|WP_Error
+ */
+function MRT_ensure_traffic_disruptions_public_page() {
+	return MRT_ensure_option_backed_page(
+		MRT_OPTION_TRAFFIC_DISRUPTIONS_PAGE_ID,
+		__( 'Trafikstörningar', 'museum-railway-timetable' ),
+		'MRT_traffic_disruptions_page_content',
+		'trafikstorningar'
+	);
+}
+
+/**
  * Single timetable page post content.
  */
 function MRT_timetable_single_page_content( int $timetable_id ): string {
@@ -227,6 +252,12 @@ function MRT_sync_timetable_public_pages() {
 		return $index;
 	}
 
+	$traffic_page = MRT_ensure_traffic_disruptions_public_page();
+	if ( is_wp_error( $traffic_page ) ) {
+		$errors[] = $traffic_page;
+		$traffic_page = 0;
+	}
+
 	$timetable_page_ids = array();
 	foreach ( MRT_get_published_timetables() as $timetable ) {
 		$result = MRT_ensure_timetable_public_page( $timetable );
@@ -240,6 +271,9 @@ function MRT_sync_timetable_public_pages() {
 	if ( function_exists( 'MRT_append_timetables_index_to_nav_menu' ) ) {
 		MRT_append_timetables_index_to_nav_menu( (int) $index );
 	}
+	if ( function_exists( 'MRT_append_traffic_disruptions_to_nav_menu' ) && ! is_wp_error( $traffic_page ) ) {
+		MRT_append_traffic_disruptions_to_nav_menu( (int) $traffic_page );
+	}
 
 	MRT_set_timetables_index_as_front_page( (int) $index );
 	if ( MRT_is_development_mode() ) {
@@ -247,9 +281,10 @@ function MRT_sync_timetable_public_pages() {
 	}
 
 	return array(
-		'index_page_id'       => (int) $index,
-		'timetable_page_ids'  => $timetable_page_ids,
-		'errors'              => $errors,
+		'index_page_id'                => (int) $index,
+		'traffic_disruptions_page_id'  => is_wp_error( $traffic_page ) ? 0 : (int) $traffic_page,
+		'timetable_page_ids'           => $timetable_page_ids,
+		'errors'                       => $errors,
 	);
 }
 
@@ -262,6 +297,12 @@ function MRT_clear_timetable_public_pages(): void {
 		wp_delete_post( $index_id, true );
 	}
 	delete_option( MRT_OPTION_TIMETABLES_INDEX_PAGE_ID );
+
+	$traffic_id = (int) get_option( MRT_OPTION_TRAFFIC_DISRUPTIONS_PAGE_ID, 0 );
+	if ( $traffic_id > 0 && get_post( $traffic_id ) ) {
+		wp_delete_post( $traffic_id, true );
+	}
+	delete_option( MRT_OPTION_TRAFFIC_DISRUPTIONS_PAGE_ID );
 
 	foreach ( MRT_get_published_timetables() as $timetable ) {
 		$page_id = MRT_timetable_public_page_id( (int) $timetable->ID );

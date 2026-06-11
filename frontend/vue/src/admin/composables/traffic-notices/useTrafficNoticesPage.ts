@@ -26,6 +26,7 @@ import { adminConfig } from '../../types';
 export function useTrafficNoticesPage() {
   const cfg = adminConfig();
   const messages = ref<PublicNoticeMessage[]>([]);
+  const feedRefreshKey = ref(0);
   const viewMode = ref<TrafficNoticesViewMode>('list');
   const draft = ref<PublicNoticeMessage | null>(null);
   const formSnapshot = ref('');
@@ -105,6 +106,7 @@ export function useTrafficNoticesPage() {
     }
     const saved = await saveTrafficNoticeMessages(renumberSortOrder(next));
     messages.value = sortMessagesByOrder(saved.messages);
+    feedRefreshKey.value += 1;
     showSaveNotice(adminStr(cfg, 'trafficNoticesSaved'));
   }
 
@@ -163,5 +165,6 @@ export function useTrafficNoticesPage() {
     saveDraft,
     removeDraft,
     moveRow,
+    feedRefreshKey,
   };
 }

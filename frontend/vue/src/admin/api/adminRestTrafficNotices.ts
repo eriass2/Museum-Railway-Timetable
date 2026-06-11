@@ -1,3 +1,4 @@
+import type { DisruptionFeedPayload } from '../../api/disruptionFeed';
 import { adminFetch } from './adminRestCore';
 
 export type PublicNoticeMessage = {
@@ -20,5 +21,13 @@ export function saveTrafficNoticeMessages(messages: PublicNoticeMessage[]) {
       method: 'PUT',
       body: JSON.stringify({ messages }),
     },
+  );
+}
+
+export function fetchTrafficNoticesFeedPreview(horizonDays = 90) {
+  return adminFetch<DisruptionFeedPayload>(
+    'traffic-notices/feed',
+    {},
+    { horizon_days: horizonDays },
   );
 }

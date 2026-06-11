@@ -159,4 +159,30 @@ final class RestTrafficNoticesTest extends TestCase {
 		self::assertInstanceOf( WP_Error::class, $result );
 		self::assertSame( 'mrt_notice_empty', $result->get_error_code() );
 	}
+
+	public function test_admin_feed_includes_edit_hints(): void {
+		update_option(
+			MRT_OPTION_PUBLIC_NOTICES,
+			array(
+				array(
+					'id'          => 'n1',
+					'text'        => 'Baninfo',
+					'enabled'     => true,
+					'active_from' => '2026-06-06',
+					'active_to'   => '2026-06-06',
+					'sort_order'  => 10,
+				),
+			),
+			false
+		);
+
+		$request = new WP_REST_Request( 'GET', '/museum-railway-timetable/v1/traffic-notices/feed' );
+		$request->set_param( 'date', '2026-06-06' );
+
+		$response = MRT_rest_traffic_notices_feed_get_handler( $request );
+		$data     = $response instanceof WP_REST_Response ? $response->get_data() : $response;
+
+		self::assertFalse( $data['is_empty'] );
+		self::assertSame( '/traffic-notices', $data['ongoing'][0]['edit']['path'] );
+	}
 }
