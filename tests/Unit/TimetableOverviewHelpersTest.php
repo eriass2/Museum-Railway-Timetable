@@ -234,6 +234,164 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertSame( '15.25', $rows[3]['cells'][1]['text'] );
 	}
 
+	public function test_branch_matches_junction_flow_for_outbound_and_inbound(): void {
+		$junction_id = 9;
+		$outbound    = array( 'stations' => array( $junction_id, 15 ) );
+		$inbound     = array( 'stations' => array( 15, $junction_id ) );
+
+		self::assertTrue( MRT_timetable_branch_matches_junction_flow( $outbound, $junction_id, 'outbound' ) );
+		self::assertFalse( MRT_timetable_branch_matches_junction_flow( $inbound, $junction_id, 'outbound' ) );
+		self::assertTrue( MRT_timetable_branch_matches_junction_flow( $inbound, $junction_id, 'inbound' ) );
+		self::assertFalse( MRT_timetable_branch_matches_junction_flow( $outbound, $junction_id, 'inbound' ) );
+	}
+
+	public function test_junction_bus_rows_for_station_skips_arrival_only_branch_on_outbound_rail(): void {
+		$junction_id = 9;
+		$fjallnora   = 15;
+		$linnes      = 16;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_number'     => 'B3',
+			'502|mrt_service_number'     => 'B7',
+			'503|mrt_service_number'     => 'B5',
+			'9|mrt_station_bus_suffix'   => '1',
+			'15|mrt_station_bus_suffix'  => '1',
+			'16|mrt_station_bus_suffix'  => '1',
+		);
+		$GLOBALS['mrt_test_posts'] = array(
+			15 => (object) array( 'ID' => 15, 'post_title' => 'Fjällnora' ),
+			16 => (object) array( 'ID' => 16, 'post_title' => 'Linnés Hammarby' ),
+		);
+		$rail_group = array(
+			'stations' => array( 1, $junction_id, 20 ),
+			'services' => array(
+				array(
+					'service'    => (object) array( 'ID' => 62 ),
+					'train_type' => (object) array( 'slug' => 'dieseltag' ),
+					'stop_times' => array(
+						$junction_id => array(
+							'arrival_time'   => '13:01',
+							'departure_time' => '13:01',
+						),
+					),
+				),
+			),
+		);
+		$paired_branches = array(
+			array(
+				'stations' => array( $junction_id, $fjallnora ),
+				'services' => array(
+					array(
+						'service'    => (object) array( 'ID' => 501 ),
+						'train_type' => (object) array( 'slug' => 'buss' ),
+						'stop_times' => array(
+							$junction_id => array( 'departure_time' => '13:40' ),
+							$fjallnora   => array( 'arrival_time' => '13:47' ),
+						),
+					),
+				),
+			),
+			array(
+				'stations' => array( $fjallnora, $junction_id ),
+				'services' => array(
+					array(
+						'service'    => (object) array( 'ID' => 502 ),
+						'train_type' => (object) array( 'slug' => 'buss' ),
+						'stop_times' => array(
+							$fjallnora   => array( 'departure_time' => '14:42' ),
+							$junction_id => array( 'arrival_time' => '14:49' ),
+						),
+					),
+				),
+			),
+		);
+		$info             = array( array( 'service_number' => '62' ) );
+		$display_columns  = array( array( 'primary_idx' => 0, 'continuation_idx' => null, 'split_station_id' => 0 ) );
+		$rows             = MRT_timetable_junction_bus_rows_for_station(
+			$info,
+			$rail_group,
+			$paired_branches,
+			$junction_id,
+			$display_columns
+		);
+
+		self::assertCount( 2, $rows );
+		self::assertSame( '13.40', $rows[0]['cells'][0]['text'] );
+		self::assertSame( 'B3', $rows[0]['cells'][0]['busServiceNumber'] );
+	}
+
+	public function test_junction_bus_rows_for_station_keeps_one_branch_when_wait_ties(): void {
+		$junction_id = 9;
+		$fjallnora   = 15;
+		$linnes      = 16;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_number'    => 'B1',
+			'503|mrt_service_number'    => 'B5',
+			'9|mrt_station_bus_suffix'  => '1',
+			'15|mrt_station_bus_suffix' => '1',
+			'16|mrt_station_bus_suffix' => '1',
+		);
+		$GLOBALS['mrt_test_posts'] = array(
+			15 => (object) array( 'ID' => 15, 'post_title' => 'Fjällnora' ),
+			16 => (object) array( 'ID' => 16, 'post_title' => 'Linnés Hammarby' ),
+		);
+		$rail_group = array(
+			'stations' => array( 1, $junction_id, 20 ),
+			'services' => array(
+				array(
+					'service'    => (object) array( 'ID' => 60 ),
+					'train_type' => (object) array( 'slug' => 'dieseltag' ),
+					'stop_times' => array(
+						$junction_id => array(
+							'arrival_time'   => '10:14',
+							'departure_time' => '10:14',
+						),
+					),
+				),
+			),
+		);
+		$paired_branches = array(
+			array(
+				'stations' => array( $junction_id, $fjallnora ),
+				'services' => array(
+					array(
+						'service'    => (object) array( 'ID' => 501 ),
+						'train_type' => (object) array( 'slug' => 'buss' ),
+						'stop_times' => array(
+							$junction_id => array( 'departure_time' => '10:53' ),
+							$fjallnora   => array( 'arrival_time' => '11:00' ),
+						),
+					),
+				),
+			),
+			array(
+				'stations' => array( $junction_id, $linnes ),
+				'services' => array(
+					array(
+						'service'    => (object) array( 'ID' => 503 ),
+						'train_type' => (object) array( 'slug' => 'buss' ),
+						'stop_times' => array(
+							$junction_id => array( 'departure_time' => '10:53' ),
+							$linnes      => array( 'arrival_time' => '11:00' ),
+						),
+					),
+				),
+			),
+		);
+		$info            = array( array( 'service_number' => '60' ) );
+		$display_columns = array( array( 'primary_idx' => 0, 'continuation_idx' => null, 'split_station_id' => 0 ) );
+		$rows            = MRT_timetable_junction_bus_rows_for_station(
+			$info,
+			$rail_group,
+			$paired_branches,
+			$junction_id,
+			$display_columns
+		);
+
+		self::assertCount( 2, $rows );
+		self::assertSame( 'B5', $rows[0]['cells'][0]['busServiceNumber'] );
+		self::assertSame( 'Till Linnés Hammarby*', $rows[1]['label'] );
+	}
+
 	/**
 	 * @return array<string, mixed>
 	 */

@@ -71,6 +71,7 @@ function MRT_timetable_collect_junction_bus_links(
 			'remote_label'   => $remote_label,
 			'inbound'        => $inbound,
 			'sort_time'      => MRT_timetable_bus_link_sort_time( $connection, $branch_group, $bus_data, $inbound ),
+			'wait_minutes'   => MRT_timetable_junction_bus_link_wait_minutes( $connection, $target['train_number'], $bus ),
 		);
 	}
 
@@ -260,11 +261,15 @@ function MRT_timetable_junction_bus_rows_for_station(
 	int $station_id,
 	array $display_columns
 ): array {
-	$links        = array();
-	$column_count = count( $display_columns );
+	$links          = array();
+	$column_count   = count( $display_columns );
+	$grid_direction = MRT_timetable_rail_grid_direction( $rail_group );
 
 	foreach ( $paired_branches as $branch_group ) {
 		if ( ! is_array( $branch_group ) ) {
+			continue;
+		}
+		if ( ! MRT_timetable_branch_matches_junction_flow( $branch_group, $station_id, $grid_direction ) ) {
 			continue;
 		}
 		$connection = MRT_build_rail_bus_connection_data( $rail_group, $branch_group );
@@ -277,10 +282,92 @@ function MRT_timetable_junction_bus_rows_for_station(
 	}
 
 	$rows = array();
-	foreach ( MRT_timetable_sort_junction_bus_links( $links ) as $link ) {
+	foreach ( MRT_timetable_sort_junction_bus_links( MRT_timetable_dedupe_junction_bus_links_by_column( $links ) ) as $link ) {
 		foreach ( MRT_timetable_junction_bus_row_pair_json( $link, $column_count ) as $row ) {
 			$rows[] = $row;
 		}
 	}
 	return $rows;
+}
+
+/**
+ * Outbound rail grids need buses that depart the junction; inbound grids need arrivals.
+ */
+function MRT_timetable_branch_matches_junction_flow(
+	array $branch_group,
+	int $junction_id,
+	string $grid_direction
+): bool {
+	$stations = array_values( array_map( 'intval', (array) ( $branch_group['stations'] ?? array() ) ) );
+	if ( $stations === array() || $junction_id <= 0 ) {
+		return false;
+	}
+	$start = $stations[0];
+	$end   = $stations[ count( $stations ) - 1 ];
+	if ( $grid_direction === 'inbound' ) {
+		return $end === $junction_id;
+	}
+	return $start === $junction_id;
+}
+
+/**
+ * @param array{service_number: string, time_display: string, destination: string} $bus
+ */
+function MRT_timetable_junction_bus_link_wait_minutes(
+	array $connection,
+	string $train_number,
+	array $bus
+): int {
+	foreach ( (array) ( $connection['train_to_bus'] ?? array() ) as $row ) {
+		if ( (string) ( $row['train']['service_number'] ?? '' ) !== $train_number ) {
+			continue;
+		}
+		$train_time = (string) ( $row['train']['time_display'] ?? '' );
+		$bus_time   = (string) ( $bus['time_display'] ?? '' );
+		if ( $train_time === '' || $bus_time === '' || $train_time === '—' || $bus_time === '—' ) {
+			return PHP_INT_MAX;
+		}
+		$wait = MRT_journey_transfer_wait_minutes( $train_time, $bus_time );
+		return $wait ?? PHP_INT_MAX;
+	}
+	return PHP_INT_MAX;
+}
+
+/**
+ * @param array<int, array<string, mixed>> $links
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_timetable_dedupe_junction_bus_links_by_column( array $links ): array {
+	$best = array();
+	foreach ( $links as $link ) {
+		$column_index = (int) ( $link['column_index'] ?? -1 );
+		if ( $column_index < 0 ) {
+			continue;
+		}
+		if (
+			! isset( $best[ $column_index ] )
+			|| MRT_timetable_junction_bus_link_precedes( $link, $best[ $column_index ] )
+		) {
+			$best[ $column_index ] = $link;
+		}
+	}
+	return array_values( $best );
+}
+
+/**
+ * @param array<string, mixed> $candidate
+ * @param array<string, mixed> $incumbent
+ */
+function MRT_timetable_junction_bus_link_precedes( array $candidate, array $incumbent ): bool {
+	$c_wait = (int) ( $candidate['wait_minutes'] ?? PHP_INT_MAX );
+	$i_wait = (int) ( $incumbent['wait_minutes'] ?? PHP_INT_MAX );
+	if ( $c_wait !== $i_wait ) {
+		return $c_wait < $i_wait;
+	}
+	$c_time = (string) ( $candidate['sort_time'] ?? '' );
+	$i_time = (string) ( $incumbent['sort_time'] ?? '' );
+	if ( $c_time !== '' && $i_time !== '' && $c_time !== $i_time ) {
+		return strcmp( $c_time, $i_time ) < 0;
+	}
+	return true;
 }
