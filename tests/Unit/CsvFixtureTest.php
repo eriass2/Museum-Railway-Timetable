@@ -87,6 +87,38 @@ final class CsvFixtureTest extends TestCase {
 				$green_code . ' vs ' . $row['service_code']
 			);
 			self::assertGreaterThan( 0, $this->fixture_stoptime_count( (string) $row['service_code'] ) );
+			self::assertSame(
+				$this->fixture_stoptime_rows( $green_code ),
+				$this->fixture_stoptime_rows( (string) $row['service_code'] ),
+				$green_code . ' vs ' . $row['service_code']
+			);
+		}
+	}
+
+	public function test_green_and_yellow_rail_stoptimes_never_render_pipe(): void {
+		foreach ( $this->fixture_files()['stoptimes.csv'] ?? array() as $row ) {
+			$code = (string) ( $row['service_code'] ?? '' );
+			if ( str_contains( $code, '-bus-' ) ) {
+				continue;
+			}
+			if ( ! str_starts_with( $code, 'green-' )
+				&& ! str_starts_with( $code, 'green-vard-' )
+				&& ! str_starts_with( $code, 'yellow-' ) ) {
+				continue;
+			}
+			$modes = array(
+				$row['ank_pickup_mode'] ?? 'none',
+				$row['ank_dropoff_mode'] ?? 'none',
+				$row['avg_pickup_mode'] ?? 'none',
+				$row['avg_dropoff_mode'] ?? 'none',
+			);
+			$arr = (string) ( $row['arrival_time'] ?? '' );
+			$dep = (string) ( $row['departure_time'] ?? '' );
+			$all_none = array_filter( $modes, static fn( $m ) => $m !== 'none' ) === array();
+			self::assertFalse(
+				$all_none && $arr === '' && $dep === '',
+				$code . ' @ ' . ( $row['station_code'] ?? '' ) . ' would display | in Turvy'
+			);
 		}
 	}
 
@@ -208,12 +240,22 @@ final class CsvFixtureTest extends TestCase {
 	}
 
 	private function fixture_stoptime_count( string $service_code ): int {
-		$count = 0;
+		return count( $this->fixture_stoptime_rows( $service_code ) );
+	}
+
+	/**
+	 * @return array<int, array<string, string>>
+	 */
+	private function fixture_stoptime_rows( string $service_code ): array {
+		$rows = array();
 		foreach ( $this->fixture_files()['stoptimes.csv'] ?? array() as $row ) {
-			if ( ( $row['service_code'] ?? '' ) === $service_code ) {
-				++$count;
+			if ( ( $row['service_code'] ?? '' ) !== $service_code ) {
+				continue;
 			}
+			$copy = $row;
+			unset( $copy['service_code'], $copy['_file'], $copy['_line'] );
+			$rows[] = $copy;
 		}
-		return $count;
+		return $rows;
 	}
 }

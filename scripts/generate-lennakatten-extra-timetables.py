@@ -15,6 +15,7 @@ from lennakatten_anslag_tables import (
     RED_IN_TIMES,
     RED_OUT_TIMES,
 )
+from lennakatten_green_vard import clone_green_rail_to_vard
 from lennakatten_symbols import FAR_IN, STOPTIMES_CSV_HEADER, UP_OUT, stoptime_csv_row, symbol_to_flags, symbols_for_train
 
 ROOT = Path(__file__).resolve().parents[1] / "testdata" / "fixtures" / "lennakatten"
@@ -101,47 +102,6 @@ def build_rail_block(prefix: str, timetable: str, out_map: dict, in_map: dict, t
         )
         train_types.append(f"{code},{types[num]}")
     return services, stoptimes, train_types
-
-
-def clone_green_rail_to_vard(
-    services: list[str],
-    stoptimes: list[str],
-    train_types: list[str],
-) -> tuple[list[str], list[str], list[str]]:
-    """Duplicate green rail services for green-vard (Wed/Thu summer)."""
-    new_svc: list[str] = []
-    new_st: list[str] = []
-    new_tt: list[str] = []
-    code_map: dict[str, str] = {}
-
-    for line in services:
-        if not line.strip() or line.startswith("service_code"):
-            continue
-        parts = line.split(",")
-        code, timetable = parts[0], parts[1]
-        if timetable != "green" or "-bus-" in code:
-            continue
-        new_code = "green-vard-" + code.removeprefix("green-")
-        code_map[code] = new_code
-        parts[0] = new_code
-        parts[1] = "green-vard"
-        new_svc.append(",".join(parts))
-
-    for line in stoptimes:
-        if not line.strip() or line.startswith("service_code"):
-            continue
-        code, rest = line.split(",", 1)
-        if code in code_map:
-            new_st.append(f"{code_map[code]},{rest}")
-
-    for line in train_types:
-        if not line.strip() or line.startswith("service_code"):
-            continue
-        code, train_type = line.split(",", 1)
-        if code in code_map:
-            new_tt.append(f"{code_map[code]},{train_type}")
-
-    return new_svc, new_st, new_tt
 
 
 def main() -> None:

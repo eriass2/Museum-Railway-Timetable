@@ -13,6 +13,7 @@ from lennakatten_anslag_tables import (
     service_train_type_rows,
 )
 from lennakatten_b_pdf import b_rail_service_stops, b_stop_to_csv_row, parse_b_pdf
+from lennakatten_green_vard import refresh_green_vard_lines
 from lennakatten_symbols import STOPTIMES_CSV_HEADER, stoptime_csv_row
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -72,41 +73,36 @@ def main() -> int:
     stoptimes_path = FIXTURE / "stoptimes.csv"
     train_types_path = FIXTURE / "service_train_types.csv"
 
-    services_path.write_text(
-        "\n".join(
-            replace_synced_lines(
-                services_path.read_text(encoding="utf-8-sig").splitlines(),
-                service_csv_rows(),
-            )
-        )
-        + "\n",
-        encoding="utf-8",
+    services_lines = replace_synced_lines(
+        services_path.read_text(encoding="utf-8-sig").splitlines(),
+        service_csv_rows(),
     )
-    stoptimes_path.write_text(
-        "\n".join(
-            replace_synced_lines(
-                stoptimes_path.read_text(encoding="utf-8-sig").splitlines(),
-                stoptime_rows,
-                header=STOPTIMES_CSV_HEADER,
-            )
-        )
-        + "\n",
-        encoding="utf-8",
+    stoptimes_lines = replace_synced_lines(
+        stoptimes_path.read_text(encoding="utf-8-sig").splitlines(),
+        stoptime_rows,
+        header=STOPTIMES_CSV_HEADER,
     )
-    train_types_path.write_text(
-        "\n".join(
-            replace_synced_lines(
-                train_types_path.read_text(encoding="utf-8-sig").splitlines(),
-                service_train_type_rows(),
-            )
-        )
-        + "\n",
-        encoding="utf-8",
+    train_types_lines = replace_synced_lines(
+        train_types_path.read_text(encoding="utf-8-sig").splitlines(),
+        service_train_type_rows(),
     )
+    services_lines, stoptimes_lines, train_types_lines = refresh_green_vard_lines(
+        services_lines,
+        stoptimes_lines,
+        train_types_lines,
+    )
+
+    services_path.write_text("\n".join(services_lines) + "\n", encoding="utf-8")
+    stoptimes_path.write_text("\n".join(stoptimes_lines) + "\n", encoding="utf-8")
+    train_types_path.write_text("\n".join(train_types_lines) + "\n", encoding="utf-8")
 
     rail = sum(1 for c, _t, _r, _s in service_definitions() if "-bus-" not in c)
     bus = sum(1 for c, _t, _r, _s in service_definitions() if "-bus-" in c)
-    print(f"Synced {rail} rail + {bus} bus services in {FIXTURE.name}")
+    vard = sum(1 for line in services_lines if line.startswith("green-vard-"))
+    print(
+        f"Synced {rail} rail + {bus} bus services in {FIXTURE.name}; "
+        f"refreshed {vard} green-vard clones"
+    )
     return 0
 
 
