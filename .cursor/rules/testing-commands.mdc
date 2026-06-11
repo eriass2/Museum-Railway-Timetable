@@ -9,19 +9,20 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 
 **Never** use `vendor/bin/phpunit` or `vendor\bin\phpunit` in shell commands.
 
-**Never** run `docker compose … run composer vue:check` — the `composer` image has no npm. Use the `vue` service or `scripts/vue-check.ps1`.
+**Never** run `docker compose … run composer vue:check` — the `composer` image has no npm. Use `.\scripts\vue-check.ps1` or the `vue` service via scripts.
+
+**Prefer** `.\scripts\*.ps1` over raw `docker compose` — wrappers use `--no-deps`, conditional `npm ci`, and single-container check/lint. See `docs/DOCKER_SCRIPTS_PLAN.md`.
 
 ## PHP
 
 | Context | Command |
 |---------|---------|
-| Full PHP gate (Windows) | `.\scripts\check.ps1` — validate + PHPStan + PHPUnit + PHPCS in Docker |
+| Full PHP gate (Windows) | `.\scripts\check.ps1` — validate + PHPStan + PHPUnit + PHPCS in Docker (one container) |
 | PHP + Vue gate | `.\scripts\check.ps1 -Vue` |
 | PHPUnit only (Windows) | `.\scripts\test.ps1` — Docker by default |
 | Single test file | `.\scripts\test.ps1 tests/Unit/SomeTest.php` |
 | Host PHP 8.2+ (optional) | `.\scripts\test.ps1 -Local` |
-| Docker (explicit) | `docker compose --profile tools run --rm composer check` |
-| PHPCS only | `docker compose --profile tools run --rm composer phpcs` |
+| PHPStan + PHPCS only | `.\scripts\lint.ps1` |
 | PHP coverage (exploratory) | `.\scripts\coverage.ps1` — PCOV in Docker; see `docs/TEST_COVERAGE.md` |
 
 ## Vue
@@ -30,9 +31,7 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 |---------|---------|
 | Full Vue gate (Windows) | `.\scripts\vue-check.ps1` — typecheck + Vitest + build + verify in Docker |
 | Host Node (optional) | `.\scripts\vue-check.ps1 -Local` |
-| Docker (explicit) | `docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"` |
-| Build only (Docker) | `docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"` |
 
 `scripts/test.ps1`, `scripts/check.ps1`, and `scripts/vue-check.ps1` use Docker by default. Same codebase via volume mount.
 
-See `docs/PHP_INSTALL_WINDOWS.md` and `docs/DEVELOPER.md` for humans.
+See `docs/PHP_INSTALL_WINDOWS.md`, `docs/DEVELOPER.md`, and `docs/DOCKER_SCRIPTS_PLAN.md` for humans.

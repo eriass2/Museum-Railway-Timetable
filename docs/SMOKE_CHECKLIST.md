@@ -33,7 +33,7 @@ Login: `admin` / `admin`
 ## Kommandon
 
 ```powershell
-docker compose up -d --build
+.\scripts\docker-dev-reset.ps1   # eller: docker compose up -d
 .\scripts\check.ps1 -SkipPhpcs
 .\scripts\vue-check.ps1
 ```

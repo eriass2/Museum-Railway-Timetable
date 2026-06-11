@@ -15,7 +15,7 @@ Docker dev bygger Vue automatiskt via `docker-dev-reset.ps1` (service `vue`).
 
 Publik CSS laddas från Vite-bundeln (`frontend/vue/src/styles/mrt-public.css` → `assets/dist/vue/`), inte från separata WP-handles för `frontend-public.css`.
 
-Se [VUE_FRONTEND.md](VUE_FRONTEND.md). Bygg manuellt: `composer vue:build` eller `docker compose --profile tools run --rm vue`.
+Se [VUE_FRONTEND.md](VUE_FRONTEND.md). Bygg manuellt: `composer vue:build` eller `.\scripts\vue-check.ps1` / `Invoke-MrtDockerVue` via dev-reset.
 
 Lokal kvalitetskontroll utan WordPress:
 

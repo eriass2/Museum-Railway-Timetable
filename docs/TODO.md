@@ -62,3 +62,16 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Admin — utökad datakvalitet (dashboard) | 2026-06-11 | `dashboard-warnings.php`, `dashboard-warnings-quality.php` |
 | Reseplanerare J14 — holistisk cache (R1–R4, prefetch, warm) | 2026-06-11 | [WIZARD_CACHE_REFACTOR.md](WIZARD_CACHE_REFACTOR.md), `journey-cache.php`, `resourceCache.ts`, `scripts/warm-journey-cache.php`, commits `fb52993`, `8f3228e` |
 | Reseplanerare — enhetlig stepper (pill-storlek/typografi) | 2026-06-11 | `wizard-steps.css`, `MrtStepProgress.vue`, commit `6cf1c64` |
+| Docker/skript — Fas 0 (optimering + refaktor) | 2026-06-11 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md), commit `b3934a4` |
+
+---
+
+## Docker och utvecklarverktyg (Fas 1–3)
+
+**Plan:** [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md)
+
+| ID | Punkt | Fas |
+|----|-------|-----|
+| D1–D7 | Docs, bash-paritet, timings, smoke-URL:er | 1 |
+| P1–P7 | Volumes, tools-image, WP-CLI exec, tools-shell | 2 |
+| S1–S5 | En CLI, CI-strategi, devcontainer | 3 |

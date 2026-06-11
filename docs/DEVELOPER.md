@@ -57,9 +57,10 @@ PowerShell- och bash-script delar helpers i `scripts/lib/` så Docker-, Vue- och
 | `Mrt.Plugin.ps1` | Plugin-slug, fil-lista, kopiera/synka |
 | `mrt-docker.sh` | Source från `*.sh` — samma byggblock för bash/CI |
 
-**Full kommandotabell:** [scripts/README.md](../scripts/README.md)
+**Full kommandotabell:** [scripts/README.md](../scripts/README.md)  
+**Roadmap (Fas 0–3):** [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md)
 
-På Windows: föredra `.\scripts\*.ps1` (Docker by default). Bash-varianter (`vue-check.sh`, `lint.sh`, `docker-dev-reset.sh`) använder samma lib.
+På Windows: föredra `.\scripts\*.ps1` (Docker by default). Kör **skripten** — undvik att kopiera rå `docker compose …`-strängar från äldre docs (skripten hanterar `--no-deps`, villkorlig `npm ci` m.m.).
 
 ---
 
@@ -78,29 +79,36 @@ composer check
 
 Använd Docker när du behöver klicka i admin, prova shortcodes eller testa dataflöden i en riktig WordPress-installation:
 
-```sh
-docker compose up -d --build
+```powershell
+.\scripts\docker-dev-reset.ps1
+# eller bara starta stacken:
+docker compose up -d
+# efter ändring i Dockerfile:
+.\scripts\docker-dev-reset.ps1 -Build
 ```
 
 - Webbplats: <http://localhost:8080>
 - Admin: <http://localhost:8080/wp-admin>
 - Login: `admin` / `admin`
 
-Kör Composer-kommandon i Docker om datorn saknar lokal PHP/Composer:
-
-```sh
-docker compose --profile tools run --rm composer install
-docker compose --profile tools run --rm composer check
-```
-
-Vue (typecheck, Vitest, build) körs i **`vue`-containern**:
+Windows — PHP/Vue quality gates (Docker, optimerade wrappers):
 
 ```powershell
-.\scripts\vue-check.ps1
-# Linux/WSL: bash scripts/vue-check.sh
+.\scripts\check.ps1          # validate + PHPStan + PHPUnit + PHPCS (en container)
+.\scripts\check.ps1 -Vue     # + Vue
+.\scripts\test.ps1             # PHPUnit
+.\scripts\vue-check.ps1        # Vue typecheck + Vitest + build
+.\scripts\lint.ps1             # PHPStan + PHPCS
 ```
 
-PHP + Vue: `.\scripts\check.ps1 -Vue`
+Om datorn saknar lokal PHP/Composer och du **måste** köra manuellt i Docker:
+
+```sh
+docker compose --profile tools run --rm --no-deps composer install
+docker compose --profile tools run --rm --no-deps composer check:all
+```
+
+Vue körs i **`vue`-containern** — använd `.\scripts\vue-check.ps1`, inte `composer vue:check` i `composer`-imaget (saknar npm).
 
 Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
 
@@ -128,7 +136,7 @@ Efter ändringar i import, rutter eller demosidor – ett kommando för agent/ut
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1
 ```
 
-`-SkipCompose` om Docker redan kör. Bygger Vue och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md). Linux: `./scripts/docker-dev-reset.sh`.
+`-SkipCompose` om Docker redan kör. `-Build` om `Dockerfile` ändrats (annars `up -d` utan rebuild). Bygger Vue och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md). Linux: `./scripts/docker-dev-reset.sh`.
 
 ### Automatiserad Docker-smoke
 
@@ -162,7 +170,7 @@ CI kör `composer vue:check`, isolerade Vue-E2E och `scripts/ci-e2e-wp.sh` på p
 
 ### Manuell smoke-checklista i WordPress
 
-Kör detta efter `docker compose up -d --build` när ändringen påverkar admin, shortcodes eller dataflöden:
+Kör detta efter `.\scripts\docker-dev-reset.ps1` (eller `docker compose up -d`) när ändringen påverkar admin, shortcodes eller dataflöden:
 
 - Logga in på <http://localhost:8080/wp-admin> med `admin` / `admin`.
 - Kontrollera att menyn **Railway Timetable** syns och att pluginet är aktivt.
@@ -181,7 +189,7 @@ Kör detta efter `docker compose up -d --build` när ändringen påverkar admin,
 - [ ] Manuell smoke-checklista i WordPress är genomförd vid UI/dataflödesändringar
 - [ ] [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort rökning vid UI-ändringar
 - [ ] Översättningar: kör `powershell -File .\scripts\make-i18n.ps1` efter nya `__()`-strängar; fyll i tomma `msgstr` i `languages/museum-railway-timetable-sv_SE.po` vid behov
-- [ ] `docker compose up -d --build` eller `.\local\deploy.ps1` om du testar i full WordPress
+- [ ] `.\scripts\docker-dev-reset.ps1` (eller `.\local\deploy.ps1`) om du testar i full WordPress
 - [ ] **Live:** `powershell -File .\scripts\build-release.ps1` → `release/museum-railway-timetable.zip` (Vue-bygg + validate + pack; ladda upp via WP Plugins → Upload). Se `INSTALL.txt` i zip:en (permalänkar, CSV-import, felsökning).
 
 ---

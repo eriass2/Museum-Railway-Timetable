@@ -2,6 +2,8 @@
 
 Entry-point scripts for quality gates, Docker dev, deploy, and fixtures. Shared logic lives in **`lib/`** so wrappers stay thin.
 
+**Roadmap:** [docs/DOCKER_SCRIPTS_PLAN.md](../docs/DOCKER_SCRIPTS_PLAN.md)
+
 ## Shared libraries
 
 | File | Platform | Purpose |
@@ -23,16 +25,25 @@ Bash scripts source the shell lib:
 . "$(dirname "$0")/lib/mrt-docker.sh"
 ```
 
+### Docker helpers (automatic)
+
+Prefer **`.\scripts\*.ps1`** over raw `docker compose` — wrappers apply:
+
+- `--no-deps` on tools services (`composer`, `php-test`, `vue`)
+- Conditional `npm ci` when `node_modules` matches `package-lock.json`
+- Single container for `check.ps1` (`composer check:all`) and `lint.ps1` (`composer lint`)
+- HTTP poll + one WP-CLI check when waiting for WordPress
+
 ---
 
 ## Quality gates
 
 | Goal | Windows (recommended) | Linux/macOS / WSL |
 |------|----------------------|-------------------|
-| PHP validate + PHPStan + PHPUnit | `.\scripts\check.ps1` | `composer check` (host PHP) |
-| PHP + PHPCS | `.\scripts\check.ps1` (includes phpcs) | `.\scripts\lint.ps1` or `bash scripts/lint.sh` |
+| PHP validate + PHPStan + PHPUnit + PHPCS | `.\scripts\check.ps1` | `composer check` + `composer phpcs` |
+| PHP without PHPCS | `.\scripts\check.ps1 -SkipPhpcs` | `composer check` |
 | PHPStan + PHPCS only | `.\scripts\lint.ps1` | `bash scripts/lint.sh` (Docker default) |
-| PHPUnit (Docker default) | `.\scripts\test.ps1` | — |
+| PHPUnit (Docker default) | `.\scripts\test.ps1` | `composer test` |
 | PHPUnit (host PHP 8.2+) | `.\scripts\test.ps1 -Local` | `composer test` |
 | Vue typecheck + Vitest + build | `.\scripts\vue-check.ps1` | `bash scripts/vue-check.sh` |
 | Vue locally | `.\scripts\vue-check.ps1 -Local` | `bash scripts/vue-check.sh --local` |
@@ -48,9 +59,11 @@ Bash scripts source the shell lib:
 
 | Goal | Command |
 |------|---------|
-| Start stack | `docker compose up -d --build` |
-| Full dev reset (clear + import + menu) | `.\scripts\docker-dev-reset.ps1` or `./scripts/docker-dev-reset.sh` |
+| Full dev reset (stack + import + menu) | `.\scripts\docker-dev-reset.ps1` or `./scripts/docker-dev-reset.sh` |
+| Dev reset + rebuild WordPress image | `.\scripts\docker-dev-reset.ps1 -Build` |
 | Dev reset (stack already running) | `.\scripts\docker-dev-reset.ps1 -SkipCompose` |
+| Start stack only | `docker compose up -d` |
+| Rebuild after Dockerfile change | `docker compose up -d --build` |
 | Smoke test (import + HTTP checks, no clear) | `.\scripts\docker-smoke.ps1` |
 | WordPress + Playwright E2E | `bash scripts/ci-e2e-wp.sh` |
 
@@ -84,5 +97,6 @@ Config for live deploy: `local/live-deploy.config.json` (see `local/live-deploy.
 ## See also
 
 - [docs/DEVELOPER.md](../docs/DEVELOPER.md) — full developer guide
+- [docs/DOCKER_SCRIPTS_PLAN.md](../docs/DOCKER_SCRIPTS_PLAN.md) — optimization roadmap
 - [docs/SMOKE_CHECKLIST.md](../docs/SMOKE_CHECKLIST.md) — manual WordPress smoke
 - `.cursor/rules/testing-commands.mdc` — agent test commands (Windows/Docker)

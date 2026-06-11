@@ -39,12 +39,11 @@ Docker (Windows rekommenderat — samma Node 22 som CI):
 
 ```powershell
 .\scripts\vue-check.ps1
+# Linux/WSL:
+bash scripts/vue-check.sh
 ```
 
-```bash
-docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"
-docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"
-```
+Skripten kör `npm ci` endast om `node_modules` saknas eller `package-lock.json` ändrats. Undvik manuell `docker compose … npm ci` — se [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md).
 
 **Kör inte** `docker compose … run composer vue:check` — `composer`-imaget saknar npm.
 

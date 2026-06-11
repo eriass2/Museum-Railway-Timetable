@@ -31,6 +31,7 @@ Tågtypsikoner: `assets/icons/train-types/`.
 | [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | Trafikmeddelanden-shortcode v1 (generella + dagens avvikelser) |
 | [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) | Trafikstörningar v2 — UL-referens, Jesper J11, gap-analys |
 | [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md) | Reseplanerare – prestanda (fas 1–4) |
+| [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) | Docker/skript — optimeringar och roadmap (Fas 0–3) |
 
 ## Feedback / QA
 

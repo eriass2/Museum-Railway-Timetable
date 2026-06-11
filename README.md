@@ -42,12 +42,14 @@ Admin workflow (create routes, timetables, trips): **[docs/ADMIN_WORKFLOW.md](do
 
 **Developers:** See **[docs/DEVELOPER.md](docs/DEVELOPER.md)** for Docker, commands, CI and deploy checklist. Documentation index: **[docs/README.md](docs/README.md)**.
 
-Quick start:
+Quick start (Windows):
 
-```sh
-docker compose up -d --build   # http://localhost:8080 (admin / admin)
-.\scripts\check.ps1 -Vue       # PHP + Vue gate (Windows)
+```powershell
+.\scripts\docker-dev-reset.ps1   # Docker + import — http://localhost:8080 (admin / admin)
+.\scripts\check.ps1 -Vue           # PHP + Vue quality gate
 ```
+
+Docker/skript roadmap: **[docs/DOCKER_SCRIPTS_PLAN.md](docs/DOCKER_SCRIPTS_PLAN.md)**.
 
 Contributing: [docs/DEVELOPER.md](docs/DEVELOPER.md#bidra). Coding standards: [docs/REBUILD_RULES.md](docs/REBUILD_RULES.md), [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md).
 
