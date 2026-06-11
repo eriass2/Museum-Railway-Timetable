@@ -27,6 +27,7 @@ function MRT_default_plugin_settings(): array {
 		'max_transfer_minutes'               => 120,
 		'max_transfers'                      => 2,
 		'afternoon_return_threshold_minutes' => 900,
+		'ticket_copy_notes'                  => array(),
 	);
 }
 
@@ -140,6 +141,7 @@ function MRT_sanitize_plugin_settings( $input ): array {
 		'afternoon_return_threshold_minutes' => MRT_sanitize_plugin_settings_afternoon_threshold(
 			$input['afternoon_return_threshold_minutes'] ?? $current['afternoon_return_threshold_minutes']
 		),
+		'ticket_copy_notes'                  => MRT_sanitize_plugin_settings_ticket_notes( $input, $current ),
 	);
 }
 
@@ -170,4 +172,19 @@ function MRT_sanitize_plugin_settings_max_transfers( $value ): int {
  */
 function MRT_sanitize_plugin_settings_afternoon_threshold( $value ): int {
 	return max( 0, min( 1439, (int) $value ) );
+}
+
+/**
+ * @param array<string, mixed> $input   Raw settings input.
+ * @param array<string, mixed> $current Current stored settings.
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_sanitize_plugin_settings_ticket_notes( array $input, array $current ): array {
+	if ( ! function_exists( 'MRT_sanitize_ticket_copy_notes' ) ) {
+		require_once MRT_PATH . 'inc/domain/pricing/ticket-copy.php';
+	}
+	if ( array_key_exists( 'ticket_copy_notes', $input ) ) {
+		return MRT_sanitize_ticket_copy_notes( $input['ticket_copy_notes'] );
+	}
+	return MRT_get_ticket_copy_notes();
 }

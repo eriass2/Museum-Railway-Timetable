@@ -92,17 +92,34 @@ function buildDayPriceRows(
   })).filter((row) => row.value && row.value !== '—');
 }
 
-function buildPriceSectionNote(
+function buildPriceSectionNotes(
   priceData: TripPriceData,
   priceLabels: PriceTableLabels,
   priceCfg: PriceCfg,
 ): string | undefined {
-  const main = priceData.isAfternoonReturn ? priceCfg.priceAfternoonNote : priceLabels.note;
-  const senior = priceLabels.seniorNote?.trim() ?? '';
-  if (main && senior) {
-    return `${main}\n${senior}`;
+  const lines: string[] = [];
+  const zone = priceLabels.note.trim();
+  if (zone) {
+    lines.push(zone);
   }
-  return main || senior || undefined;
+  const senior = priceLabels.seniorNote?.trim() ?? '';
+  if (senior) {
+    lines.push(senior);
+  }
+  const purchase = priceLabels.stationPurchaseNote?.trim() ?? '';
+  if (purchase) {
+    lines.push(purchase);
+  }
+  for (const footnote of priceLabels.footnotes ?? []) {
+    const text = footnote.trim();
+    if (text) {
+      lines.push(text);
+    }
+  }
+  if (priceData.isAfternoonReturn && priceCfg.priceAfternoonNote) {
+    lines.push(priceCfg.priceAfternoonNote);
+  }
+  return lines.length > 0 ? lines.join('\n') : undefined;
 }
 
 /** Plain-text/PDF input from wizard store + loaded prices. */
@@ -132,7 +149,7 @@ export function buildTripSummaryInput(params: BuildTripSummaryInputParams): Trip
           heading: cfgStr(cfg, 'summaryPricesHeading', 'Priser'),
           ticketTypeLabel,
           rows: buildPriceRows(priceData, priceLabels, priceCfg),
-          note: buildPriceSectionNote(priceData, priceLabels, priceCfg),
+          note: buildPriceSectionNotes(priceData, priceLabels, priceCfg),
           dayTicketHeading: dayPrices
             ? priceCfg.priceDayTitle || priceLabels.tickets.day || 'Heldagsbiljett'
             : undefined,

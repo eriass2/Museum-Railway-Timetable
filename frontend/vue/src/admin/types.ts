@@ -196,6 +196,7 @@ export type StationRow = {
   lng: string;
   display_order: number;
   price_zones: number[];
+  ticket_purchase_info?: string;
   train_change_map?: TrainChangeMap;
 };
 

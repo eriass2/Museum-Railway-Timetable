@@ -35,6 +35,7 @@ describe('adminPricePreview', () => {
     },
     zones: [1, 2],
     zone_cap: 2,
+    ticket_copy_notes: [],
     afternoon_return: {
       adult: 160,
       child_4_15: 60,

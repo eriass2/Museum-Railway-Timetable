@@ -54,6 +54,7 @@ export type MonthVueConfig = MrtRestConfig & {
   initialDate?: string;
 };
 
+import type { TicketCopyNote } from '../shared/ticketCopy';
 import type { TimetableOverviewPayload } from '../types/timetableOverview';
 
 export type OverviewVueConfig = MrtRestConfig & {
@@ -78,6 +79,8 @@ export type WizardVueConfig = MrtRestConfig & {
   cacheGeneration?: number;
   stations?: WizardStation[];
   ticketUrl?: string;
+  ticketCopyNotes?: TicketCopyNote[];
+  ticketPurchaseByStation?: Record<string, string>;
   timetableId?: number;
   /** Optional URL to a dedicated timetable page (external link on route step). */
   timetablePageUrl?: string;

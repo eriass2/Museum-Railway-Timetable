@@ -141,6 +141,9 @@ export type WizardCfg = Partial<Record<WizardCfgStringKey, string>> & {
   priceMatrixByZone?: PriceMatrixByZone;
   priceTickets?: L10nMap;
   priceCategories?: L10nMap;
+  priceDayTitle?: string;
+  priceAfternoonReturnLabel?: string;
+  priceAfternoonNote?: string;
   trainTypeIcons?: L10nMap;
   trainTypeSlugIcons?: L10nMap;
   debugPresets?: Record<string, DebugPreset>;

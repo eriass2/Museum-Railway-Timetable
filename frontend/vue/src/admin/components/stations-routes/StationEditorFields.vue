@@ -94,6 +94,19 @@ const cfg = adminConfig();
       </span>
     </p>
     <p>
+      <label :for="`${idPrefix}-ticket-purchase`">
+        {{ adminStr(cfg, 'stationsTicketPurchaseLabel', 'Biljettköp (reseplaneraren)') }}
+      </label>
+      <span class="description">{{ adminStr(cfg, 'stationsTicketPurchaseHint') }}</span>
+      <textarea
+        :id="`${idPrefix}-ticket-purchase`"
+        v-model="station.ticket_purchase_info"
+        class="large-text"
+        rows="3"
+        :placeholder="adminStr(cfg, 'stationsTicketPurchasePlaceholder')"
+      />
+    </p>
+    <p>
       <label :for="`${idPrefix}-order`">{{ adminStr(cfg, 'stationsColOrder') }}</label>
       <input
         :id="`${idPrefix}-order`"

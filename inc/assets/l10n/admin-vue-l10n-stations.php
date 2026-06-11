@@ -147,5 +147,14 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsZonesHelpLink'      => __( 'Läs om priszoner', 'museum-railway-timetable' ),
 		'stationsFilterMissingZones' => __( 'Visa bara stationer utan priszon', 'museum-railway-timetable' ),
 		'stationsMissingZoneBadge'   => __( 'Saknar priszon', 'museum-railway-timetable' ),
+		'stationsTicketPurchaseLabel' => __( 'Biljettköp (reseplaneraren)', 'museum-railway-timetable' ),
+		'stationsTicketPurchaseHint'  => __(
+			'Text under priserna när resan börjar här. Lämna tom för standardtext enligt stationskod (Uppsala Östra, Marielund, Almunge m.fl.).',
+			'museum-railway-timetable'
+		),
+		'stationsTicketPurchasePlaceholder' => __(
+			'T.ex. var och hur biljett köps vid denna station.',
+			'museum-railway-timetable'
+		),
 	);
 }

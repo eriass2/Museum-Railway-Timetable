@@ -126,5 +126,17 @@ function MRT_admin_vue_l10n_prices(): array {
 			'Zon %1$s och alla priser i den kolumnen tas bort.',
 			'museum-railway-timetable'
 		),
+		'pricesTicketCopyHeading'    => __( 'Biljettcopy (fotnoter)', 'museum-railway-timetable' ),
+		'pricesTicketCopyHint'       => __(
+			'Fotnoter under priserna i reseplaneraren. Zontext och pensionär hanteras separat. Stationsspecifik köpinfo redigeras under Stationer.',
+			'museum-railway-timetable'
+		),
+		'pricesTicketCopyCondCol'    => __( 'Villkor', 'museum-railway-timetable' ),
+		'pricesTicketCopyTextCol'    => __( 'Text', 'museum-railway-timetable' ),
+		'pricesTicketCopyEnabledCol' => __( 'Aktiv', 'museum-railway-timetable' ),
+		'pricesTicketCopyCondAlways' => __( 'Alltid', 'museum-railway-timetable' ),
+		'pricesTicketCopyCondAfternoon' => __( 'Eftermiddagsbiljett', 'museum-railway-timetable' ),
+		'pricesTicketCopyCondDay'    => __( 'Heldagsbiljett visas', 'museum-railway-timetable' ),
+		'pricesTicketCopyAdd'        => __( 'Lägg till fotnot', 'museum-railway-timetable' ),
 	);
 }

@@ -161,6 +161,12 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 			? MRT_journey_cache_generation()
 			: 1,
 		'ticketUrl'    => $ticket_url,
+		'ticketCopyNotes' => function_exists( 'MRT_get_ticket_copy_notes' )
+			? MRT_get_ticket_copy_notes()
+			: array(),
+		'ticketPurchaseByStation' => function_exists( 'MRT_ticket_purchase_info_map' )
+			? MRT_ticket_purchase_info_map()
+			: array(),
 		'betaBanner'   => $beta_banner,
 		'feedbackEnabled' => function_exists( 'MRT_plugin_wizard_feedback_enabled' )
 			? MRT_plugin_wizard_feedback_enabled()

@@ -6,6 +6,7 @@ import type { PricesPayload, SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import PricesAfternoonPanel from '../components/prices/PricesAfternoonPanel.vue';
 import PricesPreview from '../components/prices/PricesPreview.vue';
+import PricesTicketCopyPanel from '../components/prices/PricesTicketCopyPanel.vue';
 import {
   AdminDisclosure,
   AdminFormActions,
@@ -69,6 +70,9 @@ const { loading, error, load } = useAdminResource({
     }
     if (!payload.afternoon_return) {
       payload.afternoon_return = {};
+    }
+    if (!payload.ticket_copy_notes) {
+      payload.ticket_copy_notes = [];
     }
     data.value = payload;
     ensureMatrixCells(payload);
@@ -189,6 +193,7 @@ async function submit() {
         zones: data.value.zones,
         zone_cap: data.value.zone_cap,
         afternoon_return: data.value.afternoon_return,
+        ticket_copy_notes: data.value.ticket_copy_notes,
       }),
     ];
     if (settingsSnapshot.value && thresholdDirty.value) {
@@ -254,6 +259,8 @@ async function submit() {
             :threshold-minutes="afternoonThresholdMinutes"
             @update:threshold-minutes="afternoonThresholdMinutes = $event"
           />
+
+          <PricesTicketCopyPanel v-model="data" />
 
           <p v-if="matrixConfigured" class="description mrt-admin-prices-zone-cap-status">
             {{

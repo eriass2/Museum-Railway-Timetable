@@ -1,4 +1,5 @@
 import { adminFetch } from './adminRestCore';
+import type { TicketCopyNote } from '../../shared/ticketCopy';
 
 export type SettingsPayload = {
   enabled: boolean;
@@ -32,6 +33,7 @@ export type PricesPayload = {
   zones: number[];
   zone_cap: number;
   afternoon_return: Record<string, number | null>;
+  ticket_copy_notes: TicketCopyNote[];
 };
 
 export function getPrices() {
@@ -41,7 +43,13 @@ export function getPrices() {
 export function savePrices(
   payload: Pick<
     PricesPayload,
-    'matrix' | 'ticket_types' | 'categories' | 'zones' | 'zone_cap' | 'afternoon_return'
+    | 'matrix'
+    | 'ticket_types'
+    | 'categories'
+    | 'zones'
+    | 'zone_cap'
+    | 'afternoon_return'
+    | 'ticket_copy_notes'
   >,
 ) {
   return adminFetch<PricesPayload>('/settings/prices', {

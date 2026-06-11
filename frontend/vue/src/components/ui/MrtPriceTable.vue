@@ -68,14 +68,20 @@ const selectedTypeLabel = computed(() => {
   return labels.value.tickets[key] || key;
 });
 
-const priceNote = computed(() => {
-  if (priceData.value?.isAfternoonReturn && priceCfg.value.priceAfternoonNote) {
-    return priceCfg.value.priceAfternoonNote;
+const zoneNote = computed(() => labels.value.note);
+
+const afternoonClockNote = computed(() => {
+  if (!priceData.value?.isAfternoonReturn || !priceCfg.value.priceAfternoonNote) {
+    return '';
   }
-  return labels.value.note;
+  return priceCfg.value.priceAfternoonNote;
 });
 
 const priceSeniorNote = computed(() => labels.value.seniorNote ?? '');
+
+const stationPurchaseNote = computed(() => labels.value.stationPurchaseNote?.trim() ?? '');
+
+const extraFootnotes = computed(() => labels.value.footnotes?.filter((n) => n.trim() !== '') ?? []);
 
 function priceForCategory(catKey: string, ticketType: string): string {
   if (!priceData.value) {
@@ -187,11 +193,27 @@ function dayPriceForCategory(catKey: string): string {
       </div>
     </template>
 
-    <p v-if="priceNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
-      {{ priceNote }}
+    <p v-if="zoneNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
+      {{ zoneNote }}
     </p>
     <p v-if="priceSeniorNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
       {{ priceSeniorNote }}
+    </p>
+    <p
+      v-if="stationPurchaseNote"
+      class="mrt-price-block__note mrt-text-secondary mrt-mt-sm"
+    >
+      {{ stationPurchaseNote }}
+    </p>
+    <p
+      v-for="(footnote, index) in extraFootnotes"
+      :key="`footnote-${index}`"
+      class="mrt-price-block__note mrt-text-secondary mrt-mt-sm"
+    >
+      {{ footnote }}
+    </p>
+    <p v-if="afternoonClockNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
+      {{ afternoonClockNote }}
     </p>
   </div>
 </template>

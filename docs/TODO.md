@@ -6,16 +6,13 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ---
 
-## Reseplanerare — copy & biljettinfo (J15–J18)
+## Reseplanerare — copy & biljettinfo (J18)
 
 **Källa:** [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md)  
-**Status:** Väntar produktbeslut D19–D22 innan implementation.
+**Status:** D19–D21 implementerat (2026-06-11). J15–J17 levererat; J18 och D22 återstår.
 
 | ID | Punkt | Insats |
 |----|-------|--------|
-| J17 | CTA «Mer information om biljettköp» | Liten — kan göras direkt |
-| J16 | Enklare zonförklaring | Liten |
-| J15 | Biljettinfo + admin-redigerbar copy | Medel–stor |
 | J18 | Dela-knapp (Web Share) | Medel |
 
 ---
@@ -63,6 +60,7 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Reseplanerare J14 — holistisk cache (R1–R4, prefetch, warm) | 2026-06-11 | [WIZARD_CACHE_REFACTOR.md](WIZARD_CACHE_REFACTOR.md), `journey-cache.php`, `resourceCache.ts`, `scripts/warm-journey-cache.php`, commits `fb52993`, `8f3228e` |
 | Reseplanerare — enhetlig stepper (pill-storlek/typografi) | 2026-06-11 | `wizard-steps.css`, `MrtStepProgress.vue`, commit `6cf1c64` |
 | Docker/skript — Fas 0 (optimering + refaktor) | 2026-06-11 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md), commit `b3934a4` |
+| Reseplanerare J15–J17 + D19–D21 — biljettcopy (fotnoter, station, eftermiddag) | 2026-06-11 | `ticket-copy.php`, `PricesTicketCopyPanel.vue`, `MrtPriceTable.vue`, `#/prices` + stationfält |
 
 ---
 

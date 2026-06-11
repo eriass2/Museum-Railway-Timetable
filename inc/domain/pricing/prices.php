@@ -9,6 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
 require_once __DIR__ . '/price-schema.php';
+require_once __DIR__ . '/ticket-copy.php';
 
 /**
  * Ticket-type keys (rows in mockup price table)

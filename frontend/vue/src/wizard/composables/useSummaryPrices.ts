@@ -2,9 +2,12 @@ import { computed } from 'vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { useTripPrices } from '../../composables/useTripPrices';
 import { connectionToPriceLegs } from '../../shared/connectionPriceLegs';
+import {
+  afternoonClockFromPriceNote,
+  resolveTicketCopyFootnotes,
+} from '../../shared/ticketCopy';
 import { priceTableLabelsFromCfg } from '../utils/priceTableLabels';
 import { departureFromOrigin } from '../utils/connection';
-
 export function useSummaryPrices() {
   const { store, cfg, config } = useWizardContext();
 
@@ -31,13 +34,28 @@ export function useSummaryPrices() {
     tripPricesQuery,
   );
 
-  const priceLabels = computed(() =>
-    priceTableLabelsFromCfg(
+  const stationPurchaseNote = computed(() => {
+    const map = config.ticketPurchaseByStation ?? {};
+    return (map[String(store.fromId)] ?? '').trim();
+  });
+
+  const ticketCopyFootnotes = computed(() =>
+    resolveTicketCopyFootnotes(config.ticketCopyNotes ?? [], {
+      isAfternoon: !!priceData.value?.isAfternoonReturn,
+      hasDayTicket: !!dayPrices.value?.day,
+      afternoonClock: afternoonClockFromPriceNote(cfg.value.priceAfternoonNote),
+    }),
+  );
+
+  const priceLabels = computed(() => ({
+    ...priceTableLabelsFromCfg(
       cfg.value,
       zones.value,
       store.tripType === 'return' || !priceData.value?.isAfternoonReturn,
     ),
-  );
+    stationPurchaseNote: stationPurchaseNote.value,
+    footnotes: ticketCopyFootnotes.value,
+  }));
 
   return {
     pricesLoading,

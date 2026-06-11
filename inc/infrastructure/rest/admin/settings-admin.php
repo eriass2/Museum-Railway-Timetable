@@ -11,6 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/pricing/ticket-copy.php';
+
 /**
  * Register settings REST routes.
  */
@@ -109,7 +111,8 @@ function MRT_rest_get_prices_handler( WP_REST_Request $request ) {
 			'categories'       => MRT_price_category_labels(),
 			'zones'            => MRT_price_zone_keys(),
 			'zone_cap'         => MRT_price_zone_cap(),
-			'afternoon_return' => MRT_get_afternoon_return_prices(),
+			'afternoon_return'  => MRT_get_afternoon_return_prices(),
+			'ticket_copy_notes' => MRT_get_ticket_copy_notes(),
 		)
 	);
 }
@@ -141,5 +144,8 @@ function MRT_rest_save_prices_handler( WP_REST_Request $request ) {
 	$matrix = isset( $body['matrix'] ) && is_array( $body['matrix'] ) ? $body['matrix'] : array();
 	$clean  = MRT_sanitize_price_matrix( $matrix );
 	update_option( 'mrt_price_matrix', $clean );
+	if ( array_key_exists( 'ticket_copy_notes', $body ) ) {
+		MRT_save_ticket_copy_notes( $body['ticket_copy_notes'] );
+	}
 	return MRT_rest_get_prices_handler( $request );
 }

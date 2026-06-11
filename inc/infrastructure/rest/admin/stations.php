@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/admin/delete-entities.php';
+require_once MRT_PATH . 'inc/domain/pricing/ticket-copy.php';
 
 /**
  * @return array<string, array{typeName: string, serviceNumber: string}>
@@ -106,7 +107,8 @@ function MRT_rest_format_station( WP_Post $post ): array {
 		'lng'           => (string) get_post_meta( $post->ID, 'mrt_lng', true ),
 		'display_order' => (int) get_post_meta( $post->ID, 'mrt_display_order', true ),
 		'price_zones'   => MRT_get_station_price_zones( (int) $post->ID ),
-		'train_change_map' => MRT_rest_format_train_change_map( (int) $post->ID ),
+		'train_change_map'      => MRT_rest_format_train_change_map( (int) $post->ID ),
+		'ticket_purchase_info'  => (string) get_post_meta( $post->ID, MRT_station_ticket_purchase_meta_key(), true ),
 	);
 }
 
@@ -170,6 +172,14 @@ function MRT_rest_apply_station_meta( int $station_id, array $body ): void {
 			$station_id,
 			MRT_rest_parse_train_change_map_body( $body['train_change_map'] )
 		);
+	}
+	if ( array_key_exists( 'ticket_purchase_info', $body ) ) {
+		$info = sanitize_textarea_field( (string) $body['ticket_purchase_info'] );
+		if ( $info === '' ) {
+			delete_post_meta( $station_id, MRT_station_ticket_purchase_meta_key() );
+		} else {
+			update_post_meta( $station_id, MRT_station_ticket_purchase_meta_key(), $info );
+		}
 	}
 }
 
