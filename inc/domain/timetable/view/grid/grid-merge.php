@@ -10,6 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once __DIR__ . '/grid-branch.php';
+require_once MRT_PATH . 'inc/domain/route/route-meta.php';
 
 /**
  * @param array<string, array<string, mixed>> $grouped_services
@@ -69,6 +70,23 @@ function MRT_timetable_rail_paired_branches( array $group ): array {
 	return array();
 }
 
+function MRT_timetable_group_branch_code( array $group ): string {
+	$code = trim( (string) ( $group['branch_code'] ?? '' ) );
+	if ( $code !== '' ) {
+		return $code;
+	}
+	$route_id = (int) ( $group['route_id'] ?? 0 );
+	return $route_id > 0 ? MRT_route_branch_code( $route_id ) : '';
+}
+
+function MRT_timetable_group_is_main_corridor( array $group ): bool {
+	if ( MRT_timetable_group_is_branch_shuttle( $group ) ) {
+		return false;
+	}
+	$code = MRT_timetable_group_branch_code( $group );
+	return $code === '' || $code === 'main';
+}
+
 /**
  * @param array<string, array<string, mixed>> $grouped_services
  */
@@ -78,7 +96,7 @@ function MRT_timetable_find_main_group_for_branch( array $grouped_services, arra
 	$best_score         = -1;
 
 	foreach ( $grouped_services as $key => $group ) {
-		if ( $key === $branch_key || MRT_timetable_group_is_branch_shuttle( $group ) ) {
+		if ( $key === $branch_key || ! MRT_timetable_group_is_main_corridor( $group ) ) {
 			continue;
 		}
 

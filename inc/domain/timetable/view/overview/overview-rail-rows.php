@@ -15,6 +15,7 @@ require_once __DIR__ . '/overview-column-merge.php';
 require_once __DIR__ . '/overview-rail-columns.php';
 require_once __DIR__ . '/overview-rail-cells.php';
 require_once __DIR__ . '/overview-standalone-bus.php';
+require_once MRT_PATH . 'inc/domain/timetable/view/grid/grid-merge.php';
 
 function MRT_timetable_rail_group_to_json( array $group, string $dateYmd, array $grouped_services = array() ): array {
 	$view            = MRT_prepare_timetable_group_view( $group, $dateYmd );
@@ -25,7 +26,7 @@ function MRT_timetable_rail_group_to_json( array $group, string $dateYmd, array 
 	$from_label       = $view['from_station'] ? MRT_station_from_label( $view['from_station'] ) : '';
 	$to_label         = $view['to_station'] ? MRT_station_to_label( $view['to_station'] ) : '';
 
-	return array(
+	$result = array(
 		'kind'       => 'rail',
 		'routeLabel' => $view['route_label'],
 		'fromLabel'  => $from_label,
@@ -33,6 +34,11 @@ function MRT_timetable_rail_group_to_json( array $group, string $dateYmd, array 
 		'columns'    => MRT_timetable_overview_columns_json( $view, $display_columns ),
 		'rows'       => MRT_timetable_overview_rail_rows_json( $view, $group, $paired_branches, $display_columns ),
 	);
+	$branch_code = MRT_timetable_group_branch_code( $group );
+	if ( $branch_code !== '' ) {
+		$result['branchCode'] = $branch_code;
+	}
+	return $result;
 }
 
 /**

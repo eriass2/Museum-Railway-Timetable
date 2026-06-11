@@ -326,7 +326,7 @@ LINNÉS (bus)             Selkné ↔ Linnés (B5)
                          Linnés → Uppsala (B14)
 ```
 
-**Code vs geography:** `MRT_timetable_group_is_branch_shuttle()` means “bus-only route with 2–3 stops”, not `branch_code`. Overview pairing still uses junction heuristics today; `branch_code` is the hook for grouping without guessing.
+**Code vs geography:** `MRT_timetable_group_is_branch_shuttle()` means “bus-only route with 2–3 stops”, not `branch_code`. Overview pairing uses `branch_code` so shuttles only attach to `main` corridor groups (`MRT_timetable_group_is_main_corridor()` in `grid-merge.php`); junction direction still uses station-order heuristics.
 
 See also [LINNES_HAMMARBY.md](LINNES_HAMMARBY.md).
 

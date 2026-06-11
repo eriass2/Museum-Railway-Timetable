@@ -216,11 +216,12 @@ function MRT_group_services_by_route_add_service( array &$grouped_services, $ser
 
 	if ( ! isset( $grouped_services[ $group_key ] ) ) {
 		$grouped_services[ $group_key ] = array(
-			'route'     => $route,
-			'route_id'  => $route_id,
-			'direction' => $direction,
-			'stations'  => $route_stations,
-			'services'  => array(),
+			'route'       => $route,
+			'route_id'    => $route_id,
+			'direction'   => $direction,
+			'stations'    => $route_stations,
+			'branch_code' => MRT_route_branch_code( (int) $route_id ),
+			'services'    => array(),
 		);
 	}
 

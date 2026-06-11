@@ -183,6 +183,70 @@ final class OverviewBusGridTest extends TestCase {
 		self::assertSame( array(), $result['trips'] );
 	}
 
+	public function test_group_is_main_corridor(): void {
+		self::assertTrue(
+			MRT_timetable_group_is_main_corridor(
+				array(
+					'branch_code' => 'main',
+					'services'    => array(
+						array( 'train_type' => (object) array( 'slug' => 'angtag' ) ),
+					),
+				)
+			)
+		);
+		self::assertTrue(
+			MRT_timetable_group_is_main_corridor(
+				array(
+					'services' => array(
+						array( 'train_type' => (object) array( 'slug' => 'angtag' ) ),
+					),
+				)
+			)
+		);
+		self::assertFalse(
+			MRT_timetable_group_is_main_corridor(
+				array(
+					'branch_code' => 'fjallnora',
+					'stations'    => array( 9, 15 ),
+					'services'    => array(
+						array( 'train_type' => (object) array( 'slug' => 'buss' ) ),
+					),
+				)
+			)
+		);
+	}
+
+	public function test_find_main_group_only_pairs_to_main_corridor(): void {
+		$grouped = array(
+			'wrong'  => array(
+				'stations'    => array( 1, 9, 8, 14 ),
+				'branch_code' => 'fjallnora',
+				'services'    => array(
+					array( 'train_type' => (object) array( 'slug' => 'angtag' ) ),
+				),
+			),
+			'main'   => array(
+				'stations'    => array( 1, 9, 8, 14 ),
+				'branch_code' => 'main',
+				'services'    => array(
+					array( 'train_type' => (object) array( 'slug' => 'angtag' ) ),
+				),
+			),
+			'branch' => array(
+				'stations'    => array( 8, 16 ),
+				'branch_code' => 'linnes-hammarby',
+				'services'    => array(
+					array( 'train_type' => (object) array( 'slug' => 'buss' ) ),
+				),
+			),
+		);
+
+		self::assertSame(
+			'main',
+			MRT_timetable_find_main_group_for_branch( $grouped, $grouped['branch'], 'branch' )
+		);
+	}
+
 	public function test_find_main_group_prefers_matching_travel_direction_on_tie(): void {
 		$uppsala  = 14;
 		$marielund = 8;
