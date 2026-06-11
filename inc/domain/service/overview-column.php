@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/timetable/view/grid/grid-branch.php';
+require_once MRT_PATH . 'inc/domain/timetable/view/grid/grid-connections.php';
 
 function MRT_service_has_overview_column( int $service_id ): bool {
 	return (int) get_post_meta( $service_id, 'mrt_service_overview_column', true ) === 1;
@@ -52,14 +53,10 @@ function MRT_timetable_standalone_bus_entries_for_rail_group(
 	array $grouped_services,
 	array $rail_group
 ): array {
-	$rail_direction = (string) ( $rail_group['direction'] ?? '' );
-	$entries        = array();
+	$entries = array();
 
 	foreach ( $grouped_services as $group ) {
 		if ( ! MRT_timetable_group_is_branch_shuttle( $group ) ) {
-			continue;
-		}
-		if ( (string) ( $group['direction'] ?? '' ) !== $rail_direction ) {
 			continue;
 		}
 		foreach ( (array) ( $group['services'] ?? array() ) as $service_data ) {
@@ -67,11 +64,49 @@ function MRT_timetable_standalone_bus_entries_for_rail_group(
 			if ( ! $service instanceof WP_Post || ! MRT_service_has_overview_column( (int) $service->ID ) ) {
 				continue;
 			}
+			if ( ! MRT_timetable_standalone_bus_matches_rail_group( $service_data, $rail_group ) ) {
+				continue;
+			}
 			$entries[] = $service_data;
 		}
 	}
 
 	return $entries;
+}
+
+/**
+ * Standalone bus columns belong on the inbound rail grid where the bus alights on the main line.
+ *
+ * @param array<string, mixed> $service_data
+ * @param array<string, mixed> $rail_group
+ */
+function MRT_timetable_standalone_bus_matches_rail_group( array $service_data, array $rail_group ): bool {
+	if ( MRT_timetable_rail_grid_direction( $rail_group ) !== 'inbound' ) {
+		return false;
+	}
+	$rail_ids = array_map( 'intval', (array) ( $rail_group['stations'] ?? array() ) );
+	if ( $rail_ids === array() ) {
+		return false;
+	}
+	return MRT_timetable_standalone_bus_alight_station_on_route( $service_data, $rail_ids ) > 0;
+}
+
+/**
+ * @param array<int, int> $rail_station_ids
+ */
+function MRT_timetable_standalone_bus_alight_station_on_route( array $service_data, array $rail_station_ids ): int {
+	$on_route = array_fill_keys( $rail_station_ids, true );
+	$last     = 0;
+	foreach ( $service_data['stop_times'] ?? array() as $station_id => $stop ) {
+		$station_id = (int) $station_id;
+		if ( ! isset( $on_route[ $station_id ] ) || ! is_array( $stop ) ) {
+			continue;
+		}
+		if ( MRT_stop_effective_arrival( $stop ) !== '' || MRT_stop_effective_departure( $stop ) !== '' ) {
+			$last = $station_id;
+		}
+	}
+	return $last;
 }
 
 /**

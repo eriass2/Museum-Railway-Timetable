@@ -95,15 +95,14 @@ function MRT_timetable_standalone_bus_cell_text(
 	string $row_kind,
 	array $station_posts,
 	bool $use_from_display,
-	bool $use_to_display
+	bool $use_to_display,
+	string $row_label = ''
 ): string {
 	if ( $row_kind === 'busDeparture' ) {
-		$remote_id = MRT_timetable_standalone_bus_boarding_station_id( $service_data );
-		$stop      = $remote_id > 0 ? ( $service_data['stop_times'][ $remote_id ] ?? null ) : null;
-		return MRT_timetable_time_cell_text( is_array( $stop ) ? $stop : null, true, false, 'from' );
+		return MRT_timetable_standalone_bus_junction_departure_text( $service_data, $row_label );
 	}
 	if ( $row_kind === 'busArrival' ) {
-		return '—';
+		return MRT_timetable_standalone_bus_junction_arrival_text( $info, $row_label );
 	}
 
 	$stop = $service_data['stop_times'][ $station_id ] ?? null;
@@ -111,11 +110,76 @@ function MRT_timetable_standalone_bus_cell_text(
 		return MRT_timetable_time_cell_text( $stop, $use_from_display, $use_to_display, $row_kind );
 	}
 
+	return MRT_timetable_standalone_bus_corridor_cell_text(
+		$service_data,
+		$info,
+		$station_id,
+		$row_kind,
+		$station_posts,
+		$use_to_display
+	);
+}
+
+/**
+ * @param array<string, mixed> $service_data
+ */
+function MRT_timetable_standalone_bus_junction_departure_text(
+	array $service_data,
+	string $row_label
+): string {
+	$boarding_id = MRT_timetable_standalone_bus_boarding_station_id( $service_data );
+	if ( $boarding_id <= 0 || $row_label === '' ) {
+		return '—';
+	}
+	if ( ! MRT_timetable_standalone_bus_row_label_matches_station( $row_label, $boarding_id ) ) {
+		return '—';
+	}
+	$stop = $service_data['stop_times'][ $boarding_id ] ?? null;
+	return MRT_timetable_time_cell_text( is_array( $stop ) ? $stop : null, true, false, 'from' );
+}
+
+/**
+ * @param array<string, mixed> $info
+ */
+function MRT_timetable_standalone_bus_junction_arrival_text( array $info, string $row_label ): string {
+	$pass_from = (int) ( $info['overview_pass_from_station_id'] ?? 0 );
+	if ( $pass_from <= 0 || $row_label === '' ) {
+		return '—';
+	}
+	if ( ! MRT_timetable_standalone_bus_row_label_matches_station( $row_label, $pass_from ) ) {
+		return '—';
+	}
+	return '|';
+}
+
+function MRT_timetable_standalone_bus_row_label_matches_station( string $row_label, int $station_id ): bool {
+	$station = get_post( $station_id );
+	if ( ! $station instanceof WP_Post ) {
+		return false;
+	}
+	$name = MRT_get_station_display_name( $station );
+	return $name !== '' && str_contains( $row_label, $name );
+}
+
+/**
+ * @param array<string, mixed> $service_data
+ * @param array<string, mixed> $info
+ * @param array<int, WP_Post>  $station_posts
+ */
+function MRT_timetable_standalone_bus_corridor_cell_text(
+	array $service_data,
+	array $info,
+	int $station_id,
+	string $row_kind,
+	array $station_posts,
+	bool $use_to_display
+): string {
 	$pass_from = (int) ( $info['overview_pass_from_station_id'] ?? 0 );
 	$order     = MRT_timetable_station_id_order( $station_posts );
 	$pos       = array_search( $station_id, $order, true );
 	$pass_pos  = $pass_from > 0 ? array_search( $pass_from, $order, true ) : false;
-	$alight_id = MRT_timetable_standalone_bus_alight_station_id( $service_data, $station_posts );
+	$rail_ids  = array_map( 'intval', $order );
+	$alight_id = MRT_timetable_standalone_bus_alight_station_on_route( $service_data, $rail_ids );
 	$alight_pos = $alight_id > 0 ? array_search( $alight_id, $order, true ) : false;
 
 	if ( $pos === false ) {
@@ -127,12 +191,25 @@ function MRT_timetable_standalone_bus_cell_text(
 	if ( $alight_pos !== false && $pos > $alight_pos ) {
 		return '—';
 	}
-	if ( $alight_pos !== false && $pos === $alight_pos ) {
+	if ( $alight_pos !== false && $pos === $alight_pos && $row_kind === 'to' && $use_to_display ) {
 		$stop = $service_data['stop_times'][ $alight_id ] ?? null;
 		return MRT_timetable_time_cell_text( is_array( $stop ) ? $stop : null, false, true, 'to' );
 	}
+	if ( $pass_pos !== false && $pos === $pass_pos ) {
+		return MRT_timetable_standalone_bus_pass_station_cell_text( $row_kind );
+	}
+	if ( $pass_pos !== false && $pos > $pass_pos && $alight_pos !== false && $pos < $alight_pos ) {
+		return '|';
+	}
 
-	return '|';
+	return '—';
+}
+
+function MRT_timetable_standalone_bus_pass_station_cell_text( string $row_kind ): string {
+	if ( in_array( $row_kind, array( 'arrival', 'departure' ), true ) ) {
+		return '|';
+	}
+	return '—';
 }
 
 /**
@@ -159,29 +236,6 @@ function MRT_timetable_standalone_bus_boarding_station_id( array $service_data )
 }
 
 /**
- * @param array<string, mixed> $service_data
- * @param array<int, WP_Post>  $station_posts
- */
-function MRT_timetable_standalone_bus_alight_station_id( array $service_data, array $station_posts ): int {
-	$on_route = array();
-	foreach ( $station_posts as $station ) {
-		if ( $station instanceof WP_Post ) {
-			$on_route[ (int) $station->ID ] = true;
-		}
-	}
-	$last = 0;
-	foreach ( $service_data['stop_times'] ?? array() as $station_id => $stop ) {
-		if ( ! is_array( $stop ) || ! isset( $on_route[ (int) $station_id ] ) ) {
-			continue;
-		}
-		if ( MRT_stop_effective_arrival( $stop ) !== '' || MRT_stop_effective_departure( $stop ) !== '' ) {
-			$last = (int) $station_id;
-		}
-	}
-	return $last;
-}
-
-/**
  * @param array<int, array<string, mixed>> $rows
  * @param array<int, array{primary_idx: int, continuation_idx: int|null, split_station_id: int}> $display_columns
  * @param array<string, mixed> $view
@@ -192,12 +246,15 @@ function MRT_timetable_patch_standalone_bus_junction_rows(
 	array $display_columns,
 	array $view
 ): array {
+	$station_posts = (array) ( $view['station_posts'] ?? array() );
+
 	foreach ( $rows as $row_idx => $row ) {
 		$kind = (string) ( $row['kind'] ?? '' );
 		if ( $kind !== 'busDeparture' && $kind !== 'busArrival' ) {
 			continue;
 		}
 		$cells = (array) ( $row['cells'] ?? array() );
+		$label = (string) ( $row['label'] ?? '' );
 		foreach ( $display_columns as $col_idx => $column ) {
 			$idx      = (int) $column['primary_idx'];
 			$row_info = $view['service_info'][ $idx ] ?? array();
@@ -205,14 +262,16 @@ function MRT_timetable_patch_standalone_bus_junction_rows(
 				continue;
 			}
 			$service_data = $view['services_list'][ $idx ] ?? array();
-			$label = (string) ( $row['label'] ?? '' );
-			if ( $kind === 'busDeparture' && str_contains( $label, 'Linnés' ) ) {
-				$remote_id = MRT_timetable_standalone_bus_boarding_station_id( $service_data );
-				$stop      = $remote_id > 0 ? ( $service_data['stop_times'][ $remote_id ] ?? null ) : null;
-				$text      = MRT_timetable_time_cell_text( is_array( $stop ) ? $stop : null, true, false, 'from' );
-			} else {
-				$text = '—';
-			}
+			$text         = MRT_timetable_standalone_bus_cell_text(
+				$service_data,
+				$row_info,
+				0,
+				$kind,
+				$station_posts,
+				false,
+				false,
+				$label
+			);
 			$cells[ $col_idx ] = array(
 				'text'            => $text,
 				'approximateTime' => false,

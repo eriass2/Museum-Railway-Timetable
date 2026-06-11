@@ -48,7 +48,8 @@ function MRT_timetable_row_times_json(
 						$kind,
 						$station_posts,
 						$use_from_display,
-						$use_to_display
+						$use_to_display,
+						$label
 					),
 					'approximateTime' => false,
 				);
