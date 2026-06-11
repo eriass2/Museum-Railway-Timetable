@@ -1,6 +1,7 @@
 import type { ComputedRef } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
 import type { CalendarDayInfo, CalendarDayStatus, JourneyConnection, TripType, WizardStep } from '../types';
+import type { WizardResourceCache } from '../cache/resourceCache';
 import type { WizardCfg } from '../utils/wizardLabels';
 
 export type WizardStore = {
@@ -43,4 +44,5 @@ export type WizardInjection = {
   config: WizardVueConfig;
   cfg: ComputedRef<WizardCfg>;
   store: WizardStore;
+  resourceCache: WizardResourceCache;
 };

@@ -197,9 +197,10 @@ Efter alla PR:
 
 - [x] `.\scripts\check.ps1` — PHP + PHPUnit
 - [x] `.\scripts\vue-check.ps1` — Vitest + build
-- [ ] Manuell smoke: Uppsala Östra → Fjällnora (3 ben), expandera detalj
-- [ ] Manuell smoke: Uppsala Östra → Linnés Hammarby (efter komplett data)
-- [ ] Manuell smoke: Selknä-buss + Marielund-kolumner i Turvy — se [TODO.md](../TODO.md)
+- [x] Manuell smoke: Uppsala Östra → Fjällnora (3 ben) — 2026-06-11
+- [x] Manuell smoke: Uppsala Östra → Linnés Hammarby — 2026-06-11
+- [x] Manuell smoke: Selknä-buss + Marielund-kolumner i Turvy — 2026-06-11
+- [x] Utkast [svar till Jesper](2026-06-11-svar-till-jesper.md) — 2026-06-11
 - [x] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J5, A10, J3, J12, Turvy-uppföljning) — 2026-06-11
 
 ---

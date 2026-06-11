@@ -1,5 +1,9 @@
+/**
+ * @vitest-environment happy-dom
+ */
 import { computed, ref } from 'vue';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { createWizardResourceCache } from '../src/wizard/cache/resourceCache';
 import { createWizardStore } from '../src/wizard/store/createWizardStore';
 import type { WizardVueConfig } from '../src/config/types';
 import type { CalendarDayInfo, CalendarDayStatus } from '../src/shared/calendarDay';
@@ -9,12 +13,12 @@ import {
   pickWizardCalendarDate,
   wizardCalendarDayAria,
 } from '../src/wizard/composables/wizardCalendarLoad';
-import { clearWizardCalendarCache } from '../src/wizard/utils/wizardCalendarCache';
 
 const config: WizardVueConfig = {
   app: 'wizard',
   restUrl: 'http://example.test/wp-json/museum-railway-timetable/v1/',
   restNonce: 'nonce',
+  cacheGeneration: 1,
   startOfWeek: 1,
   wizard: {
     monthNames: ['januari', 'februari', 'mars', 'april', 'maj', 'juni'],
@@ -30,7 +34,7 @@ const config: WizardVueConfig = {
 describe('wizardCalendarLoad', () => {
   beforeEach(() => {
     vi.restoreAllMocks();
-    clearWizardCalendarCache();
+    sessionStorage.clear();
   });
 
   it('pickWizardCalendarDate stores date and advances step', () => {
@@ -57,7 +61,7 @@ describe('wizardCalendarLoad', () => {
   });
 
   it('loadWizardCalendarMonth stores days from REST', async () => {
-    const { store } = createWizardStore(config);
+    const { store, resourceCache } = createWizardStore(config);
     store.fromId = 1;
     store.toId = 2;
     store.tripType = 'return';
@@ -76,7 +80,7 @@ describe('wizardCalendarLoad', () => {
       errorGeneric: config.strings?.errorGeneric ?? '',
     }));
 
-    await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
+    await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
 
     expect(store.calYear).toBe(2026);
     expect(store.calMonth).toBe(6);
@@ -92,11 +96,11 @@ describe('wizardCalendarLoad', () => {
         trip_type: 'return',
       },
     });
-    await vi.waitFor(() => expect(run).toHaveBeenCalledTimes(2));
+    await vi.waitFor(() => expect(run.mock.calls.length).toBeGreaterThanOrEqual(2));
   });
 
   it('loadWizardCalendarMonth reuses client cache on repeat load', async () => {
-    const { store } = createWizardStore(config);
+    const { store, resourceCache } = createWizardStore(config);
     store.fromId = 1;
     store.toId = 2;
     store.tripType = 'single';
@@ -113,26 +117,26 @@ describe('wizardCalendarLoad', () => {
       errorGeneric: config.strings?.errorGeneric ?? '',
     }));
 
-    await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
-    await vi.waitFor(() => expect(run).toHaveBeenCalledTimes(2));
-    await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
+    await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
+    const callsAfterFirst = run.mock.calls.length;
+    await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
 
-    expect(run).toHaveBeenCalledTimes(2);
+    expect(run.mock.calls.length).toBe(callsAfterFirst);
     expect(daysMap.value['2026-06-04']).toEqual({ status: 'ok', types: ['green'] });
   });
 
-  it('prefetches the other trip type after primary calendar load', async () => {
-    const { store } = createWizardStore(config);
+  it('prefetches related calendar months including other trip type', async () => {
+    const { store, resourceCache } = createWizardStore(config);
     store.fromId = 1;
     store.toId = 2;
     store.tripType = 'return';
     const daysMap = ref<Record<string, CalendarDayInfo | CalendarDayStatus>>({});
-    const run = vi.fn().mockImplementation((init: { body: { trip_type: string } }) =>
+    const run = vi.fn().mockImplementation((init: { body: { trip_type: string; month: number } }) =>
       Promise.resolve({
         success: true,
         data: {
           year: 2026,
-          month: 6,
+          month: init.body.month,
           days: {
             '2026-06-04': { status: 'ok', type: init.body.trip_type },
           },
@@ -143,30 +147,11 @@ describe('wizardCalendarLoad', () => {
       errorGeneric: config.strings?.errorGeneric ?? '',
     }));
 
-    await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
+    await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
+    await vi.waitFor(() => expect(run.mock.calls.length).toBeGreaterThanOrEqual(4));
 
-    expect(run).toHaveBeenCalledTimes(2);
-    expect(run).toHaveBeenNthCalledWith(1, {
-      method: 'POST',
-      path: 'journey/calendar',
-      body: {
-        from_station: 1,
-        to_station: 2,
-        year: 2026,
-        month: 6,
-        trip_type: 'return',
-      },
-    });
-    expect(run).toHaveBeenNthCalledWith(2, {
-      method: 'POST',
-      path: 'journey/calendar',
-      body: {
-        from_station: 1,
-        to_station: 2,
-        year: 2026,
-        month: 6,
-        trip_type: 'single',
-      },
-    });
+    const tripTypes = run.mock.calls.map((call) => call[0].body.trip_type);
+    expect(tripTypes).toContain('return');
+    expect(tripTypes).toContain('single');
   });
 });

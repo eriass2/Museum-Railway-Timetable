@@ -1,14 +1,10 @@
 import { ref } from 'vue';
 import { useMrtRest } from '../../composables/useMrtRest';
 import type { JourneyConnection } from '../types';
+import { journeySearchParams } from '../cache/cacheKeys';
 import { cfgStr } from '../utils/wizardLabels';
 import { arrivalAtDestination } from '../utils/connection';
 import type { WizardInjection } from '../store/createWizardStore';
-import {
-  getTripConnectionsCache,
-  setTripConnectionsCache,
-  tripConnectionsCacheKey,
-} from '../utils/tripConnectionsCache';
 
 function resolveOutboundArrival(
   store: WizardInjection['store'],
@@ -21,19 +17,9 @@ function resolveOutboundArrival(
 }
 
 export function useTripConnections(ctx: WizardInjection, legCtx: 'outbound' | 'return') {
-  const { store, cfg, config } = ctx;
+  const { store, cfg, config, resourceCache } = ctx;
   const { loading, error, run } = useMrtRest(config);
   const connections = ref<JourneyConnection[]>([]);
-
-  function cacheKey(): string {
-    return tripConnectionsCacheKey(
-      legCtx,
-      store.fromId,
-      store.toId,
-      store.dateYmd,
-      resolveOutboundArrival(store, legCtx),
-    );
-  }
 
   async function loadConnections(): Promise<void> {
     const mock =
@@ -43,12 +29,19 @@ export function useTripConnections(ctx: WizardInjection, legCtx: 'outbound' | 'r
       return;
     }
 
-    const key = cacheKey();
-    const cached = getTripConnectionsCache(key);
-    if (cached) {
-      connections.value = cached;
+    const outboundArrival = resolveOutboundArrival(store, legCtx);
+    if (legCtx === 'return' && store.outbound && !outboundArrival) {
+      store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel. Försök igen.'));
       return;
     }
+
+    const params = journeySearchParams(
+      legCtx,
+      store.fromId,
+      store.toId,
+      store.dateYmd,
+      outboundArrival,
+    );
 
     const payload: Record<string, string | number> = {
       from_station: store.fromId,
@@ -56,26 +49,33 @@ export function useTripConnections(ctx: WizardInjection, legCtx: 'outbound' | 'r
       date: store.dateYmd,
       trip_type: legCtx === 'return' ? 'return' : 'single',
     };
-
-    if (legCtx === 'return' && store.outbound) {
-      const arr = resolveOutboundArrival(store, legCtx);
-      if (!arr) {
-        store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel. Försök igen.'));
-        return;
-      }
-      payload.outbound_arrival = arr;
+    if (legCtx === 'return' && outboundArrival) {
+      payload.outbound_arrival = outboundArrival;
     }
 
-    const res = await run<{ connections: JourneyConnection[] }>({
-      method: 'POST',
-      path: 'journey/search',
-      body: payload,
-    });
-    if (res.success) {
-      const list = res.data?.connections || [];
-      connections.value = list;
-      setTripConnectionsCache(key, list);
+    const list = await resourceCache.load(
+      {
+        resource: 'journey.search',
+        params,
+        request: async () => {
+          const res = await run<{ connections: JourneyConnection[] }>({
+            method: 'POST',
+            path: 'journey/search',
+            body: payload,
+          });
+          if (!res.success) {
+            return null;
+          }
+          return res.data?.connections || [];
+        },
+      },
+      { priority: 'user' },
+    );
+
+    if (list === null) {
+      return;
     }
+    connections.value = list;
   }
 
   return { loading, error, connections, loadConnections };

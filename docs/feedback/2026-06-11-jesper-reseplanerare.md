@@ -4,7 +4,7 @@ Fortsatt betatest efter leverans av sammanfattningssteg, priser, PDF och prestan
 
 **Källor:** mail/skärmdumpar från Jesper (2026-06-10)  
 **Senast uppdaterad:** 2026-06-11  
-**Relaterat:** [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md), [2026-06-01-granskning.md](2026-06-01-granskning.md), [WIZARD_PERFORMANCE_PLAN.md](../WIZARD_PERFORMANCE_PLAN.md), [WIZARD_FEEDBACK_SKETCH.md](../WIZARD_FEEDBACK_SKETCH.md)
+**Relaterat:** [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md), [2026-06-01-granskning.md](2026-06-01-granskning.md), [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md), [WIZARD_PERFORMANCE_PLAN.md](../WIZARD_PERFORMANCE_PLAN.md), [WIZARD_FEEDBACK_SKETCH.md](../WIZARD_FEEDBACK_SKETCH.md)
 
 ---
 
@@ -12,7 +12,7 @@ Fortsatt betatest efter leverans av sammanfattningssteg, priser, PDF och prestan
 
 | Kategori | Antal | Prioritet | Status |
 |----------|-------|-----------|--------|
-| Prestanda | 1 | hög | öppen — utred |
+| Prestanda | 1 | hög | delvis — prefetch klar; holistisk cache planerad |
 | Biljettinfo / copy (sammanfattning) | 4 | medium–hög | öppen |
 | Dela-resa (ny feature) | 1 | låg–medium | öppen — utred |
 
@@ -27,7 +27,7 @@ Fortsatt betatest efter leverans av sammanfattningssteg, priser, PDF och prestan
 - **Område:** Reseplanerare / prestanda (kalender, utresa/återresa-sök)
 - **Typ:** regression / utred
 - **Prioritet:** hög
-- **Status:** **bekräftad** — flaskhals `POST journey/calendar` (2026-06-11)
+- **Status:** **delvis åtgärdad** — prefetch single↔return (2026-06-11); holistisk refaktor planerad ([TODO.md](../TODO.md) J14)
 
 ### Bekräftad mätning (Erik, localhost Docker)
 
@@ -86,7 +86,8 @@ Byta månad (tur/retur, Uppsala Ö → Fjällnora, juli) ska ta **&lt; ~2 s** ka
 
 - [x] Prefetch single ↔ return (klient + indirekt PHP-transient)
 - [ ] PHP-optimering kall kalender — **rekommenderat nästa steg** (första besök per nyckel)
-- [ ] Informera Jesper: första månadsladdning kan ta några sekunder; upprepning + byten resetyp ska bli snabbare efter prefetch
+- [x] Utkast svar till Jesper om prestanda — [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
+- [ ] Jesper: bekräfta vilket steg som är långsamt (kalender vs resesök)
 
 ---
 
@@ -243,11 +244,10 @@ På mobil (iOS/Android) öppnas systemets delningsdialog med läsbar resesammanf
 
 ## Nästa steg
 
-- [ ] Jesper: bekräfta vilket steg som är långsamt (J14)
+- [ ] Jesper: bekräfta vilket steg som är långsamt (J14) — se [svar till Jesper](2026-06-11-svar-till-jesper.md)
 - [ ] Team: produktbeslut D19–D22
 - [ ] Implementation enligt prioritetslista ovan
 - [ ] Uppdatera [TODO.md](../TODO.md) när beslut är tagna
-- [ ] Länka commit/PR i **Svar** per punkt
 
 ---
 

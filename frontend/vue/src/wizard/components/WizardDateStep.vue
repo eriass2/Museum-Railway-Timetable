@@ -11,7 +11,7 @@ import MrtStatusMessage from '../../components/ui/MrtStatusMessage.vue';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
 import { cfgStr } from '../utils/wizardLabels';
 
-const { store, cfg, config } = useWizardContext();
+const { store, cfg, config, resourceCache } = useWizardContext();
 
 const {
   loading,
@@ -23,7 +23,7 @@ const {
   onPickDate,
   shiftMonth,
   goToday,
-} = useWizardCalendar(store, config, cfg);
+} = useWizardCalendar(store, config, cfg, resourceCache);
 
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
 const showEmptyMonth = computed(() => !loading.value && !hasBookableDays.value);

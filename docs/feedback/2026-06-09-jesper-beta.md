@@ -3,8 +3,8 @@
 Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssnittet. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (juni 2026)  
-**Senast uppdaterad:** 2026-06-11 — status synkad mot kod, [TODO.md](../TODO.md) och [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)  
-**Relaterat:** [2026-06-05-reseplanerare-beta.md](2026-06-05-reseplanerare-beta.md), [2026-06-08-admin-ux-audit.md](2026-06-08-admin-ux-audit.md), [2026-06-09-jesper-buggar-plan.md](2026-06-09-jesper-buggar-plan.md), [2026-06-09-jesper-diskussioner.md](2026-06-09-jesper-diskussioner.md), [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)
+**Senast uppdaterad:** 2026-06-11 — manuella verifieringar klara; [svar till Jesper](2026-06-11-svar-till-jesper.md) utkast  
+**Relaterat:** [2026-06-05-reseplanerare-beta.md](2026-06-05-reseplanerare-beta.md), [2026-06-08-admin-ux-audit.md](2026-06-08-admin-ux-audit.md), [2026-06-09-jesper-buggar-plan.md](2026-06-09-jesper-buggar-plan.md), [2026-06-09-jesper-diskussioner.md](2026-06-09-jesper-diskussioner.md), [2026-06-11-jesper-reseplanerare.md](2026-06-11-jesper-reseplanerare.md), [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md), [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)
 
 ---
 
@@ -14,12 +14,13 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 |----------|-------|------|------|
 | Reseplanerare — buggar | 1 | 1 (J5) | — |
 | Reseplanerare — UI / copy | 8 | 8 (J1–J4, J7–J10) | — |
-| Reseplanerare — data | 1 | 1 (J6 fixture) | operatörsdata (Jesper) |
+| Reseplanerare — data | 1 | 1 (J6 verifierad 2026-06-11) | — |
 | Admin — onboarding / friktion | 2 | 1 (A10) | A0 |
 | Admin — produktförslag | 9 | 8 (A1–A8, A10) | A9 |
-| Admin — Turvy / tidtabellsöversikt | 3 | 3 (A2, J12, uppföljning) | manuell validering |
-| Framtida scope | 2 | 1 (J13 beta) | J11 |
+| Admin — Turvy / tidtabellsöversikt | 3 | 3 (A2, J12, manuell check 2026-06-11) | — |
+| Framtida scope | 2 | 1 (J13 beta) | J11 — Jesper OK målbild |
 | Produktbeslut | 1 | 1 (J13) | — |
+| Reseplanerare — omgång 3 | 5 | 0 | J14–J18 — se [omgång 3](2026-06-11-jesper-reseplanerare.md) |
 
 ---
 
@@ -87,8 +88,9 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Data / admin
 - **Typ:** data (operatör)
 - **Prioritet:** medium
-- **Status:** beslutad (D17 C) — fixture + importguide
+- **Status:** **klar** (2026-06-11) — fixture + importguide; reseplanerare och Turvy verifierade
 - **Anteckning:** CSV-gren i `testdata/fixtures/lennakatten/`; import via `#/import-export`. Se [LINNES_HAMMARBY.md](../LINNES_HAMMARBY.md).
+- **Svar:** Data inmatad och verifierad — smoke Uppsala Ö → Linnés Hammarby, Turvy B9–B14. Se [svar till Jesper](2026-06-11-svar-till-jesper.md).
 
 ---
 
@@ -142,9 +144,10 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Publik webb (shortcode / ev. egen sida) — **inte** reseplaneraren
 - **Typ:** framtida scope
 - **Prioritet:** låg
-- **Status:** **beslutad riktning** (2026-06-11) — implementation enligt [TRAFFIC_DISRUPTIONS_PLAN.md](../TRAFFIC_DISRUPTIONS_PLAN.md); väntar Jesper-validering målbild + fas 1
+- **Status:** **implementerad** (fas 1–4, 2026-06-11) — väntar Jesper OK på målbild §5.2 + 90 dagar
 - **Beslut:** Webb only; **två källor → en feed** — (A) auto från tur-avvikelser + (B) manuella trafikmeddelanden; 90 dagars horisont; gruppering tågnummer; ingen wizard/realtime
-- **Tekniskt:** v1 shortcode + `aggregate.php` finns; v2 = disruption feed API + UL-lik Vue-feed
+- **Tekniskt:** Disruption feed API + UL-lik Vue-feed + admin-förhandsvisning. Se [TRAFFIC_DISRUPTIONS_PLAN.md](../TRAFFIC_DISRUPTIONS_PLAN.md).
+- **Svar:** Levererat enligt plan — behöver din snabba OK innan vi betraktar J11 som stängd. Se [svar till Jesper](2026-06-11-svar-till-jesper.md).
 
 ---
 
@@ -154,8 +157,9 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin
 - **Typ:** produktförslag
 - **Prioritet:** medium
-- **Status:** klar (2026-06-10) — samma leverans som A2
-- **Tekniskt:** Flik **Turvy** med `EditableTimetableOverview`; uppföljning 2026-06-10: kolumnsammanslagning vid tågbyte (`9a44dda`), bussrader per tågkolumn vid Selknä (`8c8a30a`), typografi utan fetstil (`6d91237`). Manuell PDF-validering kvar — se [TODO.md](../TODO.md).
+- **Status:** **klar** (2026-06-11) — samma leverans som A2 + manuell PDF-validering
+- **Tekniskt:** Flik **Turvy** med `EditableTimetableOverview`; uppföljning 2026-06-10: kolumnsammanslagning vid tågbyte (`9a44dda`), bussrader per tågkolumn vid Selknä (`8c8a30a`), typografi utan fetstil (`6d91237`). Manuell check GRÖN + RÖD 2026-06-11.
+- **Svar:** Se [svar till Jesper](2026-06-11-svar-till-jesper.md).
 - **Se:** Admin A2 nedan.
 
 ---
@@ -314,8 +318,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 | 12 | A10 | Buss/tåg per riktning och gren | Stor | ☑ (+ Selknä 2026-06-10) |
 | 13 | J4 + A3 | Ca + fotnot behovsuppehåll | Medel–stor | ☑ |
 | 14 | J10 | Desktop fullbredd + bakgrundsbild | Design + asset | ☑ |
-| 15 | J11 | Trafikstörningar UL-lik | Framtida | beslutad riktning — [plan](../TRAFFIC_DISRUPTIONS_PLAN.md) |
-| 16 | J12 | Samtrafiken-lik överblick (Turvy) | Stor | ☑ (+ PDF-lik vy 2026-06-10) |
+| 15 | J11 | Trafikstörningar UL-lik | Stor | ☑ fas 1–4 — Jesper OK kvar |
+| 16 | J12 | Samtrafiken-lik överblick (Turvy) | Stor | ☑ (+ manuell check 2026-06-11) |
 
 ---
 
@@ -334,11 +338,14 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 
 - [x] Bocka av **Status** per punkt efter genomgång (2026-06-10)
 - [x] Turvy-uppföljning: kolumnsammanslagning, Selknä-bussrader, typografi (2026-06-10)
-- [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
-- [ ] Parallellt: Jesper fortsätter mata in Linnés Hammarby-data — verifiera reseplanerare efter komplett rutt/turer/stopptider
+- [x] Länka svar i [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
+- [x] Linnés Hammarby — verifiera reseplanerare + Turvy (2026-06-11)
+- [x] Manuell smoke: Selknä-buss + Marielund-kolumner (2026-06-11)
+- [x] J11 fas 1–4 implementerade (2026-06-11)
+- [x] Utkast [svar till Jesper](2026-06-11-svar-till-jesper.md) (2026-06-11)
+- [ ] **J11:** Jesper OK på målbild §5.2 + 90 dagar
 - [ ] **Öppna punkter:** A9 (publicera), A0 (onboarding-friktion)
-- [ ] **J11:** Jesper OK på målbild §5.2 + 90 dagar; sedan fas 1 — [TRAFFIC_DISRUPTIONS_PLAN.md](../TRAFFIC_DISRUPTIONS_PLAN.md)
-- [ ] Manuell smoke: Selknä-buss + Marielund-kolumner enligt [TODO.md](../TODO.md) och [buggplan](2026-06-09-jesper-buggar-plan.md#verifiering-gemensam-checklista)
+- [ ] **Omgång 3:** J14–J18 — se [2026-06-11-jesper-reseplanerare.md](2026-06-11-jesper-reseplanerare.md)
 
 ---
 

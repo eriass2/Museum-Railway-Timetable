@@ -40,6 +40,9 @@ Betafeedback och granskningsloggar — **inte** aktiva utvecklingsplaner.
 |----------|----------|
 | [feedback/2026-06-05-reseplanerare-beta.md](feedback/2026-06-05-reseplanerare-beta.md) | Reseplanerare beta (juni 2026) — öppna deploy-verifieringar |
 | [feedback/2026-06-01-granskning.md](feedback/2026-06-01-granskning.md) | Granskning juni 2026 — majoriteten åtgärdad |
+| [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) | Jesper beta (juni 2026) — J1–J12, A1–A10 |
+| [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md) | Reseplanerare omgång 3 — J14–J18 |
+| [feedback/2026-06-11-svar-till-jesper.md](feedback/2026-06-11-svar-till-jesper.md) | Utkast svar till Jesper (status juni 2026) |
 
 ## Daglig utveckling
 

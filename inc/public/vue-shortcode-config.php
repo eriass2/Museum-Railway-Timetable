@@ -156,7 +156,10 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 	$hero_background_url = isset( $parsed['hero_background_url'] ) ? trim( (string) $parsed['hero_background_url'] ) : '';
 
 	return array(
-		'stations'     => $station_rows,
+		'stations'        => $station_rows,
+		'cacheGeneration' => function_exists( 'MRT_journey_cache_generation' )
+			? MRT_journey_cache_generation()
+			: 1,
 		'ticketUrl'    => $ticket_url,
 		'betaBanner'   => $beta_banner,
 		'feedbackEnabled' => function_exists( 'MRT_plugin_wizard_feedback_enabled' )

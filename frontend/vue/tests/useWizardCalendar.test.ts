@@ -64,7 +64,7 @@ describe('useWizardCalendar', () => {
     ctx.store.calMonth = 6;
 
     const { result: cal, unmount } = withSetup(() =>
-      useWizardCalendar(ctx.store, wizardConfig(), ctx.cfg),
+      useWizardCalendar(ctx.store, wizardConfig(), ctx.cfg, ctx.resourceCache),
     );
 
     expect(initWizardCalendar).toHaveBeenCalled();

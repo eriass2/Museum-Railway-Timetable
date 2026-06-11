@@ -1,6 +1,6 @@
 <?php
 /**
- * Transient cache for journey calendar months (Fas 2 performance).
+ * Journey calendar month cache — thin wrappers over journey-cache facade.
  *
  * @package Museum_Railway_Timetable
  */
@@ -11,29 +11,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** Option key — bump to invalidate all calendar month transients. */
-const MRT_JOURNEY_CALENDAR_CACHE_VERSION_OPTION = 'mrt_journey_calendar_cache_ver';
-
-/** TTL for cached calendar months (seconds). */
-const MRT_JOURNEY_CALENDAR_CACHE_TTL = HOUR_IN_SECONDS;
-
-/**
- * Current cache generation (invalidated on timetable data changes).
- */
-function MRT_journey_calendar_cache_version(): int {
-	return max( 1, (int) get_option( MRT_JOURNEY_CALENDAR_CACHE_VERSION_OPTION, 1 ) );
-}
-
-/**
- * Bump cache version so existing transients are ignored.
- */
-function MRT_bump_journey_calendar_cache_version(): void {
-	update_option(
-		MRT_JOURNEY_CALENDAR_CACHE_VERSION_OPTION,
-		MRT_journey_calendar_cache_version() + 1,
-		false
-	);
-}
+/** @deprecated Use MRT_JOURNEY_CACHE_DEFAULT_TTL */
+const MRT_JOURNEY_CALENDAR_CACHE_TTL = MRT_JOURNEY_CACHE_DEFAULT_TTL;
 
 /**
  * Build transient key for one calendar month query.
@@ -45,15 +24,16 @@ function MRT_journey_calendar_month_cache_key(
 	int $month,
 	string $trip_type
 ): string {
-	$parts = array(
-		(string) MRT_journey_calendar_cache_version(),
-		(string) $from_station_id,
-		(string) $to_station_id,
-		(string) $year,
-		(string) $month,
-		$trip_type === 'return' ? 'return' : 'single',
+	return MRT_journey_cache_key(
+		'calendar.month',
+		array(
+			'from'      => (string) $from_station_id,
+			'to'        => (string) $to_station_id,
+			'year'      => (string) $year,
+			'month'     => (string) $month,
+			'trip_type' => $trip_type === 'return' ? 'return' : 'single',
+		)
 	);
-	return 'mrt_jcal_' . md5( implode( '|', $parts ) );
 }
 
 /**
@@ -81,34 +61,5 @@ function MRT_journey_calendar_month_cache_set( string $cache_key, array $payload
 	if ( ! function_exists( 'set_transient' ) || $payload === array() ) {
 		return;
 	}
-	set_transient( $cache_key, $payload, MRT_JOURNEY_CALENDAR_CACHE_TTL );
+	set_transient( $cache_key, $payload, MRT_journey_cache_ttl( 'calendar.month' ) );
 }
-
-/**
- * Invalidate calendar cache when plugin timetable data changes.
- *
- * @param int $post_id Post ID.
- */
-function MRT_journey_calendar_maybe_invalidate_on_save( int $post_id ): void {
-	if ( $post_id <= 0 || wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
-		return;
-	}
-	$post_type = get_post_type( $post_id );
-	if ( ! is_string( $post_type ) || ! in_array( $post_type, MRT_POST_TYPES, true ) ) {
-		return;
-	}
-	MRT_bump_journey_calendar_cache_version();
-}
-
-add_action( 'save_post', 'MRT_journey_calendar_maybe_invalidate_on_save', 20, 1 );
-
-add_action(
-	'updated_option',
-	static function ( string $option ): void {
-		if ( in_array( $option, array( 'mrt_price_matrix', 'mrt_public_notices' ), true ) ) {
-			MRT_bump_journey_calendar_cache_version();
-		}
-	},
-	10,
-	1
-);

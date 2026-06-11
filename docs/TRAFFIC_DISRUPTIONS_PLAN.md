@@ -213,9 +213,10 @@ Exempel (målbild):
 | Doc | Roll |
 |-----|------|
 | [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | v1 — implementerad bas (källor A+B, flat lista) |
-| [TODO.md](TODO.md) | J11/D16 — aktiv plan, fas 1 nästa |
+| [TODO.md](TODO.md) | J11 — Jesper OK kvar; övrigt i arkiv |
 | [ADMIN_UX_ACTION_PLAN.md](ADMIN_UX_ACTION_PLAN.md) UX-2.7 | Trafikmeddelanden vs avvikelser — förklaring i admin |
 | [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) | J11 original |
+| [feedback/2026-06-11-svar-till-jesper.md](feedback/2026-06-11-svar-till-jesper.md) | Utkast svar till Jesper |
 
 ---
 

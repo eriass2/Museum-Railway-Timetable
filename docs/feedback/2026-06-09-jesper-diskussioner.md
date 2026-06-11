@@ -272,8 +272,8 @@
 | **Feedback** | Lista nuvarande/kommande störningar; ange berörda tåg |
 | **Beslut (2026-06-11)** | **Webb only** — UL-lik feed på shortcode/ev. egen sida. **Två källor → en feed:** (A) auto från tur-avvikelser + (B) manuella trafikmeddelanden. **90 dagars** horisont. Gruppering tågnummer i API. **Ingen** integration i reseplaneraren, realtime eller push. Inmatning oförändrad (Avvikelser + Trafikmeddelanden). |
 | **Plan** | [TRAFFIC_DISRUPTIONS_PLAN.md](../TRAFFIC_DISRUPTIONS_PLAN.md) §5–7 |
-| **Kvar** | Jesper-validering målbild §5.2; implementation fas 1–4 |
-| **Status** | **Beslutad riktning** — implementation ej påbörjad |
+| **Kvar** | Jesper-validering målbild §5.2 + 90 dagar — se [svar till Jesper](2026-06-11-svar-till-jesper.md) |
+| **Status** | **Implementerad** (fas 1–4, 2026-06-11) — väntar Jesper OK |
 
 ---
 
@@ -286,7 +286,7 @@
 | **Feedback** | J6, A0 — rutter/turer saknades; Jesper matade in manuellt |
 | **Fråga** | Är målet **CSV-import**, bättre **onboarding-checklista**, eller **operatörsmanual**? Ska vi leverera färdig fixture för Linnés Hammarby i repo? |
 | **Beslut av** | Operatör / projektledning |
-| **Status** | **Beslutad** — C) checklista + fixture + CSV-importväg |
+| **Status** | **Beslutad + verifierad** (2026-06-11) — C) checklista + fixture + CSV-importväg; reseplanerare + Turvy OK |
 
 ---
 
@@ -334,7 +334,9 @@
 | 2026-06-10 | D4 | **A** — valfri bakgrundsbild via settings/mediaväljare; grön fallback | Team |
 | 2026-06-10 | D6 | Klara wizard-steg klickbara tillbaka; framtida steg låsta (J8) | Team |
 | 2026-06-10 | D2b | Feedback-widget v1 — FAB, CPT, admin-lista; e-postnotis v2 | Team |
-| 2026-06-10 | D15 | **A** delvis — bussrader per tågkolumn + kolumnsammanslagning; manuell Selknä-check kvar | Team |
+| 2026-06-10 | D15 | **A** — bussrader per tågkolumn + kolumnsammanslagning; manuell check klar 2026-06-11 | Team |
+| 2026-06-11 | D16 | Fas 1–4 implementerade; Jesper OK målbild kvar | Team |
+| 2026-06-11 | D17 | Linnés Hammarby verifierad (reseplanerare + Turvy) | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 
@@ -345,3 +347,5 @@
 - [ ] Boka avstämning med Jesper / operatör kring D8, D11 (D1, D3, D4, D6, D14 avgjorda)
 - [x] Efter B2-utredning: uppdatera D15 med konkret rekommendation (2026-06-10)
 - [x] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) — 2026-06-11
+- [x] Utkast [svar till Jesper](2026-06-11-svar-till-jesper.md) — 2026-06-11
+- [ ] Jesper: J11 målbild + 90 dagar; J14 prestanda; D19–D22 (omgång 3)

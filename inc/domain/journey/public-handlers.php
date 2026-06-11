@@ -48,17 +48,33 @@ function MRT_journey_search_response( array $input ) {
 	if ( is_wp_error( $params ) ) {
 		return $params;
 	}
+	$cache_params = array(
+		'from'             => (string) (int) $params['from'],
+		'to'               => (string) (int) $params['to'],
+		'date'             => (string) $params['date'],
+		'trip_type'        => (string) $params['trip_type'],
+		'outbound_arrival' => (string) ( $params['outbound_arrival'] ?? '' ),
+		'min_turnaround'   => (string) (int) ( $params['min_turnaround_minutes'] ?? 0 ),
+	);
+	$cached = MRT_journey_cache_get( 'journey.search', $cache_params );
+	if ( is_array( $cached ) && isset( $cached['trip_type'], $cached['connections'] ) ) {
+		return $cached;
+	}
 	$services_on_date = MRT_services_running_on_date( $params['date'] );
 	if ( empty( $services_on_date ) ) {
-		return array(
+		$empty = array(
 			'trip_type'   => $params['trip_type'],
 			'connections' => array(),
 		);
+		MRT_journey_cache_set( 'journey.search', $cache_params, $empty );
+		return $empty;
 	}
-	return array(
+	$response = array(
 		'trip_type'   => $params['trip_type'],
 		'connections' => MRT_journey_find_connections( $params ),
 	);
+	MRT_journey_cache_set( 'journey.search', $cache_params, $response );
+	return $response;
 }
 
 /**

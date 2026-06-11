@@ -1,9 +1,12 @@
+/**
+ * @vitest-environment happy-dom
+ */
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createWizardStore } from '../src/wizard/store/createWizardStore';
 import type { WizardVueConfig } from '../src/config/types';
 import { useTripConnections } from '../src/wizard/composables/useTripConnections';
 import type { JourneyConnection } from '../src/wizard/types';
-import { clearTripConnectionsCache } from '../src/wizard/utils/tripConnectionsCache';
+import { clearWizardResourceCache } from '../src/wizard/cache/resourceCache';
 
 vi.mock('../src/api/mrtRest', () => ({
   mrtRestRequest: vi.fn(),
@@ -30,11 +33,12 @@ function wizardConfig(): WizardVueConfig {
 describe('useTripConnections', () => {
   beforeEach(() => {
     vi.mocked(mrtRestRequest).mockReset();
-    clearTripConnectionsCache();
+    sessionStorage.clear();
   });
 
   it('uses debug outbound connections without REST', async () => {
-    const ctx = createWizardStore(wizardConfig());
+    const ctx = createWizardStore({ ...wizardConfig(), cacheGeneration: 1 });
+    clearWizardResourceCache(ctx.resourceCache);
     const mock: JourneyConnection[] = [{ service_id: 9, from_departure: '10:00', to_arrival: '11:00' }];
     ctx.store.debugOutboundConnections = mock;
     ctx.store.fromId = 1;
@@ -54,7 +58,8 @@ describe('useTripConnections', () => {
       data: { connections: [{ service_id: 5, from_departure: '09:00', to_arrival: '10:00' }] },
     });
 
-    const ctx = createWizardStore(wizardConfig());
+    const ctx = createWizardStore({ ...wizardConfig(), cacheGeneration: 1 });
+    clearWizardResourceCache(ctx.resourceCache);
     ctx.store.fromId = 1;
     ctx.store.toId = 2;
     ctx.store.dateYmd = '2026-06-01';
@@ -84,7 +89,8 @@ describe('useTripConnections', () => {
       data: { connections: [] },
     });
 
-    const ctx = createWizardStore(wizardConfig());
+    const ctx = createWizardStore({ ...wizardConfig(), cacheGeneration: 1 });
+    clearWizardResourceCache(ctx.resourceCache);
     ctx.store.fromId = 1;
     ctx.store.toId = 2;
     ctx.store.dateYmd = '2026-06-01';
@@ -106,13 +112,14 @@ describe('useTripConnections', () => {
     );
   });
 
-  it('reuses client cache on repeat load without REST', async () => {
+  it('reuses client cache on repeat load and revalidates in background', async () => {
     vi.mocked(mrtRestRequest).mockResolvedValue({
       success: true,
       data: { connections: [{ service_id: 5, from_departure: '09:00', to_arrival: '10:00' }] },
     });
 
-    const ctx = createWizardStore(wizardConfig());
+    const ctx = createWizardStore({ ...wizardConfig(), cacheGeneration: 1 });
+    clearWizardResourceCache(ctx.resourceCache);
     ctx.store.fromId = 1;
     ctx.store.toId = 2;
     ctx.store.dateYmd = '2026-06-01';
@@ -122,6 +129,6 @@ describe('useTripConnections', () => {
     await loadConnections();
 
     expect(connections.value).toHaveLength(1);
-    expect(mrtRestRequest).toHaveBeenCalledTimes(1);
+    expect(mrtRestRequest).toHaveBeenCalledTimes(2);
   });
 });

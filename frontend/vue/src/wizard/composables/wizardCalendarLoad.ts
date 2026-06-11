@@ -1,77 +1,49 @@
 import type { ComputedRef, Ref } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
 import type { WizardStore } from '../store/createWizardStore';
-import type { TripType } from '../types';
 import type { CalendarDayInfo, CalendarDayStatus } from '../../shared/calendarDay';
 import type { WizardCfg } from '../utils/wizardCfgTypes';
+import { calendarMonthParams } from '../cache/cacheKeys';
+import type { WizardResourceCache } from '../cache/resourceCache';
 import { cfgStr, cfgStringArray } from '../utils/wizardLabels';
 import {
   addCalendarMonths,
   formatYmdForDisplay,
   todayYearMonth,
 } from '../utils/wizardDate';
-import {
-  clearWizardCalendarCacheInFlight,
-  getWizardCalendarCache,
-  isWizardCalendarCacheInFlight,
-  markWizardCalendarCacheInFlight,
-  setWizardCalendarCache,
-  wizardCalendarCacheKey,
-} from '../utils/wizardCalendarCache';
 
 import type { MrtRestRequestInit, MrtRestResponse } from '../../api/mrtRest';
 
 type RestRun = <T>(init: MrtRestRequestInit) => Promise<MrtRestResponse<T>>;
 
-function otherWizardTripType(tripType: string): TripType {
-  return tripType === 'return' ? 'single' : 'return';
-}
+type CalendarResponse = {
+  year: number;
+  month: number;
+  days: Record<string, CalendarDayInfo>;
+};
 
-/** Warm client + server cache for the other trip type (single ↔ return). */
-async function prefetchWizardCalendarMonth(
+async function fetchCalendarMonth(
   store: WizardStore,
   run: RestRun,
   year: number,
   month: number,
-): Promise<void> {
-  if (store.debugCalendarDays || store.fromId <= 0 || store.toId <= 0) {
-    return;
+  tripType: string,
+): Promise<Record<string, CalendarDayInfo> | null> {
+  const res = await run<CalendarResponse>({
+    method: 'POST',
+    path: 'journey/calendar',
+    body: {
+      from_station: store.fromId,
+      to_station: store.toId,
+      year,
+      month,
+      trip_type: tripType,
+    },
+  });
+  if (!res.success || !res.data?.days) {
+    return null;
   }
-
-  const tripType = otherWizardTripType(store.tripType);
-  const cacheKey = wizardCalendarCacheKey(store.fromId, store.toId, tripType, year, month);
-  if (getWizardCalendarCache(cacheKey) || isWizardCalendarCacheInFlight(cacheKey)) {
-    return;
-  }
-
-  markWizardCalendarCacheInFlight(cacheKey);
-  try {
-    const res = await run<{ year: number; month: number; days: Record<string, CalendarDayInfo> }>({
-      method: 'POST',
-      path: 'journey/calendar',
-      body: {
-        from_station: store.fromId,
-        to_station: store.toId,
-        year,
-        month,
-        trip_type: tripType,
-      },
-    });
-    if (res.success && res.data?.days) {
-      setWizardCalendarCache(cacheKey, res.data.days);
-    }
-  } finally {
-    clearWizardCalendarCacheInFlight(cacheKey);
-  }
-}
-
-function scheduleWizardCalendarPrefetch(
-  store: WizardStore,
-  run: RestRun,
-  year: number,
-  month: number,
-): void {
-  void prefetchWizardCalendarMonth(store, run, year, month);
+  return res.data.days;
 }
 
 export async function loadWizardCalendarMonth(
@@ -79,6 +51,7 @@ export async function loadWizardCalendarMonth(
   cfg: ComputedRef<WizardCfg>,
   daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   run: RestRun,
+  resourceCache: WizardResourceCache,
   year: number,
   month: number,
 ): Promise<void> {
@@ -89,39 +62,33 @@ export async function loadWizardCalendarMonth(
     return;
   }
 
-  const cacheKey = wizardCalendarCacheKey(
-    store.fromId,
-    store.toId,
-    store.tripType,
-    year,
-    month,
-  );
-  const cached = getWizardCalendarCache(cacheKey);
-  if (cached) {
-    daysMap.value = cached;
-    scheduleWizardCalendarPrefetch(store, run, year, month);
-    return;
-  }
-
-  const res = await run<{ year: number; month: number; days: Record<string, CalendarDayInfo> }>({
-    method: 'POST',
-    path: 'journey/calendar',
-    body: {
-      from_station: store.fromId,
-      to_station: store.toId,
-      year,
-      month,
-      trip_type: store.tripType,
+  const tripType = store.tripType;
+  const params = calendarMonthParams(store.fromId, store.toId, tripType, year, month);
+  const days = await resourceCache.load(
+    {
+      resource: 'calendar.month',
+      params,
+      request: () => fetchCalendarMonth(store, run, year, month, tripType),
     },
-  });
-  if (!res.success || !res.data) {
+    { priority: 'user' },
+  );
+
+  if (!days) {
     store.showError(cfgStr(cfg, 'errorGeneric', 'Något gick fel. Försök igen.'));
     return;
   }
-  const days = res.data.days || {};
+
   daysMap.value = days;
-  setWizardCalendarCache(cacheKey, days);
-  scheduleWizardCalendarPrefetch(store, run, year, month);
+  resourceCache.prefetchRelated('calendar.month', params, (spec) => {
+    const p = spec.params;
+    return fetchCalendarMonth(
+      store,
+      run,
+      Number(p.year),
+      Number(p.month),
+      String(p.trip_type),
+    );
+  });
 }
 
 export function wizardCalendarDayAria(
@@ -150,10 +117,11 @@ export function shiftWizardCalendarMonth(
   cfg: ComputedRef<WizardCfg>,
   daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   run: RestRun,
+  resourceCache: WizardResourceCache,
   delta: number,
 ): void {
   const cm = addCalendarMonths(store.calYear, store.calMonth, delta);
-  void loadWizardCalendarMonth(store, cfg, daysMap, run, cm.year, cm.month);
+  void loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, cm.year, cm.month);
 }
 
 export function goWizardCalendarToday(
@@ -161,9 +129,10 @@ export function goWizardCalendarToday(
   cfg: ComputedRef<WizardCfg>,
   daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   run: RestRun,
+  resourceCache: WizardResourceCache,
 ): void {
   const now = todayYearMonth();
-  void loadWizardCalendarMonth(store, cfg, daysMap, run, now.year, now.month);
+  void loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, now.year, now.month);
 }
 
 export function initWizardCalendar(
@@ -172,11 +141,12 @@ export function initWizardCalendar(
   cfg: ComputedRef<WizardCfg>,
   daysMap: Ref<Record<string, CalendarDayInfo | CalendarDayStatus>>,
   run: RestRun,
+  resourceCache: WizardResourceCache,
 ): void {
   if (!store.calYear) {
     const now = todayYearMonth();
-    void loadWizardCalendarMonth(store, cfg, daysMap, run, now.year, now.month);
+    void loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, now.year, now.month);
     return;
   }
-  void loadWizardCalendarMonth(store, cfg, daysMap, run, store.calYear, store.calMonth);
+  void loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, store.calYear, store.calMonth);
 }
