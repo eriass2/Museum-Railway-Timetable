@@ -16,6 +16,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function MRT_admin_vue_l10n_editor_trips(): array {
 	return array(
+		'editorColLine'           => __( 'Linje', 'museum-railway-timetable' ),
+		'editorColDirection'      => __( 'Riktning', 'museum-railway-timetable' ),
 		'editorColRoute'          => __( 'Rutt', 'museum-railway-timetable' ),
 		'editorColTrainType'      => __( 'Tågtyp', 'museum-railway-timetable' ),
 		'editorColDestination'    => __( 'Slutstation', 'museum-railway-timetable' ),
@@ -37,6 +39,13 @@ function MRT_admin_vue_l10n_editor_trips(): array {
 		'editorHighlightNote'     => __( 'Förklaring (utskrift)', 'museum-railway-timetable' ),
 		'editorHighlightHint'     => __(
 			'Tom etikett tar bort markeringen. Färg visas som vertikal rand i översikten.',
+			'museum-railway-timetable'
+		),
+		'editorLinePrompt'        => __( '— Linje —', 'museum-railway-timetable' ),
+		'editorDirectionPrompt'   => __( '— Riktning —', 'museum-railway-timetable' ),
+		'editorDirectionToward'   => __( 'Mot %s', 'museum-railway-timetable' ),
+		'editorDirectionHint'     => __(
+			'Välj linje och vilken ände turen kör mot. Rutt härleds automatiskt.',
 			'museum-railway-timetable'
 		),
 		'editorRoutePrompt'       => __( '— Rutt —', 'museum-railway-timetable' ),

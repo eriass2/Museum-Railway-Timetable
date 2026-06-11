@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import { AdminDisclosure, AdminTrainTypeSelect } from '../ui';
 import type { TimetableDetail } from '../../types';
 import type { TimetableTripDraft } from './tripFormTypes';
-import { adminStr } from '../../utils/adminLabels';
+import { adminFmt, adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 
 const props = defineProps<{
@@ -16,24 +16,63 @@ const draft = defineModel<TimetableTripDraft>('draft', { required: true });
 
 const cfg = adminConfig();
 
-const routeSelectId = computed(() => `${props.fieldIdPrefix}-route`);
+const lineSelectId = computed(() => `${props.fieldIdPrefix}-line`);
+const directionSelectId = computed(() => `${props.fieldIdPrefix}-direction`);
 const serviceNumberInputId = computed(() => `${props.fieldIdPrefix}-num`);
 const trainTypeSelectId = computed(() => `${props.fieldIdPrefix}-type`);
+
+const selectedLine = computed(() =>
+  props.detail.lines.find((line) => line.code === draft.value.line_code),
+);
+
+const directionOptions = computed(() => selectedLine.value?.termini ?? []);
 
 const selectedTrainTypeName = computed(
   () => props.detail.train_types.find((t) => t.id === draft.value.train_type_id)?.name ?? '',
 );
+
+function onLineChange(code: string): void {
+  draft.value.line_code = code;
+  const stillValid = directionOptions.value.some(
+    (t) => t.station_id === draft.value.toward_station_id,
+  );
+  if (!stillValid) {
+    draft.value.toward_station_id = 0;
+  }
+}
 </script>
 
 <template>
   <div class="mrt-admin-trip-fields">
     <p class="mrt-admin-trip-fields__field">
-      <label :for="routeSelectId">{{ adminStr(cfg, 'editorColRoute') }}</label>
-      <select :id="routeSelectId" v-model.number="draft.route_id" class="widefat">
-        <option :value="0">{{ adminStr(cfg, 'editorRoutePrompt') }}</option>
-        <option v-for="r in detail.routes" :key="r.id" :value="r.id">{{ r.title }}</option>
+      <label :for="lineSelectId">{{ adminStr(cfg, 'editorColLine') }}</label>
+      <select
+        :id="lineSelectId"
+        :value="draft.line_code"
+        class="widefat"
+        @change="onLineChange(($event.target as HTMLSelectElement).value)"
+      >
+        <option value="">{{ adminStr(cfg, 'editorLinePrompt') }}</option>
+        <option v-for="line in detail.lines" :key="line.code" :value="line.code">
+          {{ line.title }}
+        </option>
       </select>
-      <span class="description">{{ adminStr(cfg, 'editorDestinationAuto') }}</span>
+    </p>
+
+    <p class="mrt-admin-trip-fields__field">
+      <label :for="directionSelectId">{{ adminStr(cfg, 'editorColDirection') }}</label>
+      <select
+        :id="directionSelectId"
+        v-model.number="draft.toward_station_id"
+        class="widefat"
+        :disabled="!draft.line_code"
+      >
+        <option :value="0">{{ adminStr(cfg, 'editorDirectionPrompt') }}</option>
+        <option v-for="term in directionOptions" :key="term.station_id" :value="term.station_id">
+          {{ adminFmt(cfg, 'editorDirectionToward', term.station_name) }}
+        </option>
+      </select>
+      <span class="description">{{ adminStr(cfg, 'editorDirectionHint') }}</span>
     </p>
 
     <p class="mrt-admin-trip-fields__field">

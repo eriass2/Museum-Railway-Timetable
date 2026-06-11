@@ -1,6 +1,6 @@
 # Linjer och grenar — refactor-plan (Lennakatten)
 
-**Status:** Spikad domänriktning (2026-06-11). Fas 1–2 implementerade (pilot); Fas 3–4 återstår.  
+**Status:** Spikad domänriktning (2026-06-11). Fas 1–4 implementerade (pilot); `route` kvar som import-alias.  
 **Syfte:** Ersätta dagens många shuttle-`route` + overview-heuristik med en tydlig modell innan go-live.  
 **Relaterat:** [DATA_MODEL.md](DATA_MODEL.md) §1.4b, [CSV_FORMAT.md](CSV_FORMAT.md), [LINNES_HAMMARBY.md](LINNES_HAMMARBY.md).
 
@@ -142,11 +142,11 @@ services.csv
 - Ta bort `linnes-hammarby-uppsala-ostra` route, `overview_pass_from_station`, korridor-`\|` som datakrav
 - PDF-korridor `|` via `overview_corridor_after_station` på pattern-linjen i registry
 
-### Fas 4 — städning
+### Fas 4 — städning ✓
 
-- Ta bort överflödiga routes (B5/Selkné–Linnés redan borttagen)
-- D8: en linje per sträcka, riktning härledd
-- Uppdatera admin (Turvy väljer `line`, inte dubbel route)
+- `route_code` valfritt i `services.csv` när `line_code` finns — härleds från linje + riktning
+- Admin Turvy: välj linje + riktning (mot linjeände), inte dubbel rutt
+- `routes.csv` kvar som import-alias tills full D8 (en route-post per linje)
 
 ---
 

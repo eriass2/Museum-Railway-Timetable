@@ -10,6 +10,7 @@ function makeDetail(dates: string[]): TimetableDetail {
     type: 'green',
     dates,
     services: [],
+    lines: [],
     routes: [],
     train_types: [],
   };

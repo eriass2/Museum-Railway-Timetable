@@ -241,9 +241,24 @@ final class CsvFixtureTest extends TestCase {
 	 * @return array<int, array<string, string>>
 	 */
 	private function fixture_services( string $timetable_code, string $route_code ): array {
+		$files  = $this->fixture_files();
+		$branch = array();
+		foreach ( (array) ( $files['routes.csv'] ?? array() ) as $row ) {
+			$code = trim( (string) ( $row['route_code'] ?? '' ) );
+			if ( $code !== '' ) {
+				$branch[ $code ] = trim( (string) ( $row['branch_code'] ?? '' ) );
+			}
+		}
 		$out = array();
-		foreach ( $this->fixture_files()['services.csv'] ?? array() as $row ) {
-			if ( ( $row['timetable_code'] ?? '' ) === $timetable_code && ( $row['route_code'] ?? '' ) === $route_code ) {
+		foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {
+			if ( ( $row['timetable_code'] ?? '' ) !== $timetable_code ) {
+				continue;
+			}
+			$row_route = trim( (string) ( $row['route_code'] ?? '' ) );
+			if ( $row_route === '' ) {
+				$row_route = MRT_csv_resolve_service_route_code( $row, $files, $branch );
+			}
+			if ( $row_route === $route_code ) {
 				$out[] = $row;
 			}
 		}

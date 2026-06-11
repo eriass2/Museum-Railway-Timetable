@@ -11,6 +11,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/line/line-csv.php';
+require_once MRT_PATH . 'inc/domain/line/line-route-resolve.php';
+
 function MRT_rest_list_timetables(): array {
 	$posts = get_posts(
 		array(
@@ -65,9 +68,73 @@ function MRT_rest_get_timetable_detail( int $timetable_id ) {
 		'type'        => (string) get_post_meta( $timetable_id, 'mrt_timetable_type', true ),
 		'dates'       => is_array( $dates ) ? array_values( $dates ) : array(),
 		'services'    => $services,
+		'lines'       => MRT_rest_format_line_options(),
 		'routes'      => MRT_rest_format_route_options( $routes ),
 		'train_types' => MRT_rest_format_train_type_options( $train_types ),
 	);
+}
+
+/**
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_rest_format_line_options(): array {
+	$registry = MRT_get_line_registry();
+	if ( $registry === array() ) {
+		return array();
+	}
+	$rows = array();
+	foreach ( $registry as $code => $entry ) {
+		if ( ! is_array( $entry ) ) {
+			continue;
+		}
+		$station_codes = $entry['station_codes'] ?? array();
+		if ( ! is_array( $station_codes ) || $station_codes === array() ) {
+			continue;
+		}
+		$termini = array();
+		foreach ( array( $station_codes[0], $station_codes[ count( $station_codes ) - 1 ] ) as $station_code ) {
+			$station_code = trim( (string) $station_code );
+			if ( $station_code === '' ) {
+				continue;
+			}
+			$station_id = MRT_route_post_id_from_station_code( $station_code );
+			if ( $station_id <= 0 ) {
+				continue;
+			}
+			$termini[] = array(
+				'station_id'   => $station_id,
+				'station_code' => $station_code,
+				'station_name' => (string) get_the_title( $station_id ),
+			);
+		}
+		$rows[] = array(
+			'code'    => (string) $code,
+			'title'   => (string) ( $entry['title'] ?? $code ),
+			'kind'    => (string) ( $entry['kind'] ?? '' ),
+			'termini' => $termini,
+		);
+	}
+	usort(
+		$rows,
+		static fn ( array $a, array $b ): int => strcmp( (string) ( $a['title'] ?? '' ), (string) ( $b['title'] ?? '' ) )
+	);
+	return $rows;
+}
+
+function MRT_route_post_id_from_station_code( string $station_code ): int {
+	if ( $station_code === '' ) {
+		return 0;
+	}
+	$posts = get_posts(
+		array(
+			'post_type'      => MRT_POST_TYPE_STATION,
+			'posts_per_page' => 1,
+			'fields'         => 'ids',
+			'meta_key'       => 'mrt_station_code',
+			'meta_value'     => $station_code,
+		)
+	);
+	return isset( $posts[0] ) ? (int) $posts[0] : 0;
 }
 
 function MRT_rest_format_timetable_services( int $timetable_id ): array {
@@ -87,12 +154,22 @@ function MRT_rest_format_timetable_services( int $timetable_id ): array {
 			$service_number = (string) $service->ID;
 		}
 		$end_station_id  = (int) get_post_meta( $service->ID, 'mrt_service_end_station_id', true );
+		$line_code       = MRT_get_service_line_code( (int) $service->ID );
+		$route_code      = $route_id > 0 ? trim( (string) get_post_meta( $route_id, 'mrt_route_code', true ) ) : '';
+		$toward_code     = $line_code !== '' && $route_code !== ''
+			? MRT_line_toward_station_code_from_route( $line_code, $route_code )
+			: '';
+		$toward_station_id = $toward_code !== '' ? MRT_route_post_id_from_station_code( $toward_code ) : 0;
+		$line_title      = $line_code !== '' ? (string) ( MRT_line_registry_entry( $line_code )['title'] ?? $line_code ) : '';
 		$highlight       = MRT_get_service_highlight( (int) $service->ID );
 		$rows[]          = array(
 			'id'                  => (int) $service->ID,
 			'title'               => (string) $service->post_title,
 			'service_number'      => $service_number,
 			'end_station_id'      => $end_station_id,
+			'line_code'           => $line_code,
+			'line_name'           => $line_title,
+			'toward_station_id'   => $toward_station_id,
 			'route_id'            => $route_id,
 			'route_name'          => $route_id > 0 ? (string) get_the_title( $route_id ) : '',
 			'train_type_id'       => $train_type_id,

@@ -47,7 +47,7 @@ const emit = defineEmits<{
         <thead>
           <tr>
             <th>{{ adminStr(cfg, 'editorColTrip') }}</th>
-            <th>{{ adminStr(cfg, 'editorColRoute') }}</th>
+            <th>{{ adminStr(cfg, 'editorColLine') }}</th>
             <th>{{ adminStr(cfg, 'editorColTrainType') }}</th>
             <th>{{ adminStr(cfg, 'editorColDestination') }}</th>
             <th></th>
@@ -56,7 +56,7 @@ const emit = defineEmits<{
         <tbody>
           <tr v-for="s in detail.services" :key="s.id">
             <td>{{ s.service_number }}</td>
-            <td>{{ s.route_name }}</td>
+            <td>{{ s.line_name || s.route_name || '—' }}</td>
             <td>
               <AdminTrainTypeCell
                 :icon-key="s.train_type_icon_key"

@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/line/line-csv.php';
+require_once MRT_PATH . 'inc/domain/line/line-route-resolve.php';
 require_once MRT_PATH . 'inc/domain/service/highlight.php';
 require_once MRT_PATH . 'inc/domain/service/overview-column.php';
 require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
@@ -58,7 +59,12 @@ function MRT_csv_import_services( array $files, array &$maps ): int {
 	$routes_branch = MRT_csv_routes_branch_from_file( $files );
 	$count         = 0;
 	foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {
-		$code  = MRT_csv_resolve_service_code( $row );
+		$code       = MRT_csv_resolve_service_code( $row );
+		$route_code = MRT_csv_resolve_service_route_code( $row, $files, $routes_branch );
+		if ( $route_code === '' ) {
+			continue;
+		}
+		$row['_resolved_route_code'] = $route_code;
 		$title = MRT_csv_service_title( $row, $maps );
 		$id    = MRT_csv_upsert_post_by_code(
 			$code,
@@ -72,9 +78,8 @@ function MRT_csv_import_services( array $files, array &$maps ): int {
 		if ( $id <= 0 ) {
 			continue;
 		}
-		$route_code = $row['route_code'] ?? '';
-		$tt_code    = $row['timetable_code'] ?? '';
-		$end_code   = $row['end_station_code'] ?? '';
+		$tt_code  = $row['timetable_code'] ?? '';
+		$end_code = $row['end_station_code'] ?? '';
 		update_post_meta( $id, 'mrt_service_route_id', (int) ( $maps['route'][ $route_code ] ?? 0 ) );
 		update_post_meta( $id, 'mrt_service_timetable_id', (int) ( $maps['timetable'][ $tt_code ] ?? 0 ) );
 		update_post_meta( $id, 'mrt_service_end_station_id', (int) ( $maps['station'][ $end_code ] ?? 0 ) );
@@ -103,9 +108,13 @@ function MRT_csv_service_title( array $row, array $maps ): string {
 	if ( $custom !== '' ) {
 		return $custom;
 	}
-	$route_id = (int) ( $maps['route'][ $row['route_code'] ?? '' ] ?? 0 );
+	$route_code = trim( (string) ( $row['route_code'] ?? '' ) );
+	if ( $route_code === '' && isset( $row['_resolved_route_code'] ) ) {
+		$route_code = (string) $row['_resolved_route_code'];
+	}
+	$route_id = (int) ( $maps['route'][ $route_code ] ?? 0 );
 	$route    = $route_id > 0 ? get_post( $route_id ) : null;
-	$prefix   = $route instanceof WP_Post ? $route->post_title : ( $row['route_code'] ?? 'Service' );
+	$prefix   = $route instanceof WP_Post ? $route->post_title : ( $route_code !== '' ? $route_code : 'Service' );
 	$num      = $row['service_number'] ?? '';
 	return trim( $prefix . ' ' . $num );
 }

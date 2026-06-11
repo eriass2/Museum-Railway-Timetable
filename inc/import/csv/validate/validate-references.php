@@ -50,6 +50,7 @@ function MRT_csv_validate_references(
 		MRT_csv_validate_service_rows( $files, $stations, $routes, $timetables, $train, $errors );
 		if ( in_array( 'lines', $includes, true ) ) {
 			MRT_csv_validate_service_line_codes( $files, $lines, MRT_csv_routes_branch_codes( $resolved ), $errors );
+			MRT_csv_validate_service_resolved_routes( $files, $routes, MRT_csv_routes_branch_codes( $resolved ), $errors );
 		}
 	}
 	if ( in_array( 'stoptimes', $includes, true ) ) {
@@ -142,7 +143,7 @@ function MRT_csv_validate_service_rows(
 ): void {
 	foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {
 		MRT_csv_check_fk( $row, 'timetable_code', $timetables, $errors );
-		MRT_csv_check_fk( $row, 'route_code', $routes, $errors );
+		MRT_csv_validate_service_route_or_line( $row, $routes, $errors );
 		MRT_csv_check_fk( $row, 'end_station_code', $stations, $errors );
 	}
 	foreach ( (array) ( $files['service_train_types.csv'] ?? array() ) as $row ) {
@@ -165,6 +166,21 @@ function MRT_csv_check_fk( array $row, string $field, array $set, array &$errors
 	}
 	if ( ! isset( $set[ $val ] ) ) {
 		MRT_csv_add_row_error( $row, "Unknown {$field} \"{$val}\".", $errors );
+	}
+}
+
+/**
+ * @param array<string, bool> $routes
+ */
+function MRT_csv_validate_service_route_or_line( array $row, array $routes, array &$errors ): void {
+	$route_code = trim( (string) ( $row['route_code'] ?? '' ) );
+	$line_code  = trim( (string) ( $row['line_code'] ?? '' ) );
+	if ( $route_code === '' && $line_code === '' ) {
+		MRT_csv_add_row_error( $row, 'Either route_code or line_code is required.', $errors );
+		return;
+	}
+	if ( $route_code !== '' ) {
+		MRT_csv_check_fk( $row, 'route_code', $routes, $errors );
 	}
 }
 

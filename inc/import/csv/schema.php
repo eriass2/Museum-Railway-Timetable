@@ -60,7 +60,7 @@ function MRT_csv_required_columns(): array {
 		'route_stations.csv'        => array( 'route_code', 'sequence', 'station_code' ),
 		'timetables.csv'            => array( 'title' ),
 		'timetable_dates.csv'       => array( 'timetable_code', 'date' ),
-		'services.csv'              => array( 'timetable_code', 'route_code', 'end_station_code' ),
+		'services.csv'              => array( 'timetable_code', 'end_station_code' ),
 		'service_train_types.csv'   => array( 'service_code', 'train_type_slug' ),
 		'stoptimes.csv'             => array(
 			'service_code',
@@ -121,7 +121,7 @@ function MRT_csv_export_column_headers(): array {
 			'highlight_color',
 			'highlight_note',
 			'overview_column',
-			'overview_pass_from_station',
+			'toward_station_code',
 		),
 		'service_train_types.csv' => array( 'service_code', 'train_type_slug' ),
 		'stoptimes.csv'           => array(

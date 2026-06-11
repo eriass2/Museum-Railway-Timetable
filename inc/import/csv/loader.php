@@ -27,6 +27,7 @@ require_once $csv_dir . 'validate/validate-manifest.php';
 require_once $csv_dir . 'validate/validate-codes.php';
 require_once $csv_dir . 'validate/validate-codes-entities.php';
 require_once $csv_dir . 'validate/validate-lines.php';
+require_once MRT_PATH . 'inc/domain/line/line-route-resolve.php';
 require_once $csv_dir . 'validate/validate-references.php';
 require_once $csv_dir . 'codes-store.php';
 require_once $csv_dir . 'entity-upsert.php';

@@ -40,9 +40,9 @@ export function getTimetableOverview(id: number) {
 export function addTimetableService(
   timetableId: number,
   body: {
-    route_id: number;
+    line_code: string;
+    toward_station_id: number;
     train_type_id?: number;
-    end_station_id?: number;
     service_number?: string;
     highlight_label?: string;
     highlight_color?: string;
@@ -59,9 +59,9 @@ export function updateTimetableService(
   timetableId: number,
   serviceId: number,
   body: {
-    route_id: number;
+    line_code: string;
+    toward_station_id: number;
     train_type_id?: number;
-    end_station_id?: number;
     service_number?: string;
     highlight_label?: string;
     highlight_color?: string;

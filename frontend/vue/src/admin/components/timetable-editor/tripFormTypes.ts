@@ -1,5 +1,6 @@
 export type TimetableTripDraft = {
-  route_id: number;
+  line_code: string;
+  toward_station_id: number;
   train_type_id: number;
   service_number: string;
   highlight_label: string;
@@ -9,7 +10,8 @@ export type TimetableTripDraft = {
 
 export function emptyTripDraft(): TimetableTripDraft {
   return {
-    route_id: 0,
+    line_code: '',
+    toward_station_id: 0,
     train_type_id: 0,
     service_number: '',
     highlight_label: '',
@@ -19,7 +21,8 @@ export function emptyTripDraft(): TimetableTripDraft {
 }
 
 export type TripServiceApiBody = {
-  route_id: number;
+  line_code: string;
+  toward_station_id: number;
   train_type_id?: number;
   service_number?: string;
   highlight_label?: string;
@@ -29,11 +32,16 @@ export type TripServiceApiBody = {
 
 export function tripDraftToApiBody(draft: TimetableTripDraft): TripServiceApiBody {
   return {
-    route_id: draft.route_id,
+    line_code: draft.line_code,
+    toward_station_id: draft.toward_station_id,
     train_type_id: draft.train_type_id || undefined,
     service_number: draft.service_number,
     highlight_label: draft.highlight_label.trim(),
     highlight_color: draft.highlight_color,
     highlight_note: draft.highlight_note,
   };
+}
+
+export function tripDraftIsComplete(draft: TimetableTripDraft): boolean {
+  return draft.line_code !== '' && draft.toward_station_id > 0;
 }

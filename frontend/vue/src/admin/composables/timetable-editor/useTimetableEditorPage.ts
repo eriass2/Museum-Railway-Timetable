@@ -16,6 +16,7 @@ import type { TripEditDraft } from '../../components/timetable-editor/TimetableE
 import type { TripsPanelView } from '../../components/timetable-editor/TimetableEditorTripsTab.vue';
 import {
   emptyTripDraft,
+  tripDraftIsComplete,
   tripDraftToApiBody,
 } from '../../components/timetable-editor/tripFormTypes';
 import { adminConfirm } from '../adminConfirm';
@@ -248,7 +249,8 @@ export function useTimetableEditorPage(timetableId: () => number) {
     editTrip.value = {
       service_id: service.id,
       service_number: serviceNumberForEdit(service),
-      route_id: service.route_id,
+      line_code: service.line_code ?? '',
+      toward_station_id: service.toward_station_id ?? 0,
       train_type_id: service.train_type_id,
       highlight_label: service.highlight_label ?? '',
       highlight_color: service.highlight_color || '#fff9c4',
@@ -263,7 +265,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
   }
 
   async function saveEditTrip(): Promise<void> {
-    if (!editTrip.value || !cfg.canManage || editTrip.value.route_id <= 0) {
+    if (!editTrip.value || !cfg.canManage || !tripDraftIsComplete(editTrip.value)) {
       return;
     }
     await updateTimetableService(
@@ -328,7 +330,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
   }
 
   async function addTrip() {
-    if (!cfg.canManage || newTrip.value.route_id <= 0) return;
+    if (!cfg.canManage || !tripDraftIsComplete(newTrip.value)) return;
     await addTimetableService(timetableId(), tripDraftToApiBody(newTrip.value));
     backToTripsList();
     await loadDetail();

@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once MRT_PATH . 'inc/domain/service/timetable-trip-create.php';
 require_once MRT_PATH . 'inc/domain/service/highlight.php';
 require_once MRT_PATH . 'inc/domain/route/route-direction.php';
+require_once MRT_PATH . 'inc/domain/line/line-route-resolve.php';
 
 /**
  * Parse and validate trip fields from a REST/CSV body.
@@ -21,10 +22,13 @@ require_once MRT_PATH . 'inc/domain/route/route-direction.php';
  * End station is derived from stop times (A7), not from the request body.
  *
  * @param array<string, mixed> $body Request body.
- * @return array{route_id: int, train_type_id: int}|WP_Error
+ * @return array{route_id: int, train_type_id: int, line_code?: string}|WP_Error
  */
 function MRT_parse_trip_input( array $body ) {
-	$route_id = (int) ( $body['route_id'] ?? 0 );
+	$route_id = MRT_parse_trip_route_id_from_body( $body );
+	if ( is_wp_error( $route_id ) ) {
+		return $route_id;
+	}
 	if ( $route_id <= 0 ) {
 		return new WP_Error( 'route', __( 'Route is required.', 'museum-railway-timetable' ), array( 'status' => 400 ) );
 	}
@@ -33,10 +37,37 @@ function MRT_parse_trip_input( array $body ) {
 		return new WP_Error( 'route', __( 'Route not found.', 'museum-railway-timetable' ), array( 'status' => 400 ) );
 	}
 
-	return array(
+	$parsed = array(
 		'route_id'      => $route_id,
 		'train_type_id' => (int) ( $body['train_type_id'] ?? 0 ),
 	);
+	$line_code = trim( (string) ( $body['line_code'] ?? '' ) );
+	if ( $line_code !== '' ) {
+		$parsed['line_code'] = $line_code;
+	}
+	return $parsed;
+}
+
+/**
+ * @param array<string, mixed> $body
+ * @return int|WP_Error
+ */
+function MRT_parse_trip_route_id_from_body( array $body ) {
+	$line_code         = trim( (string) ( $body['line_code'] ?? '' ) );
+	$toward_station_id = (int) ( $body['toward_station_id'] ?? 0 );
+	if ( $line_code !== '' && $toward_station_id > 0 ) {
+		$toward_code = MRT_station_code_for_post_id( $toward_station_id );
+		$route_id    = MRT_line_resolve_route_id( $line_code, $toward_code );
+		if ( $route_id <= 0 ) {
+			return new WP_Error(
+				'line',
+				__( 'Could not resolve route for the selected line and direction.', 'museum-railway-timetable' ),
+				array( 'status' => 400 )
+			);
+		}
+		return $route_id;
+	}
+	return (int) ( $body['route_id'] ?? 0 );
 }
 
 /**
@@ -61,7 +92,7 @@ function MRT_service_stored_destination_meta( int $service_id, int $route_id ): 
 /**
  * Persist route, train type, title and optional highlight meta.
  *
- * @param array{route_id: int, train_type_id: int} $parsed Parsed trip fields.
+ * @param array{route_id: int, train_type_id: int, line_code?: string} $parsed Parsed trip fields.
  * @param array<string, mixed>                     $body   Original request body.
  * @return true
  */
@@ -74,6 +105,10 @@ function MRT_persist_trip_fields( int $service_id, array $parsed, array $body ):
 	if ( $route_id !== $prev_route_id ) {
 		delete_post_meta( $service_id, 'mrt_service_end_station_id' );
 		delete_post_meta( $service_id, 'mrt_direction' );
+	}
+	$line_code = trim( (string) ( $parsed['line_code'] ?? '' ) );
+	if ( $line_code !== '' ) {
+		update_post_meta( $service_id, MRT_service_line_code_meta_key(), $line_code );
 	}
 
 	$destination = MRT_service_stored_destination_meta( $service_id, $route_id );

@@ -44,17 +44,21 @@ final class CsvLinesTest extends TestCase {
 	public function test_rail_services_on_main_routes_declare_line_code_main(): void {
 		$package = MRT_csv_load_package( ABSPATH . 'testdata/fixtures/lennakatten' );
 		$files   = (array) ( $package['files'] ?? array() );
+		$branch  = MRT_csv_routes_branch_from_file( $files );
+		$matched = 0;
 		foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {
-			$route = (string) ( $row['route_code'] ?? '' );
+			$route = MRT_csv_resolve_service_route_code( $row, $files, $branch );
 			if ( ! in_array( $route, MRT_csv_main_corridor_route_codes(), true ) ) {
 				continue;
 			}
+			++$matched;
 			self::assertSame(
 				'main',
 				(string) ( $row['line_code'] ?? '' ),
 				(string) ( $row['service_code'] ?? '' )
 			);
 		}
+		self::assertGreaterThan( 0, $matched );
 	}
 
 	public function test_lennakatten_bus_services_declare_transfer_branch_line_codes(): void {
@@ -131,9 +135,27 @@ final class CsvLinesTest extends TestCase {
 		}
 		self::assertIsArray( $b14 );
 		self::assertSame( 'linnes-uppsala', (string) ( $b14['line_code'] ?? '' ) );
-		self::assertSame( 'linnes-uppsala', (string) ( $b14['route_code'] ?? '' ) );
+		self::assertSame( '', (string) ( $b14['route_code'] ?? '' ) );
 		self::assertSame( '', (string) ( $b14['overview_column'] ?? '' ) );
 		self::assertSame( '', (string) ( $b14['overview_pass_from_station'] ?? '' ) );
+	}
+
+	public function test_resolve_route_from_line_for_main_outbound_and_inbound(): void {
+		$package = MRT_csv_load_package( ABSPATH . 'testdata/fixtures/lennakatten' );
+		$files   = (array) ( $package['files'] ?? array() );
+		$branch  = MRT_csv_routes_branch_from_file( $files );
+		$out_row = array(
+			'service_code'     => 'green-71-out',
+			'line_code'        => 'main',
+			'end_station_code' => 'marielund',
+		);
+		$in_row = array(
+			'service_code'     => 'green-62-in',
+			'line_code'        => 'main',
+			'end_station_code' => 'marielund',
+		);
+		self::assertSame( 'uppsala-faringe', MRT_csv_resolve_service_route_code( $out_row, $files, $branch ) );
+		self::assertSame( 'faringe-uppsala-ostra', MRT_csv_resolve_service_route_code( $in_row, $files, $branch ) );
 	}
 
 	public function test_import_lines_persists_pattern_corridor_after_station(): void {

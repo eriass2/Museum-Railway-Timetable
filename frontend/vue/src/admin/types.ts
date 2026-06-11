@@ -151,11 +151,21 @@ export type TimetableListItem = {
   trips_count: number;
 };
 
+export type TimetableLineOption = {
+  code: string;
+  title: string;
+  kind: string;
+  termini: { station_id: number; station_code: string; station_name: string }[];
+};
+
 export type TimetableServiceRow = {
   id: number;
   title: string;
   service_number: string;
   end_station_id?: number;
+  line_code?: string;
+  line_name?: string;
+  toward_station_id?: number;
   route_id: number;
   route_name: string;
   train_type_id: number;
@@ -170,6 +180,7 @@ export type TimetableDetail = {
   type: string;
   dates: string[];
   services: TimetableServiceRow[];
+  lines: TimetableLineOption[];
   routes: { id: number; title: string }[];
   train_types: { id: number; name: string; icon_key?: string }[];
 };

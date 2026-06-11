@@ -4,7 +4,7 @@ Test/demo timetable data for development (`docker-dev-reset`, Import Lennakatten
 
 **Source of truth:** edit the CSV files here directly.
 
-**Lines:** `lines.csv` + `line_stations.csv` + `branch_junctions.csv` define `main`, `fjallnora`, `linnes-marielund`, and pattern `linnes-uppsala` (B14). Transfer branches pair via junctions; B14 uses `line_code=linnes-uppsala` with PDF corridor after Marielund from the line registry (no `overview_pass_from_station` in CSV).
+**Lines:** `lines.csv` + `line_stations.csv` + `branch_junctions.csv` define `main`, `fjallnora`, `linnes-marielund`, and pattern `linnes-uppsala` (B14). Services use `line_code` only; directed `route_code` is derived at import. PDF corridor for B14 comes from the line registry.
 
 **Reference PDF:** `testdata/reference-pdfs/Anslagstidtabell-2026.pdf` (kalender + alla tidtabeller).
 
