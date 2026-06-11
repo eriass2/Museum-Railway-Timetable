@@ -82,7 +82,6 @@ Punkter **utan** beslut (A9 publicera, A0 onboarding, J11 UL-lik störningar m.f
 | A9 / D11 | Publicera-knapp / utkast tidtabell | `draft` vs meta vs staging — [diskussioner D11](feedback/2026-06-09-jesper-diskussioner.md#d11-publicera-knapp--utkast-a9-) |
 | A0 / D8 | Onboarding-friktion (rutt per riktning) | Domänmodell — [diskussioner D8](feedback/2026-06-09-jesper-diskussioner.md#d8-rutt-en-eller-två-rutter-per-linje-) |
 | J11 / D16 | UL-lik störningslista i reseplaneraren | Parkerad — [diskussioner D16](feedback/2026-06-09-jesper-diskussioner.md#d16-ul-lik-störningslista-) |
-| — | Thun's-expressen vertikal etikett (Turvy) | Layoutbeslut saknas — ej Jesper-scope v1 |
 
 ---
 
@@ -97,3 +96,4 @@ Punkter **utan** beslut (A9 publicera, A0 onboarding, J11 UL-lik störningar m.f
 | Tidtabellsöversikt — kolumnsammanslagning (kärna) | 2026-06-10 | commit `9a44dda`, `OverviewColumnMergeTest` |
 | Tidtabellsöversikt — bussrader per tågkolumn (Selkné) | 2026-06-10 | commit `8c8a30a`, `TimetableOverviewHelpersTest` |
 | Jesper beta — reseplanerare + admin (J1–J10, A1–A8, A10) | 2026-06-10 | [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) |
+| Turvy — highlight-kolumn (Thun's-expressen, J1) | 2026-06-01 | Smal vertikal etikett + fast kolumnbredd — [granskning J1](feedback/2026-06-01-granskning.md), `MrtOverviewRailGroupGrid.vue`, `timetable-overview.css` |
