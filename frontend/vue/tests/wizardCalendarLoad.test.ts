@@ -92,6 +92,7 @@ describe('wizardCalendarLoad', () => {
         trip_type: 'return',
       },
     });
+    await vi.waitFor(() => expect(run).toHaveBeenCalledTimes(2));
   });
 
   it('loadWizardCalendarMonth reuses client cache on repeat load', async () => {
@@ -113,9 +114,59 @@ describe('wizardCalendarLoad', () => {
     }));
 
     await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
+    await vi.waitFor(() => expect(run).toHaveBeenCalledTimes(2));
     await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
 
-    expect(run).toHaveBeenCalledTimes(1);
+    expect(run).toHaveBeenCalledTimes(2);
     expect(daysMap.value['2026-06-04']).toEqual({ status: 'ok', types: ['green'] });
+  });
+
+  it('prefetches the other trip type after primary calendar load', async () => {
+    const { store } = createWizardStore(config);
+    store.fromId = 1;
+    store.toId = 2;
+    store.tripType = 'return';
+    const daysMap = ref<Record<string, CalendarDayInfo | CalendarDayStatus>>({});
+    const run = vi.fn().mockImplementation((init: { body: { trip_type: string } }) =>
+      Promise.resolve({
+        success: true,
+        data: {
+          year: 2026,
+          month: 6,
+          days: {
+            '2026-06-04': { status: 'ok', type: init.body.trip_type },
+          },
+        },
+      }),
+    );
+    const cfg = computed(() => ({
+      errorGeneric: config.strings?.errorGeneric ?? '',
+    }));
+
+    await loadWizardCalendarMonth(store, cfg, daysMap, run, 2026, 6);
+
+    expect(run).toHaveBeenCalledTimes(2);
+    expect(run).toHaveBeenNthCalledWith(1, {
+      method: 'POST',
+      path: 'journey/calendar',
+      body: {
+        from_station: 1,
+        to_station: 2,
+        year: 2026,
+        month: 6,
+        trip_type: 'return',
+      },
+    });
+    expect(run).toHaveBeenNthCalledWith(2, {
+      method: 'POST',
+      path: 'journey/calendar',
+      body: {
+        from_station: 1,
+        to_station: 2,
+        year: 2026,
+        month: 6,
+        trip_type: 'single',
+      },
+    });
   });
 });
