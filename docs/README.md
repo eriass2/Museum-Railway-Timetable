@@ -28,7 +28,8 @@ Tågtypsikoner: `assets/icons/train-types/`.
 |----------|----------|
 | [TODO.md](TODO.md) | Teknisk skuld och planerade förbättringar (utils, refaktor) |
 | [TEST_IMPLEMENTATION_PLAN.md](TEST_IMPLEMENTATION_PLAN.md) | Plan för att täta testluckor (PHPUnit, Vitest, E2E) |
-| [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | Trafikmeddelanden-shortcode + admin (generella meddelanden + avvikelser) |
+| [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | Trafikmeddelanden-shortcode v1 (generella + dagens avvikelser) |
+| [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) | Trafikstörningar v2 — UL-referens, Jesper J11, gap-analys |
 | [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md) | Reseplanerare – prestanda (fas 1–4) |
 
 ## Feedback / QA

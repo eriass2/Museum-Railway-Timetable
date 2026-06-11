@@ -2,7 +2,7 @@
 
 Kort lista över **öppna** punkter där **produkt/beslut redan är spikat** — implementation eller verifiering återstår. Genomfört arbete finns i arkivet längst ner och i respektive plan/doc.
 
-Punkter **utan** beslut (J11 UL-lik störningar m.fl.) listas separat. **Mycket senare** — parkerade tills kärnflöden är verifierade och produktbeslut finns.
+Punkter **utan** beslut (J11 UL-lik störningar m.fl.) listas separat eller i **[TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md)**. **Mycket senare** — parkerade tills kärnflöden är verifierade och produktbeslut finns.
 
 ---
 
@@ -86,7 +86,7 @@ Plocka **inte** upp förrän kärnflöden är stabila, manuella checks i TODO ov
 
 | ID | Punkt | Var beslut saknas |
 |----|-------|-------------------|
-| J11 / D16 | UL-lik störningslista i reseplaneraren | Parkerad — [diskussioner D16](feedback/2026-06-09-jesper-diskussioner.md#d16-ul-lik-störningslista-) |
+| J11 / D16 | UL-lik störningslista | Plan: [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) — väntar Jesper-validering §5–7 |
 
 ---
 
