@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import type { PricesPayload } from '../../api/adminRest';
-import type { TicketCopyCondition } from '../../../shared/ticketCopy';
 import { AdminDisclosure, AdminTableScroll, MrtButton } from '../ui';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 import { useTicketCopyNotes } from '../../composables/prices/useTicketCopyNotes';
+import PricesTicketCopyNoteRow from './PricesTicketCopyNoteRow.vue';
 
 const payload = defineModel<PricesPayload>({ required: true });
 
@@ -29,38 +29,14 @@ const { notes, conditionOptions, addNote, removeNote, updateNote } = useTicketCo
           </tr>
         </thead>
         <tbody>
-          <tr v-for="note in notes" :key="note.id">
-            <td :data-label="adminStr(cfg, 'pricesTicketCopyCondCol', 'Villkor')">
-              <select
-                :value="note.condition"
-                @change="updateNote(note.id, { condition: ($event.target as HTMLSelectElement).value as TicketCopyCondition })"
-              >
-                <option v-for="opt in conditionOptions" :key="opt.value" :value="opt.value">
-                  {{ opt.label }}
-                </option>
-              </select>
-            </td>
-            <td :data-label="adminStr(cfg, 'pricesTicketCopyTextCol', 'Text')">
-              <textarea
-                :value="note.text"
-                class="large-text"
-                rows="2"
-                @input="updateNote(note.id, { text: ($event.target as HTMLTextAreaElement).value })"
-              />
-            </td>
-            <td :data-label="adminStr(cfg, 'pricesTicketCopyEnabledCol', 'Aktiv')">
-              <input
-                type="checkbox"
-                :checked="note.enabled"
-                @change="updateNote(note.id, { enabled: ($event.target as HTMLInputElement).checked })"
-              />
-            </td>
-            <td>
-              <MrtButton context="admin" variant="link-delete" @click="removeNote(note.id)">
-                {{ adminStr(cfg, 'delete') }}
-              </MrtButton>
-            </td>
-          </tr>
+          <PricesTicketCopyNoteRow
+            v-for="note in notes"
+            :key="note.id"
+            :note="note"
+            :condition-options="conditionOptions"
+            @update="updateNote(note.id, $event)"
+            @remove="removeNote(note.id)"
+          />
         </tbody>
       </table>
     </AdminTableScroll>

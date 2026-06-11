@@ -5,8 +5,8 @@ import { adminStr } from '../../utils/adminLabels';
 import { useStopTimes } from '../../composables/timetable-editor/useStopTimes';
 import AdminLoadState from '../AdminLoadState.vue';
 import { AdminFormActions, AdminStatusMessage, MrtButton } from '../ui';
-import StopTimeModeSelect from './StopTimeModeSelect.vue';
 import StopTimePaHeading from './StopTimePaHeading.vue';
+import StopTimeTableRow from './StopTimeTableRow.vue';
 
 const props = defineProps<{ serviceId: number }>();
 const cfg = adminConfig();
@@ -47,49 +47,13 @@ watch(serviceId, () => {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="row in stations" :key="row.id">
-          <td>
-            <input v-model="row.stops_here" type="checkbox" :disabled="!canEditTimes" />
-          </td>
-          <td>{{ row.name }}</td>
-          <td>
-            <input
-              v-model="row.arrival_time"
-              type="time"
-              class="mrt-input"
-              :disabled="!canEditTimes"
-            />
-          </td>
-          <td>
-            <input
-              v-model="row.departure_time"
-              type="time"
-              class="mrt-input"
-              :disabled="!canEditTimes"
-            />
-          </td>
-          <td>
-            <StopTimeModeSelect
-              v-model="row.pickup_mode"
-              kind="pickup"
-              :disabled="!canEditModes"
-            />
-          </td>
-          <td>
-            <StopTimeModeSelect
-              v-model="row.dropoff_mode"
-              kind="dropoff"
-              :disabled="!canEditModes"
-            />
-          </td>
-          <td>
-            <input
-              v-model="row.approximate_time"
-              type="checkbox"
-              :disabled="!canEditTimes"
-            />
-          </td>
-        </tr>
+        <StopTimeTableRow
+          v-for="row in stations"
+          :key="row.id"
+          :row="row"
+          :can-edit-times="canEditTimes"
+          :can-edit-modes="canEditModes"
+        />
       </tbody>
     </table>
 

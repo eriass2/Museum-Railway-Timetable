@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { cancelTrafficToday } from '../../api/adminRest';
-import { adminConfirm } from '../../composables/adminConfirm';
+import {
+  mobileCancelResultLabels,
+  useCancelTrafficToday,
+} from '../../composables/useCancelTrafficToday';
 import type { TrafficToday } from '../../types';
 import { adminConfig } from '../../types';
-import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../../utils/adminLabels';
+import { adminFmt, adminFmtN, adminStr } from '../../utils/adminLabels';
 import { MrtButton } from '../ui';
 
 const props = defineProps<{
@@ -15,36 +16,31 @@ const props = defineProps<{
 const emit = defineEmits<{ done: [message: string]; error: [message: string] }>();
 
 const cfg = adminConfig();
-const busy = ref(false);
+const resultLabels = mobileCancelResultLabels(cfg);
 
-async function cancelAll() {
-  if (!props.canOperate || busy.value) return;
-  const ok = await adminConfirm({
+const { busy, cancelAll: runCancelAll } = useCancelTrafficToday(
+  cfg,
+  () => props.traffic,
+  () => props.canOperate,
+  () => ({
     title: adminStr(cfg, 'mobileCancelConfirmTitle'),
     message: adminFmtN(cfg, 'mobileCancelConfirmMessage', {
       1: props.traffic.services_count,
       2: props.traffic.date,
     }),
     confirmLabel: adminStr(cfg, 'trafficTodayCancelButton'),
-    danger: true,
-  });
-  if (!ok) {
-    return;
-  }
-  busy.value = true;
+  }),
+  () => resultLabels,
+);
+
+async function cancelAll() {
   try {
-    const notice = adminStr(cfg, 'trafficCancelledNotice');
-    const res = await cancelTrafficToday(props.traffic.date, notice);
-    emit(
-      'done',
-      res.services_updated > 0
-        ? adminFmt(cfg, 'mobileCancelSuccess', res.services_updated)
-        : adminStr(cfg, 'mobileCancelNone'),
-    );
+    const result = await runCancelAll();
+    if (result !== null) {
+      emit('done', result);
+    }
   } catch (e) {
-    emit('error', adminErrorMessage(cfg, e, 'trafficTodayCancelFailed'));
-  } finally {
-    busy.value = false;
+    emit('error', e instanceof Error ? e.message : adminStr(cfg, 'trafficTodayCancelFailed'));
   }
 }
 </script>

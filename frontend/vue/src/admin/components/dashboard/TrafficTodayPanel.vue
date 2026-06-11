@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { cancelTrafficToday } from '../../api/adminRest';
-import { adminConfirm } from '../../composables/adminConfirm';
+import {
+  mobileCancelResultLabels,
+  trafficTodayCancelResultLabels,
+  useCancelTrafficToday,
+} from '../../composables/useCancelTrafficToday';
 import type { TrafficToday } from '../../types';
-import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../../utils/adminLabels';
+import { adminFmtN, adminStr } from '../../utils/adminLabels';
 import { trafficTodayStatusText } from '../../utils/dashboard/trafficTodayStatus';
 import { adminConfig } from '../../types';
 import { AdminActionBar, AdminPanel, AdminStatusMessage, MrtButton } from '../ui';
@@ -16,7 +19,6 @@ const props = defineProps<{
 
 const cfg = adminConfig();
 const router = useRouter();
-const busy = ref(false);
 const message = ref('');
 const error = ref('');
 const localAllCancelled = ref(false);
@@ -30,42 +32,45 @@ const statusText = computed(() =>
   trafficTodayStatusText(cfg, effectiveTraffic.value),
 );
 
-async function cancelAll() {
-  if (!props.canOperate || busy.value) return;
-  const ok = await adminConfirm({
+const resultLabels = trafficTodayCancelResultLabels(cfg);
+
+const { busy, cancelAll: runCancelAll } = useCancelTrafficToday(
+  cfg,
+  () => props.traffic,
+  () => props.canOperate,
+  () => ({
     title: adminStr(cfg, 'trafficTodayCancelTitle'),
     message: adminFmtN(cfg, 'trafficTodayCancelMessage', {
       1: props.traffic.services_count,
       2: props.traffic.date,
     }),
     confirmLabel: adminStr(cfg, 'trafficTodayCancelButton'),
-    danger: true,
-  });
-  if (!ok) {
-    return;
-  }
-  busy.value = true;
+  }),
+  () => resultLabels,
+);
+
+async function cancelAll() {
   message.value = '';
   error.value = '';
   try {
-    const notice = adminStr(cfg, 'trafficCancelledNotice');
-    const res = await cancelTrafficToday(props.traffic.date, notice);
-    message.value =
-      res.services_updated > 0
-        ? adminFmt(cfg, 'trafficTodayCancelSuccess', res.services_updated)
-        : adminStr(cfg, 'trafficTodayCancelNone');
-    if (res.services_updated > 0) {
+    const result = await runCancelAll();
+    if (result === null) {
+      return;
+    }
+    message.value = result;
+    if (result !== resultLabels.none) {
       localAllCancelled.value = true;
     }
   } catch (e) {
-    error.value = adminErrorMessage(cfg, e, 'trafficTodayCancelFailed');
-  } finally {
-    busy.value = false;
+    error.value = e instanceof Error ? e.message : adminStr(cfg, 'trafficTodayCancelFailed');
   }
 }
 
-function openTimetable() {
-  void router.push(`/timetables/${props.traffic.timetable_id}`);
+function openTimetable(tab?: string) {
+  void router.push({
+    path: `/timetables/${props.traffic.timetable_id}`,
+    query: tab ? { tab } : undefined,
+  });
 }
 </script>
 
@@ -85,14 +90,14 @@ function openTimetable() {
       >
         {{ adminStr(cfg, 'trafficTodayCancelTitle') }}
       </MrtButton>
-      <MrtButton context="admin" variant="secondary" @click="openTimetable">
+      <MrtButton context="admin" variant="secondary" @click="openTimetable()">
         {{ adminStr(cfg, 'trafficTodayOpenTimetable') }}
       </MrtButton>
       <MrtButton
         v-if="traffic.services_count > 0"
         context="admin"
         variant="secondary"
-        @click="openTimetable"
+        @click="openTimetable('deviations')"
       >
         {{ adminStr(cfg, 'trafficTodayEditDeviations') }}
       </MrtButton>

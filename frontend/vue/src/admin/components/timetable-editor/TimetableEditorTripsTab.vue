@@ -3,17 +3,15 @@ import {
   AdminBackNav,
   AdminFormActions,
   AdminPanel,
-  AdminRowActions,
-  AdminTrainTypeCell,
   MrtButton,
 } from '../ui';
 import TimetableEditorTripEditForm, {
   type TripEditDraft,
 } from './TimetableEditorTripEditForm.vue';
+import TimetableEditorTripsList from './TimetableEditorTripsList.vue';
 import TimetableTripFieldsBlock from './TimetableTripFieldsBlock.vue';
 import type { TimetableTripDraft } from './tripFormTypes';
 import type { TimetableDetail } from '../../types';
-import { formatTripLineDisplay } from '../../utils/timetable-editor/tripLineDisplay';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 
@@ -43,60 +41,15 @@ const emit = defineEmits<{
 
 <template>
   <AdminPanel>
-    <template v-if="viewMode === 'list'">
-      <table class="widefat striped">
-        <thead>
-          <tr>
-            <th>{{ adminStr(cfg, 'editorColTrip') }}</th>
-            <th>{{ adminStr(cfg, 'editorColLine') }}</th>
-            <th>{{ adminStr(cfg, 'editorColTrainType') }}</th>
-            <th>{{ adminStr(cfg, 'editorColDestination') }}</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="s in detail.services" :key="s.id">
-            <td>{{ s.service_number }}</td>
-            <td>{{ formatTripLineDisplay(s.line_name, s.route_name) }}</td>
-            <td>
-              <AdminTrainTypeCell
-                :icon-key="s.train_type_icon_key"
-                :name="s.train_type_name"
-              />
-            </td>
-            <td>{{ s.destination || '—' }}</td>
-            <td>
-              <AdminRowActions>
-                <MrtButton
-                  v-if="canManage"
-                  context="admin"
-                  variant="secondary"
-                  @click="emit('start-edit', s.id)"
-                >
-                  {{ adminStr(cfg, 'editorEditTrip') }}
-                </MrtButton>
-                <MrtButton context="admin" variant="secondary" @click="emit('open-stoptimes', s.id)">
-                  {{ adminStr(cfg, 'editorStopptimes') }}
-                </MrtButton>
-                <MrtButton
-                  v-if="canManage"
-                  context="admin"
-                  variant="link-delete"
-                  @click="emit('remove-trip', s.id)"
-                >
-                  {{ adminStr(cfg, 'delete') }}
-                </MrtButton>
-              </AdminRowActions>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <AdminFormActions v-if="canManage">
-        <MrtButton context="admin" variant="primary" @click="emit('start-create')">
-          {{ adminStr(cfg, 'editorAddTrip') }}
-        </MrtButton>
-      </AdminFormActions>
-    </template>
+    <TimetableEditorTripsList
+      v-if="viewMode === 'list'"
+      :can-manage="canManage"
+      :detail="detail"
+      @start-create="emit('start-create')"
+      @start-edit="emit('start-edit', $event)"
+      @open-stoptimes="emit('open-stoptimes', $event)"
+      @remove-trip="emit('remove-trip', $event)"
+    />
 
     <template v-else-if="viewMode === 'create'">
       <AdminBackNav @back="emit('back')" />
