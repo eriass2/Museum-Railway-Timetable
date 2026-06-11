@@ -42,6 +42,7 @@ test.describe('Journey wizard steps', () => {
           done: el.classList.contains('is-done'),
           background: style.backgroundColor,
           color: style.color,
+          borderColor: style.borderTopColor,
           borderWidth: style.borderTopWidth,
           minHeight: style.minHeight,
           paddingBlock: `${style.paddingTop} ${style.paddingBottom}`,
@@ -60,9 +61,9 @@ test.describe('Journey wizard steps', () => {
     expect(new Set(styles.map((style) => style.minHeight)).size).toBe(1);
     expect(new Set(styles.map((style) => style.paddingBlock)).size).toBe(1);
     expect(new Set(styles.map((style) => style.paddingInline)).size).toBe(1);
-    expect(done?.color).toBe(active?.color);
+    expect(done?.color).not.toBe(future?.color);
+    expect(done?.borderColor).not.toBe(future?.borderColor);
     expect(done?.background).not.toBe(active?.background);
-    expect(done?.background).not.toBe('rgb(22, 58, 82)');
     expect(future?.background).not.toBe(active?.background);
   });
 

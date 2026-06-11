@@ -99,8 +99,8 @@ button.mrt-step-progress__item.is-done:focus-visible {
 }
 
 .mrt-step-progress__item.is-done {
-    background: color-mix(in srgb, var(--mrt-wizard-yellow, var(--mrt-color-accent-600)) 38%, var(--mrt-wizard-surface, #fff));
-    color: var(--mrt-color-on-accent, #111);
+    background: var(--mrt-color-green-800);
+    color: var(--mrt-color-accent-400, #e0c56e);
     border-color: var(--mrt-color-accent-500);
 }
 
