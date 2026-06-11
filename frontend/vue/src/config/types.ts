@@ -74,6 +74,8 @@ export type WizardBetaBanner = {
 
 export type WizardVueConfig = MrtRestConfig & {
   app: 'wizard';
+  /** Bumped when timetable data changes; clears stale client cache. */
+  cacheGeneration?: number;
   stations?: WizardStation[];
   ticketUrl?: string;
   timetableId?: number;
