@@ -259,7 +259,7 @@
 | **Utredning** | Se [buggplan B2](2026-06-09-jesper-buggar-plan.md#b2-busståg-koppling-visas-godtyckligt-a10) — kan vara bugg, data eller fel modell |
 | **Alternativ** | A) Förbättra auto + bättre admin-visning · B) Kräv manuell karta · C) Koppling per gren i rutten |
 | **Beslut av** | Operatör + utveckling — efter B2-utredning |
-| **Status** | Öppen |
+| **Status** | **Delvis löst (2026-06-10)** — A) levererad: `paired_branches`, bussrader per tågkolumn vid knutpunkt (`8c8a30a`), kolumnsammanslagning vid tågbyte via `train_change_map` (`9a44dda`). Manuell validering Selknä kvar. Explicit kopplingstabell (C) ej aktuell i v1. |
 
 ---
 
@@ -333,6 +333,8 @@
 | 2026-06-10 | D3 | **A** — hero full bredd desktop (J10) | Team |
 | 2026-06-10 | D4 | **A** — valfri bakgrundsbild via settings/mediaväljare; grön fallback | Team |
 | 2026-06-10 | D6 | Klara wizard-steg klickbara tillbaka; framtida steg låsta (J8) | Team |
+| 2026-06-10 | D2b | Feedback-widget v1 — FAB, CPT, admin-lista; e-postnotis v2 | Team |
+| 2026-06-10 | D15 | **A** delvis — bussrader per tågkolumn + kolumnsammanslagning; manuell Selknä-check kvar | Team |
 
 *(Fyll i rad när punkt är avgjord; länka ev. PR/commit.)*
 
@@ -341,5 +343,5 @@
 ## Nästa steg
 
 - [ ] Boka avstämning med Jesper / operatör kring D8, D11 (D1, D3, D4, D6, D14 avgjorda)
-- [ ] Efter B2-utredning: uppdatera D15 med konkret rekommendation
-- [x] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) — 2026-06-10
+- [x] Efter B2-utredning: uppdatera D15 med konkret rekommendation (2026-06-10)
+- [x] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) — 2026-06-11

@@ -89,10 +89,10 @@ transfer_wait_minutes: 10
 
 ### Acceptanskriterier
 
-- [ ] Varje byte-etikett i detaljvyn matchar skillnaden mellan ankomst och nästa avgång.
-- [ ] Sammanfattning (`buildConnectionLegSummary`) och detalj (`buildTransferLabel`) visar samma minuter per byte.
-- [ ] Befintliga 2-bens-tester gröna.
-- [ ] `.\scripts\vue-check.ps1` grön.
+- [x] Varje byte-etikett i detaljvyn matchar skillnaden mellan ankomst och nästa avgång.
+- [x] Sammanfattning (`buildConnectionLegSummary`) och detalj (`buildTransferLabel`) visar samma minuter per byte.
+- [x] Befintliga 2-bens-tester gröna.
+- [x] `.\scripts\vue-check.ps1` grön.
 
 **Uppgift:** `BUG-1.1`
 
@@ -140,9 +140,10 @@ I tidtabellsöversikten och/eller reseplaneraren matchas inte buss mot rätt tå
 
 ### Acceptanskriterier (efter fix)
 
-- [ ] För given grön dag: buss Bx i översikten motsvarar samma buss som reseplaneraren erbjuder för respektive tåg.
-- [ ] Linnés Hammarby-gren och Fjällnora-gren visar **olika** busskopplingar där datat så anger.
-- [ ] PHPUnit-test dokumenterar förväntat par tåg↔buss.
+- [x] För given grön dag: buss Bx i översikten motsvarar samma buss som reseplaneraren erbjuder för respektive tåg (enhetstester + `paired_branches`).
+- [x] Linnés Hammarby-gren och Fjällnora-gren visar **olika** busskopplingar där datat så anger.
+- [x] PHPUnit-test dokumenterar förväntat par tåg↔buss (`TimetableOverviewHelpersTest`, `GridConnectionsTest`).
+- [ ] Manuell check Selknä inbound GRÖN/RÖD — se [TODO.md](../TODO.md)
 
 **Uppgift:** `BUG-2.1` (utred), `BUG-2.2` (fix)
 
@@ -172,8 +173,8 @@ Alternativ B: räkna om `::before`-position så den matchar faktisk nod (1rem).
 
 ### Acceptanskriterier
 
-- [ ] Linjen går genom mitten av alla cirkelnoder (mobil + desktop).
-- [ ] Ingen regression i `@container`-layout för smala detaljpaneler.
+- [x] Linjen går genom mitten av alla cirkelnoder (mobil + desktop).
+- [x] Ingen regression i `@container`-layout för smala detaljpaneler.
 - [ ] Visuell koll i wizard debug-läge / Playwright-screenshot (valfritt).
 
 **Uppgift:** `BUG-3.1`
@@ -194,11 +195,12 @@ PR 3: BUG-3.1  (B3 — CSS)                ← kan köras parallellt med PR 2
 
 Efter alla PR:
 
-- [ ] `.\scripts\check.ps1` — PHP + PHPUnit
-- [ ] `.\scripts\vue-check.ps1` — Vitest + build
+- [x] `.\scripts\check.ps1` — PHP + PHPUnit
+- [x] `.\scripts\vue-check.ps1` — Vitest + build
 - [ ] Manuell smoke: Uppsala Östra → Fjällnora (3 ben), expandera detalj
 - [ ] Manuell smoke: Uppsala Östra → Linnés Hammarby (efter komplett data)
-- [x] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J5, A10, J3) — 2026-06-10
+- [ ] Manuell smoke: Selknä-buss + Marielund-kolumner i Turvy — se [TODO.md](../TODO.md)
+- [x] Uppdatera status i [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J5, A10, J3, J12, Turvy-uppföljning) — 2026-06-11
 
 ---
 

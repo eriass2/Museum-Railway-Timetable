@@ -3,7 +3,7 @@
 Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssnittet. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (juni 2026)  
-**Senast uppdaterad:** 2026-06-10 — status synkad mot kod och [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)  
+**Senast uppdaterad:** 2026-06-11 — status synkad mot kod, [TODO.md](../TODO.md) och [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)  
 **Relaterat:** [2026-06-05-reseplanerare-beta.md](2026-06-05-reseplanerare-beta.md), [2026-06-08-admin-ux-audit.md](2026-06-08-admin-ux-audit.md), [2026-06-09-jesper-buggar-plan.md](2026-06-09-jesper-buggar-plan.md), [2026-06-09-jesper-diskussioner.md](2026-06-09-jesper-diskussioner.md), [ADMIN_UX_ACTION_PLAN.md](../ADMIN_UX_ACTION_PLAN.md)
 
 ---
@@ -14,10 +14,11 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 |----------|-------|------|------|
 | Reseplanerare — buggar | 1 | 1 (J5) | — |
 | Reseplanerare — UI / copy | 8 | 8 (J1–J4, J7–J10) | — |
-| Reseplanerare — data | 1 | 1 (J6 fixture) | operatörsdata |
-| Admin — onboarding / friktion | 2 | delvis (A10) | A0 |
+| Reseplanerare — data | 1 | 1 (J6 fixture) | operatörsdata (Jesper) |
+| Admin — onboarding / friktion | 2 | 1 (A10) | A0 |
 | Admin — produktförslag | 9 | 8 (A1–A8, A10) | A9 |
-| Framtida scope | 3 | 1 (J13 beta) | J11 |
+| Admin — Turvy / tidtabellsöversikt | 3 | 3 (A2, J12, uppföljning) | manuell validering |
+| Framtida scope | 2 | 1 (J13 beta) | J11 |
 | Produktbeslut | 1 | 1 (J13) | — |
 
 ---
@@ -152,7 +153,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin
 - **Typ:** produktförslag
 - **Prioritet:** medium
-- **Status:** öppen
+- **Status:** klar (2026-06-10) — samma leverans som A2
+- **Tekniskt:** Flik **Turvy** med `EditableTimetableOverview`; uppföljning 2026-06-10: kolumnsammanslagning vid tågbyte (`9a44dda`), bussrader per tågkolumn vid Selknä (`8c8a30a`), typografi utan fetstil (`6d91237`). Manuell PDF-validering kvar — se [TODO.md](../TODO.md).
 - **Se:** Admin A2 nedan.
 
 ---
@@ -199,8 +201,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin / tidtabellsredigerare
 - **Typ:** produktförslag (stor)
 - **Prioritet:** hög
-- **Status:** klar (fas 2, D10 A delvis)
-- **Tekniskt:** Egen flik **Turvy** med `EditableTimetableOverview`; turer skapas fortfarande under Turer, tider fylls primärt i grid.
+- **Status:** klar (fas 2, D10 A delvis) — uppföljning 2026-06-10
+- **Tekniskt:** Egen flik **Turvy** med `EditableTimetableOverview`; turer skapas fortfarande under Turer, tider fylls primärt i grid. Uppföljning: PDF-lik kolumnsammanslagning vid tågbyte (Marielund m.fl.), bussrader kopplade till rätt tågkolumn vid Selknä, Ca/P/A/X-typografi i Turvy.
 
 ---
 
@@ -288,8 +290,8 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 - **Område:** Admin / tidtabell + stationer
 - **Typ:** produkt / utred
 - **Prioritet:** hög
-- **Status:** klar (2026-06-09)
-- **Fix:** `paired_branches` i `grid-merge.php`; tidtabellsöversikt bygger bussrader per gren (Linnés Hammarby + Fjällnora).
+- **Status:** klar (2026-06-09) — uppföljning 2026-06-10
+- **Fix:** `paired_branches` i `grid-merge.php`; tidtabellsöversikt bygger bussrader per gren (Linnés Hammarby + Fjällnora). Uppföljning (`8c8a30a`): busstider i **rätt tågkolumn** vid knutpunkt (Selknä), inte i alla kolumner samtidigt — enhetstest `test_junction_bus_rows_use_one_pair_per_matched_train`. Manuell check Selknä kvar i [TODO.md](../TODO.md).
 
 ---
 
@@ -305,13 +307,14 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 | 6 | A8 | Zon-etiketter A/B/C | Liten (UI) | ☑ |
 | 7 | J1–J3 | Ikoner, pil, tidslinje | Liten (CSS) | ☑ |
 | 8 | J8 | Klickbara steg | Medel | ☑ |
-| 9 | A2 | Samtrafiken-grid som primär vy | Stor | ☑ delvis |
+| 9 | A2 | Samtrafiken-grid som primär vy | Stor | ☑ |
 | 10 | A3–A6 | X/P/A, tom rad, en tid räcker | Medel–stor | ☑ |
 | 11 | A9 | Utkast/publicera tidtabell | Stor | öppen |
-| 12 | A10 | Buss/tåg per riktning och gren | Stor | ☑ |
+| 12 | A10 | Buss/tåg per riktning och gren | Stor | ☑ (+ Selknä 2026-06-10) |
 | 13 | J4 + A3 | Ca + fotnot behovsuppehåll | Medel–stor | ☑ |
 | 14 | J10 | Desktop fullbredd + bakgrundsbild | Design + asset | ☑ |
 | 15 | J11 | Trafikstörningar UL-lik | Framtida | parkerad |
+| 16 | J12 | Samtrafiken-lik överblick (Turvy) | Stor | ☑ (+ PDF-lik vy 2026-06-10) |
 
 ---
 
@@ -329,10 +332,11 @@ Ny omgång feedback efter fortsatt betatest av reseplaneraren och admingränssni
 ## Nästa steg
 
 - [x] Bocka av **Status** per punkt efter genomgång (2026-06-10)
+- [x] Turvy-uppföljning: kolumnsammanslagning, Selknä-bussrader, typografi (2026-06-10)
 - [ ] Länka commit/PR i **Svar** när punkt är åtgärdad
 - [ ] Parallellt: Jesper fortsätter mata in Linnés Hammarby-data — verifiera reseplanerare efter komplett rutt/turer/stopptider
 - [ ] **Öppna punkter:** A9 (publicera), A0 (onboarding-friktion), J11 (trafikstörningar)
-- [ ] Manuell smoke enligt [buggplan](2026-06-09-jesper-buggar-plan.md#verifiering-gemensam-checklista)
+- [ ] Manuell smoke: Selknä-buss + Marielund-kolumner enligt [TODO.md](../TODO.md) och [buggplan](2026-06-09-jesper-buggar-plan.md#verifiering-gemensam-checklista)
 
 ---
 
