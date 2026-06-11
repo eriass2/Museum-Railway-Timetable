@@ -524,6 +524,76 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertSame( 'Till Fjällnora*', $rows[1]['label'] );
 	}
 
+	public function test_split_station_places_train_arrival_before_junction_bus_rows(): void {
+		$marielund = 8;
+		$linnes    = 16;
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_number'          => 'B12',
+			'94|mrt_service_number'           => '94',
+			$marielund . '|mrt_station_bus_suffix' => '1',
+			$linnes . '|mrt_station_bus_suffix'    => '1',
+			'50|mrt_route_end_station'        => '1',
+			'94|mrt_service_route_id'         => '50',
+		);
+		$GLOBALS['mrt_test_posts'] = array(
+			$marielund => (object) array( 'ID' => $marielund, 'post_title' => 'Marielund' ),
+			$linnes    => (object) array( 'ID' => $linnes, 'post_title' => 'Linnés Hammarby' ),
+		);
+		$station = new WP_Post( (object) array( 'ID' => $marielund, 'post_title' => 'Marielund' ) );
+		$rail_group = array(
+			'route_id' => 50,
+			'stations' => array( 1, 7, $marielund, 14 ),
+			'services' => array(
+				array(
+					'service'    => (object) array( 'ID' => 94 ),
+					'train_type' => (object) array( 'slug' => 'ralsbuss' ),
+					'stop_times' => array(
+						$marielund => array(
+							'arrival_time'   => '13:07',
+							'departure_time' => '14:05',
+						),
+					),
+				),
+			),
+		);
+		$paired_branches = array(
+			array(
+				'stations' => array( $linnes, $marielund ),
+				'services' => array(
+					array(
+						'service'    => (object) array( 'ID' => 501 ),
+						'train_type' => (object) array( 'slug' => 'buss' ),
+						'stop_times' => array(
+							$linnes    => array( 'departure_time' => '13:15' ),
+							$marielund => array( 'arrival_time' => '13:40' ),
+						),
+					),
+				),
+			),
+		);
+		$services = $rail_group['services'];
+		$info     = array( array( 'service_number' => '94' ) );
+		$display_columns = array(
+			array( 'primary_idx' => 0, 'continuation_idx' => null, 'split_station_id' => 0 ),
+		);
+		$rows = MRT_timetable_overview_rail_rows_for_station(
+			$station,
+			MRT_timetable_rail_grid_direction( $rail_group ),
+			$rail_group,
+			$paired_branches,
+			$services,
+			$info,
+			$display_columns,
+			array( $station )
+		);
+
+		self::assertGreaterThanOrEqual( 3, count( $rows ) );
+		self::assertSame( 'arrival', $rows[0]['kind'] ?? '' );
+		self::assertStringStartsWith( 'Till Marielund', (string) ( $rows[0]['label'] ?? '' ) );
+		self::assertSame( 'busDeparture', $rows[1]['kind'] ?? '' );
+		self::assertSame( 'busArrival', $rows[2]['kind'] ?? '' );
+	}
+
 	public function test_junction_bus_departure_hides_pickup_suffix_on_from_row(): void {
 		$stop = array_merge(
 			array(

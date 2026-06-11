@@ -57,7 +57,7 @@ function MRT_timetable_overview_rail_rows_json(
 
 	$services       = $view['services_list'];
 	$info           = $view['service_info'];
-	$grid_direction = MRT_timetable_rail_grid_direction_for_branches( $rail_group, $paired_branches );
+	$grid_direction = MRT_timetable_rail_grid_direction( $rail_group );
 	$rows           = array();
 
 	$first = $station_posts[0];
@@ -104,17 +104,6 @@ function MRT_timetable_overview_rail_rows_json(
 	return array_values( array_filter( $rows ) );
 }
 
-/**
- * @param array<int, array<string, mixed>> $paired_branches
- */
-function MRT_timetable_rail_grid_direction_for_branches( array $rail_group, array $paired_branches ): string {
-	if ( $paired_branches === array() ) {
-		return 'outbound';
-	}
-	$connection = MRT_build_rail_bus_connection_data( $rail_group, $paired_branches[0] );
-	return (string) ( $connection['direction'] ?? 'outbound' );
-}
-
 function MRT_timetable_overview_rail_endpoint_row_json(
 	string $kind,
 	WP_Post $station,
@@ -155,8 +144,9 @@ function MRT_timetable_overview_rail_rows_for_station(
 ): array {
 	$station_id = (int) $station->ID;
 	$rows       = array();
+	$has_split  = MRT_station_row_has_arrival_departure_split( $station_id, $services );
 
-	if ( $grid_direction === 'inbound' ) {
+	if ( $grid_direction === 'inbound' && ! $has_split ) {
 		$rows = MRT_timetable_append_junction_bus_rows(
 			$rows,
 			$rail_group,
@@ -168,7 +158,7 @@ function MRT_timetable_overview_rail_rows_for_station(
 		);
 	}
 
-	if ( MRT_station_row_has_arrival_departure_split( $station_id, $services ) ) {
+	if ( $has_split ) {
 		$rows[] = MRT_timetable_row_times_json(
 			'arrival',
 			MRT_station_to_label( $station ),
@@ -179,6 +169,15 @@ function MRT_timetable_overview_rail_rows_for_station(
 			true,
 			$display_columns,
 			$station_posts
+		);
+		$rows = MRT_timetable_append_junction_bus_rows(
+			$rows,
+			$rail_group,
+			$paired_branches,
+			$services,
+			$info,
+			$station_id,
+			$display_columns
 		);
 		foreach ( MRT_timetable_train_change_rows_json( $station, $services, $info, $display_columns ) as $transfer_row ) {
 			$rows[] = $transfer_row;
