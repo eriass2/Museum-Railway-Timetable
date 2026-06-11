@@ -138,12 +138,13 @@ Besökare rapporterar buggar/förslag via flytande knapp i reseplaneraren; spara
 
 ### Fas 4 — Admin & validering (polish)
 
-- [ ] Hint i `StationTrainChangeEditor.vue`: continuation-turer visas inte som egna kolumner
-- [ ] Valfri validering vid spara: saknad `to_service`, dubbelkoppling
+- [x] Hint i `StationTrainChangeEditor.vue`: continuation-turer visas inte som egna kolumner
+- [x] Validering i editorn: ofullständig rad + dubbel ankommande/continuation-koppling
 
 ### Fas 5 — Tester
 
 - [x] `tests/Unit/OverviewColumnMergeTest.php` — Lennakatten-scenario (enhetstester)
+- [x] Statisk E2E/admin: tågbyteshint + dubbel continuation-varning
 - [ ] E2E/admin: redigering efter Marielund sparar rätt `serviceId`
 
 **Acceptanskriterier (överlämning):**
