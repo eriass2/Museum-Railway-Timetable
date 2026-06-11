@@ -114,11 +114,17 @@ function MRT_dev_reset_and_import() {
 		}
 	}
 
+	$cache_warm = null;
+	if ( function_exists( 'MRT_journey_cache_warm_popular_routes' ) ) {
+		$cache_warm = MRT_journey_cache_warm_popular_routes();
+	}
+
 	return array(
 		'cleared'        => true,
 		'import_message' => $import_message,
 		'navigation'     => $nav_result,
 		'pages'          => MRT_dev_smoke_page_permalinks(),
+		'cache_warm'     => $cache_warm,
 		'admin'          => admin_url( 'admin.php?page=' . MRT_ADMIN_APP_SLUG ),
 		'front'          => home_url( '/' ),
 	);

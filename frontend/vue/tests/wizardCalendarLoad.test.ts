@@ -118,7 +118,7 @@ describe('wizardCalendarLoad', () => {
     }));
 
     await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
-    await vi.waitFor(() => expect(run.mock.calls.length).toBeGreaterThanOrEqual(4));
+    await vi.waitFor(() => expect(run.mock.calls.length).toBeGreaterThanOrEqual(6));
     const callsAfterFirst = run.mock.calls.length;
     await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
     await vi.waitFor(() => expect(run.mock.calls.length).toBe(callsAfterFirst + 1));
@@ -150,7 +150,7 @@ describe('wizardCalendarLoad', () => {
     }));
 
     await loadWizardCalendarMonth(store, cfg, daysMap, run, resourceCache, 2026, 6);
-    await vi.waitFor(() => expect(run.mock.calls.length).toBeGreaterThanOrEqual(4));
+    await vi.waitFor(() => expect(run.mock.calls.length).toBeGreaterThanOrEqual(6));
 
     const tripTypes = run.mock.calls.map((call) => call[0].body.trip_type);
     expect(tripTypes).toContain('return');

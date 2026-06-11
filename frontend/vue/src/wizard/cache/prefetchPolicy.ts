@@ -41,23 +41,23 @@ export function wizardPrefetchRelated(
     return [];
   }
 
-  const related: PrefetchSpec[] = [
-    {
-      resource: 'calendar.month',
-      params: calendarMonthParams(from, to, otherTripType(tripType), year, month),
-    },
-  ];
+  const related: PrefetchSpec[] = [];
+  const otherType = otherTripType(tripType);
 
+  const addMonth = (y: number, m: number, type: string) => {
+    related.push({
+      resource: 'calendar.month',
+      params: calendarMonthParams(from, to, type, y, m),
+    });
+  };
+
+  addMonth(year, month, otherType);
   const prev = shiftMonth(year, month, -1);
   const next = shiftMonth(year, month, 1);
-  related.push({
-    resource: 'calendar.month',
-    params: calendarMonthParams(from, to, tripType, prev.year, prev.month),
-  });
-  related.push({
-    resource: 'calendar.month',
-    params: calendarMonthParams(from, to, tripType, next.year, next.month),
-  });
+  addMonth(prev.year, prev.month, tripType);
+  addMonth(next.year, next.month, tripType);
+  addMonth(prev.year, prev.month, otherType);
+  addMonth(next.year, next.month, otherType);
 
   return related;
 }
