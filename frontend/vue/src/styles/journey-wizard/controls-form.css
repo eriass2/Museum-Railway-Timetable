@@ -121,7 +121,13 @@
     margin-bottom: 1rem;
 }
 
-.mrt-journey-wizard--embedded .mrt-step-panel--search {
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg .mrt-step-panel--search {
+    background: var(--mrt-wizard-surface);
+    color: var(--mrt-wizard-text);
+    padding-inline: clamp(1.75rem, 4vw, 3rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero:not(.mrt-journey-wizard__hero--has-bg) .mrt-step-panel--search {
     background: transparent;
     color: var(--mrt-wizard-text);
     padding-inline: 0;

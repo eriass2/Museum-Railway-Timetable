@@ -32,12 +32,7 @@ const timetablePageUrl = String(props.config.timetablePageUrl || '');
 const betaBanner = props.config.betaBanner ?? null;
 const panelsRef = ref<HTMLElement | null>(null);
 
-const heroBackgroundUrl = computed(() => {
-  if (embedded) {
-    return '';
-  }
-  return String(props.config.heroBackgroundUrl || '').trim();
-});
+const heroBackgroundUrl = computed(() => String(props.config.heroBackgroundUrl || '').trim());
 
 const heroSectionStyle = computed(() => {
   const url = heroBackgroundUrl.value;

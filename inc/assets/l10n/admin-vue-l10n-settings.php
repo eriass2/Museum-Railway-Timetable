@@ -43,7 +43,7 @@ function MRT_admin_vue_l10n_settings(): array {
 		),
 		'settingsHeroBackground'       => __( 'Reseplanerare — bakgrundsbild', 'museum-railway-timetable' ),
 		'settingsHeroBackgroundHint'   => __(
-			'Valfri hero-bild (bred landskapsbild). Gäller när shortcode saknar hero_background_url. Ignoreras i inbäddat läge.',
+			'Valfri hero-bild (bred landskapsbild). Gäller när shortcode saknar hero_background_url.',
 			'museum-railway-timetable'
 		),
 		'settingsHeroBackgroundChoose' => __( 'Välj bild…', 'museum-railway-timetable' ),

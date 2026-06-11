@@ -194,7 +194,7 @@
     margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
-.mrt-journey-wizard--embedded .mrt-journey-wizard__hero {
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero:not(.mrt-journey-wizard__hero--has-bg) {
     margin-left: 0;
     margin-right: 0;
     width: 100%;
@@ -202,6 +202,15 @@
     padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.75rem) clamp(2rem, 5vw, 3rem);
     background: var(--mrt-wizard-surface);
     color: var(--mrt-wizard-text);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg {
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+    max-width: 100%;
+    padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.75rem) clamp(2rem, 5vw, 3rem);
+    color: #ffffff;
 }
 
 .mrt-journey-wizard--embedded[data-step="route"] .mrt-journey-wizard__hero {
