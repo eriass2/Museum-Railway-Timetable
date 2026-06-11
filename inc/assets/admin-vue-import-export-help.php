@@ -93,7 +93,7 @@ function MRT_admin_vue_import_export_build_steps(): array {
 		__( 'Ladda ner tom mall eller en export som utgångspunkt.', 'museum-railway-timetable' ),
 		__( 'Packa upp zip-filen och redigera CSV-filerna. Spara som UTF-8.', 'museum-railway-timetable' ),
 		__( 'Fyll i stations.csv och train_types.csv först.', 'museum-railway-timetable' ),
-		__( 'Lägg till routes.csv och route_stations.csv (stationer i ordning per rutt).', 'museum-railway-timetable' ),
+		__( 'Lägg till lines.csv + line_stations.csv (rekommenderat) eller routes.csv + route_stations.csv (legacy).', 'museum-railway-timetable' ),
 		__( 'Skapa timetables.csv, timetable_dates.csv, services.csv och stoptimes.csv.', 'museum-railway-timetable' ),
 		__( 'Zip:a CSV-filerna i zip-roten och ladda upp. manifest.json behövs inte — skapas vid import.', 'museum-railway-timetable' ),
 	);
@@ -120,14 +120,29 @@ function MRT_admin_vue_import_export_package_files(): array {
 			'desc'     => __( 'Tågtyper (slug, namn, valfri ikon)', 'museum-railway-timetable' ),
 		),
 		array(
+			'file'     => 'lines.csv',
+			'required' => false,
+			'desc'     => __( 'Linjer (main/grenar) — ersätter routes.csv när line_stations.csv finns', 'museum-railway-timetable' ),
+		),
+		array(
+			'file'     => 'line_stations.csv',
+			'required' => false,
+			'desc'     => __( 'Stationer per linje i ordning (sequence)', 'museum-railway-timetable' ),
+		),
+		array(
+			'file'     => 'branch_junctions.csv',
+			'required' => false,
+			'desc'     => __( 'Knutpunkter för transfer-grenar mot main', 'museum-railway-timetable' ),
+		),
+		array(
 			'file'     => 'routes.csv',
-			'required' => true,
-			'desc'     => __( 'Rutter mellan stationer', 'museum-railway-timetable' ),
+			'required' => false,
+			'desc'     => __( 'Legacy: riktade rutter (valfritt om lines.csv används)', 'museum-railway-timetable' ),
 		),
 		array(
 			'file'     => 'route_stations.csv',
-			'required' => true,
-			'desc'     => __( 'Stationer per rutt i ordning (sequence)', 'museum-railway-timetable' ),
+			'required' => false,
+			'desc'     => __( 'Legacy: stationer per rutt i ordning', 'museum-railway-timetable' ),
 		),
 		array(
 			'file'     => 'timetables.csv',
@@ -183,7 +198,7 @@ function MRT_admin_vue_import_export_package_files(): array {
 function MRT_admin_vue_import_export_order_steps(): array {
 	return array(
 		'stations.csv → train_types.csv',
-		'routes.csv + route_stations.csv',
+		'lines.csv + line_stations.csv (eller routes.csv + route_stations.csv)',
 		'timetables.csv + timetable_dates.csv',
 		'services.csv + service_train_types.csv',
 		'stoptimes.csv',

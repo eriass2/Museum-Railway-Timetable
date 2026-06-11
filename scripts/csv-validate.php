@@ -24,6 +24,9 @@ require_once MRT_PATH . 'inc/import/csv/package/package.php';
 require_once MRT_PATH . 'inc/import/csv/validate/validate-manifest.php';
 require_once MRT_PATH . 'inc/import/csv/validate/validate-codes.php';
 require_once MRT_PATH . 'inc/import/csv/validate/validate-codes-entities.php';
+require_once MRT_PATH . 'inc/import/csv/validate/validate-lines.php';
+require_once MRT_PATH . 'inc/domain/line/line-route-resolve.php';
+require_once MRT_PATH . 'inc/domain/line/line-route-definitions.php';
 require_once MRT_PATH . 'inc/import/csv/validate/validate-references.php';
 
 $path = $argv[1] ?? '';

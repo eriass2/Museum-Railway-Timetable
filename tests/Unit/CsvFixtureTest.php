@@ -36,19 +36,24 @@ final class CsvFixtureTest extends TestCase {
 		self::assertTrue( $result['valid'], json_encode( $result['errors'] ) );
 	}
 
-	public function test_lennakatten_routes_declare_branch_codes(): void {
+	public function test_lennakatten_fixture_has_no_legacy_route_csv(): void {
+		$files = $this->fixture_files();
+		self::assertArrayNotHasKey( 'routes.csv', $files );
+		self::assertArrayNotHasKey( 'route_stations.csv', $files );
+	}
+
+	public function test_lennakatten_derived_routes_declare_branch_codes(): void {
 		$expected = array(
 			'faringe-uppsala-ostra'         => 'main',
 			'uppsala-faringe'               => 'main',
 			'fjallnora-selkna'              => 'fjallnora',
 			'selkna-fjallnora'              => 'fjallnora',
-			'marielund-linnes-hammarby'     => 'linnes-hammarby',
-			'linnes-hammarby-marielund'     => 'linnes-hammarby',
+			'marielund-linnes-hammarby'     => 'linnes-marielund',
+			'linnes-hammarby-marielund'     => 'linnes-marielund',
 			'linnes-uppsala'                => '',
 		);
 		$seen = array();
-		foreach ( $this->fixture_files()['routes.csv'] ?? array() as $row ) {
-			$code = (string) ( $row['route_code'] ?? '' );
+		foreach ( MRT_csv_line_derived_route_rows( $this->fixture_files() ) as $code => $row ) {
 			$seen[ $code ] = (string) ( $row['branch_code'] ?? '' );
 		}
 		ksort( $expected );
@@ -243,11 +248,8 @@ final class CsvFixtureTest extends TestCase {
 	private function fixture_services( string $timetable_code, string $route_code ): array {
 		$files  = $this->fixture_files();
 		$branch = array();
-		foreach ( (array) ( $files['routes.csv'] ?? array() ) as $row ) {
-			$code = trim( (string) ( $row['route_code'] ?? '' ) );
-			if ( $code !== '' ) {
-				$branch[ $code ] = trim( (string) ( $row['branch_code'] ?? '' ) );
-			}
+		foreach ( MRT_csv_line_derived_route_rows( $files ) as $code => $row ) {
+			$branch[ $code ] = trim( (string) ( $row['branch_code'] ?? '' ) );
 		}
 		$out = array();
 		foreach ( (array) ( $files['services.csv'] ?? array() ) as $row ) {

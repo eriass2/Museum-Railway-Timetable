@@ -14,7 +14,7 @@ Stationen fanns i fixturen men saknade rutt, turer och stopptider — därför v
 
 | Fil | Innehåll |
 |-----|----------|
-| `routes.csv` | Linnés-shuttles med `branch_code=linnes-hammarby` (Selkné-, Marielund- och Uppsala-ben) |
+| `lines.csv` + `line_stations.csv` | Linnés som `linnes-marielund` och `linnes-uppsala`; riktade rutter härleds vid import |
 | `services.csv` | B9–B14 under `red-buss` (ingen Selkné–Linnés-buss; se [LINES_REFACTOR_PLAN.md](LINES_REFACTOR_PLAN.md)) |
 | `stoptimes.csv` | Selknä ↔ Linnés Hammarby |
 | `timetable_dates.csv` | Samma söndagar som `red` inom 1/7–16/8 |

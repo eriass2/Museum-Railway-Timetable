@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   AdminBackNav,
-  AdminDisclosure,
   AdminEmptyState,
   AdminFormActions,
   AdminPanel,
@@ -10,39 +9,25 @@ import {
   MrtButton,
 } from '../ui';
 import RoutePreview from './RoutePreview.vue';
-import RoutesPanel from './RoutesPanel.vue';
 import { lineKindLabelKey } from '../../utils/stations-routes/lineKindLabel';
 import { adminFmt, adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
-import type { LineRow, RouteRow, StationRow } from '../../types';
-import type { RoutesPanelView } from './RoutesPanel.vue';
+import type { LineRow, StationRow } from '../../types';
 
 export type LinesPanelView = 'list' | 'edit';
 
 defineProps<{
   lines: LineRow[];
-  routes: RouteRow[];
-  stations: StationRow[];
   stationsById: Map<number, { title: string; station_type: string }>;
-  stationTitle: (stationId: number) => string;
   linesView: LinesPanelView;
-  routesView: RoutesPanelView;
 }>();
 
-const newRoute = defineModel<RouteRow>('newRoute', { required: true });
-const editingRoute = defineModel<RouteRow | null>('editingRoute', { required: true });
 const editingLine = defineModel<LineRow | null>('editingLine', { required: true });
 
 const emit = defineEmits<{
-  add: [];
-  back: [];
   'back-line': [];
-  edit: [route: RouteRow];
   'edit-line': [line: LineRow];
-  save: [];
   'save-line': [];
-  'start-create': [];
-  remove: [route: RouteRow];
 }>();
 
 const cfg = adminConfig();
@@ -59,24 +44,7 @@ function junctionLabel(line: LineRow): string {
   <AdminPanel>
     <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabLines') }}</h2>
 
-    <RoutesPanel
-      v-if="routesView !== 'list'"
-      v-model:new-route="newRoute"
-      v-model:editing-route="editingRoute"
-      :routes="routes"
-      :stations="stations"
-      :stations-by-id="stationsById"
-      :station-title="stationTitle"
-      :view-mode="routesView"
-      @add="emit('add')"
-      @edit="emit('edit', $event)"
-      @save="emit('save')"
-      @start-create="emit('start-create')"
-      @back="emit('back')"
-      @remove="emit('remove', $event)"
-    />
-
-    <template v-else-if="linesView === 'edit' && editingLine">
+    <template v-if="linesView === 'edit' && editingLine">
       <AdminBackNav @back="emit('back-line')" />
       <h3 class="mrt-admin-line-editor__heading">
         {{ adminFmt(cfg, 'stationsEditLineTitle', editingLine.title) }}
@@ -161,29 +129,6 @@ function junctionLabel(line: LineRow): string {
           </tbody>
         </table>
       </AdminTableScroll>
-
-      <AdminDisclosure
-        v-if="cfg.isDevMode && routes.length"
-        :summary="adminStr(cfg, 'stationsLegacyRoutesSummary')"
-        class="mrt-admin-lines-legacy"
-      >
-        <p class="description">{{ adminStr(cfg, 'stationsLegacyRoutesHint') }}</p>
-        <RoutesPanel
-          v-model:new-route="newRoute"
-          v-model:editing-route="editingRoute"
-          :routes="routes"
-          :stations="stations"
-          :stations-by-id="stationsById"
-          :station-title="stationTitle"
-          view-mode="list"
-          @add="emit('add')"
-          @edit="emit('edit', $event)"
-          @save="emit('save')"
-          @start-create="emit('start-create')"
-          @back="emit('back')"
-          @remove="emit('remove', $event)"
-        />
-      </AdminDisclosure>
     </template>
   </AdminPanel>
 </template>
@@ -209,10 +154,6 @@ function junctionLabel(line: LineRow): string {
   display: block;
   color: #646970;
   font-size: 12px;
-}
-
-.mrt-admin-lines-legacy {
-  margin-top: 20px;
 }
 
 .mrt-admin-line-editor__heading {

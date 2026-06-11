@@ -64,6 +64,8 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 - [x] Fas 3: B14 som `linnes-uppsala` utan korridor-meta
 - [x] Fas 4: deprecated `route`, D8 en linje per sträcka
 - [x] Admin Fas A–C: **Linjer**-flik, import härleder rutter, redigera titel — [LINES_ADMIN_PLAN.md](LINES_ADMIN_PLAN.md)
+- [x] Lennakatten-fixture utan `routes.csv` / `route_stations.csv` (linjer = sanning)
+- [x] Admin Fas D: inga legacy-rutter när line registry finns
 
 ---
 

@@ -473,26 +473,20 @@ final class LennakattenJourneySearchTest extends TestCase {
 		$route_stations_by_code   = array();
 		$next_route_id            = 8000;
 
-		foreach ( $this->fixture_files()['route_stations.csv'] ?? array() as $row ) {
-			$route_code    = (string) ( $row['route_code'] ?? '' );
-			$station_code  = (string) ( $row['station_code'] ?? '' );
-			$station_id    = $stations[ $station_code ] ?? 0;
-			if ( $route_code === '' || $station_id <= 0 ) {
-				continue;
-			}
-			$route_stations_by_code[ $route_code ][] = $station_id;
-		}
-
-		foreach ( $this->fixture_files()['routes.csv'] ?? array() as $row ) {
-			$route_code = (string) ( $row['route_code'] ?? '' );
-			if ( $route_code === '' ) {
-				continue;
-			}
-			$route_id                      = $next_route_id++;
+		foreach ( MRT_csv_line_derived_route_definitions( $this->fixture_files() ) as $route_code => $def ) {
+			$row         = $def['row'];
+			$route_id    = $next_route_id++;
 			$route_code_to_id[ $route_code ] = $route_id;
-			$meta[ $route_id . '|mrt_route_code' ]       = $route_code;
-			if ( isset( $route_stations_by_code[ $route_code ] ) ) {
-				$meta[ $route_id . '|mrt_route_stations' ] = $route_stations_by_code[ $route_code ];
+			$meta[ $route_id . '|mrt_route_code' ] = $route_code;
+			$station_ids = array();
+			foreach ( $def['station_codes'] as $station_code ) {
+				$station_id = $stations[ $station_code ] ?? 0;
+				if ( $station_id > 0 ) {
+					$station_ids[] = $station_id;
+				}
+			}
+			if ( $station_ids !== array() ) {
+				$meta[ $route_id . '|mrt_route_stations' ] = $station_ids;
 			}
 			$start_id = $stations[ (string) ( $row['start_station_code'] ?? '' ) ] ?? 0;
 			$end_id   = $stations[ (string) ( $row['end_station_code'] ?? '' ) ] ?? 0;
@@ -501,6 +495,10 @@ final class LennakattenJourneySearchTest extends TestCase {
 			}
 			if ( $end_id > 0 ) {
 				$meta[ $route_id . '|mrt_route_end_station' ] = $end_id;
+			}
+			$branch = trim( (string) ( $row['branch_code'] ?? '' ) );
+			if ( $branch !== '' ) {
+				$meta[ $route_id . '|mrt_route_branch_code' ] = $branch;
 			}
 		}
 
@@ -534,11 +532,7 @@ final class LennakattenJourneySearchTest extends TestCase {
 	 */
 	private function fixture_routes_branch_map(): array {
 		$map = array();
-		foreach ( $this->fixture_files()['routes.csv'] ?? array() as $row ) {
-			$code = trim( (string) ( $row['route_code'] ?? '' ) );
-			if ( $code === '' ) {
-				continue;
-			}
+		foreach ( MRT_csv_line_derived_route_rows( $this->fixture_files() ) as $code => $row ) {
 			$map[ $code ] = trim( (string) ( $row['branch_code'] ?? '' ) );
 		}
 		return $map;

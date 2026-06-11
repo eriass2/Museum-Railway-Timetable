@@ -124,25 +124,13 @@ const {
 
       <LinesPanel
         v-if="sectionTab === 'lines'"
-        v-model:new-route="newRoute"
-        v-model:editing-route="editingRoute"
         v-model:editing-line="editingLine"
         :lines="lines"
-        :routes="routes"
-        :stations="stations"
         :stations-by-id="stationsById"
-        :station-title="stationTitle"
         :lines-view="linesView"
-        :routes-view="routesView"
-        @add="addRoute"
-        @edit="editRoute"
         @edit-line="editLine"
-        @save="saveRoute"
         @save-line="saveLine"
-        @start-create="startCreateRoute"
-        @back="requestBackToRoutesList"
         @back-line="requestBackToLinesList"
-        @remove="removeRoute"
       />
 
       <RoutesPanel

@@ -85,16 +85,18 @@ export function useStationsRoutesPage() {
 
   const { loading, error, data, load, reload } = useAdminResource({
     fetch: async () => {
-      const [s, r, lines, prices] = await Promise.all([
+      const [s, lines, prices] = await Promise.all([
         listStations(),
-        listRoutes(),
         fetchLineRows(),
         getPrices().catch(() => null),
       ]);
+      const lineRows = lines ?? [];
+      const routesPayload =
+        lineRows.length > 0 ? null : await listRoutes().catch(() => null);
       return {
         stations: s?.items ?? [],
-        routes: r?.items ?? [],
-        lines,
+        routes: routesPayload?.items ?? [],
+        lines: lineRows,
         priceZones: prices?.zones,
       };
     },
@@ -255,7 +257,6 @@ export function useStationsRoutesPage() {
     }
     if (prev === 'lines' && tab !== 'lines') {
       void requestBackToLinesList();
-      void requestBackToRoutesList();
     }
     if (prev === 'routes' && tab !== 'routes') {
       void requestBackToRoutesList();
@@ -322,7 +323,10 @@ export function useStationsRoutesPage() {
   }
 
   function editRoute(route: RouteRow) {
-    sectionTab.value = hasLineRegistry.value ? 'lines' : 'routes';
+    if (hasLineRegistry.value) {
+      return;
+    }
+    sectionTab.value = 'routes';
     editingRoute.value = syncRouteTermini({
       ...route,
       station_ids: [...route.station_ids],
