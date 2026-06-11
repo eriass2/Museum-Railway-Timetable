@@ -130,6 +130,7 @@ Plocka **inte** upp förrän kärnflöden är stabila, manuella checks i TODO ov
 
 | ID | Punkt | Varför senare |
 |----|-------|----------------|
+| R11 | Gångvägar + karta (Selkné–Fjällnora m.fl.) | Ny resetypsmodell + kart-UI; Jesper: «stort extrajobb» — [feedback juni 2026](feedback/2026-06-05-reseplanerare-beta.md#r11-gångvägar-framtida) |
 | A0 / D8 | Onboarding-friktion (en vs två rutter per linje) | Kräver D8-domänbeslut (en rutt vs returrutt-knapp vs CSV-first); A1/A7/A10/Turvy redan levererat — [diskussioner D8](feedback/2026-06-09-jesper-diskussioner.md#d8-rutt-en-eller-två-rutter-per-linje-) |
 | A9 / D11 | Publicera-knapp / utkast tidtabell | Kräver D11 (`draft` vs meta vs staging) **och** stabil admin/onboarding innan utkast/publicera kan designas säkert — [diskussioner D11](feedback/2026-06-09-jesper-diskussioner.md#d11-publicera-knapp--utkast-a9-) |
 | D2b v2 | Feedback — e-postnotis vid ny rapport | `wp_mail` + konfigurerbar adress; låg prioritet när admin-lista räcker — [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md) |
