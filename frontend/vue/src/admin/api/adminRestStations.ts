@@ -33,6 +33,13 @@ export function listLines() {
   return adminFetch<{ items: import('../types').LineRow[] }>('/lines');
 }
 
+export function updateLine(code: string, body: Pick<import('../types').LineRow, 'title'>) {
+  return adminFetch<import('../types').LineRow>(`/lines/${encodeURIComponent(code)}`, {
+    method: 'PATCH',
+    body: JSON.stringify(body),
+  });
+}
+
 export function createRoute(body: Partial<import('../types').RouteRow>) {
   return adminFetch<import('../types').RouteRow>('/routes', {
     method: 'POST',

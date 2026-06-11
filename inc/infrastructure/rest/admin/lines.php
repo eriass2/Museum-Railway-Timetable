@@ -11,6 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/domain/line/line-csv.php';
 require_once MRT_PATH . 'inc/domain/line/line-rest-format.php';
 
 /**
@@ -28,6 +29,17 @@ function MRT_rest_register_line_routes(): void {
 			),
 		)
 	);
+	register_rest_route(
+		MRT_REST_NAMESPACE,
+		'/lines/(?P<code>[a-z0-9-]+)',
+		array(
+			array(
+				'methods'             => WP_REST_Server::EDITABLE,
+				'callback'            => 'MRT_rest_update_line_handler',
+				'permission_callback' => 'MRT_rest_can_manage',
+			),
+		)
+	);
 }
 
 /**
@@ -36,4 +48,26 @@ function MRT_rest_register_line_routes(): void {
 function MRT_rest_list_lines_handler( WP_REST_Request $request ) {
 	unset( $request );
 	return rest_ensure_response( array( 'items' => MRT_rest_format_lines_list() ) );
+}
+
+/**
+ * @param WP_REST_Request $request Request.
+ * @return WP_REST_Response|WP_Error
+ */
+function MRT_rest_update_line_handler( WP_REST_Request $request ) {
+	$code = sanitize_key( (string) $request->get_param( 'code' ) );
+	$body = (array) $request->get_json_params();
+	$title = sanitize_text_field( (string) ( $body['title'] ?? '' ) );
+	if ( $code === '' || $title === '' ) {
+		return new WP_Error( 'mrt_invalid_line', __( 'Line code and title are required.', 'museum-railway-timetable' ), array( 'status' => 400 ) );
+	}
+	if ( ! MRT_update_line_registry_title( $code, $title ) ) {
+		return new WP_Error( 'mrt_unknown_line', __( 'Line not found.', 'museum-railway-timetable' ), array( 'status' => 404 ) );
+	}
+	$entry = MRT_line_registry_entry( $code );
+	$row   = MRT_rest_format_line_entry( $code, $entry );
+	if ( ! is_array( $row ) ) {
+		return new WP_Error( 'mrt_line_format', __( 'Could not format line.', 'museum-railway-timetable' ), array( 'status' => 500 ) );
+	}
+	return rest_ensure_response( $row );
 }

@@ -68,12 +68,16 @@ function MRT_csv_import_train_types( array $files ): void {
  * @param array<string, array<string, int>> $maps
  */
 function MRT_csv_import_routes( array $files, array &$maps ): int {
+	require_once MRT_PATH . 'inc/import/csv/import/import-entities-routes-from-lines.php';
+	$count = MRT_csv_import_routes_from_lines( $files, $maps );
 	$meta  = MRT_csv_code_meta_keys()['routes'];
-	$count = 0;
-	$route_rows = (array) ( $files['routes.csv'] ?? array() );
+	$route_rows   = (array) ( $files['routes.csv'] ?? array() );
 	$station_rows = MRT_csv_group_route_stations( $files );
 	foreach ( $route_rows as $row ) {
-		$code  = MRT_csv_row_code( $row, 'route_code', 'title' );
+		$code = MRT_csv_row_code( $row, 'route_code', 'title' );
+		if ( isset( $maps['route'][ $code ] ) ) {
+			continue;
+		}
 		$title = $row['title'];
 		$id    = MRT_csv_upsert_post_by_code( $code, MRT_POST_TYPE_ROUTE, $meta, $title );
 		if ( $id <= 0 ) {

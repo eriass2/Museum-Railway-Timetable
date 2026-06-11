@@ -1,17 +1,23 @@
 <script setup lang="ts">
 import {
+  AdminBackNav,
   AdminDisclosure,
   AdminEmptyState,
+  AdminFormActions,
   AdminPanel,
+  AdminRowActions,
   AdminTableScroll,
+  MrtButton,
 } from '../ui';
 import RoutePreview from './RoutePreview.vue';
 import RoutesPanel from './RoutesPanel.vue';
 import { lineKindLabelKey } from '../../utils/stations-routes/lineKindLabel';
-import { adminStr } from '../../utils/adminLabels';
+import { adminFmt, adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 import type { LineRow, RouteRow, StationRow } from '../../types';
 import type { RoutesPanelView } from './RoutesPanel.vue';
+
+export type LinesPanelView = 'list' | 'edit';
 
 defineProps<{
   lines: LineRow[];
@@ -19,17 +25,22 @@ defineProps<{
   stations: StationRow[];
   stationsById: Map<number, { title: string; station_type: string }>;
   stationTitle: (stationId: number) => string;
+  linesView: LinesPanelView;
   routesView: RoutesPanelView;
 }>();
 
 const newRoute = defineModel<RouteRow>('newRoute', { required: true });
 const editingRoute = defineModel<RouteRow | null>('editingRoute', { required: true });
+const editingLine = defineModel<LineRow | null>('editingLine', { required: true });
 
 const emit = defineEmits<{
   add: [];
   back: [];
+  'back-line': [];
   edit: [route: RouteRow];
+  'edit-line': [line: LineRow];
   save: [];
+  'save-line': [];
   'start-create': [];
   remove: [route: RouteRow];
 }>();
@@ -40,9 +51,6 @@ function junctionLabel(line: LineRow): string {
   if (line.junction_station_name) {
     return line.junction_station_name;
   }
-  if (line.kind === 'pattern') {
-    return '—';
-  }
   return '—';
 }
 </script>
@@ -50,9 +58,60 @@ function junctionLabel(line: LineRow): string {
 <template>
   <AdminPanel>
     <h2 class="screen-reader-text">{{ adminStr(cfg, 'stationsTabLines') }}</h2>
-    <p class="description mrt-admin-lines-help">{{ adminStr(cfg, 'stationsLinesHelp') }}</p>
 
-    <template v-if="routesView === 'list'">
+    <RoutesPanel
+      v-if="routesView !== 'list'"
+      v-model:new-route="newRoute"
+      v-model:editing-route="editingRoute"
+      :routes="routes"
+      :stations="stations"
+      :stations-by-id="stationsById"
+      :station-title="stationTitle"
+      :view-mode="routesView"
+      @add="emit('add')"
+      @edit="emit('edit', $event)"
+      @save="emit('save')"
+      @start-create="emit('start-create')"
+      @back="emit('back')"
+      @remove="emit('remove', $event)"
+    />
+
+    <template v-else-if="linesView === 'edit' && editingLine">
+      <AdminBackNav @back="emit('back-line')" />
+      <h3 class="mrt-admin-line-editor__heading">
+        {{ adminFmt(cfg, 'stationsEditLineTitle', editingLine.title) }}
+      </h3>
+      <p class="description">{{ adminStr(cfg, 'stationsLineStructureHint') }}</p>
+      <div class="mrt-admin-line-editor__section">
+        <label class="mrt-admin-line-editor__label" for="mrt-line-title">
+          {{ adminStr(cfg, 'stationsLineTitleLabel') }}
+        </label>
+        <input
+          id="mrt-line-title"
+          v-model="editingLine.title"
+          type="text"
+          class="regular-text"
+        />
+        <p class="description mrt-admin-line-code-readonly">{{ editingLine.code }}</p>
+      </div>
+      <RoutePreview
+        :station-ids="editingLine.station_ids"
+        :stations-by-id="stationsById"
+        :start-station-id="editingLine.start_station"
+        :end-station-id="editingLine.end_station"
+      />
+      <AdminFormActions>
+        <MrtButton context="admin" variant="primary" @click="emit('save-line')">
+          {{ adminStr(cfg, 'stationsSaveLine') }}
+        </MrtButton>
+        <MrtButton context="admin" variant="secondary" @click="emit('back-line')">
+          {{ adminStr(cfg, 'cancel') }}
+        </MrtButton>
+      </AdminFormActions>
+    </template>
+
+    <template v-else>
+      <p class="description mrt-admin-lines-help">{{ adminStr(cfg, 'stationsLinesHelp') }}</p>
       <AdminEmptyState
         v-if="!lines.length"
         :title="adminStr(cfg, 'stationsEmptyLinesTitle')"
@@ -66,6 +125,7 @@ function junctionLabel(line: LineRow): string {
               <th>{{ adminStr(cfg, 'stationsColLineKind') }}</th>
               <th>{{ adminStr(cfg, 'stationsColJunction') }}</th>
               <th>{{ adminStr(cfg, 'stationsColStations') }}</th>
+              <th v-if="cfg.canManage"></th>
             </tr>
           </thead>
           <tbody>
@@ -89,6 +149,13 @@ function junctionLabel(line: LineRow): string {
                   :end-station-id="line.end_station"
                   compact
                 />
+              </td>
+              <td v-if="cfg.canManage">
+                <AdminRowActions>
+                  <MrtButton context="admin" variant="secondary" @click="emit('edit-line', line)">
+                    {{ adminStr(cfg, 'edit') }}
+                  </MrtButton>
+                </AdminRowActions>
               </td>
             </tr>
           </tbody>
@@ -118,23 +185,6 @@ function junctionLabel(line: LineRow): string {
         />
       </AdminDisclosure>
     </template>
-
-    <RoutesPanel
-      v-else
-      v-model:new-route="newRoute"
-      v-model:editing-route="editingRoute"
-      :routes="routes"
-      :stations="stations"
-      :stations-by-id="stationsById"
-      :station-title="stationTitle"
-      :view-mode="routesView"
-      @add="emit('add')"
-      @edit="emit('edit', $event)"
-      @save="emit('save')"
-      @start-create="emit('start-create')"
-      @back="emit('back')"
-      @remove="emit('remove', $event)"
-    />
   </AdminPanel>
 </template>
 
@@ -148,7 +198,8 @@ function junctionLabel(line: LineRow): string {
   font-weight: 600;
 }
 
-.mrt-admin-line-code {
+.mrt-admin-line-code,
+.mrt-admin-line-code-readonly {
   display: block;
   color: #646970;
   font-size: 12px;
@@ -162,5 +213,21 @@ function junctionLabel(line: LineRow): string {
 
 .mrt-admin-lines-legacy {
   margin-top: 20px;
+}
+
+.mrt-admin-line-editor__heading {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.mrt-admin-line-editor__section {
+  margin-bottom: 12px;
+}
+
+.mrt-admin-line-editor__label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 </style>

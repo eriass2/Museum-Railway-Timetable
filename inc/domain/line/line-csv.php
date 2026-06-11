@@ -55,6 +55,21 @@ function MRT_set_line_registry( array $registry ): void {
 	update_option( MRT_line_registry_option_key(), $registry, false );
 }
 
+function MRT_update_line_registry_title( string $line_code, string $title ): bool {
+	$line_code = trim( $line_code );
+	$title     = sanitize_text_field( $title );
+	if ( $line_code === '' || $title === '' ) {
+		return false;
+	}
+	$registry = MRT_get_line_registry();
+	if ( ! isset( $registry[ $line_code ] ) || ! is_array( $registry[ $line_code ] ) ) {
+		return false;
+	}
+	$registry[ $line_code ]['title'] = $title;
+	MRT_set_line_registry( $registry );
+	return true;
+}
+
 function MRT_get_service_line_code( int $service_id ): string {
 	if ( $service_id <= 0 ) {
 		return '';

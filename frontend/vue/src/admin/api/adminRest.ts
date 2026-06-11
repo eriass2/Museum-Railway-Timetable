@@ -21,6 +21,7 @@ export {
   deleteStation,
   listRoutes,
   listLines,
+  updateLine,
   createRoute,
   updateRoute,
   deleteRoute,

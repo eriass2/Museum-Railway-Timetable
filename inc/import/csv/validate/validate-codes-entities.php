@@ -33,7 +33,12 @@ function MRT_csv_resolve_train_types( array $files, array &$resolved, array &$er
  * @param array<int, array{file: string, line: int, message: string}> $errors
  */
 function MRT_csv_resolve_routes( array $files, array &$resolved, array &$errors ): void {
+	require_once MRT_PATH . 'inc/domain/line/line-route-definitions.php';
 	$slug_to_name = array();
+	foreach ( MRT_csv_line_derived_route_rows( $files ) as $code => $row ) {
+		MRT_csv_register_code( 'route', $code, (string) ( $row['title'] ?? $code ), $slug_to_name, $row, $errors );
+		$resolved['routes'][ $code ] = $row;
+	}
 	foreach ( (array) ( $files['routes.csv'] ?? array() ) as $row ) {
 		if ( trim( $row['title'] ?? '' ) === '' ) {
 			MRT_csv_add_row_error( $row, 'Route title is required.', $errors );

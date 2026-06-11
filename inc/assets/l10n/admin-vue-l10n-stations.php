@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_admin_vue_l10n_stations(): array {
 	return array(
 		'stationsTitle'              => __( 'Stationer & rutter', 'museum-railway-timetable' ),
+		'stationsTitleLines'         => __( 'Stationer & linjer', 'museum-railway-timetable' ),
 		'stationsLoading'            => __( 'Laddar stationer och rutter…', 'museum-railway-timetable' ),
 		'stationsNavAria'            => __( 'Stationer eller rutter', 'museum-railway-timetable' ),
 		'stationsTabStations'        => __( 'Stationer', 'museum-railway-timetable' ),
@@ -39,6 +40,14 @@ function MRT_admin_vue_l10n_stations(): array {
 			'Tekniska rutter som CSV-import skapar för bakåtkompatibilitet. Redigera linjer via CSV, inte här.',
 			'museum-railway-timetable'
 		),
+		'stationsEditLineTitle'      => __( 'Redigera linje: %s', 'museum-railway-timetable' ),
+		'stationsLineTitleLabel'     => __( 'Visningsnamn', 'museum-railway-timetable' ),
+		'stationsLineSaved'          => __( 'Linjen «%s» sparades.', 'museum-railway-timetable' ),
+		'stationsLineStructureHint'  => __(
+			'Stationer och knutpunkt ändras via CSV-import (lines.csv, line_stations.csv).',
+			'museum-railway-timetable'
+		),
+		'stationsSaveLine'             => __( 'Spara linje', 'museum-railway-timetable' ),
 		'stationsNewStation'         => __( 'Ny station', 'museum-railway-timetable' ),
 		'stationsCreateMoreFields'   => __( 'Fler uppgifter (valfritt)', 'museum-railway-timetable' ),
 		'stationsNewRoute'           => __( 'Ny rutt', 'museum-railway-timetable' ),

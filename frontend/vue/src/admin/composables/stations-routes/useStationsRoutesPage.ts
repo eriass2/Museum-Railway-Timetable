@@ -8,6 +8,7 @@ import {
   listLines,
   listRoutes,
   listStations,
+  updateLine,
   updateRoute,
   updateStation,
 } from '../../api/adminRest';
@@ -23,6 +24,7 @@ import {
   syncRouteTermini,
 } from '../../utils/stations-routes/routeStationEditor';
 import { resolveStationPriceZoneOptions, stationMissingPriceZone } from '../../utils/stations-routes/stationPriceZones';
+import type { LinesPanelView } from '../../components/stations-routes/LinesPanel.vue';
 import type { RoutesPanelView } from '../../components/stations-routes/RoutesPanel.vue';
 import type { StationsPanelView } from '../../components/stations-routes/StationsPanel.vue';
 import { adminConfig } from '../../types';
@@ -32,6 +34,10 @@ export type StationsRoutesSectionTab = 'stations' | 'lines' | 'routes';
 
 function routeDraftSnapshot(route: RouteRow): string {
   return JSON.stringify(route);
+}
+
+function lineDraftSnapshot(line: LineRow): string {
+  return JSON.stringify({ code: line.code, title: line.title });
 }
 
 function stationDraftSnapshot(station: StationRow): string {
@@ -60,8 +66,11 @@ export function useStationsRoutesPage() {
   const editingRoute = ref<RouteRow | null>(null);
   const stationsView = ref<StationsPanelView>('list');
   const routesView = ref<RoutesPanelView>('list');
+  const linesView = ref<LinesPanelView>('list');
+  const editingLine = ref<LineRow | null>(null);
   const stationFormSnapshot = ref('');
   const routeFormSnapshot = ref('');
+  const lineFormSnapshot = ref('');
   const priceZoneOptions = ref<number[]>([...resolveStationPriceZoneOptions(undefined)]);
   const showMissingZonesOnly = ref(false);
 
@@ -244,10 +253,57 @@ export function useStationsRoutesPage() {
     if (prev === 'stations' && tab !== 'stations') {
       void requestBackToStationsList();
     }
-    if ((prev === 'routes' || prev === 'lines') && tab !== 'routes' && tab !== 'lines') {
+    if (prev === 'lines' && tab !== 'lines') {
+      void requestBackToLinesList();
+      void requestBackToRoutesList();
+    }
+    if (prev === 'routes' && tab !== 'routes') {
       void requestBackToRoutesList();
     }
   });
+
+  function isLineFormDirty(): boolean {
+    if (linesView.value === 'list' || !editingLine.value) {
+      return false;
+    }
+    return lineDraftSnapshot(editingLine.value) !== lineFormSnapshot.value;
+  }
+
+  function backToLinesList(): void {
+    editingLine.value = null;
+    linesView.value = 'list';
+    lineFormSnapshot.value = '';
+  }
+
+  async function requestBackToLinesList(): Promise<boolean> {
+    if (linesView.value !== 'list' && !(await proceedIfDiscardAllowed(isLineFormDirty()))) {
+      return false;
+    }
+    backToLinesList();
+    return true;
+  }
+
+  function editLine(line: LineRow): void {
+    sectionTab.value = 'lines';
+    editingLine.value = { ...line };
+    linesView.value = 'edit';
+    lineFormSnapshot.value = lineDraftSnapshot(editingLine.value);
+  }
+
+  async function saveLine(): Promise<void> {
+    if (!editingLine.value || !cfg.canManage) {
+      return;
+    }
+    const title = editingLine.value.title.trim();
+    const code = editingLine.value.code;
+    if (title === '') {
+      return;
+    }
+    await updateLine(code, { title });
+    backToLinesList();
+    showSaveNotice(adminFmt(cfg, 'stationsLineSaved', title));
+    await reload();
+  }
 
   async function addRoute() {
     const draft = newRoute.value;
@@ -353,6 +409,8 @@ export function useStationsRoutesPage() {
     editingRoute,
     stationsView,
     routesView,
+    linesView,
+    editingLine,
     loading,
     error,
     load,
@@ -369,7 +427,11 @@ export function useStationsRoutesPage() {
     startCreateRoute,
     requestBackToStationsList,
     requestBackToRoutesList,
+    requestBackToLinesList,
+    editLine,
+    saveLine,
     backToStationsList,
+    backToLinesList,
     backToRoutesList,
     removeStation,
     removeRoute,

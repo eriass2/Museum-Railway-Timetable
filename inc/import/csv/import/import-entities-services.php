@@ -144,7 +144,11 @@ function MRT_csv_apply_service_overview_display_from_line( int $service_id, stri
  * @return array<string, string>
  */
 function MRT_csv_routes_branch_from_file( array $files ): array {
+	require_once MRT_PATH . 'inc/domain/line/line-route-definitions.php';
 	$branch = array();
+	foreach ( MRT_csv_line_derived_route_rows( $files ) as $code => $row ) {
+		$branch[ $code ] = trim( (string) ( $row['branch_code'] ?? '' ) );
+	}
 	foreach ( (array) ( $files['routes.csv'] ?? array() ) as $row ) {
 		$code = trim( (string) ( $row['route_code'] ?? '' ) );
 		if ( $code === '' ) {

@@ -26,6 +26,8 @@ const {
   editingRoute,
   stationsView,
   routesView,
+  linesView,
+  editingLine,
   loading,
   error,
   load,
@@ -42,6 +44,9 @@ const {
   startCreateRoute,
   requestBackToStationsList,
   requestBackToRoutesList,
+  requestBackToLinesList,
+  editLine,
+  saveLine,
   removeStation,
   removeRoute,
 } = useStationsRoutesPage();
@@ -49,7 +54,9 @@ const {
 
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
-    <h1>{{ adminStr(cfg, 'stationsTitle') }}</h1>
+    <h1>{{
+      hasLineRegistry ? adminStr(cfg, 'stationsTitleLines') : adminStr(cfg, 'stationsTitle')
+    }}</h1>
     <AdminLoadState
       :loading="loading"
       :error="error"
@@ -119,17 +126,22 @@ const {
         v-if="sectionTab === 'lines'"
         v-model:new-route="newRoute"
         v-model:editing-route="editingRoute"
+        v-model:editing-line="editingLine"
         :lines="lines"
         :routes="routes"
         :stations="stations"
         :stations-by-id="stationsById"
         :station-title="stationTitle"
+        :lines-view="linesView"
         :routes-view="routesView"
         @add="addRoute"
         @edit="editRoute"
+        @edit-line="editLine"
         @save="saveRoute"
+        @save-line="saveLine"
         @start-create="startCreateRoute"
         @back="requestBackToRoutesList"
+        @back-line="requestBackToLinesList"
         @remove="removeRoute"
       />
 

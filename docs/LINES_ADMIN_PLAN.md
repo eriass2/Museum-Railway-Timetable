@@ -1,6 +1,6 @@
 # Admin: linjer istället för rutter — plan
 
-**Status:** Fas A–B påbörjad (2026-06-11)  
+**Status:** Fas A–C levererad (2026-06-11)  
 **Relaterat:** [LINES_REFACTOR_PLAN.md](LINES_REFACTOR_PLAN.md) Fas 4 / D8
 
 ## Problem
@@ -31,12 +31,13 @@ Domänen använder **4 linjer** (`main`, `fjallnora`, `linnes-marielund`, `linne
 - [x] Hjälptext: linjer styrs via CSV-import
 - [x] **Legacy rutter** i hopfällbar sektion (endast `isDevMode`)
 
-### Fas C — senare
+### Fas C — import + redigering ✓
 
-- [ ] Redigera linjer i admin (utan CSV)
-- [ ] Import skapar färre `mrt_route`-poster (en per linje + riktning härledd)
-- [ ] Ta bort Rutter-fliken helt när alla installationer migrerat
-- [ ] Sidtitel «Stationer & linjer»
+- [x] `PATCH /lines/{code}` — uppdatera visningsnamn i registry
+- [x] Admin: redigera linjetitel (stationer fortfarande via CSV)
+- [x] Import härleder riktade rutter från `lines.csv` + `line_stations.csv` (`routes.csv` valfritt)
+- [x] Sidtitel «Stationer & linjer» när registry finns
+- [ ] Ta bort legacy-rutter helt (efter full migrering av alla installationer)
 
 ## Acceptance
 

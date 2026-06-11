@@ -58,13 +58,21 @@ function MRT_csv_validate_required_files( array $includes, array $files, array &
 	$need = array(
 		'stations'   => array( 'stations.csv' ),
 		'lines'      => array( 'lines.csv', 'line_stations.csv', 'branch_junctions.csv' ),
-		'routes'     => array( 'routes.csv', 'route_stations.csv' ),
+		'routes'     => array(),
 		'timetables' => array( 'timetables.csv', 'timetable_dates.csv' ),
 		'services'   => array( 'services.csv', 'service_train_types.csv' ),
 		'stoptimes'  => array( 'stoptimes.csv' ),
 	);
 	foreach ( $need as $type => $csv_files ) {
 		if ( ! in_array( $type, $includes, true ) ) {
+			continue;
+		}
+		if ( $type === 'routes' ) {
+			$has_lines = ! empty( $files['lines.csv'] ) && ! empty( $files['line_stations.csv'] );
+			$has_routes_csv = ! empty( $files['routes.csv'] ) && ! empty( $files['route_stations.csv'] );
+			if ( ! $has_lines && ! $has_routes_csv ) {
+				$errors[] = MRT_csv_error( 'routes.csv', 0, 'routes requires lines.csv + line_stations.csv or routes.csv + route_stations.csv.' );
+			}
 			continue;
 		}
 		foreach ( $csv_files as $csv ) {
