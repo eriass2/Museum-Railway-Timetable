@@ -2,8 +2,8 @@
 import { RouterLink } from 'vue-router';
 import StationEditorFields from './StationEditorFields.vue';
 import {
-  AdminBackNav,
   AdminEmptyState,
+  AdminEntityEditorShell,
   AdminFlashRow,
   AdminFormActions,
   AdminPanel,
@@ -107,55 +107,39 @@ function stationTypeLabel(stationType: string): string {
       </AdminFormActions>
     </template>
 
-    <template v-else-if="viewMode === 'create'">
-      <AdminBackNav @back="emit('back')" />
-      <h3 class="mrt-admin-station-editor__heading">{{ adminStr(cfg, 'stationsNewStation') }}</h3>
+    <AdminEntityEditorShell
+      v-else-if="viewMode === 'create'"
+      :heading="adminStr(cfg, 'stationsNewStation')"
+      :submit-label="adminStr(cfg, 'add')"
+      @back="emit('back')"
+      @submit="emit('add')"
+    >
       <StationEditorFields
         v-model="newStation"
         id-prefix="mrt-new-st"
         :price-zone-options="priceZoneOptions"
         :show-train-change="true"
       />
-      <AdminFormActions>
-        <MrtButton context="admin" variant="primary" @click="emit('add')">
-          {{ adminStr(cfg, 'add') }}
-        </MrtButton>
-        <MrtButton context="admin" variant="secondary" @click="emit('back')">
-          {{ adminStr(cfg, 'cancel') }}
-        </MrtButton>
-      </AdminFormActions>
-    </template>
+    </AdminEntityEditorShell>
 
-    <template v-else-if="viewMode === 'edit' && editingStation">
-      <AdminBackNav @back="emit('back')" />
-      <h3 class="mrt-admin-station-editor__heading">
-        {{ adminFmt(cfg, 'stationsEditStationTitle', editingStation.title) }}
-      </h3>
+    <AdminEntityEditorShell
+      v-else-if="viewMode === 'edit' && editingStation"
+      :heading="adminFmt(cfg, 'stationsEditStationTitle', editingStation.title)"
+      :submit-label="adminStr(cfg, 'save')"
+      @back="emit('back')"
+      @submit="emit('save')"
+    >
       <StationEditorFields
         v-model="editingStation"
         id-prefix="mrt-edit-st"
         :price-zone-options="priceZoneOptions"
         :show-train-change="true"
       />
-      <AdminFormActions>
-        <MrtButton context="admin" variant="primary" @click="emit('save')">
-          {{ adminStr(cfg, 'save') }}
-        </MrtButton>
-        <MrtButton context="admin" variant="secondary" @click="emit('back')">
-          {{ adminStr(cfg, 'cancel') }}
-        </MrtButton>
-      </AdminFormActions>
-    </template>
+    </AdminEntityEditorShell>
   </AdminPanel>
 </template>
 
 <style scoped>
-.mrt-admin-station-editor__heading {
-  margin: 0 0 12px;
-  font-size: 14px;
-  font-weight: 600;
-}
-
 .mrt-admin-station-zones--missing {
   background: #fcf9e8;
 }

@@ -4,6 +4,7 @@ export { default as AdminBackNav } from './AdminBackNav.vue';
 export { default as AdminDateList } from './AdminDateList.vue';
 export { default as AdminDeviationRowFields } from './AdminDeviationRowFields.vue';
 export { default as AdminDisclosure } from './AdminDisclosure.vue';
+export { default as AdminEntityEditorShell } from './AdminEntityEditorShell.vue';
 export { default as AdminEmptyState } from './AdminEmptyState.vue';
 export { default as AdminFieldStack } from './AdminFieldStack.vue';
 export { default as AdminFlashRow } from './AdminFlashRow.vue';
