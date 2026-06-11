@@ -1,60 +1,29 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, watch } from 'vue';
+import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { adminConfig } from '../types';
 import { AdminPanel, AdminTableScroll, MrtButton } from '../components/ui';
+import { useHelpPage } from '../composables/useHelpPage';
+import { useHelpSectionScroll } from '../composables/useHelpSectionScroll';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 
 const router = useRouter();
 const route = useRoute();
-
-const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
-const help = computed(() => {
-  if (!cfg.help) {
-    throw new Error('mrtAdminVue.help config missing');
-  }
-  return cfg.help;
-});
+const { cfg, help, visibleAdminSections, faqAnswer } = useHelpPage();
+const { scrollToHelpSection } = useHelpSectionScroll(route);
 
-const visibleAdminSections = computed(() =>
-  help.value.adminSections.filter((section) => {
-    if (section.adminOnly && !cfg.canManage) return false;
-    if (section.devOnly && !cfg.isDevMode) return false;
-    return true;
-  }),
-);
-
-function faqAnswer(item: (typeof help.value.faq)[number]): string {
-  if (item.aEditor && !cfg.canManage) {
-    return item.aEditor;
-  }
-  return item.a;
-}
+const tocLinks = computed(() => [
+  { id: 'what', label: help.value.panelWhat },
+  ...(cfg.canManage ? [{ id: 'price-zones', label: help.value.panelPriceZones }] : []),
+  { id: 'admin', label: help.value.panelAdmin },
+  { id: 'workflow', label: help.value.panelWorkflow },
+  { id: 'operations', label: help.value.panelOperations },
+  { id: 'faq', label: help.value.panelFaq },
+]);
 
 function openShortcodesGuide() {
   void router.push('/shortcodes');
 }
-
-function scrollToHelpSection(sectionId: string | undefined) {
-  if (!sectionId) {
-    return;
-  }
-  void nextTick(() => {
-    document.getElementById(`mrt-help-${sectionId}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-}
-
-onMounted(() => {
-  scrollToHelpSection(typeof route.query.section === 'string' ? route.query.section : undefined);
-});
-
-watch(
-  () => route.query.section,
-  (section) => {
-    scrollToHelpSection(typeof section === 'string' ? section : undefined);
-  },
-);
 </script>
 
 <template>
@@ -64,16 +33,11 @@ watch(
     <nav class="mrt-admin-help-toc" :aria-label="help.tocTitle">
       <p class="mrt-admin-help-toc__title">{{ help.tocTitle }}</p>
       <ul>
-        <li><a href="#mrt-help-what" @click.prevent="scrollToHelpSection('what')">{{ help.panelWhat }}</a></li>
-        <li v-if="cfg.canManage">
-          <a href="#mrt-help-price-zones" @click.prevent="scrollToHelpSection('price-zones')">
-            {{ help.panelPriceZones }}
+        <li v-for="link in tocLinks" :key="link.id">
+          <a :href="`#mrt-help-${link.id}`" @click.prevent="scrollToHelpSection(link.id)">
+            {{ link.label }}
           </a>
         </li>
-        <li><a href="#mrt-help-admin" @click.prevent="scrollToHelpSection('admin')">{{ help.panelAdmin }}</a></li>
-        <li><a href="#mrt-help-workflow" @click.prevent="scrollToHelpSection('workflow')">{{ help.panelWorkflow }}</a></li>
-        <li><a href="#mrt-help-operations" @click.prevent="scrollToHelpSection('operations')">{{ help.panelOperations }}</a></li>
-        <li><a href="#mrt-help-faq" @click.prevent="scrollToHelpSection('faq')">{{ help.panelFaq }}</a></li>
       </ul>
     </nav>
 

@@ -8,6 +8,10 @@ import {
   MrtButton,
 } from '../ui';
 import { adminStr } from '../../utils/adminLabels';
+import {
+  formatTrafficNoticeActive,
+  formatTrafficNoticeDate,
+} from '../../utils/traffic-notices/trafficNoticesAdmin';
 import { adminConfig } from '../../types';
 
 defineProps<{
@@ -53,9 +57,9 @@ const cfg = adminConfig();
         <tbody>
           <tr v-for="(row, index) in messages" :key="row.id">
             <td>{{ row.text }}</td>
-            <td>{{ row.active_from || '—' }}</td>
-            <td>{{ row.active_to || '—' }}</td>
-            <td>{{ row.enabled ? '✓' : '—' }}</td>
+            <td>{{ formatTrafficNoticeDate(row.active_from) }}</td>
+            <td>{{ formatTrafficNoticeDate(row.active_to) }}</td>
+            <td>{{ formatTrafficNoticeActive(row.enabled) }}</td>
             <td>
               <AdminRowActions v-if="canOperate">
                 <MrtButton

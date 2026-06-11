@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import LinesPanel from '../components/stations-routes/LinesPanel.vue';
 import RoutesPanel from '../components/stations-routes/RoutesPanel.vue';
@@ -7,6 +8,7 @@ import { AdminStatusMessage } from '../components/ui';
 import { useStationsRoutesPage } from '../composables/stations-routes/useStationsRoutesPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
+import { buildStationsRoutesSectionTabs } from '../utils/stations-routes/stationsRoutesSectionTabs';
 
 const { isMobile } = useMobileAdmin();
 const {
@@ -50,6 +52,8 @@ const {
   removeStation,
   removeRoute,
 } = useStationsRoutesPage();
+
+const sectionTabs = computed(() => buildStationsRoutesSectionTabs(cfg, hasLineRegistry.value));
 </script>
 
 <template>
@@ -69,30 +73,14 @@ const {
         :aria-label="adminStr(cfg, 'stationsNavAria')"
       >
         <a
+          v-for="tab in sectionTabs"
+          :key="tab.id"
           href="#"
           class="nav-tab"
-          :class="{ 'nav-tab-active': sectionTab === 'stations' }"
-          @click.prevent="sectionTab = 'stations'"
+          :class="{ 'nav-tab-active': sectionTab === tab.id }"
+          @click.prevent="sectionTab = tab.id"
         >
-          {{ adminStr(cfg, 'stationsTabStations') }}
-        </a>
-        <a
-          v-if="hasLineRegistry"
-          href="#"
-          class="nav-tab"
-          :class="{ 'nav-tab-active': sectionTab === 'lines' }"
-          @click.prevent="sectionTab = 'lines'"
-        >
-          {{ adminStr(cfg, 'stationsTabLines') }}
-        </a>
-        <a
-          v-else
-          href="#"
-          class="nav-tab"
-          :class="{ 'nav-tab-active': sectionTab === 'routes' }"
-          @click.prevent="sectionTab = 'routes'"
-        >
-          {{ adminStr(cfg, 'stationsTabRoutes') }}
+          {{ tab.label }}
         </a>
       </nav>
 

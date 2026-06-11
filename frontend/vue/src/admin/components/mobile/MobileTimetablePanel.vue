@@ -12,6 +12,7 @@ import {
   type DeviationRow,
 } from '../../utils/timetable-editor/deviationsPayload';
 import { useAdminResource } from '../../composables/useAdminResource';
+import { buildMobileTrafficTodayPayload } from '../../utils/mobile/mobileTrafficToday';
 import AdminLoadState from '../AdminLoadState.vue';
 import MobileQuickDeparture from './MobileQuickDeparture.vue';
 import MobileCancelTraffic from './MobileCancelTraffic.vue';
@@ -110,21 +111,13 @@ const showCancelToday = computed(
 
 const trafficTodayPayload = computed(() => {
   if (!props.trafficToday) return null;
-  const today = props.trafficToday;
-  const cancelled = deviationRows.value.filter(
-    (row) =>
-      row.date === today &&
-      row.notice.toLowerCase().includes(cancelledNotice.value),
-  ).length;
-  const total = props.detail.services.length;
-  return {
-    date: today,
-    timetable_id: props.timetableId,
-    timetable_title: props.detail.title,
-    services_count: total,
-    cancelled_count: cancelled,
-    all_cancelled: total > 0 && cancelled >= total,
-  };
+  return buildMobileTrafficTodayPayload(
+    props.trafficToday,
+    props.timetableId,
+    props.detail,
+    deviationRows.value,
+    cancelledNotice.value,
+  );
 });
 
 function onCancelDone(message: string) {

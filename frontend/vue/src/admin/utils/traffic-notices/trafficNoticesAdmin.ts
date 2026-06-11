@@ -97,3 +97,13 @@ export function renumberSortOrder(rows: PublicNoticeMessage[]): PublicNoticeMess
   }));
 }
 
+/** Display placeholder for optional notice date fields in admin tables. */
+export function formatTrafficNoticeDate(value: string): string {
+  return value || '—';
+}
+
+/** Compact enabled flag for admin list tables. */
+export function formatTrafficNoticeActive(enabled: boolean): string {
+  return enabled ? '✓' : '—';
+}
+

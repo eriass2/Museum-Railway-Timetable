@@ -42,6 +42,10 @@ const emit = defineEmits<{
 }>();
 
 const cfg = adminConfig();
+
+function stationTypeLabel(stationType: string): string {
+  return routePreviewTypeLabel(stationType, (key) => adminStr(cfg, key)) || '—';
+}
 </script>
 
 <template>
@@ -74,9 +78,7 @@ const cfg = adminConfig();
           <tbody>
             <AdminFlashRow v-for="st in stations" :key="st.id" :active="isFlashed(st.id)">
               <td>{{ st.title }}</td>
-              <td>{{
-                routePreviewTypeLabel(st.station_type, (k) => adminStr(cfg, k)) || '—'
-              }}</td>
+              <td>{{ stationTypeLabel(st.station_type) }}</td>
               <td :class="{ 'mrt-admin-station-zones--missing': stationMissingPriceZone(st) }">
                 {{ formatStationPriceZones(st.price_zones) || '—' }}
                 <span v-if="stationMissingPriceZone(st)" class="mrt-admin-station-missing-zone">

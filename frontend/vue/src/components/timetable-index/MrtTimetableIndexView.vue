@@ -1,13 +1,11 @@
 <script setup lang="ts">
-import type { TimetableIndexItem } from '@/types/timetableIndex';
+import type { TimetableIndexItem, TimetableIndexLabels } from '@/types/timetableIndex';
+import MrtTimetableIndexCard from './MrtTimetableIndexCard.vue';
 
 defineProps<{
   items: TimetableIndexItem[];
   showIntro: boolean;
-  labels: {
-    intro: string;
-    navAria: string;
-  };
+  labels: TimetableIndexLabels;
 }>();
 </script>
 
@@ -24,27 +22,7 @@ defineProps<{
           class="mrt-timetable-index__item"
           :class="item.modifier ? `mrt-timetable-index__item--${item.modifier}` : undefined"
         >
-          <a
-            v-if="item.url"
-            class="mrt-timetable-index__card"
-            :href="item.url"
-            :aria-label="`${item.label} — ${item.ariaHint}`"
-          >
-            <span class="mrt-timetable-index__swatch" aria-hidden="true" />
-            <span class="mrt-timetable-index__body">
-              <span class="mrt-timetable-index__title">{{ item.label }}</span>
-              <span v-if="item.meta" class="mrt-timetable-index__meta">{{ item.meta }}</span>
-            </span>
-            <span class="mrt-timetable-index__chevron" aria-hidden="true" />
-          </a>
-          <div v-else class="mrt-timetable-index__card mrt-timetable-index__card--static">
-            <span class="mrt-timetable-index__swatch" aria-hidden="true" />
-            <span class="mrt-timetable-index__body">
-              <span class="mrt-timetable-index__title">{{ item.label }}</span>
-              <span v-if="item.meta" class="mrt-timetable-index__meta">{{ item.meta }}</span>
-            </span>
-            <span class="mrt-timetable-index__chevron" aria-hidden="true" />
-          </div>
+          <MrtTimetableIndexCard :item="item" />
         </li>
       </ul>
     </nav>

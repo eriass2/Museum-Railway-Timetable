@@ -5,7 +5,9 @@ import TrafficNoticesFeedPreview from '../components/traffic-notices/TrafficNoti
 import TrafficNoticesList from '../components/traffic-notices/TrafficNoticesList.vue';
 import { AdminStatusMessage } from '../components/ui';
 import { useTrafficNoticesPage } from '../composables/traffic-notices/useTrafficNoticesPage';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 
+const { isMobile } = useMobileAdmin();
 const {
   cfg,
   messages,
@@ -28,7 +30,8 @@ const {
 </script>
 
 <template>
-  <AdminLoadState :loading="loading" :error="error" @retry="load">
+  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+    <AdminLoadState :loading="loading" :error="error" @retry="load">
     <div class="mrt-vue-root">
       <TrafficNoticesFeedPreview
         v-if="viewMode === 'list'"
@@ -54,5 +57,6 @@ const {
       />
       <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
     </div>
-  </AdminLoadState>
+    </AdminLoadState>
+  </div>
 </template>

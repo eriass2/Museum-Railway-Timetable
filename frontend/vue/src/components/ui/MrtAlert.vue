@@ -25,6 +25,8 @@ const publicClass = computed(() =>
 );
 
 const role = computed(() => (isAdminContext(props.context) ? 'status' : 'alert'));
+
+const ariaLive = computed(() => (props.live === 'off' ? undefined : props.live));
 </script>
 
 <template>
@@ -32,7 +34,7 @@ const role = computed(() => (isAdminContext(props.context) ? 'status' : 'alert')
     v-if="context === 'admin'"
     :class="adminClass"
     :role="role"
-    :aria-live="live === 'off' ? undefined : live"
+    :aria-live="ariaLive"
   >
     <slot />
   </p>
@@ -40,7 +42,7 @@ const role = computed(() => (isAdminContext(props.context) ? 'status' : 'alert')
     v-else
     :class="publicClass"
     role="alert"
-    :aria-live="live === 'off' ? undefined : live"
+    :aria-live="ariaLive"
   >
     <slot />
   </div>

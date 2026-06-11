@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, ref, watch } from 'vue';
+import { computed } from 'vue';
 import '../styles/month-calendar.css';
 import MrtAlert from '../components/ui/MrtAlert.vue';
 import MrtCalendarGrid from '../components/ui/MrtCalendarGrid.vue';
@@ -15,8 +15,8 @@ import { chunkWeekRows } from '../utils/calendarGrid';
 import MrtTimetableOverviewView from '../components/overview/MrtTimetableOverviewView.vue';
 import { useTimetableOverview } from '../composables/useTimetableOverview';
 import { useMonthCalendar } from '../composables/useMonthCalendar';
+import { useMonthDayPanel } from '../composables/useMonthDayPanel';
 import { timetableTypeDotClass } from '../shared/calendarDay';
-import { syncDayCalendarQuery } from '../utils/monthCalendarQuery';
 import { overviewUiLabels } from '../shared/overviewUiLabels';
 import { resolveMrtString } from '../utils/mrtStrings';
 
@@ -58,12 +58,24 @@ const cells = computed(() =>
 
 const cellRows = computed(() => chunkWeekRows(cells.value));
 
-const selectedYmd = ref('');
-const panelVisible = ref(false);
-const panelRef = ref<InstanceType<typeof MrtHtmlPanel> | null>(null);
-
 const { overview: dayOverview, loading: dayLoading, error: dayError, fetchDayOverview } =
   useTimetableOverview(props.config);
+
+const {
+  selectedYmd,
+  panelVisible,
+  panelRef,
+  closeDayPanel,
+  onDayClick,
+} = useMonthDayPanel(
+  dates,
+  monthLoading,
+  trainType,
+  fetchDayOverview,
+  props.config.initialDate,
+  dayOverview,
+  dayLoading,
+);
 
 const typeLabelMap = computed(() => {
   const map: Record<string, string> = {};
@@ -108,19 +120,9 @@ function monthCellClass(cell: MonthGridCell): string | undefined {
   if (cell.kind === 'empty') {
     return 'mrt-empty';
   }
-  if (cell.kind === 'day' && !cell.info.running) {
-    return 'mrt-day-cell mrt-day-cell--inactive';
-  }
-  if (cell.kind === 'day') {
-    return cell.info.running ? 'mrt-day-cell mrt-day-cell--running' : 'mrt-day-cell mrt-day-cell--inactive';
-  }
-  return undefined;
-}
-
-function closeDayPanel(): void {
-  panelVisible.value = false;
-  selectedYmd.value = '';
-  syncDayCalendarQuery(null);
+  return cell.info.running
+    ? 'mrt-day-cell mrt-day-cell--running'
+    : 'mrt-day-cell mrt-day-cell--inactive';
 }
 
 async function onMonthShift(delta: number): Promise<void> {
@@ -130,42 +132,6 @@ async function onMonthShift(delta: number): Promise<void> {
   closeDayPanel();
   await shiftMonth(delta);
 }
-
-async function onDayClick(ymd: string): Promise<void> {
-  if (!ymd || monthLoading.value) {
-    return;
-  }
-  selectedYmd.value = ymd;
-  panelVisible.value = true;
-  syncDayCalendarQuery(ymd);
-  await fetchDayOverview(ymd, trainType.value);
-}
-
-function isRunningDay(ymd: string): boolean {
-  return Object.values(dates.value).some(
-    (day) => day.ymd === ymd && Boolean(day.running),
-  );
-}
-
-onMounted(async () => {
-  const initial = props.config.initialDate?.trim();
-  if (initial && isRunningDay(initial)) {
-    await onDayClick(initial);
-  }
-});
-
-watch([panelVisible, dayOverview, dayLoading], async ([visible, overview, loading]) => {
-  if (!visible || loading || !overview) {
-    return;
-  }
-  await nextTick();
-  const panel = panelRef.value;
-  const el =
-    panel instanceof HTMLElement
-      ? panel
-      : (panel as { $el?: HTMLElement } | null)?.$el;
-  el?.focus();
-});
 </script>
 
 <template>

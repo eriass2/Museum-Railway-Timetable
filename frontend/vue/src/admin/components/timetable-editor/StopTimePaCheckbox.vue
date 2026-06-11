@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { adminConfig } from '../../types';
-import { adminStr } from '../../utils/adminLabels';
+import {
+  stopTimePaShortLabel,
+  stopTimePaTooltip,
+} from '../../utils/timetable-editor/stopTimePaLabels';
 
 const props = defineProps<{
   modelValue: boolean;
@@ -14,17 +17,8 @@ const emit = defineEmits<{ 'update:modelValue': [value: boolean] }>();
 
 const cfg = adminConfig();
 
-const shortLabel = computed(() =>
-  props.kind === 'pickup'
-    ? adminStr(cfg, 'stopTimesColPickup')
-    : adminStr(cfg, 'stopTimesColDropoff'),
-);
-
-const tooltip = computed(() =>
-  props.kind === 'pickup'
-    ? adminStr(cfg, 'stopTimesPickupLabel')
-    : adminStr(cfg, 'stopTimesDropoffLabel'),
-);
+const shortLabel = computed(() => stopTimePaShortLabel(cfg, props.kind));
+const tooltip = computed(() => stopTimePaTooltip(cfg, props.kind));
 
 function onChange(event: Event): void {
   emit('update:modelValue', (event.target as HTMLInputElement).checked);

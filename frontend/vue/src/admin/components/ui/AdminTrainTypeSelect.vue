@@ -19,15 +19,22 @@ const props = withDefaults(
   { showIcon: false, wide: false, emptyLabelKey: 'editorStandardTrainType', iconLabel: '' },
 );
 
-defineEmits<{ 'update:modelValue': [number] }>();
+const emit = defineEmits<{ 'update:modelValue': [number] }>();
 
 const cfg = adminConfig();
+
+function onChange(event: Event) {
+  emit('update:modelValue', Number((event.target as HTMLSelectElement).value));
+}
 </script>
 
 <template>
-  <AdminInlineField v-if="showIcon" class="admin-train-type-select--with-icon">
+  <AdminInlineField
+    class="admin-train-type-select"
+    :class="{ 'admin-train-type-select--with-icon': showIcon }"
+  >
     <TrainTypeIcon
-      v-if="iconKey"
+      v-if="showIcon && iconKey"
       :icon-key="iconKey"
       :label="iconLabel || iconKey"
     />
@@ -36,23 +43,12 @@ const cfg = adminConfig();
       :class="wide ? 'widefat' : undefined"
       :value="modelValue"
       :disabled="disabled"
-      @change="$emit('update:modelValue', Number(($event.target as HTMLSelectElement).value))"
+      @change="onChange"
     >
       <option :value="0">{{ adminStr(cfg, props.emptyLabelKey) }}</option>
       <option v-for="t in trainTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
     </select>
   </AdminInlineField>
-  <select
-    v-else
-    :id="selectId"
-    :class="wide ? 'widefat' : undefined"
-    :value="modelValue"
-    :disabled="disabled"
-    @change="$emit('update:modelValue', Number(($event.target as HTMLSelectElement).value))"
-  >
-    <option :value="0">{{ adminStr(cfg, props.emptyLabelKey) }}</option>
-    <option v-for="t in trainTypes" :key="t.id" :value="t.id">{{ t.name }}</option>
-  </select>
 </template>
 
 <style scoped>

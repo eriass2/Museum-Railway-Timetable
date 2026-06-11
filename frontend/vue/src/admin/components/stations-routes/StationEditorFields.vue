@@ -3,6 +3,7 @@ import { RouterLink } from 'vue-router';
 import { AdminDisclosure } from '../ui';
 import StationTrainChangeEditor from './StationTrainChangeEditor.vue';
 import { formatPriceZoneLabel } from '../../../shared/priceZoneLabels';
+import { STATION_TYPE_OPTIONS } from '../../utils/stations-routes/routePreviewNodes';
 import { adminStr } from '../../utils/adminLabels';
 import {
   stationHasPriceZone,
@@ -38,10 +39,13 @@ const cfg = adminConfig();
       <label :for="`${idPrefix}-type`">{{ adminStr(cfg, 'stationsColType') }}</label>
       <select :id="`${idPrefix}-type`" v-model="station.station_type">
         <option value="">—</option>
-        <option value="station">{{ adminStr(cfg, 'stationsTypeStation') }}</option>
-        <option value="halt">{{ adminStr(cfg, 'stationsTypeHalt') }}</option>
-        <option value="depot">{{ adminStr(cfg, 'stationsTypeDepot') }}</option>
-        <option value="museum">{{ adminStr(cfg, 'stationsTypeMuseum') }}</option>
+        <option
+          v-for="option in STATION_TYPE_OPTIONS"
+          :key="`${idPrefix}-type-${option.value}`"
+          :value="option.value"
+        >
+          {{ adminStr(cfg, option.labelKey) }}
+        </option>
       </select>
     </p>
     <p>

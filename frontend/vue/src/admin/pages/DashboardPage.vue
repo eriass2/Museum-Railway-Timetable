@@ -9,6 +9,7 @@ import TrafficTodayPanel from '../components/dashboard/TrafficTodayPanel.vue';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
+import { buildDashboardStatItems } from '../utils/dashboard/dashboardStatItems';
 import { adminConfig } from '../types';
 
 const cfg = adminConfig();
@@ -22,13 +23,7 @@ const { loading, error, data, load } = useAdminResource({
   },
 });
 
-const statItems = computed(() => [
-  { key: 'stations', label: adminStr(cfg, 'dashboardStatStations', 'Stationer') },
-  { key: 'routes', label: adminStr(cfg, 'dashboardStatRoutes', 'Rutter') },
-  { key: 'timetables', label: adminStr(cfg, 'dashboardStatTimetables', 'Tidtabeller') },
-  { key: 'services', label: adminStr(cfg, 'dashboardStatServices', 'Turer') },
-  { key: 'train_types', label: adminStr(cfg, 'dashboardStatTrainTypes', 'Tågtyper') },
-] as const);
+const statItems = computed(() => buildDashboardStatItems(cfg));
 
 function openRoute(hashRoute: string) {
   const path = hashRoute.replace(/^#/, '');
@@ -71,11 +66,9 @@ function openRoute(hashRoute: string) {
       </div>
       <div v-else class="mrt-admin-stats widefat">
         <p>
-          <strong>{{ data.stats.stations }}</strong> {{ adminStr(cfg, 'dashboardStatStations').toLowerCase() }} ·
-          <strong>{{ data.stats.routes }}</strong> {{ adminStr(cfg, 'dashboardStatRoutes').toLowerCase() }} ·
-          <strong>{{ data.stats.timetables }}</strong> {{ adminStr(cfg, 'dashboardStatTimetables').toLowerCase() }} ·
-          <strong>{{ data.stats.services }}</strong> {{ adminStr(cfg, 'dashboardStatServices').toLowerCase() }} ·
-          <strong>{{ data.stats.train_types }}</strong> {{ adminStr(cfg, 'dashboardStatTrainTypes').toLowerCase() }}
+          <template v-for="(item, index) in statItems" :key="item.key">
+            <strong>{{ data.stats[item.key] }}</strong> {{ item.label.toLowerCase() }}<template v-if="index < statItems.length - 1"> · </template>
+          </template>
         </p>
       </div>
 

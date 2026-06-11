@@ -2,51 +2,17 @@
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { adminStr } from '../utils/adminLabels';
+import { buildAdminNavTabs, isAdminNavTabActive } from '../utils/adminNavTabs';
 import { adminConfig } from '../types';
 
 const route = useRoute();
 const router = useRouter();
 const cfg = adminConfig();
 
-const tabs = computed(() => {
-  const items = [
-    { to: '/dashboard', label: adminStr(cfg, 'navOverview', 'Översikt') },
-    { to: '/stations-routes', label: adminStr(cfg, 'navStationsRoutes', 'Stationer & rutter') },
-    { to: '/timetables', label: adminStr(cfg, 'navTimetables', 'Tidtabeller') },
-  ];
-  if (cfg.canOperate) {
-    items.push({
-      to: '/traffic-notices',
-      label: adminStr(cfg, 'navTrafficNotices', 'Trafikmeddelanden'),
-    });
-  }
-  items.push(
-    { to: '/shortcodes', label: adminStr(cfg, 'navShortcodes', 'Shortcodes') },
-    { to: '/help', label: adminStr(cfg, 'navHelp', 'Hjälp') },
-  );
-  if (cfg.canManage) {
-    items.push(
-      { to: '/train-types', label: adminStr(cfg, 'navTrainTypes', 'Tågtyper') },
-      { to: '/settings', label: adminStr(cfg, 'navSettings', 'Inställningar') },
-      { to: '/feedback', label: adminStr(cfg, 'navFeedback', 'Feedback') },
-      { to: '/prices', label: adminStr(cfg, 'navPrices', 'Priser') },
-      { to: '/import-export', label: adminStr(cfg, 'navImportExport', 'Import/export') },
-    );
-  }
-  if (cfg.canManage && cfg.isDevMode) {
-    items.push({ to: '/dev-tools', label: adminStr(cfg, 'navDev', 'Dev') });
-  }
-  return items;
-});
+const tabs = computed(() => buildAdminNavTabs(cfg));
 
 function isActive(path: string): boolean {
-  if (path === '/timetables') {
-    return route.path.startsWith('/timetables');
-  }
-  if (path === '/traffic-notices') {
-    return route.path.startsWith('/traffic-notices');
-  }
-  return route.path === path || route.path.startsWith(`${path}/`);
+  return isAdminNavTabActive(path, route.path);
 }
 
 function navigate(path: string) {

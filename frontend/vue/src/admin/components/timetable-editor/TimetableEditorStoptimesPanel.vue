@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, type ComponentPublicInstance } from 'vue';
+import { computed, toRef } from 'vue';
 import {
   AdminBackNav,
   AdminPanel,
@@ -7,7 +7,8 @@ import {
   MrtButton,
 } from '../ui';
 import StopTimesEditor from './StopTimesEditor.vue';
-import { proceedIfDiscardAllowed } from '../../composables/adminDiscardGuard';
+import { useStoptimesPanelBack } from '../../composables/timetable-editor/useStoptimesPanelBack';
+import { formatServiceTripLabel } from '../../utils/timetable-editor/serviceTripLabel';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 import type { TimetableDetail } from '../../types';
@@ -28,32 +29,16 @@ const emit = defineEmits<{
 }>();
 
 const cfg = adminConfig();
-const stopTimesRef = ref<ComponentPublicInstance<{ getIsDirty: () => boolean }> | null>(null);
-
-async function tryLeaveDetail(): Promise<boolean> {
-  if (props.viewMode === 'list') {
-    return true;
-  }
-  const dirty = stopTimesRef.value?.getIsDirty() ?? false;
-  if (dirty && !(await proceedIfDiscardAllowed(true))) {
-    return false;
-  }
+const viewModeRef = toRef(props, 'viewMode');
+const { stopTimesRef, tryLeaveDetail, onBackClick } = useStoptimesPanelBack(viewModeRef, () => {
   emit('back');
-  return true;
-}
+});
 
 defineExpose({ requestBackToList: tryLeaveDetail });
 
-async function onBack(): Promise<void> {
-  await tryLeaveDetail();
-}
-
 const selectedTripLabel = computed(() => {
   const service = props.detail.services.find((row) => row.id === selectedServiceId.value);
-  if (!service) {
-    return adminStr(cfg, 'editorSelectTrip');
-  }
-  return `${service.service_number} — ${service.destination || service.route_name}`;
+  return formatServiceTripLabel(service, adminStr(cfg, 'editorSelectTrip'));
 });
 </script>
 
@@ -92,7 +77,7 @@ const selectedTripLabel = computed(() => {
     </template>
 
     <template v-else>
-      <AdminBackNav @back="onBack" />
+      <AdminBackNav @back="onBackClick" />
       <p class="description mrt-admin-stoptimes-trip-label">{{ selectedTripLabel }}</p>
       <StopTimesEditor
         v-if="selectedServiceId"

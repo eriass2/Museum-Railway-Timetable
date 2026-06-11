@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from 'vue';
 import { RouterLink } from 'vue-router';
-import { getSettings, saveSettings } from '../api/adminRest';
-import type { SettingsPayload } from '../api/adminRest';
 import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminFormActions,
@@ -12,62 +9,12 @@ import {
   AdminUnsavedBanner,
   MrtButton,
 } from '../components/ui';
-import { useAdminResource } from '../composables/useAdminResource';
-import { useAdminSaveNotice } from '../composables/useAdminSaveNotice';
-import { useAdminFormDirty } from '../composables/useAdminFormDirty';
-import { useAdminUnsavedGuard } from '../composables/useAdminUnsavedGuard';
+import { useSettingsPage } from '../composables/useSettingsPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
-import { adminErrorMessage, adminStr } from '../utils/adminLabels';
-import { adminConfig } from '../types';
+import { adminStr } from '../utils/adminLabels';
 
-const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
-const { saveMsg, show: showSaved } = useAdminSaveNotice();
-const form = ref<SettingsPayload>({
-  enabled: true,
-  note: '',
-  operator_name: '',
-  ticket_url: '',
-  hero_background_url: '',
-  wizard_beta_enabled: false,
-  wizard_feedback_enabled: false,
-  min_transfer_minutes: 0,
-  max_transfer_minutes: 120,
-  max_transfers: 2,
-  afternoon_return_threshold_minutes: 900,
-});
-
-const { dirty, syncSnapshot } = useAdminFormDirty(form);
-useAdminUnsavedGuard(dirty);
-
-const { loading, error, data, load } = useAdminResource({
-  beforeLoad: () => cfg.canManage,
-  deniedMessage: adminStr(cfg, 'settingsNoPermission'),
-  fetch: () => getSettings(),
-  errorMessage: (e) => adminErrorMessage(cfg, e, 'settingsLoadFailed'),
-});
-
-watch(
-  data,
-  (payload) => {
-    if (payload) {
-      form.value = { ...payload };
-      syncSnapshot();
-    }
-  },
-  { immediate: true },
-);
-
-async function submit() {
-  error.value = '';
-  try {
-    form.value = await saveSettings(form.value);
-    syncSnapshot();
-    showSaved(adminStr(cfg, 'saved'));
-  } catch (e) {
-    error.value = adminErrorMessage(cfg, e, 'saveFailed');
-  }
-}
+const { cfg, form, dirty, loading, error, saveMsg, load, submit } = useSettingsPage();
 </script>
 
 <template>

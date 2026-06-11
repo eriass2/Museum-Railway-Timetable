@@ -1,15 +1,9 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { toRef } from 'vue';
 import { MrtButton } from '../ui';
+import { useStationTrainChangeDraft } from '../../composables/stations-routes/useStationTrainChangeDraft';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
-import {
-  emptyTrainChangeEntry,
-  syncStationTrainChangeEntries,
-  trainChangeMapToEntries,
-  validateTrainChangeEntries,
-  type TrainChangeEntry,
-} from '../../utils/stations-routes/stationTrainChange';
 import type { StationRow } from '../../types';
 
 const props = defineProps<{
@@ -17,56 +11,10 @@ const props = defineProps<{
 }>();
 
 const cfg = adminConfig();
-const draftEntries = ref<TrainChangeEntry[]>([emptyTrainChangeEntry()]);
-
-watch(
-  () => props.station.id,
-  () => {
-    const rows = trainChangeMapToEntries(props.station.train_change_map);
-    draftEntries.value = rows.length ? rows : [emptyTrainChangeEntry()];
-  },
-  { immediate: true },
+const { draftEntries, warnings, updateEntry, addRow, removeRow } = useStationTrainChangeDraft(
+  toRef(props, 'station'),
+  cfg,
 );
-
-const validation = computed(() => validateTrainChangeEntries(draftEntries.value));
-
-const warnings = computed(() => {
-  const messages: string[] = [];
-  if (validation.value.incompleteRows.length) {
-    messages.push(
-      adminStr(cfg, 'stationsTrainChangeIncomplete', 'Rader med saknade fält sparas inte.'),
-    );
-  }
-  if (validation.value.duplicateFromServices.length) {
-    messages.push(adminStr(cfg, 'stationsTrainChangeDuplicateFrom', 'Samma ankommande tågnummer används flera gånger.'));
-  }
-  if (validation.value.duplicateToServices.length) {
-    messages.push(adminStr(cfg, 'stationsTrainChangeDuplicateTo', 'Samma continuation-tur används flera gånger.'));
-  }
-  return messages;
-});
-
-function updateEntry(index: number, patch: Partial<TrainChangeEntry>) {
-  const next = [...draftEntries.value];
-  next[index] = { ...next[index], ...patch };
-  draftEntries.value = next;
-  syncStationTrainChangeEntries(props.station, next);
-}
-
-function addRow() {
-  draftEntries.value = [...draftEntries.value, emptyTrainChangeEntry()];
-  syncStationTrainChangeEntries(props.station, draftEntries.value);
-}
-
-function removeRow(index: number) {
-  const next = [...draftEntries.value];
-  next.splice(index, 1);
-  draftEntries.value = next;
-  if (!draftEntries.value.length) {
-    draftEntries.value = [emptyTrainChangeEntry()];
-  }
-  syncStationTrainChangeEntries(props.station, draftEntries.value);
-}
 </script>
 
 <template>

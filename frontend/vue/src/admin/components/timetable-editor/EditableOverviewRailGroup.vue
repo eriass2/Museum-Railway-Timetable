@@ -3,6 +3,7 @@ import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../../typ
 import type { OverviewGridEdit } from '../../composables/timetable-editor/useOverviewGridEdit';
 import { overviewUiLabels } from '../../../shared/overviewUiLabels';
 import { overviewColumnIsCancelled } from '../../../shared/overviewCancelled';
+import { isOverviewTimeCellEditable } from '../../utils/timetable-editor/overviewGridCell';
 import MrtOverviewRailGroupGrid from '../../../components/overview/MrtOverviewRailGroupGrid.vue';
 import OverviewGridCellEditor from './OverviewGridCellEditor.vue';
 import MrtOverviewTimeDisplay from '../../../components/overview/MrtOverviewTimeDisplay.vue';
@@ -28,7 +29,9 @@ const emit = defineEmits<{ saved: [] }>();
     :editable-cells="!readonly"
   >
     <template #time-cell="{ row, columnIndex }">
-      <template v-if="readonly || !row.stationId || !group.columns[columnIndex].serviceId">
+      <template
+        v-if="!isOverviewTimeCellEditable(readonly, row, group.columns[columnIndex])"
+      >
         <MrtOverviewTimeDisplay
           :text="row.cells[columnIndex].text"
           :approximate-time="row.cells[columnIndex].approximateTime"

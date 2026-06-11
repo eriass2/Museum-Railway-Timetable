@@ -13,8 +13,21 @@ const props = defineProps<{
 
 const emit = defineEmits<{ pick: [ymd: string] }>();
 
-function onClick(): void {
+const dayClass = computed(() => {
+  const base = 'mrt-calendar-day';
   if (props.status === 'ok') {
+    return `${base} mrt-calendar-day--ok`;
+  }
+  if (props.status === 'traffic_no_match') {
+    return `${base} mrt-calendar-day--traffic`;
+  }
+  return `${base} mrt-calendar-day--none`;
+});
+
+const isOk = computed(() => props.status === 'ok');
+
+function onClick(): void {
+  if (isOk.value) {
     emit('pick', props.ymd);
   }
 }
@@ -22,31 +35,12 @@ function onClick(): void {
 
 <template>
   <button
-    v-if="status === 'ok'"
     type="button"
-    class="mrt-calendar-day mrt-calendar-day--ok"
-    :class="{ 'is-selected': selected }"
+    :class="[dayClass, { 'is-selected': selected && isOk }]"
+    :disabled="!isOk"
     :aria-label="ariaLabel"
-    :aria-pressed="selected"
+    :aria-pressed="isOk ? selected : undefined"
     @click="onClick"
-  >
-    {{ day }}
-  </button>
-  <button
-    v-else-if="status === 'traffic_no_match'"
-    type="button"
-    class="mrt-calendar-day mrt-calendar-day--traffic"
-    disabled
-    :aria-label="ariaLabel"
-  >
-    {{ day }}
-  </button>
-  <button
-    v-else
-    type="button"
-    class="mrt-calendar-day mrt-calendar-day--none"
-    disabled
-    :aria-label="ariaLabel"
   >
     {{ day }}
   </button>

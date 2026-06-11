@@ -10,6 +10,7 @@ import WizardCalendarGrid from './WizardCalendarGrid.vue';
 import MrtStatusMessage from '../../components/ui/MrtStatusMessage.vue';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
 import { cfgStr } from '../utils/wizardLabels';
+import { wizardCalendarLegendItems } from '../utils/wizardCalendarLegend';
 
 const { store, cfg, config, resourceCache } = useWizardContext();
 
@@ -28,20 +29,7 @@ const {
 const backLabel = computed(() => cfgStr(cfg, 'back', '← Tillbaka'));
 const showEmptyMonth = computed(() => !loading.value && !hasBookableDays.value);
 
-const legendItems = computed(() => [
-  {
-    swatchClass: 'mrt-legend-swatch--ok',
-    label: cfgStr(cfg, 'legendOk', 'Trafik för din resa'),
-  },
-  {
-    swatchClass: 'mrt-legend-swatch--traffic',
-    label: cfgStr(cfg, 'legendTraffic', 'Trafik, ej din resa'),
-  },
-  {
-    swatchClass: 'mrt-legend-swatch--none',
-    label: cfgStr(cfg, 'legendNone', 'Ingen trafik'),
-  },
-]);
+const legendItems = computed(() => wizardCalendarLegendItems(cfg));
 
 function onBack(): void {
   store.dateYmd = '';

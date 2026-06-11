@@ -1,8 +1,10 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, toRef } from 'vue';
 import { AdminDisclosure, AdminTrainTypeSelect } from '../ui';
 import type { TimetableDetail } from '../../types';
 import type { TimetableTripDraft } from './tripFormTypes';
+import { useTripFieldIds } from '../../composables/timetable-editor/useTripFieldIds';
+import { directionStillValid } from '../../utils/timetable-editor/tripDraftLine';
 import { adminFmt, adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 
@@ -15,11 +17,9 @@ const props = defineProps<{
 const draft = defineModel<TimetableTripDraft>('draft', { required: true });
 
 const cfg = adminConfig();
-
-const lineSelectId = computed(() => `${props.fieldIdPrefix}-line`);
-const directionSelectId = computed(() => `${props.fieldIdPrefix}-direction`);
-const serviceNumberInputId = computed(() => `${props.fieldIdPrefix}-num`);
-const trainTypeSelectId = computed(() => `${props.fieldIdPrefix}-type`);
+const fieldIdPrefixRef = toRef(props, 'fieldIdPrefix');
+const { lineSelectId, directionSelectId, serviceNumberInputId, trainTypeSelectId } =
+  useTripFieldIds(fieldIdPrefixRef);
 
 const selectedLine = computed(() =>
   props.detail.lines.find((line) => line.code === draft.value.line_code),
@@ -33,10 +33,7 @@ const selectedTrainTypeName = computed(
 
 function onLineChange(code: string): void {
   draft.value.line_code = code;
-  const stillValid = directionOptions.value.some(
-    (t) => t.station_id === draft.value.toward_station_id,
-  );
-  if (!stillValid) {
+  if (!directionStillValid(draft.value.toward_station_id, directionOptions.value)) {
     draft.value.toward_station_id = 0;
   }
 }

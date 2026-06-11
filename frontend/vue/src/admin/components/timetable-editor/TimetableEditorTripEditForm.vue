@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import { AdminFormActions, MrtButton } from '../ui';
 import TimetableTripFieldsBlock from './TimetableTripFieldsBlock.vue';
 import type { TimetableTripDraft } from './tripFormTypes';
@@ -8,7 +9,7 @@ import { adminConfig } from '../../types';
 
 export type TripEditDraft = TimetableTripDraft & { service_id: number };
 
-withDefaults(
+const props = withDefaults(
   defineProps<{
     detail: TimetableDetail;
     trainTypeIconKey: (typeId: number) => string;
@@ -21,6 +22,10 @@ const draft = defineModel<TripEditDraft>('draft', { required: true });
 
 const cfg = adminConfig();
 
+const containerClass = computed(() =>
+  props.embedded ? 'mrt-admin-trip-edit--embedded' : 'mrt-admin-trip-edit',
+);
+
 const emit = defineEmits<{
   save: [];
   cancel: [];
@@ -28,7 +33,7 @@ const emit = defineEmits<{
 </script>
 
 <template>
-  <div :class="embedded ? 'mrt-admin-trip-edit--embedded' : 'mrt-admin-trip-edit'">
+  <div :class="containerClass">
     <h3 v-if="!embedded" class="mrt-admin-trip-edit__title">
       {{ adminStr(cfg, 'editorEditTripTitle') }}
     </h3>

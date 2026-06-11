@@ -5,6 +5,7 @@ import { cancelTrafficToday } from '../../api/adminRest';
 import { adminConfirm } from '../../composables/adminConfirm';
 import type { TrafficToday } from '../../types';
 import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../../utils/adminLabels';
+import { trafficTodayStatusText } from '../../utils/dashboard/trafficTodayStatus';
 import { adminConfig } from '../../types';
 import { AdminActionBar, AdminPanel, AdminStatusMessage, MrtButton } from '../ui';
 
@@ -25,19 +26,9 @@ const effectiveTraffic = computed(() => ({
   all_cancelled: props.traffic.all_cancelled || localAllCancelled.value,
 }));
 
-const statusText = computed(() => {
-  const traffic = effectiveTraffic.value;
-  if (traffic.services_count === 0) {
-    return adminStr(cfg, 'trafficTodayNoServices');
-  }
-  if (traffic.all_cancelled) {
-    return adminFmtN(cfg, 'trafficTodayAllCancelled', { 1: traffic.services_count });
-  }
-  return adminFmtN(cfg, 'trafficTodaySummary', {
-    1: traffic.services_count,
-    2: traffic.timetable_title,
-  });
-});
+const statusText = computed(() =>
+  trafficTodayStatusText(cfg, effectiveTraffic.value),
+);
 
 async function cancelAll() {
   if (!props.canOperate || busy.value) return;

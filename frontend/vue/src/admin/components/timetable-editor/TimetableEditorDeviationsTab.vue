@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, toRef } from 'vue';
 import {
   AdminBackNav,
   AdminFieldStack,
@@ -11,12 +11,18 @@ import {
   MrtButton,
 } from '../ui';
 import { useDeviationsPanel } from '../../composables/timetable-editor/useDeviationsPanel';
+import { useDeviationCreateDefaults } from '../../composables/timetable-editor/useDeviationCreateDefaults';
 import type { TimetableDetail } from '../../types';
 import {
   formatDeviationTripLabel,
-  isCancelledDeviationNotice,
   type DeviationRow,
 } from '../../utils/timetable-editor/deviationsPayload';
+import {
+  deviationNoticePreview,
+  deviationRowIsCancelled,
+  deviationTrainTypeName,
+  deviationTripLabelForId,
+} from '../../utils/timetable-editor/deviationRowDisplay';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 
@@ -53,30 +59,23 @@ const {
   canApplyCreate,
 } = useDeviationsPanel(rows, servicesRef, datesRef, cancelledNotice);
 
-const newDate = ref('');
-const newServiceId = ref(0);
+const { newDate, newServiceId } = useDeviationCreateDefaults(
+  toRef(props, 'dates'),
+  toRef(props, 'services'),
+);
 
 defineExpose({ requestBackToList });
 
 function tripLabel(serviceId: number): string {
-  const service = props.services.find((s) => s.id === serviceId);
-  return service ? formatDeviationTripLabel(service) : '—';
+  return deviationTripLabelForId(props.services, serviceId);
 }
 
 function trainTypeName(typeId: number): string {
-  if (typeId <= 0) {
-    return '—';
-  }
-  return props.trainTypes.find((t) => t.id === typeId)?.name ?? '—';
+  return deviationTrainTypeName(props.trainTypes, typeId);
 }
 
 function rowIsCancelled(row: DeviationRow): boolean {
-  return isCancelledDeviationNotice(row.notice, cancelledNotice.value);
-}
-
-function noticePreview(notice: string): string {
-  const text = notice.trim();
-  return text || '—';
+  return deviationRowIsCancelled(row, cancelledNotice.value);
 }
 
 async function onBack(): Promise<void> {
@@ -100,19 +99,6 @@ function onStartCreate(): void {
   }
   startCreate(newDate.value, newServiceId.value);
 }
-
-watch(
-  () => [props.dates, props.services] as const,
-  ([dates, services]) => {
-    if (!newDate.value && dates.length) {
-      newDate.value = dates[0];
-    }
-    if (!newServiceId.value && services.length) {
-      newServiceId.value = services[0].id;
-    }
-  },
-  { immediate: true },
-);
 </script>
 
 <template>
@@ -139,7 +125,7 @@ watch(
             <td>{{ tripLabel(row.service_id) }}</td>
             <td>{{ trainTypeName(row.train_type_id) }}</td>
             <td>{{ rowIsCancelled(row) ? adminStr(cfg, 'yes') : '—' }}</td>
-            <td>{{ noticePreview(row.notice) }}</td>
+            <td>{{ deviationNoticePreview(row.notice) }}</td>
             <td v-if="canOperate">
               <AdminRowActions>
                 <MrtButton context="admin" variant="secondary" @click="startEdit(idx)">

@@ -2,8 +2,11 @@
 import { computed } from 'vue';
 import type { TimetableOverviewIconUrls, TimetableRailGroup } from '../../types/timetableOverview';
 import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
-import { formatDeviationPlanned } from '../../shared/overviewUiLabels';
-import { overviewColumnIsCancelled } from '../../shared/overviewCancelled';
+import {
+  overviewCancelledNoticeDetail,
+  overviewColumnCancelled,
+  overviewDeviationTitle,
+} from '../../utils/overviewColumnDisplay';
 import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
 import {
   buildHighlightStripeSpans,
@@ -33,13 +36,6 @@ const props = withDefaults(
   { showDeviationMeta: true, editableCells: false },
 );
 
-function deviationTitle(plannedName: string | undefined): string {
-  if (plannedName) {
-    return formatDeviationPlanned(props.labels.deviationPlanned, plannedName);
-  }
-  return props.labels.deviationFromPlan;
-}
-
 const gridTracks = computed(() => buildOverviewGridTracks(props.group.columns));
 const gridStyle = computed(() => overviewGridStyle(props.group.columns));
 const highlightSpans = computed(() => buildHighlightStripeSpans(props.group.rows, gridTracks.value));
@@ -49,25 +45,12 @@ function stripeSpan(rowIndex: number, trackIndex: number) {
   return highlightStripeSpanAt(highlightSpans.value, rowIndex, trackIndex);
 }
 
-function columnAt(index: number) {
-  return props.group.columns[index];
-}
-
 function columnCancelled(index: number): boolean {
-  const column = columnAt(index);
-  return column ? overviewColumnIsCancelled(column) : false;
+  return overviewColumnCancelled(props.group, index);
 }
 
 function cancelledNoticeDetail(index: number): boolean {
-  const column = columnAt(index);
-  if (!column || !overviewColumnIsCancelled(column)) {
-    return false;
-  }
-  const notice = column.deviationNotice?.trim() || '';
-  if (!notice) {
-    return false;
-  }
-  return notice.toLowerCase() !== props.labels.cancelledLabel.toLowerCase();
+  return overviewCancelledNoticeDetail(props.group, index, props.labels.cancelledLabel);
 }
 </script>
 
@@ -115,7 +98,7 @@ function cancelledNoticeDetail(index: number): boolean {
                 <abbr
                   v-if="showDeviationMeta && group.columns[track.columnIndex].isDeviation"
                   class="mrt-ov-deviation-mark"
-                  :title="deviationTitle(group.columns[track.columnIndex].plannedTrainTypeName)"
+                  :title="overviewDeviationTitle(labels, group.columns[track.columnIndex].plannedTrainTypeName)"
                 >†</abbr>
               </span>
             </div>

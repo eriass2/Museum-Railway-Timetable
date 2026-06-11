@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
 import MrtExpandTrigger from '../../components/ui/MrtExpandTrigger.vue';
 import MrtTripCard from '../../components/ui/MrtTripCard.vue';
@@ -8,16 +8,9 @@ import MrtVehicleRow from '../../components/ui/MrtVehicleRow.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import type { JourneyConnection } from '../types';
 import { useConnectionLegDisplay } from '../composables/useConnectionLegDisplay';
+import { useTripCardDisplay } from '../composables/useTripCardDisplay';
 import { cfgStr } from '../utils/wizardLabels';
-import {
-  connectionDoorToDoorMinutes,
-  connectionLegs,
-  connectionTransferCount,
-  formatTransferTripLabel,
-  isTransfer,
-} from '../utils/connection';
-import { formatDuration, connectionNoticeIsCancelled, isWarningNotice } from '../utils/format';
-import { legsToVehicleItems } from '../utils/vehicle';
+import { formatDuration, isWarningNotice } from '../utils/format';
 import WizardTripDetail from './WizardTripDetail.vue';
 
 const props = defineProps<{
@@ -36,20 +29,10 @@ const { routeText, timeRange } = useConnectionLegDisplay(
   props.legCtx,
 );
 
-const meta = computed(() => {
-  if (!isTransfer(props.connection)) {
-    return cfgStr(cfg, 'directTrip', 'Direktresa');
-  }
-  return formatTransferTripLabel(connectionTransferCount(props.connection), cfg.value);
-});
-
-const legs = computed(() => connectionLegs(props.connection));
-
-const doorToDoorMinutes = computed(() => connectionDoorToDoorMinutes(props.connection));
-
-const vehicleItems = computed(() => legsToVehicleItems(legs.value, cfg.value));
-
-const isCancelled = computed(() => connectionNoticeIsCancelled(props.connection));
+const { meta, doorToDoorMinutes, vehicleItems, isCancelled } = useTripCardDisplay(
+  () => props.connection,
+  cfg,
+);
 
 async function toggleDetail(): Promise<void> {
   expanded.value = !expanded.value;

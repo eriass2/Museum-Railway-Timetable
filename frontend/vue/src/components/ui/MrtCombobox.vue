@@ -36,6 +36,8 @@ const filtered = computed(() => {
   return list.filter((o) => o.label.toLowerCase().includes(q));
 });
 
+const listId = computed(() => `${props.id}-list`);
+
 function onInput(): void {
   open.value = true;
   if (!query.value.trim()) {
@@ -68,7 +70,7 @@ function closeList(): void {
       class="mrt-combobox__input"
       role="combobox"
       :aria-expanded="open"
-      :aria-controls="`${id}-list`"
+      :aria-controls="listId"
       autocomplete="off"
       :placeholder="placeholder"
       :aria-label="searchAria"
@@ -78,7 +80,7 @@ function closeList(): void {
     >
     <ul
       v-show="open && filtered.length"
-      :id="`${id}-list`"
+      :id="listId"
       class="mrt-combobox__list"
       role="listbox"
     >

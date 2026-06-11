@@ -1,56 +1,22 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import {
+import { AdminPanel, AdminStatusMessage, AdminToolList, MrtButton } from '../components/ui';
+import { useDevToolsPage } from '../composables/useDevToolsPage';
+import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import { adminStr } from '../utils/adminLabels';
+
+const { isMobile } = useMobileAdmin();
+const {
+  cfg,
+  busy,
+  message,
+  error,
+  run,
   devClearDatabase,
-  devCreateDemoPage,
   devImportLennakatten,
+  devCreateDemoPage,
   devSetupNavigation,
   devSyncTimetablePages,
-} from '../api/adminRest';
-import { AdminPanel, AdminStatusMessage, AdminToolList, MrtButton } from '../components/ui';
-import { adminConfirm } from '../composables/adminConfirm';
-import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
-import { adminConfig } from '../types';
-import { adminErrorMessage, adminStr } from '../utils/adminLabels';
-
-const cfg = adminConfig();
-const { isMobile } = useMobileAdmin();
-const busy = ref('');
-const message = ref('');
-const error = ref('');
-
-async function run(action: string, fn: () => Promise<unknown>) {
-  if (busy.value) return;
-  if (action === 'clear') {
-    const ok = await adminConfirm({
-      title: adminStr(cfg, 'devClearTitle'),
-      message: adminStr(cfg, 'devClearMessage'),
-      confirmLabel: adminStr(cfg, 'devClearConfirm'),
-      danger: true,
-    });
-    if (!ok) {
-      return;
-    }
-  }
-  busy.value = action;
-  error.value = '';
-  message.value = '';
-  try {
-    await fn();
-    const labels: Record<string, string> = {
-      clear: adminStr(cfg, 'devClearSuccess'),
-      import: adminStr(cfg, 'devImportSuccess'),
-      demo: adminStr(cfg, 'devDemoSuccess'),
-      nav: adminStr(cfg, 'devNavSuccess'),
-      pages: adminStr(cfg, 'devPagesSuccess'),
-    };
-    message.value = labels[action] || adminStr(cfg, 'devDone');
-  } catch (e) {
-    error.value = adminErrorMessage(cfg, e, 'genericError');
-  } finally {
-    busy.value = '';
-  }
-}
+} = useDevToolsPage();
 </script>
 
 <template>

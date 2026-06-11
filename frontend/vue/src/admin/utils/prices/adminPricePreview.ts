@@ -121,6 +121,21 @@ export function adminPricePreviewCfg(cfg: AdminClientConfig): PriceCfg {
   };
 }
 
+export function adminAfternoonCompareLabels(
+  cfg: AdminClientConfig,
+  payload: PricesPayload,
+): PriceTableLabels {
+  return {
+    title: adminStr(cfg, 'pricesAfternoonCompareCol', 'Retur'),
+    titleSuffix: '',
+    typeColumnSr: adminStr(cfg, 'pricesTicketTypeCol', 'Biljettyp'),
+    note: '',
+    dash: '—',
+    tickets: payload.ticket_types,
+    categories: payload.categories,
+  };
+}
+
 export function adminAfternoonVisitorNote(cfg: AdminClientConfig, thresholdMinutes: number): string {
   if (thresholdMinutes <= 0) {
     return '';

@@ -37,18 +37,20 @@ watch([fromId, toId, tripType], () => {
   }
 });
 
+function stationTitle(id: number): string {
+  return props.stations.find((s) => s.id === id)?.title || '';
+}
+
 function onSearch(): void {
   if (!store.validateRoute(fromId.value, toId.value)) {
     return;
   }
-  const fromStation = props.stations.find((s) => s.id === fromId.value);
-  const toStation = props.stations.find((s) => s.id === toId.value);
   store.setRoute(
     fromId.value,
     toId.value,
     tripType.value,
-    fromStation?.title || '',
-    toStation?.title || '',
+    stationTitle(fromId.value),
+    stationTitle(toId.value),
   );
   const now = todayYearMonth();
   store.calYear = now.year;

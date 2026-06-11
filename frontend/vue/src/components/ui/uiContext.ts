@@ -35,6 +35,14 @@ export function isAdminContext(context: MrtUiContext): boolean {
   return context === 'admin';
 }
 
+/** Loading placeholder classes for MrtAsyncState. */
+export function mrtAsyncLoadingClass(context: MrtUiContext): string {
+  const base = 'mrt-empty mrt-empty--loading';
+  return isAdminContext(context)
+    ? `${base} mrt-admin-async__loading`
+    : `${base} mrt-async__loading`;
+}
+
 /** Parse `mrt-dot--green` → `green` for MrtDot migration. */
 export function mrtDotColorFromClass(dotClass: string): string | null {
   const match = /^mrt-dot--([a-z]+)$/.exec(dotClass.trim());

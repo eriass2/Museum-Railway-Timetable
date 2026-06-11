@@ -2,8 +2,8 @@
 import { computed } from 'vue';
 import {
   buildRoutePreviewNodes,
+  routePreviewRoleLabel,
   routePreviewTypeLabel,
-  type RoutePreviewNode,
 } from '../../utils/stations-routes/routePreviewNodes';
 import { adminConfig } from '../../types';
 import { adminStr } from '../../utils/adminLabels';
@@ -26,12 +26,13 @@ const props = withDefaults(
 );
 
 const cfg = adminConfig();
+const labelFor = (key: string) => adminStr(cfg, key);
 
 const displayLabel = computed(
   () => props.label || adminStr(cfg, 'routePreviewLabel'),
 );
 
-const nodes = computed<RoutePreviewNode[]>(() =>
+const nodes = computed(() =>
   buildRoutePreviewNodes(
     props.stationIds,
     props.stationsById,
@@ -39,17 +40,6 @@ const nodes = computed<RoutePreviewNode[]>(() =>
     props.endStationId,
   ),
 );
-
-function roleLabel(role: RoutePreviewNode['role']): string {
-  if (role === 'start') return adminStr(cfg, 'routePreviewStart');
-  if (role === 'end') return adminStr(cfg, 'routePreviewEnd');
-  if (role === 'both') return adminStr(cfg, 'routePreviewBoth');
-  return '';
-}
-
-function stationTypeLabel(stationType: string): string {
-  return routePreviewTypeLabel(stationType, (key) => adminStr(cfg, key));
-}
 </script>
 
 <template>
@@ -69,10 +59,10 @@ function stationTypeLabel(stationType: string): string {
       >
         <span class="mrt-route-preview__name">{{ node.name }}</span>
         <span v-if="node.role !== 'via'" class="mrt-route-preview__role">
-          {{ roleLabel(node.role) }}
+          {{ routePreviewRoleLabel(node.role, labelFor) }}
         </span>
         <span v-if="node.station_type" class="mrt-route-preview__type">
-          {{ stationTypeLabel(node.station_type) }}
+          {{ routePreviewTypeLabel(node.station_type, labelFor) }}
         </span>
       </span>
     </template>

@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import { adminConfig } from '../types';
 import AdminShortcodesGuide from '../components/AdminShortcodesGuide.vue';
 import { AdminPanel, AdminTableScroll } from '../components/ui';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import { requireAdminHelp } from '../utils/adminHelpContent';
+import { adminConfig } from '../types';
 
 const cfg = adminConfig();
 const { isMobile } = useMobileAdmin();
-const help = computed(() => {
-  if (!cfg.help) {
-    throw new Error('mrtAdminVue.help config missing');
-  }
-  return cfg.help;
-});
+const help = computed(() => requireAdminHelp(cfg));
 </script>
 
 <template>

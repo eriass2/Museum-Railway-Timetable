@@ -16,11 +16,13 @@ const props = withDefaults(
   },
 );
 
+const cfg = adminConfig();
+
 const src = computed(() => {
   if (!props.iconKey) {
     return '';
   }
-  return trainTypeIconUrl(adminConfig().trainTypeIconUrls, props.iconKey);
+  return trainTypeIconUrl(cfg.trainTypeIconUrls, props.iconKey);
 });
 </script>
 

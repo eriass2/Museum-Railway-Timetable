@@ -1,48 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue';
 import type { PricesPayload } from '../../api/adminRest';
-import type { TicketCopyCondition, TicketCopyNote } from '../../../shared/ticketCopy';
+import type { TicketCopyCondition } from '../../../shared/ticketCopy';
 import { AdminDisclosure, AdminTableScroll, MrtButton } from '../ui';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
+import { useTicketCopyNotes } from '../../composables/prices/useTicketCopyNotes';
 
 const payload = defineModel<PricesPayload>({ required: true });
 
 const cfg = adminConfig();
-
-const conditionOptions = computed((): { value: TicketCopyCondition; label: string }[] => [
-  { value: 'always', label: adminStr(cfg, 'pricesTicketCopyCondAlways', 'Alltid') },
-  { value: 'afternoon', label: adminStr(cfg, 'pricesTicketCopyCondAfternoon', 'Eftermiddagsbiljett') },
-  { value: 'day_ticket', label: adminStr(cfg, 'pricesTicketCopyCondDay', 'Heldagsbiljett visas') },
-]);
-
-const notes = computed({
-  get: () => payload.value.ticket_copy_notes ?? [],
-  set: (value: TicketCopyNote[]) => {
-    payload.value = { ...payload.value, ticket_copy_notes: value };
-  },
-});
-
-function addNote(): void {
-  const index = notes.value.length + 1;
-  notes.value = [
-    ...notes.value,
-    {
-      id: `note_${index}`,
-      condition: 'always',
-      text: '',
-      enabled: true,
-    },
-  ];
-}
-
-function removeNote(id: string): void {
-  notes.value = notes.value.filter((note) => note.id !== id);
-}
-
-function updateNote(id: string, patch: Partial<TicketCopyNote>): void {
-  notes.value = notes.value.map((note) => (note.id === id ? { ...note, ...patch } : note));
-}
+const { notes, conditionOptions, addNote, removeNote, updateNote } = useTicketCopyNotes(payload, cfg);
 </script>
 
 <template>

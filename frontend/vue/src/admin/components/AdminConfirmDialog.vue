@@ -1,20 +1,10 @@
 <script setup lang="ts">
 import { useAdminConfirmDialog } from '../composables/adminConfirm';
+import { useConfirmDialogDismiss } from '../composables/useConfirmDialogDismiss';
 import { MrtButton } from './ui';
 
 const { open, options, confirm, cancel } = useAdminConfirmDialog();
-
-function onBackdropClick(event: MouseEvent) {
-  if (event.target === event.currentTarget) {
-    cancel();
-  }
-}
-
-function onKeydown(event: KeyboardEvent) {
-  if (event.key === 'Escape') {
-    cancel();
-  }
-}
+const { onBackdropClick, onKeydown } = useConfirmDialogDismiss(cancel);
 </script>
 
 <template>

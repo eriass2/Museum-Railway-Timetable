@@ -1,56 +1,28 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { toRef } from 'vue';
 import MrtPriceTable from '../../../components/ui/MrtPriceTable.vue';
 import type { PricesPayload } from '../../api/adminRest';
-import {
-  adminPricePreviewCfg,
-  adminPriceTableLabels,
-  buildAdminPricePreviewDay,
-  buildAdminPricePreviewTrip,
-  effectivePricingZones,
-} from '../../utils/prices/adminPricePreview';
 import { formatPriceZoneLabel } from '../../../shared/priceZoneLabels';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
+import { usePricesPreview } from '../../composables/prices/usePricesPreview';
 
 const props = defineProps<{
   payload: PricesPayload;
 }>();
 
 const cfg = adminConfig();
-const previewZone = ref(1);
-const previewType = ref('single');
 
-const ticketKeys = computed(() => Object.keys(props.payload.ticket_types));
-const pricingZones = computed(() => effectivePricingZones(props.payload));
-
-watch(
+const {
+  previewZone,
+  previewType,
+  ticketKeys,
   pricingZones,
-  (zones) => {
-    if (!zones.includes(previewZone.value)) {
-      previewZone.value = zones[0] ?? 1;
-    }
-  },
-  { immediate: true },
-);
-
-watch(ticketKeys, (keys) => {
-  if (!keys.includes(previewType.value)) {
-    previewType.value = keys[0] ?? 'single';
-  }
-});
-
-const labels = computed(() =>
-  adminPriceTableLabels(cfg, props.payload, previewZone.value, true),
-);
-
-const tripPrice = computed(() =>
-  buildAdminPricePreviewTrip(props.payload, previewType.value, previewZone.value, false),
-);
-
-const dayPrice = computed(() => buildAdminPricePreviewDay(props.payload, previewZone.value));
-
-const priceCfg = computed(() => adminPricePreviewCfg(cfg));
+  labels,
+  tripPrice,
+  dayPrice,
+  priceCfg,
+} = usePricesPreview(toRef(props, 'payload'), cfg);
 </script>
 
 <template>

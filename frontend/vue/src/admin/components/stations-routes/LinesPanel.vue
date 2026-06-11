@@ -10,6 +10,7 @@ import {
 } from '../ui';
 import RoutePreview from './RoutePreview.vue';
 import { lineKindLabelKey } from '../../utils/stations-routes/lineKindLabel';
+import { lineJunctionLabel } from '../../utils/stations-routes/lineJunctionLabel';
 import { adminFmt, adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 import type { LineRow, StationRow } from '../../types';
@@ -31,13 +32,6 @@ const emit = defineEmits<{
 }>();
 
 const cfg = adminConfig();
-
-function junctionLabel(line: LineRow): string {
-  if (line.junction_station_name) {
-    return line.junction_station_name;
-  }
-  return '—';
-}
 </script>
 
 <template>
@@ -108,7 +102,7 @@ function junctionLabel(line: LineRow): string {
                   ({{ adminStr(cfg, 'stationsLinesBidirectional') }})
                 </span>
               </td>
-              <td>{{ junctionLabel(line) }}</td>
+              <td>{{ lineJunctionLabel(line) }}</td>
               <td>
                 <RoutePreview
                   :station-ids="line.station_ids"

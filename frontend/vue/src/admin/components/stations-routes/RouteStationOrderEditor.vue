@@ -29,6 +29,14 @@ const availableStations = computed(() =>
   props.stations.filter((s) => !route.value.station_ids.includes(s.id)),
 );
 
+const orderedStationRows = computed(() =>
+  route.value.station_ids.map((sid, idx) => ({
+    sid,
+    idx,
+    role: routeStationRoleFor(route.value, sid),
+  })),
+);
+
 function onAppend() {
   if (!addStationId.value) return;
   route.value = syncRouteTermini({
@@ -48,27 +56,21 @@ function onAppend() {
     </p>
     <ol v-else class="mrt-admin-route-station-list">
       <li
-        v-for="(sid, idx) in route.station_ids"
-        :key="`${idPrefix}-${sid}`"
+        v-for="row in orderedStationRows"
+        :key="`${idPrefix}-${row.sid}`"
         class="mrt-admin-route-station-row"
       >
-        <span class="mrt-admin-route-station-row__order">{{ idx + 1 }}</span>
-        <span class="mrt-admin-route-station-row__name">{{ stationTitle(sid) }}</span>
-        <span v-if="routeStationRoleFor(route, sid)" class="mrt-admin-route-station-row__badges">
+        <span class="mrt-admin-route-station-row__order">{{ row.idx + 1 }}</span>
+        <span class="mrt-admin-route-station-row__name">{{ stationTitle(row.sid) }}</span>
+        <span v-if="row.role" class="mrt-admin-route-station-row__badges">
           <span
-            v-if="
-              routeStationRoleFor(route, sid) === 'start' ||
-              routeStationRoleFor(route, sid) === 'both'
-            "
+            v-if="row.role === 'start' || row.role === 'both'"
             class="mrt-admin-route-station-row__badge mrt-admin-route-station-row__badge--start"
           >
             {{ adminStr(cfg, 'routePreviewStart') }}
           </span>
           <span
-            v-if="
-              routeStationRoleFor(route, sid) === 'end' ||
-              routeStationRoleFor(route, sid) === 'both'
-            "
+            v-if="row.role === 'end' || row.role === 'both'"
             class="mrt-admin-route-station-row__badge mrt-admin-route-station-row__badge--end"
           >
             {{ adminStr(cfg, 'routePreviewEnd') }}
@@ -78,18 +80,18 @@ function onAppend() {
           <MrtButton
             context="admin"
             variant="secondary"
-            :disabled="idx === 0"
+            :disabled="row.idx === 0"
             :aria-label="adminStr(cfg, 'stationsRouteMoveUp')"
-            @click="emit('move', idx, -1)"
+            @click="emit('move', row.idx, -1)"
           >
             ↑
           </MrtButton>
           <MrtButton
             context="admin"
             variant="secondary"
-            :disabled="idx === route.station_ids.length - 1"
+            :disabled="row.idx === route.station_ids.length - 1"
             :aria-label="adminStr(cfg, 'stationsRouteMoveDown')"
-            @click="emit('move', idx, 1)"
+            @click="emit('move', row.idx, 1)"
           >
             ↓
           </MrtButton>
@@ -97,7 +99,7 @@ function onAppend() {
             context="admin"
             variant="link-delete"
             :aria-label="adminStr(cfg, 'stationsRouteRemoveStation')"
-            @click="emit('remove', idx)"
+            @click="emit('remove', row.idx)"
           >
             ×
           </MrtButton>

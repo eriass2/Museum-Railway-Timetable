@@ -76,3 +76,14 @@ export function removeRouteStation(route: RouteRow, idx: number): RouteRow {
   const station_ids = route.station_ids.filter((_, i) => i !== idx);
   return syncRouteTermini({ ...route, station_ids });
 }
+
+export function applyRouteStationMove(
+  route: RouteRow,
+  idx: number,
+  dir: -1 | 1,
+): RouteRow {
+  return syncRouteTermini({
+    ...route,
+    station_ids: moveRouteStation(route.station_ids, idx, dir),
+  });
+}

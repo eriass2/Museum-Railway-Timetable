@@ -2,7 +2,7 @@
 import MrtAlert from './MrtAlert.vue';
 import MrtButton from './MrtButton.vue';
 import type { MrtUiContext } from './types';
-import { isAdminContext } from './uiContext';
+import { mrtAsyncLoadingClass } from './uiContext';
 
 withDefaults(
   defineProps<{
@@ -21,17 +21,10 @@ withDefaults(
 );
 
 defineEmits<{ retry: [] }>();
-
-function loadingClass(context: MrtUiContext): string {
-  const base = 'mrt-empty mrt-empty--loading';
-  return isAdminContext(context)
-    ? `${base} mrt-admin-async__loading`
-    : `${base} mrt-async__loading`;
-}
 </script>
 
 <template>
-  <p v-if="loading" :class="loadingClass(context)">
+  <p v-if="loading" :class="mrtAsyncLoadingClass(context)">
     {{ loadingText }}
   </p>
   <div v-else-if="error && context === 'admin'" class="mrt-admin-async__error notice notice-error">

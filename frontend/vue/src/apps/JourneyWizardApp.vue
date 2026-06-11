@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, nextTick, onMounted, provide, ref, watch } from 'vue';
+import { computed, onMounted, provide, ref } from 'vue';
 import MrtAlert from '../components/ui/MrtAlert.vue';
 import MrtStepProgress from '../components/ui/MrtStepProgress.vue';
 import { applyWizardDebugPreset } from '../wizard/composables/useWizardDebug';
+import { useWizardStepFocus } from '../wizard/composables/useWizardStepFocus';
 import '../styles/journey-wizard.css';
 import type { WizardVueConfig } from '../config/types';
 import { createWizardStore } from '../wizard/store/createWizardStore';
@@ -15,7 +16,6 @@ import WizardFeedbackWidget from '../wizard/components/WizardFeedbackWidget.vue'
 import WizardSummaryStep from '../wizard/components/WizardSummaryStep.vue';
 import type { WizardStep } from '../wizard/types';
 import { cfgStr } from '../wizard/utils/wizardLabels';
-import { logWizardStepInteractive } from '../wizard/utils/wizardStepTiming';
 
 const props = defineProps<{ config: WizardVueConfig }>();
 
@@ -52,26 +52,7 @@ const progressItems = computed(() => {
   }));
 });
 
-watch(
-  () => store.step,
-  async (step) => {
-    const started = performance.now();
-    await nextTick();
-    const panel = panelsRef.value?.querySelector('.mrt-step-panel--active');
-    if (panel) {
-      logWizardStepInteractive(props.config, step, performance.now() - started);
-    }
-    const focusEl = panel?.querySelector(
-      '.mrt-step-progress__item.is-active, h2.mrt-heading--surface-title',
-    ) as HTMLElement | null;
-    if (!focusEl) {
-      return;
-    }
-    focusEl.setAttribute('tabindex', '-1');
-    focusEl.focus();
-    focusEl.addEventListener('blur', () => focusEl.removeAttribute('tabindex'), { once: true });
-  },
-);
+useWizardStepFocus(props.config, () => store.step, panelsRef);
 
 function stepGoToAria(label: string): string {
   const template = cfgStr(cfg.value, 'stepGoTo', 'Gå till steg: %s');

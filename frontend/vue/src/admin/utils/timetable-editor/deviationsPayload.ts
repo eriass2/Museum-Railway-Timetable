@@ -11,7 +11,7 @@ export type DeviationSavePayload = Record<
   Record<string, { train_type?: number; notice?: string }>
 >;
 
-type DeviationTripSource = {
+export type DeviationTripSource = {
   id: number;
   service_number: string;
   destination: string;

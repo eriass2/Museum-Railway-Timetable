@@ -83,6 +83,24 @@ const stationPurchaseNote = computed(() => labels.value.stationPurchaseNote?.tri
 
 const extraFootnotes = computed(() => labels.value.footnotes?.filter((n) => n.trim() !== '') ?? []);
 
+const displayNotes = computed(() => {
+  const notes: string[] = [];
+  if (zoneNote.value) {
+    notes.push(zoneNote.value);
+  }
+  if (priceSeniorNote.value) {
+    notes.push(priceSeniorNote.value);
+  }
+  if (stationPurchaseNote.value) {
+    notes.push(stationPurchaseNote.value);
+  }
+  notes.push(...extraFootnotes.value);
+  if (afternoonClockNote.value) {
+    notes.push(afternoonClockNote.value);
+  }
+  return notes;
+});
+
 function priceForCategory(catKey: string, ticketType: string): string {
   if (!priceData.value) {
     return '';
@@ -193,27 +211,12 @@ function dayPriceForCategory(catKey: string): string {
       </div>
     </template>
 
-    <p v-if="zoneNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
-      {{ zoneNote }}
-    </p>
-    <p v-if="priceSeniorNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
-      {{ priceSeniorNote }}
-    </p>
     <p
-      v-if="stationPurchaseNote"
+      v-for="(note, index) in displayNotes"
+      :key="`note-${index}`"
       class="mrt-price-block__note mrt-text-secondary mrt-mt-sm"
     >
-      {{ stationPurchaseNote }}
-    </p>
-    <p
-      v-for="(footnote, index) in extraFootnotes"
-      :key="`footnote-${index}`"
-      class="mrt-price-block__note mrt-text-secondary mrt-mt-sm"
-    >
-      {{ footnote }}
-    </p>
-    <p v-if="afternoonClockNote" class="mrt-price-block__note mrt-text-secondary mrt-mt-sm">
-      {{ afternoonClockNote }}
+      {{ note }}
     </p>
   </div>
 </template>

@@ -19,12 +19,11 @@ const busy = ref(false);
 
 async function cancelAll() {
   if (!props.canOperate || busy.value) return;
-  const label = props.traffic.date;
   const ok = await adminConfirm({
     title: adminStr(cfg, 'mobileCancelConfirmTitle'),
     message: adminFmtN(cfg, 'mobileCancelConfirmMessage', {
       1: props.traffic.services_count,
-      2: label,
+      2: props.traffic.date,
     }),
     confirmLabel: adminStr(cfg, 'trafficTodayCancelButton'),
     danger: true,

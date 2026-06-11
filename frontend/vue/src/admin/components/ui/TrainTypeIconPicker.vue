@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { computed } from 'vue';
-import { trainTypeIconLabel } from '../../../shared/trainTypeIcons';
+import { computed, toRef } from 'vue';
+import { buildTrainTypeIconOptions } from '../../utils/trainTypeIconPicker';
 import { adminConfig } from '../../types';
-import { adminStr } from '../../utils/adminLabels';
 import TrainTypeIcon from '../TrainTypeIcon.vue';
 
 const props = withDefaults(
@@ -25,12 +24,7 @@ const emit = defineEmits<{
   'update:modelValue': [value: string];
 }>();
 
-const options = computed(() =>
-  props.iconKeys.map((key) => ({
-    key,
-    label: trainTypeIconLabel(key, (labelKey) => adminStr(cfg, labelKey)),
-  })),
-);
+const options = computed(() => buildTrainTypeIconOptions(cfg, props.iconKeys));
 
 function select(key: string) {
   if (props.disabled) {

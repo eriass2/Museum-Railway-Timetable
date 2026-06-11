@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { toRef, watch } from 'vue';
+import { computed, toRef, watch } from 'vue';
 import { adminConfig } from '../../types';
 import { adminStr } from '../../utils/adminLabels';
 import { useStopTimes } from '../../composables/timetable-editor/useStopTimes';
@@ -12,6 +12,9 @@ const props = defineProps<{ serviceId: number }>();
 const cfg = adminConfig();
 const serviceId = toRef(props, 'serviceId');
 const { stations, loading, error, message, isDirty, load, save } = useStopTimes(serviceId);
+
+const canEditTimes = computed(() => cfg.canManage || cfg.canOperate);
+const canEditModes = computed(() => cfg.canManage);
 
 defineExpose({ getIsDirty: () => isDirty.value });
 
@@ -46,7 +49,7 @@ watch(serviceId, () => {
       <tbody>
         <tr v-for="row in stations" :key="row.id">
           <td>
-            <input v-model="row.stops_here" type="checkbox" :disabled="!cfg.canManage && !cfg.canOperate" />
+            <input v-model="row.stops_here" type="checkbox" :disabled="!canEditTimes" />
           </td>
           <td>{{ row.name }}</td>
           <td>
@@ -54,7 +57,7 @@ watch(serviceId, () => {
               v-model="row.arrival_time"
               type="time"
               class="mrt-input"
-              :disabled="!cfg.canManage && !cfg.canOperate"
+              :disabled="!canEditTimes"
             />
           </td>
           <td>
@@ -62,37 +65,35 @@ watch(serviceId, () => {
               v-model="row.departure_time"
               type="time"
               class="mrt-input"
-              :disabled="!cfg.canManage && !cfg.canOperate"
+              :disabled="!canEditTimes"
             />
           </td>
           <td>
             <StopTimeModeSelect
               v-model="row.pickup_mode"
               kind="pickup"
-              :disabled="!cfg.canManage"
+              :disabled="!canEditModes"
             />
           </td>
           <td>
             <StopTimeModeSelect
               v-model="row.dropoff_mode"
               kind="dropoff"
-              :disabled="!cfg.canManage"
+              :disabled="!canEditModes"
             />
           </td>
           <td>
             <input
               v-model="row.approximate_time"
               type="checkbox"
-              :disabled="!cfg.canManage && !cfg.canOperate"
+              :disabled="!canEditTimes"
             />
           </td>
         </tr>
       </tbody>
     </table>
 
-    <p class="description">{{ adminStr(cfg, 'editorStoptimesPaLegend') }}</p>
-
-    <AdminFormActions v-if="cfg.canManage || cfg.canOperate">
+    <AdminFormActions v-if="canEditTimes">
       <MrtButton context="admin" variant="primary" @click="save()">
         {{ adminStr(cfg, 'stopTimesSaveButton') }}
       </MrtButton>

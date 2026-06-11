@@ -1,5 +1,6 @@
 <script setup lang="ts" generic="T">
 import MrtAsyncState from './MrtAsyncState.vue';
+import MrtCalendarGridTable from './MrtCalendarGridTable.vue';
 
 withDefaults(
   defineProps<{
@@ -32,59 +33,31 @@ withDefaults(
       :loading="loading"
       :loading-text="loadingLabel"
     >
-      <table
-        class="mrt-calendar-grid__table"
-        :class="{ 'mrt-month-table': variant === 'month' }"
-        role="grid"
-        :aria-label="gridLabel || undefined"
+      <MrtCalendarGridTable
+        :variant="variant"
+        :weekday-headers="weekdayHeaders"
+        :rows="rows"
+        :grid-label="gridLabel"
+        :caption="caption"
+        :cell-class="cellClass"
       >
-        <caption v-if="caption" class="mrt-calendar-grid__caption mrt-month-table__caption">
-          {{ caption }}
-        </caption>
-        <thead>
-          <tr>
-            <th v-for="(h, i) in weekdayHeaders" :key="i" scope="col">{{ h }}</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(row, ri) in rows" :key="ri">
-            <td
-              v-for="(cell, ci) in row"
-              :key="`${ri}-${ci}`"
-              :class="cellClass?.(cell)"
-            >
-              <slot name="cell" :cell="cell" :row-index="ri" :col-index="ci" />
-            </td>
-          </tr>
-        </tbody>
-      </table>
+        <template #cell="slotProps">
+          <slot name="cell" v-bind="slotProps" />
+        </template>
+      </MrtCalendarGridTable>
     </MrtAsyncState>
-    <table
+    <MrtCalendarGridTable
       v-else
-      class="mrt-calendar-grid__table"
-      :class="{ 'mrt-month-table': variant === 'month' }"
-      role="grid"
-      :aria-label="gridLabel || undefined"
+      :variant="variant"
+      :weekday-headers="weekdayHeaders"
+      :rows="rows"
+      :grid-label="gridLabel"
+      :caption="caption"
+      :cell-class="cellClass"
     >
-      <caption v-if="caption" class="mrt-calendar-grid__caption mrt-month-table__caption">
-        {{ caption }}
-      </caption>
-      <thead>
-        <tr>
-          <th v-for="(h, i) in weekdayHeaders" :key="i" scope="col">{{ h }}</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, ri) in rows" :key="ri">
-          <td
-            v-for="(cell, ci) in row"
-            :key="`${ri}-${ci}`"
-            :class="cellClass?.(cell)"
-          >
-            <slot name="cell" :cell="cell" :row-index="ri" :col-index="ci" />
-          </td>
-        </tr>
-      </tbody>
-    </table>
+      <template #cell="slotProps">
+        <slot name="cell" v-bind="slotProps" />
+      </template>
+    </MrtCalendarGridTable>
   </div>
 </template>

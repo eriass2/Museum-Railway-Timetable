@@ -1,14 +1,7 @@
 <script setup lang="ts">
 import type { OverviewUiLabels } from '../../shared/overviewUiLabels';
-import {
-  formatCardTrip,
-  formatDeparturesAria,
-  formatTrainConnecting,
-} from '../../shared/overviewUiLabels';
 import type { TimetableBranchGroup, TimetableOverviewIconUrls } from '../../types/timetableOverview';
-import { branchTripIsCancelled, branchTripNoticeDetail } from '../../shared/branchTripCancelled';
-import { trainTypeIconUrl } from '../../utils/overviewGrid';
-import { ROAD_BUS_TRAIN_TYPE_SLUG } from '../../shared/trainTypeIcons';
+import { useOverviewBranchGroup } from '../../composables/useOverviewBranchGroup';
 
 const props = defineProps<{
   group: TimetableBranchGroup;
@@ -16,19 +9,8 @@ const props = defineProps<{
   labels: OverviewUiLabels;
 }>();
 
-const busIconUrl = trainTypeIconUrl(props.iconUrls, ROAD_BUS_TRAIN_TYPE_SLUG);
-
-function departuresAria(): string {
-  return formatDeparturesAria(props.labels.departuresAria, props.group.routeLabel);
-}
-
-function trainLabel(serviceNumber: string, timeDisplay: string): string {
-  return formatTrainConnecting(props.labels.trainConnecting, serviceNumber, timeDisplay);
-}
-
-function tripCancelled(trip: TimetableBranchGroup['trips'][number]): boolean {
-  return branchTripIsCancelled(trip);
-}
+const { busIconUrl, departuresAria, trainLabel, tripCancelled, tripNoticeDetail, cardTripLabel } =
+  useOverviewBranchGroup(() => props.group, () => props.iconUrls, () => props.labels);
 </script>
 
 <template>
@@ -70,10 +52,10 @@ function tripCancelled(trip: TimetableBranchGroup['trips'][number]): boolean {
                 {{ labels.cancelledLabel }}
               </span>
               <span
-                v-if="branchTripNoticeDetail(trip, labels.cancelledLabel)"
+                v-if="tripNoticeDetail(trip)"
                 class="mrt-ov-deviation-note mrt-ov-deviation-note--cancelled-detail"
               >
-                {{ branchTripNoticeDetail(trip, labels.cancelledLabel) }}
+                {{ tripNoticeDetail(trip) }}
               </span>
             </th>
             <td :class="{ 'mrt-ov-time--cancelled': tripCancelled(trip) }">{{ trip.fromTime }}</td>
@@ -114,7 +96,7 @@ function tripCancelled(trip: TimetableBranchGroup['trips'][number]): boolean {
           <span v-if="tripCancelled(trip)" class="mrt-ov-cancelled-badge">
             {{ labels.cancelledLabel }}
           </span>
-          <span class="screen-reader-text">{{ formatCardTrip(labels.cardTrip, trip.trip) }}</span>
+          <span class="screen-reader-text">{{ cardTripLabel(trip.trip) }}</span>
         </p>
         <dl class="mrt-ov-branch-card__times">
           <div class="mrt-ov-branch-card__row">

@@ -1,12 +1,11 @@
 <script setup lang="ts">
-import { overviewUiLabels } from '../../../shared/overviewUiLabels';
 import type { TimetableOverviewPayload } from '../../../types/timetableOverview';
 import MrtOverviewBranchGroup from '../../../components/overview/MrtOverviewBranchGroup.vue';
 import MrtOverviewPrintKey from '../../../components/overview/MrtOverviewPrintKey.vue';
 import MrtTimetableOverviewShell from '../../../components/overview/MrtTimetableOverviewShell.vue';
 import { AdminStatusMessage } from '../ui';
 import EditableOverviewRailGroup from './EditableOverviewRailGroup.vue';
-import { useOverviewGridEdit } from '../../composables/timetable-editor/useOverviewGridEdit';
+import { useEditableTimetableOverview } from '../../composables/timetable-editor/useEditableTimetableOverview';
 
 defineProps<{
   data: TimetableOverviewPayload;
@@ -15,13 +14,9 @@ defineProps<{
 
 const emit = defineEmits<{ 'refresh-needed': [] }>();
 
-const editor = useOverviewGridEdit();
-const labels = overviewUiLabels({});
-
-function onGridCellSaved(): void {
-  editor.clearCache();
+const { editor, labels, onGridCellSaved } = useEditableTimetableOverview(() => {
   emit('refresh-needed');
-}
+});
 </script>
 
 <template>

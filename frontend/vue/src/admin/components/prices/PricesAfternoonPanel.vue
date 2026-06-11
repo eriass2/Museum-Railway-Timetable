@@ -1,18 +1,13 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, toRef } from 'vue';
 import MrtPriceTable from '../../../components/ui/MrtPriceTable.vue';
 import type { PricesPayload } from '../../api/adminRest';
 import { AdminTableScroll } from '../ui';
-import {
-  adminAfternoonVisitorNote,
-  adminPricePreviewCfg,
-  buildAdminPricePreviewTrip,
-  effectivePricingZones,
-} from '../../utils/prices/adminPricePreview';
 import { formatPriceZoneLabel } from '../../../shared/priceZoneLabels';
 import { adminFmtN, adminStr } from '../../utils/adminLabels';
 import { minutesToTimeInput, timeInputToMinutes } from '../../utils/settingsTime';
 import { adminConfig } from '../../types';
+import { useAfternoonPriceCompare } from '../../composables/prices/useAfternoonPriceCompare';
 
 const props = defineProps<{
   payload: PricesPayload;
@@ -24,44 +19,18 @@ const emit = defineEmits<{
 }>();
 
 const cfg = adminConfig();
-const compareZone = ref(2);
-
-const pricingZones = computed(() => effectivePricingZones(props.payload));
 const categoryKeys = computed(() => Object.keys(props.payload.categories));
 const afternoonActive = computed(() => props.thresholdMinutes > 0);
 
-watch(
+const {
+  compareZone,
   pricingZones,
-  (zones) => {
-    if (!zones.includes(compareZone.value)) {
-      compareZone.value = zones[1] ?? zones[0] ?? 1;
-    }
-  },
-  { immediate: true },
-);
-
-const priceCfg = computed(() => ({
-  ...adminPricePreviewCfg(cfg),
-  priceAfternoonNote: adminAfternoonVisitorNote(cfg, props.thresholdMinutes),
-}));
-
-const normalReturn = computed(() =>
-  buildAdminPricePreviewTrip(props.payload, 'return', compareZone.value, false),
-);
-
-const afternoonReturn = computed(() =>
-  buildAdminPricePreviewTrip(props.payload, 'return', compareZone.value, true),
-);
-
-const compareLabels = computed(() => ({
-  title: adminStr(cfg, 'pricesAfternoonCompareCol', 'Retur'),
-  titleSuffix: '',
-  typeColumnSr: adminStr(cfg, 'pricesTicketTypeCol', 'Biljettyp'),
-  note: '',
-  dash: '—',
-  tickets: props.payload.ticket_types,
-  categories: props.payload.categories,
-}));
+  priceCfg,
+  normalReturn,
+  afternoonReturn,
+  compareLabels,
+  normalCompareLabels,
+} = useAfternoonPriceCompare(toRef(props, 'payload'), toRef(props, 'thresholdMinutes'), cfg);
 
 function onThresholdInput(event: Event) {
   emit('update:thresholdMinutes', timeInputToMinutes((event.target as HTMLInputElement).value));
@@ -141,10 +110,7 @@ function onThresholdInput(event: Event) {
         </p>
         <MrtPriceTable
           :price-cfg="priceCfg"
-          :labels="{
-            ...compareLabels,
-            titleSuffix: `(${adminStr(cfg, 'pricesZoneLabel', 'Zon')} ${compareZone})`,
-          }"
+          :labels="normalCompareLabels"
           :trip-price="normalReturn"
           :show-all-types="false"
         />

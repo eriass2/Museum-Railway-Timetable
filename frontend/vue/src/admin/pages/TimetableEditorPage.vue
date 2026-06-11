@@ -15,6 +15,7 @@ import { useTimetableEditorPage } from '../composables/timetable-editor/useTimet
 import type { TimetableEditorTab } from '../composables/timetable-editor/useTimetableEditorPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
+import { buildTimetableEditorDesktopTabs } from '../utils/timetable-editor/editorDesktopTabs';
 
 const props = defineProps<{ id: string }>();
 const { isMobile } = useMobileAdmin();
@@ -75,15 +76,10 @@ function openStoptimesDetail(serviceId: number): void {
 }
 
 const desktopTabs = computed(() => {
-  if (isMobile.value) return [];
-  return [
-    ['dates', adminStr(cfg, 'editorTabDates')],
-    ['grid', adminStr(cfg, 'editorTabGrid')],
-    ['trips', adminStr(cfg, 'editorTabTrips')],
-    ['stoptimes', adminStr(cfg, 'editorTabStoptimes')],
-    ['deviations', adminStr(cfg, 'editorTabDeviations')],
-    ['preview', adminStr(cfg, 'editorTabPreview')],
-  ] as const;
+  if (isMobile.value) {
+    return [];
+  }
+  return buildTimetableEditorDesktopTabs(cfg);
 });
 
 function onTabClick(next: TimetableEditorTab): void {

@@ -11,6 +11,7 @@ import { useWizardContext } from '../../composables/useWizardContext';
 import { useConnectionLegDisplay } from '../composables/useConnectionLegDisplay';
 import { useTripConnections } from '../composables/useTripConnections';
 import { cfgStr } from '../utils/wizardLabels';
+import type { JourneyConnection } from '../types';
 import WizardTripCard from './WizardTripCard.vue';
 
 const props = defineProps<{
@@ -44,6 +45,14 @@ function onBack(): void {
   } else {
     store.inbound = null;
     store.goTo('outbound');
+  }
+}
+
+function onSelect(conn: JourneyConnection): void {
+  if (props.legCtx === 'outbound') {
+    store.selectOutbound(conn);
+  } else {
+    store.selectInbound(conn);
   }
 }
 
@@ -90,7 +99,7 @@ watch(
             :key="idx"
             :connection="conn"
             :leg-ctx="legCtx"
-            @select="legCtx === 'outbound' ? store.selectOutbound(conn) : store.selectInbound(conn)"
+            @select="onSelect(conn)"
           />
         </MrtTripList>
       </MrtAsyncState>

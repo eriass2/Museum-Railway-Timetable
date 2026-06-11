@@ -13,6 +13,7 @@ import TimetableEditorTripEditForm, {
 import TimetableTripFieldsBlock from './TimetableTripFieldsBlock.vue';
 import type { TimetableTripDraft } from './tripFormTypes';
 import type { TimetableDetail } from '../../types';
+import { formatTripLineDisplay } from '../../utils/timetable-editor/tripLineDisplay';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 
@@ -56,7 +57,7 @@ const emit = defineEmits<{
         <tbody>
           <tr v-for="s in detail.services" :key="s.id">
             <td>{{ s.service_number }}</td>
-            <td>{{ s.line_name || s.route_name || '—' }}</td>
+            <td>{{ formatTripLineDisplay(s.line_name, s.route_name) }}</td>
             <td>
               <AdminTrainTypeCell
                 :icon-key="s.train_type_icon_key"

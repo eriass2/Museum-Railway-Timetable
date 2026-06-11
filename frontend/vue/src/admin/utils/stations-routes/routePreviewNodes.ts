@@ -12,6 +12,28 @@ const STATION_TYPE_STRING_KEYS: Record<string, string> = {
   museum: 'stationsTypeMuseum',
 };
 
+export const STATION_TYPE_OPTIONS = Object.entries(STATION_TYPE_STRING_KEYS).map(
+  ([value, labelKey]) => ({ value, labelKey }),
+);
+
+const ROUTE_PREVIEW_ROLE_STRING_KEYS: Record<RoutePreviewNode['role'], string> = {
+  start: 'routePreviewStart',
+  end: 'routePreviewEnd',
+  both: 'routePreviewBoth',
+  via: '',
+};
+
+export function routePreviewRoleLabel(
+  role: RoutePreviewNode['role'],
+  labelFor?: (key: string) => string,
+): string {
+  if (role === 'via' || !labelFor) {
+    return '';
+  }
+  const stringKey = ROUTE_PREVIEW_ROLE_STRING_KEYS[role];
+  return stringKey ? labelFor(stringKey) : '';
+}
+
 export function routePreviewTypeLabel(
   stationType: string,
   labelFor?: (key: string) => string,
