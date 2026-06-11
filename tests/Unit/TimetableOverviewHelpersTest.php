@@ -169,6 +169,74 @@ final class TimetableOverviewHelpersTest extends TestCase {
 		self::assertSame( '11.00', $rows[1]['cells'][0]['text'] );
 	}
 
+	public function test_junction_bus_rows_use_continuation_train_for_merged_column(): void {
+		$junction_id = 9;
+		$remote_id   = 15;
+		$branch      = array(
+			'stations' => array( $junction_id, $remote_id ),
+			'services' => array(
+				array(
+					'service'    => (object) array( 'ID' => 501 ),
+					'stop_times' => array(
+						$junction_id => array(
+							'arrival_time'   => '10:53',
+							'departure_time' => '10:53',
+						),
+						$remote_id   => array( 'arrival_time' => '11:00' ),
+					),
+				),
+			),
+		);
+		$connection = array(
+			'junction_id'    => $junction_id,
+			'junction_label' => 'Selknä*',
+			'direction'      => 'outbound',
+			'train_to_bus'   => array(
+				array(
+					'train' => array( 'service_number' => '61', 'time_display' => '10:50' ),
+					'buses' => array(
+						array(
+							'service_number' => 'B1',
+							'time_display'   => '10:53',
+							'destination'    => 'Fjällnora*',
+						),
+					),
+				),
+			),
+		);
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_number'     => 'B1',
+			'9|mrt_station_bus_suffix'   => '1',
+			'15|mrt_station_bus_suffix'  => '1',
+		);
+		$GLOBALS['mrt_test_posts'] = array(
+			15 => (object) array( 'ID' => 15, 'post_title' => 'Fjällnora' ),
+		);
+		$info = array(
+			array( 'service_number' => '71' ),
+			array( 'service_number' => '61' ),
+		);
+		$display_columns = array(
+			array(
+				'primary_idx'      => 0,
+				'continuation_idx' => 1,
+				'split_station_id' => 8,
+			),
+		);
+
+		$rows = MRT_timetable_junction_bus_rows_json(
+			array(),
+			$info,
+			$connection,
+			$branch,
+			$display_columns
+		);
+
+		self::assertCount( 2, $rows );
+		self::assertSame( '10.53', $rows[0]['cells'][0]['text'] );
+		self::assertSame( 'B1', $rows[0]['cells'][0]['busServiceNumber'] );
+	}
+
 	public function test_junction_bus_rows_merge_matched_trains_into_two_rows(): void {
 		$junction_id = 9;
 		$remote_id   = 15;

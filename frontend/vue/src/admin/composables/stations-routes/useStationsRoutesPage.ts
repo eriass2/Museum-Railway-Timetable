@@ -5,6 +5,7 @@ import {
   deleteRoute,
   deleteStation,
   getPrices,
+  listLines,
   listRoutes,
   listStations,
   updateRoute,
@@ -25,7 +26,9 @@ import { resolveStationPriceZoneOptions, stationMissingPriceZone } from '../../u
 import type { RoutesPanelView } from '../../components/stations-routes/RoutesPanel.vue';
 import type { StationsPanelView } from '../../components/stations-routes/StationsPanel.vue';
 import { adminConfig } from '../../types';
-import type { RouteRow, StationRow } from '../../types';
+import type { LineRow, RouteRow, StationRow } from '../../types';
+
+export type StationsRoutesSectionTab = 'stations' | 'lines' | 'routes';
 
 function routeDraftSnapshot(route: RouteRow): string {
   return JSON.stringify(route);
@@ -47,11 +50,12 @@ export function useStationsRoutesPage() {
   const cfg = adminConfig();
   const stations = ref<StationRow[]>([]);
   const routes = ref<RouteRow[]>([]);
+  const lines = ref<LineRow[]>([]);
   const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
   const { flashRow, isFlashed } = useAdminRowFlash();
   const newStation = ref(emptyStationDraft());
   const newRoute = ref(emptyRouteDraft());
-  const sectionTab = ref<'stations' | 'routes'>('stations');
+  const sectionTab = ref<StationsRoutesSectionTab>('stations');
   const editingStation = ref<StationRow | null>(null);
   const editingRoute = ref<RouteRow | null>(null);
   const stationsView = ref<StationsPanelView>('list');
@@ -61,16 +65,27 @@ export function useStationsRoutesPage() {
   const priceZoneOptions = ref<number[]>([...resolveStationPriceZoneOptions(undefined)]);
   const showMissingZonesOnly = ref(false);
 
+  async function fetchLineRows(): Promise<LineRow[]> {
+    try {
+      const payload = await listLines();
+      return payload?.items ?? [];
+    } catch {
+      return [];
+    }
+  }
+
   const { loading, error, data, load, reload } = useAdminResource({
     fetch: async () => {
-      const [s, r, prices] = await Promise.all([
+      const [s, r, lines, prices] = await Promise.all([
         listStations(),
         listRoutes(),
+        fetchLineRows(),
         getPrices().catch(() => null),
       ]);
       return {
-        stations: s.items,
-        routes: r.items,
+        stations: s?.items ?? [],
+        routes: r?.items ?? [],
+        lines,
         priceZones: prices?.zones,
       };
     },
@@ -90,9 +105,12 @@ export function useStationsRoutesPage() {
         train_change_map: row.train_change_map ?? {},
       }));
       routes.value = payload.routes.map((row) => syncRouteTermini({ ...row }));
+      lines.value = payload.lines ?? [];
     },
     { immediate: true },
   );
+
+  const hasLineRegistry = computed(() => lines.value.length > 0);
 
   const stationsById = computed(
     () =>
@@ -226,7 +244,7 @@ export function useStationsRoutesPage() {
     if (prev === 'stations' && tab !== 'stations') {
       void requestBackToStationsList();
     }
-    if (prev === 'routes' && tab !== 'routes') {
+    if ((prev === 'routes' || prev === 'lines') && tab !== 'routes' && tab !== 'lines') {
       void requestBackToRoutesList();
     }
   });
@@ -248,7 +266,7 @@ export function useStationsRoutesPage() {
   }
 
   function editRoute(route: RouteRow) {
-    sectionTab.value = 'routes';
+    sectionTab.value = hasLineRegistry.value ? 'lines' : 'routes';
     editingRoute.value = syncRouteTermini({
       ...route,
       station_ids: [...route.station_ids],
@@ -325,6 +343,8 @@ export function useStationsRoutesPage() {
     priceZoneOptions,
     showMissingZonesOnly,
     routes,
+    lines,
+    hasLineRegistry,
     saveMsg,
     newStation,
     newRoute,

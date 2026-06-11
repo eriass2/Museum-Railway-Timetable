@@ -140,4 +140,68 @@ final class GridConnectionsTest extends TestCase {
 		self::assertNotEmpty( $data['train_to_bus'] );
 		self::assertSame( '71', $data['train_to_bus'][0]['train']['service_number'] );
 	}
+
+	public function test_connection_buses_for_column_uses_continuation_train_number(): void {
+		$connection = array(
+			'train_to_bus' => array(
+				array(
+					'train' => array( 'service_number' => '61' ),
+					'buses' => array(
+						array(
+							'service_number' => 'B1',
+							'time_display'   => '10:53',
+							'destination'    => 'Fjällnora',
+						),
+					),
+				),
+			),
+		);
+		$info   = array(
+			array( 'service_number' => '71' ),
+			array( 'service_number' => '61' ),
+		);
+		$column = array(
+			'primary_idx'      => 0,
+			'continuation_idx' => 1,
+			'split_station_id' => 8,
+		);
+
+		$match = MRT_connection_buses_for_column( $connection, $info, $column );
+
+		self::assertSame( '61', $match['train_number'] );
+		self::assertSame( 'B1', $match['buses'][0]['service_number'] ?? '' );
+	}
+
+	public function test_buses_for_train_at_junction_inbound_allows_bus_before_departure(): void {
+		$junction_id = 8;
+		$train_stop  = array_merge(
+			array(
+				'arrival_time'   => '13:07',
+				'departure_time' => '14:05',
+			),
+			MRT_test_stop_modes_both_scheduled()
+		);
+		$bus_services = array(
+			array(
+				'service'    => (object) array( 'ID' => 501 ),
+				'stop_times' => array(
+					$junction_id => array_merge(
+						array(
+							'arrival_time'   => '13:40',
+							'departure_time' => '',
+						),
+						MRT_test_stop_modes_both_scheduled()
+					),
+				),
+			),
+		);
+		$GLOBALS['mrt_test_post_meta'] = array(
+			'501|mrt_service_number' => 'B12',
+		);
+
+		$buses = MRT_buses_for_train_at_junction( $train_stop, 'inbound', $junction_id, $bus_services );
+
+		self::assertCount( 1, $buses );
+		self::assertSame( 'B12', $buses[0]['service_number'] );
+	}
 }

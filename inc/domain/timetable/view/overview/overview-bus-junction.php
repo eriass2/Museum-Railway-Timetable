@@ -52,7 +52,13 @@ function MRT_timetable_collect_junction_bus_links(
 	$links   = array();
 
 	foreach ( $columns as $target ) {
-		$buses = MRT_connection_buses_for_train_number( $connection, $target['train_number'] );
+		$match = MRT_connection_buses_for_column(
+			$connection,
+			$info,
+			$target['column'] ?? null,
+			(int) ( $target['fallback_idx'] ?? 0 )
+		);
+		$buses = $match['buses'];
 		if ( $buses === array() ) {
 			continue;
 		}
@@ -71,7 +77,11 @@ function MRT_timetable_collect_junction_bus_links(
 			'remote_label'   => $remote_label,
 			'inbound'        => $inbound,
 			'sort_time'      => MRT_timetable_bus_link_sort_time( $connection, $branch_group, $bus_data, $inbound ),
-			'wait_minutes'   => MRT_timetable_junction_bus_link_wait_minutes( $connection, $target['train_number'], $bus ),
+			'wait_minutes'   => MRT_timetable_junction_bus_link_wait_minutes(
+				$connection,
+				(string) $match['train_number'],
+				$bus
+			),
 		);
 	}
 
@@ -81,24 +91,26 @@ function MRT_timetable_collect_junction_bus_links(
 /**
  * @param array<int, array<string, mixed>> $info
  * @param array<int, array{primary_idx: int, continuation_idx: int|null, split_station_id: int}>|null $display_columns
- * @return array<int, array{column_index: int, train_number: string}>
+ * @return array<int, array{column_index: int, column: array{primary_idx: int, continuation_idx: int|null, split_station_id: int}|null, fallback_idx: int}>
  */
 function MRT_timetable_bus_column_targets( array $info, ?array $display_columns ): array {
 	$targets = array();
 	if ( $display_columns === null ) {
 		foreach ( $info as $idx => $row ) {
+			unset( $row );
 			$targets[] = array(
-				'column_index'  => (int) $idx,
-				'train_number'  => (string) ( $row['service_number'] ?? '' ),
+				'column_index' => (int) $idx,
+				'column'       => null,
+				'fallback_idx' => (int) $idx,
 			);
 		}
 		return $targets;
 	}
 	foreach ( $display_columns as $column_index => $column ) {
-		$idx        = (int) $column['primary_idx'];
-		$targets[]  = array(
+		$targets[] = array(
 			'column_index' => (int) $column_index,
-			'train_number' => (string) ( $info[ $idx ]['service_number'] ?? '' ),
+			'column'       => $column,
+			'fallback_idx' => (int) $column['primary_idx'],
 		);
 	}
 	return $targets;

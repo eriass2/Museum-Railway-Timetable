@@ -18,6 +18,27 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsNavAria'            => __( 'Stationer eller rutter', 'museum-railway-timetable' ),
 		'stationsTabStations'        => __( 'Stationer', 'museum-railway-timetable' ),
 		'stationsTabRoutes'          => __( 'Rutter', 'museum-railway-timetable' ),
+		'stationsTabLines'           => __( 'Linjer', 'museum-railway-timetable' ),
+		'stationsEmptyLinesTitle'    => __( 'Inga linjer', 'museum-railway-timetable' ),
+		'stationsEmptyLinesMsg'      => __(
+			'Linjer importeras via CSV (lines.csv). Importera ett paket under Import/export.',
+			'museum-railway-timetable'
+		),
+		'stationsColLineKind'        => __( 'Typ', 'museum-railway-timetable' ),
+		'stationsColJunction'        => __( 'Knutpunkt', 'museum-railway-timetable' ),
+		'stationsLineKindMain'       => __( 'Huvudstråk', 'museum-railway-timetable' ),
+		'stationsLineKindBranch'     => __( 'Transfer-gren', 'museum-railway-timetable' ),
+		'stationsLineKindPattern'    => __( 'Direktmönster', 'museum-railway-timetable' ),
+		'stationsLinesHelp'          => __(
+			'Linjer är den operativa modellen för turer och tidtabellsöversikt. Riktning väljs i Turvy — inte som separata rutter.',
+			'museum-railway-timetable'
+		),
+		'stationsLinesBidirectional' => __( 'Går åt båda håll', 'museum-railway-timetable' ),
+		'stationsLegacyRoutesSummary' => __( 'Legacy-rutter (import-alias)', 'museum-railway-timetable' ),
+		'stationsLegacyRoutesHint'   => __(
+			'Tekniska rutter som CSV-import skapar för bakåtkompatibilitet. Redigera linjer via CSV, inte här.',
+			'museum-railway-timetable'
+		),
 		'stationsNewStation'         => __( 'Ny station', 'museum-railway-timetable' ),
 		'stationsCreateMoreFields'   => __( 'Fler uppgifter (valfritt)', 'museum-railway-timetable' ),
 		'stationsNewRoute'           => __( 'Ny rutt', 'museum-railway-timetable' ),

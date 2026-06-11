@@ -68,10 +68,9 @@ function MRT_timetable_bus_time_row_json(
 		}
 	} else {
 		foreach ( $display_columns as $column ) {
-			$idx          = (int) $column['primary_idx'];
-			$train_number = (string) ( $info[ $idx ]['service_number'] ?? '' );
-			$cells[]      = MRT_timetable_bus_time_cell_json(
-				$train_number,
+			$cells[] = MRT_timetable_bus_time_cell_for_column_json(
+				$info,
+				$column,
 				$connection,
 				$branch_group,
 				$stop_role,
@@ -87,6 +86,18 @@ function MRT_timetable_bus_time_row_json(
 	);
 }
 
+function MRT_timetable_bus_time_cell_for_column_json(
+	array $info,
+	array $column,
+	array $connection,
+	array $branch_group,
+	string $stop_role,
+	bool $use_departure
+): array {
+	$match = MRT_connection_buses_for_column( $connection, $info, $column );
+	return MRT_timetable_bus_time_cell_json_from_match( $match, $connection, $branch_group, $stop_role, $use_departure );
+}
+
 function MRT_timetable_bus_time_cell_json(
 	string $train_number,
 	array $connection,
@@ -94,7 +105,27 @@ function MRT_timetable_bus_time_cell_json(
 	string $stop_role,
 	bool $use_departure
 ): array {
-	$buses = MRT_connection_buses_for_train_number( $connection, $train_number );
+	$match = array(
+		'buses'        => MRT_connection_buses_for_train_number( $connection, $train_number ),
+		'train_number' => $train_number,
+	);
+	return MRT_timetable_bus_time_cell_json_from_match( $match, $connection, $branch_group, $stop_role, $use_departure );
+}
+
+/**
+ * @param array{
+ *   buses: array<int, array{service_number: string, time_display: string, destination: string}>,
+ *   train_number: string
+ * } $match
+ */
+function MRT_timetable_bus_time_cell_json_from_match(
+	array $match,
+	array $connection,
+	array $branch_group,
+	string $stop_role,
+	bool $use_departure
+): array {
+	$buses = $match['buses'];
 	if ( $buses === array() ) {
 		return array( 'text' => '—' );
 	}

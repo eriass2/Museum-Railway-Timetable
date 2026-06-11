@@ -29,6 +29,10 @@ export function listRoutes() {
   return adminFetch<{ items: import('../types').RouteRow[] }>('/routes');
 }
 
+export function listLines() {
+  return adminFetch<{ items: import('../types').LineRow[] }>('/lines');
+}
+
 export function createRoute(body: Partial<import('../types').RouteRow>) {
   return adminFetch<import('../types').RouteRow>('/routes', {
     method: 'POST',

@@ -192,6 +192,68 @@ function MRT_connection_buses_for_train_number( array $connection_data, string $
 }
 
 /**
+ * Train numbers to try when resolving bus links for a merged overview column.
+ *
+ * @param array<int, array<string, mixed>> $info
+ * @param array{primary_idx: int, continuation_idx: int|null, split_station_id: int} $column
+ * @return array<int, string>
+ */
+function MRT_connection_train_numbers_for_column( array $info, array $column ): array {
+	$numbers = array();
+	$primary = (string) ( $info[ (int) $column['primary_idx'] ]['service_number'] ?? '' );
+	if ( $primary !== '' ) {
+		$numbers[] = $primary;
+	}
+	$continuation = $column['continuation_idx'] ?? null;
+	if ( $continuation !== null ) {
+		$cont = (string) ( $info[ (int) $continuation ]['service_number'] ?? '' );
+		if ( $cont !== '' && ! in_array( $cont, $numbers, true ) ) {
+			$numbers[] = $cont;
+		}
+	}
+	return $numbers;
+}
+
+/**
+ * @param array<string, mixed> $connection_data
+ * @param array<int, array<string, mixed>> $info
+ * @param array{primary_idx: int, continuation_idx: int|null, split_station_id: int}|null $column
+ * @return array{
+ *   buses: array<int, array{service_number: string, time_display: string, destination: string}>,
+ *   train_number: string
+ * }
+ */
+function MRT_connection_buses_for_column(
+	array $connection_data,
+	array $info,
+	?array $column,
+	int $fallback_idx = 0
+): array {
+	$train_numbers = array();
+	if ( is_array( $column ) ) {
+		$train_numbers = MRT_connection_train_numbers_for_column( $info, $column );
+	} else {
+		$train_numbers[] = (string) ( $info[ $fallback_idx ]['service_number'] ?? '' );
+	}
+	foreach ( $train_numbers as $train_number ) {
+		if ( $train_number === '' ) {
+			continue;
+		}
+		$buses = MRT_connection_buses_for_train_number( $connection_data, $train_number );
+		if ( $buses !== array() ) {
+			return array(
+				'buses'        => $buses,
+				'train_number' => $train_number,
+			);
+		}
+	}
+	return array(
+		'buses'        => array(),
+		'train_number' => '',
+	);
+}
+
+/**
  * @param array{service_number: string, time_display: string, destination: string} $bus
  */
 function MRT_bus_transfer_detail_line( array $bus ): string {

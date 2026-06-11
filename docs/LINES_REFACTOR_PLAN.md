@@ -148,6 +148,11 @@ services.csv
 - Admin Turvy: välj linje + riktning (mot linjeände), inte dubbel rutt
 - `routes.csv` kvar som import-alias tills full D8 (en route-post per linje)
 
+### Fas 5 — admin Linjer ✓ (pilot)
+
+- `GET /lines` + flik **Linjer** i Stationer & rutter (ersätter Rutter när registry finns)
+- Legacy-rutter hopfällbara under dev-läge — se [LINES_ADMIN_PLAN.md](LINES_ADMIN_PLAN.md)
+
 ---
 
 ## 6. Acceptance (Lennakatten)

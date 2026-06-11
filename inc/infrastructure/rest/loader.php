@@ -21,6 +21,7 @@ require_once $rest_dir . 'admin/dashboard.php';
 require_once $rest_dir . 'admin/timetables.php';
 require_once $rest_dir . 'admin/stations.php';
 require_once $rest_dir . 'admin/routes.php';
+require_once $rest_dir . 'admin/lines.php';
 require_once $rest_dir . 'admin/stop-times.php';
 require_once $rest_dir . 'admin/settings-admin.php';
 require_once $rest_dir . 'admin/train-types.php';
@@ -45,6 +46,7 @@ function MRT_register_rest_routes(): void {
 	MRT_rest_register_timetable_routes();
 	MRT_rest_register_station_routes();
 	MRT_rest_register_route_routes();
+	MRT_rest_register_line_routes();
 	MRT_rest_register_stop_times_routes();
 	MRT_rest_register_journey_public_routes();
 	MRT_rest_register_timetable_public_routes();

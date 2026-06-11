@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import AdminLoadState from '../components/AdminLoadState.vue';
+import LinesPanel from '../components/stations-routes/LinesPanel.vue';
 import RoutesPanel from '../components/stations-routes/RoutesPanel.vue';
 import StationsPanel from '../components/stations-routes/StationsPanel.vue';
 import { AdminStatusMessage } from '../components/ui';
@@ -15,6 +16,8 @@ const {
   priceZoneOptions,
   showMissingZonesOnly,
   routes,
+  lines,
+  hasLineRegistry,
   saveMsg,
   newStation,
   newRoute,
@@ -67,6 +70,16 @@ const {
           {{ adminStr(cfg, 'stationsTabStations') }}
         </a>
         <a
+          v-if="hasLineRegistry"
+          href="#"
+          class="nav-tab"
+          :class="{ 'nav-tab-active': sectionTab === 'lines' }"
+          @click.prevent="sectionTab = 'lines'"
+        >
+          {{ adminStr(cfg, 'stationsTabLines') }}
+        </a>
+        <a
+          v-else
           href="#"
           class="nav-tab"
           :class="{ 'nav-tab-active': sectionTab === 'routes' }"
@@ -100,6 +113,24 @@ const {
         @start-create="startCreateStation"
         @back="requestBackToStationsList"
         @remove="removeStation"
+      />
+
+      <LinesPanel
+        v-if="sectionTab === 'lines'"
+        v-model:new-route="newRoute"
+        v-model:editing-route="editingRoute"
+        :lines="lines"
+        :routes="routes"
+        :stations="stations"
+        :stations-by-id="stationsById"
+        :station-title="stationTitle"
+        :routes-view="routesView"
+        @add="addRoute"
+        @edit="editRoute"
+        @save="saveRoute"
+        @start-create="startCreateRoute"
+        @back="requestBackToRoutesList"
+        @remove="removeRoute"
       />
 
       <RoutesPanel

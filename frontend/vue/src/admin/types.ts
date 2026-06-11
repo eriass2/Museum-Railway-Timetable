@@ -208,6 +208,22 @@ export type RouteRow = {
   stations: { id: number; name: string }[];
 };
 
+export type LineKind = 'main' | 'branch' | 'pattern' | '';
+
+export type LineRow = {
+  code: string;
+  title: string;
+  kind: LineKind;
+  station_ids: number[];
+  start_station: number;
+  end_station: number;
+  junction_station_id: number;
+  junction_station_code: string;
+  junction_station_name: string;
+  requires_transfer: boolean;
+  bidirectional: boolean;
+};
+
 export type StopTimeMode = 'none' | 'scheduled' | 'on_request';
 
 export type StopTimeRow = {
