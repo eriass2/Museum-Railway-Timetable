@@ -330,6 +330,8 @@ LINNÉS (bus)             Selkné ↔ Linnés (B5)
 
 See also [LINNES_HAMMARBY.md](LINNES_HAMMARBY.md).
 
+**Planned refactor:** [LINES_REFACTOR_PLAN.md](LINES_REFACTOR_PLAN.md) — main + 2 transfer-branches (Fjällnora @ Selkné, Linnés @ Marielund) + 1 direct pattern (Linnés → Uppsala, no transfer). `branch_code` on routes is interim until `line` exists.
+
 ---
 
 ## 2. Taxonomies

@@ -8,6 +8,8 @@ Stationen fanns i fixturen men saknade rutt, turer och stopptider — därför v
 
 **Trafikdagar:** Linnés Hammarby-bussen kör **bara söndagar** (röda trafikdagar) inom bussfönstret 1 juli–16 augusti — inte på gröna bussdagar (lördag/ons/tors).
 
+**Domän (spikad):** Linnés hör till **Marielund** (shuttle + byte med tåg). Från Linnés går buss till **Marielund** eller direkt **Uppsala** (inga byten). **Fjällnora** (Selkné) är en **annan** gren — se [LINES_REFACTOR_PLAN.md](LINES_REFACTOR_PLAN.md).
+
 ## Dev / test (fixture i repo)
 
 | Fil | Innehåll |
