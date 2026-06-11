@@ -135,13 +135,4 @@
 
 .mrt-journey-wizard--embedded .mrt-step-progress__item.is-active {
     color: var(--mrt-color-on-accent);
-    background: var(--mrt-wizard-yellow);
-    border: 2px solid var(--mrt-color-accent-700, #c49a10);
-    box-shadow: none;
-}
-
-.mrt-journey-wizard--embedded .mrt-step-progress__item:not(.is-active):not(.is-done) {
-    color: var(--mrt-color-on-dark, #fff);
-    background: var(--mrt-color-green-800, #0f3d08);
-    border: 2px solid var(--mrt-color-border-on-dark, rgba(255, 255, 255, 0.35));
 }

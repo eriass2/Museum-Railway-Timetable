@@ -36,22 +36,16 @@ function stepAria(
     <ol class="mrt-step-progress" role="list">
       <li v-for="item in items" :key="item.key" class="mrt-step-progress__wrap">
         <button
-          v-if="isClickable(item, readonly)"
           type="button"
-          class="mrt-step-progress__item is-done"
-          :aria-label="stepAria(item, stepGoToAria)"
+          class="mrt-step-progress__item"
+          :class="{ 'is-active': item.active, 'is-done': item.done }"
+          :disabled="!isClickable(item, readonly)"
+          :aria-current="item.active ? 'step' : undefined"
+          :aria-label="isClickable(item, readonly) ? stepAria(item, stepGoToAria) : undefined"
           @click="emit('select', item.key)"
         >
           {{ item.label }}
         </button>
-        <span
-          v-else
-          class="mrt-step-progress__item"
-          :class="{ 'is-active': item.active, 'is-done': item.done }"
-          :aria-current="item.active ? 'step' : undefined"
-        >
-          {{ item.label }}
-        </span>
       </li>
     </ol>
   </nav>

@@ -20,14 +20,6 @@
     color: var(--mrt-wizard-text);
 }
 
-.mrt-journey-wizard .mrt-step-progress__item[aria-current="step"] {
-    box-shadow: 0 0 0 2px var(--mrt-wizard-focus);
-}
-
-.mrt-journey-wizard .mrt-step-progress__item.is-done {
-    border-color: var(--mrt-wizard-yellow);
-}
-
 .mrt-journey-wizard .mrt-calendar-nav__prev:focus-visible,
 .mrt-journey-wizard .mrt-calendar-nav__next:focus-visible,
 .mrt-journey-wizard .mrt-step-header__back:focus-visible,
