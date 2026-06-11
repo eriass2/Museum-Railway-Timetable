@@ -57,6 +57,12 @@ function MRT_admin_vue_l10n_settings(): array {
 			'Informationsbanner ovanför steg-navigeringen. Feedback samlas in via den flytande rapportknappen (när den är aktiverad).',
 			'museum-railway-timetable'
 		),
+		'settingsWizardFeedback'      => __( 'Reseplanerare — feedback', 'museum-railway-timetable' ),
+		'settingsWizardFeedbackCheckbox' => __( 'Visa flytande rapportknapp i reseplaneraren', 'museum-railway-timetable' ),
+		'settingsWizardFeedbackHint'  => __(
+			'Besökare kan rapportera fel eller förslag. Rapporter sparas under Feedback i adminmenyn.',
+			'museum-railway-timetable'
+		),
 		'settingsMaxTransfers'    => __( 'Max antal byten', 'museum-railway-timetable' ),
 		'settingsMaxTransfersHint' => __(
 			'Antal byten i en resa (2 = upp till tre tåg/ben). Resesökningsmotorn avvisar fler.',

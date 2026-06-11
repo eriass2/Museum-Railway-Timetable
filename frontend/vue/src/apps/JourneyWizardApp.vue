@@ -11,6 +11,7 @@ import WizardRouteStep from '../wizard/components/WizardRouteStep.vue';
 import WizardDateStep from '../wizard/components/WizardDateStep.vue';
 import WizardTripStep from '../wizard/components/WizardTripStep.vue';
 import WizardBetaBanner from '../wizard/components/WizardBetaBanner.vue';
+import WizardFeedbackWidget from '../wizard/components/WizardFeedbackWidget.vue';
 import WizardSummaryStep from '../wizard/components/WizardSummaryStep.vue';
 import type { WizardStep } from '../wizard/types';
 import { cfgStr } from '../wizard/utils/wizardLabels';
@@ -144,5 +145,6 @@ onMounted(() => {
         </template>
       </div>
     </section>
+    <WizardFeedbackWidget v-if="config.feedbackEnabled" :config="config" />
   </div>
 </template>

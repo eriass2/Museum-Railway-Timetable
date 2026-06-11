@@ -41,8 +41,6 @@ if (!existsSync(join(distDir, adminJsRel))) {
 const REST_PREFIX = MRT_REST_JSON_PREFIX;
 const port = Number(process.env.MRT_E2E_PORT || 5199);
 
-/** Set when rendering /traffic-notices HTML (REST handler reads this). */
-let trafficNoticesFixture = 'sample';
 /** Must match frontend/vue/vite.config.ts base (Vite public path). */
 const VITE_PUBLIC_BASE = '/wp-content/plugins/museum-railway-timetable/assets/dist/vue/';
 
@@ -75,6 +73,7 @@ function buildWizardConfig(requestUrl) {
     timetableId: 0,
     embedded: true,
     debug,
+    feedbackEnabled: params.get('feedback') === '1',
     startOfWeek: 1,
     wizard: {
       stepRoute: 'Sök resa',
@@ -115,6 +114,17 @@ function buildWizardConfig(requestUrl) {
       tripReturn: 'Tur och retur',
       back: '← Tillbaka',
       stepDate: 'Välj datum',
+      feedbackButton: 'Rapportera fel eller förslag',
+      feedbackTitle: 'Rapportera fel eller förslag',
+      feedbackTypeBug: 'Fel / bugg',
+      feedbackTypeSuggestion: 'Förslag',
+      feedbackMessage: 'Beskrivning',
+      feedbackEmail: 'E-post (valfritt)',
+      feedbackPrivacy: 'Vi sparar din rapport för felsökning. E-post används bara om du fyller i den.',
+      feedbackSubmit: 'Skicka',
+      feedbackCancel: 'Avbryt',
+      feedbackThanks: 'Tack! Vi har tagit emot din rapport.',
+      feedbackError: 'Kunde inte skicka rapporten. Försök igen.',
     },
   };
 
@@ -428,6 +438,12 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
     return;
   }
 
+  if (pathOnly.endsWith('/wizard/feedback') && req.method === 'POST') {
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(JSON.stringify({ saved: true, id: 901 }));
+    return;
+  }
+
   const adminPayload = buildAdminRestResponse(pathOnly, REST_PREFIX, {
     method: req.method || 'GET',
     body: postBody,
@@ -439,7 +455,7 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   }
 
   if (pathOnly.endsWith('/traffic-notices')) {
-    const empty = trafficNoticesFixture === 'empty';
+    const empty = query.get('date') === 'e2e-empty';
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(
       JSON.stringify(empty ? buildEmptyTrafficNoticesPayload() : buildSampleTrafficNoticesPayload()),
@@ -533,10 +549,11 @@ function renderOverviewCancelledHtml() {
 
 function renderTrafficNoticesHtml(requestUrl) {
   const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
-  trafficNoticesFixture = params.get('empty') === '1' ? 'empty' : 'sample';
+  const empty = params.get('empty') === '1';
   return renderAppHtml(
     'traffic_notices',
     buildTrafficNoticesConfig({
+      referenceDate: empty ? 'e2e-empty' : undefined,
       title: params.get('title') ?? '',
     }),
   );

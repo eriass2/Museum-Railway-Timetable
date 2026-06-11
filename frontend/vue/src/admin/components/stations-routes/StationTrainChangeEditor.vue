@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { MrtButton } from '../ui';
 import { adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 import {
-  appendTrainChangeEntry,
   emptyTrainChangeEntry,
-  removeTrainChangeEntry,
   syncStationTrainChangeEntries,
   trainChangeMapToEntries,
+  validateTrainChangeEntries,
   type TrainChangeEntry,
 } from '../../utils/stations-routes/stationTrainChange';
 import type { StationRow } from '../../types';
@@ -18,37 +17,67 @@ const props = defineProps<{
 }>();
 
 const cfg = adminConfig();
+const draftEntries = ref<TrainChangeEntry[]>([emptyTrainChangeEntry()]);
 
-const entries = computed({
-  get: () => {
+watch(
+  () => props.station.id,
+  () => {
     const rows = trainChangeMapToEntries(props.station.train_change_map);
-    return rows.length ? rows : [emptyTrainChangeEntry()];
+    draftEntries.value = rows.length ? rows : [emptyTrainChangeEntry()];
   },
-  set: (rows: TrainChangeEntry[]) => {
-    syncStationTrainChangeEntries(props.station, rows);
-  },
+  { immediate: true },
+);
+
+const validation = computed(() => validateTrainChangeEntries(draftEntries.value));
+
+const warnings = computed(() => {
+  const messages: string[] = [];
+  if (validation.value.incompleteRows.length) {
+    messages.push(
+      adminStr(cfg, 'stationsTrainChangeIncomplete', 'Rader med saknade fält sparas inte.'),
+    );
+  }
+  if (validation.value.duplicateFromServices.length) {
+    messages.push(adminStr(cfg, 'stationsTrainChangeDuplicateFrom', 'Samma ankommande tågnummer används flera gånger.'));
+  }
+  if (validation.value.duplicateToServices.length) {
+    messages.push(adminStr(cfg, 'stationsTrainChangeDuplicateTo', 'Samma continuation-tur används flera gånger.'));
+  }
+  return messages;
 });
 
 function updateEntry(index: number, patch: Partial<TrainChangeEntry>) {
-  const next = [...entries.value];
+  const next = [...draftEntries.value];
   next[index] = { ...next[index], ...patch };
-  entries.value = next;
+  draftEntries.value = next;
+  syncStationTrainChangeEntries(props.station, next);
 }
 
 function addRow() {
-  appendTrainChangeEntry(props.station);
+  draftEntries.value = [...draftEntries.value, emptyTrainChangeEntry()];
+  syncStationTrainChangeEntries(props.station, draftEntries.value);
 }
 
 function removeRow(index: number) {
-  removeTrainChangeEntry(props.station, index);
+  const next = [...draftEntries.value];
+  next.splice(index, 1);
+  draftEntries.value = next;
+  if (!draftEntries.value.length) {
+    draftEntries.value = [emptyTrainChangeEntry()];
+  }
+  syncStationTrainChangeEntries(props.station, draftEntries.value);
 }
 </script>
 
 <template>
   <div class="mrt-admin-train-change">
     <p class="description">{{ adminStr(cfg, 'stationsTrainChangeHint') }}</p>
+    <p class="description">{{ adminStr(cfg, 'stationsTrainChangeColumnHint') }}</p>
+    <ul v-if="warnings.length" class="mrt-admin-train-change__warnings" role="alert">
+      <li v-for="warning in warnings" :key="warning">{{ warning }}</li>
+    </ul>
     <div
-      v-for="(row, index) in entries"
+      v-for="(row, index) in draftEntries"
       :key="`${station.id}-tc-${index}`"
       class="mrt-admin-train-change__row"
     >
@@ -103,5 +132,11 @@ function removeRow(index: number) {
   align-items: center;
   gap: 0.35rem 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+.mrt-admin-train-change__warnings {
+  margin: 0 0 0.75rem 1.25rem;
+  color: #8a5a00;
+  font-weight: 700;
 }
 </style>

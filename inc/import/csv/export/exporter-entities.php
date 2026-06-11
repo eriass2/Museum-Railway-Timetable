@@ -255,6 +255,7 @@ function MRT_csv_export_settings(): array {
 			'ticket_url',
 			'hero_background_url',
 			'wizard_beta_enabled',
+			'wizard_feedback_enabled',
 			'min_transfer_minutes',
 			'max_transfer_minutes',
 			'max_transfers',

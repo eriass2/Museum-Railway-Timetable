@@ -44,7 +44,7 @@ Kort lista över planerade förbättringar som inte är aktiva utvecklingsplaner
 
 ## PHP – utils-snabbguide i dokumentation
 
-**Status:** planerad  
+**Status:** genomförd (2026-06-10)  
 **Varför:** Vue har [VUE_UTILS.md](VUE_UTILS.md); PHP:s motsvarande helpers (`datetime.php`, `log.php`, `helpers-utils.php`, `request-params.php`) nämns bara sporadiskt i [ARCHITECTURE.md](ARCHITECTURE.md).
 
 **Mål:** Kort pekartabell (“när använder jag vad”) i [STYLE_GUIDE.md](STYLE_GUIDE.md) eller [ARCHITECTURE.md](ARCHITECTURE.md):
@@ -58,15 +58,15 @@ Kort lista över planerade förbättringar som inte är aktiva utvecklingsplaner
 
 **Acceptanskriterier:**
 
-- [ ] Tabell + kort intro tillagd i vald doc-fil
-- [ ] Korslänk från [VUE_UTILS.md](VUE_UTILS.md) eller [ARCHITECTURE.md](ARCHITECTURE.md) så PHP- och Vue-guiden hittas parallellt
-- [ ] Ingen kodändring — enbart dokumentation
+- [x] Tabell + kort intro tillagd i vald doc-fil
+- [x] Korslänk från [VUE_UTILS.md](VUE_UTILS.md) eller [ARCHITECTURE.md](ARCHITECTURE.md) så PHP- och Vue-guiden hittas parallellt
+- [x] Ingen kodändring — enbart dokumentation
 
 ---
 
 ## Reseplanerare — feedback-widget (FAB)
 
-**Status:** planerad (beslut 2026-06-10)  
+**Status:** v1 implementerad (2026-06-10)  
 **Plan:** [WIZARD_FEEDBACK_SKETCH.md](WIZARD_FEEDBACK_SKETCH.md)  
 **Relaterat:** J13 / D2 i [feedback/2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md)
 
@@ -76,24 +76,24 @@ Besökare rapporterar buggar/förslag via flytande knapp i reseplaneraren; spara
 
 ### Fas 1 — Backend + admin-inställning
 
-- [ ] `wizard_feedback_enabled` i `mrt_settings` + REST + SettingsPage
-- [ ] CPT `mrt_feedback` (private) + meta-fält
-- [ ] `POST /mrt/v1/wizard/feedback` (nonce, rate limit, honeypot)
-- [ ] CSV import/export av `wizard_feedback_enabled`
+- [x] `wizard_feedback_enabled` i `mrt_settings` + REST + SettingsPage
+- [x] CPT `mrt_feedback` (private) + meta-fält
+- [x] `POST /mrt/v1/wizard/feedback` (nonce, rate limit, honeypot)
+- [x] CSV import/export av `wizard_feedback_enabled`
 
 ### Fas 2 — Publik Vue-widget
 
-- [ ] `WizardFeedbackFab.vue` + `WizardFeedbackPanel.vue` + CSS
-- [ ] `useWizardFeedback.ts` — submit + tack-meddelande
-- [ ] GDPR-text i panelen
-- [ ] Automatisk kontext (sida, steg, route snapshot)
-- [ ] Vitest/SSR-tester
+- [x] `WizardFeedbackWidget.vue` + CSS
+- [x] Submit + tack-meddelande
+- [x] GDPR-text i panelen
+- [x] Automatisk kontext (sida, steg, route snapshot)
+- [x] Vitest/SSR-tester + Playwright-smoke
 
 ### Fas 3 — Admin-lista
 
-- [ ] REST: lista, detalj, PATCH status
-- [ ] Admin-sida Feedback (meny eller under Dashboard)
-- [ ] Status: Ny / Läst / Åtgärdad / Avvisad
+- [x] REST: lista + PATCH status
+- [x] Admin-sida Feedback (meny)
+- [x] Status: Ny / Läst / Åtgärdad / Avvisad
 
 ### Framtida utveckling (v2)
 
@@ -138,12 +138,13 @@ Besökare rapporterar buggar/förslag via flytande knapp i reseplaneraren; spara
 
 ### Fas 4 — Admin & validering (polish)
 
-- [ ] Hint i `StationTrainChangeEditor.vue`: continuation-turer visas inte som egna kolumner
-- [ ] Valfri validering vid spara: saknad `to_service`, dubbelkoppling
+- [x] Hint i `StationTrainChangeEditor.vue`: continuation-turer visas inte som egna kolumner
+- [x] Validering i editorn: ofullständig rad + dubbel ankommande/continuation-koppling
 
 ### Fas 5 — Tester
 
 - [x] `tests/Unit/OverviewColumnMergeTest.php` — Lennakatten-scenario (enhetstester)
+- [x] Statisk E2E/admin: tågbyteshint + dubbel continuation-varning
 - [ ] E2E/admin: redigering efter Marielund sparar rätt `serviceId`
 
 **Acceptanskriterier (överlämning):**

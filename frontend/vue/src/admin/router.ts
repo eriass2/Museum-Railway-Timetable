@@ -11,6 +11,7 @@ import DevToolsPage from './pages/DevToolsPage.vue';
 import HelpPage from './pages/HelpPage.vue';
 import ShortcodesPage from './pages/ShortcodesPage.vue';
 import TrafficNoticesPage from './pages/TrafficNoticesPage.vue';
+import FeedbackPage from './pages/FeedbackPage.vue';
 import { adminConfig } from './types';
 
 export function createAdminRouter(initialRoute: string) {
@@ -37,6 +38,7 @@ export function createAdminRouter(initialRoute: string) {
     },
     { path: '/settings', component: SettingsPage, name: 'settings' },
     { path: '/prices', component: PricesPage, name: 'prices' },
+    { path: '/feedback', component: FeedbackPage, name: 'feedback' },
     { path: '/train-types', component: TrainTypesPage, name: 'train-types' },
     { path: '/import-export', component: ImportExportPage, name: 'import-export' },
     { path: '/shortcodes', component: ShortcodesPage, name: 'shortcodes' },
@@ -58,6 +60,7 @@ export function createAdminRouter(initialRoute: string) {
     'stations-routes': '/stations-routes',
     settings: '/settings',
     prices: '/prices',
+    feedback: '/feedback',
     'train-types': '/train-types',
     'import-export': '/import-export',
     shortcodes: '/shortcodes',

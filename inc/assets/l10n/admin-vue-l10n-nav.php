@@ -18,6 +18,7 @@ function MRT_admin_vue_l10n_nav(): array {
 		'navOverview'        => __( 'Översikt', 'museum-railway-timetable' ),
 		'navStationsRoutes'  => __( 'Stationer & rutter', 'museum-railway-timetable' ),
 		'navTimetables'      => __( 'Tidtabeller', 'museum-railway-timetable' ),
+		'navFeedback'        => __( 'Feedback', 'museum-railway-timetable' ),
 		'navShortcodes'      => __( 'Shortcodes', 'museum-railway-timetable' ),
 		'navHelp'            => __( 'Hjälp', 'museum-railway-timetable' ),
 		'navTrainTypes'      => __( 'Tågtyper', 'museum-railway-timetable' ),

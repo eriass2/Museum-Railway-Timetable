@@ -87,3 +87,4 @@ Prioritet: `strings` → `wizard` → `labels` → fallback.
 - [frontend/vue/README.md](../frontend/vue/README.md) — build, appar, kommandon
 - [REST_API.md](REST_API.md) — endpoints och PHP-config
 - [ARCHITECTURE.md](ARCHITECTURE.md) — plugin-lager
+- [STYLE_GUIDE.md](STYLE_GUIDE.md#php-util-snabbguide) — motsvarande snabbguide för PHP-helpers

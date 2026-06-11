@@ -30,6 +30,7 @@ const form = ref<SettingsPayload>({
   ticket_url: '',
   hero_background_url: '',
   wizard_beta_enabled: false,
+  wizard_feedback_enabled: false,
   min_transfer_minutes: 0,
   max_transfer_minutes: 120,
   max_transfers: 2,
@@ -129,6 +130,16 @@ async function submit() {
                     {{ adminStr(cfg, 'settingsWizardBetaCheckbox') }}
                   </label>
                   <p class="description">{{ adminStr(cfg, 'settingsWizardBetaHint') }}</p>
+                </td>
+              </tr>
+              <tr>
+                <th scope="row">{{ adminStr(cfg, 'settingsWizardFeedback') }}</th>
+                <td>
+                  <label>
+                    <input v-model="form.wizard_feedback_enabled" type="checkbox" />
+                    {{ adminStr(cfg, 'settingsWizardFeedbackCheckbox') }}
+                  </label>
+                  <p class="description">{{ adminStr(cfg, 'settingsWizardFeedbackHint') }}</p>
                 </td>
               </tr>
               <tr>

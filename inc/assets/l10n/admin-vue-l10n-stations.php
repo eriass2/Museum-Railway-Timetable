@@ -83,6 +83,22 @@ function MRT_admin_vue_l10n_stations(): array {
 			'Visar anslutande tåg i tidtabellsöversikten när ett tågnummer anländer (t.ex. 71 → Dieseltåg 61).',
 			'museum-railway-timetable'
 		),
+		'stationsTrainChangeColumnHint' => __(
+			'Continuation-turer visas inte som egna kolumner i Turvy när de kopplas här.',
+			'museum-railway-timetable'
+		),
+		'stationsTrainChangeIncomplete' => __(
+			'Rader med saknade fält sparas inte.',
+			'museum-railway-timetable'
+		),
+		'stationsTrainChangeDuplicateFrom' => __(
+			'Samma ankommande tågnummer används flera gånger.',
+			'museum-railway-timetable'
+		),
+		'stationsTrainChangeDuplicateTo' => __(
+			'Samma continuation-tur används flera gånger.',
+			'museum-railway-timetable'
+		),
 		'stationsTrainChangeFrom'    => __( 'Ankommande tågnummer', 'museum-railway-timetable' ),
 		'stationsTrainChangeFromPh'  => __( '71', 'museum-railway-timetable' ),
 		'stationsTrainChangeType'    => __( 'Anslutande fordons typ', 'museum-railway-timetable' ),

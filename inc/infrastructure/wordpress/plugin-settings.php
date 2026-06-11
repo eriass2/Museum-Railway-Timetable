@@ -22,6 +22,7 @@ function MRT_default_plugin_settings(): array {
 		'ticket_url'                         => '',
 		'hero_background_url'                => '',
 		'wizard_beta_enabled'                => false,
+		'wizard_feedback_enabled'            => false,
 		'min_transfer_minutes'               => 0,
 		'max_transfer_minutes'               => 120,
 		'max_transfers'                      => 2,
@@ -96,6 +97,13 @@ function MRT_plugin_wizard_beta_enabled(): bool {
 }
 
 /**
+ * Whether the journey wizard shows the feedback widget (admin setting).
+ */
+function MRT_plugin_wizard_feedback_enabled(): bool {
+	return ! empty( MRT_get_plugin_settings()['wizard_feedback_enabled'] );
+}
+
+/**
  * Sanitize mrt_settings from Settings API form.
  *
  * @param array<string, mixed> $input Raw POST values
@@ -123,6 +131,7 @@ function MRT_sanitize_plugin_settings( $input ): array {
 			? esc_url_raw( wp_unslash( (string) $input['hero_background_url'] ) )
 			: (string) ( $current['hero_background_url'] ?? '' ),
 		'wizard_beta_enabled'                => ! empty( $input['wizard_beta_enabled'] ),
+		'wizard_feedback_enabled'            => ! empty( $input['wizard_feedback_enabled'] ),
 		'min_transfer_minutes'               => $min,
 		'max_transfer_minutes'               => $max,
 		'max_transfers'                      => MRT_sanitize_plugin_settings_max_transfers(

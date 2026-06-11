@@ -159,6 +159,9 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 		'stations'     => $station_rows,
 		'ticketUrl'    => $ticket_url,
 		'betaBanner'   => $beta_banner,
+		'feedbackEnabled' => function_exists( 'MRT_plugin_wizard_feedback_enabled' )
+			? MRT_plugin_wizard_feedback_enabled()
+			: false,
 		'timetableId'      => isset( $parsed['timetable_id'] ) ? (int) $parsed['timetable_id'] : 0,
 		'timetablePageUrl' => isset( $parsed['timetable_page_url'] ) ? (string) $parsed['timetable_page_url'] : '',
 		'embedded'         => ! empty( $parsed['embedded'] ),
@@ -204,6 +207,17 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 			'summaryPricesHeading' => __( 'Priser', 'museum-railway-timetable' ),
 			'calPrevAria'          => __( 'Föregående månad', 'museum-railway-timetable' ),
 			'calNextAria'          => __( 'Nästa månad', 'museum-railway-timetable' ),
+			'feedbackButton'       => __( 'Rapportera fel eller förslag', 'museum-railway-timetable' ),
+			'feedbackTitle'        => __( 'Rapportera fel eller förslag', 'museum-railway-timetable' ),
+			'feedbackTypeBug'      => __( 'Fel / bugg', 'museum-railway-timetable' ),
+			'feedbackTypeSuggestion' => __( 'Förslag', 'museum-railway-timetable' ),
+			'feedbackMessage'      => __( 'Beskrivning', 'museum-railway-timetable' ),
+			'feedbackEmail'        => __( 'E-post (valfritt)', 'museum-railway-timetable' ),
+			'feedbackPrivacy'      => __( 'Vi sparar din rapport för felsökning. E-post används bara om du fyller i den.', 'museum-railway-timetable' ),
+			'feedbackSubmit'       => __( 'Skicka', 'museum-railway-timetable' ),
+			'feedbackCancel'       => __( 'Avbryt', 'museum-railway-timetable' ),
+			'feedbackThanks'       => __( 'Tack! Vi har tagit emot din rapport.', 'museum-railway-timetable' ),
+			'feedbackError'        => __( 'Kunde inte skicka rapporten. Försök igen.', 'museum-railway-timetable' ),
 		),
 	);
 }

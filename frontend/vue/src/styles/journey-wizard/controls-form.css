@@ -128,8 +128,8 @@
 }
 
 .mrt-journey-wizard--embedded .mrt-step-progress__item.is-active {
-    color: var(--mrt-wizard-text);
-    background: var(--mrt-wizard-surface, #fff);
+    color: var(--mrt-color-on-accent);
+    background: var(--mrt-wizard-yellow);
     border: 2px solid var(--mrt-color-accent-700, #c49a10);
     box-shadow: none;
 }

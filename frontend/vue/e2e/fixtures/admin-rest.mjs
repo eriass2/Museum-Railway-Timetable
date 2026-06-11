@@ -58,6 +58,9 @@ export function buildAdminRestResponse(pathOnly, restPrefix, options = {}) {
           lat: '',
           lng: '',
           display_order: 0,
+          train_change_map: {
+            '71': { typeName: 'Dieseltåg', serviceNumber: '61' },
+          },
         },
       ],
     },
