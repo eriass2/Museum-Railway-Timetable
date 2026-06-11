@@ -47,6 +47,20 @@ GitHub Actions (`.github/workflows/ci.yml`) kör `composer check` vid push/PR. D
 
 **Pre-commit:** kräver bash (WSL/Git Bash på Windows) – `pre-commit install`.
 
+### Script-bibliotek (`scripts/lib/`)
+
+PowerShell- och bash-script delar helpers i `scripts/lib/` så Docker-, Vue- och WP-CLI-kommandon inte dupliceras i varje entry-script.
+
+| Modul | Användning |
+|-------|------------|
+| `Mrt.Docker.ps1` | Dot-source från `*.ps1` — Compose, WP-CLI, Vue, vendor |
+| `Mrt.Plugin.ps1` | Plugin-slug, fil-lista, kopiera/synka |
+| `mrt-docker.sh` | Source från `*.sh` — samma byggblock för bash/CI |
+
+**Full kommandotabell:** [scripts/README.md](../scripts/README.md)
+
+På Windows: föredra `.\scripts\*.ps1` (Docker by default). Bash-varianter (`vue-check.sh`, `lint.sh`, `docker-dev-reset.sh`) använder samma lib.
+
 ---
 
 ## Lokala testlägen
@@ -79,11 +93,11 @@ docker compose --profile tools run --rm composer install
 docker compose --profile tools run --rm composer check
 ```
 
-Vue (typecheck, Vitest, build) körs i **`vue`-containern**, inte via `composer vue:check` i Docker:
+Vue (typecheck, Vitest, build) körs i **`vue`-containern**:
 
 ```powershell
 .\scripts\vue-check.ps1
-# eller: docker compose --profile tools run --rm vue sh -c "npm ci && npm run check"
+# Linux/WSL: bash scripts/vue-check.sh
 ```
 
 PHP + Vue: `.\scripts\check.ps1 -Vue`
@@ -114,7 +128,7 @@ Efter ändringar i import, rutter eller demosidor – ett kommando för agent/ut
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1
 ```
 
-`-SkipCompose` om Docker redan kör. Output: JSON med `pages.component_demo` och `pages.wizard`. Reset bygger Vue (`docker compose --profile tools run --rm vue sh -c "npm ci && npm run build && npm run verify"`) och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md).
+`-SkipCompose` om Docker redan kör. Bygger Vue och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md). Linux: `./scripts/docker-dev-reset.sh`.
 
 ### Automatiserad Docker-smoke
 

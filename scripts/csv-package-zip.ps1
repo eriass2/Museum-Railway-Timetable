@@ -5,17 +5,18 @@
 #   powershell -File .\scripts\csv-package-zip.ps1 -Source testdata/fixtures/lennakatten -Output testdata/fixtures/lennakatten.zip
 
 param(
-    [string] $Source = "testdata/fixtures/lennakatten",
-    [string] $Output = "testdata/fixtures/lennakatten.zip"
+    [string] $Source = 'testdata/fixtures/lennakatten',
+    [string] $Output = 'testdata/fixtures/lennakatten.zip'
 )
 
-$ErrorActionPreference = "Stop"
-$root = Split-Path -Parent $PSScriptRoot
-Set-Location $root
+$ErrorActionPreference = 'Stop'
+. (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
+$root = Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
+
+Assert-MrtDockerAvailable
 
 Write-Host "`n=== csv-package-zip: validate ===" -ForegroundColor Cyan
-docker compose --profile tools run --rm php-test scripts/csv-validate.php $Source
-if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+Invoke-MrtDockerPhpTest -PhpArgs @('scripts/csv-validate.php', $Source) -ExitOnError
 
 Write-Host "`n=== csv-package-zip: pack ===" -ForegroundColor Cyan
 $sourcePosix = ($Source -replace '\\', '/')

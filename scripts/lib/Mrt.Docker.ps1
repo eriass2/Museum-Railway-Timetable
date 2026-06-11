@@ -239,6 +239,18 @@ function Invoke-MrtDockerPhpUnit {
     Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError
 }
 
+function Invoke-MrtDockerPhpTest {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]] $PhpArgs,
+        [switch] $ExitOnError,
+        [switch] $StreamOutput
+    )
+
+    $composeArgs = @('--profile', 'tools', 'run', '--rm', 'php-test') + $PhpArgs
+    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError -StreamOutput:$StreamOutput
+}
+
 function Invoke-MrtDockerPhpUnitWithPcov {
     param(
         [string[]] $PhpUnitArgs,

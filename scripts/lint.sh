@@ -1,17 +1,28 @@
 #!/usr/bin/env bash
-# Run PHPStan and PHPCS (requires: composer install)
+# Run PHPStan and PHPCS. Default: Docker (matches lint.ps1). Pass --local for host vendor/.
 set -e
 cd "$(dirname "$0")/.."
+. "$(dirname "$0")/lib/mrt-docker.sh"
 
-if [ ! -d vendor ]; then
-    echo "Run 'composer install' first."
-    exit 1
+use_local=0
+if [ "${1:-}" = "--local" ]; then
+	use_local=1
+	shift
 fi
 
-echo "Running PHPStan..."
-./vendor/bin/phpstan analyse --no-progress
+if [ "$use_local" -eq 1 ]; then
+	if [ ! -d vendor ]; then
+		echo "Run 'composer install' first."
+		exit 1
+	fi
+	echo "Running PHPStan..."
+	./vendor/bin/phpstan analyse --no-progress
+	echo "Running PHPCS..."
+	./vendor/bin/phpcs
+	echo "Lint OK."
+	exit 0
+fi
 
-echo "Running PHPCS..."
-./vendor/bin/phpcs
-
+echo "Running PHPStan in Docker..."
+mrt_lint_docker
 echo "Lint OK."

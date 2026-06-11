@@ -13,24 +13,12 @@ echo "=== ci-e2e-wp: waiting for WordPress ==="
 mrt_wait_wordpress 300 5
 
 echo "=== ci-e2e-wp: import + demo page ==="
-docker compose run --rm --no-TTY wordpress-init wp --allow-root eval \
-  "if (function_exists('MRT_run_lennakatten_import')) { echo MRT_run_lennakatten_import(); }" || true
+mrt_e2e_prepare_site
 
-docker compose run --rm --no-TTY wordpress-init wp --allow-root eval \
-  'if (function_exists("MRT_dev_cli_set_admin_user")) { MRT_dev_cli_set_admin_user(); }
-  if (function_exists("MRT_sync_timetable_public_pages")) { MRT_sync_timetable_public_pages(); }' || true
-
-DEMO_URL="$(
-  docker compose run --rm --no-TTY wordpress-init wp --allow-root eval \
-    '$r = MRT_ensure_components_demo_page_cli();
-    if (is_wp_error($r)) { fwrite(STDERR, $r->get_error_message() . "\n"); exit(1); }
-    wp_update_post(array("ID" => (int) $r, "post_status" => "publish"));
-    echo get_permalink((int) $r);'
-)"
-
+DEMO_URL="$(mrt_demo_page_url)"
 if [ -z "$DEMO_URL" ]; then
-  echo "Failed to resolve demo page URL" >&2
-  exit 1
+	echo "Failed to resolve demo page URL" >&2
+	exit 1
 fi
 
 echo "Demo URL: $DEMO_URL"
@@ -42,13 +30,7 @@ export MRT_E2E_WP_ADMIN_USER="${WORDPRESS_ADMIN_USER:-admin}"
 export MRT_E2E_WP_ADMIN_PASSWORD="${WORDPRESS_ADMIN_PASSWORD:-admin}"
 echo "Admin URL: $MRT_E2E_WP_ADMIN_URL"
 
-INDEX_URL="$(
-  docker compose run --rm --no-TTY wordpress-init wp --allow-root eval \
-    '$id = (int) get_option("mrt_timetables_index_page_id", 0);
-    if ($id <= 0) { exit(1); }
-    echo get_permalink($id);'
-)" || INDEX_URL="${WP_SITE_BASE}/"
-
+INDEX_URL="$(mrt_index_page_url)" || INDEX_URL="${WP_SITE_BASE}/"
 export MRT_E2E_WP_INDEX_URL="$INDEX_URL"
 echo "Index URL: $MRT_E2E_WP_INDEX_URL"
 
