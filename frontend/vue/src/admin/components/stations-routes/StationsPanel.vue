@@ -112,6 +112,7 @@ const cfg = adminConfig();
         v-model="newStation"
         id-prefix="mrt-new-st"
         :price-zone-options="priceZoneOptions"
+        :show-train-change="true"
       />
       <AdminFormActions>
         <MrtButton context="admin" variant="primary" @click="emit('add')">
@@ -132,6 +133,7 @@ const cfg = adminConfig();
         v-model="editingStation"
         id-prefix="mrt-edit-st"
         :price-zone-options="priceZoneOptions"
+        :show-train-change="true"
       />
       <AdminFormActions>
         <MrtButton context="admin" variant="primary" @click="emit('save')">
