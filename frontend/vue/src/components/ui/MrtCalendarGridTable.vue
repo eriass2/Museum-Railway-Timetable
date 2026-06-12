@@ -73,4 +73,87 @@ defineProps<{
   vertical-align: middle;
   border-color: var(--mrt-color-neutral-200);
 }
+
+.mrt-month-table {
+  table-layout: fixed;
+}
+
+.mrt-month-table :deep(th),
+.mrt-month-table :deep(td) {
+  border: 1px solid var(--mrt-border-light);
+  width: 14.285%;
+  vertical-align: top;
+  height: auto;
+  min-height: var(--mrt-month-cell-min-height, 5rem);
+  padding: 0;
+  overflow: visible;
+}
+
+.mrt-month-table :deep(thead th) {
+  background: var(--mrt-bg-lightest);
+  font-weight: 700;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  padding: 0.5rem 0.2rem;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.mrt-month-table__caption {
+  caption-side: top;
+  text-align: left;
+  font-weight: 600;
+  padding: var(--mrt-spacing-xs) 0;
+}
+
+.mrt-month-table :deep(.mrt-day-cell--inactive),
+.mrt-month-table :deep(.mrt-day-cell--running) {
+  padding: 0;
+  vertical-align: stretch;
+}
+
+@media (max-width: 40rem) {
+  .mrt-month-table {
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+
+  .mrt-month-table__caption {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  .mrt-month-table :deep(th),
+  .mrt-month-table :deep(td) {
+    border-width: 0 1px 1px 0;
+  }
+
+  .mrt-month-table :deep(tr:first-child th) {
+    border-top: 0;
+  }
+
+  .mrt-month-table :deep(th:last-child),
+  .mrt-month-table :deep(td:last-child) {
+    border-right: 0;
+  }
+
+  .mrt-month-table :deep(tr:last-child td) {
+    border-bottom: 0;
+  }
+
+  .mrt-month-table :deep(thead th) {
+    padding: 0.45rem 0.1rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    background: var(--mrt-bg-white, #fff);
+    border-bottom: 2px solid var(--mrt-border-light);
+  }
+}
 </style>

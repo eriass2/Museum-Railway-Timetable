@@ -1,6 +1,6 @@
 # Plan: CSS inkapsling (Vue, Angular-liknande)
 
-**Status:** pågår — Fas 0 + Fas 1 (PR 1.1–1.6) + Fas 2 klara 2026-06-12; Fas 3–4 kvar  
+**Status:** Fas 0–2 klara; Fas 3 klara 2026-06-12; Fas 4 (Playwright) kvar  
 **Relaterat:** [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [frontend/vue/src/styles/journey-wizard/README.md](../frontend/vue/src/styles/journey-wizard/README.md)
 
 ---
@@ -274,6 +274,7 @@ Samma mönster för:
 - [ ] `frontend-public.css` importerar inte `ui-components.css` (kvar: primitives + calendar tokens)
 - [x] Alla `frontend/vue/src/components/ui/*.vue` har scoped styles (eller medvetet undantag dokumenterat)
 - [x] Wizard: inga steg-specifika regler kvar i `journey-wizard/*.css` (stub tom; styles i SFC)
+- [x] Fas 3: `month-calendar`, `timetable-index`, `traffic-notices`, `app-shell`, `timetable-overview` → scoped SFC
 - [ ] E2E wizard + manuell smoke på localhost OK
 - [x] STYLE_GUIDE + VUE_UI_COMPONENTS uppdaterade (via tidigare PR)
 
@@ -282,6 +283,5 @@ Samma mönster för:
 ## Nästa steg
 
 1. ~~Godkänn plan (denna fil).~~  
-2. ~~Fas 0–2 (legacy ui + wizard shell).~~  
-3. Fas 3: `month-calendar.css`, `timetable-overview.css`, … → scoped app/SFC  
-4. Fas 4: utöka Playwright layout-checks; ev. ta bort `ui-components.css` helt när primitives flyttats
+2. ~~Fas 0–3 (legacy ui + wizard shell + övriga appar).~~  
+3. Fas 4: Playwright layout-checks; ev. ta bort `ui-components.css` helt när primitives flyttats

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import MrtPublicAppShell from '../components/layout/MrtPublicAppShell.vue';
-import '../styles/month-calendar.css';
 import MrtAlert from '../components/ui/MrtAlert.vue';
 import MrtCalendarGrid from '../components/ui/MrtCalendarGrid.vue';
 import MrtCalendarNav from '../components/ui/MrtCalendarNav.vue';
@@ -214,3 +213,87 @@ async function onMonthShift(delta: number): Promise<void> {
   </div>
   </MrtPublicAppShell>
 </template>
+
+<style scoped>
+.mrt-month {
+  --mrt-month-cell-min-height: 5rem;
+  --mrt-month-day-font: 1.15rem;
+  --mrt-month-bar-height: 0.75rem;
+  --mrt-month-bar-single-height: 1.15rem;
+}
+
+.mrt-month__grid-wrap {
+  position: relative;
+}
+
+.mrt-month__grid--loading {
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.mrt-month__grid--loading::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  cursor: wait;
+}
+
+:deep(.mrt-day-timetable) {
+  margin: var(--mrt-spacing-md) 0;
+}
+
+:deep(.mrt-day-timetable-container) {
+  margin-top: var(--mrt-spacing-xl);
+}
+
+:deep(.mrt-empty) {
+  background: var(--mrt-bg-lightest);
+}
+
+:deep(.mrt-ui-alert),
+:deep(.mrt-surface--box),
+:deep(.mrt-calendar-nav__prev),
+:deep(.mrt-calendar-nav__next),
+:deep(.mrt-calendar-nav__link) {
+  border-radius: 0;
+}
+
+@media (max-width: 40rem) {
+  .mrt-month {
+    --mrt-month-cell-min-height: 3.1rem;
+    --mrt-month-day-font: 1.05rem;
+    --mrt-month-bar-height: 0.55rem;
+    --mrt-month-bar-single-height: 0.9rem;
+  }
+
+  :deep(.mrt-calendar-nav) {
+    padding: 0.75rem 0.5rem 0.55rem;
+    gap: 0.5rem;
+  }
+
+  :deep(.mrt-calendar-nav__title) {
+    font-size: clamp(1.2rem, 5vw, 1.55rem);
+  }
+
+  :deep(.mrt-calendar-nav__prev),
+  :deep(.mrt-calendar-nav__next) {
+    width: 2.65rem;
+    height: 2.65rem;
+    font-size: 1.4rem;
+  }
+
+  .mrt-month__grid-wrap {
+    border: 1px solid var(--mrt-border-light);
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.07);
+  }
+}
+
+@media (min-width: 40.01rem) and (max-width: 56rem) {
+  .mrt-month {
+    --mrt-month-cell-min-height: 4.25rem;
+    --mrt-month-day-font: 1.1rem;
+  }
+}
+</style>

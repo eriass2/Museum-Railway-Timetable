@@ -370,6 +370,10 @@ onMounted(() => {
   padding: 0;
 }
 
+.mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-app-shell__content) {
+  max-width: var(--mrt-wizard-content-max);
+}
+
 .mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg :deep(.mrt-step-panel--search) {
   background: var(--mrt-wizard-surface);
   color: var(--mrt-wizard-text);

@@ -4,7 +4,6 @@ import MrtPublicAppShell from '@/components/layout/MrtPublicAppShell.vue';
 import MrtAlert from '@/components/ui/MrtAlert.vue';
 import MrtTimetableIndexView from '@/components/timetable-index/MrtTimetableIndexView.vue';
 import type { IndexVueConfig } from '@/config/types';
-import '../styles/timetable-index.css';
 
 const props = defineProps<{ config: IndexVueConfig }>();
 

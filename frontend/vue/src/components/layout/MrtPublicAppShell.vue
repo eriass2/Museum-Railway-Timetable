@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import '../../styles/app-shell.css';
 
 const props = withDefaults(
   defineProps<{
@@ -46,3 +45,60 @@ const backdropStyle = computed(() => {
     </div>
   </div>
 </template>
+
+<style>
+:root {
+  --mrt-app-content-max: min(96vw, 80rem);
+  --mrt-wizard-content-max: min(76.8vw, 64rem);
+  --mrt-app-bleed-outset: min(50px, 5vw);
+}
+</style>
+
+<style scoped>
+.mrt-app-shell {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+}
+
+.mrt-app-shell__content {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: var(--mrt-app-content-max);
+  margin-inline: auto;
+}
+
+.mrt-app-shell__content--fluid {
+  max-width: none;
+}
+
+.mrt-app-shell__backdrop {
+  display: none;
+}
+
+@media (min-width: 48.0625rem) {
+  .mrt-app-shell--bleed-bg {
+    width: 100vw;
+    width: 100svw;
+    max-width: none;
+    margin-left: calc(-1 * var(--mrt-app-bleed-outset));
+    margin-right: calc(100% - 100svw + var(--mrt-app-bleed-outset));
+  }
+
+  .mrt-app-shell--bleed-bg .mrt-app-shell__backdrop {
+    display: block;
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background-color: var(--mrt-wizard-green-dark, #1e4d6b);
+    background-image: var(--mrt-app-shell-bg-image, none);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+}
+</style>

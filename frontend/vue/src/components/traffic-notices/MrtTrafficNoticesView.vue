@@ -32,3 +32,23 @@ const { loading, error, payload, labels } = useDisruptionFeedView(() => props.co
     />
   </div>
 </template>
+
+<style scoped>
+.mrt-traffic-notices {
+  margin-block: var(--mrt-space-md, 1rem);
+}
+
+.mrt-traffic-notices__title {
+  margin: 0 0 var(--mrt-space-sm, 0.5rem);
+  font-size: var(--mrt-font-size-lg, 1.125rem);
+}
+
+.mrt-traffic-notices__empty {
+  margin: 0;
+  color: var(--mrt-color-muted, #555);
+}
+
+.mrt-traffic-notices__loading {
+  margin: 0;
+}
+</style>
