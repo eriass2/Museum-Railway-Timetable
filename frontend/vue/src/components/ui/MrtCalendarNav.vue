@@ -72,3 +72,87 @@ const emit = defineEmits<{
     </template>
   </div>
 </template>
+
+<style scoped>
+.mrt-calendar-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 1rem 1.25rem 0.75rem;
+}
+
+.mrt-calendar-nav__title {
+  flex: 1;
+  margin: 0;
+  text-align: center;
+  font-size: clamp(1.35rem, 2.5vw, 1.75rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.mrt-calendar-nav__prev,
+.mrt-calendar-nav__next {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  padding: 0;
+  border: 2px solid var(--mrt-color-border-on-surface, #ccc);
+  background: var(--mrt-wizard-surface, #fff);
+  color: var(--mrt-color-green-700, #1f4d2e);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: 1;
+  min-height: 0;
+  text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
+}
+
+.mrt-calendar-nav__prev:hover,
+.mrt-calendar-nav__next:hover,
+.mrt-calendar-nav__link:hover {
+  background: var(--mrt-color-neutral-200, #eee);
+}
+
+.mrt-calendar-nav__prev:focus-visible,
+.mrt-calendar-nav__next:focus-visible {
+  outline: 3px solid var(--mrt-wizard-focus);
+  outline-offset: 3px;
+}
+
+.mrt-calendar-nav__link {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--mrt-border-default, #ccc);
+  background: var(--mrt-bg-lighter, #f5f5f5);
+  color: var(--mrt-text-secondary, #333);
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.mrt-calendar-nav__today {
+  margin-left: auto;
+  padding: 0.35rem 0.7rem;
+  border: 2px solid var(--mrt-color-border-on-surface, #ccc);
+  background: var(--mrt-wizard-surface, #fff);
+  color: var(--mrt-color-green-700, #1f4d2e);
+  font-size: 0.95rem;
+  font-weight: 700;
+  min-height: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 48rem) {
+  .mrt-calendar-nav {
+    flex-wrap: wrap;
+    padding: 0.9rem 0.9rem 0;
+  }
+}
+</style>

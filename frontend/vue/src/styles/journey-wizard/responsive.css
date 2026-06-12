@@ -26,19 +26,9 @@
         font-size: 1.8rem;
     }
 
-    .mrt-journey-wizard .mrt-calendar-nav {
-        flex-wrap: wrap;
-        padding: 0.9rem 0.9rem 0;
-    }
-
-    .mrt-journey-wizard .mrt-calendar-nav,
     .mrt-calendar-grid--wizard,
-    .mrt-journey-wizard .mrt-legend-list {
+    .mrt-calendar-grid--wizard .mrt-calendar-grid__table th {
         padding-inline: 0.65rem;
-    }
-
-    .mrt-journey-wizard .mrt-legend-list {
-        padding-bottom: 1.2rem;
     }
 
     .mrt-calendar-grid--wizard .mrt-calendar-grid__table th {
