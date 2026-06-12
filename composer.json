@@ -19,7 +19,7 @@
     },
     "scripts": {
         "plugin-check": "php scripts/validate.php",
-        "phpstan": "phpstan analyse --memory-limit=1G --no-progress",
+        "phpstan": "phpstan analyse --memory-limit=2G --no-progress",
         "phpcs": "phpcs",
         "phpcbf": "phpcbf",
         "check": ["@plugin-check", "@phpstan", "@test"],
