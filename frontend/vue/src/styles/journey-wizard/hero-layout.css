@@ -28,50 +28,6 @@
 }
 
 @media (min-width: 48.0625rem) {
-    /*
-     * Full-bleed hero background without widening the content column (TT5 / nested shortcodes).
-     * ::after paints green + optional photo; ::before keeps the tint aligned to the same box.
-     */
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) > .mrt-journey-wizard__hero::after {
-        content: '';
-        position: absolute;
-        z-index: 0;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        width: 100vw;
-        width: 100svw;
-        margin-left: -50vw;
-        margin-left: -50svw;
-        background-color: var(--mrt-wizard-green-dark);
-        pointer-events: none;
-    }
-
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) > .mrt-journey-wizard__hero--has-bg {
-        background-image: none;
-        background-color: transparent;
-    }
-
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) > .mrt-journey-wizard__hero--has-bg::after {
-        background-image: var(--mrt-wizard-hero-bg-image);
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) > .mrt-journey-wizard__hero--has-bg::before {
-        inset: auto;
-        top: 0;
-        bottom: 0;
-        left: 50%;
-        right: auto;
-        width: 100vw;
-        width: 100svw;
-        margin-left: -50vw;
-        margin-left: -50svw;
-        z-index: 1;
-    }
-
     .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero-inner {
         position: relative;
         z-index: 2;
