@@ -29,3 +29,39 @@ withDefaults(
     <slot />
   </component>
 </template>
+
+<style scoped>
+.mrt-heading {
+  margin: 0;
+  font-family: var(--mrt-font-heading);
+  font-weight: var(--mrt-font-weight-heading);
+}
+
+.mrt-heading--lg {
+  font-size: var(--mrt-font-lg, 1.25rem);
+}
+
+.mrt-heading--md {
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.mrt-heading--sm {
+  font-size: var(--mrt-font-sm, 0.875rem);
+}
+
+.mrt-heading--xl {
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: 1.08;
+  font-weight: 700;
+}
+
+.mrt-heading--surface-title {
+  margin: 0 0 1.25rem;
+  color: var(--mrt-color-green-700, #1f4d2e);
+  text-align: center;
+  font-size: clamp(2rem, 4vw, 2.6rem);
+  line-height: 1.08;
+  font-weight: 700;
+}
+</style>

@@ -2,14 +2,17 @@
 
 Modular styles for `[museum_journey_wizard]`, imported from `JourneyWizardApp.vue` via `../styles/journey-wizard.css`.
 
-**Konventioner:** [docs/STYLE_GUIDE.md](../../../docs/STYLE_GUIDE.md) §3 CSS, [docs/VUE_UI_COMPONENTS.md](../../../docs/VUE_UI_COMPONENTS.md), [docs/mockups/DESIGN_TOKENS.md](../../../docs/mockups/DESIGN_TOKENS.md).
+**Konventioner:** [docs/STYLE_GUIDE.md](../../../docs/STYLE_GUIDE.md) §3 CSS, [docs/VUE_UI_COMPONENTS.md](../../../docs/VUE_UI_COMPONENTS.md), [docs/CSS_ENCAPSULATION_PLAN.md](../../../docs/CSS_ENCAPSULATION_PLAN.md).
+
+> **Migrering:** Steg- och formulärstilar flyttas till scoped CSS i `.vue`-komponenter. Modulerna nedan är **app-shell** (layout, embedded, responsive) — inte nya komponentregler här.
 
 | Modul | Innehåll |
 |-------|----------|
 | `base.css` | Shell, hero, embedded, fokus |
 | `hero-layout.css` | Desktop fullbredd, valfri hero-bakgrundsbild (J10) |
-| `wizard-shell.css` | Overrides på delade ui-components |
-| `controls-form.css` | Sök steg: stationer, restyp, combobox |
+| `wizard-main-card.css` | Grön huvudpanel (J19) |
+| `wizard-shell.css` | Wizard-specifika overrides på delade primitiver |
+| `controls-form.css` | **Endast** embedded-overrides (söksteg → scoped SFC) |
 | `controls-calendar.css` | Datumsteg, kalender |
 | `steps-outbound-return.css` | Utresa/återresa |
 | `steps-summary.css` | Sammanfattning |

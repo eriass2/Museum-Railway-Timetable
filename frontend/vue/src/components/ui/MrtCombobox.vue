@@ -97,3 +97,55 @@ function closeList(): void {
     </ul>
   </div>
 </template>
+
+<style scoped>
+.mrt-combobox {
+  position: relative;
+}
+
+.mrt-combobox__input {
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.65rem 0.85rem;
+  border: 2px solid var(--mrt-color-border-on-surface, #767676);
+  border-radius: 0;
+  background: var(--mrt-wizard-surface, #fff);
+  color: var(--mrt-wizard-text, #141414);
+  font-size: 1.05rem;
+  line-height: 1.3;
+  box-sizing: border-box;
+}
+
+.mrt-combobox__input::placeholder {
+  color: var(--mrt-color-placeholder, #767676);
+  opacity: 1;
+}
+
+.mrt-combobox__list {
+  position: absolute;
+  z-index: 20;
+  left: 0;
+  right: 0;
+  top: calc(100% + 2px);
+  margin: 0;
+  padding: 0;
+  max-height: 14rem;
+  overflow-y: auto;
+  list-style: none;
+  background: var(--mrt-wizard-surface, #fff);
+  color: var(--mrt-wizard-text, #151515);
+  border: 1px solid var(--mrt-wizard-border, #ccc);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.mrt-combobox__option {
+  padding: 0.65rem 0.85rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.mrt-combobox__option:hover,
+.mrt-combobox__option[aria-selected='true'] {
+  background: color-mix(in srgb, var(--mrt-color-accent-500) 35%, transparent);
+}
+</style>

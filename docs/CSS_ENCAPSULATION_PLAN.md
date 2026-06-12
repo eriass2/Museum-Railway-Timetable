@@ -1,6 +1,6 @@
 # Plan: CSS inkapsling (Vue, Angular-liknande)
 
-**Status:** utkast / plan  
+**Status:** pågår — Fas 0 + PR 1.1 (route search) klara 2026-06-12  
 **Relaterat:** [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [frontend/vue/src/styles/journey-wizard/README.md](../frontend/vue/src/styles/journey-wizard/README.md)
 
 ---
@@ -281,6 +281,7 @@ Samma mönster för:
 
 ## Nästa steg
 
-1. Godkänn plan (denna fil).  
-2. PR: Fas 0 (docs-länkar).  
-3. PR: `MrtRouteLayout` scoped + ta bort route-block ur `trips.css` (eliminerar klassen av layout-krockar).
+1. ~~Godkänn plan (denna fil).~~  
+2. ~~PR: Fas 0 (docs-länkar).~~  
+3. ~~PR: `MrtRouteLayout` scoped + ta bort route-block ur `trips.css`.~~  
+4. PR 1.2: `MrtStepProgress` / `MrtStepHeader` scoped.

@@ -62,3 +62,21 @@ defineProps<{
     </svg>
   </span>
 </template>
+
+<style scoped>
+.mrt-trip-type-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  line-height: 0;
+}
+
+.mrt-trip-type-icon svg {
+  display: block;
+  width: 1.35rem;
+  height: 1.35rem;
+}
+</style>

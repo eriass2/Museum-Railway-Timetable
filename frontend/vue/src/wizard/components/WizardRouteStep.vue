@@ -72,6 +72,7 @@ function onSearch(): void {
     <MrtSurfaceCard class="mrt-journey-wizard__route-form">
       <MrtSegmentedControl
         v-model="tripType"
+        size="compact"
         :legend="cfgStr(cfg, 'tripTypeLegend', 'Restyp')"
         :options="tripOptions"
       >
@@ -131,3 +132,30 @@ function onSearch(): void {
     </MrtSurfaceCard>
   </MrtStepPanel>
 </template>
+
+<style scoped>
+.mrt-journey-wizard__station-field {
+  display: grid;
+  gap: 0.25rem;
+}
+
+.mrt-journey-wizard__station-field :deep(.mrt-heading) {
+  color: var(--mrt-wizard-text, #151515);
+  font-weight: 700;
+}
+
+.mrt-field-error {
+  margin: 0 0 1rem;
+  text-align: center;
+}
+
+.mrt-field-error :deep(.mrt-ui-alert) {
+  margin: 0;
+}
+
+.mrt-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.25rem;
+}
+</style>

@@ -85,7 +85,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Struktur
 - **Varumärke och UI** – Se [design/BRAND_UI.md](design/BRAND_UI.md) (scope, formspråk, typografi, branding i texter).
 - **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
-- **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med scoped CSS; se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md). Kvarvarande global modul-CSS: `assets/frontend/ui/` (wizard-steg, trips, kalender — barrel `ui-components.css`).
+- **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med **scoped `<style>`** i SFC; se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) och migrationsplan [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md). **Inga nya komponentregler** i `assets/frontend/ui/` (legacy barrel fasas ut).
 - **Legacy PHP** – `.mrt-alert` m.m. i `assets/frontend/components-base.css` (demo-verktyg, bygg-varningar).
 - **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
@@ -96,10 +96,10 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Text på guld:** `--mrt-color-on-accent` (**svart**), enligt [grafisk profil](https://lennakatten.se/grafisk-profil/) och [BRAND_UI.md](design/BRAND_UI.md).
 - **Vue-bundle:** Publik CSS under `frontend/vue/src/styles/` → `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + vue-shell); varje app importerar egen modul (`month-calendar.css`, `journey-wizard.css`, `timetable-overview.css`, `timetable-index.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
 - **Månadskalender-CSS:** `frontend/vue/src/styles/month-calendar.css` — `.mrt-month-*`, `.mrt-month-day*` (tidtabellstyp-färger); importeras från `MonthCalendarApp.vue`. Wizard använder `.mrt-calendar-day--*` (bokningsbar/trafik/ingen).
-- **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — `base.css`, `wizard-shell.css`, `controls-form.css` (sök steg), `controls-calendar.css`, `steps-*.css`, `responsive.css`. Importeras från `JourneyWizardApp.vue`.
+- **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — app-shell (base, hero, responsive). Söksteg och formulärprimitiver → scoped i `.vue` (se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md)). `controls-form.css` = embedded-overrides only.
 - **Tidtabellsöversikt-CSS:** `frontend/vue/src/styles/timetable-overview.css` — block `.mrt-ov-*`, importeras från `MrtTimetableOverviewView.vue`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
 - **Färgtokens:** `assets/mrt-color-tokens.css` importeras först i `mrt-public.css`. Se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) och [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
-- **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; stylas med `currentColor` i `controls-form.css` (scoped under `.mrt-journey-wizard .mrt-surface`).
+- **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; scoped CSS i komponenten.
 
 ### Exempel
 

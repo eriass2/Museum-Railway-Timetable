@@ -1,6 +1,8 @@
 # Vue UI components (`frontend/vue/src/components/ui/`)
 
-Delat komponentbibliotek för wizard, månadskalender, översikt, tidtabellsindex och Vue-admin. Wizard-specifika wrappers ligger i `frontend/vue/src/wizard/components/`. Colocated primitiver har scoped CSS i SFC (`MrtAlert`, `MrtButton`, `MrtDot`, `MrtSurfaceCard`). Kvarvarande global modul-CSS: `assets/frontend/ui/` (wizard-steg, trips, kalender — barrel `ui-components.css`).
+Delat komponentbibliotek för wizard, månadskalender, översikt, tidtabellsindex och Vue-admin. Wizard-specifika wrappers ligger i `frontend/vue/src/wizard/components/`. **Nya och migrerade primitiver** har scoped CSS i SFC. Legacy global modul-CSS i `assets/frontend/ui/` fasas ut enligt [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md).
+
+**Scoped idag (exempel):** `MrtAlert`, `MrtButton`, `MrtDot`, `MrtSurfaceCard`, `MrtAsyncState`, `MrtRouteLayout`, `MrtSegmentedControl`, `MrtCombobox`, `MrtFieldGroup`, `MrtHeading`, `WizardRouteStep`, `WizardTripTypeIcon`.
 
 ## Shared primitives (admin + public)
 
@@ -81,11 +83,11 @@ frontend/vue/src/components/
 └── admin/components/ui/        ← admin-specifikt
 ```
 
-**Medvetet kvar som global CSS:** `timetable-overview.css`, wizard-shell, `.mrt-empty` (månadskalender).
+**Medvetet kvar som global CSS (tills migrerat):** `assets/frontend/ui/` (steg, trips, kalender — barrel `ui-components.css`), `timetable-overview.css`, wizard app-shell under `journey-wizard/`, `.mrt-empty` (månadskalender). Se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md).
 
 ## Regler för nya komponenter
 
-1. **Nya primitiver** → `frontend/vue/src/components/ui/` med scoped CSS.
+1. **Nya primitiver** → `frontend/vue/src/components/ui/` med scoped CSS (**inte** `assets/frontend/ui/`).
 2. **Tokens** → `assets/mrt-color-tokens.css` (aldrig nya hex i komponenter).
 3. **App-specifikt** → `frontend/vue/src/styles/<app>/`.
 4. **Admin-skals** → `admin/styles/admin-shell.css`.

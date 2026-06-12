@@ -121,50 +121,6 @@
     padding: 0.75rem 0.9rem;
 }
 
-/* â€”â€” Route search layout â€”â€” */
-.mrt-route-layout {
-    width: min(100%, 36rem);
-    margin-inline: auto;
-}
-
-.mrt-route-layout__stations {
-    display: grid;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-}
-
-@media (min-width: 40rem) {
-    .mrt-route-layout__stations {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem 1.25rem;
-    }
-}
-
-.mrt-route-layout__link-wrap {
-    margin: 1.25rem 0 0;
-    text-align: center;
-}
-
-.mrt-route-layout__link {
-    color: var(--mrt-color-on-dark-link, #f5e6a8);
-    font-size: 0.95rem;
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 0.15em;
-}
-
-.mrt-route-layout__link:hover {
-    color: var(--mrt-color-on-dark, #ffffff);
-}
-
-.mrt-surface .mrt-route-layout__link {
-    color: var(--mrt-color-green-700, #1f4d2e);
-}
-
-.mrt-surface .mrt-route-layout__link:hover {
-    color: var(--mrt-color-accent-700, #a88a10);
-}
-
 /* —— Connection leg list (summary / compact route) —— */
 .mrt-connection-leg-list {
     margin: 0.75rem 0 0;

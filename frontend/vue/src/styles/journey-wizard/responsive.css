@@ -86,21 +86,6 @@
         box-sizing: border-box;
     }
 
-    .mrt-journey-wizard .mrt-surface .mrt-segmented {
-        grid-template-columns: 1fr;
-    }
-
-    .mrt-journey-wizard .mrt-surface .mrt-segmented__option + .mrt-segmented__option {
-        border-left: 0;
-        border-top: 2px solid var(--mrt-color-border-on-surface, #767676);
-    }
-
-    .mrt-journey-wizard .mrt-surface .mrt-segmented__option {
-        justify-content: flex-start;
-        padding: 0.65rem 0.85rem;
-        font-size: 0.975rem;
-    }
-
     .mrt-journey-wizard .mrt-step-progress__item {
         box-sizing: border-box;
         width: 100%;

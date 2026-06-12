@@ -23,12 +23,3 @@
     letter-spacing: 0.04em;
 }
 
-.mrt-journey-wizard .mrt-segmented-field__legend {
-    color: var(--mrt-wizard-text);
-}
-
-.mrt-journey-wizard .mrt-step-panel--search .mrt-surface .mrt-segmented-field__legend,
-.mrt-journey-wizard .mrt-step-panel--search .mrt-field__label {
-    color: var(--mrt-wizard-text);
-}
-
