@@ -184,6 +184,21 @@ function Get-MrtToolsServiceRunArgs {
     return @('--profile', 'tools', 'run', '--rm', '--no-deps', $Service)
 }
 
+function Test-MrtWpCliContainerRunning {
+    $running = Invoke-MrtDockerCompose -ComposeArgs @(
+        'ps', '--status', 'running', '-q', 'wpcli'
+    ) -ReturnOutput
+    if ($null -eq $running) {
+        return $false
+    }
+    foreach ($line in @($running)) {
+        if ($line -match '\S') {
+            return $true
+        }
+    }
+    return $false
+}
+
 function Get-MrtWordPressInitRunArgs {
     param(
         [switch] $NoTty,
@@ -208,6 +223,35 @@ function Get-MrtWordPressInitRunArgs {
     if ($Entrypoint -eq 'wp') {
         $composeArgs += '--allow-root'
     }
+    return $composeArgs
+}
+
+function Get-MrtWpCliComposeArgs {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string[]] $CommandArgs,
+        [switch] $NoTty,
+        [switch] $AsRoot,
+        [string] $Entrypoint = 'wp'
+    )
+
+    if (Test-MrtWpCliContainerRunning) {
+        $composeArgs = @('exec')
+        if ($NoTty) {
+            $composeArgs += '-T'
+        }
+        $composeArgs += 'wpcli'
+        if ($Entrypoint -eq 'wp') {
+            $composeArgs += 'wp', '--allow-root'
+        } else {
+            $composeArgs += $Entrypoint
+        }
+        $composeArgs += $CommandArgs
+        return $composeArgs
+    }
+
+    $composeArgs = Get-MrtWordPressInitRunArgs -NoTty:$NoTty -AsRoot:$AsRoot -Entrypoint $Entrypoint
+    $composeArgs += $CommandArgs
     return $composeArgs
 }
 
@@ -437,8 +481,8 @@ function Invoke-MrtWpCli {
         [switch] $ExitOnError
     )
 
-    $composeArgs = Get-MrtWordPressInitRunArgs -NoTty:$NoTty -AsRoot:$AsRoot -Entrypoint $Entrypoint
-    $composeArgs += $WpArgs
+    $composeArgs = Get-MrtWpCliComposeArgs -CommandArgs $WpArgs -NoTty:$NoTty `
+        -AsRoot:$AsRoot -Entrypoint $Entrypoint
 
     Invoke-MrtDockerCompose -ComposeArgs $composeArgs -StreamOutput:$StreamOutput `
         -ReturnOutput:$ReturnOutput -ExitOnError:$ExitOnError

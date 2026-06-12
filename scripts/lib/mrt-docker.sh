@@ -40,6 +40,26 @@ mrt_wordpress_running() {
 	docker compose ps --status running -q wordpress 2>/dev/null | grep -q .
 }
 
+mrt_wpcli_running() {
+	docker compose ps --status running -q wpcli 2>/dev/null | grep -q .
+}
+
+mrt_wp_cli() {
+	if mrt_wpcli_running; then
+		docker compose exec -T wpcli wp --allow-root "$@"
+	else
+		mrt_compose_run_no_deps_if_up --no-TTY wordpress-init wp --allow-root "$@"
+	fi
+}
+
+mrt_wp_sh() {
+	if mrt_wpcli_running; then
+		docker compose exec -T wpcli sh "$@"
+	else
+		mrt_compose_run_no_deps_if_up wordpress-init sh "$@"
+	fi
+}
+
 mrt_compose_run_no_deps_if_up() {
 	if mrt_wordpress_running; then
 		docker compose run --rm --no-deps "$@"
@@ -85,7 +105,7 @@ mrt_http_ready() {
 }
 
 mrt_wp_installed() {
-	mrt_compose_run_no_deps_if_up --no-TTY wordpress-init wp --allow-root core is-installed >/dev/null 2>&1
+	mrt_wp_cli core is-installed >/dev/null 2>&1
 }
 
 mrt_wait_wordpress() {
@@ -106,7 +126,7 @@ mrt_wait_wordpress() {
 }
 
 mrt_wp_eval() {
-	mrt_compose_run_no_deps_if_up --no-TTY wordpress-init wp --allow-root eval "$1"
+	mrt_wp_cli eval "$1"
 }
 
 mrt_vue_check() {
@@ -130,11 +150,11 @@ mrt_lint_docker() {
 }
 
 mrt_ensure_sv_locale() {
-	mrt_compose_run_no_deps_if_up wordpress-init sh /usr/local/bin/mrt-ensure-sv-locale.sh
+	mrt_wp_sh /usr/local/bin/mrt-ensure-sv-locale.sh
 }
 
 mrt_dev_reset_import() {
-	mrt_compose_run_no_deps_if_up --no-TTY wordpress-init wp --allow-root eval \
+	mrt_wp_cli eval \
 		"if (!function_exists('MRT_dev_reset_and_import_cli')) { fwrite(STDERR, 'Plugin not active or dev-cli not loaded'.PHP_EOL); exit(1); } MRT_dev_reset_and_import_cli();"
 }
 

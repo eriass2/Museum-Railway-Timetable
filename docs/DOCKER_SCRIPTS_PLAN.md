@@ -78,7 +78,7 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 | P2 | Dokumentera WSL2: repo under `\\wsl$\…` inte `C:\Projects\…` | Liten | 2–10× fil-I/O i Docker | **Klar** (2026-06-12) |
 | P3 | Eget `docker/Dockerfile.tools` — PHP 8.2 + mbstring, xml, **PCOV** | Medel | `coverage.ps1` utan `apt-get`/`pecl` varje gång | **Klar** (2026-06-12) |
 | P4 | Kör `coverage-summary.php` i samma container som PHPUnit | Liten | Coverage utan host-PHP | **Klar** (2026-06-12) |
-| P5 | WP-CLI via `docker compose exec` (sidecar eller CLI i WP-image) | Stor | Färre `run wordpress-init`-containers | |
+| P5 | WP-CLI via `docker compose exec` (sidecar eller CLI i WP-image) | Stor | Färre `run wordpress-init`-containers | **Klar** (2026-06-12) |
 | P6 | Long-running **tools-shell** (`compose exec` istället för `run`) | Medel | ~2–5 s sparat per gate på Windows | |
 | P7 | `compose watch` för plugin-bind mount | Medel | Snabbare iterering mot WordPress | |
 
@@ -131,3 +131,4 @@ Sist   → S1/S2 (CLI-konsolidering) när smärta från dubbel kodbas märks
 | 2026-06-12 | Fas 1 D3–D4: `-Timings` / `MRT_SCRIPT_TIMINGS=1`, npm ci + vendor-logg |
 | 2026-06-12 | Fas 1 D5–D7: csv-package via tools, host npm ci, smoke-URL:er via WP-CLI |
 | 2026-06-12 | Fas 2 P1–P4: named volumes, Dockerfile.tools + PCOV, coverage i Docker, WSL2-docs |
+| 2026-06-12 | Fas 2 P5: `wpcli` sidecar + `compose exec` (fallback `run wordpress-init`) |

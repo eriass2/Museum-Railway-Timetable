@@ -69,6 +69,27 @@ services:
         wp --allow-root rewrite structure '/%postname%/' --hard;
       '
 
+  # Long-running WP-CLI sidecar — scripts use `compose exec wpcli` when up (Fas 2 P5).
+  wpcli:
+    image: wordpress:cli-php8.2
+    user: root
+    depends_on:
+      - db
+      - wordpress
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: wordpress
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./:/var/www/html/wp-content/plugins/museum-railway-timetable
+      - ./docker/ensure-sv-locale.sh:/usr/local/bin/mrt-ensure-sv-locale.sh:ro
+    working_dir: /var/www/html
+    entrypoint: ['sh', '-c']
+    command: ['sleep infinity']
+    restart: unless-stopped
+
   # PHP tooling — no Node. Do not run composer vue:* here; use the vue service.
   composer:
     image: composer:2
