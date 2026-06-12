@@ -1,17 +1,5 @@
 /**
- * Journey wizard â€” overrides on shared ui-components.
+ * Deprecated — styles moved to scoped Vue SFCs (docs/CSS_ENCAPSULATION_PLAN.md).
  *
  * @package Museum_Railway_Timetable
  */
-
-.mrt-journey-wizard .mrt-step-panel--wide {
-    width: min(100%, 54rem);
-}
-
-.mrt-journey-wizard .mrt-step-panel--search .mrt-accent-btn--primary {
-    min-width: 12rem;
-    padding: 0.85rem 2rem;
-    font-size: 1.05rem;
-    letter-spacing: 0.04em;
-}
-

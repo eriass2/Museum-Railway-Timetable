@@ -61,6 +61,50 @@ function mrt_validate_css_files( array &$errors, int &$checks ): void {
 			echo "  ✅ $legacy_file (no .mrt-* rules)\n";
 		}
 	}
+
+	mrt_validate_css_no_component_rules( $errors, $checks, 'Vue app CSS stubs (Phase 3)', array(
+		'frontend/vue/src/styles/month-calendar.css',
+		'frontend/vue/src/styles/timetable-index.css',
+		'frontend/vue/src/styles/timetable-overview.css',
+		'frontend/vue/src/styles/traffic-notices.css',
+		'frontend/vue/src/styles/app-shell.css',
+	) );
+
+	$journey_wizard_dir = 'frontend/vue/src/styles/journey-wizard';
+	if ( is_dir( $journey_wizard_dir ) ) {
+		$journey_files = glob( $journey_wizard_dir . '/*.css' );
+		if ( is_array( $journey_files ) ) {
+			mrt_validate_css_no_component_rules( $errors, $checks, 'journey-wizard CSS modules (deprecated)', $journey_files );
+		}
+	}
+}
+
+/**
+ * @param array<int, string> $errors
+ * @param array<int, string> $files
+ */
+function mrt_validate_css_no_component_rules( array &$errors, int &$checks, string $label, array $files ): void {
+	echo "\n  {$label}…\n";
+	foreach ( $files as $css_file ) {
+		++$checks;
+		if ( ! file_exists( $css_file ) ) {
+			$errors[] = "CSS encapsulation check file missing: $css_file";
+			echo "  ❌ $css_file missing\n";
+			continue;
+		}
+		$css = file_get_contents( $css_file );
+		if ( ! is_string( $css ) ) {
+			$errors[] = "Cannot read CSS encapsulation file: $css_file";
+			echo "  ❌ Unreadable: $css_file\n";
+			continue;
+		}
+		if ( preg_match( '/\.mrt-[a-z0-9_-]+\s*[{,]/i', $css ) === 1 ) {
+			$errors[] = "CSS encapsulation: move .mrt-* rules to scoped Vue SFC: $css_file";
+			echo "  ❌ $css_file contains .mrt-* class rules\n";
+		} else {
+			echo "  ✅ $css_file (no .mrt-* rules)\n";
+		}
+	}
 }
 
 /**

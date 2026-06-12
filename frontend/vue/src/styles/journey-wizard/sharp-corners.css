@@ -1,16 +1,5 @@
 /**
- * Sharp corners — journey wizard (Lennakatten formspråk).
+ * Deprecated � styles moved to scoped Vue SFCs (docs/CSS_ENCAPSULATION_PLAN.md).
  *
- * @see docs/design/BRAND_UI.md
  * @package Museum_Railway_Timetable
  */
-
-.mrt-journey-wizard .mrt-ui-alert {
-    border-radius: 0;
-}
-
-.mrt-journey-wizard .mrt-surface--box {
-    border-radius: 0;
-}
-
-/* Timeline nodes stay circular (station dots), not sharp-corner boxes. */

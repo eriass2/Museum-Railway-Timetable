@@ -9,9 +9,26 @@ const vueRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(vueRoot, '../../assets/dist/vue');
 const manifestPath = join(distDir, '.vite/manifest.json');
 
-function fail(message) {
-  console.error(`vue verify-build: ${message}`);
-  process.exit(1);
+function readDistText(relPath) {
+  const path = join(distDir, String(relPath).replace(/^\//, ''));
+  if (!existsSync(path)) {
+    fail(`missing dist file ${relPath}`);
+  }
+  return readFileSync(path, 'utf8');
+}
+
+function assertNoLegacyComponentRules(cssText, label) {
+  const forbidden = [
+    /\.mrt-trip-card\s*\{/,
+    /\.mrt-route-layout__stations\s*\{/,
+    /\.mrt-segmented\s*\{/,
+    /\.mrt-detail-panel\s*\{/,
+  ];
+  for (const pattern of forbidden) {
+    if (pattern.test(cssText)) {
+      fail(`${label} still contains legacy component rule ${pattern}`);
+    }
+  }
 }
 
 if (!existsSync(manifestPath)) {
@@ -81,6 +98,18 @@ if (wizardChunkKey) {
   const wizardCode = readFileSync(wizardPath, 'utf8');
   if (!wizardCode.includes('JourneyWizardApp') && !wizardCode.includes('mrt-journey-wizard')) {
     fail('wizard chunk missing expected wizard markers');
+  }
+  if (Array.isArray(entry.css) && entry.css.length > 0) {
+    const mainCss = readDistText(entry.css[0]);
+    assertNoLegacyComponentRules(mainCss, 'main entry CSS');
+  }
+  if (Array.isArray(wizardChunk.css) && wizardChunk.css.length > 0) {
+    const wizardCss = readDistText(wizardChunk.css[0]);
+    if (!wizardCss.includes('mrt-journey-wizard')) {
+      fail('wizard chunk CSS missing .mrt-journey-wizard styles');
+    }
+  } else {
+    fail('wizard chunk has no CSS output — scoped styles may be missing');
   }
 }
 

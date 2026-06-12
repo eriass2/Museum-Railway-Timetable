@@ -1,56 +1,5 @@
 /**
- * Journey wizard â€” desktop hero full width and optional background image (J10).
- *
- * Background image on non-embedded wizard: MrtPublicAppShell backdrop (app-shell.css).
- * Embedded wizard keeps background on __hero (below).
+ * Deprecated — styles moved to scoped Vue SFCs (docs/CSS_ENCAPSULATION_PLAN.md).
  *
  * @package Museum_Railway_Timetable
  */
-
-.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg {
-    position: relative;
-    background-color: var(--mrt-wizard-green-dark);
-    background-image: var(--mrt-wizard-hero-bg-image);
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-}
-
-.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: color-mix(in srgb, var(--mrt-wizard-green-dark) 30%, transparent);
-    pointer-events: none;
-}
-
-.mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero--has-bg {
-    background: transparent;
-}
-
-.mrt-journey-wizard__hero--has-bg > .mrt-journey-wizard__hero-inner {
-    position: relative;
-    z-index: 1;
-}
-
-@media (min-width: 48.0625rem) {
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero-inner {
-        position: relative;
-        z-index: 2;
-        width: 100%;
-        max-width: none;
-    }
-
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__beta,
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__errors {
-        max-width: none;
-    }
-
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-step-panel,
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-step-panel--search,
-    .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-step-panel--wide {
-        width: 100%;
-        max-width: none;
-        background: transparent;
-    }
-}
