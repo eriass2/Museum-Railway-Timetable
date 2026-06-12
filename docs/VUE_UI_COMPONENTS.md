@@ -37,7 +37,7 @@ Admin wrappers (deprecated gradually): `MrtAccentButton` delegates to `MrtButton
 | `MrtTripCard` | `mrt-trip-card` | Wizard trip list (`WizardTripCard` wrapper) |
 | `MrtHeading` | `mrt-heading` | Month title, wizard route/summary/detail, price block |
 | `MrtStatusMessage` | `mrt-status-message` | Wizard empty calendar month |
-| `MrtPriceTable` | `mrt-price-block` | Wizard summary (`shared/prices.ts` + `PriceTableLabels` props) |
+| `MrtPriceTable` | `mrt-price-block` | Wizard summary (`shared/prices.ts` + `PriceTableLabels` props). Interna hjälp-SFC: `MrtPriceTableList`, `MrtPriceTableMatrix`. |
 | `MrtSegmentedControl` | `mrt-segmented` | Route trip type |
 | `MrtFieldGroup` + `MrtCombobox` | `mrt-field`, `mrt-combobox` | Station search |
 | `MrtTripSummary` | `mrt-trip-summary` | Trip cards, summary |

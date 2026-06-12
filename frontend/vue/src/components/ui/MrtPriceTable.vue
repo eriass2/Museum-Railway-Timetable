@@ -9,8 +9,9 @@ import {
 } from '../../shared/prices';
 import type { PriceCfg } from '../../shared/priceTypes';
 import MrtHeading from './MrtHeading.vue';
+import MrtPriceTableList from './MrtPriceTableList.vue';
+import MrtPriceTableMatrix from './MrtPriceTableMatrix.vue';
 import MrtStack from './MrtStack.vue';
-import MrtVisuallyHidden from './MrtVisuallyHidden.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -126,105 +127,83 @@ function dayPriceForCategory(catKey: string): string {
   </MrtStack>
   <MrtStack v-else-if="priceData" margin-top="lg" gap="md">
     <div class="mrt-price-block">
-    <MrtHeading level="h4" size="md" class="mrt-price-block__title">
-      {{ labels.title }}
-      <span v-if="selectedTypeLabel && !useSplitPriceLayout" class="mrt-price-block__title-trip">
-        — {{ selectedTypeLabel }}
-      </span>
-      <span v-if="labels.titleSuffix" class="mrt-price-block__title-suffix">
-        {{ labels.titleSuffix }}
-      </span>
-    </MrtHeading>
+      <MrtHeading level="h4" size="md" class="mrt-price-block__title">
+        {{ labels.title }}
+        <span v-if="selectedTypeLabel && !useSplitPriceLayout" class="mrt-price-block__title-trip">
+          — {{ selectedTypeLabel }}
+        </span>
+        <span v-if="labels.titleSuffix" class="mrt-price-block__title-suffix">
+          {{ labels.titleSuffix }}
+        </span>
+      </MrtHeading>
 
-    <div
-      v-if="useSplitPriceLayout"
-      class="mrt-price-columns mrt-price-columns--split"
-    >
-      <section class="mrt-price-column">
-        <MrtHeading level="h5" size="sm" class="mrt-price-column__title">
-          {{ selectedTypeLabel }}
-        </MrtHeading>
-        <dl class="mrt-price-list">
-          <div v-for="ck in categoryKeys" :key="ck" class="mrt-price-list__row">
-            <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
-            <dd class="mrt-price-list__value">{{ priceForCategory(ck, listTicketType) }}</dd>
-          </div>
-        </dl>
-      </section>
-      <section class="mrt-price-column">
-        <MrtHeading level="h5" size="sm" class="mrt-price-column__title">
-          {{ dayTicketTitle }}
-        </MrtHeading>
-        <dl class="mrt-price-list">
-          <div v-for="ck in categoryKeys" :key="`day-${ck}`" class="mrt-price-list__row">
-            <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
-            <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
-          </div>
-        </dl>
-      </section>
-    </div>
-
-    <template v-else>
-      <dl v-if="useListLayout" class="mrt-price-list">
-        <div v-for="ck in categoryKeys" :key="ck" class="mrt-price-list__row">
-          <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
-          <dd class="mrt-price-list__value">{{ priceForCategory(ck, listTicketType) }}</dd>
-        </div>
-      </dl>
-
-      <div v-else class="mrt-price-block__table-wrap">
-        <table class="mrt-table mrt-price-block__table">
-          <thead>
-            <tr>
-              <th scope="col" class="mrt-price-block__corner">
-                <MrtVisuallyHidden>{{ labels.typeColumnSr || labels.title }}</MrtVisuallyHidden>
-              </th>
-              <th v-for="ck in categoryKeys" :key="ck" scope="col">
-                {{ labels.categories[ck] || ck }}
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr
-              v-for="tk in visibleTypes"
-              :key="tk"
-              :class="{ 'mrt-price-block__row--active': tk === priceData.activeType }"
-            >
-              <th scope="row">{{ labels.tickets[tk] || tk }}</th>
-              <td
-                v-for="ck in categoryKeys"
-                :key="ck"
-                :data-label="labels.categories[ck] || ck"
-              >
-                {{ priceForCategory(ck, tk) }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-      <MrtStack v-if="dayPrices" margin-top="md">
-        <div class="mrt-price-block">
-          <MrtHeading level="h4" size="md" class="mrt-price-block__title">
+      <div
+        v-if="useSplitPriceLayout"
+        class="mrt-price-columns mrt-price-columns--split"
+      >
+        <section class="mrt-price-column">
+          <MrtHeading level="h5" size="sm" class="mrt-price-column__title">
+            {{ selectedTypeLabel }}
+          </MrtHeading>
+          <MrtPriceTableList
+            :category-keys="categoryKeys"
+            :categories="labels.categories"
+            :value-for-category="(ck) => priceForCategory(ck, listTicketType)"
+          />
+        </section>
+        <section class="mrt-price-column">
+          <MrtHeading level="h5" size="sm" class="mrt-price-column__title">
             {{ dayTicketTitle }}
           </MrtHeading>
-          <dl class="mrt-price-list">
-            <div v-for="ck in categoryKeys" :key="`day-${ck}`" class="mrt-price-list__row">
-              <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
-              <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
-            </div>
-          </dl>
-        </div>
-      </MrtStack>
-    </template>
+          <MrtPriceTableList
+            :category-keys="categoryKeys"
+            :categories="labels.categories"
+            :value-for-category="dayPriceForCategory"
+          />
+        </section>
+      </div>
 
-    <p
-      v-for="(note, index) in displayNotes"
-      :key="`note-${index}`"
-      class="mrt-price-block__note mrt-text-secondary"
-    >
-      {{ note }}
-    </p>
+      <template v-else>
+        <MrtPriceTableList
+          v-if="useListLayout"
+          :category-keys="categoryKeys"
+          :categories="labels.categories"
+          :value-for-category="(ck) => priceForCategory(ck, listTicketType)"
+        />
+
+        <MrtPriceTableMatrix
+          v-else
+          :category-keys="categoryKeys"
+          :visible-types="visibleTypes"
+          :active-type="priceData.activeType"
+          :categories="labels.categories"
+          :tickets="labels.tickets"
+          :type-column-sr="labels.typeColumnSr"
+          :title="labels.title"
+          :price-for-category="priceForCategory"
+        />
+
+        <MrtStack v-if="dayPrices" margin-top="md">
+          <div class="mrt-price-block">
+            <MrtHeading level="h4" size="md" class="mrt-price-block__title">
+              {{ dayTicketTitle }}
+            </MrtHeading>
+            <MrtPriceTableList
+              :category-keys="categoryKeys"
+              :categories="labels.categories"
+              :value-for-category="dayPriceForCategory"
+            />
+          </div>
+        </MrtStack>
+      </template>
+
+      <p
+        v-for="(note, index) in displayNotes"
+        :key="`note-${index}`"
+        class="mrt-price-block__note mrt-text-secondary"
+      >
+        {{ note }}
+      </p>
     </div>
   </MrtStack>
 </template>
@@ -276,150 +255,10 @@ function dayPriceForCategory(catKey: string): string {
   line-height: 1.25;
 }
 
-.mrt-price-list {
-  margin: 0;
-  padding: 0.65rem 0.85rem;
-  border-radius: 0;
-  background: var(--mrt-color-neutral-100, #ececec);
-}
-
-.mrt-price-list__row {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1rem;
-  padding: 0.4rem 0;
-  border-bottom: 1px solid var(--mrt-color-neutral-200, #d8d8d8);
-}
-
-.mrt-price-list__row:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
-}
-
-.mrt-price-list__row:first-child {
-  padding-top: 0;
-}
-
-.mrt-price-list__label {
-  margin: 0;
-  font-size: clamp(0.9rem, 2.5vw, 1rem);
-  font-weight: 700;
-  color: var(--mrt-color-neutral-700, #444);
-}
-
-.mrt-price-list__value {
-  margin: 0;
-  font-size: clamp(0.95rem, 2.5vw, 1.05rem);
-  font-weight: 900;
-  color: inherit;
-  text-align: right;
-  white-space: nowrap;
-}
-
-.mrt-price-block__table-wrap {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.mrt-price-block__table {
-  width: 100%;
-  min-width: 0;
-  border-collapse: collapse;
-  table-layout: fixed;
-  color: inherit;
-}
-
-.mrt-price-block__table :deep(th),
-.mrt-price-block__table :deep(td) {
-  padding: 0.5rem 0.4rem;
-  text-align: left;
-  border: 0;
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
-  line-height: 1.3;
-  vertical-align: top;
-  overflow-wrap: anywhere;
-}
-
-.mrt-price-block__corner {
-  width: 26%;
-}
-
-.mrt-price-block__table :deep(thead th:not(.mrt-price-block__corner)) {
-  font-weight: 700;
-}
-
-.mrt-price-block__table :deep(tbody tr) {
-  background: var(--mrt-color-neutral-100, #ececec);
-}
-
-.mrt-price-block__table :deep(th[scope='row']) {
-  font-weight: 900;
-}
-
-.mrt-price-block__row--active :deep(th),
-.mrt-price-block__row--active :deep(td) {
-  font-weight: 900;
-  background: color-mix(in srgb, var(--mrt-wizard-yellow) 40%, #fff);
-}
-
 .mrt-price-block__note {
   margin: 0.75rem 0 0;
   font-size: 0.9rem;
   line-height: 1.45;
   color: var(--mrt-color-neutral-600, #555);
-}
-
-@media (max-width: 32rem) {
-  .mrt-price-block__table-wrap {
-    overflow-x: visible;
-  }
-
-  .mrt-price-block__table :deep(thead) {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  .mrt-price-block__table,
-  .mrt-price-block__table :deep(tbody),
-  .mrt-price-block__table :deep(tr),
-  .mrt-price-block__table :deep(th),
-  .mrt-price-block__table :deep(td) {
-    display: block;
-    width: 100%;
-  }
-
-  .mrt-price-block__table :deep(tbody tr) {
-    margin-bottom: 0.5rem;
-    padding: 0.65rem 0.75rem;
-    border-radius: 0;
-  }
-
-  .mrt-price-block__table :deep(th[scope='row']) {
-    margin-bottom: 0.35rem;
-    padding-bottom: 0.35rem;
-    border-bottom: 1px solid var(--mrt-color-neutral-300, #ccc);
-  }
-
-  .mrt-price-block__table :deep(td) {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.75rem;
-    padding: 0.35rem 0;
-  }
-
-  .mrt-price-block__table :deep(td)::before {
-    content: attr(data-label);
-    flex: 1 1 55%;
-    font-weight: 700;
-    color: var(--mrt-color-neutral-700, #444);
-  }
 }
 </style>

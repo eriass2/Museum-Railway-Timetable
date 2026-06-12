@@ -1,6 +1,6 @@
 # Åtgärdsplan: CSS-refaktor + återanvändbara UI-komponenter
 
-**Status:** Plan — påbörjas efter [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md) (klar 2026-06-12)  
+**Status:** Klar (2026-06-12) — uppföljning: E2E + valfri varumärkesstäd  
 **Relaterat:** [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [design/BRAND_UI.md](design/BRAND_UI.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3
 
 ---
@@ -18,41 +18,45 @@ Encapsulation är **klar** — komponent-CSS ligger i Vue-chunks, inte i global 
 
 ---
 
-## Nuläge efter encapsulation
+## Nuläge (efter refaktor R0–R5)
 
 | Område | Status |
 |--------|--------|
-| Publika `Mrt*` (~35 st) | Scoped SFC, exporterade från `@/components/ui` |
-| App-chunks | Lazy; CSS colocated per app |
-| Global publik CSS | Tokens, utilities, PHP legacy, layout, tabeller |
-| Guardrails | validate + `verify-build.mjs` + layout-E2E |
+| Publika `Mrt*` (~40 st) | Scoped SFC, exporterade från `@/components/ui` |
+| Layout | `MrtWizardShell` → `MrtWizardHero`, `MrtWizardShellSurfaces`, `MrtWizardMainCard` |
+| Overview | CSS i `MrtOverview*`; shell ~60 rader tokens |
+| Admin | `admin-shell.css` **7 rader**; feature-CSS i SFC; `Mrt*` med `context="admin"` |
+| App-roots | `JourneyWizardApp.vue` utan `<style>` — wiring only |
+| Global publik CSS | Tokens, utilities, PHP legacy (`components-base`, `tables`), `public-layout` |
+| Legacy barrel | `assets/frontend/ui/` och `ui-components.css` **borttagna** (validate guardrail) |
+| Guardrails | validate + `verify-build.mjs` (admin-markers, style line budget) + layout-E2E |
 
-### Problem kvar (teknisk skuld)
+### Kvarvarande skuld (låg prioritet)
 
-| Fil | ~CSS-rader | Rotorsak |
-|-----|------------|----------|
-| `JourneyWizardApp.vue` | 415 | Shell + responsive `:deep()` i en app-root |
-| `MrtTimetableOverviewShell.vue` | 560 | Grid/branch/print-key CSS samlat i shell |
-| `admin/styles/admin-shell.css` | 712 | Hela admin-SPA globalt |
-| Global utilities | 58 klasser | Vue använder `mrt-mt-*`, `mrt-hidden` m.fl. |
-| Dubblerade mönster | — | Loading-spinner (public + admin), focus-ring på många ställen |
+| Område | Not |
+|--------|-----|
+| Global utilities | ~58 klasser kvar för PHP/demo; Vue använder `MrtStack` |
+| `WizardSummaryStep.vue` | 184 rader CSS — dokumenterat undantag (print) |
+| Nära style-budget | `MrtOverviewRailGroupGridRow`, `MrtMonthDayCell`, `WizardFeedbackWidget`, `AdminApp` (132–152 rader) |
+| Varumärke | Admin `border-radius: 3px`; legacy token-alias i `tokens.css` |
+| E2E | Full publik suite + admin smoke ej körd i denna omgång |
 
 ---
 
 ## Målbild — komponentcentrerad CSS
 
 ```
-assets/mrt-color-tokens.css          ← tokens (oförändrat)
-assets/frontend/public-layout.css    ← WP/tema (oförändrat)
-assets/frontend/utilities.css        ← krymper; PHP/demo kvar
+assets/mrt-color-tokens.css          ← tokens
+assets/frontend/public-layout.css    ← WP/tema
+assets/frontend/utilities.css        ← PHP/demo (Vue → MrtStack)
 
-frontend/vue/src/components/ui/      ← delade Mrt* (växer kontrollerat)
-frontend/vue/src/components/layout/  ← MrtPublicAppShell, ev. MrtWizardShell
-frontend/vue/src/components/overview/ ← domän, men med egen scoped CSS per komponent
-frontend/vue/src/wizard/components/  ← tunna wrappers; shell flyttas till layout/
-frontend/vue/src/admin/components/ui/ ← Admin*; använder Mrt* där möjligt
+frontend/vue/src/components/ui/      ← delade Mrt* (+ interna hjälp-SFC t.ex. MrtPriceTableMatrix)
+frontend/vue/src/components/layout/  ← MrtPublicAppShell, MrtWizardShell*
+frontend/vue/src/components/overview/ ← domän med scoped CSS per komponent
+frontend/vue/src/wizard/components/  ← tunna wrappers
+frontend/vue/src/admin/components/ui/ ← Admin*; Mrt* där möjligt
 
-apps/*.vue                           ← tunn glue (< 50 rader CSS vardera)
+apps/*.vue                           ← tunn glue (ingen stor CSS i app-root)
 ```
 
 **Regler (oförändrade från encapsulation + tillägg):**
@@ -118,7 +122,7 @@ Mål: `MrtTimetableOverviewShell.vue` **< 80 rader CSS** (tokens + layout-wrappe
 
 Varje rad = **en reviewbar PR**. Kör `npm run build`, relevant E2E, uppdatera docs.
 
-### Fas R0 — Spelregler (docs, liten PR)
+### Fas R0 — Spelregler (docs, liten PR) ✅
 
 | # | Åtgärd |
 |---|--------|
@@ -126,7 +130,7 @@ Varje rad = **en reviewbar PR**. Kör `npm run build`, relevant E2E, uppdatera d
 | R0.2 | Dokumentera **tillåtna globala lager**: tokens \| layout \| utilities (legacy) \| PHP alerts |
 | R0.3 | Checklista “ny `Mrt*`”: props, scoped CSS, tokens, Vitest, VUE_UI_COMPONENTS |
 
-**DoD:** team har gemensam regel; ingen stor kodändring.
+**DoD:** team har gemensam regel — uppfyllt via länkar i STYLE_GUIDE och VUE_UI_COMPONENTS.
 
 ---
 
@@ -217,7 +221,7 @@ flowchart LR
 
 ## Definition of done (hela refaktor-initiativet)
 
-- [ ] Inga app-root/SFC med **> 150 rader** scoped CSS (undantag dokumenterat: print block)
+- [x] Inga app-root/SFC med **> 150 rader** scoped CSS (undantag dokumenterat: `WizardSummaryStep` print block)
 - [x] `admin-shell.css` **< 200 rader** (resten i feature SFC) — **7 rader** efter R4
 - [x] Nya spacing-mönster via **`MrtStack`**, inte nya utilities (publik Vue; PHP utilities kvar)
 - [x] **`AdminLoadState` / `AdminStatusMessage` borttagna** — endast `MrtAsyncState` / `MrtAlert`
@@ -231,10 +235,12 @@ flowchart LR
 
 | Fas | Status |
 |-----|--------|
+| R0 | Klar — länkat från STYLE_GUIDE, VUE_UI_COMPONENTS, encapsulation-plan |
 | R0–R3 | Klar (commit `de3e3bd`) |
 | R4 | Klar (commit `3fb873f`) |
-| R5 | Klar — städning, brand-dok, tokens-kommentar |
-| Wizard shell split | Klar — `MrtWizardHero`, `MrtWizardShellSurfaces` |
+| R5 | Klar — städning, brand-dok, tokens-kommentar; `assets/frontend/ui/` borttagen |
+| Wizard shell split | Klar (commit `4873289`) — `MrtWizardHero`, `MrtWizardShellSurfaces` |
+| PriceTable split | Klar — `MrtPriceTableList`, `MrtPriceTableMatrix` |
 | CI style budget | Soft warning i validate + verify-build (150 rader) |
 
 ---
@@ -242,7 +248,8 @@ flowchart LR
 ## Nästa steg
 
 1. E2E: kör full publik suite + admin smoke.
-2. Adressera kvarvarande style-budget-varningar (t.ex. `AdminApp.vue`, `WizardSummaryStep` print).
+2. (Valfritt) Bryt ned SFC nära budget (`AdminApp`, `MrtMonthDayCell`, …).
+3. (Valfritt) Varumärkesstäd: admin border-radius, legacy token-alias.
 
 ---
 
