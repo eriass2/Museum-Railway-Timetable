@@ -1,0 +1,19 @@
+# PHP 8.2 tools image: PHPUnit, PCOV coverage, csv-validate (matches CI).
+FROM php:8.2-cli-bookworm
+
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends \
+		$PHPIZE_DEPS \
+		libonig-dev \
+		libxml2-dev \
+	&& docker-php-ext-install mbstring xml \
+	&& pecl install pcov \
+	&& docker-php-ext-enable pcov \
+	&& apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
+		$PHPIZE_DEPS \
+		libonig-dev \
+		libxml2-dev \
+	&& rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+ENTRYPOINT ["php"]

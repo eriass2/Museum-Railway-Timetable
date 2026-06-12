@@ -15,9 +15,9 @@ Kodtäckning är **inte** CI-gate i v1 — använd för att hitta otäckta domä
 .\scripts\coverage.ps1
 ```
 
-- Installerar PCOV i engångs-`php:8.2-cli`-container (~20 s första gången per körning).
+- Installerar PCOV via **`docker/Dockerfile.tools`** (första gången: `docker compose --profile tools build php-test`).
 - Skriver Clover till `coverage/clover.xml` (gitignored).
-- Skriver sammanfattning via `scripts/coverage-summary.php`.
+- Sammanfattning via `scripts/coverage-summary.php` **i samma container** (ingen host-PHP krävs).
 
 ---
 

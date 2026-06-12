@@ -8,12 +8,8 @@ $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
 Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 
-if (-not (Test-Path (Join-Path (Get-MrtRepoRoot) 'vendor'))) {
-    Write-Host 'vendor/ missing. Run composer install first.' -ForegroundColor Red
-    exit 1
-}
-
-Assert-MrtDockerAvailable -Message 'Docker is not running. Coverage requires Docker (php:8.2-cli + PCOV).'
+Assert-MrtDockerAvailable -Message 'Docker is not running. Coverage requires Docker (php-test + PCOV).'
+Ensure-MrtVendor
 
 New-Item -ItemType Directory -Force -Path coverage | Out-Null
 
@@ -25,5 +21,6 @@ if ($Passthrough.Count -gt 0) {
 Invoke-MrtDockerPhpUnitWithPcov -PhpUnitArgs $phpUnitArgs -ExitOnError
 
 Write-Host ''
-& php scripts/coverage-summary.php coverage/clover.xml
+Invoke-MrtDockerPhpTest -PhpArgs @('scripts/coverage-summary.php', 'coverage/clover.xml') `
+    -StreamOutput -ExitOnError
 exit $LASTEXITCODE

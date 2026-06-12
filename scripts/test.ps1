@@ -12,7 +12,7 @@ $ErrorActionPreference = 'Stop'
 Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 Initialize-MrtScriptTimings -Timings:$Timings
 
-Ensure-MrtVendor
+Ensure-MrtVendor -PreferHost:$Local
 
 Invoke-MrtWithDockerDefault -Local:$Local `
     -DockerHint 'Using Docker (php:8.2-cli). Pass -Local to run on host PHP.' `

@@ -110,6 +110,10 @@ Om datorn saknar lokal PHP/Composer: använd **`.\scripts\check.ps1`** (Windows)
 
 Vue körs i **`vue`-containern** — använd **`.\scripts\vue-check.ps1`** / **`bash scripts/vue-check.sh`**, inte `docker compose … run composer vue:check` (`composer`-imaget saknar npm).
 
+**Docker tools-volymer (Fas 2):** `composer` och `php-test` delar named volume `mrt_vendor`; `vue` använder `mrt_vue_node_modules`. Det minskar bind-mount-I/O på Windows. Volymerna är **separata** från eventuell host-`vendor/` — gate-skript installerar via Docker om volymen saknar `vendor/autoload.php`. Rensa vid behov: `docker volume rm $(docker volume ls -q --filter name=mrt_vendor)` (projektnamn varierar).
+
+**WSL2 (Windows):** Klona och kör Docker från Linux-filsystemet (`\\wsl$\Ubuntu\home\…`) i stället för `C:\Projects\…` — bind mounts blir då 2–10× snabbare. Se [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) Fas 2 P2.
+
 Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
 
 ### Live test / staging (test3)

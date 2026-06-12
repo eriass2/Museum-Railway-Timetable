@@ -30,6 +30,7 @@ Bash scripts source the shell lib:
 Prefer **`.\scripts\*.ps1`** over raw `docker compose` — wrappers apply:
 
 - `--no-deps` on tools services (`composer`, `php-test`, `vue`)
+- Named volumes `mrt_vendor` and `mrt_vue_node_modules` (less bind-mount I/O on Windows)
 - Conditional `npm ci` when `node_modules` matches `package-lock.json` (logs *Skipped npm ci* / *Running npm ci*)
 - `-Timings` or `MRT_SCRIPT_TIMINGS=1` for per-step duration on gate scripts
 - Single container for `check.ps1` (`composer check:all`) and `lint.ps1` (`composer lint`)

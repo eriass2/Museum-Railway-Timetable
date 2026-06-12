@@ -1,7 +1,7 @@
 # Docker- och skriptlager — plan
 
 Plan för utvecklarverktyg under `scripts/` och `docker-compose.yml`.  
-**Status:** Fas 0 genomförd (2026-06-11). Fas 1–3 är framtida förbättringar.
+**Status:** Fas 0–1 genomförda. Fas 2 pågår (P1–P4 klara 2026-06-12).
 
 **Relaterat:** [scripts/README.md](../scripts/README.md), [DEVELOPER.md](DEVELOPER.md), `.cursor/rules/testing-commands.mdc`.
 
@@ -72,15 +72,15 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 
 **Mål:** Mindre I/O-straff (Windows) och färre cold starts.
 
-| ID | Uppgift | Insats | Förväntad vinst |
-|----|---------|--------|-----------------|
-| P1 | Named volumes för `vendor/` och `frontend/vue/node_modules` | Medel | Snabbare upprepade check/test/vue på Windows |
-| P2 | Dokumentera WSL2: repo under `\\wsl$\…` inte `C:\Projects\…` | Liten | 2–10× fil-I/O i Docker |
-| P3 | Eget `docker/Dockerfile.tools` — PHP 8.2 + mbstring, xml, **PCOV** | Medel | `coverage.ps1` utan `apt-get`/`pecl` varje gång |
-| P4 | Kör `coverage-summary.php` i samma container som PHPUnit | Liten | Coverage utan host-PHP |
-| P5 | WP-CLI via `docker compose exec` (sidecar eller CLI i WP-image) | Stor | Färre `run wordpress-init`-containers |
-| P6 | Long-running **tools-shell** (`compose exec` istället för `run`) | Medel | ~2–5 s sparat per gate på Windows |
-| P7 | `compose watch` för plugin-bind mount | Medel | Snabbare iterering mot WordPress |
+| ID | Uppgift | Insats | Förväntad vinst | Status |
+|----|---------|--------|-----------------|--------|
+| P1 | Named volumes för `vendor/` och `frontend/vue/node_modules` | Medel | Snabbare upprepade check/test/vue på Windows | **Klar** (2026-06-12) |
+| P2 | Dokumentera WSL2: repo under `\\wsl$\…` inte `C:\Projects\…` | Liten | 2–10× fil-I/O i Docker | **Klar** (2026-06-12) |
+| P3 | Eget `docker/Dockerfile.tools` — PHP 8.2 + mbstring, xml, **PCOV** | Medel | `coverage.ps1` utan `apt-get`/`pecl` varje gång | **Klar** (2026-06-12) |
+| P4 | Kör `coverage-summary.php` i samma container som PHPUnit | Liten | Coverage utan host-PHP | **Klar** (2026-06-12) |
+| P5 | WP-CLI via `docker compose exec` (sidecar eller CLI i WP-image) | Stor | Färre `run wordpress-init`-containers | |
+| P6 | Long-running **tools-shell** (`compose exec` istället för `run`) | Medel | ~2–5 s sparat per gate på Windows | |
+| P7 | `compose watch` för plugin-bind mount | Medel | Snabbare iterering mot WordPress | |
 
 **Exit-kriterium:** `check.ps1 -Vue` och `docker-dev-reset.ps1` märkbart snabbare vid upprepade körningar samma dag.
 
@@ -113,12 +113,11 @@ Sist   → S1/S2 (CLI-konsolidering) när smärta från dubbel kodbas märks
 
 ---
 
-## Kända begränsningar (medvetet ej fixat i Fas 0)
+## Kända begränsningar (medvetet ej fixat)
 
 | Område | Nuvarande beteende |
 |--------|-------------------|
-| `coverage.ps1` | Bygger PCOV vid varje körning |
-| Bind mount | Hela repot mountas — långsamt på Windows utan WSL2-volym |
+| Bind mount | Plugin-kod mountas fortfarande från host (WordPress + tools) — WSL2-volym eller P7 `watch` hjälper |
 | Docs i root README | Kan fortfarande nämna `docker compose up -d --build` som snabbstart |
 
 ---
@@ -131,3 +130,4 @@ Sist   → S1/S2 (CLI-konsolidering) när smärta från dubbel kodbas märks
 | 2026-06-12 | Fas 1 D1–D2: docs → skript, `docker-dev-reset.sh --build` / `--skip-compose` |
 | 2026-06-12 | Fas 1 D3–D4: `-Timings` / `MRT_SCRIPT_TIMINGS=1`, npm ci + vendor-logg |
 | 2026-06-12 | Fas 1 D5–D7: csv-package via tools, host npm ci, smoke-URL:er via WP-CLI |
+| 2026-06-12 | Fas 2 P1–P4: named volumes, Dockerfile.tools + PCOV, coverage i Docker, WSL2-docs |

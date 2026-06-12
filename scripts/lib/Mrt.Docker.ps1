@@ -308,7 +308,33 @@ function Invoke-MrtWithDockerDefault {
     exit $LASTEXITCODE
 }
 
+function Test-MrtDockerVendorReady {
+    Invoke-MrtDockerPhpTest -PhpArgs @(
+        '-r',
+        'exit(is_file("vendor/autoload.php") ? 0 : 1);'
+    )
+    return ($LASTEXITCODE -eq 0)
+}
+
 function Ensure-MrtVendor {
+    param(
+        [switch] $PreferHost
+    )
+
+    if (-not $PreferHost -and (Test-MrtDockerAvailable)) {
+        if (Test-MrtDockerVendorReady) {
+            Write-Host 'Using existing vendor/ (Docker volume).' -ForegroundColor DarkGray
+            return
+        }
+
+        Write-Host 'vendor/ missing in Docker tools volume.' -ForegroundColor Yellow
+        Write-Host 'Installing dependencies via Docker...'
+        Invoke-MrtTimedStep -Title 'composer install (Docker)' -SkipStepHeader -Action {
+            Invoke-MrtDockerComposer -ComposerArgs @('install', '--no-interaction') -ExitOnError
+        }
+        return
+    }
+
     $vendorPath = Join-Path (Get-MrtRepoRoot) 'vendor'
     if (Test-Path $vendorPath) {
         Write-Host 'Using existing vendor/.' -ForegroundColor DarkGray
@@ -507,7 +533,7 @@ function Invoke-MrtDockerPhpUnit {
         [switch] $ExitOnError
     )
 
-    Write-Host 'Running PHPUnit in Docker (php:8.2-cli)...' -ForegroundColor Cyan
+    Write-Host 'Running PHPUnit in Docker (php-test)...' -ForegroundColor Cyan
     $runArgs = @('vendor/bin/phpunit')
     if ($PhpUnitArgs.Count -gt 0) {
         $runArgs += $PhpUnitArgs
@@ -533,18 +559,13 @@ function Invoke-MrtDockerPhpUnitWithPcov {
         [switch] $ExitOnError
     )
 
-    Write-Host 'Running PHPUnit with PCOV in Docker...' -ForegroundColor Cyan
-    $shellCmd = @'
-apt-get update -qq && apt-get install -y -qq $PHPIZE_DEPS >/dev/null &&
-pecl install pcov >/dev/null && docker-php-ext-enable pcov >/dev/null &&
-vendor/bin/phpunit
-'@ -replace "`r`n", ' '
-
-    $composeArgs = @(
-        '--profile', 'tools', 'run', '--rm', '--no-deps',
-        '--entrypoint', 'sh', 'php-test', '-c', "$shellCmd $($PhpUnitArgs -join ' ')"
-    )
-    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -StreamOutput -ExitOnError:$ExitOnError
+    Write-Host 'Running PHPUnit with PCOV in Docker (php-test)...' -ForegroundColor Cyan
+    $runArgs = @('vendor/bin/phpunit')
+    if ($PhpUnitArgs.Count -gt 0) {
+        $runArgs += $PhpUnitArgs
+    }
+    Invoke-MrtDockerToolsService -Service 'php-test' -RunArgs $runArgs `
+        -ExitOnError:$ExitOnError -StreamOutput
 }
 
 function Invoke-MrtDockerVue {
