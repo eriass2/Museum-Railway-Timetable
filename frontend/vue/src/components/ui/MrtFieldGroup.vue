@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import MrtVisuallyHidden from './MrtVisuallyHidden.vue';
+
 defineProps<{
   label: string;
   inputId: string;
@@ -8,11 +10,10 @@ defineProps<{
 
 <template>
   <div class="mrt-field">
-    <label
-      class="mrt-field__label"
-      :class="{ 'mrt-sr-only': hideLabel }"
-      :for="inputId"
-    >{{ label }}</label>
+    <MrtVisuallyHidden v-if="hideLabel">
+      <label class="mrt-field__label" :for="inputId">{{ label }}</label>
+    </MrtVisuallyHidden>
+    <label v-else class="mrt-field__label" :for="inputId">{{ label }}</label>
     <slot />
   </div>
 </template>

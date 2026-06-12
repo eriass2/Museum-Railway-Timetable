@@ -31,3 +31,39 @@ const suffix = computed(() => formatOverviewTimeSuffix(parts.value));
     ><span v-if="suffix" class="mrt-ov-time__suffix">{{ suffix }}</span>
   </span>
 </template>
+
+<style scoped>
+@import './overviewStatus.css';
+
+.mrt-ov-time {
+  display: inline-flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  max-width: 100%;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.mrt-ov-time__ca,
+.mrt-ov-time__suffix {
+  flex: 0 0 auto;
+  font-size: var(--mrt-ov-footnote-size, 0.5rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.mrt-ov-time__ca {
+  margin-right: 0.12em;
+}
+
+.mrt-ov-time__suffix {
+  margin-left: 0.12em;
+}
+
+.mrt-ov-time__value {
+  flex: 0 1 auto;
+  font-size: 1em;
+  font-weight: inherit;
+}
+</style>

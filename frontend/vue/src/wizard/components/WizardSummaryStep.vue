@@ -174,6 +174,10 @@ function onBack(): void {
 }
 
 @media (max-width: 48rem) {
+  .mrt-summary-list--round-trip {
+    grid-template-columns: 1fr;
+  }
+
   :deep(.mrt-price-list) {
     padding: 0;
     border-radius: 0;

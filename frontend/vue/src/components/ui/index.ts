@@ -3,6 +3,8 @@
  *
  * @see docs/VUE_UI_COMPONENTS.md
  */
+export { default as MrtStack } from './MrtStack.vue';
+export { default as MrtVisuallyHidden } from './MrtVisuallyHidden.vue';
 export { default as MrtAlert } from './MrtAlert.vue';
 export { default as MrtAsyncState } from './MrtAsyncState.vue';
 export { default as MrtButton } from './MrtButton.vue';

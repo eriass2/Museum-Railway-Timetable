@@ -6,6 +6,7 @@ import MrtCalendarGrid from '../components/ui/MrtCalendarGrid.vue';
 import MrtCalendarNav from '../components/ui/MrtCalendarNav.vue';
 import MrtHeading from '../components/ui/MrtHeading.vue';
 import MrtHtmlPanel from '../components/ui/MrtHtmlPanel.vue';
+import MrtStack from '../components/ui/MrtStack.vue';
 import MrtLegend from '../components/ui/MrtLegend.vue';
 import MrtMonthDayCell from '../components/ui/MrtMonthDayCell.vue';
 import type { MonthVueConfig } from '../config/types';
@@ -136,8 +137,11 @@ async function onMonthShift(delta: number): Promise<void> {
 
 <template>
   <MrtPublicAppShell>
-  <div
-    class="mrt-month mrt-my-1"
+  <MrtStack
+    as="div"
+    class="mrt-month"
+    margin-top="md"
+    margin-bottom="md"
     role="region"
     :aria-label="monthAriaLabel"
     :data-train-type="trainType"
@@ -157,9 +161,11 @@ async function onMonthShift(delta: number): Promise<void> {
       {{ monthTitle }}
     </MrtHeading>
 
-    <MrtAlert v-if="monthError" variant="error" live="assertive" class="mrt-mt-sm">
-      {{ monthError }}
-    </MrtAlert>
+    <MrtStack v-if="monthError" margin-top="sm">
+      <MrtAlert variant="error" live="assertive">
+        {{ monthError }}
+      </MrtAlert>
+    </MrtStack>
 
     <div
       class="mrt-month__grid-wrap"
@@ -191,9 +197,9 @@ async function onMonthShift(delta: number): Promise<void> {
       </MrtCalendarGrid>
     </div>
 
-    <div v-if="showLegend" class="mrt-mt-sm">
+    <MrtStack v-if="showLegend" margin-top="sm">
       <MrtLegend :items="legendItems" :hints="legendHints" />
-    </div>
+    </MrtStack>
 
     <MrtHtmlPanel
       ref="panelRef"
@@ -210,7 +216,7 @@ async function onMonthShift(delta: number): Promise<void> {
         :labels="overviewLabels"
       />
     </MrtHtmlPanel>
-  </div>
+  </MrtStack>
   </MrtPublicAppShell>
 </template>
 

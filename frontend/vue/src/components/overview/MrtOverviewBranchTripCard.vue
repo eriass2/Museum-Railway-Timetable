@@ -64,3 +64,73 @@ defineProps<{
     </dl>
   </li>
 </template>
+
+<style scoped>
+@import './overviewStatus.css';
+
+.mrt-ov-branch-card {
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--mrt-border-default, #ccc);
+  border-radius: var(--mrt-radius-sm, 4px);
+  background: #fff;
+}
+
+.mrt-ov-branch-card + .mrt-ov-branch-card {
+  margin-top: 0.65rem;
+}
+
+.mrt-ov-branch-card--cancelled {
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+  opacity: 0.95;
+}
+
+.mrt-ov-branch-card__trip {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.mrt-ov-branch-card__times {
+  margin: 0;
+}
+
+.mrt-ov-branch-card__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.35rem 0;
+  border-top: 1px solid var(--mrt-border-default, #e8e8e8);
+}
+
+.mrt-ov-branch-card__row:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+.mrt-ov-branch-card__row dt {
+  margin: 0;
+  flex: 1 1 55%;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--mrt-color-neutral-700, #404040);
+}
+
+.mrt-ov-branch-card__row dd {
+  margin: 0;
+  flex: 0 0 auto;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: right;
+}
+
+.mrt-ov-branch-trip-icon {
+  display: block;
+  margin: 0 auto;
+}
+
+.mrt-ov-branch-train {
+  display: block;
+  font-size: 0.85rem;
+}
+</style>

@@ -1,7 +1,7 @@
 # Plan: CSS inkapsling (Vue, Angular-liknande)
 
-**Status:** Fas 0–3 klara; Fas 4 (guardrails) klara 2026-06-12  
-**Relaterat:** [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [frontend/vue/src/styles/journey-wizard/README.md](../frontend/vue/src/styles/journey-wizard/README.md)
+**Status:** Klart 2026-06-12. Uppföljning: [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md) (komponent-split, `MrtStack`, admin).  
+**Relaterat:** [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md)
 
 ---
 
@@ -276,7 +276,7 @@ Samma mönster för:
 - [x] Wizard: inga steg-specifika regler kvar i `journey-wizard/*.css` (mappen borttagen; styles i SFC)
 - [x] Fas 3: `month-calendar`, `timetable-index`, `traffic-notices`, `app-shell`, `timetable-overview` → scoped SFC
 - [x] Fas 4: validate guardrails + Playwright layout-specs (`wizard-route-layout`, `app-chunk-layout`)
-- [ ] E2E wizard + manuell smoke på localhost OK (kör `npm run e2e` i `frontend/vue/`)
+- [x] E2E wizard + publik smoke OK (`npm run e2e` — wizard, layout, mount, a11y, WP shortcodes; 41/41 2026-06-12)
 - [x] STYLE_GUIDE + VUE_UI_COMPONENTS uppdaterade
 
 ---
@@ -286,4 +286,5 @@ Samma mönster för:
 1. ~~Godkänn plan (denna fil).~~  
 2. ~~Fas 0–4 (legacy ui, wizard shell, övriga appar, guardrails).~~  
 3. ~~Ta bort `ui-components.css` och flytta primitives till SFC.~~  
-4. Ev. full E2E + localhost smoke
+4. ~~Ev. full E2E + localhost smoke~~ (publik/wizard OK; admin WP-specs kan flaka isolerat)  
+5. **Nästa initiativ:** [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md)

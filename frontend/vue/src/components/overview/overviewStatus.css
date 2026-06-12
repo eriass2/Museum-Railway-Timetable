@@ -1,0 +1,48 @@
+.mrt-ov-deviation-mark {
+  margin-left: 0.15rem;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: help;
+}
+
+.mrt-ov-deviation-note {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: var(--mrt-ov-text-size, 0.5rem);
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--mrt-color-warning-800, #7a4f01);
+}
+
+.mrt-ov-cancelled-badge {
+  display: block;
+  margin-top: 0.2rem;
+  font-size: var(--mrt-ov-text-size, 0.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--mrt-text-error, #b32d2e);
+}
+
+.mrt-ov-deviation-note--cancelled-detail {
+  color: var(--mrt-text-error, #b32d2e);
+}
+
+.mrt-ov-col-head--cancelled {
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+}
+
+.mrt-ov-icon--cancelled {
+  opacity: 0.45;
+  filter: grayscale(1);
+}
+
+.mrt-ov-time-cell--cancelled {
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+}
+
+.mrt-ov-time--cancelled {
+  text-decoration: line-through;
+  color: var(--mrt-color-neutral-600, #666);
+}

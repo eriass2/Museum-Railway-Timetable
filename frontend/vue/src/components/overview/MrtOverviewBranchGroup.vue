@@ -68,3 +68,89 @@ const { busIconUrl, departuresAria, trainLabel, tripCancelled, tripNoticeDetail,
     </ol>
   </section>
 </template>
+
+<style scoped>
+@import './overviewStatus.css';
+
+.mrt-ov-group {
+  margin-bottom: var(--mrt-spacing-xl, 2rem);
+  border: 1px solid var(--mrt-border-default, #d8d8d8);
+  box-shadow: var(--mrt-shadow-md, 0 2px 10px rgba(0, 0, 0, 0.06));
+}
+
+.mrt-ov-route-header {
+  padding: 0.85rem var(--mrt-spacing-md, 1rem);
+  background: var(--mrt-ov-header-bg);
+  color: var(--mrt-ov-header-fg);
+}
+
+.mrt-ov-route-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.mrt-ov-route-arrow {
+  margin: 0 0.35rem;
+}
+
+.mrt-ov-route-ends,
+.mrt-ov-branch-note {
+  margin: 0;
+  font-size: 0.9rem;
+  opacity: 0.95;
+}
+
+.mrt-ov-branch-note {
+  font-weight: 600;
+}
+
+.mrt-ov-branch-scroll {
+  overflow-x: visible;
+  padding: 0 var(--mrt-spacing-md, 1rem) var(--mrt-spacing-md, 1rem);
+}
+
+.mrt-ov-branch-table th,
+.mrt-ov-branch-table td {
+  border: 1px solid var(--mrt-border-default, #ccc);
+  padding: 0.45rem 0.65rem;
+  text-align: left;
+}
+
+.mrt-ov-branch-table thead th {
+  background: var(--mrt-ov-highlight-strong);
+  font-weight: 700;
+  white-space: normal;
+}
+
+.mrt-ov-branch-cards {
+  display: none;
+  margin: 0;
+  padding: 0 var(--mrt-spacing-md, 1rem) var(--mrt-spacing-md, 1rem);
+  list-style: none;
+}
+
+@media (max-width: 40rem) {
+  .mrt-ov-route-header {
+    padding-inline: 0.75rem;
+  }
+
+  .mrt-ov-route-title {
+    font-size: 1.05rem;
+  }
+
+  .mrt-ov-route-ends,
+  .mrt-ov-branch-note {
+    font-size: 0.85rem;
+  }
+
+  .mrt-ov-branch-scroll {
+    display: none;
+  }
+
+  .mrt-ov-branch-cards {
+    display: block;
+  }
+}
+</style>

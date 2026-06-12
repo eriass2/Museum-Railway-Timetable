@@ -61,4 +61,16 @@
     font-size: 1rem;
   }
 }
+
+@media (max-width: 48rem) {
+  .mrt-detail-panel {
+    padding: 0.85rem 0.5rem 0.75rem;
+    overflow-x: hidden;
+  }
+
+  :deep(.mrt-detail-segment__meta .mrt-vehicle-row) {
+    justify-content: flex-start;
+    width: 100%;
+  }
+}
 </style>

@@ -11,7 +11,7 @@ defineProps<{
 </script>
 
 <template>
-  <div class="mrt-detail-segment mrt-mb-sm">
+  <div class="mrt-detail-segment">
     <MrtHeading v-if="title" level="h4" size="md" class="mrt-detail-segment__title">
       {{ title }}
     </MrtHeading>
@@ -33,6 +33,10 @@ defineProps<{
 </template>
 
 <style scoped>
+.mrt-detail-segment {
+  margin-bottom: var(--mrt-spacing-sm);
+}
+
 .mrt-detail-segment__notice {
   margin: 0.2rem 0 0.4rem;
   color: #151515;

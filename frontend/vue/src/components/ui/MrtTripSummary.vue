@@ -67,4 +67,16 @@ defineProps<{
 .mrt-trip-summary__time--cancelled {
   text-decoration: line-through;
 }
+
+@media (max-width: 48rem) {
+  .mrt-trip-summary,
+  .mrt-trip-summary__route {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .mrt-trip-summary__route {
+    overflow-wrap: anywhere;
+  }
+}
 </style>

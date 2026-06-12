@@ -64,4 +64,10 @@ withDefaults(
   line-height: 1.08;
   font-weight: 700;
 }
+
+@media (max-width: 48rem) {
+  .mrt-heading--surface-title {
+    font-size: 1.8rem;
+  }
+}
 </style>

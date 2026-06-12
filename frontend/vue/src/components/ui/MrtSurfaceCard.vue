@@ -42,4 +42,13 @@ withDefaults(
   border: 1px solid var(--mrt-box-border, var(--mrt-border-default));
   border-radius: var(--mrt-radius-sm, 0);
 }
+
+@media (max-width: 48rem) {
+  .mrt-surface:not(.mrt-surface--flush) {
+    padding: 0.85rem 0.75rem;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
 </style>

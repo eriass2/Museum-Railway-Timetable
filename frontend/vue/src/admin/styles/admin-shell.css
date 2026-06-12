@@ -126,40 +126,6 @@
   vertical-align: middle;
 }
 
-.mrt-admin-async__loading {
-  text-align: center;
-  padding: 24px 16px;
-  color: #50575e;
-  font-style: normal;
-}
-
-.mrt-admin-async__loading::before {
-  content: '';
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  margin-right: 8px;
-  border: 2px solid currentColor;
-  border-right-color: transparent;
-  border-radius: 50%;
-  vertical-align: -0.15em;
-  animation: mrt-admin-spin 0.75s linear infinite;
-}
-
-@keyframes mrt-admin-spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mrt-admin-async__loading::before {
-    animation: none;
-    border-right-color: currentColor;
-    opacity: 0.65;
-  }
-}
-
 .mrt-admin-async__error p {
   margin: 0 0 8px;
 }

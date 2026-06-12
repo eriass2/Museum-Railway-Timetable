@@ -50,3 +50,21 @@ defineProps<{
     </td>
   </tr>
 </template>
+
+<style scoped>
+@import './overviewStatus.css';
+
+.mrt-ov-branch-row--cancelled {
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+}
+
+.mrt-ov-branch-train {
+  display: block;
+  font-size: 0.85rem;
+}
+
+.mrt-ov-branch-trip-icon {
+  display: block;
+  margin: 0 auto;
+}
+</style>

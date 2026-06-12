@@ -12,7 +12,7 @@ test.describe('Journey wizard route step layout', () => {
   });
 
   test('main card uses green shell with white inner route form', async ({ page }) => {
-    const mainCard = page.locator('.mrt-journey-wizard__main-card').first();
+    const mainCard = page.locator('.mrt-wizard-main-card').first();
     await expect(mainCard).toBeVisible();
 
     const mainCardBg = await mainCard.evaluate((el) => getComputedStyle(el).backgroundColor);

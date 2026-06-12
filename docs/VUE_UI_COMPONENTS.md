@@ -48,8 +48,10 @@ Admin wrappers (deprecated gradually): `AdminLoadState` → `MrtAsyncState conte
 | `MrtRouteLayout` | `mrt-route-layout` | Route search form layout |
 | `MrtSelectedTrip` | `mrt-selected-trip` | Return step outbound recap |
 | `MrtTripList` | `mrt-trip-list` | Outbound/return connection list |
+| `MrtStack` | `mrt-stack` | Vertical spacing (`gap`, `marginTop`, `marginBottom`) |
+| `MrtVisuallyHidden` | `mrt-visually-hidden` | Screen-reader-only labels |
 
-Wizard shell CSS: scoped in `JourneyWizardApp.vue` and `frontend/vue/src/wizard/components/*`. Visuell wizard-referens: [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
+Wizard shell CSS: scoped in `MrtWizardShell.vue`, `MrtWizardMainCard.vue`, and `frontend/vue/src/wizard/components/*`. Visuell wizard-referens: [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
 
 ## Alerts
 
@@ -66,9 +68,9 @@ Defined in `assets/mrt-color-tokens.css` (including `--mrt-cal-traffic-*` for ca
 
 **Shared:** `--mrt-color-green-700`, `--mrt-color-accent-500/700`, `--mrt-color-on-dark`, `--mrt-color-neutral-*`, `--mrt-font-lg/xl`.
 
-**Wizard shell:** `--mrt-wizard-green-dark`, `--mrt-wizard-surface`, `--mrt-wizard-text`, `--mrt-wizard-yellow`, `--mrt-wizard-focus`.
+**Wizard shell:** `--mrt-wizard-green-dark`, `--mrt-wizard-surface`, `--mrt-wizard-text`, `--mrt-wizard-yellow`, `--mrt-wizard-focus` (set in `MrtWizardShell.vue`).
 
-**Overview (`.mrt-ov-*`):** scoped in `MrtTimetableOverviewShell.vue` — `--mrt-ov-green`, `--mrt-ov-highlight`, `--mrt-ov-transfer`, `--mrt-ov-stripe`. Legacy aliases in `assets/frontend/tokens.css`.
+**Overview (`.mrt-ov-*`):** type tokens in `MrtTimetableOverviewShell.vue`; layout CSS in `MrtOverview*` child components and `MrtOverviewBanner.vue`.
 
 See also [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
 
@@ -83,7 +85,7 @@ frontend/vue/src/components/
 └── admin/components/ui/        ← admin-specifikt
 ```
 
-**Global CSS kvar (medvetet):** design tokens (`assets/mrt-color-tokens.css`), legacy PHP (`.mrt-alert` i `components-base.css`), vue-shell reset (`vue-shell.css`). Komponentregler ska **inte** läggas i `assets/frontend/ui/` (mappen borttagen). Se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md).
+**Global CSS kvar (medvetet):** design tokens (`assets/mrt-color-tokens.css`), legacy PHP (`.mrt-alert` i `components-base.css`), vue-shell reset (`vue-shell.css`). Komponentregler ska **inte** läggas i `assets/frontend/ui/` (mappen borttagen). Se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md) (klar) och pågående [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md).
 
 ## Regler för nya komponenter
 

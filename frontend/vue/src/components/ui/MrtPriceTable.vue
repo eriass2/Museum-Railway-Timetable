@@ -9,6 +9,8 @@ import {
 } from '../../shared/prices';
 import type { PriceCfg } from '../../shared/priceTypes';
 import MrtHeading from './MrtHeading.vue';
+import MrtStack from './MrtStack.vue';
+import MrtVisuallyHidden from './MrtVisuallyHidden.vue';
 
 const props = withDefaults(
   defineProps<{
@@ -117,10 +119,13 @@ function dayPriceForCategory(catKey: string): string {
 </script>
 
 <template>
-  <div v-if="loading" class="mrt-price-block mrt-mt-lg" role="status">
-    {{ labels.title }}…
-  </div>
-  <div v-else-if="priceData" class="mrt-price-block mrt-mt-lg">
+  <MrtStack v-if="loading" margin-top="lg" role="status">
+    <div class="mrt-price-block">
+      {{ labels.title }}…
+    </div>
+  </MrtStack>
+  <MrtStack v-else-if="priceData" margin-top="lg" gap="md">
+    <div class="mrt-price-block">
     <MrtHeading level="h4" size="md" class="mrt-price-block__title">
       {{ labels.title }}
       <span v-if="selectedTypeLabel && !useSplitPriceLayout" class="mrt-price-block__title-trip">
@@ -172,7 +177,7 @@ function dayPriceForCategory(catKey: string): string {
           <thead>
             <tr>
               <th scope="col" class="mrt-price-block__corner">
-                <span class="mrt-sr-only">{{ labels.typeColumnSr || labels.title }}</span>
+                <MrtVisuallyHidden>{{ labels.typeColumnSr || labels.title }}</MrtVisuallyHidden>
               </th>
               <th v-for="ck in categoryKeys" :key="ck" scope="col">
                 {{ labels.categories[ck] || ck }}
@@ -198,27 +203,30 @@ function dayPriceForCategory(catKey: string): string {
         </table>
       </div>
 
-      <div v-if="dayPrices" class="mrt-price-block mrt-mt-md">
-        <MrtHeading level="h4" size="md" class="mrt-price-block__title">
-          {{ dayTicketTitle }}
-        </MrtHeading>
-        <dl class="mrt-price-list">
-          <div v-for="ck in categoryKeys" :key="`day-${ck}`" class="mrt-price-list__row">
-            <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
-            <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
-          </div>
-        </dl>
-      </div>
+      <MrtStack v-if="dayPrices" margin-top="md">
+        <div class="mrt-price-block">
+          <MrtHeading level="h4" size="md" class="mrt-price-block__title">
+            {{ dayTicketTitle }}
+          </MrtHeading>
+          <dl class="mrt-price-list">
+            <div v-for="ck in categoryKeys" :key="`day-${ck}`" class="mrt-price-list__row">
+              <dt class="mrt-price-list__label">{{ labels.categories[ck] || ck }}</dt>
+              <dd class="mrt-price-list__value">{{ dayPriceForCategory(ck) }}</dd>
+            </div>
+          </dl>
+        </div>
+      </MrtStack>
     </template>
 
     <p
       v-for="(note, index) in displayNotes"
       :key="`note-${index}`"
-      class="mrt-price-block__note mrt-text-secondary mrt-mt-sm"
+      class="mrt-price-block__note mrt-text-secondary"
     >
       {{ note }}
     </p>
-  </div>
+    </div>
+  </MrtStack>
 </template>
 
 <style scoped>
@@ -253,6 +261,12 @@ function dayPriceForCategory(catKey: string): string {
 
 .mrt-price-columns--split {
   grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 48rem) {
+  .mrt-price-columns--split {
+    grid-template-columns: 1fr;
+  }
 }
 
 .mrt-price-column__title {

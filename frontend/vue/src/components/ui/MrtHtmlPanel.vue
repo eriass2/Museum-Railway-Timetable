@@ -21,7 +21,7 @@ const wrapperTag = computed(() => (props.surface ? MrtSurfaceCard : 'div'));
   <component
     :is="wrapperTag"
     class="mrt-html-panel"
-    :class="{ 'mrt-hidden': !visible }"
+    :class="{ 'mrt-html-panel--hidden': !visible }"
     :box="surface"
     role="region"
     aria-live="polite"
@@ -38,7 +38,7 @@ const wrapperTag = computed(() => (props.surface ? MrtSurfaceCard : 'div'));
   margin-top: var(--mrt-spacing-xl, 1.5rem);
 }
 
-.mrt-html-panel.mrt-hidden {
+.mrt-html-panel.mrt-html-panel--hidden {
   display: none;
 }
 </style>

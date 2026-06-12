@@ -13,7 +13,9 @@ export function buildSampleOverviewPayload(scope = 'timetable') {
       { symbol: 'X', text: 'Stannar vid av- och påstigning när någon resenär ska på eller av.' },
       { symbol: '*', text: 'Busshållplats.' },
     ],
-    iconUrls: {},
+    iconUrls: {
+      bus: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+    },
     groups: [
       {
         kind: 'rail',
@@ -70,7 +72,9 @@ export function buildCancelledOverviewPayload(scope = 'timetable') {
       { symbol: 'Inställd', text: 'Inställd tur — avgår inte men visas i tabellen med genomstrukna tider.' },
       { symbol: '72 (Inställd)', text: 'Inställd' },
     ],
-    iconUrls: {},
+    iconUrls: {
+      bus: 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+    },
     groups: [
       {
         kind: 'rail',

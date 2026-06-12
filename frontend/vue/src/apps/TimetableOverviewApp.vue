@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted } from 'vue';
 import MrtPublicAppShell from '../components/layout/MrtPublicAppShell.vue';
+import MrtStack from '../components/ui/MrtStack.vue';
 import { overviewUiLabels } from '../shared/overviewUiLabels';
 import MrtHtmlPanel from '../components/ui/MrtHtmlPanel.vue';
 import MrtTimetableOverviewView from '../components/overview/MrtTimetableOverviewView.vue';
@@ -27,9 +28,12 @@ onMounted(() => {
 
 <template>
   <MrtPublicAppShell :constrain-content="!embedded">
-  <div
+  <MrtStack
+    as="div"
     class="mrt-vue-overview"
-    :class="{ 'mrt-my-lg': !embedded, 'mrt-vue-overview--embedded': embedded }"
+    :class="{ 'mrt-vue-overview--embedded': embedded }"
+    :margin-top="embedded ? 'none' : 'lg'"
+    :margin-bottom="embedded ? 'none' : 'lg'"
   >
     <MrtHtmlPanel
       :visible="true"
@@ -41,6 +45,6 @@ onMounted(() => {
     >
       <MrtTimetableOverviewView v-if="overview" :data="overview" :labels="overviewLabels" />
     </MrtHtmlPanel>
-  </div>
+  </MrtStack>
   </MrtPublicAppShell>
 </template>

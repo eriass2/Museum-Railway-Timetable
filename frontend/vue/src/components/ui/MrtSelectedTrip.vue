@@ -34,4 +34,13 @@ defineProps<{
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
   padding: 0.75rem 0.9rem;
 }
+
+@media (max-width: 48rem) {
+  .mrt-selected-trip__card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.85rem 0.75rem;
+  }
+}
 </style>
