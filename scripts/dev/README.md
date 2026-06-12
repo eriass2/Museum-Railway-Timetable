@@ -1,0 +1,11 @@
+# Docker dev and diagnostics
+
+| Script | Purpose |
+|--------|---------|
+| `docker-dev-reset.ps1` / `.sh` | Reset stack, import Lennakatten, dev menu |
+| `docker-smoke.ps1` | Import + HTTP smoke (no DB clear) |
+| `ci-e2e-wp.sh` | WordPress + Playwright E2E (CI) |
+| `bench-calendar.php` | Journey calendar benchmark (WP-CLI/Docker) |
+| `warm-journey-cache.php` | Pre-warm wizard PHP transients |
+
+Entry points at repo root stay **`scripts/docker-dev-reset.ps1`** etc. — thin wrappers forward here.
