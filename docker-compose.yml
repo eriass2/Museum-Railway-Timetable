@@ -91,17 +91,19 @@ services:
     restart: unless-stopped
 
   # PHP tooling — no Node. Do not run composer vue:* here; use the vue service.
+  # Long-running shell (P6): scripts use `compose exec`; start with:
+  #   docker compose --profile tools up -d composer php-test vue
   composer:
     image: composer:2
-    entrypoint:
-      - composer
     profiles:
       - tools
     working_dir: /app
     volumes:
       - ./:/app
       - mrt_vendor:/app/vendor
-    command: install
+    entrypoint: ['sh', '-c']
+    command: ['sleep infinity']
+    restart: unless-stopped
 
   # PHPUnit with PHP 8.2 — matches CI (see scripts/test.ps1).
   php-test:
@@ -114,12 +116,12 @@ services:
     volumes:
       - ./:/app
       - mrt_vendor:/app/vendor
-    entrypoint:
-      - php
+    entrypoint: ['sh', '-c']
+    command: ['sleep infinity']
+    restart: unless-stopped
 
-  # Node 22 — Vue build/check. Examples:
-  #   docker compose --profile tools run --rm --no-deps vue sh -c "<npm ci if needed> && npm run check"
-  #   docker compose --profile tools run --rm --no-deps vue sh -c "<npm ci if needed> && npm run build && npm run verify"
+  # Node 22 — Vue build/check. Example:
+  #   docker compose --profile tools exec -T vue sh -c "<npm ci if needed> && npm run check"
   vue:
     image: node:22-alpine
     profiles:
@@ -128,6 +130,9 @@ services:
     volumes:
       - ./:/app
       - mrt_vue_node_modules:/app/frontend/vue/node_modules
+    entrypoint: ['sh', '-c']
+    command: ['sleep infinity']
+    restart: unless-stopped
 
 volumes:
   db_data:

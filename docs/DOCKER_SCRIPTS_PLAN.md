@@ -1,7 +1,7 @@
 # Docker- och skriptlager — plan
 
 Plan för utvecklarverktyg under `scripts/` och `docker-compose.yml`.  
-**Status:** Fas 0–1 genomförda. Fas 2 pågår (P1–P4 klara 2026-06-12).
+**Status:** Fas 0–1 genomförda. Fas 2 pågår (P1–P6 klara 2026-06-12).
 
 **Relaterat:** [scripts/README.md](../scripts/README.md), [DEVELOPER.md](DEVELOPER.md), `.cursor/rules/testing-commands.mdc`.
 
@@ -79,7 +79,7 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 | P3 | Eget `docker/Dockerfile.tools` — PHP 8.2 + mbstring, xml, **PCOV** | Medel | `coverage.ps1` utan `apt-get`/`pecl` varje gång | **Klar** (2026-06-12) |
 | P4 | Kör `coverage-summary.php` i samma container som PHPUnit | Liten | Coverage utan host-PHP | **Klar** (2026-06-12) |
 | P5 | WP-CLI via `docker compose exec` (sidecar eller CLI i WP-image) | Stor | Färre `run wordpress-init`-containers | **Klar** (2026-06-12) |
-| P6 | Long-running **tools-shell** (`compose exec` istället för `run`) | Medel | ~2–5 s sparat per gate på Windows | |
+| P6 | Long-running **tools-shell** (`compose exec` istället för `run`) | Medel | ~2–5 s sparat per gate på Windows | **Klar** (2026-06-12) |
 | P7 | `compose watch` för plugin-bind mount | Medel | Snabbare iterering mot WordPress | |
 
 **Exit-kriterium:** `check.ps1 -Vue` och `docker-dev-reset.ps1` märkbart snabbare vid upprepade körningar samma dag.

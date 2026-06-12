@@ -184,6 +184,73 @@ function Get-MrtToolsServiceRunArgs {
     return @('--profile', 'tools', 'run', '--rm', '--no-deps', $Service)
 }
 
+function Test-MrtToolsServiceRunning {
+    param([Parameter(Mandatory = $true)] [string] $Service)
+
+    $running = Invoke-MrtDockerCompose -ComposeArgs @(
+        '--profile', 'tools', 'ps', '--status', 'running', '-q', $Service
+    ) -ReturnOutput
+    if ($null -eq $running) {
+        return $false
+    }
+    foreach ($line in @($running)) {
+        if ($line -match '\S') {
+            return $true
+        }
+    }
+    return $false
+}
+
+function Ensure-MrtToolsShell {
+    if (-not (Test-MrtDockerAvailable)) {
+        return
+    }
+
+    $services = @('composer', 'php-test', 'vue')
+    $missing = @($services | Where-Object { -not (Test-MrtToolsServiceRunning $_) })
+    if ($missing.Count -eq 0) {
+        return
+    }
+
+    Write-Host "Starting tools shell: $($missing -join ', ')..." -ForegroundColor DarkGray
+    $composeArgs = @('--profile', 'tools', 'up', '-d') + $missing
+    Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError
+}
+
+function Get-MrtToolsExecArgs {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Service,
+        [Parameter(Mandatory = $true)]
+        [string[]] $RunArgs
+    )
+
+    switch ($Service) {
+        'composer' { return @('composer') + $RunArgs }
+        'php-test' { return @('php') + $RunArgs }
+        default { return $RunArgs }
+    }
+}
+
+function Get-MrtToolsServiceRunFallbackArgs {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Service,
+        [Parameter(Mandatory = $true)]
+        [string[]] $RunArgs
+    )
+
+    $composeArgs = Get-MrtToolsServiceRunArgs -Service $Service
+    switch ($Service) {
+        'composer' { $composeArgs += @('--entrypoint', 'composer') }
+        'php-test' { $composeArgs += @('--entrypoint', 'php') }
+    }
+    if ($RunArgs.Count -gt 0) {
+        $composeArgs += $RunArgs
+    }
+    return $composeArgs
+}
+
 function Test-MrtWpCliContainerRunning {
     $running = Invoke-MrtDockerCompose -ComposeArgs @(
         'ps', '--status', 'running', '-q', 'wpcli'
@@ -302,9 +369,12 @@ function Invoke-MrtDockerToolsService {
         [switch] $ReturnOutput
     )
 
-    $composeArgs = Get-MrtToolsServiceRunArgs -Service $Service
-    if ($RunArgs.Count -gt 0) {
-        $composeArgs += $RunArgs
+    Ensure-MrtToolsShell
+    if (Test-MrtToolsServiceRunning -Service $Service) {
+        $composeArgs = @('--profile', 'tools', 'exec', '-T', $Service)
+        $composeArgs += Get-MrtToolsExecArgs -Service $Service -RunArgs $RunArgs
+    } else {
+        $composeArgs = Get-MrtToolsServiceRunFallbackArgs -Service $Service -RunArgs $RunArgs
     }
     Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError `
         -StreamOutput:$StreamOutput -ReturnOutput:$ReturnOutput
