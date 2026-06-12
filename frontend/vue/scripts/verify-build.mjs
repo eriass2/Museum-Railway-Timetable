@@ -1,7 +1,7 @@
 /**
  * Verify Vite dist output without WordPress (run after `npm run build`).
  */
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -31,8 +31,60 @@ function assertNoLegacyComponentRules(cssText, label) {
   }
 }
 
+function fail(message) {
+  console.error(`vue verify-build: ${message}`);
+  process.exit(1);
+}
+
+const STYLE_LINE_BUDGET = 150;
+const STYLE_EXCEPTIONS = new Set([
+  'wizard/components/WizardSummaryStep.vue',
+]);
+
+function warnVueStyleBudget() {
+  const srcRoot = join(vueRoot, 'src');
+  const stylePattern = /<style\b[^>]*>([\s\S]*?)<\/style>/g;
+  const warnings = [];
+
+  function walk(dir) {
+    for (const name of readdirSync(dir)) {
+      const path = join(dir, name);
+      const stat = statSync(path);
+      if (stat.isDirectory()) {
+        walk(path);
+        continue;
+      }
+      if (!name.endsWith('.vue')) {
+        continue;
+      }
+      const rel = path.slice(srcRoot.length + 1).replace(/\\/g, '/');
+      const contents = readFileSync(path, 'utf8');
+      for (const match of contents.matchAll(stylePattern)) {
+        const body = match[1].trim();
+        if (!body) {
+          continue;
+        }
+        const lines = body.split('\n').length;
+        if (lines <= STYLE_LINE_BUDGET) {
+          continue;
+        }
+        if (STYLE_EXCEPTIONS.has(rel)) {
+          console.warn(`vue verify-build: note ${rel} style ${lines} lines (documented exception)`);
+          continue;
+        }
+        warnings.push(`${rel} (${lines} lines)`);
+      }
+    }
+  }
+
+  walk(srcRoot);
+  for (const item of warnings) {
+    console.warn(`vue verify-build: WARNING style block exceeds ${STYLE_LINE_BUDGET} lines — ${item}`);
+  }
+}
+
 if (!existsSync(manifestPath)) {
-  fail(`missing manifest — run "npm run build" in frontend/vue first`);
+  fail('missing manifest — run "npm run build" in frontend/vue first');
 }
 
 const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
@@ -134,3 +186,5 @@ if (!existsSync(tripPdfPath)) {
 console.log(
   `vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB entry; ${dynamicImports.length} app chunks; admin.js ${(readFileSync(adminPath, 'utf8').length / 1024).toFixed(1)} KiB; trip-pdf.js ${(readFileSync(tripPdfPath, 'utf8').length / 1024).toFixed(1)} KiB)`,
 );
+
+warnVueStyleBudget();

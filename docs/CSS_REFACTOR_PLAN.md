@@ -222,7 +222,7 @@ flowchart LR
 - [x] Nya spacing-mönster via **`MrtStack`**, inte nya utilities (publik Vue; PHP utilities kvar)
 - [x] **`AdminLoadState` / `AdminStatusMessage` borttagna** — endast `MrtAsyncState` / `MrtAlert`
 - [x] [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) listar nya `Mrt*` (R1–R3)
-- [x] Guardrails utökade — `verify-build.mjs` admin-markers; validate legacy CSS borttagen (R5)
+- [x] Guardrails utökade — `verify-build.mjs` admin-markers + Vue style line budget (soft warning)
 - [ ] E2E: publik suite grön; admin-WP-flak fixad eller isolerad
 
 ---
@@ -232,16 +232,17 @@ flowchart LR
 | Fas | Status |
 |-----|--------|
 | R0–R3 | Klar (commit `de3e3bd`) |
-| R4 | Klar — admin encapsulation |
+| R4 | Klar (commit `3fb873f`) |
 | R5 | Klar — städning, brand-dok, tokens-kommentar |
+| Wizard shell split | Klar — `MrtWizardHero`, `MrtWizardShellSurfaces` |
+| CI style budget | Soft warning i validate + verify-build (150 rader) |
 
 ---
 
 ## Nästa steg
 
-1. E2E: kör full publik suite + admin smoke.  
-2. Ev. dela `MrtWizardShell` om scoped CSS >150 rader ska uppfyllas.  
-3. CI soft warning: max CSS-rader per `.vue`.
+1. E2E: kör full publik suite + admin smoke.
+2. Adressera kvarvarande style-budget-varningar (t.ex. `AdminApp.vue`, `WizardSummaryStep` print).
 
 ---
 

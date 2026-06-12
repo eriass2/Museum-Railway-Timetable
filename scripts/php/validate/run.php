@@ -13,6 +13,7 @@ require __DIR__ . '/syntax.php';
 require __DIR__ . '/security-markers.php';
 require __DIR__ . '/plugin-meta.php';
 require __DIR__ . '/assets.php';
+require __DIR__ . '/vue-style.php';
 
 function mrt_validate_run(): void {
 	$errors   = array();
@@ -31,6 +32,7 @@ function mrt_validate_run(): void {
 	mrt_validate_text_domain( $warnings, $checks, $php_files );
 	mrt_validate_css_files( $errors, $checks );
 	mrt_validate_accessibility_markers( $errors, $checks );
+	mrt_validate_vue_style_blocks( $warnings, $checks );
 
 	mrt_validate_print_summary( $errors, $warnings, $checks );
 }

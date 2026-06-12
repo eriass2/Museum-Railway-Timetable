@@ -51,7 +51,7 @@ Admin wrappers (deprecated gradually): `MrtAccentButton` delegates to `MrtButton
 | `MrtStack` | `mrt-stack` | Vertical spacing (`gap`, `marginTop`, `marginBottom`) |
 | `MrtVisuallyHidden` | `mrt-visually-hidden` | Screen-reader-only labels |
 
-Wizard shell CSS: scoped in `MrtWizardShell.vue`, `MrtWizardMainCard.vue`, and `frontend/vue/src/wizard/components/*`. Visuell wizard-referens: [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
+Wizard shell CSS: scoped in `MrtWizardShell.vue`, `MrtWizardHero.vue`, `MrtWizardShellSurfaces.vue`, `MrtWizardMainCard.vue`. Visuell wizard-referens: [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
 
 ## Alerts
 
