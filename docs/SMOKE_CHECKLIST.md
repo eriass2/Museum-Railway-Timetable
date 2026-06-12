@@ -6,15 +6,17 @@ Snabb genomgång efter ändringar i frontend, shortcodes eller import.
 
 | Kommando | Täcker |
 |----------|--------|
-| `.\scripts\check.ps1` | validate.php, PHPStan, PHPUnit, PHPCS (Docker) |
-| `.\scripts\check.ps1 -Vue` | PHP + Vue (Docker) |
-| `.\scripts\vue-check.ps1` | Vue typecheck, Vitest, build (Docker) |
-| `.\scripts\docker-smoke.ps1` | Docker: Vue build + import + demo + PHP check (rensar inte DB) |
+| `.\scripts\mrt.ps1 check` / `bash scripts/mrt.sh check` | validate.php, PHPStan, PHPUnit, PHPCS (Docker) |
+| `.\scripts\mrt.ps1 check -Vue` / `bash scripts/mrt.sh check --vue` | PHP + Vue (Docker) |
+| `.\scripts\mrt.ps1 vue-check` / `bash scripts/mrt.sh vue-check` | Vue typecheck, Vitest, build (Docker) |
+| `.\scripts\mrt.ps1 dev smoke` | Docker: Vue build + import + demo + PHP check (rensar inte DB) |
+
+Root-wrappers (`check.ps1`, `vue-check.ps1`, `docker-smoke.ps1`) fungerar som alternativ.
 
 ## Docker-smoke
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
+.\scripts\mrt.ps1 dev smoke
 ```
 
 ## Manuellt i webbläsaren
@@ -30,12 +32,12 @@ Login: `admin` / `admin`
 
 **Meny (utveckling):** Tidtabell → **Utvecklingsverktyg** (`#/dev-tools`) — kräver `WP_DEBUG` eller `MRT_DEVELOPMENT`. Importera demo, sätt upp utvecklingsmeny och synka tidtabellssidor. Komponentdemo finns under **Komponentdemo** (PHP-admin). Legacy `?page=mrt_import_lennakatten` redirectar till Utvecklingsverktyg.
 
-## Kommandon
+## Kommandon (typisk ordning)
 
 ```powershell
-.\scripts\docker-dev-reset.ps1
-.\scripts\check.ps1 -SkipPhpcs
-.\scripts\vue-check.ps1
+.\scripts\mrt.ps1 dev reset
+.\scripts\mrt.ps1 check -SkipPhpcs
+.\scripts\mrt.ps1 vue-check
 ```
 
 ## Kända begränsningar

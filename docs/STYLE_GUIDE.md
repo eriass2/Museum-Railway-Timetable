@@ -162,7 +162,7 @@ Admin (Vue, wp-admin):
 - **Kontext** – Använd `_x()` vid behov för kontextberoende strängar
 - **Vue publikt** – strängar från PHP (`strings`, `wizard`, `labels`) via `resolveMrtString()`; se [VUE_UTILS.md](VUE_UTILS.md)
 - **Vue admin** – `mrtAdminVue.strings` och `adminStr()`
-- **Underhåll** – efter nya PHP-strängar: `powershell -File .\scripts\make-i18n.ps1` (WP-CLI + msgmerge). `inc/assets/frontend.php` använder literal `'museum-railway-timetable'` så WP-CLI hittar strängarna (`MRT_TEXT_DOMAIN` plockas inte upp av `make-pot`)
+- **Underhåll** – efter nya PHP-strängar: `.\scripts\mrt.ps1 i18n` (WP-CLI + msgmerge). `inc/assets/frontend.php` använder literal `'museum-railway-timetable'` så WP-CLI hittar strängarna (`MRT_TEXT_DOMAIN` plockas inte upp av `make-pot`)
 
 ### Databas
 - **Tabellprefix** – `$wpdb->prefix . 'mrt_stoptimes'`

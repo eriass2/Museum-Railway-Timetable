@@ -11,8 +11,13 @@ git clone <repo>
 cd Museum-Railway-Timetable
 composer install
 
-composer check
+composer check          # host PHP (CI-paritet)
+# eller Docker gates:
+bash scripts/mrt.sh check --skip-phpcs   # Linux/WSL
+.\scripts\mrt.ps1 check -SkipPhpcs      # Windows
 ```
+
+**En ingång:** `mrt help` — se [scripts/README.md](../scripts/README.md).
 
 ---
 
@@ -37,7 +42,8 @@ Snabbstart vid ny kod:
 | `composer check` | Kör lokal snabbkontroll: plugin-check, PHPStan och PHPUnit |
 | `composer plugin-check` | `php scripts/validate.php` – filer, syntax, ABSPATH, text domain |
 | `composer test` | PHPUnit (`php vendor/bin/phpunit` — kör i terminal, öppna inte `vendor\bin\phpunit` direkt på Windows) |
-| `.\scripts\test.ps1` | PHPUnit lokalt (PHP 8.2+) eller auto i Docker `php-test` (PHP 8.2) om lokal PHP saknas/är för gammal |
+| `.\scripts\mrt.ps1 test` / `bash scripts/mrt.sh test` | PHPUnit i Docker (standard) eller `-Local` / `--local` på host PHP 8.2+ |
+| `.\scripts\test.ps1` | Samma som `mrt test` (root-wrapper) |
 | `composer csv:validate -- <path>` | Validera CSV-paket utan WordPress |
 | `composer phpstan` / `phpcs` / `lint` | Statisk analys + WPCS |
 
@@ -53,16 +59,16 @@ PowerShell- och bash-script delar helpers i `scripts/lib/` så Docker-, Vue- och
 
 | Modul | Användning |
 |-------|------------|
-| `Mrt.Docker.ps1` | Dot-source från `*.ps1` — Compose, WP-CLI, Vue, vendor |
-| `Mrt.Plugin.ps1` | Plugin-slug, fil-lista, kopiera/synka |
-| `mrt-docker.sh` | Source från `*.sh` — samma byggblock för bash/CI |
+| `Mrt.Docker.ps1` + `Mrt.*.ps1` | Dot-source från `*.ps1` — Compose, tools-shell, WP-CLI, Vue, vendor |
+| `mrt-docker.sh` + `lib/mrt/*.sh` | Source från `*.sh` — samma byggblock för bash/CI |
 
 **Full kommandotabell:** [scripts/README.md](../scripts/README.md)  
+**Modullayout:** [scripts/lib/ARCHITECTURE.md](../scripts/lib/ARCHITECTURE.md)  
 **Roadmap (Fas 0–3):** [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md)  
 **CI vs Docker dev:** [CI_AND_DEV_MODEL.md](CI_AND_DEV_MODEL.md)  
 **Dev Container:** [.devcontainer/README.md](../.devcontainer/README.md)
 
-På Windows: föredra **`.\scripts\mrt.ps1`** eller **`.\scripts\*.ps1`** (Docker by default). Kör **skripten** — undvik rå `docker compose …` (skripten hanterar tools-shell exec, `--no-deps`, villkorlig `npm ci`, m.m.).
+**Föredra `mrt`** — `.\scripts\mrt.ps1` (Windows) eller `bash scripts/mrt.sh` (Linux/WSL). Root-wrappers (`check.ps1`, `test.ps1`, …) fungerar fortfarande. Kör **skripten** — undvik rå `docker compose …` (skripten hanterar tools-shell exec, `--no-deps`, villkorlig `npm ci`, m.m.).
 
 ---
 
@@ -82,35 +88,39 @@ composer check
 Använd Docker när du behöver klicka i admin, prova shortcodes eller testa dataflöden i en riktig WordPress-installation:
 
 ```powershell
-.\scripts\docker-dev-reset.ps1
+.\scripts\mrt.ps1 dev reset
 # efter ändring i Dockerfile:
-.\scripts\docker-dev-reset.ps1 -Build
+.\scripts\mrt.ps1 dev reset -Build
 ```
 
 Linux/WSL:
 
 ```sh
-./scripts/docker-dev-reset.sh
-./scripts/docker-dev-reset.sh --build
+bash scripts/mrt.sh dev reset
+bash scripts/mrt.sh dev reset --build
 ```
 
 - Webbplats: <http://localhost:8080>
 - Admin: <http://localhost:8080/wp-admin>
 - Login: `admin` / `admin`
 
-Windows — PHP/Vue quality gates (Docker, optimerade wrappers):
+**Quality gates (Docker)** — samma beteende via `mrt` eller root-wrappers:
 
-```powershell
-.\scripts\check.ps1          # validate + PHPStan + PHPUnit + PHPCS (en container)
-.\scripts\check.ps1 -Vue     # + Vue
-.\scripts\test.ps1             # PHPUnit
-.\scripts\vue-check.ps1        # Vue typecheck + Vitest + build
-.\scripts\lint.ps1             # PHPStan + PHPCS
-```
+| Mål | Windows | Linux/WSL |
+|-----|---------|-----------|
+| Full PHP-gate | `.\scripts\mrt.ps1 check` | `bash scripts/mrt.sh check` |
+| PHP utan PHPCS | `.\scripts\mrt.ps1 check -SkipPhpcs` | `bash scripts/mrt.sh check --skip-phpcs` |
+| PHP + Vue | `.\scripts\mrt.ps1 check -Vue` | `bash scripts/mrt.sh check --vue` |
+| PHPUnit | `.\scripts\mrt.ps1 test` | `bash scripts/mrt.sh test` |
+| Vue | `.\scripts\mrt.ps1 vue-check` | `bash scripts/mrt.sh vue-check` |
+| Lint | `.\scripts\mrt.ps1 lint` | `bash scripts/mrt.sh lint` |
+| Coverage (utforskande) | `.\scripts\mrt.ps1 coverage -Timings` | `bash scripts/mrt.sh coverage --timings` |
 
-Om datorn saknar lokal PHP/Composer: använd **`.\scripts\check.ps1`** (Windows) eller **`bash scripts/lint.sh`** + **`composer test`** (Linux) — inte rå `docker compose … run composer …`.
+Alternativ: `.\scripts\check.ps1`, `.\scripts\test.ps1`, `.\scripts\vue-check.ps1` (root-wrappers).
 
-Vue körs i **`vue`-containern** — använd **`.\scripts\vue-check.ps1`** / **`bash scripts/vue-check.sh`**, inte `docker compose … run composer vue:check` (`composer`-imaget saknar npm).
+Om datorn saknar lokal PHP/Composer: använd **`mrt check`** / **`mrt test`** — inte rå `docker compose … run composer …`.
+
+Vue körs i **`vue`-containern** — använd **`mrt vue-check`**, inte `docker compose … run composer vue:check` (`composer`-imaget saknar npm).
 
 **Docker tools-volymer (Fas 2):** `composer` och `php-test` delar named volume `mrt_vendor`; `vue` använder `mrt_vue_node_modules`. Det minskar bind-mount-I/O på Windows. Volymerna är **separata** från eventuell host-`vendor/` — gate-skript installerar via Docker om volymen saknar `vendor/autoload.php`. Rensa vid behov: `docker volume rm $(docker volume ls -q --filter name=mrt_vendor)` (projektnamn varierar).
 
@@ -127,30 +137,30 @@ Synka plugin till en riktig WordPress utan zip — som Docker volume mount (inge
 3. Kör:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\live-deploy.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\live-deploy.ps1 -SkipBuild   # bara PHP/assets
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\live-deploy.ps1 -Watch       # auto vid filändring
+.\scripts\mrt.ps1 release deploy
+.\scripts\mrt.ps1 release deploy -SkipBuild   # bara PHP/assets
+.\scripts\live-deploy.ps1 -Watch              # auto vid filändring
 ```
 
-Bygger Vue vid behov (samma som `docker-dev-reset`), kopierar `inc`, `assets`, `languages` m.m. För full omstart med import: `docker-dev-reset.ps1` lokalt eller WP-CLI på servern.
+Bygger Vue vid behov (samma som dev reset), kopierar `inc`, `assets`, `languages` m.m. För full omstart med import: `mrt dev reset` lokalt eller WP-CLI på servern.
 
 ### Dev reset (clear + import + smoke menu)
 
-Efter ändringar i import, rutter eller demosidor – ett kommando för agent/utvecklare:
+Efter ändringar i import, rutter eller demosidor – ett kommando:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1
+.\scripts\mrt.ps1 dev reset
 ```
 
-`-SkipCompose` / `--skip-compose` om Docker redan kör. `-Build` / `--build` om `Dockerfile` ändrats (annars `up -d` utan rebuild). Bygger Vue och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md).
+`-SkipCompose` / `--skip-compose` om Docker redan kör. `-Build` / `--build` om `Dockerfile` ändrats. Bygger Vue och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md).
 
 ### Automatiserad Docker-smoke
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
+.\scripts\mrt.ps1 dev smoke
 ```
 
-(`docker-smoke` kör import + demo men **rensar inte**; använd `docker-dev-reset` för full omstart.)
+(`dev smoke` kör import + demo men **rensar inte**; använd `dev reset` för full omstart.)
 
 Se även [SMOKE_CHECKLIST.md](SMOKE_CHECKLIST.md) och [DEVELOPMENT_MODE.md](DEVELOPMENT_MODE.md).
 
@@ -176,7 +186,7 @@ CI kör `composer vue:check`, isolerade Vue-E2E och `scripts/ci-e2e-wp.sh` på p
 
 ### Manuell smoke-checklista i WordPress
 
-Kör detta efter `.\scripts\docker-dev-reset.ps1` (eller `docker compose up -d`) när ändringen påverkar admin, shortcodes eller dataflöden:
+Kör detta efter `.\scripts\mrt.ps1 dev reset` (eller `docker compose up -d`) när ändringen påverkar admin, shortcodes eller dataflöden:
 
 - Logga in på <http://localhost:8080/wp-admin> med `admin` / `admin`.
 - Kontrollera att menyn **Railway Timetable** syns och att pluginet är aktivt.
@@ -191,12 +201,12 @@ Kör detta efter `.\scripts\docker-dev-reset.ps1` (eller `docker compose up -d`)
 
 ## Checklista före deploy
 
-- [ ] `composer check` grönt
+- [ ] `composer check` eller `.\scripts\mrt.ps1 check -Vue` grönt
 - [ ] Manuell smoke-checklista i WordPress är genomförd vid UI/dataflödesändringar
 - [ ] [ACCESSIBILITY.md](ACCESSIBILITY.md) – kort rökning vid UI-ändringar
-- [ ] Översättningar: kör `powershell -File .\scripts\make-i18n.ps1` efter nya `__()`-strängar; fyll i tomma `msgstr` i `languages/museum-railway-timetable-sv_SE.po` vid behov
-- [ ] `.\scripts\docker-dev-reset.ps1` (eller `.\local\deploy.ps1`) om du testar i full WordPress
-- [ ] **Live:** `powershell -File .\scripts\build-release.ps1` → `release/museum-railway-timetable.zip` (Vue-bygg + validate + pack; ladda upp via WP Plugins → Upload). Se `INSTALL.txt` i zip:en (permalänkar, CSV-import, felsökning).
+- [ ] Översättningar: `.\scripts\mrt.ps1 i18n` efter nya `__()`-strängar; fyll i tomma `msgstr` i `languages/museum-railway-timetable-sv_SE.po` vid behov
+- [ ] `.\scripts\mrt.ps1 dev reset` (eller `.\local\deploy.ps1`) om du testar i full WordPress
+- [ ] **Live:** `.\scripts\mrt.ps1 release build` → `release/museum-railway-timetable.zip` (Vue-bygg + validate + pack; ladda upp via WP Plugins → Upload). Se `INSTALL.txt` i zip:en (permalänkar, CSV-import, felsökning).
 
 ---
 
@@ -217,6 +227,6 @@ PHP: `declare(strict_types=1)` där det passar.
 
 ## Bidra
 
-Följ [REBUILD_RULES.md](REBUILD_RULES.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Kör `composer check` (eller `.\scripts\check.ps1 -Vue`) innan pull request.
+Följ [REBUILD_RULES.md](REBUILD_RULES.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) och [ARCHITECTURE.md](ARCHITECTURE.md). Kör `composer check` eller `.\scripts\mrt.ps1 check -Vue` innan pull request.
 
 Vid PR: använd checklistan i [`.github/pull_request_template.md`](../.github/pull_request_template.md) och säkerställ att `composer test` samt `php scripts/validate.php` är gröna.

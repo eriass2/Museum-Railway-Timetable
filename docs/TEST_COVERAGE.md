@@ -12,12 +12,20 @@ Kodtäckning är **inte** CI-gate i v1 — använd för att hitta otäckta domä
 ## Kör
 
 ```powershell
-.\scripts\coverage.ps1
+.\scripts\mrt.ps1 coverage -Timings
 ```
+
+Linux/WSL:
+
+```sh
+bash scripts/mrt.sh coverage --timings
+```
+
+Alternativ (root-wrapper): `.\scripts\coverage.ps1` / `bash scripts/gate/coverage.sh`.
 
 - Installerar PCOV via **`docker/Dockerfile.tools`** (första gången: `docker compose --profile tools build php-test`).
 - Skriver Clover till `coverage/clover.xml` (gitignored).
-- Sammanfattning via `scripts/coverage-summary.php` **i samma container** (ingen host-PHP krävs).
+- Sammanfattning via `scripts/php/coverage-summary.php` **i samma container** (ingen host-PHP krävs).
 
 ---
 
@@ -53,7 +61,7 @@ Import: `inc/import/csv/loader.php`, `inc/import/csv/slugify.php`
 
 Övrigt: `inc/public/journey-wizard/debug-fixtures.php`
 
-Kör `.\scripts\coverage.ps1` för full lista och filer under 25 %.
+Kör `.\scripts\mrt.ps1 coverage` för full lista och filer under 25 %.
 
 ---
 

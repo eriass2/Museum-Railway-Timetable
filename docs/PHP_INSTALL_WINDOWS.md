@@ -122,12 +122,14 @@ PHPUnit ska **köras i terminalen**, inte öppnas som fil.
 
 | Gör så här | Kommando |
 |------------|----------|
-| Rekommenderat (Windows) | `.\scripts\test.ps1` — Docker som standard; `-Local` för host PHP 8.2+ |
-| Full PHP gate | `.\scripts\check.ps1` |
-| Vue gate | `.\scripts\vue-check.ps1` |
+| Rekommenderat (Windows) | `.\scripts\mrt.ps1 test` — Docker som standard; `-Local` för host PHP 8.2+ |
+| Rekommenderat (Linux/WSL) | `bash scripts/mrt.sh test` — Docker; `--local` för host PHP 8.2+ |
+| Full PHP gate | `.\scripts\mrt.ps1 check` / `bash scripts/mrt.sh check` |
+| Vue gate | `.\scripts\mrt.ps1 vue-check` / `bash scripts/mrt.sh vue-check` |
+| Root-wrappers (samma beteende) | `.\scripts\test.ps1`, `.\scripts\check.ps1`, `.\scripts\vue-check.ps1` |
 | Lokal PHP 8.2+ | `composer test` |
-| Manuell Docker (undvik — använd wrapper) | `docker compose --profile tools run --rm --no-deps php-test vendor/bin/phpunit` |
-| En testfil via wrapper | `.\scripts\test.ps1 tests/Unit/SomeTest.php` |
+| En testfil | `.\scripts\mrt.ps1 test tests/Unit/SomeTest.php` |
+| Manuell Docker (undvik — använd mrt) | `docker compose --profile tools run --rm --no-deps php-test vendor/bin/phpunit` |
 
 **Undvik** att dubbelklicka på `vendor\bin\phpunit` eller köra den utan `php` — Windows frågar då vilket program som ska *öppna* filen (den har inget `.exe`-ändelse).
 

@@ -4,7 +4,7 @@ MRT developer CLI - one entry point for gates, dev, and release.
   mrt test [--local] [--timings] [phpunit args...]
   mrt lint [--local] [--timings]
   mrt vue-check [--local] [--timings]
-  mrt coverage [phpunit args...]
+  mrt coverage [--timings] [phpunit args...]
   mrt setup-dev              Host composer + npm (CI parity)
   mrt dev reset [--build] [--skip-compose] [--timings]
   mrt dev smoke              Import + HTTP smoke (PowerShell)
