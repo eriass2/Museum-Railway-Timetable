@@ -1,36 +1,17 @@
-# Unified MRT developer CLI (Fas 3 S2). Forwards to existing scripts.
+# Unified MRT developer CLI — Windows entry (Fas 3 S2).
+# Bash scripts/mrt.sh is canonical on Linux/macOS/WSL; this forwards to existing .ps1 gates.
 param(
     [Parameter(Position = 0)]
     [string] $Command = 'help',
-    [Parameter(Position = 1)]
-    [string] $SubCommand = '',
     [Parameter(ValueFromRemainingArguments = $true)]
-    [string[]] $Passthrough
+    [string[]] $Remaining
 )
 
 $ErrorActionPreference = 'Stop'
 $scriptsRoot = $PSScriptRoot
 
 function Show-MrtHelp {
-    Write-Host @'
-MRT developer CLI — forwards to scripts/*.ps1
-
-  mrt check [-SkipPhpcs] [-Vue] [-Timings]
-  mrt test [-Local] [-Timings] [phpunit args...]
-  mrt lint [-Timings]
-  mrt vue-check [-Local] [-Timings]
-  mrt coverage [phpunit args...]
-  mrt dev reset [-Build] [-SkipCompose] [-Timings]
-  mrt dev smoke
-  mrt dev watch [--no-up]
-  mrt release build [-SkipBuild] [-SkipValidate]
-  mrt help
-
-Examples:
-  .\scripts\mrt.ps1 check -SkipPhpcs
-  .\scripts\mrt.ps1 dev reset -Build
-  .\scripts\mrt.ps1 test tests/Unit/CsvManifestTest.php
-'@
+    Get-Content (Join-Path $scriptsRoot 'lib/mrt-help.txt') | Write-Host
 }
 
 function Invoke-MrtScript {
@@ -45,10 +26,16 @@ function Invoke-MrtScript {
 }
 
 $cmd = $Command.ToLowerInvariant()
-$sub = $SubCommand.ToLowerInvariant()
+$sub = ''
+$Passthrough = @($Remaining)
+
+if ($Passthrough.Count -gt 0 -and $cmd -in @('dev', 'release', 'csv', 'vue')) {
+    $sub = $Passthrough[0].ToLowerInvariant()
+    $Passthrough = @($Passthrough | Select-Object -Skip 1)
+}
 
 switch ($cmd) {
-    'help' { Show-MrtHelp; exit 0 }
+    { $_ -in 'help', '-h', '--help' } { Show-MrtHelp; exit 0 }
     'check' { Invoke-MrtScript 'check.ps1' $Passthrough }
     'test' { Invoke-MrtScript 'test.ps1' $Passthrough }
     'lint' { Invoke-MrtScript 'lint.ps1' $Passthrough }
@@ -57,17 +44,18 @@ switch ($cmd) {
         if ($sub -eq 'check') {
             Invoke-MrtScript 'vue-check.ps1' $Passthrough
         }
-        Write-Host "Unknown vue subcommand: $SubCommand (try: check)" -ForegroundColor Red
+        Write-Host "Unknown vue subcommand: $sub (try: check)" -ForegroundColor Red
         exit 1
     }
     'coverage' { Invoke-MrtScript 'coverage.ps1' $Passthrough }
+    'setup-dev' { Invoke-MrtScript 'setup-dev.ps1' $Passthrough }
     'dev' {
         switch ($sub) {
             'reset' { Invoke-MrtScript 'docker-dev-reset.ps1' $Passthrough }
             'smoke' { Invoke-MrtScript 'docker-smoke.ps1' $Passthrough }
             'watch' { Invoke-MrtScript 'docker-watch.ps1' $Passthrough }
             default {
-                Write-Host "Unknown dev subcommand: $SubCommand (try: reset, smoke, watch)" -ForegroundColor Red
+                Write-Host "Unknown dev subcommand: $sub (try: reset, smoke, watch)" -ForegroundColor Red
                 exit 1
             }
         }
@@ -75,12 +63,27 @@ switch ($cmd) {
     'release' {
         switch ($sub) {
             'build' { Invoke-MrtScript 'build-release.ps1' $Passthrough }
+            'deploy' { Invoke-MrtScript 'live-deploy.ps1' $Passthrough }
             default {
-                Write-Host "Unknown release subcommand: $SubCommand (try: build)" -ForegroundColor Red
+                Write-Host "Unknown release subcommand: $sub (try: build, deploy)" -ForegroundColor Red
                 exit 1
             }
         }
     }
+    'csv' {
+        switch ($sub) {
+            'validate' {
+                & composer csv:validate -- @Passthrough
+                exit $LASTEXITCODE
+            }
+            'zip' { Invoke-MrtScript 'csv-package-zip.ps1' $Passthrough }
+            default {
+                Write-Host "Unknown csv subcommand: $sub (try: validate, zip)" -ForegroundColor Red
+                exit 1
+            }
+        }
+    }
+    'i18n' { Invoke-MrtScript 'make-i18n.ps1' $Passthrough }
     default {
         Write-Host "Unknown command: $Command (run: mrt help)" -ForegroundColor Red
         exit 1

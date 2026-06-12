@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Unified MRT developer CLI (Fas 3 S2). Forwards to existing scripts.
+# Unified MRT developer CLI — canonical on Linux/macOS/WSL (Fas 3 S1/S2).
 set -euo pipefail
 
 SCRIPTS="$(cd "$(dirname "$0")" && pwd)"
@@ -9,57 +9,58 @@ cd "$ROOT"
 cmd="${1:-help}"
 sub="${2:-}"
 shift $(( $# > 0 ? 1 : 0 )) || true
-if [ -n "$sub" ] && { [ "$cmd" = dev ] || [ "$cmd" = release ] || [ "$cmd" = vue ]; }; then
+if [ -n "$sub" ] && { [ "$cmd" = dev ] || [ "$cmd" = release ] || [ "$cmd" = csv ] || [ "$cmd" = vue ]; }; then
 	shift $(( $# > 0 ? 1 : 0 )) || true
 fi
 
 mrt_help() {
-	cat <<'EOF'
-MRT developer CLI — forwards to scripts/*.sh / composer
-
-  mrt check
-  mrt test [--local]
-  mrt lint [--local] [--timings]
-  mrt vue-check [--local] [--timings]
-  mrt dev reset [--build] [--skip-compose]
-  mrt dev watch [--no-up]
-  mrt help
-
-Examples:
-  bash scripts/mrt.sh check
-  bash scripts/mrt.sh dev reset --build
-EOF
+	cat "$SCRIPTS/lib/mrt-help.txt"
 }
 
 mrt_run_ps1() {
+	if ! command -v powershell >/dev/null 2>&1; then
+		echo "PowerShell required for this command on this host." >&2
+		exit 1
+	fi
 	powershell -NoProfile -ExecutionPolicy Bypass -File "$SCRIPTS/$1" "${@:2}"
 }
 
 case "$cmd" in
-help) mrt_help ;;
-check) mrt_run_ps1 check.ps1 "$@" ;;
-test) mrt_run_ps1 test.ps1 "$@" ;;
-lint) bash "$SCRIPTS/lint.sh" "$@" ;;
-vue-check) bash "$SCRIPTS/vue-check.sh" "$@" ;;
+help|-h|--help) mrt_help ;;
+check) bash "$SCRIPTS/gate/check.sh" "$@" ;;
+test) bash "$SCRIPTS/gate/test.sh" "$@" ;;
+lint) bash "$SCRIPTS/gate/lint.sh" "$@" ;;
+vue-check) bash "$SCRIPTS/gate/vue-check.sh" "$@" ;;
+coverage) bash "$SCRIPTS/gate/coverage.sh" "$@" ;;
+setup-dev) bash "$SCRIPTS/setup-dev.sh" "$@" ;;
 vue)
 	case "$sub" in
-	check) bash "$SCRIPTS/vue-check.sh" "$@" ;;
-	*) echo "Unknown vue subcommand: $sub" >&2; exit 1 ;;
+	check) bash "$SCRIPTS/gate/vue-check.sh" "$@" ;;
+	*) echo "Unknown vue subcommand: $sub (try: check)" >&2; exit 1 ;;
 	esac
 	;;
 dev)
 	case "$sub" in
-	reset) bash "$SCRIPTS/docker-dev-reset.sh" "$@" ;;
+	reset) bash "$SCRIPTS/dev/docker-dev-reset.sh" "$@" ;;
 	smoke) mrt_run_ps1 docker-smoke.ps1 "$@" ;;
-	watch) bash "$SCRIPTS/docker-watch.sh" "$@" ;;
+	watch) bash "$SCRIPTS/dev/docker-watch.sh" "$@" ;;
 	*) echo "Unknown dev subcommand: $sub (try: reset, smoke, watch)" >&2; exit 1 ;;
 	esac
 	;;
 release)
 	case "$sub" in
 	build) mrt_run_ps1 build-release.ps1 "$@" ;;
-	*) echo "Unknown release subcommand: $sub (try: build)" >&2; exit 1 ;;
+	deploy) mrt_run_ps1 live-deploy.ps1 "$@" ;;
+	*) echo "Unknown release subcommand: $sub (try: build, deploy)" >&2; exit 1 ;;
 	esac
 	;;
+csv)
+	case "$sub" in
+	validate) composer csv:validate -- "$@" ;;
+	zip) bash "$SCRIPTS/csv/csv-package-zip.sh" "$@" ;;
+	*) echo "Unknown csv subcommand: $sub (try: validate, zip)" >&2; exit 1 ;;
+	esac
+	;;
+i18n) mrt_run_ps1 make-i18n.ps1 "$@" ;;
 *) echo "Unknown command: $cmd (run: mrt help)" >&2; exit 1 ;;
 esac

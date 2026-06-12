@@ -1,0 +1,26 @@
+MRT developer CLI - one entry point for gates, dev, and release.
+
+  mrt check [--skip-phpcs] [--vue] [--timings]
+  mrt test [--local] [--timings] [phpunit args...]
+  mrt lint [--local] [--timings]
+  mrt vue-check [--local] [--timings]
+  mrt coverage [phpunit args...]
+  mrt setup-dev              Host composer + npm (CI parity)
+  mrt dev reset [--build] [--skip-compose] [--timings]
+  mrt dev smoke
+  mrt dev watch [--no-up]
+  mrt release build
+  mrt csv validate <path>
+  mrt i18n                   Regenerate .pot / merge Swedish .po
+  mrt help
+
+Platform notes:
+  Linux/macOS/WSL - bash scripts/mrt.sh (canonical)
+  Windows         - .\scripts\mrt.ps1 (Docker via PowerShell lib)
+
+Examples:
+  bash scripts/mrt.sh check --skip-phpcs
+  bash scripts/mrt.sh dev reset --build
+  .\scripts\mrt.ps1 test tests/Unit/CsvManifestTest.php
+
+See docs/CI_AND_DEV_MODEL.md and scripts/lib/ARCHITECTURE.md.
