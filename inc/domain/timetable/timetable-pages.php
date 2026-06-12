@@ -252,10 +252,12 @@ function MRT_sync_timetable_public_pages() {
 		return $index;
 	}
 
-	$traffic_page = MRT_ensure_traffic_disruptions_public_page();
+	$traffic_page    = MRT_ensure_traffic_disruptions_public_page();
+	$traffic_page_id = 0;
 	if ( is_wp_error( $traffic_page ) ) {
 		$errors[] = $traffic_page;
-		$traffic_page = 0;
+	} else {
+		$traffic_page_id = (int) $traffic_page;
 	}
 
 	$timetable_page_ids = array();
@@ -271,8 +273,8 @@ function MRT_sync_timetable_public_pages() {
 	if ( function_exists( 'MRT_append_timetables_index_to_nav_menu' ) ) {
 		MRT_append_timetables_index_to_nav_menu( (int) $index );
 	}
-	if ( function_exists( 'MRT_append_traffic_disruptions_to_nav_menu' ) && ! is_wp_error( $traffic_page ) ) {
-		MRT_append_traffic_disruptions_to_nav_menu( (int) $traffic_page );
+	if ( function_exists( 'MRT_append_traffic_disruptions_to_nav_menu' ) && $traffic_page_id > 0 ) {
+		MRT_append_traffic_disruptions_to_nav_menu( $traffic_page_id );
 	}
 
 	MRT_set_timetables_index_as_front_page( (int) $index );
@@ -282,7 +284,7 @@ function MRT_sync_timetable_public_pages() {
 
 	return array(
 		'index_page_id'                => (int) $index,
-		'traffic_disruptions_page_id'  => is_wp_error( $traffic_page ) ? 0 : (int) $traffic_page,
+		'traffic_disruptions_page_id'  => $traffic_page_id,
 		'timetable_page_ids'           => $timetable_page_ids,
 		'errors'                       => $errors,
 	);

@@ -50,7 +50,8 @@ function MRT_timetable_standalone_corridor_after_station_id( int $service_id, ar
  * @param array<string, mixed> $row services.csv row.
  */
 function MRT_csv_apply_service_overview_column_from_row( int $service_id, array $row, array $station_maps ): void {
-	$enabled = ! empty( $row['overview_column'] ) && (string) $row['overview_column'] !== '0';
+	$overview_column = trim( (string) ( $row['overview_column'] ?? '' ) );
+	$enabled         = $overview_column !== '' && $overview_column !== '0';
 	if ( $enabled ) {
 		update_post_meta( $service_id, 'mrt_service_overview_column', 1 );
 	} else {

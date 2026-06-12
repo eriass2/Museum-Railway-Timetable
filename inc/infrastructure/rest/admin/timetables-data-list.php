@@ -75,9 +75,6 @@ function MRT_rest_get_timetable_detail( int $timetable_id ) {
 	);
 }
 
-/**
- * @return array<int, array<string, mixed>>
- */
 function MRT_route_post_id_from_station_code( string $station_code ): int {
 	return MRT_station_post_id_from_station_code( $station_code );
 }

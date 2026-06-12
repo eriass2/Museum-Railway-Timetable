@@ -164,6 +164,7 @@ function MRT_line_resolve_route_id( string $line_code, string $toward_station_co
 /**
  * @param array<string, bool> $routes
  * @param array<string, string> $routes_branch
+ * @param array<int, array{file: string, line: int, message: string}> $errors
  */
 function MRT_csv_validate_service_resolved_routes(
 	array $files,

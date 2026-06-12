@@ -126,7 +126,8 @@ function MRT_csv_service_title( array $row, array $maps ): string {
  * @param array<string, mixed> $row
  */
 function MRT_csv_apply_service_overview_display_from_line( int $service_id, string $line_code, array $row ): void {
-	$csv_flag = ! empty( $row['overview_column'] ) && (string) $row['overview_column'] !== '0';
+	$overview_column = trim( (string) ( $row['overview_column'] ?? '' ) );
+	$csv_flag        = $overview_column !== '' && $overview_column !== '0';
 	if ( $csv_flag ) {
 		update_post_meta( $service_id, 'mrt_service_overview_column', 1 );
 		delete_post_meta( $service_id, 'mrt_service_overview_pass_from_station_id' );

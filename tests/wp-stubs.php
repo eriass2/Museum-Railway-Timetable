@@ -44,6 +44,9 @@ if ( ! class_exists( 'WP_Post' ) ) {
 		/** @var string */
 		public $post_content = '';
 
+		/** @var string */
+		public $post_date = '';
+
 		/**
 		 * @param object|array<string, mixed>|null $data
 		 */
@@ -533,11 +536,12 @@ if ( ! function_exists( 'wp_insert_post' ) ) {
 		$id = (int) ++$GLOBALS['mrt_test_next_post_id'];
 		$post = new WP_Post(
 			(object) array(
-				'ID'          => $id,
-				'post_title'  => (string) ( $postarr['post_title'] ?? '' ),
+				'ID'           => $id,
+				'post_title'   => (string) ( $postarr['post_title'] ?? '' ),
 				'post_content' => (string) ( $postarr['post_content'] ?? '' ),
-				'post_type'   => (string) ( $postarr['post_type'] ?? 'post' ),
-				'post_status' => (string) ( $postarr['post_status'] ?? 'publish' ),
+				'post_type'    => (string) ( $postarr['post_type'] ?? 'post' ),
+				'post_status'  => (string) ( $postarr['post_status'] ?? 'publish' ),
+				'post_date'    => (string) ( $postarr['post_date'] ?? current_time( 'mysql' ) ),
 			)
 		);
 		if ( ! isset( $GLOBALS['mrt_test_posts'] ) || ! is_array( $GLOBALS['mrt_test_posts'] ) ) {

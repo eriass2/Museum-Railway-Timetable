@@ -45,10 +45,7 @@ function MRT_feedback_export_csv_line( int $post_id, array $headers ): array {
 	$item = MRT_feedback_format_item( $post_id );
 	$post = get_post( $post_id );
 	$ctx  = is_array( $item['context'] ?? null ) ? $item['context'] : array();
-	$created_at = '';
-	if ( $post instanceof WP_Post && property_exists( $post, 'post_date' ) ) {
-		$created_at = (string) $post->post_date;
-	}
+	$created_at = $post instanceof WP_Post ? (string) $post->post_date : '';
 	$row  = array(
 		'id'               => (string) $post_id,
 		'created_at'       => $created_at,

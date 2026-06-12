@@ -171,6 +171,7 @@ function MRT_csv_check_fk( array $row, string $field, array $set, array &$errors
 
 /**
  * @param array<string, bool> $routes
+ * @param array<int, array{file: string, line: int, message: string}> $errors
  */
 function MRT_csv_validate_service_route_or_line( array $row, array $routes, array &$errors ): void {
 	$route_code = trim( (string) ( $row['route_code'] ?? '' ) );

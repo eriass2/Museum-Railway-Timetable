@@ -104,6 +104,7 @@ function MRT_csv_validate_service_line_codes(
 /**
  * @param array<string, bool> $lines
  * @param array<string, bool> $stations
+ * @param array<int, array{file: string, line: int, message: string}> $errors
  */
 function MRT_csv_validate_branch_junction_rows(
 	array $files,
@@ -175,6 +176,10 @@ function MRT_csv_validate_pattern_line_corridor_stations(
 	}
 }
 
+/**
+ * @param array<string, array<int, array<string, string>>> $files
+ * @param array<int, array{file: string, line: int, message: string}> $errors
+ */
 function MRT_csv_validate_main_line_station_order( array $files, array &$errors ): void {
 	if ( empty( $files['lines.csv'] ) || empty( $files['line_stations.csv'] ) ) {
 		return;

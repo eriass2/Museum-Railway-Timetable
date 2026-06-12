@@ -27,6 +27,9 @@ function MRT_journey_engine_find_direct(
 	return $results;
 }
 
+/**
+ * @return array<int, array<string, mixed>>
+ */
 function MRT_journey_engine_find(
 	int $from_station_id,
 	int $to_station_id,
@@ -58,6 +61,9 @@ function MRT_journey_engine_find(
 	return $out;
 }
 
+/**
+ * @return array<int, array<string, mixed>>
+ */
 function MRT_find_multi_leg_connections( $from_station_id, $to_station_id, $dateYmd, $min_transfer_minutes = 0, $include_direct = true ) {
 	return MRT_journey_engine_find(
 		(int) $from_station_id,
