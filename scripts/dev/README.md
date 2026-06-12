@@ -4,6 +4,7 @@
 |--------|---------|
 | `docker-dev-reset.ps1` / `.sh` | Reset stack, import Lennakatten, dev menu |
 | `docker-smoke.ps1` | Import + HTTP smoke (no DB clear) |
+| `docker-watch.ps1` / `.sh` | Plugin sync via `compose watch` + volume (Windows I/O) |
 | `ci-e2e-wp.sh` | WordPress + Playwright E2E (CI) |
 | `bench-calendar.php` | Journey calendar benchmark (WP-CLI/Docker) |
 | `warm-journey-cache.php` | Pre-warm wizard PHP transients |

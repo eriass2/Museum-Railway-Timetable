@@ -27,12 +27,15 @@ Entry-point scripts for quality gates, Docker dev, deploy, and fixtures. Shared 
 | `lib/Mrt.Plugin.ps1` | PowerShell | Plugin slug, file list, version, copy/sync helpers |
 | `lib/mrt-docker.sh` | Bash/sh | Same building blocks for `.sh` scripts and CI |
 
-PowerShell scripts dot-source the Docker lib:
+PowerShell scripts dot-source the Docker lib (works from root wrappers or subfolders):
 
 ```powershell
-. (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
+$scriptsRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path  # when in gate/, dev/, …
+. (Join-Path $scriptsRoot 'lib/Mrt.Docker.ps1')
 Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
 ```
+
+Or use the unified CLI: `.\scripts\mrt.ps1 check` (see below).
 
 Bash scripts source the shell lib:
 
@@ -52,6 +55,21 @@ Prefer **`.\scripts\*.ps1`** over raw `docker compose` — wrappers apply:
 - `-Timings` or `MRT_SCRIPT_TIMINGS=1` for per-step duration on gate scripts
 - Single container for `check.ps1` (`composer check:all`) and `lint.ps1` (`composer lint`)
 - HTTP poll + one WP-CLI check when waiting for WordPress
+
+---
+
+## Unified CLI (`mrt`)
+
+| Goal | Command |
+|------|---------|
+| Help | `.\scripts\mrt.ps1 help` or `bash scripts/mrt.sh help` |
+| PHP gate | `.\scripts\mrt.ps1 check` |
+| PHP + Vue | `.\scripts\mrt.ps1 check -Vue` |
+| PHPUnit | `.\scripts\mrt.ps1 test` |
+| Dev reset | `.\scripts\mrt.ps1 dev reset` |
+| Plugin file sync (Windows) | `.\scripts\mrt.ps1 dev watch` |
+
+Existing `.\scripts\*.ps1` entry points remain; `mrt` forwards to them.
 
 ---
 
@@ -83,6 +101,7 @@ Prefer **`.\scripts\*.ps1`** over raw `docker compose` — wrappers apply:
 | Dev reset (stack already running) | `.\scripts\docker-dev-reset.ps1 -SkipCompose` or `./scripts/docker-dev-reset.sh --skip-compose` |
 | Start stack only (no import) | `docker compose up -d` — prefer dev reset when you need data + menu |
 | Smoke test (import + HTTP checks, no clear) | `.\scripts\docker-smoke.ps1` |
+| Plugin sync via compose watch (Windows I/O) | `.\scripts\docker-watch.ps1` or `.\scripts\mrt.ps1 dev watch` |
 | WordPress + Playwright E2E | `bash scripts/ci-e2e-wp.sh` |
 
 Dev site: <http://localhost:8080> — admin / admin.

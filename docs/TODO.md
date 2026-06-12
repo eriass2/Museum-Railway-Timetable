@@ -65,6 +65,8 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Docker/skript — Fas 1 D5–D7 (csv-package, host npm ci, smoke-URL:er) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
 | Docker/skript — Fas 2 P1–P4 (volumes, tools-image, coverage) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
 | Docker/skript — Fas 2 P5 (wpcli exec sidecar) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
+| Docker/skript — Fas 2 P6 (tools-shell exec) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
+| Docker/skript — scripts-organisation (gate, php, csv, i18n, dev, release) | 2026-06-12 | [scripts/README.md](../scripts/README.md) |
 | Reseplanerare J15–J17 + D19–D21 — biljettcopy (fotnoter, station, eftermiddag) | 2026-06-11 | `ticket-copy.php`, `PricesTicketCopyPanel.vue`, `MrtPriceTable.vue`, `#/prices` + stationfält |
 
 ---
@@ -78,5 +80,7 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | ~~D1–D7~~ | ~~Fas 1~~ | 1 — **klar** |
 | ~~P1–P4~~ | ~~Volumes, tools-image, coverage i Docker, WSL2-docs~~ | 2 — **klar** |
 | ~~P5~~ | ~~WP-CLI exec via `wpcli` sidecar~~ | 2 — **klar** |
-| P6–P7 | tools-shell, compose watch | 2 |
-| S1–S5 | En CLI, CI-strategi, devcontainer | 3 |
+| ~~P6~~ | ~~tools-shell (`compose exec`)~~ | 2 — **klar** |
+| ~~P7~~ | ~~compose watch (plugin sync via volym)~~ | 2 — **klar** |
+| ~~S2 (delvis)~~ | ~~`mrt` CLI — tunna wrappers~~ | 3 — **klar** |
+| S1, S3–S5 | Canonical bash vs PS, CI-strategi, devcontainer, init-poll | 3 |

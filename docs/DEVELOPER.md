@@ -60,7 +60,9 @@ PowerShell- och bash-script delar helpers i `scripts/lib/` så Docker-, Vue- och
 **Full kommandotabell:** [scripts/README.md](../scripts/README.md)  
 **Roadmap (Fas 0–3):** [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md)
 
-På Windows: föredra `.\scripts\*.ps1` (Docker by default). Kör **skripten** — undvik att kopiera rå `docker compose …`-strängar från äldre docs (skripten hanterar `--no-deps`, villkorlig `npm ci` m.m.).
+På Windows: föredra `.\scripts\*.ps1` (Docker by default) eller **`.\scripts\mrt.ps1`** (`mrt check`, `mrt dev reset`, …). Kör **skripten** — undvik att kopiera rå `docker compose …`-strängar från äldre docs (skripten hanterar `--no-deps`, villkorlig `npm ci`, tools-shell exec m.m.).
+
+**Långsam plugin-I/O på Windows (`C:\Projects\…`):** använd `.\scripts\docker-watch.ps1` (volym + `compose watch`) eller lägg repot under WSL2 — se [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) P2/P7.
 
 ---
 

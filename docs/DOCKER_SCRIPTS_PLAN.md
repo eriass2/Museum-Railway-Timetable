@@ -1,7 +1,7 @@
 # Docker- och skriptlager — plan
 
 Plan för utvecklarverktyg under `scripts/` och `docker-compose.yml`.  
-**Status:** Fas 0–1 genomförda. Fas 2 pågår (P1–P6 klara 2026-06-12).
+**Status:** Fas 0–2 klara. Fas 3 påbörjad (`mrt` CLI); S1/S3–S5 kvar.
 
 **Relaterat:** [scripts/README.md](../scripts/README.md), [DEVELOPER.md](DEVELOPER.md), `.cursor/rules/testing-commands.mdc`.
 
@@ -80,7 +80,7 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 | P4 | Kör `coverage-summary.php` i samma container som PHPUnit | Liten | Coverage utan host-PHP | **Klar** (2026-06-12) |
 | P5 | WP-CLI via `docker compose exec` (sidecar eller CLI i WP-image) | Stor | Färre `run wordpress-init`-containers | **Klar** (2026-06-12) |
 | P6 | Long-running **tools-shell** (`compose exec` istället för `run`) | Medel | ~2–5 s sparat per gate på Windows | **Klar** (2026-06-12) |
-| P7 | `compose watch` för plugin-bind mount | Medel | Snabbare iterering mot WordPress | |
+| P7 | `compose watch` för plugin-sync via volym (Windows I/O) | Medel | Snabbare iterering mot WordPress | **Klar** (2026-06-12) |
 
 **Exit-kriterium:** `check.ps1 -Vue` och `docker-dev-reset.ps1` märkbart snabbare vid upprepade körningar samma dag.
 
@@ -93,7 +93,7 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 | ID | Uppgift | Insats | Beslut som krävs |
 |----|---------|--------|------------------|
 | S1 | Bash som canonical + tunna PS-wrappers **eller** gemensamt `mrt`-CLI | Stor | Windows utan WSL? |
-| S2 | Samlat CLI: `mrt check`, `mrt test`, `mrt dev reset` | Medel | Bakåtkompatibilitet för befintliga `.ps1` |
+| S2 | Samlat CLI: `mrt check`, `mrt test`, `mrt dev reset` | Medel | Bakåtkompatibilitet för befintliga `.ps1` | **Klar** (2026-06-12) — `scripts/mrt.ps1` / `mrt.sh` |
 | S3 | CI: allt i Docker **eller** dokumenterad host-only med `setup-dev` | Stor | CI-tid vs paritet |
 | S4 | Dev Container (`.devcontainer/`) | Stor | Cursor/VS Code standard för teamet? |
 | S5 | Init-container: HTTP-poll istället för `sleep 3` i `wordpress-init` | Liten | — |
@@ -105,10 +105,8 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 ## Prioritering (rekommendation)
 
 ```text
-Nu     → Fas 1 (docs + paritet + timings)
-Sedan  → P1 + P3 (volumes + tools-image) — störst praktisk vinst
-Senare → P5/P6 (WP-CLI + tools-shell)
-Sist   → S1/S2 (CLI-konsolidering) när smärta från dubbel kodbas märks
+Klart  → Fas 1 + Fas 2 (P1–P7) + scripts-organisation + mrt CLI
+Kvar   → Fas 3 S1/S3–S5 (CI-modell, devcontainer, init-poll)
 ```
 
 ---
@@ -132,3 +130,7 @@ Sist   → S1/S2 (CLI-konsolidering) när smärta från dubbel kodbas märks
 | 2026-06-12 | Fas 1 D5–D7: csv-package via tools, host npm ci, smoke-URL:er via WP-CLI |
 | 2026-06-12 | Fas 2 P1–P4: named volumes, Dockerfile.tools + PCOV, coverage i Docker, WSL2-docs |
 | 2026-06-12 | Fas 2 P5: `wpcli` sidecar + `compose exec` (fallback `run wordpress-init`) |
+| 2026-06-12 | Fas 2 P6: long-running tools-shell (`composer` / `php-test` / `vue`) |
+| 2026-06-12 | Scripts-organisation Fas A–C: `dev/`, `release/`, `gate/`, `php/`, `csv/`, `i18n/` + root wrappers |
+| 2026-06-12 | Fas 2 P7: `docker-compose.watch.yml` + `scripts/dev/docker-watch.*` |
+| 2026-06-12 | Fas 3 S2 (delvis): `scripts/mrt.ps1` / `mrt.sh` unified CLI |

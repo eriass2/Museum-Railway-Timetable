@@ -11,7 +11,7 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 
 **Never** run `docker compose … run composer vue:check` — the `composer` image has no npm. Use `.\scripts\vue-check.ps1` or the `vue` service via scripts.
 
-**Prefer** `.\scripts\*.ps1` over raw `docker compose` — wrappers use `--no-deps`, conditional `npm ci`, and single-container check/lint. See `docs/DOCKER_SCRIPTS_PLAN.md`.
+**Prefer** `.\scripts\*.ps1` or `.\scripts\mrt.ps1` over raw `docker compose` — wrappers use `--no-deps`, conditional `npm ci`, tools-shell exec, and single-container check/lint. See `docs/DOCKER_SCRIPTS_PLAN.md`.
 
 **Timings:** add `-Timings` to gate scripts, or set `$env:MRT_SCRIPT_TIMINGS=1` / `export MRT_SCRIPT_TIMINGS=1` (bash: `--timings`). Logs `[timing] step — Ns` per major step.
 
@@ -23,6 +23,16 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 | Full reset (Linux/WSL) | `./scripts/docker-dev-reset.sh` |
 | Rebuild WordPress image | `-Build` / `--build` on the reset script above |
 | Stack already up | `-SkipCompose` / `--skip-compose` |
+| Plugin sync (slow Windows bind mount) | `.\scripts\docker-watch.ps1` or `.\scripts\mrt.ps1 dev watch` |
+
+## Unified CLI
+
+| Context | Command |
+|---------|---------|
+| Help | `.\scripts\mrt.ps1 help` |
+| Same as check.ps1 | `.\scripts\mrt.ps1 check` |
+| Same as test.ps1 | `.\scripts\mrt.ps1 test` |
+| Dev reset | `.\scripts\mrt.ps1 dev reset` |
 
 ## PHP
 
