@@ -1,3 +1,5 @@
 # Quality gates (validate, PHPStan, PHPUnit, PHPCS, Vue, coverage).
 
-Implementation lives here; root `scripts/*.ps1` / `*.sh` are thin wrappers for backward compatibility.
+Bash implementations (`*.sh`) are canonical for Linux/WSL/CI; PowerShell (`.ps1`) for Windows Docker.
+
+Root wrappers forward here for backward compatibility.
