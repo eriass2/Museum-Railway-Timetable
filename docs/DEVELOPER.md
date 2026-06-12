@@ -81,10 +81,15 @@ Använd Docker när du behöver klicka i admin, prova shortcodes eller testa dat
 
 ```powershell
 .\scripts\docker-dev-reset.ps1
-# eller bara starta stacken:
-docker compose up -d
 # efter ändring i Dockerfile:
 .\scripts\docker-dev-reset.ps1 -Build
+```
+
+Linux/WSL:
+
+```sh
+./scripts/docker-dev-reset.sh
+./scripts/docker-dev-reset.sh --build
 ```
 
 - Webbplats: <http://localhost:8080>
@@ -101,14 +106,9 @@ Windows — PHP/Vue quality gates (Docker, optimerade wrappers):
 .\scripts\lint.ps1             # PHPStan + PHPCS
 ```
 
-Om datorn saknar lokal PHP/Composer och du **måste** köra manuellt i Docker:
+Om datorn saknar lokal PHP/Composer: använd **`.\scripts\check.ps1`** (Windows) eller **`bash scripts/lint.sh`** + **`composer test`** (Linux) — inte rå `docker compose … run composer …`.
 
-```sh
-docker compose --profile tools run --rm --no-deps composer install
-docker compose --profile tools run --rm --no-deps composer check:all
-```
-
-Vue körs i **`vue`-containern** — använd `.\scripts\vue-check.ps1`, inte `composer vue:check` i `composer`-imaget (saknar npm).
+Vue körs i **`vue`-containern** — använd **`.\scripts\vue-check.ps1`** / **`bash scripts/vue-check.sh`**, inte `docker compose … run composer vue:check` (`composer`-imaget saknar npm).
 
 Local by Flywheel kan fortfarande användas via `local/deploy.ps1`, men Docker är den portabla standarden för manuell WordPress-testning.
 
@@ -136,7 +136,7 @@ Efter ändringar i import, rutter eller demosidor – ett kommando för agent/ut
 powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-dev-reset.ps1
 ```
 
-`-SkipCompose` om Docker redan kör. `-Build` om `Dockerfile` ändrats (annars `up -d` utan rebuild). Bygger Vue och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md). Linux: `./scripts/docker-dev-reset.sh`.
+`-SkipCompose` / `--skip-compose` om Docker redan kör. `-Build` / `--build` om `Dockerfile` ändrats (annars `up -d` utan rebuild). Bygger Vue och laddar publik CSS via Vite-bundeln — se [VUE_FRONTEND.md](VUE_FRONTEND.md).
 
 ### Automatiserad Docker-smoke
 

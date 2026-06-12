@@ -60,6 +60,9 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Reseplanerare J14 — holistisk cache (R1–R4, prefetch, warm) | 2026-06-11 | [WIZARD_CACHE_REFACTOR.md](WIZARD_CACHE_REFACTOR.md), `journey-cache.php`, `resourceCache.ts`, `scripts/warm-journey-cache.php`, commits `fb52993`, `8f3228e` |
 | Reseplanerare — enhetlig stepper (pill-storlek/typografi) | 2026-06-11 | `wizard-steps.css`, `MrtStepProgress.vue`, commit `6cf1c64` |
 | Docker/skript — Fas 0 (optimering + refaktor) | 2026-06-11 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md), commit `b3934a4` |
+| Docker/skript — Fas 1 D1–D2 (docs → skript, bash `-Build`) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
+| Docker/skript — Fas 1 D3–D4 (timings, npm/vendor-logg) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
+| Docker/skript — Fas 1 D5–D7 (csv-package, host npm ci, smoke-URL:er) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
 | Reseplanerare J15–J17 + D19–D21 — biljettcopy (fotnoter, station, eftermiddag) | 2026-06-11 | `ticket-copy.php`, `PricesTicketCopyPanel.vue`, `MrtPriceTable.vue`, `#/prices` + stationfält |
 
 ---
@@ -70,6 +73,6 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 
 | ID | Punkt | Fas |
 |----|-------|-----|
-| D1–D7 | Docs, bash-paritet, timings, smoke-URL:er | 1 |
+| ~~D1–D7~~ | ~~Fas 1 (docs, timings, csv, smoke-URL:er)~~ | 1 — **klar** |
 | P1–P7 | Volumes, tools-image, WP-CLI exec, tools-shell | 2 |
 | S1–S5 | En CLI, CI-strategi, devcontainer | 3 |

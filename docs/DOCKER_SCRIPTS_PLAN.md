@@ -36,7 +36,7 @@ Entry-script (`check.ps1`, `test.ps1`, `vue-check.ps1`, …) är tunna. Gemensam
 | PHPUnit | `.\scripts\test.ps1` | `composer test` |
 | Vue | `.\scripts\vue-check.ps1` | `bash scripts/vue-check.sh` |
 | Dev reset | `.\scripts\docker-dev-reset.ps1` | `./scripts/docker-dev-reset.sh` |
-| Dev reset + rebuild image | `.\scripts\docker-dev-reset.ps1 -Build` | *(saknas i `.sh` — se Fas 1)* |
+| Dev reset + rebuild image | `.\scripts\docker-dev-reset.ps1 -Build` | `./scripts/docker-dev-reset.sh --build` |
 
 ### Medveten hybrid: Docker vs host
 
@@ -54,15 +54,15 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 
 **Mål:** Dokumentation, paritet och bättre feedback utan ny infrastruktur.
 
-| ID | Uppgift | Insats | Filer |
-|----|---------|--------|-------|
-| D1 | Docs pekar på skript, inte rå `docker compose … npm ci` | Liten | `DEVELOPER.md`, `VUE_FRONTEND.md`, `testing-commands.mdc` |
-| D2 | `-Build` i `docker-dev-reset.sh` (paritet med `.ps1`) | Liten | `docker-dev-reset.sh`, `mrt-docker.sh` |
-| D3 | `-Timings` / `MRT_SCRIPT_TIMINGS=1` — logga stegtid | Liten | `Mrt.Docker.ps1`, `mrt-docker.sh` |
-| D4 | Tydlig logg: *Skipped npm ci*, *Using existing vendor* | Liten | Vue/npm-helpers |
-| D5 | `csv-package-zip.sh` via `mrt_tools_run` | Liten | `csv-package-zip.sh` |
-| D6 | Villkorlig `npm ci` i `composer vue:build` / `vue:check` (host) | Liten | `composer.json` eller wrapper |
-| D7 | `docker-smoke.ps1`: hämta demo-URL via WP-CLI (inte hårdkodade `?p=39`) | Medel | `docker-smoke.ps1` |
+| ID | Punkt | Insats | Status |
+|----|---------|--------|--------|
+| D1 | Docs pekar på skript, inte rå `docker compose … npm ci` | Liten | **Klar** (2026-06-12) |
+| D2 | `-Build` i `docker-dev-reset.sh` (paritet med `.ps1`) | Liten | **Klar** (2026-06-12) |
+| D3 | `-Timings` / `MRT_SCRIPT_TIMINGS=1` — logga stegtid | Liten | **Klar** (2026-06-12) |
+| D4 | Tydlig logg: *Skipped npm ci*, *Using existing vendor* | Liten | **Klar** (2026-06-12) |
+| D5 | `csv-package-zip.sh` via `mrt_tools_run` | Liten | **Klar** (2026-06-12) |
+| D6 | Villkorlig `npm ci` i `composer vue:build` / `vue:check` (host) | Liten | **Klar** (2026-06-12) |
+| D7 | `docker-smoke.ps1`: hämta demo-URL via WP-CLI (inte hårdkodade `?p=39`) | Medel | **Klar** (2026-06-12) |
 
 **Exit-kriterium:** Nya utveckare och agenter hittar rätt kommando utan att kopiera inaktuella docker-rader.
 
@@ -118,8 +118,6 @@ Sist   → S1/S2 (CLI-konsolidering) när smärta från dubbel kodbas märks
 | Område | Nuvarande beteende |
 |--------|-------------------|
 | `coverage.ps1` | Bygger PCOV vid varje körning |
-| `docker-dev-reset.sh` | Saknar `-Build` |
-| `Invoke-MrtVueBuild` (lokal) | `composer vue:build` kör alltid `npm ci` |
 | Bind mount | Hela repot mountas — långsamt på Windows utan WSL2-volym |
 | Docs i root README | Kan fortfarande nämna `docker compose up -d --build` som snabbstart |
 
@@ -130,3 +128,6 @@ Sist   → S1/S2 (CLI-konsolidering) när smärta från dubbel kodbas märks
 | Datum | Vad |
 |-------|-----|
 | 2026-06-11 | Fas 0: optimering + refaktor `Mrt.Docker.ps1` / `mrt-docker.sh`, `composer check:all`, `-Build` på `docker-dev-reset.ps1` — commit `b3934a4` |
+| 2026-06-12 | Fas 1 D1–D2: docs → skript, `docker-dev-reset.sh --build` / `--skip-compose` |
+| 2026-06-12 | Fas 1 D3–D4: `-Timings` / `MRT_SCRIPT_TIMINGS=1`, npm ci + vendor-logg |
+| 2026-06-12 | Fas 1 D5–D7: csv-package via tools, host npm ci, smoke-URL:er via WP-CLI |

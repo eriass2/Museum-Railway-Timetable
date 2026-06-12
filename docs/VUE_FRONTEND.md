@@ -24,7 +24,7 @@ Styles ship in the Vite bundle (not separate `mrt-frontend-public` handles).
 
 ## Docker / utveckling
 
-Docker dev (`docker compose up` / `docker-dev-reset.ps1`) sätter `MRT_DEVELOPMENT` och bygger Vue-bundeln.
+Docker dev (`.\scripts\docker-dev-reset.ps1` / `./scripts/docker-dev-reset.sh`) sätter `MRT_DEVELOPMENT` och bygger Vue-bundeln.
 
 ## Build and check
 
@@ -34,6 +34,8 @@ Host (Node/npm i PATH):
 composer vue:check   # typecheck + vitest + build + bundle smoke test
 composer vue:build   # build only
 ```
+
+Host `composer vue:*` kör `php scripts/npm-ci-if-needed.php` — samma villkorliga `npm ci` som Docker-skripten.
 
 Docker (Windows rekommenderat — samma Node 22 som CI):
 
