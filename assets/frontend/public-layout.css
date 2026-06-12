@@ -27,6 +27,27 @@ body.mrt-has-overview .mrt-vue-root--overview {
     box-sizing: border-box;
 }
 
+/* Non-embedded wizard: viewport full bleed (TT5 padding + capped entry-content). */
+@media (min-width: 48.0625rem) {
+    body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root--wizard.alignfull,
+    body.mrt-has-shortcodes .wp-block-post-content-is-layout-constrained > .mrt-vue-root--wizard.alignfull {
+        box-sizing: border-box;
+        max-width: none !important;
+        width: 100svw !important;
+        margin-left: calc(50% - 50svw) !important;
+        margin-right: calc(50% - 50svw) !important;
+    }
+
+    /* Nested in an alignfull Group block only — not entry-content.alignfull (would cancel breakout). */
+    body.mrt-has-shortcodes .wp-block-group.alignfull > .mrt-vue-root--wizard.alignfull,
+    body.mrt-has-shortcodes .wp-block-group.alignfull .mrt-vue-root--wizard.alignfull {
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
 .mrt-timetable-overview {
     width: 100%;
     max-width: 100%;
@@ -44,9 +65,4 @@ body.mrt-has-overview .mrt-vue-root--overview {
 
 .mrt-demo-mockup-caption + .mrt-journey-wizard--embedded {
     margin-top: clamp(1.25rem, 3vw, 2rem);
-}
-
-/* Viewport-wide wizard hero ::after can extend past the content column; avoid horizontal scroll. */
-body.mrt-has-shortcodes:has(.mrt-journey-wizard:not(.mrt-journey-wizard--embedded)) {
-    overflow-x: clip;
 }

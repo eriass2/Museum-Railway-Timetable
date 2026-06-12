@@ -4,11 +4,11 @@ import { wpIndexUrl } from './wp-demo-url';
 test.describe('Journey wizard on Trafikkalender (WordPress front page)', () => {
   test.skip(!wpIndexUrl, 'Set MRT_E2E_WP_INDEX_URL or MRT_E2E_WP_DEMO_URL');
 
-  test('stacked shortcodes mount wizard with hero background at full width', async ({ page }) => {
+  test('stacked shortcodes mount wizard with hero background edge to edge', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(wpIndexUrl);
 
-    const wizardRoot = page.locator('.mrt-vue-root--wizard').first();
+    const wizardRoot = page.locator('.mrt-vue-root--wizard.alignfull').first();
     await expect(wizardRoot).toBeVisible({ timeout: 20_000 });
 
     const wizard = page.locator('.mrt-journey-wizard').first();
@@ -19,24 +19,28 @@ test.describe('Journey wizard on Trafikkalender (WordPress front page)', () => {
     await hero.scrollIntoViewIfNeeded();
     await expect(hero).toBeVisible();
 
-    const heroMetrics = await hero.evaluate((el) => {
+    const viewport = page.viewportSize();
+    expect(viewport).not.toBeNull();
+
+    const metrics = await hero.evaluate((el) => {
       const style = getComputedStyle(el);
       const rect = el.getBoundingClientRect();
       return {
         backgroundImage: style.backgroundImage,
-        width: rect.width,
         left: rect.left,
+        right: rect.right,
+        width: rect.width,
       };
     });
 
-    expect(heroMetrics.backgroundImage).not.toBe('none');
-    expect(heroMetrics.backgroundImage).toMatch(/url\(/);
+    expect(metrics.backgroundImage).not.toBe('none');
+    expect(metrics.backgroundImage).toMatch(/url\(/);
 
-    const viewport = page.viewportSize();
-    expect(viewport).not.toBeNull();
     if (viewport) {
-      expect(heroMetrics.width).toBeGreaterThan(viewport.width * 0.95);
-      expect(heroMetrics.left).toBeLessThan(8);
+      const edgeSlack = 4;
+      expect(metrics.left).toBeLessThan(edgeSlack);
+      expect(metrics.right).toBeGreaterThan(viewport.width - edgeSlack);
+      expect(metrics.width).toBeGreaterThan(viewport.width - edgeSlack * 2);
     }
   });
 });

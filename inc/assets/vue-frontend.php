@@ -94,6 +94,23 @@ function MRT_vue_trip_pdf_script_url(): ?string {
 }
 
 /**
+ * Extra CSS classes on the Vue mount node (block-theme layout).
+ *
+ * @param string               $app    Vue app id.
+ * @param array<string, mixed> $config Mount config (may include embedded).
+ */
+function MRT_vue_mount_extra_classes( string $app, array $config ): string {
+	if ( in_array( $app, array( 'overview', 'month', 'index', 'traffic_notices' ), true ) ) {
+		return ' alignwide';
+	}
+	if ( 'wizard' === $app && empty( $config['embedded'] ) ) {
+		return ' alignfull';
+	}
+
+	return '';
+}
+
+/**
  * Render mount node for a Vue app.
  *
  * @param string               $app    month|overview|wizard|index
@@ -134,7 +151,7 @@ function MRT_render_vue_mount( string $app, array $config ): string {
 		'<div class="mrt-vue-root mrt-vue-root--%1$s%3$s" data-mrt-vue-app="%1$s"><script type="application/json" class="mrt-vue-config">%2$s</script></div>',
 		esc_attr( $app ),
 		$json,
-		'overview' === $app || 'month' === $app || 'index' === $app || 'traffic_notices' === $app ? ' alignwide' : ''
+		MRT_vue_mount_extra_classes( $app, $config )
 	);
 }
 
