@@ -197,6 +197,16 @@ mrt_dev_reset_import() {
 		"if (!function_exists('MRT_dev_reset_and_import_cli')) { fwrite(STDERR, 'Plugin not active or dev-cli not loaded'.PHP_EOL); exit(1); } MRT_dev_reset_and_import_cli();"
 }
 
+mrt_set_wp_debug() {
+	enabled="${1:-1}"
+	value="false"
+	if [ "$enabled" -eq 1 ]; then
+		value="true"
+	fi
+	mrt_wp_cli config set WP_DEBUG "$value" --raw
+	mrt_wp_cli config set WP_DEBUG_LOG "$value" --raw
+}
+
 mrt_import_lennakatten() {
 	mrt_wp_eval "if (function_exists('MRT_run_lennakatten_import')) { echo MRT_run_lennakatten_import(); }" || true
 }

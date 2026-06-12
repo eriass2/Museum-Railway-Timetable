@@ -36,24 +36,26 @@ if ($Passthrough.Count -gt 0 -and $cmd -in @('dev', 'release', 'csv', 'vue')) {
 
 switch ($cmd) {
     { $_ -in 'help', '-h', '--help' } { Show-MrtHelp; exit 0 }
-    'check' { Invoke-MrtScript 'check.ps1' $Passthrough }
-    'test' { Invoke-MrtScript 'test.ps1' $Passthrough }
-    'lint' { Invoke-MrtScript 'lint.ps1' $Passthrough }
-    'vue-check' { Invoke-MrtScript 'vue-check.ps1' $Passthrough }
+    'check' { Invoke-MrtScript 'gate/check.ps1' $Passthrough }
+    'test' { Invoke-MrtScript 'gate/test.ps1' $Passthrough }
+    'lint' { Invoke-MrtScript 'gate/lint.ps1' $Passthrough }
+    'vue-check' { Invoke-MrtScript 'gate/vue-check.ps1' $Passthrough }
     'vue' {
-        if ($sub -eq 'check') {
-            Invoke-MrtScript 'vue-check.ps1' $Passthrough
+        switch ($sub) {
+            'check' { Invoke-MrtScript 'gate/vue-check.ps1' $Passthrough }
+            default {
+                Write-Host "Unknown vue subcommand: $sub (try: check)" -ForegroundColor Red
+                exit 1
+            }
         }
-        Write-Host "Unknown vue subcommand: $sub (try: check)" -ForegroundColor Red
-        exit 1
     }
-    'coverage' { Invoke-MrtScript 'coverage.ps1' $Passthrough }
+    'coverage' { Invoke-MrtScript 'gate/coverage.ps1' $Passthrough }
     'setup-dev' { Invoke-MrtScript 'setup-dev.ps1' $Passthrough }
     'dev' {
         switch ($sub) {
-            'reset' { Invoke-MrtScript 'docker-dev-reset.ps1' $Passthrough }
-            'smoke' { Invoke-MrtScript 'docker-smoke.ps1' $Passthrough }
-            'watch' { Invoke-MrtScript 'docker-watch.ps1' $Passthrough }
+            'reset' { Invoke-MrtScript 'dev/docker-dev-reset.ps1' $Passthrough }
+            'smoke' { Invoke-MrtScript 'dev/docker-smoke.ps1' $Passthrough }
+            'watch' { Invoke-MrtScript 'dev/docker-watch.ps1' $Passthrough }
             default {
                 Write-Host "Unknown dev subcommand: $sub (try: reset, smoke, watch)" -ForegroundColor Red
                 exit 1
@@ -62,8 +64,8 @@ switch ($cmd) {
     }
     'release' {
         switch ($sub) {
-            'build' { Invoke-MrtScript 'build-release.ps1' $Passthrough }
-            'deploy' { Invoke-MrtScript 'live-deploy.ps1' $Passthrough }
+            'build' { Invoke-MrtScript 'release/build-release.ps1' $Passthrough }
+            'deploy' { Invoke-MrtScript 'release/live-deploy.ps1' $Passthrough }
             default {
                 Write-Host "Unknown release subcommand: $sub (try: build, deploy)" -ForegroundColor Red
                 exit 1

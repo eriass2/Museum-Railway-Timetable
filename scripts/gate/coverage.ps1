@@ -5,12 +5,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$scriptsRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-. (Join-Path $scriptsRoot 'lib/Mrt.Docker.ps1')
-Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
-
-Assert-MrtDockerAvailable -Message 'Docker is not running. Coverage requires Docker (php-test + PCOV).'
-Ensure-MrtVendor
+. (Join-Path $PSScriptRoot '_runner.ps1')
+Initialize-MrtGateEnvironment -RequireDocker -EnsureVendor
 
 New-Item -ItemType Directory -Force -Path coverage | Out-Null
 

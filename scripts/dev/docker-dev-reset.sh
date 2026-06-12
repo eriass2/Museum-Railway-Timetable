@@ -44,6 +44,10 @@ mrt_step 'Swedish locale (sv_SE)'
 mrt_ensure_sv_locale
 mrt_step_done
 
+mrt_step 'Enable WP_DEBUG (development)'
+mrt_set_wp_debug 1
+mrt_step_done
+
 mrt_step 'Reset and import'
 mrt_dev_reset_import
 mrt_step_done

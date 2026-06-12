@@ -9,13 +9,8 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$scriptsRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-. (Join-Path $scriptsRoot 'lib/Mrt.Docker.ps1')
-Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
-Initialize-MrtScriptTimings -Timings:$Timings
-
-Assert-MrtDockerAvailable
-Ensure-MrtVendor
+. (Join-Path $PSScriptRoot '_runner.ps1')
+Initialize-MrtGateEnvironment -Timings:$Timings -RequireDocker -EnsureVendor
 
 $composerScript = if ($SkipPhpcs) { 'check' } else { 'check:all' }
 $checkArgs = @($composerScript)
@@ -33,10 +28,10 @@ if ($Vue) {
     if ($Timings) {
         $vueArgs += '-Timings'
     }
-    & (Join-Path $scriptsRoot 'vue-check.ps1') @vueArgs
+    & (Join-Path $script:MrtGateScriptsRoot 'gate/vue-check.ps1') @vueArgs
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
 }
 
-Complete-MrtScriptTimings
+Complete-MrtGateEnvironment

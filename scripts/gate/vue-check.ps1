@@ -1,15 +1,12 @@
 # Run Vue typecheck, Vitest, build, and verify in Docker by default (node:22-alpine).
-# Use -Local when Node/npm is installed on the host.
 param(
     [switch]$Local,
     [switch]$Timings
 )
 
 $ErrorActionPreference = 'Stop'
-$scriptsRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
-. (Join-Path $scriptsRoot 'lib/Mrt.Docker.ps1')
-Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
-Initialize-MrtScriptTimings -Timings:$Timings
+. (Join-Path $PSScriptRoot '_runner.ps1')
+Initialize-MrtGateEnvironment -Timings:$Timings
 
 Invoke-MrtWithDockerDefault -Local:$Local `
     -DockerUnavailableWarning:(Test-MrtNpmAvailable) `
@@ -19,9 +16,11 @@ Invoke-MrtWithDockerDefault -Local:$Local `
         'Docker is not running and npm is not in PATH.'
     }) `
     -DockerAction {
+        Assert-MrtDockerAvailable
         Invoke-MrtTimedStep -Title 'Vue check (Docker)' -SkipStepHeader -Action {
             Invoke-MrtDockerVue -Mode Check -ExitOnError
         }
+        Complete-MrtGateEnvironment
     } `
     -LocalAction {
         Invoke-MrtTimedStep -Title 'Vue check (local)' -Action {
@@ -29,4 +28,5 @@ Invoke-MrtWithDockerDefault -Local:$Local `
             Write-Host 'Running Vue check locally (composer vue:check)...' -ForegroundColor Cyan
             & composer vue:check
         }
+        Complete-MrtGateEnvironment
     }
