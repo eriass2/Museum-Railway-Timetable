@@ -41,6 +41,10 @@
     background: var(--mrt-wizard-green-dark);
 }
 
+.mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero {
+    padding: clamp(2rem, 5vw, 4rem) 1rem clamp(1.5rem, 4vw, 2.5rem);
+}
+
 .mrt-journey-wizard[data-step="route"] .mrt-journey-wizard__hero {
     min-height: 0;
 }

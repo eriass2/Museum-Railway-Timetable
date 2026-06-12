@@ -41,7 +41,7 @@ function onBack(): void {
   <MrtStepPanel step="date" :ariaLabel="cfgStr(cfg, 'stepDate', 'Välj datum')">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
-    <MrtSurfaceCard flush>
+    <MrtSurfaceCard flush box class="mrt-journey-wizard__step-section">
       <MrtCalendarNav
         :month-title="monthTitle"
         :prev-aria="cfgStr(cfg, 'calPrevAria', 'Föregående månad')"

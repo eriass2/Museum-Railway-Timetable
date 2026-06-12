@@ -1,0 +1,57 @@
+/**
+ * Journey wizard — green main card (J19): beta, steps, white text; inner boxes stay white.
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+.mrt-journey-wizard__main-card {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: clamp(1.25rem, 3vw, 2rem);
+    background: var(--mrt-wizard-green-dark, #1e4d6b);
+    color: #fff;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+}
+
+.mrt-journey-wizard__main-card > .mrt-journey-wizard__beta {
+    max-width: none;
+    margin-bottom: 1rem;
+}
+
+.mrt-journey-wizard__main-card > .mrt-step-nav {
+    margin-bottom: 1.25rem;
+}
+
+.mrt-journey-wizard__main-card > .mrt-journey-wizard__errors {
+    max-width: none;
+}
+
+.mrt-journey-wizard__main-card .mrt-heading--surface-title {
+    color: #fff;
+}
+
+.mrt-journey-wizard__main-card .mrt-step-panel,
+.mrt-journey-wizard__main-card .mrt-step-panel--search,
+.mrt-journey-wizard__main-card .mrt-step-panel--wide {
+    width: 100%;
+    max-width: none;
+    margin-inline: 0;
+    margin-top: 0;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+}
+
+.mrt-journey-wizard__main-card .mrt-journey-wizard__route-form {
+    margin-top: 0.25rem;
+}
+
+.mrt-journey-wizard__main-card .mrt-journey-wizard__step-section {
+    margin-top: 0.5rem;
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__main-card {
+    box-shadow: none;
+    padding: 0;
+}

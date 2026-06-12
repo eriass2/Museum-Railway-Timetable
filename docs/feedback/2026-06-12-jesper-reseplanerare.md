@@ -3,7 +3,7 @@
 Återkoppling efter publicering och [svar 11 juni](2026-06-11-svar-till-jesper.md). Jesper bekräftar att vi **fixar det som finns nu innan vi bygger vidare** och att reseplaneraren **känns snabbare**. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (2026-06-12), mockup `image0.png`  
-**Senast uppdaterad:** 2026-06-12  
+**Senast uppdaterad:** 2026-06-12 (J19/J21 layout implementerad)  
 **Relaterat:** [2026-06-11-jesper-reseplanerare.md](2026-06-11-jesper-reseplanerare.md) (J14–J18), [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J3, J4, J10), [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
 
 ---
@@ -13,7 +13,7 @@
 | Kategori | Antal | Prioritet | Status |
 |----------|-------|-----------|--------|
 | Prestanda (bekräftelse) | 1 | — | Jesper OK — J14 upplevs bättre |
-| Layout / design (regression + ny riktning) | 3 | hög | öppen |
+| Layout / design (regression + ny riktning) | 3 | hög | delvis åtgärdad (J19/J21 layout) |
 | Detaljvy — buggar (Ca, mot, fotnot) | 3 | hög | öppen |
 | Detaljvy — polish (tidslinje, Ca-rad) | 2 | medium–låg | öppen |
 | Omgång 3 kvar (J15–J18) | 4 | varierande | öppen — paus tills layout/buggar fixade |
@@ -37,16 +37,16 @@
 - **Område:** Reseplanerare / layout, alla steg
 - **Typ:** design / regression mot ursprungsutkast
 - **Prioritet:** hög
-- **Status:** öppen
+- **Status:** **delvis åtgärdad** (2026-06-12) — grön huvudpanel (`mrt-journey-wizard__main-card`) med vit text; beta, steg och rubriker på grönt; formulär, kalender och reskort i vita rutor inuti. Kvar: ev. finjustering mot mockup.
 
 ### Nuvarande läge i kod
 
 | Del | Var | Beteende idag |
 |-----|-----|---------------|
-| Hero-bakgrund | `base.css` — `.mrt-journey-wizard__hero` | Grön bakgrund på hero-ytan |
-| Stegpaneler desktop | `hero-layout.css` — `.mrt-step-panel` | `background: transparent` inom hero med bild |
-| Innehållsrutor | `MrtSurfaceCard` / `.mrt-surface` | Vit bakgrund |
-| Text på grönt | `wizard-shell.css`, stegheaders | Delvis vit på vissa steg; paneler kan kännas som ”ram” runt vita kort |
+| Yta utanför kort | `app-shell.css` — backdrop / hero | Grön eller foto full bredd |
+| Huvudpanel | `JourneyWizardApp.vue` — `__main-card` | Vit `MrtSurfaceCard`: beta, steg, alla steg |
+| Inre sektioner | datum/utresa/summary | Vit `--box` inuti huvudpanel vid behov |
+| Söksteg | `WizardRouteStep.vue` | Restyp före Från/Till |
 
 ### Önskat utseende (Jesper)
 
@@ -98,16 +98,17 @@ Alla fyra stegknappar på **samma rad** på mobil (som tidigare), utan att bryta
 - **Område:** Reseplanerare / hero-layout, WordPress-tema-integration
 - **Typ:** bugg + design (J10-uppföljning)
 - **Prioritet:** hög
-- **Status:** öppen
+- **Status:** **delvis åtgärdad** (2026-06-12) — se delpunkter nedan.
 
 ### Delpunkter
 
-| # | Problem | Antydning i kod |
-|---|---------|-----------------|
-| A | Element utanför skärmen (horisontell overflow) | `width: 100vw` + negativa margins i `base.css`; `background-attachment: fixed` i `hero-layout.css` |
-| B | Bakgrundsbild täcker inte hela bredden | Hero-inner `max-width: 58rem`; tema-wrapper begränsar |
-| C | Planeraren för bred/utdragen | Desktop: `max-width: none` på stegpaneler (`hero-layout.css`); hero-inner fortfarande 58rem |
-| D | Grönt filter över foto | `hero-layout.css` `::before` — `color-mix(… green-dark 30%, transparent)` |
+| # | Problem | Status (2026-06-12) |
+|---|---------|---------------------|
+| A | Element utanför skärmen (horisontell overflow) | ☑ `MrtPublicAppShell` + centrerad layout |
+| B | Bakgrundsbild täcker inte hela bredden | ☑ backdrop full viewport |
+| C | Planeraren för bred/utdragen | ☑ `--mrt-wizard-content-max` + vit huvudpanel |
+| D | Grönt filter över foto | ☑ overlay borttagen från backdrop |
+| E | Restyp före destination (söksteg) | ☑ `WizardRouteStep.vue` |
 
 ### Föreslagen åtgärd
 
@@ -292,8 +293,8 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 
 | # | ID | Punkt | Insats | Rek. ordning |
 |---|-----|-------|--------|--------------|
-| 1 | J21 | Overflow, bild, kompakt, filter | Medel | 1 — synligt på hemsidan |
-| 2 | J19 | Grön bakgrund hela planeraren | Medel | 2 — design tillsammans med J21 |
+| 1 | J21 | Overflow, bild, kompakt, filter | Medel | **delvis klar** — verifiera på test3 |
+| 2 | J19 | Grön bakgrund hela planeraren | Medel | **delvis klar** — grön huvudpanel, vit text, vita inre rutor |
 | 3 | J24 | Fel ”mot”-destination | Liten (PHP) | 3 — tydlig bugg |
 | 4 | J23 | Ca bara behovsuppehåll | Liten–medel | 4 — logik + ev. data |
 | 5 | J26 | Behovsuppehåll ℹ️ per stopp | Medel | 5 — UX + logik |
@@ -318,6 +319,7 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 
 ## Nästa steg
 
+- [x] J19/J21 layout: grön huvudpanel (vit text), shell full-bleed, filter bort, restyp före stationer (2026-06-12)
 - [ ] Team: produktbeslut D23–D26
 - [ ] Implementation enligt prioritetslista
 - [ ] Verifiera på `t3.lennakatten.se` (tema + shortcode), inte bara lokal demo

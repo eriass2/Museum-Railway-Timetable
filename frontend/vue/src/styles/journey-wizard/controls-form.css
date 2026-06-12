@@ -17,13 +17,6 @@
     margin-bottom: 1.25rem;
 }
 
-@media (min-width: 40rem) {
-    .mrt-journey-wizard .mrt-surface .mrt-route-layout__stations {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem 1.25rem;
-    }
-}
-
 .mrt-journey-wizard .mrt-surface .mrt-segmented-field {
     margin-bottom: 1.5rem;
 }
@@ -135,4 +128,45 @@
 
 .mrt-journey-wizard--embedded .mrt-step-progress__item.is-active {
     color: var(--mrt-color-on-accent);
+}
+
+/*
+ * Route search step overrides — must follow generic .mrt-surface rules above and beat
+ * bundled legacy ui/trips.css (.mrt-route-layout__stations two-column at 40rem).
+ */
+.mrt-journey-wizard .mrt-surface.mrt-journey-wizard__route-form .mrt-segmented-field {
+    margin-bottom: 1.25rem;
+}
+
+.mrt-journey-wizard .mrt-surface.mrt-journey-wizard__route-form .mrt-segmented-field__legend {
+    margin-bottom: 0.4rem;
+    font-size: 0.95rem;
+}
+
+.mrt-journey-wizard .mrt-surface.mrt-journey-wizard__route-form .mrt-segmented__option {
+    min-height: 2.5rem;
+    padding: 0.35rem 0.5rem;
+    gap: 0.4rem;
+    font-size: 0.875rem;
+}
+
+.mrt-journey-wizard .mrt-surface.mrt-journey-wizard__route-form .mrt-trip-type-icon,
+.mrt-journey-wizard .mrt-surface.mrt-journey-wizard__route-form .mrt-trip-type-icon svg {
+    width: 1.35rem;
+    height: 1.35rem;
+}
+
+.mrt-journey-wizard .mrt-surface.mrt-journey-wizard__route-form .mrt-route-layout__stations {
+    grid-template-columns: 1fr;
+}
+
+.mrt-journey-wizard .mrt-surface.mrt-journey-wizard__route-form .mrt-journey-wizard__station-field {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.mrt-journey-wizard .mrt-surface.mrt-journey-wizard__route-form .mrt-journey-wizard__station-field .mrt-heading {
+    margin: 0;
+    color: var(--mrt-wizard-text);
+    font-weight: 700;
 }

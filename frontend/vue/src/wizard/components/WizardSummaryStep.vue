@@ -49,7 +49,7 @@ function onBack(): void {
       @back="onBack"
     />
 
-    <MrtSurfaceCard>
+    <MrtSurfaceCard box class="mrt-journey-wizard__step-section">
       <div class="mrt-summary-print-root" data-wizard-summary-print>
         <p class="mrt-summary-print-title">{{ cfgStr(cfg, 'stepSummary', 'Din resa') }}</p>
         <p class="mrt-summary-print-meta">{{ tripTypeLabel }} · {{ store.contextLine.replace(/\n/g, ' · ') }}</p>

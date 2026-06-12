@@ -72,7 +72,7 @@ watch(
   <MrtStepPanel :step="legCtx" variant="wide" :ariaLabel="stepLabel">
     <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
-    <MrtSurfaceCard>
+    <MrtSurfaceCard box class="mrt-journey-wizard__step-section">
       <MrtSelectedTrip
         v-if="legCtx === 'return' && store.outbound"
         return-summary

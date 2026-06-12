@@ -58,14 +58,6 @@
         background-repeat: no-repeat;
         pointer-events: none;
     }
-
-    .mrt-app-shell--bleed-bg .mrt-app-shell__backdrop::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background: color-mix(in srgb, var(--mrt-wizard-green-dark, #1e4d6b) 30%, transparent);
-        pointer-events: none;
-    }
 }
 
 /* Narrower content column than calendar/index; centered via bleed shell above. */

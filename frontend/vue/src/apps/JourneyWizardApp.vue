@@ -105,28 +105,30 @@ onMounted(() => {
           <MrtAlert v-if="!hasStations" variant="info">
             {{ cfgStr(cfg, 'noStations', 'Inga stationer är tillgängliga.') }}
           </MrtAlert>
-          <div v-else-if="store.error && store.step !== 'route'" class="mrt-journey-wizard__errors">
-            <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>
-          </div>
           <template v-if="hasStations">
-            <WizardBetaBanner v-if="betaBanner" v-bind="betaBanner" />
-            <MrtStepProgress
-              :items="progressItems"
-              :nav-aria-label="cfgStr(cfg, 'stepNavAria', 'Steg i reseplaneraren')"
-              :readonly="false"
-              :step-go-to-aria="stepGoToAria"
-              @select="onProgressSelect"
-            />
-            <div ref="panelsRef" class="mrt-journey-wizard__panels">
-              <WizardRouteStep
-                v-if="store.step === 'route'"
-                :stations="stations"
-                :timetable-page-url="timetablePageUrl"
+            <div class="mrt-journey-wizard__main-card">
+              <WizardBetaBanner v-if="betaBanner" v-bind="betaBanner" />
+              <MrtStepProgress
+                :items="progressItems"
+                :nav-aria-label="cfgStr(cfg, 'stepNavAria', 'Steg i reseplaneraren')"
+                :readonly="false"
+                :step-go-to-aria="stepGoToAria"
+                @select="onProgressSelect"
               />
-              <WizardDateStep v-else-if="store.step === 'date'" />
-              <WizardTripStep v-else-if="store.step === 'outbound'" leg-ctx="outbound" />
-              <WizardTripStep v-else-if="store.step === 'return'" leg-ctx="return" />
-              <WizardSummaryStep v-else-if="store.step === 'summary'" />
+              <div v-if="store.error && store.step !== 'route'" class="mrt-journey-wizard__errors">
+                <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>
+              </div>
+              <div ref="panelsRef" class="mrt-journey-wizard__panels">
+                <WizardRouteStep
+                  v-if="store.step === 'route'"
+                  :stations="stations"
+                  :timetable-page-url="timetablePageUrl"
+                />
+                <WizardDateStep v-else-if="store.step === 'date'" />
+                <WizardTripStep v-else-if="store.step === 'outbound'" leg-ctx="outbound" />
+                <WizardTripStep v-else-if="store.step === 'return'" leg-ctx="return" />
+                <WizardSummaryStep v-else-if="store.step === 'summary'" />
+              </div>
             </div>
           </template>
         </div>

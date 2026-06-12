@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
+import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import MrtAlert from '../../components/ui/MrtAlert.vue';
 import MrtSegmentedControl from '../../components/ui/MrtSegmentedControl.vue';
 import MrtHeading from '../../components/ui/MrtHeading.vue';
 import MrtRouteLayout from '../../components/ui/MrtRouteLayout.vue';
 import MrtStepPanel from '../../components/ui/MrtStepPanel.vue';
-import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import { todayYearMonth } from '../utils/wizardDate';
 import { cfgStr } from '../utils/wizardLabels';
@@ -65,57 +65,69 @@ function onSearch(): void {
     variant="search"
     :ariaLabel="cfgStr(cfg, 'stepRoute', 'Sök resa')"
   >
-    <MrtSurfaceCard>
-      <MrtHeading level="h2" size="xl" variant="surface-title">
-        {{ cfgStr(cfg, 'routeTitle', 'Planera resa') }}
-      </MrtHeading>
+    <MrtHeading level="h2" size="xl" variant="surface-title">
+      {{ cfgStr(cfg, 'routeTitle', 'Planera resa') }}
+    </MrtHeading>
+
+    <MrtSurfaceCard class="mrt-journey-wizard__route-form">
+      <MrtSegmentedControl
+        v-model="tripType"
+        :legend="cfgStr(cfg, 'tripTypeLegend', 'Restyp')"
+        :options="tripOptions"
+      >
+        <template #option="{ option }">
+          <WizardTripTypeIcon :variant="option.value" />
+          {{ option.label }}
+        </template>
+      </MrtSegmentedControl>
 
       <MrtRouteLayout
         :timetable-href="timetablePageUrl || undefined"
         :timetable-label="cfgStr(cfg, 'timetablePageLink', 'Visa hela tidtabellen')"
       >
         <template #stations>
-          <WizardStationField
-            id="mrt_wizard_from"
-            v-model="fromId"
-            :label="cfgStr(cfg, 'from', 'Från')"
-            :placeholder="cfgStr(cfg, 'fromPlaceholder', 'Sök eller välj station…')"
-            :search-aria="cfgStr(cfg, 'stationSearchAria', 'Sök avgångsstation')"
-            :stations="stations"
-            :exclude-id="toId"
-          />
-          <WizardStationField
-            id="mrt_wizard_to"
-            v-model="toId"
-            :label="cfgStr(cfg, 'to', 'Till')"
-            :placeholder="cfgStr(cfg, 'toPlaceholder', 'Sök eller välj station…')"
-            :search-aria="cfgStr(cfg, 'stationSearchAriaTo', 'Sök ankomststation')"
-            :stations="stations"
-            :exclude-id="fromId"
-          />
+          <div class="mrt-journey-wizard__station-field">
+            <MrtHeading level="h3" size="sm">
+              {{ cfgStr(cfg, 'from', 'Från') }}
+            </MrtHeading>
+            <WizardStationField
+              id="mrt_wizard_from"
+              v-model="fromId"
+              hide-label
+              :label="cfgStr(cfg, 'from', 'Från')"
+              :placeholder="cfgStr(cfg, 'fromPlaceholder', 'Sök eller välj station…')"
+              :search-aria="cfgStr(cfg, 'stationSearchAria', 'Sök avgångsstation')"
+              :stations="stations"
+              :exclude-id="toId"
+            />
+          </div>
+          <div class="mrt-journey-wizard__station-field">
+            <MrtHeading level="h3" size="sm">
+              {{ cfgStr(cfg, 'to', 'Till') }}
+            </MrtHeading>
+            <WizardStationField
+              id="mrt_wizard_to"
+              v-model="toId"
+              hide-label
+              :label="cfgStr(cfg, 'to', 'Till')"
+              :placeholder="cfgStr(cfg, 'toPlaceholder', 'Sök eller välj station…')"
+              :search-aria="cfgStr(cfg, 'stationSearchAriaTo', 'Sök ankomststation')"
+              :stations="stations"
+              :exclude-id="fromId"
+            />
+          </div>
         </template>
-
-        <MrtSegmentedControl
-          v-model="tripType"
-          :legend="cfgStr(cfg, 'tripTypeLegend', 'Restyp')"
-          :options="tripOptions"
-        >
-          <template #option="{ option }">
-            <WizardTripTypeIcon :variant="option.value" />
-            {{ option.label }}
-          </template>
-        </MrtSegmentedControl>
-
-        <div v-if="store.error" class="mrt-field-error">
-          <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>
-        </div>
-
-        <div class="mrt-actions">
-          <MrtAccentButton type="button" @click="onSearch">
-            {{ cfgStr(cfg, 'searchTrip', 'Sök resa') }}
-          </MrtAccentButton>
-        </div>
       </MrtRouteLayout>
+
+      <div v-if="store.error" class="mrt-field-error">
+        <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>
+      </div>
+
+      <div class="mrt-actions">
+        <MrtAccentButton type="button" @click="onSearch">
+          {{ cfgStr(cfg, 'searchTrip', 'Sök resa') }}
+        </MrtAccentButton>
+      </div>
     </MrtSurfaceCard>
   </MrtStepPanel>
 </template>

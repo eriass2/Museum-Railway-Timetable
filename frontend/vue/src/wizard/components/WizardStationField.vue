@@ -12,6 +12,8 @@ const props = defineProps<{
   stations: WizardStation[];
   modelValue: number;
   excludeId?: number;
+  /** Keep label for a11y but hide visually when a heading is shown above. */
+  hideLabel?: boolean;
 }>();
 
 defineEmits<{ 'update:modelValue': [number] }>();
@@ -22,7 +24,7 @@ const options = computed(() =>
 </script>
 
 <template>
-  <MrtFieldGroup :label="label" :input-id="id">
+  <MrtFieldGroup :label="label" :input-id="id" :hide-label="hideLabel">
     <MrtCombobox
       :id="id"
       :model-value="modelValue"
