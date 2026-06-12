@@ -247,6 +247,9 @@ async function onMonthShift(delta: number): Promise<void> {
 }
 
 :deep(.mrt-empty) {
+  padding: var(--mrt-spacing-sm);
+  color: var(--mrt-text-tertiary);
+  font-style: italic;
   background: var(--mrt-bg-lightest);
 }
 

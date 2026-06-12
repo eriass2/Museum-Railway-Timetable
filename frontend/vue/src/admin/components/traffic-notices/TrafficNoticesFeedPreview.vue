@@ -4,7 +4,6 @@ import MrtDisruptionFeedSections from '@/components/traffic-notices/MrtDisruptio
 import { AdminPanel } from '../../components/ui';
 import { useTrafficNoticesFeedPreview } from '../../composables/traffic-notices/useTrafficNoticesFeedPreview';
 import { adminStr } from '../../utils/adminLabels';
-import '@/styles/traffic-notices.css';
 
 const props = defineProps<{
   refreshKey?: number;

@@ -270,14 +270,14 @@ Samma mönster för:
 
 ## Definition of done (hela initiativet)
 
-- [x] `assets/frontend/ui/` innehåller inga komponentregler (trips, price-table, panels-headings tomma; barrel = tokens + primitives)
-- [ ] `frontend-public.css` importerar inte `ui-components.css` (kvar: primitives + calendar tokens)
+- [x] `assets/frontend/ui/` borttagen — inga komponentregler i global barrel
+- [x] `frontend-public.css` importerar inte `ui-components.css`
 - [x] Alla `frontend/vue/src/components/ui/*.vue` har scoped styles (eller medvetet undantag dokumenterat)
-- [x] Wizard: inga steg-specifika regler kvar i `journey-wizard/*.css` (stub tom; styles i SFC)
+- [x] Wizard: inga steg-specifika regler kvar i `journey-wizard/*.css` (mappen borttagen; styles i SFC)
 - [x] Fas 3: `month-calendar`, `timetable-index`, `traffic-notices`, `app-shell`, `timetable-overview` → scoped SFC
 - [x] Fas 4: validate guardrails + Playwright layout-specs (`wizard-route-layout`, `app-chunk-layout`)
 - [ ] E2E wizard + manuell smoke på localhost OK (kör `npm run e2e` i `frontend/vue/`)
-- [x] STYLE_GUIDE + VUE_UI_COMPONENTS uppdaterade (via tidigare PR)
+- [x] STYLE_GUIDE + VUE_UI_COMPONENTS uppdaterade
 
 ---
 
@@ -285,4 +285,5 @@ Samma mönster för:
 
 1. ~~Godkänn plan (denna fil).~~  
 2. ~~Fas 0–4 (legacy ui, wizard shell, övriga appar, guardrails).~~  
-3. Ev. ta bort `ui-components.css` helt när `primitives.css` flyttats till SFC
+3. ~~Ta bort `ui-components.css` och flytta primitives till SFC.~~  
+4. Ev. full E2E + localhost smoke

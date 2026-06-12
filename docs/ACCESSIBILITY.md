@@ -78,11 +78,11 @@ Valideringen inkluderar statiska a11y-markörer i publika moduler (region, aria-
 | Fel | `role="alert"`, `aria-live="assertive"` |
 | Kalender | Region, `aria-busy`, dagknappar med `aria-label` + `aria-pressed` |
 | Tabeller | `caption`, `scope="col"`; dold Actions-kolumn med `.mrt-sr-only` |
-| Fokus | Vid stegbyte fokus på rubrik (`tabindex="-1"`, tas bort vid blur); `:focus-visible` på knappar (se `frontend/vue/src/styles/journey-wizard.css`) |
+| Fokus | Vid stegbyte fokus på rubrik (`tabindex="-1"`, tas bort vid blur); `:focus-visible` på interaktiva element (se `JourneyWizardApp.vue`) |
 | Rörelse | `prefers-reduced-motion` i wizard base CSS (samma kedja) |
 | Ikoner | Dekorativa `<img alt="">` i resekort; tidtabell i drawer använder samma PNG som översikt |
 
-**Filer:** `inc/public/journey-wizard/` (config), `frontend/vue/src/wizard/components/`, `frontend/vue/src/styles/journey-wizard.css`.
+**Filer:** `inc/public/journey-wizard/` (config), `frontend/vue/src/wizard/components/`, `frontend/vue/src/apps/JourneyWizardApp.vue`.
 
 ---
 

@@ -228,7 +228,7 @@ Tur-avvikelser redigeras **inte** här.
 | Vue config | `MRT_vue_traffic_notices_config()` |
 | Vue app | `frontend/vue/src/apps/TrafficNoticesApp.vue` |
 | Komponenter | `frontend/vue/src/components/traffic-notices/` |
-| CSS | `frontend/vue/src/styles/traffic-notices.css` |
+| CSS | scoped in `MrtTrafficNoticesView.vue`, `MrtDisruptionFeedSections.vue` |
 | REST-klient | `frontend/vue/src/api/mrtRest.ts` |
 | Registrering | `inc/shortcodes.php`, `main.ts` loader `traffic_notices` |
 

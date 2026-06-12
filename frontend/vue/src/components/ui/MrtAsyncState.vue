@@ -45,6 +45,45 @@ defineEmits<{ retry: [] }>();
 </template>
 
 <style scoped>
+.mrt-empty {
+  padding: var(--mrt-spacing-sm);
+  color: var(--mrt-text-tertiary);
+  font-style: italic;
+}
+
+.mrt-empty--loading {
+  text-align: center;
+  padding: var(--mrt-spacing-xl, 1.5rem);
+  color: var(--mrt-text-secondary);
+}
+
+.mrt-empty--loading::before {
+  content: "";
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  margin-right: var(--mrt-spacing-sm);
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  vertical-align: -0.15em;
+  animation: mrt-loading-spin 0.75s linear infinite;
+}
+
+@keyframes mrt-loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mrt-empty--loading::before {
+    animation: none;
+    border-right-color: currentColor;
+    opacity: 0.65;
+  }
+}
+
 .mrt-async__loading {
   text-align: center;
   padding: var(--mrt-spacing-xl, 1.5rem);

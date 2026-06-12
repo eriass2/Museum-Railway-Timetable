@@ -16,8 +16,8 @@ Legacy jQuery-frontend är borttagen; ingen PHP-toggle krävs.
 Public styles are **bundled by Vite**, not enqueued from WordPress:
 
 - Source entry: `frontend/vue/src/styles/mrt-public.css`
-- Imports (unchanged on disk): `assets/train-type-icons.css`, `frontend-public.css`
-- Vue-owned: `frontend/vue/src/styles/month-calendar.css`, `frontend/vue/src/styles/timetable-overview.css`, `frontend/vue/src/styles/timetable-index.css`, `frontend/vue/src/styles/journey-wizard/`
+- Imports (unchanged on disk): `assets/train-type-icons.css`, `frontend-public.css` (tokens, legacy PHP alerts, tables — no component barrel)
+- App CSS: scoped in Vue SFCs (`MonthCalendarApp.vue`, `JourneyWizardApp.vue`, `MrtTimetableOverviewShell.vue`, …)
 - Vue-only shell: `frontend/vue/src/styles/vue-shell.css`
 
 Styles ship in the Vite bundle (not separate `mrt-frontend-public` handles).

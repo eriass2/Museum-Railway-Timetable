@@ -66,4 +66,18 @@
     --mrt-wizard-text: var(--mrt-color-neutral-900);
     --mrt-wizard-border: var(--mrt-color-neutral-200);
     --mrt-wizard-focus: var(--mrt-color-focus-ring);
+
+    /* Calendar traffic colours (month grid + wizard date step) */
+    --mrt-cal-traffic-green-bg: var(--mrt-color-traffic-green);
+    --mrt-cal-traffic-green-fg: var(--mrt-color-on-green);
+    --mrt-cal-traffic-yellow-bg: var(--mrt-color-traffic-yellow);
+    --mrt-cal-traffic-yellow-fg: var(--mrt-color-on-accent);
+    --mrt-cal-traffic-red-bg: var(--mrt-color-traffic-red);
+    --mrt-cal-traffic-red-fg: var(--mrt-color-on-green);
+    --mrt-cal-traffic-orange-bg: var(--mrt-color-traffic-orange);
+    --mrt-cal-traffic-orange-fg: var(--mrt-color-on-green);
+    --mrt-cal-traffic-blue-bg: var(--mrt-blue-primary);
+    --mrt-cal-traffic-blue-fg: var(--mrt-color-on-dark);
+    --mrt-cal-traffic-muted-bg: var(--mrt-color-neutral-200);
+    --mrt-cal-traffic-muted-fg: var(--mrt-color-neutral-700);
 }

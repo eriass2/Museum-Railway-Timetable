@@ -49,7 +49,7 @@ Admin wrappers (deprecated gradually): `AdminLoadState` → `MrtAsyncState conte
 | `MrtSelectedTrip` | `mrt-selected-trip` | Return step outbound recap |
 | `MrtTripList` | `mrt-trip-list` | Outbound/return connection list |
 
-Wizard shell CSS: `frontend/vue/src/styles/journey-wizard/`. Visuell wizard-referens: [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
+Wizard shell CSS: scoped in `JourneyWizardApp.vue` and `frontend/vue/src/wizard/components/*`. Visuell wizard-referens: [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
 
 ## Alerts
 
@@ -62,13 +62,13 @@ New Vue code must use **`MrtAlert`** (`mrt-ui-alert`).
 
 ## Design tokens (CSS)
 
-Defined in `assets/mrt-color-tokens.css`; wizard overrides in `frontend/vue/src/styles/journey-wizard/base.css`. Prefer tokens over hard-coded hex.
+Defined in `assets/mrt-color-tokens.css` (including `--mrt-cal-traffic-*` for calendar cells). Wizard shell tokens are set in `JourneyWizardApp.vue`. Prefer tokens over hard-coded hex.
 
 **Shared:** `--mrt-color-green-700`, `--mrt-color-accent-500/700`, `--mrt-color-on-dark`, `--mrt-color-neutral-*`, `--mrt-font-lg/xl`.
 
 **Wizard shell:** `--mrt-wizard-green-dark`, `--mrt-wizard-surface`, `--mrt-wizard-text`, `--mrt-wizard-yellow`, `--mrt-wizard-focus`.
 
-**Overview (`.mrt-ov-*`):** `frontend/vue/src/styles/timetable-overview.css` — `--mrt-ov-green`, `--mrt-ov-highlight`, `--mrt-ov-transfer`, `--mrt-ov-stripe`. Legacy aliases in `assets/frontend/tokens.css`.
+**Overview (`.mrt-ov-*`):** scoped in `MrtTimetableOverviewShell.vue` — `--mrt-ov-green`, `--mrt-ov-highlight`, `--mrt-ov-transfer`, `--mrt-ov-stripe`. Legacy aliases in `assets/frontend/tokens.css`.
 
 See also [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
 
@@ -83,7 +83,7 @@ frontend/vue/src/components/
 └── admin/components/ui/        ← admin-specifikt
 ```
 
-**Medvetet kvar som global CSS (tills migrerat):** `assets/frontend/ui/` (steg, trips, kalender — barrel `ui-components.css`), `timetable-overview.css`, wizard app-shell under `journey-wizard/`, `.mrt-empty` (månadskalender). Se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md).
+**Global CSS kvar (medvetet):** design tokens (`assets/mrt-color-tokens.css`), legacy PHP (`.mrt-alert` i `components-base.css`), vue-shell reset (`vue-shell.css`). Komponentregler ska **inte** läggas i `assets/frontend/ui/` (mappen borttagen). Se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md).
 
 ## Regler för nya komponenter
 

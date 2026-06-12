@@ -15,8 +15,6 @@ function mrt_validate_css_files( array &$errors, int &$checks ): void {
 	$css_files = array(
 		'assets/train-type-icons.css',
 		'assets/frontend-public.css',
-		'frontend/vue/src/styles/month-calendar.css',
-		'frontend/vue/src/styles/journey-wizard.css',
 		'assets/admin.css',
 	);
 
@@ -36,73 +34,32 @@ function mrt_validate_css_files( array &$errors, int &$checks ): void {
 		}
 	}
 
-	$legacy_ui_files = array(
-		'assets/frontend/ui/trips.css',
-		'assets/frontend/ui/price-table.css',
-		'assets/frontend/ui/panels-headings.css',
-	);
-	foreach ( $legacy_ui_files as $legacy_file ) {
-		++$checks;
-		if ( ! file_exists( $legacy_file ) ) {
-			$errors[] = "Legacy UI CSS missing: $legacy_file";
-			echo "  ❌ $legacy_file missing\n";
-			continue;
-		}
-		$legacy_css = file_get_contents( $legacy_file );
-		if ( ! is_string( $legacy_css ) ) {
-			$errors[] = "Cannot read legacy UI CSS: $legacy_file";
-			echo "  ❌ Unreadable: $legacy_file\n";
-			continue;
-		}
-		if ( preg_match( '/\.mrt-[a-z0-9_-]+\s*[{,]/i', $legacy_css ) === 1 ) {
-			$errors[] = "Legacy UI CSS must not define .mrt-* rules (move to scoped Vue SFC): $legacy_file";
-			echo "  ❌ $legacy_file contains .mrt-* class rules\n";
+	++$checks;
+	$public_css_path = 'assets/frontend-public.css';
+	if ( file_exists( $public_css_path ) ) {
+		$public_css = file_get_contents( $public_css_path );
+		if ( is_string( $public_css ) && strpos( $public_css, 'ui-components.css' ) !== false ) {
+			$errors[] = 'frontend-public.css must not import ui-components.css (CSS encapsulation complete)';
+			echo "  ❌ $public_css_path still imports ui-components.css\n";
 		} else {
-			echo "  ✅ $legacy_file (no .mrt-* rules)\n";
+			echo "  ✅ $public_css_path (no ui-components.css import)\n";
 		}
 	}
 
-	mrt_validate_css_no_component_rules( $errors, $checks, 'Vue app CSS stubs (Phase 3)', array(
+	$removed_legacy = array(
+		'assets/frontend/ui-components.css',
+		'assets/frontend/ui/primitives.css',
+		'assets/frontend/ui/calendar-tokens.css',
+		'frontend/vue/src/styles/journey-wizard.css',
 		'frontend/vue/src/styles/month-calendar.css',
-		'frontend/vue/src/styles/timetable-index.css',
-		'frontend/vue/src/styles/timetable-overview.css',
-		'frontend/vue/src/styles/traffic-notices.css',
-		'frontend/vue/src/styles/app-shell.css',
-	) );
-
-	$journey_wizard_dir = 'frontend/vue/src/styles/journey-wizard';
-	if ( is_dir( $journey_wizard_dir ) ) {
-		$journey_files = glob( $journey_wizard_dir . '/*.css' );
-		if ( is_array( $journey_files ) ) {
-			mrt_validate_css_no_component_rules( $errors, $checks, 'journey-wizard CSS modules (deprecated)', $journey_files );
-		}
-	}
-}
-
-/**
- * @param array<int, string> $errors
- * @param array<int, string> $files
- */
-function mrt_validate_css_no_component_rules( array &$errors, int &$checks, string $label, array $files ): void {
-	echo "\n  {$label}…\n";
-	foreach ( $files as $css_file ) {
+	);
+	foreach ( $removed_legacy as $removed_file ) {
 		++$checks;
-		if ( ! file_exists( $css_file ) ) {
-			$errors[] = "CSS encapsulation check file missing: $css_file";
-			echo "  ❌ $css_file missing\n";
-			continue;
-		}
-		$css = file_get_contents( $css_file );
-		if ( ! is_string( $css ) ) {
-			$errors[] = "Cannot read CSS encapsulation file: $css_file";
-			echo "  ❌ Unreadable: $css_file\n";
-			continue;
-		}
-		if ( preg_match( '/\.mrt-[a-z0-9_-]+\s*[{,]/i', $css ) === 1 ) {
-			$errors[] = "CSS encapsulation: move .mrt-* rules to scoped Vue SFC: $css_file";
-			echo "  ❌ $css_file contains .mrt-* class rules\n";
+		if ( file_exists( $removed_file ) ) {
+			$errors[] = "Deprecated CSS file should be removed: $removed_file";
+			echo "  ❌ $removed_file still exists (should be deleted)\n";
 		} else {
-			echo "  ✅ $css_file (no .mrt-* rules)\n";
+			echo "  ✅ removed: $removed_file\n";
 		}
 	}
 }
@@ -113,9 +70,9 @@ function mrt_validate_css_no_component_rules( array &$errors, int &$checks, stri
 function mrt_validate_accessibility_markers( array &$errors, int &$checks ): void {
 	echo "\n8. Checking accessibility markers in public modules...\n";
 	$a11y_markers = array(
-		'inc/public/journey-wizard/shell.php'     => array( 'MRT_render_vue_mount', 'museum_journey_wizard' ),
-		'inc/public/month-calendar/shortcode.php' => array( 'MRT_render_vue_mount', 'museum_timetable_month' ),
-		'assets/frontend/ui/primitives.css'       => array( ':focus-visible' ),
+		'inc/public/journey-wizard/shell.php'           => array( 'MRT_render_vue_mount', 'museum_journey_wizard' ),
+		'inc/public/month-calendar/shortcode.php'       => array( 'MRT_render_vue_mount', 'museum_timetable_month' ),
+		'frontend/vue/src/apps/JourneyWizardApp.vue'    => array( ':focus-visible' ),
 	);
 
 	foreach ( $a11y_markers as $file => $needles ) {

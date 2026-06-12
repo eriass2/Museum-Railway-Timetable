@@ -94,10 +94,10 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Publik UI (wizard m.fl.)
 - **Primär accent:** `--mrt-color-accent-600` (`#DDD24C`) — Lennakatten varumärkesguld för CTA, aktivt steg och vald restyp (sparsamt; se [BRAND_UI.md](design/BRAND_UI.md)).
 - **Text på guld:** `--mrt-color-on-accent` (**svart**), enligt [grafisk profil](https://lennakatten.se/grafisk-profil/) och [BRAND_UI.md](design/BRAND_UI.md).
-- **Vue-bundle:** Publik CSS under `frontend/vue/src/styles/` → `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + vue-shell); varje app importerar egen modul (`month-calendar.css`, `journey-wizard.css`, `timetable-overview.css`, `timetable-index.css`). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
-- **Månadskalender-CSS:** `frontend/vue/src/styles/month-calendar.css` — `.mrt-month-*`, `.mrt-month-day*` (tidtabellstyp-färger); importeras från `MonthCalendarApp.vue`. Wizard använder `.mrt-calendar-day--*` (bokningsbar/trafik/ingen).
-- **Wizard-CSS:** `frontend/vue/src/styles/journey-wizard/` — app-shell (base, hero, responsive). Söksteg och formulärprimitiver → scoped i `.vue` (se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md)). `controls-form.css` = embedded-overrides only.
-- **Tidtabellsöversikt-CSS:** `frontend/vue/src/styles/timetable-overview.css` — block `.mrt-ov-*`, importeras från `MrtTimetableOverviewView.vue`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
+- **Vue-bundle:** Publik CSS → `assets/dist/vue/`. Entry: `mrt-public.css` (tokens + `frontend-public.css` + vue-shell). App-specifik CSS i scoped SFC (`MonthCalendarApp.vue`, `JourneyWizardApp.vue`, `MrtTimetableOverviewShell.vue`, m.fl.). Efter ändring: `npm run build` i `frontend/vue/` och committa `assets/dist/vue/`.
+- **Månadskalender-CSS:** scoped i `MonthCalendarApp.vue`, `MrtMonthDayCell.vue`, `MrtCalendarGridTable.vue`. Wizard datumsteg: `MrtWizardCalendarDayCell.vue`. Kalenderfärger: `--mrt-cal-traffic-*` i `assets/mrt-color-tokens.css`.
+- **Wizard-CSS:** scoped i `JourneyWizardApp.vue` och `wizard/components/*` (se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md)).
+- **Tidtabellsöversikt-CSS:** scoped i `MrtTimetableOverviewShell.vue` — block `.mrt-ov-*`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
 - **Färgtokens:** `assets/mrt-color-tokens.css` importeras först i `mrt-public.css`. Se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) och [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
 - **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; scoped CSS i komponenten.
 
@@ -209,10 +209,8 @@ museum-railway-timetable/
 │   ├── components/                # t.ex. AdminStationsPanel, RouteStationOrderEditor
 │   └── pages/                     # tunna route-vyer som delegerar till composables
 ├── frontend/vue/src/styles/       # Vue-ägd publik CSS (se §3 CSS)
-│   ├── mrt-public.css             # tokens + assets primitives + vue-shell
-│   ├── journey-wizard/            # wizard-moduler
-│   ├── timetable-overview.css     # .mrt-ov-* tidtabell
-│   └── timetable-index.css        # .mrt-timetable-index__*
+│   ├── mrt-public.css             # tokens + frontend-public + vue-shell
+│   └── vue-shell.css              # .mrt-vue-root reset
 └── languages/
 ```
 

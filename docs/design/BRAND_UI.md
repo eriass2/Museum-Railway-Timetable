@@ -75,12 +75,12 @@ Vid ny CSS: räta hörn och inga gradienter om möjligt.
 | Avvikelse | Var |
 |-----------|-----|
 | `border-radius: 4px` (`--mrt-radius-sm`) | Delar av `assets/frontend/`, admin |
-| Gradient på banner | `frontend/vue/src/styles/timetable-overview.css` |
+| Gradient på banner | `MrtTimetableOverviewShell.vue` (scoped) |
 | Rundade detaljer | Admin, delade `assets/frontend/` |
 
-**Klart (räta hörn):** resesökaren (`journey-wizard/sharp-corners.css`, `price-table.css`); månadskalender (`month-calendar.css`). Laddningsspinner (`.mrt-empty--loading::before`) och **tidslinjens stopppunkter** (`.mrt-timeline__node`) behåller cirkel.
+**Klart (räta hörn):** resesökaren (`JourneyWizardApp.vue`, `MrtPriceTable.vue`); månadskalender (`MonthCalendarApp.vue`, `MrtMonthDayCell.vue`). Laddningsspinner (`.mrt-empty--loading::before` i `MrtAsyncState.vue`) och **tidslinjens stopppunkter** (`.mrt-timeline__node`) behåller cirkel.
 
-**Nästa vy:** tidtabellsöversikt → övriga `assets/frontend/`.
+**Nästa vy:** tidtabellsöversikt — övriga legacy i `assets/frontend/` (PHP/demo).
 
 ## Relaterat
 
