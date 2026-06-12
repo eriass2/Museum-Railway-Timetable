@@ -39,7 +39,7 @@ function onBack(): void {
 
 <template>
   <MrtStepPanel step="date" :ariaLabel="cfgStr(cfg, 'stepDate', 'Välj datum')">
-    <MrtStepHeader :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
+    <MrtStepHeader spacing="tight" :back-label="backLabel" :context-line="store.contextLine" @back="onBack" />
 
     <MrtSurfaceCard flush box class="mrt-journey-wizard__step-section">
       <MrtCalendarNav

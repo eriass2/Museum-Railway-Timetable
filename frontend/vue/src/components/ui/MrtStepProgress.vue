@@ -50,3 +50,114 @@ function stepAria(
     </ol>
   </nav>
 </template>
+
+<style scoped>
+.mrt-step-nav {
+  margin: 0 0 0.75rem;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow: visible;
+}
+
+.mrt-step-nav--readonly {
+  pointer-events: none;
+  user-select: none;
+}
+
+.mrt-step-progress {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.mrt-step-progress__wrap {
+  display: contents;
+}
+
+.mrt-step-progress__item {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  margin: 0;
+  padding: 0.35rem 0.65rem;
+  border: 2px solid var(--mrt-color-border-on-dark, rgba(255, 255, 255, 0.35));
+  border-radius: 0;
+  background: var(--mrt-color-green-800);
+  color: var(--mrt-color-on-dark-muted, rgba(255, 255, 255, 0.85));
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1.25;
+  text-align: center;
+  appearance: none;
+  box-shadow: 0 0 0 2px transparent;
+  cursor: default;
+}
+
+.mrt-step-progress__item.is-done:not(.is-active) {
+  color: var(--mrt-color-on-dark, #fff);
+  border-color: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
+}
+
+.mrt-step-progress__item.is-done:not(.is-active):not(:disabled) {
+  cursor: pointer;
+}
+
+.mrt-step-progress__item.is-done:not(.is-active):not(:disabled):hover {
+  background: color-mix(
+    in srgb,
+    var(--mrt-wizard-yellow, var(--mrt-color-accent-600)) 18%,
+    var(--mrt-color-green-800)
+  );
+}
+
+.mrt-step-progress__item.is-done:not(.is-active):not(:disabled):focus-visible {
+  outline: 3px solid var(--mrt-wizard-focus);
+  outline-offset: 3px;
+}
+
+.mrt-step-progress__item.is-active {
+  color: var(--mrt-color-on-accent, #1a1a1a);
+  background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
+  border-color: var(--mrt-color-accent-700, #c9a01a);
+  box-shadow: 0 0 0 2px var(--mrt-wizard-focus);
+}
+
+.mrt-step-progress__item:disabled {
+  opacity: 1;
+}
+
+@media (max-width: 48rem) {
+  .mrt-step-progress {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.35rem;
+    width: 100%;
+    max-width: 100%;
+    justify-content: stretch;
+  }
+
+  .mrt-step-progress__item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    width: calc(50% - 0.175rem);
+    justify-self: center;
+  }
+
+  .mrt-step-progress__item {
+    width: 100%;
+    min-width: 0;
+    min-height: 2rem;
+    font-size: 0.72rem;
+    line-height: 1.25;
+    padding: 0.35rem 0.35rem;
+    white-space: normal;
+  }
+}
+</style>

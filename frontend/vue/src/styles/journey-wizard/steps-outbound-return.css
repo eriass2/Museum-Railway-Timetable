@@ -22,7 +22,6 @@
 
 .mrt-journey-wizard .mrt-calendar-nav__prev:focus-visible,
 .mrt-journey-wizard .mrt-calendar-nav__next:focus-visible,
-.mrt-journey-wizard .mrt-step-header__back:focus-visible,
 .mrt-journey-wizard .mrt-accent-btn:focus-visible {
     outline: 3px solid var(--mrt-wizard-focus);
     outline-offset: 3px;

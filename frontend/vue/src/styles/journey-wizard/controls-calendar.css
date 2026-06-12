@@ -8,16 +8,6 @@
     padding-bottom: clamp(1rem, 3vw, 1.5rem);
 }
 
-.mrt-journey-wizard .mrt-step-panel[data-wizard-step="date"] .mrt-step-header {
-    gap: 0.5rem;
-    margin-bottom: 0.25rem;
-}
-
-.mrt-journey-wizard .mrt-step-panel[data-wizard-step="date"] .mrt-step-header__context {
-    font-size: 1.05rem;
-    color: var(--mrt-color-on-dark-muted);
-}
-
 .mrt-calendar-grid--wizard {
     padding: 0.5rem 1.25rem 1rem;
     color: var(--mrt-wizard-text);

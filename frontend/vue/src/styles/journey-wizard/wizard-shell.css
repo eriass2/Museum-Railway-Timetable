@@ -8,14 +8,6 @@
     width: min(100%, 54rem);
 }
 
-.mrt-journey-wizard .mrt-step-header__back {
-    color: var(--mrt-color-accent-500);
-}
-
-.mrt-journey-wizard .mrt-step-header__back:hover {
-    color: var(--mrt-color-on-dark);
-}
-
 .mrt-journey-wizard .mrt-step-panel--search .mrt-accent-btn--primary {
     min-width: 12rem;
     padding: 0.85rem 2rem;

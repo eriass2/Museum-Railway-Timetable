@@ -19,7 +19,3 @@
     color: var(--mrt-wizard-text);
     padding-inline: 0;
 }
-
-.mrt-journey-wizard--embedded .mrt-step-progress__item.is-active {
-    color: var(--mrt-color-on-accent);
-}

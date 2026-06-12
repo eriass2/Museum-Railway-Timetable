@@ -26,19 +26,6 @@
     display: none;
 }
 
-/* â€”â€” Surface context helpers â€”â€” */
-.mrt-surface .mrt-step-header__back {
-    color: var(--mrt-color-accent-500);
-}
-
-.mrt-surface .mrt-step-header__back:hover {
-    color: var(--mrt-color-green-700, #1f4d2e);
-}
-
-.mrt-surface .mrt-step-header__context {
-    color: var(--mrt-wizard-text, #151515);
-}
-
 .mrt-actions {
     text-align: center;
 }

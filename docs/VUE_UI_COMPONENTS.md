@@ -2,7 +2,7 @@
 
 Delat komponentbibliotek för wizard, månadskalender, översikt, tidtabellsindex och Vue-admin. Wizard-specifika wrappers ligger i `frontend/vue/src/wizard/components/`. **Nya och migrerade primitiver** har scoped CSS i SFC. Legacy global modul-CSS i `assets/frontend/ui/` fasas ut enligt [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md).
 
-**Scoped idag (exempel):** `MrtAlert`, `MrtButton`, `MrtDot`, `MrtSurfaceCard`, `MrtAsyncState`, `MrtRouteLayout`, `MrtSegmentedControl`, `MrtCombobox`, `MrtFieldGroup`, `MrtHeading`, `WizardRouteStep`, `WizardTripTypeIcon`.
+**Scoped idag (exempel):** `MrtAlert`, `MrtButton`, `MrtDot`, `MrtSurfaceCard`, `MrtAsyncState`, `MrtRouteLayout`, `MrtSegmentedControl`, `MrtCombobox`, `MrtFieldGroup`, `MrtHeading`, `MrtStepProgress`, `MrtStepHeader`, `WizardRouteStep`, `WizardTripTypeIcon`.
 
 ## Shared primitives (admin + public)
 

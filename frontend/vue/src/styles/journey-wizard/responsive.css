@@ -12,40 +12,14 @@
         box-sizing: border-box;
     }
 
-    .mrt-journey-wizard .mrt-step-header,
-    .mrt-journey-wizard .mrt-step-header__context,
     .mrt-journey-wizard .mrt-trip-summary,
     .mrt-journey-wizard .mrt-trip-summary__route {
         min-width: 0;
         max-width: 100%;
     }
 
-    .mrt-journey-wizard .mrt-step-header__context,
     .mrt-journey-wizard .mrt-trip-summary__route {
         overflow-wrap: anywhere;
-    }
-
-    .mrt-journey-wizard .mrt-step-nav {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        margin-inline: 0;
-        overflow: visible;
-    }
-
-    .mrt-journey-wizard .mrt-step-progress {
-        display: grid;
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0.35rem;
-        width: 100%;
-        max-width: 100%;
-        justify-content: stretch;
-    }
-
-    .mrt-journey-wizard .mrt-step-progress__item:last-child:nth-child(odd) {
-        grid-column: 1 / -1;
-        width: calc(50% - 0.175rem);
-        justify-self: center;
     }
 
     .mrt-journey-wizard .mrt-heading--surface-title {
@@ -84,18 +58,6 @@
         min-width: 0;
         max-width: 100%;
         box-sizing: border-box;
-    }
-
-    .mrt-journey-wizard .mrt-step-progress__item {
-        box-sizing: border-box;
-        width: 100%;
-        min-width: 0;
-        min-height: 2rem;
-        font-size: 0.72rem;
-        line-height: 1.25;
-        padding: 0.35rem 0.35rem;
-        text-align: center;
-        white-space: normal;
     }
 
     .mrt-journey-wizard .mrt-trip-card__head,
