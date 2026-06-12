@@ -45,6 +45,11 @@ defineEmits<{ retry: [] }>();
 </template>
 
 <style scoped>
+.mrt-async__loading {
+  text-align: center;
+  padding: var(--mrt-spacing-xl, 1.5rem);
+}
+
 .mrt-admin-async__retry {
   display: flex;
   flex-wrap: wrap;

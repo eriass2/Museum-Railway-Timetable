@@ -1,6 +1,6 @@
 /**
- * Journey wizard date-step colours (.mrt-calendar-day--*).
- * Month calendar timetable types: frontend/vue/src/styles/month-calendar.css
+ * Calendar colour tokens (shared :root vars).
+ * Component rules: MrtWizardCalendarDayCell, month-calendar.css.
  *
  * @package Museum_Railway_Timetable
  */
@@ -18,29 +18,4 @@
     --mrt-cal-traffic-blue-fg: var(--mrt-color-on-dark);
     --mrt-cal-traffic-muted-bg: var(--mrt-color-neutral-200);
     --mrt-cal-traffic-muted-fg: var(--mrt-color-neutral-700);
-}
-
-.mrt-calendar-day--green {
-    background: var(--mrt-cal-traffic-green-bg);
-    color: var(--mrt-cal-traffic-green-fg);
-}
-
-.mrt-calendar-day--yellow {
-    background: var(--mrt-cal-traffic-yellow-bg);
-    color: var(--mrt-cal-traffic-yellow-fg);
-}
-
-.mrt-calendar-day--red {
-    background: var(--mrt-cal-traffic-red-bg);
-    color: var(--mrt-cal-traffic-red-fg);
-}
-
-.mrt-calendar-day--orange {
-    background: var(--mrt-cal-traffic-orange-bg);
-    color: var(--mrt-cal-traffic-orange-fg);
-}
-
-.mrt-calendar-day--blue {
-    background: var(--mrt-cal-traffic-blue-bg);
-    color: var(--mrt-cal-traffic-blue-fg);
 }

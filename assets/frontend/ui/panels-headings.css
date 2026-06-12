@@ -1,49 +1,5 @@
 /**
- * panels-headings
+ * Panel/heading helpers — migrated to scoped Vue SFCs (PR 1.5).
+ *
  * @package Museum_Railway_Timetable
  */
-/* â€”â€” Inline field error â€”â€” */
-.mrt-field-error {
-    margin: 0 0 0.75rem;
-    text-align: center;
-}
-
-.mrt-field-error .mrt-ui-alert {
-    margin: 0;
-}
-
-/* â€”â€” Async / html panel â€”â€” */
-.mrt-async__loading {
-    text-align: center;
-    padding: var(--mrt-spacing-xl, 1.5rem);
-}
-
-.mrt-html-panel {
-    margin-top: var(--mrt-spacing-xl, 1.5rem);
-}
-
-.mrt-html-panel.mrt-hidden {
-    display: none;
-}
-
-.mrt-actions {
-    text-align: center;
-}
-
-.mrt-status-message {
-    margin: 0;
-    padding: 0.75rem 1.25rem 1rem;
-    text-align: center;
-    font-size: 0.95rem;
-    font-weight: 700;
-    border-top: 1px solid var(--mrt-color-neutral-200, #e0e0e0);
-}
-
-.mrt-status-message__hint {
-    display: block;
-    margin-top: 0.35rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: var(--mrt-color-neutral-600, #555);
-}
-

@@ -32,3 +32,13 @@ const wrapperTag = computed(() => (props.surface ? MrtSurfaceCard : 'div'));
     </MrtAsyncState>
   </component>
 </template>
+
+<style scoped>
+.mrt-html-panel {
+  margin-top: var(--mrt-spacing-xl, 1.5rem);
+}
+
+.mrt-html-panel.mrt-hidden {
+  display: none;
+}
+</style>

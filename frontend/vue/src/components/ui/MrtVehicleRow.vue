@@ -32,3 +32,39 @@ defineProps<{
     </span>
   </div>
 </template>
+
+<style scoped>
+.mrt-vehicle-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.65rem;
+  justify-content: flex-end;
+}
+
+.mrt-vehicle-row--compact {
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+}
+
+.mrt-vehicle-row__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  min-width: 0;
+}
+
+.mrt-vehicle-row__icon {
+  display: block;
+  width: 48px;
+  height: 24px;
+}
+
+.mrt-vehicle-row__mark {
+  display: inline-block;
+  width: 2rem;
+  height: 0.65rem;
+  background: var(--mrt-color-neutral-400, #999);
+}
+</style>

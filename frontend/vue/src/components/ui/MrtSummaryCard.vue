@@ -14,3 +14,20 @@ defineProps<{
     <slot />
   </article>
 </template>
+
+<style scoped>
+.mrt-summary-card {
+  container-type: inline-size;
+  container-name: mrt-summary-card;
+  background: var(--mrt-wizard-surface, #fff);
+  color: var(--mrt-wizard-text, #151515);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+  padding: 0.75rem 0.9rem;
+}
+
+.mrt-summary-card__heading {
+  color: var(--mrt-wizard-green-dark, #1f4d2e);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+</style>

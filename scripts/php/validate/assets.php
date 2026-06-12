@@ -35,6 +35,32 @@ function mrt_validate_css_files( array &$errors, int &$checks ): void {
 			echo "  ✅ $css_file\n";
 		}
 	}
+
+	$legacy_ui_files = array(
+		'assets/frontend/ui/trips.css',
+		'assets/frontend/ui/price-table.css',
+		'assets/frontend/ui/panels-headings.css',
+	);
+	foreach ( $legacy_ui_files as $legacy_file ) {
+		++$checks;
+		if ( ! file_exists( $legacy_file ) ) {
+			$errors[] = "Legacy UI CSS missing: $legacy_file";
+			echo "  ❌ $legacy_file missing\n";
+			continue;
+		}
+		$legacy_css = file_get_contents( $legacy_file );
+		if ( ! is_string( $legacy_css ) ) {
+			$errors[] = "Cannot read legacy UI CSS: $legacy_file";
+			echo "  ❌ Unreadable: $legacy_file\n";
+			continue;
+		}
+		if ( preg_match( '/\.mrt-[a-z0-9_-]+\s*[{,]/i', $legacy_css ) === 1 ) {
+			$errors[] = "Legacy UI CSS must not define .mrt-* rules (move to scoped Vue SFC): $legacy_file";
+			echo "  ❌ $legacy_file contains .mrt-* class rules\n";
+		} else {
+			echo "  ✅ $legacy_file (no .mrt-* rules)\n";
+		}
+	}
 }
 
 /**

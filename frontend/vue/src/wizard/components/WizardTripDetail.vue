@@ -77,3 +77,36 @@ defineExpose({ ensureLoaded });
     </MrtAsyncState>
   </MrtDetailPanel>
 </template>
+
+<style scoped>
+.mrt-detail-footnotes {
+  margin: 1rem 0 0;
+  padding: 0.75rem 0 0;
+  border-top: 1px solid var(--mrt-wizard-border, #ddd);
+  color: #333333;
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+.mrt-detail-footnotes__row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.35rem 0.5rem;
+  margin: 0;
+}
+
+.mrt-detail-footnotes__row + .mrt-detail-footnotes__row {
+  margin-top: 0.35rem;
+}
+
+.mrt-detail-footnotes__mark {
+  margin: 0;
+  font-weight: 700;
+}
+
+.mrt-detail-footnotes__text {
+  margin: 0;
+  font-weight: 600;
+}
+</style>

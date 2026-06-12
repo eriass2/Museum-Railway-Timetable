@@ -1,13 +1,11 @@
 /**
  * Vue UI component styles — barrel import.
  *
- * Colocated primitives: MrtAlert, MrtButton, MrtDot, MrtSurfaceCard (see docs/VUE_UI_COMPONENTS.md).
+ * Colocated scoped styles: frontend/vue/src/components/ui/*.vue
+ * See docs/CSS_ENCAPSULATION_PLAN.md and docs/VUE_UI_COMPONENTS.md.
  *
  * @package Museum_Railway_Timetable
  */
 
 @import url("ui/primitives.css");
 @import url("ui/calendar-tokens.css");
-@import url("ui/trips.css");
-@import url("ui/panels-headings.css");
-@import url("ui/price-table.css");

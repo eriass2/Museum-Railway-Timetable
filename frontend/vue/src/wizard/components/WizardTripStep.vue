@@ -106,3 +106,26 @@ watch(
     </MrtSurfaceCard>
   </MrtStepPanel>
 </template>
+
+<style scoped>
+.mrt-selected-trip[data-wizard-return-summary] {
+  margin: 0 0 1.5rem;
+  padding-bottom: 1.35rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+.mrt-selected-trip[data-wizard-return-summary] :deep(.mrt-selected-trip__label) {
+  color: #ffffff;
+}
+
+.mrt-selected-trip[data-wizard-return-summary] :deep(.mrt-selected-trip__card) {
+  border: 3px solid var(--mrt-wizard-yellow);
+  background: var(--mrt-wizard-surface);
+  color: var(--mrt-wizard-text);
+}
+
+:deep(.mrt-accent-btn:focus-visible) {
+  outline: 3px solid var(--mrt-wizard-focus);
+  outline-offset: 3px;
+}
+</style>

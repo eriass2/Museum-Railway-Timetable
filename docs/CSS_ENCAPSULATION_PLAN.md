@@ -1,6 +1,6 @@
 # Plan: CSS inkapsling (Vue, Angular-liknande)
 
-**Status:** pågår — Fas 0 + PR 1.1–1.3 (delvis) klara 2026-06-12  
+**Status:** pågår — Fas 0 + Fas 1 (PR 1.1–1.6) + Fas 2 klara 2026-06-12; Fas 3–4 kvar  
 **Relaterat:** [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [frontend/vue/src/styles/journey-wizard/README.md](../frontend/vue/src/styles/journey-wizard/README.md)
 
 ---
@@ -270,20 +270,18 @@ Samma mönster för:
 
 ## Definition of done (hela initiativet)
 
-- [ ] `assets/frontend/ui/` innehåller inga komponentregler (raderad eller tom barrel)
-- [ ] `frontend-public.css` importerar inte `ui-components.css`
-- [ ] Alla `frontend/vue/src/components/ui/*.vue` har scoped styles (eller medvetet undantag dokumenterat)
-- [ ] Wizard: inga steg-specifika regler kvar i `journey-wizard/*.css` utom ev. root/embedded
+- [x] `assets/frontend/ui/` innehåller inga komponentregler (trips, price-table, panels-headings tomma; barrel = tokens + primitives)
+- [ ] `frontend-public.css` importerar inte `ui-components.css` (kvar: primitives + calendar tokens)
+- [x] Alla `frontend/vue/src/components/ui/*.vue` har scoped styles (eller medvetet undantag dokumenterat)
+- [x] Wizard: inga steg-specifika regler kvar i `journey-wizard/*.css` (stub tom; styles i SFC)
 - [ ] E2E wizard + manuell smoke på localhost OK
-- [ ] STYLE_GUIDE + VUE_UI_COMPONENTS uppdaterade
+- [x] STYLE_GUIDE + VUE_UI_COMPONENTS uppdaterade (via tidigare PR)
 
 ---
 
 ## Nästa steg
 
 1. ~~Godkänn plan (denna fil).~~  
-2. ~~PR: Fas 0 (docs-länkar).~~  
-3. ~~PR: `MrtRouteLayout` scoped + ta bort route-block ur `trips.css`.~~  
-4. ~~PR 1.2: `MrtStepProgress` / `MrtStepHeader` scoped; `wizard-steps.css` borttagen från barrel.~~  
-5. ~~PR 1.3 (delvis): `MrtCalendarNav` / `MrtLegend` scoped; `calendar-nav-legend.css` borttagen.~~  
-6. PR 1.3 (kvar): kalenderdags-celler (`MrtWizardCalendarDayCell`, `calendar-tokens.css`).
+2. ~~Fas 0–2 (legacy ui + wizard shell).~~  
+3. Fas 3: `month-calendar.css`, `timetable-overview.css`, … → scoped app/SFC  
+4. Fas 4: utöka Playwright layout-checks; ev. ta bort `ui-components.css` helt när primitives flyttats

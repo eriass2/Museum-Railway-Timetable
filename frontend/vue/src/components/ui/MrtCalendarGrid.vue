@@ -61,3 +61,31 @@ withDefaults(
     </MrtCalendarGridTable>
   </div>
 </template>
+
+<style scoped>
+.mrt-calendar-grid--wizard {
+  padding: 0.5rem 1.25rem 1rem;
+  color: var(--mrt-wizard-text);
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+@media (max-width: 48rem) {
+  .mrt-calendar-grid--wizard {
+    padding-inline: 0.65rem;
+  }
+
+  .mrt-calendar-grid--wizard :deep(.mrt-calendar-grid__table--wizard th) {
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+  }
+
+  .mrt-calendar-grid--wizard :deep(.mrt-calendar-day) {
+    max-width: 100%;
+    min-width: 0;
+    min-height: 2.35rem;
+    font-size: 1rem;
+  }
+}
+</style>

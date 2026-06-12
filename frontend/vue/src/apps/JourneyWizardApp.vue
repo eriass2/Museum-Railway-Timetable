@@ -5,7 +5,6 @@ import MrtAlert from '../components/ui/MrtAlert.vue';
 import MrtStepProgress from '../components/ui/MrtStepProgress.vue';
 import { applyWizardDebugPreset } from '../wizard/composables/useWizardDebug';
 import { useWizardStepFocus } from '../wizard/composables/useWizardStepFocus';
-import '../styles/journey-wizard.css';
 import type { WizardVueConfig } from '../config/types';
 import { createWizardStore } from '../wizard/store/createWizardStore';
 import { wizardKey } from '../wizard/injection';
@@ -137,3 +136,416 @@ onMounted(() => {
     <WizardFeedbackWidget v-if="config.feedbackEnabled" :config="config" />
   </div>
 </template>
+
+<style scoped>
+.mrt-journey-wizard {
+  color: var(--mrt-wizard-text);
+  max-width: 100%;
+  min-width: 0;
+}
+
+.mrt-journey-wizard :deep(.mrt-sr-only) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mrt-journey-wizard :deep(*),
+  .mrt-journey-wizard :deep(*::before),
+  .mrt-journey-wizard :deep(*::after) {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+.mrt-journey-wizard__hero {
+  box-sizing: border-box;
+  position: relative;
+  width: 100%;
+  min-height: 0;
+  padding: clamp(3rem, 8vw, 7rem) 1rem clamp(2rem, 5vw, 3rem);
+  background: var(--mrt-wizard-green-dark);
+}
+
+.mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero {
+  padding: clamp(2rem, 5vw, 4rem) 1rem clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.mrt-journey-wizard[data-step="route"] .mrt-journey-wizard__hero {
+  min-height: 0;
+}
+
+.mrt-journey-wizard__hero-inner {
+  width: min(100%, 58rem);
+  margin-inline: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mrt-journey-wizard__panels {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.mrt-journey-wizard__errors {
+  max-width: 46rem;
+  margin: 0 auto 0.75rem;
+}
+
+.mrt-journey-wizard :deep(.mrt-step-panel) {
+  width: min(100%, 46rem);
+  margin-inline: auto;
+  min-width: 0;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+  background: var(--mrt-wizard-green-dark);
+  color: #ffffff;
+  box-sizing: border-box;
+}
+
+.mrt-journey-wizard :deep(.mrt-step-panel--search) {
+  width: min(100%, 54rem);
+  margin-top: 1.5rem;
+  padding-block: clamp(1.75rem, 4vw, 3rem);
+}
+
+.mrt-journey-wizard :deep(.mrt-step-panel--wide) {
+  width: min(100%, 54rem);
+}
+
+.mrt-journey-wizard :deep(.mrt-step-panel[data-wizard-step="date"]) {
+  padding-bottom: clamp(1rem, 3vw, 1.5rem);
+}
+
+.mrt-journey-wizard :deep(.mrt-step-panel--search .mrt-accent-btn--primary) {
+  min-width: 12rem;
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.mrt-journey-wizard :deep(.mrt-heading--surface-title:focus) {
+  outline: none;
+}
+
+.mrt-journey-wizard :deep(.mrt-heading--surface-title:focus-visible) {
+  outline: 3px solid var(--mrt-wizard-focus);
+  outline-offset: 4px;
+}
+
+.mrt-journey-wizard :deep(.mrt-combobox__input:focus-visible),
+.mrt-journey-wizard :deep(.mrt-segmented__option:focus-visible),
+.mrt-journey-wizard :deep(button:focus-visible),
+.mrt-journey-wizard :deep(a:focus-visible),
+.mrt-journey-wizard :deep(select:focus-visible) {
+  outline: 3px solid var(--mrt-wizard-focus);
+  outline-offset: 3px;
+}
+
+.mrt-journey-wizard :deep(.mrt-step-panel > .mrt-text-secondary) {
+  color: var(--mrt-color-on-dark-muted);
+}
+
+.mrt-journey-wizard :deep(.mrt-mb-sm) {
+  margin-bottom: 0.5rem;
+}
+
+.mrt-journey-wizard :deep(.mrt-mt-lg) {
+  margin-top: 1.5rem;
+}
+
+.mrt-journey-wizard__main-card {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--mrt-wizard-green-dark, #1e4d6b);
+  color: #fff;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+}
+
+.mrt-journey-wizard__main-card > :deep(.mrt-journey-wizard__beta) {
+  max-width: none;
+  margin-bottom: 1rem;
+}
+
+.mrt-journey-wizard__main-card > :deep(.mrt-step-nav) {
+  margin-bottom: 1.25rem;
+}
+
+.mrt-journey-wizard__main-card > .mrt-journey-wizard__errors {
+  max-width: none;
+}
+
+.mrt-journey-wizard__main-card :deep(.mrt-heading--surface-title) {
+  color: #fff;
+}
+
+.mrt-journey-wizard__main-card :deep(.mrt-step-panel),
+.mrt-journey-wizard__main-card :deep(.mrt-step-panel--search),
+.mrt-journey-wizard__main-card :deep(.mrt-step-panel--wide) {
+  width: 100%;
+  max-width: none;
+  margin-inline: 0;
+  margin-top: 0;
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.mrt-journey-wizard__main-card :deep(.mrt-journey-wizard__route-form) {
+  margin-top: 0.25rem;
+}
+
+.mrt-journey-wizard__main-card :deep(.mrt-journey-wizard__step-section) {
+  margin-top: 0.5rem;
+}
+
+.mrt-journey-wizard--embedded {
+  margin-top: clamp(2rem, 4vw, 3rem);
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero:not(.mrt-journey-wizard__hero--has-bg) {
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.75rem) clamp(2rem, 5vw, 3rem);
+  background: var(--mrt-wizard-surface);
+  color: var(--mrt-wizard-text);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg {
+  margin-left: 0;
+  margin-right: 0;
+  width: 100%;
+  max-width: 100%;
+  padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.75rem) clamp(2rem, 5vw, 3rem);
+  color: #ffffff;
+  position: relative;
+  background-color: var(--mrt-wizard-green-dark);
+  background-image: var(--mrt-wizard-hero-bg-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--mrt-wizard-green-dark) 30%, transparent);
+  pointer-events: none;
+}
+
+.mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero--has-bg {
+  background: transparent;
+}
+
+.mrt-journey-wizard__hero--has-bg > .mrt-journey-wizard__hero-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.mrt-journey-wizard--embedded[data-step="route"] .mrt-journey-wizard__hero {
+  min-height: auto;
+}
+
+.mrt-journey-wizard--embedded :deep(.mrt-step-panel--search) {
+  margin-top: clamp(1rem, 2.5vw, 1.75rem);
+  padding-block: clamp(2rem, 4vw, 3.25rem);
+  padding-inline: clamp(1.75rem, 4vw, 3rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__main-card {
+  box-shadow: none;
+  padding: 0;
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg :deep(.mrt-step-panel--search) {
+  background: var(--mrt-wizard-surface);
+  color: var(--mrt-wizard-text);
+  padding-inline: clamp(1.75rem, 4vw, 3rem);
+}
+
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero:not(.mrt-journey-wizard__hero--has-bg) :deep(.mrt-step-panel--search) {
+  background: transparent;
+  color: var(--mrt-wizard-text);
+  padding-inline: 0;
+}
+
+.mrt-journey-wizard :deep(.mrt-ui-alert) {
+  border-radius: 0;
+}
+
+.mrt-journey-wizard :deep(.mrt-surface--box) {
+  border-radius: 0;
+}
+
+@media (min-width: 48.0625rem) {
+  .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero-inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: none;
+  }
+
+  .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__errors {
+    max-width: none;
+  }
+
+  .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-step-panel),
+  .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-step-panel--search),
+  .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-step-panel--wide) {
+    width: 100%;
+    max-width: none;
+    background: transparent;
+  }
+}
+
+@media (max-width: 48rem) {
+  .mrt-journey-wizard__hero {
+    padding: 1rem;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-step-panel),
+  .mrt-journey-wizard :deep(.mrt-step-panel--search),
+  .mrt-journey-wizard :deep(.mrt-step-panel--wide) {
+    width: 100%;
+    min-width: 0;
+    padding: 0.75rem 0.85rem 1.1rem;
+    box-sizing: border-box;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-trip-summary),
+  .mrt-journey-wizard :deep(.mrt-trip-summary__route) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-trip-summary__route) {
+    overflow-wrap: anywhere;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-heading--surface-title) {
+    font-size: 1.8rem;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-surface:not(.mrt-surface--flush)) {
+    padding: 0.85rem 0.75rem;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-trip-card__head),
+  .mrt-journey-wizard :deep(.mrt-selected-trip__card) {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.85rem 0.75rem;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-trip-card__copy),
+  .mrt-journey-wizard :deep(.mrt-trip-card__side) {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-trip-card__side) {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-areas:
+      "vehicles vehicles"
+      "duration button";
+    align-items: center;
+    gap: 0.55rem 0.75rem;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-vehicle-row) {
+    grid-area: vehicles;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0.35rem;
+    max-width: 100%;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-vehicle-row--compact) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-vehicle-row__item) {
+    min-width: 0;
+    max-width: 100%;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-vehicle-row__icon) {
+    flex-shrink: 0;
+    width: 36px;
+    height: 18px;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-vehicle-row__item > .mrt-vehicle-row__label) {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-trip-card__duration) {
+    grid-area: duration;
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-trip-card__side > .mrt-accent-btn) {
+    grid-area: button;
+    justify-self: end;
+    min-width: min(100%, 8.5rem);
+  }
+
+  .mrt-journey-wizard :deep(.mrt-detail-panel) {
+    padding: 0.85rem 0.5rem 0.75rem;
+    overflow-x: hidden;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-detail-segment__meta .mrt-vehicle-row) {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-summary-list--round-trip) {
+    grid-template-columns: 1fr;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-price-columns--split) {
+    grid-template-columns: 1fr;
+  }
+
+  @media (max-width: 22.5rem) {
+    .mrt-journey-wizard :deep(.mrt-trip-card__side) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas:
+        "vehicles"
+        "duration"
+        "button";
+    }
+
+    .mrt-journey-wizard :deep(.mrt-trip-card__side > .mrt-accent-btn) {
+      grid-area: button;
+      justify-self: stretch;
+      width: 100%;
+    }
+  }
+}
+</style>

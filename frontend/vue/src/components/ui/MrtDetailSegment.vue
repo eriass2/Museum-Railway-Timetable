@@ -31,3 +31,31 @@ defineProps<{
     </p>
   </div>
 </template>
+
+<style scoped>
+.mrt-detail-segment__notice {
+  margin: 0.2rem 0 0.4rem;
+  color: #151515;
+  font-size: 0.95rem;
+}
+
+.mrt-detail-segment__notice--cancelled {
+  color: var(--mrt-text-error, #b32d2e);
+  font-weight: 700;
+}
+
+.mrt-detail-segment__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.8rem;
+  align-items: center;
+  margin: 0 0 0.55rem var(--mrt-tl-content-start, 0);
+}
+
+.mrt-detail-segment__transfer {
+  margin: 0.45rem 0 0.8rem var(--mrt-tl-content-start, 0);
+  color: #333333;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+</style>

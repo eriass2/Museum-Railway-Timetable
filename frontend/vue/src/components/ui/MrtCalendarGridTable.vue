@@ -12,7 +12,10 @@ defineProps<{
 <template>
   <table
     class="mrt-calendar-grid__table"
-    :class="{ 'mrt-month-table': variant === 'month' }"
+    :class="{
+      'mrt-month-table': variant === 'month',
+      'mrt-calendar-grid__table--wizard': variant === 'wizard',
+    }"
     role="grid"
     :aria-label="gridLabel || undefined"
   >
@@ -37,3 +40,37 @@ defineProps<{
     </tbody>
   </table>
 </template>
+
+<style scoped>
+.mrt-calendar-grid__table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.mrt-calendar-grid__table--wizard {
+  table-layout: fixed;
+}
+
+.mrt-calendar-grid__table--wizard :deep(th),
+.mrt-calendar-grid__table--wizard :deep(td) {
+  width: 14.285%;
+  padding: 0.15rem 0.05rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+.mrt-calendar-grid__table--wizard :deep(th) {
+  padding: 0.4rem 0.25rem;
+  color: var(--mrt-wizard-text);
+  background: transparent;
+  border-color: var(--mrt-color-neutral-200);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.mrt-calendar-grid__table--wizard :deep(td) {
+  height: auto;
+  vertical-align: middle;
+  border-color: var(--mrt-color-neutral-200);
+}
+</style>

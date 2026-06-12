@@ -51,3 +51,16 @@ const vehicleItems = computed(() =>
     />
   </MrtDetailSegment>
 </template>
+
+<style scoped>
+.mrt-detail-segment__duration {
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: #3f3f3f;
+}
+
+.mrt-detail-segment__duration--cancelled {
+  text-decoration: line-through;
+  color: var(--mrt-text-error, #b32d2e);
+}
+</style>
