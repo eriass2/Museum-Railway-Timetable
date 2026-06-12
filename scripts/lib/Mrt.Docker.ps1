@@ -29,7 +29,7 @@ function Write-MrtTiming {
 
     $ms = [math]::Round($Elapsed.TotalMilliseconds)
     $label = if ($ms -lt 1000) { "${ms}ms" } else { '{0:N1}s' -f $Elapsed.TotalSeconds }
-    Write-Host "  [timing] $Step — $label" -ForegroundColor DarkGray
+    Write-Host "  [timing] $Step - $label" -ForegroundColor DarkGray
 }
 
 function Complete-MrtScriptTimings {
@@ -118,7 +118,7 @@ function Assert-MrtNpmAvailable {
 
 function Get-MrtLocalPhpVersion {
     $version = $null
-    & php -r "echo PHP_MAJOR_VERSION.'.'.PHP_MINOR_VERSION;" 2>$null | ForEach-Object { $version = $_ }
+    & php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;' 2>$null | ForEach-Object { $version = $_ }
     if ($LASTEXITCODE -ne 0 -or -not $version) {
         return $null
     }
@@ -137,7 +137,7 @@ function Assert-MrtLocalPhpMin {
         exit 1
     }
     if ([version]$version -lt [version]$MinVersion) {
-        Write-Host "Local PHP $version < $MinVersion. Omit -Local to use Docker." -ForegroundColor Red
+        Write-Host "Local PHP $version is below $MinVersion. Omit -Local to use Docker." -ForegroundColor Red
         exit 1
     }
     return $version
@@ -563,7 +563,7 @@ function Get-MrtDemoPageUrl {
     $eval = @(
         '$r = MRT_ensure_components_demo_page_cli();',
         'if (is_wp_error($r)) { echo $r->get_error_message(); }',
-        "else { wp_update_post(array('ID' => (int) `$r, 'post_status' => 'publish')); echo get_permalink((int) `$r); }"
+        'else { wp_update_post(array(''ID'' => (int) $r, ''post_status'' => ''publish'')); echo get_permalink((int) $r); }'
     ) -join ' '
 
     $demoOut = Invoke-MrtWpCli -WpArgs @('eval', $eval) -ReturnOutput
