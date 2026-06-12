@@ -1,4 +1,4 @@
-# Kör samma snabbkontroll som lokalt: composer check.
+# Kör samma snabbkontroll som lokalt: composer check (host — see docs/CI_AND_DEV_MODEL.md).
 name: CI
 
 on:

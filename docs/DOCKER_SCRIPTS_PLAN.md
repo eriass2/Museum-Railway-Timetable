@@ -1,7 +1,7 @@
 # Docker- och skriptlager — plan
 
 Plan för utvecklarverktyg under `scripts/` och `docker-compose.yml`.  
-**Status:** Fas 0–2 klara. Fas 3 påbörjad (`mrt` CLI); S1/S3–S5 kvar.
+**Status:** Fas 0–3 genomförda (2026-06-12).
 
 **Relaterat:** [scripts/README.md](../scripts/README.md), [DEVELOPER.md](DEVELOPER.md), `.cursor/rules/testing-commands.mdc`.
 
@@ -92,11 +92,11 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 
 | ID | Uppgift | Insats | Beslut som krävs |
 |----|---------|--------|------------------|
-| S1 | Bash som canonical + tunna PS-wrappers **eller** gemensamt `mrt`-CLI | Stor | Windows utan WSL? |
+| S1 | Bash som canonical + tunna PS-wrappers **eller** gemensamt `mrt`-CLI | Stor | Windows utan WSL? | **Klar** (2026-06-12) — `gate/*.sh` + [ARCHITECTURE.md](../scripts/lib/ARCHITECTURE.md) |
 | S2 | Samlat CLI: `mrt check`, `mrt test`, `mrt dev reset` | Medel | Bakåtkompatibilitet för befintliga `.ps1` | **Klar** (2026-06-12) — `scripts/mrt.ps1` / `mrt.sh` |
-| S3 | CI: allt i Docker **eller** dokumenterad host-only med `setup-dev` | Stor | CI-tid vs paritet |
-| S4 | Dev Container (`.devcontainer/`) | Stor | Cursor/VS Code standard för teamet? |
-| S5 | Init-container: HTTP-poll istället för `sleep 3` i `wordpress-init` | Liten | — |
+| S3 | CI: allt i Docker **eller** dokumenterad host-only med `setup-dev` | Stor | CI-tid vs paritet | **Klar** (2026-06-12) — [CI_AND_DEV_MODEL.md](CI_AND_DEV_MODEL.md), `setup-dev.*` |
+| S4 | Dev Container (`.devcontainer/`) | Stor | Cursor/VS Code standard för teamet? | **Klar** (2026-06-12) |
+| S5 | Init-container: HTTP-poll istället för `sleep 3` i `wordpress-init` | Liten | — | **Klar** (2026-06-12) — `docker/wordpress-init.sh` |
 
 **Exit-kriterium:** En plats att lära sig (`mrt help`), ingen duplicerad PS/bash-logik att hålla synkad manuellt.
 
@@ -105,8 +105,7 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 ## Prioritering (rekommendation)
 
 ```text
-Klart  → Fas 1 + Fas 2 (P1–P7) + scripts-organisation + mrt CLI
-Kvar   → Fas 3 S1/S3–S5 (CI-modell, devcontainer, init-poll)
+Klart  → Fas 1–3 (inkl. mrt CLI, setup-dev, devcontainer, init HTTP-poll)
 ```
 
 ---
@@ -133,4 +132,4 @@ Kvar   → Fas 3 S1/S3–S5 (CI-modell, devcontainer, init-poll)
 | 2026-06-12 | Fas 2 P6: long-running tools-shell (`composer` / `php-test` / `vue`) |
 | 2026-06-12 | Scripts-organisation Fas A–C: `dev/`, `release/`, `gate/`, `php/`, `csv/`, `i18n/` + root wrappers |
 | 2026-06-12 | Fas 2 P7: `docker-compose.watch.yml` + `scripts/dev/docker-watch.*` |
-| 2026-06-12 | Fas 3 S2 (delvis): `scripts/mrt.ps1` / `mrt.sh` unified CLI |
+| 2026-06-12 | Fas 3 S1–S5: bash gates, `setup-dev`, devcontainer, init HTTP-poll, CI model doc |

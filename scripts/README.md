@@ -63,11 +63,14 @@ Prefer **`.\scripts\*.ps1`** over raw `docker compose` — wrappers apply:
 | Goal | Command |
 |------|---------|
 | Help | `.\scripts\mrt.ps1 help` or `bash scripts/mrt.sh help` |
+| Host bootstrap (CI parity) | `.\scripts\mrt.ps1 setup-dev` or `bash scripts/setup-dev.sh` |
 | PHP gate | `.\scripts\mrt.ps1 check` |
 | PHP + Vue | `.\scripts\mrt.ps1 check -Vue` |
 | PHPUnit | `.\scripts\mrt.ps1 test` |
 | Dev reset | `.\scripts\mrt.ps1 dev reset` |
 | Plugin file sync (Windows) | `.\scripts\mrt.ps1 dev watch` |
+| CSV validate / zip | `.\scripts\mrt.ps1 csv validate -- <path>` / `csv zip` |
+| i18n | `.\scripts\mrt.ps1 i18n` |
 
 Existing `.\scripts\*.ps1` entry points remain; `mrt` forwards to them.
 

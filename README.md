@@ -45,11 +45,13 @@ Admin workflow (create routes, timetables, trips): **[docs/ADMIN_WORKFLOW.md](do
 Quick start (Windows):
 
 ```powershell
-.\scripts\docker-dev-reset.ps1   # Docker + import — http://localhost:8080 (admin / admin)
-.\scripts\check.ps1 -Vue           # PHP + Vue quality gate
+.\scripts\mrt.ps1 dev reset      # Docker + import — http://localhost:8080 (admin / admin)
+.\scripts\mrt.ps1 check -SkipPhpcs # PHP quality gate (Docker)
 ```
 
-Docker/skript roadmap: **[docs/DOCKER_SCRIPTS_PLAN.md](docs/DOCKER_SCRIPTS_PLAN.md)**.
+Unified CLI: **`scripts/mrt.ps1`** / **`scripts/mrt.sh`**. Dev Container: **`.devcontainer/`**.
+
+Docker/skript roadmap: **[docs/DOCKER_SCRIPTS_PLAN.md](docs/DOCKER_SCRIPTS_PLAN.md)** (Fas 0–3 complete). CI model: **[docs/CI_AND_DEV_MODEL.md](docs/CI_AND_DEV_MODEL.md)**.
 
 Contributing: [docs/DEVELOPER.md](docs/DEVELOPER.md#bidra). Coding standards: [docs/REBUILD_RULES.md](docs/REBUILD_RULES.md), [docs/STYLE_GUIDE.md](docs/STYLE_GUIDE.md).
 

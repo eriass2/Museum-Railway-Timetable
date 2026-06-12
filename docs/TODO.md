@@ -67,6 +67,7 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Docker/skript — Fas 2 P5 (wpcli exec sidecar) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
 | Docker/skript — Fas 2 P6 (tools-shell exec) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
 | Docker/skript — Fas 2 P7 (compose watch overlay) | 2026-06-12 | `docker-compose.watch.yml`, `scripts/docker-watch.ps1` |
+| Docker/skript — Fas 3 S1–S5 (bash gates, setup-dev, devcontainer, init poll) | 2026-06-12 | [CI_AND_DEV_MODEL.md](CI_AND_DEV_MODEL.md), `.devcontainer/` |
 | Docker/skript — Fas 3 S2 (`mrt` CLI) | 2026-06-12 | `scripts/mrt.ps1`, `scripts/mrt.sh` |
 | Docker/skript — scripts-organisation (gate, php, csv, i18n, dev, release) | 2026-06-12 | [scripts/README.md](../scripts/README.md) |
 | Reseplanerare J15–J17 + D19–D21 — biljettcopy (fotnoter, station, eftermiddag) | 2026-06-11 | `ticket-copy.php`, `PricesTicketCopyPanel.vue`, `MrtPriceTable.vue`, `#/prices` + stationfält |
@@ -75,14 +76,4 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 
 ## Docker och utvecklarverktyg (Fas 1–3)
 
-**Plan:** [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md)
-
-| ID | Punkt | Fas |
-|----|-------|-----|
-| ~~D1–D7~~ | ~~Fas 1~~ | 1 — **klar** |
-| ~~P1–P4~~ | ~~Volumes, tools-image, coverage i Docker, WSL2-docs~~ | 2 — **klar** |
-| ~~P5~~ | ~~WP-CLI exec via `wpcli` sidecar~~ | 2 — **klar** |
-| ~~P6~~ | ~~tools-shell (`compose exec`)~~ | 2 — **klar** |
-| ~~P7~~ | ~~compose watch (plugin sync via volym)~~ | 2 — **klar** |
-| ~~S2 (delvis)~~ | ~~`mrt` CLI — tunna wrappers~~ | 3 — **klar** |
-| S1, S3–S5 | Canonical bash vs PS, CI-strategi, devcontainer, init-poll | 3 |
+**Plan:** [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) — **Fas 0–3 klara** (2026-06-12).
