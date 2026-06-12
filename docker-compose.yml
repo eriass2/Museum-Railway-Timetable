@@ -45,29 +45,13 @@ services:
       WORDPRESS_ADMIN_EMAIL: admin@example.test
       WORDPRESS_SITE_TITLE: Museum Railway Timetable
       WORDPRESS_SITE_URL: http://localhost:8080
+      WORDPRESS_INTERNAL_URL: http://wordpress
     volumes:
       - wordpress_data:/var/www/html
       - ./:/var/www/html/wp-content/plugins/museum-railway-timetable
       - ./docker/ensure-sv-locale.sh:/usr/local/bin/mrt-ensure-sv-locale.sh:ro
-    command: >
-      sh -c '
-        until [ -f wp-config.php ] && wp --allow-root db check >/dev/null 2>&1; do
-          sleep 3;
-        done;
-        if ! wp --allow-root core is-installed >/dev/null 2>&1; then
-          wp --allow-root core install \
-            --url="$${WORDPRESS_SITE_URL}" \
-            --title="$${WORDPRESS_SITE_TITLE}" \
-            --admin_user="$${WORDPRESS_ADMIN_USER}" \
-            --admin_password="$${WORDPRESS_ADMIN_PASSWORD}" \
-            --admin_email="$${WORDPRESS_ADMIN_EMAIL}" \
-            --locale=sv_SE \
-            --skip-email;
-        fi;
-        sh /usr/local/bin/mrt-ensure-sv-locale.sh;
-        wp --allow-root plugin activate museum-railway-timetable;
-        wp --allow-root rewrite structure '/%postname%/' --hard;
-      '
+      - ./docker/wordpress-init.sh:/usr/local/bin/mrt-wordpress-init.sh:ro
+    command: ['sh', '/usr/local/bin/mrt-wordpress-init.sh']
 
   # Long-running WP-CLI sidecar — scripts use `compose exec wpcli` when up (Fas 2 P5).
   wpcli:
