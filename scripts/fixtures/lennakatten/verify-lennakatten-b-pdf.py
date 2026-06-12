@@ -9,10 +9,11 @@ from pathlib import Path
 
 from lennakatten_b_pdf import BStop, b_rail_service_stops, parse_b_pdf
 from lennakatten_symbols import anslag_overlay_flags
+from repo_paths import FIXTURE_DIR, REPO_ROOT, REFERENCE_PDF_DIR
 
-ROOT = Path(__file__).resolve().parents[2]
-FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
-B_PDF = ROOT / "testdata" / "reference-pdfs" / "Tidtabellsboken-del-B.pdf"
+ROOT = REPO_ROOT
+FIXTURE = FIXTURE_DIR
+B_PDF = REFERENCE_PDF_DIR / "Tidtabellsboken-del-B.pdf"
 
 MODE_FIELDS = (
     "ank_pickup_mode",

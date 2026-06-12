@@ -17,8 +17,9 @@ from lennakatten_anslag_tables import (
 )
 from lennakatten_green_vard import clone_green_rail_to_vard
 from lennakatten_symbols import FAR_IN, STOPTIMES_CSV_HEADER, UP_OUT, stoptime_csv_row, symbol_to_flags, symbols_for_train
+from repo_paths import FIXTURE_DIR
 
-ROOT = Path(__file__).resolve().parents[2] / "testdata" / "fixtures" / "lennakatten"
+ROOT = FIXTURE_DIR
 
 
 def stoptime_rows(

@@ -15,9 +15,10 @@ from lennakatten_anslag_tables import (
 from lennakatten_b_pdf import b_rail_service_stops, b_stop_to_csv_row, parse_b_pdf
 from lennakatten_green_vard import refresh_green_vard_lines
 from lennakatten_symbols import STOPTIMES_CSV_HEADER, stoptime_csv_row
+from repo_paths import FIXTURE_DIR, REPO_ROOT
 
-ROOT = Path(__file__).resolve().parents[2]
-FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
+ROOT = REPO_ROOT
+FIXTURE = FIXTURE_DIR
 
 
 def anslag_bus_stop_rows(service_code: str, stops: list[tuple[str, str, str, str]]) -> list[str]:

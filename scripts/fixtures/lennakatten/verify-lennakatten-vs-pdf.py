@@ -10,10 +10,11 @@ from pathlib import Path
 from lennakatten_anslag_tables import is_synced_green_yellow_rail, pdf_service_definitions
 from lennakatten_calendar import expected_green_buss_dates, expected_red_buss_dates
 from lennakatten_symbols import four_modes_from_flags, symbol_to_flags
+from repo_paths import FIXTURE_DIR, REPO_ROOT, REFERENCE_PDF_DIR
 
-ROOT = Path(__file__).resolve().parents[2]
-FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
-PDF = ROOT / "testdata" / "reference-pdfs" / "Anslagstidtabell-2026.pdf"
+ROOT = REPO_ROOT
+FIXTURE = FIXTURE_DIR
+PDF = REFERENCE_PDF_DIR / "Anslagstidtabell-2026.pdf"
 
 
 def load_stoptimes() -> dict[str, list[dict[str, str]]]:

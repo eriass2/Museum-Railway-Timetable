@@ -8,9 +8,10 @@ from pathlib import Path
 
 from lennakatten_anslag_tables import service_definitions
 from lennakatten_symbols import STOPTIMES_CSV_HEADER, stoptime_csv_row
+from repo_paths import FIXTURE_DIR, REPO_ROOT
 
-ROOT = Path(__file__).resolve().parents[2]
-FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
+ROOT = REPO_ROOT
+FIXTURE = FIXTURE_DIR
 STOPTIMES = FIXTURE / "stoptimes.csv"
 
 SYNC_PREFIXES = ("green-", "yellow-")
