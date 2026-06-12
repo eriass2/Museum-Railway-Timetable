@@ -1,6 +1,6 @@
 # Plan: CSS inkapsling (Vue, Angular-liknande)
 
-**Status:** Klart 2026-06-12. Uppföljning: [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md) (komponent-split, `MrtStack`, admin).  
+**Status:** Klart 2026-06-12. Uppföljning: [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md) (klar), [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) (ansvar, `:deep`, focus).  
 **Relaterat:** [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md)
 
 ---

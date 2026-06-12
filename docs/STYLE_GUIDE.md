@@ -85,7 +85,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 ### Struktur
 - **Varumärke och UI** – Se [design/BRAND_UI.md](design/BRAND_UI.md) (scope, formspråk, typografi, branding i texter).
 - **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
-- **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med **scoped `<style>`** i SFC; se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md). Encapsulation klar — vidare arbete: [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md). **Inga nya komponentregler** i global legacy CSS.
+- **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med **scoped `<style>`** i SFC; se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md). Encapsulation klar — refaktor klar ([CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md)); pågående ansvar/duplicering: [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md). **Inga nya komponentregler** i global legacy CSS.
 - **Legacy PHP** – `.mrt-alert` m.m. i `assets/frontend/components-base.css` (demo-verktyg, bygg-varningar).
 - **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.

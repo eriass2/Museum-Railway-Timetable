@@ -1,6 +1,6 @@
 # Åtgärdsplan: CSS-refaktor + återanvändbara UI-komponenter
 
-**Status:** Klar (2026-06-12) — uppföljning: E2E + valfri varumärkesstäd  
+**Status:** Klar (2026-06-12) — uppföljning: [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md), E2E  
 **Relaterat:** [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [design/BRAND_UI.md](design/BRAND_UI.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3
 
 ---
@@ -247,9 +247,12 @@ flowchart LR
 
 ## Nästa steg
 
-1. E2E: kör full publik suite + admin smoke.
-2. (Valfritt) Bryt ned SFC nära budget (`AdminApp`, `MrtMonthDayCell`, …).
-3. (Valfritt) Varumärkesstäd: admin border-radius, legacy token-alias.
+Uppföljning i **[CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md)** (C1–C5). Kort:
+
+1. **C1** — `MrtStepPanel` äger panel-CSS (ta bort layout `:deep`)
+2. **C2** — focus ring i `Mrt*` + `mrtFocusRing.css`
+3. E2E — full publik suite + admin smoke
+4. **C3–C5** — admin mobil, månadskalender, alert dual track, `AdminPanel` tokens
 
 ---
 

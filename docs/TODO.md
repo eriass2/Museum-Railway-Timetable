@@ -6,6 +6,21 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ---
 
+## CSS — ansvar och duplicering (C1–C5)
+
+**Plan:** [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) — efter refaktor R0–R5 (2026-06-12). Fokus: komponenten äger CSS, minska `:deep()` i layout/app-roots, focus i primitiver.
+
+| ID | Punkt | Insats |
+|----|-------|--------|
+| C1 | `MrtStepPanel` äger panel-CSS; layout utan `:deep(.mrt-step-panel*)` | Stor (4 PR) |
+| C2 | Focus ring i `MrtButton` m.fl. + `mrtFocusRing.css` | Medel (4 PR) |
+| C3 | `AdminMobilePageShell` — flytta mobil `:deep` från `AdminApp` | Medel (3 PR) |
+| C4 | `MonthCalendarApp` — nav/empty/radius till komponenter | Medel (3 PR) |
+| C5 | PHP/Vue alert dual track + `AdminPanel` tokens | Liten (3 PR) |
+| E2E | Full publik suite + admin smoke (DoD refaktor) | Medel |
+
+---
+
 ## Reseplanerare — copy & biljettinfo (J18)
 
 **Källa:** [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md)  
@@ -71,6 +86,7 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Docker/skript — Fas 3 S2 (`mrt` CLI) | 2026-06-12 | `scripts/mrt.ps1`, `scripts/mrt.sh` |
 | Docker/skript — scripts-organisation (gate, php, csv, i18n, dev, release) | 2026-06-12 | [scripts/README.md](../scripts/README.md) |
 | Reseplanerare J15–J17 + D19–D21 — biljettcopy (fotnoter, station, eftermiddag) | 2026-06-11 | `ticket-copy.php`, `PricesTicketCopyPanel.vue`, `MrtPriceTable.vue`, `#/prices` + stationfält |
+| CSS refaktor R0–R5 (encapsulation, layout-split, admin, style budget) | 2026-06-12 | [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md), commits `de3e3bd`–`6b8c2c1` |
 
 ---
 
