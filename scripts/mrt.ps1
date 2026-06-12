@@ -78,14 +78,14 @@ switch ($cmd) {
                 & composer csv:validate -- @Passthrough
                 exit $LASTEXITCODE
             }
-            'zip' { Invoke-MrtScript 'csv-package-zip.ps1' $Passthrough }
+            'zip' { Invoke-MrtScript 'csv/csv-package-zip.ps1' $Passthrough }
             default {
                 Write-Host "Unknown csv subcommand: $sub (try: validate, zip)" -ForegroundColor Red
                 exit 1
             }
         }
     }
-    'i18n' { Invoke-MrtScript 'make-i18n.ps1' $Passthrough }
+    'i18n' { Invoke-MrtScript 'i18n/make-i18n.ps1' $Passthrough }
     default {
         Write-Host "Unknown command: $Command (run: mrt help)" -ForegroundColor Red
         exit 1

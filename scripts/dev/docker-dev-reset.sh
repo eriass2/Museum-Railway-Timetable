@@ -53,6 +53,6 @@ mrt_dev_reset_import
 mrt_step_done
 
 echo ""
-echo "Done. Front: http://localhost:8080  Admin: http://localhost:8080/wp-admin (admin / admin)"
+echo "Done. Front: ${MRT_DEV_SITE_URL}  Admin: ${MRT_DEV_SITE_URL}/wp-admin (admin / admin)"
 echo ""
 mrt_step_done

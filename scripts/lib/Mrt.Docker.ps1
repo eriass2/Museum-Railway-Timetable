@@ -6,6 +6,7 @@ $libRoot = Split-Path -Parent $PSCommandPath
 . (Join-Path $libRoot 'Mrt.Timings.ps1')
 . (Join-Path $libRoot 'Mrt.Host.ps1')
 . (Join-Path $libRoot 'Mrt.Compose.ps1')
+. (Join-Path $libRoot 'Mrt.ToolsShell.ps1')
 . (Join-Path $libRoot 'Mrt.WpCli.ps1')
 . (Join-Path $libRoot 'Mrt.Vendor.ps1')
 . (Join-Path $libRoot 'Mrt.Vue.ps1')

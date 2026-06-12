@@ -31,12 +31,12 @@ Entry-script (`check.ps1`, `test.ps1`, `vue-check.ps1`, …) är tunna. Gemensam
 
 | Mål | Windows | CI / Linux |
 |-----|---------|------------|
-| Full PHP-gate + PHPCS | `.\scripts\check.ps1` | `composer check` (+ ev. `composer phpcs`) |
-| PHP + Vue | `.\scripts\check.ps1 -Vue` | `composer check` + `composer vue:check` |
-| PHPUnit | `.\scripts\test.ps1` | `composer test` |
-| Vue | `.\scripts\vue-check.ps1` | `bash scripts/vue-check.sh` |
-| Dev reset | `.\scripts\docker-dev-reset.ps1` | `./scripts/docker-dev-reset.sh` |
-| Dev reset + rebuild image | `.\scripts\docker-dev-reset.ps1 -Build` | `./scripts/docker-dev-reset.sh --build` |
+| Full PHP-gate + PHPCS | `.\scripts\mrt.ps1 check` | `bash scripts/mrt.sh check` |
+| PHP + Vue | `.\scripts\mrt.ps1 check -Vue` | `bash scripts/mrt.sh check --vue` |
+| PHPUnit | `.\scripts\mrt.ps1 test` | `bash scripts/mrt.sh test` |
+| Vue | `.\scripts\mrt.ps1 vue-check` | `bash scripts/mrt.sh vue-check` |
+| Dev reset | `.\scripts\mrt.ps1 dev reset` | `bash scripts/mrt.sh dev reset` |
+| Dev reset + rebuild image | `.\scripts\mrt.ps1 dev reset -Build` | `bash scripts/mrt.sh dev reset --build` |
 
 ### Medveten hybrid: Docker vs host
 
@@ -98,7 +98,7 @@ Samma **composer-skript**, inte nödvändigtvis samma container — avsiktligt f
 | S4 | Dev Container (`.devcontainer/`) | Stor | Cursor/VS Code standard för teamet? | **Klar** (2026-06-12) |
 | S5 | Init-container: HTTP-poll istället för `sleep 3` i `wordpress-init` | Liten | — | **Klar** (2026-06-12) — `docker/wordpress-init.sh` |
 
-**Exit-kriterium:** En plats att lära sig (`mrt help`), ingen duplicerad PS/bash-logik att hålla synkad manuellt.
+**Exit-kriterium:** En plats att lära sig (`mrt help`). Bash-gates och PS-moduler delar samma beteende; root-wrappers (`check.ps1`, `test.ps1`, …) finns kvar för bakåtkompatibilitet.
 
 ---
 

@@ -17,6 +17,15 @@ Entry-point scripts for quality gates, Docker dev, deploy, and fixtures. Shared 
 | `maintenance/` | One-off PHP refactor/split scripts |
 | Root `*.ps1` / `*.sh` / `*.php` | Daily entry points (wrappers + gates) |
 
+Root wrappers (`check.ps1`, `test.ps1`, `validate.php`, …) forward to `gate/`, `dev/`, or `php/` for backward compatibility. Prefer `mrt check` / `bash scripts/mrt.sh check` for new usage — see [lib/ARCHITECTURE.md](lib/ARCHITECTURE.md).
+
+**Maintenance and fixtures:**
+
+| Folder | Purpose |
+|--------|---------|
+| [maintenance/](maintenance/) | One-off PHP refactor/split scripts (archived; not part of daily gates) |
+| [fixtures/lennakatten/](fixtures/lennakatten/) | PDF → CSV fixture sync and verify for Lennakatten data |
+
 **Roadmap:** [docs/DOCKER_SCRIPTS_PLAN.md](../docs/DOCKER_SCRIPTS_PLAN.md)
 
 ## Shared libraries
@@ -25,7 +34,8 @@ Entry-point scripts for quality gates, Docker dev, deploy, and fixtures. Shared 
 |------|----------|---------|
 | `lib/Mrt.Docker.ps1` | PowerShell | Docker Compose, WP-CLI, Vue build/check, vendor install |
 | `lib/Mrt.Plugin.ps1` | PowerShell | Plugin slug, file list, version, copy/sync helpers |
-| `lib/mrt-docker.sh` | Bash/sh | Same building blocks for `.sh` scripts and CI |
+| `lib/mrt-docker.sh` | Bash/sh | Loader for `lib/mrt/*.sh` (same building blocks as PS) |
+| `lib/mrt/*.sh` | Bash/sh | Modular bash: timings, wpcli, tools, dev, vendor |
 
 PowerShell scripts dot-source the Docker lib (works from root wrappers or subfolders):
 
@@ -89,7 +99,7 @@ Existing `.\scripts\*.ps1` entry points remain; `mrt` forwards to them.
 | Vue typecheck + Vitest + build | `.\scripts\vue-check.ps1` | `bash scripts/gate/vue-check.sh` |
 | Vue locally | `.\scripts\vue-check.ps1 -Local` | `bash scripts/gate/vue-check.sh --local` |
 | PHP + Vue | `.\scripts\check.ps1 -Vue` | `bash scripts/mrt.sh check --vue` |
-| Line coverage (exploratory) | `.\scripts\coverage.ps1` | `bash scripts/gate/coverage.sh` |
+| Line coverage (exploratory) | `.\scripts\coverage.ps1` or `.\scripts\mrt.ps1 coverage -Timings` | `bash scripts/gate/coverage.sh --timings` |
 | Plugin file/syntax check | `composer plugin-check` | `php scripts/validate.php` |
 
 **Windows:** never invoke `vendor\bin\phpunit` directly — use `.\scripts\test.ps1`.
@@ -129,8 +139,8 @@ Config for live deploy: `local/live-deploy.config.json` (see `local/live-deploy.
 
 | Goal | Command |
 |------|---------|
-| Regenerate `.pot` / merge Swedish `.po` | `.\scripts\make-i18n.ps1` |
-| Pack CSV fixture zip | `.\scripts\csv-package-zip.ps1` or `bash scripts/csv-package-zip.sh` |
+| Regenerate `.pot` / merge Swedish `.po` | `.\scripts\mrt.ps1 i18n` or `.\scripts\i18n/make-i18n.ps1` |
+| Pack CSV fixture zip | `.\scripts\mrt.ps1 csv zip` or `.\scripts\csv/csv-package-zip.ps1` |
 | Validate CSV package | `composer csv:validate -- <path>` |
 
 ---
@@ -138,6 +148,7 @@ Config for live deploy: `local/live-deploy.config.json` (see `local/live-deploy.
 ## See also
 
 - [docs/DEVELOPER.md](../docs/DEVELOPER.md) — full developer guide
+- [scripts/lib/ARCHITECTURE.md](lib/ARCHITECTURE.md) — module layout and duplication policy
 - [docs/DOCKER_SCRIPTS_PLAN.md](../docs/DOCKER_SCRIPTS_PLAN.md) — optimization roadmap
 - [docs/SMOKE_CHECKLIST.md](../docs/SMOKE_CHECKLIST.md) — manual WordPress smoke
 - `.cursor/rules/testing-commands.mdc` — agent test commands (Windows/Docker)
