@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminFormActions,
   AdminMediaImageField,
   AdminPanel,
-  AdminStatusMessage,
   AdminUnsavedBanner,
+  MrtAlert,
+  MrtAsyncState,
   MrtButton,
 } from '../components/ui';
 import { useSettingsPage } from '../composables/useSettingsPage';
@@ -21,10 +21,12 @@ const { cfg, form, dirty, loading, error, saveMsg, load, submit } = useSettingsP
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'settingsTitle', 'Inställningar') }}</h1>
 
-    <AdminLoadState
+    <MrtAsyncState
+      context="admin"
       :loading="loading"
       :error="error"
       :loading-text="adminStr(cfg, 'settingsLoading')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
       @retry="load"
     >
       <AdminPanel>
@@ -125,13 +127,13 @@ const { cfg, form, dirty, loading, error, saveMsg, load, submit } = useSettingsP
             <MrtButton context="admin" variant="primary" type="submit">
               {{ adminStr(cfg, 'settingsSaveButton') }}
             </MrtButton>
-            <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
+            <MrtAlert v-if="saveMsg" context="admin" variant="success">{{ saveMsg }}</MrtAlert>
           </AdminFormActions>
           <p class="description">
             {{ adminStr(cfg, 'settingsImportHint') }}
           </p>
         </form>
       </AdminPanel>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>

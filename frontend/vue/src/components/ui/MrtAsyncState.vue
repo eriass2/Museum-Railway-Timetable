@@ -77,4 +77,12 @@ defineEmits<{ retry: [] }>();
   gap: 8px;
   margin-top: 8px;
 }
+
+.mrt-admin-async__error p {
+  margin: 0 0 8px;
+}
+
+.mrt-admin-async__error p:last-child {
+  margin-bottom: 0;
+}
 </style>

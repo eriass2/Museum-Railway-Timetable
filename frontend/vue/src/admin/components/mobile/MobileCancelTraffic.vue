@@ -68,3 +68,11 @@ async function cancelAll() {
     <p v-else class="description">{{ adminStr(cfg, 'mobileCancelNoPermission') }}</p>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-mobile-cancel {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #dcdcde;
+}
+</style>

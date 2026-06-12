@@ -47,3 +47,11 @@ const cfg = adminConfig();
     </AdminFormActions>
   </AdminPanel>
 </template>
+
+<style scoped>
+.mrt-admin-timetable-meta :deep(label) {
+  display: inline-block;
+  min-width: 10em;
+  font-weight: 600;
+}
+</style>

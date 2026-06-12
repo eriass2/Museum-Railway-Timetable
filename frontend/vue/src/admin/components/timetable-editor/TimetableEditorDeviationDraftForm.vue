@@ -143,4 +143,37 @@ function tripLabel(serviceId: number, services: TimetableDetail['services']): st
   font-size: 14px;
   font-weight: 600;
 }
+
+.mrt-admin-trip-fields {
+  display: grid;
+  gap: 12px;
+  max-width: 28rem;
+}
+
+.mrt-admin-trip-fields__field {
+  margin: 0;
+}
+
+.mrt-admin-trip-fields__field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mrt-admin-trip-fields__field :deep(.widefat),
+.mrt-admin-trip-fields__field :deep(.regular-text),
+.mrt-admin-trip-fields__field :deep(.large-text) {
+  max-width: 100%;
+}
+
+.mrt-admin-trip-fields__field :deep(.description) {
+  display: block;
+  margin-top: 4px;
+}
+
+@media (max-width: 782px) {
+  .mrt-admin-trip-fields {
+    max-width: none;
+  }
+}
 </style>

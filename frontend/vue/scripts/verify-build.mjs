@@ -118,6 +118,14 @@ if (!existsSync(adminPath)) {
   fail('missing admin bundle assets/admin.js — run full npm run build');
 }
 
+const adminCode = readFileSync(adminPath, 'utf8');
+const adminMarkers = ['mrt-admin-shell', 'mrt-admin-app', 'mrt-admin-async'];
+for (const marker of adminMarkers) {
+  if (!adminCode.includes(marker)) {
+    fail(`admin bundle missing expected marker: ${marker}`);
+  }
+}
+
 const tripPdfPath = join(distDir, 'assets/trip-pdf.js');
 if (!existsSync(tripPdfPath)) {
   fail('missing trip-pdf.js — run full npm run build (vite.pdf.config.ts)');

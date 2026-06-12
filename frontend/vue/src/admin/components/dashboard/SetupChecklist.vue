@@ -42,3 +42,9 @@ function openStep(route: string) {
     <SetupChecklistSteps :steps="steps" :complete="false" @go="openStep" />
   </AdminPanel>
 </template>
+
+<style scoped>
+.mrt-admin-setup--complete {
+  margin-bottom: 16px;
+}
+</style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdminPanel, AdminStatusMessage, AdminToolList, MrtButton } from '../components/ui';
+import { AdminPanel, AdminToolList, MrtAlert, MrtButton } from '../components/ui';
 import { useDevToolsPage } from '../composables/useDevToolsPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
@@ -29,8 +29,8 @@ const {
       <p class="description">
         {{ adminStr(cfg, 'devDescription') }}
       </p>
-      <AdminStatusMessage :message="message" />
-      <AdminStatusMessage v-if="error" :message="error" type="error" />
+      <MrtAlert v-if="message" context="admin" variant="success">{{ message }}</MrtAlert>
+      <MrtAlert v-if="error" context="admin" variant="error">{{ error }}</MrtAlert>
       <AdminPanel>
         <AdminToolList>
           <MrtButton

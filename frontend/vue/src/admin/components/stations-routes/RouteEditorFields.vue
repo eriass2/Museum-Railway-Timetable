@@ -51,12 +51,24 @@ const cfg = adminConfig();
 
 <style scoped>
 .mrt-admin-route-editor__section {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+}
+
+.mrt-admin-route-editor__section:last-child {
+  margin-bottom: 0;
 }
 
 .mrt-admin-route-editor__label {
   display: block;
   margin-bottom: 4px;
   font-weight: 600;
+}
+
+@media (max-width: 782px) {
+  :deep(select),
+  :deep(.admin-form-actions .button),
+  :deep(.admin-inline-form .button) {
+    width: 100%;
+  }
 }
 </style>

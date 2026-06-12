@@ -13,10 +13,9 @@ import {
 } from '../../utils/timetable-editor/deviationsPayload';
 import { useAdminResource } from '../../composables/useAdminResource';
 import { buildMobileTrafficTodayPayload } from '../../utils/mobile/mobileTrafficToday';
-import AdminLoadState from '../AdminLoadState.vue';
 import MobileQuickDeparture from './MobileQuickDeparture.vue';
 import MobileCancelTraffic from './MobileCancelTraffic.vue';
-import { AdminDeviationRowFields, AdminStatusMessage, MrtButton } from '../ui';
+import { AdminDeviationRowFields, MrtAlert, MrtAsyncState, MrtButton } from '../ui';
 
 const props = defineProps<{
   timetableId: number;
@@ -141,10 +140,12 @@ async function saveDeviationChanges() {
     <p class="description mrt-admin-mobile-desktop-hint">
       {{ adminStr(cfg, 'mobileDesktopEditHint') }}
     </p>
-    <AdminLoadState
+    <MrtAsyncState
+      context="admin"
       :loading="loading"
       :error="error"
       :loading-text="adminStr(cfg, 'mobileLoading')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
       @retry="load"
     >
       <MobileQuickDeparture
@@ -160,7 +161,7 @@ async function saveDeviationChanges() {
         @done="onCancelDone"
         @error="onCancelError"
       />
-      <AdminStatusMessage v-if="cancelMsg" :message="cancelMsg" />
+      <MrtAlert v-if="cancelMsg" context="admin" variant="success">{{ cancelMsg }}</MrtAlert>
 
       <div class="mrt-admin-mobile-deviations">
         <h3>{{ adminStr(cfg, 'mobileDeviationsTitle') }}</h3>
@@ -214,6 +215,56 @@ async function saveDeviationChanges() {
           {{ adminStr(cfg, 'editorDeviationsEmpty') }}
         </p>
       </div>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-mobile-panel {
+  margin-top: 12px;
+}
+
+.mrt-admin-mobile-desktop-hint {
+  margin-bottom: 12px;
+}
+
+.mrt-admin-mobile-deviations {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #dcdcde;
+}
+
+.mrt-admin-mobile-deviation-add {
+  display: grid;
+  gap: 12px;
+  max-width: 28rem;
+  margin-bottom: 12px;
+}
+
+.mrt-admin-mobile-deviation-card {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #f6f7f7;
+  border: 1px solid #c3c4c7;
+}
+
+.mrt-admin-trip-fields__field {
+  margin: 0;
+}
+
+.mrt-admin-trip-fields__field label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mrt-admin-trip-fields__field :deep(.widefat) {
+  max-width: 100%;
+}
+
+@media (max-width: 782px) {
+  .mrt-admin-mobile-deviation-add {
+    max-width: none;
+  }
+}
+</style>

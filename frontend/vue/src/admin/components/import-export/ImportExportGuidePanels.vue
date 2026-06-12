@@ -60,3 +60,22 @@ defineProps<{
     </ul>
   </AdminPanel>
 </template>
+
+<style scoped>
+.mrt-admin-help-steps {
+  margin: 0 0 0 1.5em;
+}
+
+.mrt-admin-import-files {
+  margin-top: 12px;
+}
+
+.mrt-admin-import-files code {
+  white-space: nowrap;
+}
+
+.mrt-admin-import-docs {
+  margin-top: 12px;
+  margin-bottom: 0;
+}
+</style>

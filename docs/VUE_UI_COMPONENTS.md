@@ -13,7 +13,7 @@ Delat komponentbibliotek för wizard, månadskalender, översikt, tidtabellsinde
 | `MrtAsyncState` | `public` \| `admin` | Loading, error, empty; admin retry via `@retry` |
 | `MrtDot` | — | Traffic / timetable type dots |
 
-Admin wrappers (deprecated gradually): `AdminLoadState` → `MrtAsyncState context="admin"`; `AdminStatusMessage` → `MrtAlert context="admin"`. `MrtAccentButton` delegates to `MrtButton context="public"`.
+Admin wrappers (deprecated gradually): `MrtAccentButton` delegates to `MrtButton context="public"`. Admin uses `MrtAsyncState context="admin"` and `MrtAlert context="admin"` directly.
 
 ## Components
 

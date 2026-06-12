@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminBackNav,
   AdminEmptyState,
@@ -8,6 +7,7 @@ import {
   AdminPanel,
   AdminRowActions,
   AdminTableScroll,
+  MrtAsyncState,
   MrtButton,
 } from '../components/ui';
 import { useTimetableListPage } from '../composables/useTimetableListPage';
@@ -36,10 +36,12 @@ const {
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'timetablesTitle') }}</h1>
-    <AdminLoadState
+    <MrtAsyncState
+      context="admin"
       :loading="loading"
       :error="error"
       :loading-text="adminStr(cfg, 'timetablesLoading')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
       @retry="load"
     >
       <p v-if="!cfg.canManage" class="notice notice-info">
@@ -175,6 +177,12 @@ const {
           </AdminFormActions>
         </AdminPanel>
       </template>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-timetable-create select {
+  max-width: 14rem;
+}
+</style>

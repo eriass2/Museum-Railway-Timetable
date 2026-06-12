@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 import { overviewUiLabels } from '../../shared/overviewUiLabels';
 import MrtTimetableOverviewView from '../../components/overview/MrtTimetableOverviewView.vue';
-import AdminLoadState from '../components/AdminLoadState.vue';
 import TimetableEditorMetaPanel from '../components/timetable-editor/TimetableEditorMetaPanel.vue';
 import TimetableEditorStoptimesPanel from '../components/timetable-editor/TimetableEditorStoptimesPanel.vue';
 import TimetableEditorDatesTab from '../components/timetable-editor/TimetableEditorDatesTab.vue';
@@ -10,7 +9,7 @@ import TimetableEditorDeviationsTab from '../components/timetable-editor/Timetab
 import TimetableEditorGridTab from '../components/timetable-editor/TimetableEditorGridTab.vue';
 import TimetableEditorTripsTab from '../components/timetable-editor/TimetableEditorTripsTab.vue';
 import MobileTimetablePanel from '../components/mobile/MobileTimetablePanel.vue';
-import { AdminPanel, AdminStatusMessage } from '../components/ui';
+import { AdminPanel, MrtAlert, MrtAsyncState } from '../components/ui';
 import { useTimetableEditorPage } from '../composables/timetable-editor/useTimetableEditorPage';
 import type { TimetableEditorTab } from '../composables/timetable-editor/useTimetableEditorPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
@@ -90,13 +89,15 @@ function onTabClick(next: TimetableEditorTab): void {
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1 v-if="!detail">{{ adminStr(cfg, 'editorTitle') }}</h1>
-    <AdminLoadState
+    <MrtAsyncState
+      context="admin"
       :loading="loading"
       :error="error"
       :loading-text="adminStr(cfg, 'editorLoading')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
       @retry="loadDetail"
     >
-      <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
+      <MrtAlert v-if="saveMsg" context="admin" variant="success">{{ saveMsg }}</MrtAlert>
 
       <TimetableEditorMetaPanel
         v-if="detail && cfg.canManage"
@@ -207,6 +208,6 @@ function onTabClick(next: TimetableEditorTab): void {
       <AdminPanel v-if="!isMobile && tab === 'preview'" class="mrt-vue-root">
         <MrtTimetableOverviewView v-if="overview" :data="overview" :labels="overviewLabels" />
       </AdminPanel>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>

@@ -9,6 +9,7 @@
 @import url("../mrt-typography.css");
 
 :root {
+    /* Legacy aliases below — prefer --mrt-color-* from mrt-color-tokens.css in new code (R5.4). */
     /* Primary Colors (legacy aliases → Lennakatten brand) */
     --mrt-green-primary: var(--mrt-color-brand-green);
     --mrt-green-light: #9ad29a;

@@ -138,4 +138,17 @@ const cfg = adminConfig();
   margin-bottom: 4px;
   font-weight: 600;
 }
+
+.mrt-admin-zone-picks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+}
+
+.mrt-admin-zone-picks__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  white-space: nowrap;
+}
 </style>

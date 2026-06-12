@@ -2,7 +2,7 @@
 import { adminFmtN, adminStr } from '../../utils/adminLabels';
 import { useMobileQuickDeparture } from '../../composables/mobile/useMobileQuickDeparture';
 import type { TimetableServiceRow } from '../../types';
-import { AdminStatusMessage, MrtButton } from '../ui';
+import { MrtAlert, MrtButton } from '../ui';
 
 const props = defineProps<{
   services: TimetableServiceRow[];
@@ -33,7 +33,7 @@ const {
     <p v-if="serviceId && firstStopName" class="description">
       {{ adminFmtN(cfg, 'mobileQuickDepartureWarning', { 1: firstStopName }) }}
     </p>
-    <AdminStatusMessage v-if="error" type="error" :message="error" />
+    <MrtAlert v-if="error" context="admin" variant="error">{{ error }}</MrtAlert>
     <p>
       <label for="mrt-mobile-service">{{ adminStr(cfg, 'mobileTripLabel') }}</label>
       <select id="mrt-mobile-service" v-model.number="serviceId" class="widefat">
@@ -68,3 +68,11 @@ const {
     </p>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-mobile-departure {
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #dcdcde;
+}
+</style>

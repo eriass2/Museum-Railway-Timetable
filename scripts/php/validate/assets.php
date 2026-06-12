@@ -50,6 +50,11 @@ function mrt_validate_css_files( array &$errors, int &$checks ): void {
 		'assets/frontend/ui-components.css',
 		'assets/frontend/ui/primitives.css',
 		'assets/frontend/ui/calendar-tokens.css',
+		'assets/frontend/ui/calendar-nav-legend.css',
+		'assets/frontend/ui/panels-headings.css',
+		'assets/frontend/ui/price-table.css',
+		'assets/frontend/ui/trips.css',
+		'assets/frontend/ui/wizard-steps.css',
 		'frontend/vue/src/styles/journey-wizard.css',
 		'frontend/vue/src/styles/month-calendar.css',
 	);
@@ -72,7 +77,7 @@ function mrt_validate_accessibility_markers( array &$errors, int &$checks ): voi
 	$a11y_markers = array(
 		'inc/public/journey-wizard/shell.php'           => array( 'MRT_render_vue_mount', 'museum_journey_wizard' ),
 		'inc/public/month-calendar/shortcode.php'       => array( 'MRT_render_vue_mount', 'museum_timetable_month' ),
-		'frontend/vue/src/apps/JourneyWizardApp.vue'    => array( ':focus-visible' ),
+		'frontend/vue/src/components/layout/MrtWizardShell.vue' => array( ':focus-visible' ),
 	);
 
 	foreach ( $a11y_markers as $file => $needles ) {

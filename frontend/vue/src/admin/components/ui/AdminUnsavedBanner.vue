@@ -10,3 +10,9 @@ defineProps<{
     {{ message }}
   </p>
 </template>
+
+<style scoped>
+.mrt-admin-unsaved {
+  margin: 0 0 12px;
+}
+</style>

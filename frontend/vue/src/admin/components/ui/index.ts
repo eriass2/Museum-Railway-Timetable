@@ -1,4 +1,4 @@
-export { MrtButton } from '@/components/ui';
+export { MrtAlert, MrtAsyncState, MrtButton } from '@/components/ui';
 export { default as AdminActionBar } from './AdminActionBar.vue';
 export { default as AdminBackNav } from './AdminBackNav.vue';
 export { default as AdminDateList } from './AdminDateList.vue';
@@ -14,7 +14,6 @@ export { default as AdminMediaImageField } from './AdminMediaImageField.vue';
 export { default as AdminInlineForm } from './AdminInlineForm.vue';
 export { default as AdminPanel } from './AdminPanel.vue';
 export { default as AdminRowActions } from './AdminRowActions.vue';
-export { default as AdminStatusMessage } from './AdminStatusMessage.vue';
 export { default as AdminTableScroll } from './AdminTableScroll.vue';
 export { default as AdminToolList } from './AdminToolList.vue';
 export { default as AdminTrainTypeCell } from './AdminTrainTypeCell.vue';

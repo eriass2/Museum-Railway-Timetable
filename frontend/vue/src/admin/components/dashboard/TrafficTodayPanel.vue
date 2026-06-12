@@ -10,7 +10,7 @@ import type { TrafficToday } from '../../types';
 import { adminFmtN, adminStr } from '../../utils/adminLabels';
 import { trafficTodayStatusText } from '../../utils/dashboard/trafficTodayStatus';
 import { adminConfig } from '../../types';
-import { AdminActionBar, AdminPanel, AdminStatusMessage, MrtButton } from '../ui';
+import { AdminActionBar, AdminPanel, MrtAlert, MrtButton } from '../ui';
 
 const props = defineProps<{
   traffic: TrafficToday;
@@ -78,8 +78,8 @@ function openTimetable(tab?: string) {
   <AdminPanel class="mrt-admin-ops-today">
     <h2>{{ adminStr(cfg, 'trafficTodayTitle') }}</h2>
     <p class="description">{{ traffic.date }} — {{ statusText }}</p>
-    <AdminStatusMessage v-if="message" :message="message" />
-    <AdminStatusMessage v-if="error" type="error" :message="error" />
+    <MrtAlert v-if="message" context="admin" variant="success">{{ message }}</MrtAlert>
+    <MrtAlert v-if="error" context="admin" variant="error">{{ error }}</MrtAlert>
     <AdminActionBar>
       <MrtButton
         v-if="canOperate && !effectiveTraffic.all_cancelled && effectiveTraffic.services_count > 0"

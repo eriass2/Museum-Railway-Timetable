@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { RouterLink } from 'vue-router';
-import AdminLoadState from '../components/AdminLoadState.vue';
 import PricesAfternoonPanel from '../components/prices/PricesAfternoonPanel.vue';
 import PricesPreview from '../components/prices/PricesPreview.vue';
 import PricesTicketCopyPanel from '../components/prices/PricesTicketCopyPanel.vue';
@@ -9,9 +8,10 @@ import {
   AdminFormActions,
   AdminInlineForm,
   AdminPanel,
-  AdminStatusMessage,
   AdminTableScroll,
   AdminUnsavedBanner,
+  MrtAlert,
+  MrtAsyncState,
   MrtButton,
 } from '../components/ui';
 import { usePricesPage } from '../composables/prices/usePricesPage';
@@ -57,10 +57,12 @@ const {
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'pricesTitle', 'Priser') }}</h1>
 
-    <AdminLoadState
+    <MrtAsyncState
+      context="admin"
       :loading="loading"
       :error="error"
       :loading-text="adminStr(cfg, 'pricesLoading')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
       @retry="load"
     >
       <AdminPanel v-if="data">
@@ -329,11 +331,11 @@ const {
             <MrtButton context="admin" variant="primary" type="submit">
               {{ adminStr(cfg, 'pricesSaveButton') }}
             </MrtButton>
-            <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
+            <MrtAlert v-if="saveMsg" context="admin" variant="success">{{ saveMsg }}</MrtAlert>
           </AdminFormActions>
         </form>
       </AdminPanel>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>
 
@@ -341,6 +343,19 @@ const {
 .mrt-admin-prices-schema__heading {
   margin: 16px 0 8px;
   font-size: 13px;
+}
+
+.mrt-admin-prices-onboarding__title {
+  margin: 16px 0 8px;
+  font-size: 1em;
+}
+
+.mrt-admin-prices-onboarding__steps {
+  margin-bottom: 16px;
+}
+
+.mrt-admin-help-steps {
+  margin: 0 0 0 1.5em;
 }
 
 .mrt-admin-prices-schema__table {

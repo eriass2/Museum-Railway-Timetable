@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import AdminLoadState from '../components/AdminLoadState.vue';
 import {
   AdminBackNav,
   AdminDisclosure,
@@ -8,9 +7,10 @@ import {
   AdminFormActions,
   AdminPanel,
   AdminRowActions,
-  AdminStatusMessage,
   AdminTableScroll,
   AdminTrainTypeCell,
+  MrtAlert,
+  MrtAsyncState,
   MrtButton,
   TrainTypeIconPicker,
 } from '../components/ui';
@@ -44,13 +44,15 @@ const {
   <div class="mrt-admin-page train-types-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'trainTypesTitle') }}</h1>
 
-    <AdminLoadState
+    <MrtAsyncState
+      context="admin"
       :loading="loading"
       :error="error"
       :loading-text="adminStr(cfg, 'trainTypesLoading')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
       @retry="load"
     >
-      <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
+      <MrtAlert v-if="saveMsg" context="admin" variant="success">{{ saveMsg }}</MrtAlert>
 
       <AdminPanel v-if="viewMode === 'list'">
         <AdminEmptyState
@@ -191,7 +193,7 @@ const {
           </AdminFormActions>
         </div>
       </AdminPanel>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>
 

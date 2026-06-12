@@ -3,8 +3,7 @@ import { computed, toRef, watch } from 'vue';
 import { adminConfig } from '../../types';
 import { adminStr } from '../../utils/adminLabels';
 import { useStopTimes } from '../../composables/timetable-editor/useStopTimes';
-import AdminLoadState from '../AdminLoadState.vue';
-import { AdminFormActions, AdminStatusMessage, MrtButton } from '../ui';
+import { AdminFormActions, MrtAlert, MrtAsyncState, MrtButton } from '../ui';
 import StopTimePaHeading from './StopTimePaHeading.vue';
 import StopTimeTableRow from './StopTimeTableRow.vue';
 
@@ -24,13 +23,15 @@ watch(serviceId, () => {
 </script>
 
 <template>
-  <AdminLoadState
+  <MrtAsyncState
+    context="admin"
     :loading="loading"
     :error="error"
     :loading-text="adminStr(cfg, 'stopTimesLoading')"
+    :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
     @retry="load"
   >
-    <AdminStatusMessage v-if="message" :message="message" />
+    <MrtAlert v-if="message" context="admin" variant="success">{{ message }}</MrtAlert>
     <p class="description">{{ adminStr(cfg, 'editorStoptimesPaLegend') }}</p>
     <p class="description">{{ adminStr(cfg, 'stopTimesOnRequestHint') }}</p>
 
@@ -62,5 +63,11 @@ watch(serviceId, () => {
         {{ adminStr(cfg, 'stopTimesSaveButton') }}
       </MrtButton>
     </AdminFormActions>
-  </AdminLoadState>
+  </MrtAsyncState>
 </template>
+
+<style scoped>
+.mrt-admin-stoptimes :deep(input[type='time']) {
+  max-width: 8em;
+}
+</style>

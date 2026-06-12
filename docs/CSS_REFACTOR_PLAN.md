@@ -218,12 +218,30 @@ flowchart LR
 ## Definition of done (hela refaktor-initiativet)
 
 - [ ] Inga app-root/SFC med **> 150 rader** scoped CSS (undantag dokumenterat: print block)
-- [ ] `admin-shell.css` **< 200 rader** (resten i feature SFC)
-- [ ] Nya spacing-mönster via **`MrtStack`**, inte nya utilities
-- [ ] **`AdminLoadState` / `AdminStatusMessage` borttagna** — endast `MrtAsyncState` / `MrtAlert`
-- [ ] [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) listar alla nya `Mrt*`
-- [ ] Guardrails utökade (ev. max CSS-rader per `.vue` i CI — soft warning först)
+- [x] `admin-shell.css` **< 200 rader** (resten i feature SFC) — **7 rader** efter R4
+- [x] Nya spacing-mönster via **`MrtStack`**, inte nya utilities (publik Vue; PHP utilities kvar)
+- [x] **`AdminLoadState` / `AdminStatusMessage` borttagna** — endast `MrtAsyncState` / `MrtAlert`
+- [x] [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) listar nya `Mrt*` (R1–R3)
+- [x] Guardrails utökade — `verify-build.mjs` admin-markers; validate legacy CSS borttagen (R5)
 - [ ] E2E: publik suite grön; admin-WP-flak fixad eller isolerad
+
+---
+
+## Status (2026-06-12)
+
+| Fas | Status |
+|-----|--------|
+| R0–R3 | Klar (commit `de3e3bd`) |
+| R4 | Klar — admin encapsulation |
+| R5 | Klar — städning, brand-dok, tokens-kommentar |
+
+---
+
+## Nästa steg
+
+1. E2E: kör full publik suite + admin smoke.  
+2. Ev. dela `MrtWizardShell` om scoped CSS >150 rader ska uppfyllas.  
+3. CI soft warning: max CSS-rader per `.vue`.
 
 ---
 
@@ -235,11 +253,3 @@ flowchart LR
 | `:deep()` vid layout-split | Flytta `:deep` till layout-komponent som äger slot-strukturen |
 | Admin ser annorlunda ut | `context="admin"` + WP-klasser i `MrtButton`/`MrtAlert` — visuell regression via E2E |
 | PR blir stora | En komponent / en CSS-källa per PR |
-
----
-
-## Nästa steg
-
-1. Godkänn denna plan (prioritera R0 + R1.1).  
-2. Skapa PR **R1.1** (`MrtWizardMainCard`) som första konkreta layout-komponent.  
-3. Parallellt: skissa **`MrtStack` API** (props: `gap`, `marginTop`, `as`?) i issue/PR-beskrivning.

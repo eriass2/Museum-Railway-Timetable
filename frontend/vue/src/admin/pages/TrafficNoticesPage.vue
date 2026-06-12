@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import AdminLoadState from '../components/AdminLoadState.vue';
 import TrafficNoticesForm from '../components/traffic-notices/TrafficNoticesForm.vue';
 import TrafficNoticesFeedPreview from '../components/traffic-notices/TrafficNoticesFeedPreview.vue';
 import TrafficNoticesList from '../components/traffic-notices/TrafficNoticesList.vue';
-import { AdminStatusMessage } from '../components/ui';
+import { MrtAlert, MrtAsyncState } from '../components/ui';
 import { useTrafficNoticesPage } from '../composables/traffic-notices/useTrafficNoticesPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import { adminStr } from '../utils/adminLabels';
 
 const { isMobile } = useMobileAdmin();
 const {
@@ -31,7 +31,14 @@ const {
 
 <template>
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
-    <AdminLoadState :loading="loading" :error="error" @retry="load">
+    <MrtAsyncState
+      context="admin"
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'loading', 'Laddar…')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
+      @retry="load"
+    >
     <div class="mrt-vue-root">
       <TrafficNoticesFeedPreview
         v-if="viewMode === 'list'"
@@ -55,8 +62,8 @@ const {
         @save="saveDraft"
         @remove="removeDraft"
       />
-      <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
+      <MrtAlert v-if="saveMsg" context="admin" variant="success">{{ saveMsg }}</MrtAlert>
     </div>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>

@@ -3,7 +3,7 @@ import type { TimetableOverviewPayload } from '../../../types/timetableOverview'
 import MrtOverviewBranchGroup from '../../../components/overview/MrtOverviewBranchGroup.vue';
 import MrtOverviewPrintKey from '../../../components/overview/MrtOverviewPrintKey.vue';
 import MrtTimetableOverviewShell from '../../../components/overview/MrtTimetableOverviewShell.vue';
-import { AdminStatusMessage } from '../ui';
+import { MrtAlert } from '../ui';
 import EditableOverviewRailGroup from './EditableOverviewRailGroup.vue';
 import { useEditableTimetableOverview } from '../../composables/timetable-editor/useEditableTimetableOverview';
 
@@ -22,8 +22,8 @@ const { editor, labels, onGridCellSaved } = useEditableTimetableOverview(() => {
 <template>
   <MrtTimetableOverviewShell :data="data" :show-day-title="false">
     <template #prepend>
-      <AdminStatusMessage v-if="editor.error.value" type="error" :message="editor.error.value" />
-      <AdminStatusMessage v-if="editor.message.value" :message="editor.message.value" />
+      <MrtAlert v-if="editor.error.value" context="admin" variant="error">{{ editor.error.value }}</MrtAlert>
+      <MrtAlert v-if="editor.message.value" context="admin" variant="success">{{ editor.message.value }}</MrtAlert>
     </template>
     <template #group="{ group, iconUrls }">
       <EditableOverviewRailGroup

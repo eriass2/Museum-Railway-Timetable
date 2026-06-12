@@ -123,3 +123,48 @@ function openShortcodesGuide() {
     </AdminPanel>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-help-toc {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  background: #f6f7f7;
+  border-left: 4px solid #2271b1;
+}
+
+.mrt-admin-help-toc__title {
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+
+.mrt-admin-help-toc ul {
+  margin: 0;
+  padding-left: 1.25em;
+}
+
+.mrt-admin-help-steps {
+  margin: 0 0 0 1.5em;
+}
+
+.mrt-admin-faq {
+  margin: 0;
+}
+
+.mrt-admin-faq dt {
+  margin-top: 12px;
+  font-weight: 600;
+}
+
+.mrt-admin-faq dt:first-child {
+  margin-top: 0;
+}
+
+.mrt-admin-faq dd {
+  margin: 4px 0 0;
+  color: #50575e;
+}
+
+.mrt-admin-help-table {
+  margin-top: 12px;
+}
+</style>

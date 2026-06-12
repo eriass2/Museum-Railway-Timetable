@@ -66,3 +66,9 @@ const isCancelled = computed({
     </p>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-mobile-deviation-meta {
+  margin: 0 0 8px;
+}
+</style>

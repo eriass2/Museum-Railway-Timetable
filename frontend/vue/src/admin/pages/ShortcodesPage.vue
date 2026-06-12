@@ -57,3 +57,25 @@ const help = computed(() => requireAdminHelp(cfg));
     </AdminPanel>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-page__lead {
+  margin: -4px 0 20px;
+  max-width: 52rem;
+  color: #50575e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.mrt-admin-help-steps {
+  margin: 0 0 0 1.5em;
+}
+
+.mrt-admin-shortcodes-quick {
+  margin-top: 12px;
+}
+
+.mrt-admin-shortcodes-quick code {
+  white-space: nowrap;
+}
+</style>

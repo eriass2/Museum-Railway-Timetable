@@ -3,7 +3,7 @@ import {
   AdminDisclosure,
   AdminFormActions,
   AdminPanel,
-  AdminStatusMessage,
+  MrtAlert,
   MrtButton,
 } from '../components/ui';
 import ImportExportGuidePanels from '../components/import-export/ImportExportGuidePanels.vue';
@@ -40,7 +40,7 @@ const {
     </p>
 
     <p v-if="error" class="notice notice-error mrt-admin-import-error">{{ error }}</p>
-    <AdminStatusMessage :message="success" />
+    <MrtAlert v-if="success" context="admin" variant="success">{{ success }}</MrtAlert>
 
     <AdminPanel :title="guide.workflowTitle">
       <ol class="mrt-admin-help-steps">
@@ -130,3 +130,41 @@ const {
     </AdminDisclosure>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-page__lead {
+  margin: -4px 0 20px;
+  max-width: 52rem;
+  color: #50575e;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.mrt-admin-help-steps {
+  margin: 0 0 0 1.5em;
+}
+
+.mrt-admin-import-error {
+  white-space: pre-line;
+}
+
+.mrt-admin-import-file {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mrt-admin-import-export-options {
+  margin: 12px 0 0;
+}
+
+.mrt-admin-import-override-notice {
+  margin-top: 12px;
+}
+</style>

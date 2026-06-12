@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import type { FeedbackStatus } from '../api/adminRest';
-import AdminLoadState from '../components/AdminLoadState.vue';
-import { AdminPanel, AdminStatusMessage, MrtButton } from '../components/ui';
+import { AdminPanel, MrtAlert, MrtAsyncState, MrtButton } from '../components/ui';
 import { useFeedbackPage } from '../composables/useFeedbackPage';
 import { adminStr } from '../utils/adminLabels';
 
@@ -24,7 +23,14 @@ const {
 <template>
   <div class="mrt-admin-page">
     <h1>{{ adminStr(cfg, 'feedbackTitle', 'Feedback') }}</h1>
-    <AdminLoadState :loading="loading" :error="error" @retry="load">
+    <MrtAsyncState
+      context="admin"
+      :loading="loading"
+      :error="error"
+      :loading-text="adminStr(cfg, 'loading', 'Laddar…')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
+      @retry="load"
+    >
       <AdminPanel>
         <p class="description">
           {{ adminStr(cfg, 'feedbackIntro', 'Rapporter från reseplanerarens feedbackknapp.') }}
@@ -85,8 +91,8 @@ const {
             {{ adminStr(cfg, 'feedbackExportButton', 'Exportera CSV') }}
           </MrtButton>
         </p>
-        <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
+        <MrtAlert v-if="saveMsg" context="admin" variant="success">{{ saveMsg }}</MrtAlert>
       </AdminPanel>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>

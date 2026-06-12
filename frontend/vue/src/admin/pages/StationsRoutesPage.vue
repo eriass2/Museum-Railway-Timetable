@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import AdminLoadState from '../components/AdminLoadState.vue';
 import LinesPanel from '../components/stations-routes/LinesPanel.vue';
 import RoutesPanel from '../components/stations-routes/RoutesPanel.vue';
 import StationsPanel from '../components/stations-routes/StationsPanel.vue';
-import { AdminStatusMessage } from '../components/ui';
+import { MrtAlert, MrtAsyncState } from '../components/ui';
 import { useStationsRoutesPage } from '../composables/stations-routes/useStationsRoutesPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import { adminStr } from '../utils/adminLabels';
@@ -61,13 +60,15 @@ const sectionTabs = computed(() => buildStationsRoutesSectionTabs(cfg, hasLineRe
     <h1>{{
       hasLineRegistry ? adminStr(cfg, 'stationsTitleLines') : adminStr(cfg, 'stationsTitle')
     }}</h1>
-    <AdminLoadState
+    <MrtAsyncState
+      context="admin"
       :loading="loading"
       :error="error"
       :loading-text="adminStr(cfg, 'stationsLoading')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
       @retry="load"
     >
-      <AdminStatusMessage v-if="saveMsg" :message="saveMsg" />
+      <MrtAlert v-if="saveMsg" context="admin" variant="success">{{ saveMsg }}</MrtAlert>
       <nav
         class="nav-tab-wrapper mrt-admin-section-nav"
         :aria-label="adminStr(cfg, 'stationsNavAria')"
@@ -137,7 +138,7 @@ const sectionTabs = computed(() => buildStationsRoutesSectionTabs(cfg, hasLineRe
         @back="requestBackToRoutesList"
         @remove="removeRoute"
       />
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>
 
@@ -150,5 +151,9 @@ const sectionTabs = computed(() => buildStationsRoutesSectionTabs(cfg, hasLineRe
   display: inline-flex;
   align-items: center;
   gap: 8px;
+}
+
+.mrt-admin-section-nav {
+  margin-bottom: 12px;
 }
 </style>

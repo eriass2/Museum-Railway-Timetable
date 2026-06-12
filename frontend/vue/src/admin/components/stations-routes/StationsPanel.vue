@@ -147,4 +147,13 @@ function stationTypeLabel(stationType: string): string {
 .mrt-admin-station-missing-zone {
   color: #996800;
 }
+
+.mrt-admin-stations-table td:last-child {
+  vertical-align: middle;
+}
+
+.mrt-admin-stations-table :deep(input.small-text) {
+  min-width: 5.5em;
+  width: 5.5em;
+}
 </style>

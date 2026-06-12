@@ -1,50 +1,27 @@
-/**
- * Public page layout when plugin shortcodes are present.
- *
- * Content max-width: --mrt-app-content-max (app-shell.css). Full-bleed backgrounds: MrtPublicAppShell.
- *
- * @package Museum_Railway_Timetable
- */
-
-body.mrt-has-shortcodes .entry-content,
-body.mrt-has-shortcodes .wp-block-post-content {
-    max-width: var(--mrt-app-content-max, min(96vw, 80rem));
-}
-
-/* Block themes constrain direct children to content-size (~645px); widen Vue mounts. */
-body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root.alignwide,
-body.mrt-has-shortcodes .wp-block-post-content-is-layout-constrained > .mrt-vue-root.alignwide {
-    width: 100%;
-    max-width: var(--mrt-app-content-max, min(96vw, 80rem));
-}
-
-body.mrt-has-overview .mrt-vue-root--overview {
-    width: 100%;
-    max-width: var(--mrt-app-content-max, min(96vw, 80rem));
-}
-
-.mrt-vue-root {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-.mrt-timetable-overview {
-    width: 100%;
-    max-width: 100%;
-}
-
-.mrt-timetable-group {
-    width: 100%;
-    max-width: 100%;
-}
-
-.mrt-overview-grid {
-    width: max-content;
-    min-width: min(100%, max-content);
-}
-
-.mrt-demo-mockup-caption + .mrt-journey-wizard--embedded {
-    margin-top: clamp(1.25rem, 3vw, 2rem);
-}
-
+/**
+ * WordPress / theme layout hooks for plugin shortcodes.
+ * Content width tokens: MrtPublicAppShell (--mrt-app-content-max in component).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+body.mrt-has-shortcodes .entry-content,
+body.mrt-has-shortcodes .wp-block-post-content {
+  max-width: var(--mrt-app-content-max, min(96vw, 80rem));
+}
+
+/* Block themes constrain direct children to content-size (~645px); widen Vue mounts. */
+body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root.alignwide,
+body.mrt-has-shortcodes .wp-block-post-content-is-layout-constrained > .mrt-vue-root.alignwide {
+  width: 100%;
+  max-width: var(--mrt-app-content-max, min(96vw, 80rem));
+}
+
+body.mrt-has-overview .mrt-vue-root--overview {
+  width: 100%;
+  max-width: var(--mrt-app-content-max, min(96vw, 80rem));
+}
+
+.mrt-demo-mockup-caption + .mrt-journey-wizard--embedded {
+  margin-top: clamp(1.25rem, 3vw, 2rem);
+}

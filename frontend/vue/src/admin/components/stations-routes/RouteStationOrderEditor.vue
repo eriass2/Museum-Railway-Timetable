@@ -119,3 +119,95 @@ function onAppend() {
     </AdminInlineForm>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-route-editor__section {
+  margin-bottom: 16px;
+}
+
+.mrt-admin-route-editor__section:last-child {
+  margin-bottom: 0;
+}
+
+.mrt-admin-route-editor__heading {
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+
+.mrt-admin-route-editor__empty {
+  margin-top: 0;
+}
+
+.mrt-admin-route-station-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  max-width: 36em;
+}
+
+.mrt-admin-route-station-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid #dcdcde;
+}
+
+.mrt-admin-route-station-row:last-child {
+  border-bottom: none;
+}
+
+.mrt-admin-route-station-row__order {
+  flex: 0 0 1.5em;
+  color: #646970;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.mrt-admin-route-station-row__name {
+  flex: 1;
+  min-width: 0;
+}
+
+.mrt-admin-route-station-row__badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.mrt-admin-route-station-row__badge {
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+.mrt-admin-route-station-row__badge--start {
+  border: 1px solid #2271b1;
+  background: #f0f6fc;
+  color: #1d4f8c;
+}
+
+.mrt-admin-route-station-row__badge--end {
+  border: 1px solid #3a6b1f;
+  background: #f0f6eb;
+  color: #2f5c17;
+}
+
+.mrt-admin-route-editor__add {
+  margin-top: 12px;
+}
+
+@media (max-width: 782px) {
+  .mrt-admin-route-station-list {
+    max-width: none;
+  }
+
+  .mrt-admin-route-editor__add :deep(select),
+  .mrt-admin-route-editor__add :deep(.button) {
+    width: 100%;
+  }
+}
+</style>

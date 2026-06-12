@@ -2,8 +2,7 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
-import AdminLoadState from '../components/AdminLoadState.vue';
-import { AdminActionBar, AdminPanel, MrtButton } from '../components/ui';
+import { AdminActionBar, AdminPanel, MrtAsyncState, MrtButton } from '../components/ui';
 import SetupChecklist from '../components/dashboard/SetupChecklist.vue';
 import TrafficTodayPanel from '../components/dashboard/TrafficTodayPanel.vue';
 import { useAdminResource } from '../composables/useAdminResource';
@@ -35,10 +34,12 @@ function openRoute(hashRoute: string) {
   <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
     <h1>{{ adminStr(cfg, 'dashboardTitle', 'Museum Railway Timetable') }}</h1>
 
-    <AdminLoadState
+    <MrtAsyncState
+      context="admin"
       :loading="loading"
       :error="error"
       :loading-text="adminStr(cfg, 'dashboardLoading')"
+      :retry-label="adminStr(cfg, 'retry', 'Försök igen')"
       @retry="load"
     >
     <template v-if="data">
@@ -136,6 +137,44 @@ function openRoute(hashRoute: string) {
         </AdminActionBar>
       </AdminPanel>
     </template>
-    </AdminLoadState>
+    </MrtAsyncState>
   </div>
 </template>
+
+<style scoped>
+.mrt-admin-warnings {
+  list-style: disc;
+  margin-left: 1.5em;
+}
+
+@media (max-width: 782px) {
+  .mrt-admin-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .mrt-admin-stat-card {
+    padding: 12px;
+    text-align: center;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 3px;
+  }
+
+  .mrt-admin-stat-card__value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .mrt-admin-stat-card__label {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #50575e;
+  }
+}
+</style>

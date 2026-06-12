@@ -145,3 +145,9 @@ const { onMove: onEditRouteMove, onRemove: onEditRouteRemove } =
     </AdminEntityEditorShell>
   </AdminPanel>
 </template>
+
+<style scoped>
+.mrt-admin-routes-table td:last-child {
+  vertical-align: middle;
+}
+</style>

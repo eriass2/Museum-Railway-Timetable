@@ -46,7 +46,7 @@ Ny kod för ovan → lägg i befintlig undermapp, inte i rot.
 
 ## När INTE skapa mapp
 
-- En ensam komponent/helper (`AdminLoadState.vue`, `adminConfirm.ts`)
+- En ensam komponent/helper (`adminConfirm.ts`, `useAdminResource`)
 - Generella verktyg (`adminLabels.ts`, `settingsTime.ts`, `downloadBase64File.ts`)
 - Delade composables (`useAdminResource`, `useAdminSaveNotice`, `adminDiscardGuard`, …)
 - Enskilda sidor utan utbrott (`TrainTypesPage`, `ShortcodesPage`, `SettingsPage`)
