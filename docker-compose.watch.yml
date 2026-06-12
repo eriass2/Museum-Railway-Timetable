@@ -1,0 +1,45 @@
+# Optional overlay: sync plugin into a named volume instead of bind-mounting the repo (P7).
+# Avoids slow C:\ bind-mount I/O on Windows Docker Desktop.
+#
+# Usage:
+#   docker compose -f docker-compose.yml -f docker-compose.watch.yml up -d
+#   docker compose -f docker-compose.yml -f docker-compose.watch.yml watch
+# Or: .\scripts\docker-watch.ps1  /  bash scripts/docker-watch.sh
+#
+# Do not combine plugin bind mount and watch on the same path (Compose conflict).
+
+x-mrt-plugin-watch: &mrt_plugin_watch
+  develop:
+    watch:
+      - action: sync
+        path: .
+        target: /var/www/html/wp-content/plugins/museum-railway-timetable
+        ignore:
+          - vendor/
+          - node_modules/
+          - frontend/vue/node_modules/
+          - coverage/
+          - .git/
+          - assets/dist/
+
+services:
+  wordpress:
+    <<: *mrt_plugin_watch
+    volumes:
+      - wordpress_data:/var/www/html
+      - mrt_plugin:/var/www/html/wp-content/plugins/museum-railway-timetable
+
+  wordpress-init:
+    volumes:
+      - wordpress_data:/var/www/html
+      - mrt_plugin:/var/www/html/wp-content/plugins/museum-railway-timetable
+      - ./docker/ensure-sv-locale.sh:/usr/local/bin/mrt-ensure-sv-locale.sh:ro
+
+  wpcli:
+    volumes:
+      - wordpress_data:/var/www/html
+      - mrt_plugin:/var/www/html/wp-content/plugins/museum-railway-timetable
+      - ./docker/ensure-sv-locale.sh:/usr/local/bin/mrt-ensure-sv-locale.sh:ro
+
+volumes:
+  mrt_plugin:
