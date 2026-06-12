@@ -459,7 +459,10 @@ function MRT_timetable_apply_standalone_bus_boarding_fallback(
 		if ( ! MRT_timetable_standalone_bus_is_boarding_departure_row( $label, $boarding_id ) ) {
 			continue;
 		}
-		$rows[ $row_idx ]['cells'][ $col_idx ] = array( 'text' => $text, 'approximateTime' => false );
+		$rows[ $row_idx ]['cells'][ $col_idx ] = array(
+			'text' => $text,
+			'approximateTime' => false,
+		);
 		return $rows;
 	}
 	return $rows;

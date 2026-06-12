@@ -71,24 +71,24 @@ function MRT_get_services_by_post_ids( array $service_ids ): array {
  */
 function MRT_sort_timetable_services_by_first_station_time( array $services_list, int $first_station_id ): array {
 		usort(
-		$services_list,
-		function ( $a, $b ) use ( $first_station_id ) {
-			$a_stop = $a['stop_times'][ $first_station_id ] ?? array();
-			$b_stop = $b['stop_times'][ $first_station_id ] ?? array();
-			$a_time = MRT_stop_effective_departure( is_array( $a_stop ) ? $a_stop : array() );
-			$b_time = MRT_stop_effective_departure( is_array( $b_stop ) ? $b_stop : array() );
-			if ( $a_time === '' && $b_time === '' ) {
-				return 0;
+			$services_list,
+			function ( $a, $b ) use ( $first_station_id ) {
+				$a_stop = $a['stop_times'][ $first_station_id ] ?? array();
+				$b_stop = $b['stop_times'][ $first_station_id ] ?? array();
+				$a_time = MRT_stop_effective_departure( is_array( $a_stop ) ? $a_stop : array() );
+				$b_time = MRT_stop_effective_departure( is_array( $b_stop ) ? $b_stop : array() );
+				if ( $a_time === '' && $b_time === '' ) {
+					return 0;
+				}
+				if ( $a_time === '' ) {
+					return 1;
+				}
+				if ( $b_time === '' ) {
+					return -1;
+				}
+				return strcmp( $a_time, $b_time );
 			}
-			if ( $a_time === '' ) {
-				return 1;
-			}
-			if ( $b_time === '' ) {
-				return -1;
-			}
-			return strcmp( $a_time, $b_time );
-		}
-	);
+		);
 	return $services_list;
 }
 

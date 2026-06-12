@@ -1,2 +1,9 @@
+# Shell scripts must stay LF (Docker/Linux).
 docker/*.sh text eol=lf
 scripts/*.sh text eol=lf
+
+# PHP source: LF everywhere (PHPCS + Linux CI).
+*.php text eol=lf
+phpstan-bootstrap.php text eol=lf
+uninstall.php text eol=lf
+tests/**/*.php text eol=lf

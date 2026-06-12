@@ -340,7 +340,11 @@ function MRT_disruption_feed_sort_items( array $items ): array {
 			if ( $cmp !== 0 ) {
 				return $cmp;
 			}
-			$phase_order = array( 'ongoing' => 0, 'upcoming' => 1, 'past' => 2 );
+			$phase_order = array(
+				'ongoing' => 0,
+				'upcoming' => 1,
+				'past' => 2,
+			);
 			$a_phase     = $phase_order[ (string) ( $a['phase'] ?? '' ) ] ?? 9;
 			$b_phase     = $phase_order[ (string) ( $b['phase'] ?? '' ) ] ?? 9;
 			if ( $a_phase !== $b_phase ) {

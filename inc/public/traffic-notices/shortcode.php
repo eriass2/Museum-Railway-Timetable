@@ -106,7 +106,7 @@ function MRT_render_traffic_notices_html( array $payload, string $title = '' ): 
 	$out .= MRT_render_disruption_feed_section_html(
 		__( 'Kommande', 'museum-railway-timetable' ),
 		$upcoming
-	 );
+	);
 	$out .= '</div></div>';
 	return $out;
 }
