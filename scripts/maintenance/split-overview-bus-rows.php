@@ -1,9 +1,9 @@
 <?php
-$root = dirname( __DIR__ );
+$root = dirname( __DIR__, 2 );
 $src  = file_get_contents( $root . '/inc/domain/timetable/view/overview/overview-bus-rows.php' );
 $dir  = $root . '/inc/domain/timetable/view/overview/';
 
-require __DIR__ . '/lib/extract-php-functions.php';
+require __DIR__ . '/../lib/extract-php-functions.php';
 
 $junction = array(
 	'MRT_timetable_station_is_bus_junction',

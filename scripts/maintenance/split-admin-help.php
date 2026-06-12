@@ -1,5 +1,5 @@
 <?php
-$root   = dirname(__DIR__);
+$root   = dirname( __DIR__, 2 );
 $cmd    = 'git -C ' . escapeshellarg($root) . ' show HEAD:inc/assets/admin-vue-help.php';
 $source = shell_exec($cmd);
 if (!is_string($source) || $source === '') {

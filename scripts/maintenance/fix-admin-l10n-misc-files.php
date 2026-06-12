@@ -1,5 +1,5 @@
 <?php
-$root   = dirname( __DIR__ );
+$root   = dirname( __DIR__, 2 );
 $source = shell_exec( 'git -C ' . escapeshellarg( $root ) . ' show 52e3c6b~1:inc/assets/admin-vue-l10n-misc.php' );
 if ( ! is_string( $source ) || $source === '' ) {
 	fwrite( STDERR, "Could not read misc.php from git\n" );

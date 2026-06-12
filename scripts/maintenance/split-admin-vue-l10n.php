@@ -1,5 +1,5 @@
 <?php
-$root = dirname(__DIR__);
+$root = dirname( __DIR__, 2 );
 $cmd  = 'git -C ' . escapeshellarg($root) . ' show HEAD:inc/assets/admin-vue.php';
 $source = shell_exec($cmd);
 if (!is_string($source) || $source === '') {
@@ -7,7 +7,7 @@ if (!is_string($source) || $source === '') {
 	exit(1);
 }
 $lines  = preg_split('/\R/', $source) ?: array();
-$outDir = dirname(__DIR__) . '/inc/assets/l10n/';
+$outDir = dirname( __DIR__, 2 ) . '/inc/assets/l10n/';
 $functions = array(
 	'common'        => 'MRT_admin_vue_l10n_common',
 	'nav'           => 'MRT_admin_vue_l10n_nav',

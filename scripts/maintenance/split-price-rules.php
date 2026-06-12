@@ -1,5 +1,5 @@
 <?php
-$root = dirname( __DIR__ );
+$root = dirname( __DIR__, 2 );
 $src  = file_get_contents( $root . '/inc/domain/pricing/price-rules.php' );
 $dir  = $root . '/inc/domain/pricing/';
 
@@ -28,7 +28,7 @@ $groups = array(
 	),
 );
 
-require __DIR__ . '/lib/extract-php-functions.php';
+require __DIR__ . '/../lib/extract-php-functions.php';
 
 $header = <<<'PHP'
 <?php

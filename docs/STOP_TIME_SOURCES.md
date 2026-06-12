@@ -149,7 +149,7 @@ Resesökningsmotor och fotnoter använder **effective** + endpoint-regler. Ansla
 | **Rälsbuss** (spår, tågnummer) | GRÖN 93, 97 | **Tidtabell B** (samma som övriga tåg) | Anslag + symboler |
 | **Anslutningsbuss** (väg, B1–B4 …) | Selknä* ↔ Fjällnora* | **Anslag** (klockslag) | **Endast anslag** (blå stjärnrader i GRÖN-tabellen) |
 
-**Känt:** Anslutningsbuss Selknä–Fjällnora importeras idag enbart från `Anslagstidtabell-2026.pdf` (`scripts/lennakatten_anslag_tables.py`).
+**Känt:** Anslutningsbuss Selknä–Fjällnora importeras idag enbart från `Anslagstidtabell-2026.pdf` (`scripts/fixtures/lennakatten/lennakatten_anslag_tables.py`).
 
 **Preliminär kontroll av B-PDF (textextraktion):**
 

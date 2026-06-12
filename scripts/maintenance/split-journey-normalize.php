@@ -1,5 +1,5 @@
 <?php
-$root = dirname( __DIR__ );
+$root = dirname( __DIR__, 2 );
 $src  = shell_exec( 'git -C ' . escapeshellarg( $root ) . ' show HEAD:inc/domain/journey/journey-normalize.php' );
 if ( ! is_string( $src ) || $src === '' ) {
 	fwrite( STDERR, "Could not read journey-normalize.php from git HEAD\n" );

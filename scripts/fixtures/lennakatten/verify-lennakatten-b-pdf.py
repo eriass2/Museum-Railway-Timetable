@@ -10,7 +10,7 @@ from pathlib import Path
 from lennakatten_b_pdf import BStop, b_rail_service_stops, parse_b_pdf
 from lennakatten_symbols import anslag_overlay_flags
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
 B_PDF = ROOT / "testdata" / "reference-pdfs" / "Tidtabellsboken-del-B.pdf"
 

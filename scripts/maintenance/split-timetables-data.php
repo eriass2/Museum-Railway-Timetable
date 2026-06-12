@@ -1,9 +1,9 @@
 <?php
-$root = dirname( __DIR__ );
+$root = dirname( __DIR__, 2 );
 $src  = file_get_contents( $root . '/inc/infrastructure/rest/admin/timetables-data.php' );
 $dir  = $root . '/inc/infrastructure/rest/admin/';
 
-require __DIR__ . '/lib/extract-php-functions.php';
+require __DIR__ . '/../lib/extract-php-functions.php';
 
 $list = array(
 	'MRT_rest_list_timetables',

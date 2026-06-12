@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Generate Lennakatten fixture rows (red/orange, green-vard clone, bus split).
 
-Run ``python scripts/sync-lennakatten-rail-fixture.py`` first so GRÖN/GUL rail
+Run ``python scripts/fixtures/lennakatten/sync-lennakatten-rail-fixture.py`` first so GRÖN/GUL rail
 (including Marielund train-change splits) is up to date before cloning to green-vard.
 """
 
@@ -18,7 +18,7 @@ from lennakatten_anslag_tables import (
 from lennakatten_green_vard import clone_green_rail_to_vard
 from lennakatten_symbols import FAR_IN, STOPTIMES_CSV_HEADER, UP_OUT, stoptime_csv_row, symbol_to_flags, symbols_for_train
 
-ROOT = Path(__file__).resolve().parents[1] / "testdata" / "fixtures" / "lennakatten"
+ROOT = Path(__file__).resolve().parents[2] / "testdata" / "fixtures" / "lennakatten"
 
 
 def stoptime_rows(

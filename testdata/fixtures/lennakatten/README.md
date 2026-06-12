@@ -19,19 +19,19 @@ Timetable codes in the CSV package:
 | `yellow` | GUL rail – Fridays |
 | `red` / `orange` | RÖD Sundays / ORANGE extra Friday trains |
 
-Regenerate rail blocks after PDF edits: `python scripts/generate-lennakatten-extra-timetables.py` (green-vard clone + red/orange).
+Regenerate rail blocks after PDF edits: `python scripts/fixtures/lennakatten/generate-lennakatten-extra-timetables.py` (green-vard clone + red/orange).
 
 Sync GRÖN/GUL rail and bus stop times from Anslagstidtabell (splits tågbyte at Marielund into separate services):
 
 ```sh
-python scripts/sync-lennakatten-rail-fixture.py
-python scripts/generate-lennakatten-extra-timetables.py
+python scripts/fixtures/lennakatten/sync-lennakatten-rail-fixture.py
+python scripts/fixtures/lennakatten/generate-lennakatten-extra-timetables.py
 ```
 
 Verify against Anslagstidtabell:
 
 ```sh
-python scripts/verify-lennakatten-vs-pdf.py
+python scripts/fixtures/lennakatten/verify-lennakatten-vs-pdf.py
 ```
 
 Validate after changes:

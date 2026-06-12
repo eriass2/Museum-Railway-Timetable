@@ -16,7 +16,7 @@ from lennakatten_b_pdf import b_rail_service_stops, b_stop_to_csv_row, parse_b_p
 from lennakatten_green_vard import refresh_green_vard_lines
 from lennakatten_symbols import STOPTIMES_CSV_HEADER, stoptime_csv_row
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
 
 

@@ -1,5 +1,5 @@
 <?php
-$root   = dirname( __DIR__ );
+$root   = dirname( __DIR__, 2 );
 $source = file_get_contents( $root . '/inc/assets/admin-vue-l10n-misc.php' );
 $outDir = $root . '/inc/assets/l10n/';
 $map    = array(

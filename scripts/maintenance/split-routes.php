@@ -1,5 +1,5 @@
 <?php
-$root = dirname( __DIR__ );
+$root = dirname( __DIR__, 2 );
 $src  = file_get_contents( $root . '/inc/domain/route/routes.php' );
 $dir  = $root . '/inc/domain/route/';
 
@@ -27,7 +27,7 @@ $groups = array(
 	),
 );
 
-require __DIR__ . '/lib/extract-php-functions.php';
+require __DIR__ . '/../lib/extract-php-functions.php';
 
 $header = <<<'PHP'
 <?php

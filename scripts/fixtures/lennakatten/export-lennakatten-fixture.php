@@ -4,7 +4,7 @@
  *
  * Usage (Docker):
  *   docker compose run --rm wordpress-init wp --allow-root eval-file \
- *     wp-content/plugins/museum-railway-timetable/scripts/export-lennakatten-fixture.php
+ *     wp-content/plugins/museum-railway-timetable/scripts/fixtures/lennakatten/export-lennakatten-fixture.php
  *
  * @package Museum_Railway_Timetable
  */

@@ -2,6 +2,15 @@
 
 Entry-point scripts for quality gates, Docker dev, deploy, and fixtures. Shared logic lives in **`lib/`** so wrappers stay thin.
 
+**Layout (Fas A):**
+
+| Folder | Purpose |
+|--------|---------|
+| `lib/` | Shared PowerShell/bash helpers |
+| `fixtures/lennakatten/` | PDF → CSV fixture sync and verify |
+| `maintenance/` | One-off PHP refactor/split scripts |
+| Root `*.ps1` / `*.sh` | Daily entry points (`check`, `test`, `docker-dev-reset`, …) |
+
 **Roadmap:** [docs/DOCKER_SCRIPTS_PLAN.md](../docs/DOCKER_SCRIPTS_PLAN.md)
 
 ## Shared libraries

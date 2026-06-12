@@ -27,7 +27,7 @@ from lennakatten_symbols import (
     symbol_to_flags,
 )
 
-B_PDF_PATH = Path(__file__).resolve().parents[1] / "testdata/reference-pdfs/Tidtabellsboken-del-B.pdf"
+B_PDF_PATH = Path(__file__).resolve().parents[2] / "testdata/reference-pdfs/Tidtabellsboken-del-B.pdf"
 
 STATION_ABBREV: dict[str, str] = {
     "Uö": "uppsala-ostra",

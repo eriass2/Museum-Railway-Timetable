@@ -9,7 +9,7 @@ from pathlib import Path
 from lennakatten_anslag_tables import service_definitions
 from lennakatten_symbols import STOPTIMES_CSV_HEADER, stoptime_csv_row
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
 STOPTIMES = FIXTURE / "stoptimes.csv"
 

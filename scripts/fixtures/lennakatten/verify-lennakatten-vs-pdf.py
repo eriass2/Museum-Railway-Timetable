@@ -11,7 +11,7 @@ from lennakatten_anslag_tables import is_synced_green_yellow_rail, pdf_service_d
 from lennakatten_calendar import expected_green_buss_dates, expected_red_buss_dates
 from lennakatten_symbols import four_modes_from_flags, symbol_to_flags
 
-ROOT = Path(__file__).resolve().parents[1]
+ROOT = Path(__file__).resolve().parents[2]
 FIXTURE = ROOT / "testdata" / "fixtures" / "lennakatten"
 PDF = ROOT / "testdata" / "reference-pdfs" / "Anslagstidtabell-2026.pdf"
 
