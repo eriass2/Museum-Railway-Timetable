@@ -1,10 +1,13 @@
 /**
  * Journey wizard — desktop hero full width and optional background image (J10).
  *
+ * Background image on non-embedded wizard: MrtPublicAppShell backdrop (app-shell.css).
+ * Embedded wizard keeps background on __hero (below).
+ *
  * @package Museum_Railway_Timetable
  */
 
-.mrt-journey-wizard__hero--has-bg {
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg {
     position: relative;
     background-color: var(--mrt-wizard-green-dark);
     background-image: var(--mrt-wizard-hero-bg-image);
@@ -13,13 +16,16 @@
     background-repeat: no-repeat;
 }
 
-.mrt-journey-wizard__hero--has-bg::before {
+.mrt-journey-wizard--embedded .mrt-journey-wizard__hero--has-bg::before {
     content: '';
     position: absolute;
     inset: 0;
-    /* Light tint so the photo stays visible (UL has none; we keep brand green for contrast). */
     background: color-mix(in srgb, var(--mrt-wizard-green-dark) 30%, transparent);
     pointer-events: none;
+}
+
+.mrt-journey-wizard:not(.mrt-journey-wizard--embedded) .mrt-journey-wizard__hero--has-bg {
+    background: transparent;
 }
 
 .mrt-journey-wizard__hero--has-bg > .mrt-journey-wizard__hero-inner {

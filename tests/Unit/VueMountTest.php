@@ -13,14 +13,11 @@ require_once ABSPATH . 'inc/assets/vue-frontend.php';
 
 final class VueMountTest extends TestCase {
 
-	public function test_mount_extra_classes_alignwide_for_calendar_apps(): void {
+	public function test_mount_extra_classes_alignwide_for_public_apps(): void {
 		self::assertSame( ' alignwide', MRT_vue_mount_extra_classes( 'month', array() ) );
-		self::assertSame( ' alignwide', MRT_vue_mount_extra_classes( 'index', array( 'embedded' => true ) ) );
-	}
-
-	public function test_mount_extra_classes_alignfull_for_non_embedded_wizard(): void {
-		self::assertSame( ' alignfull', MRT_vue_mount_extra_classes( 'wizard', array() ) );
-		self::assertSame( ' alignfull', MRT_vue_mount_extra_classes( 'wizard', array( 'embedded' => false ) ) );
+		self::assertSame( ' alignwide', MRT_vue_mount_extra_classes( 'index', array() ) );
+		self::assertSame( ' alignwide', MRT_vue_mount_extra_classes( 'wizard', array() ) );
+		self::assertSame( ' alignwide', MRT_vue_mount_extra_classes( 'wizard', array( 'embedded' => false ) ) );
 	}
 
 	public function test_mount_extra_classes_empty_for_embedded_wizard(): void {

@@ -9,6 +9,7 @@
 @import '@mrt-assets/mrt-color-tokens.css';
 @import '@mrt-assets/mrt-typography.css';
 @import '@mrt-assets/train-type-icons.css';
+@import './app-shell.css';
 @import '@mrt-assets/frontend-public.css';
 /* Timetable index: frontend/vue/src/styles/timetable-index.css (via TimetableIndexApp). */
 /* Timetable overview: frontend/vue/src/styles/timetable-overview.css (via MrtTimetableOverviewView). */

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import MrtPublicAppShell from '../components/layout/MrtPublicAppShell.vue';
 import '../styles/month-calendar.css';
 import MrtAlert from '../components/ui/MrtAlert.vue';
 import MrtCalendarGrid from '../components/ui/MrtCalendarGrid.vue';
@@ -135,6 +136,7 @@ async function onMonthShift(delta: number): Promise<void> {
 </script>
 
 <template>
+  <MrtPublicAppShell>
   <div
     class="mrt-month mrt-my-1"
     role="region"
@@ -210,4 +212,5 @@ async function onMonthShift(delta: number): Promise<void> {
       />
     </MrtHtmlPanel>
   </div>
+  </MrtPublicAppShell>
 </template>

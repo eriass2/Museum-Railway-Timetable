@@ -100,11 +100,11 @@ function MRT_vue_trip_pdf_script_url(): ?string {
  * @param array<string, mixed> $config Mount config (may include embedded).
  */
 function MRT_vue_mount_extra_classes( string $app, array $config ): string {
-	if ( in_array( $app, array( 'overview', 'month', 'index', 'traffic_notices' ), true ) ) {
-		return ' alignwide';
+	if ( 'wizard' === $app && ! empty( $config['embedded'] ) ) {
+		return '';
 	}
-	if ( 'wizard' === $app && empty( $config['embedded'] ) ) {
-		return ' alignfull';
+	if ( in_array( $app, array( 'overview', 'month', 'index', 'traffic_notices', 'wizard' ), true ) ) {
+		return ' alignwide';
 	}
 
 	return '';
