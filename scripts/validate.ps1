@@ -1,6 +1,4 @@
-# DEPRECATED: use `composer plugin-check` or `php scripts/validate.php` instead.
-# Thin wrapper kept for backwards compatibility.
+# Wrapper — implementation in gate/validate.ps1
 $ErrorActionPreference = 'Stop'
-Write-Warning 'validate.ps1 is deprecated. Use: composer plugin-check  (or: php scripts/validate.php)'
-& php (Join-Path $PSScriptRoot 'validate.php')
+& (Join-Path $PSScriptRoot 'gate/validate.ps1') @args
 exit $LASTEXITCODE

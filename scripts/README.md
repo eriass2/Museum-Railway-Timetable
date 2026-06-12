@@ -2,16 +2,20 @@
 
 Entry-point scripts for quality gates, Docker dev, deploy, and fixtures. Shared logic lives in **`lib/`** so wrappers stay thin.
 
-**Layout (Fas A–B):**
+**Layout (Fas A–C):**
 
 | Folder | Purpose |
 |--------|---------|
 | `lib/` | Shared PowerShell/bash helpers |
+| `gate/` | Quality gates (check, test, lint, vue-check, coverage) |
+| `php/` | PHP utilities (validate, npm-ci-if-needed, coverage-summary) |
+| `csv/` | CSV validate and zip packaging |
+| `i18n/` | Translation template and `.po` helpers |
 | `dev/` | Docker dev reset, smoke, E2E, diagnostics |
 | `release/` | Production zip and live deploy |
 | `fixtures/lennakatten/` | PDF → CSV fixture sync and verify |
 | `maintenance/` | One-off PHP refactor/split scripts |
-| Root `*.ps1` / `*.sh` | Daily entry points (wrappers + gates) |
+| Root `*.ps1` / `*.sh` / `*.php` | Daily entry points (wrappers + gates) |
 
 **Roadmap:** [docs/DOCKER_SCRIPTS_PLAN.md](../docs/DOCKER_SCRIPTS_PLAN.md)
 
@@ -41,6 +45,7 @@ Bash scripts source the shell lib:
 Prefer **`.\scripts\*.ps1`** over raw `docker compose` — wrappers apply:
 
 - `--no-deps` on tools services (`composer`, `php-test`, `vue`)
+- Long-running **tools shell** (P6): `compose exec` into `composer` / `php-test` / `vue` when profile is up; auto-starts on first gate run; fallback to `run --rm` with entrypoint override
 - Named volumes `mrt_vendor` and `mrt_vue_node_modules` (less bind-mount I/O on Windows)
 - WP-CLI via long-running **`wpcli`** sidecar (`compose exec`) when the stack is up; falls back to `run wordpress-init`
 - Conditional `npm ci` when `node_modules` matches `package-lock.json` (logs *Skipped npm ci* / *Running npm ci*)

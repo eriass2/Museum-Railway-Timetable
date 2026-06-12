@@ -13,13 +13,40 @@ $script:MrtPluginItems = @(
 $script:MrtDevSiteUrl = 'http://localhost:8080'
 $script:MrtWpPluginContainerPath = "/var/www/html/wp-content/plugins/$script:MrtPluginSlug"
 
+function Resolve-MrtScriptsRoot {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $ScriptDirectory
+    )
+
+    $dir = (Resolve-Path $ScriptDirectory).Path
+    while ($true) {
+        if ((Split-Path $dir -Leaf) -eq 'scripts') {
+            return $dir
+        }
+        $parent = Split-Path $dir -Parent
+        if (-not $parent -or $parent -eq $dir) {
+            throw "Could not resolve scripts/ root from $ScriptDirectory"
+        }
+        $dir = $parent
+    }
+}
+
+function Get-MrtScriptsRoot {
+    if (-not $script:MrtScriptsRoot) {
+        throw 'Call Set-MrtRepoRoot first.'
+    }
+    return $script:MrtScriptsRoot
+}
+
 function Set-MrtRepoRoot {
     param(
         [Parameter(Mandatory = $true)]
         [string] $ScriptsDirectory
     )
 
-    $root = (Resolve-Path (Join-Path $ScriptsDirectory '..')).Path
+    $script:MrtScriptsRoot = Resolve-MrtScriptsRoot -ScriptDirectory $ScriptsDirectory
+    $root = (Resolve-Path (Join-Path $script:MrtScriptsRoot '..')).Path
     $script:MrtRepoRoot = $root
     Set-Location $root
     return $root

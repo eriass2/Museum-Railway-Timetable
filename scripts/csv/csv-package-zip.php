@@ -10,13 +10,13 @@
 
 declare(strict_types=1);
 
-$root = dirname( __DIR__ );
+$root = dirname( __DIR__, 2 );
 define( 'ABSPATH', $root . DIRECTORY_SEPARATOR );
 define( 'MRT_PATH', ABSPATH );
 define( 'MRT_VERSION', '0.3.0' );
 
 require_once $root . '/tests/wp-stubs.php';
-require_once $root . '/scripts/csv-cli-stubs.php';
+require_once __DIR__ . '/csv-cli-stubs.php';
 require_once MRT_PATH . 'inc/import/csv/writer.php';
 require_once MRT_PATH . 'inc/import/csv/package/package.php';
 require_once MRT_PATH . 'inc/import/csv/schema.php';
