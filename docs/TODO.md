@@ -66,6 +66,8 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Docker/skript — Fas 2 P1–P4 (volumes, tools-image, coverage) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
 | Docker/skript — Fas 2 P5 (wpcli exec sidecar) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
 | Docker/skript — Fas 2 P6 (tools-shell exec) | 2026-06-12 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) |
+| Docker/skript — Fas 2 P7 (compose watch overlay) | 2026-06-12 | `docker-compose.watch.yml`, `scripts/docker-watch.ps1` |
+| Docker/skript — Fas 3 S2 (`mrt` CLI) | 2026-06-12 | `scripts/mrt.ps1`, `scripts/mrt.sh` |
 | Docker/skript — scripts-organisation (gate, php, csv, i18n, dev, release) | 2026-06-12 | [scripts/README.md](../scripts/README.md) |
 | Reseplanerare J15–J17 + D19–D21 — biljettcopy (fotnoter, station, eftermiddag) | 2026-06-11 | `ticket-copy.php`, `PricesTicketCopyPanel.vue`, `MrtPriceTable.vue`, `#/prices` + stationfält |
 
