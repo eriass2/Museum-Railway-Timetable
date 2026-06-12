@@ -1,0 +1,33 @@
+{
+  "name": "Museum Railway Timetable",
+  "dockerComposeFile": "../docker-compose.yml",
+  "composeProfiles": ["tools"],
+  "service": "php-test",
+  "workspaceFolder": "/app",
+  "runServices": [
+    "db",
+    "wordpress",
+    "wpcli",
+    "composer",
+    "php-test",
+    "vue"
+  ],
+  "forwardPorts": [8080],
+  "portsAttributes": {
+    "8080": {
+      "label": "WordPress",
+      "onAutoForward": "notify"
+    }
+  },
+  "postCreateCommand": "composer install --no-interaction",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bmewburn.vscode-intelephense-client",
+        "dbaeumer.vscode-eslint",
+        "Vue.volar"
+      ]
+    }
+  },
+  "remoteUser": "root"
+}
