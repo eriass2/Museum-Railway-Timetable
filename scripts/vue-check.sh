@@ -5,13 +5,19 @@ cd "$(dirname "$0")/.."
 . "$(dirname "$0")/lib/mrt-docker.sh"
 
 use_local=0
-if [ "${1:-}" = "--local" ]; then
-	use_local=1
-	shift
-fi
+composer_args=
+for arg in "$@"; do
+	case "$arg" in
+		--local) use_local=1 ;;
+		--timings) export MRT_SCRIPT_TIMINGS=1 ;;
+		*) composer_args="$composer_args $arg" ;;
+	esac
+done
 
 if [ "$use_local" -eq 1 ]; then
-	exec composer vue:check "$@"
+	# shellcheck disable=SC2086
+	exec composer vue:check $composer_args
 fi
 
-exec mrt_vue_check
+mrt_vue_check
+mrt_step_done

@@ -30,7 +30,8 @@ Bash scripts source the shell lib:
 Prefer **`.\scripts\*.ps1`** over raw `docker compose` — wrappers apply:
 
 - `--no-deps` on tools services (`composer`, `php-test`, `vue`)
-- Conditional `npm ci` when `node_modules` matches `package-lock.json`
+- Conditional `npm ci` when `node_modules` matches `package-lock.json` (logs *Skipped npm ci* / *Running npm ci*)
+- `-Timings` or `MRT_SCRIPT_TIMINGS=1` for per-step duration on gate scripts
 - Single container for `check.ps1` (`composer check:all`) and `lint.ps1` (`composer lint`)
 - HTTP poll + one WP-CLI check when waiting for WordPress
 
@@ -60,10 +61,9 @@ Prefer **`.\scripts\*.ps1`** over raw `docker compose` — wrappers apply:
 | Goal | Command |
 |------|---------|
 | Full dev reset (stack + import + menu) | `.\scripts\docker-dev-reset.ps1` or `./scripts/docker-dev-reset.sh` |
-| Dev reset + rebuild WordPress image | `.\scripts\docker-dev-reset.ps1 -Build` |
-| Dev reset (stack already running) | `.\scripts\docker-dev-reset.ps1 -SkipCompose` |
-| Start stack only | `docker compose up -d` |
-| Rebuild after Dockerfile change | `docker compose up -d --build` |
+| Dev reset + rebuild WordPress image | `.\scripts\docker-dev-reset.ps1 -Build` or `./scripts/docker-dev-reset.sh --build` |
+| Dev reset (stack already running) | `.\scripts\docker-dev-reset.ps1 -SkipCompose` or `./scripts/docker-dev-reset.sh --skip-compose` |
+| Start stack only (no import) | `docker compose up -d` — prefer dev reset when you need data + menu |
 | Smoke test (import + HTTP checks, no clear) | `.\scripts\docker-smoke.ps1` |
 | WordPress + Playwright E2E | `bash scripts/ci-e2e-wp.sh` |
 
@@ -89,7 +89,7 @@ Config for live deploy: `local/live-deploy.config.json` (see `local/live-deploy.
 | Goal | Command |
 |------|---------|
 | Regenerate `.pot` / merge Swedish `.po` | `.\scripts\make-i18n.ps1` |
-| Pack CSV fixture zip | `.\scripts\csv-package-zip.ps1` |
+| Pack CSV fixture zip | `.\scripts\csv-package-zip.ps1` or `bash scripts/csv-package-zip.sh` |
 | Validate CSV package | `composer csv:validate -- <path>` |
 
 ---

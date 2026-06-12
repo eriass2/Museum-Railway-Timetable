@@ -7,9 +7,10 @@ SOURCE="${1:-testdata/fixtures/lennakatten}"
 OUTPUT="${2:-testdata/fixtures/lennakatten.zip}"
 
 cd "$ROOT"
+. "$(dirname "$0")/lib/mrt-docker.sh"
 
 echo "=== csv-package-zip: validate ==="
-docker compose --profile tools run --rm php-test scripts/csv-validate.php "$SOURCE"
+mrt_tools_run php-test scripts/csv-validate.php "$SOURCE"
 
 echo "=== csv-package-zip: pack ==="
 docker run --rm -v "$ROOT:/app" -w /app alpine sh -c "

@@ -1,9 +1,14 @@
 # Docker smoke test for Museum Railway Timetable
 # Usage: powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\docker-smoke.ps1
 
+param(
+    [switch] $Timings
+)
+
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
 Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
+Initialize-MrtScriptTimings -Timings:$Timings
 
 Write-Host "`n=== Docker smoke ===" -ForegroundColor Cyan
 
@@ -17,19 +22,19 @@ Invoke-MrtDockerVue -Mode BuildVerify -StreamOutput -ExitOnError
 Write-MrtStep -Title 'Import demo data'
 Invoke-MrtWpCli -WpArgs @('eval', 'MRT_run_lennakatten_import();') -StreamOutput
 
-$demoUrl = Get-MrtDemoPageUrl
+Write-MrtStep -Title 'Smoke page URLs (WP-CLI)'
+$pages = Get-MrtSmokePageUrlEntries
+if ($pages.Count -eq 0) {
+    Write-Host '  WARN: No smoke page URLs from WP-CLI.' -ForegroundColor Yellow
+} else {
+    foreach ($entry in $pages) {
+        Write-Host ("  {0}: {1}" -f $entry.Name, $entry.Url) -ForegroundColor Gray
+    }
+}
 
 Write-MrtStep -Title 'Composer check (PHP 8.2)'
 Ensure-MrtVendor
 Invoke-MrtDockerComposer -ComposerArgs @('check') -StreamOutput -ExitOnError
-
-$pages = @(
-    @{ Name = 'Wizard test'; Url = "$script:MrtDevSiteUrl/?p=39" },
-    @{ Name = 'Planner test'; Url = "$script:MrtDevSiteUrl/?p=41" }
-)
-if ($demoUrl) {
-    $pages += @{ Name = 'Component demo'; Url = $demoUrl }
-}
 
 Write-MrtStep -Title 'HTTP checks'
 foreach ($p in $pages) {
@@ -45,3 +50,4 @@ foreach ($p in $pages) {
 
 Write-Host "`nAdmin: $script:MrtDevSiteUrl/wp-admin/admin.php?page=mrt_app (admin / admin)" -ForegroundColor Gray
 Write-Host "Done.`n" -ForegroundColor Cyan
+Complete-MrtScriptTimings

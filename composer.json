@@ -26,8 +26,8 @@
         "check:all": ["@check", "@phpcs"],
         "lint": ["@phpstan", "@phpcs"],
         "test": "@php vendor/bin/phpunit",
-        "vue:build": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run build",
-        "vue:check": "npm --prefix frontend/vue ci && npm --prefix frontend/vue run check",
+        "vue:build": "php scripts/npm-ci-if-needed.php frontend/vue && npm --prefix frontend/vue run build",
+        "vue:check": "php scripts/npm-ci-if-needed.php frontend/vue && npm --prefix frontend/vue run check",
         "csv:validate": "php scripts/csv-validate.php",
         "csv:zip": "bash scripts/csv-package-zip.sh"
     }

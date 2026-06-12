@@ -7,12 +7,14 @@
 
 param(
     [switch] $SkipCompose,
-    [switch] $Build
+    [switch] $Build,
+    [switch] $Timings
 )
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
 Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
+Initialize-MrtScriptTimings -Timings:$Timings
 
 Write-Host "`n=== MRT dev reset (clear + import + smoke menu) ===" -ForegroundColor Cyan
 
@@ -29,3 +31,4 @@ Set-MrtWpDebug
 Invoke-MrtDevResetImport
 
 Write-Host "`nDone. Front: $script:MrtDevSiteUrl  Admin: $script:MrtDevSiteUrl/wp-admin (admin / admin)`n" -ForegroundColor Green
+Complete-MrtScriptTimings

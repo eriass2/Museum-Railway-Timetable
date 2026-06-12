@@ -2,6 +2,7 @@
 # Never invoke vendor\bin\phpunit directly on Windows.
 param(
     [switch]$Local,
+    [switch]$Timings,
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$Passthrough
 )
@@ -9,6 +10,7 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
 Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
+Initialize-MrtScriptTimings -Timings:$Timings
 
 Ensure-MrtVendor
 
@@ -16,14 +18,18 @@ Invoke-MrtWithDockerDefault -Local:$Local `
     -DockerHint 'Using Docker (php:8.2-cli). Pass -Local to run on host PHP.' `
     -DockerUnavailableMessage 'PHP not in PATH and Docker is not running.' `
     -DockerAction {
-        Invoke-MrtDockerPhpUnit -PhpUnitArgs $Passthrough -ExitOnError
+        Invoke-MrtTimedStep -Title 'PHPUnit (Docker)' -SkipStepHeader -Action {
+            Invoke-MrtDockerPhpUnit -PhpUnitArgs $Passthrough -ExitOnError
+        }
     } `
     -LocalAction {
-        Assert-MrtLocalPhpMin -MinVersion '8.2' | Out-Null
-        Write-Host 'Running PHPUnit locally (composer test)...'
-        if ($Passthrough.Count -gt 0) {
-            & composer test -- @Passthrough
-        } else {
-            & composer test
+        Invoke-MrtTimedStep -Title 'PHPUnit (local)' -Action {
+            Assert-MrtLocalPhpMin -MinVersion '8.2' | Out-Null
+            Write-Host 'Running PHPUnit locally (composer test)...'
+            if ($Passthrough.Count -gt 0) {
+                & composer test -- @Passthrough
+            } else {
+                & composer test
+            }
         }
     }

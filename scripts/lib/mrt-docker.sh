@@ -4,9 +4,37 @@
 
 MRT_DEV_SITE_URL="${MRT_DEV_SITE_URL:-http://localhost:8080}"
 
-MRT_NPM_CI_SNIPPET='if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ] || ! cmp -s package-lock.json node_modules/.package-lock.json 2>/dev/null; then npm ci; fi'
+MRT_NPM_CI_SNIPPET='if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ] || ! cmp -s package-lock.json node_modules/.package-lock.json 2>/dev/null; then echo "Running npm ci..."; npm ci; cp package-lock.json node_modules/.package-lock.json; else echo "Skipped npm ci (node_modules matches package-lock.json)"; fi'
 
 mrt_npm_ci_snippet="$MRT_NPM_CI_SNIPPET"
+
+mrt_timings_on() {
+	case "${MRT_SCRIPT_TIMINGS:-}" in 1|true|yes) return 0 ;; esac
+	return 1
+}
+
+mrt_timing_finish() {
+	if ! mrt_timings_on || [ -z "${MRT_TIMING_TITLE:-}" ]; then
+		return 0
+	fi
+	_now=$(date +%s)
+	_elapsed=$(( _now - MRT_TIMING_START ))
+	printf '  [timing] %s — %ss\n' "$MRT_TIMING_TITLE" "$_elapsed"
+	unset MRT_TIMING_TITLE MRT_TIMING_START
+}
+
+mrt_step() {
+	mrt_timing_finish
+	printf '\n--- %s ---\n' "$1"
+	if mrt_timings_on; then
+		MRT_TIMING_TITLE=$1
+		MRT_TIMING_START=$(date +%s)
+	fi
+}
+
+mrt_step_done() {
+	mrt_timing_finish
+}
 
 mrt_wordpress_running() {
 	docker compose ps --status running -q wordpress 2>/dev/null | grep -q .
@@ -83,16 +111,22 @@ mrt_wp_eval() {
 
 mrt_vue_check() {
 	echo "Running Vue check in Docker (node:22-alpine)..."
+	mrt_step 'Vue check (Docker)'
 	mrt_tools_run vue sh -c "$(mrt_vue_shell Check)"
+	mrt_step_done
 }
 
 mrt_vue_build_verify() {
+	mrt_step 'Vue build + verify (Docker)'
 	mrt_tools_run vue sh -c "$(mrt_vue_shell BuildVerify)"
+	mrt_step_done
 }
 
 mrt_lint_docker() {
 	echo "Running composer lint in Docker..."
+	mrt_step 'composer lint (Docker)'
 	mrt_tools_run composer lint
+	mrt_step_done
 }
 
 mrt_ensure_sv_locale() {

@@ -3,10 +3,85 @@
 
 . (Join-Path $PSScriptRoot 'Mrt.Plugin.ps1')
 
+$script:MrtScriptTimings = $env:MRT_SCRIPT_TIMINGS -match '^(1|true|yes)$'
+$script:MrtTimingStepTitle = $null
+$script:MrtTimingStepStarted = $null
+
+function Initialize-MrtScriptTimings {
+    param([switch] $Timings)
+
+    if ($Timings) {
+        $script:MrtScriptTimings = $true
+    }
+}
+
+function Test-MrtScriptTimingsEnabled {
+    return [bool] $script:MrtScriptTimings
+}
+
+function Write-MrtTiming {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Step,
+        [Parameter(Mandatory = $true)]
+        [TimeSpan] $Elapsed
+    )
+
+    $ms = [math]::Round($Elapsed.TotalMilliseconds)
+    $label = if ($ms -lt 1000) { "${ms}ms" } else { '{0:N1}s' -f $Elapsed.TotalSeconds }
+    Write-Host "  [timing] $Step — $label" -ForegroundColor DarkGray
+}
+
+function Complete-MrtScriptTimings {
+    if (-not (Test-MrtScriptTimingsEnabled)) {
+        return
+    }
+    if (-not $script:MrtTimingStepStarted) {
+        return
+    }
+
+    $elapsed = (Get-Date) - $script:MrtTimingStepStarted
+    Write-MrtTiming -Step $script:MrtTimingStepTitle -Elapsed $elapsed
+    $script:MrtTimingStepTitle = $null
+    $script:MrtTimingStepStarted = $null
+}
+
+function Invoke-MrtTimedStep {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Title,
+        [Parameter(Mandatory = $true)]
+        [scriptblock] $Action,
+        [switch] $SkipStepHeader
+    )
+
+    if (-not $SkipStepHeader) {
+        Write-Host "`n--- $Title ---" -ForegroundColor Cyan
+    }
+
+    if (-not (Test-MrtScriptTimingsEnabled)) {
+        & $Action
+        return
+    }
+
+    $sw = [System.Diagnostics.Stopwatch]::StartNew()
+    try {
+        & $Action
+    } finally {
+        $sw.Stop()
+        Write-MrtTiming -Step $Title -Elapsed $sw.Elapsed
+    }
+}
+
 function Write-MrtStep {
     param([Parameter(Mandatory = $true)] [string] $Title)
 
+    Complete-MrtScriptTimings
     Write-Host "`n--- $Title ---" -ForegroundColor Cyan
+    if (Test-MrtScriptTimingsEnabled) {
+        $script:MrtTimingStepTitle = $Title
+        $script:MrtTimingStepStarted = Get-Date
+    }
 }
 
 function Test-MrtDockerAvailable {
@@ -70,7 +145,7 @@ function Assert-MrtLocalPhpMin {
 
 function Get-MrtNpmCiShellSnippet {
     return @'
-if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ] || ! cmp -s package-lock.json node_modules/.package-lock.json 2>/dev/null; then npm ci; fi
+if [ ! -d node_modules ] || [ ! -f node_modules/.package-lock.json ] || ! cmp -s package-lock.json node_modules/.package-lock.json 2>/dev/null; then echo 'Running npm ci...'; npm ci; cp package-lock.json node_modules/.package-lock.json; else echo 'Skipped npm ci (node_modules matches package-lock.json)'; fi
 '@.Trim()
 }
 
@@ -236,6 +311,7 @@ function Invoke-MrtWithDockerDefault {
 function Ensure-MrtVendor {
     $vendorPath = Join-Path (Get-MrtRepoRoot) 'vendor'
     if (Test-Path $vendorPath) {
+        Write-Host 'Using existing vendor/.' -ForegroundColor DarkGray
         return
     }
 
@@ -246,7 +322,9 @@ function Ensure-MrtVendor {
     }
 
     Write-Host 'Installing dependencies via Docker...'
-    Invoke-MrtDockerComposer -ComposerArgs @('install', '--no-interaction') -ExitOnError
+    Invoke-MrtTimedStep -Title 'composer install (Docker)' -SkipStepHeader -Action {
+        Invoke-MrtDockerComposer -ComposerArgs @('install', '--no-interaction') -ExitOnError
+    }
 }
 
 function Start-MrtDockerStack {
@@ -359,6 +437,44 @@ function Get-MrtDemoPageUrl {
         return $null
     }
     return $match.Matches.Value
+}
+
+function Get-MrtSmokePageUrlEntries {
+    $eval = @(
+        "if (!function_exists('MRT_dev_smoke_page_permalinks')) {",
+        "fwrite(STDERR, 'dev-cli not loaded'.PHP_EOL); exit(1);",
+        '}',
+        "if (function_exists('MRT_dev_cli_set_admin_user')) { MRT_dev_cli_set_admin_user(); }",
+        "if (function_exists('MRT_ensure_dev_smoke_pages')) { MRT_ensure_dev_smoke_pages(); }",
+        'echo wp_json_encode(MRT_dev_smoke_page_permalinks());'
+    ) -join ' '
+
+    $raw = Invoke-MrtWpCli -WpArgs @('eval', $eval) -ReturnOutput -NoTty
+    if ($LASTEXITCODE -ne 0) {
+        return @()
+    }
+
+    $jsonLine = ($raw | Where-Object { $_ -match '^\{' } | Select-Object -Last 1)
+    if (-not $jsonLine) {
+        return @()
+    }
+
+    $labels = @{
+        wizard         = 'Wizard smoke test'
+        component_demo = 'Component demo'
+        planner        = 'Planner smoke test'
+    }
+
+    $map = $jsonLine | ConvertFrom-Json
+    $pages = @()
+    foreach ($prop in $map.PSObject.Properties) {
+        $label = $labels[$prop.Name]
+        if (-not $label) {
+            $label = $prop.Name
+        }
+        $pages += @{ Name = $label; Url = [string] $prop.Value }
+    }
+    return $pages
 }
 
 function Invoke-MrtEnsureSvLocale {

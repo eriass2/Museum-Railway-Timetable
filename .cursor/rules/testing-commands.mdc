@@ -13,6 +13,17 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 
 **Prefer** `.\scripts\*.ps1` over raw `docker compose` — wrappers use `--no-deps`, conditional `npm ci`, and single-container check/lint. See `docs/DOCKER_SCRIPTS_PLAN.md`.
 
+**Timings:** add `-Timings` to gate scripts, or set `$env:MRT_SCRIPT_TIMINGS=1` / `export MRT_SCRIPT_TIMINGS=1` (bash: `--timings`). Logs `[timing] step — Ns` per major step.
+
+## Docker dev reset
+
+| Context | Command |
+|---------|---------|
+| Full reset (Windows) | `.\scripts\docker-dev-reset.ps1` |
+| Full reset (Linux/WSL) | `./scripts/docker-dev-reset.sh` |
+| Rebuild WordPress image | `-Build` / `--build` on the reset script above |
+| Stack already up | `-SkipCompose` / `--skip-compose` |
+
 ## PHP
 
 | Context | Command |
@@ -30,7 +41,8 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 | Context | Command |
 |---------|---------|
 | Full Vue gate (Windows) | `.\scripts\vue-check.ps1` — typecheck + Vitest + build + verify in Docker |
-| Host Node (optional) | `.\scripts\vue-check.ps1 -Local` |
+| Full Vue gate (Linux/WSL) | `bash scripts/vue-check.sh` |
+| Host Node (optional) | `.\scripts\vue-check.ps1 -Local` or `bash scripts/vue-check.sh --local` |
 
 `scripts/test.ps1`, `scripts/check.ps1`, and `scripts/vue-check.ps1` use Docker by default. Same codebase via volume mount.
 

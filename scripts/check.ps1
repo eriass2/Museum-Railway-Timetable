@@ -3,6 +3,7 @@
 param(
     [switch]$SkipPhpcs,
     [switch]$Vue,
+    [switch]$Timings,
     [Parameter(ValueFromRemainingArguments = $true)]
     [string[]]$Passthrough
 )
@@ -10,23 +11,31 @@ param(
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot 'lib/Mrt.Docker.ps1')
 Set-MrtRepoRoot -ScriptsDirectory $PSScriptRoot
+Initialize-MrtScriptTimings -Timings:$Timings
 
 Assert-MrtDockerAvailable
 Ensure-MrtVendor
 
 $composerScript = if ($SkipPhpcs) { 'check' } else { 'check:all' }
-Write-Host "Running composer $composerScript in Docker..." -ForegroundColor Cyan
 $checkArgs = @($composerScript)
 if ($Passthrough.Count -gt 0) {
     $checkArgs += $Passthrough
 }
-Invoke-MrtDockerComposer -ComposerArgs $checkArgs -ExitOnError
+Invoke-MrtTimedStep -Title "composer $composerScript (Docker)" -Action {
+    Invoke-MrtDockerComposer -ComposerArgs $checkArgs -ExitOnError
+}
 
 Write-Host 'PHP check OK.' -ForegroundColor Green
 
 if ($Vue) {
-    & (Join-Path $PSScriptRoot 'vue-check.ps1')
+    $vueArgs = @()
+    if ($Timings) {
+        $vueArgs += '-Timings'
+    }
+    & (Join-Path $PSScriptRoot 'vue-check.ps1') @vueArgs
     if ($LASTEXITCODE -ne 0) {
         exit $LASTEXITCODE
     }
 }
+
+Complete-MrtScriptTimings
