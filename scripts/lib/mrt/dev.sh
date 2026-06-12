@@ -40,7 +40,8 @@ mrt_import_lennakatten() {
 mrt_e2e_prepare_site() {
 	mrt_import_lennakatten
 	mrt_wp_eval 'if (function_exists("MRT_dev_cli_set_admin_user")) { MRT_dev_cli_set_admin_user(); }
-  if (function_exists("MRT_sync_timetable_public_pages")) { MRT_sync_timetable_public_pages(); }' || true
+  if (function_exists("MRT_sync_timetable_public_pages")) { MRT_sync_timetable_public_pages(); }
+  if (function_exists("MRT_dev_activate_twentytwentyfive_theme")) { MRT_dev_activate_twentytwentyfive_theme(); }' || true
 }
 
 mrt_demo_page_url() {

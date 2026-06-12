@@ -20,8 +20,14 @@ Wait-MrtWordPressReady
 Write-MrtStep -Title 'Build Vue public bundle (CSS + JS)'
 Invoke-MrtDockerVue -Mode BuildVerify -StreamOutput -ExitOnError
 
-Write-MrtStep -Title 'Import demo data'
-Invoke-MrtWpCli -WpArgs @('eval', 'MRT_run_lennakatten_import();') -StreamOutput
+Write-MrtStep -Title 'Import demo data + sync public pages'
+$syncEval = @(
+	"if (function_exists('MRT_run_lennakatten_import')) { MRT_run_lennakatten_import(); }",
+	"if (function_exists('MRT_dev_cli_set_admin_user')) { MRT_dev_cli_set_admin_user(); }",
+	"if (function_exists('MRT_sync_timetable_public_pages')) { MRT_sync_timetable_public_pages(); }",
+	"if (function_exists('MRT_dev_activate_twentytwentyfive_theme')) { MRT_dev_activate_twentytwentyfive_theme(); }"
+) -join ' '
+Invoke-MrtWpCli -WpArgs @('eval', $syncEval) -StreamOutput
 
 Write-MrtStep -Title 'Smoke page URLs (WP-CLI)'
 $pages = Get-MrtSmokePageUrlEntries
@@ -38,12 +44,23 @@ Ensure-MrtVendor
 Invoke-MrtDockerComposer -ComposerArgs @('check') -StreamOutput -ExitOnError
 
 Write-MrtStep -Title 'HTTP checks'
-foreach ($p in $pages) {
+$httpPages = @($pages)
+$frontEval = 'echo home_url("/");'
+$frontOut = Invoke-MrtWpCli -WpArgs @('eval', $frontEval) -ReturnOutput -NoTty
+if ($LASTEXITCODE -eq 0 -and $frontOut) {
+    $frontUrl = ($frontOut | Where-Object { $_ -match '^https?://' } | Select-Object -Last 1)
+    if ($frontUrl) {
+        $httpPages += @{ Name = 'Trafikkalender (front)'; Url = [string] $frontUrl }
+    }
+}
+foreach ($p in $httpPages) {
     try {
         $r = Invoke-WebRequest -Uri $p.Url -UseBasicParsing -TimeoutSec 20
         $vueBundle = $r.Content -match 'assets/dist/vue|mrt-vue-public'
         $vueMount = $r.Content -match 'data-mrt-vue-app'
-        Write-Host ("  OK {0} ({1}) vue-bundle={2} vue-mount={3}" -f $p.Name, $r.StatusCode, $vueBundle, $vueMount) -ForegroundColor Green
+        $wizardMount = $r.Content -match 'mrt-vue-root--wizard'
+        $extra = if ($p.Name -match 'Trafikkalender') { " wizard={0}" -f $wizardMount } else { '' }
+        Write-Host ("  OK {0} ({1}) vue-bundle={2} vue-mount={3}{4}" -f $p.Name, $r.StatusCode, $vueBundle, $vueMount, $extra) -ForegroundColor Green
     } catch {
         Write-Host ("  FAIL {0}: {1}" -f $p.Name, $_.Exception.Message) -ForegroundColor Red
     }

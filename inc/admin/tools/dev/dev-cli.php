@@ -62,6 +62,20 @@ function MRT_dev_smoke_page_permalinks(): array {
 }
 
 /**
+ * Use Twenty Twenty-Five in dev (matches Lennakatten test3 block-theme layout).
+ */
+function MRT_dev_activate_twentytwentyfive_theme(): void {
+	if ( ! MRT_is_development_mode() ) {
+		return;
+	}
+	$theme = wp_get_theme( 'twentytwentyfive' );
+	if ( ! $theme->exists() ) {
+		return;
+	}
+	switch_theme( 'twentytwentyfive' );
+}
+
+/**
  * Clear plugin data, import Lennakatten, create smoke pages and menu links.
  *
  * @return array<string, mixed>|WP_Error
@@ -113,6 +127,8 @@ function MRT_dev_reset_and_import() {
 			return $pages_result;
 		}
 	}
+
+	MRT_dev_activate_twentytwentyfive_theme();
 
 	$cache_warm = null;
 	if ( function_exists( 'MRT_journey_cache_warm_popular_routes' ) ) {

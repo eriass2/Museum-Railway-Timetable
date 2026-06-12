@@ -24,6 +24,7 @@ final class TimetablePagesTest extends TestCase {
 		self::assertStringContainsString( 'legend="1"', $content );
 		self::assertStringContainsString( '[museum_timetable_index intro="0"]', $content );
 		self::assertStringContainsString( 'mrt-timetable-index-secondary__title', $content );
+		self::assertStringContainsString( '[museum_journey_wizard]', $content );
 	}
 
 	public function test_public_page_slug_uses_code_when_present(): void {

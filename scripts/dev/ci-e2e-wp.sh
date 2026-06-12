@@ -42,6 +42,7 @@ npm --prefix frontend/vue run e2e -- --workers=1 \
   e2e/overview-wp.spec.ts \
   e2e/month-wp.spec.ts \
   e2e/wizard-wp.spec.ts \
+  e2e/wizard-front-page-wp.spec.ts \
   e2e/index-wp.spec.ts \
   e2e/traffic-notices-wp.spec.ts \
   e2e/admin-dashboard.spec.ts \
