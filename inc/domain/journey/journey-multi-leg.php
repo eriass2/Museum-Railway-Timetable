@@ -29,7 +29,7 @@ function MRT_journey_build_leg_segment( $service_id, $from_station_id, $to_stati
 	$arr   = $last['arrival_time'] ?: $last['departure_time'];
 	$tt    = MRT_get_service_train_type_for_date( $service_id, $dateYmd );
 	$num   = get_post_meta( $service_id, 'mrt_service_number', true );
-	$dest  = MRT_journey_leg_destination_label( $to_station_id );
+	$dest  = MRT_journey_service_destination_label( (int) $service_id );
 	$dur   = MRT_format_duration_minutes( $dep, $arr );
 	return array(
 		'service_id'       => (int) $service_id,
@@ -59,7 +59,7 @@ function MRT_journey_leg_from_connection_row( array $conn, $dateYmd, $from_stati
 	$sid  = intval( $conn['service_id'] );
 	$tt   = MRT_get_service_train_type_for_date( $sid, $dateYmd );
 	$num  = get_post_meta( $sid, 'mrt_service_number', true );
-	$dest = MRT_journey_leg_destination_label( (int) $to_station_id );
+	$dest = MRT_journey_service_destination_label( $sid );
 	$dep  = $conn['from_departure'] ? (string) $conn['from_departure'] : (string) ( $conn['from_arrival'] ?? '' );
 	$arr  = $conn['to_arrival'] ? (string) $conn['to_arrival'] : (string) ( $conn['to_departure'] ?? '' );
 	return array(

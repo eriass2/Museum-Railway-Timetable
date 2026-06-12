@@ -86,6 +86,25 @@ final class JourneyMultiLegTest extends TestCase {
         self::assertSame('42', $leg['service_number']);
     }
 
+    public function test_journey_leg_destination_uses_service_end_not_passenger_alighting(): void {
+        $GLOBALS['mrt_test_post_meta'] = array(
+            '42|mrt_service_end_station_id' => 100,
+        );
+        $GLOBALS['mrt_test_posts'] = array(
+            2   => (object) array( 'ID' => 2, 'post_title' => 'Lövstahagen' ),
+            100 => (object) array( 'ID' => 100, 'post_title' => 'Marielund' ),
+        );
+        $conn = array(
+            'service_id'     => 42,
+            'from_departure' => '10:00',
+            'to_arrival'     => '10:46',
+            'train_type'     => 'Ångtåg',
+        );
+        $leg = MRT_journey_leg_from_connection_row( $conn, '2026-06-01', 1, 2 );
+        self::assertSame( 'Marielund', $leg['destination'] );
+        unset( $GLOBALS['mrt_test_post_meta'], $GLOBALS['mrt_test_posts'] );
+    }
+
     public function test_journey_wrap_direct_multi_falls_back_when_no_stoptimes(): void {
         $conn = [
             'service_id' => 7,

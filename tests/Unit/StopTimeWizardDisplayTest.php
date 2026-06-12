@@ -20,7 +20,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertTrue( $meta['on_request_both'] );
 	}
 
-	public function test_approximate_flag_shows_ca_prefix(): void {
+	public function test_approximate_on_scheduled_stop_does_not_show_ca(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array_merge(
 				array(
@@ -31,8 +31,22 @@ final class StopTimeWizardDisplayTest extends TestCase {
 			)
 		);
 
-		self::assertSame( 'Ca 10.13', $meta['time_label'] );
+		self::assertSame( '10.13', $meta['time_label'] );
 		self::assertTrue( $meta['approximate_time'] );
+	}
+
+	public function test_approximate_on_behov_stop_shows_ca_prefix(): void {
+		$meta = MRT_journey_stop_wizard_time_meta(
+			array_merge(
+				array(
+					'departure_time'   => '10:13',
+					'approximate_time' => 1,
+				),
+				MRT_test_stop_modes_pickup_only()
+			)
+		);
+
+		self::assertSame( 'Ca 10.13', $meta['time_label'] );
 	}
 
 	public function test_fixed_time_without_approximate_flag(): void {

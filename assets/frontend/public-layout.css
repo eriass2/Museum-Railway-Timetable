@@ -45,3 +45,8 @@ body.mrt-has-overview .mrt-vue-root--overview {
 .mrt-demo-mockup-caption + .mrt-journey-wizard--embedded {
     margin-top: clamp(1.25rem, 3vw, 2rem);
 }
+
+/* Viewport-wide wizard hero ::after can extend past the content column; avoid horizontal scroll. */
+body.mrt-has-shortcodes:has(.mrt-journey-wizard:not(.mrt-journey-wizard--embedded)) {
+    overflow-x: clip;
+}

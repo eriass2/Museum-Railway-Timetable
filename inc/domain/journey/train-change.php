@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Passenger-facing "mot …" label for a leg alighting station.
+ * Passenger alighting station title (not the service "mot …" label).
  */
 function MRT_journey_leg_destination_label( int $to_station_id ): string {
 	if ( $to_station_id <= 0 ) {
@@ -18,6 +18,18 @@ function MRT_journey_leg_destination_label( int $to_station_id ): string {
 	}
 	$title = get_the_title( $to_station_id );
 	return is_string( $title ) ? $title : '';
+}
+
+/**
+ * Service end destination for vehicle labels ("Ångtåg 81 mot Marielund").
+ */
+function MRT_journey_service_destination_label( int $service_id ): string {
+	if ( $service_id <= 0 ) {
+		return '';
+	}
+	require_once MRT_PATH . 'inc/domain/service/stop-times.php';
+	$dest = MRT_get_service_destination( $service_id );
+	return (string) ( $dest['destination'] ?? '' );
 }
 
 /**

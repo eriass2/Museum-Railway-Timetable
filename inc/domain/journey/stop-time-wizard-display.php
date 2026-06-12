@@ -42,12 +42,15 @@ function MRT_journey_stop_wizard_time_meta(
 	$time_raw  = $time_preference === 'arrival'
 		? ( $arrival !== '' ? $arrival : $departure )
 		: ( $departure !== '' ? $departure : $arrival );
-	$has_time  = $time_raw !== '';
+	$has_time    = $time_raw !== '';
 	$approximate = ! empty( $row['approximate_time'] );
+	$pickup_or   = MRT_stop_time_on_request_pickup( $row );
+	$dropoff_or  = MRT_stop_time_on_request_dropoff( $row );
+	$show_ca     = $approximate && ( $pickup_or || $dropoff_or );
 
 	$restrictions       = MRT_stop_time_restriction_footnote_flags(
-		MRT_stop_time_on_request_pickup( $row ),
-		MRT_stop_time_on_request_dropoff( $row ),
+		$pickup_or,
+		$dropoff_or,
 		$has_time,
 		$is_first_in_leg,
 		$is_last_in_leg
@@ -61,11 +64,8 @@ function MRT_journey_stop_wizard_time_meta(
 		$time_label = 'X';
 	} elseif ( $has_time ) {
 		$formatted  = MRT_format_time_display( $time_raw );
-		$time_label = $approximate ? 'Ca ' . $formatted : $formatted;
-		if (
-			MRT_stop_time_on_request_pickup( $row )
-			&& MRT_stop_time_on_request_dropoff( $row )
-		) {
+		$time_label = $show_ca ? 'Ca ' . $formatted : $formatted;
+		if ( $pickup_or && $dropoff_or ) {
 			$time_label .= ' X';
 		}
 	}

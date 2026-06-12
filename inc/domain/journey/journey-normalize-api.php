@@ -99,7 +99,9 @@ function MRT_normalize_connection_for_api( $item, $dateYmd, $from_station_id, $t
 		'route_name'          => (string) ( $conn['route_name'] ?? '' ),
 		'destination'         => $leg !== null
 			? (string) ( $leg['destination'] ?? '' )
-			: MRT_journey_leg_destination_label( $to_station_id ),
+			: ( $sid > 0
+				? MRT_journey_service_destination_label( $sid )
+				: MRT_journey_leg_destination_label( $to_station_id ) ),
 		'direction'           => (string) ( $conn['direction'] ?? '' ),
 		'segments'            => $extra['segments'],
 		'notice'              => $extra['notice'],
