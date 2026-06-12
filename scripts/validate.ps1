@@ -1,4 +1,4 @@
-# Wrapper — implementation in gate/validate.ps1
+# Wrapper — implementation in php/validate.php
 $ErrorActionPreference = 'Stop'
-& (Join-Path $PSScriptRoot 'gate/validate.ps1') @args
+& php (Join-Path $PSScriptRoot 'validate.php')
 exit $LASTEXITCODE

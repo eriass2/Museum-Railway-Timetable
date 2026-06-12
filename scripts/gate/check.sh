@@ -17,7 +17,11 @@ if [ "$MRT_GATE_SKIP_PHPCS" -eq 1 ]; then
 fi
 
 mrt_step "composer ${composer_script} (Docker)"
-mrt_tools_run composer "$composer_script"
+if [ "${#MRT_GATE_FILTERED[@]}" -gt 0 ]; then
+	mrt_tools_run composer "$composer_script" "${MRT_GATE_FILTERED[@]}"
+else
+	mrt_tools_run composer "$composer_script"
+fi
 mrt_step_done
 
 echo "PHP check OK."

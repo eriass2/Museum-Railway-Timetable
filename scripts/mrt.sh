@@ -42,15 +42,15 @@ vue)
 dev)
 	case "$sub" in
 	reset) bash "$SCRIPTS/dev/docker-dev-reset.sh" "$@" ;;
-	smoke) mrt_run_ps1 docker-smoke.ps1 "$@" ;;
+	smoke) mrt_run_ps1 dev/docker-smoke.ps1 "$@" ;;
 	watch) bash "$SCRIPTS/dev/docker-watch.sh" "$@" ;;
 	*) echo "Unknown dev subcommand: $sub (try: reset, smoke, watch)" >&2; exit 1 ;;
 	esac
 	;;
 release)
 	case "$sub" in
-	build) mrt_run_ps1 build-release.ps1 "$@" ;;
-	deploy) mrt_run_ps1 live-deploy.ps1 "$@" ;;
+	build) mrt_run_ps1 release/build-release.ps1 "$@" ;;
+	deploy) mrt_run_ps1 release/live-deploy.ps1 "$@" ;;
 	*) echo "Unknown release subcommand: $sub (try: build, deploy)" >&2; exit 1 ;;
 	esac
 	;;
@@ -61,6 +61,6 @@ csv)
 	*) echo "Unknown csv subcommand: $sub (try: validate, zip)" >&2; exit 1 ;;
 	esac
 	;;
-i18n) mrt_run_ps1 make-i18n.ps1 "$@" ;;
+i18n) mrt_run_ps1 i18n/make-i18n.ps1 "$@" ;;
 *) echo "Unknown command: $cmd (run: mrt help)" >&2; exit 1 ;;
 esac

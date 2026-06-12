@@ -80,15 +80,16 @@ Existing `.\scripts\*.ps1` entry points remain; `mrt` forwards to them.
 
 | Goal | Windows (recommended) | Linux/macOS / WSL |
 |------|----------------------|-------------------|
-| PHP validate + PHPStan + PHPUnit + PHPCS | `.\scripts\check.ps1` | `composer check` + `composer phpcs` |
-| PHP without PHPCS | `.\scripts\check.ps1 -SkipPhpcs` | `composer check` |
-| PHPStan + PHPCS only | `.\scripts\lint.ps1` | `bash scripts/lint.sh` (Docker default) |
-| PHPUnit (Docker default) | `.\scripts\test.ps1` | `composer test` |
-| PHPUnit (host PHP 8.2+) | `.\scripts\test.ps1 -Local` | `composer test` |
-| Vue typecheck + Vitest + build | `.\scripts\vue-check.ps1` | `bash scripts/vue-check.sh` |
-| Vue locally | `.\scripts\vue-check.ps1 -Local` | `bash scripts/vue-check.sh --local` |
-| PHP + Vue | `.\scripts\check.ps1 -Vue` | — |
-| Line coverage (exploratory) | `.\scripts\coverage.ps1` | — |
+| Full PHP gate (Docker) | `.\scripts\mrt.ps1 check` | `bash scripts/mrt.sh check` |
+| PHP validate + PHPStan + PHPUnit + PHPCS | `.\scripts\check.ps1` | `bash scripts/gate/check.sh` |
+| PHP without PHPCS | `.\scripts\check.ps1 -SkipPhpcs` | `bash scripts/mrt.sh check --skip-phpcs` |
+| PHPStan + PHPCS only | `.\scripts\lint.ps1` | `bash scripts/gate/lint.sh` |
+| PHPUnit (Docker default) | `.\scripts\test.ps1` | `bash scripts/gate/test.sh` |
+| PHPUnit (host PHP 8.2+) | `.\scripts\test.ps1 -Local` | `bash scripts/gate/test.sh --local` |
+| Vue typecheck + Vitest + build | `.\scripts\vue-check.ps1` | `bash scripts/gate/vue-check.sh` |
+| Vue locally | `.\scripts\vue-check.ps1 -Local` | `bash scripts/gate/vue-check.sh --local` |
+| PHP + Vue | `.\scripts\check.ps1 -Vue` | `bash scripts/mrt.sh check --vue` |
+| Line coverage (exploratory) | `.\scripts\coverage.ps1` | `bash scripts/gate/coverage.sh` |
 | Plugin file/syntax check | `composer plugin-check` | `php scripts/validate.php` |
 
 **Windows:** never invoke `vendor\bin\phpunit` directly — use `.\scripts\test.ps1`.
@@ -103,7 +104,7 @@ Existing `.\scripts\*.ps1` entry points remain; `mrt` forwards to them.
 | Dev reset + rebuild WordPress image | `.\scripts\docker-dev-reset.ps1 -Build` or `./scripts/docker-dev-reset.sh --build` |
 | Dev reset (stack already running) | `.\scripts\docker-dev-reset.ps1 -SkipCompose` or `./scripts/docker-dev-reset.sh --skip-compose` |
 | Start stack only (no import) | `docker compose up -d` — prefer dev reset when you need data + menu |
-| Smoke test (import + HTTP checks, no clear) | `.\scripts\docker-smoke.ps1` |
+| Smoke test (import + HTTP checks, no clear) | `.\scripts\mrt.ps1 dev smoke` or `.\scripts\docker-smoke.ps1` |
 | Plugin sync via compose watch (Windows I/O) | `.\scripts\docker-watch.ps1` or `.\scripts\mrt.ps1 dev watch` |
 | WordPress + Playwright E2E | `bash scripts/ci-e2e-wp.sh` |
 
@@ -115,8 +116,8 @@ Dev site: <http://localhost:8080> — admin / admin.
 
 | Goal | Command |
 |------|---------|
-| Production zip | `.\scripts\build-release.ps1` |
-| Sync to staging/live (no zip) | `.\scripts\live-deploy.ps1` |
+| Production zip | `.\scripts\mrt.ps1 release build` or `.\scripts\build-release.ps1` |
+| Sync to staging/live (no zip) | `.\scripts\mrt.ps1 release deploy` or `.\scripts\live-deploy.ps1` |
 | Sync with file watch | `.\scripts\live-deploy.ps1 -Watch` |
 | Local by Flywheel | `.\local\deploy.ps1` |
 

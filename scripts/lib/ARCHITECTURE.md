@@ -23,6 +23,7 @@ Both CLIs forward to the same behaviour; help text is shared in `lib/mrt-help.tx
 | `lib/Mrt.Vue.ps1` | Vue check/build in Docker or local npm |
 | `lib/Mrt.Dev.ps1` | Dev reset, locale, WP_DEBUG, smoke pages |
 | `lib/Mrt.LiveDeploy.ps1` | Live deploy sync and watch mode |
+| `lib/Mrt.Release.ps1` | Production zip build (validate, pack) |
 | `lib/Mrt.Plugin.ps1` | Plugin metadata, repo root resolution |
 
 ## Layout

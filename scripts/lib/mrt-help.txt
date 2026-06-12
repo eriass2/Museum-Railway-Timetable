@@ -7,20 +7,24 @@ MRT developer CLI - one entry point for gates, dev, and release.
   mrt coverage [phpunit args...]
   mrt setup-dev              Host composer + npm (CI parity)
   mrt dev reset [--build] [--skip-compose] [--timings]
-  mrt dev smoke
+  mrt dev smoke              Import + HTTP smoke (PowerShell)
   mrt dev watch [--no-up]
-  mrt release build
+  mrt release build          Production zip (PowerShell)
+  mrt release deploy         Sync plugin to staging/live (PowerShell)
   mrt csv validate <path>
+  mrt csv zip                Pack CSV fixture zip
   mrt i18n                   Regenerate .pot / merge Swedish .po
   mrt help
 
 Platform notes:
   Linux/macOS/WSL - bash scripts/mrt.sh (canonical)
   Windows         - .\scripts\mrt.ps1 (Docker via PowerShell lib)
+  dev smoke, release, i18n on Linux require PowerShell (mrt.sh delegates)
 
 Examples:
   bash scripts/mrt.sh check --skip-phpcs
   bash scripts/mrt.sh dev reset --build
   .\scripts\mrt.ps1 test tests/Unit/CsvManifestTest.php
+  .\scripts\mrt.ps1 release deploy
 
 See docs/CI_AND_DEV_MODEL.md and scripts/lib/ARCHITECTURE.md.

@@ -18,6 +18,7 @@ Invoke-MrtWithDockerDefault -Local:$Local `
         Invoke-MrtTimedStep -Title 'PHPUnit (Docker)' -SkipStepHeader -Action {
             Invoke-MrtDockerPhpUnit -PhpUnitArgs $Passthrough -ExitOnError
         }
+        Complete-MrtGateEnvironment
     } `
     -LocalAction {
         Invoke-MrtTimedStep -Title 'PHPUnit (local)' -Action {
@@ -29,4 +30,5 @@ Invoke-MrtWithDockerDefault -Local:$Local `
                 & composer test
             }
         }
+        Complete-MrtGateEnvironment
     }
