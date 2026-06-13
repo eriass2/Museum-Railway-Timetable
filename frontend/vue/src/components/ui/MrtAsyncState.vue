@@ -16,7 +16,6 @@ withDefaults(
   }>(),
   {
     context: 'public',
-    retryLabel: 'Försök igen',
   },
 );
 
@@ -30,7 +29,12 @@ defineEmits<{ retry: [] }>();
   <div v-else-if="error && context === 'admin'" class="mrt-admin-async__error notice notice-error">
     <p>{{ error }}</p>
     <div class="mrt-admin-async__retry">
-      <MrtButton context="admin" variant="secondary" @click="$emit('retry')">
+      <MrtButton
+        v-if="retryLabel"
+        context="admin"
+        variant="secondary"
+        @click="$emit('retry')"
+      >
         {{ retryLabel }}
       </MrtButton>
     </div>

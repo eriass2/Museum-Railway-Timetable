@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { ref } from 'vue';
 import type { WizardVueConfig } from '../../config/types';
+import { useDialogDismiss, useFocusTrap } from '../../composables/useDialogDismiss';
 import { useWizardFeedbackForm } from '../composables/useWizardFeedbackForm';
 
 const props = defineProps<{ config: WizardVueConfig }>();
@@ -7,7 +9,6 @@ const props = defineProps<{ config: WizardVueConfig }>();
 const {
   MESSAGE_MIN_LENGTH,
   open,
-  submitting,
   sent,
   error,
   type,
@@ -21,6 +22,11 @@ const {
   closePanel,
   submit,
 } = useWizardFeedbackForm(props.config);
+
+const panelRef = ref<HTMLElement | null>(null);
+const titleId = 'mrt-wizard-feedback-title';
+const { onBackdropClick, onKeydown } = useDialogDismiss(closePanel);
+useFocusTrap(panelRef, open);
 </script>
 
 <template>
@@ -34,11 +40,31 @@ const {
       {{ label('feedbackButton', 'Rapportera fel eller förslag') }}
     </button>
 
-    <div v-if="open" class="mrt-wizard-feedback__backdrop" @click.self="closePanel">
-      <section class="mrt-wizard-feedback__panel" role="dialog" aria-modal="true">
+    <div
+      v-if="open"
+      class="mrt-wizard-feedback__backdrop"
+      role="presentation"
+      @click="onBackdropClick"
+    >
+      <section
+        ref="panelRef"
+        class="mrt-wizard-feedback__panel"
+        role="dialog"
+        aria-modal="true"
+        :aria-labelledby="titleId"
+        @keydown="onKeydown"
+        @click.stop
+      >
         <header class="mrt-wizard-feedback__header">
-          <h2>{{ label('feedbackTitle', 'Rapportera fel eller förslag') }}</h2>
-          <button type="button" class="mrt-wizard-feedback__close" @click="closePanel">×</button>
+          <h2 :id="titleId">{{ label('feedbackTitle', 'Rapportera fel eller förslag') }}</h2>
+          <button
+            type="button"
+            class="mrt-wizard-feedback__close"
+            :aria-label="label('feedbackClose', 'Stäng')"
+            @click="closePanel"
+          >
+            ×
+          </button>
         </header>
 
         <p v-if="sent" class="mrt-wizard-feedback__thanks" role="status">
@@ -47,7 +73,7 @@ const {
 
         <form v-else class="mrt-wizard-feedback__form" @submit.prevent="submit">
           <fieldset class="mrt-wizard-feedback__types">
-            <legend>Typ</legend>
+            <legend>{{ label('feedbackTypeLegend', 'Typ') }}</legend>
             <label>
               <input v-model="type" type="radio" value="bug" />
               {{ label('feedbackTypeBug', 'Fel / bugg') }}

@@ -11,6 +11,7 @@ import { useWizardContext } from '../../composables/useWizardContext';
 import { useConnectionLegDisplay } from '../composables/useConnectionLegDisplay';
 import { useTripConnections } from '../composables/useTripConnections';
 import { cfgStr } from '../utils/wizardLabels';
+import { connectionListKey } from '../utils/connectionKey';
 import type { JourneyConnection } from '../types';
 import WizardTripCard from './WizardTripCard.vue';
 
@@ -95,8 +96,8 @@ watch(
       >
         <MrtTripList>
           <WizardTripCard
-            v-for="(conn, idx) in connections"
-            :key="idx"
+            v-for="conn in connections"
+            :key="connectionListKey(conn)"
             :connection="conn"
             :leg-ctx="legCtx"
             @select="onSelect(conn)"

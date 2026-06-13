@@ -1,36 +1,31 @@
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import {
   createRoute,
   createStation,
   deleteRoute,
   deleteStation,
-  getPrices,
-  listLines,
-  listRoutes,
-  listStations,
   updateLine,
   updateRoute,
   updateStation,
 } from '../../api/adminRest';
 import { adminConfirm } from '../adminConfirm';
 import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
-import { useAdminResource } from '../useAdminResource';
 import { useAdminRowFlash } from '../useAdminRowFlash';
 import { useAdminSaveNotice } from '../useAdminSaveNotice';
-import { adminErrorMessage, adminFmt, adminStr } from '../../utils/adminLabels';
+import { useAdminMutation } from '../useAdminMutation';
+import { adminFmt, adminStr } from '../../utils/adminLabels';
 import {
   emptyRouteDraft,
   emptyStationDraft,
   syncRouteTermini,
 } from '../../utils/stations-routes/routeStationEditor';
-import { resolveStationPriceZoneOptions, stationMissingPriceZone } from '../../utils/stations-routes/stationPriceZones';
 import type { LinesPanelView } from '../../components/stations-routes/LinesPanel.vue';
 import type { RoutesPanelView } from '../../components/stations-routes/RoutesPanel.vue';
 import type { StationsPanelView } from '../../components/stations-routes/StationsPanel.vue';
-import { adminConfig } from '../../types';
 import type { LineRow, RouteRow, StationRow } from '../../types';
+import { useStationsRoutesData, type StationsRoutesSectionTab } from './useStationsRoutesData';
 
-export type StationsRoutesSectionTab = 'stations' | 'lines' | 'routes';
+export type { StationsRoutesSectionTab };
 
 function routeDraftSnapshot(route: RouteRow): string {
   return JSON.stringify(route);
@@ -53,10 +48,23 @@ function cloneStationRow(station: StationRow): StationRow {
 }
 
 export function useStationsRoutesPage() {
-  const cfg = adminConfig();
-  const stations = ref<StationRow[]>([]);
-  const routes = ref<RouteRow[]>([]);
-  const lines = ref<LineRow[]>([]);
+  const {
+    cfg,
+    stations,
+    routes,
+    lines,
+    priceZoneOptions,
+    showMissingZonesOnly,
+    hasLineRegistry,
+    stationsById,
+    visibleStations,
+    loading,
+    error,
+    load,
+    reload,
+    stationTitle,
+  } = useStationsRoutesData();
+  const { runMutation } = useAdminMutation(error);
   const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
   const { flashRow, isFlashed } = useAdminRowFlash();
   const newStation = ref(emptyStationDraft());
@@ -71,78 +79,6 @@ export function useStationsRoutesPage() {
   const stationFormSnapshot = ref('');
   const routeFormSnapshot = ref('');
   const lineFormSnapshot = ref('');
-  const priceZoneOptions = ref<number[]>([...resolveStationPriceZoneOptions(undefined)]);
-  const showMissingZonesOnly = ref(false);
-
-  async function fetchLineRows(): Promise<LineRow[]> {
-    try {
-      const payload = await listLines();
-      return payload?.items ?? [];
-    } catch {
-      return [];
-    }
-  }
-
-  const { loading, error, data, load, reload } = useAdminResource({
-    fetch: async () => {
-      const [s, lines, prices] = await Promise.all([
-        listStations(),
-        fetchLineRows(),
-        getPrices().catch(() => null),
-      ]);
-      const lineRows = lines ?? [];
-      const routesPayload =
-        lineRows.length > 0 ? null : await listRoutes().catch(() => null);
-      return {
-        stations: s?.items ?? [],
-        routes: routesPayload?.items ?? [],
-        lines: lineRows,
-        priceZones: prices?.zones,
-      };
-    },
-    errorMessage: (e) => adminErrorMessage(cfg, e, 'loadFailed'),
-  });
-
-  watch(
-    data,
-    (payload) => {
-      if (!payload) {
-        return;
-      }
-      priceZoneOptions.value = resolveStationPriceZoneOptions(payload.priceZones);
-      stations.value = payload.stations.map((row) => ({
-        ...row,
-        price_zones: row.price_zones ?? [],
-        train_change_map: row.train_change_map ?? {},
-      }));
-      routes.value = payload.routes.map((row) => syncRouteTermini({ ...row }));
-      lines.value = payload.lines ?? [];
-    },
-    { immediate: true },
-  );
-
-  const hasLineRegistry = computed(() => lines.value.length > 0);
-
-  const stationsById = computed(
-    () =>
-      new Map(
-        stations.value.map((st) => [
-          st.id,
-          { title: st.title, station_type: st.station_type },
-        ]),
-      ),
-  );
-
-  const visibleStations = computed(() => {
-    if (!showMissingZonesOnly.value) {
-      return stations.value;
-    }
-    return stations.value.filter((st) => stationMissingPriceZone(st));
-  });
-
-  function stationTitle(stationId: number): string {
-    return stations.value.find((s) => s.id === stationId)?.title || String(stationId);
-  }
 
   function isStationFormDirty(): boolean {
     if (stationsView.value === 'list') {
@@ -183,16 +119,21 @@ export function useStationsRoutesPage() {
   async function addStation() {
     const draft = newStation.value;
     if (!cfg.canManage || !draft.title.trim()) return;
-    await createStation({
-      title: draft.title.trim(),
-      station_type: draft.station_type || undefined,
-      lat: draft.lat || undefined,
-      lng: draft.lng || undefined,
-      bus_suffix: draft.bus_suffix,
-      display_order: draft.display_order || undefined,
-      price_zones: draft.price_zones,
-      train_change_map: draft.train_change_map,
-    });
+    const ok = await runMutation(
+      () =>
+        createStation({
+          title: draft.title.trim(),
+          station_type: draft.station_type || undefined,
+          lat: draft.lat || undefined,
+          lng: draft.lng || undefined,
+          bus_suffix: draft.bus_suffix,
+          display_order: draft.display_order || undefined,
+          price_zones: draft.price_zones,
+          train_change_map: draft.train_change_map,
+        }),
+      'stationsSaveStationFailed',
+    );
+    if (!ok) return;
     backToStationsList();
     await reload();
   }
@@ -208,7 +149,11 @@ export function useStationsRoutesPage() {
     if (!editingStation.value || !cfg.canManage) return;
     const title = editingStation.value.title;
     const stationId = editingStation.value.id;
-    await updateStation(stationId, editingStation.value);
+    const ok = await runMutation(
+      () => updateStation(stationId, editingStation.value!),
+      'stationsSaveStationFailed',
+    );
+    if (!ok) return;
     backToStationsList();
     showSaveNotice(adminFmt(cfg, 'stationsStationSaved', title));
     flashRow(stationId);
@@ -300,7 +245,8 @@ export function useStationsRoutesPage() {
     if (title === '') {
       return;
     }
-    await updateLine(code, { title });
+    const ok = await runMutation(() => updateLine(code, { title }), 'stationsSaveLineFailed');
+    if (!ok) return;
     backToLinesList();
     showSaveNotice(adminFmt(cfg, 'stationsLineSaved', title));
     await reload();
@@ -314,10 +260,15 @@ export function useStationsRoutesPage() {
       return;
     }
     const route = syncRouteTermini(draft);
-    await createRoute({
-      title: route.title.trim(),
-      station_ids: route.station_ids,
-    });
+    const ok = await runMutation(
+      () =>
+        createRoute({
+          title: route.title.trim(),
+          station_ids: route.station_ids,
+        }),
+      'stationsSaveRouteFailed',
+    );
+    if (!ok) return;
     backToRoutesList();
     await reload();
   }
@@ -344,10 +295,15 @@ export function useStationsRoutesPage() {
     const title = editingRoute.value.title;
     const routeId = editingRoute.value.id;
     const route = syncRouteTermini(editingRoute.value);
-    await updateRoute(routeId, {
-      title: route.title,
-      station_ids: route.station_ids,
-    });
+    const ok = await runMutation(
+      () =>
+        updateRoute(routeId, {
+          title: route.title,
+          station_ids: route.station_ids,
+        }),
+      'stationsSaveRouteFailed',
+    );
+    if (!ok) return;
     backToRoutesList();
     showSaveNotice(adminFmt(cfg, 'stationsRouteSaved', title));
     flashRow(routeId);
@@ -356,44 +312,38 @@ export function useStationsRoutesPage() {
 
   async function removeStation(st: StationRow) {
     if (!cfg.canManage) return;
-    const ok = await adminConfirm({
+    const confirmed = await adminConfirm({
       title: adminStr(cfg, 'stationsDeleteStationTitle'),
       message: adminFmt(cfg, 'stationsDeleteStationMsg', st.title),
       confirmLabel: adminStr(cfg, 'delete'),
       danger: true,
     });
-    if (!ok) return;
-    error.value = '';
-    try {
+    if (!confirmed) return;
+    await runMutation(async () => {
       await deleteStation(st.id);
       if (editingStation.value?.id === st.id) {
         backToStationsList();
       }
       await reload();
-    } catch (e) {
-      error.value = adminErrorMessage(cfg, e, 'stationsDeleteStationFailed');
-    }
+    }, 'stationsDeleteStationFailed');
   }
 
   async function removeRoute(route: RouteRow) {
     if (!cfg.canManage) return;
-    const ok = await adminConfirm({
+    const confirmed = await adminConfirm({
       title: adminStr(cfg, 'stationsDeleteRouteTitle'),
       message: adminFmt(cfg, 'stationsDeleteRouteMsg', route.title),
       confirmLabel: adminStr(cfg, 'delete'),
       danger: true,
     });
-    if (!ok) return;
-    error.value = '';
-    try {
+    if (!confirmed) return;
+    await runMutation(async () => {
       await deleteRoute(route.id);
       if (editingRoute.value?.id === route.id) {
         backToRoutesList();
       }
       await reload();
-    } catch (e) {
-      error.value = adminErrorMessage(cfg, e, 'stationsDeleteRouteFailed');
-    }
+    }, 'stationsDeleteRouteFailed');
   }
 
   return {

@@ -17,8 +17,6 @@ withDefaults(
     nextHref: '#',
     prevText: '',
     nextText: '',
-    prevAria: 'Föregående månad',
-    nextAria: 'Nästa månad',
     todayLabel: '',
   },
 );

@@ -5,7 +5,8 @@ import {
   type PublicNoticeMessage,
 } from '../../api/adminRestTrafficNotices';
 import { adminConfirm } from '../adminConfirm';
-import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
+import { useAdminListEditor } from '../useAdminListEditor';
+import { useAdminMutation } from '../useAdminMutation';
 import { useAdminResource } from '../useAdminResource';
 import { useAdminSaveNotice } from '../useAdminSaveNotice';
 import { adminErrorMessage, adminFmtN, adminStr } from '../../utils/adminLabels';
@@ -19,7 +20,6 @@ import {
   reorderMessages,
   sortMessagesByOrder,
   TRAFFIC_NOTICE_MAX_LENGTH,
-  type TrafficNoticesViewMode,
 } from '../../utils/traffic-notices/trafficNoticesAdmin';
 import { adminConfig } from '../../types';
 
@@ -27,10 +27,10 @@ export function useTrafficNoticesPage() {
   const cfg = adminConfig();
   const messages = ref<PublicNoticeMessage[]>([]);
   const feedRefreshKey = ref(0);
-  const viewMode = ref<TrafficNoticesViewMode>('list');
   const draft = ref<PublicNoticeMessage | null>(null);
-  const formSnapshot = ref('');
   const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
+  const { viewMode, captureSnapshot, isDirty, guardBackToList } =
+    useAdminListEditor(messageDraftSnapshot);
 
   const { loading, error, data, load } = useAdminResource({
     beforeLoad: () => cfg.canOperate,
@@ -38,6 +38,7 @@ export function useTrafficNoticesPage() {
     fetch: () => listTrafficNoticeMessages(),
     errorMessage: (e) => adminErrorMessage(cfg, e, 'loadFailed'),
   });
+  const { runMutation } = useAdminMutation(error);
 
   watch(
     data,
@@ -63,23 +64,19 @@ export function useTrafficNoticesPage() {
   });
 
   function isFormDirty(): boolean {
-    if (viewMode.value === 'list' || !draft.value) {
+    if (!draft.value) {
       return false;
     }
-    return messageDraftSnapshot(draft.value) !== formSnapshot.value;
+    return isDirty(draft.value);
   }
 
   function resetDraft(): void {
     draft.value = null;
     viewMode.value = 'list';
-    formSnapshot.value = '';
   }
 
   async function backToList(): Promise<void> {
-    if (viewMode.value !== 'list' && !(await proceedIfDiscardAllowed(isFormDirty()))) {
-      return;
-    }
-    resetDraft();
+    await guardBackToList(isFormDirty, resetDraft);
   }
 
   function startCreate(): void {
@@ -88,7 +85,7 @@ export function useTrafficNoticesPage() {
     }
     draft.value = createNoticeDraft(messages.value);
     viewMode.value = 'create';
-    formSnapshot.value = messageDraftSnapshot(draft.value);
+    captureSnapshot(draft.value);
   }
 
   function startEdit(row: PublicNoticeMessage): void {
@@ -97,17 +94,19 @@ export function useTrafficNoticesPage() {
     }
     draft.value = { ...row };
     viewMode.value = 'edit';
-    formSnapshot.value = messageDraftSnapshot(draft.value);
+    captureSnapshot(draft.value);
   }
 
-  async function persistAll(next: PublicNoticeMessage[]): Promise<void> {
+  async function persistAll(next: PublicNoticeMessage[]): Promise<boolean> {
     if (!cfg.canOperate) {
-      return;
+      return false;
     }
-    const saved = await saveTrafficNoticeMessages(renumberSortOrder(next));
-    messages.value = sortMessagesByOrder(saved.messages);
-    feedRefreshKey.value += 1;
-    showSaveNotice(adminStr(cfg, 'trafficNoticesSaved'));
+    return runMutation(async () => {
+      const saved = await saveTrafficNoticeMessages(renumberSortOrder(next));
+      messages.value = sortMessagesByOrder(saved.messages);
+      feedRefreshKey.value += 1;
+      showSaveNotice(adminStr(cfg, 'trafficNoticesSaved'));
+    }, 'saveFailed');
   }
 
   async function saveDraft(): Promise<void> {
@@ -115,8 +114,9 @@ export function useTrafficNoticesPage() {
       return;
     }
     const next = applyDraftToMessages(messages.value, draft.value, viewMode.value);
-    await persistAll(next);
-    resetDraft();
+    if (await persistAll(next)) {
+      resetDraft();
+    }
   }
 
   async function removeDraft(): Promise<void> {
@@ -133,8 +133,9 @@ export function useTrafficNoticesPage() {
       return;
     }
     const next = removeMessageById(messages.value, draft.value.id);
-    await persistAll(next);
-    resetDraft();
+    if (await persistAll(next)) {
+      resetDraft();
+    }
   }
 
   async function moveRow(index: number, direction: -1 | 1): Promise<void> {

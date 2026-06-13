@@ -60,7 +60,7 @@ export function parseOverviewTimeText(text: string): OverviewTimeParts {
 }
 
 /** @deprecated Use formatOverviewTimeSuffix — kept for callers migrating from prefix layout. */
-export function formatOverviewTimePrefix(parts: OverviewTimeParts): string {
+export function formatOverviewTimePrefix(_parts: OverviewTimeParts): string {
   return '';
 }
 

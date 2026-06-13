@@ -7,14 +7,13 @@ import {
 } from '../api/adminRest';
 import type { TrainTypeRow } from '../types';
 import { adminConfirm } from './adminConfirm';
-import { proceedIfDiscardAllowed } from './adminDiscardGuard';
+import { useAdminListEditor } from './useAdminListEditor';
+import { useAdminMutation } from './useAdminMutation';
 import { useAdminResource } from './useAdminResource';
 import { useAdminRowFlash } from './useAdminRowFlash';
 import { useAdminSaveNotice } from './useAdminSaveNotice';
 import { adminErrorMessage, adminFmt, adminStr } from '../utils/adminLabels';
 import { adminConfig } from '../types';
-
-type TrainTypesView = 'list' | 'edit' | 'create';
 
 type TrainTypeDraft = { name: string; slug: string; icon_key: string };
 
@@ -26,17 +25,18 @@ export function useTrainTypesPage() {
   const cfg = adminConfig();
   const items = ref<TrainTypeRow[]>([]);
   const iconKeys = ref<string[]>([]);
-  const viewMode = ref<TrainTypesView>('list');
   const editingRow = ref<TrainTypeRow | null>(null);
   const newType = ref<TrainTypeDraft>({ name: '', slug: '', icon_key: 'diesel' });
-  const formSnapshot = ref('');
   const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
   const { flashRow, isFlashed } = useAdminRowFlash();
+  const { viewMode, captureSnapshot, isDirty, guardBackToList } =
+    useAdminListEditor(typeDraftSnapshot);
 
   const { loading, error, data, load, reload } = useAdminResource({
     fetch: () => listTrainTypes(),
     errorMessage: (e) => adminErrorMessage(cfg, e, 'loadFailed'),
   });
+  const { runMutation, runMutationWithResult } = useAdminMutation(error);
 
   watch(
     data,
@@ -50,29 +50,22 @@ export function useTrainTypesPage() {
     { immediate: true },
   );
 
-  function isFormDirty(): boolean {
-    if (viewMode.value === 'list') {
-      return false;
-    }
-    const current =
-      viewMode.value === 'edit' && editingRow.value
-        ? typeDraftSnapshot(editingRow.value)
-        : typeDraftSnapshot(newType.value);
-    return current !== formSnapshot.value;
-  }
-
   function resetFormState(): void {
     editingRow.value = null;
     newType.value = { name: '', slug: '', icon_key: 'diesel' };
     viewMode.value = 'list';
-    formSnapshot.value = '';
+  }
+
+  function isFormDirty(): boolean {
+    const current =
+      viewMode.value === 'edit' && editingRow.value
+        ? editingRow.value
+        : newType.value;
+    return isDirty(current);
   }
 
   async function backToList(): Promise<void> {
-    if (viewMode.value !== 'list' && !(await proceedIfDiscardAllowed(isFormDirty()))) {
-      return;
-    }
-    resetFormState();
+    await guardBackToList(isFormDirty, resetFormState);
   }
 
   function startCreate(): void {
@@ -82,7 +75,7 @@ export function useTrainTypesPage() {
     editingRow.value = null;
     newType.value = { name: '', slug: '', icon_key: 'diesel' };
     viewMode.value = 'create';
-    formSnapshot.value = typeDraftSnapshot(newType.value);
+    captureSnapshot(newType.value);
   }
 
   function startEdit(row: TrainTypeRow): void {
@@ -91,18 +84,25 @@ export function useTrainTypesPage() {
     }
     editingRow.value = { ...row };
     viewMode.value = 'edit';
-    formSnapshot.value = typeDraftSnapshot(editingRow.value);
+    captureSnapshot(editingRow.value);
   }
 
   async function addType() {
     if (!cfg.canManage || !newType.value.name.trim()) {
       return;
     }
-    const created = await createTrainType({
-      name: newType.value.name.trim(),
-      slug: newType.value.slug.trim() || undefined,
-      icon_key: newType.value.icon_key,
-    });
+    const created = await runMutationWithResult(
+      () =>
+        createTrainType({
+          name: newType.value.name.trim(),
+          slug: newType.value.slug.trim() || undefined,
+          icon_key: newType.value.icon_key,
+        }),
+      'saveFailed',
+    );
+    if (!created) {
+      return;
+    }
     showSaveNotice(adminFmt(cfg, 'trainTypesCreated', created.name));
     resetFormState();
     await reload();
@@ -114,11 +114,14 @@ export function useTrainTypesPage() {
       return;
     }
     const row = editingRow.value;
-    await updateTrainType(row.id, {
+    const ok = await runMutation(() => updateTrainType(row.id, {
       name: row.name,
       slug: row.slug,
       icon_key: row.icon_key,
-    });
+    }), 'saveFailed');
+    if (!ok) {
+      return;
+    }
     showSaveNotice(adminFmt(cfg, 'trainTypesSaved', row.name));
     resetFormState();
     await reload();
@@ -141,7 +144,9 @@ export function useTrainTypesPage() {
     if (!ok) {
       return;
     }
-    await deleteTrainType(id);
+    if (!(await runMutation(() => deleteTrainType(id), 'saveFailed'))) {
+      return;
+    }
     showSaveNotice(
       row
         ? adminFmt(cfg, 'trainTypesRemoved', row.name)

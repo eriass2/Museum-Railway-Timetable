@@ -21,6 +21,7 @@ import {
 } from '../../components/timetable-editor/tripFormTypes';
 import { adminConfirm } from '../adminConfirm';
 import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
+import { useAdminMutation } from '../useAdminMutation';
 import { useAdminSaveNotice } from '../useAdminSaveNotice';
 import { useTimetableEditorDirty } from './useTimetableEditorDirty';
 import { deviationsToSavePayload, type DeviationRow } from '../../utils/timetable-editor/deviationsPayload';
@@ -85,6 +86,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
   const gridOverviewLoading = ref(false);
   const deviationRows = ref<DeviationRow[]>([]);
   const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
+  const { runMutation } = useAdminMutation(error);
   const editTitle = ref('');
   const editType = ref('');
 
@@ -301,11 +303,14 @@ export function useTimetableEditorPage(timetableId: () => number) {
     if (!editTrip.value || !cfg.canManage || !tripDraftIsComplete(editTrip.value)) {
       return;
     }
-    await updateTimetableService(
-      timetableId(),
-      editTrip.value.service_id,
-      tripDraftToApiBody(editTrip.value),
-    );
+    const ok = await runMutation(async () => {
+      await updateTimetableService(
+        timetableId(),
+        editTrip.value!.service_id,
+        tripDraftToApiBody(editTrip.value!),
+      );
+    }, 'saveFailed');
+    if (!ok) return;
     backToTripsList();
     await loadDetail();
     showSaveNotice(adminStr(cfg, 'editorSavedTrip'));
@@ -313,19 +318,25 @@ export function useTimetableEditorPage(timetableId: () => number) {
 
   async function saveDates() {
     if (!detail.value || !cfg.canManage) return;
-    detail.value = await updateTimetable(timetableId(), { dates: detail.value.dates });
+    const ok = await runMutation(async () => {
+      detail.value = await updateTimetable(timetableId(), { dates: detail.value!.dates });
+    }, 'saveFailed');
+    if (!ok) return;
     syncSnapshots();
     showSaveNotice(adminStr(cfg, 'editorSavedDates'));
   }
 
   async function saveMeta() {
     if (!detail.value || !cfg.canManage) return;
-    detail.value = await updateTimetable(timetableId(), {
-      title: editTitle.value.trim(),
-      type: editType.value,
-    });
-    editTitle.value = detail.value.title;
-    editType.value = detail.value.type || '';
+    const ok = await runMutation(async () => {
+      detail.value = await updateTimetable(timetableId(), {
+        title: editTitle.value.trim(),
+        type: editType.value,
+      });
+    }, 'saveFailed');
+    if (!ok) return;
+    editTitle.value = detail.value!.title;
+    editType.value = detail.value!.type || '';
     syncSnapshots();
     showSaveNotice(adminStr(cfg, 'editorSavedMeta'));
   }
@@ -364,19 +375,27 @@ export function useTimetableEditorPage(timetableId: () => number) {
 
   async function addTrip() {
     if (!cfg.canManage || !tripDraftIsComplete(newTrip.value)) return;
-    await addTimetableService(timetableId(), tripDraftToApiBody(newTrip.value));
+    const ok = await runMutation(async () => {
+      await addTimetableService(timetableId(), tripDraftToApiBody(newTrip.value));
+    }, 'saveFailed');
+    if (!ok) return;
     backToTripsList();
     await loadDetail();
   }
 
   async function removeTrip(serviceId: number) {
     if (!cfg.canManage) return;
-    await removeTimetableService(timetableId(), serviceId);
-    await loadDetail();
+    await runMutation(async () => {
+      await removeTimetableService(timetableId(), serviceId);
+      await loadDetail();
+    }, 'saveFailed');
   }
 
   async function saveDeviationChanges() {
-    await saveDeviations(timetableId(), deviationsToSavePayload(deviationRows.value));
+    const ok = await runMutation(async () => {
+      await saveDeviations(timetableId(), deviationsToSavePayload(deviationRows.value));
+    }, 'saveFailed');
+    if (!ok) return;
     syncSnapshots();
     showSaveNotice(adminStr(cfg, 'editorSavedDeviations'));
   }

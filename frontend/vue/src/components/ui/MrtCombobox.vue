@@ -15,6 +15,7 @@ const emit = defineEmits<{ 'update:modelValue': [number] }>();
 
 const open = ref(false);
 const query = ref('');
+const activeIndex = ref(-1);
 
 const selected = computed(() => props.options.find((o) => o.id === props.modelValue));
 
@@ -38,8 +39,21 @@ const filtered = computed(() => {
 
 const listId = computed(() => `${props.id}-list`);
 
+const activeDescendant = computed(() => {
+  if (!open.value || activeIndex.value < 0) {
+    return undefined;
+  }
+  const option = filtered.value[activeIndex.value];
+  return option ? optionId(option) : undefined;
+});
+
+function optionId(option: MrtComboboxOption): string {
+  return `${props.id}-opt-${option.id}`;
+}
+
 function onInput(): void {
   open.value = true;
+  activeIndex.value = filtered.value.length > 0 ? 0 : -1;
   if (!query.value.trim()) {
     emit('update:modelValue', 0);
   }
@@ -49,16 +63,73 @@ function pick(option: MrtComboboxOption): void {
   emit('update:modelValue', option.id);
   query.value = option.label;
   open.value = false;
+  activeIndex.value = -1;
 }
 
 function closeList(): void {
   window.setTimeout(() => {
     open.value = false;
+    activeIndex.value = -1;
     if (props.modelValue && selected.value) {
       query.value = selected.value.label;
     }
   }, 120);
 }
+
+function onKeydown(event: KeyboardEvent): void {
+  if (!open.value && (event.key === 'ArrowDown' || event.key === 'ArrowUp')) {
+    open.value = true;
+    activeIndex.value = filtered.value.length > 0 ? 0 : -1;
+    event.preventDefault();
+    return;
+  }
+  if (!open.value) {
+    return;
+  }
+
+  switch (event.key) {
+    case 'ArrowDown':
+      event.preventDefault();
+      if (filtered.value.length === 0) {
+        return;
+      }
+      activeIndex.value = Math.min(activeIndex.value + 1, filtered.value.length - 1);
+      break;
+    case 'ArrowUp':
+      event.preventDefault();
+      if (filtered.value.length === 0) {
+        return;
+      }
+      activeIndex.value = Math.max(activeIndex.value - 1, 0);
+      break;
+    case 'Enter':
+      if (activeIndex.value >= 0 && filtered.value[activeIndex.value]) {
+        event.preventDefault();
+        pick(filtered.value[activeIndex.value]);
+      }
+      break;
+    case 'Escape':
+      event.preventDefault();
+      open.value = false;
+      activeIndex.value = -1;
+      break;
+    default:
+      break;
+  }
+}
+
+watch(filtered, (list) => {
+  if (!open.value) {
+    return;
+  }
+  if (list.length === 0) {
+    activeIndex.value = -1;
+    return;
+  }
+  if (activeIndex.value < 0 || activeIndex.value >= list.length) {
+    activeIndex.value = 0;
+  }
+});
 </script>
 
 <template>
@@ -71,12 +142,15 @@ function closeList(): void {
       role="combobox"
       :aria-expanded="open"
       :aria-controls="listId"
+      :aria-activedescendant="activeDescendant"
+      aria-autocomplete="list"
       autocomplete="off"
       :placeholder="placeholder"
       :aria-label="searchAria"
       @input="onInput"
       @focus="open = true"
       @blur="closeList"
+      @keydown="onKeydown"
     >
     <ul
       v-show="open && filtered.length"
@@ -85,9 +159,11 @@ function closeList(): void {
       role="listbox"
     >
       <li
-        v-for="option in filtered"
+        v-for="(option, idx) in filtered"
+        :id="optionId(option)"
         :key="option.id"
         class="mrt-combobox__option"
+        :class="{ 'mrt-combobox__option--active': idx === activeIndex }"
         role="option"
         :aria-selected="option.id === modelValue"
         @mousedown.prevent="pick(option)"
@@ -147,6 +223,7 @@ function closeList(): void {
 }
 
 .mrt-combobox__option:hover,
+.mrt-combobox__option--active,
 .mrt-combobox__option[aria-selected='true'] {
   background: color-mix(in srgb, var(--mrt-color-accent-500) 35%, transparent);
 }
