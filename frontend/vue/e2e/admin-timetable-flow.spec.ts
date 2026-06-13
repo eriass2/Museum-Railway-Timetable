@@ -43,17 +43,17 @@ test.describe('Vue admin timetable flow', () => {
 
     await page.locator('.nav-tab', { hasText: 'Turer' }).click();
     await page.getByRole('button', { name: 'Lägg till tur' }).click();
-    const routeSelect = page.getByLabel(/^rutt$/i);
-    await expect(routeSelect).toBeVisible({ timeout: 10_000 });
-    const routeOptions = routeSelect.locator('option');
-    const routeCount = await routeOptions.count();
-    if (routeCount < 2) {
-      test.skip(true, 'No routes in database — import demo data first');
+    const lineSelect = page.getByLabel(/^linje$/i);
+    await expect(lineSelect).toBeVisible({ timeout: 10_000 });
+    const lineOptions = lineSelect.locator('option');
+    const lineCount = await lineOptions.count();
+    if (lineCount < 2) {
+      test.skip(true, 'No lines in database — import demo data first');
     }
-    await routeSelect.selectOption({ index: 1 });
-    const destSelect = page.getByLabel(/^slutstation$/i);
-    if ((await destSelect.locator('option').count()) > 1) {
-      await destSelect.selectOption({ index: 1 });
+    await lineSelect.selectOption({ index: 1 });
+    const directionSelect = page.getByLabel(/^riktning$/i);
+    if ((await directionSelect.locator('option').count()) > 1) {
+      await directionSelect.selectOption({ index: 1 });
     }
     await page.getByRole('button', { name: 'Lägg till tur' }).click();
     await expect(page.locator('.widefat.striped tbody tr').first()).toBeVisible({
@@ -77,6 +77,8 @@ test.describe('Vue admin timetable flow', () => {
 
     await page.locator('.nav-tab', { hasText: 'Avvikelser' }).click();
     await page.getByRole('button', { name: 'Lägg till avvikelse' }).click();
+    await page.locator('#mrt-deviation-date').selectOption({ index: 1 });
+    await page.locator('#mrt-deviation-trip').selectOption({ index: 1 });
     await page.getByLabel(/inställt tåg/i).check();
     await page.getByRole('button', { name: 'Lägg till avvikelse' }).click();
     await expect(page.locator('.widefat.striped tbody tr')).toHaveCount(1, { timeout: 10_000 });

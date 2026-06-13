@@ -19,20 +19,20 @@ defineProps<{
 .admin-empty-state {
   padding: 20px 16px;
   text-align: center;
-  border: 1px dashed #c3c4c7;
-  border-radius: 3px;
-  background: #f6f7f7;
+  border: 1px dashed var(--mrt-admin-border, #c3c4c7);
+  border-radius: var(--mrt-admin-radius, 3px);
+  background: var(--mrt-admin-surface-muted-bg, #f6f7f7);
 }
 
 .admin-empty-state__title {
   margin: 0;
   font-weight: 600;
-  color: #1d2327;
+  color: var(--mrt-admin-text, #1d2327);
 }
 
 .admin-empty-state__message {
   margin: 8px 0 0;
-  color: #50575e;
+  color: var(--mrt-admin-text-muted, #50575e);
   font-size: 13px;
 }
 

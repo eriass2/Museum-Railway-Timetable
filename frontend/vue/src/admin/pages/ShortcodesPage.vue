@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import AdminShortcodesGuide from '../components/AdminShortcodesGuide.vue';
-import { AdminPanel, AdminTableScroll } from '../components/ui';
+import { AdminPageHeader, AdminPanel, AdminTableScroll } from '../components/ui';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { requireAdminHelp } from '../utils/adminHelpContent';
@@ -14,8 +14,7 @@ const help = computed(() => requireAdminHelp(cfg));
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{ help.shortcodesPageTitle }}</h1>
-    <p class="mrt-admin-page__lead">{{ help.shortcodesPageIntro }}</p>
+    <AdminPageHeader :title="help.shortcodesPageTitle" :lead="help.shortcodesPageIntro" />
 
     <AdminPanel :title="help.shortcodesHowToTitle">
       <ol class="mrt-admin-help-steps">
@@ -60,14 +59,6 @@ const help = computed(() => requireAdminHelp(cfg));
 </template>
 
 <style scoped>
-.mrt-admin-page__lead {
-  margin: -4px 0 20px;
-  max-width: 52rem;
-  color: #50575e;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
 .mrt-admin-help-steps {
   margin: 0 0 0 1.5em;
 }

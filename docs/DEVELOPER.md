@@ -182,6 +182,30 @@ $env:MRT_E2E_WP_DEMO_URL = 'http://localhost:8080/museum-railway-timetable-compo
 bash scripts/ci-e2e-wp.sh
 ```
 
+**Windows utan host-`npm`** — kör Playwright i Docker mot stacken på `localhost:8080`:
+
+```powershell
+# 1. Stack up (t.ex. .\scripts\mrt.ps1 dev reset -SkipCompose om redan uppe)
+# 2. Tillfälligt: WP siteurl/home måste nås från containern som host.docker.internal:8080
+docker compose exec -T wordpress wp option update siteurl 'http://host.docker.internal:8080' --allow-root
+docker compose exec -T wordpress wp option update home 'http://host.docker.internal:8080' --allow-root
+
+# 3. Playwright (version ska matcha package-lock; CI-image v1.60.0-jammy)
+docker run --rm -it `
+  -v "${PWD}:/work" -w /work/frontend/vue `
+  -e MRT_E2E_WP_DEMO_URL=http://host.docker.internal:8080/museum-railway-timetable-component-demo/ `
+  -e MRT_E2E_WP_ADMIN_URL=http://host.docker.internal:8080/wp-admin/admin.php?page=mrt_app `
+  --add-host=host.docker.internal:host-gateway `
+  mcr.microsoft.com/playwright:v1.60.0-jammy `
+  bash -lc "npm ci && npm run e2e"
+
+# 4. Återställ siteurl/home till localhost:8080 för lokal webbläsare
+docker compose exec -T wordpress wp option update siteurl 'http://localhost:8080' --allow-root
+docker compose exec -T wordpress wp option update home 'http://localhost:8080' --allow-root
+```
+
+`package-lock.json` kan peka på nyare `@playwright/test` än CI-Docker-imagen — håll image-tag i synk med [ci.yml](../.github/workflows/ci.yml) eller kör `bash scripts/ci-e2e-wp.sh` i WSL/Linux CI.
+
 CI kör `composer vue:check`, isolerade Vue-E2E och `scripts/ci-e2e-wp.sh` på pull requests — se [.github/workflows/ci.yml](../.github/workflows/ci.yml).
 
 ### Manuell smoke-checklista i WordPress

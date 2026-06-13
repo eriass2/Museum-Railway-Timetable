@@ -4,6 +4,7 @@ import {
   AdminEmptyState,
   AdminFormActions,
   AdminInlineForm,
+  AdminPageHeader,
   AdminPanel,
   AdminRowActions,
   AdminTableScroll,
@@ -36,7 +37,7 @@ import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue'
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{ adminStr(cfg, 'timetablesTitle') }}</h1>
+    <AdminPageHeader :title="adminStr(cfg, 'timetablesTitle')" />
     <MrtAsyncState
       context="admin"
       :loading="loading"

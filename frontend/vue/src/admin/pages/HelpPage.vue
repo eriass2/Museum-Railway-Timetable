@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { AdminPanel, AdminTableScroll, MrtButton } from '../components/ui';
+import { AdminPageHeader, AdminPanel, AdminTableScroll, MrtButton } from '../components/ui';
 import { useHelpPage } from '../composables/useHelpPage';
 import { useHelpSectionScroll } from '../composables/useHelpSectionScroll';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
@@ -29,7 +29,7 @@ function openShortcodesGuide() {
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{ help.title }}</h1>
+    <AdminPageHeader :title="help.title" />
 
     <nav class="mrt-admin-help-toc" :aria-label="help.tocTitle">
       <p class="mrt-admin-help-toc__title">{{ help.tocTitle }}</p>

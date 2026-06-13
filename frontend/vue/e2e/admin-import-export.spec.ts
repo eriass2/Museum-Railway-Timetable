@@ -25,10 +25,8 @@ test.describe('Vue admin import/export', () => {
   });
 
   test('imports Lennakatten fixture zip in merge mode', async ({ page }) => {
-    await gotoAdminRoute(page, adminUrl, '/import-export');
-    await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
-    await expect(page.getByRole('heading', { name: /import\/export/i })).toBeVisible({
-      timeout: 15_000,
+    await gotoAdminRoute(page, adminUrl, '/import-export', {
+      heading: /import\s*\/\s*export/i,
     });
 
     const fileInput = page.locator('input.mrt-admin-import-file');

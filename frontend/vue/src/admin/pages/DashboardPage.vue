@@ -2,7 +2,7 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { getDashboard } from '../api/adminRest';
-import { AdminActionBar, AdminPanel, MrtAsyncState, MrtButton } from '../components/ui';
+import { AdminActionBar, AdminPageHeader, AdminPanel, MrtAsyncState, MrtButton } from '../components/ui';
 import SetupChecklist from '../components/dashboard/SetupChecklist.vue';
 import TrafficTodayPanel from '../components/dashboard/TrafficTodayPanel.vue';
 import { useAdminResource } from '../composables/useAdminResource';
@@ -33,7 +33,7 @@ function openRoute(hashRoute: string) {
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{ adminStr(cfg, 'dashboardTitle', 'Museum Railway Timetable') }}</h1>
+    <AdminPageHeader :title="adminStr(cfg, 'dashboardTitle', 'Museum Railway Timetable')" />
 
     <MrtAsyncState
       context="admin"
@@ -159,9 +159,9 @@ function openRoute(hashRoute: string) {
   .mrt-admin-stat-card {
     padding: 12px;
     text-align: center;
-    background: #fff;
-    border: 1px solid #c3c4c7;
-    border-radius: 3px;
+    background: var(--mrt-admin-surface-bg, #fff);
+    border: 1px solid var(--mrt-admin-border, #c3c4c7);
+    border-radius: var(--mrt-admin-radius, 3px);
   }
 
   .mrt-admin-stat-card__value {
@@ -175,7 +175,7 @@ function openRoute(hashRoute: string) {
     display: block;
     margin-top: 4px;
     font-size: 12px;
-    color: #50575e;
+    color: var(--mrt-admin-text-muted, #50575e);
   }
 }
 </style>

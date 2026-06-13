@@ -67,6 +67,11 @@
     --mrt-wizard-border: var(--mrt-color-neutral-200);
     --mrt-wizard-focus: var(--mrt-color-focus-ring);
 
+    --mrt-surface-bg: var(--mrt-wizard-surface);
+    --mrt-surface-border: var(--mrt-wizard-border);
+    --mrt-surface-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    --mrt-surface-shadow-flat: 0 1px 1px rgba(0, 0, 0, 0.04);
+
     /* Calendar traffic colours (month grid + wizard date step) */
     --mrt-cal-traffic-green-bg: var(--mrt-color-traffic-green);
     --mrt-cal-traffic-green-fg: var(--mrt-color-on-green);

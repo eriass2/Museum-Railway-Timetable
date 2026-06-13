@@ -2,6 +2,7 @@
 import {
   AdminDisclosure,
   AdminFormActions,
+  AdminPageHeader,
   AdminPanel,
   MrtAlert,
   MrtButton,
@@ -33,8 +34,7 @@ const {
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{ adminStr(cfg, 'importExportTitle') }}</h1>
-    <p class="mrt-admin-page__lead">{{ guide.intro }}</p>
+    <AdminPageHeader :title="adminStr(cfg, 'importExportTitle')" :lead="guide.intro" />
 
     <p v-if="!cfg.canManage" class="notice notice-warning">
       {{ adminStr(cfg, 'importExportNoPermission') }}
@@ -133,14 +133,6 @@ const {
 </template>
 
 <style scoped>
-.mrt-admin-page__lead {
-  margin: -4px 0 20px;
-  max-width: 52rem;
-  color: #50575e;
-  font-size: 14px;
-  line-height: 1.5;
-}
-
 .mrt-admin-help-steps {
   margin: 0 0 0 1.5em;
 }

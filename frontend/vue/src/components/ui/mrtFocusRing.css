@@ -13,7 +13,9 @@
   .mrt-calendar-nav__next,
   .mrt-calendar-nav__link,
   .mrt-calendar-nav__today,
-  .mrt-heading--surface-title
+  .mrt-heading--surface-title,
+  .mrt-month-day--clickable,
+  .train-type-icon-picker__option
 ):focus {
   outline: none;
 }
@@ -37,4 +39,16 @@
 
 .mrt-heading--surface-title:focus-visible {
   outline-offset: 4px;
+}
+
+.mrt-month-day--clickable:focus-visible {
+  outline: 2px solid var(--mrt-focus-ring-color, var(--mrt-blue-primary));
+  outline-offset: var(--mrt-focus-ring-offset, 2px);
+  z-index: 1;
+}
+
+.train-type-icon-picker__option:focus-visible {
+  border-color: var(--mrt-admin-accent-border, #2271b1);
+  background: var(--mrt-admin-accent-bg-muted, #f6f7f7);
+  box-shadow: 0 0 0 1px var(--mrt-admin-accent-border, #2271b1);
 }

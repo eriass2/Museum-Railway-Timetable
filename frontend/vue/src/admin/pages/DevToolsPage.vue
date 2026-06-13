@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { AdminPanel, AdminToolList, MrtAlert, MrtButton } from '../components/ui';
+import { AdminPageHeader, AdminPanel, AdminToolList, MrtAlert, MrtButton } from '../components/ui';
 import { useDevToolsPage } from '../composables/useDevToolsPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
@@ -22,7 +22,7 @@ const {
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{ adminStr(cfg, 'devTitle') }}</h1>
+    <AdminPageHeader :title="adminStr(cfg, 'devTitle')" />
     <p v-if="!cfg.isDevMode" class="notice notice-warning">
       {{ adminStr(cfg, 'devNotAvailable') }}
     </p>

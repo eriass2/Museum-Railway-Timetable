@@ -37,10 +37,10 @@ defineProps<{
   justify-content: center;
   min-height: 30px;
   padding: 0 10px;
-  border: 1px solid #d63638;
-  border-radius: 3px;
-  background: #fcf0f1;
-  color: #b32d2e;
+  border: 1px solid var(--mrt-admin-danger-border, #d63638);
+  border-radius: var(--mrt-admin-radius, 3px);
+  background: var(--mrt-admin-danger-bg, #fcf0f1);
+  color: var(--mrt-admin-danger-text, #b32d2e);
   text-decoration: none;
   font-size: 13px;
   line-height: 1.4;

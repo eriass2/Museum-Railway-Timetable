@@ -67,9 +67,38 @@ New Vue code must use **`MrtAlert`** (`mrt-ui-alert`).
 | File | Used by | Purpose |
 |------|---------|---------|
 | `mrtSpinnerStyles.css` | `MrtAsyncState` | Loading pseudo-element animation |
-| `mrtFocusRing.css` | `MrtButton`, `MrtCombobox`, `MrtSegmentedControl`, `MrtExpandTrigger`, `MrtStepHeader`, `MrtStepProgress`, `MrtCalendarNav`, `MrtHeading` | `:focus-visible` ring — import via `@import './mrtFocusRing.css';` in SFC `<style scoped>` |
+| `mrtFocusRing.css` | `MrtButton`, `MrtCombobox`, `MrtSegmentedControl`, `MrtExpandTrigger`, `MrtStepHeader`, `MrtStepProgress`, `MrtCalendarNav`, `MrtHeading`, `MrtMonthDayCell`, `TrainTypeIconPicker` | `:focus-visible` ring — import via `@import './mrtFocusRing.css';` in SFC `<style scoped>` |
+| `wizardSummaryPrint.css` | `WizardSummaryStep` | Print layout for summary PDF/print clone |
 
-Do not duplicate focus-ring rules outside `mrtFocusRing.css` unless documented (e.g. admin-only pickers).
+Do not duplicate focus-ring rules outside `mrtFocusRing.css` unless documented below.
+
+### Focus ring exceptions (documented)
+
+| Pattern | Component | Reason |
+|---------|-----------|--------|
+| Card elevation (border + shadow, no outline) | `MrtTimetableIndexCard` | Link card affordance matches hover |
+| Link colour only | `WizardBetaBanner` `.mrt-journey-wizard__beta-link` | Inline link on dark hero |
+| Cell trigger (border/bg) | `OverviewGridCellEditor` `.mrt-ov-cell-trigger` | Compact grid editor |
+
+### Wizard `--mrt-step-panel-*` token contract
+
+| Token | Default (`MrtStepPanel`) | Set by layout |
+|-------|--------------------------|---------------|
+| `--mrt-step-panel-padding` | `clamp(1rem, 2.5vw, 1.5rem)` | — |
+| `--mrt-step-panel-gap` | `1rem` | — |
+| `--mrt-step-panel-bg` | `transparent` | `MrtWizardHero`, `MrtWizardMainCard`, `MrtWizardShellSurfaces` |
+| `--mrt-step-panel-border` | `none` | same |
+| `--mrt-step-panel-shadow` | `none` | same |
+| `--mrt-step-panel-radius` | `0` | same |
+
+Layout sets context; `MrtStepPanel` owns panel chrome. Do not style `.mrt-step-panel*` from parent layout via `:deep()`.
+
+### Admin page header
+
+| Component | CSS prefix | Used by |
+|-----------|------------|---------|
+| `AdminPageHeader` | `admin-page-header` | Admin route pages (`DashboardPage`, `ImportExportPage`, …) |
+| `AdminMobilePageShell` | `mrt-admin-page` | Wraps admin pages; imports `admin/styles/mobile/responsive-*.css` |
 
 ## Design tokens (CSS)
 
@@ -77,7 +106,11 @@ Defined in `assets/mrt-color-tokens.css` (including `--mrt-cal-traffic-*` for ca
 
 **Shared:** `--mrt-color-green-700`, `--mrt-color-accent-500/700`, `--mrt-color-on-dark`, `--mrt-color-neutral-*`, `--mrt-font-lg/xl`.
 
+**Surface (publik + admin panel):** `--mrt-surface-bg`, `--mrt-surface-border`, `--mrt-surface-shadow`, `--mrt-surface-shadow-flat` — used by `MrtSurfaceCard` and `--mrt-admin-panel-*` aliases.
+
 **Wizard shell:** `--mrt-wizard-green-dark`, `--mrt-wizard-surface`, `--mrt-wizard-text`, `--mrt-wizard-yellow`, `--mrt-wizard-focus` (set in `MrtWizardShell.vue`).
+
+**Admin shell:** `--mrt-admin-border`, `--mrt-admin-radius`, `--mrt-admin-surface-bg`, `--mrt-admin-text-muted`, `--mrt-admin-accent-*`, `--mrt-admin-danger-*` (set on `.mrt-admin-app` in `admin-shell.css`).
 
 **Overview (`.mrt-ov-*`):** type tokens in `MrtTimetableOverviewShell.vue`; layout CSS in `MrtOverview*` child components and `MrtOverviewBanner.vue`.
 

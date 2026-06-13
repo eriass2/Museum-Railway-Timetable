@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import { expect, type Page } from '@playwright/test';
 
 /** Matches `dashboardTitle` in sv_SE (msgid shared with plugin name). */
 export const DASHBOARD_HEADING = /museum railway timetable|museijärnvägens tidtabell/i;
@@ -10,11 +10,26 @@ export async function useAdminMobileViewport(page: Page): Promise<void> {
   await page.setViewportSize(ADMIN_MOBILE_VIEWPORT);
 }
 
+type GotoAdminRouteOptions = {
+  heading?: RegExp | string;
+};
+
 /** Hash navigation for the single-page admin app. */
-export async function gotoAdminRoute(page: Page, adminBase: string, route: string): Promise<void> {
+export async function gotoAdminRoute(
+  page: Page,
+  adminBase: string,
+  route: string,
+  options: GotoAdminRouteOptions = {},
+): Promise<void> {
   const hash = route.startsWith('#') ? route : `#${route.startsWith('/') ? route : `/${route}`}`;
   const base = adminBase.replace(/#.*$/, '');
   await page.goto(`${base}${hash}`);
+  await expect(page.locator('#mrt-admin-app')).toBeVisible({ timeout: 20_000 });
+  if (options.heading) {
+    await expect(page.getByRole('heading', { name: options.heading })).toBeVisible({
+      timeout: 15_000,
+    });
+  }
 }
 
 export function adminNavLink(page: Page, label: string | RegExp) {

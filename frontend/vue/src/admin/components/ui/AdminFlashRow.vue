@@ -19,7 +19,7 @@ defineProps<{
 @keyframes admin-flash-row {
   0%,
   20% {
-    background-color: #edfaef;
+    background-color: var(--mrt-admin-flash-bg, #edfaef);
   }
 
   100% {
@@ -31,7 +31,7 @@ defineProps<{
   .admin-flash-row--active :deep(td),
   .admin-flash-row--active :deep(th) {
     animation: none;
-    background-color: #edfaef;
+    background-color: var(--mrt-admin-flash-bg, #edfaef);
   }
 }
 </style>

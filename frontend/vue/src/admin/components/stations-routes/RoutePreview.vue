@@ -86,7 +86,7 @@ const nodes = computed(() =>
 }
 
 .mrt-route-preview__arrow {
-  color: #646970;
+  color: var(--mrt-admin-text-subtle, #646970);
   font-weight: 600;
 }
 
@@ -96,16 +96,16 @@ const nodes = computed(() =>
   align-items: center;
   gap: 4px;
   padding: 2px 8px;
-  border: 1px solid #c3c4c7;
-  border-radius: 3px;
-  background: #f6f7f7;
+  border: 1px solid var(--mrt-admin-border, #c3c4c7);
+  border-radius: var(--mrt-admin-radius, 3px);
+  background: var(--mrt-admin-surface-muted-bg, #f6f7f7);
   font-size: 13px;
 }
 
 .mrt-route-preview__node--start,
 .mrt-route-preview__node--both {
-  border-color: #2271b1;
-  background: #f0f6fc;
+  border-color: var(--mrt-admin-accent-border, #2271b1);
+  background: var(--mrt-admin-accent-bg, #f0f6fc);
 }
 
 .mrt-route-preview__node--end {
@@ -117,12 +117,12 @@ const nodes = computed(() =>
   font-size: 11px;
   font-weight: 600;
   text-transform: uppercase;
-  color: #50575e;
+  color: var(--mrt-admin-text-muted, #50575e);
 }
 
 .mrt-route-preview__type {
   font-size: 11px;
-  color: #646970;
+  color: var(--mrt-admin-text-subtle, #646970);
 }
 
 .mrt-route-preview__empty {

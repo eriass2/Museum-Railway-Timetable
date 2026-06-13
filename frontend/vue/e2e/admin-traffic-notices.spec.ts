@@ -66,14 +66,28 @@ test.describe('Vue admin traffic notices', () => {
     await createNotice(page, first);
     await createNotice(page, second);
 
-    const rows = page.locator('.widefat.striped tbody tr');
-    await expect(rows.nth(0)).toContainText(first);
-    await expect(rows.nth(1)).toContainText(second);
+    const rowFirst = page.locator('.widefat.striped tbody tr', { hasText: first });
+    const rowSecond = page.locator('.widefat.striped tbody tr', { hasText: second });
+    await expect(rowFirst).toBeVisible();
+    await expect(rowSecond).toBeVisible();
 
-    await rows.nth(0).getByRole('button', { name: 'Ner' }).click();
+    const rowIndex = (el: Element) =>
+      Array.from(el.parentElement?.children ?? []).indexOf(el);
+
+    const firstIndex = await rowFirst.evaluate(rowIndex);
+    const secondIndex = await rowSecond.evaluate(rowIndex);
+    expect(firstIndex).toBeLessThan(secondIndex);
+
+    await rowSecond.getByRole('button', { name: 'Upp' }).click();
     await expect(page.getByText('Meddelanden sparade')).toBeVisible({ timeout: 15_000 });
-    await expect(rows.nth(0)).toContainText(second, { timeout: 10_000 });
-    await expect(rows.nth(1)).toContainText(first);
+
+    await expect
+      .poll(async () => {
+        const firstIndexAfter = await rowFirst.evaluate(rowIndex);
+        const secondIndexAfter = await rowSecond.evaluate(rowIndex);
+        return secondIndexAfter < firstIndexAfter;
+      })
+      .toBe(true);
   });
 
   test('shows hidden-today hint for future active_from date', async ({ page }) => {

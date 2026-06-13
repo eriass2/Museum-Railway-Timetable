@@ -12,7 +12,7 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 | ID | Punkt | Status |
 |----|-------|--------|
-| E1 | WP-admin E2E-fixar (specs) | ✅ kod — kör `ci-e2e-wp.sh` |
+| E1 | WP-admin E2E-fixar (specs) | ✅ verifierat |
 | E0 | Windows/Docker E2E-dokumentation | ✅ |
 | C6–C9 | Focus, tokens, PageHeader, print/surface | ✅ |
 

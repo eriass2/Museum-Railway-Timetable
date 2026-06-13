@@ -7,6 +7,7 @@ import {
   AdminDisclosure,
   AdminFormActions,
   AdminInlineForm,
+  AdminPageHeader,
   AdminPanel,
   AdminTableScroll,
   AdminUnsavedBanner,
@@ -56,7 +57,7 @@ const {
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{ adminStr(cfg, 'pricesTitle', 'Priser') }}</h1>
+    <AdminPageHeader :title="adminStr(cfg, 'pricesTitle', 'Priser')" />
 
     <MrtAsyncState
       context="admin"

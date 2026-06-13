@@ -1,0 +1,36 @@
+@media (max-width: 782px) {
+  .mrt-admin-page--mobile :deep(.form-table th),
+  .mrt-admin-page--mobile :deep(.form-table td) {
+    display: block;
+    width: 100%;
+    padding: 4px 0;
+  }
+
+  .mrt-admin-page--mobile :deep(.form-table input[type='text']),
+  .mrt-admin-page--mobile :deep(.form-table input[type='number']) {
+    width: 100%;
+  }
+
+  .mrt-admin-page--mobile :deep(.form-table .button-primary) {
+    width: 100%;
+  }
+
+  .mrt-admin-page--mobile :deep(.mrt-admin-import-export-options) {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .mrt-admin-page--mobile :deep(.mrt-admin-import-export-options .mrt-ml-sm) {
+    margin-left: 0;
+  }
+
+  .mrt-admin-page--mobile :deep(.mrt-price-matrix-table input.small-text) {
+    min-width: 3.5em;
+  }
+
+  .mrt-admin-page--mobile :deep(.train-types-page__field--slug .regular-text) {
+    max-width: none;
+    width: 100%;
+  }
+}

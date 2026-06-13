@@ -34,11 +34,19 @@ test.describe('Vue admin (WordPress)', () => {
   });
 
   test('stations routes shows route preview', async ({ page }) => {
-    await gotoAdminRoute(page, adminUrl, '/stations-routes');
-    await expect(page.getByRole('heading', { name: /stationer & rutter/i })).toBeVisible({
+    await gotoAdminRoute(page, adminUrl, '/stations-routes', {
+      heading: /stationer & (linjer|rutter)/i,
+    });
+    await expect(page.locator('.mrt-admin-section-nav .nav-tab').first()).toBeVisible({
       timeout: 15_000,
     });
-    await page.locator('.nav-tab', { hasText: /rutter/i }).click();
+    const linesTab = page.locator('.mrt-admin-section-nav .nav-tab', { hasText: /linjer/i });
+    const routesTab = page.locator('.mrt-admin-section-nav .nav-tab', { hasText: /rutter/i });
+    if ((await linesTab.count()) > 0) {
+      await linesTab.click();
+    } else {
+      await routesTab.click();
+    }
     const preview = page.locator('.mrt-route-preview').first();
     const empty = page.locator('.mrt-route-preview__empty');
     await expect(preview.or(empty)).toBeVisible({ timeout: 15_000 });

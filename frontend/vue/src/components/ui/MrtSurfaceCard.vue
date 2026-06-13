@@ -25,10 +25,10 @@ withDefaults(
 
 <style scoped>
 .mrt-surface {
-  background: var(--mrt-wizard-surface, #fff);
+  background: var(--mrt-surface-bg, var(--mrt-wizard-surface, #fff));
   color: var(--mrt-wizard-text, #151515);
   border: 0;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  box-shadow: var(--mrt-surface-shadow, 0 4px 18px rgba(0, 0, 0, 0.22));
   padding: clamp(1.25rem, 3vw, 2rem);
   box-sizing: border-box;
 }
@@ -39,7 +39,7 @@ withDefaults(
 
 .mrt-surface--box {
   box-shadow: none;
-  border: 1px solid var(--mrt-box-border, var(--mrt-border-default));
+  border: 1px solid var(--mrt-surface-border, var(--mrt-box-border, var(--mrt-border-default)));
   border-radius: var(--mrt-radius-sm, 0);
 }
 

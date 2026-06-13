@@ -41,6 +41,9 @@ Skapa `kebab-case/`-undermapp när en admin-sida har **2+ egna filer i samma lag
 | Import/export | `ImportExportPage` | `import-export/` | `import-export/` | — |
 | Dashboard | `DashboardPage` | `dashboard/` | — | `dashboard/` |
 | Mobil (tvärgående) | många sidor | `mobile/` | `mobile/` | — |
+| Admin page header | många sidor | `ui/AdminPageHeader.vue` | — | — |
+
+Mobil responsiv CSS: `admin/styles/mobile/responsive-forms.css`, `responsive-tables.css`, `responsive-cards.css` — importeras i `AdminMobilePageShell.vue` (inte i `AdminApp`).
 
 Ny kod för ovan → lägg i befintlig undermapp, inte i rot.
 

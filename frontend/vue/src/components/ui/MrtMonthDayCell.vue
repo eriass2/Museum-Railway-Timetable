@@ -84,6 +84,7 @@ function onClick(): void {
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
 .mrt-month-day {
   display: flex;
   flex-direction: column;
@@ -206,12 +207,6 @@ function onClick(): void {
 
 .mrt-month-day--clickable:hover {
   box-shadow: inset 0 0 0 2px var(--mrt-border-light);
-}
-
-.mrt-month-day--clickable:focus-visible {
-  outline: 2px solid var(--mrt-blue-primary);
-  outline-offset: 2px;
-  z-index: 1;
 }
 
 .mrt-month-day--clickable.is-selected {

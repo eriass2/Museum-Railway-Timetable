@@ -3,6 +3,7 @@ import { RouterLink } from 'vue-router';
 import {
   AdminFormActions,
   AdminMediaImageField,
+  AdminPageHeader,
   AdminPanel,
   AdminUnsavedBanner,
   MrtAlert,
@@ -20,7 +21,7 @@ const { cfg, form, dirty, loading, error, saveMsg, load, submit } = useSettingsP
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{ adminStr(cfg, 'settingsTitle', 'Inställningar') }}</h1>
+    <AdminPageHeader :title="adminStr(cfg, 'settingsTitle', 'Inställningar')" />
 
     <MrtAsyncState
       context="admin"

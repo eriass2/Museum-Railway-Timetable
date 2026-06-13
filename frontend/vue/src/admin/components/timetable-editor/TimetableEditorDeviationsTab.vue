@@ -36,6 +36,7 @@ const {
   requestBackToList,
   applyDraftToRows,
   removeRow,
+  resetDetail,
   draftIsCancelled,
   setDraftCancelled,
   updateDraftTrip,
@@ -61,8 +62,10 @@ async function onApplyDraft(): Promise<void> {
   if (viewMode.value === 'create' && !canApplyCreate.value) {
     return;
   }
-  applyDraftToRows();
-  await requestBackToList();
+  if (!applyDraftToRows()) {
+    return;
+  }
+  resetDetail();
 }
 
 function onStartCreate(): void {

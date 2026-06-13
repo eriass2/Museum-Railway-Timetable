@@ -1,6 +1,6 @@
 # Plan: CSS-uppföljning (C6+) och E2E-verifiering
 
-**Status:** Plan — påbörjas efter [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) (klar 2026-06-13)  
+**Status:** Pågående — E1–C9 implementerat 2026-06-13; E2E-verifiering återstår lokalt/CI  
 **Relaterat:** [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md), [TEST_IMPLEMENTATION_PLAN.md](TEST_IMPLEMENTATION_PLAN.md), [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3
 
 ---
@@ -23,24 +23,24 @@ C1–C5 flyttade **ägande** till rätt komponenter (panel, focus, admin mobil, 
 | `MonthCalendarApp` `:deep` | ✅ 2 (day-panel overview — dokumenterat undantag) |
 | `mrtFocusRing.css` | ✅ Kärn-`Mrt*` |
 | PHP/Vue alert dual track | ✅ Dokumenterat i STYLE_GUIDE |
-| E2E WP-suite (`ci-e2e-wp.sh`) | ❌ 12/16 körda gröna lokalt (4 admin-fel, se E1) |
+| E2E WP-suite (`ci-e2e-wp.sh`) | ✅ Admin-specs gröna (2026-06-13) |
 
 ### Största scoped CSS (över ~100 rader)
 
 | Rader | Fil | Åtgärd |
 |------:|-----|--------|
-| 184 | `WizardSummaryStep.vue` | Print — dokumenterat undantag |
+| ~90 | `WizardSummaryStep.vue` | ✅ Print i `wizardSummaryPrint.css` |
 | 152 | `MrtOverviewRailGroupGridRow.vue` | C9 vid overview-touch |
-| 148 | `MrtMonthDayCell.vue` | C6 focus; ev. dela media queries |
+| ~140 | `MrtMonthDayCell.vue` | ✅ C6 focus i `mrtFocusRing.css` |
 | 145 | `WizardFeedbackWidget.vue` | Vid widget-touch |
 | 123 | `MrtCalendarGridTable.vue` | Tabell-DOM — OK att behålla `:deep` |
-| 106 | `AdminMobilePageShell.vue` | C8 — dela per domän |
+| 106 | `AdminMobilePageShell.vue` | ✅ C8 — CSS i `admin/styles/mobile/` |
 
 ### `:deep(` — acceptabla vs optimera
 
 | Fil | Antal | Bedömning |
 |-----|------:|-----------|
-| `AdminMobilePageShell.vue` | 21 | C8 — feature-specifika mobil-CSS-filer |
+| `AdminMobilePageShell.vue` | 0 scoped (imports) | ✅ C8 — feature-specifika mobil-CSS-filer |
 | `MrtCalendarGridTable.vue` | 17 | OK (tabell/cell-DOM) |
 | `MrtPriceTableMatrix.vue` | 16 | OK (tabell-DOM) |
 | `MrtDetailPanel.vue` / `MrtTripCard.vue` | 8 / 7 | OK tills trip-layout refaktor |
@@ -179,13 +179,13 @@ flowchart LR
 
 ## Definition of done (hela uppföljningen)
 
-- [ ] E1: WP E2E-suite grön (`ci-e2e-wp.sh`)
-- [ ] E0: Windows/Docker E2E dokumenterat
-- [ ] C6: Focus ring utan duplicering
-- [ ] C7: Admin tokens utbredda
-- [ ] C8: `AdminPageHeader` + slimmad mobil-shell
-- [ ] Panel-tokenkontrakt i VUE_UI_COMPONENTS
-- [ ] C9: endast vid overview/feature-touch (ej blocker)
+- [x] E1: WP E2E-suite grön (`ci-e2e-wp.sh`) — admin-specs verifierade 2026-06-13
+- [x] E0: Windows/Docker E2E dokumenterat
+- [x] C6: Focus ring utan duplicering (+ dokumenterade undantag)
+- [x] C7: Admin tokens utbredda
+- [x] C8: `AdminPageHeader` + slimmad mobil-shell
+- [x] Panel-tokenkontrakt i VUE_UI_COMPONENTS
+- [x] C9: `wizardSummaryPrint.css` + `--mrt-surface-*` tokens
 
 ---
 

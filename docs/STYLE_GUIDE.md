@@ -142,6 +142,8 @@ Admin (Vue, wp-admin):
 - **Vue-admin** – `frontend/vue/src/admin/` byggt till `assets/dist/vue/assets/admin.js` (`vite.admin.config.ts`).
 - **REST** – `adminRest.ts` mot `inc/infrastructure/rest/`; nonce via `mrtAdminVue`.
 - **CSS** – `assets/admin.css` (WP-native skal) + `admin-shell.css` i Vue-bundeln.
+- **Design tokens** – `--mrt-admin-*` på `.mrt-admin-app` (`admin-shell.css`): border, radius, surface, text-muted, accent, danger, flash. Panel (`AdminPanel`) mappar till `--mrt-admin-panel-*`; delade ytor kan använda publika `--mrt-surface-*` från `mrt-color-tokens.css`. Nya admin-komponenter: tokens, inte nya hex.
+- **Sidmönster** – `AdminMobilePageShell` + `AdminPageHeader`; mobil-CSS i `admin/styles/mobile/` (importeras i shell).
 
 ### Publikt frontend (Vue)
 - **Ingen jQuery-frontend** – månad, översikt, index och wizard mountar Vue (`frontend/vue/`, byggt till `assets/dist/vue/`).

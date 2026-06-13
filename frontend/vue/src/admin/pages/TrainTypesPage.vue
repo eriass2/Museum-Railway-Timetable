@@ -5,6 +5,7 @@ import {
   AdminEmptyState,
   AdminFlashRow,
   AdminFormActions,
+  AdminPageHeader,
   AdminPanel,
   AdminRowActions,
   AdminTableScroll,
@@ -43,7 +44,7 @@ const {
 
 <template>
   <AdminMobilePageShell class="train-types-page" :mobile="isMobile">
-    <h1>{{ adminStr(cfg, 'trainTypesTitle') }}</h1>
+    <AdminPageHeader :title="adminStr(cfg, 'trainTypesTitle')" />
 
     <MrtAsyncState
       context="admin"

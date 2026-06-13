@@ -3,7 +3,7 @@ import { computed } from 'vue';
 import LinesPanel from '../components/stations-routes/LinesPanel.vue';
 import RoutesPanel from '../components/stations-routes/RoutesPanel.vue';
 import StationsPanel from '../components/stations-routes/StationsPanel.vue';
-import { MrtAlert, MrtAsyncState } from '../components/ui';
+import { AdminPageHeader, MrtAlert, MrtAsyncState } from '../components/ui';
 import { useStationsRoutesPage } from '../composables/stations-routes/useStationsRoutesPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
 import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
@@ -58,9 +58,11 @@ const sectionTabs = computed(() => buildStationsRoutesSectionTabs(cfg, hasLineRe
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1>{{
-      hasLineRegistry ? adminStr(cfg, 'stationsTitleLines') : adminStr(cfg, 'stationsTitle')
-    }}</h1>
+    <AdminPageHeader
+      :title="
+        hasLineRegistry ? adminStr(cfg, 'stationsTitleLines') : adminStr(cfg, 'stationsTitle')
+      "
+    />
     <MrtAsyncState
       context="admin"
       :loading="loading"

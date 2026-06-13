@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, toRef } from 'vue';
+import { computed } from 'vue';
 import { buildTrainTypeIconOptions } from '../../utils/trainTypeIconPicker';
 import { adminConfig } from '../../types';
 import TrainTypeIcon from '../TrainTypeIcon.vue';
@@ -60,6 +60,8 @@ function select(key: string) {
 </template>
 
 <style scoped>
+@import '../../../components/ui/mrtFocusRing.css';
+
 .train-type-icon-picker {
   display: flex;
   flex-wrap: wrap;
@@ -73,10 +75,10 @@ function select(key: string) {
   gap: 4px;
   min-width: 4.75rem;
   padding: 8px 6px;
-  border: 1px solid #c3c4c7;
-  border-radius: 3px;
-  background: #fff;
-  color: #1d2327;
+  border: 1px solid var(--mrt-admin-border, #c3c4c7);
+  border-radius: var(--mrt-admin-radius, 3px);
+  background: var(--mrt-admin-surface-bg, #fff);
+  color: var(--mrt-admin-text, #1d2327);
   cursor: pointer;
   transition:
     border-color 0.15s ease,
@@ -84,18 +86,15 @@ function select(key: string) {
     box-shadow 0.15s ease;
 }
 
-.train-type-icon-picker__option:hover:not(:disabled),
-.train-type-icon-picker__option:focus-visible {
-  border-color: #2271b1;
-  background: #f6f7f7;
-  outline: none;
-  box-shadow: 0 0 0 1px #2271b1;
+.train-type-icon-picker__option:hover:not(:disabled) {
+  border-color: var(--mrt-admin-accent-border, #2271b1);
+  background: var(--mrt-admin-accent-bg-muted, #f6f7f7);
 }
 
 .train-type-icon-picker__option--active {
-  border-color: #2271b1;
-  background: #f0f6fc;
-  box-shadow: inset 0 0 0 1px #2271b1;
+  border-color: var(--mrt-admin-accent-border, #2271b1);
+  background: var(--mrt-admin-accent-bg, #f0f6fc);
+  box-shadow: inset 0 0 0 1px var(--mrt-admin-accent-border, #2271b1);
 }
 
 .train-type-icon-picker__option:disabled {

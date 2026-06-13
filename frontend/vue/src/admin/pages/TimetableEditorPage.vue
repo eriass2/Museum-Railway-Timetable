@@ -9,7 +9,7 @@ import TimetableEditorDeviationsTab from '../components/timetable-editor/Timetab
 import TimetableEditorGridTab from '../components/timetable-editor/TimetableEditorGridTab.vue';
 import TimetableEditorTripsTab from '../components/timetable-editor/TimetableEditorTripsTab.vue';
 import MobileTimetablePanel from '../components/mobile/MobileTimetablePanel.vue';
-import { AdminPanel, MrtAlert, MrtAsyncState } from '../components/ui';
+import { AdminPageHeader, AdminPanel, MrtAlert, MrtAsyncState } from '../components/ui';
 import { useTimetableEditorPage } from '../composables/timetable-editor/useTimetableEditorPage';
 import type { TimetableEditorTab } from '../composables/timetable-editor/useTimetableEditorPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
@@ -89,7 +89,7 @@ function onTabClick(next: TimetableEditorTab): void {
 
 <template>
   <AdminMobilePageShell :mobile="isMobile">
-    <h1 v-if="!detail">{{ adminStr(cfg, 'editorTitle') }}</h1>
+    <AdminPageHeader v-if="!detail" :title="adminStr(cfg, 'editorTitle')" />
     <MrtAsyncState
       context="admin"
       :loading="loading"
