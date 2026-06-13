@@ -2,6 +2,16 @@
   max-width: none;
 }
 
+.mrt-admin-app {
+  --mrt-admin-panel-bg: #fff;
+  --mrt-admin-panel-border: #c3c4c7;
+  --mrt-admin-panel-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  --mrt-admin-panel-padding-block: 12px;
+  --mrt-admin-panel-padding-inline: 16px;
+  --mrt-admin-panel-margin-top: 16px;
+  --mrt-admin-panel-title-margin-bottom: 12px;
+}
+
 .mrt-admin-app .button {
   margin: 0;
 }

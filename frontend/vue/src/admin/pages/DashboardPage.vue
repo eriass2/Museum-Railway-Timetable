@@ -7,6 +7,7 @@ import SetupChecklist from '../components/dashboard/SetupChecklist.vue';
 import TrafficTodayPanel from '../components/dashboard/TrafficTodayPanel.vue';
 import { useAdminResource } from '../composables/useAdminResource';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { buildDashboardStatItems } from '../utils/dashboard/dashboardStatItems';
 import { adminConfig } from '../types';
@@ -31,7 +32,7 @@ function openRoute(hashRoute: string) {
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1>{{ adminStr(cfg, 'dashboardTitle', 'Museum Railway Timetable') }}</h1>
 
     <MrtAsyncState
@@ -138,7 +139,7 @@ function openRoute(hashRoute: string) {
       </AdminPanel>
     </template>
     </MrtAsyncState>
-  </div>
+  </AdminMobilePageShell>
 </template>
 
 <style scoped>

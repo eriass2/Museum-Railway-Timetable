@@ -31,6 +31,8 @@ withDefaults(
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
+
 .mrt-heading {
   margin: 0;
   font-family: var(--mrt-font-heading);

@@ -99,6 +99,8 @@ function closeList(): void {
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
+
 .mrt-combobox {
   position: relative;
 }

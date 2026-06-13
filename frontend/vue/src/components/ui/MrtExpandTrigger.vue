@@ -32,6 +32,8 @@ defineEmits<{ toggle: [] }>();
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
+
 .mrt-expand-trigger {
   display: flex;
   align-items: center;

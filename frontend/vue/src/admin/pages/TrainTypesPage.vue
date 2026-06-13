@@ -16,6 +16,7 @@ import {
 } from '../components/ui';
 import { useTrainTypesPage } from '../composables/useTrainTypesPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminStr } from '../utils/adminLabels';
 
 const { isMobile } = useMobileAdmin();
@@ -41,7 +42,7 @@ const {
 </script>
 
 <template>
-  <div class="mrt-admin-page train-types-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell class="train-types-page" :mobile="isMobile">
     <h1>{{ adminStr(cfg, 'trainTypesTitle') }}</h1>
 
     <MrtAsyncState
@@ -194,7 +195,7 @@ const {
         </div>
       </AdminPanel>
     </MrtAsyncState>
-  </div>
+  </AdminMobilePageShell>
 </template>
 
 <style scoped>

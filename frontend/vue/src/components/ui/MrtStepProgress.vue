@@ -52,6 +52,8 @@ function stepAria(
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
+
 .mrt-step-nav {
   margin: 0 0 0.75rem;
   width: 100%;
@@ -116,11 +118,6 @@ function stepAria(
     var(--mrt-wizard-yellow, var(--mrt-color-accent-600)) 18%,
     var(--mrt-color-green-800)
   );
-}
-
-.mrt-step-progress__item.is-done:not(.is-active):not(:disabled):focus-visible {
-  outline: 3px solid var(--mrt-wizard-focus);
-  outline-offset: 3px;
 }
 
 .mrt-step-progress__item.is-active {

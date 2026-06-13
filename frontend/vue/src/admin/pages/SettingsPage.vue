@@ -11,6 +11,7 @@ import {
 } from '../components/ui';
 import { useSettingsPage } from '../composables/useSettingsPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminStr } from '../utils/adminLabels';
 
 const { isMobile } = useMobileAdmin();
@@ -18,7 +19,7 @@ const { cfg, form, dirty, loading, error, saveMsg, load, submit } = useSettingsP
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1>{{ adminStr(cfg, 'settingsTitle', 'Inställningar') }}</h1>
 
     <MrtAsyncState
@@ -135,5 +136,5 @@ const { cfg, form, dirty, loading, error, saveMsg, load, submit } = useSettingsP
         </form>
       </AdminPanel>
     </MrtAsyncState>
-  </div>
+  </AdminMobilePageShell>
 </template>

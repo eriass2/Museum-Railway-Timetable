@@ -9,6 +9,7 @@ import {
 import ImportExportGuidePanels from '../components/import-export/ImportExportGuidePanels.vue';
 import { useImportExportPage } from '../composables/import-export/useImportExportPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminStr } from '../utils/adminLabels';
 
 const { isMobile } = useMobileAdmin();
@@ -31,7 +32,7 @@ const {
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1>{{ adminStr(cfg, 'importExportTitle') }}</h1>
     <p class="mrt-admin-page__lead">{{ guide.intro }}</p>
 
@@ -128,7 +129,7 @@ const {
     <AdminDisclosure :summary="guide.guideDisclosureSummary">
       <ImportExportGuidePanels :guide="guide" />
     </AdminDisclosure>
-  </div>
+  </AdminMobilePageShell>
 </template>
 
 <style scoped>

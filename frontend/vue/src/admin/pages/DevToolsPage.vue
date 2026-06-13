@@ -2,6 +2,7 @@
 import { AdminPanel, AdminToolList, MrtAlert, MrtButton } from '../components/ui';
 import { useDevToolsPage } from '../composables/useDevToolsPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminStr } from '../utils/adminLabels';
 
 const { isMobile } = useMobileAdmin();
@@ -20,7 +21,7 @@ const {
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1>{{ adminStr(cfg, 'devTitle') }}</h1>
     <p v-if="!cfg.isDevMode" class="notice notice-warning">
       {{ adminStr(cfg, 'devNotAvailable') }}
@@ -64,5 +65,5 @@ const {
         </p>
       </AdminPanel>
     </template>
-  </div>
+  </AdminMobilePageShell>
 </template>

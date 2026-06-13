@@ -19,6 +19,15 @@ defineProps<{
   background: var(--mrt-wizard-green-dark, #1e4d6b);
   color: #fff;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+  --mrt-step-panel-width: 100%;
+  --mrt-step-panel-max-width: none;
+  --mrt-step-panel-margin-inline: 0;
+  --mrt-step-panel-margin-top: 0;
+  --mrt-step-panel-padding: 0;
+  --mrt-step-panel-bg: transparent;
+  --mrt-step-panel-color: inherit;
+  --mrt-step-panel-search-width: 100%;
+  --mrt-step-panel-wide-width: 100%;
 }
 
 :deep(.mrt-journey-wizard__beta) {
@@ -36,18 +45,6 @@ defineProps<{
 
 :deep(.mrt-heading--surface-title) {
   color: #fff;
-}
-
-:deep(.mrt-step-panel),
-:deep(.mrt-step-panel--search),
-:deep(.mrt-step-panel--wide) {
-  width: 100%;
-  max-width: none;
-  margin-inline: 0;
-  margin-top: 0;
-  padding: 0;
-  background: transparent;
-  color: inherit;
 }
 
 :deep(.mrt-journey-wizard__route-form) {

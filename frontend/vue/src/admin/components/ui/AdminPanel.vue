@@ -15,15 +15,15 @@ defineProps<{
 
 <style scoped>
 .admin-panel {
-  margin-top: 16px;
-  padding: 12px 16px;
-  background: #fff;
-  border: 1px solid #c3c4c7;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  margin-top: var(--mrt-admin-panel-margin-top, 16px);
+  padding: var(--mrt-admin-panel-padding-block, 12px) var(--mrt-admin-panel-padding-inline, 16px);
+  background: var(--mrt-admin-panel-bg, #fff);
+  border: 1px solid var(--mrt-admin-panel-border, #c3c4c7);
+  box-shadow: var(--mrt-admin-panel-shadow, 0 1px 1px rgba(0, 0, 0, 0.04));
 }
 
 .admin-panel__title {
-  margin: 0 0 12px;
+  margin: 0 0 var(--mrt-admin-panel-title-margin-bottom, 12px);
   font-size: 1.05em;
   line-height: 1.3;
 }

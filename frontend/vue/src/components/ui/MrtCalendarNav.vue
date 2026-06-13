@@ -74,6 +74,8 @@ const emit = defineEmits<{
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
+
 .mrt-calendar-nav {
   display: flex;
   flex-wrap: wrap;
@@ -100,6 +102,7 @@ const emit = defineEmits<{
   height: 2.35rem;
   padding: 0;
   border: 2px solid var(--mrt-color-border-on-surface, #ccc);
+  border-radius: var(--mrt-radius-sm, 0);
   background: var(--mrt-wizard-surface, #fff);
   color: var(--mrt-color-green-700, #1f4d2e);
   font-size: 1.5rem;
@@ -117,12 +120,6 @@ const emit = defineEmits<{
   background: var(--mrt-color-neutral-200, #eee);
 }
 
-.mrt-calendar-nav__prev:focus-visible,
-.mrt-calendar-nav__next:focus-visible {
-  outline: 3px solid var(--mrt-wizard-focus);
-  outline-offset: 3px;
-}
-
 .mrt-calendar-nav__link {
   flex-shrink: 0;
   display: inline-flex;
@@ -130,6 +127,7 @@ const emit = defineEmits<{
   gap: 0.35rem;
   padding: 0.35rem 0.7rem;
   border: 1px solid var(--mrt-border-default, #ccc);
+  border-radius: var(--mrt-radius-sm, 0);
   background: var(--mrt-bg-lighter, #f5f5f5);
   color: var(--mrt-text-secondary, #333);
   font-size: 0.95rem;
@@ -141,6 +139,7 @@ const emit = defineEmits<{
   margin-left: auto;
   padding: 0.35rem 0.7rem;
   border: 2px solid var(--mrt-color-border-on-surface, #ccc);
+  border-radius: var(--mrt-radius-sm, 0);
   background: var(--mrt-wizard-surface, #fff);
   color: var(--mrt-color-green-700, #1f4d2e);
   font-size: 0.95rem;
@@ -153,6 +152,24 @@ const emit = defineEmits<{
   .mrt-calendar-nav {
     flex-wrap: wrap;
     padding: 0.9rem 0.9rem 0;
+  }
+}
+
+@media (max-width: 40rem) {
+  .mrt-calendar-nav {
+    padding: 0.75rem 0.5rem 0.55rem;
+    gap: 0.5rem;
+  }
+
+  .mrt-calendar-nav__title {
+    font-size: clamp(1.2rem, 5vw, 1.55rem);
+  }
+
+  .mrt-calendar-nav__prev,
+  .mrt-calendar-nav__next {
+    width: 2.65rem;
+    height: 2.65rem;
+    font-size: 1.4rem;
   }
 }
 </style>

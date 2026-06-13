@@ -1,6 +1,6 @@
 # Plan: CSS-ansvar och minskad duplicering
 
-**Status:** Plan — påbörjas efter [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md) (klar 2026-06-12)  
+**Status:** Klar (2026-06-13) — efter [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md) (klar 2026-06-12)  
 **Relaterat:** [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md)
 
 ---
@@ -184,12 +184,12 @@ flowchart LR
 
 ## Definition of done (hela initiativet)
 
-- [ ] `MrtStepPanel` har scoped CSS; layout utan `:deep(.mrt-step-panel*)`
-- [ ] Interaktiva `Mrt*` äger `:focus-visible`; `mrtFocusRing.css` delad
-- [ ] `MrtWizardShellSurfaces` utan blanket focus `:deep`
-- [ ] `AdminApp` utan sid-specifik mobil `:deep` (flyttat till shell/page)
-- [ ] `MonthCalendarApp` utan `:deep` på alerts/nav/empty (utom dokumenterade undantag)
-- [ ] PHP/Vue alert-spår dokumenterat i STYLE_GUIDE
+- [x] `MrtStepPanel` har scoped CSS; layout utan `:deep(.mrt-step-panel*)`
+- [x] Interaktiva `Mrt*` äger `:focus-visible`; `mrtFocusRing.css` delad
+- [x] `MrtWizardShellSurfaces` utan blanket focus `:deep`
+- [x] `AdminApp` utan sid-specifik mobil `:deep` (flyttat till shell/page)
+- [x] `MonthCalendarApp` utan `:deep` på alerts/nav/empty (utom dokumenterade undantag)
+- [x] PHP/Vue alert-spår dokumenterat i STYLE_GUIDE
 - [ ] E2E: publik suite + admin smoke grön
 
 ---

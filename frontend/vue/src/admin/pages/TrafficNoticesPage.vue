@@ -5,6 +5,7 @@ import TrafficNoticesList from '../components/traffic-notices/TrafficNoticesList
 import { MrtAlert, MrtAsyncState } from '../components/ui';
 import { useTrafficNoticesPage } from '../composables/traffic-notices/useTrafficNoticesPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminStr } from '../utils/adminLabels';
 
 const { isMobile } = useMobileAdmin();
@@ -30,7 +31,7 @@ const {
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <MrtAsyncState
       context="admin"
       :loading="loading"
@@ -65,5 +66,5 @@ const {
       <MrtAlert v-if="saveMsg" context="admin" variant="success">{{ saveMsg }}</MrtAlert>
     </div>
     </MrtAsyncState>
-  </div>
+  </AdminMobilePageShell>
 </template>

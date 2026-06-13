@@ -123,9 +123,4 @@ watch(
   background: var(--mrt-wizard-surface);
   color: var(--mrt-wizard-text);
 }
-
-:deep(.mrt-accent-btn:focus-visible) {
-  outline: 3px solid var(--mrt-wizard-focus);
-  outline-offset: 3px;
-}
 </style>

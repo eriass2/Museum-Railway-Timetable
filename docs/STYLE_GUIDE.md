@@ -87,6 +87,7 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Färgpalett** – Se [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md); implementera via `assets/mrt-color-tokens.css` (`--mrt-color-*`, wizard-alias `--mrt-wizard-*`).
 - **UI-komponenter** – Delade primitiver i `frontend/vue/src/components/ui/` med **scoped `<style>`** i SFC; se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md). Encapsulation klar — refaktor klar ([CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md)); pågående ansvar/duplicering: [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md). **Inga nya komponentregler** i global legacy CSS.
 - **Legacy PHP** – `.mrt-alert` m.m. i `assets/frontend/components-base.css` (demo-verktyg, bygg-varningar).
+- **Alert dual track (permanent)** – PHP-renderad markup använder `.mrt-alert` / `.mrt-alert-{info,warning,error}` i `components-base.css`. Vue använder `MrtAlert` med `.mrt-ui-alert` / `.mrt-ui-alert--*`. Båda spåren delar semantiska tokens (`--mrt-info-bg`, `--mrt-warning-bg`, `--mrt-bg-error`, …). Lägg **inte** till nya `.mrt-alert`-klasser i Vue — importera `MrtAlert` i stället.
 - **CSS-variabler** – Använd tokens från paletten; undvik nya hårdkodade hex-värden i komponenter.
 - **Mobile-first** – Basstilar för mobil, `@media (min-width)` för större skärmar.
 - **Inga inline styles** – All styling i CSS-filer.

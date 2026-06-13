@@ -6,6 +6,7 @@ import StationsPanel from '../components/stations-routes/StationsPanel.vue';
 import { MrtAlert, MrtAsyncState } from '../components/ui';
 import { useStationsRoutesPage } from '../composables/stations-routes/useStationsRoutesPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminStr } from '../utils/adminLabels';
 import { buildStationsRoutesSectionTabs } from '../utils/stations-routes/stationsRoutesSectionTabs';
 
@@ -56,7 +57,7 @@ const sectionTabs = computed(() => buildStationsRoutesSectionTabs(cfg, hasLineRe
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1>{{
       hasLineRegistry ? adminStr(cfg, 'stationsTitleLines') : adminStr(cfg, 'stationsTitle')
     }}</h1>
@@ -139,7 +140,7 @@ const sectionTabs = computed(() => buildStationsRoutesSectionTabs(cfg, hasLineRe
         @remove="removeRoute"
       />
     </MrtAsyncState>
-  </div>
+  </AdminMobilePageShell>
 </template>
 
 <style scoped>

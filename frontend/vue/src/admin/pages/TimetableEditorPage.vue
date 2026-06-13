@@ -13,6 +13,7 @@ import { AdminPanel, MrtAlert, MrtAsyncState } from '../components/ui';
 import { useTimetableEditorPage } from '../composables/timetable-editor/useTimetableEditorPage';
 import type { TimetableEditorTab } from '../composables/timetable-editor/useTimetableEditorPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminStr } from '../utils/adminLabels';
 import { buildTimetableEditorDesktopTabs } from '../utils/timetable-editor/editorDesktopTabs';
 
@@ -87,7 +88,7 @@ function onTabClick(next: TimetableEditorTab): void {
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1 v-if="!detail">{{ adminStr(cfg, 'editorTitle') }}</h1>
     <MrtAsyncState
       context="admin"
@@ -209,5 +210,5 @@ function onTabClick(next: TimetableEditorTab): void {
         <MrtTimetableOverviewView v-if="overview" :data="overview" :labels="overviewLabels" />
       </AdminPanel>
     </MrtAsyncState>
-  </div>
+  </AdminMobilePageShell>
 </template>

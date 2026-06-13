@@ -56,6 +56,8 @@ const buttonClass = computed(() => {
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
+
 .mrt-accent-btn {
   display: inline-flex;
   align-items: center;

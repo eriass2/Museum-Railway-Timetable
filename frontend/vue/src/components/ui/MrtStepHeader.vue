@@ -25,6 +25,8 @@ defineEmits<{ back: [] }>();
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
+
 .mrt-step-header {
   display: grid;
   gap: 0.5rem;
@@ -54,11 +56,6 @@ defineEmits<{ back: [] }>();
 
 .mrt-step-header__back:hover {
   color: var(--mrt-color-on-dark, #fff);
-}
-
-.mrt-step-header__back:focus-visible {
-  outline: 3px solid var(--mrt-wizard-focus);
-  outline-offset: 3px;
 }
 
 .mrt-step-header__context {

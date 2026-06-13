@@ -16,6 +16,7 @@ import {
 } from '../components/ui';
 import { usePricesPage } from '../composables/prices/usePricesPage';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 import { adminFmtN, adminStr } from '../utils/adminLabels';
 import { formatPriceZoneLabel } from '../../shared/priceZoneLabels';
 
@@ -54,7 +55,7 @@ const {
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1>{{ adminStr(cfg, 'pricesTitle', 'Priser') }}</h1>
 
     <MrtAsyncState
@@ -336,7 +337,7 @@ const {
         </form>
       </AdminPanel>
     </MrtAsyncState>
-  </div>
+  </AdminMobilePageShell>
 </template>
 
 <style scoped>

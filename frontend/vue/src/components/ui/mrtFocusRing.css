@@ -1,0 +1,40 @@
+/**
+ * Shared :focus-visible ring for Mrt* interactive elements.
+ * Import in SFC: @import './mrtFocusRing.css';
+ */
+:where(
+  .mrt-accent-btn,
+  .mrt-combobox__input,
+  .mrt-segmented__option,
+  .mrt-expand-trigger,
+  .mrt-step-header__back,
+  .mrt-step-progress__item,
+  .mrt-calendar-nav__prev,
+  .mrt-calendar-nav__next,
+  .mrt-calendar-nav__link,
+  .mrt-calendar-nav__today,
+  .mrt-heading--surface-title
+):focus {
+  outline: none;
+}
+
+:where(
+  .mrt-accent-btn,
+  .mrt-combobox__input,
+  .mrt-segmented__option,
+  .mrt-expand-trigger,
+  .mrt-step-header__back,
+  .mrt-step-progress__item:not(:disabled),
+  .mrt-calendar-nav__prev,
+  .mrt-calendar-nav__next,
+  .mrt-calendar-nav__link,
+  .mrt-calendar-nav__today,
+  .mrt-heading--surface-title
+):focus-visible {
+  outline: 3px solid var(--mrt-focus-ring-color, var(--mrt-wizard-focus));
+  outline-offset: var(--mrt-focus-ring-offset, 3px);
+}
+
+.mrt-heading--surface-title:focus-visible {
+  outline-offset: 4px;
+}

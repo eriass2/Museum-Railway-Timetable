@@ -100,16 +100,16 @@ defineProps<{
   min-height: auto;
 }
 
-.mrt-journey-wizard__hero--embedded.mrt-journey-wizard__hero--has-bg :deep(.mrt-step-panel--search) {
-  background: var(--mrt-wizard-surface);
-  color: var(--mrt-wizard-text);
-  padding-inline: clamp(1.75rem, 4vw, 3rem);
+.mrt-journey-wizard__hero--embedded.mrt-journey-wizard__hero--has-bg {
+  --mrt-step-panel-search-bg: var(--mrt-wizard-surface);
+  --mrt-step-panel-search-color: var(--mrt-wizard-text);
+  --mrt-step-panel-search-padding-inline: clamp(1.75rem, 4vw, 3rem);
 }
 
-.mrt-journey-wizard__hero--embedded:not(.mrt-journey-wizard__hero--has-bg) :deep(.mrt-step-panel--search) {
-  background: transparent;
-  color: var(--mrt-wizard-text);
-  padding-inline: 0;
+.mrt-journey-wizard__hero--embedded:not(.mrt-journey-wizard__hero--has-bg) {
+  --mrt-step-panel-search-bg: transparent;
+  --mrt-step-panel-search-color: var(--mrt-wizard-text);
+  --mrt-step-panel-search-padding-inline: 0;
 }
 
 @media (min-width: 48.0625rem) {

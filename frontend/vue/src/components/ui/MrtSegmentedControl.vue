@@ -39,6 +39,8 @@ withDefaults(
 </template>
 
 <style scoped>
+@import './mrtFocusRing.css';
+
 .mrt-segmented-field {
   border: 0;
   padding: 0;

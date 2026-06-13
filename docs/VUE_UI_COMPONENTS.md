@@ -62,6 +62,15 @@ Wizard shell CSS: scoped in `MrtWizardShell.vue`, `MrtWizardHero.vue`, `MrtWizar
 
 New Vue code must use **`MrtAlert`** (`mrt-ui-alert`).
 
+## Shared mechanism CSS
+
+| File | Used by | Purpose |
+|------|---------|---------|
+| `mrtSpinnerStyles.css` | `MrtAsyncState` | Loading pseudo-element animation |
+| `mrtFocusRing.css` | `MrtButton`, `MrtCombobox`, `MrtSegmentedControl`, `MrtExpandTrigger`, `MrtStepHeader`, `MrtStepProgress`, `MrtCalendarNav`, `MrtHeading` | `:focus-visible` ring — import via `@import './mrtFocusRing.css';` in SFC `<style scoped>` |
+
+Do not duplicate focus-ring rules outside `mrtFocusRing.css` unless documented (e.g. admin-only pickers).
+
 ## Design tokens (CSS)
 
 Defined in `assets/mrt-color-tokens.css` (including `--mrt-cal-traffic-*` for calendar cells). Wizard shell tokens are set in `JourneyWizardApp.vue`. Prefer tokens over hard-coded hex.

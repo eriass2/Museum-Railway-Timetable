@@ -31,10 +31,11 @@ const {
   openEditor,
   removeTimetable,
 } = useTimetableListPage();
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1>{{ adminStr(cfg, 'timetablesTitle') }}</h1>
     <MrtAsyncState
       context="admin"
@@ -178,7 +179,7 @@ const {
         </AdminPanel>
       </template>
     </MrtAsyncState>
-  </div>
+  </AdminMobilePageShell>
 </template>
 
 <style scoped>

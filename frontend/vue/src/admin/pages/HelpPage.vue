@@ -5,6 +5,7 @@ import { AdminPanel, AdminTableScroll, MrtButton } from '../components/ui';
 import { useHelpPage } from '../composables/useHelpPage';
 import { useHelpSectionScroll } from '../composables/useHelpSectionScroll';
 import { useMobileAdmin } from '../composables/mobile/useMobileAdmin';
+import AdminMobilePageShell from '../components/mobile/AdminMobilePageShell.vue';
 
 const router = useRouter();
 const route = useRoute();
@@ -27,7 +28,7 @@ function openShortcodesGuide() {
 </script>
 
 <template>
-  <div class="mrt-admin-page" :class="{ 'mrt-admin-page--mobile': isMobile }">
+  <AdminMobilePageShell :mobile="isMobile">
     <h1>{{ help.title }}</h1>
 
     <nav class="mrt-admin-help-toc" :aria-label="help.tocTitle">
@@ -121,7 +122,7 @@ function openShortcodesGuide() {
       <p>{{ help.moreInfoBody }}</p>
       <p class="description">{{ help.moreInfoDocs }}</p>
     </AdminPanel>
-  </div>
+  </AdminMobilePageShell>
 </template>
 
 <style scoped>

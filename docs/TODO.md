@@ -6,22 +6,18 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ---
 
-## CSS — ansvar och duplicering (C1–C5)
+## E2E — full publik suite + admin smoke
 
-**Plan:** [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) — efter refaktor R0–R5 (2026-06-12). Fokus: komponenten äger CSS, minska `:deep()` i layout/app-roots, focus i primitiver.
+**Källa:** [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) DoD  
+**Status:** C1–C5 klara (2026-06-13); E2E återstår.
 
 | ID | Punkt | Insats |
 |----|-------|--------|
-| C1 | `MrtStepPanel` äger panel-CSS; layout utan `:deep(.mrt-step-panel*)` | Stor (4 PR) |
-| C2 | Focus ring i `MrtButton` m.fl. + `mrtFocusRing.css` | Medel (4 PR) |
-| C3 | `AdminMobilePageShell` — flytta mobil `:deep` från `AdminApp` | Medel (3 PR) |
-| C4 | `MonthCalendarApp` — nav/empty/radius till komponenter | Medel (3 PR) |
-| C5 | PHP/Vue alert dual track + `AdminPanel` tokens | Liten (3 PR) |
 | E2E | Full publik suite + admin smoke (DoD refaktor) | Medel |
 
 ---
 
-## Reseplanerare — copy & biljettinfo (J18)
+## Mycket senare (förutsättningar / produktbeslut saknas)
 
 **Källa:** [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md)  
 **Status:** D19–D21 implementerat (2026-06-11). J15–J17 levererat; J18 och D22 återstår.
@@ -87,6 +83,7 @@ Plocka **inte** upp förrän kärnflöden är stabila och ev. produktbeslut är 
 | Docker/skript — scripts-organisation (gate, php, csv, i18n, dev, release) | 2026-06-12 | [scripts/README.md](../scripts/README.md) |
 | Reseplanerare J15–J17 + D19–D21 — biljettcopy (fotnoter, station, eftermiddag) | 2026-06-11 | `ticket-copy.php`, `PricesTicketCopyPanel.vue`, `MrtPriceTable.vue`, `#/prices` + stationfält |
 | CSS refaktor R0–R5 (encapsulation, layout-split, admin, style budget) | 2026-06-12 | [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md), commits `de3e3bd`–`6b8c2c1` |
+| CSS ansvar C1–C5 (StepPanel, focus ring, admin mobil shell, month calendar, docs/tokens) | 2026-06-13 | [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) |
 
 ---
 

@@ -226,6 +226,7 @@ async function onMonthShift(delta: number): Promise<void> {
   --mrt-month-day-font: 1.15rem;
   --mrt-month-bar-height: 0.75rem;
   --mrt-month-bar-single-height: 1.15rem;
+  --mrt-radius-sm: 0;
 }
 
 .mrt-month__grid-wrap {
@@ -252,43 +253,12 @@ async function onMonthShift(delta: number): Promise<void> {
   margin-top: var(--mrt-spacing-xl);
 }
 
-:deep(.mrt-empty) {
-  padding: var(--mrt-spacing-sm);
-  color: var(--mrt-text-tertiary);
-  font-style: italic;
-  background: var(--mrt-bg-lightest);
-}
-
-:deep(.mrt-ui-alert),
-:deep(.mrt-surface--box),
-:deep(.mrt-calendar-nav__prev),
-:deep(.mrt-calendar-nav__next),
-:deep(.mrt-calendar-nav__link) {
-  border-radius: 0;
-}
-
 @media (max-width: 40rem) {
   .mrt-month {
     --mrt-month-cell-min-height: 3.1rem;
     --mrt-month-day-font: 1.05rem;
     --mrt-month-bar-height: 0.55rem;
     --mrt-month-bar-single-height: 0.9rem;
-  }
-
-  :deep(.mrt-calendar-nav) {
-    padding: 0.75rem 0.5rem 0.55rem;
-    gap: 0.5rem;
-  }
-
-  :deep(.mrt-calendar-nav__title) {
-    font-size: clamp(1.2rem, 5vw, 1.55rem);
-  }
-
-  :deep(.mrt-calendar-nav__prev),
-  :deep(.mrt-calendar-nav__next) {
-    width: 2.65rem;
-    height: 2.65rem;
-    font-size: 1.4rem;
   }
 
   .mrt-month__grid-wrap {

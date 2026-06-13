@@ -112,6 +112,13 @@ defineProps<{
   vertical-align: stretch;
 }
 
+.mrt-month-table :deep(.mrt-empty) {
+  padding: var(--mrt-spacing-sm);
+  color: var(--mrt-text-tertiary);
+  font-style: italic;
+  background: var(--mrt-bg-lightest);
+}
+
 @media (max-width: 40rem) {
   .mrt-month-table {
     border-collapse: separate;
