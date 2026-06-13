@@ -94,7 +94,7 @@ frontend/vue/src/components/
 └── admin/components/ui/        ← admin-specifikt
 ```
 
-**Global CSS kvar (medvetet):** design tokens (`assets/mrt-color-tokens.css`), legacy PHP (`.mrt-alert` i `components-base.css`), vue-shell reset (`vue-shell.css`). Komponentregler ska **inte** läggas i `assets/frontend/ui/` (mappen borttagen). Se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md) (klar), [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md) (klar), pågående [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md).
+**Global CSS kvar (medvetet):** design tokens (`assets/mrt-color-tokens.css`), legacy PHP (`.mrt-alert` i `components-base.css`), vue-shell reset (`vue-shell.css`). Komponentregler ska **inte** läggas i `assets/frontend/ui/` (mappen borttagen). Planserie: [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md) → [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md) → [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) (klar) → [CSS_FOLLOWUP_PLAN.md](CSS_FOLLOWUP_PLAN.md) (C6+, E2E).
 
 ## Regler för nya komponenter
 

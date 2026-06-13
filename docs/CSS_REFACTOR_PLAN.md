@@ -1,6 +1,6 @@
 # Åtgärdsplan: CSS-refaktor + återanvändbara UI-komponenter
 
-**Status:** Klar (2026-06-12) — uppföljning: [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md), E2E  
+**Status:** Klar (2026-06-12) — uppföljning: [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) (klar), [CSS_FOLLOWUP_PLAN.md](CSS_FOLLOWUP_PLAN.md)  
 **Relaterat:** [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [design/BRAND_UI.md](design/BRAND_UI.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3
 
 ---

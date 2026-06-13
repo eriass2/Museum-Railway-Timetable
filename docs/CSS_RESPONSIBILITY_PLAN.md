@@ -1,6 +1,7 @@
 # Plan: CSS-ansvar och minskad duplicering
 
 **Status:** Klar (2026-06-13) — efter [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md) (klar 2026-06-12)  
+**Uppföljning:** [CSS_FOLLOWUP_PLAN.md](CSS_FOLLOWUP_PLAN.md) (C6+, E0–E1)  
 **Relaterat:** [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md)
 
 ---
@@ -190,7 +191,7 @@ flowchart LR
 - [x] `AdminApp` utan sid-specifik mobil `:deep` (flyttat till shell/page)
 - [x] `MonthCalendarApp` utan `:deep` på alerts/nav/empty (utom dokumenterade undantag)
 - [x] PHP/Vue alert-spår dokumenterat i STYLE_GUIDE
-- [ ] E2E: publik suite + admin smoke grön
+- [ ] E2E: publik suite + admin smoke grön — se [CSS_FOLLOWUP_PLAN.md](CSS_FOLLOWUP_PLAN.md) E0–E1
 
 ---
 

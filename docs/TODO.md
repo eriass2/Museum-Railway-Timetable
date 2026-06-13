@@ -6,18 +6,22 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ---
 
-## E2E — full publik suite + admin smoke
+## CSS — uppföljning C6+ och E2E
 
-**Källa:** [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md) DoD  
-**Status:** C1–C5 klara (2026-06-13); E2E återstår.
+**Plan:** [CSS_FOLLOWUP_PLAN.md](CSS_FOLLOWUP_PLAN.md) — efter C1–C5 (2026-06-13).
 
 | ID | Punkt | Insats |
 |----|-------|--------|
-| E2E | Full publik suite + admin smoke (DoD refaktor) | Medel |
+| E1 | Fixa föråldrade WP-admin E2E (lines, import-export, timetable, traffic reorder) | Medel |
+| E0 | E2E CI grön + Windows/Docker-dokumentation | Liten |
+| C6 | Focus ring komplett (`mrtFocusRing.css`) | Liten |
+| C7 | Admin design tokens (`--mrt-admin-*`) | Medel |
+| C8 | `AdminPageHeader` + mobil-shell-split | Medel |
+| C9 | Overview / stora SFC (vid feature-touch) | Liten |
 
 ---
 
-## Mycket senare (förutsättningar / produktbeslut saknas)
+## Reseplanerare — copy & biljettinfo (J18)
 
 **Källa:** [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md)  
 **Status:** D19–D21 implementerat (2026-06-11). J15–J17 levererat; J18 och D22 återstår.
