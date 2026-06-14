@@ -45,70 +45,70 @@ function navigate(path: string) {
 
 <style scoped>
 .mrt-admin-shell__nav {
-  flex: 0 0 11.5rem;
+  flex: 0 0 var(--mrt-admin-nav-width);
   position: sticky;
-  top: 32px;
-  padding: 12px 0;
-  background: #fff;
-  border: 1px solid #c3c4c7;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  top: var(--mrt-admin-nav-sticky-top);
+  padding: var(--mrt-admin-nav-padding-block) 0;
+  background: var(--mrt-admin-surface-bg);
+  border: 1px solid var(--mrt-admin-panel-border);
+  box-shadow: var(--mrt-admin-panel-shadow);
 }
 
 .mrt-admin-shell__brand {
-  margin: 0 0 8px;
-  padding: 0 14px 10px;
-  border-bottom: 1px solid #dcdcde;
-  font-size: 0.95rem;
+  margin: 0 0 var(--mrt-admin-gap-sm);
+  padding: 0 var(--mrt-admin-nav-padding-inline) var(--mrt-admin-nav-brand-padding-block-end);
+  border-bottom: 1px solid var(--mrt-admin-border-subtle);
+  font-size: var(--mrt-admin-font-brand);
   font-weight: 700;
   line-height: 1.3;
-  color: #1d2327;
+  color: var(--mrt-admin-text);
 }
 
 .mrt-admin-shell__menu {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  padding: 4px 0;
+  gap: var(--mrt-admin-gap-xs);
+  padding: var(--mrt-spacing-xs) 0;
 }
 
 .mrt-admin-shell__link {
   display: block;
-  padding: 8px 14px;
-  color: #2c3338;
+  padding: var(--mrt-admin-nav-link-padding);
+  color: var(--mrt-admin-link-color);
   text-decoration: none;
-  font-size: 13px;
+  font-size: var(--mrt-admin-font-sm);
   line-height: 1.35;
-  border-left: 3px solid transparent;
+  border-left: var(--mrt-admin-nav-active-border) solid transparent;
 }
 
 .mrt-admin-shell__link:hover,
 .mrt-admin-shell__link:focus {
-  color: #2271b1;
-  background: #f6f7f7;
+  color: var(--mrt-admin-accent-border);
+  background: var(--mrt-admin-surface-muted-bg);
 }
 
 .mrt-admin-shell__link--active {
-  color: #1d2327;
+  color: var(--mrt-admin-text);
   font-weight: 600;
-  background: #f0f6fc;
-  border-left-color: #2271b1;
+  background: var(--mrt-admin-accent-bg);
+  border-left-color: var(--mrt-admin-accent-border);
 }
 
 .mrt-admin-shell__tools {
-  margin: 10px 0 0;
-  padding: 10px 14px 0;
-  border-top: 1px solid #dcdcde;
-  font-size: 12px;
+  margin: var(--mrt-admin-gap-md) 0 0;
+  padding: var(--mrt-admin-gap-md) var(--mrt-admin-nav-padding-inline) 0;
+  border-top: 1px solid var(--mrt-admin-border-subtle);
+  font-size: var(--mrt-admin-font-xs);
 }
 
 .mrt-admin-shell__tools-link {
-  color: #50575e;
+  color: var(--mrt-admin-text-muted);
   text-decoration: none;
 }
 
 .mrt-admin-shell__tools-link:hover,
 .mrt-admin-shell__tools-link:focus {
-  color: #2271b1;
+  color: var(--mrt-admin-accent-border);
 }
 
 @media (max-width: 782px) {
@@ -116,7 +116,7 @@ function navigate(path: string) {
     position: static;
     flex: none;
     width: 100%;
-    padding: 8px 0;
+    padding: var(--mrt-admin-gap-sm) 0;
   }
 
   .mrt-admin-shell__menu {
@@ -124,21 +124,21 @@ function navigate(path: string) {
     flex-wrap: nowrap;
     overflow-x: auto;
     gap: 0;
-    padding: 0 8px 4px;
+    padding: 0 var(--mrt-admin-gap-sm) var(--mrt-spacing-xs);
     -webkit-overflow-scrolling: touch;
   }
 
   .mrt-admin-shell__link {
     flex: 0 0 auto;
-    padding: 8px 12px;
+    padding: var(--mrt-admin-nav-link-padding-mobile);
     border-left: 0;
-    border-bottom: 3px solid transparent;
+    border-bottom: var(--mrt-admin-nav-active-border) solid transparent;
     white-space: nowrap;
   }
 
   .mrt-admin-shell__link--active {
     border-left-color: transparent;
-    border-bottom-color: #2271b1;
+    border-bottom-color: var(--mrt-admin-accent-border);
   }
 }
 </style>

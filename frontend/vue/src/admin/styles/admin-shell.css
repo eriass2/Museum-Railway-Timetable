@@ -11,12 +11,14 @@
   --mrt-admin-panel-margin-top: 16px;
   --mrt-admin-panel-title-margin-bottom: 12px;
   --mrt-admin-border: #c3c4c7;
+  --mrt-admin-border-subtle: #dcdcde;
   --mrt-admin-radius: 3px;
   --mrt-admin-surface-bg: #fff;
   --mrt-admin-surface-muted-bg: #f6f7f7;
   --mrt-admin-text: #1d2327;
   --mrt-admin-text-muted: #50575e;
   --mrt-admin-text-subtle: #646970;
+  --mrt-admin-link-color: #2c3338;
   --mrt-admin-danger-border: #d63638;
   --mrt-admin-danger-bg: #fcf0f1;
   --mrt-admin-danger-text: #b32d2e;
@@ -25,6 +27,20 @@
   --mrt-admin-accent-bg-muted: #f6f7f7;
   --mrt-admin-flash-bg: #edfaef;
   --mrt-admin-card-shadow: var(--mrt-surface-shadow-flat, 0 1px 1px rgba(0, 0, 0, 0.04));
+  --mrt-admin-font-brand: 0.95rem;
+  --mrt-admin-font-sm: 0.8125rem;
+  --mrt-admin-font-xs: 0.75rem;
+  --mrt-admin-gap-xs: 2px;
+  --mrt-admin-gap-sm: 8px;
+  --mrt-admin-gap-md: 10px;
+  --mrt-admin-nav-width: 11.5rem;
+  --mrt-admin-nav-sticky-top: 32px;
+  --mrt-admin-nav-padding-block: 12px;
+  --mrt-admin-nav-padding-inline: 14px;
+  --mrt-admin-nav-brand-padding-block-end: 10px;
+  --mrt-admin-nav-link-padding: 8px 14px;
+  --mrt-admin-nav-link-padding-mobile: 8px 12px;
+  --mrt-admin-nav-active-border: 3px;
 }
 
 .mrt-admin-app .button {

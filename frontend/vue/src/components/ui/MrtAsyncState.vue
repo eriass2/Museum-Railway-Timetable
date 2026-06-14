@@ -70,20 +70,20 @@ defineEmits<{ retry: [] }>();
 
 .mrt-admin-async__loading {
   text-align: center;
-  padding: 24px 16px;
-  color: #50575e;
+  padding: var(--mrt-spacing-lg) var(--mrt-spacing-md);
+  color: var(--mrt-admin-text-muted);
   font-style: normal;
 }
 
 .mrt-admin-async__retry {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
+  gap: var(--mrt-admin-gap-sm);
+  margin-top: var(--mrt-admin-gap-sm);
 }
 
 .mrt-admin-async__error p {
-  margin: 0 0 8px;
+  margin: 0 0 var(--mrt-admin-gap-sm);
 }
 
 .mrt-admin-async__error p:last-child {

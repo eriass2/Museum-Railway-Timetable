@@ -6,8 +6,8 @@
   }
 
   .mrt-admin-page--mobile :deep(.mrt-admin-card-list__item) {
-    margin-bottom: 10px;
-    padding: 12px 14px;
+    margin-bottom: var(--mrt-admin-gap-md);
+    padding: var(--mrt-admin-panel-padding-block) var(--mrt-admin-nav-padding-inline);
     background: var(--mrt-admin-surface-bg, #fff);
     border: 1px solid var(--mrt-admin-border, #c3c4c7);
     box-shadow: var(--mrt-admin-card-shadow, 0 1px 1px rgba(0, 0, 0, 0.04));
@@ -15,11 +15,11 @@
   }
 
   .mrt-admin-page--mobile :deep(.mrt-admin-card-list__item .admin-row-actions) {
-    margin-top: 8px;
+    margin-top: var(--mrt-admin-gap-sm);
   }
 
   .mrt-admin-page--mobile :deep(.mrt-admin-card-list__empty) {
-    padding: 12px 0;
+    padding: var(--mrt-admin-panel-padding-block) 0;
     color: var(--mrt-admin-text-subtle, #646970);
   }
 }

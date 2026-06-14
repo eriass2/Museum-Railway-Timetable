@@ -5,13 +5,6 @@ import { adminConfig } from '../types';
 import { adminErrorMessage, adminStr } from '../utils/adminLabels';
 import { downloadBase64Csv } from '../utils/downloadBase64File';
 
-const FEEDBACK_STATUSES: { value: FeedbackStatus; label: string }[] = [
-  { value: 'new', label: 'Ny' },
-  { value: 'read', label: 'Läst' },
-  { value: 'resolved', label: 'Åtgärdad' },
-  { value: 'dismissed', label: 'Avvisad' },
-];
-
 export function useFeedbackPage() {
   const cfg = adminConfig();
   const loading = ref(false);
@@ -21,6 +14,13 @@ export function useFeedbackPage() {
   const items = ref<FeedbackItem[]>([]);
 
   const hasItems = computed(() => items.value.length > 0);
+
+  const statuses = computed(() => [
+    { value: 'new' as const, label: adminStr(cfg, 'feedbackStatusNew', 'Ny') },
+    { value: 'read' as const, label: adminStr(cfg, 'feedbackStatusRead', 'Läst') },
+    { value: 'resolved' as const, label: adminStr(cfg, 'feedbackStatusResolved', 'Åtgärdad') },
+    { value: 'dismissed' as const, label: adminStr(cfg, 'feedbackStatusDismissed', 'Avvisad') },
+  ]);
 
   async function load() {
     loading.value = true;
@@ -61,14 +61,21 @@ export function useFeedbackPage() {
   }
 
   function statusLabel(status: FeedbackStatus): string {
-    return FEEDBACK_STATUSES.find((item) => item.value === status)?.label ?? status;
+    return statuses.value.find((item) => item.value === status)?.label ?? status;
+  }
+
+  function typeLabel(type: string): string {
+    if (type === 'bug') {
+      return adminStr(cfg, 'feedbackTypeBug', 'Fel');
+    }
+    return adminStr(cfg, 'feedbackTypeSuggestion', 'Förslag');
   }
 
   onMounted(() => void load());
 
   return {
     cfg,
-    statuses: FEEDBACK_STATUSES,
+    statuses,
     loading,
     exporting,
     error,
@@ -79,5 +86,6 @@ export function useFeedbackPage() {
     setStatus,
     onExportCsv,
     statusLabel,
+    typeLabel,
   };
 }

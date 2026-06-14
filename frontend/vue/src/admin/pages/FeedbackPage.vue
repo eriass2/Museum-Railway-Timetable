@@ -17,6 +17,7 @@ const {
   setStatus,
   onExportCsv,
   statusLabel,
+  typeLabel,
 } = useFeedbackPage();
 </script>
 
@@ -49,13 +50,17 @@ const {
           </thead>
           <tbody>
             <tr v-for="item in items" :key="item.id">
-              <td>{{ item.type === 'bug' ? 'Fel' : 'Förslag' }}</td>
+              <td>{{ typeLabel(item.type) }}</td>
               <td>
                 <strong>{{ item.title }}</strong>
                 <p>{{ item.message }}</p>
-                <p v-if="item.email" class="description">E-post: {{ item.email }}</p>
+                <p v-if="item.email" class="description">
+                  {{ adminStr(cfg, 'feedbackEmailPrefix', 'E-post:') }} {{ item.email }}
+                </p>
                 <p v-if="item.page_url" class="description">
-                  <a :href="item.page_url" target="_blank" rel="noreferrer">Öppna sida</a>
+                  <a :href="item.page_url" target="_blank" rel="noreferrer">
+                    {{ adminStr(cfg, 'feedbackOpenPage', 'Öppna sida') }}
+                  </a>
                 </p>
               </td>
               <td>

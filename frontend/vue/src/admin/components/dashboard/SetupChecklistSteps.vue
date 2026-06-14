@@ -33,7 +33,7 @@ const cfg = adminConfig();
         class="mrt-admin-setup__go"
         @click="$emit('go', step.route)"
       >
-        {{ adminStr(cfg, 'setupGo') }}
+        {{ adminStr(cfg, 'setupGo', 'Gå till') }}
       </MrtButton>
     </li>
   </ol>
@@ -46,15 +46,15 @@ const cfg = adminConfig();
 }
 
 .mrt-admin-setup__item {
-  margin-bottom: 8px;
+  margin-bottom: var(--mrt-admin-gap-sm);
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: var(--mrt-admin-gap-sm);
 }
 
 .mrt-admin-setup__item--done {
-  color: #50575e;
+  color: var(--mrt-admin-text-muted);
 }
 
 .mrt-admin-setup__item--done .mrt-admin-setup__label {

@@ -24,5 +24,13 @@ function MRT_admin_vue_l10n_feedback(): array {
 		'feedbackExportButton'    => __( 'Exportera CSV', 'museum-railway-timetable' ),
 		'feedbackExportSuccess'   => __( 'CSV exporterad.', 'museum-railway-timetable' ),
 		'feedbackExportFailed'    => __( 'Kunde inte exportera CSV', 'museum-railway-timetable' ),
+		'feedbackTypeBug'         => __( 'Fel', 'museum-railway-timetable' ),
+		'feedbackTypeSuggestion'  => __( 'Förslag', 'museum-railway-timetable' ),
+		'feedbackEmailPrefix'     => __( 'E-post:', 'museum-railway-timetable' ),
+		'feedbackOpenPage'        => __( 'Öppna sida', 'museum-railway-timetable' ),
+		'feedbackStatusNew'       => __( 'Ny', 'museum-railway-timetable' ),
+		'feedbackStatusRead'      => __( 'Läst', 'museum-railway-timetable' ),
+		'feedbackStatusResolved'  => __( 'Åtgärdad', 'museum-railway-timetable' ),
+		'feedbackStatusDismissed' => __( 'Avvisad', 'museum-railway-timetable' ),
 	);
 }

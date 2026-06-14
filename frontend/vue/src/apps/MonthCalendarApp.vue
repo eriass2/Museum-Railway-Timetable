@@ -104,6 +104,13 @@ const legendItems = computed(() => {
 
 const overviewLabels = computed(() => overviewUiLabels(props.config));
 
+const monthNavPrev = computed(() =>
+  resolveMrtString(props.config, 'stringsPrevMonth', 'Föregående månad'),
+);
+const monthNavNext = computed(() =>
+  resolveMrtString(props.config, 'stringsNextMonth', 'Nästa månad'),
+);
+
 const legendHints = computed(() => {
   const hints: string[] = [];
   const countHint = props.config.legendCountHint?.trim();
@@ -150,10 +157,10 @@ async function onMonthShift(delta: number): Promise<void> {
       v-if="showNav"
       mode="buttons"
       :month-title="monthTitle"
-      :prev-text="config.stringsPrevMonth || 'Föregående månad'"
-      :next-text="config.stringsNextMonth || 'Nästa månad'"
-      :prev-aria="config.stringsPrevMonth || 'Föregående månad'"
-      :next-aria="config.stringsNextMonth || 'Nästa månad'"
+      :prev-text="monthNavPrev"
+      :next-text="monthNavNext"
+      :prev-aria="monthNavPrev"
+      :next-aria="monthNavNext"
       @prev="onMonthShift(-1)"
       @next="onMonthShift(1)"
     />
