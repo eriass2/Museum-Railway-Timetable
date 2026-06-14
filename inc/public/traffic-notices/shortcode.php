@@ -140,13 +140,17 @@ function MRT_render_disruption_feed_item_html( array $item ): string {
 	$headline = trim( (string) ( $item['headline'] ?? '' ) );
 	$body     = trim( (string) ( $item['body'] ?? '' ) );
 	$date     = trim( (string) ( $item['date_label'] ?? '' ) );
-	$out      = '<li class="' . esc_attr( $classes ) . '">';
+	$date_from = trim( (string) ( $item['date_from'] ?? '' ) );
+	$out       = '<li class="' . esc_attr( $classes ) . '">';
+	$out      .= '<p class="mrt-traffic-notices__summary">';
 	if ( $date !== '' ) {
-		$out .= '<p class="mrt-traffic-notices__date">' . esc_html( $date ) . '</p>';
+		$datetime = $date_from !== '' ? ' datetime="' . esc_attr( $date_from ) . '"' : '';
+		$out     .= '<time class="mrt-traffic-notices__date"' . $datetime . '>' . esc_html( $date ) . '</time>';
 	}
 	if ( $headline !== '' ) {
-		$out .= '<p class="mrt-traffic-notices__headline">' . esc_html( $headline ) . '</p>';
+		$out .= '<span class="mrt-traffic-notices__headline">' . esc_html( $headline ) . '</span>';
 	}
+	$out .= '</p>';
 	$body_display = MRT_disruption_feed_item_body_display( $item );
 	if ( $body_display !== '' ) {
 		$out .= '<p class="mrt-traffic-notices__body">' . esc_html( $body_display ) . '</p>';

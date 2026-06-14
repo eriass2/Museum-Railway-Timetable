@@ -312,20 +312,20 @@ function MRT_disruption_feed_phase_for_range( string $from, string $to, string $
 
 function MRT_disruption_feed_range_label( string $from, string $to, string $reference_date ): string {
 	if ( $from === $to ) {
-		return MRT_traffic_notices_date_label( $from, $reference_date );
+		return MRT_disruption_feed_compact_date_label( $from, $reference_date );
 	}
-	$from_label = MRT_disruption_feed_single_date_label( $from );
-	$to_label   = MRT_disruption_feed_single_date_label( $to );
-	return $from_label . ' – ' . $to_label;
+	return MRT_disruption_feed_compact_date_label( $from, $reference_date ) . ' – ' . MRT_disruption_feed_compact_date_label( $to, $reference_date );
 }
 
-function MRT_disruption_feed_single_date_label( string $date_ymd ): string {
-	$ts = strtotime( $date_ymd );
-	if ( $ts === false ) {
-		return $date_ymd;
+function MRT_disruption_feed_compact_date_label( string $date_ymd, string $reference_date ): string {
+	if ( $date_ymd === $reference_date ) {
+		return __( 'Idag', 'museum-railway-timetable' );
 	}
-	$label = wp_date( 'j M Y', $ts );
-	return is_string( $label ) ? $label : $date_ymd;
+	$tomorrow = gmdate( 'Y-m-d', strtotime( $reference_date . ' +1 day' ) );
+	if ( $date_ymd === $tomorrow ) {
+		return __( 'Imorgon', 'museum-railway-timetable' );
+	}
+	return $date_ymd;
 }
 
 /**

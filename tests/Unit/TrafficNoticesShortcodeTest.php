@@ -48,6 +48,7 @@ final class TrafficNoticesShortcodeTest extends TestCase {
 					array(
 						'id'          => 'notice-1',
 						'kind'        => 'info',
+						'date_from'   => '2026-06-06',
 						'date_label'  => '6 Jun 2026',
 						'headline'    => 'Baninfo',
 						'body'        => 'Baninfo',
@@ -58,5 +59,6 @@ final class TrafficNoticesShortcodeTest extends TestCase {
 		);
 		self::assertStringContainsString( 'Baninfo', $html );
 		self::assertStringContainsString( 'mrt-traffic-notices__section-title', $html );
+		self::assertStringContainsString( 'mrt-traffic-notices__summary', $html );
 	}
 }

@@ -57,8 +57,16 @@ function editHint(item: DisruptionFeedItem): DisruptionFeedEditHint | null {
           class="mrt-traffic-notices__feed-item"
           :class="disruptionFeedItemKindClasses(item)"
         >
-          <p class="mrt-traffic-notices__date">{{ item.date_label }}</p>
-          <p class="mrt-traffic-notices__headline">{{ item.headline }}</p>
+          <p class="mrt-traffic-notices__summary">
+            <time
+              v-if="item.date_label"
+              class="mrt-traffic-notices__date"
+              :datetime="item.date_from"
+            >
+              {{ item.date_label }}
+            </time>
+            <span class="mrt-traffic-notices__headline">{{ item.headline }}</span>
+          </p>
           <p v-if="disruptionFeedShowBody(item)" class="mrt-traffic-notices__body">
             {{ disruptionFeedItemBodyDisplay(item) }}
           </p>
@@ -75,12 +83,16 @@ function editHint(item: DisruptionFeedItem): DisruptionFeedEditHint | null {
 .mrt-traffic-notices__feed {
   display: grid;
   gap: var(--mrt-space-md, 1rem);
+  max-width: 36rem;
 }
 
 .mrt-traffic-notices__section-title {
-  margin: 0 0 var(--mrt-space-sm, 0.5rem);
-  font-size: var(--mrt-font-size-md, 1rem);
+  margin: 0 0 0.35rem;
+  font-size: var(--mrt-font-size-sm, 0.875rem);
   font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--mrt-color-neutral-700, #505050);
 }
 
 .mrt-traffic-notices__list {
@@ -90,41 +102,52 @@ function editHint(item: DisruptionFeedItem): DisruptionFeedEditHint | null {
 }
 
 .mrt-traffic-notices__feed-item {
-  padding-block: 0.65rem;
-  border-block-end: 1px solid var(--mrt-wizard-border, var(--mrt-color-neutral-200, #ddd));
+  margin: 0;
+  padding-block: 0.3rem;
+  border-block-end: 1px solid var(--mrt-color-neutral-200, #e8e8e8);
 }
 
 .mrt-traffic-notices__feed-item:last-child {
   border-block-end: none;
 }
 
+.mrt-traffic-notices__summary {
+  margin: 0;
+  line-height: 1.35;
+  font-size: 0.9375rem;
+}
+
 .mrt-traffic-notices__date {
-  margin: 0 0 0.2rem;
-  font-size: var(--mrt-font-size-sm, 0.875rem);
-  font-weight: 600;
-  color: var(--mrt-color-neutral-700, #505050);
+  margin: 0;
+  font-weight: 400;
+  color: inherit;
+  white-space: nowrap;
+}
+
+.mrt-traffic-notices__date::after {
+  content: '\00a0';
 }
 
 .mrt-traffic-notices__headline {
   margin: 0;
-  line-height: 1.45;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 .mrt-traffic-notices__body {
-  margin: 0.35rem 0 0;
-  line-height: 1.45;
-  color: var(--mrt-color-neutral-700, #505050);
+  margin: 0.15rem 0 0;
+  line-height: 1.35;
+  font-size: 0.8125rem;
+  color: var(--mrt-color-neutral-600, #666);
 }
 
 .mrt-traffic-notices__feed-item--cancelled .mrt-traffic-notices__headline {
   text-decoration: line-through;
-  opacity: 0.85;
+  opacity: 0.8;
 }
 
 .mrt-traffic-notices__edit-link {
-  margin: 0.35rem 0 0;
-  font-size: var(--mrt-font-size-sm, 0.875rem);
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
 }
 
 .mrt-traffic-notices__edit-link a {

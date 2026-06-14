@@ -39,8 +39,9 @@ const { loading, error, payload, labels } = useDisruptionFeedView(() => props.co
 }
 
 .mrt-traffic-notices__title {
-  margin: 0 0 var(--mrt-space-sm, 0.5rem);
-  font-size: var(--mrt-font-size-lg, 1.125rem);
+  margin: 0 0 0.5rem;
+  font-size: var(--mrt-font-size-md, 1rem);
+  font-weight: 700;
 }
 
 .mrt-traffic-notices__empty {
