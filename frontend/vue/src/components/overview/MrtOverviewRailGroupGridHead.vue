@@ -127,6 +127,10 @@ function columnIconKey(columnIndex: number): string {
 <style scoped>
 @import './overviewStatus.css';
 
+.mrt-ov-grid-row {
+  display: contents;
+}
+
 .mrt-ov-grid-row--head .mrt-ov-station-col,
 .mrt-ov-grid-row--head .mrt-ov-col-head {
   background: var(--mrt-ov-highlight-strong);
