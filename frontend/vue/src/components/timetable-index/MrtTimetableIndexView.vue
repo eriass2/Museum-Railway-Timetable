@@ -20,9 +20,11 @@ defineProps<{
           v-for="(item, index) in items"
           :key="`${item.label}-${index}`"
           class="mrt-timetable-index__item"
-          :class="item.modifier ? `mrt-timetable-index__item--${item.modifier}` : undefined"
         >
-          <MrtTimetableIndexCard :item="item" />
+          <MrtTimetableIndexCard
+            :item="item"
+            :tone="(item.modifier as 'green' | 'yellow' | 'red' | 'orange' | '') || ''"
+          />
         </li>
       </ul>
     </nav>
@@ -52,22 +54,6 @@ defineProps<{
 
 .mrt-timetable-index__item {
   margin: 0;
-}
-
-.mrt-timetable-index__item--green :deep(.mrt-timetable-index__swatch) {
-  background: var(--mrt-color-traffic-green);
-}
-
-.mrt-timetable-index__item--yellow :deep(.mrt-timetable-index__swatch) {
-  background: var(--mrt-color-traffic-yellow);
-}
-
-.mrt-timetable-index__item--red :deep(.mrt-timetable-index__swatch) {
-  background: var(--mrt-color-traffic-red);
-}
-
-.mrt-timetable-index__item--orange :deep(.mrt-timetable-index__swatch) {
-  background: var(--mrt-color-traffic-orange);
 }
 </style>
 

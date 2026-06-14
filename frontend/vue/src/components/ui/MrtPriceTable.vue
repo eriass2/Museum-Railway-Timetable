@@ -22,8 +22,10 @@ const props = withDefaults(
     loading?: boolean;
     /** Summary step: one row for the chosen trip type. Set true to show full matrix. */
     showAllTypes?: boolean;
+    /** Summary step layout tweaks for price blocks and lists. */
+    context?: 'default' | 'summary';
   }>(),
-  { showAllTypes: false, loading: false },
+  { showAllTypes: false, loading: false, context: 'default' },
 );
 
 const priceCfg = computed(() => unref(props.priceCfg));
@@ -120,12 +122,22 @@ function dayPriceForCategory(catKey: string): string {
 </script>
 
 <template>
-  <MrtStack v-if="loading" margin-top="lg" role="status">
+  <MrtStack
+    v-if="loading"
+    margin-top="lg"
+    role="status"
+    :class="{ 'mrt-price-table--summary': context === 'summary' }"
+  >
     <div class="mrt-price-block">
       {{ labels.title }}…
     </div>
   </MrtStack>
-  <MrtStack v-else-if="priceData" margin-top="lg" gap="md">
+  <MrtStack
+    v-else-if="priceData"
+    margin-top="lg"
+    gap="md"
+    :class="{ 'mrt-price-table--summary': context === 'summary' }"
+  >
     <div class="mrt-price-block">
       <MrtHeading level="h4" size="md" class="mrt-price-block__title">
         {{ labels.title }}
@@ -146,6 +158,7 @@ function dayPriceForCategory(catKey: string): string {
             {{ selectedTypeLabel }}
           </MrtHeading>
           <MrtPriceTableList
+            :variant="context === 'summary' ? 'summary' : 'default'"
             :category-keys="categoryKeys"
             :categories="labels.categories"
             :value-for-category="(ck) => priceForCategory(ck, listTicketType)"
@@ -156,6 +169,7 @@ function dayPriceForCategory(catKey: string): string {
             {{ dayTicketTitle }}
           </MrtHeading>
           <MrtPriceTableList
+            :variant="context === 'summary' ? 'summary' : 'default'"
             :category-keys="categoryKeys"
             :categories="labels.categories"
             :value-for-category="dayPriceForCategory"
@@ -166,6 +180,7 @@ function dayPriceForCategory(catKey: string): string {
       <template v-else>
         <MrtPriceTableList
           v-if="useListLayout"
+          :variant="context === 'summary' ? 'summary' : 'default'"
           :category-keys="categoryKeys"
           :categories="labels.categories"
           :value-for-category="(ck) => priceForCategory(ck, listTicketType)"
@@ -189,6 +204,7 @@ function dayPriceForCategory(catKey: string): string {
               {{ dayTicketTitle }}
             </MrtHeading>
             <MrtPriceTableList
+              :variant="context === 'summary' ? 'summary' : 'default'"
               :category-keys="categoryKeys"
               :categories="labels.categories"
               :value-for-category="dayPriceForCategory"
@@ -260,5 +276,27 @@ function dayPriceForCategory(catKey: string): string {
   font-size: 0.9rem;
   line-height: 1.45;
   color: var(--mrt-color-neutral-600, #555);
+}
+
+.mrt-price-table--summary .mrt-price-block {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--mrt-color-neutral-300, #ccc);
+}
+
+.mrt-price-table--summary .mrt-price-block + .mrt-price-block {
+  margin-top: 1rem;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.mrt-price-table--summary .mrt-price-block__note {
+  color: var(--mrt-color-neutral-700, #444);
+}
+
+@media (max-width: 48rem) {
+  .mrt-price-table--summary .mrt-price-block__title {
+    font-size: 1.05rem;
+  }
 }
 </style>

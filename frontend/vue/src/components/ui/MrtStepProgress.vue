@@ -55,7 +55,7 @@ function stepAria(
 @import './mrtFocusRing.css';
 
 .mrt-step-nav {
-  margin: 0 0 0.75rem;
+  margin: 0 0 var(--mrt-step-nav-margin-bottom, 0.75rem);
   width: 100%;
   max-width: 100%;
   min-width: 0;

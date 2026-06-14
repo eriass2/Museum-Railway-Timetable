@@ -54,14 +54,19 @@ async function toggleDetail(): Promise<void> {
         :notice-cancelled="isCancelled"
       />
     </template>
-    <template #side>
-      <MrtVehicleRow :items="vehicleItems" compact />
-        <p v-if="doorToDoorMinutes !== null" class="mrt-trip-card__duration">
+    <template #vehicles>
+      <MrtVehicleRow :items="vehicleItems" compact layout="trip-card" />
+    </template>
+    <template #duration>
+      <template v-if="doorToDoorMinutes !== null">
         {{ formatDuration(doorToDoorMinutes, cfg) }}
-      </p>
+      </template>
+    </template>
+    <template #action>
       <MrtAccentButton
         variant="select"
         type="button"
+        size="trip-card"
         :disabled="isCancelled"
         @click="emit('select')"
       >

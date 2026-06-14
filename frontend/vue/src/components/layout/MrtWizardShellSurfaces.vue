@@ -14,14 +14,8 @@ defineProps<{
 </template>
 
 <style scoped>
-:deep(.mrt-wizard-main-card__errors) {
-  max-width: 46rem;
-  margin: 0 auto 0.75rem;
-}
-
-:deep(.mrt-journey-wizard__panels) {
-  min-width: 0;
-  max-width: 100%;
+.mrt-wizard-shell-surfaces {
+  --mrt-wizard-errors-max-width: 46rem;
 }
 
 .mrt-wizard-shell-surfaces--embedded {
@@ -31,11 +25,8 @@ defineProps<{
 }
 
 @media (min-width: 48.0625rem) {
-  .mrt-wizard-shell-surfaces:not(.mrt-wizard-shell-surfaces--embedded) :deep(.mrt-wizard-main-card__errors) {
-    max-width: none;
-  }
-
   .mrt-wizard-shell-surfaces:not(.mrt-wizard-shell-surfaces--embedded) {
+    --mrt-wizard-errors-max-width: none;
     --mrt-step-panel-width: 100%;
     --mrt-step-panel-max-width: none;
     --mrt-step-panel-bg: transparent;

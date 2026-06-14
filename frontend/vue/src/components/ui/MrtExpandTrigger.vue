@@ -7,8 +7,11 @@ withDefaults(
     label: string;
     /** Full-width bar (trip card) or inline link (timeline stops). */
     variant?: 'bar' | 'link';
+    /** Link variant: align label row (timeline uses start + full width). */
+    align?: 'between' | 'start';
+    fullWidth?: boolean;
   }>(),
-  { variant: 'bar' },
+  { variant: 'bar', align: 'between', fullWidth: false },
 );
 
 defineEmits<{ toggle: [] }>();
@@ -21,6 +24,8 @@ defineEmits<{ toggle: [] }>();
     :class="{
       'is-expanded': expanded,
       'mrt-expand-trigger--link': variant === 'link',
+      'mrt-expand-trigger--align-start': align === 'start',
+      'mrt-expand-trigger--full': fullWidth,
     }"
     :aria-expanded="expanded"
     v-bind="$attrs"
@@ -110,5 +115,15 @@ defineEmits<{ toggle: [] }>();
 
 .mrt-expand-trigger--link.is-expanded .mrt-expand-trigger__chevron {
   transform: rotate(225deg);
+}
+
+.mrt-expand-trigger--link.mrt-expand-trigger--align-start {
+  justify-content: flex-start;
+}
+
+.mrt-expand-trigger--link.mrt-expand-trigger--full {
+  width: 100%;
+  max-width: 100%;
+  overflow-wrap: anywhere;
 }
 </style>

@@ -115,3 +115,19 @@ onMounted(() => {
     </MrtWizardShell>
   </MrtStack>
 </template>
+
+<style scoped>
+.mrt-wizard-main-card__errors {
+  max-width: var(--mrt-wizard-errors-max-width, 46rem);
+  margin: 0 auto 0.75rem;
+}
+
+.mrt-journey-wizard__panels {
+  min-width: 0;
+  max-width: 100%;
+}
+</style>
+
+<style>
+@import '../wizard/styles/wizardStepSurfaces.css';
+</style>

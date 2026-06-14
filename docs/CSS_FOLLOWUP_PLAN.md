@@ -36,15 +36,78 @@ C1–C5 flyttade **ägande** till rätt komponenter (panel, focus, admin mobil, 
 | 123 | `MrtCalendarGridTable.vue` | Tabell-DOM — OK att behålla `:deep` |
 | 106 | `AdminMobilePageShell.vue` | ✅ C8 — CSS i `admin/styles/mobile/` |
 
-### `:deep(` — acceptabla vs optimera
+### `:deep(` — inventering (2026-06-13, uppdaterad efter flytta/optimera)
 
-| Fil | Antal | Bedömning |
-|-----|------:|-----------|
-| `AdminMobilePageShell.vue` | 0 scoped (imports) | ✅ C8 — feature-specifika mobil-CSS-filer |
-| `MrtCalendarGridTable.vue` | 17 | OK (tabell/cell-DOM) |
-| `MrtPriceTableMatrix.vue` | 16 | OK (tabell-DOM) |
-| `MrtDetailPanel.vue` / `MrtTripCard.vue` | 8 / 7 | OK tills trip-layout refaktor |
-| `WizardSummaryStep.vue` | 10 | Print-undantag |
+**Totalt:** ~115 anrop i **~32 filer** (minskat från ~138 / 36).
+
+| Klass | Status efter refaktor |
+|-------|----------------------|
+| ✅ **Acceptabel** | Oförändrat — WP, tabell-DOM, admin mobil |
+| ⚠️ **Optimera** | ✅ **Klart** — DetailPanel, Timeline, Index, ShellSurfaces, RouteStep, StepPanel |
+| 🔄 **Flytta** | ✅ **Klart** — SummaryStep, SelectedTrip, MainCard, TripCard |
+
+#### Genomfört (2026-06-13)
+
+| Område | Åtgärd |
+|--------|--------|
+| `WizardSummaryStep` | Prislayout → `MrtPriceTable context="summary"` + `MrtPriceTableList variant` |
+| `MrtSelectedTrip` | `returnSummary` äger grön-kort-styling (bort från `WizardTripStep`) |
+| `MrtWizardMainCard` | Bara CSS-tokens (`--mrt-heading-surface-color`, `--mrt-step-nav-margin-bottom`, …) |
+| `MrtTripCard` | Slots `vehicles` / `duration` / `action`; `MrtVehicleRow layout="trip-card"` |
+| `MrtDetailPanel` | Segment-tokens → `MrtDetailSegment` + `MrtVehicleRow` justify-variabler |
+| `MrtTimeline` | `MrtExpandTrigger align/fullWidth` — inga `:deep` kvar |
+| `MrtTimetableIndexCard` | `tone` prop för swatch-färg |
+| `MrtStepPanel` | Panel-tokens + oscoped barnregler (ägare, ej layout `:deep`) |
+| `JourneyWizardApp` | Äger errors/panels + `wizardStepSurfaces.css` |
+
+#### ✅ Acceptabel — behåll
+
+| Fil | Antal | Varför |
+|-----|------:|--------|
+| `MrtCalendarGridTable.vue` | 17 | Tabell/cell-DOM; kalender äger tabellstruktur |
+| `MrtPriceTableMatrix.vue` | 16 | Tabell-DOM + responsiv kort-layout |
+| `admin/styles/mobile/responsive-forms.css` | 9 | WP `.form-table`, `.widefat` i mobil-shell |
+| `admin/styles/mobile/responsive-tables.css` | 8 | Responsiv tabell → kort (WP-mönster) |
+| `admin/styles/mobile/responsive-cards.css` | 4 | Mobil card-list + row actions |
+| `AdminRowActions.vue` | 3 | WP `.button` / delete-link |
+| `AdminDateList.vue` | 3 | WP list + `.button-link` |
+| `AdminInlineForm.vue` | 4 | WP `.regular-text` / `.button` |
+| `TimetableTripFieldsBlock.vue` | 4 | WP `.widefat` / `.description` |
+| `TimetableEditorDeviationDraftForm.vue` | 4 | WP fältklasser |
+| `AdminFlashRow.vue` | 4 | `td`/`th` highlight i tabell |
+| `MrtWizardShell.vue` | 5 | Box-sizing-reset på wizard-träd; shell-innehållsbredd |
+| `RouteEditorFields.vue` | 3 | WP `select` / `.button` |
+| `AdminActionBar.vue` | 2 | WP `.button` |
+| `MonthCalendarApp.vue` | 2 | Dagpanel → overview (dokumenterat undantag) |
+| `MrtCalendarGrid.vue` | 2 | Wizard-variant av kalendertabell |
+| `RouteStationOrderEditor.vue` | 2 | WP `select` / `.button` |
+| `AdminApp.vue` | 1 | `widefat td` vertical-align (enda kvarvarande app-root) |
+| `AdminFormActions.vue` | 1 | WP `.button` |
+| `AdminToolList.vue` | 1 | WP `.button` |
+| `StationsPanel.vue` | 1 | WP `input.small-text` |
+| `MobileTimetablePanel.vue` | 1 | WP `.widefat` |
+| `StopTimesEditor.vue` | 1 | `input[type='time']` |
+| `AdminFieldStack.vue` | 1 | WP `.description` |
+| `TimetableEditorMetaPanel.vue` | 1 | WP `label` |
+| `AdminTrainTypeSelect.vue` | 1 | WP `select` |
+| `PricesPage.vue` | 1 | Sid-specifik priszon-modifier |
+
+**Tumregel:** se [Regler för ny kod](#regler-för-ny-kod-checklista) nedan.
+
+#### Tidigare flytta/optimera (referens — klart)
+
+| Fil | Var |
+|-----|-----|
+| `WizardSummaryStep.vue` | → `MrtPriceTable` / `MrtSummaryCard` |
+| `WizardTripStep.vue` | → `MrtSelectedTrip` |
+| `MrtWizardMainCard.vue` | → tokens + stegkomponenter |
+| `MrtTripCard.vue` | → strukturerade slots + `MrtVehicleRow` |
+| `MrtDetailPanel.vue` | → segment-tokens |
+| `MrtTimeline.vue` | → `MrtExpandTrigger` props |
+| `MrtTimetableIndexView.vue` | → `MrtTimetableIndexCard tone` |
+| `MrtWizardShellSurfaces.vue` | → tokens på shell |
+| `WizardRouteStep.vue` | → `MrtAccentButton size="search"` |
+| `MrtStepPanel.vue` | → panel-tokens (ej layout `:deep`) |
 
 ---
 

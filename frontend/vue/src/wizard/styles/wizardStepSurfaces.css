@@ -1,0 +1,9 @@
+/** Spacing for wizard step surface cards (owned by step components, not layout :deep). */
+
+.mrt-journey-wizard__route-form {
+  margin-top: 0.25rem;
+}
+
+.mrt-journey-wizard__step-section {
+  margin-top: 0.5rem;
+}

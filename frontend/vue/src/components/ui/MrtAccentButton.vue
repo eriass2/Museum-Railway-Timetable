@@ -8,11 +8,13 @@ withDefaults(
     type?: 'button' | 'submit';
     variant?: MrtPublicButtonVariant;
     disabled?: boolean;
+    size?: 'default' | 'search' | 'summary' | 'trip-card';
   }>(),
   {
     type: 'button',
     variant: 'primary',
     disabled: false,
+    size: 'default',
   },
 );
 
@@ -26,6 +28,7 @@ defineEmits<{ click: [] }>();
     :type="type"
     :variant="variant"
     :disabled="disabled"
+    :class="size !== 'default' ? `mrt-accent-btn--size-${size}` : undefined"
     @click="$emit('click')"
   >
     <slot />

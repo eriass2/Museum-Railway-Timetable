@@ -30,4 +30,10 @@ defineProps<{
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
+
+@container mrt-summary-card (max-width: 28rem) {
+  .mrt-summary-card__heading {
+    font-size: 0.9rem;
+  }
+}
 </style>

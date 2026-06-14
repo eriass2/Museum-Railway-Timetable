@@ -114,4 +114,30 @@ const buttonClass = computed(() => {
   opacity: 0.55;
   cursor: not-allowed;
 }
+
+.mrt-accent-btn--size-search.mrt-accent-btn--primary {
+  min-width: 12rem;
+  padding: 0.85rem 2rem;
+  font-size: 1.05rem;
+  letter-spacing: 0.04em;
+}
+
+.mrt-accent-btn--size-summary {
+  min-width: min(100%, 14rem);
+  min-height: 2.85rem;
+  padding: 0.5rem 1.25rem;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 48rem) {
+  .mrt-accent-btn--size-trip-card {
+    min-width: min(100%, 8.5rem);
+  }
+}
+
+@media (max-width: 22.5rem) {
+  .mrt-accent-btn--size-trip-card {
+    width: 100%;
+  }
+}
 </style>

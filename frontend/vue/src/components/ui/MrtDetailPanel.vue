@@ -14,6 +14,14 @@
   --mrt-tl-node: clamp(1rem, 2.5vw, 1.6rem);
   --mrt-tl-gap: clamp(0.35rem, 1vw, 0.65rem);
   --mrt-tl-content-start: calc(var(--mrt-tl-time) + var(--mrt-tl-gap) + var(--mrt-tl-node) + var(--mrt-tl-gap));
+  --mrt-detail-segment-meta-gap: 0.5rem 0.8rem;
+  --mrt-detail-segment-meta-margin-bottom: 0.55rem;
+  --mrt-detail-segment-transfer-margin-top: 0.45rem;
+  --mrt-detail-segment-transfer-margin-bottom: 0.8rem;
+  --mrt-detail-segment-transfer-font-size: 1.1rem;
+  --mrt-detail-segment-title-font-size: inherit;
+  --mrt-vehicle-row-justify: flex-end;
+  --mrt-vehicle-row-width: auto;
 }
 
 .mrt-detail-panel--multi {
@@ -22,24 +30,16 @@
 }
 
 @container mrt-detail (max-width: 28rem) {
-  --mrt-tl-time: clamp(3rem, 18cqi, 3.75rem);
-  --mrt-tl-node: 1.1rem;
-  --mrt-tl-gap: 0.4rem;
-
-  :deep(.mrt-detail-segment__meta) {
-    margin-bottom: 0.4rem;
-    gap: 0.35rem 0.5rem;
-  }
-
-  :deep(.mrt-detail-segment__transfer) {
-    margin-top: 0.25rem;
-    margin-bottom: 0.55rem;
-    font-size: 0.95rem;
-    line-height: 1.35;
-  }
-
-  :deep(.mrt-detail-segment__title) {
-    font-size: 1rem;
+  .mrt-detail-panel {
+    --mrt-tl-time: clamp(3rem, 18cqi, 3.75rem);
+    --mrt-tl-node: 1.1rem;
+    --mrt-tl-gap: 0.4rem;
+    --mrt-detail-segment-meta-gap: 0.35rem 0.5rem;
+    --mrt-detail-segment-meta-margin-bottom: 0.4rem;
+    --mrt-detail-segment-transfer-margin-top: 0.25rem;
+    --mrt-detail-segment-transfer-margin-bottom: 0.55rem;
+    --mrt-detail-segment-transfer-font-size: 0.95rem;
+    --mrt-detail-segment-title-font-size: 1rem;
   }
 }
 
@@ -47,11 +47,8 @@
   .mrt-detail-panel {
     padding: 0.85rem 0.5rem 0.75rem;
     overflow-x: hidden;
-  }
-
-  :deep(.mrt-detail-segment__meta .mrt-vehicle-row) {
-    justify-content: flex-start;
-    width: 100%;
+    --mrt-vehicle-row-justify: flex-start;
+    --mrt-vehicle-row-width: 100%;
   }
 }
 </style>

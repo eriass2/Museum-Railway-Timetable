@@ -125,7 +125,7 @@ function onSearch(): void {
       </div>
 
       <div class="mrt-actions">
-        <MrtAccentButton type="button" @click="onSearch">
+        <MrtAccentButton type="button" size="search" @click="onSearch">
           {{ cfgStr(cfg, 'searchTrip', 'Sök resa') }}
         </MrtAccentButton>
       </div>
@@ -139,18 +139,9 @@ function onSearch(): void {
   gap: 0.25rem;
 }
 
-.mrt-journey-wizard__station-field :deep(.mrt-heading) {
-  color: var(--mrt-wizard-text, #151515);
-  font-weight: 700;
-}
-
 .mrt-field-error {
   margin: 0 0 1rem;
   text-align: center;
-}
-
-.mrt-field-error :deep(.mrt-ui-alert) {
-  margin: 0;
 }
 
 .mrt-actions {

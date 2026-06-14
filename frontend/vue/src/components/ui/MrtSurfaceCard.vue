@@ -40,7 +40,7 @@ withDefaults(
 .mrt-surface--box {
   box-shadow: none;
   border: 1px solid var(--mrt-surface-border, var(--mrt-box-border, var(--mrt-border-default)));
-  border-radius: var(--mrt-radius-sm, 0);
+  border-radius: var(--mrt-surface-radius, var(--mrt-radius-sm, 0));
 }
 
 @media (max-width: 48rem) {

@@ -28,31 +28,9 @@ defineProps<{
   --mrt-step-panel-color: inherit;
   --mrt-step-panel-search-width: 100%;
   --mrt-step-panel-wide-width: 100%;
-}
-
-:deep(.mrt-journey-wizard__beta) {
-  max-width: none;
-  margin-bottom: 1rem;
-}
-
-:deep(.mrt-step-nav) {
-  margin-bottom: 1.25rem;
-}
-
-:deep(.mrt-wizard-main-card__errors) {
-  max-width: none;
-}
-
-:deep(.mrt-heading--surface-title) {
-  color: #fff;
-}
-
-:deep(.mrt-journey-wizard__route-form) {
-  margin-top: 0.25rem;
-}
-
-:deep(.mrt-journey-wizard__step-section) {
-  margin-top: 0.5rem;
+  --mrt-wizard-beta-max-width: none;
+  --mrt-step-nav-margin-bottom: 1.25rem;
+  --mrt-heading-surface-color: #fff;
 }
 
 .mrt-wizard-main-card--embedded {

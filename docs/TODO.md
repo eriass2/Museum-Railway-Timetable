@@ -48,6 +48,7 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 | R-J1 | Ca-semantik wizard vs Turvy (beslut D23) + `STOP_TIME_CA.md` | öppen |
 | R-J5 | Timeline E2E/screenshot-regression | öppen |
 | R-T1 | Ta bort TS legacy body-fallback när API alltid sätter `detail_intro` | öppen |
+| R-CSS1 | Wizard `:deep` flytta/optimera (summary, trip card, panel tokens) | ✅ |
 
 ---
 

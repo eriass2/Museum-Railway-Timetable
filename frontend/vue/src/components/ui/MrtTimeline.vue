@@ -89,6 +89,8 @@ function showsInfoForStop(stop: MrtTimelineStop): boolean {
         <span class="mrt-timeline__node-col mrt-timeline__node-col--empty" aria-hidden="true" />
         <MrtExpandTrigger
           variant="link"
+          align="start"
+          full-width
           :expanded="showAllStops"
           :label="expandLabel"
           @toggle="showAllStops = !showAllStops"
@@ -121,15 +123,6 @@ function showsInfoForStop(stop: MrtTimelineStop): boolean {
 
 .mrt-timeline__toggle {
   padding: 0.15rem 0;
-}
-
-.mrt-timeline__toggle :deep(.mrt-expand-trigger--link) {
-  grid-column: 3;
-  margin: 0;
-  max-width: 100%;
-  width: 100%;
-  justify-content: flex-start;
-  overflow-wrap: anywhere;
 }
 
 .mrt-timeline__time {
@@ -220,11 +213,6 @@ function showsInfoForStop(stop: MrtTimelineStop): boolean {
 
   .mrt-timeline__node {
     border-width: 0.22rem;
-  }
-
-  .mrt-timeline__toggle :deep(.mrt-expand-trigger--link) {
-    font-size: 0.9rem;
-    line-height: 1.35;
   }
 }
 </style>

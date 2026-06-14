@@ -1,13 +1,17 @@
 <script setup lang="ts">
-defineProps<{
-  categoryKeys: string[];
-  categories: Record<string, string>;
-  valueForCategory: (catKey: string) => string;
-}>();
+withDefaults(
+  defineProps<{
+    categoryKeys: string[];
+    categories: Record<string, string>;
+    valueForCategory: (catKey: string) => string;
+    variant?: 'default' | 'summary';
+  }>(),
+  { variant: 'default' },
+);
 </script>
 
 <template>
-  <dl class="mrt-price-list">
+  <dl class="mrt-price-list" :class="{ 'mrt-price-list--summary': variant === 'summary' }">
     <div v-for="ck in categoryKeys" :key="ck" class="mrt-price-list__row">
       <dt class="mrt-price-list__label">{{ categories[ck] || ck }}</dt>
       <dd class="mrt-price-list__value">{{ valueForCategory(ck) }}</dd>
@@ -55,5 +59,24 @@ defineProps<{
   color: inherit;
   text-align: right;
   white-space: nowrap;
+}
+
+@media (max-width: 48rem) {
+  .mrt-price-list--summary {
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+  }
+
+  .mrt-price-list--summary .mrt-price-list__row {
+    padding: 0.55rem 0;
+    border-bottom-color: var(--mrt-color-neutral-300, #ccc);
+  }
+
+  .mrt-price-list--summary .mrt-price-list__label,
+  .mrt-price-list--summary .mrt-price-list__value {
+    color: var(--mrt-wizard-text, #151515);
+    font-weight: 700;
+  }
 }
 </style>

@@ -1,15 +1,22 @@
 <script setup lang="ts">
 import type { TimetableIndexItem } from '@/types/timetableIndex';
 
-defineProps<{
-  item: TimetableIndexItem;
-}>();
+type IndexTone = 'green' | 'yellow' | 'red' | 'orange' | '';
+
+withDefaults(
+  defineProps<{
+    item: TimetableIndexItem;
+    tone?: IndexTone;
+  }>(),
+  { tone: '' },
+);
 </script>
 
 <template>
   <a
     v-if="item.url"
     class="mrt-timetable-index__card"
+    :class="tone ? `mrt-timetable-index__card--${tone}` : undefined"
     :href="item.url"
     :aria-label="`${item.label} — ${item.ariaHint}`"
   >
@@ -20,7 +27,11 @@ defineProps<{
     </span>
     <span class="mrt-timetable-index__chevron" aria-hidden="true" />
   </a>
-  <div v-else class="mrt-timetable-index__card mrt-timetable-index__card--static">
+  <div
+    v-else
+    class="mrt-timetable-index__card mrt-timetable-index__card--static"
+    :class="tone ? `mrt-timetable-index__card--${tone}` : undefined"
+  >
     <span class="mrt-timetable-index__swatch" aria-hidden="true" />
     <span class="mrt-timetable-index__body">
       <span class="mrt-timetable-index__title">{{ item.label }}</span>
@@ -66,7 +77,23 @@ defineProps<{
   align-self: stretch;
   min-height: 2.75rem;
   border-radius: 999px;
-  background: var(--mrt-color-traffic-green);
+  background: var(--mrt-index-swatch-bg, var(--mrt-color-traffic-green));
+}
+
+.mrt-timetable-index__card--green {
+  --mrt-index-swatch-bg: var(--mrt-color-traffic-green);
+}
+
+.mrt-timetable-index__card--yellow {
+  --mrt-index-swatch-bg: var(--mrt-color-traffic-yellow);
+}
+
+.mrt-timetable-index__card--red {
+  --mrt-index-swatch-bg: var(--mrt-color-traffic-red);
+}
+
+.mrt-timetable-index__card--orange {
+  --mrt-index-swatch-bg: var(--mrt-color-traffic-orange);
 }
 
 .mrt-timetable-index__body {

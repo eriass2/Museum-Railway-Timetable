@@ -11,7 +11,15 @@ defineProps<{
         <slot name="copy" />
       </div>
       <div class="mrt-trip-card__side">
-        <slot name="side" />
+        <div v-if="$slots.vehicles" class="mrt-trip-card__side-vehicles">
+          <slot name="vehicles" />
+        </div>
+        <div v-if="$slots.duration" class="mrt-trip-card__duration">
+          <slot name="duration" />
+        </div>
+        <div v-if="$slots.action" class="mrt-trip-card__side-action">
+          <slot name="action" />
+        </div>
       </div>
     </div>
     <slot name="actions" />
@@ -71,53 +79,26 @@ defineProps<{
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "vehicles vehicles"
-      "duration button";
+      "duration action";
     align-items: center;
     gap: 0.55rem 0.75rem;
   }
 
-  .mrt-trip-card__side :deep(.mrt-vehicle-row) {
+  .mrt-trip-card__side-vehicles {
     grid-area: vehicles;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 0.35rem;
-    max-width: 100%;
-  }
-
-  .mrt-trip-card__side :deep(.mrt-vehicle-row--compact) {
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: flex-end;
-  }
-
-  .mrt-trip-card__side :deep(.mrt-vehicle-row__item) {
+    width: 100%;
     min-width: 0;
-    max-width: 100%;
   }
 
-  .mrt-trip-card__side :deep(.mrt-vehicle-row__icon) {
-    flex-shrink: 0;
-    width: 36px;
-    height: 18px;
-  }
-
-  .mrt-trip-card__side :deep(.mrt-vehicle-row__item > .mrt-vehicle-row__label) {
-    min-width: 0;
-    overflow-wrap: anywhere;
+  .mrt-trip-card__side-action {
+    grid-area: action;
+    justify-self: end;
   }
 
   .mrt-trip-card__duration {
     grid-area: duration;
     margin: 0;
     font-size: 1.15rem;
-  }
-
-  .mrt-trip-card__side > :deep(.mrt-accent-btn) {
-    grid-area: button;
-    justify-self: end;
-    min-width: min(100%, 8.5rem);
   }
 }
 
@@ -127,11 +108,10 @@ defineProps<{
     grid-template-areas:
       "vehicles"
       "duration"
-      "button";
+      "action";
   }
 
-  .mrt-trip-card__side > :deep(.mrt-accent-btn) {
-    grid-area: button;
+  .mrt-trip-card__side-action {
     justify-self: stretch;
     width: 100%;
   }

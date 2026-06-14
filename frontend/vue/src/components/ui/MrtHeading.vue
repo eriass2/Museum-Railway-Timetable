@@ -60,7 +60,7 @@ withDefaults(
 
 .mrt-heading--surface-title {
   margin: 0 0 1.25rem;
-  color: var(--mrt-color-green-700, #1f4d2e);
+  color: var(--mrt-heading-surface-color, var(--mrt-color-green-700, #1f4d2e));
   text-align: center;
   font-size: clamp(2rem, 4vw, 2.6rem);
   line-height: 1.08;

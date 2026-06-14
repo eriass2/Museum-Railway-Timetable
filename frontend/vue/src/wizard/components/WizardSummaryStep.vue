@@ -75,6 +75,7 @@ function onBack(): void {
         </div>
 
         <MrtPriceTable
+          context="summary"
           :price-cfg="cfg"
           :labels="priceLabels"
           :trip-price="priceData"
@@ -88,15 +89,17 @@ function onBack(): void {
           v-if="ticketUrl"
           :href="ticketUrl"
           variant="primary"
+          size="summary"
         >
           {{ ticketCtaLabel }}
         </MrtAccentButton>
-        <MrtAccentButton type="button" variant="secondary" @click="onPrint">
+        <MrtAccentButton type="button" variant="secondary" size="summary" @click="onPrint">
           {{ printLabel }}
         </MrtAccentButton>
         <MrtAccentButton
           type="button"
           variant="secondary"
+          size="summary"
           :disabled="pdfDownloading"
           @click="onDownloadPdf"
         >
@@ -129,22 +132,6 @@ function onBack(): void {
   margin-bottom: 0.15rem;
 }
 
-:deep(.mrt-price-block) {
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--mrt-color-neutral-300, #ccc);
-}
-
-:deep(.mrt-price-block + .mrt-price-block) {
-  margin-top: 1rem;
-  padding-top: 0;
-  border-top: 0;
-}
-
-:deep(.mrt-price-block__note) {
-  color: var(--mrt-color-neutral-700, #444);
-}
-
 .mrt-summary-print-title,
 .mrt-summary-print-meta {
   display: none;
@@ -158,14 +145,6 @@ function onBack(): void {
   margin-top: 1.75rem;
 }
 
-.mrt-summary-actions :deep(.mrt-accent-btn) {
-  display: inline-flex;
-  min-width: min(100%, 14rem);
-  min-height: 2.85rem;
-  padding: 0.5rem 1.25rem;
-  font-size: 1.05rem;
-}
-
 .mrt-summary-actions__feedback {
   margin: 0.75rem 0 0;
   text-align: center;
@@ -176,31 +155,6 @@ function onBack(): void {
 @media (max-width: 48rem) {
   .mrt-summary-list--round-trip {
     grid-template-columns: 1fr;
-  }
-
-  :deep(.mrt-price-list) {
-    padding: 0;
-    border-radius: 0;
-    background: transparent;
-  }
-
-  :deep(.mrt-price-list__row) {
-    padding: 0.55rem 0;
-    border-bottom-color: var(--mrt-color-neutral-300, #ccc);
-  }
-
-  :deep(.mrt-price-list__label),
-  :deep(.mrt-price-list__value) {
-    color: var(--mrt-wizard-text, #151515);
-    font-weight: 700;
-  }
-
-  :deep(.mrt-price-block__title) {
-    font-size: 1.05rem;
-  }
-
-  :deep(.mrt-summary-card__heading) {
-    font-size: 0.9rem;
   }
 }
 </style>

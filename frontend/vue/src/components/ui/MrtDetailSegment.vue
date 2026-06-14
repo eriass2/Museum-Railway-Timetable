@@ -37,6 +37,10 @@ defineProps<{
   margin-bottom: var(--mrt-spacing-sm);
 }
 
+.mrt-detail-segment__title {
+  font-size: var(--mrt-detail-segment-title-font-size, inherit);
+}
+
 .mrt-detail-segment__notice {
   margin: 0.2rem 0 0.4rem;
   color: #151515;
@@ -51,15 +55,16 @@ defineProps<{
 .mrt-detail-segment__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 0.8rem;
+  gap: var(--mrt-detail-segment-meta-gap, 0.5rem 0.8rem);
   align-items: center;
-  margin: 0 0 0.55rem var(--mrt-tl-content-start, 0);
+  margin: 0 0 var(--mrt-detail-segment-meta-margin-bottom, 0.55rem) var(--mrt-tl-content-start, 0);
 }
 
 .mrt-detail-segment__transfer {
-  margin: 0.45rem 0 0.8rem var(--mrt-tl-content-start, 0);
+  margin: var(--mrt-detail-segment-transfer-margin-top, 0.45rem) 0
+    var(--mrt-detail-segment-transfer-margin-bottom, 0.8rem) var(--mrt-tl-content-start, 0);
   color: #333333;
-  font-size: 1.1rem;
+  font-size: var(--mrt-detail-segment-transfer-font-size, 1.1rem);
   font-weight: 700;
 }
 </style>
