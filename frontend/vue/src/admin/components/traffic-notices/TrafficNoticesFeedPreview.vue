@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { toRef } from 'vue';
 import MrtDisruptionFeedSections from '@/components/traffic-notices/MrtDisruptionFeedSections.vue';
+import { AdminPanel } from '../ui';
 import { useTrafficNoticesFeedPreview } from '../../composables/traffic-notices/useTrafficNoticesFeedPreview';
 import { adminStr } from '../../utils/adminLabels';
 
@@ -14,10 +15,10 @@ const { cfg, loading, error, payload, sectionLabels, editForItem } = useTrafficN
 </script>
 
 <template>
-  <section class="mrt-traffic-notices-admin-preview">
-    <h2 class="mrt-traffic-notices-admin-preview__title">
-      {{ adminStr(cfg, 'trafficNoticesFeedTitle') }}
-    </h2>
+  <AdminPanel
+    class="mrt-traffic-notices-admin-preview"
+    :title="adminStr(cfg, 'trafficNoticesFeedTitle')"
+  >
     <p class="mrt-traffic-notices-admin-preview__intro">
       {{ adminStr(cfg, 'trafficNoticesFeedIntro') }}
     </p>
@@ -39,20 +40,10 @@ const { cfg, loading, error, payload, sectionLabels, editForItem } = useTrafficN
         :edit-for-item="editForItem"
       />
     </div>
-  </section>
+  </AdminPanel>
 </template>
 
 <style scoped>
-.mrt-traffic-notices-admin-preview {
-  margin-top: var(--mrt-admin-panel-margin-top, 16px);
-}
-
-.mrt-traffic-notices-admin-preview__title {
-  margin: 0 0 0.5rem;
-  font-size: 1.05em;
-  line-height: 1.3;
-}
-
 .mrt-traffic-notices-admin-preview__intro {
   margin: 0 0 1rem;
   color: var(--mrt-color-neutral-600, #666);

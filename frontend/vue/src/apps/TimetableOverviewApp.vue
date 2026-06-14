@@ -27,7 +27,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <MrtPublicAppShell :constrain-content="!embedded">
+  <MrtPublicAppShell :constrain-content="!embedded" :content-padding="!embedded">
   <MrtStack
     as="div"
     class="mrt-vue-overview"

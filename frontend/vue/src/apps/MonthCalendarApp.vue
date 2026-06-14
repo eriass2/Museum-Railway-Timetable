@@ -157,7 +157,7 @@ async function onMonthShift(delta: number): Promise<void> {
       @prev="onMonthShift(-1)"
       @next="onMonthShift(1)"
     />
-    <MrtHeading v-else level="h2" size="lg">
+    <MrtHeading v-else level="h2" size="lg" class="mrt-month__title">
       {{ monthTitle }}
     </MrtHeading>
 
@@ -231,6 +231,10 @@ async function onMonthShift(delta: number): Promise<void> {
 
 .mrt-month__grid-wrap {
   position: relative;
+}
+
+.mrt-month__title {
+  margin-bottom: var(--mrt-spacing-sm, 0.5rem);
 }
 
 .mrt-month__grid--loading {

@@ -156,7 +156,7 @@ defineProps<{
   }
 
   .mrt-month-table :deep(thead th) {
-    padding: 0.45rem 0.1rem;
+    padding: 0.45rem 0.15rem;
     font-size: 0.78rem;
     font-weight: 700;
     background: var(--mrt-bg-white, #fff);

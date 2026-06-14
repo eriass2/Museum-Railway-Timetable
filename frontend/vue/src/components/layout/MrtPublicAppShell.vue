@@ -8,11 +8,14 @@ const props = withDefaults(
     backgroundImage?: string;
     /** When false, content slot is not capped (rare; default matches all public apps). */
     constrainContent?: boolean;
+    /** When false, skip viewport gutter (e.g. embedded overview inside a padded panel). */
+    contentPadding?: boolean;
   }>(),
   {
     bleedBackground: false,
     backgroundImage: '',
     constrainContent: true,
+    contentPadding: true,
   },
 );
 
@@ -39,7 +42,10 @@ const backdropStyle = computed(() => {
     />
     <div
       class="mrt-app-shell__content"
-      :class="{ 'mrt-app-shell__content--fluid': !constrainContent }"
+      :class="{
+        'mrt-app-shell__content--fluid': !constrainContent,
+        'mrt-app-shell__content--flush': !contentPadding,
+      }"
     >
       <slot />
     </div>
@@ -75,6 +81,10 @@ const backdropStyle = computed(() => {
 
 .mrt-app-shell__content--fluid {
   max-width: none;
+}
+
+.mrt-app-shell__content--flush {
+  padding-inline: 0;
 }
 
 .mrt-app-shell__backdrop {

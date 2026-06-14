@@ -222,7 +222,7 @@ function onClick(): void {
 
 @media (max-width: 40rem) {
   .mrt-month-day {
-    padding: 0.25rem 0.15rem 0;
+    padding: 0.25rem 0.2rem 0;
   }
 }
 </style>
