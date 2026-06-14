@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import type { DisruptionFeedItem } from '@/api/disruptionFeed';
 import MrtExpandTrigger from '@/components/ui/MrtExpandTrigger.vue';
 import {
@@ -9,6 +9,7 @@ import {
   disruptionFeedHasDetailSections,
   disruptionFeedItemCanExpand,
   disruptionFeedItemIntro,
+  disruptionFeedItemKindAriaLabel,
   disruptionFeedItemKindClasses,
   disruptionFeedShowIntro,
   type DisruptionFeedEditHint,
@@ -18,10 +19,12 @@ import {
 const props = defineProps<{
   item: DisruptionFeedItem;
   labels: DisruptionFeedItemLabels;
+  expanded: boolean;
   editHint?: DisruptionFeedEditHint | null;
 }>();
 
-const infoOpen = ref(false);
+const emit = defineEmits<{ toggle: [] }>();
+
 const detailsOpen = ref(false);
 
 const intro = computed(() => disruptionFeedItemIntro(props.item));
@@ -31,15 +34,34 @@ const hasSections = computed(() => disruptionFeedHasDetailSections(props.item));
 const canExpand = computed(() => disruptionFeedItemCanExpand(props.item, props.editHint));
 const expandLabel = computed(() => disruptionFeedExpandLabel(props.item, props.labels));
 const showSectionsPanel = computed(
-  () => detailsOpen.value || (infoOpen.value && !hasIntro.value),
+  () => detailsOpen.value || (props.expanded && !hasIntro.value),
+);
+const summaryAriaLabel = computed(() => {
+  const kind = disruptionFeedItemKindAriaLabel(props.item.kind);
+  const parts = [kind, props.item.date_label, props.item.headline].filter(Boolean);
+  return parts.join('. ');
+});
+
+watch(
+  () => props.expanded,
+  (open) => {
+    if (open && !hasIntro.value) {
+      detailsOpen.value = true;
+      return;
+    }
+    if (!open) {
+      detailsOpen.value = false;
+    }
+  },
 );
 
 function toggleInfo(): void {
-  infoOpen.value = !infoOpen.value;
-  if (infoOpen.value && !hasIntro.value) {
+  const willOpen = !props.expanded;
+  emit('toggle');
+  if (willOpen && !hasIntro.value) {
     detailsOpen.value = true;
   }
-  if (!infoOpen.value) {
+  if (!willOpen) {
     detailsOpen.value = false;
   }
 }
@@ -50,10 +72,29 @@ function toggleInfo(): void {
     class="mrt-traffic-notices__feed-item"
     :class="[
       disruptionFeedItemKindClasses(item),
-      { 'is-expanded': infoOpen },
+      { 'is-expanded': expanded },
     ]"
   >
-    <div class="mrt-traffic-notices__summary-row">
+    <button
+      v-if="canExpand"
+      type="button"
+      class="mrt-traffic-notices__summary-row mrt-traffic-notices__summary-row--interactive"
+      :aria-expanded="expanded"
+      :aria-label="summaryAriaLabel"
+      @click="toggleInfo"
+    >
+      <span class="mrt-traffic-notices__summary">
+        <time
+          v-if="item.date_label"
+          class="mrt-traffic-notices__date"
+          :datetime="item.date_from"
+        >
+          {{ item.date_label }}
+        </time>
+        <span class="mrt-traffic-notices__headline">{{ item.headline }}</span>
+      </span>
+    </button>
+    <div v-else class="mrt-traffic-notices__summary-row">
       <p class="mrt-traffic-notices__summary">
         <time
           v-if="item.date_label"
@@ -67,11 +108,11 @@ function toggleInfo(): void {
     </div>
     <MrtExpandTrigger
       v-if="canExpand"
-      :expanded="infoOpen"
+      :expanded="expanded"
       :label="expandLabel"
       @toggle="toggleInfo"
     />
-    <div v-if="infoOpen" class="mrt-traffic-notices__expanded">
+    <div v-if="expanded" class="mrt-traffic-notices__expanded">
       <p v-if="hasIntro" class="mrt-traffic-notices__intro">
         {{ intro }}
       </p>
@@ -108,10 +149,25 @@ function toggleInfo(): void {
 </template>
 
 <style scoped>
+@import '@/components/ui/mrtFocusRing.css';
+
 .mrt-traffic-notices__feed-item {
   margin: 0;
   list-style: none;
   border-block-end: 1px solid var(--mrt-wizard-border, #ddd);
+  border-inline-start: 4px solid transparent;
+}
+
+.mrt-traffic-notices__feed-item--info {
+  border-inline-start-color: var(--mrt-color-brand-green, #296310);
+}
+
+.mrt-traffic-notices__feed-item--deviation {
+  border-inline-start-color: var(--mrt-color-warning-800, #7a4f01);
+}
+
+.mrt-traffic-notices__feed-item--cancelled {
+  border-inline-start-color: var(--mrt-text-error, #b32d2e);
 }
 
 .mrt-traffic-notices__feed-item:last-child {
@@ -122,11 +178,28 @@ function toggleInfo(): void {
   padding: 0.65rem 0.9rem;
 }
 
-.mrt-traffic-notices__feed-item.is-expanded .mrt-traffic-notices__summary-row {
+.mrt-traffic-notices__summary-row--interactive {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  padding: 0.65rem 0.9rem;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+}
+
+.mrt-traffic-notices__feed-item.is-expanded .mrt-traffic-notices__summary-row--interactive {
   background: var(--mrt-color-neutral-200, #d6d6d6);
 }
 
 .mrt-traffic-notices__summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.15rem 0.35rem;
   margin: 0;
   line-height: 1.35;
   font-size: 0.9375rem;
@@ -138,11 +211,9 @@ function toggleInfo(): void {
   white-space: nowrap;
 }
 
-.mrt-traffic-notices__date::after {
-  content: '\00a0';
-}
-
 .mrt-traffic-notices__headline {
+  flex: 1 1 auto;
+  min-width: 0;
   margin: 0;
   font-weight: 600;
 }
@@ -150,6 +221,13 @@ function toggleInfo(): void {
 .mrt-traffic-notices__feed-item--cancelled .mrt-traffic-notices__headline {
   text-decoration: line-through;
   opacity: 0.85;
+}
+
+@media (max-width: 30rem) {
+  .mrt-traffic-notices__date {
+    flex: 0 0 100%;
+    white-space: normal;
+  }
 }
 
 .mrt-traffic-notices__expanded {

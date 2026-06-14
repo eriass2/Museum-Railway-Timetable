@@ -72,6 +72,17 @@ export function disruptionFeedItemKindClasses(item: DisruptionFeedItem): Record<
   };
 }
 
+export function disruptionFeedItemKindAriaLabel(kind: DisruptionFeedItem['kind']): string {
+  switch (kind) {
+    case 'cancelled':
+      return 'Inställd trafik';
+    case 'deviation':
+      return 'Tur-avvikelse';
+    default:
+      return 'Information';
+  }
+}
+
 export function disruptionFeedEditHref(hint: DisruptionFeedEditHint): string {
   const params = new URLSearchParams(hint.query ?? {});
   const query = params.toString();

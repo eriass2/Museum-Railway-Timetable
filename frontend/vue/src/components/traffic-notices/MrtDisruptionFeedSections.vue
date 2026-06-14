@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import type { DisruptionFeedItem } from '@/api/disruptionFeed';
 import {
   DEFAULT_DISRUPTION_FEED_ITEM_LABELS,
@@ -64,6 +64,12 @@ function editHint(item: DisruptionFeedItem): DisruptionFeedEditHint | null {
 function showRouteHeading(section: FeedSection, group: DisruptionFeedRouteGroup): boolean {
   return section.key === 'upcoming' && group.routeLabel !== '';
 }
+
+const expandedItemId = ref<string | null>(null);
+
+function toggleItem(itemId: string): void {
+  expandedItemId.value = expandedItemId.value === itemId ? null : itemId;
+}
 </script>
 
 <template>
@@ -95,7 +101,9 @@ function showRouteHeading(section: FeedSection, group: DisruptionFeedRouteGroup)
               :key="item.id"
               :item="item"
               :labels="itemLabels"
+              :expanded="expandedItemId === item.id"
               :edit-hint="editHint(item)"
+              @toggle="toggleItem(item.id)"
             />
           </ul>
         </div>

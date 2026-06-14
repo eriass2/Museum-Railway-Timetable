@@ -5,6 +5,7 @@ import {
   disruptionFeedHasDetailSections,
   disruptionFeedItemCanExpand,
   disruptionFeedItemIntro,
+  disruptionFeedItemKindAriaLabel,
   disruptionFeedShowIntro,
 } from '../src/utils/disruptionFeedDisplay';
 import type { DisruptionFeedItem } from '../src/api/disruptionFeed';
@@ -74,6 +75,14 @@ describe('disruptionFeed expand helpers', () => {
 
     const headlineOnly = item({ headline: 'Kort rubrik' });
     expect(disruptionFeedItemCanExpand(headlineOnly)).toBe(false);
+  });
+});
+
+describe('disruptionFeedItemKindAriaLabel', () => {
+  it('maps feed kinds to Swedish labels', () => {
+    expect(disruptionFeedItemKindAriaLabel('cancelled')).toBe('Inställd trafik');
+    expect(disruptionFeedItemKindAriaLabel('deviation')).toBe('Tur-avvikelse');
+    expect(disruptionFeedItemKindAriaLabel('info')).toBe('Information');
   });
 });
 

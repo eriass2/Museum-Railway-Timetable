@@ -24,6 +24,7 @@ function MRT_admin_vue_l10n_traffic_notices(): array {
 			'Samma lista som besökare ser på webben (Pågår nu / Kommande). Länkar går till redigering här eller under Tidtabeller → Avvikelser.',
 			'museum-railway-timetable'
 		),
+		'trafficNoticesFeedPreviewCaption' => __( 'Så här ser det ut på sajten', 'museum-railway-timetable' ),
 		'trafficNoticesFeedEmpty'     => __( 'Inga störningar i feeden just nu.', 'museum-railway-timetable' ),
 		'trafficNoticesFeedOngoing'   => __( 'Pågår nu', 'museum-railway-timetable' ),
 		'trafficNoticesFeedUpcoming'  => __( 'Kommande', 'museum-railway-timetable' ),
