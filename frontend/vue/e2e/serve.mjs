@@ -491,8 +491,33 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
       JSON.stringify({
         detail: {
           stops: [
-            { station_title: 'Uppsala', departure_time: '09:00' },
-            { station_title: 'Märsta', arrival_time: '10:30' },
+            {
+              station_title: 'Uppsala Östra',
+              departure_time: '10:00',
+              time_label: '10.00',
+            },
+            {
+              station_title: 'Fyrislund',
+              departure_time: '10:15',
+              time_label: '10.15',
+            },
+            {
+              station_title: 'Årsta',
+              departure_time: '10:30',
+              time_label: '10.30',
+            },
+            {
+              station_title: 'Lövstahagen',
+              departure_time: '10:46',
+              time_label: 'Ca 10.46',
+              approximate_time: true,
+              on_request_dropoff: true,
+            },
+            {
+              station_title: 'Marielund',
+              arrival_time: '11:00',
+              time_label: '11.00',
+            },
           ],
           duration_minutes: 90,
         },

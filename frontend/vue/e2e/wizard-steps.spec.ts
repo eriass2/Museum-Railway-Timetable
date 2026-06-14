@@ -33,7 +33,7 @@ test.describe('Journey wizard steps', () => {
 
   test('return step shows selected outbound banner', async ({ page }) => {
     await page.goto('/wizard?debug=return');
-    await expect(page.locator('.mrt-selected-trip[data-wizard-return-summary]')).toBeVisible();
+    await expect(page.locator('.mrt-selected-trip--return-summary')).toBeVisible();
     await expect(page.locator('.mrt-selected-trip__label')).toContainText(/utresa/i);
     await page.locator('.mrt-trip-list').getByRole('button', { name: /Välj/i }).click();
     await expect(page.locator('.mrt-journey-wizard')).toHaveAttribute('data-step', 'summary');
