@@ -3,7 +3,7 @@
 Återkoppling efter publicering och [svar 11 juni](2026-06-11-svar-till-jesper.md). Jesper bekräftar att vi **fixar det som finns nu innan vi bygger vidare** och att reseplaneraren **känns snabbare**. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (2026-06-12), mockup `image0.png`  
-**Senast uppdaterad:** 2026-06-13 (J19–J21 klar team; J20 mobil-rad; J24 mot-destination)  
+**Senast uppdaterad:** 2026-06-13 (J19–J21 klar team; J23–J26 detaljvy)  
 **Relaterat:** [2026-06-11-jesper-reseplanerare.md](2026-06-11-jesper-reseplanerare.md) (J14–J18), [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J3, J4, J10), [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
 
 ---
@@ -14,7 +14,7 @@
 |----------|-------|-----------|--------|
 | Prestanda (bekräftelse) | 1 | — | Jesper OK — J14 upplevs bättre |
 | Layout / design (regression + ny riktning) | 3 | hög | J19 klar (väntar Jesper); J20–J21 implementation klar, J21 verifiering test3 senare |
-| Detaljvy — buggar (Ca, mot, fotnot) | 3 | hög | J24 klar (team); J23, J26 öppna |
+| Detaljvy — buggar (Ca, mot, fotnot) | 3 | hög | J23–J26 klar (team) |
 | Detaljvy — polish (tidslinje, Ca-rad) | 2 | medium–låg | öppen |
 | Omgång 3 kvar (J15–J18) | 4 | varierande | öppen — paus tills layout/buggar fixade |
 
@@ -167,28 +167,26 @@ Vertikal linje centrerad genom stationsymboler; inga brutna eller förskjutna no
 - **Område:** Reseplanerare / detaljvy + admin stopptider
 - **Typ:** bugg (logik och/eller data)
 - **Prioritet:** hög
-- **Status:** öppen
+- **Status:** **klar (team, 2026-06-12)** — Ca i reseplaneraren endast vid `approximate_time` **och** behovsläge (`on_request`); enhetstester i `StopTimeWizardDisplayTest`. Verifiera på test3 (Uppsala Ö → Lövstahagen).
 
-### Nuvarande läge
+### Rotorsak (var)
 
-| Del | Var | Logik |
-|-----|-----|-------|
-| Ca-prefix | `stop-time-wizard-display.php` | `approximate_time` på stoprad → `Ca ` + tid |
-| Admin | Stopptider — checkbox `approximate_time` | Separat från behovsläge (`on_request`) |
-| J4 (2026-06-09) | Ca för hållplatser utan exakt tid i tidtabell | Kan krocka med Jespers nya tolkning |
+Ca-prefix visades när `approximate_time` var satt — oavsett schemalagt eller behov — enligt äldre J4-tolkning (Ca för hållplatser utan exakt B-tid).
 
-### Jespers intention
+### Levererat (team)
 
-- **Uppsala Ö** (schemalagd avgång) ska **inte** ha Ca.
-- **Ca** ska gälla **behovsuppehåll** — anges via turens stopptider (behov + ev. ungefärlig tid).
-- Mockup visar exakt tid vid ordinarie hållplatser; Ca vid behovshållplatser.
+| Del | Var | Beteende |
+|-----|-----|----------|
+| Wizard-tidsrad | `stop-time-wizard-display.php` | `show_ca = approximate_time && (pickup_or \|\| dropoff_or)` |
+| Test | `StopTimeWizardDisplayTest` | Schemalagd + `approximate_time` → ingen Ca; behov + `approximate_time` → `Ca …` |
 
-### Föreslagen åtgärd
+### Kvar (ev. senare)
 
-1. **Data:** Kontrollera om Uppsala Ö har `approximate_time` felaktigt satt i Lennakatten-data.
-2. **Produkt/logik:** Klargör om Ca = `approximate_time` **eller** Ca = behovsuppehåll med tid — Jesper säger senare.
-3. Om ny regel: visa Ca endast när `on_request` + tid (eller enbart behov enligt mockup), inte för schemalagda stationer.
-4. Uppdatera admin-hjälptext under stopptider så operatör vet när Ca ska användas.
+| Del | Status |
+|-----|--------|
+| Tidtabellsöversikt / Turvy | `stop-time-display.php` — fortfarande Ca enbart från `approximate_time` (produktbeslut D23) |
+| Admin-hjälptext | Ej uppdaterad — operatörsguide för när Ca ska kryssas i |
+| `docs/STOP_TIME_CA.md` | Beskriver gammal semantik; synka om D23 beslutas |
 
 ### Acceptanskriterium
 
@@ -250,32 +248,20 @@ Vid radbrytning ligger tid+cirkaprefix visuellt centrerat mot stationscirkeln.
 - **Område:** Reseplanerare / detaljvy, fotnoter
 - **Typ:** bugg + UX (A3/J4-uppföljning)
 - **Prioritet:** hög
-- **Status:** öppen
+- **Status:** **klar (team, 2026-06-13)** — fotnoter endast vid passagerarens av-/påstigning (API); ℹ️ i tidslinje + fotnotlista. Verifiera på test3 (Uppsala Ö → Lövstahagen).
 
-### Nuvarande läge
+### Rotorsak (var)
+
+P/A-fotnoter samlades från **alla** stopp i segmentet, inkl. mellanstationer med behov-påstigning (Fyrislund, Årsta) som passageraren bara passerar.
+
+### Levererat (team)
 
 | Del | Var | Beteende |
 |-----|-----|----------|
-| P/A-markörer | `stopTimeFootnotes.ts`, `MrtTimeline.vue` | Superscript P/A vid station |
-| Global fotnotlista | `WizardTripDetail.vue` — `mrt-detail-footnotes` | Dedup per P/A över **alla** stopp i resan |
-| Påstigningstext | `frontend.php` `onRequestPickupFootnote` | ”…ge ett tecken till föraren om du vill stiga på.” |
-| Avstigningstext | `onRequestDropoffFootnote` | ”…säg till konduktören i god tid om du vill stiga av.” |
-
-**Problem:** P-fotnot triggas av behov-påstigning på **andra** hållplatser längs tjänsten (Fyrislund, Årsta) som inte ingår i passagerarens synliga resa, eller visas globalt utan koppling till rätt stopp.
-
-### Jespers önskade UX (mockup)
-
-- **ℹ️-ikon vid aktuell hållplats** (här: Lövstahagen vid avstigning).
-- **En fotnot under rutten:** ”ℹ️ Behovsuppehåll, säg till konduktören i god tid om du vill stiga av”.
-- Ingen missvisande P-fotnot för hållplatser resan inte berör.
-
-### Föreslagen åtgärd
-
-1. Visa behovsinformation **per stopp** i tidslinjen (ℹ️), inte enbart global P/A-lista.
-2. Begränsa fotnoter till stopp som **faktiskt visas** i passagerarens segment (inkl. expanderade passerade).
-3. Vid avstigning på behovshållplats: avstigningstext; vid påstigning: påstigningstext — kopplat till rätt stopp.
-4. Uppdatera copy till Jespers formulering med ℹ️ i fotnotraden.
-5. Överväg att ta bort eller ersätta generiska P/A-superscript om ℹ️ räcker.
+| API-flaggor | `stop-time-display.php` | Avstigningsfotnot endast vid `is_last_in_leg`; inga P-fotnoter i wizard |
+| Tidslinje | `MrtTimeline.vue` | ℹ️ vid stopp med behovsuppehåll |
+| Fotnotlista | `stopTimeFootnotes.ts`, `WizardTripDetail.vue` | ℹ️ + av-/påstigningstext, deduplicerad |
+| Test | `JourneyDetailTest`, `StopTimeWizardDisplayTest`, Vue unit | Mellanstation utan ℹ️; Lövstahagen med avstigning |
 
 ### Acceptanskriterium
 
@@ -291,8 +277,8 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 | 2 | J21 | Overflow, bild, kompakt, filter | Medel | **klar team** — verifiera test3 |
 | 3 | J20 | Stegknappar på rad mobil | Liten (CSS) | **klar team** — Jesper OK |
 | 4 | J24 | Fel ”mot”-destination | Liten (PHP) | **klar team** — verifiera test3 |
-| 5 | J23 | Ca bara behovsuppehåll | Liten–medel | 5 — logik + ev. data |
-| 6 | J26 | Behovsuppehåll ℹ️ per stopp | Medel | 6 — UX + logik |
+| 5 | J23 | Ca bara behovsuppehåll | Liten–medel | **klar team** — verifiera test3 |
+| 6 | J26 | Behovsuppehåll ℹ️ per stopp | Medel | **klar team** — verifiera test3 |
 | 7 | J22 | Rutttgrafik regression | Liten–medel | 7 — efter layout |
 | 8 | J25 | Ca vertikal centrering | Liten (CSS) | 8 — polish |
 

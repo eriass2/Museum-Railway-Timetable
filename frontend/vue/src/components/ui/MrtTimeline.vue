@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import MrtExpandTrigger from './MrtExpandTrigger.vue';
-import { footnoteMarksForStop, type FootnoteMark } from '../../shared/stopTimeFootnotes';
+import { stopShowsOnRequestInfo, ON_REQUEST_INFO_MARK } from '../../shared/stopTimeFootnotes';
 import {
   buildTimelineItems,
   type MrtTimelineStop,
@@ -31,8 +31,8 @@ const timelineItems = computed(() =>
   buildTimelineItems(props.stops, showAllStops.value),
 );
 
-function marksForStop(stop: MrtTimelineStop): FootnoteMark[] {
-  return footnoteMarksForStop(stop);
+function showsInfoForStop(stop: MrtTimelineStop): boolean {
+  return stopShowsOnRequestInfo(stop);
 }
 </script>
 
@@ -48,11 +48,12 @@ function marksForStop(stop: MrtTimelineStop): FootnoteMark[] {
         <span class="mrt-timeline__node" aria-hidden="true" />
         <span class="mrt-timeline__station">
           {{ item.stop.station_title }}
-          <sup
-            v-for="mark in marksForStop(item.stop)"
-            :key="mark"
-            class="mrt-timeline__mark"
-          >{{ mark }}</sup>
+          <span
+            v-if="showsInfoForStop(item.stop)"
+            class="mrt-timeline__info"
+            :aria-label="ON_REQUEST_INFO_MARK"
+            role="img"
+          >{{ ON_REQUEST_INFO_MARK }}</span>
         </span>
       </div>
       <div v-else class="mrt-timeline__toggle">
@@ -147,12 +148,11 @@ function marksForStop(stop: MrtTimelineStop): FootnoteMark[] {
   min-width: 0;
 }
 
-.mrt-timeline__mark {
-  margin-left: 0.12rem;
-  font-size: 0.72em;
-  font-weight: 700;
-  line-height: 0;
-  vertical-align: super;
+.mrt-timeline__info {
+  margin-left: 0.2rem;
+  font-size: 0.92em;
+  line-height: 1;
+  vertical-align: middle;
 }
 
 .mrt-timeline__row:not(.is-terminal) .mrt-timeline__station,

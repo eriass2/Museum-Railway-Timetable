@@ -100,4 +100,16 @@ final class StopTimeDisplayTest extends TestCase {
 			MRT_format_stop_time_display( MRT_test_stop_modes_none() )
 		);
 	}
+
+	public function test_wizard_footnote_flags_hide_pickup_on_passed_through_middle(): void {
+		$flags = MRT_stop_time_restriction_footnote_flags( true, false, true, false, false );
+		self::assertFalse( $flags['pickup_restriction'] );
+		self::assertFalse( $flags['dropoff_restriction'] );
+	}
+
+	public function test_wizard_footnote_flags_show_dropoff_only_at_alighting(): void {
+		$flags = MRT_stop_time_restriction_footnote_flags( false, true, true, false, true );
+		self::assertFalse( $flags['pickup_restriction'] );
+		self::assertTrue( $flags['dropoff_restriction'] );
+	}
 }

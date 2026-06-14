@@ -14,7 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once MRT_PATH . 'inc/domain/service/stop-time-modes.php';
 
 /**
- * P/A footnote flags for wizard timeline (endpoint-aware, behovsuppehåll preserved at destination).
+ * Wizard behovsuppehåll footnote flags — only where the passenger boards or alights.
+ *
+ * Passed-through intermediate stops (e.g. pickup on_request elsewhere on the service)
+ * must not surface P/A or ℹ️ in the journey detail timeline.
  *
  * @return array{pickup_restriction: bool, dropoff_restriction: bool, on_request_both: bool}
  */
@@ -28,18 +31,19 @@ function MRT_stop_time_restriction_footnote_flags(
 	$both_no_time = $pickup_on_request && $dropoff_on_request && ! $has_time;
 	$pickup_only  = $pickup_on_request && ! $dropoff_on_request;
 	$dropoff_only = ! $pickup_on_request && $dropoff_on_request;
+	$at_endpoint  = $is_first_in_leg || $is_last_in_leg;
 
 	if ( $both_no_time ) {
 		return array(
-			'pickup_restriction'  => ! $is_first_in_leg,
-			'dropoff_restriction' => ! $is_last_in_leg,
+			'pickup_restriction'  => false,
+			'dropoff_restriction' => $at_endpoint,
 			'on_request_both'     => true,
 		);
 	}
 
 	return array(
-		'pickup_restriction'  => $pickup_only && ! $is_first_in_leg,
-		'dropoff_restriction' => $dropoff_only,
+		'pickup_restriction'  => false,
+		'dropoff_restriction' => $dropoff_only && $is_last_in_leg,
 		'on_request_both'     => false,
 	);
 }

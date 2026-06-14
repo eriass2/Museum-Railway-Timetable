@@ -44,7 +44,7 @@ final class JourneyDetailTest extends TestCase {
 		self::assertSame( 'on_request', $mapped['pickup_mode'] );
 		self::assertSame( 'none', $mapped['dropoff_mode'] );
 		self::assertSame( '09.00', $mapped['time_label'] );
-		self::assertTrue( $mapped['on_request_pickup'] );
+		self::assertFalse( $mapped['on_request_pickup'] );
 	}
 
 	public function test_connection_journey_detail_returns_empty_for_invalid_ids(): void {
@@ -171,6 +171,48 @@ final class JourneyDetailTest extends TestCase {
 
 		self::assertFalse( $detail['stops'][0]['on_request_pickup'] );
 		self::assertTrue( $detail['stops'][1]['on_request_dropoff'] );
+	}
+
+	public function test_connection_journey_detail_hides_pickup_footnote_on_passed_through_middle(): void {
+		$GLOBALS['mrt_test_posts'] = array(
+			101 => new WP_Post( (object) array( 'ID' => 101, 'post_title' => 'Uppsala Östra' ) ),
+			102 => new WP_Post( (object) array( 'ID' => 102, 'post_title' => 'Fyrislund' ) ),
+			103 => new WP_Post( (object) array( 'ID' => 103, 'post_title' => 'Lövstahagen' ) ),
+		);
+		$this->boot_stop_times_db(
+			array(
+				array_merge(
+					array(
+						'station_post_id' => 101,
+						'stop_sequence'   => 1,
+						'departure_time'  => '10:00',
+					),
+					MRT_test_stop_modes_both_scheduled()
+				),
+				array_merge(
+					array(
+						'station_post_id' => 102,
+						'stop_sequence'   => 2,
+						'departure_time'  => '10:20',
+					),
+					MRT_test_stop_modes_pickup_only()
+				),
+				array_merge(
+					array(
+						'station_post_id' => 103,
+						'stop_sequence'   => 3,
+						'arrival_time'    => '10:46',
+					),
+					MRT_test_stop_modes_dropoff_only()
+				),
+			)
+		);
+
+		$detail = MRT_get_connection_journey_detail( 501, 101, 103 );
+
+		self::assertCount( 3, $detail['stops'] );
+		self::assertFalse( $detail['stops'][1]['on_request_pickup'] );
+		self::assertTrue( $detail['stops'][2]['on_request_dropoff'] );
 	}
 
 	public function test_connection_journey_detail_rejects_backwards_slice(): void {

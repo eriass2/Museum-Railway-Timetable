@@ -39,7 +39,7 @@ describe('MrtTimeline', () => {
     expect(html).toContain('Dölj passerade stationer');
   });
 
-  it('renders footnote marks on stops that need them', async () => {
+  it('renders info icon on stops that need behovsuppehåll', async () => {
     const app = createSSRApp({
       render: () =>
         h(MrtTimeline, {
@@ -53,8 +53,7 @@ describe('MrtTimeline', () => {
         }),
     });
     const html = await renderToString(app);
-    expect(html).toContain('mrt-timeline__mark');
-    expect(html).toContain('>P<');
-    expect(html).toContain('>A<');
+    expect(html).toContain('mrt-timeline__info');
+    expect(html).toContain('ℹ️');
   });
 });

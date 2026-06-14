@@ -80,17 +80,19 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertSame( '10.35', $meta['time_label'] );
 	}
 
-	public function test_pickup_only_sets_on_request_pickup(): void {
+	public function test_pickup_only_at_passed_through_middle_hides_pickup_footnote(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array_merge(
-				array( 'departure_time' => '09:00' ),
+				array( 'departure_time' => '09:30' ),
 				MRT_test_stop_modes_pickup_only()
-			)
+			),
+			'departure',
+			false,
+			false
 		);
 
-		self::assertSame( '09.00', $meta['time_label'] );
-		self::assertTrue( $meta['on_request_pickup'] );
-		self::assertFalse( $meta['on_request_dropoff'] );
+		self::assertSame( '09.30', $meta['time_label'] );
+		self::assertFalse( $meta['on_request_pickup'] );
 	}
 
 	public function test_pickup_only_at_trip_start_hides_pickup_footnote(): void {
@@ -150,13 +152,15 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertSame( 'Ca 10.09 X', $meta['time_label'] );
 	}
 
-	public function test_dropoff_only_with_time_keeps_dropoff_footnote(): void {
+	public function test_dropoff_only_with_time_keeps_dropoff_footnote_at_alighting(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array_merge(
 				array( 'arrival_time' => '09:30' ),
 				MRT_test_stop_modes_dropoff_only()
 			),
-			'arrival'
+			'arrival',
+			false,
+			true
 		);
 
 		self::assertSame( '09.30', $meta['time_label'] );

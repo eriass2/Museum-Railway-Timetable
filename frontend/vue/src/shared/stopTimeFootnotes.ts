@@ -8,12 +8,17 @@ export type StopTimeFootnoteStop = {
   approximate_time?: boolean;
 };
 
-export type FootnoteMark = 'P' | 'A';
+export const ON_REQUEST_INFO_MARK = 'ℹ️';
 
 export type TripFootnoteEntry = {
-  mark: FootnoteMark;
+  mark: typeof ON_REQUEST_INFO_MARK;
   text: string;
 };
+
+/** Whether a stop should show the behovsuppehåll info icon in the timeline. */
+export function stopShowsOnRequestInfo(stop: StopTimeFootnoteStop): boolean {
+  return Boolean(stop.on_request_pickup || stop.on_request_dropoff);
+}
 
 export function segmentNeedsPickupFootnote(stops: StopTimeFootnoteStop[]): boolean {
   return stops.some((s) => s.on_request_pickup);
@@ -23,40 +28,33 @@ export function segmentNeedsDropoffFootnote(stops: StopTimeFootnoteStop[]): bool
   return stops.some((s) => s.on_request_dropoff);
 }
 
-/** Superscript markers shown next to station names in the timeline. */
-export function footnoteMarksForStop(stop: StopTimeFootnoteStop): FootnoteMark[] {
-  const marks: FootnoteMark[] = [];
+function footnoteTextForStop(stop: StopTimeFootnoteStop, cfg: WizardCfg): string | null {
   if (stop.on_request_pickup) {
-    marks.push('P');
+    const text = cfgStr(cfg, 'onRequestPickupFootnote', '');
+    return text !== '' ? text : null;
   }
-  if (stop.on_request_dropoff) {
-    marks.push('A');
+  if (stop.on_request_dropoff || stop.on_request_both) {
+    const text = cfgStr(cfg, 'onRequestDropoffFootnote', '');
+    return text !== '' ? text : null;
   }
-  return marks;
+  return null;
 }
 
-/** One footnote per mark (P/A), deduplicated across all stops in the trip. */
+/** One footnote per unique text, from passenger-relevant stops only (API filters endpoints). */
 export function tripFootnotesFromStops(
   stops: StopTimeFootnoteStop[],
   cfg: WizardCfg,
 ): TripFootnoteEntry[] {
   const entries: TripFootnoteEntry[] = [];
-  const seen = new Set<FootnoteMark>();
+  const seen = new Set<string>();
 
   for (const stop of stops) {
-    for (const mark of footnoteMarksForStop(stop)) {
-      if (seen.has(mark)) {
-        continue;
-      }
-      seen.add(mark);
-      const text =
-        mark === 'P'
-          ? cfgStr(cfg, 'onRequestPickupFootnote', '')
-          : cfgStr(cfg, 'onRequestDropoffFootnote', '');
-      if (text !== '') {
-        entries.push({ mark, text });
-      }
+    const text = footnoteTextForStop(stop, cfg);
+    if (text === null || seen.has(text)) {
+      continue;
     }
+    seen.add(text);
+    entries.push({ mark: ON_REQUEST_INFO_MARK, text });
   }
 
   return entries;

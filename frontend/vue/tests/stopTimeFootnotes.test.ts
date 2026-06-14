@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
-  footnoteMarksForStop,
+  ON_REQUEST_INFO_MARK,
+  stopShowsOnRequestInfo,
   stopTimeFootnotesForSegment,
   tripFootnotesFromStops,
 } from '../src/shared/stopTimeFootnotes';
@@ -8,37 +9,41 @@ import type { WizardCfg } from '../src/wizard/utils/wizardCfgTypes';
 
 describe('stopTimeFootnotes', () => {
   const cfg: WizardCfg = {
-    onRequestPickupFootnote: 'Ge tecken till föraren vid påstigning.',
-    onRequestDropoffFootnote: 'Säg till konduktören vid avstigning.',
+    onRequestPickupFootnote: 'Behovsuppehåll, ge ett tecken till föraren om du vill stiga på.',
+    onRequestDropoffFootnote:
+      'Behovsuppehåll, säg till konduktören i god tid om du vill stiga av.',
   };
 
-  it('footnoteMarksForStop returns P and A when both restrictions apply', () => {
-    expect(
-      footnoteMarksForStop({ on_request_pickup: true, on_request_dropoff: true }),
-    ).toEqual(['P', 'A']);
+  it('stopShowsOnRequestInfo is true when dropoff restriction applies', () => {
+    expect(stopShowsOnRequestInfo({ on_request_dropoff: true })).toBe(true);
   });
 
-  it('footnoteMarksForStop returns P only for pickup', () => {
-    expect(footnoteMarksForStop({ on_request_pickup: true })).toEqual(['P']);
+  it('stopShowsOnRequestInfo is false for passed-through stops without flags', () => {
+    expect(stopShowsOnRequestInfo({})).toBe(false);
   });
 
-  it('tripFootnotesFromStops deduplicates marks across stops', () => {
+  it('tripFootnotesFromStops deduplicates texts and uses info mark', () => {
     const entries = tripFootnotesFromStops(
       [
-        { on_request_pickup: true },
         { on_request_dropoff: true },
-        { on_request_pickup: true, on_request_dropoff: true },
+        { on_request_dropoff: true },
       ],
       cfg,
     );
     expect(entries).toEqual([
-      { mark: 'P', text: cfg.onRequestPickupFootnote },
-      { mark: 'A', text: cfg.onRequestDropoffFootnote },
+      { mark: ON_REQUEST_INFO_MARK, text: cfg.onRequestDropoffFootnote },
+    ]);
+  });
+
+  it('tripFootnotesFromStops shows dropoff footnote for alighting stop', () => {
+    const entries = tripFootnotesFromStops([{ on_request_dropoff: true }], cfg);
+    expect(entries).toEqual([
+      { mark: ON_REQUEST_INFO_MARK, text: cfg.onRequestDropoffFootnote },
     ]);
   });
 
   it('stopTimeFootnotesForSegment returns footnote texts only', () => {
-    const notes = stopTimeFootnotesForSegment([{ on_request_pickup: true }], cfg);
-    expect(notes).toEqual(['Ge tecken till föraren vid påstigning.']);
+    const notes = stopTimeFootnotesForSegment([{ on_request_dropoff: true }], cfg);
+    expect(notes).toEqual([cfg.onRequestDropoffFootnote]);
   });
 });
