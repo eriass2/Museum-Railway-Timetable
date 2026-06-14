@@ -3,7 +3,7 @@
 Återkoppling efter publicering och [svar 11 juni](2026-06-11-svar-till-jesper.md). Jesper bekräftar att vi **fixar det som finns nu innan vi bygger vidare** och att reseplaneraren **känns snabbare**. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (2026-06-12), mockup `image0.png`  
-**Senast uppdaterad:** 2026-06-13 (J19 klar team; J21 implementation dokumenterad; J20 mobil-rad)  
+**Senast uppdaterad:** 2026-06-13 (J19–J21 klar team; J20 mobil-rad; J24 mot-destination)  
 **Relaterat:** [2026-06-11-jesper-reseplanerare.md](2026-06-11-jesper-reseplanerare.md) (J14–J18), [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J3, J4, J10), [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
 
 ---
@@ -14,7 +14,7 @@
 |----------|-------|-----------|--------|
 | Prestanda (bekräftelse) | 1 | — | Jesper OK — J14 upplevs bättre |
 | Layout / design (regression + ny riktning) | 3 | hög | J19 klar (väntar Jesper); J20–J21 implementation klar, J21 verifiering test3 senare |
-| Detaljvy — buggar (Ca, mot, fotnot) | 3 | hög | öppen |
+| Detaljvy — buggar (Ca, mot, fotnot) | 3 | hög | J24 klar (team); J23, J26 öppna |
 | Detaljvy — polish (tidslinje, Ca-rad) | 2 | medium–låg | öppen |
 | Omgång 3 kvar (J15–J18) | 4 | varierande | öppen — paus tills layout/buggar fixade |
 
@@ -203,29 +203,20 @@ Uppsala Östra visar **10.00** (utan Ca) på exemplet; behovshållplatser enligt
 - **Område:** Reseplanerare / fordonsrad, API
 - **Typ:** bugg
 - **Prioritet:** hög
-- **Status:** öppen
+- **Status:** **klar (team, 2026-06-12)** — leg-`destination` från tjänstens slutstation via `MRT_journey_service_destination_label()`; enhetstest `JourneyMultiLegTest::test_journey_leg_destination_uses_service_end_not_passenger_alighting`. Verifiera på test3 (Uppsala Ö → Lövstahagen, ångtåg 81).
 
-### Rotorsak (kod)
+### Rotorsak (var)
 
-`journey-multi-leg.php` sätter leg-`destination` via `MRT_journey_leg_destination_label( $to_station_id )` — dvs **resans sluthållplats** (passagerarens mål), inte **tjänstens slutdestination**.
+Leg-`destination` sattes tidigare via `MRT_journey_leg_destination_label( $to_station_id )` — passagerarens avstigning — medan `vehicle.ts` visar `leg.destination` som ”mot …”.
 
-`train-change.php`:
+### Levererat (team)
 
-```php
-function MRT_journey_leg_destination_label( int $to_station_id ): string {
-    return get_the_title( $to_station_id ); // passagerarens avstigning
-}
-```
-
-`vehicle.ts` — `legTowardsSuffix(leg.destination)` → ”mot Lövstahagen”.
-
-**Korrekt källa:** `MRT_get_service_destination( $service_id )` (används redan i `journey-normalize-segments.php`).
-
-### Föreslagen åtgärd
-
-1. Byt `destination` på leg-objekt till tjänstens destination (sista station på linjen / angiven i admin).
-2. Lägg till/enhetstest: resa till mellanliggande hållplats ska visa ”mot Marielund” (eller Faringe), inte mellanliggande namn.
-3. Verifiera flerbenade resor — varje ben sitt tågs destination.
+| Del | Var | Beteende |
+|-----|-----|----------|
+| Leg-byggare | `journey-multi-leg.php` | `MRT_journey_service_destination_label( $service_id )` |
+| Hjälpare | `train-change.php` | `MRT_journey_service_destination_label()` → `MRT_get_service_destination()` |
+| Test | `JourneyMultiLegTest` | Resa till Lövstahagen → destination Marielund |
+| Integration | `LennakattenJourneySearchTest` | Uppsala Ö → Marielund direkt med korrekt etikett |
 
 ### Acceptanskriterium
 
@@ -299,7 +290,7 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 | 1 | J19 | Grön bakgrund hela planeraren | Medel | **klar team** — Jesper OK |
 | 2 | J21 | Overflow, bild, kompakt, filter | Medel | **klar team** — verifiera test3 |
 | 3 | J20 | Stegknappar på rad mobil | Liten (CSS) | **klar team** — Jesper OK |
-| 4 | J24 | Fel ”mot”-destination | Liten (PHP) | 4 — tydlig bugg |
+| 4 | J24 | Fel ”mot”-destination | Liten (PHP) | **klar team** — verifiera test3 |
 | 5 | J23 | Ca bara behovsuppehåll | Liten–medel | 5 — logik + ev. data |
 | 6 | J26 | Behovsuppehåll ℹ️ per stopp | Medel | 6 — UX + logik |
 | 7 | J22 | Rutttgrafik regression | Liten–medel | 7 — efter layout |
