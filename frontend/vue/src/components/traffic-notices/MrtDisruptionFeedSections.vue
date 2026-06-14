@@ -2,18 +2,27 @@
 import { computed } from 'vue';
 import type { DisruptionFeedItem } from '@/api/disruptionFeed';
 import {
-  disruptionFeedEditHref,
-  disruptionFeedItemBodyDisplay,
-  disruptionFeedItemKindClasses,
-  disruptionFeedShowBody,
+  DEFAULT_DISRUPTION_FEED_ITEM_LABELS,
+  disruptionFeedGroupByRoute,
   type DisruptionFeedEditHint,
+  type DisruptionFeedItemLabels,
+  type DisruptionFeedRouteGroup,
 } from '@/utils/disruptionFeedDisplay';
+import MrtDisruptionFeedItemCard from './MrtDisruptionFeedItemCard.vue';
+import MrtSurfaceCard from '@/components/ui/MrtSurfaceCard.vue';
 
 export type { DisruptionFeedEditHint };
 
 export type DisruptionFeedSectionLabels = {
   sectionOngoing: string;
   sectionUpcoming: string;
+  item?: Partial<DisruptionFeedItemLabels>;
+};
+
+type FeedSection = {
+  key: string;
+  label: string;
+  routeGroups: DisruptionFeedRouteGroup[];
 };
 
 const props = defineProps<{
@@ -23,13 +32,27 @@ const props = defineProps<{
   editForItem?: (item: DisruptionFeedItem) => DisruptionFeedEditHint | null;
 }>();
 
-const sections = computed(() => {
-  const result: { key: string; items: DisruptionFeedItem[]; label: string }[] = [];
+const itemLabels = computed<DisruptionFeedItemLabels>(() => ({
+  ...DEFAULT_DISRUPTION_FEED_ITEM_LABELS,
+  ...props.labels.item,
+}));
+
+const sections = computed<FeedSection[]>(() => {
+  const result: FeedSection[] = [];
+  const otherLabel = itemLabels.value.routeOther;
   if (props.ongoing.length) {
-    result.push({ key: 'ongoing', items: props.ongoing, label: props.labels.sectionOngoing });
+    result.push({
+      key: 'ongoing',
+      label: props.labels.sectionOngoing,
+      routeGroups: disruptionFeedGroupByRoute(props.ongoing, otherLabel),
+    });
   }
   if (props.upcoming.length) {
-    result.push({ key: 'upcoming', items: props.upcoming, label: props.labels.sectionUpcoming });
+    result.push({
+      key: 'upcoming',
+      label: props.labels.sectionUpcoming,
+      routeGroups: disruptionFeedGroupByRoute(props.upcoming, otherLabel),
+    });
   }
   return result;
 });
@@ -37,61 +60,84 @@ const sections = computed(() => {
 function editHint(item: DisruptionFeedItem): DisruptionFeedEditHint | null {
   return props.editForItem?.(item) ?? null;
 }
+
+function showRouteHeading(section: FeedSection, group: DisruptionFeedRouteGroup): boolean {
+  return section.key === 'upcoming' && group.routeLabel !== '';
+}
 </script>
 
 <template>
-  <div class="mrt-traffic-notices__feed">
-    <section
-      v-for="section in sections"
-      :key="section.key"
-      class="mrt-traffic-notices__section"
-      :aria-label="section.label"
-    >
-      <h3 class="mrt-traffic-notices__section-title">
-        {{ section.label }}
-      </h3>
-      <ul class="mrt-traffic-notices__list">
-        <li
-          v-for="item in section.items"
-          :key="item.id"
-          class="mrt-traffic-notices__feed-item"
-          :class="disruptionFeedItemKindClasses(item)"
+  <MrtSurfaceCard flush class="mrt-traffic-notices__feed-card">
+    <div class="mrt-traffic-notices__feed">
+      <section
+        v-for="section in sections"
+        :key="section.key"
+        class="mrt-traffic-notices__section"
+        :aria-label="section.label"
+      >
+        <h3 class="mrt-traffic-notices__section-title">
+          {{ section.label }}
+        </h3>
+        <div
+          v-for="(group, groupIndex) in section.routeGroups"
+          :key="`${section.key}-${group.routeLabel || 'all'}-${groupIndex}`"
+          class="mrt-traffic-notices__route-group"
         >
-          <p class="mrt-traffic-notices__summary">
-            <time
-              v-if="item.date_label"
-              class="mrt-traffic-notices__date"
-              :datetime="item.date_from"
-            >
-              {{ item.date_label }}
-            </time>
-            <span class="mrt-traffic-notices__headline">{{ item.headline }}</span>
-          </p>
-          <p v-if="disruptionFeedShowBody(item)" class="mrt-traffic-notices__body">
-            {{ disruptionFeedItemBodyDisplay(item) }}
-          </p>
-          <p v-if="editHint(item)" class="mrt-traffic-notices__edit-link">
-            <a :href="disruptionFeedEditHref(editHint(item)!)">{{ editHint(item)!.label }}</a>
-          </p>
-        </li>
-      </ul>
-    </section>
-  </div>
+          <h4
+            v-if="showRouteHeading(section, group)"
+            class="mrt-traffic-notices__route-title"
+          >
+            {{ group.routeLabel }}
+          </h4>
+          <ul class="mrt-traffic-notices__list">
+            <MrtDisruptionFeedItemCard
+              v-for="item in group.items"
+              :key="item.id"
+              :item="item"
+              :labels="itemLabels"
+              :edit-hint="editHint(item)"
+            />
+          </ul>
+        </div>
+      </section>
+    </div>
+  </MrtSurfaceCard>
 </template>
 
 <style scoped>
+.mrt-traffic-notices__feed-card {
+  max-width: 36rem;
+  background: var(--mrt-wizard-surface, #fff);
+  color: var(--mrt-wizard-text, #151515);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+}
+
 .mrt-traffic-notices__feed {
   display: grid;
-  gap: var(--mrt-space-md, 1rem);
-  max-width: 36rem;
+  gap: 0;
+}
+
+.mrt-traffic-notices__section + .mrt-traffic-notices__section {
+  border-block-start: 1px solid var(--mrt-wizard-border, #ddd);
 }
 
 .mrt-traffic-notices__section-title {
-  margin: 0 0 0.35rem;
+  margin: 0;
+  padding: 0.55rem 0.9rem 0.35rem;
   font-size: var(--mrt-font-size-sm, 0.875rem);
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  color: var(--mrt-color-neutral-700, #505050);
+  background: var(--mrt-color-neutral-100, #f3f3f3);
+}
+
+.mrt-traffic-notices__route-title {
+  margin: 0;
+  padding: 0.35rem 0.9rem 0.2rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  line-height: 1.35;
   color: var(--mrt-color-neutral-700, #505050);
 }
 
@@ -99,58 +145,5 @@ function editHint(item: DisruptionFeedItem): DisruptionFeedEditHint | null {
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-.mrt-traffic-notices__feed-item {
-  margin: 0;
-  padding-block: 0.3rem;
-  border-block-end: 1px solid var(--mrt-color-neutral-200, #e8e8e8);
-}
-
-.mrt-traffic-notices__feed-item:last-child {
-  border-block-end: none;
-}
-
-.mrt-traffic-notices__summary {
-  margin: 0;
-  line-height: 1.35;
-  font-size: 0.9375rem;
-}
-
-.mrt-traffic-notices__date {
-  margin: 0;
-  font-weight: 400;
-  color: inherit;
-  white-space: nowrap;
-}
-
-.mrt-traffic-notices__date::after {
-  content: '\00a0';
-}
-
-.mrt-traffic-notices__headline {
-  margin: 0;
-  font-weight: 400;
-}
-
-.mrt-traffic-notices__body {
-  margin: 0.15rem 0 0;
-  line-height: 1.35;
-  font-size: 0.8125rem;
-  color: var(--mrt-color-neutral-600, #666);
-}
-
-.mrt-traffic-notices__feed-item--cancelled .mrt-traffic-notices__headline {
-  text-decoration: line-through;
-  opacity: 0.8;
-}
-
-.mrt-traffic-notices__edit-link {
-  margin: 0.15rem 0 0;
-  font-size: 0.8125rem;
-}
-
-.mrt-traffic-notices__edit-link a {
-  color: var(--mrt-color-brand-green, #296310);
 }
 </style>

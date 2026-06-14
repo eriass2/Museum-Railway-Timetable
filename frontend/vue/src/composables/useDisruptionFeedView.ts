@@ -2,6 +2,7 @@ import { computed, onMounted, ref, toValue, type MaybeRefOrGetter } from 'vue';
 import { fetchDisruptionFeed, type DisruptionFeedPayload } from '@/api/disruptionFeed';
 import type { MrtRestConfig } from '@/config/types';
 import type { TrafficNoticesLabels } from '@/types/trafficNotices';
+import { DEFAULT_DISRUPTION_FEED_ITEM_LABELS } from '@/utils/disruptionFeedDisplay';
 
 export type DisruptionFeedViewConfig = MrtRestConfig & {
   referenceDate?: string;
@@ -17,12 +18,18 @@ export function useDisruptionFeedView(config: MaybeRefOrGetter<DisruptionFeedVie
 
   const labels = computed(() => {
     const cfg = toValue(config);
+    const defaults = DEFAULT_DISRUPTION_FEED_ITEM_LABELS;
     return {
       empty: cfg.labels?.empty ?? 'Inga meddelanden',
       loading: cfg.labels?.loading ?? 'Laddar meddelanden…',
       error: cfg.labels?.error ?? 'Kunde inte ladda meddelanden.',
       sectionOngoing: cfg.labels?.sectionOngoing ?? 'Pågår nu',
       sectionUpcoming: cfg.labels?.sectionUpcoming ?? 'Kommande',
+      item: {
+        expandMore: cfg.labels?.expandMore ?? defaults.expandMore,
+        expandDetails: cfg.labels?.expandDetails ?? defaults.expandDetails,
+        routeOther: cfg.labels?.routeOther ?? defaults.routeOther,
+      },
     };
   });
 

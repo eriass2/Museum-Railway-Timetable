@@ -98,7 +98,7 @@ function MRT_render_traffic_notices_html( array $payload, string $title = '' ): 
 		$out .= '</div>';
 		return $out;
 	}
-	$out .= '<div class="mrt-traffic-notices__feed">';
+	$out .= '<div class="mrt-traffic-notices__feed-card"><div class="mrt-traffic-notices__feed">';
 	$out .= MRT_render_disruption_feed_section_html(
 		__( 'Pågår nu', 'museum-railway-timetable' ),
 		$ongoing
@@ -107,7 +107,7 @@ function MRT_render_traffic_notices_html( array $payload, string $title = '' ): 
 		__( 'Kommande', 'museum-railway-timetable' ),
 		$upcoming
 	);
-	$out .= '</div></div>';
+	$out .= '</div></div></div>';
 	return $out;
 }
 
@@ -135,14 +135,24 @@ function MRT_render_disruption_feed_section_html( string $heading, array $items 
  * @param array<string, mixed> $item Feed item.
  */
 function MRT_render_disruption_feed_item_html( array $item ): string {
-	$kind     = (string) ( $item['kind'] ?? 'info' );
-	$classes  = 'mrt-traffic-notices__feed-item mrt-traffic-notices__feed-item--' . sanitize_html_class( $kind );
-	$headline = trim( (string) ( $item['headline'] ?? '' ) );
-	$body     = trim( (string) ( $item['body'] ?? '' ) );
-	$date     = trim( (string) ( $item['date_label'] ?? '' ) );
+	$kind      = (string) ( $item['kind'] ?? 'info' );
+	$classes   = 'mrt-traffic-notices__feed-item mrt-traffic-notices__feed-item--' . sanitize_html_class( $kind );
+	$headline  = trim( (string) ( $item['headline'] ?? '' ) );
+	$date      = trim( (string) ( $item['date_label'] ?? '' ) );
 	$date_from = trim( (string) ( $item['date_from'] ?? '' ) );
-	$out       = '<li class="' . esc_attr( $classes ) . '">';
-	$out      .= '<p class="mrt-traffic-notices__summary">';
+	$intro      = trim( (string) ( $item['detail_intro'] ?? '' ) );
+	if ( $intro === '' ) {
+		$intro = MRT_disruption_feed_item_body_display( $item );
+	}
+	$can_expand = $intro !== '' || MRT_disruption_feed_item_has_expandable_content( $item );
+
+	$out = '<li class="' . esc_attr( $classes ) . '">';
+	if ( $can_expand ) {
+		$out .= '<details class="mrt-traffic-notices__details-fallback">';
+		$out .= '<summary class="mrt-traffic-notices__summary">';
+	} else {
+		$out .= '<p class="mrt-traffic-notices__summary">';
+	}
 	if ( $date !== '' ) {
 		$datetime = $date_from !== '' ? ' datetime="' . esc_attr( $date_from ) . '"' : '';
 		$out     .= '<time class="mrt-traffic-notices__date"' . $datetime . '>' . esc_html( $date ) . '</time>';
@@ -150,11 +160,47 @@ function MRT_render_disruption_feed_item_html( array $item ): string {
 	if ( $headline !== '' ) {
 		$out .= '<span class="mrt-traffic-notices__headline">' . esc_html( $headline ) . '</span>';
 	}
-	$out .= '</p>';
-	$body_display = MRT_disruption_feed_item_body_display( $item );
-	if ( $body_display !== '' ) {
-		$out .= '<p class="mrt-traffic-notices__body">' . esc_html( $body_display ) . '</p>';
+	$out .= $can_expand ? '</summary>' : '</p>';
+	if ( $intro !== '' ) {
+		$out .= '<p class="mrt-traffic-notices__body">' . esc_html( $intro ) . '</p>';
+	}
+	$out .= MRT_render_disruption_feed_item_sections_html( $item );
+	if ( $can_expand ) {
+		$out .= '</details>';
 	}
 	$out .= '</li>';
+	return $out;
+}
+
+/**
+ * @param array<string, mixed> $item Feed item.
+ */
+function MRT_render_disruption_feed_item_sections_html( array $item ): string {
+	$sections = $item['detail_sections'] ?? array();
+	if ( ! is_array( $sections ) || $sections === array() ) {
+		return '';
+	}
+	$out = '';
+	foreach ( $sections as $section ) {
+		if ( ! is_array( $section ) ) {
+			continue;
+		}
+		$title = trim( (string) ( $section['title'] ?? '' ) );
+		$lines = isset( $section['lines'] ) && is_array( $section['lines'] )
+			? array_values( array_filter( array_map( 'strval', $section['lines'] ) ) )
+			: array();
+		if ( $lines === array() ) {
+			continue;
+		}
+		$out .= '<div class="mrt-traffic-notices__detail-section">';
+		if ( $title !== '' ) {
+			$out .= '<h4 class="mrt-traffic-notices__detail-title">' . esc_html( $title ) . '</h4>';
+		}
+		$out .= '<ul class="mrt-traffic-notices__detail-lines">';
+		foreach ( $lines as $line ) {
+			$out .= '<li>' . esc_html( $line ) . '</li>';
+		}
+		$out .= '</ul></div>';
+	}
 	return $out;
 }

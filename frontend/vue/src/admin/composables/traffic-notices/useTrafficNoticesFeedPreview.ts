@@ -26,6 +26,11 @@ export function useTrafficNoticesFeedPreview(refreshKey: Ref<number | undefined>
   const sectionLabels = computed(() => ({
     sectionOngoing: adminStr(cfg, 'trafficNoticesFeedOngoing'),
     sectionUpcoming: adminStr(cfg, 'trafficNoticesFeedUpcoming'),
+    item: {
+      expandMore: adminStr(cfg, 'trafficNoticesExpandMore'),
+      expandDetails: adminStr(cfg, 'trafficNoticesExpandDetails'),
+      routeOther: adminStr(cfg, 'trafficNoticesRouteOther'),
+    },
   }));
 
   async function load(): Promise<void> {

@@ -281,6 +281,9 @@ function MRT_vue_traffic_notices_config( array $context ): array {
 			'error'           => __( 'Kunde inte ladda meddelanden.', 'museum-railway-timetable' ),
 			'sectionOngoing'  => __( 'Pågår nu', 'museum-railway-timetable' ),
 			'sectionUpcoming' => __( 'Kommande', 'museum-railway-timetable' ),
+			'expandMore'      => __( 'Mer information', 'museum-railway-timetable' ),
+			'expandDetails'   => __( 'Visa detaljer', 'museum-railway-timetable' ),
+			'routeOther'      => __( 'Övrigt', 'museum-railway-timetable' ),
 		),
 	);
 }

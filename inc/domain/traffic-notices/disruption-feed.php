@@ -12,6 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 require_once MRT_PATH . 'inc/domain/traffic-notices/aggregate.php';
+require_once MRT_PATH . 'inc/domain/traffic-notices/disruption-feed-display.php';
 
 const MRT_DISRUPTION_FEED_DEFAULT_HORIZON = 90;
 const MRT_DISRUPTION_FEED_MAX_HORIZON     = 365;
@@ -107,58 +108,29 @@ function MRT_disruption_feed_notice_window( array $notice, string $reference_dat
  * @return array<string, mixed>
  */
 function MRT_disruption_feed_item_from_notice( array $notice, array $window, string $reference_date ): array {
-	$text = trim( (string) ( $notice['text'] ?? '' ) );
-	return array(
-		'id'             => 'notice-' . (string) ( $notice['id'] ?? '' ),
-		'source'         => 'general',
-		'kind'           => 'info',
-		'phase'          => MRT_disruption_feed_phase_for_range( $window['from'], $window['to'], $reference_date ),
-		'date_from'      => $window['from'],
-		'date_to'        => $window['to'],
-		'date_label'     => MRT_disruption_feed_range_label( $window['from'], $window['to'], $reference_date ),
-		'headline'       => MRT_disruption_feed_notice_headline( $text ),
-		'body'           => $text,
-		'train_numbers'  => array(),
-		'service_ids'    => array(),
+	$text     = trim( (string) ( $notice['text'] ?? '' ) );
+	$headline = MRT_disruption_feed_notice_headline(
+		$text,
+		$window['from'],
+		$window['to'],
+		$reference_date
 	);
-}
-
-function MRT_disruption_feed_notice_headline( string $text ): string {
-	if ( $text === '' ) {
-		return __( 'Trafikmeddelande', 'museum-railway-timetable' );
-	}
-	$first = preg_split( '/\R/u', $text )[0] ?? $text;
-	$first = trim( (string) $first );
-	if ( mb_strlen( $first ) > 120 ) {
-		return mb_substr( $first, 0, 117 ) . '…';
-	}
-	return $first;
-}
-
-/**
- * Body text to show under headline (omit text already covered by the headline).
- *
- * @param array<string, mixed> $item Feed item.
- */
-function MRT_disruption_feed_item_body_display( array $item ): string {
-	$body     = trim( (string) ( $item['body'] ?? '' ) );
-	$headline = trim( (string) ( $item['headline'] ?? '' ) );
-	if ( $body === '' || $body === $headline ) {
-		return '';
-	}
-	$source = (string) ( $item['source'] ?? '' );
-	if ( $source === 'deviation' && stripos( $headline, $body ) !== false ) {
-		return '';
-	}
-	if ( $source === 'general' ) {
-		$lines      = preg_split( '/\R/u', $body );
-		$first_line = trim( (string) ( $lines[0] ?? '' ) );
-		if ( $first_line === $headline ) {
-			array_shift( $lines );
-			return trim( implode( "\n", $lines ) );
-		}
-	}
-	return $body;
+	return array(
+		'id'              => 'notice-' . (string) ( $notice['id'] ?? '' ),
+		'source'          => 'general',
+		'kind'            => 'info',
+		'phase'           => MRT_disruption_feed_phase_for_range( $window['from'], $window['to'], $reference_date ),
+		'date_from'       => $window['from'],
+		'date_to'         => $window['to'],
+		'date_label'      => MRT_disruption_feed_range_label( $window['from'], $window['to'], $reference_date ),
+		'headline'        => $headline,
+		'body'            => $text,
+		'route_label'     => '',
+		'detail_intro'    => MRT_disruption_feed_general_detail_intro( $text, $headline ),
+		'detail_sections' => MRT_disruption_feed_general_detail_sections( $text, $headline ),
+		'train_numbers'   => array(),
+		'service_ids'     => array(),
+	);
 }
 
 /**
@@ -223,22 +195,26 @@ function MRT_disruption_feed_deviation_group_key( array $row ): string {
  * @return array<string, mixed>
  */
 function MRT_disruption_feed_item_from_deviation_group( array $group, string $reference_date ): array {
-	$date = (string) ( $group[0]['date'] ?? $reference_date );
+	$date    = (string) ( $group[0]['date'] ?? $reference_date );
 	$numbers = MRT_disruption_feed_unique_train_numbers( $group );
 	$notice  = trim( (string) ( $group[0]['notice'] ?? '' ) );
 	$cancel  = ! empty( $group[0]['is_cancelled'] ) || MRT_notice_indicates_cancelled( $notice );
+	$headline = MRT_disruption_feed_deviation_headline_from_group( $group, $reference_date );
 	return array(
-		'id'            => 'deviation-' . md5( MRT_disruption_feed_deviation_group_key( $group[0] ) ),
-		'source'        => 'deviation',
-		'kind'          => $cancel ? 'cancelled' : 'deviation',
-		'phase'         => MRT_disruption_feed_phase_for_range( $date, $date, $reference_date ),
-		'date_from'     => $date,
-		'date_to'       => $date,
-		'date_label'    => MRT_disruption_feed_range_label( $date, $date, $reference_date ),
-		'headline'      => MRT_disruption_feed_deviation_headline( $notice, $numbers, $cancel ),
-		'body'          => $notice,
-		'train_numbers' => $numbers,
-		'service_ids'   => array_values(
+		'id'              => 'deviation-' . md5( MRT_disruption_feed_deviation_group_key( $group[0] ) ),
+		'source'          => 'deviation',
+		'kind'            => $cancel ? 'cancelled' : 'deviation',
+		'phase'           => MRT_disruption_feed_phase_for_range( $date, $date, $reference_date ),
+		'date_from'       => $date,
+		'date_to'         => $date,
+		'date_label'      => MRT_disruption_feed_range_label( $date, $date, $reference_date ),
+		'headline'        => $headline,
+		'body'            => $notice,
+		'route_label'     => MRT_disruption_feed_primary_route_label( $group ),
+		'detail_intro'    => MRT_disruption_feed_deviation_detail_intro( $group, $headline ),
+		'detail_sections' => MRT_disruption_feed_deviation_detail_sections( $group ),
+		'train_numbers'   => $numbers,
+		'service_ids'     => array_values(
 			array_unique(
 				array_map(
 					static fn( array $row ): int => (int) ( $row['service_id'] ?? 0 ),
@@ -264,40 +240,6 @@ function MRT_disruption_feed_unique_train_numbers( array $group ): array {
 	$numbers = array_values( array_unique( $numbers ) );
 	sort( $numbers, SORT_NATURAL );
 	return $numbers;
-}
-
-/**
- * @param list<string> $train_numbers
- */
-function MRT_disruption_feed_deviation_headline( string $notice, array $train_numbers, bool $cancelled ): string {
-	$trains = implode( ', ', $train_numbers );
-	if ( $cancelled ) {
-		return $trains === ''
-			? __( 'Inställd trafik', 'museum-railway-timetable' )
-			: sprintf(
-				/* translators: %s: comma-separated train numbers */
-				__( 'Inställd trafik — Tåg %s', 'museum-railway-timetable' ),
-				$trains
-			);
-	}
-	if ( $notice !== '' && $trains !== '' ) {
-		return sprintf(
-			/* translators: 1: notice text, 2: comma-separated train numbers */
-			__( '%1$s — Tåg %2$s', 'museum-railway-timetable' ),
-			$notice,
-			$trains
-		);
-	}
-	if ( $notice !== '' ) {
-		return $notice;
-	}
-	return $trains === ''
-		? __( 'Tur-avvikelse', 'museum-railway-timetable' )
-		: sprintf(
-			/* translators: %s: comma-separated train numbers */
-			__( 'Tur-avvikelse — Tåg %s', 'museum-railway-timetable' ),
-			$trains
-		);
 }
 
 function MRT_disruption_feed_phase_for_range( string $from, string $to, string $reference_date ): string {

@@ -1,7 +1,11 @@
 import { describe, expect, it } from 'vitest';
 import {
-  disruptionFeedItemBodyDisplay,
-  disruptionFeedShowBody,
+  disruptionFeedExpandLabel,
+  disruptionFeedGroupByRoute,
+  disruptionFeedHasDetailSections,
+  disruptionFeedItemCanExpand,
+  disruptionFeedItemIntro,
+  disruptionFeedShowIntro,
 } from '../src/utils/disruptionFeedDisplay';
 import type { DisruptionFeedItem } from '../src/api/disruptionFeed';
 
@@ -16,21 +20,23 @@ function item(partial: Partial<DisruptionFeedItem>): DisruptionFeedItem {
     date_label: '2026-06-06',
     headline: '',
     body: '',
+    route_label: '',
+    detail_intro: '',
+    detail_sections: [],
     train_numbers: [],
     service_ids: [],
     ...partial,
   };
 }
 
-describe('disruptionFeedItemBodyDisplay', () => {
-  it('hides body when deviation notice is already in headline', () => {
+describe('disruptionFeedItemIntro', () => {
+  it('prefers detail_intro from API', () => {
     const feedItem = item({
-      source: 'deviation',
-      headline: 'Inställd trafik — Tåg 71',
+      detail_intro: 'Tågen trafikerar inte enligt ordinarie tidtabell denna dag.',
       body: 'Inställd',
+      headline: 'Inställd trafik — Tåg 71',
     });
-    expect(disruptionFeedItemBodyDisplay(feedItem)).toBe('');
-    expect(disruptionFeedShowBody(feedItem)).toBe(false);
+    expect(disruptionFeedItemIntro(feedItem)).toContain('ordinarie tidtabell');
   });
 
   it('strips first line for general notices when it matches headline', () => {
@@ -38,16 +44,60 @@ describe('disruptionFeedItemBodyDisplay', () => {
       source: 'general',
       headline: 'Baninfo sommar',
       body: 'Baninfo sommar\nBerörda anslutningar: Uppsala',
+      detail_intro: 'Berörda anslutningar: Uppsala',
     });
-    expect(disruptionFeedItemBodyDisplay(feedItem)).toBe('Berörda anslutningar: Uppsala');
-    expect(disruptionFeedShowBody(feedItem)).toBe(true);
+    expect(disruptionFeedShowIntro(feedItem)).toBe(true);
+  });
+});
+
+describe('disruptionFeed expand helpers', () => {
+  it('detects expandable items with intro or detail sections', () => {
+    const withIntro = item({
+      detail_intro: 'Extra info',
+      headline: 'Rubrik',
+    });
+    expect(disruptionFeedItemCanExpand(withIntro)).toBe(true);
+    expect(disruptionFeedExpandLabel(withIntro, { expandMore: 'Mer', expandDetails: 'Detaljer' })).toBe(
+      'Mer',
+    );
+
+    const withSections = item({
+      kind: 'cancelled',
+      headline: 'Inställd trafik — Tåg 71, 73',
+      detail_sections: [{ title: 'Faringe – Uppsala', lines: ['71 → Faringe'] }],
+    });
+    expect(disruptionFeedHasDetailSections(withSections)).toBe(true);
+    expect(disruptionFeedItemCanExpand(withSections)).toBe(true);
+    expect(
+      disruptionFeedExpandLabel(withSections, { expandMore: 'Mer', expandDetails: 'Detaljer' }),
+    ).toBe('Detaljer');
+
+    const headlineOnly = item({ headline: 'Kort rubrik' });
+    expect(disruptionFeedItemCanExpand(headlineOnly)).toBe(false);
+  });
+});
+
+describe('disruptionFeedGroupByRoute', () => {
+  it('groups upcoming items by route label when routes exist', () => {
+    const groups = disruptionFeedGroupByRoute(
+      [
+        item({ id: 'a', route_label: 'Faringe – Uppsala' }),
+        item({ id: 'b', route_label: 'Selkné – Faringe' }),
+        item({ id: 'c', route_label: 'Faringe – Uppsala' }),
+      ],
+      'Övrigt',
+    );
+    expect(groups).toHaveLength(2);
+    expect(groups[0]?.items).toHaveLength(2);
   });
 
-  it('shows full body when not redundant', () => {
-    const feedItem = item({
-      headline: 'Glassrea',
-      body: 'Glassrea på stationen idag.',
-    });
-    expect(disruptionFeedItemBodyDisplay(feedItem)).toBe('Glassrea på stationen idag.');
+  it('keeps flat list when no route labels exist', () => {
+    const groups = disruptionFeedGroupByRoute(
+      [item({ id: 'a' }), item({ id: 'b' })],
+      'Övrigt',
+    );
+    expect(groups).toHaveLength(1);
+    expect(groups[0]?.routeLabel).toBe('');
+    expect(groups[0]?.items).toHaveLength(2);
   });
 });

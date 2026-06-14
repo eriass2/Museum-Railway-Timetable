@@ -7,6 +7,8 @@ test.describe('Traffic notices (static mount)', () => {
     await expect(page.locator('.mrt-traffic-notices__section-title').first()).toHaveText('Pågår nu');
     await expect(page.locator('.mrt-traffic-notices__headline').first()).toContainText('Glassrean');
     await expect(page.locator('.mrt-traffic-notices__feed-item--cancelled')).toContainText('Inställd');
+    await page.locator('.mrt-traffic-notices__feed-item').first().locator('.mrt-expand-trigger').click();
+    await expect(page.locator('.mrt-traffic-notices__intro').first()).toBeVisible();
   });
 
   test('shows empty state', async ({ page }) => {

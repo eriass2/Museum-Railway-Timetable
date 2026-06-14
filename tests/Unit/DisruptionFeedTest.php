@@ -54,6 +54,7 @@ final class DisruptionFeedTest extends TestCase {
 		self::assertCount( 1, $result['upcoming'] );
 		self::assertSame( 'general', $result['ongoing'][0]['source'] );
 		self::assertSame( 'general', $result['upcoming'][0]['source'] );
+		self::assertStringContainsString( '2026-07-01', $result['upcoming'][0]['headline'] );
 	}
 
 	public function test_build_groups_deviations_with_same_notice_on_same_date(): void {
@@ -83,6 +84,8 @@ final class DisruptionFeedTest extends TestCase {
 		self::assertStringContainsString( '71', $deviations[0]['headline'] );
 		self::assertStringContainsString( '97', $deviations[0]['headline'] );
 		self::assertSame( 'cancelled', $deviations[0]['kind'] );
+		self::assertNotEmpty( $deviations[0]['detail_intro'] );
+		self::assertNotEmpty( $deviations[0]['detail_sections'] );
 	}
 
 	public function test_build_clamps_horizon_days(): void {

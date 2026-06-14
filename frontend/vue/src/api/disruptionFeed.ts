@@ -3,6 +3,11 @@ import { mrtRestRequest } from './mrtRest';
 
 export type DisruptionFeedKind = 'cancelled' | 'deviation' | 'info';
 
+export type DisruptionFeedDetailSection = {
+  title: string;
+  lines: string[];
+};
+
 export type DisruptionFeedItem = {
   id: string;
   source: 'general' | 'deviation';
@@ -13,6 +18,9 @@ export type DisruptionFeedItem = {
   date_label: string;
   headline: string;
   body: string;
+  route_label: string;
+  detail_intro: string;
+  detail_sections: DisruptionFeedDetailSection[];
   train_numbers: string[];
   service_ids: number[];
   edit?: {

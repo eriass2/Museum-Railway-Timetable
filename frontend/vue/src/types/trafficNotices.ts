@@ -4,6 +4,9 @@ export type TrafficNoticesLabels = {
   error: string;
   sectionOngoing: string;
   sectionUpcoming: string;
+  expandMore?: string;
+  expandDetails?: string;
+  routeOther?: string;
 };
 
 export type TrafficNoticesVueConfig = {

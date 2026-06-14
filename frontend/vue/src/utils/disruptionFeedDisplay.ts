@@ -1,13 +1,37 @@
 import type { DisruptionFeedItem } from '@/api/disruptionFeed';
 
+export type DisruptionFeedDetailSection = {
+  title: string;
+  lines: string[];
+};
+
 export type DisruptionFeedEditHint = {
   path: string;
   label: string;
   query?: Record<string, string>;
 };
 
-/** Body text to show under headline (omit repetition already in the headline). */
-export function disruptionFeedItemBodyDisplay(item: DisruptionFeedItem): string {
+export type DisruptionFeedItemLabels = {
+  expandMore: string;
+  expandDetails: string;
+  routeOther: string;
+};
+
+export const DEFAULT_DISRUPTION_FEED_ITEM_LABELS: DisruptionFeedItemLabels = {
+  expandMore: 'Mer information',
+  expandDetails: 'Visa detaljer',
+  routeOther: 'Övrigt',
+};
+
+export function disruptionFeedItemIntro(item: DisruptionFeedItem): string {
+  const intro = item.detail_intro?.trim() ?? '';
+  if (intro !== '') {
+    return intro;
+  }
+  return disruptionFeedLegacyBodyDisplay(item);
+}
+
+function disruptionFeedLegacyBodyDisplay(item: DisruptionFeedItem): string {
   const body = item.body.trim();
   const headline = item.headline.trim();
   if (body === '' || body === headline) {
@@ -26,8 +50,18 @@ export function disruptionFeedItemBodyDisplay(item: DisruptionFeedItem): string 
   return body;
 }
 
-export function disruptionFeedShowBody(item: DisruptionFeedItem): boolean {
-  return disruptionFeedItemBodyDisplay(item) !== '';
+export function disruptionFeedShowIntro(item: DisruptionFeedItem): boolean {
+  return disruptionFeedItemIntro(item) !== '';
+}
+
+export function disruptionFeedDetailSections(item: DisruptionFeedItem): DisruptionFeedDetailSection[] {
+  return (item.detail_sections ?? []).filter(
+    (section) => section.lines.length > 0,
+  );
+}
+
+export function disruptionFeedHasDetailSections(item: DisruptionFeedItem): boolean {
+  return disruptionFeedDetailSections(item).length > 0;
 }
 
 export function disruptionFeedItemKindClasses(item: DisruptionFeedItem): Record<string, boolean> {
@@ -42,4 +76,69 @@ export function disruptionFeedEditHref(hint: DisruptionFeedEditHint): string {
   const params = new URLSearchParams(hint.query ?? {});
   const query = params.toString();
   return `#${hint.path}${query ? `?${query}` : ''}`;
+}
+
+export function disruptionFeedItemCanExpand(
+  item: DisruptionFeedItem,
+  editHint?: DisruptionFeedEditHint | null,
+): boolean {
+  return (
+    disruptionFeedShowIntro(item) ||
+    disruptionFeedHasDetailSections(item) ||
+    editHint != null
+  );
+}
+
+export function disruptionFeedExpandLabel(
+  item: DisruptionFeedItem,
+  labels: Pick<DisruptionFeedItemLabels, 'expandMore' | 'expandDetails'>,
+): string {
+  if (disruptionFeedShowIntro(item)) {
+    return labels.expandMore;
+  }
+  if (disruptionFeedHasDetailSections(item)) {
+    return labels.expandDetails;
+  }
+  return labels.expandMore;
+}
+
+export type DisruptionFeedRouteGroup = {
+  routeLabel: string;
+  items: DisruptionFeedItem[];
+};
+
+export function disruptionFeedGroupByRoute(
+  items: DisruptionFeedItem[],
+  otherLabel: string,
+): DisruptionFeedRouteGroup[] {
+  const hasNamedRoute = items.some((item) => (item.route_label?.trim() ?? '') !== '');
+  if (!hasNamedRoute) {
+    return [{ routeLabel: '', items }];
+  }
+  const groups = new Map<string, DisruptionFeedItem[]>();
+  for (const item of items) {
+    const key = item.route_label?.trim() || otherLabel;
+    const bucket = groups.get(key) ?? [];
+    bucket.push(item);
+    groups.set(key, bucket);
+  }
+  return [...groups.entries()].map(([routeLabel, groupItems]) => ({
+    routeLabel: routeLabel === otherLabel ? '' : routeLabel,
+    items: groupItems,
+  }));
+}
+
+/** @deprecated Use disruptionFeedItemIntro */
+export function disruptionFeedItemBodyDisplay(item: DisruptionFeedItem): string {
+  return disruptionFeedItemIntro(item);
+}
+
+/** @deprecated Use disruptionFeedShowIntro */
+export function disruptionFeedShowBody(item: DisruptionFeedItem): boolean {
+  return disruptionFeedShowIntro(item);
+}
+
+/** @deprecated Use disruptionFeedHasDetailSections */
+export function disruptionFeedItemShowDetails(item: DisruptionFeedItem): boolean {
+  return disruptionFeedHasDetailSections(item);
 }
