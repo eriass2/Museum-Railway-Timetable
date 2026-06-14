@@ -231,67 +231,6 @@ function MRT_render_tf_alert_html( array $item ): string {
 }
 
 /**
- * @param list<array<string, mixed>> $items Feed items.
- */
-function MRT_render_disruption_feed_section_html( string $heading, array $items ): string {
-	if ( $items === array() ) {
-		return '';
-	}
-	$out = '<section class="mrt-traffic-notices__section">';
-	$out .= '<h3 class="mrt-traffic-notices__section-title">' . esc_html( $heading ) . '</h3>';
-	$out .= '<ul class="mrt-traffic-notices__list">';
-	foreach ( $items as $item ) {
-		if ( ! is_array( $item ) ) {
-			continue;
-		}
-		$out .= MRT_render_disruption_feed_item_html( $item );
-	}
-	$out .= '</ul></section>';
-	return $out;
-}
-
-/**
- * @param array<string, mixed> $item Feed item.
- */
-function MRT_render_disruption_feed_item_html( array $item ): string {
-	$kind      = (string) ( $item['kind'] ?? 'info' );
-	$classes   = 'mrt-traffic-notices__feed-item mrt-traffic-notices__feed-item--' . sanitize_html_class( $kind );
-	$headline  = trim( (string) ( $item['headline'] ?? '' ) );
-	$date      = trim( (string) ( $item['date_label'] ?? '' ) );
-	$date_from = trim( (string) ( $item['date_from'] ?? '' ) );
-	$intro      = trim( (string) ( $item['detail_intro'] ?? '' ) );
-	if ( $intro === '' ) {
-		$intro = MRT_disruption_feed_item_body_display( $item );
-	}
-	$can_expand = $intro !== '' || MRT_disruption_feed_item_has_expandable_content( $item );
-
-	$out = '<li class="' . esc_attr( $classes ) . '">';
-	if ( $can_expand ) {
-		$out .= '<details class="mrt-traffic-notices__details-fallback">';
-		$out .= '<summary class="mrt-traffic-notices__summary">';
-	} else {
-		$out .= '<p class="mrt-traffic-notices__summary">';
-	}
-	if ( $date !== '' ) {
-		$datetime = $date_from !== '' ? ' datetime="' . esc_attr( $date_from ) . '"' : '';
-		$out     .= '<time class="mrt-traffic-notices__date"' . $datetime . '>' . esc_html( $date ) . '</time>';
-	}
-	if ( $headline !== '' ) {
-		$out .= '<span class="mrt-traffic-notices__headline">' . esc_html( $headline ) . '</span>';
-	}
-	$out .= $can_expand ? '</summary>' : '</p>';
-	if ( $intro !== '' ) {
-		$out .= '<p class="mrt-traffic-notices__body">' . esc_html( $intro ) . '</p>';
-	}
-	$out .= MRT_render_disruption_feed_item_sections_html( $item );
-	if ( $can_expand ) {
-		$out .= '</details>';
-	}
-	$out .= '</li>';
-	return $out;
-}
-
-/**
  * @param array<string, mixed> $item Feed item.
  */
 function MRT_render_disruption_feed_item_sections_html( array $item ): string {
@@ -311,11 +250,11 @@ function MRT_render_disruption_feed_item_sections_html( array $item ): string {
 		if ( $lines === array() ) {
 			continue;
 		}
-		$out .= '<div class="mrt-traffic-notices__detail-section">';
+		$out .= '<div class="mrt-tf-alert__detail-section">';
 		if ( $title !== '' ) {
-			$out .= '<h4 class="mrt-traffic-notices__detail-title">' . esc_html( $title ) . '</h4>';
+			$out .= '<h4 class="mrt-tf-alert__detail-title">' . esc_html( $title ) . '</h4>';
 		}
-		$out .= '<ul class="mrt-traffic-notices__detail-lines">';
+		$out .= '<ul class="mrt-tf-alert__detail-lines">';
 		foreach ( $lines as $line ) {
 			$out .= '<li>' . esc_html( $line ) . '</li>';
 		}

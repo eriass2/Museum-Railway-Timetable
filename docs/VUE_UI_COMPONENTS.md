@@ -51,6 +51,19 @@ Admin wrappers (deprecated gradually): `MrtAccentButton` delegates to `MrtButton
 | `MrtStack` | `mrt-stack` | Vertical spacing (`gap`, `marginTop`, `marginBottom`) |
 | `MrtVisuallyHidden` | `mrt-visually-hidden` | Screen-reader-only labels |
 
+## Traffic info (`components/traffic-notices/`)
+
+UL-style disruption feed. Tokens: `assets/mrt-traffic-info-tokens.css` (`--mrt-tf-*`). Layout BEM in `traffic-info-layout.css`.
+
+| Component | CSS prefix | Used by |
+|-----------|------------|---------|
+| `MrtTfPanels` | `mrt-tf-feed` | `MrtTrafficNoticesView`, admin feed preview |
+| `MrtTfPanel` | `mrt-tf-panel` | Panel section (ongoing / upcoming) |
+| `MrtTfCategoryRow` | `mrt-tf-category` | Category expand with count badges |
+| `MrtTfAlertList` / `MrtTfAlertCard` | `mrt-tf-alert` | Coral summary + validity row + detail |
+| `MrtTfCountBadge` | `mrt-tf-count-badge` | **i** / **!** pills with count |
+| `MrtTfLineBadge` | `mrt-tf-line-badge` | Train number badge |
+
 Wizard shell CSS: scoped in `MrtWizardShell.vue`, `MrtWizardHero.vue`, `MrtWizardShellSurfaces.vue`, `MrtWizardMainCard.vue`. Visuell wizard-referens: [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md). Price matrix: `frontend/vue/src/shared/prices.ts`.
 
 ## Alerts

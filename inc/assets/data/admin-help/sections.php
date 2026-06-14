@@ -35,6 +35,14 @@ function MRT_admin_vue_help_admin_sections(): array {
 			),
 		),
 		array(
+			'title'     => __( 'Trafikmeddelanden', 'museum-railway-timetable' ),
+			'body'      => __(
+				'Generella meddelanden (glassrea, baninfo) och tur-avvikelser från tidtabellen visas i samma publika feed som shortcoden [museum_traffic_notices]. Förhandsvisningen speglar sajten.',
+				'museum-railway-timetable'
+			),
+			'adminOnly' => true,
+		),
+		array(
 			'title'     => __( 'Tågtyper', 'museum-railway-timetable' ),
 			'body'      => __(
 				'Kategorier med namn, slug och ikon — visas i tidtabellsöversikt och kan filtrera månadskalendern.',
@@ -98,6 +106,13 @@ function MRT_admin_vue_help_operations(): array {
 			'title' => __( 'Inställ trafik idag', 'museum-railway-timetable' ),
 			'body'  => __(
 				'(Översikt) — sätter meddelandet «Inställd» på alla dagens turer.',
+				'museum-railway-timetable'
+			),
+		),
+		array(
+			'title' => __( 'Trafikmeddelanden', 'museum-railway-timetable' ),
+			'body'  => __(
+				'(Trafikmeddelanden) — första raden i meddelandetexten blir meddelandet i den orange rutan på sajten. Datum och giltighet («Gäller …») sätts automatiskt från Gäller från/till. Ytterligare rader visas som detalj när besökaren expanderar (+).',
 				'museum-railway-timetable'
 			),
 		),

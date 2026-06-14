@@ -14,6 +14,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 function MRT_admin_vue_help_faq_items(): array {
 	return array(
 		array(
+			'q' => __( 'Hur formaterar jag ett trafikmeddelande?', 'museum-railway-timetable' ),
+			'a' => __(
+				'Första raden blir meddelandet i den orange rutan på sajten. Datum visas automatiskt under («Gäller Idag» eller datumintervall). Lägg till fler rader om du vill att besökaren ska kunna expandera och läsa mer.',
+				'museum-railway-timetable'
+			),
+		),
+		array(
 			'q' => __( 'Var börjar jag?', 'museum-railway-timetable' ),
 			'a' => __(
 				'Följ ordningen stationer → rutter → tidtabell → turer → stopptider. På mobil räcker det ofta att ändra avvikelser och avgångstider via Översikt eller tidtabellseditorn.',
