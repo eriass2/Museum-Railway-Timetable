@@ -269,6 +269,24 @@ function MRT_disruption_feed_line_looks_like_heading( string $line ): bool {
 	return mb_strlen( $line ) <= 48 && ! str_contains( $line, '.' );
 }
 
+function MRT_disruption_feed_range_label( string $from, string $to, string $reference_date ): string {
+	if ( $from === $to ) {
+		return MRT_disruption_feed_compact_date_label( $from, $reference_date );
+	}
+	return MRT_disruption_feed_compact_date_label( $from, $reference_date ) . ' – ' . MRT_disruption_feed_compact_date_label( $to, $reference_date );
+}
+
+function MRT_disruption_feed_compact_date_label( string $date_ymd, string $reference_date ): string {
+	if ( $date_ymd === $reference_date ) {
+		return __( 'Idag', 'museum-railway-timetable' );
+	}
+	$tomorrow = gmdate( 'Y-m-d', strtotime( $reference_date . ' +1 day' ) );
+	if ( $date_ymd === $tomorrow ) {
+		return __( 'Imorgon', 'museum-railway-timetable' );
+	}
+	return $date_ymd;
+}
+
 /**
  * @param array<string, mixed> $item Feed item.
  */

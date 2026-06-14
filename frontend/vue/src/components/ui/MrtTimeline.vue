@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import MrtExpandTrigger from './MrtExpandTrigger.vue';
+import type { TimeLabelCaParts } from '../../shared/parseTimeLabel';
+import { parseTimeLabelCaPrefix } from '../../shared/parseTimeLabel';
 import { stopShowsOnRequestInfo, ON_REQUEST_INFO_MARK } from '../../shared/stopTimeFootnotes';
+import type { TimelineItem } from './timelineItems';
 import {
   buildTimelineItems,
   type MrtTimelineStop,
 } from './timelineItems';
+
+type StopDisplayItem = Extract<TimelineItem, { kind: 'stop' }> & {
+  timeParts: TimeLabelCaParts;
+};
+
+type DisplayTimelineItem = StopDisplayItem | Extract<TimelineItem, { kind: 'toggle' }>;
 
 export type { MrtTimelineStop };
 
@@ -31,23 +40,26 @@ const timelineItems = computed(() =>
   buildTimelineItems(props.stops, showAllStops.value),
 );
 
+const displayItems = computed((): DisplayTimelineItem[] =>
+  timelineItems.value.map((item) => {
+    if (item.kind !== 'stop') {
+      return item;
+    }
+    return {
+      ...item,
+      timeParts: parseTimeLabelCaPrefix(props.formatTime(item.stop)),
+    };
+  }),
+);
+
 function showsInfoForStop(stop: MrtTimelineStop): boolean {
   return stopShowsOnRequestInfo(stop);
-}
-
-/** Split "Ca 10.00" for stacked layout (J25). */
-function timeParts(stop: MrtTimelineStop): { ca: boolean; value: string } {
-  const label = props.formatTime(stop).trim();
-  if (label.startsWith('Ca ')) {
-    return { ca: true, value: label.slice(3) };
-  }
-  return { ca: false, value: label };
 }
 </script>
 
 <template>
   <div class="mrt-timeline">
-    <template v-for="item in timelineItems" :key="item.kind === 'stop' ? item.key : 'toggle'">
+    <template v-for="item in displayItems" :key="item.kind === 'stop' ? item.key : 'toggle'">
       <div
         v-if="item.kind === 'stop'"
         class="mrt-timeline__row"
@@ -55,8 +67,8 @@ function timeParts(stop: MrtTimelineStop): { ca: boolean; value: string } {
       >
         <time class="mrt-timeline__time">
           <span class="mrt-timeline__time-stack">
-            <span v-if="timeParts(item.stop).ca" class="mrt-timeline__time-ca">Ca</span>
-            <span class="mrt-timeline__time-value">{{ timeParts(item.stop).value }}</span>
+            <span v-if="item.timeParts.ca" class="mrt-timeline__time-ca">Ca</span>
+            <span class="mrt-timeline__time-value">{{ item.timeParts.value }}</span>
           </span>
         </time>
         <span class="mrt-timeline__node-col" aria-hidden="true">
@@ -88,13 +100,11 @@ function timeParts(stop: MrtTimelineStop): { ca: boolean; value: string } {
 
 <style scoped>
 .mrt-timeline {
+  container-type: inline-size;
+  container-name: mrt-timeline;
   display: grid;
   gap: 0;
-  --mrt-tl-time: clamp(3.25rem, 8vw, 5.4rem);
-  --mrt-tl-node: clamp(1rem, 2.5vw, 1.6rem);
-  --mrt-tl-gap: clamp(0.35rem, 1vw, 0.65rem);
   --mrt-tl-line: 0.35rem;
-  --mrt-tl-content-start: calc(var(--mrt-tl-time) + var(--mrt-tl-gap) + var(--mrt-tl-node) + var(--mrt-tl-gap));
 }
 
 .mrt-timeline__row,
@@ -201,5 +211,20 @@ function timeParts(stop: MrtTimelineStop): { ca: boolean; value: string } {
 .mrt-timeline__row--cancelled .mrt-timeline__station {
   text-decoration: line-through;
   color: var(--mrt-text-error, #b32d2e);
+}
+
+@container mrt-timeline (max-width: 28rem) {
+  .mrt-timeline__row {
+    min-height: 2.15rem;
+  }
+
+  .mrt-timeline__node {
+    border-width: 0.22rem;
+  }
+
+  .mrt-timeline__toggle :deep(.mrt-expand-trigger--link) {
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
 }
 </style>

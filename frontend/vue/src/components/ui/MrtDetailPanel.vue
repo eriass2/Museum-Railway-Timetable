@@ -22,31 +22,9 @@
 }
 
 @container mrt-detail (max-width: 28rem) {
-  :deep(.mrt-timeline) {
-    --mrt-tl-time: clamp(3rem, 18cqi, 3.75rem);
-    --mrt-tl-node: 1.1rem;
-    --mrt-tl-gap: 0.4rem;
-  }
-
-  :deep(.mrt-timeline__row) {
-    min-height: 2.15rem;
-  }
-
-  :deep(.mrt-timeline__node-col) {
-    width: var(--mrt-tl-node);
-    justify-self: center;
-  }
-
-  :deep(.mrt-timeline__node) {
-    width: var(--mrt-tl-node);
-    height: var(--mrt-tl-node);
-    border-width: 0.22rem;
-  }
-
-  :deep(.mrt-timeline__toggle .mrt-expand-trigger--link) {
-    font-size: 0.9rem;
-    line-height: 1.35;
-  }
+  --mrt-tl-time: clamp(3rem, 18cqi, 3.75rem);
+  --mrt-tl-node: 1.1rem;
+  --mrt-tl-gap: 0.4rem;
 
   :deep(.mrt-detail-segment__meta) {
     margin-bottom: 0.4rem;

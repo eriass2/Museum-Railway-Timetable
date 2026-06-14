@@ -300,10 +300,10 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 - [x] J19: grön huvudpanel, vit text, vita inre rutor (2026-06-12) — **klar team; väntar Jesper**
 - [x] J21 implementation: shell full-bleed, filter bort backdrop, maxbredd, restyp före stationer (2026-06-12)
 - [x] J20: stegknappar horisontell rad på mobil (2026-06-13)
-- [ ] **J21 verifiering:** manuell check på `t3.lennakatten.se` (tema + shortcode, mobil + desktop)
-- [ ] Jesper: visuellt OK J19 (+ ev. J20/J21 efter test3)
+- [x] J22–J26: implementation klar team (2026-06-13)
+- [ ] **J21 + J19–J26 verifiering:** manuell check på `t3.lennakatten.se` (mobil + desktop)
+- [ ] Jesper: visuellt OK omgång 4
 - [ ] Team: produktbeslut D23–D26 (vid behov efter test3)
-- [ ] Implementation J22–J26 enligt prioritetslista
 - [ ] J15–J18: återuppta efter Jesper bekräftat att omgång 4 layout är OK
 
 ---

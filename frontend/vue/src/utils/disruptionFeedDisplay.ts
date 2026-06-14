@@ -138,18 +138,3 @@ export function disruptionFeedGroupByRoute(
     items: groupItems,
   }));
 }
-
-/** @deprecated Use disruptionFeedItemIntro */
-export function disruptionFeedItemBodyDisplay(item: DisruptionFeedItem): string {
-  return disruptionFeedItemIntro(item);
-}
-
-/** @deprecated Use disruptionFeedShowIntro */
-export function disruptionFeedShowBody(item: DisruptionFeedItem): boolean {
-  return disruptionFeedShowIntro(item);
-}
-
-/** @deprecated Use disruptionFeedHasDetailSections */
-export function disruptionFeedItemShowDetails(item: DisruptionFeedItem): boolean {
-  return disruptionFeedHasDetailSections(item);
-}

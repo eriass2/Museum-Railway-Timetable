@@ -20,14 +20,6 @@ export function stopShowsOnRequestInfo(stop: StopTimeFootnoteStop): boolean {
   return Boolean(stop.on_request_pickup || stop.on_request_dropoff);
 }
 
-export function segmentNeedsPickupFootnote(stops: StopTimeFootnoteStop[]): boolean {
-  return stops.some((s) => s.on_request_pickup);
-}
-
-export function segmentNeedsDropoffFootnote(stops: StopTimeFootnoteStop[]): boolean {
-  return stops.some((s) => s.on_request_dropoff);
-}
-
 function footnoteTextForStop(stop: StopTimeFootnoteStop, cfg: WizardCfg): string | null {
   if (stop.on_request_pickup) {
     const text = cfgStr(cfg, 'onRequestPickupFootnote', '');
@@ -58,12 +50,4 @@ export function tripFootnotesFromStops(
   }
 
   return entries;
-}
-
-/** @deprecated Per-segment footnotes; use tripFootnotesFromStops at trip level. */
-export function stopTimeFootnotesForSegment(
-  stops: StopTimeFootnoteStop[],
-  cfg: WizardCfg,
-): string[] {
-  return tripFootnotesFromStops(stops, cfg).map((e) => e.text);
 }

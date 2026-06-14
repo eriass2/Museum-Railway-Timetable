@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import {
   ON_REQUEST_INFO_MARK,
   stopShowsOnRequestInfo,
-  stopTimeFootnotesForSegment,
   tripFootnotesFromStops,
 } from '../src/shared/stopTimeFootnotes';
 import type { WizardCfg } from '../src/wizard/utils/wizardCfgTypes';
@@ -40,10 +39,5 @@ describe('stopTimeFootnotes', () => {
     expect(entries).toEqual([
       { mark: ON_REQUEST_INFO_MARK, text: cfg.onRequestDropoffFootnote },
     ]);
-  });
-
-  it('stopTimeFootnotesForSegment returns footnote texts only', () => {
-    const notes = stopTimeFootnotesForSegment([{ on_request_dropoff: true }], cfg);
-    expect(notes).toEqual([cfg.onRequestDropoffFootnote]);
   });
 });

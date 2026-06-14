@@ -1,8 +1,8 @@
 /**
  * Split overview time cell text into Ca, clock digits, and footnote suffix (P, A, X).
- *
- * @package Museum_Railway_Timetable
  */
+
+import { parseTimeLabelCaPrefix } from '../shared/parseTimeLabel';
 
 export type OverviewTimeParts = {
   approximate: boolean;
@@ -48,8 +48,9 @@ export function parseOverviewTimeText(text: string): OverviewTimeParts {
   }
 
   if (rest.startsWith('Ca ')) {
-    approximate = true;
-    rest = rest.slice(3);
+    const caParts = parseTimeLabelCaPrefix(rest);
+    approximate = caParts.ca;
+    rest = caParts.value;
   }
 
   return {

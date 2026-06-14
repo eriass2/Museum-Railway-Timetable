@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref, watch } from 'vue';
+import { computed, toRef } from 'vue';
 import type { DisruptionFeedItem } from '@/api/disruptionFeed';
 import MrtExpandTrigger from '@/components/ui/MrtExpandTrigger.vue';
+import { useDisruptionFeedItemDetails } from '@/composables/useDisruptionFeedItemExpand';
 import {
   disruptionFeedDetailSections,
   disruptionFeedEditHref,
@@ -25,45 +26,28 @@ const props = defineProps<{
 
 const emit = defineEmits<{ toggle: [] }>();
 
-const detailsOpen = ref(false);
-
 const intro = computed(() => disruptionFeedItemIntro(props.item));
 const sections = computed(() => disruptionFeedDetailSections(props.item));
 const hasIntro = computed(() => disruptionFeedShowIntro(props.item));
 const hasSections = computed(() => disruptionFeedHasDetailSections(props.item));
 const canExpand = computed(() => disruptionFeedItemCanExpand(props.item, props.editHint));
 const expandLabel = computed(() => disruptionFeedExpandLabel(props.item, props.labels));
-const showSectionsPanel = computed(
-  () => detailsOpen.value || (props.expanded && !hasIntro.value),
+
+const { detailsOpen, showSectionsPanel, onSummaryToggle } = useDisruptionFeedItemDetails(
+  toRef(props, 'expanded'),
+  hasIntro,
 );
+
 const summaryAriaLabel = computed(() => {
   const kind = disruptionFeedItemKindAriaLabel(props.item.kind);
   const parts = [kind, props.item.date_label, props.item.headline].filter(Boolean);
   return parts.join('. ');
 });
 
-watch(
-  () => props.expanded,
-  (open) => {
-    if (open && !hasIntro.value) {
-      detailsOpen.value = true;
-      return;
-    }
-    if (!open) {
-      detailsOpen.value = false;
-    }
-  },
-);
-
 function toggleInfo(): void {
   const willOpen = !props.expanded;
   emit('toggle');
-  if (willOpen && !hasIntro.value) {
-    detailsOpen.value = true;
-  }
-  if (!willOpen) {
-    detailsOpen.value = false;
-  }
+  onSummaryToggle(willOpen);
 }
 </script>
 
