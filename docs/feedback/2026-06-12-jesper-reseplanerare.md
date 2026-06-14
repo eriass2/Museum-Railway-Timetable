@@ -3,7 +3,7 @@
 Återkoppling efter publicering och [svar 11 juni](2026-06-11-svar-till-jesper.md). Jesper bekräftar att vi **fixar det som finns nu innan vi bygger vidare** och att reseplaneraren **känns snabbare**. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (2026-06-12), mockup `image0.png`  
-**Senast uppdaterad:** 2026-06-12 (J19/J21 layout implementerad)  
+**Senast uppdaterad:** 2026-06-13 (J19 klar team; J21 implementation dokumenterad; J20 mobil-rad)  
 **Relaterat:** [2026-06-11-jesper-reseplanerare.md](2026-06-11-jesper-reseplanerare.md) (J14–J18), [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J3, J4, J10), [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
 
 ---
@@ -13,7 +13,7 @@
 | Kategori | Antal | Prioritet | Status |
 |----------|-------|-----------|--------|
 | Prestanda (bekräftelse) | 1 | — | Jesper OK — J14 upplevs bättre |
-| Layout / design (regression + ny riktning) | 3 | hög | delvis åtgärdad (J19/J21 layout) |
+| Layout / design (regression + ny riktning) | 3 | hög | J19 klar (väntar Jesper); J20–J21 implementation klar, J21 verifiering test3 senare |
 | Detaljvy — buggar (Ca, mot, fotnot) | 3 | hög | öppen |
 | Detaljvy — polish (tidslinje, Ca-rad) | 2 | medium–låg | öppen |
 | Omgång 3 kvar (J15–J18) | 4 | varierande | öppen — paus tills layout/buggar fixade |
@@ -37,28 +37,28 @@
 - **Område:** Reseplanerare / layout, alla steg
 - **Typ:** design / regression mot ursprungsutkast
 - **Prioritet:** hög
-- **Status:** **delvis åtgärdad** (2026-06-12) — grön huvudpanel (`mrt-journey-wizard__main-card`) med vit text; beta, steg och rubriker på grönt; formulär, kalender och reskort i vita rutor inuti. Kvar: ev. finjustering mot mockup.
+- **Status:** **klar (team, 2026-06-13)** — väntar Jespers visuella OK mot mockup. Grön huvudpanel (`MrtWizardMainCard`), vit text på beta/steg/rubriker; formulär, kalender och reskort i vita `MrtSurfaceCard` inuti.
 
 ### Nuvarande läge i kod
 
 | Del | Var | Beteende idag |
 |-----|-----|---------------|
-| Yta utanför kort | `app-shell.css` — backdrop / hero | Grön eller foto full bredd |
-| Huvudpanel | `JourneyWizardApp.vue` — `__main-card` | Vit `MrtSurfaceCard`: beta, steg, alla steg |
-| Inre sektioner | datum/utresa/summary | Vit `--box` inuti huvudpanel vid behov |
+| Hero / shell | `MrtWizardHero`, `MrtWizardShell` | Grön yta runt innehåll; transparent hero när bleed-backdrop aktiv (desktop) |
+| Huvudpanel | `MrtWizardMainCard` | Grön bakgrund (`--mrt-wizard-green-dark`), vit typografi |
+| Inre sektioner | `MrtSurfaceCard` i stegkomponenter | Vit bakgrund: sök, kalender, resekort, sammanfattning |
 | Söksteg | `WizardRouteStep.vue` | Restyp före Från/Till |
+| E2E | `wizard-route-layout.spec.ts` | Grön shell + vit inre route-form |
 
-### Önskat utseende (Jesper)
+### Levererat (team)
 
-- Hela reseplanerarens yta = mörkgrön med vit text/etiketter.
-- Alla funktionella rutor (sök, kalender, resekort, detalj) = vit bakgrund oförändrad.
-- Som ursprungsmockup — inte grön bara som kant runt innehållet.
+1. Grön bakgrund på huvudpanel och shell, vit typografi utanför vita kort.
+2. Kontrast på tillbaka-länk, stegnavigering och betaband (gul aktiv, vit/grön övrigt).
+3. Vita `MrtSurfaceCard` — ingen grön inuti funktionella rutor.
 
-### Föreslagen åtgärd
+### Kvar (Jesper)
 
-1. Grön bakgrund på wizard-shell (hero + stegområde), vit typografi på rubriker/kontext utanför vita kort.
-2. Säkerställ kontrast på tillbaka-länk, stegnavigering och betaband.
-3. Behåll vita `MrtSurfaceCard` — ingen grön inuti kort.
+- Visuell bekräftelse mot mockup `image0.png` på test3 (mobil + desktop).
+- Ev. finjustering av nyanser/spacing **endast om** Jesper flaggar avvikelse.
 
 ### Acceptanskriterium
 
@@ -73,17 +73,11 @@ På mobil och desktop känns hela planeraren grön med vita kort inuti — inte 
 - **Område:** Reseplanerare / `MrtStepProgress`
 - **Typ:** UX / regression
 - **Prioritet:** medium
-- **Status:** öppen
+- **Status:** **klar (team, 2026-06-13)** — horisontell rad på mobil (`MrtStepProgress`: `flex` + `nowrap`, sidscroll vid behov).
 
 ### Nuvarande läge
 
-`responsive.css` (max-width 48rem): `.mrt-step-progress` är **2-kolumns grid** med sista udda knapp centrerad — ger radbrytning 2+2 istället för en horisontell rad.
-
-### Föreslagen åtgärd
-
-- Återgå till horisontell rad (flex/grid 4 kolumner eller scrollbara chips) på mobil.
-- Ev. mindre font/padding för att få plats — Jesper föredrar rad framför stapling.
-- Testa smala skärmar (&lt;360px) — ev. horisontell scroll som fallback.
+`MrtStepProgress.vue` (max-width 48rem): horisontell rad med `flex-wrap: nowrap`; kompaktare font/padding; `overflow-x: auto` på nav vid smala skärmar.
 
 ### Acceptanskriterium
 
@@ -98,25 +92,34 @@ Alla fyra stegknappar på **samma rad** på mobil (som tidigare), utan att bryta
 - **Område:** Reseplanerare / hero-layout, WordPress-tema-integration
 - **Typ:** bugg + design (J10-uppföljning)
 - **Prioritet:** hög
-- **Status:** **delvis åtgärdad** (2026-06-12) — se delpunkter nedan.
+- **Status:** **implementation klar (team, 2026-06-13)** — manuell verifiering på Lennakatten-tema (`t3`) återstår.
 
 ### Delpunkter
 
-| # | Problem | Status (2026-06-12) |
-|---|---------|---------------------|
-| A | Element utanför skärmen (horisontell overflow) | ☑ `MrtPublicAppShell` + centrerad layout |
-| B | Bakgrundsbild täcker inte hela bredden | ☑ backdrop full viewport |
-| C | Planeraren för bred/utdragen | ☑ `--mrt-wizard-content-max` + vit huvudpanel |
-| D | Grönt filter över foto | ☑ overlay borttagen från backdrop |
-| E | Restyp före destination (söksteg) | ☑ `WizardRouteStep.vue` |
+| # | Problem | Implementation (team) | Verifiering |
+|---|---------|----------------------|-------------|
+| A | Element utanför skärmen (horisontell overflow) | ☑ `MrtPublicAppShell`, centrerad layout, `min-width: 0` | ☐ test3 mobil/desktop |
+| B | Bakgrundsbild täcker inte hela bredden | ☑ `bleedBackground` + `.mrt-app-shell__backdrop` edge-to-edge (≥48rem) | ☑ E2E `wizard-front-page-wp.spec.ts` (WP demo); ☐ test3 |
+| C | Planeraren för bred/utdragen | ☑ `--mrt-wizard-content-max: min(76.8vw, 64rem)` | ☐ Jesper/UL-jämförelse; ev. D24 (smalare rem) |
+| D | Grönt filter över foto | ☑ Ingen overlay på bleed-backdrop | ☐ test3; embedded shortcode har fortfarande 30 % grön `::before` i `MrtWizardHero` (D26) |
+| E | Restyp före destination (söksteg) | ☑ `WizardRouteStep.vue` | ☑ E2E `wizard-route-layout.spec.ts` |
 
-### Föreslagen åtgärd
+### Levererat i kod
 
-1. **Ta bort eller kraftigt minska** grön `::before`-overlay på hero-bild.
-2. **Overflow-audit** — `overflow-x: hidden` på rätt nivå eller fixa 100vw-beräkning (scrollbar-gutter).
-3. **Maxbredd** på innehåll — UL-lik (~40–48rem centrerat?) istället för full viewport-bredd på paneler.
-4. **Bild full bleed** — hero-bakgrund ska nå viewport-kanter (J10-intention); innehåll centrerat smalt.
-5. Verifiera i **inbäddad shortcode på Lennakatten-tema**, inte bara ren shortcode-sida.
+| Komponent | Ändring |
+|-----------|---------|
+| `MrtPublicAppShell.vue` | Bleed-backdrop utan grön overlay; full viewport-bredd desktop |
+| `MrtWizardShell.vue` | `--mrt-wizard-content-max` på innehåll |
+| `JourneyWizardApp.vue` | `bleedBackground` när hero-bild + ej embedded |
+| `WizardRouteStep.vue` | Restyp före stationfält |
+
+### Kvar (senare)
+
+1. **Manuell check** på `t3.lennakatten.se` — inbäddad shortcode i Lennakatten-tema (inte bara lokal e2e/demo).
+2. **Horisontell scroll** — bekräfta ingen sidscroll på mobil/desktop på startsidan.
+3. **Mobil &lt;48rem** — full-bleed-foto visas inte (backdrop dold); grön hero + grön huvudpanel — OK om Jesper accepterar, annars utred mobil hero.
+4. **D24** — maxbredd idag upp till 64rem; Jesper nämnde UL-lik ~40–48rem — produktbeslut vid behov.
+5. **D26** — embedded hero med bakgrundsbild har lätt grön toning (`::before` 30 %) — separat om inbäddade shortcodes ska matcha front page.
 
 ### Acceptanskriterium
 
@@ -293,12 +296,12 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 
 | # | ID | Punkt | Insats | Rek. ordning |
 |---|-----|-------|--------|--------------|
-| 1 | J21 | Overflow, bild, kompakt, filter | Medel | **delvis klar** — verifiera på test3 |
-| 2 | J19 | Grön bakgrund hela planeraren | Medel | **delvis klar** — grön huvudpanel, vit text, vita inre rutor |
-| 3 | J24 | Fel ”mot”-destination | Liten (PHP) | 3 — tydlig bugg |
-| 4 | J23 | Ca bara behovsuppehåll | Liten–medel | 4 — logik + ev. data |
-| 5 | J26 | Behovsuppehåll ℹ️ per stopp | Medel | 5 — UX + logik |
-| 6 | J20 | Stegknappar på rad mobil | Liten (CSS) | 6 |
+| 1 | J19 | Grön bakgrund hela planeraren | Medel | **klar team** — Jesper OK |
+| 2 | J21 | Overflow, bild, kompakt, filter | Medel | **klar team** — verifiera test3 |
+| 3 | J20 | Stegknappar på rad mobil | Liten (CSS) | **klar team** — Jesper OK |
+| 4 | J24 | Fel ”mot”-destination | Liten (PHP) | 4 — tydlig bugg |
+| 5 | J23 | Ca bara behovsuppehåll | Liten–medel | 5 — logik + ev. data |
+| 6 | J26 | Behovsuppehåll ℹ️ per stopp | Medel | 6 — UX + logik |
 | 7 | J22 | Rutttgrafik regression | Liten–medel | 7 — efter layout |
 | 8 | J25 | Ca vertikal centrering | Liten (CSS) | 8 — polish |
 
@@ -319,12 +322,14 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 
 ## Nästa steg
 
-- [x] J19/J21 layout: grön huvudpanel (vit text), shell full-bleed, filter bort, restyp före stationer (2026-06-12)
-- [ ] Team: produktbeslut D23–D26
-- [ ] Implementation enligt prioritetslista
-- [ ] Verifiera på `t3.lennakatten.se` (tema + shortcode), inte bara lokal demo
-- [ ] Uppdatera [TODO.md](../TODO.md) när arbete påbörjas
-- [ ] J15–J18: återuppta efter Jesper bekräftat att omgång 4 är OK
+- [x] J19: grön huvudpanel, vit text, vita inre rutor (2026-06-12) — **klar team; väntar Jesper**
+- [x] J21 implementation: shell full-bleed, filter bort backdrop, maxbredd, restyp före stationer (2026-06-12)
+- [x] J20: stegknappar horisontell rad på mobil (2026-06-13)
+- [ ] **J21 verifiering:** manuell check på `t3.lennakatten.se` (tema + shortcode, mobil + desktop)
+- [ ] Jesper: visuellt OK J19 (+ ev. J20/J21 efter test3)
+- [ ] Team: produktbeslut D23–D26 (vid behov efter test3)
+- [ ] Implementation J22–J26 enligt prioritetslista
+- [ ] J15–J18: återuppta efter Jesper bekräftat att omgång 4 layout är OK
 
 ---
 

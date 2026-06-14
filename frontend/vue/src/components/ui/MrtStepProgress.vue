@@ -132,29 +132,30 @@ function stepAria(
 }
 
 @media (max-width: 48rem) {
-  .mrt-step-progress {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.35rem;
-    width: 100%;
-    max-width: 100%;
-    justify-content: stretch;
+  .mrt-step-nav {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
 
-  .mrt-step-progress__item:last-child:nth-child(odd) {
-    grid-column: 1 / -1;
-    width: calc(50% - 0.175rem);
-    justify-self: center;
+  .mrt-step-progress {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    gap: 0.3rem;
+    width: max-content;
+    min-width: 100%;
   }
 
   .mrt-step-progress__item {
-    width: 100%;
+    flex: 0 0 auto;
+    width: auto;
     min-width: 0;
     min-height: 2rem;
-    font-size: 0.72rem;
-    line-height: 1.25;
-    padding: 0.35rem 0.35rem;
-    white-space: normal;
+    font-size: 0.7rem;
+    line-height: 1.2;
+    padding: 0.3rem 0.45rem;
+    white-space: nowrap;
   }
 }
 </style>
