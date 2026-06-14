@@ -131,6 +131,8 @@ final class LennakattenReferenceConfigTest extends TestCase {
 		self::assertSame( 'Inställd', $deviations['green-71-out']['2026-06-06'] );
 		self::assertSame( 'Inställd', $deviations['green-97-out']['2026-06-06'] );
 		self::assertSame( 'Ersättningsbuss', $deviations['green-75-out']['2026-06-06'] );
+		self::assertArrayHasKey( 'green-b3-bus-out', $deviations );
+		self::assertSame( 'Försenad trafik', $deviations['green-b3-bus-out']['2026-06-06'] );
 	}
 
 	public function test_csv_import_resolves_plugin_relative_hero_background_url(): void {

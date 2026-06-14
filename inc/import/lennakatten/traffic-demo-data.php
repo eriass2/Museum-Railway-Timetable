@@ -23,7 +23,7 @@ function MRT_lennakatten_reference_public_notices(): array {
 	return array(
 		array(
 			'id'          => 'demo-baninfo',
-			'text'        => "Buss ersätter tåg vid Selkné 1 juli–16 augusti.\nBerörda anslutningar: B3, B4.",
+			'text'        => "Buss ersätter tåg vid Selkné.\nBerörda anslutningar: B3, B4.",
 			'enabled'     => true,
 			'active_from' => '2026-07-01',
 			'active_to'   => '2026-08-16',
@@ -31,7 +31,7 @@ function MRT_lennakatten_reference_public_notices(): array {
 		),
 		array(
 			'id'          => 'demo-glassrea',
-			'text'        => 'Glassrea på Faringe station kl 14.',
+			'text'        => "Glassrea på Faringe station kl 14.\nGlassrea på stationen idag.",
 			'enabled'     => true,
 			'active_from' => '2026-06-06',
 			'active_to'   => '2026-06-06',
@@ -56,6 +56,9 @@ function MRT_lennakatten_reference_service_deviations(): array {
 		),
 		'green-75-out' => array(
 			'2026-06-06' => 'Ersättningsbuss',
+		),
+		'green-b3-bus-out' => array(
+			'2026-06-06' => 'Försenad trafik',
 		),
 	);
 }

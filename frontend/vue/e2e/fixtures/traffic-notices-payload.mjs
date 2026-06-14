@@ -8,20 +8,44 @@ export function buildSampleDisruptionFeedPayload() {
     date_from: '2026-06-06',
     date_to: '2026-06-06',
     date_label: 'Idag',
-    headline: 'Glassrean i caféet kl 14–16!',
-    summary: 'Glassrean i caféet kl 14–16!',
+    headline: 'Glassrea på Faringe station kl 14.',
+    summary: 'Glassrea på Faringe station kl 14.',
     validity_label: 'Gäller Idag',
     line_label: '',
     severity: 'info',
     category_key: 'general',
     category_label: 'Information',
     icon_key: 'diesel',
-    body: 'Glassrean i caféet kl 14–16!',
+    body: 'Glassrea på Faringe station kl 14.\nGlassrea på stationen idag.',
     route_label: '',
     detail_intro: 'Glassrea på stationen idag.',
     detail_sections: [],
     train_numbers: [],
     service_ids: [],
+  };
+
+  const ongoingBusDeviation = {
+    id: 'deviation-e2e-bus',
+    source: 'deviation',
+    kind: 'deviation',
+    phase: 'ongoing',
+    date_from: '2026-06-06',
+    date_to: '2026-06-06',
+    date_label: 'Idag',
+    headline: 'Försenad trafik',
+    summary: 'Försenad trafik',
+    validity_label: 'Gäller Idag',
+    line_label: 'B3',
+    severity: 'warning',
+    category_key: 'bus',
+    category_label: 'Buss',
+    icon_key: 'bus',
+    body: 'Försenad trafik',
+    route_label: 'Selknä – Fjällnora',
+    detail_intro: '',
+    detail_sections: [],
+    train_numbers: ['B3'],
+    service_ids: [303],
   };
 
   const ongoingDeviation = {
@@ -61,23 +85,23 @@ export function buildSampleDisruptionFeedPayload() {
     date_from: '2026-07-01',
     date_to: '2026-08-16',
     date_label: '1 juli – 16 augusti',
-    headline: 'Sommarbaninfo',
-    summary: 'Sommarbaninfo',
+    headline: 'Buss ersätter tåg vid Selkné.',
+    summary: 'Buss ersätter tåg vid Selkné.',
     validity_label: 'Gäller 1 juli – 16 augusti',
     line_label: '',
     severity: 'info',
     category_key: 'general',
     category_label: 'Information',
     icon_key: 'diesel',
-    body: 'Sommarbaninfo',
+    body: 'Buss ersätter tåg vid Selkné.\nBerörda anslutningar: B3, B4.',
     route_label: '',
-    detail_intro: '',
+    detail_intro: 'Berörda anslutningar: B3, B4.',
     detail_sections: [],
     train_numbers: [],
     service_ids: [],
   };
 
-  const ongoing = [ongoingGeneral, ongoingDeviation];
+  const ongoing = [ongoingGeneral, ongoingDeviation, ongoingBusDeviation];
   const upcoming = [upcomingGeneral];
 
   return {
@@ -99,6 +123,13 @@ export function buildSampleDisruptionFeedPayload() {
             icon_key: 'diesel',
             counts: { info: 0, warning: 1 },
             items: [ongoingDeviation],
+          },
+          {
+            key: 'bus',
+            label: 'Buss',
+            icon_key: 'bus',
+            counts: { info: 0, warning: 1 },
+            items: [ongoingBusDeviation],
           },
           {
             key: 'general',

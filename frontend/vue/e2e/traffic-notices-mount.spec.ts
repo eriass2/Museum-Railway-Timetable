@@ -6,7 +6,7 @@ test.describe('Traffic notices (static mount)', () => {
     await expect(page.locator('.mrt-traffic-notices')).toBeVisible();
     await expect(page.locator('.mrt-tf-panel__header').first()).toContainText('Aktuellt trafikläge');
     await page.locator('.mrt-tf-category__row').filter({ hasText: 'Information' }).click();
-    await expect(page.locator('.mrt-tf-alert__summary').filter({ hasText: 'Glassrean' })).toBeVisible();
+    await expect(page.locator('.mrt-tf-alert__summary').filter({ hasText: 'Glassrea' })).toBeVisible();
     await page.locator('.mrt-tf-category__row').filter({ hasText: 'Tåg' }).click();
     await expect(page.locator('.mrt-tf-line-badge').filter({ hasText: '71' })).toBeVisible();
     await expect(page.locator('.mrt-tf-alert__summary').filter({ hasText: 'Inställd' })).toBeVisible();
