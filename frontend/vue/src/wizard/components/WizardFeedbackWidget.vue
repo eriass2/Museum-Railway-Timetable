@@ -33,11 +33,12 @@ useFocusTrap(panelRef, open);
   <div class="mrt-wizard-feedback">
     <button
       type="button"
-      class="mrt-wizard-feedback__fab"
+      class="mrt-wizard-feedback__trigger"
       :aria-expanded="open"
+      :aria-label="label('feedbackButton', 'Rapportera fel eller förslag')"
       @click="open = true"
     >
-      {{ label('feedbackButton', 'Rapportera fel eller förslag') }}
+      {{ label('feedbackButtonShort', 'Rapportera fel') }}
     </button>
 
     <div
@@ -137,18 +138,33 @@ useFocusTrap(panelRef, open);
 </template>
 
 <style scoped>
-.mrt-wizard-feedback__fab {
-  position: fixed;
-  right: 1rem;
-  bottom: 1rem;
-  z-index: 40;
-  min-height: 2.75rem;
-  padding: 0.65rem 0.95rem;
-  border: 2px solid var(--mrt-color-accent-700, #b89222);
-  background: var(--mrt-wizard-yellow, #c9a227);
-  color: var(--mrt-color-on-accent, #111);
-  font-weight: 700;
+@import '../../components/ui/mrtFocusRing.css';
+
+.mrt-wizard-feedback {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid color-mix(in srgb, var(--mrt-color-on-dark, #fff) 18%, transparent);
+}
+
+.mrt-wizard-feedback__trigger {
+  min-height: 1.65rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid color-mix(in srgb, var(--mrt-color-on-dark, #fff) 35%, transparent);
+  border-radius: 0;
+  background: color-mix(in srgb, var(--mrt-color-on-dark, #fff) 8%, transparent);
+  color: var(--mrt-color-on-dark-muted, rgba(255, 255, 255, 0.85));
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
   cursor: pointer;
+}
+
+.mrt-wizard-feedback__trigger:hover {
+  background: color-mix(in srgb, var(--mrt-color-on-dark, #fff) 14%, transparent);
+  color: var(--mrt-color-on-dark, #fff);
 }
 
 .mrt-wizard-feedback__backdrop {

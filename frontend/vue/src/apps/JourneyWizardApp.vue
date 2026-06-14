@@ -110,8 +110,8 @@ onMounted(() => {
           <WizardTripStep v-else-if="store.step === 'return'" leg-ctx="return" />
           <WizardSummaryStep v-else-if="store.step === 'summary'" />
         </div>
+        <WizardFeedbackWidget v-if="config.feedbackEnabled" :config="config" />
       </MrtWizardMainCard>
     </MrtWizardShell>
-    <WizardFeedbackWidget v-if="config.feedbackEnabled" :config="config" />
   </MrtStack>
 </template>

@@ -115,6 +115,7 @@ function buildWizardConfig(requestUrl) {
       back: '← Tillbaka',
       stepDate: 'Välj datum',
       feedbackButton: 'Rapportera fel eller förslag',
+      feedbackButtonShort: 'Rapportera fel',
       feedbackTitle: 'Rapportera fel eller förslag',
       feedbackTypeBug: 'Fel / bugg',
       feedbackTypeSuggestion: 'Förslag',

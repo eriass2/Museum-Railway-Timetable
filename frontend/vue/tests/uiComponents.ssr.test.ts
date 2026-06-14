@@ -52,11 +52,11 @@ describe('UI components (SSR smoke)', () => {
     const html = await render(WizardFeedbackWidget, {
       config: {
         app: 'wizard',
-        labels: { feedbackButton: 'Rapportera fel eller förslag' },
+        labels: { feedbackButtonShort: 'Rapportera fel' },
       },
     });
-    expect(html).toContain('mrt-wizard-feedback__fab');
-    expect(html).toContain('Rapportera fel eller förslag');
+    expect(html).toContain('mrt-wizard-feedback__trigger');
+    expect(html).toContain('Rapportera fel');
   });
 
   it('MrtVehicleRow compact hides labels but keeps aria-label', async () => {

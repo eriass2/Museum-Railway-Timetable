@@ -119,6 +119,7 @@ export type WizardCfgStringKey =
   | 'calPrevAria'
   | 'calNextAria'
   | 'feedbackButton'
+  | 'feedbackButtonShort'
   | 'feedbackTitle'
   | 'feedbackTypeLegend'
   | 'feedbackTypeBug'

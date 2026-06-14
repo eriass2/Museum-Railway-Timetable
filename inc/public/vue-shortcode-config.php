@@ -217,6 +217,7 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 			'calPrevAria'          => __( 'Föregående månad', 'museum-railway-timetable' ),
 			'calNextAria'          => __( 'Nästa månad', 'museum-railway-timetable' ),
 			'feedbackButton'       => __( 'Rapportera fel eller förslag', 'museum-railway-timetable' ),
+			'feedbackButtonShort'  => __( 'Rapportera fel', 'museum-railway-timetable' ),
 			'feedbackTitle'        => __( 'Rapportera fel eller förslag', 'museum-railway-timetable' ),
 			'feedbackTypeLegend' => __( 'Typ', 'museum-railway-timetable' ),
 			'feedbackTypeBug'      => __( 'Fel / bugg', 'museum-railway-timetable' ),
