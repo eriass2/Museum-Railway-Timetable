@@ -128,8 +128,9 @@ function Invoke-MrtDockerPhpUnit {
 
     Write-Host 'Running PHPUnit in Docker (php-test)...' -ForegroundColor Cyan
     $runArgs = @('vendor/bin/phpunit')
-    if ($PhpUnitArgs.Count -gt 0) {
-        $runArgs += $PhpUnitArgs
+    $extra = @($PhpUnitArgs | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
+    if ($extra.Count -gt 0) {
+        $runArgs += $extra
     }
     Invoke-MrtDockerToolsService -Service 'php-test' -RunArgs $runArgs -ExitOnError:$ExitOnError
 }

@@ -11,6 +11,9 @@ declare(strict_types=1);
 
 define('ABSPATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
 define('MRT_PATH', dirname(__DIR__) . DIRECTORY_SEPARATOR);
+if ( ! defined( 'MRT_URL' ) ) {
+	define( 'MRT_URL', 'https://example.test/wp-content/plugins/museum-railway-timetable/' );
+}
 define('MRT_TEXT_DOMAIN', 'museum-railway-timetable');
 define('MRT_POST_TYPE_SERVICE', 'mrt_service');
 define('MRT_POST_TYPE_TIMETABLE', 'mrt_timetable');

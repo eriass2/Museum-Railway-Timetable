@@ -8,6 +8,7 @@ param(
 
 $ErrorActionPreference = 'Stop'
 . (Join-Path $PSScriptRoot '_runner.ps1')
+$Passthrough = @($Passthrough | Where-Object { -not [string]::IsNullOrWhiteSpace($_) })
 Initialize-MrtGateEnvironment -Timings:$Timings -EnsureVendor -PreferHostVendor:$Local
 
 Invoke-MrtWithDockerDefault -Local:$Local `

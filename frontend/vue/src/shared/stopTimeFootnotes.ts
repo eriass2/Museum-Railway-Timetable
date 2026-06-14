@@ -1,17 +1,13 @@
 import type { WizardCfg } from '../wizard/utils/wizardCfgTypes';
 import { cfgStr } from '../wizard/utils/wizardLabels';
+import type { TimelineStopBase } from './timelineStop';
 
-export type StopTimeFootnoteStop = {
-  on_request_pickup?: boolean;
-  on_request_dropoff?: boolean;
-  on_request_both?: boolean;
-  approximate_time?: boolean;
-};
+export type StopTimeFootnoteStop = TimelineStopBase;
 
-export const ON_REQUEST_INFO_MARK = 'ℹ️';
+/** Short accessible label for behovsuppehåll info icons (UL-style circle-i, not emoji). */
+export const ON_REQUEST_INFO_ARIA_LABEL = 'Behovsuppehåll';
 
 export type TripFootnoteEntry = {
-  mark: typeof ON_REQUEST_INFO_MARK;
   text: string;
 };
 
@@ -46,7 +42,7 @@ export function tripFootnotesFromStops(
       continue;
     }
     seen.add(text);
-    entries.push({ mark: ON_REQUEST_INFO_MARK, text });
+    entries.push({ text });
   }
 
   return entries;

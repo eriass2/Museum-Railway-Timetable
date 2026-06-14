@@ -20,6 +20,7 @@ Tågtypsikoner: `assets/icons/train-types/`.
 | [design/BRAND_UI.md](design/BRAND_UI.md) | Lennakatten profil → plugin-UI (scope, typografi, formspråk) |
 | [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md) | Färgpalett och tokens (`assets/mrt-color-tokens.css`) |
 | [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md) | Wizard-specifika tokens och layout |
+| [mockups/TRAFFIC_INFO_TOKENS.md](mockups/TRAFFIC_INFO_TOKENS.md) | Trafikinfo-feed (UL 1:1) — tokens och BEM |
 | [mockups/](mockups/) | Arkiverade mockups (referens) |
 
 ## Åtgärdsplaner
@@ -31,6 +32,7 @@ Tågtypsikoner: `assets/icons/train-types/`.
 | [TEST_IMPLEMENTATION_PLAN.md](TEST_IMPLEMENTATION_PLAN.md) | Plan för att täta testluckor (PHPUnit, Vitest, E2E) |
 | [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) | Trafikmeddelanden-shortcode v1 (generella + dagens avvikelser) |
 | [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) | Trafikstörningar v2 — UL-referens, Jesper J11, gap-analys |
+| [TRAFFIC_INFO_UL_PLAN.md](TRAFFIC_INFO_UL_PLAN.md) | Trafikinfo UL 1:1 — implementering; öppna punkter i [TODO.md](TODO.md) (`TF-*`) |
 | [WIZARD_PERFORMANCE_PLAN.md](WIZARD_PERFORMANCE_PLAN.md) | Reseplanerare – prestanda (fas 1–4) |
 | [DOCKER_SCRIPTS_PLAN.md](DOCKER_SCRIPTS_PLAN.md) | Docker/skript — optimeringar och roadmap (Fas 0–3) |
 

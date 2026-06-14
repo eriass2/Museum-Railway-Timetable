@@ -12,6 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/assets/vue-mount-layout.php';
+
 /**
  * Mark that a Vue shortcode rendered (for late asset enqueue).
  */
@@ -91,23 +93,6 @@ function MRT_vue_trip_pdf_script_url(): ?string {
 		return null;
 	}
 	return MRT_assets_base_url() . 'dist/vue/assets/trip-pdf.js';
-}
-
-/**
- * Extra CSS classes on the Vue mount node (block-theme layout).
- *
- * @param string               $app    Vue app id.
- * @param array<string, mixed> $config Mount config (may include embedded).
- */
-function MRT_vue_mount_extra_classes( string $app, array $config ): string {
-	if ( 'wizard' === $app && ! empty( $config['embedded'] ) ) {
-		return '';
-	}
-	if ( in_array( $app, array( 'overview', 'month', 'index', 'traffic_notices', 'wizard' ), true ) ) {
-		return ' alignwide';
-	}
-
-	return '';
 }
 
 /**

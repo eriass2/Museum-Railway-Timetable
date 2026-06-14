@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest';
 import {
-  ON_REQUEST_INFO_MARK,
   stopShowsOnRequestInfo,
   tripFootnotesFromStops,
 } from '../src/shared/stopTimeFootnotes';
@@ -21,7 +20,7 @@ describe('stopTimeFootnotes', () => {
     expect(stopShowsOnRequestInfo({})).toBe(false);
   });
 
-  it('tripFootnotesFromStops deduplicates texts and uses info mark', () => {
+  it('tripFootnotesFromStops deduplicates texts', () => {
     const entries = tripFootnotesFromStops(
       [
         { on_request_dropoff: true },
@@ -30,14 +29,14 @@ describe('stopTimeFootnotes', () => {
       cfg,
     );
     expect(entries).toEqual([
-      { mark: ON_REQUEST_INFO_MARK, text: cfg.onRequestDropoffFootnote },
+      { text: cfg.onRequestDropoffFootnote },
     ]);
   });
 
   it('tripFootnotesFromStops shows dropoff footnote for alighting stop', () => {
     const entries = tripFootnotesFromStops([{ on_request_dropoff: true }], cfg);
     expect(entries).toEqual([
-      { mark: ON_REQUEST_INFO_MARK, text: cfg.onRequestDropoffFootnote },
+      { text: cfg.onRequestDropoffFootnote },
     ]);
   });
 });

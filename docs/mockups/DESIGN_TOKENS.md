@@ -53,6 +53,10 @@ Se `frontend/vue/src/styles/journey-wizard/controls-calendar.css`.
 - Aktivt steg i steglistan: gul bakgrund + fokusring vid `aria-current="step"`
 - Expanderat kort: tidslinje med punkt-tider, visa/dölj hållplatser, **Priser**-tabell i kortet
 
+## Trafikinfo (UL 1:1 feed)
+
+Wizard-tokens gäller **inte** trafikstörningsfeeden. Se [TRAFFIC_INFO_TOKENS.md](TRAFFIC_INFO_TOKENS.md) och `assets/mrt-traffic-info-tokens.css` (`--mrt-tf-*`).
+
 ## Sammanfattning (`Din resa`)
 
 - Vit **Utresa** / **Återresa**-kort i lista (`steps-summary.css`)

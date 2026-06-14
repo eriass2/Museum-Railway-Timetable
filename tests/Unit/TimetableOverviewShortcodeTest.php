@@ -9,18 +9,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-if ( ! function_exists( 'MRT_render_vue_mount' ) ) {
-	function MRT_render_vue_mount( string $app, array $config ): string {
-		$GLOBALS['mrt_test_vue_mount'] = array(
-			'app'    => $app,
-			'config' => $config,
-		);
-		return '<div class="mrt-vue-mount"></div>';
-	}
-}
-
-require_once ABSPATH . 'inc/public/vue-shortcode-config.php';
-require_once ABSPATH . 'inc/public/timetable-overview/shortcode.php';
+require_once __DIR__ . '/../helpers/VueShortcodeTestBootstrap.php';
+MRT_test_boot_timetable_overview_shortcode();
 
 final class TimetableOverviewShortcodeTest extends TestCase {
 

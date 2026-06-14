@@ -1,0 +1,41 @@
+/**
+ * Traffic info feed tokens (UL 1:1 layout).
+ * Spec: docs/mockups/TRAFFIC_INFO_TOKENS.md
+ * Plan: docs/TRAFFIC_INFO_UL_PLAN.md
+ *
+ * Import in Vue SFC or app entry — do not duplicate hex in components.
+ */
+
+:root {
+  --mrt-tf-section-bg: #e8e8e8;
+  --mrt-tf-section-text: #333333;
+  --mrt-tf-surface: #ffffff;
+  --mrt-tf-border: #dddddd;
+  --mrt-tf-category-active: #f5e642;
+  --mrt-tf-category-hover: #f0f0f0;
+  --mrt-tf-badge-bg: #e8e8e8;
+  --mrt-tf-info: #c9a227;
+  --mrt-tf-info-on: #ffffff;
+  --mrt-tf-warning: #c44b33;
+  --mrt-tf-alert-bg: #e8a090;
+  --mrt-tf-alert-text: #1a1a1a;
+  --mrt-tf-line-badge-bg: #222222;
+  --mrt-tf-line-badge-text: #ffffff;
+  --mrt-tf-validity-text: #666666;
+  --mrt-tf-muted: #505050;
+
+  --mrt-tf-font-size-body: 0.9375rem;
+  --mrt-tf-font-size-small: 0.8125rem;
+  --mrt-tf-font-size-section: 0.875rem;
+  --mrt-tf-font-weight-bold: 600;
+  --mrt-tf-font-weight-normal: 400;
+
+  --mrt-tf-panel-max-width: 36rem;
+  --mrt-tf-pad-row: 0.65rem 0.9rem;
+  --mrt-tf-pad-section: 0.55rem 0.9rem 0.35rem;
+  --mrt-tf-gap-badge: 0.35rem;
+  --mrt-tf-gap-inline: 0.5rem;
+  --mrt-tf-radius-alert: 0.25rem;
+  --mrt-tf-radius-badge: 999px;
+  --mrt-tf-line-badge-min-width: 1.75rem;
+}

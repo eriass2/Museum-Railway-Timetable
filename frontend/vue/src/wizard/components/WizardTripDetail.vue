@@ -7,6 +7,7 @@ import type { JourneyConnection } from '../types';
 import { cfgStr } from '../utils/wizardLabels';
 import { useConnectionDetail } from '../composables/useConnectionDetail';
 import WizardDetailSegment from './WizardDetailSegment.vue';
+import MrtInfoMark from '../../components/ui/MrtInfoMark.vue';
 import { tripFootnotesFromStops } from '../../shared/stopTimeFootnotes';
 
 const props = defineProps<{
@@ -66,10 +67,12 @@ defineExpose({ ensureLoaded });
         <dl v-if="tripFootnotes.length" class="mrt-detail-footnotes">
           <div
             v-for="entry in tripFootnotes"
-            :key="entry.mark"
+            :key="entry.text"
             class="mrt-detail-footnotes__row"
           >
-            <dt class="mrt-detail-footnotes__mark">{{ entry.mark }}</dt>
+            <dt class="mrt-detail-footnotes__mark">
+              <MrtInfoMark size="md" />
+            </dt>
             <dd class="mrt-detail-footnotes__text">{{ entry.text }}</dd>
           </div>
         </dl>
@@ -102,7 +105,9 @@ defineExpose({ ensureLoaded });
 
 .mrt-detail-footnotes__mark {
   margin: 0;
-  font-weight: 700;
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.1rem;
 }
 
 .mrt-detail-footnotes__text {

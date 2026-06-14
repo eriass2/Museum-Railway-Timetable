@@ -9,31 +9,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-if ( ! function_exists( 'MRT_render_vue_mount' ) ) {
-	function MRT_render_vue_mount( string $app, array $config ): string {
-		$GLOBALS['mrt_test_vue_mount'] = array(
-			'app'    => $app,
-			'config' => $config,
-		);
-		return '<div class="mrt-vue-mount"></div>';
-	}
-}
-
-if ( ! function_exists( 'MRT_journey_wizard_debug_presets' ) ) {
-	/**
-	 * @return array<string, array<string, mixed>>
-	 */
-	function MRT_journey_wizard_debug_presets(): array {
-		return array(
-			'date'     => array(),
-			'outbound' => array(),
-		);
-	}
-}
-
-require_once ABSPATH . 'inc/public/journey-wizard/timetable.php';
-require_once ABSPATH . 'inc/public/journey-wizard/shell.php';
-require_once ABSPATH . 'inc/public/vue-shortcode-config.php';
+require_once __DIR__ . '/../helpers/VueShortcodeTestBootstrap.php';
+MRT_test_boot_journey_wizard_shortcode();
 
 final class JourneyWizardShortcodeTest extends TestCase {
 

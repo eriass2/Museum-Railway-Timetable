@@ -18,10 +18,10 @@ function Invoke-MrtScript {
     param(
         [Parameter(Mandatory = $true)]
         [string] $Name,
-        [string[]] $Args = @()
+        [string[]] $ScriptArgs = @()
     )
 
-    & (Join-Path $scriptsRoot $Name) @Args
+    & (Join-Path $scriptsRoot $Name) @ScriptArgs
     exit $LASTEXITCODE
 }
 

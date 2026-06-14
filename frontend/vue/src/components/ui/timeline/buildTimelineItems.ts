@@ -1,31 +1,38 @@
-export type MrtTimelineStop = {
-  station_title?: string;
-  departure_time?: string;
-  arrival_time?: string;
-  on_request_pickup?: boolean;
-  on_request_dropoff?: boolean;
-  on_request_both?: boolean;
-};
+import type { MrtTimelineStop, StopPosition, TimelineRow } from './types';
 
-export type TimelineItem =
-  | { kind: 'stop'; stop: MrtTimelineStop; terminal: boolean; key: string }
-  | { kind: 'toggle' };
+function stopPosition(index: number, total: number): StopPosition {
+  if (total === 1) {
+    return 'only';
+  }
+  if (index === 0) {
+    return 'first';
+  }
+  if (index === total - 1) {
+    return 'last';
+  }
+  return 'middle';
+}
 
 export function buildTimelineItems(
   stops: MrtTimelineStop[],
   showAllStops: boolean,
-): TimelineItem[] {
+): TimelineRow[] {
   if (stops.length <= 2) {
     return stops.map((stop, index) => ({
       kind: 'stop' as const,
       stop,
-      terminal: index === 0 || index === stops.length - 1,
+      position: stopPosition(index, stops.length),
       key: `stop-${index}`,
     }));
   }
 
-  const items: TimelineItem[] = [
-    { kind: 'stop', stop: stops[0], terminal: true, key: 'stop-first' },
+  const items: TimelineRow[] = [
+    {
+      kind: 'stop',
+      stop: stops[0],
+      position: 'first',
+      key: 'stop-first',
+    },
     { kind: 'toggle' },
   ];
 
@@ -34,7 +41,7 @@ export function buildTimelineItems(
       items.push({
         kind: 'stop',
         stop,
-        terminal: false,
+        position: 'middle',
         key: `stop-mid-${index}`,
       });
     });
@@ -43,7 +50,7 @@ export function buildTimelineItems(
   items.push({
     kind: 'stop',
     stop: stops[stops.length - 1],
-    terminal: true,
+    position: 'last',
     key: 'stop-last',
   });
 

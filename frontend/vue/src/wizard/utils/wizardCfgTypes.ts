@@ -41,6 +41,7 @@ export type WizardCfgStringKey =
   | 'noConnections'
   | 'showStops'
   | 'hideStops'
+  | 'timelineListLabel'
   | 'selectTrip'
   | 'noticeLabel'
   | 'durationMinutes'

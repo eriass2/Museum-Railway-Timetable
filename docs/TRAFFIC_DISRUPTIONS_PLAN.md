@@ -2,7 +2,8 @@
 
 **Status:** fas 1–4 implementerade (2026-06-11) — webb + admin förhandsvisning  
 **Källa:** [2026-06-09-jesper-beta.md](feedback/2026-06-09-jesper-beta.md) J11, [2026-06-09-jesper-diskussioner.md](feedback/2026-06-09-jesper-diskussioner.md) D16  
-**Föregångare (v1, klar):** [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) — shortcode + generella meddelanden + dagens tur-avvikelser
+**Föregångare (v1, klar):** [TRAFFIC_NOTICES.md](TRAFFIC_NOTICES.md) — shortcode + generella meddelanden + dagens tur-avvikelser  
+**Uppföljning (visuell UL 1:1):** [TRAFFIC_INFO_UL_PLAN.md](TRAFFIC_INFO_UL_PLAN.md) — ansvar, API, komponenter, tokens (ej inline styling)
 
 ---
 

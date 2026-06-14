@@ -1,6 +1,6 @@
 <?php
 /**
- * Vue mount helpers (inc/assets/vue-frontend.php).
+ * Vue mount layout helpers (inc/assets/vue-mount-layout.php).
  *
  * @package Museum_Railway_Timetable
  */
@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-require_once ABSPATH . 'inc/assets/vue-frontend.php';
+require_once ABSPATH . 'inc/assets/vue-mount-layout.php';
 
 final class VueMountTest extends TestCase {
 
