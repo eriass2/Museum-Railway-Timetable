@@ -51,6 +51,7 @@ const backdropStyle = computed(() => {
   --mrt-app-content-max: min(96vw, 80rem);
   --mrt-wizard-content-max: min(76.8vw, 64rem);
   --mrt-app-bleed-outset: min(50px, 5vw);
+  --mrt-app-shell-padding-inline: clamp(1rem, 3vw, 1.25rem);
 }
 </style>
 
@@ -69,6 +70,7 @@ const backdropStyle = computed(() => {
   width: 100%;
   max-width: var(--mrt-app-content-max);
   margin-inline: auto;
+  padding-inline: var(--mrt-app-shell-padding-inline);
 }
 
 .mrt-app-shell__content--fluid {

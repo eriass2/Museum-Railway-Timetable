@@ -79,6 +79,10 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
   margin-bottom: clamp(2.5rem, 5vw, 4rem);
 }
 
+.mrt-journey-wizard :deep(.mrt-app-shell__content) {
+  padding-inline: 0;
+}
+
 .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-app-shell__content) {
   max-width: var(--mrt-wizard-content-max);
 }

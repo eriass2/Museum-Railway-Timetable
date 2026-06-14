@@ -8,7 +8,7 @@
 .mrt-detail-panel {
   container-type: inline-size;
   container-name: mrt-detail;
-  padding: 1.2rem 0.8rem 1rem;
+  padding: 1.2rem var(--mrt-spacing-md, 1rem) 1rem;
   background: var(--mrt-wizard-surface, #fff);
   --mrt-tl-time: clamp(3.25rem, 8vw, 5.4rem);
   --mrt-tl-node: clamp(1rem, 2.5vw, 1.6rem);
@@ -45,7 +45,7 @@
 
 @media (max-width: 48rem) {
   .mrt-detail-panel {
-    padding: 0.85rem 0.5rem 0.75rem;
+    padding: 0.85rem var(--mrt-spacing-sm, 0.75rem) 0.75rem;
     overflow-x: hidden;
     --mrt-vehicle-row-justify: flex-start;
     --mrt-vehicle-row-width: 100%;

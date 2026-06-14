@@ -109,7 +109,7 @@ defineProps<{
 .mrt-journey-wizard__hero--embedded:not(.mrt-journey-wizard__hero--has-bg) {
   --mrt-step-panel-search-bg: transparent;
   --mrt-step-panel-search-color: var(--mrt-wizard-text);
-  --mrt-step-panel-search-padding-inline: 0;
+  --mrt-step-panel-search-padding-inline: var(--mrt-spacing-sm, 0.5rem);
 }
 
 @media (min-width: 48.0625rem) {

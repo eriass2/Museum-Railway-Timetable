@@ -72,6 +72,7 @@
     --mrt-spacing-md: 1rem;
     --mrt-spacing-lg: 1.5rem;
     --mrt-spacing-xl: 2rem;
+    --mrt-app-shell-padding-inline: clamp(1rem, 3vw, 1.25rem);
     --mrt-cell-padding: 4px 6px;
     --mrt-cell-padding-md: 6px 8px;
     --mrt-cell-padding-lg: 6px 10px;
