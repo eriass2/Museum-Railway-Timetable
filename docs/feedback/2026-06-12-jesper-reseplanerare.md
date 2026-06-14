@@ -3,7 +3,7 @@
 Återkoppling efter publicering och [svar 11 juni](2026-06-11-svar-till-jesper.md). Jesper bekräftar att vi **fixar det som finns nu innan vi bygger vidare** och att reseplaneraren **känns snabbare**. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (2026-06-12), mockup `image0.png`  
-**Senast uppdaterad:** 2026-06-13 (J19–J21 klar team; J23–J26 detaljvy)  
+**Senast uppdaterad:** 2026-06-13 (omgång 4 implementation klar team; test3-verifiering återstår)  
 **Relaterat:** [2026-06-11-jesper-reseplanerare.md](2026-06-11-jesper-reseplanerare.md) (J14–J18), [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J3, J4, J10), [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
 
 ---
@@ -15,7 +15,7 @@
 | Prestanda (bekräftelse) | 1 | — | Jesper OK — J14 upplevs bättre |
 | Layout / design (regression + ny riktning) | 3 | hög | J19 klar (väntar Jesper); J20–J21 implementation klar, J21 verifiering test3 senare |
 | Detaljvy — buggar (Ca, mot, fotnot) | 3 | hög | J23–J26 klar (team) |
-| Detaljvy — polish (tidslinje, Ca-rad) | 2 | medium–låg | öppen |
+| Detaljvy — polish (tidslinje, Ca-rad) | 2 | medium–låg | J22, J25 klar (team) |
 | Omgång 3 kvar (J15–J18) | 4 | varierande | öppen — paus tills layout/buggar fixade |
 
 **Kort tolkning:** Jesper vill (1) grön bakgrund över **hela** planeraren med vit text och vita innehållsrutor (som ursprungsutkastet), (2) stegknappar **bredvid varandra** även på mobil, (3) layoutfixar på hemsidan — fullbreddsbild utan grönt filter, inget utanför skärmen, smalare/kompaktare panel (UL-lik), (4) rätta buggar i ruttdetalj: Ca bara vid behovsuppehåll, rätt tågdestination i ”mot …”, korrekt behovsuppehåll-ikon vid rätt hållplats, samt (5) tidslinjegrafik som åter ser konstig ut.
@@ -136,23 +136,19 @@ Alla fyra stegknappar på **samma rad** på mobil (som tidigare), utan att bryta
 - **Område:** Reseplanerare / `MrtTimeline`, `WizardTimeline`
 - **Typ:** regression (J3 fixad 2026-06-09)
 - **Prioritet:** medium–hög
-- **Status:** öppen
+- **Status:** **klar (team, 2026-06-13)** — vertikal linje per rad i `mrt-timeline__node-col` (centrerad i nodkolumnen); verifiera på test3 mobil.
 
-### Historik
+### Rotorsak (var)
 
-J3 (2026-06-09): nodbredd vs `--mrt-tl-node`, `justify-self: center` — markerad **klar**.
+Global `::before`-linje med fast `top`/`left` följde inte nodkolumnen när radhöjd och `--mrt-tl-node` varierade (container queries + `margin-top` på nod).
 
-### Möjliga orsaker (utred)
+### Levererat (team)
 
-- Mobil CSS i `responsive.css` / timeline-styles efter J10-heroändringar.
-- Radbrytning på tidskolumn (J25) som skjuter layout.
-- Regression i `MrtTimeline.vue` eller `assets/frontend/ui/timeline.css`.
-
-### Föreslagen åtgärd
-
-1. Jämför med skärmdump före J10-leverans.
-2. Verifiera nod/linje-centrering på mobil och desktop.
-3. E2E/screenshot-test om möjligt.
+| Del | Var | Beteende |
+|-----|-----|----------|
+| Linje | `MrtTimeline.vue` — `mrt-timeline__node-col::before` | Segment per rad, centrerat i nodkolumn |
+| Nod | `mrt-timeline__node` | Ingen `margin-top`; `z-index` ovan linje |
+| Mobil | `MrtDetailPanel.vue` | Uppdaterad nodkolumn-styling |
 
 ### Acceptanskriterium
 
@@ -228,12 +224,14 @@ Leg-`destination` sattes tidigare via `MRT_journey_leg_destination_label( $to_st
 - **Område:** Reseplanerare / tidslinje CSS
 - **Typ:** polish
 - **Prioritet:** låg–medium
-- **Status:** öppen
+- **Status:** **klar (team, 2026-06-13)** — `Ca` staplas ovanför klockslag; rad `align-items: center` mot nod.
 
-### Föreslagen åtgärd
+### Levererat (team)
 
-- Tidskolumn: `align-items: center` mot nodrad, eller `Ca` som egen liten rad ovanför tiden med gemensam vertikal centrering.
-- Ev. `white-space: nowrap` på smala skärmar om plats finns efter J21-kompaktning.
+| Del | Var | Beteende |
+|-----|-----|----------|
+| Ca-layout | `MrtTimeline.vue` — `mrt-timeline__time-stack` | `Ca` på egen rad ovanför tid |
+| Vertikal centrering | `mrt-timeline__row` | `align-items: center` |
 
 ### Acceptanskriterium
 
@@ -279,8 +277,8 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 | 4 | J24 | Fel ”mot”-destination | Liten (PHP) | **klar team** — verifiera test3 |
 | 5 | J23 | Ca bara behovsuppehåll | Liten–medel | **klar team** — verifiera test3 |
 | 6 | J26 | Behovsuppehåll ℹ️ per stopp | Medel | **klar team** — verifiera test3 |
-| 7 | J22 | Rutttgrafik regression | Liten–medel | 7 — efter layout |
-| 8 | J25 | Ca vertikal centrering | Liten (CSS) | 8 — polish |
+| 7 | J22 | Rutttgrafik regression | Liten–medel | **klar team** — verifiera test3 |
+| 8 | J25 | Ca vertikal centrering | Liten (CSS) | **klar team** — verifiera test3 |
 
 **Pausad tills ovan är klart:** J15–J18 ([omgång 3](2026-06-11-jesper-reseplanerare.md)).
 

@@ -56,4 +56,30 @@ describe('MrtTimeline', () => {
     expect(html).toContain('mrt-timeline__info');
     expect(html).toContain('ℹ️');
   });
+
+  it('renders per-row node column for centered vertical line (J22)', async () => {
+    const html = await renderTimeline(false);
+    expect(html).toContain('mrt-timeline__node-col');
+    expect(html).toContain('mrt-timeline__node');
+  });
+
+  it('stacks Ca prefix above clock digits (J25)', async () => {
+    const app = createSSRApp({
+      render: () =>
+        h(MrtTimeline, {
+          stops: [
+            { station_title: 'Lövstahagen', departure_time: '10:46' },
+            { station_title: 'Marielund', arrival_time: '11:00' },
+          ],
+          formatTime: (s: MrtTimelineStop) =>
+            s.station_title === 'Lövstahagen' ? 'Ca 10.46' : '11.00',
+          showStopsLabel: 'Visa',
+          hideStopsLabel: 'Dölj',
+        }),
+    });
+    const html = await renderToString(app);
+    expect(html).toContain('mrt-timeline__time-ca');
+    expect(html).toContain('>Ca<');
+    expect(html).toContain('10.46');
+  });
 });

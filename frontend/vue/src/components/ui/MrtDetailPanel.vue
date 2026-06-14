@@ -32,11 +32,14 @@
     min-height: 2.15rem;
   }
 
-  :deep(.mrt-timeline__node) {
+  :deep(.mrt-timeline__node-col) {
+    width: var(--mrt-tl-node);
     justify-self: center;
+  }
+
+  :deep(.mrt-timeline__node) {
     width: var(--mrt-tl-node);
     height: var(--mrt-tl-node);
-    margin-top: 0.15rem;
     border-width: 0.22rem;
   }
 

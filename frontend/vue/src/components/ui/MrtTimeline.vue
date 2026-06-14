@@ -34,6 +34,15 @@ const timelineItems = computed(() =>
 function showsInfoForStop(stop: MrtTimelineStop): boolean {
   return stopShowsOnRequestInfo(stop);
 }
+
+/** Split "Ca 10.00" for stacked layout (J25). */
+function timeParts(stop: MrtTimelineStop): { ca: boolean; value: string } {
+  const label = props.formatTime(stop).trim();
+  if (label.startsWith('Ca ')) {
+    return { ca: true, value: label.slice(3) };
+  }
+  return { ca: false, value: label };
+}
 </script>
 
 <template>
@@ -44,8 +53,15 @@ function showsInfoForStop(stop: MrtTimelineStop): boolean {
         class="mrt-timeline__row"
         :class="{ 'is-terminal': item.terminal, 'mrt-timeline__row--cancelled': cancelled }"
       >
-        <time class="mrt-timeline__time">{{ formatTime(item.stop) }}</time>
-        <span class="mrt-timeline__node" aria-hidden="true" />
+        <time class="mrt-timeline__time">
+          <span class="mrt-timeline__time-stack">
+            <span v-if="timeParts(item.stop).ca" class="mrt-timeline__time-ca">Ca</span>
+            <span class="mrt-timeline__time-value">{{ timeParts(item.stop).value }}</span>
+          </span>
+        </time>
+        <span class="mrt-timeline__node-col" aria-hidden="true">
+          <span class="mrt-timeline__node" />
+        </span>
         <span class="mrt-timeline__station">
           {{ item.stop.station_title }}
           <span
@@ -57,6 +73,8 @@ function showsInfoForStop(stop: MrtTimelineStop): boolean {
         </span>
       </div>
       <div v-else class="mrt-timeline__toggle">
+        <span class="mrt-timeline__time-spacer" aria-hidden="true" />
+        <span class="mrt-timeline__node-col mrt-timeline__node-col--empty" aria-hidden="true" />
         <MrtExpandTrigger
           variant="link"
           :expanded="showAllStops"
@@ -70,34 +88,21 @@ function showsInfoForStop(stop: MrtTimelineStop): boolean {
 
 <style scoped>
 .mrt-timeline {
-  position: relative;
   display: grid;
   gap: 0;
   --mrt-tl-time: clamp(3.25rem, 8vw, 5.4rem);
   --mrt-tl-node: clamp(1rem, 2.5vw, 1.6rem);
   --mrt-tl-gap: clamp(0.35rem, 1vw, 0.65rem);
+  --mrt-tl-line: 0.35rem;
   --mrt-tl-content-start: calc(var(--mrt-tl-time) + var(--mrt-tl-gap) + var(--mrt-tl-node) + var(--mrt-tl-gap));
-}
-
-.mrt-timeline::before {
-  content: "";
-  position: absolute;
-  left: calc(var(--mrt-tl-time) + var(--mrt-tl-gap) + (var(--mrt-tl-node) / 2) - 0.175rem);
-  top: 0.85rem;
-  bottom: 0.85rem;
-  width: 0.35rem;
-  background: #151515;
-  pointer-events: none;
 }
 
 .mrt-timeline__row,
 .mrt-timeline__toggle {
-  position: relative;
-  z-index: 1;
   display: grid;
   grid-template-columns: var(--mrt-tl-time) var(--mrt-tl-node) minmax(0, 1fr);
   gap: var(--mrt-tl-gap);
-  align-items: start;
+  align-items: center;
 }
 
 .mrt-timeline__row {
@@ -105,7 +110,6 @@ function showsInfoForStop(stop: MrtTimelineStop): boolean {
 }
 
 .mrt-timeline__toggle {
-  align-items: center;
   padding: 0.15rem 0;
 }
 
@@ -124,20 +128,53 @@ function showsInfoForStop(stop: MrtTimelineStop): boolean {
   font-weight: 700;
 }
 
+.mrt-timeline__time-stack {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.15;
+  gap: 0.05rem;
+}
+
+.mrt-timeline__time-ca {
+  font-size: 0.72em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.mrt-timeline__node-col {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--mrt-tl-node);
+  height: 100%;
+  min-height: inherit;
+  justify-self: center;
+}
+
+.mrt-timeline__node-col::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: var(--mrt-tl-line);
+  transform: translateX(-50%);
+  background: #151515;
+  pointer-events: none;
+}
+
 .mrt-timeline__node {
   position: relative;
-  justify-self: center;
+  z-index: 1;
+  flex-shrink: 0;
   width: var(--mrt-tl-node);
   height: var(--mrt-tl-node);
-  margin-top: 0.2rem;
   border: 0.28rem solid #151515;
   border-radius: 50%;
   background: #ffffff;
   box-sizing: border-box;
-}
-
-.mrt-timeline__node::after {
-  display: none;
 }
 
 .mrt-timeline__station {
