@@ -1,7 +1,7 @@
 import { computed, onMounted, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { DisruptionFeedItem, DisruptionFeedPayload } from '@/api/disruptionFeed';
-import type { DisruptionFeedEditHint } from '@/components/traffic-notices/MrtDisruptionFeedSections.vue';
+import type { DisruptionFeedEditHint } from '@/utils/disruptionFeedDisplay';
 import { fetchTrafficNoticesFeedPreview } from '../../api/adminRestTrafficNotices';
 import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';

@@ -1,13 +1,22 @@
 <script setup lang="ts">
-import MrtDisruptionFeedSections from '@/components/traffic-notices/MrtDisruptionFeedSections.vue';
+import { computed } from 'vue';
+import MrtTfPanels from '@/components/traffic-notices/MrtTfPanels.vue';
 import MrtAlert from '@/components/ui/MrtAlert.vue';
 import { useDisruptionFeedView, type DisruptionFeedViewConfig } from '@/composables/useDisruptionFeedView';
+import { resolveDisruptionPanels } from '@/utils/disruptionFeedPanels';
 
 const props = defineProps<{
   config: DisruptionFeedViewConfig;
 }>();
 
 const { loading, error, payload, labels } = useDisruptionFeedView(() => props.config);
+
+const panels = computed(() => {
+  if (!payload.value) {
+    return [];
+  }
+  return resolveDisruptionPanels(payload.value, labels.value);
+});
 </script>
 
 <template>
@@ -24,12 +33,7 @@ const { loading, error, payload, labels } = useDisruptionFeedView(() => props.co
     <p v-else-if="payload?.is_empty" class="mrt-traffic-notices__empty">
       {{ labels.empty }}
     </p>
-    <MrtDisruptionFeedSections
-      v-else-if="payload"
-      :ongoing="payload.ongoing"
-      :upcoming="payload.upcoming"
-      :labels="labels"
-    />
+    <MrtTfPanels v-else-if="panels.length" :panels="panels" />
   </div>
 </template>
 

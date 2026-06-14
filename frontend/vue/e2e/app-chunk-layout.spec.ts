@@ -27,6 +27,6 @@ test.describe('Public app chunk layout', () => {
   test('traffic notices feed renders list items', async ({ page }) => {
     await page.goto('/traffic-notices');
     await expect(page.locator('.mrt-traffic-notices')).toBeVisible();
-    await expect(page.locator('.mrt-traffic-notices__feed-item').first()).toBeVisible();
+    await expect(page.locator('.mrt-tf-feed').first()).toBeVisible();
   });
 });

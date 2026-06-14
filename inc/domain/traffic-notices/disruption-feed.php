@@ -13,6 +13,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 require_once MRT_PATH . 'inc/domain/traffic-notices/aggregate.php';
 require_once MRT_PATH . 'inc/domain/traffic-notices/disruption-feed-display.php';
+require_once MRT_PATH . 'inc/domain/traffic-notices/disruption-feed-ul.php';
 
 const MRT_DISRUPTION_FEED_DEFAULT_HORIZON = 90;
 const MRT_DISRUPTION_FEED_MAX_HORIZON     = 365;
@@ -33,6 +34,10 @@ function MRT_disruption_feed_build( string $reference_date, int $horizon_days = 
 		MRT_disruption_feed_items_from_deviations( $reference_date, $end_date )
 	);
 	$items        = MRT_disruption_feed_sort_items( $items );
+	$items        = array_map(
+		static fn( array $item ): array => MRT_disruption_feed_enrich_item( $item, $reference_date ),
+		$items
+	);
 	$sections     = MRT_disruption_feed_split_sections( $items );
 
 	return array(
@@ -42,6 +47,7 @@ function MRT_disruption_feed_build( string $reference_date, int $horizon_days = 
 		'ongoing'        => $sections['ongoing'],
 		'upcoming'       => $sections['upcoming'],
 		'items'          => $items,
+		'panels'         => MRT_disruption_feed_build_panels( $sections['ongoing'], $sections['upcoming'] ),
 		'is_empty'       => $items === array(),
 	);
 }
@@ -214,6 +220,7 @@ function MRT_disruption_feed_item_from_deviation_group( array $group, string $re
 		'detail_intro'    => MRT_disruption_feed_deviation_detail_intro( $group, $headline ),
 		'detail_sections' => MRT_disruption_feed_deviation_detail_sections( $group ),
 		'train_numbers'   => $numbers,
+		'train_type_id'   => (int) ( $group[0]['train_type_id'] ?? 0 ),
 		'service_ids'     => array_values(
 			array_unique(
 				array_map(

@@ -54,7 +54,12 @@ final class DisruptionFeedTest extends TestCase {
 		self::assertCount( 1, $result['upcoming'] );
 		self::assertSame( 'general', $result['ongoing'][0]['source'] );
 		self::assertSame( 'general', $result['upcoming'][0]['source'] );
-		self::assertStringContainsString( '2026-07-01', $result['upcoming'][0]['headline'] );
+		self::assertSame( 'Glassrea idag', $result['ongoing'][0]['summary'] );
+		self::assertSame( 'Sommarbaninfo', $result['upcoming'][0]['summary'] );
+		self::assertStringContainsString( 'Gäller', $result['upcoming'][0]['validity_label'] );
+		self::assertStringContainsString( '16', $result['upcoming'][0]['validity_label'] );
+		self::assertArrayHasKey( 'panels', $result );
+		self::assertCount( 2, $result['panels'] );
 	}
 
 	public function test_build_groups_deviations_with_same_notice_on_same_date(): void {
@@ -81,8 +86,9 @@ final class DisruptionFeedTest extends TestCase {
 		);
 		self::assertCount( 1, $deviations );
 		self::assertSame( array( '71', '97' ), $deviations[0]['train_numbers'] );
-		self::assertStringContainsString( '71', $deviations[0]['headline'] );
-		self::assertStringContainsString( '97', $deviations[0]['headline'] );
+		self::assertSame( 'Inställd trafik', $deviations[0]['summary'] );
+		self::assertSame( 'warning', $deviations[0]['severity'] );
+		self::assertSame( 'train', $deviations[0]['category_key'] );
 		self::assertSame( 'cancelled', $deviations[0]['kind'] );
 		self::assertNotEmpty( $deviations[0]['detail_intro'] );
 		self::assertNotEmpty( $deviations[0]['detail_sections'] );

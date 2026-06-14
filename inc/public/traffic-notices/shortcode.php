@@ -61,6 +61,9 @@ function MRT_traffic_notices_build_context( array $atts ): array {
  */
 function MRT_render_shortcode_traffic_notices( $atts ): string {
 	$context  = MRT_traffic_notices_build_context( (array) $atts );
+	if ( function_exists( 'MRT_enqueue_traffic_info_tokens' ) ) {
+		MRT_enqueue_traffic_info_tokens();
+	}
 	$mount    = MRT_render_vue_mount( 'traffic_notices', MRT_vue_traffic_notices_config( $context ) );
 	$noscript = MRT_render_traffic_notices_noscript( $context );
 	return $mount . $noscript;
@@ -86,28 +89,144 @@ function MRT_render_traffic_notices_noscript( array $context ): string {
  */
 function MRT_render_traffic_notices_html( array $payload, string $title = '' ): string {
 	$is_empty = ! empty( $payload['is_empty'] );
-	$ongoing  = isset( $payload['ongoing'] ) && is_array( $payload['ongoing'] ) ? $payload['ongoing'] : array();
-	$upcoming = isset( $payload['upcoming'] ) && is_array( $payload['upcoming'] ) ? $payload['upcoming'] : array();
+	$panels   = MRT_render_traffic_notices_resolve_panels( $payload );
 
 	$out = '<div class="mrt-traffic-notices">';
 	if ( $title !== '' ) {
 		$out .= '<h2 class="mrt-traffic-notices__title">' . esc_html( $title ) . '</h2>';
 	}
-	if ( $is_empty ) {
+	if ( $is_empty || $panels === array() ) {
 		$out .= '<p class="mrt-traffic-notices__empty">' . esc_html__( 'Inga meddelanden', 'museum-railway-timetable' ) . '</p>';
 		$out .= '</div>';
 		return $out;
 	}
-	$out .= '<div class="mrt-traffic-notices__feed-card"><div class="mrt-traffic-notices__feed">';
-	$out .= MRT_render_disruption_feed_section_html(
-		__( 'Pågår nu', 'museum-railway-timetable' ),
-		$ongoing
-	);
-	$out .= MRT_render_disruption_feed_section_html(
-		__( 'Kommande', 'museum-railway-timetable' ),
-		$upcoming
-	);
-	$out .= '</div></div></div>';
+	$out .= '<div class="mrt-tf-feed">';
+	foreach ( $panels as $panel ) {
+		if ( ! is_array( $panel ) ) {
+			continue;
+		}
+		$out .= MRT_render_tf_panel_html( $panel );
+	}
+	$out .= '</div></div>';
+	return $out;
+}
+
+/**
+ * @param array<string, mixed> $payload
+ * @return list<array<string, mixed>>
+ */
+function MRT_render_traffic_notices_resolve_panels( array $payload ): array {
+	$panels = isset( $payload['panels'] ) && is_array( $payload['panels'] ) ? $payload['panels'] : array();
+	if ( $panels !== array() ) {
+		return $panels;
+	}
+	$ongoing  = isset( $payload['ongoing'] ) && is_array( $payload['ongoing'] ) ? $payload['ongoing'] : array();
+	$upcoming = isset( $payload['upcoming'] ) && is_array( $payload['upcoming'] ) ? $payload['upcoming'] : array();
+	$built    = array();
+	if ( $ongoing !== array() ) {
+		$built[] = MRT_disruption_feed_build_panel( 'ongoing', $ongoing );
+	}
+	if ( $upcoming !== array() ) {
+		$built[] = MRT_disruption_feed_build_panel( 'upcoming', $upcoming );
+	}
+	return $built;
+}
+
+/**
+ * @param array<string, mixed> $panel
+ */
+function MRT_render_tf_panel_html( array $panel ): string {
+	$title      = trim( (string) ( $panel['title'] ?? '' ) );
+	$icon       = (string) ( $panel['icon'] ?? 'clock' );
+	$categories = isset( $panel['categories'] ) && is_array( $panel['categories'] ) ? $panel['categories'] : array();
+	$out        = '<section class="mrt-tf-panel" aria-label="' . esc_attr( $title ) . '">';
+	$out       .= '<h3 class="mrt-tf-panel__header">';
+	$out       .= '<span class="mrt-tf-panel__icon" aria-hidden="true">';
+	$out       .= $icon === 'calendar' ? '▦' : '◷';
+	$out       .= '</span><span>' . esc_html( $title ) . '</span></h3>';
+	foreach ( $categories as $category ) {
+		if ( ! is_array( $category ) ) {
+			continue;
+		}
+		$out .= MRT_render_tf_category_html( $category );
+	}
+	$out .= '</section>';
+	return $out;
+}
+
+/**
+ * @param array<string, mixed> $category
+ */
+function MRT_render_tf_category_html( array $category ): string {
+	$label  = trim( (string) ( $category['label'] ?? '' ) );
+	$counts = isset( $category['counts'] ) && is_array( $category['counts'] ) ? $category['counts'] : array();
+	$items  = isset( $category['items'] ) && is_array( $category['items'] ) ? $category['items'] : array();
+	$out    = '<div class="mrt-tf-category">';
+	$out   .= '<div class="mrt-tf-category__row">';
+	$out   .= '<span class="mrt-tf-category__label">' . esc_html( $label ) . '</span>';
+	$out   .= '<span class="mrt-tf-category__badges">';
+	$info    = (int) ( $counts['info'] ?? 0 );
+	$warning = (int) ( $counts['warning'] ?? 0 );
+	if ( $info > 0 ) {
+		$out .= MRT_render_tf_count_badge_html( 'info', $info );
+	}
+	if ( $warning > 0 ) {
+		$out .= MRT_render_tf_count_badge_html( 'warning', $warning );
+	}
+	$out .= '</span></div>';
+	if ( $items !== array() ) {
+		$out .= '<div class="mrt-tf-category__alerts"><ul class="mrt-tf-alert-list">';
+		foreach ( $items as $item ) {
+			if ( ! is_array( $item ) ) {
+				continue;
+			}
+			$out .= MRT_render_tf_alert_html( $item );
+		}
+		$out .= '</ul></div>';
+	}
+	$out .= '</div>';
+	return $out;
+}
+
+function MRT_render_tf_count_badge_html( string $variant, int $count ): string {
+	$mark = $variant === 'info' ? 'i' : '!';
+	$out  = '<span class="mrt-tf-count-badge mrt-tf-count-badge--' . esc_attr( $variant ) . '">';
+	$out .= '<span class="mrt-tf-count-badge__mark" aria-hidden="true">' . esc_html( $mark ) . '</span>';
+	$out .= '<span class="mrt-tf-count-badge__count">' . esc_html( (string) $count ) . '</span>';
+	$out .= '</span>';
+	return $out;
+}
+
+/**
+ * @param array<string, mixed> $item
+ */
+function MRT_render_tf_alert_html( array $item ): string {
+	$summary        = trim( (string) ( $item['summary'] ?? $item['headline'] ?? '' ) );
+	$validity_label = trim( (string) ( $item['validity_label'] ?? '' ) );
+	$line_label     = trim( (string) ( $item['line_label'] ?? '' ) );
+	$intro          = trim( (string) ( $item['detail_intro'] ?? '' ) );
+	if ( $intro === '' ) {
+		$intro = MRT_disruption_feed_item_body_display( $item );
+	}
+	$out = '<li class="mrt-tf-alert"><div class="mrt-tf-alert__main">';
+	if ( $line_label !== '' ) {
+		$out .= '<span class="mrt-tf-line-badge">' . esc_html( $line_label ) . '</span>';
+	}
+	$out .= '<div class="mrt-tf-alert__body">';
+	$out .= '<div class="mrt-tf-alert__summary">' . esc_html( $summary ) . '</div>';
+	if ( $validity_label !== '' ) {
+		$out .= '<p class="mrt-tf-alert__validity"><span>' . esc_html( $validity_label ) . '</span></p>';
+	}
+	$out .= '</div></div>';
+	if ( $intro !== '' || MRT_disruption_feed_item_has_expandable_content( $item ) ) {
+		$out .= '<div class="mrt-tf-alert__detail">';
+		if ( $intro !== '' ) {
+			$out .= '<p>' . esc_html( $intro ) . '</p>';
+		}
+		$out .= MRT_render_disruption_feed_item_sections_html( $item );
+		$out .= '</div>';
+	}
+	$out .= '</li>';
 	return $out;
 }
 

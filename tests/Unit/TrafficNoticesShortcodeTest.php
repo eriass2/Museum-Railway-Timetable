@@ -58,8 +58,7 @@ final class TrafficNoticesShortcodeTest extends TestCase {
 			)
 		);
 		self::assertStringContainsString( 'Baninfo', $html );
-		self::assertStringContainsString( 'mrt-traffic-notices__feed-card', $html );
-		self::assertStringContainsString( 'mrt-traffic-notices__section-title', $html );
-		self::assertStringContainsString( 'mrt-traffic-notices__summary', $html );
+		self::assertStringContainsString( 'mrt-tf-feed', $html );
+		self::assertStringContainsString( 'mrt-tf-alert__summary', $html );
 	}
 }

@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { toRef } from 'vue';
-import MrtDisruptionFeedSections from '@/components/traffic-notices/MrtDisruptionFeedSections.vue';
+import { computed, toRef } from 'vue';
+import MrtTfPanels from '@/components/traffic-notices/MrtTfPanels.vue';
 import { AdminPanel } from '../ui';
 import { useTrafficNoticesFeedPreview } from '../../composables/traffic-notices/useTrafficNoticesFeedPreview';
 import { adminStr } from '../../utils/adminLabels';
+import { resolveDisruptionPanels } from '@/utils/disruptionFeedPanels';
 
 const props = defineProps<{
   refreshKey?: number;
@@ -12,6 +13,13 @@ const props = defineProps<{
 const { cfg, loading, error, payload, sectionLabels, editForItem } = useTrafficNoticesFeedPreview(
   toRef(props, 'refreshKey'),
 );
+
+const panels = computed(() => {
+  if (!payload.value) {
+    return [];
+  }
+  return resolveDisruptionPanels(payload.value, sectionLabels.value);
+});
 </script>
 
 <template>
@@ -29,16 +37,11 @@ const { cfg, loading, error, payload, sectionLabels, editForItem } = useTrafficN
     <p v-else-if="payload?.is_empty" class="mrt-traffic-notices__empty">
       {{ adminStr(cfg, 'trafficNoticesFeedEmpty') }}
     </p>
-    <div v-else-if="payload" class="mrt-traffic-notices-admin-preview__site">
+    <div v-else-if="panels.length" class="mrt-traffic-notices-admin-preview__site">
       <p class="mrt-traffic-notices-admin-preview__caption">
         {{ adminStr(cfg, 'trafficNoticesFeedPreviewCaption') }}
       </p>
-      <MrtDisruptionFeedSections
-        :ongoing="payload.ongoing"
-        :upcoming="payload.upcoming"
-        :labels="sectionLabels"
-        :edit-for-item="editForItem"
-      />
+      <MrtTfPanels :panels="panels" :edit-for-item="editForItem" />
     </div>
   </AdminPanel>
 </template>

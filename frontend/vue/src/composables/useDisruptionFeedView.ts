@@ -23,8 +23,8 @@ export function useDisruptionFeedView(config: MaybeRefOrGetter<DisruptionFeedVie
       empty: cfg.labels?.empty ?? 'Inga meddelanden',
       loading: cfg.labels?.loading ?? 'Laddar meddelanden…',
       error: cfg.labels?.error ?? 'Kunde inte ladda meddelanden.',
-      sectionOngoing: cfg.labels?.sectionOngoing ?? 'Pågår nu',
-      sectionUpcoming: cfg.labels?.sectionUpcoming ?? 'Kommande',
+      sectionOngoing: cfg.labels?.sectionOngoing ?? 'Aktuellt trafikläge',
+      sectionUpcoming: cfg.labels?.sectionUpcoming ?? 'Planerade avvikelser',
       item: {
         expandMore: cfg.labels?.expandMore ?? defaults.expandMore,
         expandDetails: cfg.labels?.expandDetails ?? defaults.expandDetails,

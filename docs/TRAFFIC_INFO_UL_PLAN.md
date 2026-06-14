@@ -1,6 +1,7 @@
 # Trafikinfo UL 1:1 — implementeringsplan
 
 **Status:** plan (ej startad) — **backlog:** [TODO.md](TODO.md) § Trafikinfo UL 1:1 (`TF-*`)  
+**Kodbaseline:** 2026-06-14 — se §16 (inga TF-implementationer utom token-filer + förberedande wizard-UI)  
 **Mål:** Publik trafikstörningsvy ska **visuellt** matcha UL:s «Aktuellt trafikläge» / «Planerade avvikelser» (hierarki, färger, badges, alert-rutor). Innehåll för Lennakatten (tågnummer, museumstrafik).  
 **Kontext:** [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) (v2 API/feed klar 2026-06-11) — denna plan är **uppföljning för visuell paritet**.  
 **Designreferens:** UL-skärmdumpar (team), [mockups/TRAFFIC_INFO_TOKENS.md](mockups/TRAFFIC_INFO_TOKENS.md)
@@ -168,7 +169,7 @@ MrtTrafficNoticesView.vue
 - `MrtTfCountBadge.vue` — pill **i** / **!** + siffra
 - `MrtTfLineBadge.vue` — svart nummer
 - `MrtTfIconClock.vue`, `MrtTfIconCalendar.vue`, `MrtTfIconWarning.vue`
-- Återanvänd `MrtInfoMark.vue` i info-badge
+- Återanvänd `MrtInfoMark.vue` endast om `currentColor` + `--mrt-tf-info` räcker; UL count-pill troligen **`MrtTfCountBadge`** (se §16)
 
 **State:** `expandedCategoryKey` per panel; valfritt `expandedAlertId` för detalj under kort.
 
@@ -200,13 +201,18 @@ MrtTrafficNoticesView.vue
 | `docs/mockups/TRAFFIC_INFO_TOKENS.md` | Design |
 | `docs/mockups/ul-trafikinfo-reference.png` | Produkt |
 | `assets/mrt-traffic-info-tokens.css` | Frontend |
+| `inc/assets/vue-mount-layout.php` | Backend — `alignwide` på `traffic_notices` mount |
+| `inc/assets/vue-frontend.php` | Backend — Vue enqueue; hook för token-CSS efter bundle |
+| `inc/assets/brand-tokens.php` | Backend — mönster för CSS efter Vue (operatör-brand) |
 | `inc/domain/traffic-notices/disruption-feed.php` | Backend |
 | `inc/domain/traffic-notices/disruption-feed-display.php` | Backend |
 | `inc/public/traffic-notices/shortcode.php` | Backend |
 | `inc/public/vue-shortcode-config.php` | Backend (i18n) |
 | `frontend/vue/src/api/disruptionFeed.ts` | Frontend |
-| `frontend/vue/src/components/traffic-notices/` | Frontend |
-| `frontend/vue/src/components/ui/MrtInfoMark.vue` | Delad UI |
+| `frontend/vue/src/apps/TrafficNoticesApp.vue` | Frontend |
+| `frontend/vue/src/components/layout/MrtPublicAppShell.vue` | Frontend — wrapper publik vy |
+| `frontend/vue/src/components/traffic-notices/` | Frontend — **fortfarande** `MrtDisruption*` (ej `MrtTf*`) |
+| `frontend/vue/src/components/ui/MrtInfoMark.vue` | Delad UI — wizard/timeline (ej trafikinfo än) |
 | `tests/Unit/DisruptionFeedTest.php` | Test |
 | `frontend/vue/tests/disruptionFeedDisplay.test.ts` | Test |
 | `frontend/vue/e2e/traffic-notices-mount.spec.ts` | Test |
@@ -289,9 +295,9 @@ E2E ska testa **UL-flödet** (expand kategori → alert synlig), inte bara «Gla
 
 | Kanal | Krav | Ansvar |
 |-------|------|--------|
-| Vue (JS) | `mrt-traffic-info-tokens.css` importerad i trafikinfo-chunk eller global public CSS | Frontend |
-| Noscript | Samma token-fil enqueue när shortcode används (utan Vue-build) | Backend `frontend.php` eller shortcode |
-| WordPress-tema | `alignwide` + `MrtPublicAppShell` — verifiera på Lennakatten-tema, inte bara e2e | Test + Produkt |
+| Vue (JS) | `mrt-traffic-info-tokens.css` importerad i trafikinfo-chunk **eller** enqueue efter Vue-CSS (samma hook som `MRT_enqueue_brand_token_overrides` i `vue-frontend.php`) | Frontend + Backend |
+| Noscript | Samma token-fil enqueue när shortcode renderas utan JS | Backend (`frontend.php` / shortcode) |
+| WordPress-tema | `alignwide` via `MRT_vue_mount_extra_classes()` i `vue-mount-layout.php` + `MrtPublicAppShell` — verifiera på Lennakatten-tema | Test + Produkt |
 
 Utan enqueue av tokens ser noscript-användare och vissa WP-miljöer **fel färger** trots korrekt HTML.
 
@@ -324,7 +330,7 @@ Pixel-perfect mot UL är inte målet — **samma hierarki, färger och typografi
 |------|--------|----------|
 | **H1** | Backend | Svenskt datum i `validity_label` |
 | **H2** | Test | UL-lik `traffic-notices-payload.mjs` + uppdaterade e2e |
-| **H3** | Backend | Enqueue `mrt-traffic-info-tokens.css` för shortcode |
+| **H3** | Backend | Enqueue `mrt-traffic-info-tokens.css` (shortcode + hook som Vue efter bundle) |
 | **H4** | Test | Playwright screenshots |
 | **H5** | Produkt | Operatörguide + Jesper-checklista §14 |
 | **H6** | Produkt | test3 på Lennakatten-tema |
@@ -360,5 +366,44 @@ Kör på `/trafikstorningar` (eller shortcode på startsidan), mobil + desktop.
 | **H** | **Fixtures, enqueue CSS, screenshots, operatör, tema** |
 | G | Produkt acceptans §14 |
 
-**Kritiskt för slutoutput:** A + H2 + H3 — utan dem ser test3 fortfarande «fel» även med perfekt CSS.
+**Kritiskt för slutoutput:** A + TF-F5 + TF-H1 — utan dem ser test3 fortfarande «fel» även med perfekt CSS.
+
+---
+
+## 16. Kodstatus (baseline 2026-06-14)
+
+Jämförelse mellan plan och faktisk kod. **TF-ul-arbetet är i stort sett ej påbörjat**; nedan är relevanta förändringar i närheten.
+
+### Redan i kod (förberedelse — inte UL-feed klart)
+
+| Vad | Var | Påverkan på TF-plan |
+|-----|-----|---------------------|
+| Token-spec + `--mrt-tf-*` CSS-fil | `TRAFFIC_INFO_TOKENS.md`, `assets/mrt-traffic-info-tokens.css` | TF-0.1 ✅ TF-0.2 ✅ fil, **ej enqueue/import** |
+| `MrtInfoMark.vue` (grön cirkel-i, `#fff` i SVG) | `components/ui/` | Används i **wizard** tidslinje + fotnoter — **inte** trafikinfo. TF-C5: behöver troligen **egen** `MrtTfCountBadge` (gul **i** i grå pill), inte återanvända rakt av |
+| Timeline-modul refactor | `components/ui/timeline/*` | Parallellt arbete; **ej** trafikinfo |
+| `MrtPublicAppShell` | `TrafficNoticesApp.vue` | TF-H2: layout-wrapper finns; tema-verifiering kvar |
+| `MRT_vue_mount_extra_classes()` | `inc/assets/vue-mount-layout.php` | `traffic_notices` får `alignwide` (flyttad från `vue-frontend.php`) |
+| `MRT_enqueue_brand_token_overrides()` | `vue-frontend.php` + `brand-tokens.php` | TF-H1: **mönster** för att enqueue CSS efter Vue-bundle — trafikinfo-tokens ej kopplade |
+
+### Oförändrat sedan plan (fortfarande öppna TF-punkter)
+
+| Område | Nuvarande kod |
+|--------|----------------|
+| API-fält | Inga `summary`, `validity_label`, `severity`, `panels` — `disruptionFeed.ts` + `disruption-feed.php` |
+| Vue trafikinfo | `MrtDisruptionFeedSections`, `MrtDisruptionFeedItemCard` — **ingen** `MrtTf*` |
+| i18n rubriker | Fortfarande «Pågår nu» / «Kommande» i `vue-shortcode-config.php` |
+| Noscript | Legacy `mrt-traffic-notices__*` + `<details>` i `shortcode.php` |
+| E2E fixture | Flat `ongoing`/`upcoming` i `traffic-notices-payload.mjs` |
+| CSS DoD | Inga `mrt-tf-*` klasser i produktion |
+
+### Planjusteringar (efter kodgranskning)
+
+1. **TF-H1:** enqueue via ny `MRT_enqueue_traffic_info_tokens( $after_handle )` (lik `brand-tokens.php`) **eller** `@import` i trafikinfo Vue-entry — inte bara «frontend.php» generiskt.
+2. **TF-H2:** referensfil `vue-mount-layout.php`, inte endast `vue-frontend.php`.
+3. **TF-C5:** `MrtInfoMark` är **wizard**-ikon (brand-grön); UL count-badge är annorlunda — planera `MrtTfCountBadge` som primär, `MrtInfoMark` som valfri inre ikon med `currentColor` från `--mrt-tf-info`.
+4. **Strict tokens:** `MrtInfoMark` har hårdkodad `#fff` i SVG — bryter TF CSS-regler; nya TF-komponenter ska använda `currentColor` / tokens.
+
+### Slutsats
+
+**Planen behöver inte ändras i faser eller scope** — kodbasen matchar «ej startad» för TF-A–G. Uppdateringar ovan är **precision** (filer, enqueue-mönster, MrtInfoMark ≠ UL-badge). Nästa implementationsteg förblir **TF-A** (+ TF-F5, TF-H1 för synligt test3-resultat).
 

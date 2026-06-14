@@ -54,7 +54,7 @@ test.describe('Vue admin traffic notices', () => {
       timeout: 20_000,
     });
     await expect(
-      page.locator('.mrt-traffic-notices__headline', { hasText: message }),
+      page.locator('.mrt-tf-alert__summary', { hasText: message }),
     ).toBeVisible({ timeout: 15_000 });
   });
 

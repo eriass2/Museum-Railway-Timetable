@@ -3,6 +3,8 @@ import { mrtRestRequest } from './mrtRest';
 
 export type DisruptionFeedKind = 'cancelled' | 'deviation' | 'info';
 
+export type DisruptionFeedSeverity = 'info' | 'warning';
+
 export type DisruptionFeedDetailSection = {
   title: string;
   lines: string[];
@@ -17,6 +19,13 @@ export type DisruptionFeedItem = {
   date_to: string;
   date_label: string;
   headline: string;
+  summary?: string;
+  validity_label?: string;
+  line_label?: string;
+  severity?: DisruptionFeedSeverity;
+  category_key?: string;
+  category_label?: string;
+  icon_key?: string;
   body: string;
   route_label: string;
   detail_intro: string;
@@ -30,6 +39,21 @@ export type DisruptionFeedItem = {
   };
 };
 
+export type DisruptionFeedCategory = {
+  key: string;
+  label: string;
+  icon_key: string;
+  counts: { info: number; warning: number };
+  items: DisruptionFeedItem[];
+};
+
+export type DisruptionFeedPanel = {
+  key: 'ongoing' | 'upcoming';
+  title: string;
+  icon: 'clock' | 'calendar';
+  categories: DisruptionFeedCategory[];
+};
+
 export type DisruptionFeedPayload = {
   reference_date: string;
   horizon_days: number;
@@ -37,6 +61,7 @@ export type DisruptionFeedPayload = {
   ongoing: DisruptionFeedItem[];
   upcoming: DisruptionFeedItem[];
   items: DisruptionFeedItem[];
+  panels?: DisruptionFeedPanel[];
   is_empty: boolean;
 };
 

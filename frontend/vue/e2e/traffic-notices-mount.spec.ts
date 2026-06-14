@@ -4,21 +4,24 @@ test.describe('Traffic notices (static mount)', () => {
   test('lists ongoing feed items from REST', async ({ page }) => {
     await page.goto('/traffic-notices');
     await expect(page.locator('.mrt-traffic-notices')).toBeVisible();
-    await expect(page.locator('.mrt-traffic-notices__section-title').first()).toHaveText('Pågår nu');
-    await expect(page.locator('.mrt-traffic-notices__headline').first()).toContainText('Glassrean');
-    await expect(page.locator('.mrt-traffic-notices__feed-item--cancelled')).toContainText('Inställd');
-    await page.locator('.mrt-traffic-notices__feed-item').first().locator('.mrt-expand-trigger').click();
-    await expect(page.locator('.mrt-traffic-notices__intro').first()).toBeVisible();
+    await expect(page.locator('.mrt-tf-panel__header').first()).toContainText('Aktuellt trafikläge');
+    await page.locator('.mrt-tf-category__row').filter({ hasText: 'Information' }).click();
+    await expect(page.locator('.mrt-tf-alert__summary').filter({ hasText: 'Glassrean' })).toBeVisible();
+    await page.locator('.mrt-tf-category__row').filter({ hasText: 'Tåg' }).click();
+    await expect(page.locator('.mrt-tf-line-badge').filter({ hasText: '71' })).toBeVisible();
+    await expect(page.locator('.mrt-tf-alert__summary').filter({ hasText: 'Inställd' })).toBeVisible();
+    await page.locator('.mrt-tf-alert__expand').first().click();
+    await expect(page.locator('.mrt-tf-alert__detail').first()).toBeVisible();
   });
 
-  test('accordion keeps one expanded item at a time', async ({ page }) => {
+  test('accordion keeps one expanded category at a time per panel', async ({ page }) => {
     await page.goto('/traffic-notices');
-    const items = page.locator('.mrt-traffic-notices__feed-item');
-    await items.nth(0).locator('.mrt-traffic-notices__summary-row--interactive').click();
-    await expect(items.nth(0)).toHaveClass(/is-expanded/);
-    await items.nth(1).locator('.mrt-traffic-notices__summary-row--interactive').click();
-    await expect(items.nth(1)).toHaveClass(/is-expanded/);
-    await expect(items.nth(0)).not.toHaveClass(/is-expanded/);
+    const categories = page.locator('.mrt-tf-category');
+    await categories.filter({ hasText: 'Information' }).locator('.mrt-tf-category__row').click();
+    await expect(categories.filter({ hasText: 'Information' })).toHaveClass(/is-expanded/);
+    await categories.filter({ hasText: 'Tåg' }).locator('.mrt-tf-category__row').click();
+    await expect(categories.filter({ hasText: 'Tåg' })).toHaveClass(/is-expanded/);
+    await expect(categories.filter({ hasText: 'Information' })).not.toHaveClass(/is-expanded/);
   });
 
   test('shows empty state', async ({ page }) => {

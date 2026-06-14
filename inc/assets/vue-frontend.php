@@ -172,6 +172,9 @@ function MRT_enqueue_vue_frontend_assets(): void {
 	if ( function_exists( 'MRT_enqueue_brand_token_overrides' ) ) {
 		MRT_enqueue_brand_token_overrides( $last_css_hdl );
 	}
+	if ( function_exists( 'MRT_enqueue_traffic_info_tokens' ) ) {
+		MRT_enqueue_traffic_info_tokens( $last_css_hdl );
+	}
 
 	$js_file = isset( $entry['file'] ) ? (string) $entry['file'] : '';
 	if ( $js_file === '' ) {

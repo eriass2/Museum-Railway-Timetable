@@ -35,6 +35,7 @@ function MRT_enqueue_train_type_icon_styles( array $deps = array() ): string {
 }
 
 require_once MRT_PATH . 'inc/assets/brand-tokens.php';
+require_once MRT_PATH . 'inc/assets/traffic-info-tokens.php';
 require_once MRT_PATH . 'inc/assets/vue-frontend.php';
 require_once MRT_PATH . 'inc/assets/admin.php';
 require_once MRT_PATH . 'inc/assets/admin-vue.php';
