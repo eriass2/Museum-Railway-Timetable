@@ -236,3 +236,16 @@
   font-weight: var(--mrt-tf-font-weight-bold);
   line-height: 1.2;
 }
+
+@media (max-width: 30rem) {
+  .mrt-tf-alert__validity {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .mrt-tf-alert__validity span {
+    flex: 1 1 calc(100% - 1.25rem);
+    min-width: 0;
+    word-break: break-word;
+  }
+}

@@ -34,4 +34,13 @@ test.describe('Traffic notices (static mount)', () => {
     await page.goto('/traffic-notices?title=Trafikinfo');
     await expect(page.locator('.mrt-traffic-notices__title')).toHaveText('Trafikinfo');
   });
+
+  test('shows only upcoming panel when ongoing is empty (TF-C8)', async ({ page }) => {
+    await page.goto('/traffic-notices?upcoming-only=1');
+    await expect(page.locator('.mrt-tf-panel')).toHaveCount(1);
+    await expect(page.locator('.mrt-tf-panel__header')).toHaveText('Planerade avvikelser');
+    await expect(page.locator('.mrt-tf-panel__header')).not.toContainText('Aktuellt trafikläge');
+    await page.locator('.mrt-tf-category__row').first().click();
+    await expect(page.locator('.mrt-tf-alert__summary')).toContainText('Buss ersätter');
+  });
 });

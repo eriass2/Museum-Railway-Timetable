@@ -89,6 +89,31 @@ Vue och PHP noscript delar samma klassnamn.
 
 ---
 
+## Visuell referens (TF-0.4)
+
+Playwright-baseline (Linux CI) för UL-layout — jämför hierarki, badges och färger mot UL-skärmdump när `mockups/ul-trafikinfo-reference.png` finns (TF-0.3).
+
+| Vy | Snapshot | Viewport |
+|----|----------|----------|
+| Desktop (alla kategorier expanderade) | `frontend/vue/e2e/traffic-notices-ul-layout.spec.ts-snapshots/traffic-notices-ul-desktop-linux.png` | 900×900 |
+| Mobil | `frontend/vue/e2e/traffic-notices-ul-layout.spec.ts-snapshots/traffic-notices-ul-mobile-linux.png` | 390×820 |
+
+**Kontrollpunkter vid side-by-side:**
+
+1. Två sektioner med ikon i rubrik (klocka / kalender).
+2. Kategori-rader med count-badges före expand; gul aktiv rad.
+3. Svart line-badge + korall summary-ruta + giltighet under.
+4. Ingen grön vänsterkant eller flat «Mer information»-lista.
+
+Uppdatera snapshots efter avsiktliga layoutändringar:
+
+```bash
+docker run --rm -v "$PWD:/app" -w /app/frontend/vue mcr.microsoft.com/playwright:v1.60.0-jammy \
+  sh -c "npm run build && npm run e2e -- traffic-notices-ul-layout.spec.ts --update-snapshots"
+```
+
+---
+
 ## Godkännande
 
 | Steg | Ansvar |

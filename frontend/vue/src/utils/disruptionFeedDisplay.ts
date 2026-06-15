@@ -24,30 +24,7 @@ export const DEFAULT_DISRUPTION_FEED_ITEM_LABELS: DisruptionFeedItemLabels = {
 };
 
 export function disruptionFeedItemIntro(item: DisruptionFeedItem): string {
-  const intro = item.detail_intro?.trim() ?? '';
-  if (intro !== '') {
-    return intro;
-  }
-  return disruptionFeedLegacyBodyDisplay(item);
-}
-
-function disruptionFeedLegacyBodyDisplay(item: DisruptionFeedItem): string {
-  const body = item.body.trim();
-  const headline = item.headline.trim();
-  if (body === '' || body === headline) {
-    return '';
-  }
-  if (item.source === 'deviation' && headline.toLowerCase().includes(body.toLowerCase())) {
-    return '';
-  }
-  if (item.source === 'general') {
-    const lines = body.split(/\r?\n/);
-    const firstLine = (lines[0] ?? '').trim();
-    if (firstLine === headline) {
-      return lines.slice(1).join('\n').trim();
-    }
-  }
-  return body;
+  return item.detail_intro?.trim() ?? '';
 }
 
 export function disruptionFeedShowIntro(item: DisruptionFeedItem): boolean {

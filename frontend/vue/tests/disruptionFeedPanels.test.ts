@@ -66,4 +66,21 @@ describe('resolveDisruptionPanels', () => {
     expect(panels[0].categories[0].key).toBe('train');
     expect(panels[1].categories[0].key).toBe('general');
   });
+
+  it('shows only upcoming panel when ongoing is empty (TF-C8)', () => {
+    const upcoming = item('b', { phase: 'upcoming', category_key: 'general', category_label: 'Information' });
+    const payload: DisruptionFeedPayload = {
+      reference_date: '2026-06-06',
+      horizon_days: 90,
+      end_date: '2026-09-04',
+      ongoing: [],
+      upcoming: [upcoming],
+      items: [upcoming],
+      is_empty: false,
+    };
+    const panels = resolveDisruptionPanels(payload);
+    expect(panels).toHaveLength(1);
+    expect(panels[0].key).toBe('upcoming');
+    expect(panels[0].title).toBe('Planerade avvikelser');
+  });
 });

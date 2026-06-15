@@ -40,14 +40,13 @@ describe('disruptionFeedItemIntro', () => {
     expect(disruptionFeedItemIntro(feedItem)).toContain('ordinarie tidtabell');
   });
 
-  it('strips first line for general notices when it matches headline', () => {
+  it('returns empty intro when detail_intro is missing', () => {
     const feedItem = item({
-      source: 'general',
-      headline: 'Baninfo sommar',
-      body: 'Baninfo sommar\nBerörda anslutningar: Uppsala',
-      detail_intro: 'Berörda anslutningar: Uppsala',
+      body: 'Extra rad som inte ska visas utan detail_intro',
+      headline: 'Rubrik',
     });
-    expect(disruptionFeedShowIntro(feedItem)).toBe(true);
+    expect(disruptionFeedItemIntro(feedItem)).toBe('');
+    expect(disruptionFeedShowIntro(feedItem)).toBe(false);
   });
 });
 

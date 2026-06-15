@@ -172,6 +172,23 @@ export function buildEmptyDisruptionFeedPayload() {
   };
 }
 
+/** Ongoing empty, upcoming only — TF-C8 edge case. */
+export function buildUpcomingOnlyDisruptionFeedPayload() {
+  const sample = buildSampleDisruptionFeedPayload();
+  const upcoming = sample.upcoming;
+  const upcomingPanel = sample.panels.find((panel) => panel.key === 'upcoming');
+  return {
+    reference_date: sample.reference_date,
+    horizon_days: sample.horizon_days,
+    end_date: sample.end_date,
+    ongoing: [],
+    upcoming,
+    items: upcoming,
+    panels: upcomingPanel ? [upcomingPanel] : [],
+    is_empty: false,
+  };
+}
+
 /** @deprecated Use buildSampleDisruptionFeedPayload — kept for legacy REST stubs. */
 export function buildSampleTrafficNoticesPayload() {
   return buildSampleDisruptionFeedPayload();

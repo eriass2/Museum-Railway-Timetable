@@ -1,6 +1,6 @@
 # Trafikinfo UL 1:1 — implementeringsplan
 
-**Status:** **implementation klar** (2026-06-14) — acceptans och snapshots återstår — **backlog:** [TODO.md](TODO.md) § Trafikinfo UL 1:1 (`TF-*`)  
+**Status:** **implementation klar** (2026-06-15) — manuell acceptans återstår — **backlog:** [TODO.md](TODO.md) · **Acceptans:** [TRAFFIC_INFO_ACCEPTANCE.md](TRAFFIC_INFO_ACCEPTANCE.md)  
 **Kodbaseline:** 2026-06-15 — se §16  
 **Mål:** Publik trafikstörningsvy ska **visuellt** matcha UL:s «Aktuellt trafikläge» / «Planerade avvikelser» (hierarki, färger, badges, alert-rutor). Innehåll för Lennakatten (tågnummer, museumstrafik).  
 **Kontext:** [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) (v2 API/feed klar 2026-06-11) — denna plan är **uppföljning för visuell paritet**.  
@@ -391,22 +391,13 @@ Jämförelse mellan plan och faktisk kod efter implementation (commits `4fb9eb8`
 
 | ID | Punkt |
 |----|-------|
-| TF-F4 | Playwright screenshots — spec `traffic-notices-ul-layout.spec.ts`, snapshots i `e2e/traffic-notices-ul-layout.spec.ts-snapshots/` |
-| TF-C8 | Edge: tom `ongoing`, bara `upcoming`; mobil radbrytning |
-| TF-H2 | Verifiera `alignwide` + `MrtPublicAppShell` på Lennakatten-tema (test3) |
-| TF-G1/G2 | Jesper-checklista §14 + OK på målbild |
-| TF-0.3/0.4 | UL-referensbild + side-by-side i token-doc (produkt/design) |
+| TF-H2 | Manuell verifiering på test3 — [TRAFFIC_INFO_ACCEPTANCE.md](TRAFFIC_INFO_ACCEPTANCE.md) |
+| TF-G1/G2 | Jesper-checklista + OK på målbild — [TRAFFIC_INFO_ACCEPTANCE.md](TRAFFIC_INFO_ACCEPTANCE.md) |
+| TF-0.3 | UL-referensbild (produkt) |
 | TF-B5/B6 | Valfria admin-fält (tider, headline) |
 
 ### Nästa steg
 
-1. **TF-H2 + TF-G** — manuell verifiering på test3.
-2. **TF-0.4** — side-by-side UL vs snapshot i token-doc (när produkt har referensbild TF-0.3).
-
-**Uppdatera snapshots (Linux, samma som CI):**
-
-```bash
-docker run --rm -v "$PWD:/app" -w /app/frontend/vue mcr.microsoft.com/playwright:v1.60.0-jammy \
-  sh -c "npm run build && npm run e2e -- traffic-notices-ul-layout.spec.ts --update-snapshots"
-```
+1. **TF-H2 + TF-G** — manuell verifiering på test3 med Jesper.
+2. **TF-0.3** — UL-referensbild från produkt (kompletterar TF-0.4 snapshots).
 

@@ -28,10 +28,14 @@ const {
   tripTypeLabel,
   printLabel,
   downloadPdfLabel,
+  shareLabel,
+  shareFeedback,
+  shareFeedbackIsError,
   pdfDownloading,
   pdfError,
   onPrint,
   onDownloadPdf,
+  onShare,
 } = useSummaryExport({ dateText, priceData, dayPrices, priceLabels });
 
 function onBack(): void {
@@ -96,6 +100,9 @@ function onBack(): void {
         <MrtAccentButton type="button" variant="secondary" size="summary" @click="onPrint">
           {{ printLabel }}
         </MrtAccentButton>
+        <MrtAccentButton type="button" variant="secondary" size="summary" @click="onShare">
+          {{ shareLabel }}
+        </MrtAccentButton>
         <MrtAccentButton
           type="button"
           variant="secondary"
@@ -108,6 +115,13 @@ function onBack(): void {
       </div>
       <p v-if="pdfError" class="mrt-summary-actions__feedback" role="alert">
         {{ pdfError }}
+      </p>
+      <p
+        v-if="shareFeedback"
+        class="mrt-summary-actions__feedback"
+        :role="shareFeedbackIsError ? 'alert' : 'status'"
+      >
+        {{ shareFeedback }}
       </p>
     </MrtSurfaceCard>
   </MrtStepPanel>

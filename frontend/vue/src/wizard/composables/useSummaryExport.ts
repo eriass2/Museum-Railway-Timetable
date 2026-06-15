@@ -3,8 +3,10 @@ import { useWizardContext } from '../../composables/useWizardContext';
 import type { DayTicketData, TripPriceData } from '../../shared/prices';
 import type { PriceTableLabels } from '../../shared/priceLabels';
 import { printElement } from '../../utils/printElement';
+import { shareText } from '../../utils/webShare';
 import { downloadTripSummaryPdf } from '../utils/downloadTripSummaryPdf';
 import { buildTripSummaryInput } from '../utils/tripSummaryBuild';
+import { buildTripSummaryText } from '../utils/tripSummaryText';
 import { cfgStr } from '../utils/wizardLabels';
 
 type SummaryExportOptions = {
@@ -30,10 +32,16 @@ export function useSummaryExport(options: SummaryExportOptions) {
   const pdfErrorLabel = computed(() =>
     cfgStr(cfg, 'summaryPdfError', 'Kunde inte skapa PDF. Försök igen eller använd Skriv ut.'),
   );
+  const shareLabel = computed(() => cfgStr(cfg, 'summaryShare', 'Dela'));
+  const shareCopiedLabel = computed(() =>
+    cfgStr(cfg, 'summaryShareCopied', 'Resesammanfattning kopierad till urklipp.'),
+  );
+  const shareErrorLabel = computed(() =>
+    cfgStr(cfg, 'summaryShareError', 'Kunde inte dela resan. Försök igen.'),
+  );
 
-  function onPrint(): void {
-    printElement('[data-wizard-summary-print]');
-  }
+  const shareFeedback = ref('');
+  const shareFeedbackIsError = ref(false);
 
   async function onDownloadPdf(): Promise<void> {
     if (pdfDownloading.value) {
@@ -64,13 +72,51 @@ export function useSummaryExport(options: SummaryExportOptions) {
     }
   }
 
+  function onPrint(): void {
+    printElement('[data-wizard-summary-print]');
+  }
+
+  function buildSummaryTextInput() {
+    return buildTripSummaryInput({
+      store,
+      cfg: cfg.value,
+      dateText: options.dateText.value,
+      tripTypeLabel: tripTypeLabel.value,
+      priceData: options.priceData.value,
+      dayPrices: options.dayPrices.value,
+      priceLabels: options.priceLabels.value,
+    });
+  }
+
+  async function onShare(): Promise<void> {
+    shareFeedback.value = '';
+    shareFeedbackIsError.value = false;
+    const text = buildTripSummaryText(buildSummaryTextInput());
+    const result = await shareText({
+      title: cfgStr(cfg, 'stepSummary', 'Din resa'),
+      text,
+    });
+    if (result === 'copied') {
+      shareFeedback.value = shareCopiedLabel.value;
+      return;
+    }
+    if (result === 'failed') {
+      shareFeedback.value = shareErrorLabel.value;
+      shareFeedbackIsError.value = true;
+    }
+  }
+
   return {
     tripTypeLabel,
     printLabel,
     downloadPdfLabel,
+    shareLabel,
+    shareFeedback,
+    shareFeedbackIsError,
     pdfDownloading,
     pdfError,
     onPrint,
     onDownloadPdf,
+    onShare,
   };
 }

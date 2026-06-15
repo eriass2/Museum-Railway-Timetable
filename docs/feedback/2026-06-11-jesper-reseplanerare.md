@@ -193,7 +193,7 @@ Knappen visas när `ticket_url` är satt (global inställning eller shortcode). 
 - **Område:** Sammanfattning / export
 - **Typ:** feature — utred
 - **Prioritet:** låg–medium
-- **Status:** öppen
+- **Status:** **implementerad** (2026-06-15) — Web Share + urklippsfallback i sammanfattningssteget
 
 ### Teknisk bakgrund i kodbasen
 

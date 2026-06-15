@@ -12,6 +12,7 @@ import { e2eAdminHelp } from './fixtures/admin-help.mjs';
 import {
   buildEmptyDisruptionFeedPayload,
   buildSampleDisruptionFeedPayload,
+  buildUpcomingOnlyDisruptionFeedPayload,
 } from './fixtures/traffic-notices-payload.mjs';
 import { MRT_REST_JSON_PREFIX } from '../shared/restNamespace.mjs';
 
@@ -472,10 +473,18 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   }
 
   if (pathOnly.endsWith('/traffic-notices')) {
-    const empty = query.get('date') === 'e2e-empty';
+    const date = query.get('date') ?? '';
+    const empty = date === 'e2e-empty';
+    const upcomingOnly = date === 'e2e-upcoming-only';
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(
-      JSON.stringify(empty ? buildEmptyDisruptionFeedPayload() : buildSampleDisruptionFeedPayload()),
+      JSON.stringify(
+        empty
+          ? buildEmptyDisruptionFeedPayload()
+          : upcomingOnly
+            ? buildUpcomingOnlyDisruptionFeedPayload()
+            : buildSampleDisruptionFeedPayload(),
+      ),
     );
     return;
   }
@@ -593,13 +602,14 @@ function renderOverviewCancelledHtml() {
 function renderTrafficNoticesHtml(requestUrl) {
   const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
   const empty = params.get('empty') === '1';
+  const upcomingOnly = params.get('upcoming-only') === '1';
   const tokenLink = existsSync(trafficTokensCssPath)
     ? `<link rel="stylesheet" href="${TRAFFIC_TOKENS_URL}" />`
     : '';
   return renderAppHtml(
     'traffic_notices',
     buildTrafficNoticesConfig({
-      referenceDate: empty ? 'e2e-empty' : undefined,
+      referenceDate: empty ? 'e2e-empty' : upcomingOnly ? 'e2e-upcoming-only' : undefined,
       title: params.get('title') ?? '',
     }),
     tokenLink,
