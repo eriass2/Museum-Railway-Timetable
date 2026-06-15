@@ -107,6 +107,7 @@ function MRT_csv_collect_export_tables( bool $include_prices, bool $include_sett
 	$tables['stoptimes.csv'] = MRT_csv_export_stoptimes( $maps );
 	if ( $include_settings ) {
 		$tables['settings.csv'] = MRT_csv_export_settings();
+		$tables['ticket_copy_notes.csv'] = MRT_csv_export_ticket_copy_notes();
 		$brand_rows             = MRT_csv_export_brand_tokens();
 		if ( $brand_rows !== array() ) {
 			$tables['brand_tokens.csv'] = $brand_rows;
@@ -124,6 +125,9 @@ function MRT_csv_collect_export_tables( bool $include_prices, bool $include_sett
  * @return array<int, array<string, string>>
  */
 function MRT_csv_export_stations( array &$maps ): array {
+	if ( ! function_exists( 'MRT_station_ticket_purchase_meta_key' ) ) {
+		require_once MRT_PATH . 'inc/domain/pricing/ticket-copy.php';
+	}
 	$meta = MRT_csv_code_meta_keys()['stations'];
 	$rows = array();
 	$posts = get_posts(
@@ -153,6 +157,11 @@ function MRT_csv_export_stations( array &$maps ): array {
 			'price_zones'     => implode(
 				',',
 				array_map( 'strval', MRT_get_station_price_zones( (int) $post->ID ) )
+			),
+			'ticket_purchase_info' => (string) get_post_meta(
+				$post->ID,
+				MRT_station_ticket_purchase_meta_key(),
+				true
 			),
 		);
 	}

@@ -22,7 +22,7 @@ describe('buildTripSummaryText', () => {
           { label: 'Vuxen', value: '220 kr' },
           { label: 'Barn 4–15', value: '60 kr' },
         ],
-        note: 'Priserna är vägledande.',
+        notes: ['Priserna är vägledande.'],
       },
     });
 

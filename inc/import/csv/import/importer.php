@@ -85,6 +85,7 @@ function MRT_csv_run_import( array $package ): array {
 	}
 	if ( in_array( 'settings', $includes, true ) ) {
 		MRT_csv_import_settings( $files );
+		MRT_csv_import_ticket_copy_notes( $files );
 	}
 	if ( in_array( 'brand_tokens', $includes, true ) ) {
 		MRT_csv_import_brand_tokens( $files );

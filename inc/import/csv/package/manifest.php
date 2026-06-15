@@ -50,6 +50,7 @@ function MRT_csv_file_to_include_entity( string $filename ): ?string {
 		'service_train_types.csv' => 'services',
 		'stoptimes.csv'           => 'stoptimes',
 		'settings.csv'            => 'settings',
+		'ticket_copy_notes.csv'   => 'settings',
 		'brand_tokens.csv'        => 'brand_tokens',
 		'prices.csv'              => 'prices',
 		'price_schema.csv'        => 'prices',

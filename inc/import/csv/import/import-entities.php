@@ -40,6 +40,15 @@ function MRT_csv_import_stations( array $files, array &$maps ): int {
 				MRT_parse_station_price_zones_csv( (string) ( $row['price_zones'] ?? '' ) )
 			);
 		}
+		if ( array_key_exists( 'ticket_purchase_info', $row ) ) {
+			$info = sanitize_textarea_field( (string) ( $row['ticket_purchase_info'] ?? '' ) );
+			if ( $info !== '' ) {
+				if ( ! function_exists( 'MRT_station_ticket_purchase_meta_key' ) ) {
+					require_once MRT_PATH . 'inc/domain/pricing/ticket-copy.php';
+				}
+				update_post_meta( (int) $id, MRT_station_ticket_purchase_meta_key(), $info );
+			}
+		}
 		$maps['station'][ $code ] = (int) $id;
 		++$count;
 	}

@@ -37,6 +37,7 @@ require_once $csv_dir . 'import/import-entities-lines.php';
 require_once $csv_dir . 'import/import-entities.php';
 require_once $csv_dir . 'import/import-entities-services.php';
 require_once $csv_dir . 'import/import-brand-tokens.php';
+require_once $csv_dir . 'ticket-copy-csv.php';
 require_once $csv_dir . 'import/import-override.php';
 require_once $csv_dir . 'import/importer.php';
 require_once $csv_dir . 'export/exporter.php';

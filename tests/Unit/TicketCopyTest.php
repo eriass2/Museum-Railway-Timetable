@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 require_once ABSPATH . 'inc/infrastructure/wordpress/plugin-settings.php';
 require_once ABSPATH . 'inc/domain/pricing/ticket-copy.php';
+require_once ABSPATH . 'inc/import/csv/ticket-copy-csv.php';
 
 final class TicketCopyTest extends TestCase {
 
@@ -109,5 +110,48 @@ final class TicketCopyTest extends TestCase {
 
 		$text = MRT_get_station_ticket_purchase_info( $station_id );
 		self::assertStringContainsString( 'Marielund', $text );
+	}
+
+	public function test_csv_export_includes_ticket_copy_notes_with_settings(): void {
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'ticket_copy_notes' => array(
+					array(
+						'id'        => 'student',
+						'condition' => 'always',
+						'text'      => 'Student-ID krävs.',
+						'enabled'   => true,
+					),
+				),
+			),
+		);
+
+		$rows = MRT_csv_export_ticket_copy_notes();
+		self::assertCount( 1, $rows );
+		self::assertSame( 'student', $rows[0]['id'] ?? '' );
+		self::assertSame( 'always', $rows[0]['condition'] ?? '' );
+		self::assertSame( 'Student-ID krävs.', $rows[0]['text'] ?? '' );
+		self::assertSame( '1', $rows[0]['enabled'] ?? '' );
+	}
+
+	public function test_csv_import_ticket_copy_notes_persists_settings(): void {
+		$GLOBALS['mrt_test_options'] = array( 'mrt_settings' => array() );
+
+		MRT_csv_import_ticket_copy_notes(
+			array(
+				'ticket_copy_notes.csv' => array(
+					array(
+						'id'        => 'season',
+						'condition' => 'always',
+						'text'      => 'Säsongsgiltighet.',
+						'enabled'   => '1',
+					),
+				),
+			)
+		);
+
+		$settings = MRT_get_plugin_settings();
+		self::assertCount( 1, $settings['ticket_copy_notes'] ?? array() );
+		self::assertSame( 'Säsongsgiltighet.', $settings['ticket_copy_notes'][0]['text'] ?? '' );
 	}
 }

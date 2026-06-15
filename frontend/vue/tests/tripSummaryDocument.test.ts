@@ -90,6 +90,21 @@ describe('tripSummaryDocument', () => {
     expect(body).toContain('Heldagsbiljett');
   });
 
+  it('renders each price footnote as its own paragraph', () => {
+    const body = buildTripSummaryHtml({
+      ...sampleInput,
+      priceSection: {
+        heading: 'Priser',
+        ticketTypeLabel: 'Enkelbiljett',
+        rows: [{ label: 'Vuxen', value: '80 kr' }],
+        notes: ['Zonförklaring.', 'Stationstext.'],
+      },
+    });
+    expect(body.match(/<p class="note">/g)).toHaveLength(2);
+    expect(body).toContain('Zonförklaring.');
+    expect(body).toContain('Stationstext.');
+  });
+
   it('lays out outbound and return legs side by side for round trips', () => {
     const body = buildTripSummaryHtml({
       ...sampleInput,

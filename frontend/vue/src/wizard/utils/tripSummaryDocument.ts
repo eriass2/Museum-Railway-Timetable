@@ -91,8 +91,11 @@ function priceSectionHtml(prices: NonNullable<TripSummaryTextInput['priceSection
     dayRows.length > 0
       ? `<table class="price-columns-table"><tbody><tr>${priceColumnHtml(tripHeading, prices.rows)}${priceColumnHtml(prices.dayTicketHeading || 'Heldagsbiljett', dayRows)}</tr></tbody></table>`
       : `${prices.ticketTypeLabel ? `<h3>${escapeHtml(prices.ticketTypeLabel)}</h3>` : ''}${priceTableHtml(prices.rows)}`;
-  const note = prices.note ? `<p class="note">${escapeHtml(prices.note)}</p>` : '';
-  return `<section class="prices"><h2>${escapeHtml(prices.heading)}</h2>${priceBody}${note}</section>`;
+  const noteBlocks = (prices.notes ?? [])
+    .filter((note) => note.trim() !== '')
+    .map((note) => `<p class="note">${escapeHtml(note)}</p>`)
+    .join('');
+  return `<section class="prices"><h2>${escapeHtml(prices.heading)}</h2>${priceBody}${noteBlocks}</section>`;
 }
 
 function legCardHtml(leg: TripSummaryTextInput['legs'][number]): string {

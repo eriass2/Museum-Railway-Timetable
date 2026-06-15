@@ -75,7 +75,35 @@ describe('tripSummaryBuild', () => {
         typeColumnSr: '',
       },
     });
-    expect(input.priceSection?.note).toContain('Biljettpriset beror');
-    expect(input.priceSection?.note).toContain('Pensionär gäller från 65 år.');
+    expect(input.priceSection?.notes).toContain('Biljettpriset beror på hur många zoner din resa går igenom.');
+    expect(input.priceSection?.notes).toContain('Pensionär gäller från 65 år.');
+  });
+
+  it('includes station purchase and ticket copy footnotes in export notes (J15)', () => {
+    const input = buildTripSummaryInput({
+      store: storeStub,
+      cfg: {},
+      dateText: '6 juni 2026',
+      tripTypeLabel: 'Enkel resa',
+      priceData: {
+        activeType: 'single',
+        isAfternoonReturn: false,
+        matrix: { single: { adult: 120 } },
+      },
+      dayPrices: null,
+      priceLabels: {
+        categories: { adult: 'Vuxen' },
+        tickets: { single: 'Enkel' },
+        dash: '—',
+        title: 'Priser',
+        titleSuffix: '',
+        note: '',
+        typeColumnSr: '',
+        stationPurchaseNote: 'Din resa börjar på Uppsala Östra.',
+        footnotes: ['Biljetterna gäller hela trafiksäsongen.'],
+      },
+    });
+    expect(input.priceSection?.notes).toContain('Din resa börjar på Uppsala Östra.');
+    expect(input.priceSection?.notes).toContain('Biljetterna gäller hela trafiksäsongen.');
   });
 });

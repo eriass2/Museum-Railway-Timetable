@@ -23,7 +23,8 @@ export type TripSummaryTextInput = {
     heading: string;
     ticketTypeLabel: string;
     rows: TripSummaryPriceRow[];
-    note?: string;
+    /** Footnotes under the price block (zone, station purchase, ticket copy, etc.). */
+    notes?: string[];
     dayTicketHeading?: string;
     dayTicketRows?: TripSummaryPriceRow[];
   };
@@ -65,8 +66,10 @@ export function buildTripSummaryText(input: TripSummaryTextInput): string {
   for (const row of prices.rows) {
     lines.push(`${row.label}: ${row.value}`);
   }
-  if (prices.note) {
-    lines.push('', prices.note);
+  const notes = prices.notes?.filter((note) => note.trim() !== '') ?? [];
+  if (notes.length > 0) {
+    lines.push('');
+    lines.push(...notes);
   }
   if (prices.dayTicketHeading && prices.dayTicketRows?.length) {
     lines.push('', prices.dayTicketHeading);

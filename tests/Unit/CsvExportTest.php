@@ -30,6 +30,7 @@ require_once ABSPATH . 'inc/import/csv/validate/validate-codes-entities.php';
 require_once ABSPATH . 'inc/import/csv/validate/validate-references.php';
 require_once ABSPATH . 'inc/import/csv/codes-store.php';
 require_once ABSPATH . 'inc/import/csv/export/exporter-entities.php';
+require_once ABSPATH . 'inc/import/csv/ticket-copy-csv.php';
 require_once ABSPATH . 'inc/import/csv/export/exporter.php';
 
 if ( ! function_exists( 'determine_locale' ) ) {
