@@ -154,13 +154,15 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ---
 
-## Reseplanerare — copy & biljettinfo (J18)
+## Reseplanerare — copy & biljettinfo (Jesper omgång 3)
 
 **Källa:** [feedback/2026-06-11-jesper-reseplanerare.md](feedback/2026-06-11-jesper-reseplanerare.md)  
-**Status:** D19–D21 implementerat (2026-06-11). J15–J17 levererat; J18 och D22 återstår.
+**Status:** J16–J18 ✅ (2026-06-11). J15 (admin-redigerbar biljettcopy) öppen.
 
 | ID | Punkt | Insats |
 |----|-------|--------|
+| J16 | Enklare zonförklaring + pensionär separat rad | ✅ |
+| J17 | CTA «Mer information om biljettköp» | ✅ |
 | J18 | Dela-knapp (Web Share) | ✅ |
 
 ---

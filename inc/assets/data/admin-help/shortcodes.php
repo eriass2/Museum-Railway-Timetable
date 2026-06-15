@@ -127,7 +127,7 @@ function MRT_admin_vue_help_shortcodes(): array {
 			'params'  => array(
 				array(
 					'name' => 'ticket_url',
-					'desc' => __( 'Reserverat (inaktiverat) — biljettknapp visas inte i nuvarande version', 'museum-railway-timetable' ),
+					'desc' => __( 'Biljett-URL (valfritt). Överstyr global URL. Visar knappen «Mer information om biljettköp» i sammanfattningen (infosida, inte onlinebokning).', 'museum-railway-timetable' ),
 				),
 				array(
 					'name' => 'timetable_page_url',

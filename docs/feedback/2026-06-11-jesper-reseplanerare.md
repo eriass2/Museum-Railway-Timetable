@@ -148,20 +148,19 @@ Byta månad (tur/retur, Uppsala Ö → Fjällnora, juli) ska ta **&lt; ~2 s** ka
 - **Område:** Sammanfattning / prisfotnot
 - **Typ:** copy
 - **Prioritet:** låg (snabb fix om J15 inte görs samtidigt)
-- **Status:** öppen
+- **Status:** **implementerad** (2026-06-11, commit `cd4edda`) — enklare zoncopy + pensionär som separat rad; ingår i PDF/textexport
 
 ### Nuvarande läge
 
-```132:132:inc/assets/frontend.php
-		'priceNote'            => __( 'Priset bygger på lägsta giltiga zontal för den valda resan (max tre zoner enligt taxa 2026). Pensionär gäller från 65 år.', 'museum-railway-timetable' ),
+```132:133:inc/assets/frontend.php
+		'priceNote'            => __( 'Biljettpriset beror på hur många zoner din resa går igenom. Som mest kan en resa gå igenom tre zoner.', 'museum-railway-timetable' ),
+		'priceNoteSenior'      => __( 'Pensionär gäller från 65 år.', 'museum-railway-timetable' ),
 ```
 
-### Föreslagen åtgärd
+### Beslut
 
-- Byt `priceNote` till Jespers formulering (ev. behåll pensionärssatsen som separat rad om önskat).
-- Om J15 implementeras med admin-redigerbar copy → inkludera denna som default i seed/fixture.
-
-**OBS:** Jesper nämner inte pensionär i sin förenklade text — **bekräfta** om raden om 65+ ska ligga kvar separat.
+- [x] Jespers zonformulering i `priceNote`
+- [x] Pensionär kvar som separat rad (`priceNoteSenior`)
 
 ---
 
@@ -171,19 +170,19 @@ Byta månad (tur/retur, Uppsala Ö → Fjällnora, juli) ska ta **&lt; ~2 s** ka
 - **Område:** Sammanfattning / primär knapp
 - **Typ:** copy / UX
 - **Prioritet:** medium
-- **Status:** öppen
+- **Status:** **implementerad** (2026-06-11, commit `350ea96`) — default «Mer information om biljettköp»; admin-hint uppdaterad; E2E justerad
 
 ### Nuvarande läge
 
-Knappen visas när `ticket_url` är satt (global inställning eller shortcode). Etikett: `ticketCta` default **”Fortsätt till biljetter”** i `vue-shortcode-config.php` / `WizardSummaryStep.vue`.
+Knappen visas när `ticket_url` är satt (global inställning eller shortcode). Etikett: `ticketCta` default **«Mer information om biljettköp»** i `vue-shortcode-config.php` / `WizardSummaryStep.vue`. Admin-hint under Biljett-URL förklarar att länken går till infosida, inte checkout.
 
 **Historik:** I [2026-06-01-granskning.md](2026-06-01-granskning.md) J5 beslutades knappen **borttagen** (gav intryck av onlinebokning). Den är **tillbaka** när Lennakatten har `ticket_url` → https://www.lennakatten.se/biljetter/ — vilket förklarar Jespers förvirring.
 
-### Föreslagen åtgärd
+### Beslut
 
-1. Byt default `ticketCta` till **”Mer information om biljettköp”** (översättningssträng + `sv_SE.po`).
-2. Uppdatera admin-hint under Biljett-URL så det framgår att knappen länkar till infosida, inte checkout.
-3. Uppdatera E2E: `wizard-steps.spec.ts` förväntar sig idag **0** knappar med gammal text — justera när URL finns i test.
+- [x] Default `ticketCta` → «Mer information om biljettköp»
+- [x] Admin-hint under Biljett-URL
+- [x] E2E: `wizard-steps.spec.ts` (ingen CTA utan `ticket_url`)
 
 ---
 

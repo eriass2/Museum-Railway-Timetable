@@ -51,4 +51,31 @@ describe('tripSummaryBuild', () => {
     expect(input.legs[0].heading).toBe('Utresa');
     expect(input.priceSection).toBeUndefined();
   });
+
+  it('includes zone and senior price footnotes in export note (J16)', () => {
+    const input = buildTripSummaryInput({
+      store: storeStub,
+      cfg: {},
+      dateText: '6 juni 2026',
+      tripTypeLabel: 'Enkel resa',
+      priceData: {
+        activeType: 'single',
+        isAfternoonReturn: false,
+        matrix: { single: { adult: 120 } },
+      },
+      dayPrices: null,
+      priceLabels: {
+        categories: { adult: 'Vuxen' },
+        tickets: { single: 'Enkel' },
+        dash: '—',
+        title: 'Priser',
+        titleSuffix: '',
+        note: 'Biljettpriset beror på hur många zoner din resa går igenom.',
+        seniorNote: 'Pensionär gäller från 65 år.',
+        typeColumnSr: '',
+      },
+    });
+    expect(input.priceSection?.note).toContain('Biljettpriset beror');
+    expect(input.priceSection?.note).toContain('Pensionär gäller från 65 år.');
+  });
 });
