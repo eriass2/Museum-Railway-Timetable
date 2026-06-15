@@ -34,6 +34,17 @@ async function createNotice(
   });
 }
 
+/** UL feed hides alerts until category rows are expanded (same as static mount E2E). */
+async function expandTrafficFeedCategories(
+  feed: import('@playwright/test').Locator,
+): Promise<void> {
+  const rows = feed.locator('.mrt-tf-category__row');
+  const count = await rows.count();
+  for (let i = 0; i < count; i++) {
+    await rows.nth(i).click();
+  }
+}
+
 test.describe('Vue admin traffic notices', () => {
   test.describe.configure({ mode: 'serial' });
   test.skip(!adminUrl, 'Set MRT_E2E_WP_ADMIN_URL or MRT_E2E_WP_DEMO_URL');
@@ -50,12 +61,12 @@ test.describe('Vue admin traffic notices', () => {
     await createNotice(page, message);
 
     await page.goto(wpIndexUrl!);
-    await expect(page.locator('.mrt-traffic-notices').first()).toBeVisible({
-      timeout: 20_000,
+    const feed = page.locator('.mrt-traffic-notices').first();
+    await expect(feed).toBeVisible({ timeout: 20_000 });
+    await expandTrafficFeedCategories(feed);
+    await expect(feed.locator('.mrt-tf-alert__summary', { hasText: message })).toBeVisible({
+      timeout: 15_000,
     });
-    await expect(
-      page.locator('.mrt-tf-alert__summary', { hasText: message }),
-    ).toBeVisible({ timeout: 15_000 });
   });
 
   test('reorders notices with up and down', async ({ page }) => {
