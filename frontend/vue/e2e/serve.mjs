@@ -464,10 +464,18 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   }
 
   if (pathOnly.endsWith('/traffic-disruptions/feed')) {
-    const empty = query.get('date') === 'e2e-empty';
+    const date = query.get('date') ?? '';
+    const empty = date === 'e2e-empty';
+    const upcomingOnly = date === 'e2e-upcoming-only';
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(
-      JSON.stringify(empty ? buildEmptyDisruptionFeedPayload() : buildSampleDisruptionFeedPayload()),
+      JSON.stringify(
+        empty
+          ? buildEmptyDisruptionFeedPayload()
+          : upcomingOnly
+            ? buildUpcomingOnlyDisruptionFeedPayload()
+            : buildSampleDisruptionFeedPayload(),
+      ),
     );
     return;
   }

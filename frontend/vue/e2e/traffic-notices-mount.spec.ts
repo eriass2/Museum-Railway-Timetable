@@ -1,22 +1,29 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Traffic notices (static mount)', () => {
+  function ongoingPanel(page: import('@playwright/test').Page) {
+    return page
+      .locator('.mrt-tf-panel')
+      .filter({ has: page.locator('.mrt-tf-panel__header', { hasText: 'Aktuellt trafikläge' }) });
+  }
+
   test('lists ongoing feed items from REST', async ({ page }) => {
     await page.goto('/traffic-notices');
     await expect(page.locator('.mrt-traffic-notices')).toBeVisible();
-    await expect(page.locator('.mrt-tf-panel__header').first()).toContainText('Aktuellt trafikläge');
-    await page.locator('.mrt-tf-category__row').filter({ hasText: 'Information' }).click();
-    await expect(page.locator('.mrt-tf-alert__summary').filter({ hasText: 'Glassrea' })).toBeVisible();
-    await page.locator('.mrt-tf-category__row').filter({ hasText: 'Tåg' }).click();
-    await expect(page.locator('.mrt-tf-line-badge').filter({ hasText: '71' })).toBeVisible();
-    await expect(page.locator('.mrt-tf-alert__summary').filter({ hasText: 'Inställd' })).toBeVisible();
-    await page.locator('.mrt-tf-alert__expand').first().click();
-    await expect(page.locator('.mrt-tf-alert__detail').first()).toBeVisible();
+    const ongoing = ongoingPanel(page);
+    await expect(ongoing.locator('.mrt-tf-panel__header')).toContainText('Aktuellt trafikläge');
+    await ongoing.locator('.mrt-tf-category__row').filter({ hasText: 'Information' }).click();
+    await expect(ongoing.locator('.mrt-tf-alert__summary').filter({ hasText: 'Glassrea' })).toBeVisible();
+    await ongoing.locator('.mrt-tf-category__row').filter({ hasText: 'Tåg' }).click();
+    await expect(ongoing.locator('.mrt-tf-line-badge').filter({ hasText: '71' })).toBeVisible();
+    await expect(ongoing.locator('.mrt-tf-alert__summary').filter({ hasText: 'Inställd' })).toBeVisible();
+    await ongoing.locator('.mrt-tf-alert__expand').first().click();
+    await expect(ongoing.locator('.mrt-tf-alert__detail').first()).toBeVisible();
   });
 
   test('accordion keeps one expanded category at a time per panel', async ({ page }) => {
     await page.goto('/traffic-notices');
-    const categories = page.locator('.mrt-tf-category');
+    const categories = ongoingPanel(page).locator('.mrt-tf-category');
     await categories.filter({ hasText: 'Information' }).locator('.mrt-tf-category__row').click();
     await expect(categories.filter({ hasText: 'Information' })).toHaveClass(/is-expanded/);
     await categories.filter({ hasText: 'Tåg' }).locator('.mrt-tf-category__row').click();
