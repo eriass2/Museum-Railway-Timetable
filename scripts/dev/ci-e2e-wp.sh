@@ -34,19 +34,28 @@ INDEX_URL="$(mrt_index_page_url)" || INDEX_URL="${WP_SITE_BASE}/"
 export MRT_E2E_WP_INDEX_URL="$INDEX_URL"
 echo "Index URL: $MRT_E2E_WP_INDEX_URL"
 
+WP_E2E_SPECS=(
+	e2e/overview-wp.spec.ts
+	e2e/month-wp.spec.ts
+	e2e/wizard-wp.spec.ts
+	e2e/wizard-front-page-wp.spec.ts
+	e2e/index-wp.spec.ts
+	e2e/traffic-notices-wp.spec.ts
+	e2e/admin-dashboard.spec.ts
+	e2e/admin-nav-wp.spec.ts
+	e2e/admin-traffic-notices.spec.ts
+	e2e/admin-import-export.spec.ts
+	e2e/admin-timetable-flow.spec.ts
+)
+
 echo "=== ci-e2e-wp: Vue build + Playwright ==="
 npm --prefix frontend/vue ci
 npm --prefix frontend/vue run build
 npx --prefix frontend/vue playwright install chromium --with-deps
-npm --prefix frontend/vue run e2e -- --workers=1 \
-  e2e/overview-wp.spec.ts \
-  e2e/month-wp.spec.ts \
-  e2e/wizard-wp.spec.ts \
-  e2e/wizard-front-page-wp.spec.ts \
-  e2e/index-wp.spec.ts \
-  e2e/traffic-notices-wp.spec.ts \
-  e2e/admin-dashboard.spec.ts \
-  e2e/admin-nav-wp.spec.ts \
-  e2e/admin-traffic-notices.spec.ts \
-  e2e/admin-import-export.spec.ts \
-  e2e/admin-timetable-flow.spec.ts
+e2e_exit=0
+npm --prefix frontend/vue run e2e -- --workers=1 "${WP_E2E_SPECS[@]}" || e2e_exit=$?
+
+echo "=== ci-e2e-wp: restoring site (Lennakatten override + demo traffic) ==="
+mrt_e2e_prepare_site
+
+exit "$e2e_exit"

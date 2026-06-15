@@ -116,7 +116,7 @@ Existing `.\scripts\*.ps1` entry points remain; `mrt` forwards to them.
 | Start stack only (no import) | `docker compose up -d` — prefer dev reset when you need data + menu |
 | Smoke test (import + HTTP checks, no clear) | `.\scripts\mrt.ps1 dev smoke` or `.\scripts\docker-smoke.ps1` |
 | Plugin sync via compose watch (Windows I/O) | `.\scripts\docker-watch.ps1` or `.\scripts\mrt.ps1 dev watch` |
-| WordPress + Playwright E2E | `bash scripts/ci-e2e-wp.sh` |
+| WordPress + Playwright E2E | `.\scripts\mrt.ps1 dev e2e-wp` / `bash scripts/mrt.sh dev e2e-wp` |
 
 Dev site: <http://localhost:8080> — admin / admin.
 

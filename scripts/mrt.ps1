@@ -82,8 +82,9 @@ switch ($cmd) {
             'reset' { Invoke-MrtScript -Name 'dev/docker-dev-reset.ps1' -ScriptArgs $GateArgs }
             'smoke' { Invoke-MrtScript -Name 'dev/docker-smoke.ps1' -ScriptArgs $GateArgs }
             'watch' { Invoke-MrtScript -Name 'dev/docker-watch.ps1' -ScriptArgs $GateArgs }
+            'e2e-wp' { Invoke-MrtScript -Name 'dev/e2e-wp.ps1' -ScriptArgs $GateArgs }
             default {
-                Write-Host "Unknown dev subcommand: $sub (try: reset, smoke, watch)" -ForegroundColor Red
+                Write-Host "Unknown dev subcommand: $sub (try: reset, smoke, watch, e2e-wp)" -ForegroundColor Red
                 exit 1
             }
         }

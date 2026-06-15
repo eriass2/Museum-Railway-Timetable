@@ -37,6 +37,7 @@ mrt_import_lennakatten() {
 	mrt_wp_eval "if (function_exists('MRT_run_lennakatten_import')) { echo MRT_run_lennakatten_import(); }" || true
 }
 
+# Lennakatten override import + demo traffic/pages — used before and after WP Playwright E2E.
 mrt_e2e_prepare_site() {
 	mrt_import_lennakatten
 	mrt_wp_eval 'if (function_exists("MRT_dev_cli_set_admin_user")) { MRT_dev_cli_set_admin_user(); }

@@ -1,4 +1,4 @@
-# Run Playwright E2E in Docker (playwright:v1.60-jammy). Mock specs use serve.mjs; WP specs need mrt dev e2e-wp.
+# Static Playwright E2E in Docker (playwright:v1.60-jammy). WP integration: mrt dev e2e-wp (prepare + restore).
 param(
     [switch]$Timings,
     [Parameter(ValueFromRemainingArguments = $true)]
