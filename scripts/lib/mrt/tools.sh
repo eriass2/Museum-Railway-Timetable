@@ -20,13 +20,13 @@ mrt_tools_run() {
 	if mrt_tools_service_running "$_svc"; then
 		case "$_svc" in
 		composer)
-			docker compose --profile tools exec -T composer composer "$@"
+			docker compose --profile tools exec --no-TTY composer composer "$@"
 			;;
 		php-test)
-			docker compose --profile tools exec -T php-test php "$@"
+			docker compose --profile tools exec --no-TTY php-test php "$@"
 			;;
 		*)
-			docker compose --profile tools exec -T "$_svc" "$@"
+			docker compose --profile tools exec --no-TTY "$_svc" "$@"
 			;;
 		esac
 	else
@@ -52,6 +52,18 @@ mrt_vue_shell() {
 	BuildVerify) printf '%s && npm run build && npm run verify' "$MRT_NPM_CI_SNIPPET" ;;
 	*) return 1 ;;
 	esac
+}
+
+mrt_vue_e2e_shell() {
+	_cmd="$MRT_NPM_CI_SNIPPET && npm run e2e"
+	if [ "$#" -gt 0 ]; then
+		_extra=""
+		for _arg in "$@"; do
+			_extra="$_extra '$(printf '%s' "$_arg" | sed "s/'/'\\\\''/g")'"
+		done
+		_cmd="$_cmd -- $_extra"
+	fi
+	printf '%s' "$_cmd"
 }
 
 mrt_lint_docker() {

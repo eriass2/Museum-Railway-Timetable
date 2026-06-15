@@ -31,6 +31,7 @@ check) bash "$SCRIPTS/gate/check.sh" "$@" ;;
 test) bash "$SCRIPTS/gate/test.sh" "$@" ;;
 lint) bash "$SCRIPTS/gate/lint.sh" "$@" ;;
 vue-check) bash "$SCRIPTS/gate/vue-check.sh" "$@" ;;
+e2e) bash "$SCRIPTS/gate/e2e.sh" "$@" ;;
 coverage) bash "$SCRIPTS/gate/coverage.sh" "$@" ;;
 setup-dev) bash "$SCRIPTS/setup-dev.sh" "$@" ;;
 vue)

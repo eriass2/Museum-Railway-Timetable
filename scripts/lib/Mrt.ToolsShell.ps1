@@ -86,7 +86,7 @@ function Invoke-MrtDockerToolsService {
 
     Ensure-MrtToolsShell
     if (Test-MrtToolsServiceRunning -Service $Service) {
-        $composeArgs = @('--profile', 'tools', 'exec', '-T', $Service)
+        $composeArgs = @('--profile', 'tools', 'exec', '--no-TTY', $Service)
         $composeArgs += Get-MrtToolsExecArgs -Service $Service -RunArgs $RunArgs
     } else {
         $composeArgs = Get-MrtToolsServiceRunFallbackArgs -Service $Service -RunArgs $RunArgs

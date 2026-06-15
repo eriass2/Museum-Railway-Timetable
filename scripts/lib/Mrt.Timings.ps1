@@ -7,7 +7,7 @@ $script:MrtTimingStepStarted = $null
 function Initialize-MrtScriptTimings {
     param([switch] $Timings)
 
-    if ($Timings) {
+    if ($Timings -or ($env:MRT_SCRIPT_TIMINGS -match '^(1|true|yes)$')) {
         $script:MrtScriptTimings = $true
     }
 }

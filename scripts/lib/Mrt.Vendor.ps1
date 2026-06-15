@@ -3,7 +3,7 @@
 function Test-MrtDockerVendorReady {
     Invoke-MrtDockerPhpTest -PhpArgs @(
         '-r',
-        'exit(is_file("vendor/autoload.php") && is_file("vendor/bin/phpstan") ? 0 : 1);'
+        "exit(is_file('vendor/autoload.php') && is_file('vendor/bin/phpstan') ? 0 : 1);"
     )
     return ($LASTEXITCODE -eq 0)
 }
