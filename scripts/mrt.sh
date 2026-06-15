@@ -45,8 +45,8 @@ dev)
 	reset) bash "$SCRIPTS/dev/docker-dev-reset.sh" "$@" ;;
 	smoke) mrt_run_ps1 dev/docker-smoke.ps1 "$@" ;;
 	watch) bash "$SCRIPTS/dev/docker-watch.sh" "$@" ;;
-	e2e-wp) bash "$SCRIPTS/dev/e2e-wp.sh" "$@" ;;
-	*) echo "Unknown dev subcommand: $sub (try: reset, smoke, watch, e2e-wp)" >&2; exit 1 ;;
+	e2ewp) bash "$SCRIPTS/dev/e2e-wp.sh" "$@" ;;
+	*) echo "Unknown dev subcommand: $sub (try: reset, smoke, watch, e2ewp)" >&2; exit 1 ;;
 	esac
 	;;
 release)

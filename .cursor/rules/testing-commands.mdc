@@ -26,7 +26,7 @@ On Windows, `vendor\bin\phpunit` has no `.exe` extension. Invoking it directly o
 | PHPUnit | `.\scripts\mrt.ps1 test` / `bash scripts/mrt.sh test` |
 | Vue | `.\scripts\mrt.ps1 vue-check` / `bash scripts/mrt.sh vue-check` |
 | Static E2E (mock) | `.\scripts\mrt.ps1 e2e` / `bash scripts/mrt.sh e2e` |
-| WordPress E2E | `.\scripts\mrt.ps1 dev e2e-wp` / `bash scripts/mrt.sh dev e2e-wp` (prepare + restore) |
+| WordPress E2E | `.\scripts\mrt.ps1 dev e2ewp` / `bash scripts/mrt.sh dev e2ewp` (prepare + restore) |
 | Lint | `.\scripts\mrt.ps1 lint` / `bash scripts/mrt.sh lint` |
 | Coverage (exploratory) | `.\scripts\mrt.ps1 coverage -Timings` / `bash scripts/mrt.sh coverage --timings` |
 | Dev reset | `.\scripts\mrt.ps1 dev reset` / `bash scripts/mrt.sh dev reset` |

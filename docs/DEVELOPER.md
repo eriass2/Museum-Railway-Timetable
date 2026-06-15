@@ -177,12 +177,12 @@ npm run e2e
 **WordPress-integration** (Docker + riktig WP; prepare → Playwright → **restore** så dev-db inte lämnas smutsig):
 
 ```powershell
-.\scripts\mrt.ps1 dev e2e-wp
-# eller: bash scripts/mrt.sh dev e2e-wp
+.\scripts\mrt.ps1 dev e2ewp
+# eller: bash scripts/mrt.sh dev e2ewp
 # CI anropar samma flöde via bash scripts/ci-e2e-wp.sh
 ```
 
-Restore kör samma Lennakatten override + demo-trafik som i början (tar bort E2E-tidtabeller utan fixture-kod och återställer `mrt_public_notices`). **Kör enstaka `*-wp.spec.ts` utan hela skriptet** → avsluta med `.\scripts\mrt.ps1 dev reset` eller `dev e2e-wp`.
+Restore kör samma Lennakatten override + demo-trafik som i början (tar bort E2E-tidtabeller utan fixture-kod och återställer `mrt_public_notices`). **Kör enstaka `*-wp.spec.ts` utan hela skriptet** → avsluta med `.\scripts\mrt.ps1 dev reset` eller `dev e2ewp`.
 
 **Windows utan host-`npm`** — kör Playwright i Docker mot stacken på `localhost:8080`:
 

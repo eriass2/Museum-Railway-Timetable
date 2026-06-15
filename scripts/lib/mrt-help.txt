@@ -9,7 +9,7 @@ MRT developer CLI - one entry point for gates, dev, and release.
   mrt setup-dev              Host composer + npm (CI parity)
   mrt dev reset [--build] [--skip-compose] [--timings]
   mrt dev smoke              Import + HTTP smoke (PowerShell)
-  mrt dev e2e-wp             WordPress Playwright E2E (prepare, run, restore)
+  mrt dev e2ewp              WordPress Playwright E2E (prepare, run, restore)
   mrt dev watch [--no-up]
   mrt release build          Production zip (PowerShell)
   mrt release deploy         Sync plugin to staging/live (PowerShell)

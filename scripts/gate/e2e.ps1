@@ -1,4 +1,4 @@
-# Static Playwright E2E in Docker (playwright:v1.60-jammy). WP integration: mrt dev e2e-wp (prepare + restore).
+# Static Playwright E2E in Docker (playwright:v1.60-jammy). WP integration: mrt dev e2ewp (prepare + restore).
 param(
     [switch]$Timings,
     [Parameter(ValueFromRemainingArguments = $true)]

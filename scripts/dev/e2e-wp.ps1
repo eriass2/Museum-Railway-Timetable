@@ -1,5 +1,5 @@
 # WordPress + Playwright E2E (prepare, run, restore). Requires Git Bash.
-# Usage: .\scripts\mrt.ps1 dev e2e-wp
+# Usage: .\scripts\mrt.ps1 dev e2ewp
 
 param(
     [switch] $Timings
@@ -11,10 +11,6 @@ $scriptsRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 Initialize-MrtScriptTimings -Timings:$Timings
 
 function Resolve-MrtGitBash {
-    $cmd = Get-Command bash -ErrorAction SilentlyContinue
-    if ($cmd -and $cmd.Source -notmatch 'WindowsApps\\bash\.exe$') {
-        return $cmd.Source
-    }
     foreach ($path in @(
             'C:\Program Files\Git\bin\bash.exe'
             'C:\Program Files (x86)\Git\bin\bash.exe'
@@ -22,6 +18,10 @@ function Resolve-MrtGitBash {
         if (Test-Path $path) {
             return $path
         }
+    }
+    $cmd = Get-Command bash -ErrorAction SilentlyContinue
+    if ($cmd -and $cmd.Source -notmatch 'WindowsApps\\bash\.exe$') {
+        return $cmd.Source
     }
     Write-Host 'Git Bash is required for WordPress E2E (scripts/dev/ci-e2e-wp.sh).' -ForegroundColor Red
     exit 1
