@@ -66,7 +66,6 @@ function MRT_disruption_feed_deviation_summary( array $item ): string {
 }
 
 /**
- * @param array<string, mixed> $item
  * @return array{key: string, label: string, icon_key: string}
  */
 function MRT_disruption_feed_general_category(): array {
@@ -208,7 +207,7 @@ function MRT_disruption_feed_build_categories( array $items ): array {
 	}
 	$categories = array();
 	foreach ( $order as $key ) {
-		if ( ! isset( $groups[ $key ] ) || $groups[ $key ] === array() ) {
+		if ( ! isset( $groups[ $key ] ) ) {
 			continue;
 		}
 		$bucket = $groups[ $key ];

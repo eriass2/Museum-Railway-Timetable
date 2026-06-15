@@ -39,7 +39,14 @@ function Invoke-MrtDockerCompose {
             $output | ForEach-Object { Write-Host $_ }
         }
     } else {
-        & docker @dockerArgs
+        # PHPUnit and other tools log to stderr; do not treat as terminating errors on Windows.
+        $prevEap = $ErrorActionPreference
+        $ErrorActionPreference = 'Continue'
+        try {
+            & docker @dockerArgs 2>&1 | ForEach-Object { Write-Host $_ }
+        } finally {
+            $ErrorActionPreference = $prevEap
+        }
     }
 
     if ($ExitOnError -and $LASTEXITCODE -ne 0) {
