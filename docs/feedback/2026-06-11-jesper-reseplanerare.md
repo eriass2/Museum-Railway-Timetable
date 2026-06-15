@@ -46,13 +46,13 @@ Fortsatt betatest efter leverans av sammanfattningssteg, priser, PDF och prestan
 ### Åtgärd (2026-06-11)
 
 - [x] **Prefetch** — efter kalenderladdning hämtas den **andra** resetypen i bakgrunden (`wizardCalendarLoad.ts` → `prefetchWizardCalendarMonth`). Värmer både Vue-cache och PHP-transient för `single` ↔ `return` samma månad/rutt. **Tillfällig lösning** — se holistisk refaktor: [WIZARD_CACHE_REFACTOR.md](../WIZARD_CACHE_REFACTOR.md).
-- [ ] **PHP-optimering** kall tur/retur-kalender (kvarstår för första anropet per nyckel)
+- [x] **PHP-optimering** kall tur/retur-kalender — two-pointer på rå tider + outbound request-cache (2026-06-15)
 
 ### Lokala jämförelser (Docker, samma rutt)
 
 | Scenario | Kall build |
 |----------|------------|
-| Tur/retur, juli 2026 | **7,6 s** |
+| Tur/retur, juli 2026 | **7,6 s** → **~5,9 s** (two-pointer, 2026-06-15) |
 | Enkel resa, juli 2026 | **3,8 s** |
 | Tur/retur, juni 2026 | **0,6 s** |
 
@@ -60,7 +60,7 @@ Juli är tyngre (mer trafik → fler dagar kör full tur/retur-kontroll). Tur/re
 
 ### Nuvarande läge i kod
 
-Fas 1–3 i [WIZARD_PERFORMANCE_PLAN.md](../WIZARD_PERFORMANCE_PLAN.md) är **klara**, men **kall kalender** för tur/retur på trafiktunga månader är fortfarande för långsam.
+Fas 1–3 i [WIZARD_PERFORMANCE_PLAN.md](../WIZARD_PERFORMANCE_PLAN.md) är **klara**. **Kall kalender** tur/retur juli är **förbättrad** (~22 %) men fortfarande över målet ~2 s — flaskhalsen är nu främst `MRT_find_multi_leg_connections` × 2 per trafikdag, inte parningen.
 
 | Flaskhals | Var | Kommentar |
 |-----------|-----|-----------|
@@ -85,7 +85,7 @@ Byta månad (tur/retur, Uppsala Ö → Fjällnora, juli) ska ta **&lt; ~2 s** ka
 ### Beslut
 
 - [x] Prefetch single ↔ return (klient + indirekt PHP-transient)
-- [ ] PHP-optimering kall kalender — **rekommenderat nästa steg** (första besök per nyckel)
+- [x] PHP-optimering kall kalender — **two-pointer på rå tider** i `MRT_journey_calendar_has_round_trip_fast()` (2026-06-15)
 - [x] Utkast svar till Jesper om prestanda — [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
 - [ ] Jesper: bekräfta vilket steg som är långsamt (kalender vs resesök)
 

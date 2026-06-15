@@ -35,6 +35,68 @@ function MRT_journey_raw_item_arrival_hhmm( array $item ): string {
 }
 
 /**
+ * Sorted unique HH:MM arrival times at journey destination from raw rows.
+ *
+ * @param array<int, array<string, mixed>> $raw From MRT_find_multi_leg_connections.
+ * @return list<string>
+ */
+function MRT_journey_raw_sorted_arrival_hhmm_list( array $raw ): array {
+	$times = array();
+	foreach ( $raw as $item ) {
+		if ( ! is_array( $item ) ) {
+			continue;
+		}
+		$arr = MRT_journey_raw_item_arrival_hhmm( $item );
+		if ( $arr === '' ) {
+			continue;
+		}
+		$times[ $arr ] = true;
+	}
+	if ( $times === array() ) {
+		return array();
+	}
+	$list = array_keys( $times );
+	usort(
+		$list,
+		static function ( string $a, string $b ): int {
+			return MRT_compare_hhmm( $a, $b );
+		}
+	);
+	return $list;
+}
+
+/**
+ * Sorted unique HH:MM first-departure times from raw rows.
+ *
+ * @param array<int, array<string, mixed>> $raw From MRT_find_multi_leg_connections.
+ * @return list<string>
+ */
+function MRT_journey_raw_sorted_departure_hhmm_list( array $raw ): array {
+	$times = array();
+	foreach ( $raw as $item ) {
+		if ( ! is_array( $item ) ) {
+			continue;
+		}
+		$dep = MRT_journey_raw_item_first_departure( $item );
+		if ( $dep === '' || ! MRT_validate_time_hhmm( $dep ) ) {
+			continue;
+		}
+		$times[ $dep ] = true;
+	}
+	if ( $times === array() ) {
+		return array();
+	}
+	$list = array_keys( $times );
+	usort(
+		$list,
+		static function ( string $a, string $b ): int {
+			return MRT_compare_hhmm( $a, $b );
+		}
+	);
+	return $list;
+}
+
+/**
  * Whether any return departs on/after earliest allowed turnaround.
  *
  * @param array<int, array<string, mixed>> $return_raw Cached return search rows.
@@ -46,31 +108,27 @@ function MRT_journey_calendar_has_return_after_arrival(
 	int $return_dest_id,
 	string $earliest_hhmm
 ): bool {
-	$normalized = MRT_return_journey_normalized_after_turnaround(
-		$return_raw,
-		$dateYmd,
-		$return_origin_id,
-		$return_dest_id,
-		$earliest_hhmm
-	);
-	return $normalized !== array();
+	unset( $dateYmd, $return_origin_id, $return_dest_id );
+	return MRT_journey_raw_has_departure_on_or_after( $return_raw, $earliest_hhmm );
 }
 
 /**
- * Progressive round-trip check — one return search per day, no full outbound list.
+ * Round-trip check — one search per direction per day, two-pointer on raw times.
  *
- * @param array<string, array<int, array<string, mixed>>> $return_raw_cache Request-scope cache.
+ * @param array<string, array<int, array<string, mixed>>> $search_raw_cache Request-scope cache (from|to|ymd).
  */
 function MRT_journey_calendar_has_round_trip_fast(
 	int $from_station_id,
 	int $to_station_id,
 	string $ymd,
-	array &$return_raw_cache
+	array &$search_raw_cache
 ): bool {
-	$min_xfer   = MRT_journey_min_transfer_minutes();
-	$return_key = (string) $to_station_id . '|' . (string) $from_station_id . '|' . $ymd;
-	if ( ! isset( $return_raw_cache[ $return_key ] ) ) {
-		$return_raw_cache[ $return_key ] = MRT_find_multi_leg_connections(
+	$min_xfer     = MRT_journey_min_transfer_minutes();
+	$return_key   = (string) $to_station_id . '|' . (string) $from_station_id . '|' . $ymd;
+	$outbound_key = (string) $from_station_id . '|' . (string) $to_station_id . '|' . $ymd;
+
+	if ( ! isset( $search_raw_cache[ $return_key ] ) ) {
+		$search_raw_cache[ $return_key ] = MRT_find_multi_leg_connections(
 			$to_station_id,
 			$from_station_id,
 			$ymd,
@@ -78,40 +136,44 @@ function MRT_journey_calendar_has_round_trip_fast(
 			true
 		);
 	}
-	$return_raw = $return_raw_cache[ $return_key ];
+	$return_raw = $search_raw_cache[ $return_key ];
 	if ( $return_raw === array() ) {
 		return false;
 	}
-	$outbound_raw = MRT_find_multi_leg_connections(
-		$from_station_id,
-		$to_station_id,
-		$ymd,
-		$min_xfer,
-		true
-	);
+
+	if ( ! isset( $search_raw_cache[ $outbound_key ] ) ) {
+		$search_raw_cache[ $outbound_key ] = MRT_find_multi_leg_connections(
+			$from_station_id,
+			$to_station_id,
+			$ymd,
+			$min_xfer,
+			true
+		);
+	}
+	$outbound_raw = $search_raw_cache[ $outbound_key ];
 	if ( $outbound_raw === array() ) {
 		return false;
 	}
+
+	$arrivals    = MRT_journey_raw_sorted_arrival_hhmm_list( $outbound_raw );
+	$return_deps = MRT_journey_raw_sorted_departure_hhmm_list( $return_raw );
+	if ( $arrivals === array() || $return_deps === array() ) {
+		return false;
+	}
+
 	$turnaround = MRT_journey_min_transfer_minutes();
-	foreach ( $outbound_raw as $out_item ) {
-		if ( ! is_array( $out_item ) ) {
-			continue;
-		}
-		$arrival = MRT_journey_raw_item_arrival_hhmm( $out_item );
-		if ( $arrival === '' ) {
-			continue;
-		}
+	$ri         = 0;
+	$r_count    = count( $return_deps );
+
+	foreach ( $arrivals as $arrival ) {
 		$earliest = MRT_add_minutes_to_hhmm( $arrival, $turnaround );
 		if ( $earliest === null ) {
 			continue;
 		}
-		if ( MRT_journey_calendar_has_return_after_arrival(
-			$return_raw,
-			$ymd,
-			$to_station_id,
-			$from_station_id,
-			$earliest
-		) ) {
+		while ( $ri < $r_count && MRT_compare_hhmm( $return_deps[ $ri ], $earliest ) < 0 ) {
+			++$ri;
+		}
+		if ( $ri < $r_count ) {
 			return true;
 		}
 	}
@@ -325,12 +387,9 @@ function MRT_journey_calendar_maybe_log_slow_build(
 	int $month,
 	string $trip_type
 ): void {
-	if ( ! MRT_is_development_mode() ) {
-		return;
-	}
-
 	$elapsed_ms = ( microtime( true ) - $started_at ) * 1000;
-	$threshold  = (int) apply_filters( 'mrt_journey_calendar_slow_ms', 500 );
+	$default_ms = MRT_is_development_mode() ? 500 : 2000;
+	$threshold  = (int) apply_filters( 'mrt_journey_calendar_slow_ms', $default_ms );
 	if ( $elapsed_ms < $threshold ) {
 		return;
 	}

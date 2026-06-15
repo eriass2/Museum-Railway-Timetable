@@ -471,6 +471,40 @@ final class JourneyMultiLegTest extends TestCase {
         self::assertSame( 'traffic_no_match', $return['2026-06-02']['status'] ?? '' );
     }
 
+    public function test_journey_calendar_round_trip_respects_turnaround_gap(): void {
+        $GLOBALS['mrt_test_options'] = array(
+            'mrt_settings' => array( 'min_transfer_minutes' => 30 ),
+        );
+        $this->mrt_use_journey_fixture(
+            [
+                11 => [
+                    $this->mrt_stop( 11, self::A, 1, null, '09:00' ),
+                    $this->mrt_stop( 11, self::B, 2, '10:00', null ),
+                ],
+                22 => [
+                    $this->mrt_stop( 22, self::B, 1, null, '10:15' ),
+                    $this->mrt_stop( 22, self::A, 2, '11:00', null ),
+                ],
+                33 => [
+                    $this->mrt_stop( 33, self::B, 1, null, '10:45' ),
+                    $this->mrt_stop( 33, self::A, 2, '11:30', null ),
+                ],
+            ],
+            [
+                900 => [ '2026-06-01' ],
+            ],
+            [
+                11 => 900,
+                22 => 900,
+                33 => 900,
+            ]
+        );
+
+        $return = MRT_get_journey_calendar_month( self::A, self::B, 2026, 6, 'return' );
+
+        self::assertSame( 'ok', $return['2026-06-01']['status'] ?? '' );
+    }
+
     /**
      * @return array<int, array<int, array<string, mixed>>>
      */

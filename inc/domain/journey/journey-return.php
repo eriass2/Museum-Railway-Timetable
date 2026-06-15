@@ -9,6 +9,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
 /**
+ * Whether any raw row departs on or after earliest HH:MM (calendar existence check).
+ *
+ * @param array<int, array<string, mixed>> $raw From MRT_find_multi_leg_connections.
+ */
+function MRT_journey_raw_has_departure_on_or_after( array $raw, string $earliest_hhmm ): bool {
+	foreach ( $raw as $item ) {
+		if ( ! is_array( $item ) ) {
+			continue;
+		}
+		$dep = MRT_journey_raw_item_first_departure( $item );
+		if ( $dep === '' || ! MRT_validate_time_hhmm( $dep ) ) {
+			continue;
+		}
+		if ( MRT_compare_hhmm( $dep, $earliest_hhmm ) >= 0 ) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
  * First departure (HH:MM) at journey origin from a raw multi-leg bundle
  *
  * @param array<string, mixed> $item Row from MRT_find_multi_leg_connections
