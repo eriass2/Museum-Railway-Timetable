@@ -17,6 +17,8 @@ import { MRT_REST_JSON_PREFIX } from '../shared/restNamespace.mjs';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(root, '../../assets/dist/vue');
+const pluginAssetsDir = join(root, '../../assets');
+const trafficTokensCssPath = join(pluginAssetsDir, 'mrt-traffic-info-tokens.css');
 const manifestPath = join(distDir, '.vite/manifest.json');
 
 if (!existsSync(manifestPath)) {
@@ -43,6 +45,9 @@ const port = Number(process.env.MRT_E2E_PORT || 5199);
 
 /** Must match frontend/vue/vite.config.ts base (Vite public path). */
 const VITE_PUBLIC_BASE = '/wp-content/plugins/museum-railway-timetable/assets/dist/vue/';
+/** Same path as MRT_enqueue_traffic_info_tokens() in production. */
+const TRAFFIC_TOKENS_URL =
+  '/wp-content/plugins/museum-railway-timetable/assets/mrt-traffic-info-tokens.css';
 
 const entryCssLinks = (entry?.css || [])
   .map((rel) => {
@@ -546,13 +551,14 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
   res.end(JSON.stringify(payload));
 }
 
-function renderAppHtml(app, config) {
+function renderAppHtml(app, config, extraCssLinks = '') {
   return `<!DOCTYPE html>
 <html lang="sv">
 <head>
   <meta charset="utf-8" />
   <title>MRT ${app} e2e</title>
   ${entryCssLinks}
+  ${extraCssLinks}
 </head>
 <body>
   <div class="mrt-vue-root" data-mrt-vue-app="${app}">
@@ -587,12 +593,16 @@ function renderOverviewCancelledHtml() {
 function renderTrafficNoticesHtml(requestUrl) {
   const params = new URL(requestUrl, 'http://127.0.0.1').searchParams;
   const empty = params.get('empty') === '1';
+  const tokenLink = existsSync(trafficTokensCssPath)
+    ? `<link rel="stylesheet" href="${TRAFFIC_TOKENS_URL}" />`
+    : '';
   return renderAppHtml(
     'traffic_notices',
     buildTrafficNoticesConfig({
       referenceDate: empty ? 'e2e-empty' : undefined,
       title: params.get('title') ?? '',
     }),
+    tokenLink,
   );
 }
 
@@ -656,6 +666,16 @@ http
     }
     if (pathOnly.startsWith(REST_PREFIX)) {
       void handleRestRequest(req, res, pathOnly, rawUrl);
+      return;
+    }
+    if (pathOnly === TRAFFIC_TOKENS_URL) {
+      if (!existsSync(trafficTokensCssPath)) {
+        res.writeHead(404);
+        res.end('Not found');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
+      res.end(readFileSync(trafficTokensCssPath));
       return;
     }
     let rel = pathOnly.replace(/^\//, '');

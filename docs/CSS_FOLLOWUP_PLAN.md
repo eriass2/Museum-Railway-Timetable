@@ -1,6 +1,6 @@
 # Plan: CSS-uppföljning (C6+) och E2E-verifiering
 
-**Status:** Pågående — E1–C9 implementerat 2026-06-13; E2E-verifiering återstår lokalt/CI  
+**Status:** Pågående — E1–C9 implementerat 2026-06-13; E2E-verifiering klar (WP-suite + DoD 2026-06-13)  
 **Relaterat:** [CSS_REFACTOR_PLAN.md](CSS_REFACTOR_PLAN.md), [TEST_IMPLEMENTATION_PLAN.md](TEST_IMPLEMENTATION_PLAN.md), [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3
 
 ---

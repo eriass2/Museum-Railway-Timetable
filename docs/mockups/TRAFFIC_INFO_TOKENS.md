@@ -1,6 +1,6 @@
 # Trafikinfo — design tokens (UL 1:1)
 
-**Status:** CSS-fil skapad (`assets/mrt-traffic-info-tokens.css`); **ej enqueue/import** i Vue eller shortcode än.
+**Status:** CSS-fil skapad (`assets/mrt-traffic-info-tokens.css`); enqueue via `MRT_enqueue_traffic_info_tokens()` (Vue + shortcode). E2E: `e2e/serve.mjs` laddar samma fil för statiska Playwright-tester.
 **Plan:** [TRAFFIC_INFO_UL_PLAN.md](../TRAFFIC_INFO_UL_PLAN.md)  
 **Referens:** UL «Aktuellt trafikläge» / «Planerade avvikelser» (skärmdumpar i `mockups/`)
 

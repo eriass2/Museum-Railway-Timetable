@@ -1,7 +1,7 @@
 # Trafikinfo UL 1:1 — implementeringsplan
 
-**Status:** plan (ej startad) — **backlog:** [TODO.md](TODO.md) § Trafikinfo UL 1:1 (`TF-*`)  
-**Kodbaseline:** 2026-06-14 — se §16 (inga TF-implementationer utom token-filer + förberedande wizard-UI)  
+**Status:** **implementation klar** (2026-06-14) — acceptans och snapshots återstår — **backlog:** [TODO.md](TODO.md) § Trafikinfo UL 1:1 (`TF-*`)  
+**Kodbaseline:** 2026-06-15 — se §16  
 **Mål:** Publik trafikstörningsvy ska **visuellt** matcha UL:s «Aktuellt trafikläge» / «Planerade avvikelser» (hierarki, färger, badges, alert-rutor). Innehåll för Lennakatten (tågnummer, museumstrafik).  
 **Kontext:** [TRAFFIC_DISRUPTIONS_PLAN.md](TRAFFIC_DISRUPTIONS_PLAN.md) (v2 API/feed klar 2026-06-11) — denna plan är **uppföljning för visuell paritet**.  
 **Designreferens:** UL-skärmdumpar (team), [mockups/TRAFFIC_INFO_TOKENS.md](mockups/TRAFFIC_INFO_TOKENS.md)
@@ -370,40 +370,43 @@ Kör på `/trafikstorningar` (eller shortcode på startsidan), mobil + desktop.
 
 ---
 
-## 16. Kodstatus (baseline 2026-06-14)
+## 16. Kodstatus (2026-06-15)
 
-Jämförelse mellan plan och faktisk kod. **TF-ul-arbetet är i stort sett ej påbörjat**; nedan är relevanta förändringar i närheten.
+Jämförelse mellan plan och faktisk kod efter implementation (commits `4fb9eb8`–`a3c8448`).
 
-### Redan i kod (förberedelse — inte UL-feed klart)
+### Klart (TF-A–E, H1, F1–F3, F5–F6, C1–C7, C9–C10, D1–D3)
 
-| Vad | Var | Påverkan på TF-plan |
-|-----|-----|---------------------|
-| Token-spec + `--mrt-tf-*` CSS-fil | `TRAFFIC_INFO_TOKENS.md`, `assets/mrt-traffic-info-tokens.css` | TF-0.1 ✅ TF-0.2 ✅ fil, **ej enqueue/import** |
-| `MrtInfoMark.vue` (grön cirkel-i, `#fff` i SVG) | `components/ui/` | Används i **wizard** tidslinje + fotnoter — **inte** trafikinfo. TF-C5: behöver troligen **egen** `MrtTfCountBadge` (gul **i** i grå pill), inte återanvända rakt av |
-| Timeline-modul refactor | `components/ui/timeline/*` | Parallellt arbete; **ej** trafikinfo |
-| `MrtPublicAppShell` | `TrafficNoticesApp.vue` | TF-H2: layout-wrapper finns; tema-verifiering kvar |
-| `MRT_vue_mount_extra_classes()` | `inc/assets/vue-mount-layout.php` | `traffic_notices` får `alignwide` (flyttad från `vue-frontend.php`) |
-| `MRT_enqueue_brand_token_overrides()` | `vue-frontend.php` + `brand-tokens.php` | TF-H1: **mönster** för att enqueue CSS efter Vue-bundle — trafikinfo-tokens ej kopplade |
+| Område | Var |
+|--------|-----|
+| API `panels`, `summary`, `validity_label`, counts | `disruption-feed.php`, `disruptionFeed.ts` |
+| Vue `MrtTf*` komponentträd | `frontend/vue/src/components/traffic-notices/` |
+| Noscript BEM `.mrt-tf-*` | `inc/public/traffic-notices/shortcode.php` |
+| Token enqueue | `inc/assets/traffic-info-tokens.php`, `vue-frontend.php`, shortcode |
+| Admin preview | `TrafficNoticesFeedPreview.vue` |
+| UL-lik E2E fixture | `e2e/fixtures/traffic-notices-payload.mjs` |
+| PHPUnit + Vitest + funktionell E2E | `DisruptionFeedTest`, `disruptionFeedPanels.test.ts`, `traffic-notices-mount.spec.ts` |
+| Legacy UI borttagen | `MrtDisruptionFeedSections`, `MrtDisruptionFeedItemCard` |
 
-### Oförändrat sedan plan (fortfarande öppna TF-punkter)
+### Öppet (acceptans & polish)
 
-| Område | Nuvarande kod |
-|--------|----------------|
-| API-fält | Inga `summary`, `validity_label`, `severity`, `panels` — `disruptionFeed.ts` + `disruption-feed.php` |
-| Vue trafikinfo | `MrtDisruptionFeedSections`, `MrtDisruptionFeedItemCard` — **ingen** `MrtTf*` |
-| i18n rubriker | Fortfarande «Pågår nu» / «Kommande» i `vue-shortcode-config.php` |
-| Noscript | Legacy `mrt-traffic-notices__*` + `<details>` i `shortcode.php` |
-| E2E fixture | Flat `ongoing`/`upcoming` i `traffic-notices-payload.mjs` |
-| CSS DoD | Inga `mrt-tf-*` klasser i produktion |
+| ID | Punkt |
+|----|-------|
+| TF-F4 | Playwright screenshots — spec `traffic-notices-ul-layout.spec.ts`, snapshots i `e2e/traffic-notices-ul-layout.spec.ts-snapshots/` |
+| TF-C8 | Edge: tom `ongoing`, bara `upcoming`; mobil radbrytning |
+| TF-H2 | Verifiera `alignwide` + `MrtPublicAppShell` på Lennakatten-tema (test3) |
+| TF-G1/G2 | Jesper-checklista §14 + OK på målbild |
+| TF-0.3/0.4 | UL-referensbild + side-by-side i token-doc (produkt/design) |
+| TF-B5/B6 | Valfria admin-fält (tider, headline) |
 
-### Planjusteringar (efter kodgranskning)
+### Nästa steg
 
-1. **TF-H1:** enqueue via ny `MRT_enqueue_traffic_info_tokens( $after_handle )` (lik `brand-tokens.php`) **eller** `@import` i trafikinfo Vue-entry — inte bara «frontend.php» generiskt.
-2. **TF-H2:** referensfil `vue-mount-layout.php`, inte endast `vue-frontend.php`.
-3. **TF-C5:** `MrtInfoMark` är **wizard**-ikon (brand-grön); UL count-badge är annorlunda — planera `MrtTfCountBadge` som primär, `MrtInfoMark` som valfri inre ikon med `currentColor` från `--mrt-tf-info`.
-4. **Strict tokens:** `MrtInfoMark` har hårdkodad `#fff` i SVG — bryter TF CSS-regler; nya TF-komponenter ska använda `currentColor` / tokens.
+1. **TF-H2 + TF-G** — manuell verifiering på test3.
+2. **TF-0.4** — side-by-side UL vs snapshot i token-doc (när produkt har referensbild TF-0.3).
 
-### Slutsats
+**Uppdatera snapshots (Linux, samma som CI):**
 
-**Planen behöver inte ändras i faser eller scope** — kodbasen matchar «ej startad» för TF-A–G. Uppdateringar ovan är **precision** (filer, enqueue-mönster, MrtInfoMark ≠ UL-badge). Nästa implementationsteg förblir **TF-A** (+ TF-F5, TF-H1 för synligt test3-resultat).
+```bash
+docker run --rm -v "$PWD:/app" -w /app/frontend/vue mcr.microsoft.com/playwright:v1.60.0-jammy \
+  sh -c "npm run build && npm run e2e -- traffic-notices-ul-layout.spec.ts --update-snapshots"
+```
 

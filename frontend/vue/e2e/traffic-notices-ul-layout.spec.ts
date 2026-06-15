@@ -9,9 +9,11 @@ test.describe('Traffic notices UL layout', () => {
     await page.goto('/traffic-notices');
     const feed = page.locator('.mrt-tf-feed');
     await expect(feed).toBeVisible();
-    await page.locator('.mrt-tf-category__row').filter({ hasText: 'Tåg' }).click();
-    await page.locator('.mrt-tf-category__row').filter({ hasText: 'Buss' }).click();
-    await page.locator('.mrt-tf-category__row').filter({ hasText: 'Information' }).click();
+    const rows = feed.locator('.mrt-tf-category__row');
+    const count = await rows.count();
+    for (let i = 0; i < count; i++) {
+      await rows.nth(i).click();
+    }
     return feed;
   }
 
