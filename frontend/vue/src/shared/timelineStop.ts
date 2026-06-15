@@ -1,12 +1,13 @@
+/** Passenger-facing behovsuppehåll hint from journey connection-detail API. */
+export type BehovHint = '' | 'pickup' | 'dropoff' | 'both';
+
 /** Shared stop shape for timeline rendering and footnotes. */
 export type TimelineStopBase = {
   station_title?: string;
   departure_time?: string;
   arrival_time?: string;
   approximate_time?: boolean;
-  on_request_pickup?: boolean;
-  on_request_dropoff?: boolean;
-  on_request_both?: boolean;
+  behov_hint?: BehovHint;
 };
 
 /** Wizard/API stop with optional pre-formatted clock label. */

@@ -9,7 +9,7 @@ describe('mapTimelineDisplay', () => {
         kind: 'stop',
         key: 'stop-first',
         position: 'first',
-        stop: { station_title: 'Uppsala', on_request_pickup: true },
+        stop: { station_title: 'Uppsala', behov_hint: 'pickup' },
       },
       { kind: 'toggle' },
       {

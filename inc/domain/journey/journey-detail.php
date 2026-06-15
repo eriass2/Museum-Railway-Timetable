@@ -50,9 +50,7 @@ function MRT_journey_map_stop_row(
 		'dropoff_mode'         => MRT_stop_time_effective_dropoff( $row ),
 		'approximate_time'    => ! empty( $row['approximate_time'] ),
 		'time_label'          => $display['time_label'],
-		'on_request_pickup'   => $display['on_request_pickup'],
-		'on_request_dropoff'  => $display['on_request_dropoff'],
-		'on_request_both'     => $display['on_request_both'],
+		'behov_hint'          => $display['behov_hint'],
 	);
 }
 

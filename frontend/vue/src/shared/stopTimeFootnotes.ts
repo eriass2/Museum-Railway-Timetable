@@ -1,6 +1,6 @@
 import type { WizardCfg } from '../wizard/utils/wizardCfgTypes';
 import { cfgStr } from '../wizard/utils/wizardLabels';
-import type { TimelineStopBase } from './timelineStop';
+import type { BehovHint, TimelineStopBase } from './timelineStop';
 
 export type StopTimeFootnoteStop = TimelineStopBase;
 
@@ -11,17 +11,23 @@ export type TripFootnoteEntry = {
   text: string;
 };
 
+function normalizeBehovHint(stop: StopTimeFootnoteStop): BehovHint {
+  return stop.behov_hint ?? '';
+}
+
 /** Whether a stop should show the behovsuppehåll info icon in the timeline. */
 export function stopShowsOnRequestInfo(stop: StopTimeFootnoteStop): boolean {
-  return Boolean(stop.on_request_pickup || stop.on_request_dropoff);
+  const hint = normalizeBehovHint(stop);
+  return hint === 'pickup' || hint === 'dropoff' || hint === 'both';
 }
 
 function footnoteTextForStop(stop: StopTimeFootnoteStop, cfg: WizardCfg): string | null {
-  if (stop.on_request_pickup) {
+  const hint = normalizeBehovHint(stop);
+  if (hint === 'pickup') {
     const text = cfgStr(cfg, 'onRequestPickupFootnote', '');
     return text !== '' ? text : null;
   }
-  if (stop.on_request_dropoff || stop.on_request_both) {
+  if (hint === 'dropoff' || hint === 'both') {
     const text = cfgStr(cfg, 'onRequestDropoffFootnote', '');
     return text !== '' ? text : null;
   }

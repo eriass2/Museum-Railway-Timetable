@@ -80,3 +80,7 @@ Se [CSV_FORMAT.md](CSV_FORMAT.md) § stoptimes.
 
 - [STOP_TIME_SOURCES.md](STOP_TIME_SOURCES.md)
 - [STOP_TIME_V3_IMPLEMENTATION.md](STOP_TIME_V3_IMPLEMENTATION.md) — fas 4
+
+## Journey detail API — `behov_hint`
+
+`POST /journey/connection-detail` stoppar exponerar ett fält **`behov_hint`** (`''` | `pickup` | `dropoff` | `both`) i stället för tre booleans. Värden sätts i `MRT_journey_stop_wizard_time_meta()` utifrån passagerarens position i segmentet (ändpunkt vs genomfart). Vue tidslinje och fotnoter läser endast `behov_hint`.

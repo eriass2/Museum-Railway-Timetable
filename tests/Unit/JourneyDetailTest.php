@@ -44,7 +44,7 @@ final class JourneyDetailTest extends TestCase {
 		self::assertSame( 'on_request', $mapped['pickup_mode'] );
 		self::assertSame( 'none', $mapped['dropoff_mode'] );
 		self::assertSame( '09.00', $mapped['time_label'] );
-		self::assertFalse( $mapped['on_request_pickup'] );
+		self::assertSame( '', $mapped['behov_hint'] );
 	}
 
 	public function test_connection_journey_detail_returns_empty_for_invalid_ids(): void {
@@ -169,8 +169,8 @@ final class JourneyDetailTest extends TestCase {
 
 		$detail = MRT_get_connection_journey_detail( 501, 101, 102 );
 
-		self::assertFalse( $detail['stops'][0]['on_request_pickup'] );
-		self::assertTrue( $detail['stops'][1]['on_request_dropoff'] );
+		self::assertSame( '', $detail['stops'][0]['behov_hint'] );
+		self::assertSame( 'dropoff', $detail['stops'][1]['behov_hint'] );
 	}
 
 	public function test_connection_journey_detail_hides_pickup_footnote_on_passed_through_middle(): void {
@@ -211,8 +211,8 @@ final class JourneyDetailTest extends TestCase {
 		$detail = MRT_get_connection_journey_detail( 501, 101, 103 );
 
 		self::assertCount( 3, $detail['stops'] );
-		self::assertFalse( $detail['stops'][1]['on_request_pickup'] );
-		self::assertTrue( $detail['stops'][2]['on_request_dropoff'] );
+		self::assertSame( '', $detail['stops'][1]['behov_hint'] );
+		self::assertSame( 'dropoff', $detail['stops'][2]['behov_hint'] );
 	}
 
 	public function test_connection_journey_detail_rejects_backwards_slice(): void {

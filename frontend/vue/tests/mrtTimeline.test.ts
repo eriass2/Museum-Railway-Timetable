@@ -63,8 +63,8 @@ describe('MrtTimeline', () => {
       render: () =>
         h(MrtTimeline, {
           stops: [
-            { station_title: 'Skolsta', on_request_pickup: true },
-            { station_title: 'Faringe', on_request_dropoff: true },
+            { station_title: 'Skolsta', behov_hint: 'pickup' },
+            { station_title: 'Faringe', behov_hint: 'dropoff' },
           ],
           formatTime: () => '10:00',
           showStopsLabel: 'Visa',

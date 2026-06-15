@@ -3,40 +3,42 @@ import {
   stopShowsOnRequestInfo,
   tripFootnotesFromStops,
 } from '../src/shared/stopTimeFootnotes';
-import type { WizardCfg } from '../src/wizard/utils/wizardCfgTypes';
 
-describe('stopTimeFootnotes', () => {
-  const cfg: WizardCfg = {
-    onRequestPickupFootnote: 'Behovsuppehåll, ge ett tecken till föraren om du vill stiga på.',
-    onRequestDropoffFootnote:
-      'Behovsuppehåll, säg till konduktören i god tid om du vill stiga av.',
-  };
+const cfg = {
+  onRequestPickupFootnote: 'Ge tecken till föraren om du vill stiga på.',
+  onRequestDropoffFootnote: 'Säg till konduktören i god tid om du vill stiga av.',
+};
 
-  it('stopShowsOnRequestInfo is true when dropoff restriction applies', () => {
-    expect(stopShowsOnRequestInfo({ on_request_dropoff: true })).toBe(true);
+describe('stopShowsOnRequestInfo', () => {
+  it('shows icon for pickup or dropoff hints', () => {
+    expect(stopShowsOnRequestInfo({ behov_hint: 'pickup' })).toBe(true);
+    expect(stopShowsOnRequestInfo({ behov_hint: 'dropoff' })).toBe(true);
+    expect(stopShowsOnRequestInfo({ behov_hint: 'both' })).toBe(true);
+    expect(stopShowsOnRequestInfo({ behov_hint: '' })).toBe(false);
   });
+});
 
-  it('stopShowsOnRequestInfo is false for passed-through stops without flags', () => {
-    expect(stopShowsOnRequestInfo({})).toBe(false);
-  });
-
-  it('tripFootnotesFromStops deduplicates texts', () => {
+describe('tripFootnotesFromStops', () => {
+  it('deduplicates footnotes by text', () => {
     const entries = tripFootnotesFromStops(
       [
-        { on_request_dropoff: true },
-        { on_request_dropoff: true },
+        { behov_hint: 'dropoff' },
+        { behov_hint: 'dropoff' },
       ],
       cfg,
     );
-    expect(entries).toEqual([
-      { text: cfg.onRequestDropoffFootnote },
-    ]);
+    expect(entries).toHaveLength(1);
+    expect(entries[0]?.text).toContain('stiga av');
   });
 
-  it('tripFootnotesFromStops shows dropoff footnote for alighting stop', () => {
-    const entries = tripFootnotesFromStops([{ on_request_dropoff: true }], cfg);
-    expect(entries).toEqual([
-      { text: cfg.onRequestDropoffFootnote },
-    ]);
+  it('uses dropoff copy for both hint', () => {
+    const entries = tripFootnotesFromStops([{ behov_hint: 'both' }], cfg);
+    expect(entries).toHaveLength(1);
+    expect(entries[0]?.text).toContain('stiga av');
+  });
+
+  it('uses pickup copy for pickup hint', () => {
+    const entries = tripFootnotesFromStops([{ behov_hint: 'pickup' }], cfg);
+    expect(entries[0]?.text).toContain('stiga på');
   });
 });

@@ -525,7 +525,7 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
               departure_time: '10:46',
               time_label: 'Ca 10.46',
               approximate_time: true,
-              on_request_dropoff: true,
+              behov_hint: 'dropoff',
             },
             {
               station_title: 'Marielund',

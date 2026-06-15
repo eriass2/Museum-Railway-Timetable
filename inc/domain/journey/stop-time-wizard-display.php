@@ -21,9 +21,7 @@ require_once MRT_PATH . 'inc/domain/service/stop-time-display.php';
  * @return array{
  *   time_label: string,
  *   approximate_time: bool,
- *   on_request_pickup: bool,
- *   on_request_dropoff: bool,
- *   on_request_both: bool
+ *   behov_hint: string
  * }
  */
 function MRT_journey_stop_wizard_time_meta(
@@ -71,10 +69,34 @@ function MRT_journey_stop_wizard_time_meta(
 	}
 
 	return array(
-		'time_label'          => $time_label,
-		'approximate_time'    => $approximate,
-		'on_request_pickup'   => $on_request_pickup,
-		'on_request_dropoff'  => $on_request_dropoff,
-		'on_request_both'     => $on_request_both,
+		'time_label'       => $time_label,
+		'approximate_time' => $approximate,
+		'behov_hint'       => MRT_journey_stop_behov_hint(
+			$on_request_pickup,
+			$on_request_dropoff,
+			$on_request_both
+		),
 	);
+}
+
+/**
+ * Single passenger-facing behovsuppehåll hint for journey detail API.
+ *
+ * @return ''|'pickup'|'dropoff'|'both'
+ */
+function MRT_journey_stop_behov_hint(
+	bool $pickup_restriction,
+	bool $dropoff_restriction,
+	bool $on_request_both
+): string {
+	if ( $on_request_both ) {
+		return 'both';
+	}
+	if ( $pickup_restriction ) {
+		return 'pickup';
+	}
+	if ( $dropoff_restriction ) {
+		return 'dropoff';
+	}
+	return '';
 }

@@ -17,7 +17,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		$meta = MRT_journey_stop_wizard_time_meta( MRT_test_stop_modes_both_on_request() );
 
 		self::assertSame( 'X', $meta['time_label'] );
-		self::assertTrue( $meta['on_request_both'] );
+		self::assertSame( 'both', $meta['behov_hint'] );
 	}
 
 	public function test_approximate_on_scheduled_stop_does_not_show_ca(): void {
@@ -33,6 +33,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 
 		self::assertSame( '10.13', $meta['time_label'] );
 		self::assertTrue( $meta['approximate_time'] );
+		self::assertSame( '', $meta['behov_hint'] );
 	}
 
 	public function test_approximate_on_behov_stop_shows_ca_prefix(): void {
@@ -92,7 +93,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		);
 
 		self::assertSame( '09.30', $meta['time_label'] );
-		self::assertFalse( $meta['on_request_pickup'] );
+		self::assertSame( '', $meta['behov_hint'] );
 	}
 
 	public function test_pickup_only_at_trip_start_hides_pickup_footnote(): void {
@@ -106,7 +107,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 			false
 		);
 
-		self::assertFalse( $meta['on_request_pickup'] );
+		self::assertSame( '', $meta['behov_hint'] );
 	}
 
 	public function test_dropoff_only_at_trip_end_keeps_dropoff_footnote(): void {
@@ -120,7 +121,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 			true
 		);
 
-		self::assertTrue( $meta['on_request_dropoff'] );
+		self::assertSame( 'dropoff', $meta['behov_hint'] );
 	}
 
 	public function test_on_request_x_at_trip_start_keeps_dropoff_footnote_only(): void {
@@ -132,9 +133,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		);
 
 		self::assertSame( 'X', $meta['time_label'] );
-		self::assertTrue( $meta['on_request_both'] );
-		self::assertFalse( $meta['on_request_pickup'] );
-		self::assertTrue( $meta['on_request_dropoff'] );
+		self::assertSame( 'both', $meta['behov_hint'] );
 	}
 
 	public function test_on_request_with_time_shows_ca_and_x_suffix(): void {
@@ -150,6 +149,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		);
 
 		self::assertSame( 'Ca 10.09 X', $meta['time_label'] );
+		self::assertSame( '', $meta['behov_hint'] );
 	}
 
 	public function test_dropoff_only_with_time_keeps_dropoff_footnote_at_alighting(): void {
@@ -164,6 +164,13 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		);
 
 		self::assertSame( '09.30', $meta['time_label'] );
-		self::assertTrue( $meta['on_request_dropoff'] );
+		self::assertSame( 'dropoff', $meta['behov_hint'] );
+	}
+
+	public function test_behov_hint_maps_restriction_flags(): void {
+		self::assertSame( '', MRT_journey_stop_behov_hint( false, false, false ) );
+		self::assertSame( 'pickup', MRT_journey_stop_behov_hint( true, false, false ) );
+		self::assertSame( 'dropoff', MRT_journey_stop_behov_hint( false, true, false ) );
+		self::assertSame( 'both', MRT_journey_stop_behov_hint( false, true, true ) );
 	}
 }
