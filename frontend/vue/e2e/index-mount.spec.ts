@@ -12,9 +12,9 @@ test.describe('Timetable index (static mount)', () => {
 
     const items = root.locator('.mrt-timetable-index__item');
     await expect(items).toHaveCount(3);
-    await expect(items.nth(0)).toHaveClass(/mrt-timetable-index__item--green/);
-    await expect(items.nth(1)).toHaveClass(/mrt-timetable-index__item--yellow/);
-    await expect(items.nth(2)).toHaveClass(/mrt-timetable-index__item--red/);
+    await expect(items.nth(0).locator('.mrt-timetable-index__card')).toHaveClass(/mrt-timetable-index__card--green/);
+    await expect(items.nth(1).locator('.mrt-timetable-index__card')).toHaveClass(/mrt-timetable-index__card--yellow/);
+    await expect(items.nth(2).locator('.mrt-timetable-index__card')).toHaveClass(/mrt-timetable-index__card--red/);
 
     const greenLink = root.getByRole('link', { name: 'Grön tidtabell — 12 juni, 19 juni' });
     await expect(greenLink).toHaveAttribute('href', '/timetables/green');

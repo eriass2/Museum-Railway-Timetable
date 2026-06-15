@@ -1,7 +1,39 @@
 /**
  * Sample timetable overview JSON for static E2E (matches TimetableOverviewPayload shape).
  */
+
+function overviewColumn(serviceNumber, overrides = {}) {
+  return {
+    serviceNumber,
+    trainTypeName: 'Dieseltåg',
+    trainTypeSlug: 'diesel',
+    iconKey: 'diesel',
+    isSpecial: false,
+    specialName: '',
+    ...overrides,
+  };
+}
+
+function timeCells(values) {
+  return values.map((text) => ({ text }));
+}
+
+function emptyCells(count) {
+  return Array.from({ length: count }, () => ({ text: '' }));
+}
+
+/** Six trip columns — matches overview-mount horizontal layout check. */
+const E2E_RAIL_COLUMNS = [
+  overviewColumn('71'),
+  overviewColumn('72'),
+  overviewColumn('93', { trainTypeName: 'Ånglok', trainTypeSlug: 'anglok', iconKey: 'anglok' }),
+  overviewColumn('94'),
+  overviewColumn('95'),
+  overviewColumn('96'),
+];
+
 export function buildSampleOverviewPayload(scope = 'timetable') {
+  const columnCount = E2E_RAIL_COLUMNS.length;
   return {
     scope,
     timetableId: 1,
@@ -22,36 +54,27 @@ export function buildSampleOverviewPayload(scope = 'timetable') {
         routeLabel: 'Uppsala Östra – Faringe',
         fromLabel: 'Från Uppsala Östra',
         toLabel: 'Till Faringe',
-        columns: [
-          {
-            serviceNumber: '93',
-            trainTypeName: 'Ånglok',
-            trainTypeSlug: 'anglok',
-            iconKey: 'anglok',
-            isSpecial: false,
-            specialName: '',
-          },
-        ],
+        columns: E2E_RAIL_COLUMNS,
         rows: [
           {
             kind: 'from',
             label: 'Från Uppsala Östra',
-            cells: [{ text: '09:00' }],
+            cells: timeCells(['09:00', '09:30', '10:00', '10:30', '11:00', '11:30']),
           },
           {
             kind: 'station',
             label: 'Selknä*',
-            cells: [{ text: '10:15' }],
+            cells: timeCells(['10:15', '10:45', '11:15', '11:45', '12:15', '12:45']),
           },
           {
             kind: 'busDeparture',
             label: 'Från Selknä*',
-            cells: [{ text: '10:53', busServiceNumber: 'B1' }],
+            cells: [{ text: '10:53', busServiceNumber: 'B1' }, ...emptyCells(columnCount - 1)],
           },
           {
             kind: 'busArrival',
             label: 'Till Fjällnora*',
-            cells: [{ text: '11:00', busServiceNumber: 'B1' }],
+            cells: [{ text: '11:00', busServiceNumber: 'B1' }, ...emptyCells(columnCount - 1)],
           },
         ],
       },

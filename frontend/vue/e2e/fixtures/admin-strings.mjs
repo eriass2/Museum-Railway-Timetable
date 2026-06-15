@@ -42,4 +42,13 @@ export const e2eAdminStrings = {
   stationsTrainChangeAdd: 'Lägg till rad',
   pricesTitle: 'Priser',
   pricesUnsaved: 'Du har osparade prisändringar.',
+  setupTitle: 'Kom igång',
+  setupCompleteSummary: 'Alla grundsteg är klara. Du kan fortfarande öppna checklistan här.',
+  setupProgress: '%1$s av %2$s steg klara — följ ordningen nedan innan du publicerar tidtabeller på webbplatsen.',
+  setupStepStations: 'Skapa minst en station',
+  setupStepRoutes: 'Skapa minst en rutt med stationer',
+  setupStepTimetables: 'Skapa en tidtabell',
+  setupStepServices: 'Lägg till turer i en tidtabell',
+  setupStepPrices: 'Konfigurera biljettpriser',
+  setupStepStationZones: 'Tilldela priszoner till alla stationer',
 };
