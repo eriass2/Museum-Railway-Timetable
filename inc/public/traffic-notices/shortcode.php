@@ -155,7 +155,7 @@ function MRT_render_tf_panel_html( array $panel ): string {
 }
 
 /**
- * @param array<string, mixed> $category
+ * @param string $key Category key (train, bus, or other).
  */
 function MRT_render_tf_category_icon_html( string $key ): string {
 	$class = 'mrt-tf-category__icon';
