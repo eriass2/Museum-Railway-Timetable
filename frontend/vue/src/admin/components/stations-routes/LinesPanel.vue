@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue';
 import {
   AdminBackNav,
   AdminEmptyState,
@@ -6,21 +7,32 @@ import {
   AdminPanel,
   AdminRowActions,
   AdminTableScroll,
+  AdminUnsavedBanner,
   MrtButton,
 } from '../ui';
 import RoutePreview from './RoutePreview.vue';
+import RouteStationOrderEditor from './RouteStationOrderEditor.vue';
 import { lineKindLabelKey } from '../../utils/stations-routes/lineKindLabel';
 import { lineJunctionLabel } from '../../utils/stations-routes/lineJunctionLabel';
+import {
+  applyLineStationMove,
+  applyRouteDraftToLine,
+  lineRowToRouteDraft,
+  removeLineStation,
+} from '../../utils/stations-routes/lineRouteEditor';
 import { adminFmt, adminStr } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
-import type { LineRow, StationRow } from '../../types';
+import type { LineRow, RouteRow, StationRow } from '../../types';
 
 export type LinesPanelView = 'list' | 'edit';
 
 defineProps<{
   lines: LineRow[];
+  stations: StationRow[];
   stationsById: Map<number, { title: string; station_type: string }>;
+  stationTitle: (stationId: number) => string;
   linesView: LinesPanelView;
+  linesDirty: boolean;
 }>();
 
 const editingLine = defineModel<LineRow | null>('editingLine', { required: true });
@@ -32,6 +44,30 @@ const emit = defineEmits<{
 }>();
 
 const cfg = adminConfig();
+
+const lineRouteDraft = computed({
+  get: (): RouteRow | null => (editingLine.value ? lineRowToRouteDraft(editingLine.value) : null),
+  set: (route: RouteRow | null) => {
+    if (!editingLine.value || !route) {
+      return;
+    }
+    editingLine.value = applyRouteDraftToLine(editingLine.value, route);
+  },
+});
+
+function onLineStationMove(idx: number, dir: -1 | 1): void {
+  if (!editingLine.value) {
+    return;
+  }
+  editingLine.value = applyLineStationMove(editingLine.value, idx, dir);
+}
+
+function onLineStationRemove(idx: number): void {
+  if (!editingLine.value) {
+    return;
+  }
+  editingLine.value = removeLineStation(editingLine.value, idx);
+}
 </script>
 
 <template>
@@ -43,7 +79,17 @@ const cfg = adminConfig();
       <h3 class="mrt-admin-line-editor__heading">
         {{ adminFmt(cfg, 'stationsEditLineTitle', editingLine.title) }}
       </h3>
+      <AdminUnsavedBanner
+        :show="linesDirty"
+        :message="adminStr(cfg, 'editorMetaUnsaved', 'Osparade ändringar')"
+      />
       <p class="description">{{ adminStr(cfg, 'stationsLineStructureHint') }}</p>
+      <p
+        v-if="editingLine.kind === 'branch' || editingLine.kind === 'pattern'"
+        class="description"
+      >
+        {{ adminStr(cfg, 'stationsLineBranchTwoOnly') }}
+      </p>
       <div class="mrt-admin-line-editor__section">
         <label class="mrt-admin-line-editor__label" for="mrt-line-title">
           {{ adminStr(cfg, 'stationsLineTitleLabel') }}
@@ -56,11 +102,14 @@ const cfg = adminConfig();
         />
         <p class="description mrt-admin-line-code-readonly">{{ editingLine.code }}</p>
       </div>
-      <RoutePreview
-        :station-ids="editingLine.station_ids"
-        :stations-by-id="stationsById"
-        :start-station-id="editingLine.start_station"
-        :end-station-id="editingLine.end_station"
+      <RouteStationOrderEditor
+        v-if="lineRouteDraft"
+        v-model="lineRouteDraft"
+        :stations="stations"
+        :station-title="stationTitle"
+        id-prefix="mrt-line"
+        @move="onLineStationMove"
+        @remove="onLineStationRemove"
       />
       <AdminFormActions>
         <MrtButton context="admin" variant="primary" @click="emit('save-line')">

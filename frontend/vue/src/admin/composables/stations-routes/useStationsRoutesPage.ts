@@ -1,4 +1,4 @@
-import { ref, watch, type Ref } from 'vue';
+import { computed, ref, watch, type Ref } from 'vue';
 import {
   createRoute,
   createStation,
@@ -30,7 +30,11 @@ function routeDraftSnapshot(route: RouteRow): string {
 }
 
 function lineDraftSnapshot(line: LineRow): string {
-  return JSON.stringify({ code: line.code, title: line.title });
+  return JSON.stringify({
+    code: line.code,
+    title: line.title,
+    station_ids: line.station_ids,
+  });
 }
 
 function stationDraftSnapshot(station: StationRow): string {
@@ -214,6 +218,8 @@ export function useStationsRoutesPage() {
     return isLineSnapshotDirty(editingLine.value);
   }
 
+  const linesDirty = computed(() => linesView.value === 'edit' && isLineFormDirty());
+
   function backToLinesList(): void {
     editingLine.value = null;
     linesView.value = 'list';
@@ -225,7 +231,7 @@ export function useStationsRoutesPage() {
 
   function editLine(line: LineRow): void {
     sectionTab.value = 'lines';
-    editingLine.value = { ...line };
+    editingLine.value = { ...line, station_ids: [...line.station_ids] };
     linesView.value = 'edit';
     captureLineSnapshot(editingLine.value);
   }
@@ -239,7 +245,23 @@ export function useStationsRoutesPage() {
     if (title === '') {
       return;
     }
-    const ok = await runMutation(() => updateLine(code, { title }), 'stationsSaveLineFailed');
+    if (editingLine.value.station_ids.length < 2) {
+      error.value = adminStr(cfg, 'stationsLineMinStations');
+      return;
+    }
+    const kind = editingLine.value.kind;
+    if ((kind === 'branch' || kind === 'pattern') && editingLine.value.station_ids.length !== 2) {
+      error.value = adminStr(cfg, 'stationsLineBranchTwoOnly');
+      return;
+    }
+    const ok = await runMutation(
+      () =>
+        updateLine(code, {
+          title,
+          station_ids: editingLine.value!.station_ids,
+        }),
+      'stationsSaveLineFailed',
+    );
     if (!ok) return;
     backToLinesList();
     showSaveNotice(adminFmt(cfg, 'stationsLineSaved', title));
@@ -358,6 +380,7 @@ export function useStationsRoutesPage() {
     stationsView,
     routesView,
     linesView: linesView as Ref<LinesPanelView>,
+    linesDirty,
     editingLine,
     loading,
     error,

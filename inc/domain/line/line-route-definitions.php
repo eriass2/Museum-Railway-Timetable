@@ -96,6 +96,40 @@ function MRT_csv_line_derived_route_csv_row( array $def ): array {
 }
 
 /**
+ * @param list<string> $station_codes
+ * @param array<string, string> $station_names
+ * @return array<string, array{row: array<string, string>, station_codes: list<string>}>
+ */
+function MRT_line_derived_route_defs_for_codes(
+	string $line_code,
+	string $kind,
+	array $station_codes,
+	array $station_names
+): array {
+	if ( $station_codes === array() ) {
+		return array();
+	}
+	$defs         = array();
+	$first        = $station_codes[0] ?? '';
+	$last         = $station_codes[ count( $station_codes ) - 1 ] ?? '';
+	$toward_codes = ( $line_code === 'linnes-uppsala' || $kind === 'pattern' ) ? array( $last ) : array( $last, $first );
+	foreach ( $toward_codes as $toward ) {
+		if ( $toward === '' ) {
+			continue;
+		}
+		$def = MRT_csv_line_derived_route_def( $line_code, $kind, $station_codes, $toward, $station_names );
+		if ( ! is_array( $def ) ) {
+			continue;
+		}
+		$defs[ $def['route_code'] ] = array(
+			'row'           => MRT_csv_line_derived_route_csv_row( $def ),
+			'station_codes' => $def['station_codes'],
+		);
+	}
+	return $defs;
+}
+
+/**
  * @param array<string, array<int, array<string, string>>> $files
  * @return array<string, array{row: array<string, string>, station_codes: list<string>}>
  */
@@ -112,21 +146,8 @@ function MRT_csv_line_derived_route_definitions( array $files ): array {
 		}
 		$kind          = sanitize_key( (string) ( $line_row['kind'] ?? '' ) );
 		$station_codes = MRT_csv_ordered_line_station_codes( $files, $line_code );
-		$first         = $station_codes[0] ?? '';
-		$last          = $station_codes[ count( $station_codes ) - 1 ] ?? '';
-		$toward_codes  = ( $line_code === 'linnes-uppsala' || $kind === 'pattern' ) ? array( $last ) : array( $last, $first );
-		foreach ( $toward_codes as $toward ) {
-			if ( $toward === '' ) {
-				continue;
-			}
-			$def = MRT_csv_line_derived_route_def( $line_code, $kind, $station_codes, $toward, $names );
-			if ( ! is_array( $def ) ) {
-				continue;
-			}
-			$defs[ $def['route_code'] ] = array(
-				'row'            => MRT_csv_line_derived_route_csv_row( $def ),
-				'station_codes'  => $def['station_codes'],
-			);
+		foreach ( MRT_line_derived_route_defs_for_codes( $line_code, $kind, $station_codes, $names ) as $code => $def ) {
+			$defs[ $code ] = $def;
 		}
 	}
 	return $defs;

@@ -33,7 +33,10 @@ export function listLines() {
   return adminFetch<{ items: import('../types').LineRow[] }>('/lines');
 }
 
-export function updateLine(code: string, body: Pick<import('../types').LineRow, 'title'>) {
+export function updateLine(
+  code: string,
+  body: Pick<import('../types').LineRow, 'title'> & { station_ids?: number[] },
+) {
   return adminFetch<import('../types').LineRow>(`/lines/${encodeURIComponent(code)}`, {
     method: 'PATCH',
     body: JSON.stringify(body),

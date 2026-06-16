@@ -29,6 +29,7 @@ const {
   stationsView,
   routesView,
   linesView,
+  linesDirty,
   editingLine,
   loading,
   error,
@@ -118,8 +119,11 @@ const sectionTabs = computed(() => buildStationsRoutesSectionTabs(cfg, hasLineRe
         v-if="sectionTab === 'lines'"
         v-model:editing-line="editingLine"
         :lines="lines"
+        :stations="stations"
         :stations-by-id="stationsById"
+        :station-title="stationTitle"
         :lines-view="linesView"
+        :lines-dirty="linesDirty"
         @edit-line="editLine"
         @save-line="saveLine"
         @back-line="requestBackToLinesList"

@@ -44,9 +44,18 @@ function MRT_admin_vue_l10n_stations(): array {
 		'stationsLineTitleLabel'     => __( 'Visningsnamn', 'museum-railway-timetable' ),
 		'stationsLineSaved'          => __( 'Linjen «%s» sparades.', 'museum-railway-timetable' ),
 		'stationsLineStructureHint'  => __(
-			'Stationer och knutpunkt ändras via CSV-import (lines.csv, line_stations.csv).',
+			'Ändra stationer och ordning nedan. Härledda rutter uppdateras automatiskt. Knutpunkt och linjetyp styrs fortfarande via CSV-import.',
 			'museum-railway-timetable'
 		),
+		'stationsLineMinStations'    => __(
+			'En linje måste ha minst två stationer.',
+			'museum-railway-timetable'
+		),
+		'stationsLineBranchTwoOnly'  => __(
+			'Transfer-grenar och direktmönster måste ha exakt två stationer. För längre sträckor, redigera huvudstråket.',
+			'museum-railway-timetable'
+		),
+		'stationsSaveLineFailed'     => __( 'Kunde inte spara linjen.', 'museum-railway-timetable' ),
 		'stationsSaveLine'             => __( 'Spara linje', 'museum-railway-timetable' ),
 		'stationsNewStation'         => __( 'Ny station', 'museum-railway-timetable' ),
 		'stationsCreateMoreFields'   => __( 'Fler uppgifter (valfritt)', 'museum-railway-timetable' ),
