@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 import { DASHBOARD_HEADING } from './admin-helpers';
+import { waitForTrafficFeedReady } from './traffic-feed-helpers';
 
 const publicMounts = [
   { name: 'wizard route step', path: '/wizard' },
@@ -15,6 +16,9 @@ const adminMounts = [{ name: 'admin dashboard', path: '/admin?page=mrt_app' }] a
 for (const mount of publicMounts) {
   test(`a11y smoke: ${mount.name}`, async ({ page }) => {
     await page.goto(mount.path);
+    if (mount.path === '/traffic-notices') {
+      await waitForTrafficFeedReady(page.locator('.mrt-traffic-notices'));
+    }
     const results = await new AxeBuilder({ page })
       .exclude('[aria-hidden="true"]')
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])

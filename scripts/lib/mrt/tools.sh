@@ -38,7 +38,7 @@ mrt_tools_run() {
 			docker compose --profile tools run --rm --no-deps --entrypoint php "$_svc" "$@"
 			;;
 		*)
-			docker compose --profile tools run --rm --no-deps "$_svc" "$@"
+			docker compose --profile tools run --rm --no-deps -e "CI=${CI:-}" "$_svc" "$@"
 			;;
 		esac
 	fi

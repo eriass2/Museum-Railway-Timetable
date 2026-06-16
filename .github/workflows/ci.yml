@@ -56,8 +56,20 @@ jobs:
 
       - name: WordPress E2E (Docker + Playwright)
         id: e2ewp
+        continue-on-error: true
         run: bash scripts/ci-e2e-wp.sh
 
       - name: Retry WordPress E2E after Docker warmup failure
-        if: failure() && steps.e2ewp.outcome == 'failure'
+        id: e2ewp_retry
+        if: steps.e2ewp.outcome == 'failure'
         run: bash scripts/ci-e2e-wp.sh
+
+      - name: Require WordPress E2E pass
+        if: always()
+        run: |
+          if [ "${{ steps.e2ewp.outcome }}" = "success" ] || [ "${{ steps.e2ewp_retry.outcome }}" = "success" ]; then
+            echo "WordPress E2E passed"
+          else
+            echo "WordPress E2E failed on both attempts" >&2
+            exit 1
+          fi
