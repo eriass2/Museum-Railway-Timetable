@@ -37,7 +37,9 @@ jobs:
         run: npx --prefix frontend/vue playwright install chromium --with-deps
 
       - name: Vue E2E smoke
-        run: npm --prefix frontend/vue run e2e
+        run: npm --prefix frontend/vue run e2e -- --workers=4
+        env:
+          CI: true
 
   e2e-wp:
     runs-on: ubuntu-latest

@@ -3,8 +3,13 @@ import { expect, type Locator, type Page } from '@playwright/test';
 /** Wait until the Vue traffic feed has loaded REST data and rendered panels. */
 export async function waitForTrafficFeedReady(feed: Locator): Promise<void> {
   await expect(feed).toBeVisible({ timeout: 20_000 });
-  await expect(feed.locator('.mrt-traffic-notices__loading')).toHaveCount(0, { timeout: 20_000 });
+  const noticesRoot = feed.page().locator('.mrt-traffic-notices').first();
+  await expect(noticesRoot).toBeVisible({ timeout: 20_000 });
+  await expect(noticesRoot.locator('.mrt-traffic-notices__loading')).toHaveCount(0, {
+    timeout: 20_000,
+  });
   await expect(feed.locator('.mrt-tf-panel').first()).toBeVisible({ timeout: 20_000 });
+  await expect(feed.locator('.mrt-tf-category__row').first()).toBeVisible({ timeout: 10_000 });
 }
 
 export function ongoingTrafficPanel(page: Page) {
