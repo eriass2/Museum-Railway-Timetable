@@ -1,4 +1,4 @@
-import { ref, watch } from 'vue';
+import { ref, watch, type Ref } from 'vue';
 import {
   createRoute,
   createStation,
@@ -9,7 +9,7 @@ import {
   updateStation,
 } from '../../api/adminRest';
 import { adminConfirm } from '../adminConfirm';
-import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
+import { useAdminListEditor } from '../useAdminListEditor';
 import { useAdminRowFlash } from '../useAdminRowFlash';
 import { useAdminSaveNotice } from '../useAdminSaveNotice';
 import { useAdminMutation } from '../useAdminMutation';
@@ -20,8 +20,6 @@ import {
   syncRouteTermini,
 } from '../../utils/stations-routes/routeStationEditor';
 import type { LinesPanelView } from '../../components/stations-routes/LinesPanel.vue';
-import type { RoutesPanelView } from '../../components/stations-routes/RoutesPanel.vue';
-import type { StationsPanelView } from '../../components/stations-routes/StationsPanel.vue';
 import type { LineRow, RouteRow, StationRow } from '../../types';
 import { useStationsRoutesData, type StationsRoutesSectionTab } from './useStationsRoutesData';
 
@@ -72,38 +70,45 @@ export function useStationsRoutesPage() {
   const sectionTab = ref<StationsRoutesSectionTab>('stations');
   const editingStation = ref<StationRow | null>(null);
   const editingRoute = ref<RouteRow | null>(null);
-  const stationsView = ref<StationsPanelView>('list');
-  const routesView = ref<RoutesPanelView>('list');
-  const linesView = ref<LinesPanelView>('list');
   const editingLine = ref<LineRow | null>(null);
-  const stationFormSnapshot = ref('');
-  const routeFormSnapshot = ref('');
-  const lineFormSnapshot = ref('');
+
+  const {
+    viewMode: stationsView,
+    captureSnapshot: captureStationSnapshot,
+    isDirty: isStationSnapshotDirty,
+    guardBackToList: guardStationsBackToList,
+  } = useAdminListEditor(stationDraftSnapshot);
+  const {
+    viewMode: routesView,
+    captureSnapshot: captureRouteSnapshot,
+    isDirty: isRouteSnapshotDirty,
+    guardBackToList: guardRoutesBackToList,
+  } = useAdminListEditor(routeDraftSnapshot);
+  const {
+    viewMode: linesView,
+    captureSnapshot: captureLineSnapshot,
+    isDirty: isLineSnapshotDirty,
+    guardBackToList: guardLinesBackToList,
+  } = useAdminListEditor(lineDraftSnapshot);
+
+  function stationFormCurrent(): StationRow {
+    return stationsView.value === 'edit' && editingStation.value
+      ? editingStation.value
+      : newStation.value;
+  }
 
   function isStationFormDirty(): boolean {
-    if (stationsView.value === 'list') {
-      return false;
-    }
-    const current =
-      stationsView.value === 'edit' && editingStation.value
-        ? stationDraftSnapshot(editingStation.value)
-        : stationDraftSnapshot(newStation.value);
-    return current !== stationFormSnapshot.value;
+    return isStationSnapshotDirty(stationFormCurrent());
   }
 
   function backToStationsList(): void {
     editingStation.value = null;
     newStation.value = emptyStationDraft();
     stationsView.value = 'list';
-    stationFormSnapshot.value = '';
   }
 
   async function requestBackToStationsList(): Promise<boolean> {
-    if (stationsView.value !== 'list' && !(await proceedIfDiscardAllowed(isStationFormDirty()))) {
-      return false;
-    }
-    backToStationsList();
-    return true;
+    return guardStationsBackToList(isStationFormDirty, backToStationsList);
   }
 
   function startCreateStation(): void {
@@ -113,7 +118,7 @@ export function useStationsRoutesPage() {
     editingStation.value = null;
     newStation.value = emptyStationDraft();
     stationsView.value = 'create';
-    stationFormSnapshot.value = stationDraftSnapshot(newStation.value);
+    captureStationSnapshot(newStation.value);
   }
 
   async function addStation() {
@@ -142,7 +147,7 @@ export function useStationsRoutesPage() {
     sectionTab.value = 'stations';
     editingStation.value = cloneStationRow(station);
     stationsView.value = 'edit';
-    stationFormSnapshot.value = stationDraftSnapshot(editingStation.value);
+    captureStationSnapshot(editingStation.value);
   }
 
   async function saveEditingStation() {
@@ -160,30 +165,24 @@ export function useStationsRoutesPage() {
     await reload();
   }
 
+  function routeFormCurrent(): RouteRow {
+    return routesView.value === 'edit' && editingRoute.value
+      ? editingRoute.value
+      : newRoute.value;
+  }
+
   function isRouteFormDirty(): boolean {
-    if (routesView.value === 'list') {
-      return false;
-    }
-    const current =
-      routesView.value === 'edit' && editingRoute.value
-        ? routeDraftSnapshot(editingRoute.value)
-        : routeDraftSnapshot(newRoute.value);
-    return current !== routeFormSnapshot.value;
+    return isRouteSnapshotDirty(routeFormCurrent());
   }
 
   function backToRoutesList(): void {
     editingRoute.value = null;
     newRoute.value = emptyRouteDraft();
     routesView.value = 'list';
-    routeFormSnapshot.value = '';
   }
 
   async function requestBackToRoutesList(): Promise<boolean> {
-    if (routesView.value !== 'list' && !(await proceedIfDiscardAllowed(isRouteFormDirty()))) {
-      return false;
-    }
-    backToRoutesList();
-    return true;
+    return guardRoutesBackToList(isRouteFormDirty, backToRoutesList);
   }
 
   function startCreateRoute(): void {
@@ -193,7 +192,7 @@ export function useStationsRoutesPage() {
     editingRoute.value = null;
     newRoute.value = emptyRouteDraft();
     routesView.value = 'create';
-    routeFormSnapshot.value = routeDraftSnapshot(newRoute.value);
+    captureRouteSnapshot(newRoute.value);
   }
 
   watch(sectionTab, (tab, prev) => {
@@ -209,31 +208,26 @@ export function useStationsRoutesPage() {
   });
 
   function isLineFormDirty(): boolean {
-    if (linesView.value === 'list' || !editingLine.value) {
+    if (!editingLine.value) {
       return false;
     }
-    return lineDraftSnapshot(editingLine.value) !== lineFormSnapshot.value;
+    return isLineSnapshotDirty(editingLine.value);
   }
 
   function backToLinesList(): void {
     editingLine.value = null;
     linesView.value = 'list';
-    lineFormSnapshot.value = '';
   }
 
   async function requestBackToLinesList(): Promise<boolean> {
-    if (linesView.value !== 'list' && !(await proceedIfDiscardAllowed(isLineFormDirty()))) {
-      return false;
-    }
-    backToLinesList();
-    return true;
+    return guardLinesBackToList(isLineFormDirty, backToLinesList);
   }
 
   function editLine(line: LineRow): void {
     sectionTab.value = 'lines';
     editingLine.value = { ...line };
     linesView.value = 'edit';
-    lineFormSnapshot.value = lineDraftSnapshot(editingLine.value);
+    captureLineSnapshot(editingLine.value);
   }
 
   async function saveLine(): Promise<void> {
@@ -283,7 +277,7 @@ export function useStationsRoutesPage() {
       station_ids: [...route.station_ids],
     });
     routesView.value = 'edit';
-    routeFormSnapshot.value = routeDraftSnapshot(editingRoute.value);
+    captureRouteSnapshot(editingRoute.value);
   }
 
   async function saveRoute() {
@@ -363,7 +357,7 @@ export function useStationsRoutesPage() {
     editingRoute,
     stationsView,
     routesView,
-    linesView,
+    linesView: linesView as Ref<LinesPanelView>,
     editingLine,
     loading,
     error,
