@@ -28,6 +28,7 @@ import { deviationsToSavePayload, type DeviationRow } from '../../utils/timetabl
 import { adminConfig } from '../../types';
 import type { TimetableDetail, TimetableServiceRow } from '../../types';
 import { adminErrorMessage, adminFmt, adminStr } from '../../utils/adminLabels';
+import { buildTimetableTypeOptions } from '../../utils/timetableTypeOptions';
 import type { TimetableOverviewPayload } from '../../../types/timetableOverview';
 
 export type TimetableServiceEditRow = TimetableServiceRow & {
@@ -98,13 +99,7 @@ export function useTimetableEditorPage(timetableId: () => number) {
     tabLabel,
   } = useTimetableEditorDirty(detail, editTitle, editType, deviationRows);
 
-  const timetableTypes = computed(() => [
-    { value: '', label: adminStr(cfg, 'editorTypeNone') },
-    { value: 'green', label: adminStr(cfg, 'editorTypeGreen') },
-    { value: 'yellow', label: adminStr(cfg, 'editorTypeYellow') },
-    { value: 'red', label: adminStr(cfg, 'editorTypeRed') },
-    { value: 'orange', label: adminStr(cfg, 'editorTypeOrange') },
-  ] as const);
+  const timetableTypes = computed(() => buildTimetableTypeOptions(cfg));
 
   const trafficToday = computed(() => {
     const d = new Date();

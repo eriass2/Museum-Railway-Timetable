@@ -5,6 +5,7 @@ import { adminConfirm } from './adminConfirm';
 import { useAdminResource } from './useAdminResource';
 import { useMobileAdmin } from './mobile/useMobileAdmin';
 import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
+import { buildTimetableTypeOptions } from '../utils/timetableTypeOptions';
 import { adminConfig } from '../types';
 
 type TimetablesView = 'list' | 'create';
@@ -17,13 +18,7 @@ export function useTimetableListPage() {
   const newTitle = ref('');
   const newType = ref('');
 
-  const timetableTypes = computed(() => [
-    { value: '', label: adminStr(cfg, 'editorTypeNone') },
-    { value: 'green', label: adminStr(cfg, 'editorTypeGreen') },
-    { value: 'yellow', label: adminStr(cfg, 'editorTypeYellow') },
-    { value: 'red', label: adminStr(cfg, 'editorTypeRed') },
-    { value: 'orange', label: adminStr(cfg, 'editorTypeOrange') },
-  ] as const);
+  const timetableTypes = computed(() => buildTimetableTypeOptions(cfg));
 
   const { loading, error, data, load, reload } = useAdminResource({
     fetch: () => listTimetables(),

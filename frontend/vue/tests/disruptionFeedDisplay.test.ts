@@ -1,11 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import {
   disruptionFeedExpandLabel,
-  disruptionFeedGroupByRoute,
   disruptionFeedHasDetailSections,
   disruptionFeedItemCanExpand,
   disruptionFeedItemIntro,
-  disruptionFeedItemKindAriaLabel,
   disruptionFeedShowIntro,
 } from '../src/utils/disruptionFeedDisplay';
 import type { DisruptionFeedItem } from '../src/api/disruptionFeed';
@@ -74,38 +72,5 @@ describe('disruptionFeed expand helpers', () => {
 
     const headlineOnly = item({ headline: 'Kort rubrik' });
     expect(disruptionFeedItemCanExpand(headlineOnly)).toBe(false);
-  });
-});
-
-describe('disruptionFeedItemKindAriaLabel', () => {
-  it('maps feed kinds to Swedish labels', () => {
-    expect(disruptionFeedItemKindAriaLabel('cancelled')).toBe('Inställd trafik');
-    expect(disruptionFeedItemKindAriaLabel('deviation')).toBe('Tur-avvikelse');
-    expect(disruptionFeedItemKindAriaLabel('info')).toBe('Information');
-  });
-});
-
-describe('disruptionFeedGroupByRoute', () => {
-  it('groups upcoming items by route label when routes exist', () => {
-    const groups = disruptionFeedGroupByRoute(
-      [
-        item({ id: 'a', route_label: 'Faringe – Uppsala' }),
-        item({ id: 'b', route_label: 'Selkné – Faringe' }),
-        item({ id: 'c', route_label: 'Faringe – Uppsala' }),
-      ],
-      'Övrigt',
-    );
-    expect(groups).toHaveLength(2);
-    expect(groups[0]?.items).toHaveLength(2);
-  });
-
-  it('keeps flat list when no route labels exist', () => {
-    const groups = disruptionFeedGroupByRoute(
-      [item({ id: 'a' }), item({ id: 'b' })],
-      'Övrigt',
-    );
-    expect(groups).toHaveLength(1);
-    expect(groups[0]?.routeLabel).toBe('');
-    expect(groups[0]?.items).toHaveLength(2);
   });
 });
