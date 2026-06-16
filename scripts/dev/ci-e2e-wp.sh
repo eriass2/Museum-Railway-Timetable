@@ -6,6 +6,13 @@ ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 cd "$ROOT"
 . "$(dirname "$0")/../lib/mrt-docker.sh"
 
+mrt_ci_e2e_wp_on_fail() {
+	echo "=== ci-e2e-wp: failure diagnostics ===" >&2
+	docker compose ps 2>/dev/null || true
+	docker compose logs --tail=80 db wordpress 2>/dev/null || true
+}
+trap mrt_ci_e2e_wp_on_fail ERR
+
 echo "=== ci-e2e-wp: starting Docker ==="
 mrt_docker_up
 
