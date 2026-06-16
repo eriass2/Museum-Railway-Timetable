@@ -36,6 +36,14 @@ jobs:
       - name: Vue E2E smoke (Docker, matches mrt e2e)
         run: bash scripts/gate/e2e.sh
 
+      - name: Upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: frontend/vue/playwright-report/
+          if-no-files-found: ignore
+
   e2e-wp:
     runs-on: ubuntu-latest
     steps:
@@ -47,4 +55,9 @@ jobs:
           node-version: '22'
 
       - name: WordPress E2E (Docker + Playwright)
+        id: e2ewp
+        run: bash scripts/ci-e2e-wp.sh
+
+      - name: Retry WordPress E2E after Docker warmup failure
+        if: failure() && steps.e2ewp.outcome == 'failure'
         run: bash scripts/ci-e2e-wp.sh

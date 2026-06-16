@@ -14,6 +14,7 @@ mrt_ci_e2e_wp_on_fail() {
 trap mrt_ci_e2e_wp_on_fail ERR
 
 echo "=== ci-e2e-wp: starting Docker ==="
+docker compose build wordpress
 mrt_docker_up
 
 echo "=== ci-e2e-wp: waiting for WordPress ==="
