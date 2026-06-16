@@ -1,9 +1,9 @@
 import { computed, ref, type Ref } from 'vue';
 import type { TimetableDetail } from '../../types';
 import type { DeviationRow } from '../../utils/timetable-editor/deviationsPayload';
+import type { TimetableEditorTab } from './timetableEditorTypes';
 
-export type TimetableEditorTab = 'dates' | 'grid' | 'trips' | 'stoptimes' | 'deviations' | 'preview';
-
+export type { TimetableEditorTab };
 export type { DeviationRow };
 
 function datesKey(dates: string[]): string {

@@ -45,3 +45,7 @@ export function tripDraftToApiBody(draft: TimetableTripDraft): TripServiceApiBod
 export function tripDraftIsComplete(draft: TimetableTripDraft): boolean {
   return draft.line_code !== '' && draft.toward_station_id > 0;
 }
+
+export function tripDraftSnapshot(draft: TimetableTripDraft): string {
+  return JSON.stringify(draft);
+}

@@ -1,103 +1,126 @@
-import { computed, onMounted, ref, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import {
-  addTimetableService,
-  deleteTimetable,
-  getDeviations,
-  getTimetable,
-  getTimetableOverview,
-  removeTimetableService,
-  saveDeviations,
-  updateTimetable,
-  updateTimetableService,
-} from '../../api/adminRest';
-import type { ComponentPublicInstance } from 'vue';
-import type { TripEditDraft } from '../../components/timetable-editor/TimetableEditorTripEditForm.vue';
-import type { TripsPanelView } from '../../components/timetable-editor/TimetableEditorTripsTab.vue';
-import {
-  emptyTripDraft,
-  tripDraftIsComplete,
-  tripDraftToApiBody,
-} from '../../components/timetable-editor/tripFormTypes';
-import { adminConfirm } from '../adminConfirm';
-import { proceedIfDiscardAllowed } from '../adminDiscardGuard';
+import { computed, onMounted, ref, watch, type ComponentPublicInstance } from 'vue';
+import { getTimetable } from '../../api/adminRest';
 import { useAdminMutation } from '../useAdminMutation';
 import { useAdminSaveNotice } from '../useAdminSaveNotice';
+import { useTimetableEditorDatesMeta } from './useTimetableEditorDatesMeta';
+import { useTimetableEditorDeviations } from './useTimetableEditorDeviations';
 import { useTimetableEditorDirty } from './useTimetableEditorDirty';
-import { deviationsToSavePayload, type DeviationRow } from '../../utils/timetable-editor/deviationsPayload';
+import { useTimetableEditorOverview } from './useTimetableEditorOverview';
+import { useTimetableEditorTabNavigation } from './useTimetableEditorTabNavigation';
+import { useTimetableEditorTrips } from './useTimetableEditorTrips';
+import type { StoptimesPanelView, TimetableEditorTab } from './timetableEditorTypes';
 import { adminConfig } from '../../types';
-import type { TimetableDetail, TimetableServiceRow } from '../../types';
-import { adminErrorMessage, adminFmt, adminStr } from '../../utils/adminLabels';
+import type { TimetableDetail } from '../../types';
+import { adminErrorMessage } from '../../utils/adminLabels';
 import { buildTimetableTypeOptions } from '../../utils/timetableTypeOptions';
-import type { TimetableOverviewPayload } from '../../../types/timetableOverview';
 
-export type TimetableServiceEditRow = TimetableServiceRow & {
-  highlight_label?: string;
-  highlight_color?: string;
-  highlight_note?: string;
-};
-
-export type StoptimesPanelView = 'list' | 'detail';
-export type TimetableEditorTab = 'dates' | 'grid' | 'trips' | 'stoptimes' | 'deviations' | 'preview';
-
-const TIMETABLE_EDITOR_TABS: TimetableEditorTab[] = [
-  'dates',
-  'grid',
-  'trips',
-  'stoptimes',
-  'deviations',
-  'preview',
-];
-
-function parseTimetableEditorTab(value: unknown): TimetableEditorTab | null {
-  if (typeof value !== 'string') {
-    return null;
-  }
-  return TIMETABLE_EDITOR_TABS.includes(value as TimetableEditorTab)
-    ? (value as TimetableEditorTab)
-    : null;
-}
-
-function tripDraftSnapshot(draft: TripEditDraft | ReturnType<typeof emptyTripDraft>): string {
-  return JSON.stringify(draft);
-}
+export type {
+  StoptimesPanelView,
+  TimetableEditorTab,
+  TimetableServiceEditRow,
+} from './timetableEditorTypes';
 
 export function useTimetableEditorPage(timetableId: () => number) {
-  const router = useRouter();
-  const route = useRoute();
   const cfg = adminConfig();
-  const tab = ref<TimetableEditorTab>('dates');
   const detail = ref<TimetableDetail | null>(null);
-  const overview = ref<TimetableOverviewPayload | null>(null);
   const loading = ref(true);
   const error = ref('');
-  const dateInput = ref('');
-  const newTrip = ref(emptyTripDraft());
-  const editTrip = ref<TripEditDraft | null>(null);
-  const tripFormSnapshot = ref('');
-  const tripsView = ref<TripsPanelView>('list');
   const stoptimesView = ref<StoptimesPanelView>('list');
+  const selectedServiceId = ref(0);
   const stoptimesPanelRef = ref<ComponentPublicInstance<{ requestBackToList: () => Promise<boolean> }> | null>(
     null,
   );
   const deviationsTabRef = ref<ComponentPublicInstance<{ requestBackToList: () => Promise<boolean> }> | null>(
     null,
   );
-  const selectedServiceId = ref(0);
-  const gridOverviewLoading = ref(false);
-  const deviationRows = ref<DeviationRow[]>([]);
   const { saveMsg, show: showSaveNotice } = useAdminSaveNotice();
   const { runMutation } = useAdminMutation(error);
-  const editTitle = ref('');
-  const editType = ref('');
 
-  const {
-    syncSnapshots,
-    metaDirty,
-    datesDirty,
-    deviationsDirty,
-    tabLabel,
-  } = useTimetableEditorDirty(detail, editTitle, editType, deviationRows);
+  let syncSnapshots = (): void => {};
+
+  const datesMeta = useTimetableEditorDatesMeta({
+    timetableId,
+    detail,
+    cfg,
+    error,
+    runMutation,
+    syncSnapshots: () => syncSnapshots(),
+    showSaveNotice,
+  });
+
+  const deviations = useTimetableEditorDeviations({
+    timetableId,
+    error,
+    cfg,
+    syncSnapshots: () => syncSnapshots(),
+    runMutation,
+    showSaveNotice,
+  });
+
+  const dirty = useTimetableEditorDirty(
+    detail,
+    datesMeta.editTitle,
+    datesMeta.editType,
+    deviations.deviationRows,
+  );
+  syncSnapshots = dirty.syncSnapshots;
+
+  const overviewState = useTimetableEditorOverview(timetableId, error, cfg);
+
+  async function loadDetail(): Promise<void> {
+    loading.value = true;
+    error.value = '';
+    try {
+      detail.value = await getTimetable(timetableId());
+      datesMeta.syncMetaFromDetail(detail.value);
+      syncSnapshots();
+    } catch (e) {
+      error.value = adminErrorMessage(cfg, e, 'genericError');
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  const trips = useTimetableEditorTrips({
+    timetableId,
+    detail,
+    cfg,
+    runMutation,
+    loadDetail,
+    showSaveNotice,
+  });
+
+  function backToStoptimesList(): void {
+    selectedServiceId.value = 0;
+    stoptimesView.value = 'list';
+  }
+
+  async function requestBackToStoptimesList(): Promise<boolean> {
+    return (await stoptimesPanelRef.value?.requestBackToList()) ?? true;
+  }
+
+  async function handleTabActivated(nextTab: TimetableEditorTab): Promise<void> {
+    if (nextTab === 'grid') {
+      await overviewState.loadOverviewForTab(true);
+      return;
+    }
+    if (nextTab === 'preview') {
+      await overviewState.loadOverviewForTab(false);
+      return;
+    }
+    if (nextTab === 'deviations') {
+      await deviations.loadDeviationsIfNeeded();
+    }
+  }
+
+  const navigation = useTimetableEditorTabNavigation({
+    tripsView: trips.tripsView,
+    requestBackToTripsList: trips.requestBackToTripsList,
+    stoptimesView,
+    requestBackToStoptimesList,
+    deviationsTabRef,
+    onTabActivated: handleTabActivated,
+  });
 
   const timetableTypes = computed(() => buildTimetableTypeOptions(cfg));
 
@@ -116,350 +139,84 @@ export function useTimetableEditorPage(timetableId: () => number) {
     return detail.value?.train_types.find((t) => t.id === typeId)?.icon_key ?? '';
   }
 
-  async function loadDetail() {
-    loading.value = true;
-    error.value = '';
-    try {
-      detail.value = await getTimetable(timetableId());
-      editTitle.value = detail.value.title;
-      editType.value = detail.value.type || '';
-      syncSnapshots();
-    } catch (e) {
-      error.value = adminErrorMessage(cfg, e, 'genericError');
-    } finally {
-      loading.value = false;
-    }
-  }
-
-  async function loadOverview() {
-    overview.value = await getTimetableOverview(timetableId());
-  }
-
-  async function loadDeviations() {
-    const res = await getDeviations(timetableId());
-    deviationRows.value = res.rows;
-    syncSnapshots();
-  }
-
-  onMounted(() => {
-    const initialTab = parseTimetableEditorTab(route.query.tab);
-    if (initialTab) {
-      tab.value = initialTab;
-    }
-    void loadDetail();
-  });
-
-  watch(
-    () => route.query.tab,
-    (nextTab) => {
-      const parsed = parseTimetableEditorTab(nextTab);
-      if (parsed) {
-        tab.value = parsed;
-      }
-    },
-  );
-
-  watch(timetableId, () => {
-    selectedServiceId.value = 0;
-    stoptimesView.value = 'list';
-    tripsView.value = 'list';
-    editTrip.value = null;
-    overview.value = null;
-    void loadDetail();
-  });
-
-  function isTripFormDirty(): boolean {
-    if (tripsView.value === 'list') {
-      return false;
-    }
-    const current =
-      tripsView.value === 'edit' && editTrip.value
-        ? tripDraftSnapshot(editTrip.value)
-        : tripDraftSnapshot(newTrip.value);
-    return current !== tripFormSnapshot.value;
-  }
-
-  function backToTripsList(): void {
-    editTrip.value = null;
-    newTrip.value = emptyTripDraft();
-    tripsView.value = 'list';
-    tripFormSnapshot.value = '';
-  }
-
-  async function requestBackToTripsList(): Promise<boolean> {
-    if (tripsView.value !== 'list' && !(await proceedIfDiscardAllowed(isTripFormDirty()))) {
-      return false;
-    }
-    backToTripsList();
-    return true;
-  }
-
-  function backToStoptimesList(): void {
-    selectedServiceId.value = 0;
-    stoptimesView.value = 'list';
-  }
-
-  async function requestBackToStoptimesList(): Promise<boolean> {
-    return (await stoptimesPanelRef.value?.requestBackToList()) ?? true;
-  }
-
-  async function leaveActiveSubView(): Promise<boolean> {
-    if (tab.value === 'trips' && tripsView.value !== 'list') {
-      return requestBackToTripsList();
-    }
-    if (tab.value === 'stoptimes' && stoptimesView.value === 'detail') {
-      return requestBackToStoptimesList();
-    }
-    if (tab.value === 'deviations') {
-      return (await deviationsTabRef.value?.requestBackToList()) ?? true;
-    }
-    return true;
-  }
-
-  async function switchTab(next: TimetableEditorTab): Promise<void> {
-    if (tab.value === next) {
-      return;
-    }
-    if (!(await leaveActiveSubView())) {
-      return;
-    }
-    tab.value = next;
-  }
-
-  function startCreateTrip(): void {
-    if (!cfg.canManage) {
-      return;
-    }
-    editTrip.value = null;
-    newTrip.value = emptyTripDraft();
-    tripsView.value = 'create';
-    tripFormSnapshot.value = tripDraftSnapshot(newTrip.value);
-  }
-
-  async function loadOverviewForTab(refresh = false): Promise<void> {
-    if (!refresh && overview.value) {
-      return;
-    }
-    gridOverviewLoading.value = true;
-    try {
-      await loadOverview();
-    } catch (e) {
-      error.value = adminErrorMessage(cfg, e, 'editorOverviewLoadFailed');
-    } finally {
-      gridOverviewLoading.value = false;
-    }
-  }
-
-  watch(tab, async (t) => {
-    if (t === 'grid') {
-      await loadOverviewForTab(true);
-    } else if (t === 'preview') {
-      await loadOverviewForTab(false);
-    }
-    if (t === 'deviations' && deviationRows.value.length === 0) {
-      try {
-        await loadDeviations();
-      } catch (e) {
-        error.value = adminErrorMessage(cfg, e, 'editorDeviationsLoadFailed');
-      }
-    }
-  });
-
-  function serviceNumberForEdit(service: TimetableServiceEditRow): string {
-    return service.service_number === String(service.id) ? '' : service.service_number;
-  }
-
-  async function startEditTrip(serviceId: number): Promise<void> {
-    const service = detail.value?.services.find((s) => s.id === serviceId) as
-      | TimetableServiceEditRow
-      | undefined;
-    if (!service || !cfg.canManage) {
-      return;
-    }
-    editTrip.value = {
-      service_id: service.id,
-      service_number: serviceNumberForEdit(service),
-      line_code: service.line_code ?? '',
-      toward_station_id: service.toward_station_id ?? 0,
-      train_type_id: service.train_type_id,
-      highlight_label: service.highlight_label ?? '',
-      highlight_color: service.highlight_color || '#fff9c4',
-      highlight_note: service.highlight_note ?? '',
-    };
-    tripFormSnapshot.value = tripDraftSnapshot(editTrip.value);
-    tripsView.value = 'edit';
-  }
-
-  async function cancelEditTrip(): Promise<void> {
-    await requestBackToTripsList();
-  }
-
-  async function saveEditTrip(): Promise<void> {
-    if (!editTrip.value || !cfg.canManage || !tripDraftIsComplete(editTrip.value)) {
-      return;
-    }
-    const ok = await runMutation(async () => {
-      await updateTimetableService(
-        timetableId(),
-        editTrip.value!.service_id,
-        tripDraftToApiBody(editTrip.value!),
-      );
-    }, 'saveFailed');
-    if (!ok) return;
-    backToTripsList();
-    await loadDetail();
-    showSaveNotice(adminStr(cfg, 'editorSavedTrip'));
-  }
-
-  async function saveDates() {
-    if (!detail.value || !cfg.canManage) return;
-    const ok = await runMutation(async () => {
-      detail.value = await updateTimetable(timetableId(), { dates: detail.value!.dates });
-    }, 'saveFailed');
-    if (!ok) return;
-    syncSnapshots();
-    showSaveNotice(adminStr(cfg, 'editorSavedDates'));
-  }
-
-  async function saveMeta() {
-    if (!detail.value || !cfg.canManage) return;
-    const ok = await runMutation(async () => {
-      detail.value = await updateTimetable(timetableId(), {
-        title: editTitle.value.trim(),
-        type: editType.value,
-      });
-    }, 'saveFailed');
-    if (!ok) return;
-    editTitle.value = detail.value!.title;
-    editType.value = detail.value!.type || '';
-    syncSnapshots();
-    showSaveNotice(adminStr(cfg, 'editorSavedMeta'));
-  }
-
-  async function removeTimetable() {
-    if (!detail.value || !cfg.canManage) return;
-    const ok = await adminConfirm({
-      title: adminStr(cfg, 'timetablesDeleteTitle'),
-      message: adminFmt(cfg, 'timetablesDeleteMessage', detail.value.title),
-      confirmLabel: adminStr(cfg, 'delete'),
-      danger: true,
-    });
-    if (!ok) {
-      return;
-    }
-    try {
-      await deleteTimetable(timetableId());
-      await router.push('/timetables');
-    } catch (e) {
-      error.value = adminErrorMessage(cfg, e, 'timetablesDeleteFailed');
-    }
-  }
-
-  function addDate() {
-    if (!detail.value || !dateInput.value) return;
-    if (!detail.value.dates.includes(dateInput.value)) {
-      detail.value.dates = [...detail.value.dates, dateInput.value].sort();
-    }
-    dateInput.value = '';
-  }
-
-  function removeDate(d: string) {
-    if (!detail.value) return;
-    detail.value.dates = detail.value.dates.filter((x) => x !== d);
-  }
-
-  async function addTrip() {
-    if (!cfg.canManage || !tripDraftIsComplete(newTrip.value)) return;
-    const ok = await runMutation(async () => {
-      await addTimetableService(timetableId(), tripDraftToApiBody(newTrip.value));
-    }, 'saveFailed');
-    if (!ok) return;
-    backToTripsList();
-    await loadDetail();
-  }
-
-  async function removeTrip(serviceId: number) {
-    if (!cfg.canManage) return;
-    await runMutation(async () => {
-      await removeTimetableService(timetableId(), serviceId);
-      await loadDetail();
-    }, 'saveFailed');
-  }
-
-  async function saveDeviationChanges() {
-    const ok = await runMutation(async () => {
-      await saveDeviations(timetableId(), deviationsToSavePayload(deviationRows.value));
-    }, 'saveFailed');
-    if (!ok) return;
-    syncSnapshots();
-    showSaveNotice(adminStr(cfg, 'editorSavedDeviations'));
-  }
-
-  function openStoptimes(serviceId: number) {
+  function openStoptimes(serviceId: number): void {
     void (async () => {
-      if (tab.value === 'trips' && tripsView.value !== 'list') {
-        if (!(await requestBackToTripsList())) {
+      if (navigation.tab.value === 'trips' && trips.tripsView.value !== 'list') {
+        if (!(await trips.requestBackToTripsList())) {
           return;
         }
       }
       selectedServiceId.value = serviceId;
       stoptimesView.value = 'detail';
-      tab.value = 'stoptimes';
+      navigation.tab.value = 'stoptimes';
     })();
   }
 
-  function onMobileSaved(message: string) {
+  function onMobileSaved(message: string): void {
     showSaveNotice(message);
   }
 
+  onMounted(() => {
+    navigation.initRouteTabSync();
+    void loadDetail();
+  });
+
+  watch(timetableId, () => {
+    selectedServiceId.value = 0;
+    stoptimesView.value = 'list';
+    trips.resetTripsPanel();
+    overviewState.clearOverview();
+    void loadDetail();
+  });
+
   return {
     cfg,
-    tab,
+    tab: navigation.tab,
     detail,
-    overview,
+    overview: overviewState.overview,
     loading,
     error,
-    dateInput,
-    newTrip,
-    editTrip,
-    tripsView,
+    dateInput: datesMeta.dateInput,
+    newTrip: trips.newTrip,
+    editTrip: trips.editTrip,
+    tripsView: trips.tripsView,
     stoptimesView,
     stoptimesPanelRef,
     deviationsTabRef,
     selectedServiceId,
-    gridOverviewLoading,
-    deviationRows,
+    gridOverviewLoading: overviewState.gridOverviewLoading,
+    deviationRows: deviations.deviationRows,
     saveMsg,
-    editTitle,
-    editType,
-    metaDirty,
-    datesDirty,
-    deviationsDirty,
-    tabLabel,
+    editTitle: datesMeta.editTitle,
+    editType: datesMeta.editType,
+    metaDirty: dirty.metaDirty,
+    datesDirty: dirty.datesDirty,
+    deviationsDirty: dirty.deviationsDirty,
+    tabLabel: dirty.tabLabel,
     timetableTypes,
     trafficToday,
     trainTypeIconKey,
     loadDetail,
-    loadOverview,
-    loadOverviewForTab,
-    startCreateTrip,
-    requestBackToTripsList,
+    loadOverview: overviewState.loadOverview,
+    loadOverviewForTab: overviewState.loadOverviewForTab,
+    startCreateTrip: trips.startCreateTrip,
+    requestBackToTripsList: trips.requestBackToTripsList,
     requestBackToStoptimesList,
-    switchTab,
-    leaveActiveSubView,
-    backToTripsList,
+    switchTab: navigation.switchTab,
+    leaveActiveSubView: navigation.leaveActiveSubView,
+    backToTripsList: trips.backToTripsList,
     backToStoptimesList,
-    startEditTrip,
-    cancelEditTrip,
-    saveEditTrip,
-    saveDates,
-    saveMeta,
-    removeTimetable,
-    addDate,
-    removeDate,
-    addTrip,
-    removeTrip,
-    saveDeviationChanges,
+    startEditTrip: trips.startEditTrip,
+    cancelEditTrip: trips.cancelEditTrip,
+    saveEditTrip: trips.saveEditTrip,
+    saveDates: datesMeta.saveDates,
+    saveMeta: datesMeta.saveMeta,
+    removeTimetable: datesMeta.removeTimetable,
+    addDate: datesMeta.addDate,
+    removeDate: datesMeta.removeDate,
+    addTrip: trips.addTrip,
+    removeTrip: trips.removeTrip,
+    saveDeviationChanges: deviations.saveDeviationChanges,
     openStoptimes,
     onMobileSaved,
   };
