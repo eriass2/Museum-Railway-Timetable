@@ -1,5 +1,9 @@
 import { test, expect } from '@playwright/test';
 import { gotoAdminRoute } from './admin-helpers';
+import {
+  expandOngoingInformationCategory,
+  waitForTrafficFeedReady,
+} from './traffic-feed-helpers';
 import { wpDemoUrl, wpIndexUrl } from './wp-demo-url';
 import { loginWpAdmin } from './wp-admin-login';
 
@@ -32,30 +36,6 @@ async function createNotice(
   await expect(page.locator('.widefat.striped tbody tr', { hasText: text })).toBeVisible({
     timeout: 10_000,
   });
-}
-
-/** UL feed hides alerts until category rows are expanded (same as static mount E2E). */
-async function waitForTrafficFeedReady(
-  feed: import('@playwright/test').Locator,
-): Promise<void> {
-  await expect(feed).toBeVisible({ timeout: 20_000 });
-  await expect(feed.locator('.mrt-traffic-notices__loading')).toHaveCount(0, { timeout: 20_000 });
-  await expect(feed.locator('.mrt-tf-panel').first()).toBeVisible({ timeout: 20_000 });
-}
-
-function ongoingTrafficPanel(page: import('@playwright/test').Page) {
-  return page.getByRole('region', { name: /aktuellt trafikläge/i });
-}
-
-async function expandOngoingInformationCategory(
-  page: import('@playwright/test').Page,
-): Promise<void> {
-  const panel = ongoingTrafficPanel(page);
-  await expect(panel).toBeVisible({ timeout: 15_000 });
-  const infoRow = panel.getByRole('button', { name: /^information\b/i });
-  await expect(infoRow).toBeVisible({ timeout: 10_000 });
-  await infoRow.click();
-  await expect(panel.locator('.mrt-tf-category.is-expanded')).toBeVisible();
 }
 
 test.describe('Vue admin traffic notices', () => {

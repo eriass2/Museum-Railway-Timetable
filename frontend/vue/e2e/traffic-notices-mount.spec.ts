@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { waitForTrafficFeedReady } from './traffic-feed-helpers';
 
 test.describe('Traffic notices (static mount)', () => {
   function ongoingPanel(page: import('@playwright/test').Page) {
@@ -9,7 +10,8 @@ test.describe('Traffic notices (static mount)', () => {
 
   test('lists ongoing feed items from REST', async ({ page }) => {
     await page.goto('/traffic-notices');
-    await expect(page.locator('.mrt-traffic-notices')).toBeVisible();
+    const feed = page.locator('.mrt-traffic-notices');
+    await waitForTrafficFeedReady(feed);
     const ongoing = ongoingPanel(page);
     await expect(ongoing.locator('.mrt-tf-panel__header')).toContainText('Aktuellt trafikläge');
     await ongoing.locator('.mrt-tf-category__row').filter({ hasText: 'Information' }).click();
@@ -23,6 +25,7 @@ test.describe('Traffic notices (static mount)', () => {
 
   test('accordion keeps one expanded category at a time per panel', async ({ page }) => {
     await page.goto('/traffic-notices');
+    await waitForTrafficFeedReady(page.locator('.mrt-traffic-notices'));
     const categories = ongoingPanel(page).locator('.mrt-tf-category');
     await categories.filter({ hasText: 'Information' }).locator('.mrt-tf-category__row').click();
     await expect(categories.filter({ hasText: 'Information' })).toHaveClass(/is-expanded/);
@@ -44,6 +47,7 @@ test.describe('Traffic notices (static mount)', () => {
 
   test('shows only upcoming panel when ongoing is empty (TF-C8)', async ({ page }) => {
     await page.goto('/traffic-notices?upcoming-only=1');
+    await waitForTrafficFeedReady(page.locator('.mrt-traffic-notices'));
     await expect(page.locator('.mrt-tf-panel')).toHaveCount(1);
     await expect(page.locator('.mrt-tf-panel__header')).toHaveText('Planerade avvikelser');
     await expect(page.locator('.mrt-tf-panel__header')).not.toContainText('Aktuellt trafikläge');

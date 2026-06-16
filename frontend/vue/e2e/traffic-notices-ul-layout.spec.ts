@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { expandAllTrafficFeedCategories } from './traffic-feed-helpers';
 
 /**
  * Visual regression for UL-style traffic info feed (TF-F4).
@@ -8,12 +9,7 @@ test.describe('Traffic notices UL layout', () => {
   async function openExpandedFeed(page: import('@playwright/test').Page) {
     await page.goto('/traffic-notices');
     const feed = page.locator('.mrt-tf-feed');
-    await expect(feed).toBeVisible();
-    const rows = feed.locator('.mrt-tf-category__row');
-    const count = await rows.count();
-    for (let i = 0; i < count; i++) {
-      await rows.nth(i).click();
-    }
+    await expandAllTrafficFeedCategories(feed);
     return feed;
   }
 
