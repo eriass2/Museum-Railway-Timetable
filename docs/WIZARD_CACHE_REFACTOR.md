@@ -33,7 +33,7 @@ Idag finns **flera oberoende cache-lager** utan gemensam modell för nycklar, in
 
 | Resurs | Nyckel | TTL | Invalidering |
 |--------|--------|-----|--------------|
-| Kalendermånad | `ver \| from \| to \| year \| month \| trip_type` | 1 h | `MRT_bump_journey_calendar_cache_version()` |
+| Kalendermånad | `ver \| from \| to \| year \| month \| trip_type` | 1 h | `MRT_journey_cache_bump_generation()` |
 
 **Fil:** `journey-calendar-cache.php`
 

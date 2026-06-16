@@ -10,7 +10,7 @@ const props = defineProps<{
   refreshKey?: number;
 }>();
 
-const { cfg, loading, error, payload, sectionLabels, editForItem } = useTrafficNoticesFeedPreview(
+const { cfg, loading, error, payload, editForItem } = useTrafficNoticesFeedPreview(
   toRef(props, 'refreshKey'),
 );
 
@@ -18,7 +18,7 @@ const panels = computed(() => {
   if (!payload.value) {
     return [];
   }
-  return resolveDisruptionPanels(payload.value, sectionLabels.value);
+  return resolveDisruptionPanels(payload.value);
 });
 </script>
 

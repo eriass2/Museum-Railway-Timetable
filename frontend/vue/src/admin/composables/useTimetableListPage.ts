@@ -2,21 +2,30 @@ import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { createTimetable, deleteTimetable, listTimetables } from '../api/adminRest';
 import { adminConfirm } from './adminConfirm';
+import { useAdminListEditor } from './useAdminListEditor';
 import { useAdminResource } from './useAdminResource';
 import { useMobileAdmin } from './mobile/useMobileAdmin';
 import { adminErrorMessage, adminFmt, adminFmtN, adminStr } from '../utils/adminLabels';
 import { buildTimetableTypeOptions } from '../utils/timetableTypeOptions';
 import { adminConfig } from '../types';
 
-type TimetablesView = 'list' | 'create';
+type TimetableCreateDraft = {
+  title: string;
+  type: string;
+};
+
+function createDraftSnapshot(draft: TimetableCreateDraft): string {
+  return JSON.stringify(draft);
+}
 
 export function useTimetableListPage() {
   const router = useRouter();
   const cfg = adminConfig();
   const { isMobile } = useMobileAdmin();
-  const viewMode = ref<TimetablesView>('list');
   const newTitle = ref('');
   const newType = ref('');
+  const { viewMode, captureSnapshot, isDirty, guardBackToList } =
+    useAdminListEditor(createDraftSnapshot);
 
   const timetableTypes = computed(() => buildTimetableTypeOptions(cfg));
 
@@ -34,10 +43,25 @@ export function useTimetableListPage() {
     });
   }
 
-  function backToList(): void {
+  function currentDraft(): TimetableCreateDraft {
+    return {
+      title: newTitle.value,
+      type: newType.value,
+    };
+  }
+
+  function isFormDirty(): boolean {
+    return isDirty(currentDraft());
+  }
+
+  function resetCreateForm(): void {
     newTitle.value = '';
     newType.value = '';
     viewMode.value = 'list';
+  }
+
+  async function backToList(): Promise<void> {
+    await guardBackToList(isFormDirty, resetCreateForm);
   }
 
   function startCreate(): void {
@@ -47,6 +71,7 @@ export function useTimetableListPage() {
     newTitle.value = '';
     newType.value = '';
     viewMode.value = 'create';
+    captureSnapshot(currentDraft());
   }
 
   async function createNew() {
@@ -58,7 +83,7 @@ export function useTimetableListPage() {
         title: newTitle.value.trim(),
         type: newType.value || undefined,
       });
-      backToList();
+      resetCreateForm();
       await router.push(`/timetables/${tt.id}`);
     } catch (e) {
       error.value = adminErrorMessage(cfg, e, 'timetablesCreateFailed');
@@ -93,7 +118,7 @@ export function useTimetableListPage() {
 
   watch(isMobile, (mobile) => {
     if (mobile && viewMode.value === 'create') {
-      backToList();
+      void backToList();
     }
   });
 

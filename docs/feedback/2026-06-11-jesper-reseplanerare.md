@@ -67,7 +67,7 @@ Fas 1–3 i [WIZARD_PERFORMANCE_PLAN.md](../WIZARD_PERFORMANCE_PLAN.md) är **kl
 | Kalendermånad tur/retur | `MRT_journey_calendar_has_round_trip()` | Största rotorsaken (bekräftad) |
 | Kalendermånad enkel | `MRT_journey_engine_has_connection()` per dag | ~4 s juli (mindre men märkbart) |
 | Resesök | `POST journey/search` | Ej mätt i denna omgång |
-| Cache-invalidering | `MRT_bump_journey_calendar_cache_version()` vid admin-spar | Frekvent under betatest |
+| Cache-invalidering | `MRT_journey_cache_bump_generation()` vid admin-spar | Frekvent under betatest |
 
 Diagnostikscript: `scripts/bench-calendar.php` (CLI via Docker).
 

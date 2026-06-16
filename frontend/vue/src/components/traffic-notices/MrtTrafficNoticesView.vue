@@ -15,7 +15,7 @@ const panels = computed(() => {
   if (!payload.value) {
     return [];
   }
-  return resolveDisruptionPanels(payload.value, labels.value);
+  return resolveDisruptionPanels(payload.value);
 });
 </script>
 

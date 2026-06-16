@@ -1,9 +1,9 @@
-import { computed, onMounted, ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 import type { Ref } from 'vue';
 import type { DisruptionFeedItem, DisruptionFeedPayload } from '@/api/disruptionFeed';
 import type { DisruptionFeedEditHint } from '@/utils/disruptionFeedDisplay';
 import { fetchTrafficNoticesFeedPreview } from '../../api/adminRestTrafficNotices';
-import { adminErrorMessage, adminStr } from '../../utils/adminLabels';
+import { adminErrorMessage } from '../../utils/adminLabels';
 import { adminConfig } from '../../types';
 
 function editForItem(item: DisruptionFeedItem): DisruptionFeedEditHint | null {
@@ -22,16 +22,6 @@ export function useTrafficNoticesFeedPreview(refreshKey: Ref<number | undefined>
   const loading = ref(true);
   const error = ref('');
   const payload = ref<DisruptionFeedPayload | null>(null);
-
-  const sectionLabels = computed(() => ({
-    sectionOngoing: adminStr(cfg, 'trafficNoticesFeedOngoing'),
-    sectionUpcoming: adminStr(cfg, 'trafficNoticesFeedUpcoming'),
-    item: {
-      expandMore: adminStr(cfg, 'trafficNoticesExpandMore'),
-      expandDetails: adminStr(cfg, 'trafficNoticesExpandDetails'),
-      routeOther: adminStr(cfg, 'trafficNoticesRouteOther'),
-    },
-  }));
 
   async function load(): Promise<void> {
     loading.value = true;
@@ -59,7 +49,6 @@ export function useTrafficNoticesFeedPreview(refreshKey: Ref<number | undefined>
     loading,
     error,
     payload,
-    sectionLabels,
     editForItem,
   };
 }
