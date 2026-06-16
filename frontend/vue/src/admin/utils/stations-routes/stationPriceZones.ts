@@ -3,9 +3,6 @@ import type { StationRow } from '../../types';
 
 export const DEFAULT_STATION_PRICE_ZONE_OPTIONS = [1, 2, 3, 4] as const;
 
-/** @deprecated Use resolveStationPriceZoneOptions from price schema. */
-export const STATION_PRICE_ZONE_OPTIONS = DEFAULT_STATION_PRICE_ZONE_OPTIONS;
-
 export function resolveStationPriceZoneOptions(zones: number[] | undefined): number[] {
   if (zones?.length) {
     return [...zones].sort((a, b) => a - b);

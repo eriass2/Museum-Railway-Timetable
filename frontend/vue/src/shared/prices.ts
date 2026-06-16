@@ -11,11 +11,6 @@ export function priceKeysFromMap(map: Record<string, string>): string[] {
 export const DEFAULT_PRICE_TYPE_KEYS = ['single', 'return', 'day'] as const;
 export const DEFAULT_PRICE_CAT_KEYS = ['adult', 'child_4_15', 'child_0_3', 'student_senior'] as const;
 
-/** @deprecated Use priceKeysFromMap(labels.tickets) or matrix keys from API. */
-export const PRICE_TYPE_KEYS = DEFAULT_PRICE_TYPE_KEYS;
-/** @deprecated Use priceKeysFromMap(labels.categories). */
-export const PRICE_CAT_KEYS = DEFAULT_PRICE_CAT_KEYS;
-
 export type PriceTripType = 'single' | 'return' | 'day';
 
 /** Server-computed trip price payload (`GET /prices/trip`). */

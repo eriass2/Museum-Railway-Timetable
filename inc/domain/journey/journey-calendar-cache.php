@@ -11,9 +11,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/** @deprecated Use MRT_JOURNEY_CACHE_DEFAULT_TTL */
-const MRT_JOURNEY_CALENDAR_CACHE_TTL = MRT_JOURNEY_CACHE_DEFAULT_TTL;
-
 /**
  * Build transient key for one calendar month query.
  */

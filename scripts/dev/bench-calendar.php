@@ -15,7 +15,7 @@ $month  = (int) ( $argv[4] ?? 7 );
 $trip   = (string) ( $argv[5] ?? 'return' );
 
 if ( ! in_array( '--no-bump', $argv, true ) ) {
-	MRT_bump_journey_calendar_cache_version();
+	MRT_journey_cache_bump_generation( 'bench_calendar' );
 }
 
 $sw = microtime( true );
@@ -31,4 +31,4 @@ echo sprintf( "Warm  %s %04d-%02d %s: %d days, %.0f ms\n", $trip, $year, $month,
 $key = MRT_journey_calendar_month_cache_key( $from, $to, $year, $month, $trip );
 $cached = get_transient( $key );
 echo 'Transient in DB: ' . ( is_array( $cached ) ? 'yes (' . count( $cached ) . ' days)' : 'NO' ) . "\n";
-echo 'Cache version: ' . MRT_journey_calendar_cache_version() . "\n";
+echo 'Cache version: ' . MRT_journey_cache_generation() . "\n";

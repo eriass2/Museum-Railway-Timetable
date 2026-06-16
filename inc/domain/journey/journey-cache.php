@@ -14,9 +14,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 /** Option key — bump to invalidate all journey wizard transients. */
 const MRT_JOURNEY_CACHE_VERSION_OPTION = 'mrt_journey_calendar_cache_ver';
 
-/** @deprecated Use MRT_JOURNEY_CACHE_VERSION_OPTION */
-const MRT_JOURNEY_CALENDAR_CACHE_VERSION_OPTION = MRT_JOURNEY_CACHE_VERSION_OPTION;
-
 /** Default TTL per resource (seconds). */
 const MRT_JOURNEY_CACHE_DEFAULT_TTL = HOUR_IN_SECONDS;
 
@@ -25,13 +22,6 @@ const MRT_JOURNEY_CACHE_DEFAULT_TTL = HOUR_IN_SECONDS;
  */
 function MRT_journey_cache_generation(): int {
 	return max( 1, (int) get_option( MRT_JOURNEY_CACHE_VERSION_OPTION, 1 ) );
-}
-
-/**
- * @deprecated Use MRT_journey_cache_generation()
- */
-function MRT_journey_calendar_cache_version(): int {
-	return MRT_journey_cache_generation();
 }
 
 /**
@@ -48,13 +38,6 @@ function MRT_journey_cache_bump_generation( ?string $reason = null ): void {
 	if ( $reason !== null && $reason !== '' && MRT_is_development_mode() ) {
 		MRT_log( 'Journey cache generation bumped', array( 'reason' => $reason ), 'info' );
 	}
-}
-
-/**
- * @deprecated Use MRT_journey_cache_bump_generation()
- */
-function MRT_bump_journey_calendar_cache_version(): void {
-	MRT_journey_cache_bump_generation( 'calendar_legacy_bump' );
 }
 
 /**
@@ -125,13 +108,6 @@ function MRT_journey_cache_maybe_invalidate_on_save( int $post_id ): void {
 		return;
 	}
 	MRT_journey_cache_bump_generation( 'save_post:' . $post_type );
-}
-
-/**
- * @deprecated Use MRT_journey_cache_maybe_invalidate_on_save()
- */
-function MRT_journey_calendar_maybe_invalidate_on_save( int $post_id ): void {
-	MRT_journey_cache_maybe_invalidate_on_save( $post_id );
 }
 
 add_action( 'save_post', 'MRT_journey_cache_maybe_invalidate_on_save', 20, 1 );

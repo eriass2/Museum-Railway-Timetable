@@ -160,8 +160,8 @@ trait MRT_Journey_Test_Fixture {
 		array $routes = array(),
 		array $service_routes = array()
 	): void {
-		if ( function_exists( 'MRT_bump_journey_calendar_cache_version' ) ) {
-			MRT_bump_journey_calendar_cache_version();
+		if ( function_exists( 'MRT_journey_cache_bump_generation' ) ) {
+			MRT_journey_cache_bump_generation( 'test_fixture' );
 		}
 		$this->mrt_original_wpdb = $GLOBALS['wpdb'] ?? null;
 		$service_timetables      = $this->mrt_service_timetables( array_keys( $rows_by_service ), $service_timetables );
@@ -182,8 +182,8 @@ trait MRT_Journey_Test_Fixture {
 			$GLOBALS['wpdb'] = $this->mrt_original_wpdb;
 		}
 		unset( $GLOBALS['mrt_test_post_meta'], $GLOBALS['mrt_test_get_posts'], $GLOBALS['mrt_test_transients'] );
-		if ( function_exists( 'MRT_bump_journey_calendar_cache_version' ) ) {
-			MRT_bump_journey_calendar_cache_version();
+		if ( function_exists( 'MRT_journey_cache_bump_generation' ) ) {
+			MRT_journey_cache_bump_generation( 'test_fixture' );
 		}
 	}
 
