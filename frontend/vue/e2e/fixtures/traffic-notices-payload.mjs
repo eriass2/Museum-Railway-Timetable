@@ -1,5 +1,29 @@
 /** Sample disruption feed payload for static E2E (UL-style panels). */
 export function buildSampleDisruptionFeedPayload() {
+  const ongoingSummerInfo = {
+    id: 'notice-e2e-summer',
+    source: 'general',
+    kind: 'info',
+    phase: 'ongoing',
+    date_from: '2026-06-01',
+    date_to: '2026-09-30',
+    date_label: '1 juni – 30 september',
+    headline: 'Sommartrafik: GRÖN tidtabell gäller lördagar 5 juli–16 augusti.',
+    summary: 'Sommartrafik: GRÖN tidtabell gäller lördagar 5 juli–16 augusti.',
+    validity_label: 'Gäller 1 juni – 30 september',
+    line_label: '',
+    severity: 'info',
+    category_key: 'general',
+    category_label: 'Information',
+    icon_key: 'diesel',
+    body: 'Sommartrafik: GRÖN tidtabell gäller lördagar 5 juli–16 augusti.\nSe trafikkalendern för alla trafikdagar.',
+    route_label: '',
+    detail_intro: 'Se trafikkalendern för alla trafikdagar.',
+    detail_sections: [],
+    train_numbers: [],
+    service_ids: [],
+  };
+
   const ongoingGeneral = {
     id: 'notice-e2e-1',
     source: 'general',
@@ -101,7 +125,7 @@ export function buildSampleDisruptionFeedPayload() {
     service_ids: [],
   };
 
-  const ongoing = [ongoingGeneral, ongoingDeviation, ongoingBusDeviation];
+  const ongoing = [ongoingSummerInfo, ongoingGeneral, ongoingDeviation, ongoingBusDeviation];
   const upcoming = [upcomingGeneral];
 
   return {
@@ -135,8 +159,8 @@ export function buildSampleDisruptionFeedPayload() {
             key: 'general',
             label: 'Information',
             icon_key: 'diesel',
-            counts: { info: 1, warning: 0 },
-            items: [ongoingGeneral],
+            counts: { info: 2, warning: 0 },
+            items: [ongoingSummerInfo, ongoingGeneral],
           },
         ],
       },

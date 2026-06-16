@@ -3,6 +3,7 @@ import type { DisruptionFeedCategory } from '@/api/disruptionFeed';
 import type { DisruptionFeedItem } from '@/api/disruptionFeed';
 import type { DisruptionFeedEditHint } from '@/utils/disruptionFeedDisplay';
 import MrtTfAlertList from './MrtTfAlertList.vue';
+import MrtTfCategoryIcon from './MrtTfCategoryIcon.vue';
 import MrtTfCountBadge from './MrtTfCountBadge.vue';
 
 const props = defineProps<{
@@ -27,6 +28,7 @@ const emit = defineEmits<{
       :aria-label="category.label"
       @click="emit('toggle')"
     >
+      <MrtTfCategoryIcon :category-key="category.key" />
       <span class="mrt-tf-category__label">{{ category.label }}</span>
       <span class="mrt-tf-category__badges">
         <MrtTfCountBadge

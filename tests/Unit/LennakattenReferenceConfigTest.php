@@ -122,9 +122,10 @@ final class LennakattenReferenceConfigTest extends TestCase {
 
 	public function test_reference_traffic_demo_has_notices_and_deviations(): void {
 		$notices = MRT_lennakatten_reference_public_notices();
-		self::assertCount( 2, $notices );
-		self::assertSame( 'demo-glassrea', $notices[1]['id'] );
-		self::assertSame( '2026-06-06', $notices[1]['active_from'] );
+		self::assertCount( 3, $notices );
+		self::assertSame( 'demo-sommarinfo', $notices[0]['id'] );
+		self::assertSame( 'demo-glassrea', $notices[2]['id'] );
+		self::assertSame( '2026-06-06', $notices[2]['active_from'] );
 
 		$deviations = MRT_lennakatten_reference_service_deviations();
 		self::assertArrayHasKey( 'green-71-out', $deviations );

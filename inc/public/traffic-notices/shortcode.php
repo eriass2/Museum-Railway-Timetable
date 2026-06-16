@@ -157,12 +157,39 @@ function MRT_render_tf_panel_html( array $panel ): string {
 /**
  * @param array<string, mixed> $category
  */
+function MRT_render_tf_category_icon_html( string $key ): string {
+	$class = 'mrt-tf-category__icon';
+	if ( $key === 'train' ) {
+		return '<span class="' . esc_attr( $class ) . '" aria-hidden="true">'
+			. '<svg viewBox="0 0 24 24" fill="none" width="20" height="20">'
+			. '<rect x="5" y="8" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/>'
+			. '<path d="M8 17v2M16 17v2M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+			. '</svg></span>';
+	}
+	if ( $key === 'bus' ) {
+		return '<span class="' . esc_attr( $class ) . '" aria-hidden="true">'
+			. '<svg viewBox="0 0 24 24" fill="none" width="20" height="20">'
+			. '<rect x="4" y="6" width="16" height="11" rx="2" stroke="currentColor" stroke-width="2"/>'
+			. '<path d="M4 11h16" stroke="currentColor" stroke-width="2"/>'
+			. '</svg></span>';
+	}
+	return '<span class="' . esc_attr( $class ) . '" aria-hidden="true">'
+		. '<svg viewBox="0 0 24 24" fill="none" width="20" height="20">'
+		. '<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/>'
+		. '<path d="M12 10v6M12 8h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>'
+		. '</svg></span>';
+}
+
+/**
+ * @param array<string, mixed> $category
+ */
 function MRT_render_tf_category_html( array $category ): string {
 	$label  = trim( (string) ( $category['label'] ?? '' ) );
 	$counts = isset( $category['counts'] ) && is_array( $category['counts'] ) ? $category['counts'] : array();
 	$items  = isset( $category['items'] ) && is_array( $category['items'] ) ? $category['items'] : array();
 	$out    = '<div class="mrt-tf-category">';
 	$out   .= '<div class="mrt-tf-category__row">';
+	$out   .= MRT_render_tf_category_icon_html( (string) ( $category['key'] ?? '' ) );
 	$out   .= '<span class="mrt-tf-category__label">' . esc_html( $label ) . '</span>';
 	$out   .= '<span class="mrt-tf-category__badges">';
 	$info    = (int) ( $counts['info'] ?? 0 );

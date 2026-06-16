@@ -22,4 +22,10 @@ function MRT_enqueue_traffic_info_tokens( string $after_handle = '' ): void {
 		$deps,
 		MRT_VERSION
 	);
+	wp_enqueue_style(
+		'mrt-traffic-info-layout',
+		MRT_URL . 'assets/mrt-traffic-info-layout.css',
+		array( 'mrt-traffic-info-tokens' ),
+		MRT_VERSION
+	);
 }

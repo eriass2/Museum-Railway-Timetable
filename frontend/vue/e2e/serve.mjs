@@ -20,6 +20,7 @@ const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = join(root, '../../assets/dist/vue');
 const pluginAssetsDir = join(root, '../../assets');
 const trafficTokensCssPath = join(pluginAssetsDir, 'mrt-traffic-info-tokens.css');
+const trafficLayoutCssPath = join(pluginAssetsDir, 'mrt-traffic-info-layout.css');
 const manifestPath = join(distDir, '.vite/manifest.json');
 
 if (!existsSync(manifestPath)) {
@@ -49,6 +50,8 @@ const VITE_PUBLIC_BASE = '/wp-content/plugins/museum-railway-timetable/assets/di
 /** Same path as MRT_enqueue_traffic_info_tokens() in production. */
 const TRAFFIC_TOKENS_URL =
   '/wp-content/plugins/museum-railway-timetable/assets/mrt-traffic-info-tokens.css';
+const TRAFFIC_LAYOUT_URL =
+  '/wp-content/plugins/museum-railway-timetable/assets/mrt-traffic-info-layout.css';
 
 const entryCssLinks = (entry?.css || [])
   .map((rel) => {
@@ -614,13 +617,16 @@ function renderTrafficNoticesHtml(requestUrl) {
   const tokenLink = existsSync(trafficTokensCssPath)
     ? `<link rel="stylesheet" href="${TRAFFIC_TOKENS_URL}" />`
     : '';
+  const layoutLink = existsSync(trafficLayoutCssPath)
+    ? `<link rel="stylesheet" href="${TRAFFIC_LAYOUT_URL}" />`
+    : '';
   return renderAppHtml(
     'traffic_notices',
     buildTrafficNoticesConfig({
       referenceDate: empty ? 'e2e-empty' : upcomingOnly ? 'e2e-upcoming-only' : undefined,
       title: params.get('title') ?? '',
     }),
-    tokenLink,
+    `${tokenLink}\n  ${layoutLink}`,
   );
 }
 
@@ -694,6 +700,16 @@ http
       }
       res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
       res.end(readFileSync(trafficTokensCssPath));
+      return;
+    }
+    if (pathOnly === TRAFFIC_LAYOUT_URL) {
+      if (!existsSync(trafficLayoutCssPath)) {
+        res.writeHead(404);
+        res.end('Not found');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
+      res.end(readFileSync(trafficLayoutCssPath));
       return;
     }
     let rel = pathOnly.replace(/^\//, '');

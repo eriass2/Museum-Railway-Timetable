@@ -21,6 +21,7 @@ defineProps<{
   </div>
 </template>
 
-<style scoped>
-@import './traffic-info-layout.css';
+<!-- Layout must be global (not scoped): rules target child SFCs (panel, category, alert). -->
+<style>
+@import '@mrt-assets/mrt-traffic-info-layout.css';
 </style>
