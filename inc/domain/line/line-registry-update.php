@@ -32,8 +32,7 @@ function MRT_station_codes_from_ids( array $station_ids ) {
 			continue;
 		}
 		$post = get_post( $station_id );
-		$post_type = is_object( $post ) ? (string) ( $post->post_type ?? '' ) : '';
-		if ( $post_type !== MRT_POST_TYPE_STATION ) {
+		if ( ! is_object( $post ) || get_post_type( $post ) !== MRT_POST_TYPE_STATION ) {
 			return new WP_Error(
 				'mrt_invalid_station',
 				__( 'One or more stations could not be found.', 'museum-railway-timetable' ),
