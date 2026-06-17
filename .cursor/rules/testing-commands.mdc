@@ -52,7 +52,7 @@ Root wrappers (`check.ps1`, `test.ps1`, `vue-check.ps1`, `coverage.ps1`, …) st
 | Full PHP gate (Windows) | `.\scripts\check.ps1` or `.\scripts\mrt.ps1 check` |
 | PHPUnit only | `.\scripts\test.ps1` or `.\scripts\mrt.ps1 test` |
 | Single test file | `.\scripts\mrt.ps1 test tests/Unit/SomeTest.php` |
-| Host PHP 8.2+ | `.\scripts\mrt.ps1 test -Local` |
+| Host PHP 8.3+ | `.\scripts\mrt.ps1 test -Local` |
 | PHPStan + PHPCS only | `.\scripts\lint.ps1` or `.\scripts\mrt.ps1 lint` |
 
 ## Vue

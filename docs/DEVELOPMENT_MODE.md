@@ -20,7 +20,7 @@ Se [VUE_FRONTEND.md](VUE_FRONTEND.md). Bygg manuellt: `composer vue:build` eller
 Lokal kvalitetskontroll utan WordPress:
 
 - Vue: `.\scripts\vue-check.ps1` (Docker) eller `composer vue:check` (host npm)
-- PHP: `.\scripts\test.ps1` (Docker) eller `composer test` (host PHP 8.2+)
+- PHP: `.\scripts\test.ps1` (Docker) eller `composer test` (host PHP 8.3+)
 - Båda: `.\scripts\check.ps1 -Vue`
 
 Samma kedja körs i GitHub Actions CI. Manuell regression: [frontend/vue/TESTING.md](../frontend/vue/TESTING.md).

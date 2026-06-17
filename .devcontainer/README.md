@@ -5,7 +5,7 @@ Open this repo in VS Code / Cursor with **Dev Containers: Reopen in Container**.
 ## What starts
 
 - Full stack from `docker-compose.yml`: MariaDB, WordPress, `wpcli`, and tools profile (`composer`, `php-test`, `vue`)
-- Workspace folder: `/app` in the `php-test` service (PHP 8.2 + PCOV)
+- Workspace folder: `/app` in the `php-test` service (PHP 8.3 + PCOV)
 
 ## After open
 

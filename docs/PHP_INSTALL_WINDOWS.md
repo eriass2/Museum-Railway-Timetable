@@ -122,12 +122,12 @@ PHPUnit ska **köras i terminalen**, inte öppnas som fil.
 
 | Gör så här | Kommando |
 |------------|----------|
-| Rekommenderat (Windows) | `.\scripts\mrt.ps1 test` — Docker som standard; `-Local` för host PHP 8.2+ |
-| Rekommenderat (Linux/WSL) | `bash scripts/mrt.sh test` — Docker; `--local` för host PHP 8.2+ |
+| Rekommenderat (Windows) | `.\scripts\mrt.ps1 test` — Docker som standard; `-Local` för host PHP 8.3+ |
+| Rekommenderat (Linux/WSL) | `bash scripts/mrt.sh test` — Docker; `--local` för host PHP 8.3+ |
 | Full PHP gate | `.\scripts\mrt.ps1 check` / `bash scripts/mrt.sh check` |
 | Vue gate | `.\scripts\mrt.ps1 vue-check` / `bash scripts/mrt.sh vue-check` |
 | Root-wrappers (samma beteende) | `.\scripts\test.ps1`, `.\scripts\check.ps1`, `.\scripts\vue-check.ps1` |
-| Lokal PHP 8.2+ | `composer test` |
+| Lokal PHP 8.3+ | `composer test` |
 | En testfil | `.\scripts\mrt.ps1 test tests/Unit/SomeTest.php` |
 | Manuell Docker (undvik — använd mrt) | `docker compose --profile tools run --rm --no-deps php-test vendor/bin/phpunit` |
 
@@ -135,4 +135,4 @@ PHPUnit ska **köras i terminalen**, inte öppnas som fil.
 
 `composer test` och `php-test` kör internt `php vendor/bin/phpunit`, vilket är rätt sätt.
 
-PHPUnit 11 kräver **PHP 8.2+**. Om `php -v` visar 7.x (vanligt med äldre XAMPP): uppgradera PHP i PATH eller använd Docker-raden ovan.
+PHPUnit 12 kräver **PHP 8.3+**. Om `php -v` visar 7.x eller 8.2 (vanligt med äldre XAMPP): uppgradera PHP i PATH eller använd Docker-raden ovan.

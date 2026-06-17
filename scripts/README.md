@@ -95,7 +95,7 @@ Existing `.\scripts\*.ps1` entry points remain; `mrt` forwards to them.
 | PHP without PHPCS | `.\scripts\check.ps1 -SkipPhpcs` | `bash scripts/mrt.sh check --skip-phpcs` |
 | PHPStan + PHPCS only | `.\scripts\lint.ps1` | `bash scripts/gate/lint.sh` |
 | PHPUnit (Docker default) | `.\scripts\test.ps1` | `bash scripts/gate/test.sh` |
-| PHPUnit (host PHP 8.2+) | `.\scripts\test.ps1 -Local` | `bash scripts/gate/test.sh --local` |
+| PHPUnit (host PHP 8.3+) | `.\scripts\test.ps1 -Local` | `bash scripts/gate/test.sh --local` |
 | Vue typecheck + Vitest + build | `.\scripts\vue-check.ps1` | `bash scripts/gate/vue-check.sh` |
 | Vue locally | `.\scripts\vue-check.ps1 -Local` | `bash scripts/gate/vue-check.sh --local` |
 | PHP + Vue | `.\scripts\check.ps1 -Vue` | `bash scripts/mrt.sh check --vue` |

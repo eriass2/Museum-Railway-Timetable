@@ -13,7 +13,7 @@ A WordPress plugin for displaying train timetables for a museum railway. Custom 
 ## Requirements
 
 - WordPress 6.0 or higher
-- PHP 8.2 or higher (recommended; matches CI)
+- PHP 8.3 or higher (recommended; matches CI)
 
 ## Installation
 

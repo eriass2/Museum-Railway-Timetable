@@ -9,7 +9,7 @@ $root = Set-MrtRepoRoot -ScriptsDirectory $scriptsRoot
 Write-Host '=== MRT setup-dev (host) ===' -ForegroundColor Cyan
 
 if (-not (Get-Command php -ErrorAction SilentlyContinue)) {
-    Write-Host 'PHP not in PATH. Install PHP 8.2+ or use Docker gates (.\scripts\mrt.ps1 check).' -ForegroundColor Red
+    Write-Host 'PHP not in PATH. Install PHP 8.3+ or use Docker gates (.\scripts\mrt.ps1 check).' -ForegroundColor Red
     exit 1
 }
 if (-not (Get-Command composer -ErrorAction SilentlyContinue)) {

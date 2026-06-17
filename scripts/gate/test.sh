@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# PHPUnit in Docker by default (PHP 8.2). Pass --local for host PHP 8.2+.
+# PHPUnit in Docker by default (PHP 8.3). Pass --local for host PHP 8.3+.
 set -e
 . "$(dirname "$0")/_init.sh"
 mrt_gate_parse_args "$@"

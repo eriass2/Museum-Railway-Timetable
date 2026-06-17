@@ -1,5 +1,5 @@
-# PHP 8.2 tools image: PHPUnit, PCOV coverage, csv-validate (matches CI).
-FROM php:8.2-cli-bookworm
+# PHP 8.3 tools image: PHPUnit, PCOV coverage, csv-validate (matches CI).
+FROM php:8.3-cli-bookworm
 
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \

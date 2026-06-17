@@ -4,7 +4,7 @@
 
 | Context | PHP / Vue gates | WordPress E2E |
 |---------|-----------------|---------------|
-| **GitHub Actions** (`ci.yml`) | Host PHP 8.2 + Node 22 | Docker via `scripts/ci-e2e-wp.sh` |
+| **GitHub Actions** (`ci.yml`) | Host PHP 8.3 + Node 22 | Docker via `scripts/ci-e2e-wp.sh` |
 | **Windows (recommended)** | Docker via `.\scripts\mrt.ps1` | `mrt dev reset`, `mrt dev smoke` |
 | **Linux / WSL** | Docker via `bash scripts/mrt.sh check` or host after `setup-dev` | `mrt dev reset`, `mrt dev smoke` |
 

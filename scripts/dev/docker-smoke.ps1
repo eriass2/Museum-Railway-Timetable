@@ -39,7 +39,7 @@ if ($pages.Count -eq 0) {
     }
 }
 
-Write-MrtStep -Title 'Composer check (PHP 8.2)'
+Write-MrtStep -Title 'Composer check (PHP 8.3)'
 Ensure-MrtVendor
 Invoke-MrtDockerComposer -ComposerArgs @('check') -StreamOutput -ExitOnError
 

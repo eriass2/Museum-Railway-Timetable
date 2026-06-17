@@ -13,7 +13,7 @@
 |------|-------|------|--------|
 | **0** | Baseline (Actions, Playwright 1.61, PHPStan 2.2) | Låg | **Klar** — commit `0fd775a` |
 | **1** | Patch under befintliga majors (npm + Composer) | Låg | **Klar** |
-| **2** | PHP 8.3 + PHPUnit 12 | Medel | Öppen |
+| **2** | PHP 8.3 + PHPUnit 12 | Medel | **Klar** |
 | **3** | Vite 8 + Vitest 4 + happy-dom | Hög | Öppen |
 | **4** | ESLint 10-stack | Medel | Öppen |
 | **5** | vue-router 5 | Medel | Öppen |
@@ -30,8 +30,8 @@
 
 | Lager | Nyckelversioner |
 |-------|-----------------|
-| PHP | 8.2 (CI, Docker, `composer.json`) |
-| PHPUnit | 11.5.x *(EOL feb 2026 — bugfix-stöd ute)* |
+| PHP | 8.3 (CI, Docker, `composer.json`) |
+| PHPUnit | 12.x |
 | PHPStan | 2.2.2 |
 | Vue | 3.5.x |
 | Vite / Vitest | 6.4 / 3.2 |

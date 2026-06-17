@@ -8,7 +8,7 @@ cd "$ROOT"
 echo "=== MRT setup-dev (host) ==="
 
 if ! command -v php >/dev/null 2>&1; then
-	echo "PHP not in PATH. Install PHP 8.2+ or use Docker gates (scripts/mrt.sh check)." >&2
+	echo "PHP not in PATH. Install PHP 8.3+ or use Docker gates (scripts/mrt.sh check)." >&2
 	exit 1
 fi
 

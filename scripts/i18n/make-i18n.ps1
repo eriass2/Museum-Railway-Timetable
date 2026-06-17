@@ -28,7 +28,7 @@ docker run --rm -v "${LangMount}:/work" -w /work debian:bookworm-slim bash -lc `
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host 'Filling empty Swedish msgstr from msgid...'
-docker run --rm -v "${Root}:/work" -w /work php:8.2-cli php scripts/fill-sv-po.php languages/museum-railway-timetable-sv_SE.po
+docker run --rm -v "${Root}:/work" -w /work php:8.3-cli php scripts/fill-sv-po.php languages/museum-railway-timetable-sv_SE.po
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
 Write-Host 'Compiling .mo...'
