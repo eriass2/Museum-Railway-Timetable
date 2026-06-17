@@ -8,14 +8,22 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 
 ## Beroendeuppgraderingar
 
-**Plan:** [DEPENDENCY_UPGRADE_PLAN.md](DEPENDENCY_UPGRADE_PLAN.md) — steg 0 (baseline) **klar**; nästa: steg 1 (patch), därefter PHP 8.3 + PHPUnit 12.
+**Plan:** [DEPENDENCY_UPGRADE_PLAN.md](DEPENDENCY_UPGRADE_PLAN.md) — steg 0–2 **klara**; nästa: steg 3 (Vite/Vitest).
 
 | Steg | Fokus | Status |
 |------|-------|--------|
 | 0 | Actions v5/v6, Playwright 1.61, PHPStan 2.2 | ✅ |
 | 1 | npm/Composer patch | ✅ |
 | 2 | PHP 8.3 + PHPUnit 12 | ✅ |
-| 3–7 | Vite, ESLint, router, TS, html2pdf | öppen |
+| 3 | Vite 8 + `@vitejs/plugin-vue` 6 + Vitest 4 + happy-dom | öppen |
+| 4 | ESLint 10 + eslint-plugin-vue 10 + vue-eslint-parser 10 | öppen |
+| 5 | vue-router 5 | öppen |
+| 6 | vue-tsc 3 + TypeScript 6 | öppen |
+| 7 | html2pdf.js 0.14 (PDF-export, `trip-pdf.js`) | öppen |
+| 8 | Infrastruktur (MariaDB, Playwright npm ↔ Docker) | löpande |
+| 9 | PHP 8.4 + PHPUnit 13 *(valfritt)* | parkerad |
+
+**Ordning:** 3 → 4 → (5 och 6) → 7. Efter push: `mrt vue-check`, `mrt e2e`, committa ombyggd `assets/dist/vue/`.
 
 ---
 
