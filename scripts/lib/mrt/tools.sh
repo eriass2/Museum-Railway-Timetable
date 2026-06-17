@@ -16,9 +16,11 @@ mrt_tools_ensure_shell() {
 mrt_tools_run() {
 	_svc="$1"
 	shift
-	if [ "$_svc" != "vue-e2e" ]; then
-		mrt_tools_ensure_shell
+	if [ "$_svc" = "vue-e2e" ]; then
+		docker compose --profile tools run --rm --no-deps -e "CI=${CI:-}" "$_svc" "$@"
+		return
 	fi
+	mrt_tools_ensure_shell
 	if mrt_tools_service_running "$_svc"; then
 		case "$_svc" in
 		composer)

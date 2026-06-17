@@ -59,7 +59,7 @@ npm run e2e
 
 Mot Docker-demo: `MRT_E2E_WP_DEMO_URL=http://127.0.0.1:8080/… npm run e2e -- e2e/*-wp.spec.ts` eller `bash scripts/ci-e2e-wp.sh` från reporoten.
 
-**Windows utan host-`npm`:** Playwright Docker-image + `host.docker.internal:8080` — se [DEVELOPER.md](DEVELOPER.md) § Playwright E2E (tillfällig `siteurl`/`home`, image `mcr.microsoft.com/playwright:v1.60.0-jammy`).
+**Windows utan host-`npm`:** Playwright Docker-image + `host.docker.internal:8080` — se [DEVELOPER.md](DEVELOPER.md) § Playwright E2E (tillfällig `siteurl`/`home`, image `mcr.microsoft.com/playwright:v1.61.0-jammy`).
 
 ## Nästa steg
 

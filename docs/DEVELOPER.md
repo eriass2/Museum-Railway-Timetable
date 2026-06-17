@@ -192,13 +192,13 @@ Restore kör samma Lennakatten override + demo-trafik som i början (tar bort E2
 docker compose exec -T wordpress wp option update siteurl 'http://host.docker.internal:8080' --allow-root
 docker compose exec -T wordpress wp option update home 'http://host.docker.internal:8080' --allow-root
 
-# 3. Playwright (version ska matcha package-lock; CI-image v1.60.0-jammy)
+# 3. Playwright (version ska matcha package-lock; image v1.61.0-jammy)
 docker run --rm -it `
   -v "${PWD}:/work" -w /work/frontend/vue `
   -e MRT_E2E_WP_DEMO_URL=http://host.docker.internal:8080/museum-railway-timetable-component-demo/ `
   -e MRT_E2E_WP_ADMIN_URL=http://host.docker.internal:8080/wp-admin/admin.php?page=mrt_app `
   --add-host=host.docker.internal:host-gateway `
-  mcr.microsoft.com/playwright:v1.60.0-jammy `
+  mcr.microsoft.com/playwright:v1.61.0-jammy `
   bash -lc "npm ci && npm run e2e"
 
 # 4. Återställ siteurl/home till localhost:8080 för lokal webbläsare

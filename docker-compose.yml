@@ -119,10 +119,10 @@ services:
     restart: unless-stopped
 
   # Playwright + Node 22 (Jammy) — Vue E2E only (browsers preinstalled).
-  # Match @playwright/test in frontend/vue/package-lock.json (1.60.x).
-  #   docker compose --profile tools exec --no-TTY vue-e2e sh -c "npm run e2e"
+  # Match @playwright/test in frontend/vue/package-lock.json (1.61.x).
+  #   docker compose --profile tools run --rm --no-deps vue-e2e sh -c "npm run e2e"
   vue-e2e:
-    image: mcr.microsoft.com/playwright:v1.60.0-jammy
+    image: mcr.microsoft.com/playwright:v1.61.0-jammy
     profiles:
       - tools
     working_dir: /app/frontend/vue

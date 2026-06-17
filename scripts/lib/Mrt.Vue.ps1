@@ -40,17 +40,6 @@ function Invoke-MrtDockerVue {
     ) -ExitOnError:$ExitOnError -StreamOutput:$StreamOutput
 }
 
-function Ensure-MrtVueE2eShell {
-    if (-not (Test-MrtDockerAvailable)) {
-        return
-    }
-    if (Test-MrtToolsServiceRunning -Service 'vue-e2e') {
-        return
-    }
-    Write-Host 'Starting tools shell: vue-e2e...' -ForegroundColor DarkGray
-    Invoke-MrtDockerCompose -ComposeArgs @('--profile', 'tools', 'up', '-d', 'vue-e2e') -ExitOnError
-}
-
 function Get-MrtVueE2eShellCommand {
     param([string[]] $PlaywrightArgs = @())
 
@@ -71,8 +60,7 @@ function Invoke-MrtDockerVueE2e {
         [switch] $StreamOutput
     )
 
-    Ensure-MrtVueE2eShell
-    Write-Host 'Running Vue E2E in Docker (playwright v1.60 jammy)...' -ForegroundColor Cyan
+    Write-Host 'Running Vue E2E in Docker (playwright v1.61 jammy)...' -ForegroundColor Cyan
     Invoke-MrtDockerToolsService -Service 'vue-e2e' -RunArgs @(
         'sh', '-c', (Get-MrtVueE2eShellCommand -PlaywrightArgs $PlaywrightArgs)
     ) -ExitOnError:$ExitOnError -StreamOutput:$StreamOutput
