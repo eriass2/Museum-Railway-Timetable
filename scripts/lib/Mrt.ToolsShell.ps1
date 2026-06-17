@@ -85,11 +85,18 @@ function Invoke-MrtDockerToolsService {
     )
 
     if ($Service -eq 'vue-e2e') {
-        $composeArgs = Get-MrtToolsServiceRunArgs -Service $Service
-        $composeArgs += @('-e', "CI=$($env:CI)")
-        if ($RunArgs.Count -gt 0) {
-            $composeArgs += $RunArgs
+        $script = if ($RunArgs.Count -ge 3 -and $RunArgs[0] -eq 'sh' -and $RunArgs[1] -eq '-c') {
+            $RunArgs[2]
+        } else {
+            ($RunArgs -join ' ')
         }
+        $composeArgs = @(
+            '--profile', 'tools', 'run', '--rm', '--no-deps',
+            '-e', "CI=$($env:CI)",
+            '--entrypoint', 'sh',
+            $Service,
+            '-c', $script
+        )
         Invoke-MrtDockerCompose -ComposeArgs $composeArgs -ExitOnError:$ExitOnError `
             -StreamOutput:$StreamOutput -ReturnOutput:$ReturnOutput
         return

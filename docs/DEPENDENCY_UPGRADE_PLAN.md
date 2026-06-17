@@ -12,7 +12,7 @@
 | Steg | Fokus | Risk | Status |
 |------|-------|------|--------|
 | **0** | Baseline (Actions, Playwright 1.61, PHPStan 2.2) | Låg | **Klar** — commit `0fd775a` |
-| **1** | Patch under befintliga majors (npm + Composer) | Låg | Öppen |
+| **1** | Patch under befintliga majors (npm + Composer) | Låg | **Klar** |
 | **2** | PHP 8.3 + PHPUnit 12 | Medel | Öppen |
 | **3** | Vite 8 + Vitest 4 + happy-dom | Hög | Öppen |
 | **4** | ESLint 10-stack | Medel | Öppen |

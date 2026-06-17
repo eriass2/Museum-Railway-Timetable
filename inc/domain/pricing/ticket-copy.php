@@ -162,7 +162,7 @@ function MRT_get_station_ticket_purchase_info( int $station_id ): string {
 }
 
 /**
- * @return array<string, string> Station post ID => purchase copy.
+ * @return array<int, string> Station post ID => purchase copy.
  */
 function MRT_ticket_purchase_info_map(): array {
 	$out   = array();
@@ -178,7 +178,7 @@ function MRT_ticket_purchase_info_map(): array {
 		$id = (int) $station_id;
 		$text = MRT_get_station_ticket_purchase_info( $id );
 		if ( $text !== '' ) {
-			$out[ (string) $id ] = $text;
+			$out[ $id ] = $text;
 		}
 	}
 	return $out;

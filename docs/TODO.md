@@ -13,7 +13,7 @@ Punkter **utan** beslut listas separat. **Mycket senare** — parkerade tills k�
 | Steg | Fokus | Status |
 |------|-------|--------|
 | 0 | Actions v5/v6, Playwright 1.61, PHPStan 2.2 | ✅ |
-| 1 | npm/Composer patch | öppen |
+| 1 | npm/Composer patch | ✅ |
 | 2 | PHP 8.3 + PHPUnit 12 | öppen |
 | 3–7 | Vite, ESLint, router, TS, html2pdf | öppen |
 

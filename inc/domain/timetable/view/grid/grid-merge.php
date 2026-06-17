@@ -177,7 +177,7 @@ function MRT_timetable_branch_main_pair_score( array $main_stations, array $bran
 		$idx = array_search( $branch_start, $main_stations, true );
 		return $idx === false ? -1 : ( ( $main_len - 1 - (int) $idx ) * 1000 ) + $main_len;
 	}
-	if ( ! $start_on && $end_on ) {
+	if ( ! $start_on ) {
 		$idx = array_search( $branch_end, $main_stations, true );
 		return $idx === false ? -1 : ( (int) $idx * 1000 ) + $main_len;
 	}

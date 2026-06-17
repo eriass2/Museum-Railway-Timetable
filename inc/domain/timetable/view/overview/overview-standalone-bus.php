@@ -213,11 +213,23 @@ function MRT_timetable_standalone_bus_corridor_cell_text(
 	if ( $pass_pos !== false && $pos === $pass_pos ) {
 		return MRT_timetable_standalone_bus_pass_station_cell_text( $row_kind );
 	}
-	if ( $pass_pos !== false && $pos > $pass_pos && $alight_pos !== false && $pos < $alight_pos ) {
+	if ( MRT_timetable_standalone_bus_corridor_cell_is_between( $pos, $pass_pos, $alight_pos ) ) {
 		return '|';
 	}
 
 	return '—';
+}
+
+/**
+ * @param int|false $pass_pos
+ * @param int|false $alight_pos
+ */
+function MRT_timetable_standalone_bus_corridor_cell_is_between( int $pos, $pass_pos, $alight_pos ): bool {
+	if ( ! is_int( $pass_pos ) || ! is_int( $alight_pos ) ) {
+		return false;
+	}
+
+	return $pos > $pass_pos && $pos < $alight_pos;
 }
 
 function MRT_timetable_standalone_bus_pass_station_cell_text( string $row_kind ): string {

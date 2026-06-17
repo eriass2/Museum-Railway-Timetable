@@ -17,7 +17,14 @@ mrt_tools_run() {
 	_svc="$1"
 	shift
 	if [ "$_svc" = "vue-e2e" ]; then
-		docker compose --profile tools run --rm --no-deps -e "CI=${CI:-}" "$_svc" "$@"
+		_script=""
+		if [ "$1" = "sh" ] && [ "$2" = "-c" ]; then
+			shift 2
+			_script="$1"
+			shift
+		fi
+		docker compose --profile tools run --rm --no-deps -e "CI=${CI:-}" \
+			--entrypoint sh "$_svc" -c "$_script" "$@"
 		return
 	fi
 	mrt_tools_ensure_shell
