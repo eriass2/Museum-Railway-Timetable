@@ -1,0 +1,5 @@
+﻿id,condition,text,enabled
+student,always,"Student ska kunna uppvisa giltig studentlegitimation (Mecenat, WeStudents eller ISIC-kortet).",1
+season,always,"Biljetterna gäller hela trafiksäsongen.",1
+day_ticket,day_ticket,"Heldagsbiljett gäller för obegränsat resande på alla Lennakattens tåg och bussar under en hel dag.",1
+afternoon_reminder,afternoon,"Tänk dock på att eftermiddagsbiljett endast gäller vid resa efter kl %1$s.",1

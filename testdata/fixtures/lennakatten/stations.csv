@@ -1,17 +1,17 @@
-﻿station_code,name,station_type,display_order,bus_stop_marker,lat,lng,price_zones
-uppsala-ostra,"Uppsala Östra",,1,0,,,1
-fyrislund,Fyrislund,,2,0,,,1
-arsta,Årsta,,3,0,,,1
-skolsta,Skölsta,,4,0,,,1
-barby,Bärby,,5,0,,,1
-gunsta,Gunsta,,6,0,,,"1,2"
-marielund,Marielund,,7,0,,,2
-lovstahagen,Lövstahagen,,8,0,,,2
-selkna,Selknä,,9,1,,,2
-lot,Löt,,10,0,,,2
-lanna,Länna,,11,0,,,2
-almunge,Almunge,,12,0,,,"2,3"
-moga,Moga,,13,0,,,3
-faringe,Faringe,,14,0,,,3
-fjallnora,Fjällnora,,15,1,,,2
-linnes-hammarby,"Linnés Hammarby",,16,1,,,3
+﻿station_code,name,station_type,display_order,bus_stop_marker,lat,lng,price_zones,ticket_purchase_info
+uppsala-ostra,"Uppsala Östra",,1,0,,,1,
+fyrislund,Fyrislund,,2,0,,,1,
+arsta,Årsta,,3,0,,,1,
+skolsta,Skölsta,,4,0,,,1,
+barby,Bärby,,5,0,,,1,
+gunsta,Gunsta,,6,0,,,"1,2",
+marielund,Marielund,,7,0,,,2,
+lovstahagen,Lövstahagen,,8,0,,,2,
+selkna,Selknä,,9,1,,,2,
+lot,Löt,,10,0,,,2,
+lanna,Länna,,11,0,,,2,
+almunge,Almunge,,12,0,,,"2,3",
+moga,Moga,,13,0,,,3,
+faringe,Faringe,,14,0,,,3,
+fjallnora,Fjällnora,,15,1,,,2,
+linnes-hammarby,"Linnés Hammarby",,16,1,,,3,
