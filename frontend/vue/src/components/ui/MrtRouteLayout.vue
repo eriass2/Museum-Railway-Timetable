@@ -34,7 +34,7 @@ withDefaults(
 
 <style scoped>
 .mrt-route-layout {
-  width: min(100%, 36rem);
+  width: min(100%, var(--mrt-max-feed));
   margin-inline: auto;
 }
 

@@ -31,7 +31,7 @@ defineProps<{
   letter-spacing: 0.04em;
 }
 
-@container mrt-summary-card (max-width: 28rem) {
+@container mrt-summary-card (max-width: var(--mrt-max-narrow)) {
   .mrt-summary-card__heading {
     font-size: 0.9rem;
   }

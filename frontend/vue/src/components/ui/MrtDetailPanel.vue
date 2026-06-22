@@ -29,7 +29,7 @@
   gap: 1rem;
 }
 
-@container mrt-detail (max-width: 28rem) {
+@container mrt-detail (max-width: var(--mrt-max-narrow)) {
   .mrt-detail-panel {
     --mrt-tl-time: clamp(3rem, 18cqi, 3.75rem);
     --mrt-tl-node: 1.1rem;

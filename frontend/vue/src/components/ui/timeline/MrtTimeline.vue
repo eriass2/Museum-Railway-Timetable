@@ -71,7 +71,7 @@ const displayItems = computed(() =>
   --mrt-timeline-line: var(--mrt-wizard-text, #151515);
 }
 
-@container mrt-timeline (max-width: 28rem) {
+@container mrt-timeline (max-width: var(--mrt-max-narrow)) {
   :deep(.mrt-timeline__row) {
     min-height: 2.15rem;
   }
