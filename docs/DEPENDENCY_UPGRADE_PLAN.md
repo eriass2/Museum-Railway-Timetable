@@ -18,11 +18,11 @@
 | **4** | ESLint 10-stack | Medel | Öppen |
 | **5** | vue-router 5 | Medel | Öppen |
 | **6** | vue-tsc 3 + TypeScript 6 | Medel | Öppen |
-| **7** | html2pdf.js 0.14 (PDF-export) | Medel | Öppen |
+| **7** | ~~html2pdf.js~~ — PDF via server Dompdf | — | **Klar** — klient-`trip-pdf.js` borttagen; se `inc/domain/journey/trip-summary-*.php` |
 | **8** | Infrastruktur (MariaDB, Playwright-sync) | Låg | Löpande |
 | **9** | PHP 8.4 + PHPUnit 13 *(valfritt)* | Hög | Parkerad |
 
-**Rekommenderad ordning:** 1 → 2 → 3 → 4 → (5 och 6 parallellt om möjligt) → 7. Steg 9 först efter stabil PHP 8.3/12-miljö.
+**Rekommenderad ordning:** 1 → 2 → 3 → 4 → (5 och 6 parallellt om möjligt). Steg 9 först efter stabil PHP 8.3/12-miljö.
 
 ---
 
@@ -197,25 +197,24 @@ bash scripts/mrt.sh dev e2ewp  # WP E2E
 
 ---
 
-## Steg 7 — html2pdf.js 0.14
+## Steg 7 — Resesammanfattning-PDF (server) *(klar 2026-06)*
 
-**Mål:** Säkerhets- och underhållsuppdatering för PDF-export.  
-**Beräknad insats:** 2–4 h + manuell PDF-smoke.
+**Beslut:** Klient-`html2pdf.js` / `trip-pdf.js` ersattes med **Dompdf** på servern.
 
 | ID | Uppgift | Filer |
 |----|---------|-------|
-| 7.1 | Bump `html2pdf.js` | `package.json`, `package-lock.json` |
-| 7.2 | Bygg om PDF-bundle | `vite.pdf.config.ts` → `assets/dist/vue/assets/trip-pdf.js` |
-| 7.3 | Verifiera API | `src/wizard/utils/downloadTripSummaryPdf.ts`, `pdf-vendor-entry.ts` |
-| 7.4 | Test | E2E `wizard-steps` (PDF-knapp); manuell nedladdning i wizard |
+| 7.1 | `dompdf/dompdf` i Composer | `composer.json`, `vendor/` (ej i git) |
+| 7.2 | REST + HTML-mall | `inc/domain/journey/trip-summary-*.php`, `journey-trip-summary-pdf.php` |
+| 7.3 | Wizard anropar REST | `downloadTripSummaryPdf.ts`, `useSummaryExport.ts` |
+| 7.4 | Test | PHPUnit `TripSummaryDocumentTest`, E2E `wizard-pdf-download.spec.ts` |
 
-**Risk:** 0.10 → 0.14 är stor hopp inom 0.x — bundle-storlek och runtime-beteende kan skifta.
-
-**Acceptanskriterium:** PDF genereras korrekt i wizard (utskrift + nedladdning); `mrt e2e` grön.
-
-**PR-titel (förslag):** `Upgrade html2pdf.js and rebuild trip-pdf bundle.`
+**Acceptanskriterium:** PDF laddas ner från sammanfattningssteget; utskrift via `printElement` oförändrad.
 
 ---
+
+## ~~Steg 7 (arkiverat) — html2pdf.js 0.14~~
+
+Togs bort när PDF flyttades till servern (se ovan).
 
 ## Steg 8 — Infrastruktur *(löpande)*
 

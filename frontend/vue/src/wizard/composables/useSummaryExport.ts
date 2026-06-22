@@ -6,6 +6,7 @@ import { printElement } from '../../utils/printElement';
 import { shareText } from '../../utils/webShare';
 import { downloadTripSummaryPdf } from '../utils/downloadTripSummaryPdf';
 import { buildTripSummaryInput } from '../utils/tripSummaryBuild';
+import type { TripSummaryTextInput } from '../utils/tripSummaryText';
 import { buildTripSummaryText } from '../utils/tripSummaryText';
 import { cfgStr } from '../utils/wizardLabels';
 
@@ -46,6 +47,18 @@ export function useSummaryExport(options: SummaryExportOptions) {
   const shareFeedback = ref('');
   const shareFeedbackIsError = ref(false);
 
+  function buildSummaryInput(): TripSummaryTextInput {
+    return buildTripSummaryInput({
+      store,
+      cfg: cfg.value,
+      dateText: options.dateText.value,
+      tripTypeLabel: tripTypeLabel.value,
+      priceData: options.priceData.value,
+      dayPrices: options.dayPrices.value,
+      priceLabels: options.priceLabels.value,
+    });
+  }
+
   async function onDownloadPdf(): Promise<void> {
     if (pdfDownloading.value) {
       return;
@@ -53,18 +66,9 @@ export function useSummaryExport(options: SummaryExportOptions) {
     pdfError.value = '';
     pdfDownloading.value = true;
     try {
-      const input = buildTripSummaryInput({
-        store,
-        cfg: cfg.value,
-        dateText: options.dateText.value,
-        tripTypeLabel: tripTypeLabel.value,
-        priceData: options.priceData.value,
-        dayPrices: options.dayPrices.value,
-        priceLabels: options.priceLabels.value,
-      });
-      const ok = await downloadTripSummaryPdf(input, config);
-      if (!ok) {
-        pdfError.value = pdfErrorLabel.value;
+      const result = await downloadTripSummaryPdf(buildSummaryInput(), config);
+      if (!result.ok) {
+        pdfError.value = result.message?.trim() || pdfErrorLabel.value;
       }
     } catch {
       pdfError.value = pdfErrorLabel.value;
@@ -77,22 +81,10 @@ export function useSummaryExport(options: SummaryExportOptions) {
     printElement('[data-wizard-summary-print]');
   }
 
-  function buildSummaryTextInput() {
-    return buildTripSummaryInput({
-      store,
-      cfg: cfg.value,
-      dateText: options.dateText.value,
-      tripTypeLabel: tripTypeLabel.value,
-      priceData: options.priceData.value,
-      dayPrices: options.dayPrices.value,
-      priceLabels: options.priceLabels.value,
-    });
-  }
-
   async function onShare(): Promise<void> {
     shareFeedback.value = '';
     shareFeedbackIsError.value = false;
-    const text = buildTripSummaryText(buildSummaryTextInput());
+    const text = buildTripSummaryText(buildSummaryInput());
     const result = await shareText({
       title: cfgStr(cfg, 'stepSummary', 'Din resa'),
       text,

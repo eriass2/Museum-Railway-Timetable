@@ -47,6 +47,7 @@ if (!existsSync(join(distDir, adminJsRel))) {
 
 const REST_PREFIX = MRT_REST_JSON_PREFIX;
 const port = Number(process.env.MRT_E2E_PORT || 5199);
+const E2E_MIN_PDF_BASE64 = Buffer.from('%PDF-1.4\n%%EOF\n').toString('base64');
 
 /** Must match frontend/vue/vite.config.ts base (Vite public path). */
 const VITE_PUBLIC_BASE = '/wp-content/plugins/museum-railway-timetable/assets/dist/vue/';
@@ -512,6 +513,22 @@ async function handleRestRequest(req, res, pathOnly, requestUrl) {
     const tripType = String(query.get('trip_type') || 'single');
     res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
     res.end(JSON.stringify(buildTripPricesPayload(tripType)));
+    return;
+  }
+
+  if (pathOnly.endsWith('/journey/trip-summary/pdf') && req.method === 'POST') {
+    if (referer.includes('pdf=fail')) {
+      res.writeHead(500, { 'Content-Type': 'application/json; charset=utf-8' });
+      res.end(JSON.stringify({ message: 'PDF kunde inte skapas (e2e)' }));
+      return;
+    }
+    res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+    res.end(
+      JSON.stringify({
+        filename: 'resa.pdf',
+        content_base64: E2E_MIN_PDF_BASE64,
+      }),
+    );
     return;
   }
 
