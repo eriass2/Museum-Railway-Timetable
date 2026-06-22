@@ -70,6 +70,7 @@
 
 .mrt-tf-category.is-expanded .mrt-tf-category__row {
   background: var(--mrt-tf-category-active);
+  color: var(--mrt-tf-category-active-text, inherit);
 }
 
 .mrt-tf-category__icon {

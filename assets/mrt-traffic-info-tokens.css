@@ -12,6 +12,7 @@
   --mrt-tf-surface: #ffffff;
   --mrt-tf-border: #dddddd;
   --mrt-tf-category-active: #f5e642;
+  --mrt-tf-category-active-text: var(--mrt-tf-alert-text);
   --mrt-tf-category-hover: #f0f0f0;
   --mrt-tf-badge-bg: #e8e8e8;
   --mrt-tf-info: #c9a227;

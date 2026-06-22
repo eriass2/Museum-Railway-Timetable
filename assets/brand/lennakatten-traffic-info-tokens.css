@@ -16,6 +16,7 @@
   --mrt-tf-surface: var(--mrt-color-neutral-100, #ffffff);
   --mrt-tf-border: var(--mrt-color-neutral-200, #b4b4b4);
   --mrt-tf-category-active: var(--mrt-color-accent-600, #ddd24c);
+  --mrt-tf-category-active-text: var(--mrt-color-on-accent, #000000);
   --mrt-tf-category-hover: color-mix(
     in srgb,
     var(--mrt-color-accent-600, #ddd24c) 12%,
@@ -51,14 +52,6 @@
 
 .mrt-tf-alert__summary {
   border: 1px solid var(--mrt-tf-border);
-}
-
-.mrt-tf-category.is-expanded .mrt-tf-category__row {
-  color: var(--mrt-color-on-accent, #000000);
-}
-
-.mrt-tf-category.is-expanded .mrt-tf-category__icon {
-  color: var(--mrt-color-on-accent, #000000);
 }
 
 .mrt-tf-count-badge--info .mrt-tf-count-badge__mark {
