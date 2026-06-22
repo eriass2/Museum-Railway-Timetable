@@ -1,6 +1,6 @@
 # Plan: Granskning av responsivitet och max-storlekar (Vue)
 
-**Status:** Pågående — F0 klar (2026-06-22); T1–T2 klar (2026-06-22); T3–T8 ej påbörjad  
+**Status:** Pågående — F0 klar (2026-06-22); T1–T3 klar (2026-06-22); T4–T8 ej påbörjad  
 **Datum:** 2026-06-22  
 **Relaterat:** [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md), [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md), [REBUILD_RULES.md](REBUILD_RULES.md) §mobile-first
 
@@ -179,7 +179,7 @@ Granska endast om Tier 1–3 hittar återkommande problem:
 | F0 | Ramverk: tokens, checklista, inventeringsmall | ✅ 2026-06-22 |
 | T1 | Reseplanerare | ✅ 2026-06-22 |
 | T2 | Tidtabellsöversikt | ✅ 2026-06-22 |
-| T3 | Månadskalender | ☐ |
+| T3 | Månadskalender | ✅ 2026-06-22 |
 | T4 | Trafikinfo | ☐ |
 | T5 | Tidtabellsindex | ☐ |
 | T6 | Admin shell + dashboard | ☐ |
@@ -212,4 +212,4 @@ Granska endast om Tier 1–3 hittar återkommande problem:
 .\scripts\mrt.ps1 dev e2ewp
 ```
 
-**Första rekommenderade steg:** ~~F0~~ ✅ ~~T1~~ ✅ ~~T2~~ ✅ → **T3** (månadskalender) med V1–V5.
+**Första rekommenderade steg:** ~~F0~~ ✅ ~~T1–T3~~ ✅ → **T4** (trafikinfo) med V2 + V5.
