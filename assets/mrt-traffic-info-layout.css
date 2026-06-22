@@ -4,6 +4,7 @@
  */
 
 .mrt-tf-feed {
+  width: 100%;
   max-width: var(--mrt-tf-panel-max-width);
   background: var(--mrt-tf-surface);
   color: var(--mrt-tf-alert-text);
@@ -48,6 +49,8 @@
   align-items: center;
   gap: var(--mrt-tf-gap-inline);
   width: 100%;
+  min-height: 2.75rem;
+  box-sizing: border-box;
   padding: var(--mrt-tf-pad-row);
   border: 0;
   background: transparent;

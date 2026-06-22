@@ -1,7 +1,21 @@
 # Responsiv granskning — resultat
 
 **Plan:** [RESPONSIVE_AUDIT_PLAN.md](RESPONSIVE_AUDIT_PLAN.md)  
-**Status:** T1–T3 klar (2026-06-22)
+**Status:** T1–T4 klar (2026-06-22)
+
+---
+
+## T4 — Trafikinfo (sammanfattning)
+
+| Viewport | Resultat |
+|----------|----------|
+| V1 320px | ✅ Ingen sid-overflow (expanderad feed) |
+| V2 390px | ✅ Feed inom shell; kategorirader ≥44px efter fix |
+| V5 1920px | ✅ Feed cap `--mrt-max-feed` (36rem) |
+
+**Komponenter:** `MrtTrafficNoticesView`, `MrtTfPanels`, `MrtTfAlertCard`, `assets/mrt-traffic-info-layout.css`.
+
+**Åtgärder:** `min-height: 2.75rem` på kategorirader; `width: 100%` på feed; E2E `traffic-notices-responsive.spec.ts`; snapshots uppdaterade.
 
 ---
 
@@ -61,7 +75,10 @@
 | T1 Wizard | `MrtStepProgress` | ✅ | fluid | 48rem | Befintlig scroll | — |
 | T1 Wizard | `MrtTripCard` | ✅ | fluid | 48/22.5rem | OK | — |
 | T3 Calendar | `MonthCalendarApp` + grid | ✅ | `--mrt-max-app` | 40rem | OK | T3 |
-| T3 Calendar | `MrtCalendarNav` | ✅ | fluid | 48/40rem | Touch 2.65rem | — |
+| T4 Traffic | `MrtTfPanels` / feed | ✅ | `--mrt-max-feed` | 30rem¹ | Touch fix | T4 |
+| T4 Traffic | `MrtTfAlertCard` | ✅ | fluid | 30rem¹ | Validity wrap | — |
+
+¹ Layout `@media (max-width: 30rem)` — validity-rad, ej i token-skalan.
 
 **Legend:** R1–R8 enligt plan (✅ / ⚠️ / ❌).
 
@@ -72,4 +89,4 @@
 | Datum | Yta | Beskrivning | Status |
 |-------|-----|-------------|--------|
 | 2026-06-22 | F0 | Infört `assets/mrt-layout-tokens.css`; wizard shell kopplad till skalan | Klar |
-| 2026-06-22 | T3 | E2E month overflow, table scroll, touch targets | Klar |
+| 2026-06-22 | T4 | Kategori-rad touch target; feed width 100%; E2E + snapshots | Klar |
