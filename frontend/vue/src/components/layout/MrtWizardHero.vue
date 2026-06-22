@@ -44,7 +44,7 @@ defineProps<{
 }
 
 .mrt-journey-wizard__hero-inner {
-  width: min(100%, 58rem);
+  width: min(100%, var(--mrt-wizard-hero-inner-max, 58rem));
   margin-inline: auto;
   min-width: 0;
   max-width: 100%;
@@ -60,8 +60,12 @@ defineProps<{
   width: 100%;
   max-width: 100%;
   padding: clamp(1.5rem, 4vw, 2.5rem) clamp(1rem, 3vw, 1.75rem) clamp(2rem, 5vw, 3rem);
-  background: var(--mrt-wizard-surface);
-  color: var(--mrt-wizard-text);
+  background: var(--mrt-wizard-green-dark);
+  color: #fff;
+  --mrt-heading-surface-color: #fff;
+  --mrt-step-panel-search-bg: transparent;
+  --mrt-step-panel-search-color: #fff;
+  --mrt-step-panel-color: #fff;
 }
 
 .mrt-journey-wizard__hero--embedded.mrt-journey-wizard__hero--has-bg {
@@ -87,10 +91,6 @@ defineProps<{
   pointer-events: none;
 }
 
-.mrt-journey-wizard__hero--embedded:not(.mrt-journey-wizard__hero--has-bg) {
-  background: var(--mrt-wizard-surface);
-}
-
 .mrt-journey-wizard__hero--has-bg > .mrt-journey-wizard__hero-inner {
   position: relative;
   z-index: 1;
@@ -104,12 +104,6 @@ defineProps<{
   --mrt-step-panel-search-bg: var(--mrt-wizard-surface);
   --mrt-step-panel-search-color: var(--mrt-wizard-text);
   --mrt-step-panel-search-padding-inline: clamp(1.75rem, 4vw, 3rem);
-}
-
-.mrt-journey-wizard__hero--embedded:not(.mrt-journey-wizard__hero--has-bg) {
-  --mrt-step-panel-search-bg: transparent;
-  --mrt-step-panel-search-color: var(--mrt-wizard-text);
-  --mrt-step-panel-search-padding-inline: var(--mrt-spacing-sm, 0.5rem);
 }
 
 @media (min-width: 48.0625rem) {

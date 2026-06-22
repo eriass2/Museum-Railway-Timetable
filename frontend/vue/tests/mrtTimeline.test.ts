@@ -83,18 +83,18 @@ describe('MrtTimeline', () => {
     expect(html).toContain('mrt-timeline__node');
   });
 
-  it('clips line at first and last stop when collapsed', async () => {
+  it('draws a through segment on the toggle row when collapsed', async () => {
     const html = await renderTimeline(stops, false);
     expect(segmentCount(html, 'down')).toBe(1);
     expect(segmentCount(html, 'up')).toBe(1);
-    expect(segmentCount(html, 'through')).toBe(0);
+    expect(segmentCount(html, 'through')).toBe(1);
   });
 
-  it('uses through segments for middle stops when expanded', async () => {
+  it('uses through segments for toggle and middle stops when expanded', async () => {
     const html = await renderTimeline(stops, true);
     expect(segmentCount(html, 'down')).toBe(1);
     expect(segmentCount(html, 'up')).toBe(1);
-    expect(segmentCount(html, 'through')).toBe(2);
+    expect(segmentCount(html, 'through')).toBe(3);
   });
 
   it('uses down and up segments for a two-stop journey', async () => {

@@ -299,6 +299,12 @@ function MRT_frontend_body_class( array $classes ): array {
 	if ( $flags['has_overview'] ) {
 		$classes[] = 'mrt-has-overview';
 	}
+	if ( is_singular() && defined( 'MRT_OPTION_COMPONENTS_DEMO_PAGE_ID' ) ) {
+		$demo_page_id = (int) get_option( MRT_OPTION_COMPONENTS_DEMO_PAGE_ID, 0 );
+		if ( $demo_page_id > 0 && (int) get_queried_object_id() === $demo_page_id ) {
+			$classes[] = 'mrt-has-component-demo';
+		}
+	}
 	return $classes;
 }
 add_filter( 'body_class', 'MRT_frontend_body_class' );

@@ -1,11 +1,18 @@
 <script setup lang="ts">
 defineProps<{
   embedded?: boolean;
+  routeStep?: boolean;
 }>();
 </script>
 
 <template>
-  <div class="mrt-wizard-main-card" :class="{ 'mrt-wizard-main-card--embedded': embedded }">
+  <div
+    class="mrt-wizard-main-card"
+    :class="{
+      'mrt-wizard-main-card--embedded': embedded,
+      'mrt-wizard-main-card--route': routeStep,
+    }"
+  >
     <slot />
   </div>
 </template>
@@ -34,6 +41,13 @@ defineProps<{
 }
 
 .mrt-wizard-main-card--embedded {
+  background: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+.mrt-wizard-main-card--route {
+  background: transparent;
   box-shadow: none;
   padding: 0;
 }

@@ -68,24 +68,33 @@ function stepAria(
 }
 
 .mrt-step-progress {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.35rem;
-  justify-content: center;
+  width: 100%;
+  max-width: 100%;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
 .mrt-step-progress__wrap {
-  display: contents;
+  display: block;
+  min-width: 0;
+}
+
+/* Odd step count (tur/retur): last step spans full width. */
+.mrt-step-progress__wrap:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
 }
 
 .mrt-step-progress__item {
   box-sizing: border-box;
-  display: inline-flex;
+  display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  min-width: 0;
   min-height: 2rem;
   margin: 0;
   padding: 0.35rem 0.65rem;
@@ -99,7 +108,7 @@ function stepAria(
   line-height: 1.25;
   text-align: center;
   appearance: none;
-  box-shadow: 0 0 0 2px transparent;
+  box-shadow: none;
   cursor: default;
 }
 
@@ -124,11 +133,24 @@ function stepAria(
   color: var(--mrt-color-on-accent, #1a1a1a);
   background: var(--mrt-wizard-yellow, var(--mrt-color-accent-600));
   border-color: var(--mrt-color-accent-700, #c9a01a);
-  box-shadow: 0 0 0 2px var(--mrt-wizard-focus);
+}
+
+.mrt-step-progress__item:focus-visible {
+  outline-offset: -2px;
 }
 
 .mrt-step-progress__item:disabled {
   opacity: 1;
+}
+
+@media (min-width: 48.0625rem) {
+  .mrt-step-progress {
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+  }
+
+  .mrt-step-progress__wrap:last-child:nth-child(odd) {
+    grid-column: auto;
+  }
 }
 
 @media (max-width: 48rem) {
@@ -136,25 +158,7 @@ function stepAria(
     overflow-x: visible;
   }
 
-  .mrt-step-progress {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 0.3rem;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .mrt-step-progress__wrap {
-    display: block;
-    flex: 1 1 auto;
-    min-width: min(100%, 9.5rem);
-    max-width: 100%;
-  }
-
   .mrt-step-progress__item {
-    width: 100%;
-    min-width: 0;
     min-height: 2.75rem;
     font-size: 0.7rem;
     line-height: 1.2;

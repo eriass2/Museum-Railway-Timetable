@@ -16,7 +16,6 @@ import WizardTripStep from '../wizard/components/WizardTripStep.vue';
 import WizardBetaBanner from '../wizard/components/WizardBetaBanner.vue';
 import WizardFeedbackWidget from '../wizard/components/WizardFeedbackWidget.vue';
 import WizardSummaryStep from '../wizard/components/WizardSummaryStep.vue';
-import type { WizardStep } from '../wizard/types';
 import { cfgStr } from '../wizard/utils/wizardLabels';
 
 const props = defineProps<{ config: WizardVueConfig }>();
@@ -49,15 +48,6 @@ const progressItems = computed(() => {
 
 useWizardStepFocus(props.config, () => store.step, panelsRef);
 
-function stepGoToAria(label: string): string {
-  const template = cfgStr(cfg.value, 'stepGoTo', 'Gå till steg: %s');
-  return template.includes('%s') ? template.replace('%s', label) : `${template} ${label}`;
-}
-
-function onProgressSelect(key: string): void {
-  store.navigateToStep(key as WizardStep);
-}
-
 onMounted(() => {
   if (debug) {
     applyWizardDebugPreset(wizardCtx, debug);
@@ -87,14 +77,16 @@ onMounted(() => {
       <MrtAlert v-if="!hasStations" variant="info">
         {{ cfgStr(cfg, 'noStations', 'Inga stationer är tillgängliga.') }}
       </MrtAlert>
-      <MrtWizardMainCard v-if="hasStations" :embedded="embedded">
+      <MrtWizardMainCard
+        v-if="hasStations"
+        :embedded="embedded"
+        :route-step="store.step === 'route'"
+      >
         <WizardBetaBanner v-if="betaBanner" v-bind="betaBanner" />
         <MrtStepProgress
           :items="progressItems"
           :nav-aria-label="cfgStr(cfg, 'stepNavAria', 'Steg i reseplaneraren')"
-          :readonly="false"
-          :step-go-to-aria="stepGoToAria"
-          @select="onProgressSelect"
+          readonly
         />
         <div v-if="store.error && store.step !== 'route'" class="mrt-wizard-main-card__errors">
           <MrtAlert variant="error" live="assertive">{{ store.error }}</MrtAlert>

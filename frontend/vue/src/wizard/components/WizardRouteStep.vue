@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import MrtAccentButton from '../../components/ui/MrtAccentButton.vue';
-import MrtSurfaceCard from '../../components/ui/MrtSurfaceCard.vue';
 import MrtAlert from '../../components/ui/MrtAlert.vue';
 import MrtSegmentedControl from '../../components/ui/MrtSegmentedControl.vue';
 import MrtHeading from '../../components/ui/MrtHeading.vue';
@@ -69,7 +68,7 @@ function onSearch(): void {
       {{ cfgStr(cfg, 'routeTitle', 'Planera resa') }}
     </MrtHeading>
 
-    <MrtSurfaceCard class="mrt-journey-wizard__route-form">
+    <div class="mrt-journey-wizard__route-form">
       <MrtSegmentedControl
         v-model="tripType"
         size="compact"
@@ -83,6 +82,7 @@ function onSearch(): void {
       </MrtSegmentedControl>
 
       <MrtRouteLayout
+        link-tone="dark"
         :timetable-href="timetablePageUrl || undefined"
         :timetable-label="cfgStr(cfg, 'timetablePageLink', 'Visa hela tidtabellen')"
       >
@@ -129,11 +129,15 @@ function onSearch(): void {
           {{ cfgStr(cfg, 'searchTrip', 'Sök resa') }}
         </MrtAccentButton>
       </div>
-    </MrtSurfaceCard>
+    </div>
   </MrtStepPanel>
 </template>
 
 <style scoped>
+.mrt-journey-wizard__route-form :deep(.mrt-segmented-field__legend) {
+  color: inherit;
+}
+
 .mrt-journey-wizard__station-field {
   display: grid;
   gap: 0.25rem;

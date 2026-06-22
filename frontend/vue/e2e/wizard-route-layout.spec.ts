@@ -11,17 +11,17 @@ test.describe('Journey wizard route step layout', () => {
     await expect(page.locator('.mrt-journey-wizard')).toHaveAttribute('data-step', 'route');
   });
 
-  test('main card uses green shell with white inner route form', async ({ page }) => {
-    const mainCard = page.locator('.mrt-wizard-main-card').first();
-    await expect(mainCard).toBeVisible();
+  test('route form sits on green shell without nested white card', async ({ page }) => {
+    const hero = page.locator('.mrt-journey-wizard__hero').first();
+    await expect(hero).toBeVisible();
 
-    const mainCardBg = await mainCard.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(mainCardBg).not.toBe('rgba(0, 0, 0, 0)');
+    const heroBg = await hero.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(heroBg).not.toBe('rgba(0, 0, 0, 0)');
 
     const routeForm = page.locator('.mrt-journey-wizard__route-form').first();
     await expect(routeForm).toBeVisible();
     const formBg = await routeForm.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(formBg).not.toBe(mainCardBg);
+    expect(formBg).toBe('rgba(0, 0, 0, 0)');
   });
 
   test('trip type control appears before stacked station fields', async ({ page }) => {

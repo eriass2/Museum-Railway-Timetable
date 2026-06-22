@@ -15,7 +15,7 @@ test.describe('Journey wizard timeline layout', () => {
     await expect(timeline.locator('.mrt-timeline__node-col')).toHaveCount(3);
     await expect(timeline.locator('.mrt-timeline__node-col--segment-down')).toHaveCount(1);
     await expect(timeline.locator('.mrt-timeline__node-col--segment-up')).toHaveCount(1);
-    await expect(timeline.locator('.mrt-timeline__node-col--segment-through')).toHaveCount(0);
+    await expect(timeline.locator('.mrt-timeline__node-col--segment-through')).toHaveCount(1);
     await expect(timeline.locator('.mrt-timeline__time-ca')).toHaveCount(0);
     await expect(timeline.locator('.mrt-timeline__info')).toHaveCount(0);
     return timeline;
@@ -51,7 +51,7 @@ test.describe('Journey wizard timeline layout', () => {
     await expect(timeline.locator('.mrt-timeline__info')).toHaveCount(1);
     await expect(timeline.locator('.mrt-timeline__node-col--segment-down')).toHaveCount(1);
     await expect(timeline.locator('.mrt-timeline__node-col--segment-up')).toHaveCount(1);
-    await expect(timeline.locator('.mrt-timeline__node-col--segment-through')).toHaveCount(3);
+    await expect(timeline.locator('.mrt-timeline__node-col--segment-through')).toHaveCount(4);
 
     const nodeCol = timeline.locator('.mrt-timeline__node-col').first();
     const alignment = await nodeCol.evaluate((col) => {

@@ -12,6 +12,8 @@ test.describe('Journey wizard (WordPress)', () => {
     }
     const root = page.locator('.mrt-journey-wizard').first();
     await expect(root).toBeVisible({ timeout: 20_000 });
+    await expect(root).toHaveAttribute('data-step', 'route');
     await expect(root.locator('.mrt-step-nav')).toBeVisible();
+    await expect(root.locator('.mrt-step-progress__item.is-active')).toBeVisible();
   });
 });

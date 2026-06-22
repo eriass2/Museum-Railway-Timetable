@@ -49,6 +49,10 @@ withDefaults(
   );
   background: var(--mrt-step-panel-search-bg, var(--mrt-step-panel-bg, var(--mrt-wizard-green-dark)));
   color: var(--mrt-step-panel-search-color, var(--mrt-step-panel-color, #ffffff));
+  --mrt-heading-surface-color: var(
+    --mrt-step-panel-search-color,
+    var(--mrt-step-panel-color, #ffffff)
+  );
 }
 
 .mrt-step-panel--wide {

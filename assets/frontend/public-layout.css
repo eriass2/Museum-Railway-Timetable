@@ -39,3 +39,16 @@ body.mrt-has-shortcodes .mrt-journey-wizard--embedded {
   max-width: 100%;
   min-width: 0;
 }
+
+/* Component demo: wider content column and wizard hero inner cap. */
+body.mrt-has-component-demo {
+  --mrt-app-content-max: min(98vw, var(--mrt-max-app));
+  --mrt-wizard-hero-inner-max: var(--mrt-app-content-max);
+}
+
+body.mrt-has-component-demo .entry-content,
+body.mrt-has-component-demo .wp-block-post-content,
+body.mrt-has-component-demo .is-layout-constrained > .mrt-vue-root.alignwide,
+body.mrt-has-component-demo .wp-block-post-content-is-layout-constrained > .mrt-vue-root.alignwide {
+  max-width: var(--mrt-app-content-max, min(98vw, var(--mrt-max-app)));
+}

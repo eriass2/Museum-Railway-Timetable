@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import MrtExpandTrigger from '../MrtExpandTrigger.vue';
+import MrtTimelineNode from './MrtTimelineNode.vue';
 
 defineProps<{
   expanded: boolean;
@@ -14,10 +15,7 @@ const emit = defineEmits<{
 <template>
   <li class="mrt-timeline__item mrt-timeline__toggle mrt-timeline-row-grid">
     <span class="mrt-timeline__time-spacer" aria-hidden="true" />
-    <span
-      class="mrt-timeline__node-col mrt-timeline__node-col--empty"
-      aria-hidden="true"
-    />
+    <MrtTimelineNode segment="through" class="mrt-timeline__toggle-line" />
     <MrtExpandTrigger
       variant="link"
       align="start"
@@ -34,8 +32,7 @@ const emit = defineEmits<{
   padding: 0.15rem 0;
 }
 
-.mrt-timeline__node-col--empty {
-  width: var(--mrt-tl-node);
-  justify-self: center;
+.mrt-timeline__toggle-line :deep(.mrt-timeline__node) {
+  visibility: hidden;
 }
 </style>

@@ -24,9 +24,9 @@ test.describe('Journey wizard steps', () => {
     await expect(page.locator('.mrt-step-progress__item.is-active')).toContainText(/återresa/i);
   });
 
-  test('completed progress steps navigate back', async ({ page }) => {
-    await page.goto('/wizard?debug=summary');
-    await page.getByRole('button', { name: /datum/i }).click();
+  test('back button navigates to previous step', async ({ page }) => {
+    await page.goto('/wizard?debug=outbound');
+    await page.getByRole('button', { name: /Tillbaka/i }).click();
     await expect(page.locator('.mrt-journey-wizard')).toHaveAttribute('data-step', 'date');
     await expect(page.locator('[data-wizard-step="date"]')).toBeVisible();
   });
