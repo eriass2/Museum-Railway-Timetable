@@ -1,10 +1,11 @@
-import { computed, ref, type ComputedRef, type Ref } from 'vue';
+import { computed, onMounted, ref, type ComputedRef, type Ref } from 'vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import type { DayTicketData, TripPriceData } from '../../shared/prices';
 import type { PriceTableLabels } from '../../shared/priceLabels';
 import { printElement } from '../../utils/printElement';
 import { shareText } from '../../utils/webShare';
 import { downloadTripSummaryPdf } from '../utils/downloadTripSummaryPdf';
+import { prefetchHtml2Pdf } from '../utils/loadHtml2Pdf';
 import { buildTripSummaryInput } from '../utils/tripSummaryBuild';
 import { buildTripSummaryText } from '../utils/tripSummaryText';
 import { cfgStr } from '../utils/wizardLabels';
@@ -29,6 +30,9 @@ export function useSummaryExport(options: SummaryExportOptions) {
 
   const printLabel = computed(() => cfgStr(cfg, 'summaryPrint', 'Skriv ut'));
   const downloadPdfLabel = computed(() => cfgStr(cfg, 'summaryDownloadPdf', 'Ladda ner som PDF'));
+  const downloadPdfBusyLabel = computed(() =>
+    cfgStr(cfg, 'summaryDownloadingPdf', 'Skapar PDF…'),
+  );
   const pdfErrorLabel = computed(() =>
     cfgStr(cfg, 'summaryPdfError', 'Kunde inte skapa PDF. Försök igen eller använd Skriv ut.'),
   );
@@ -42,6 +46,10 @@ export function useSummaryExport(options: SummaryExportOptions) {
 
   const shareFeedback = ref('');
   const shareFeedbackIsError = ref(false);
+
+  onMounted(() => {
+    prefetchHtml2Pdf(config.tripPdfUrl);
+  });
 
   async function onDownloadPdf(): Promise<void> {
     if (pdfDownloading.value) {
@@ -110,6 +118,7 @@ export function useSummaryExport(options: SummaryExportOptions) {
     tripTypeLabel,
     printLabel,
     downloadPdfLabel,
+    downloadPdfBusyLabel,
     shareLabel,
     shareFeedback,
     shareFeedbackIsError,

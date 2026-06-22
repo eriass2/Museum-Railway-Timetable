@@ -2,6 +2,8 @@
 import MrtButton from './MrtButton.vue';
 import type { MrtPublicButtonVariant } from './types';
 
+defineOptions({ inheritAttrs: false });
+
 withDefaults(
   defineProps<{
     href?: string;
@@ -29,6 +31,7 @@ defineEmits<{ click: [] }>();
     :variant="variant"
     :disabled="disabled"
     :class="size !== 'default' ? `mrt-accent-btn--size-${size}` : undefined"
+    v-bind="$attrs"
     @click="$emit('click')"
   >
     <slot />

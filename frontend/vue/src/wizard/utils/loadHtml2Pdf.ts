@@ -73,3 +73,10 @@ export async function loadHtml2Pdf(configuredUrl?: string): Promise<Html2PdfFn> 
   }
   return window.MRTHtml2Pdf;
 }
+
+/** Warm the lazy PDF vendor on the summary step so the first download is faster. */
+export function prefetchHtml2Pdf(configuredUrl?: string): void {
+  void loadHtml2Pdf(configuredUrl).catch(() => {
+    // Best-effort; explicit download surfaces errors to the user.
+  });
+}

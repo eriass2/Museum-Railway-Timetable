@@ -115,6 +115,7 @@ export type WizardCfgStringKey =
   | 'ticketCta'
   | 'summaryPrint'
   | 'summaryDownloadPdf'
+  | 'summaryDownloadingPdf'
   | 'summaryShare'
   | 'summaryShareCopied'
   | 'summaryShareError'

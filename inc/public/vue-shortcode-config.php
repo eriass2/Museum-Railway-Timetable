@@ -212,6 +212,7 @@ function MRT_vue_wizard_config( array $stations, array $parsed ): array {
 			'ticketCta'       => __( 'Mer information om biljettköp', 'museum-railway-timetable' ),
 			'summaryPrint'    => __( 'Skriv ut', 'museum-railway-timetable' ),
 			'summaryDownloadPdf' => __( 'Ladda ner som PDF', 'museum-railway-timetable' ),
+			'summaryDownloadingPdf' => __( 'Skapar PDF…', 'museum-railway-timetable' ),
 			'summaryShare'    => __( 'Dela', 'museum-railway-timetable' ),
 			'summaryShareCopied' => __( 'Resesammanfattning kopierad till urklipp.', 'museum-railway-timetable' ),
 			'summaryShareError' => __( 'Kunde inte dela resan. Försök igen.', 'museum-railway-timetable' ),

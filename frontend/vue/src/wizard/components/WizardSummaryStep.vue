@@ -28,6 +28,7 @@ const {
   tripTypeLabel,
   printLabel,
   downloadPdfLabel,
+  downloadPdfBusyLabel,
   shareLabel,
   shareFeedback,
   shareFeedbackIsError,
@@ -108,9 +109,10 @@ function onBack(): void {
           variant="secondary"
           size="summary"
           :disabled="pdfDownloading"
+          :aria-busy="pdfDownloading"
           @click="onDownloadPdf"
         >
-          {{ downloadPdfLabel }}
+          {{ pdfDownloading ? downloadPdfBusyLabel : downloadPdfLabel }}
         </MrtAccentButton>
       </div>
       <p v-if="pdfError" class="mrt-summary-actions__feedback" role="alert">
