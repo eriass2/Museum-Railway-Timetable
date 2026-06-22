@@ -59,17 +59,16 @@ function onSearch(): void {
 </script>
 
 <template>
-  <div class="mrt-journey-wizard__route-step">
+  <MrtStepPanel
+    step="route"
+    variant="search"
+    :ariaLabel="cfgStr(cfg, 'stepRoute', 'Sök resa')"
+  >
     <MrtHeading level="h2" size="xl" variant="surface-title">
       {{ cfgStr(cfg, 'routeTitle', 'Planera resa') }}
     </MrtHeading>
 
-    <MrtStepPanel
-      step="route"
-      variant="search"
-      :ariaLabel="cfgStr(cfg, 'stepRoute', 'Sök resa')"
-    >
-      <div class="mrt-journey-wizard__route-form">
+    <div class="mrt-journey-wizard__route-form">
       <MrtSegmentedControl
         v-model="tripType"
         size="compact"
@@ -130,20 +129,11 @@ function onSearch(): void {
           {{ cfgStr(cfg, 'searchTrip', 'Sök resa') }}
         </MrtAccentButton>
       </div>
-      </div>
-    </MrtStepPanel>
-  </div>
+    </div>
+  </MrtStepPanel>
 </template>
 
 <style scoped>
-.mrt-journey-wizard__route-step {
-  display: grid;
-  gap: 0;
-}
-
-.mrt-journey-wizard__route-step :deep(.mrt-heading--surface-title) {
-  color: var(--mrt-heading-surface-color, #fff);
-}
 .mrt-journey-wizard__route-form :deep(.mrt-segmented-field__legend) {
   color: inherit;
 }

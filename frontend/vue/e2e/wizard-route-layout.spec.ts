@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 
 /**
- * Layout guardrails for wizard route step (CSS encapsulation / J19).
- * Catches regressions where legacy global CSS overrides scoped SFC styles.
+ * Layout guardrails for wizard route step.
+ * Target: stepper in main card shell; route title + form in white search panel.
  */
 test.describe('Journey wizard route step layout', () => {
   test.beforeEach(async ({ page }) => {
@@ -11,22 +11,28 @@ test.describe('Journey wizard route step layout', () => {
     await expect(page.locator('.mrt-journey-wizard')).toHaveAttribute('data-step', 'route');
   });
 
-  test('route form sits in white panel on green shell', async ({ page }) => {
-    const shell = page.locator('.mrt-wizard-main-card, .mrt-journey-wizard__hero').first();
-    await expect(shell).toBeVisible();
+  test('stepper and search panel live inside the wizard main card', async ({ page }) => {
+    const mainCard = page.locator('.mrt-wizard-main-card').first();
+    await expect(mainCard).toBeVisible();
 
-    const shellBg = await shell.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(shellBg).not.toBe('rgba(0, 0, 0, 0)');
+    const stepper = mainCard.locator('.mrt-step-nav').first();
+    await expect(stepper).toBeVisible();
 
-    const searchPanel = page.locator('.mrt-step-panel--search').first();
+    const searchPanel = mainCard.locator('.mrt-step-panel--search').first();
     await expect(searchPanel).toBeVisible();
     const panelBg = await searchPanel.evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(panelBg).toBe('rgb(255, 255, 255)');
+  });
 
-    const routeTitle = page.locator('.mrt-journey-wizard__route-step .mrt-heading--surface-title').first();
+  test('route title sits in white search panel with dark text', async ({ page }) => {
+    const searchPanel = page.locator('.mrt-step-panel--search').first();
+    await expect(searchPanel).toBeVisible();
+
+    const routeTitle = searchPanel.locator('.mrt-heading--surface-title').first();
     await expect(routeTitle).toBeVisible();
     const titleColor = await routeTitle.evaluate((el) => getComputedStyle(el).color);
-    expect(titleColor).toBe('rgb(255, 255, 255)');
+    expect(titleColor).not.toBe('rgb(255, 255, 255)');
+    expect(titleColor).not.toBe('rgba(0, 0, 0, 0)');
   });
 
   test('trip type control appears before stacked station fields', async ({ page }) => {
