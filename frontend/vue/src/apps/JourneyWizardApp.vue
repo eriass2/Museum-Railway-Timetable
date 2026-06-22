@@ -80,7 +80,6 @@ onMounted(() => {
       <MrtWizardMainCard
         v-if="hasStations"
         :embedded="embedded"
-        :route-step="store.step === 'route'"
       >
         <WizardBetaBanner v-if="betaBanner" v-bind="betaBanner" />
         <MrtStepProgress

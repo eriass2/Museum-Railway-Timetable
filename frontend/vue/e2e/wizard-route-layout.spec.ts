@@ -11,17 +11,22 @@ test.describe('Journey wizard route step layout', () => {
     await expect(page.locator('.mrt-journey-wizard')).toHaveAttribute('data-step', 'route');
   });
 
-  test('route form sits on green shell without nested white card', async ({ page }) => {
-    const hero = page.locator('.mrt-journey-wizard__hero').first();
-    await expect(hero).toBeVisible();
+  test('route form sits in white panel on green shell', async ({ page }) => {
+    const shell = page.locator('.mrt-wizard-main-card, .mrt-journey-wizard__hero').first();
+    await expect(shell).toBeVisible();
 
-    const heroBg = await hero.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(heroBg).not.toBe('rgba(0, 0, 0, 0)');
+    const shellBg = await shell.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(shellBg).not.toBe('rgba(0, 0, 0, 0)');
 
-    const routeForm = page.locator('.mrt-journey-wizard__route-form').first();
-    await expect(routeForm).toBeVisible();
-    const formBg = await routeForm.evaluate((el) => getComputedStyle(el).backgroundColor);
-    expect(formBg).toBe('rgba(0, 0, 0, 0)');
+    const searchPanel = page.locator('.mrt-step-panel--search').first();
+    await expect(searchPanel).toBeVisible();
+    const panelBg = await searchPanel.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(panelBg).toBe('rgb(255, 255, 255)');
+
+    const routeTitle = page.locator('.mrt-journey-wizard__route-step .mrt-heading--surface-title').first();
+    await expect(routeTitle).toBeVisible();
+    const titleColor = await routeTitle.evaluate((el) => getComputedStyle(el).color);
+    expect(titleColor).toBe('rgb(255, 255, 255)');
   });
 
   test('trip type control appears before stacked station fields', async ({ page }) => {

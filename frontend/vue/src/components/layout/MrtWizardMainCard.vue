@@ -1,17 +1,13 @@
 <script setup lang="ts">
 defineProps<{
   embedded?: boolean;
-  routeStep?: boolean;
 }>();
 </script>
 
 <template>
   <div
     class="mrt-wizard-main-card"
-    :class="{
-      'mrt-wizard-main-card--embedded': embedded,
-      'mrt-wizard-main-card--route': routeStep,
-    }"
+    :class="{ 'mrt-wizard-main-card--embedded': embedded }"
   >
     <slot />
   </div>
@@ -35,6 +31,8 @@ defineProps<{
   --mrt-step-panel-color: inherit;
   --mrt-step-panel-search-width: 100%;
   --mrt-step-panel-wide-width: 100%;
+  --mrt-step-panel-search-bg: var(--mrt-wizard-surface, #ffffff);
+  --mrt-step-panel-search-color: var(--mrt-wizard-text, #1a1a1a);
   --mrt-wizard-beta-max-width: none;
   --mrt-step-nav-margin-bottom: 1.25rem;
   --mrt-heading-surface-color: #fff;
@@ -44,12 +42,9 @@ defineProps<{
   background: transparent;
   box-shadow: none;
   padding: 0;
-}
-
-.mrt-wizard-main-card--route {
-  background: transparent;
-  box-shadow: none;
-  padding: 0;
+  --mrt-step-panel-search-bg: var(--mrt-wizard-surface, #ffffff);
+  --mrt-step-panel-search-color: var(--mrt-wizard-text, #1a1a1a);
+  --mrt-heading-surface-color: #fff;
 }
 
 @media (max-width: 48rem) {
