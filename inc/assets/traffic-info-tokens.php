@@ -22,7 +22,7 @@ function MRT_use_lennakatten_traffic_info_tokens(): bool {
 	if ( $filtered !== null ) {
 		return (bool) $filtered;
 	}
-	if ( defined( 'MRT_LENNAKATTEN_BRAND' ) && MRT_LENNAKATTEN_BRAND ) {
+	if ( function_exists( 'MRT_is_lennakatten_brand_enabled' ) && MRT_is_lennakatten_brand_enabled() ) {
 		return true;
 	}
 	return function_exists( 'MRT_use_lennakatten_brand_tokens' ) && MRT_use_lennakatten_brand_tokens();

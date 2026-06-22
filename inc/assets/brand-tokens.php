@@ -14,6 +14,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 require_once __DIR__ . '/brand-tokens-data.php';
 
 /**
+ * Whether Lennakatten branding is enabled (constant + filter only).
+ *
+ * Does not consider CSV-imported tokens; use MRT_use_lennakatten_brand_tokens()
+ * for static pack enqueue.
+ */
+function MRT_is_lennakatten_brand_enabled(): bool {
+	$default = defined( 'MRT_LENNAKATTEN_BRAND' ) && MRT_LENNAKATTEN_BRAND;
+	return (bool) apply_filters( 'mrt_use_lennakatten_brand_tokens', $default );
+}
+
+/**
  * Whether to enqueue Lennakatten static brand CSS (when no CSV tokens stored).
  *
  * Default: MRT_LENNAKATTEN_BRAND constant in wp-config.php.
@@ -23,8 +34,7 @@ function MRT_use_lennakatten_brand_tokens(): bool {
 	if ( MRT_has_imported_brand_tokens() ) {
 		return false;
 	}
-	$default = defined( 'MRT_LENNAKATTEN_BRAND' ) && MRT_LENNAKATTEN_BRAND;
-	return (bool) apply_filters( 'mrt_use_lennakatten_brand_tokens', $default );
+	return MRT_is_lennakatten_brand_enabled();
 }
 
 /**

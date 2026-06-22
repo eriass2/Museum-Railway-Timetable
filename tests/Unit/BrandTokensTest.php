@@ -85,6 +85,13 @@ final class BrandTokensTest extends TestCase {
 		self::assertSame( '"Roboto", sans-serif', MRT_get_brand_css_tokens()['--mrt-font-body'] );
 	}
 
+	public function test_lennakatten_brand_enabled_follows_constant(): void {
+		if ( ! defined( 'MRT_LENNAKATTEN_BRAND' ) || ! MRT_LENNAKATTEN_BRAND ) {
+			self::markTestSkipped( 'MRT_LENNAKATTEN_BRAND is not enabled in this test run.' );
+		}
+		self::assertTrue( MRT_is_lennakatten_brand_enabled() );
+	}
+
 	public function test_imported_tokens_disable_lennakatten_pack(): void {
 		update_option(
 			MRT_OPTION_BRAND_TOKENS,
