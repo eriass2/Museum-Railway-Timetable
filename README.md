@@ -75,6 +75,11 @@ This plugin is provided as-is for use with WordPress.
 - **Component demo**: three blocks (month, overview, wizard with `embedded="1"`)
 - **Dev menu**: component demo + wizard smoke test only
 
+### 0.3.1
+- **Wizard**: route step title and stepper stay inside the main card; white search panel restored
+- **Traffic info**: Lennakatten brand tokens load correctly after CSV import
+- **Traffic info**: tighter alert spacing and line-badge alignment
+
 ### 0.4.0
 - Journey search shortcode `[museum_journey_planner]` (superseded by wizard)
 - Admin documentation for public shortcodes

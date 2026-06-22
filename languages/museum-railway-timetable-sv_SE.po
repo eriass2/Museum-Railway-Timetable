@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Museum Railway Timetable 0.3.0\n"
+"Project-Id-Version: Museum Railway Timetable 0.3.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/museum-railway-"
 "timetable\n"
 "POT-Creation-Date: 2026-06-02T13:56:24+00:00\n"

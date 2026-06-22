@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Museum Railway Timetable
  * Description: A calendar displaying train timetables for a museum railway.
- * Version: 0.3.0
+ * Version: 0.3.1
  * Requires at least: 6.0
  * Requires PHP: 8.0
  * Author: Erik
@@ -13,7 +13,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; }
 
-define( 'MRT_VERSION', '0.3.0' );
+define( 'MRT_VERSION', '0.3.1' );
 define( 'MRT_PATH', plugin_dir_path( __FILE__ ) );
 define( 'MRT_URL', plugin_dir_url( __FILE__ ) );
 
