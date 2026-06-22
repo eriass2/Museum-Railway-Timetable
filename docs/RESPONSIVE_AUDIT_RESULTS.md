@@ -1,7 +1,21 @@
 # Responsiv granskning — resultat
 
 **Plan:** [RESPONSIVE_AUDIT_PLAN.md](RESPONSIVE_AUDIT_PLAN.md)  
-**Status:** T1–T4 klar (2026-06-22)
+**Status:** T1–T5 klar (2026-06-22)
+
+---
+
+## T5 — Tidtabellsindex (sammanfattning)
+
+| Viewport | Resultat |
+|----------|----------|
+| V1 320px | ✅ Ingen sid-overflow; titlar klipps inte |
+| V2 390px | ✅ Kort ≥44px höjd |
+| V5 1920px | ✅ Cap `--mrt-max-content` (42rem) |
+
+**Komponenter:** `MrtTimetableIndexView`, `MrtTimetableIndexCard`.
+
+**Åtgärder:** `42rem` → `var(--mrt-max-content)`; E2E `index-responsive.spec.ts`.
 
 ---
 
@@ -78,7 +92,11 @@
 | T4 Traffic | `MrtTfPanels` / feed | ✅ | `--mrt-max-feed` | 30rem¹ | Touch fix | T4 |
 | T4 Traffic | `MrtTfAlertCard` | ✅ | fluid | 30rem¹ | Validity wrap | — |
 
-¹ Layout `@media (max-width: 30rem)` — validity-rad, ej i token-skalan.
+| T5 Index | `MrtTimetableIndexView` | ✅ | `--mrt-max-content` | 40rem² | Token migration | T5 |
+| T5 Index | `MrtTimetableIndexCard` | ✅ | fluid | 40rem² | Touch OK | — |
+
+¹ T4 layout `@media (max-width: 30rem)` — validity-rad.  
+² T5 card padding `@media (min-width: 40rem)`.
 
 **Legend:** R1–R8 enligt plan (✅ / ⚠️ / ❌).
 
@@ -89,4 +107,4 @@
 | Datum | Yta | Beskrivning | Status |
 |-------|-----|-------------|--------|
 | 2026-06-22 | F0 | Infört `assets/mrt-layout-tokens.css`; wizard shell kopplad till skalan | Klar |
-| 2026-06-22 | T4 | Kategori-rad touch target; feed width 100%; E2E + snapshots | Klar |
+| 2026-06-22 | T5 | Token `--mrt-max-content`; E2E index responsive | Klar |

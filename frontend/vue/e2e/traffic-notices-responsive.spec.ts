@@ -65,7 +65,7 @@ test.describe('Traffic notices responsive layout', () => {
 
   test('feed stays within shell content at 390px', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 820 });
-    const feed = await openExpandedFeed(page);
+    await openExpandedFeed(page);
 
     const metrics = await page.evaluate(() => {
       const feedEl = document.querySelector('.mrt-tf-feed');

@@ -34,7 +34,7 @@ defineProps<{
 <style scoped>
 .mrt-timetable-index {
   margin: 0 0 var(--mrt-spacing-xl, 2rem);
-  max-width: 42rem;
+  max-width: var(--mrt-max-content);
 }
 
 .mrt-timetable-index__intro {
@@ -59,7 +59,7 @@ defineProps<{
 
 <style>
 .mrt-timetable-index-secondary__title {
-  max-width: 42rem;
+  max-width: var(--mrt-max-content);
   margin: 2.25rem auto 1rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--mrt-color-neutral-200, #b4b4b4);
