@@ -100,7 +100,29 @@ Kodstandarder och clean code-principer för projektet (PHP, CSS, JS, WordPress).
 - **Wizard-CSS:** scoped i `JourneyWizardApp.vue` och `wizard/components/*` (se [CSS_ENCAPSULATION_PLAN.md](CSS_ENCAPSULATION_PLAN.md)).
 - **Tidtabellsöversikt-CSS:** scoped i `MrtTimetableOverviewShell.vue` — block `.mrt-ov-*`. Använd tokens (`--mrt-color-green-*`, `--mrt-from-to-bg`, `--mrt-transfer-*` från `assets/frontend/tokens.css`) i stället för nya hex-värden.
 - **Färgtokens:** `assets/mrt-color-tokens.css` importeras först i `mrt-public.css`. Se [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md) och [design/COLOR_PALETTE.md](design/COLOR_PALETTE.md).
+- **Layout-tokens:** `assets/mrt-layout-tokens.css` — max-width-skala (`--mrt-max-*`), shell-caps (`--mrt-app-content-max`, `--mrt-wizard-content-max`) och breakpoint-referenser. Se [RESPONSIVE_AUDIT_PLAN.md](RESPONSIVE_AUDIT_PLAN.md). Komponenter ska referera tokens — inte hårdkoda `42rem`/`46rem` i ny kod.
 - **Restyp-ikoner:** SVG i `WizardTripTypeIcon.vue`; scoped CSS i komponenten.
+
+### Responsivitet (public vs admin)
+
+| Kontext | Breakpoint | JS-match |
+|---------|------------|----------|
+| Publik Vue | `48rem` (primär), `40rem`, `22.5rem` | — |
+| Admin mobil | `782px` | `useMobileAdmin` / `MOBILE_QUERY` |
+
+**Max-width-skala** (`assets/mrt-layout-tokens.css`):
+
+| Token | Värde | Typisk användning |
+|-------|-------|-------------------|
+| `--mrt-max-narrow` | `28rem` | Formulär, smala paneler |
+| `--mrt-max-feed` | `36rem` | Trafikinfo-feed |
+| `--mrt-max-content` | `42rem` | Index, texttunga kort |
+| `--mrt-max-step` | `46rem` | Wizard sök, fel, beta |
+| `--mrt-max-step-wide` | `54rem` | Wizard utresa/retur |
+| `--mrt-max-wizard` | `64rem` | Wizard shell |
+| `--mrt-max-app` | `80rem` | Publik app-shell |
+
+Shell sätter `--mrt-app-content-max` och `--mrt-wizard-content-max` (viewport-aware). Granskningsplan: [RESPONSIVE_AUDIT_PLAN.md](RESPONSIVE_AUDIT_PLAN.md).
 
 ### Exempel
 
