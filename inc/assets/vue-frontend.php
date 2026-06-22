@@ -76,23 +76,7 @@ function MRT_vue_shared_client_config(): array {
 		array( 'strings' => $fe )
 	);
 
-	$trip_pdf_url = MRT_vue_trip_pdf_script_url();
-	if ( null !== $trip_pdf_url ) {
-		$shared['tripPdfUrl'] = $trip_pdf_url;
-	}
-
 	return $shared;
-}
-
-/**
- * URL for lazy-loaded trip PDF helper script, when built.
- */
-function MRT_vue_trip_pdf_script_url(): ?string {
-	$path = MRT_vue_dist_dir() . 'assets/trip-pdf.js';
-	if ( ! is_readable( $path ) ) {
-		return null;
-	}
-	return MRT_assets_base_url() . 'dist/vue/assets/trip-pdf.js';
 }
 
 /**

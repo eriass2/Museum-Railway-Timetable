@@ -32,6 +32,10 @@ function MRT_load_journey_domain_modules(): void {
 	require_once $journey_dir . 'journey-scoring.php';
 	require_once $journey_dir . 'request-params.php';
 	require_once $journey_dir . 'public-handlers.php';
+	require_once $journey_dir . 'trip-summary-pdf-styles.php';
+	require_once $journey_dir . 'trip-summary-document.php';
+	require_once $journey_dir . 'trip-summary-pdf-input.php';
+	require_once $journey_dir . 'trip-summary-pdf-render.php';
 }
 
 /**

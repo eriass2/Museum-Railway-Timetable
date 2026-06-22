@@ -1,9 +1,10 @@
-import { buildTripSummaryHtml, tripSummaryPdfStyles } from './tripSummaryDocument';
-import { loadHtml2Pdf } from './loadHtml2Pdf';
+import type { MrtRestConfig } from '../../config/types';
+import { mrtRestRequest } from '../../api/mrtRest';
 import type { TripSummaryTextInput } from './tripSummaryText';
 
-export type DownloadTripSummaryPdfOptions = {
-  tripPdfUrl?: string;
+type TripSummaryPdfResponse = {
+  filename: string;
+  content_base64: string;
 };
 
 /** Slug for PDF download filename (ASCII-safe, preserves Swedish letters as a/o). */
@@ -18,89 +19,45 @@ export function tripSummaryPdfFilename(tripName: string): string {
   return `${slug || 'resa'}.pdf`;
 }
 
-function downloadBlob(blob: Blob, filename: string): void {
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  link.rel = 'noopener';
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 2000);
+function downloadBase64Pdf(filename: string, contentBase64: string): boolean {
+  try {
+    const binary = atob(contentBase64);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    const blob = new Blob([bytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = filename;
+    anchor.click();
+    URL.revokeObjectURL(url);
+    return true;
+  } catch {
+    return false;
+  }
 }
 
-function mountPdfIframe(bodyHtml: string): HTMLIFrameElement {
-  const iframe = document.createElement('iframe');
-  iframe.setAttribute('aria-hidden', 'true');
-  iframe.title = '';
-  iframe.style.cssText =
-    'position:fixed;left:0;top:0;width:210mm;height:auto;min-height:0;border:0;opacity:0;pointer-events:none;z-index:-1;';
-  document.body.appendChild(iframe);
-
-  const doc = iframe.contentDocument;
-  if (!doc) {
-    iframe.remove();
-    throw new Error('PDF iframe unavailable');
-  }
-
-  doc.open();
-  doc.write(
-    `<!DOCTYPE html><html lang="sv"><head><meta charset="utf-8">` +
-      `<style>${tripSummaryPdfStyles()}</style></head><body>${bodyHtml}</body></html>`,
-  );
-  doc.close();
-  return iframe;
-}
-
-async function waitForIframeLayout(iframe: HTMLIFrameElement): Promise<HTMLElement> {
-  const doc = iframe.contentDocument;
-  const body = doc?.body;
-  if (!body) {
-    throw new Error('PDF iframe body missing');
-  }
-  if (doc.fonts?.ready) {
-    await doc.fonts.ready;
-  }
-  await new Promise<void>((resolve) => {
-    requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-  });
-  iframe.style.height = `${body.scrollHeight}px`;
-  return body;
-}
-
-/** Generate and download a PDF without browser print headers/footers. */
+/** Request a server-rendered PDF and trigger download. */
 export async function downloadTripSummaryPdf(
   input: TripSummaryTextInput,
-  options?: DownloadTripSummaryPdfOptions,
+  config: MrtRestConfig,
 ): Promise<boolean> {
   if (typeof document === 'undefined') {
     return false;
   }
 
-  const bodyHtml = buildTripSummaryHtml(input);
-  const iframe = mountPdfIframe(bodyHtml);
-  try {
-    const body = await waitForIframeLayout(iframe);
-    const html2pdf = await loadHtml2Pdf(options?.tripPdfUrl);
-    const blob = (await html2pdf()
-      .set({
-        margin: [14, 12, 14, 12],
-        filename: tripSummaryPdfFilename(input.downloadName),
-        image: { type: 'jpeg', quality: 0.96 },
-        html2canvas: { scale: 2, logging: false, useCORS: true, scrollX: 0, scrollY: 0 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['css', 'legacy'] },
-      })
-      .from(body)
-      .outputPdf('blob')) as Blob;
+  const result = await mrtRestRequest<TripSummaryPdfResponse>(config, {
+    method: 'POST',
+    path: 'journey/trip-summary/pdf',
+    body: input as unknown as Record<string, unknown>,
+  });
 
-    if (!(blob instanceof Blob) || blob.size === 0) {
-      throw new Error('Empty PDF blob');
-    }
-    downloadBlob(blob, tripSummaryPdfFilename(input.downloadName));
-    return true;
-  } finally {
-    iframe.remove();
+  if (!result.success || !result.data?.content_base64) {
+    return false;
   }
+
+  const filename = result.data.filename?.trim() || tripSummaryPdfFilename(input.downloadName);
+  return downloadBase64Pdf(filename, result.data.content_base64);
 }

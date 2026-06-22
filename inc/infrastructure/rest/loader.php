@@ -30,6 +30,7 @@ require_once $rest_dir . 'admin/operations.php';
 require_once $rest_dir . 'admin/traffic-notices-admin.php';
 
 require_once $rest_dir . 'public/journey-public.php';
+require_once $rest_dir . 'public/journey-trip-summary-pdf.php';
 require_once $rest_dir . 'public/timetable-public.php';
 require_once $rest_dir . 'public/pricing-public.php';
 require_once $rest_dir . 'public/traffic-notices-public.php';
@@ -49,6 +50,7 @@ function MRT_register_rest_routes(): void {
 	MRT_rest_register_line_routes();
 	MRT_rest_register_stop_times_routes();
 	MRT_rest_register_journey_public_routes();
+	MRT_rest_register_journey_trip_summary_pdf_routes();
 	MRT_rest_register_timetable_public_routes();
 	MRT_rest_register_pricing_public_routes();
 	MRT_rest_register_settings_routes();

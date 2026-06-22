@@ -34,6 +34,11 @@ require_once __DIR__ . '/JourneyTestFixtures.php';
 require_once __DIR__ . '/StopTimeTestFixtures.php';
 require_once __DIR__ . '/LennakattenTestFixtures.php';
 
+$vendor_autoload = dirname( __DIR__ ) . '/vendor/autoload.php';
+if ( is_readable( $vendor_autoload ) ) {
+	require_once $vendor_autoload;
+}
+
 if (!isset($GLOBALS['wpdb'])) {
     $GLOBALS['wpdb'] = new class {
         /** @var string */

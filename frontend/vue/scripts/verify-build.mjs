@@ -178,13 +178,8 @@ for (const marker of adminMarkers) {
   }
 }
 
-const tripPdfPath = join(distDir, 'assets/trip-pdf.js');
-if (!existsSync(tripPdfPath)) {
-  fail('missing trip-pdf.js — run full npm run build (vite.pdf.config.ts)');
-}
-
 console.log(
-  `vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB entry; ${dynamicImports.length} app chunks; admin.js ${(readFileSync(adminPath, 'utf8').length / 1024).toFixed(1)} KiB; trip-pdf.js ${(readFileSync(tripPdfPath, 'utf8').length / 1024).toFixed(1)} KiB)`,
+  `vue verify-build: OK (${jsRel}, ${(code.length / 1024).toFixed(1)} KiB entry; ${dynamicImports.length} app chunks; admin.js ${(readFileSync(adminPath, 'utf8').length / 1024).toFixed(1)} KiB)`,
 );
 
 warnVueStyleBudget();

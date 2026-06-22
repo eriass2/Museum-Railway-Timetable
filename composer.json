@@ -3,7 +3,8 @@
     "description": "WordPress plugin for museum railway timetables",
     "type": "project",
     "require": {
-        "php": ">=8.3"
+        "php": ">=8.2",
+        "dompdf/dompdf": "^3.1"
     },
     "require-dev": {
         "phpstan/phpstan": "^2.0",

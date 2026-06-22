@@ -1,11 +1,10 @@
-import { computed, onMounted, ref, type ComputedRef, type Ref } from 'vue';
+import { computed, ref, type ComputedRef, type Ref } from 'vue';
 import { useWizardContext } from '../../composables/useWizardContext';
 import type { DayTicketData, TripPriceData } from '../../shared/prices';
 import type { PriceTableLabels } from '../../shared/priceLabels';
 import { printElement } from '../../utils/printElement';
 import { shareText } from '../../utils/webShare';
 import { downloadTripSummaryPdf } from '../utils/downloadTripSummaryPdf';
-import { prefetchHtml2Pdf } from '../utils/loadHtml2Pdf';
 import { buildTripSummaryInput } from '../utils/tripSummaryBuild';
 import { buildTripSummaryText } from '../utils/tripSummaryText';
 import { cfgStr } from '../utils/wizardLabels';
@@ -47,10 +46,6 @@ export function useSummaryExport(options: SummaryExportOptions) {
   const shareFeedback = ref('');
   const shareFeedbackIsError = ref(false);
 
-  onMounted(() => {
-    prefetchHtml2Pdf(config.tripPdfUrl);
-  });
-
   async function onDownloadPdf(): Promise<void> {
     if (pdfDownloading.value) {
       return;
@@ -67,9 +62,7 @@ export function useSummaryExport(options: SummaryExportOptions) {
         dayPrices: options.dayPrices.value,
         priceLabels: options.priceLabels.value,
       });
-      const ok = await downloadTripSummaryPdf(input, {
-        tripPdfUrl: config.tripPdfUrl,
-      });
+      const ok = await downloadTripSummaryPdf(input, config);
       if (!ok) {
         pdfError.value = pdfErrorLabel.value;
       }
