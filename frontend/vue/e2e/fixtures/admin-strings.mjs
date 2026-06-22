@@ -51,4 +51,6 @@ export const e2eAdminStrings = {
   setupStepServices: 'Lägg till turer i en tidtabell',
   setupStepPrices: 'Konfigurera biljettpriser',
   setupStepStationZones: 'Tilldela priszoner till alla stationer',
+  mobileQuickDepartureTitle: 'Snabb avgångstid',
+  mobileSaveDeparture: 'Spara avgångstid',
 };

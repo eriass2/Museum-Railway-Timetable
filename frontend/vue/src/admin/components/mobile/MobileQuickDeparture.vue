@@ -75,4 +75,12 @@ const {
   padding-top: 12px;
   border-top: 1px solid #dcdcde;
 }
+
+@media (max-width: 782px) {
+  .mrt-admin-mobile-departure :deep(.button.widefat) {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+}
 </style>

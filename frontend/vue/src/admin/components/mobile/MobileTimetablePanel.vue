@@ -237,7 +237,7 @@ async function saveDeviationChanges() {
 .mrt-admin-mobile-deviation-add {
   display: grid;
   gap: 12px;
-  max-width: 28rem;
+  max-width: var(--mrt-max-narrow);
   margin-bottom: 12px;
 }
 

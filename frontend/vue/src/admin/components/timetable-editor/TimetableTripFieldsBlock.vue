@@ -149,7 +149,7 @@ function onLineChange(code: string): void {
 .mrt-admin-trip-fields {
   display: grid;
   gap: 12px;
-  max-width: 28rem;
+  max-width: var(--mrt-max-narrow);
 }
 
 .mrt-admin-trip-fields__field {

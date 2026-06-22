@@ -1,11 +1,21 @@
 # Responsiv granskning — resultat
 
 **Plan:** [RESPONSIVE_AUDIT_PLAN.md](RESPONSIVE_AUDIT_PLAN.md)  
-**Status:** T1–T6 klar (2026-06-22)
+**Status:** T1–T7 klar (2026-06-22)
 
 ---
 
-## T6 — Admin shell + dashboard (sammanfattning)
+## T7 — Tidtabellseditor mobil (sammanfattning)
+
+| Viewport | Resultat |
+|----------|----------|
+| V2 390px (782px breakpoint) | ✅ Ingen sid-overflow; formulär fullbredd; spara-knapp fullbredd |
+
+**Komponenter:** `MobileTimetablePanel`, `MobileQuickDeparture`, `TimetableTripFieldsBlock`.
+
+**Åtgärder:** `28rem` → `var(--mrt-max-narrow)`; fullbredd `widefat`-knapp på mobil; utökade admin REST-fixtures; E2E `admin-timetable-editor-responsive.spec.ts`.
+
+---
 
 | Viewport | Resultat |
 |----------|----------|
@@ -109,6 +119,9 @@
 | T6 Admin | `AdminApp` / shell | ✅ | fluid | 782px | Column layout | — |
 | T6 Admin | `AdminNav` | ✅ | fluid | 782px | Touch fix | T6 |
 | T6 Admin | `DashboardPage` | ✅ | fluid | 782px | Stat grid | — |
+| T7 Admin | `MobileTimetablePanel` | ✅ | `--mrt-max-narrow` | 782px | Deviation add cap | T7 |
+| T7 Admin | `MobileQuickDeparture` | ✅ | fluid | 782px | Fullbredd knapp | T7 |
+| T7 Admin | `TimetableTripFieldsBlock` | ✅ | `--mrt-max-narrow` | — | Token migration | T7 |
 
 ¹ T4 layout `@media (max-width: 30rem)` — validity-rad.  
 ² T5 card padding `@media (min-width: 40rem)`.
@@ -122,4 +135,5 @@
 | Datum | Yta | Beskrivning | Status |
 |-------|-----|-------------|--------|
 | 2026-06-22 | F0 | Infört `assets/mrt-layout-tokens.css`; wizard shell kopplad till skalan | Klar |
+| 2026-06-22 | T7 | Mobil tidtabellseditor tokens + E2E | Klar |
 | 2026-06-22 | T6 | Admin nav touch target; E2E admin responsive | Klar |
