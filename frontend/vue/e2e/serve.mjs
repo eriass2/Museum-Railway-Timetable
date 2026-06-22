@@ -117,7 +117,7 @@ function buildWizardConfig(requestUrl) {
     ],
     ticketUrl: '',
     timetableId: 0,
-    embedded: true,
+    embedded: false,
     debug,
     feedbackEnabled: params.get('feedback') === '1',
     startOfWeek: 1,

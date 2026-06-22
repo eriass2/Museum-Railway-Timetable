@@ -4,8 +4,8 @@ note,
 operator_name,Lennakatten
 ticket_url,https://www.lennakatten.se/biljetter/
 hero_background_url,http://localhost:8080/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg
-wizard_beta_enabled,0
-wizard_feedback_enabled,0
+wizard_beta_enabled,1
+wizard_feedback_enabled,1
 min_transfer_minutes,0
 max_transfer_minutes,120
 max_transfers,2

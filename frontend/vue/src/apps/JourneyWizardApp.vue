@@ -34,7 +34,7 @@ const betaBanner = props.config.betaBanner ?? null;
 const panelsRef = ref<HTMLElement | null>(null);
 
 const heroBackgroundUrl = computed(() => String(props.config.heroBackgroundUrl || '').trim());
-const bleedBackground = computed(() => !embedded && heroBackgroundUrl.value !== '');
+const bleedBackground = computed(() => heroBackgroundUrl.value !== '');
 
 const progressItems = computed(() => {
   const currentIndex = store.stepSequence.indexOf(store.step);
@@ -77,10 +77,7 @@ onMounted(() => {
       <MrtAlert v-if="!hasStations" variant="info">
         {{ cfgStr(cfg, 'noStations', 'Inga stationer är tillgängliga.') }}
       </MrtAlert>
-      <MrtWizardMainCard
-        v-if="hasStations"
-        :embedded="embedded"
-      >
+      <MrtWizardMainCard v-if="hasStations">
         <WizardBetaBanner v-if="betaBanner" v-bind="betaBanner" />
         <MrtStepProgress
           :items="progressItems"

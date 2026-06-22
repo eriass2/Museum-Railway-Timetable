@@ -15,6 +15,9 @@ test.describe('Journey wizard route step layout', () => {
     const mainCard = page.locator('.mrt-wizard-main-card').first();
     await expect(mainCard).toBeVisible();
 
+    const mainCardBg = await mainCard.evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(mainCardBg).not.toBe('rgba(0, 0, 0, 0)');
+
     const stepper = mainCard.locator('.mrt-step-nav').first();
     await expect(stepper).toBeVisible();
 

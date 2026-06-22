@@ -189,7 +189,7 @@ function MRT_get_components_demo_page_content() {
 		sprintf( '[museum_timetable_overview timetable="%s"]', esc_attr( $tt ) ),
 		'<h2>' . esc_html__( '4. Resewizard (flerstegs)', 'museum-railway-timetable' ) . '</h2>',
 		MRT_demo_mockup_caption( __( 'Mockup-baserat: helt reseflöde (V1–V5) med kalender, sträckor, valfri retur, priser i sammanfattning).', 'museum-railway-timetable' ) ),
-		'[museum_journey_wizard embedded="1"]',
+		sprintf( '[museum_journey_wizard timetable="%s"]', esc_attr( $tt ) ),
 	);
 	return implode( "\n\n", $lines );
 }

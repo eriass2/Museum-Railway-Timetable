@@ -84,7 +84,7 @@ export type WizardVueConfig = MrtRestConfig & {
   timetablePageUrl?: string;
   embedded?: boolean;
   debug?: string;
-  /** Optional cover image for the full-bleed hero (non-embedded). */
+  /** Optional cover image for the bleed hero backdrop. */
   heroBackgroundUrl?: string;
   heroSubtitle?: string;
   feedbackEnabled?: boolean;

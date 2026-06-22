@@ -47,18 +47,13 @@ test.describe('Journey wizard responsive layout', () => {
 
     const metrics = await page.evaluate(() => {
       const root = getComputedStyle(document.documentElement);
-      const embedded = document.querySelector('.mrt-journey-wizard--embedded') !== null;
-      const maxRem = parseFloat(
-        root.getPropertyValue(embedded ? '--mrt-max-app' : '--mrt-max-wizard'),
-      );
-      const vwFactor = embedded ? 0.96 : 0.768;
+      const maxRem = parseFloat(root.getPropertyValue('--mrt-max-wizard'));
       const viewport = document.documentElement.clientWidth;
-      const expectedMax = Math.min(viewport * vwFactor, maxRem * 16);
+      const expectedMax = Math.min(viewport * 0.768, maxRem * 16);
       const shell = document.querySelector('.mrt-journey-wizard .mrt-app-shell__content');
       return {
         contentWidth: shell?.getBoundingClientRect().width ?? 0,
         expectedMax,
-        embedded,
       };
     });
 

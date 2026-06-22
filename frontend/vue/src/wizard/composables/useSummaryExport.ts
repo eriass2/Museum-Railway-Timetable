@@ -3,11 +3,9 @@ import { useWizardContext } from '../../composables/useWizardContext';
 import type { DayTicketData, TripPriceData } from '../../shared/prices';
 import type { PriceTableLabels } from '../../shared/priceLabels';
 import { printElement } from '../../utils/printElement';
-import { shareText } from '../../utils/webShare';
 import { downloadTripSummaryPdf } from '../utils/downloadTripSummaryPdf';
 import { buildTripSummaryInput } from '../utils/tripSummaryBuild';
 import type { TripSummaryTextInput } from '../utils/tripSummaryText';
-import { buildTripSummaryText } from '../utils/tripSummaryText';
 import { cfgStr } from '../utils/wizardLabels';
 
 type SummaryExportOptions = {
@@ -36,16 +34,6 @@ export function useSummaryExport(options: SummaryExportOptions) {
   const pdfErrorLabel = computed(() =>
     cfgStr(cfg, 'summaryPdfError', 'Kunde inte skapa PDF. Försök igen eller använd Skriv ut.'),
   );
-  const shareLabel = computed(() => cfgStr(cfg, 'summaryShare', 'Dela'));
-  const shareCopiedLabel = computed(() =>
-    cfgStr(cfg, 'summaryShareCopied', 'Resesammanfattning kopierad till urklipp.'),
-  );
-  const shareErrorLabel = computed(() =>
-    cfgStr(cfg, 'summaryShareError', 'Kunde inte dela resan. Försök igen.'),
-  );
-
-  const shareFeedback = ref('');
-  const shareFeedbackIsError = ref(false);
 
   function buildSummaryInput(): TripSummaryTextInput {
     return buildTripSummaryInput({
@@ -81,36 +69,14 @@ export function useSummaryExport(options: SummaryExportOptions) {
     printElement('[data-wizard-summary-print]');
   }
 
-  async function onShare(): Promise<void> {
-    shareFeedback.value = '';
-    shareFeedbackIsError.value = false;
-    const text = buildTripSummaryText(buildSummaryInput());
-    const result = await shareText({
-      title: cfgStr(cfg, 'stepSummary', 'Din resa'),
-      text,
-    });
-    if (result === 'copied') {
-      shareFeedback.value = shareCopiedLabel.value;
-      return;
-    }
-    if (result === 'failed') {
-      shareFeedback.value = shareErrorLabel.value;
-      shareFeedbackIsError.value = true;
-    }
-  }
-
   return {
     tripTypeLabel,
     printLabel,
     downloadPdfLabel,
     downloadPdfBusyLabel,
-    shareLabel,
-    shareFeedback,
-    shareFeedbackIsError,
     pdfDownloading,
     pdfError,
     onPrint,
     onDownloadPdf,
-    onShare,
   };
 }

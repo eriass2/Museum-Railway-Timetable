@@ -44,12 +44,11 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
   <div class="mrt-journey-wizard" :class="rootClass" :data-step="step">
     <MrtPublicAppShell :bleed-background="bleedBackground" :background-image="heroBackgroundUrl">
       <MrtWizardHero
-        :embedded="embedded"
         :step="step"
         :hero-class="heroClass"
         :hero-section-style="heroSectionStyle"
       >
-        <MrtWizardShellSurfaces :embedded="embedded">
+        <MrtWizardShellSurfaces>
           <slot />
         </MrtWizardShellSurfaces>
       </MrtWizardHero>
@@ -87,7 +86,7 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
   max-width: var(--mrt-wizard-content-max);
 }
 
-.mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-journey-wizard__hero--has-bg) {
+.mrt-journey-wizard :deep(.mrt-journey-wizard__hero--has-bg) {
   background: transparent;
 }
 </style>
