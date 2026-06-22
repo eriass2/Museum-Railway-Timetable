@@ -130,6 +130,10 @@ function navigate(path: string) {
 
   .mrt-admin-shell__link {
     flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    box-sizing: border-box;
     padding: var(--mrt-admin-nav-link-padding-mobile);
     border-left: 0;
     border-bottom: var(--mrt-admin-nav-active-border) solid transparent;

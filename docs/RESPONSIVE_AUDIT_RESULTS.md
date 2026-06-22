@@ -1,7 +1,20 @@
 # Responsiv granskning — resultat
 
 **Plan:** [RESPONSIVE_AUDIT_PLAN.md](RESPONSIVE_AUDIT_PLAN.md)  
-**Status:** T1–T5 klar (2026-06-22)
+**Status:** T1–T6 klar (2026-06-22)
+
+---
+
+## T6 — Admin shell + dashboard (sammanfattning)
+
+| Viewport | Resultat |
+|----------|----------|
+| V2 390px (782px breakpoint) | ✅ Ingen sid-overflow; stat-kort; nav touch fix |
+| V4 1280px | ✅ Inline stats; kolumn-layout av |
+
+**Komponenter:** `AdminApp`, `AdminNav`, `AdminMobilePageShell`, `DashboardPage`.
+
+**Åtgärder:** `min-height: 2.75rem` på mobil nav-länkar; E2E `admin-responsive.spec.ts`.
 
 ---
 
@@ -93,7 +106,9 @@
 | T4 Traffic | `MrtTfAlertCard` | ✅ | fluid | 30rem¹ | Validity wrap | — |
 
 | T5 Index | `MrtTimetableIndexView` | ✅ | `--mrt-max-content` | 40rem² | Token migration | T5 |
-| T5 Index | `MrtTimetableIndexCard` | ✅ | fluid | 40rem² | Touch OK | — |
+| T6 Admin | `AdminApp` / shell | ✅ | fluid | 782px | Column layout | — |
+| T6 Admin | `AdminNav` | ✅ | fluid | 782px | Touch fix | T6 |
+| T6 Admin | `DashboardPage` | ✅ | fluid | 782px | Stat grid | — |
 
 ¹ T4 layout `@media (max-width: 30rem)` — validity-rad.  
 ² T5 card padding `@media (min-width: 40rem)`.
@@ -107,4 +122,4 @@
 | Datum | Yta | Beskrivning | Status |
 |-------|-----|-------------|--------|
 | 2026-06-22 | F0 | Infört `assets/mrt-layout-tokens.css`; wizard shell kopplad till skalan | Klar |
-| 2026-06-22 | T5 | Token `--mrt-max-content`; E2E index responsive | Klar |
+| 2026-06-22 | T6 | Admin nav touch target; E2E admin responsive | Klar |
