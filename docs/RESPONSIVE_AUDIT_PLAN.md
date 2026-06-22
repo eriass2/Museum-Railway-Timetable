@@ -183,10 +183,11 @@ Granska endast om Tier 1–3 hittar återkommande problem:
 | T4 | Trafikinfo | ✅ 2026-06-22 |
 | T5 | Tidtabellsindex | ✅ 2026-06-22 |
 | T6 | Admin shell + dashboard | ✅ 2026-06-22 |
-| T7 | Tidtabellseditor mobil | ☐ |
-| T8 | Priser / stationer / import | ☐ |
-| V-DOC | STYLE_GUIDE + VUE_UI_COMPONENTS | ☐ |
-| V-E2E | Tier-1 Playwright viewport | ⚠️ wizard-responsive (T1); overview/calendar kvar |
+| T7 | Tidtabellseditor mobil | ✅ 2026-06-22 |
+| T8 | Priser / stationer / import | ✅ 2026-06-22 |
+| V-DOC | STYLE_GUIDE + VUE_UI_COMPONENTS | ⚠️ tokens i STYLE_GUIDE; VUE_UI delvis |
+| V-E2E | Tier-1 Playwright viewport | ✅ 8× `*-responsive.spec.ts` (statisk mount) |
+| V-MAN | Manuell testplan | ✅ [RESPONSIVE_MANUAL_TEST_PLAN.md](RESPONSIVE_MANUAL_TEST_PLAN.md) |
 
 ---
 
@@ -212,4 +213,6 @@ Granska endast om Tier 1–3 hittar återkommande problem:
 .\scripts\mrt.ps1 dev e2ewp
 ```
 
-**Första rekommenderade steg:** ~~F0~~ ✅ ~~T1–T6~~ ✅ → **T7** (tidtabellseditor mobil).
+**Första rekommenderade steg:** ~~F0~~ ✅ ~~T1–T8~~ ✅ → Fas 3 (V-DOC, SMOKE_CHECKLIST-rader) vid behov.
+
+**Test:** `.\scripts\mrt.ps1 e2e -- --grep "responsive"` · manuellt enligt [RESPONSIVE_MANUAL_TEST_PLAN.md](RESPONSIVE_MANUAL_TEST_PLAN.md).

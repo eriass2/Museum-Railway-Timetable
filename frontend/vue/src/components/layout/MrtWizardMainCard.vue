@@ -37,4 +37,11 @@ defineProps<{
   box-shadow: none;
   padding: 0;
 }
+
+@media (max-width: 48rem) {
+  .mrt-wizard-main-card--embedded {
+    width: 100%;
+    max-width: 100%;
+  }
+}
 </style>

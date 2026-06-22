@@ -9,6 +9,7 @@ Snabb genomgång efter ändringar i frontend, shortcodes eller import.
 | `.\scripts\mrt.ps1 check` / `bash scripts/mrt.sh check` | validate.php, PHPStan, PHPUnit, PHPCS (Docker) |
 | `.\scripts\mrt.ps1 check -Vue` / `bash scripts/mrt.sh check --vue` | PHP + Vue (Docker) |
 | `.\scripts\mrt.ps1 vue-check` / `bash scripts/mrt.sh vue-check` | Vue typecheck, Vitest, build (Docker) |
+| `.\scripts\mrt.ps1 e2e -- --grep "responsive"` | Responsivitet T1–T8 (statisk Playwright, Docker) |
 | `.\scripts\mrt.ps1 dev smoke` | Docker: Vue build + import + demo + PHP check (rensar inte DB) |
 
 Root-wrappers (`check.ps1`, `vue-check.ps1`, `docker-smoke.ps1`) fungerar som alternativ.
@@ -21,12 +22,16 @@ Root-wrappers (`check.ps1`, `vue-check.ps1`, `docker-smoke.ps1`) fungerar som al
 
 ## Manuellt i webbläsaren
 
+Se **[RESPONSIVE_MANUAL_TEST_PLAN.md](RESPONSIVE_MANUAL_TEST_PLAN.md)** för viewport-matris (390px / 1920px) och admin mobil T6–T8.
+
 | Vad | URL | Förväntat |
 |-----|-----|-----------|
 | Admin dashboard | http://localhost:8080/wp-admin/admin.php?page=mrt_app | Vue-admin: statistik, varningar, navigation |
 | Wizard | Sida med `[museum_journey_wizard]` eller demo | Grön hero, steg 1–4, kalenderfärger, ikoner |
 | Månad | `[museum_timetable_month]` | Kalender, klickbar trafikdag |
-| Översikt | `[museum_timetable_overview]` | Rutnät per rutt |
+| Översikt | `[museum_timetable_overview]` | Rutnät per rutt; grid scroll inuti container på mobil |
+| Trafikinfo | `[museum_traffic_notices]` eller komponentdemo | Kategorier, feed utan sid-overflow mobil |
+| Tidtabellsindex | `[museum_timetable_index]` | Kortlista, cap på bred skärm |
 
 Login: `admin` / `admin`
 
@@ -38,6 +43,7 @@ Login: `admin` / `admin`
 .\scripts\mrt.ps1 dev reset
 .\scripts\mrt.ps1 check -SkipPhpcs
 .\scripts\mrt.ps1 vue-check
+.\scripts\mrt.ps1 e2e -- --grep "responsive"
 ```
 
 ## Kända begränsningar
@@ -49,7 +55,17 @@ Login: `admin` / `admin`
 
 Per-app-manuell rökning (månad, översikt, wizard, index): **[frontend/vue/TESTING.md](../frontend/vue/TESTING.md)**.
 
-Snabb E2E utan WordPress (kräver `npm run build` först):
+Snabb E2E utan WordPress (Docker, rekommenderat):
+
+```powershell
+.\scripts\mrt.ps1 vue-check
+.\scripts\mrt.ps1 e2e
+.\scripts\mrt.ps1 e2e -- --grep "responsive"   # T1–T8 responsivitet
+```
+
+Responsiv manuell rökning: **[RESPONSIVE_MANUAL_TEST_PLAN.md](RESPONSIVE_MANUAL_TEST_PLAN.md)**.
+
+Med host-Node (valfritt):
 
 ```bash
 cd frontend/vue

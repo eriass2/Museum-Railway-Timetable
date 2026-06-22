@@ -210,6 +210,8 @@ docker compose exec -T wordpress wp option update home 'http://localhost:8080' -
 
 CI kör `composer vue:check`, isolerade Vue-E2E och `scripts/ci-e2e-wp.sh` på pull requests — se [.github/workflows/ci.yml](../.github/workflows/ci.yml).
 
+**Responsivitet (F0 + T1–T8):** statiska specs i Docker — `.\scripts\mrt.ps1 e2e -- --grep "responsive"`. Manuell viewport-rökning: [RESPONSIVE_MANUAL_TEST_PLAN.md](RESPONSIVE_MANUAL_TEST_PLAN.md).
+
 ### Manuell smoke-checklista i WordPress
 
 Kör detta efter `.\scripts\mrt.ps1 dev reset` (eller `docker compose up -d`) när ändringen påverkar admin, shortcodes eller dataflöden:

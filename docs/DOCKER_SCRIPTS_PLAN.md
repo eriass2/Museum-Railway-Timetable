@@ -35,6 +35,9 @@ Entry-script (`check.ps1`, `test.ps1`, `vue-check.ps1`, …) är tunna. Gemensam
 | PHP + Vue | `.\scripts\mrt.ps1 check -Vue` | `bash scripts/mrt.sh check --vue` |
 | PHPUnit | `.\scripts\mrt.ps1 test` | `bash scripts/mrt.sh test` |
 | Vue | `.\scripts\mrt.ps1 vue-check` | `bash scripts/mrt.sh vue-check` |
+| Statisk E2E (Playwright) | `.\scripts\mrt.ps1 e2e` | `bash scripts/mrt.sh e2e` |
+| Responsiv E2E (T1–T8) | `.\scripts\mrt.ps1 e2e -- --grep "responsive"` | samma |
+| WordPress E2E | `.\scripts\mrt.ps1 dev e2ewp` | `bash scripts/mrt.sh dev e2ewp` |
 | Dev reset | `.\scripts\mrt.ps1 dev reset` | `bash scripts/mrt.sh dev reset` |
 | Dev reset + rebuild image | `.\scripts\mrt.ps1 dev reset -Build` | `bash scripts/mrt.sh dev reset --build` |
 

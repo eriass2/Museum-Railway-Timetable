@@ -25,3 +25,17 @@ body.mrt-has-overview .mrt-vue-root--overview {
 .mrt-demo-mockup-caption + .mrt-journey-wizard--embedded {
   margin-top: clamp(1.25rem, 3vw, 2rem);
 }
+
+/* Embedded wizard: use full shortcode column (block themes + demo page). */
+body.mrt-has-shortcodes .mrt-vue-root--wizard,
+body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root--wizard.alignwide {
+  width: 100%;
+  max-width: var(--mrt-app-content-max, min(96vw, 80rem));
+  min-width: 0;
+}
+
+body.mrt-has-shortcodes .mrt-journey-wizard--embedded {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+}

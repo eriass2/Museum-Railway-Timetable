@@ -1,6 +1,6 @@
 # Manual test checklist (Vue public UI)
 
-Detaljerad per-app-checklista. Översikt, Docker-smoke och automatiska kommandon: **[docs/SMOKE_CHECKLIST.md](../../docs/SMOKE_CHECKLIST.md)**.
+Detaljerad per-app-checklista. Översikt, Docker-smoke och automatiska kommandon: **[docs/SMOKE_CHECKLIST.md](../../docs/SMOKE_CHECKLIST.md)**. Responsiv viewport-rökning (390px / 1920px): **[docs/RESPONSIVE_MANUAL_TEST_PLAN.md](../../docs/RESPONSIVE_MANUAL_TEST_PLAN.md)**.
 
 Kör efter `npm run check` och hård refresh i webbläsaren (Ctrl+F5).
 
@@ -11,7 +11,7 @@ Kör efter `npm run check` och hård refresh i webbläsaren (Ctrl+F5).
 
 ### Automated E2E
 
-Se [SMOKE_CHECKLIST.md](../../docs/SMOKE_CHECKLIST.md) § Vue – detaljerad checklista och E2E. Avbrutna resor (statiska mounts): `/overview-cancelled`, `/wizard?debug=cancelled` — `e2e/cancelled-mount.spec.ts`.
+Se [SMOKE_CHECKLIST.md](../../docs/SMOKE_CHECKLIST.md) § Vue – detaljerad checklista och E2E. Responsiva specs (Docker): `.\scripts\mrt.ps1 e2e -- --grep "responsive"`. Avbrutna resor (statiska mounts): `/overview-cancelled`, `/wizard?debug=cancelled` — `e2e/cancelled-mount.spec.ts`.
 
 ## Month calendar (`data-mrt-vue-app="month"`)
 

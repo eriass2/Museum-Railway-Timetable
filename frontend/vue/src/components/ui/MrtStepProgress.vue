@@ -133,29 +133,33 @@ function stepAria(
 
 @media (max-width: 48rem) {
   .mrt-step-nav {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    overflow-x: visible;
   }
 
   .mrt-step-progress {
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 0.3rem;
-    width: max-content;
-    min-width: 100%;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .mrt-step-progress__wrap {
+    display: block;
+    flex: 1 1 auto;
+    min-width: min(100%, 9.5rem);
+    max-width: 100%;
   }
 
   .mrt-step-progress__item {
-    flex: 0 0 auto;
-    width: auto;
+    width: 100%;
     min-width: 0;
-    min-height: 2rem;
+    min-height: 2.75rem;
     font-size: 0.7rem;
     line-height: 1.2;
-    padding: 0.3rem 0.45rem;
-    white-space: nowrap;
+    padding: 0.35rem 0.45rem;
+    white-space: normal;
   }
 }
 </style>

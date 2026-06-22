@@ -42,5 +42,9 @@ defineProps<{
     --mrt-step-panel-search-width: 100%;
     --mrt-step-panel-wide-width: 100%;
   }
+
+  .mrt-wizard-shell-surfaces--embedded {
+    --mrt-step-panel-padding: 0.65rem 0.5rem 0.85rem;
+  }
 }
 </style>

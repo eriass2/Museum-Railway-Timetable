@@ -19,9 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param array<string, mixed> $config Mount config (may include embedded).
  */
 function MRT_vue_mount_extra_classes( string $app, array $config ): string {
-	if ( 'wizard' === $app && ! empty( $config['embedded'] ) ) {
-		return '';
-	}
 	if ( in_array( $app, array( 'overview', 'month', 'index', 'traffic_notices', 'wizard' ), true ) ) {
 		return ' alignwide';
 	}

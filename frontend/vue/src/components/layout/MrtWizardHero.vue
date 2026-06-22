@@ -122,8 +122,18 @@ defineProps<{
 }
 
 @media (max-width: 48rem) {
-  .mrt-journey-wizard__hero {
+  .mrt-journey-wizard__hero:not(.mrt-journey-wizard__hero--embedded) {
     padding: 1rem;
+  }
+
+  .mrt-journey-wizard__hero--embedded {
+    padding-inline: 0;
+    padding-top: 0;
+  }
+
+  .mrt-journey-wizard__hero--embedded .mrt-journey-wizard__hero-inner {
+    width: 100%;
+    max-width: 100%;
   }
 }
 </style>
