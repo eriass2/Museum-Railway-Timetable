@@ -31,11 +31,26 @@
   --mrt-tf-font-weight-normal: 400;
 
   --mrt-tf-panel-max-width: var(--mrt-max-feed, 36rem);
-  --mrt-tf-pad-row: 0.65rem 0.9rem;
-  --mrt-tf-pad-section: 0.55rem 0.9rem 0.35rem;
+  --mrt-tf-pad-inline: 1rem;
+  --mrt-tf-pad-row-block: 0.75rem;
+  --mrt-tf-pad-row: var(--mrt-tf-pad-row-block) var(--mrt-tf-pad-inline);
+  --mrt-tf-pad-section: var(--mrt-tf-pad-row-block) var(--mrt-tf-pad-inline);
+  --mrt-tf-pad-alerts: 0.5rem var(--mrt-tf-pad-inline) 0.875rem;
+  --mrt-tf-pad-alert-summary: 0.55rem 0.65rem;
   --mrt-tf-gap-badge: 0.35rem;
   --mrt-tf-gap-inline: 0.5rem;
+  --mrt-tf-gap-alert-list: 0.875rem;
+  --mrt-tf-gap-category-trail: 0.5rem;
+  --mrt-tf-line-badge-slot: 2.25rem;
   --mrt-tf-radius-alert: 0.25rem;
   --mrt-tf-radius-badge: 999px;
   --mrt-tf-line-badge-min-width: 1.75rem;
+
+  /* Layout (UL defaults; Lennakatten overrides in brand pack) */
+  --mrt-tf-feed-shadow: 0 2px 10px rgba(0, 0, 0, 0.14);
+  --mrt-tf-feed-border: none;
+  --mrt-tf-section-text-transform: uppercase;
+  --mrt-tf-section-letter-spacing: 0.03em;
+  --mrt-tf-section-font-weight: 700;
+  --mrt-tf-font-heading: inherit;
 }

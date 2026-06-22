@@ -1,0 +1,66 @@
+/**
+ * Lennakatten profile for traffic info feed (Anslag 1/2-inspired).
+ *
+ * Requires brand color tokens (--mrt-color-*) from lennakatten-color-tokens.css
+ * or CSV-imported brand tokens on :root.
+ *
+ * Spec: docs/mockups/TRAFFIC_INFO_TOKENS.md (Lennakatten profile)
+ * Profile: docs/design/BRAND_UI.md
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+:root {
+  --mrt-tf-section-bg: var(--mrt-color-green-700, #245610);
+  --mrt-tf-section-text: var(--mrt-color-on-green, #ffffff);
+  --mrt-tf-surface: var(--mrt-color-neutral-100, #ffffff);
+  --mrt-tf-border: var(--mrt-color-neutral-200, #b4b4b4);
+  --mrt-tf-category-active: var(--mrt-color-accent-600, #ddd24c);
+  --mrt-tf-category-hover: color-mix(
+    in srgb,
+    var(--mrt-color-accent-600, #ddd24c) 12%,
+    var(--mrt-color-neutral-100, #ffffff)
+  );
+  --mrt-tf-badge-bg: color-mix(
+    in srgb,
+    var(--mrt-color-green-800, #214f0c) 8%,
+    var(--mrt-color-neutral-100, #ffffff)
+  );
+  --mrt-tf-info: var(--mrt-color-brand-olive, #807c1c);
+  --mrt-tf-info-on: var(--mrt-color-on-accent, #000000);
+  --mrt-tf-warning: var(--mrt-color-traffic-red, #b42318);
+  --mrt-tf-alert-bg: var(--mrt-color-neutral-100, #ffffff);
+  --mrt-tf-alert-text: var(--mrt-color-neutral-900, #000000);
+  --mrt-tf-line-badge-bg: var(--mrt-color-green-800, #214f0c);
+  --mrt-tf-line-badge-text: var(--mrt-color-on-green, #ffffff);
+  --mrt-tf-validity-text: var(--mrt-color-neutral-700, #505050);
+  --mrt-tf-muted: var(--mrt-color-neutral-700, #505050);
+
+  --mrt-tf-radius-alert: 0;
+  --mrt-tf-radius-badge: 0;
+
+  --mrt-tf-feed-shadow: none;
+  --mrt-tf-feed-border: 2px solid var(--mrt-color-green-700, #245610);
+  --mrt-tf-section-text-transform: none;
+  --mrt-tf-section-letter-spacing: normal;
+  --mrt-tf-section-font-weight: 700;
+  --mrt-tf-font-heading: var(--mrt-font-heading, inherit);
+
+  --mrt-tf-category-icon: var(--mrt-color-green-700, #245610);
+}
+
+.mrt-tf-alert__summary {
+  border: 1px solid var(--mrt-tf-border);
+}
+
+.mrt-tf-category.is-expanded .mrt-tf-category__row {
+  color: var(--mrt-color-on-accent, #000000);
+}
+
+.mrt-tf-category.is-expanded .mrt-tf-category__icon {
+  color: var(--mrt-color-on-accent, #000000);
+}
+
+.mrt-tf-count-badge--info .mrt-tf-count-badge__mark {
+  color: var(--mrt-color-on-accent, #000000);
+}

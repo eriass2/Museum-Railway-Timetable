@@ -40,7 +40,9 @@ function toggleDetail(): void {
 <template>
   <li class="mrt-tf-alert">
     <div class="mrt-tf-alert__main">
-      <MrtTfLineBadge v-if="lineLabel" :label="lineLabel" />
+      <div class="mrt-tf-alert__line-slot" aria-hidden="true">
+        <MrtTfLineBadge v-if="lineLabel" :label="lineLabel" />
+      </div>
       <div class="mrt-tf-alert__body">
         <div class="mrt-tf-alert__summary">
           {{ summary }}

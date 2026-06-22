@@ -31,6 +31,23 @@ Tokens använder prefix `--mrt-tf-*` (traffic feed). **Inte** wizard-tokens (`--
 
 Brand-grön (`--mrt-color-brand-green`) används **inte** som primär accent i UL-layouten — endast om produkt explicit vill.
 
+### Lennakatten-profil (Nivå A)
+
+När `MRT_LENNAKATTEN_BRAND` eller filter `mrt_use_lennakatten_traffic_info_tokens` är aktivt laddas `assets/brand/lennakatten-traffic-info-tokens.css` efter bas-tokens.
+
+| Token | Lennakatten | UL (neutral) |
+|-------|-------------|--------------|
+| `--mrt-tf-section-bg` | `--mrt-color-green-700` | `#e8e8e8` |
+| `--mrt-tf-section-text` | vit | `#333333` |
+| `--mrt-tf-category-active` | `--mrt-color-accent-600` (svart text) | `#f5e642` |
+| `--mrt-tf-alert-bg` | vit ruta | korall `#e8a090` |
+| `--mrt-tf-line-badge-bg` | `--mrt-color-green-800` | `#222222` |
+| `--mrt-tf-feed-shadow` | `none` | skugga |
+| `--mrt-tf-section-text-transform` | `none` | `uppercase` |
+| `--mrt-tf-radius-alert` | `0` | `0.25rem` |
+
+Layout-tokens (`--mrt-tf-feed-shadow`, `--mrt-tf-section-text-transform`, …) styrs i bas-filen; Lennakatten-pack overridar värdena.
+
 ---
 
 ## Typografi

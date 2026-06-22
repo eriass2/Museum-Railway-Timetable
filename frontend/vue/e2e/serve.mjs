@@ -22,6 +22,8 @@ const distDir = join(root, '../../assets/dist/vue');
 const pluginAssetsDir = join(root, '../../assets');
 const trafficTokensCssPath = join(pluginAssetsDir, 'mrt-traffic-info-tokens.css');
 const trafficLayoutCssPath = join(pluginAssetsDir, 'mrt-traffic-info-layout.css');
+const lennakattenColorsCssPath = join(pluginAssetsDir, 'brand/lennakatten-color-tokens.css');
+const lennakattenTrafficCssPath = join(pluginAssetsDir, 'brand/lennakatten-traffic-info-tokens.css');
 const manifestPath = join(distDir, '.vite/manifest.json');
 
 if (!existsSync(manifestPath)) {
@@ -53,6 +55,10 @@ const TRAFFIC_TOKENS_URL =
   '/wp-content/plugins/museum-railway-timetable/assets/mrt-traffic-info-tokens.css';
 const TRAFFIC_LAYOUT_URL =
   '/wp-content/plugins/museum-railway-timetable/assets/mrt-traffic-info-layout.css';
+const LENNAKATTEN_COLORS_URL =
+  '/wp-content/plugins/museum-railway-timetable/assets/brand/lennakatten-color-tokens.css';
+const LENNAKATTEN_TRAFFIC_URL =
+  '/wp-content/plugins/museum-railway-timetable/assets/brand/lennakatten-traffic-info-tokens.css';
 
 const entryCssLinks = (entry?.css || [])
   .map((rel) => {
@@ -622,13 +628,19 @@ function renderTrafficNoticesHtml(requestUrl) {
   const layoutLink = existsSync(trafficLayoutCssPath)
     ? `<link rel="stylesheet" href="${TRAFFIC_LAYOUT_URL}" />`
     : '';
+  const brandColorLink = existsSync(lennakattenColorsCssPath)
+    ? `<link rel="stylesheet" href="${LENNAKATTEN_COLORS_URL}" />`
+    : '';
+  const brandTrafficLink = existsSync(lennakattenTrafficCssPath)
+    ? `<link rel="stylesheet" href="${LENNAKATTEN_TRAFFIC_URL}" />`
+    : '';
   return renderAppHtml(
     'traffic_notices',
     buildTrafficNoticesConfig({
       referenceDate: empty ? 'e2e-empty' : upcomingOnly ? 'e2e-upcoming-only' : undefined,
       title: params.get('title') ?? '',
     }),
-    `${tokenLink}\n  ${layoutLink}`,
+    `${tokenLink}\n  ${brandColorLink}\n  ${brandTrafficLink}\n  ${layoutLink}`,
   );
 }
 
@@ -712,6 +724,26 @@ http
       }
       res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
       res.end(readFileSync(trafficLayoutCssPath));
+      return;
+    }
+    if (pathOnly === LENNAKATTEN_COLORS_URL) {
+      if (!existsSync(lennakattenColorsCssPath)) {
+        res.writeHead(404);
+        res.end('Not found');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
+      res.end(readFileSync(lennakattenColorsCssPath));
+      return;
+    }
+    if (pathOnly === LENNAKATTEN_TRAFFIC_URL) {
+      if (!existsSync(lennakattenTrafficCssPath)) {
+        res.writeHead(404);
+        res.end('Not found');
+        return;
+      }
+      res.writeHead(200, { 'Content-Type': 'text/css; charset=utf-8' });
+      res.end(readFileSync(lennakattenTrafficCssPath));
       return;
     }
     let rel = pathOnly.replace(/^\//, '');
