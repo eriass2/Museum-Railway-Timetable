@@ -48,3 +48,10 @@ onMounted(() => {
   </MrtStack>
   </MrtPublicAppShell>
 </template>
+
+<style scoped>
+.mrt-vue-overview {
+  min-width: 0;
+  max-width: 100%;
+}
+</style>

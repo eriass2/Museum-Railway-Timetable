@@ -54,16 +54,27 @@ const suffix = computed(() => formatOverviewTimeSuffix(parts.value));
 }
 
 .mrt-ov-time__ca {
-  margin-right: 0.12em;
+  margin-right: 0.06em;
 }
 
 .mrt-ov-time__suffix {
-  margin-left: 0.12em;
+  margin-left: 0.06em;
 }
 
 .mrt-ov-time__value {
   flex: 0 1 auto;
   font-size: 1em;
   font-weight: inherit;
+}
+
+@container (max-width: 3.5rem) {
+  .mrt-ov-time {
+    font-size: 0.9em;
+  }
+
+  .mrt-ov-time__ca,
+  .mrt-ov-time__suffix {
+    font-size: calc(var(--mrt-ov-footnote-size, 0.5rem) * 0.88);
+  }
 }
 </style>

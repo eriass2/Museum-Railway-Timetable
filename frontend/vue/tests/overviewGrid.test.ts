@@ -4,7 +4,9 @@ import {
   buildOverviewGridTracks,
   isBusRow,
   isTimeRow,
+  overviewGridDensity,
   overviewGridMinWidth,
+  overviewGridStyle,
   overviewGridTemplateColumns,
   overviewRowClass,
   splitOverviewRowSegments,
@@ -56,6 +58,16 @@ describe('overviewGrid tracks', () => {
 
     expect(overviewGridTemplateColumns(cols)).toContain('1.15rem');
     expect(parseFloat(overviewGridMinWidth(cols))).toBeGreaterThan(10.5 + 4.1 * 2);
+  });
+
+  it('tightens column tokens when many trips are shown', () => {
+    const cols = Array.from({ length: 6 }, (_, index) =>
+      column({ serviceNumber: String(70 + index) }),
+    );
+
+    expect(overviewGridDensity(buildOverviewGridTracks(cols).length).colMax).toBe('3.65rem');
+    expect(overviewGridStyle(cols)['--mrt-ov-col-max']).toBe('3.65rem');
+    expect(parseFloat(overviewGridMinWidth(cols))).toBeLessThan(10.5 + 4.1 * 6);
   });
 
   it('merges highlight stripes per segment around train change', () => {

@@ -16,7 +16,7 @@ if (!defined('MRT_URL')) {
     define('MRT_URL', '');
 }
 if (!defined('MRT_VERSION')) {
-    define('MRT_VERSION', '0.3.1');
+    define('MRT_VERSION', '0.3.2');
 }
 
 require_once __DIR__ . '/inc/constants.php';

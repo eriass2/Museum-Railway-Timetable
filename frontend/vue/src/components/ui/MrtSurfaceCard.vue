@@ -31,6 +31,8 @@ withDefaults(
   box-shadow: var(--mrt-surface-shadow, 0 4px 18px rgba(0, 0, 0, 0.22));
   padding: clamp(1.25rem, 3vw, 2rem);
   box-sizing: border-box;
+  min-width: 0;
+  max-width: 100%;
 }
 
 .mrt-surface--flush {

@@ -89,6 +89,9 @@ function columnCancelled(index: number): boolean {
   margin-bottom: var(--mrt-spacing-xl, 2rem);
   border: 1px solid var(--mrt-border-default, #d8d8d8);
   box-shadow: var(--mrt-shadow-md, 0 2px 10px rgba(0, 0, 0, 0.06));
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .mrt-ov-route-header {
@@ -116,6 +119,8 @@ function columnCancelled(index: number): boolean {
 
 .mrt-ov-grid-scroll {
   width: 100%;
+  max-width: 100%;
+  min-width: 0;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
 }

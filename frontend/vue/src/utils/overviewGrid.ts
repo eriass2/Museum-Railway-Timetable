@@ -77,10 +77,49 @@ export function buildOverviewGridTracks(columns: TimetableOverviewColumn[]): Ove
   return tracks;
 }
 
+export type OverviewGridDensity = {
+  stationW: string;
+  colMin: string;
+  colMax: string;
+  highlightW: string;
+  numSize: string;
+};
+
+/** Tighter columns when many trips + highlight stripes would overflow typical viewports. */
+export function overviewGridDensity(trackCount: number): OverviewGridDensity {
+  if (trackCount >= 8) {
+    return {
+      stationW: '8.25rem',
+      colMin: '2.9rem',
+      colMax: '3.35rem',
+      highlightW: '0.9rem',
+      numSize: '0.85rem',
+    };
+  }
+  if (trackCount >= 6) {
+    return {
+      stationW: '9rem',
+      colMin: '3rem',
+      colMax: '3.65rem',
+      highlightW: '1rem',
+      numSize: '0.92rem',
+    };
+  }
+  return {
+    stationW: '10.5rem',
+    colMin: '3.35rem',
+    colMax: '4.1rem',
+    highlightW: '1.15rem',
+    numSize: '1rem',
+  };
+}
+
 export function overviewGridMinWidth(columns: TimetableOverviewColumn[]): string {
-  let rem = 10.5;
-  for (const track of buildOverviewGridTracks(columns)) {
-    rem += track.kind === 'highlight' ? 1.15 : 4.1;
+  const tracks = buildOverviewGridTracks(columns);
+  const density = overviewGridDensity(tracks.length);
+  let rem = parseFloat(density.stationW);
+  for (const track of tracks) {
+    rem += track.kind === 'highlight' ? parseFloat(density.highlightW) : parseFloat(density.colMax);
   }
   return `${rem}rem`;
 }
@@ -105,9 +144,16 @@ export function overviewHighlightStripeStyle(color: string): Record<string, stri
 }
 
 export function overviewGridStyle(columns: TimetableOverviewColumn[]): Record<string, string> {
+  const tracks = buildOverviewGridTracks(columns);
+  const density = overviewGridDensity(tracks.length);
   return {
     gridTemplateColumns: overviewGridTemplateColumns(columns),
     '--mrt-ov-grid-min': overviewGridMinWidth(columns),
+    '--mrt-ov-station-w': density.stationW,
+    '--mrt-ov-col-min': density.colMin,
+    '--mrt-ov-col-max': density.colMax,
+    '--mrt-ov-highlight-w': density.highlightW,
+    '--mrt-ov-num-size': density.numSize,
   };
 }
 

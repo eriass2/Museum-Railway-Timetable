@@ -142,13 +142,15 @@ const rowClass = computed(() => overviewRowClass(props.row, props.rowIndex));
 
 .mrt-ov-highlight-stripe__label {
   display: block;
-  font-size: var(--mrt-ov-footnote-size);
+  font-size: calc(var(--mrt-ov-footnote-size) * 0.92);
   font-weight: 700;
-  line-height: 1.1;
+  line-height: 1.05;
   text-align: center;
   writing-mode: vertical-rl;
   text-orientation: mixed;
   transform: rotate(180deg);
+  max-height: 100%;
+  overflow: hidden;
 }
 
 .mrt-ov-highlight-stripe--span .mrt-ov-highlight-stripe__label {
@@ -202,7 +204,7 @@ const rowClass = computed(() => overviewRowClass(props.row, props.rowIndex));
 
 .mrt-ov-time-cell,
 .mrt-ov-transfer-cell {
-  padding: var(--mrt-cell-padding-md, 0.4rem 0.3rem);
+  padding: 0.35rem 0.18rem;
   border: 1px solid var(--mrt-border-default, #ccc);
   text-align: center;
   font-size: var(--mrt-ov-num-size);
@@ -210,6 +212,11 @@ const rowClass = computed(() => overviewRowClass(props.row, props.rowIndex));
   line-height: 1;
   white-space: nowrap;
   min-width: 0;
+}
+
+.mrt-ov-time-cell {
+  container-type: inline-size;
+  overflow-x: clip;
 }
 
 .mrt-ov-transfer-cell {

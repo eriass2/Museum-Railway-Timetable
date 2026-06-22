@@ -10,7 +10,7 @@ declare(strict_types=1);
 $root = dirname( __DIR__, 2 );
 define( 'ABSPATH', $root . DIRECTORY_SEPARATOR );
 define( 'MRT_PATH', ABSPATH );
-define( 'MRT_VERSION', '0.3.1' );
+define( 'MRT_VERSION', '0.3.2' );
 
 require_once $root . '/tests/wp-stubs.php';
 require_once __DIR__ . '/csv-cli-stubs.php';

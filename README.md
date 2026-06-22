@@ -75,6 +75,11 @@ This plugin is provided as-is for use with WordPress.
 - **Component demo**: three blocks (month, overview, wizard with `embedded="1"`)
 - **Dev menu**: component demo + wizard smoke test only
 
+### 0.3.2
+- **Overview**: tighter grid columns when many trips (e.g. Faringe–Uppsala with Thun's stripes); horizontal scroll contained inside route card
+- **Overview**: compact time cells for `Ca`/`x` footnotes without cell overflow
+- **Wizard**: unified shell layout; summary share button removed
+
 ### 0.3.1
 - **Wizard**: route step title and stepper stay inside the main card; white search panel restored
 - **Traffic info**: Lennakatten brand tokens load correctly after CSV import

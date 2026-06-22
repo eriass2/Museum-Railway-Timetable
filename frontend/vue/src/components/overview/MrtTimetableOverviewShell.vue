@@ -49,6 +49,7 @@ withDefaults(
   --mrt-ov-stripe: var(--mrt-bg-lightest, #f7fbfd);
   width: 100%;
   max-width: 100%;
+  min-width: 0;
   font-size: var(--mrt-font-base, 0.95rem);
   line-height: 1.35;
 }
