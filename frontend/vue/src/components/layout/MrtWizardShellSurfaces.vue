@@ -15,7 +15,7 @@ defineProps<{
 
 <style scoped>
 .mrt-wizard-shell-surfaces {
-  --mrt-wizard-errors-max-width: 46rem;
+  --mrt-wizard-errors-max-width: var(--mrt-max-step);
 }
 
 .mrt-wizard-shell-surfaces--embedded {

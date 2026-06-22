@@ -30,7 +30,7 @@
   --mrt-tf-font-weight-bold: 600;
   --mrt-tf-font-weight-normal: 400;
 
-  --mrt-tf-panel-max-width: 36rem;
+  --mrt-tf-panel-max-width: var(--mrt-max-feed, 36rem);
   --mrt-tf-pad-row: 0.65rem 0.9rem;
   --mrt-tf-pad-section: 0.55rem 0.9rem 0.35rem;
   --mrt-tf-gap-badge: 0.35rem;

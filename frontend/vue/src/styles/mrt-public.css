@@ -7,6 +7,7 @@
  */
 
 @import '@mrt-assets/mrt-color-tokens.css';
+@import '@mrt-assets/mrt-layout-tokens.css';
 @import '@mrt-assets/mrt-typography.css';
 @import '@mrt-assets/train-type-icons.css';
 @import '@mrt-assets/frontend-public.css';

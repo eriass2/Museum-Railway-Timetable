@@ -54,10 +54,8 @@ const backdropStyle = computed(() => {
 
 <style>
 :root {
-  --mrt-app-content-max: min(96vw, 80rem);
-  --mrt-wizard-content-max: min(76.8vw, 64rem);
+  /* Shell-specific; max-width scale in assets/mrt-layout-tokens.css */
   --mrt-app-bleed-outset: min(50px, 5vw);
-  --mrt-app-shell-padding-inline: clamp(1rem, 3vw, 1.25rem);
 }
 </style>
 

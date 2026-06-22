@@ -29,7 +29,7 @@ defineProps<{
   flex-wrap: wrap;
   align-items: flex-start;
   gap: 0.5rem 0.75rem;
-  max-width: var(--mrt-wizard-beta-max-width, 46rem);
+  max-width: var(--mrt-wizard-beta-max-width, var(--mrt-max-step));
   margin: 0 auto 1rem;
   padding: 0.65rem 0.85rem;
   border: 1px solid color-mix(in srgb, var(--mrt-color-on-dark) 22%, transparent);

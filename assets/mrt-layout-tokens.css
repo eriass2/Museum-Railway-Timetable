@@ -1,0 +1,32 @@
+/**
+ * Layout tokens — max-width scale and shell caps.
+ *
+ * Spec: docs/RESPONSIVE_AUDIT_PLAN.md (Fas 0)
+ * Import via frontend/vue/src/styles/mrt-public.css (public + Vue admin).
+ *
+ * @package Museum_Railway_Timetable
+ */
+
+:root {
+  /* Max-width scale (fixed caps — use in min(100%, var(...)) or width rules) */
+  --mrt-max-narrow: 28rem;
+  --mrt-max-feed: 36rem;
+  --mrt-max-content: 42rem;
+  --mrt-max-step: 46rem;
+  --mrt-max-step-wide: 54rem;
+  --mrt-max-wizard: 64rem;
+  --mrt-max-app: 80rem;
+
+  /* Viewport-aware shell caps */
+  --mrt-app-content-max: min(96vw, var(--mrt-max-app));
+  --mrt-wizard-content-max: min(76.8vw, var(--mrt-max-wizard));
+
+  /*
+   * Breakpoints (reference for docs and future @custom-media).
+   * Media queries still use literals until custom media is adopted project-wide.
+   */
+  --mrt-bp-public-md: 48rem;
+  --mrt-bp-public-sm: 40rem;
+  --mrt-bp-public-xs: 22.5rem;
+  --mrt-bp-admin-mobile: 782px;
+}

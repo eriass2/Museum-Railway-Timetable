@@ -118,7 +118,7 @@ onMounted(() => {
 
 <style scoped>
 .mrt-wizard-main-card__errors {
-  max-width: var(--mrt-wizard-errors-max-width, 46rem);
+  max-width: var(--mrt-wizard-errors-max-width, var(--mrt-max-step));
   margin: 0 auto 0.75rem;
 }
 
