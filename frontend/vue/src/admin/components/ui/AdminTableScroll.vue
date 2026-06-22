@@ -6,14 +6,18 @@
 
 <style scoped>
 .admin-table-scroll {
+  display: block;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 782px) {
   .admin-table-scroll {
-    margin-left: -4px;
-    margin-right: -4px;
+    width: 100%;
   }
 }
 </style>

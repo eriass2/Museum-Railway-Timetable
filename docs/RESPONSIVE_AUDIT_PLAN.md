@@ -1,6 +1,6 @@
 # Plan: Granskning av responsivitet och max-storlekar (Vue)
 
-**Status:** Pågående — F0 klar (2026-06-22); T1–T7 klar (2026-06-22); T8 ej påbörjad  
+**Status:** Klar — F0 + T1–T8 (2026-06-22)  
 **Datum:** 2026-06-22  
 **Relaterat:** [CSS_RESPONSIBILITY_PLAN.md](CSS_RESPONSIBILITY_PLAN.md), [VUE_UI_COMPONENTS.md](VUE_UI_COMPONENTS.md), [STYLE_GUIDE.md](STYLE_GUIDE.md) §3, [mockups/DESIGN_TOKENS.md](mockups/DESIGN_TOKENS.md), [REBUILD_RULES.md](REBUILD_RULES.md) §mobile-first
 

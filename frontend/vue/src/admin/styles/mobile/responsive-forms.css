@@ -1,4 +1,15 @@
 @media (max-width: 782px) {
+  .mrt-admin-page.mrt-admin-page--mobile {
+    overflow-x: clip;
+    max-width: 100%;
+    min-width: 0;
+  }
+
+  .mrt-admin-page--mobile :deep(.admin-table-scroll) {
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
   .mrt-admin-page--mobile :deep(.form-table th),
   .mrt-admin-page--mobile :deep(.form-table td) {
     display: block;

@@ -40,6 +40,14 @@ import AdminNav from './components/AdminNav.vue';
   .mrt-admin-shell {
     flex-direction: column;
     gap: 12px;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
+  .mrt-admin-shell__main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
   }
 }
 </style>

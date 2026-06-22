@@ -21,7 +21,7 @@ defineProps<{
 
 .admin-inline-form :deep(.regular-text) {
   flex: 1 1 14rem;
-  max-width: 28rem;
+  max-width: var(--mrt-max-narrow);
 }
 
 .admin-inline-form :deep(.button) {

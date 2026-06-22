@@ -8,6 +8,7 @@ import { fileURLToPath } from 'node:url';
 import { buildSampleOverviewPayload, buildCancelledOverviewPayload } from './fixtures/sample-overview-payload.mjs';
 import { buildAdminRestResponse } from './fixtures/admin-rest.mjs';
 import { e2eAdminStrings } from './fixtures/admin-strings.mjs';
+import { e2eImportExportGuide } from './fixtures/admin-import-export-guide.mjs';
 import { e2eAdminHelp } from './fixtures/admin-help.mjs';
 import {
   buildEmptyDisruptionFeedPayload,
@@ -373,6 +374,7 @@ function buildAdminClientConfig() {
     isDevMode: true,
     strings: e2eAdminStrings,
     help: e2eAdminHelp,
+    importExportGuide: e2eImportExportGuide,
   };
 }
 

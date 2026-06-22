@@ -65,7 +65,7 @@ function stationTypeLabel(stationType: string): string {
         :message="adminStr(cfg, 'stationsEmptyStationsMsg')"
       />
       <AdminTableScroll v-else>
-        <table class="widefat striped mrt-admin-stations-table">
+        <table class="widefat striped mrt-admin-stations-table mrt-admin-responsive-table">
           <thead>
             <tr>
               <th>{{ adminStr(cfg, 'stationsColName') }}</th>
@@ -77,16 +77,19 @@ function stationTypeLabel(stationType: string): string {
           </thead>
           <tbody>
             <AdminFlashRow v-for="st in stations" :key="st.id" :active="isFlashed(st.id)">
-              <td>{{ st.title }}</td>
-              <td>{{ stationTypeLabel(st.station_type) }}</td>
-              <td :class="{ 'mrt-admin-station-zones--missing': stationMissingPriceZone(st) }">
+              <td :data-label="adminStr(cfg, 'stationsColName')">{{ st.title }}</td>
+              <td :data-label="adminStr(cfg, 'stationsColType')">{{ stationTypeLabel(st.station_type) }}</td>
+              <td
+                :data-label="adminStr(cfg, 'stationsColZones')"
+                :class="{ 'mrt-admin-station-zones--missing': stationMissingPriceZone(st) }"
+              >
                 {{ formatStationPriceZones(st.price_zones) || '—' }}
                 <span v-if="stationMissingPriceZone(st)" class="mrt-admin-station-missing-zone">
                   ({{ adminStr(cfg, 'stationsMissingZoneBadge') }})
                 </span>
               </td>
-              <td>{{ st.display_order }}</td>
-              <td v-if="cfg.canManage">
+              <td :data-label="adminStr(cfg, 'stationsColOrder')">{{ st.display_order }}</td>
+              <td v-if="cfg.canManage" data-label="">
                 <AdminRowActions>
                   <MrtButton context="admin" variant="secondary" @click="emit('edit', st)">
                     {{ adminStr(cfg, 'edit') }}

@@ -1,7 +1,19 @@
 # Responsiv granskning — resultat
 
 **Plan:** [RESPONSIVE_AUDIT_PLAN.md](RESPONSIVE_AUDIT_PLAN.md)  
-**Status:** T1–T7 klar (2026-06-22)
+**Status:** T1–T8 klar (2026-06-22)
+
+---
+
+## T8 — Priser / stationer / import (sammanfattning)
+
+| Viewport | Resultat |
+|----------|----------|
+| V2 390px (782px breakpoint) | ✅ Ingen sid-overflow; tabeller scrollar/staplas; import-alternativ kolumn |
+
+**Komponenter:** `PricesPage`, `StationsPanel`, `ImportExportPage`, `AdminInlineForm`, `AdminTableScroll`.
+
+**Åtgärder:** Mobil overflow-clip på admin shell/page; `AdminTableScroll` begränsar bredd; stationstabell responsiv med `data-label`; `28rem` → `var(--mrt-max-narrow)` i `AdminInlineForm`; import-guide i E2E-fixtures; E2E `admin-prices-import-responsive.spec.ts`.
 
 ---
 
@@ -16,6 +28,8 @@
 **Åtgärder:** `28rem` → `var(--mrt-max-narrow)`; fullbredd `widefat`-knapp på mobil; utökade admin REST-fixtures; E2E `admin-timetable-editor-responsive.spec.ts`.
 
 ---
+
+## T6 — Admin shell + dashboard (sammanfattning)
 
 | Viewport | Resultat |
 |----------|----------|
@@ -122,6 +136,10 @@
 | T7 Admin | `MobileTimetablePanel` | ✅ | `--mrt-max-narrow` | 782px | Deviation add cap | T7 |
 | T7 Admin | `MobileQuickDeparture` | ✅ | fluid | 782px | Fullbredd knapp | T7 |
 | T7 Admin | `TimetableTripFieldsBlock` | ✅ | `--mrt-max-narrow` | — | Token migration | T7 |
+| T8 Admin | `PricesPage` / matrix | ✅ | fluid | 782px | Table scroll | T8 |
+| T8 Admin | `StationsPanel` | ✅ | fluid | 782px | Responsive table | T8 |
+| T8 Admin | `ImportExportPage` | ✅ | fluid | 782px | Options stack | T8 |
+| T8 Admin | `AdminInlineForm` | ✅ | `--mrt-max-narrow` | 782px | Token migration | T8 |
 
 ¹ T4 layout `@media (max-width: 30rem)` — validity-rad.  
 ² T5 card padding `@media (min-width: 40rem)`.
@@ -135,5 +153,6 @@
 | Datum | Yta | Beskrivning | Status |
 |-------|-----|-------------|--------|
 | 2026-06-22 | F0 | Infört `assets/mrt-layout-tokens.css`; wizard shell kopplad till skalan | Klar |
+| 2026-06-22 | T8 | Admin priser/stationer/import overflow + E2E | Klar |
 | 2026-06-22 | T7 | Mobil tidtabellseditor tokens + E2E | Klar |
 | 2026-06-22 | T6 | Admin nav touch target; E2E admin responsive | Klar |
