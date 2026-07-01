@@ -28,32 +28,8 @@ defineProps<{
   justify-self: center;
 }
 
+/* Per-row segments replaced by one measured line on MrtTimeline (J22). */
 .mrt-timeline__node-col::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  width: var(--mrt-tl-line, 0.35rem);
-  transform: translateX(-50%);
-  background: var(--mrt-timeline-line, var(--mrt-wizard-text, #151515));
-  pointer-events: none;
-}
-
-.mrt-timeline__node-col--segment-down::before {
-  top: 50%;
-  bottom: -1px;
-}
-
-.mrt-timeline__node-col--segment-up::before {
-  top: -1px;
-  bottom: 50%;
-}
-
-.mrt-timeline__node-col--segment-through::before {
-  top: -1px;
-  bottom: -1px;
-}
-
-.mrt-timeline__node-col--segment-none::before {
   display: none;
 }
 
