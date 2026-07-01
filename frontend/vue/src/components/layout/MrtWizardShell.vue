@@ -98,18 +98,10 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
 
 @media (max-width: 48rem) {
   .mrt-journey-wizard {
-    box-sizing: border-box;
-    width: 100svw;
-    max-width: 100svw;
-    margin-left: calc(50% - 50svw);
-    margin-right: calc(50% - 50svw);
-    --mrt-app-content-max: 100%;
-  }
-
-  .mrt-journey-wizard :deep(.mrt-app-shell),
-  .mrt-journey-wizard :deep(.mrt-app-shell__content) {
     width: 100%;
-    max-width: none;
+    max-width: 100%;
+    min-width: 0;
+    overflow-x: clip;
   }
 
   .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-app-shell__content) {

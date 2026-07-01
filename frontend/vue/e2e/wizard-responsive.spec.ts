@@ -36,9 +36,10 @@ test.describe('Journey wizard responsive layout', () => {
       const root = document.querySelector('.mrt-journey-wizard');
       const rect = root?.getBoundingClientRect();
       const viewport = document.documentElement.clientWidth;
-      return { width: rect?.width ?? 0, viewport };
+      return { left: rect?.left ?? 0, width: rect?.width ?? 0, viewport };
     });
 
+    expect(metrics.left).toBeLessThanOrEqual(OVERFLOW_SLACK);
     expect(metrics.width).toBeGreaterThanOrEqual(metrics.viewport * 0.98 - OVERFLOW_SLACK);
   });
 

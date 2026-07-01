@@ -28,10 +28,12 @@ body.mrt-has-overview .mrt-vue-root--overview {
 
 /* Embedded wizard: use full shortcode column (block themes + demo page). */
 body.mrt-has-shortcodes .mrt-vue-root--wizard,
-body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root--wizard.alignwide {
+body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root--wizard.alignfull,
+body.mrt-has-shortcodes .wp-block-post-content-is-layout-constrained > .mrt-vue-root--wizard.alignfull {
   width: 100%;
-  max-width: var(--mrt-app-content-max, min(96vw, 80rem));
+  max-width: none;
   min-width: 0;
+  box-sizing: border-box;
 }
 
 body.mrt-has-shortcodes .mrt-journey-wizard--embedded {
@@ -53,15 +55,24 @@ body.mrt-has-component-demo .wp-block-post-content-is-layout-constrained > .mrt-
   max-width: var(--mrt-app-content-max, min(98vw, var(--mrt-max-app)));
 }
 
-/* Mobile: wizard full viewport width inside block themes (J21 / Jesper 2026-06). */
+/*
+ * Mobile wizard: alignfull + TT5 has-global-padding breakout (J21).
+ * Avoid 100svw — nested constrained/padded wrappers break calc(50% - 50svw).
+ */
 @media (max-width: 48rem) {
-  body.mrt-has-shortcodes .mrt-vue-root--wizard,
-  body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root--wizard.alignwide,
-  body.mrt-has-shortcodes .wp-block-post-content-is-layout-constrained > .mrt-vue-root--wizard.alignwide {
-    box-sizing: border-box;
-    width: 100svw;
-    max-width: 100svw;
-    margin-left: calc(50% - 50svw + var(--wp--style--root--padding-left, 0px));
-    margin-right: calc(50% - 50svw + var(--wp--style--root--padding-right, 0px));
+  body.mrt-has-shortcodes .mrt-vue-root--wizard.alignfull,
+  body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root--wizard.alignfull,
+  body.mrt-has-shortcodes .wp-block-post-content-is-layout-constrained > .mrt-vue-root--wizard.alignfull {
+    width: auto;
+    max-width: none;
+    margin-left: calc(var(--wp--style--root--padding-left, 0px) * -1);
+    margin-right: calc(var(--wp--style--root--padding-right, 0px) * -1);
+    overflow-x: clip;
+  }
+
+  body.mrt-has-component-demo .mrt-vue-root--wizard {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: 0;
   }
 }

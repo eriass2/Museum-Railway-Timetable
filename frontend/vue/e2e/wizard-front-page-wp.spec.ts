@@ -8,7 +8,7 @@ test.describe('Journey wizard on Trafikkalender (WordPress front page)', () => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.goto(wpIndexUrl);
 
-    const wizardRoot = page.locator('.mrt-vue-root--wizard.alignwide').first();
+    const wizardRoot = page.locator('.mrt-vue-root--wizard.alignfull').first();
     await expect(wizardRoot).toBeVisible({ timeout: 20_000 });
 
     const wizard = page.locator('.mrt-journey-wizard').first();
