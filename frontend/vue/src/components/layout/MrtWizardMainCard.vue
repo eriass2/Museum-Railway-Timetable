@@ -31,4 +31,11 @@
   --mrt-step-nav-margin-bottom: 1.25rem;
   --mrt-heading-surface-color: #fff;
 }
+
+@media (max-width: 48rem) {
+  .mrt-wizard-main-card {
+    padding: 0.75rem;
+    box-shadow: none;
+  }
+}
 </style>

@@ -32,6 +32,7 @@
     --mrt-step-panel-padding: 0.75rem 0.85rem 1.1rem;
     --mrt-step-panel-search-width: 100%;
     --mrt-step-panel-wide-width: 100%;
+    --mrt-step-panel-search-padding-inline: 1rem;
   }
 }
 </style>

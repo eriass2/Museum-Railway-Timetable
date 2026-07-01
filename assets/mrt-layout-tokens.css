@@ -14,12 +14,13 @@
   --mrt-max-content: 42rem;
   --mrt-max-step: 46rem;
   --mrt-max-step-wide: 54rem;
-  --mrt-max-wizard: 64rem;
+  /* ~30% narrower than former 64rem cap (Jesper D24 / 2026-06-30). */
+  --mrt-max-wizard: 45rem;
   --mrt-max-app: 80rem;
 
   /* Viewport-aware shell caps */
   --mrt-app-content-max: min(96vw, var(--mrt-max-app));
-  --mrt-wizard-content-max: min(76.8vw, var(--mrt-max-wizard));
+  --mrt-wizard-content-max: min(54vw, var(--mrt-max-wizard));
 
   /*
    * Breakpoints (reference for docs and future @custom-media).
@@ -29,4 +30,11 @@
   --mrt-bp-public-sm: 40rem;
   --mrt-bp-public-xs: 22.5rem;
   --mrt-bp-admin-mobile: 782px;
+}
+
+@media (max-width: 48rem) {
+  :root {
+    /* Mobile: wizard uses full page width (J21 / Jesper 2026-06). */
+    --mrt-wizard-content-max: 100%;
+  }
 }

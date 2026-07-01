@@ -42,7 +42,12 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
 
 <template>
   <div class="mrt-journey-wizard" :class="rootClass" :data-step="step">
-    <MrtPublicAppShell :bleed-background="bleedBackground" :background-image="heroBackgroundUrl">
+    <MrtPublicAppShell
+      :bleed-background="bleedBackground"
+      :background-image="heroBackgroundUrl"
+      :constrain-content="false"
+      :content-padding="false"
+    >
       <MrtWizardHero
         :step="step"
         :hero-class="heroClass"
@@ -80,6 +85,7 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
 
 .mrt-journey-wizard :deep(.mrt-app-shell__content) {
   padding-inline: 0;
+  margin-inline: auto;
 }
 
 .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-app-shell__content) {
@@ -88,5 +94,26 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
 
 .mrt-journey-wizard :deep(.mrt-journey-wizard__hero--has-bg) {
   background: transparent;
+}
+
+@media (max-width: 48rem) {
+  .mrt-journey-wizard {
+    box-sizing: border-box;
+    width: 100svw;
+    max-width: 100svw;
+    margin-left: calc(50% - 50svw);
+    margin-right: calc(50% - 50svw);
+    --mrt-app-content-max: 100%;
+  }
+
+  .mrt-journey-wizard :deep(.mrt-app-shell),
+  .mrt-journey-wizard :deep(.mrt-app-shell__content) {
+    width: 100%;
+    max-width: none;
+  }
+
+  .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-app-shell__content) {
+    max-width: none;
+  }
 }
 </style>

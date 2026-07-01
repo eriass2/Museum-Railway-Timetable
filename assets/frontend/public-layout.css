@@ -52,3 +52,16 @@ body.mrt-has-component-demo .is-layout-constrained > .mrt-vue-root.alignwide,
 body.mrt-has-component-demo .wp-block-post-content-is-layout-constrained > .mrt-vue-root.alignwide {
   max-width: var(--mrt-app-content-max, min(98vw, var(--mrt-max-app)));
 }
+
+/* Mobile: wizard full viewport width inside block themes (J21 / Jesper 2026-06). */
+@media (max-width: 48rem) {
+  body.mrt-has-shortcodes .mrt-vue-root--wizard,
+  body.mrt-has-shortcodes .is-layout-constrained > .mrt-vue-root--wizard.alignwide,
+  body.mrt-has-shortcodes .wp-block-post-content-is-layout-constrained > .mrt-vue-root--wizard.alignwide {
+    box-sizing: border-box;
+    width: 100svw;
+    max-width: 100svw;
+    margin-left: calc(50% - 50svw + var(--wp--style--root--padding-left, 0px));
+    margin-right: calc(50% - 50svw + var(--wp--style--root--padding-right, 0px));
+  }
+}

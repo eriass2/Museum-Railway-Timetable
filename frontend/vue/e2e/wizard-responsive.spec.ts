@@ -26,6 +26,22 @@ test.describe('Journey wizard responsive layout', () => {
     await expectNoHorizontalOverflow(page);
   });
 
+  test('route step uses full viewport width at 390px', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 820 });
+    await page.goto('/wizard');
+    const hero = page.locator('.mrt-journey-wizard__hero').first();
+    await expect(hero).toBeVisible();
+
+    const metrics = await page.evaluate(() => {
+      const root = document.querySelector('.mrt-journey-wizard');
+      const rect = root?.getBoundingClientRect();
+      const viewport = document.documentElement.clientWidth;
+      return { width: rect?.width ?? 0, viewport };
+    });
+
+    expect(metrics.width).toBeGreaterThanOrEqual(metrics.viewport * 0.98 - OVERFLOW_SLACK);
+  });
+
   test('outbound step has no horizontal overflow at 390px', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 820 });
     await page.goto('/wizard?debug=outbound');
@@ -49,7 +65,7 @@ test.describe('Journey wizard responsive layout', () => {
       const root = getComputedStyle(document.documentElement);
       const maxRem = parseFloat(root.getPropertyValue('--mrt-max-wizard'));
       const viewport = document.documentElement.clientWidth;
-      const expectedMax = Math.min(viewport * 0.768, maxRem * 16);
+      const expectedMax = Math.min(viewport * 0.54, maxRem * 16);
       const shell = document.querySelector('.mrt-journey-wizard .mrt-app-shell__content');
       return {
         contentWidth: shell?.getBoundingClientRect().width ?? 0,
@@ -58,6 +74,6 @@ test.describe('Journey wizard responsive layout', () => {
     });
 
     expect(metrics.contentWidth).toBeLessThanOrEqual(metrics.expectedMax + OVERFLOW_SLACK);
-    expect(metrics.contentWidth).toBeGreaterThan(900);
+    expect(metrics.contentWidth).toBeGreaterThan(640);
   });
 });
