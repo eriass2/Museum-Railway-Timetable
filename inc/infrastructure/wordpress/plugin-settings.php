@@ -85,9 +85,40 @@ function MRT_plugin_operator_name(): string {
 /**
  * Default hero background image URL for the journey wizard (empty when unset).
  */
+function MRT_rewrite_localhost_plugin_asset_url( string $url ): string {
+	if ( $url === '' || ! preg_match( '#^https?://localhost:\d+#i', $url ) ) {
+		return $url;
+	}
+
+	$plugin_url_path = (string) parse_url( MRT_URL, PHP_URL_PATH );
+	$asset_path      = (string) parse_url( $url, PHP_URL_PATH );
+	if ( $plugin_url_path === '' || $asset_path === '' || ! str_starts_with( $asset_path, $plugin_url_path ) ) {
+		return $url;
+	}
+
+	$relative = ltrim( substr( $asset_path, strlen( $plugin_url_path ) ), '/' );
+
+	return esc_url( MRT_URL . $relative );
+}
+
 function MRT_plugin_hero_background_url(): string {
-	$url = (string) ( MRT_get_plugin_settings()['hero_background_url'] ?? '' );
-	return $url !== '' ? esc_url( $url ) : '';
+	$url = trim( (string) ( MRT_get_plugin_settings()['hero_background_url'] ?? '' ) );
+	if ( $url === '' ) {
+		return '';
+	}
+
+	if ( ! preg_match( '#^https?://#i', $url ) ) {
+		$relative = ltrim( $url, '/' );
+		if ( $relative !== '' && ! str_contains( $relative, '..' ) ) {
+			$url = MRT_URL . $relative;
+		}
+	}
+
+	if ( MRT_is_development_mode() ) {
+		$url = MRT_rewrite_localhost_plugin_asset_url( $url );
+	}
+
+	return esc_url( $url );
 }
 
 /**

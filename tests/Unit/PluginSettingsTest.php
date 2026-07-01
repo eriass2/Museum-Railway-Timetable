@@ -10,7 +10,7 @@ require_once dirname(__DIR__, 2) . '/inc/infrastructure/wordpress/plugin-setting
 final class PluginSettingsTest extends TestCase {
 
 	protected function tearDown(): void {
-		unset( $GLOBALS['mrt_test_options'] );
+		unset( $GLOBALS['mrt_test_options'], $GLOBALS['mrt_test_filters'] );
 		parent::tearDown();
 	}
 
@@ -55,6 +55,30 @@ final class PluginSettingsTest extends TestCase {
 		);
 
 		self::assertSame( 'https://example.test/hero.jpg', MRT_plugin_hero_background_url() );
+	}
+
+	public function test_rewrite_localhost_plugin_asset_url_uses_current_mrt_url(): void {
+		$stored = 'http://localhost:8080/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg';
+
+		self::assertSame(
+			'https://example.test/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg',
+			MRT_rewrite_localhost_plugin_asset_url( $stored )
+		);
+	}
+
+	public function test_plugin_hero_background_url_rewrites_localhost_in_dev_mode(): void {
+		$GLOBALS['mrt_test_filters']['mrt_is_development_mode'] = static fn (): bool => true;
+
+		$GLOBALS['mrt_test_options'] = array(
+			'mrt_settings' => array(
+				'hero_background_url' => 'http://localhost:8080/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg',
+			),
+		);
+
+		self::assertSame(
+			'https://example.test/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg',
+			MRT_plugin_hero_background_url()
+		);
 	}
 
 	public function test_plugin_wizard_beta_enabled_reads_settings(): void {
