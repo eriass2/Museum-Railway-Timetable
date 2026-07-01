@@ -67,6 +67,7 @@ const displayItems = computed(() =>
   list-style: none;
   margin: 0;
   padding: 0;
+  max-width: var(--mrt-max-narrow);
   --mrt-tl-line: 0.35rem;
   --mrt-timeline-line: var(--mrt-wizard-text, #151515);
 }

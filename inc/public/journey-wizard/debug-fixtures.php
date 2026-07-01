@@ -189,6 +189,128 @@ function MRT_debug_sample_outbound_transfer_summary(): array {
 }
 
 /**
+ * Whether a service ID belongs to wizard debug fixtures (not the database).
+ */
+function MRT_debug_is_fixture_service_id( int $service_id ): bool {
+	return $service_id >= 90001 && $service_id <= 90099;
+}
+
+/**
+ * Stop rows for connection-detail when expanding debug wizard cards (dev only).
+ *
+ * @return array<int, array<string, mixed>>
+ */
+function MRT_debug_fixture_connection_stops_by_service(): array {
+	return array(
+		90001 => array(
+			array(
+				'station_title'    => 'Uppsala Östra',
+				'departure_time'   => '10:00',
+				'time_label'       => '10.00',
+				'approximate_time' => false,
+				'behov_hint'       => '',
+			),
+			array(
+				'station_title'    => 'Fyrislund',
+				'departure_time'   => '10:15',
+				'time_label'       => '10.15',
+				'approximate_time' => false,
+				'behov_hint'       => '',
+			),
+			array(
+				'station_title'    => 'Lövstahagen',
+				'departure_time'   => '10:46',
+				'time_label'       => 'Ca 10.46',
+				'approximate_time' => true,
+				'behov_hint'       => 'dropoff',
+			),
+			array(
+				'station_title'  => 'Faringe',
+				'arrival_time'   => '10:57',
+				'time_label'     => '10.57',
+				'behov_hint'     => '',
+			),
+		),
+		90002 => array(
+			array(
+				'station_title'  => 'Uppsala Östra',
+				'departure_time' => '14:46',
+				'time_label'     => '14.46',
+			),
+			array(
+				'station_title'  => 'Marielund',
+				'arrival_time'   => '14:58',
+				'time_label'     => '14.58',
+			),
+		),
+		90003 => array(
+			array(
+				'station_title'  => 'Marielund',
+				'departure_time' => '15:05',
+				'time_label'     => '15.05',
+			),
+			array(
+				'station_title'  => 'Faringe',
+				'arrival_time'   => '15:37',
+				'time_label'     => '15.37',
+			),
+		),
+		90004 => array(
+			array(
+				'station_title'  => 'Faringe',
+				'departure_time' => '16:41',
+				'time_label'     => '16.41',
+			),
+			array(
+				'station_title'  => 'Uppsala Östra',
+				'arrival_time'   => '17:47',
+				'time_label'     => '17.47',
+			),
+		),
+	);
+}
+
+/**
+ * Journey detail for debug fixture services (Playwright e2e parity in WordPress dev).
+ *
+ * @return array<string, mixed>|null Null when not a debug fixture service.
+ */
+function MRT_debug_connection_journey_detail( int $service_id, int $from_station_id, int $to_station_id ): ?array {
+	if ( ! MRT_debug_is_fixture_service_id( $service_id ) ) {
+		return null;
+	}
+
+	$stops_by_service = MRT_debug_fixture_connection_stops_by_service();
+	if ( ! isset( $stops_by_service[ $service_id ] ) ) {
+		return array(
+			'service_id'       => $service_id,
+			'stops'            => array(),
+			'duration_minutes' => null,
+		);
+	}
+
+	$stops    = $stops_by_service[ $service_id ];
+	$duration = null;
+	if ( count( $stops ) >= 2 ) {
+		$first = $stops[0];
+		$last  = $stops[ count( $stops ) - 1 ];
+		$dep   = (string) ( $first['departure_time'] ?? '' );
+		$arr   = (string) ( $last['arrival_time'] ?? $last['departure_time'] ?? '' );
+		if ( $dep !== '' && $arr !== '' && function_exists( 'MRT_format_duration_minutes' ) ) {
+			$duration = MRT_format_duration_minutes( $dep, $arr );
+		}
+	}
+
+	unset( $from_station_id, $to_station_id );
+
+	return array(
+		'service_id'       => $service_id,
+		'stops'            => $stops,
+		'duration_minutes' => $duration,
+	);
+}
+
+/**
  * Presets keyed by debug shortcode attribute (development only).
  *
  * @return array<string, array<string, mixed>>

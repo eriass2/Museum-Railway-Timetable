@@ -29,6 +29,7 @@ const emit = defineEmits<{
 
 <style scoped>
 .mrt-timeline__toggle {
+  min-height: 2.5rem;
   padding: 0.15rem 0;
 }
 

@@ -18,7 +18,7 @@ final class JourneyDetailTest extends TestCase {
 		if ( $this->original_wpdb !== null ) {
 			$GLOBALS['wpdb'] = $this->original_wpdb;
 		}
-		unset( $GLOBALS['mrt_test_posts'] );
+		unset( $GLOBALS['mrt_test_posts'], $GLOBALS['mrt_test_filters'] );
 		parent::tearDown();
 	}
 
@@ -234,6 +234,17 @@ final class JourneyDetailTest extends TestCase {
 		$detail = MRT_get_connection_journey_detail( 501, 102, 101 );
 
 		self::assertSame( array(), $detail['stops'] );
+	}
+
+	public function test_connection_journey_detail_uses_debug_fixture_stops_in_dev_mode(): void {
+		require_once ABSPATH . 'inc/public/journey-wizard/debug-fixtures.php';
+		$GLOBALS['mrt_test_filters']['mrt_is_development_mode'] = static fn (): bool => true;
+
+		$detail = MRT_get_connection_journey_detail( 90001, 4694, 4707 );
+
+		self::assertCount( 4, $detail['stops'] );
+		self::assertSame( 'Uppsala Östra', $detail['stops'][0]['station_title'] );
+		self::assertSame( 'Ca 10.46', $detail['stops'][2]['time_label'] );
 	}
 
 	/**

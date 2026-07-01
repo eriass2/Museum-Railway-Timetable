@@ -68,6 +68,16 @@ function MRT_get_connection_journey_detail( $service_id, $from_station_id, $to_s
 		'stops'            => array(),
 		'duration_minutes' => null,
 	);
+	if ( MRT_is_development_mode() && function_exists( 'MRT_debug_connection_journey_detail' ) ) {
+		$mock = MRT_debug_connection_journey_detail(
+			(int) $service_id,
+			(int) $from_station_id,
+			(int) $to_station_id
+		);
+		if ( is_array( $mock ) ) {
+			return $mock;
+		}
+	}
 	if ( $service_id <= 0 || $from_station_id <= 0 || $to_station_id <= 0 ) {
 		return $out;
 	}

@@ -86,9 +86,6 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
 .mrt-journey-wizard :deep(.mrt-app-shell__content) {
   padding-inline: 0;
   margin-inline: auto;
-}
-
-.mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-app-shell__content) {
   max-width: var(--mrt-wizard-content-max);
 }
 
@@ -104,7 +101,7 @@ const heroSectionStyle = computed((): CSSProperties | undefined => {
     overflow-x: clip;
   }
 
-  .mrt-journey-wizard:not(.mrt-journey-wizard--embedded) :deep(.mrt-app-shell__content) {
+  .mrt-journey-wizard :deep(.mrt-app-shell__content) {
     max-width: none;
   }
 }

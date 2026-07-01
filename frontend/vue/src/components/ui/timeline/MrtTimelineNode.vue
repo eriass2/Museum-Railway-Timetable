@@ -40,17 +40,17 @@ defineProps<{
 
 .mrt-timeline__node-col--segment-down::before {
   top: 50%;
-  bottom: 0;
+  bottom: -1px;
 }
 
 .mrt-timeline__node-col--segment-up::before {
-  top: 0;
+  top: -1px;
   bottom: 50%;
 }
 
 .mrt-timeline__node-col--segment-through::before {
-  top: 0;
-  bottom: 0;
+  top: -1px;
+  bottom: -1px;
 }
 
 .mrt-timeline__node-col--segment-none::before {

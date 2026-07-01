@@ -18,11 +18,11 @@ final class VueMountTest extends TestCase {
 		self::assertSame( ' alignwide', MRT_vue_mount_extra_classes( 'index', array() ) );
 		self::assertSame( ' alignwide', MRT_vue_mount_extra_classes( 'overview', array() ) );
 		self::assertSame( ' alignwide', MRT_vue_mount_extra_classes( 'traffic_notices', array() ) );
-		self::assertSame( ' alignfull', MRT_vue_mount_extra_classes( 'wizard', array() ) );
-		self::assertSame( ' alignfull', MRT_vue_mount_extra_classes( 'wizard', array( 'embedded' => false ) ) );
 	}
 
-	public function test_mount_extra_classes_empty_for_embedded_wizard(): void {
-		self::assertSame( '', MRT_vue_mount_extra_classes( 'wizard', array( 'embedded' => true ) ) );
+	public function test_mount_extra_classes_alignfull_for_wizard(): void {
+		self::assertSame( ' alignfull', MRT_vue_mount_extra_classes( 'wizard', array() ) );
+		self::assertSame( ' alignfull', MRT_vue_mount_extra_classes( 'wizard', array( 'embedded' => false ) ) );
+		self::assertSame( ' alignfull', MRT_vue_mount_extra_classes( 'wizard', array( 'embedded' => true ) ) );
 	}
 }

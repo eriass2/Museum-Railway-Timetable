@@ -130,7 +130,7 @@ describe('MrtTimeline', () => {
     expect(html).toContain('mrt-timeline__row--cancelled');
   });
 
-  it('stacks Ca prefix above clock digits (J25)', async () => {
+  it('renders Ca prefix before clock digits on one line (J25)', async () => {
     const app = createSSRApp({
       render: () =>
         h(MrtTimeline, {

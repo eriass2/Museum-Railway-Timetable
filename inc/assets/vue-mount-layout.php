@@ -20,10 +20,6 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 function MRT_vue_mount_extra_classes( string $app, array $config ): string {
 	if ( 'wizard' === $app ) {
-		if ( ! empty( $config['embedded'] ) ) {
-			return '';
-		}
-
 		return ' alignfull';
 	}
 

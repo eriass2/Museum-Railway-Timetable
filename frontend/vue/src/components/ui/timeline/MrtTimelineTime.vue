@@ -32,14 +32,15 @@ defineProps<{
 
 .mrt-timeline__time-stack {
   display: inline-flex;
-  flex-direction: column;
-  align-items: flex-end;
+  flex-direction: row;
+  align-items: baseline;
+  justify-content: flex-end;
   line-height: 1.15;
-  gap: 0.05rem;
+  gap: 0.2em;
 }
 
 .mrt-timeline__time-ca {
-  font-size: 0.72em;
+  font-size: 0.85em;
   font-weight: 600;
   letter-spacing: 0.02em;
 }
