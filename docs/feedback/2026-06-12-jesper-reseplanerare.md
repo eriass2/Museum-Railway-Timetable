@@ -3,7 +3,7 @@
 Återkoppling efter publicering och [svar 11 juni](2026-06-11-svar-till-jesper.md). Jesper bekräftar att vi **fixar det som finns nu innan vi bygger vidare** och att reseplaneraren **känns snabbare**. **Gå igenom en punkt i taget** — bocka av status när punkt är besvarad, fixad eller avvisad.
 
 **Källor:** mail/skärmdumpar från Jesper (2026-06-12), mockup `image0.png`  
-**Senast uppdaterad:** 2026-06-13 (omgång 4 implementation klar team; test3-verifiering återstår)  
+**Senast uppdaterad:** 2026-06-30 (J21 layout + J22 tidslinje-fixar committade; test3-verifiering återstår)  
 **Relaterat:** [2026-06-11-jesper-reseplanerare.md](2026-06-11-jesper-reseplanerare.md) (J14–J18), [2026-06-09-jesper-beta.md](2026-06-09-jesper-beta.md) (J3, J4, J10), [2026-06-11-svar-till-jesper.md](2026-06-11-svar-till-jesper.md)
 
 ---
@@ -100,7 +100,7 @@ Alla fyra stegknappar på **samma rad** på mobil (som tidigare), utan att bryta
 |---|---------|----------------------|-------------|
 | A | Element utanför skärmen (horisontell overflow) | ☑ `MrtPublicAppShell`, centrerad layout, `min-width: 0` | ☐ test3 mobil/desktop |
 | B | Bakgrundsbild täcker inte hela bredden | ☑ `bleedBackground` + `.mrt-app-shell__backdrop` edge-to-edge (≥48rem) | ☑ E2E `wizard-front-page-wp.spec.ts` (WP demo); ☐ test3 |
-| C | Planeraren för bred/utdragen | ☑ `--mrt-wizard-content-max: min(76.8vw, 64rem)` | ☐ Jesper/UL-jämförelse; ev. D24 (smalare rem) |
+| C | Planeraren för bred/utdragen | ☑ desktop `min(54vw, 45rem)` (~30% smalare); mobil **100%** (2026-06-30) | ☐ Jesper/UL-jämförelse |
 | D | Grönt filter över foto | ☑ Ingen overlay på bleed-backdrop | ☐ test3; embedded shortcode har fortfarande 30 % grön `::before` i `MrtWizardHero` (D26) |
 | E | Restyp före destination (söksteg) | ☑ `WizardRouteStep.vue` | ☑ E2E `wizard-route-layout.spec.ts` |
 
@@ -118,8 +118,7 @@ Alla fyra stegknappar på **samma rad** på mobil (som tidigare), utan att bryta
 1. **Manuell check** på `t3.lennakatten.se` — inbäddad shortcode i Lennakatten-tema (inte bara lokal e2e/demo).
 2. **Horisontell scroll** — bekräfta ingen sidscroll på mobil/desktop på startsidan.
 3. **Mobil &lt;48rem** — full-bleed-foto visas inte (backdrop dold); grön hero + grön huvudpanel — OK om Jesper accepterar, annars utred mobil hero.
-4. **D24** — maxbredd idag upp till 64rem; Jesper nämnde UL-lik ~40–48rem — produktbeslut vid behov.
-5. **D26** — embedded hero med bakgrundsbild har lätt grön toning (`::before` 30 %) — separat om inbäddade shortcodes ska matcha front page.
+4. **D26** — embedded hero med bakgrundsbild har lätt grön toning (`::before` 30 %) — separat om inbäddade shortcodes ska matcha front page.
 
 ### Acceptanskriterium
 
@@ -136,17 +135,19 @@ Alla fyra stegknappar på **samma rad** på mobil (som tidigare), utan att bryta
 - **Område:** Reseplanerare / `MrtTimeline`, `WizardTimeline`
 - **Typ:** regression (J3 fixad 2026-06-09)
 - **Prioritet:** medium–hög
-- **Status:** **klar (team, 2026-06-13)** — vertikal linje per rad i `mrt-timeline__node-col` (centrerad i nodkolumnen); verifiera på test3 mobil.
+- **Status:** **klar (team, 2026-06-30)** — vertikal linje per rad; linje går igenom ”Dölj passerade stationer”; `Ca 10.09` utan felaktigt `X`-suffix vid schemalagd tid + behov. Verifiera på test3 mobil.
 
 ### Rotorsak (var)
 
-Global `::before`-linje med fast `top`/`left` följde inte nodkolumnen när radhöjd och `--mrt-tl-node` varierade (container queries + `margin-top` på nod).
+Global `::before`-linje med fast `top`/`left` följde inte nodkolumnen när radhöjd och `--mrt-tl-node` varierade (container queries + `margin-top` på nod). Senare: glapp i linjen vid collapse-rad; dubbel `X` i tidslabel.
 
 ### Levererat (team)
 
 | Del | Var | Beteende |
 |-----|-----|----------|
 | Linje | `MrtTimeline.vue` — `mrt-timeline__node-col::before` | Segment per rad, centrerat i nodkolumn |
+| Collapse-rad | `timeline-row-grid.css` | `align-self: stretch` på nodkolumn |
+| Ca + behov | `stop-time-wizard-display.php` | Ingen ` X`-suffix när klockslag finns |
 | Nod | `mrt-timeline__node` | Ingen `margin-top`; `z-index` ovan linje |
 | Mobil | `MrtDetailPanel.vue` | Uppdaterad nodkolumn-styling |
 
@@ -289,7 +290,7 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 | # | Fråga | Alternativ |
 |---|-------|------------|
 | D23 | Ca-semantik framåt | A) Endast behovsuppehåll · B) Behåll `approximate_time` för tidtabell · C) Båda (tydlig prioritet) |
-| D24 | Maxbredd innehåll (UL-lik) | Fast rem (t.ex. 40/48) vs responsiv % |
+| D24 | Maxbredd innehåll (UL-lik) | **Implementerat 2026-06-30:** 45rem / 54vw — Jesper verifierar |
 | D25 | Behovsinformation | ℹ️ per stopp + fotnot · behåll P/A · hybrid |
 | D26 | Hero-bild utan filter | Helt utan overlay vs mycket lätt toning för läsbarhet |
 
@@ -301,10 +302,13 @@ Resa till Lövstahagen: ℹ️ vid Lövstahagen, fotnot om avstigning enligt moc
 - [x] J21 implementation: shell full-bleed, filter bort backdrop, maxbredd, restyp före stationer (2026-06-12)
 - [x] J20: stegknappar horisontell rad på mobil (2026-06-13)
 - [x] J22–J26: implementation klar team (2026-06-13)
+- [x] J21 layout: mobil full-bleed + desktop smalare (2026-06-30) — commits `5db5707`, `8e55b45`
+- [x] J22 tidslinje: linje genom collapse-rad + Ca utan X (2026-06-30) — commits `4874e9b`, `0b5a082`
 - [ ] **J21 + J19–J26 verifiering:** manuell check på `t3.lennakatten.se` (mobil + desktop)
 - [ ] Jesper: visuellt OK omgång 4
 - [ ] Team: produktbeslut D23–D26 (vid behov efter test3)
 - [ ] J15–J18: återuppta efter Jesper bekräftat att omgång 4 layout är OK
+- [ ] Turvy (T1–T5): se [2026-06-30-turvy-oversikt.md](2026-06-30-turvy-oversikt.md)
 
 ---
 
