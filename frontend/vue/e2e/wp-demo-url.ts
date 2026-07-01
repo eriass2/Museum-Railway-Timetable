@@ -1,4 +1,6 @@
 /** Demo page URL for WordPress E2E (docker CI or local compose). */
+import { mrtDevSiteUrl } from './mrt-dev-site-url';
+
 export const wpDemoUrl = process.env.MRT_E2E_WP_DEMO_URL || '';
 
 function wpSiteBase(url: string): string {
@@ -12,4 +14,4 @@ function wpSiteBase(url: string): string {
  */
 export const wpIndexUrl =
   process.env.MRT_E2E_WP_INDEX_URL ||
-  (wpDemoUrl ? `${wpSiteBase(wpDemoUrl)}/` : '');
+  (wpDemoUrl ? `${wpSiteBase(wpDemoUrl)}/` : `${mrtDevSiteUrl()}/`);

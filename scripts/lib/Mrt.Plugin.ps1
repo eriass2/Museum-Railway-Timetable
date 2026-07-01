@@ -97,6 +97,18 @@ function Set-MrtRepoRoot {
     return $root
 }
 
+function Get-MrtVueE2eDockerEnvArgs {
+    $url = Get-MrtDevSiteUrl
+    $port = if ($env:MRT_WP_PORT) { $env:MRT_WP_PORT } else { '8080' }
+    $ci = if ($env:CI) { $env:CI } else { '' }
+    return @(
+        '-e', "CI=$ci",
+        '-e', "MRT_DEV_SITE_URL=$url",
+        '-e', "MRT_E2E_WP_SITE_URL=$url",
+        '-e', "MRT_WP_PORT=$port"
+    )
+}
+
 function Get-MrtRepoRoot {
     if (-not $script:MrtRepoRoot) {
         throw 'Call Set-MrtRepoRoot first.'

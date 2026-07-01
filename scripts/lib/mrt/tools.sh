@@ -13,6 +13,15 @@ mrt_tools_ensure_shell() {
 	done
 }
 
+mrt_vue_e2e_docker_env_args() {
+	_port="${MRT_WP_PORT:-8080}"
+	printf '%s\n' \
+		"-e" "CI=${CI:-}" \
+		"-e" "MRT_DEV_SITE_URL=${MRT_DEV_SITE_URL}" \
+		"-e" "MRT_E2E_WP_SITE_URL=${MRT_DEV_SITE_URL}" \
+		"-e" "MRT_WP_PORT=${_port}"
+}
+
 mrt_tools_run() {
 	_svc="$1"
 	shift
@@ -23,7 +32,8 @@ mrt_tools_run() {
 			_script="$1"
 			shift
 		fi
-		docker compose --profile tools run --rm --no-deps -e "CI=${CI:-}" \
+		# shellcheck disable=SC2046
+		docker compose --profile tools run --rm --no-deps $(mrt_vue_e2e_docker_env_args) \
 			--entrypoint sh "$_svc" -c "$_script" "$@"
 		return
 	fi

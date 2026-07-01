@@ -91,8 +91,8 @@ function Invoke-MrtDockerToolsService {
             ($RunArgs -join ' ')
         }
         $composeArgs = @(
-            '--profile', 'tools', 'run', '--rm', '--no-deps',
-            '-e', "CI=$($env:CI)",
+            '--profile', 'tools', 'run', '--rm', '--no-deps'
+        ) + (Get-MrtVueE2eDockerEnvArgs) + @(
             '--entrypoint', 'sh',
             $Service,
             '-c', $script

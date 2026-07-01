@@ -21,7 +21,10 @@ echo "=== ci-e2e-wp: waiting for WordPress ==="
 mrt_wait_wordpress 300 5
 
 echo "=== ci-e2e-wp: import + demo page ==="
+export MRT_E2E_WP_SITE_URL="${MRT_DEV_SITE_URL}"
+mrt_sync_dev_site_url
 mrt_e2e_prepare_site
+mrt_sync_dev_site_url
 
 DEMO_URL="$(mrt_demo_page_url)"
 if [ -z "$DEMO_URL" ]; then

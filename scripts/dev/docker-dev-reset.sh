@@ -50,6 +50,7 @@ mrt_step_done
 
 mrt_step 'Reset and import'
 mrt_dev_reset_import
+mrt_sync_dev_site_url
 mrt_step_done
 
 echo ""

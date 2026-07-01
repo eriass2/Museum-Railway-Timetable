@@ -6,7 +6,7 @@ Kör efter `npm run check` och hård refresh i webbläsaren (Ctrl+F5).
 
 ## Environment
 
-- Demo page: `http://localhost:8080/?page_id=569` (or your local demosida)
+- Demo page: `http://localhost:8089/` (or your port from repo `.env` → `MRT_WP_PORT`)
 - Plugin active; Vue bundle built (`composer vue:build`)
 
 ### Automated E2E
