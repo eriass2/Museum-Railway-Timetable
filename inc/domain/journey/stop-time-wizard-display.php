@@ -63,9 +63,6 @@ function MRT_journey_stop_wizard_time_meta(
 	} elseif ( $has_time ) {
 		$formatted  = MRT_format_time_display( $time_raw );
 		$time_label = $show_ca ? 'Ca ' . $formatted : $formatted;
-		if ( $pickup_or && $dropoff_or ) {
-			$time_label .= ' X';
-		}
 	}
 
 	return array(

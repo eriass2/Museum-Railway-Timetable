@@ -136,7 +136,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertSame( 'both', $meta['behov_hint'] );
 	}
 
-	public function test_on_request_with_time_shows_ca_and_x_suffix(): void {
+	public function test_on_request_with_time_shows_ca_without_x_suffix(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array_merge(
 				array(
@@ -148,7 +148,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 			)
 		);
 
-		self::assertSame( 'Ca 10.09 X', $meta['time_label'] );
+		self::assertSame( 'Ca 10.09', $meta['time_label'] );
 		self::assertSame( '', $meta['behov_hint'] );
 	}
 
