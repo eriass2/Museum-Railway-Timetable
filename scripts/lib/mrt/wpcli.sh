@@ -55,6 +55,14 @@ mrt_wp_installed() {
 	mrt_wp_cli core is-installed >/dev/null 2>&1
 }
 
+mrt_sync_dev_site_url() {
+	if ! mrt_wp_installed >/dev/null 2>&1; then
+		return 0
+	fi
+	mrt_wp_cli option update siteurl "$MRT_DEV_SITE_URL"
+	mrt_wp_cli option update home "$MRT_DEV_SITE_URL"
+}
+
 mrt_wait_wordpress() {
 	timeout="${1:-120}"
 	interval="${2:-2}"
@@ -70,6 +78,7 @@ mrt_wait_wordpress() {
 		echo "WordPress did not become ready within ${timeout}s." >&2
 		return 1
 	fi
+	mrt_sync_dev_site_url
 }
 
 mrt_wp_eval() {

@@ -13,6 +13,49 @@ $script:MrtPluginItems = @(
 $script:MrtDevSiteUrl = 'http://localhost:8080'
 $script:MrtWpPluginContainerPath = "/var/www/html/wp-content/plugins/$script:MrtPluginSlug"
 
+function Import-MrtDotEnv {
+    param(
+        [Parameter(Mandatory = $true)]
+        [string] $Path
+    )
+
+    if (-not (Test-Path $Path)) {
+        return
+    }
+
+    Get-Content $Path | ForEach-Object {
+        $line = $_.Trim()
+        if ($line -eq '' -or $line.StartsWith('#')) {
+            return
+        }
+        if ($line -match '^\s*([^#=]+)=(.*)$') {
+            $name = $Matches[1].Trim()
+            $value = $Matches[2].Trim().Trim('"').Trim("'")
+            if (-not [Environment]::GetEnvironmentVariable($name)) {
+                [Environment]::SetEnvironmentVariable($name, $value, 'Process')
+            }
+        }
+    }
+}
+
+function Get-MrtDevSiteUrl {
+    if ($env:MRT_DEV_SITE_URL) {
+        return $env:MRT_DEV_SITE_URL
+    }
+    $port = if ($env:MRT_WP_PORT) { $env:MRT_WP_PORT } else { '8080' }
+    return "http://localhost:$port"
+}
+
+function Sync-MrtDevSiteUrl {
+    if (-not (Test-MrtWordPressContainerRunning)) {
+        return
+    }
+
+    $url = Get-MrtDevSiteUrl
+    Invoke-MrtWpCli -WpArgs @('option', 'update', 'siteurl', $url) -AsRoot -NoTty | Out-Null
+    Invoke-MrtWpCli -WpArgs @('option', 'update', 'home', $url) -AsRoot -NoTty | Out-Null
+}
+
 function Resolve-MrtScriptsRoot {
     param(
         [Parameter(Mandatory = $true)]
@@ -48,6 +91,8 @@ function Set-MrtRepoRoot {
     $script:MrtScriptsRoot = Resolve-MrtScriptsRoot -ScriptDirectory $ScriptsDirectory
     $root = (Resolve-Path (Join-Path $script:MrtScriptsRoot '..')).Path
     $script:MrtRepoRoot = $root
+    Import-MrtDotEnv -Path (Join-Path $root '.env')
+    $script:MrtDevSiteUrl = Get-MrtDevSiteUrl
     Set-Location $root
     return $root
 }

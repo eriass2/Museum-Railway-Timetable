@@ -66,6 +66,9 @@ frontend/vue/node_modules/
 # gettext merge backups
 *.po~
 
+# Local Docker port overrides (see .env.example)
+.env
+
 # Deploy config (user-specific Local path)
 local/deploy.config.json
 local/live-deploy.config.json

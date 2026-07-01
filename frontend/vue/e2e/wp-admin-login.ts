@@ -15,7 +15,7 @@ function wpSiteBase(): string {
       return match[1];
     }
   }
-  return process.env.MRT_E2E_WP_SITE_URL || 'http://localhost:8080';
+  return process.env.MRT_E2E_WP_SITE_URL || process.env.MRT_DEV_SITE_URL || 'http://localhost:8080';
 }
 
 export async function loginWpAdmin(page: Page): Promise<void> {

@@ -114,4 +114,6 @@ function Wait-MrtWordPressReady {
         Write-Host "WordPress did not become ready within ${TimeoutSec}s." -ForegroundColor Red
         exit 1
     }
+
+    Sync-MrtDevSiteUrl
 }

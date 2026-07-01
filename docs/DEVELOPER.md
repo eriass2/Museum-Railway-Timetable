@@ -100,9 +100,11 @@ bash scripts/mrt.sh dev reset
 bash scripts/mrt.sh dev reset --build
 ```
 
-- Webbplats: <http://localhost:8080>
+- Webbplats: <http://localhost:8080> (eller din port — se nedan)
 - Admin: <http://localhost:8080/wp-admin>
 - Login: `admin` / `admin`
+
+**Portkonflikt?** Kopiera `.env.example` till `.env` och sätt t.ex. `MRT_WP_PORT=8081`. Starta om stacken (`mrt dev reset`). Skript och Docker Compose läser `.env` automatiskt; WordPress `siteurl`/`home` synkas vid dev reset.
 
 **Quality gates (Docker)** — samma beteende via `mrt` eller root-wrappers:
 
