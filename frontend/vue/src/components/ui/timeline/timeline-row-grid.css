@@ -4,3 +4,8 @@
   gap: var(--mrt-tl-gap);
   align-items: center;
 }
+
+/* Node column spans full row height so vertical line segments connect (J22). */
+.mrt-timeline-row-grid > .mrt-timeline__node-col {
+  align-self: stretch;
+}
