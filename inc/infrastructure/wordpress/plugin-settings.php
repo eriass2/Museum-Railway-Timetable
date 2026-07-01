@@ -9,6 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+require_once MRT_PATH . 'inc/infrastructure/wordpress/dev-localhost-url.php';
+
 /**
  * Default values for mrt_settings (stored in wp_options).
  *
@@ -86,19 +88,7 @@ function MRT_plugin_operator_name(): string {
  * Default hero background image URL for the journey wizard (empty when unset).
  */
 function MRT_rewrite_localhost_plugin_asset_url( string $url ): string {
-	if ( $url === '' || ! preg_match( '#^https?://localhost:\d+#i', $url ) ) {
-		return $url;
-	}
-
-	$plugin_url_path = (string) parse_url( MRT_URL, PHP_URL_PATH );
-	$asset_path      = (string) parse_url( $url, PHP_URL_PATH );
-	if ( $plugin_url_path === '' || $asset_path === '' || ! str_starts_with( $asset_path, $plugin_url_path ) ) {
-		return $url;
-	}
-
-	$relative = ltrim( substr( $asset_path, strlen( $plugin_url_path ) ), '/' );
-
-	return esc_url( MRT_URL . $relative );
+	return MRT_rewrite_localhost_dev_url( $url );
 }
 
 function MRT_plugin_hero_background_url(): string {

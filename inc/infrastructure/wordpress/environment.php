@@ -45,3 +45,5 @@ function MRT_ensure_pretty_permalinks(): bool {
 	flush_rewrite_rules( true );
 	return true;
 }
+
+require_once MRT_PATH . 'inc/infrastructure/wordpress/dev-localhost-url.php';

@@ -5,12 +5,13 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 require_once dirname(__DIR__) . '/wp-stubs.php';
+require_once dirname(__DIR__, 2) . '/inc/infrastructure/wordpress/dev-localhost-url.php';
 require_once dirname(__DIR__, 2) . '/inc/infrastructure/wordpress/plugin-settings.php';
 
 final class PluginSettingsTest extends TestCase {
 
 	protected function tearDown(): void {
-		unset( $GLOBALS['mrt_test_options'], $GLOBALS['mrt_test_filters'] );
+		unset( $GLOBALS['mrt_test_options'], $GLOBALS['mrt_test_filters'], $_SERVER['HTTP_HOST'] );
 		parent::tearDown();
 	}
 
@@ -58,16 +59,19 @@ final class PluginSettingsTest extends TestCase {
 	}
 
 	public function test_rewrite_localhost_plugin_asset_url_uses_current_mrt_url(): void {
+		$GLOBALS['mrt_test_filters']['mrt_is_development_mode'] = static fn (): bool => true;
+		$_SERVER['HTTP_HOST']                                   = 'localhost:8089';
 		$stored = 'http://localhost:8080/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg';
 
 		self::assertSame(
-			'https://example.test/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg',
+			'http://localhost:8089/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg',
 			MRT_rewrite_localhost_plugin_asset_url( $stored )
 		);
 	}
 
 	public function test_plugin_hero_background_url_rewrites_localhost_in_dev_mode(): void {
 		$GLOBALS['mrt_test_filters']['mrt_is_development_mode'] = static fn (): bool => true;
+		$_SERVER['HTTP_HOST']                                   = 'localhost:8089';
 
 		$GLOBALS['mrt_test_options'] = array(
 			'mrt_settings' => array(
@@ -76,7 +80,7 @@ final class PluginSettingsTest extends TestCase {
 		);
 
 		self::assertSame(
-			'https://example.test/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg',
+			'http://localhost:8089/wp-content/plugins/museum-railway-timetable/testdata/images/wizard-hero-bosshus.jpg',
 			MRT_plugin_hero_background_url()
 		);
 	}

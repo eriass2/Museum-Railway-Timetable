@@ -25,6 +25,7 @@ function mrt_validate_required_files( array &$errors, int &$checks ): void {
 		'scripts/docker-dev-reset.ps1',
 		'inc/admin/tools/import-lennakatten.php',
 		'inc/infrastructure/wordpress/environment.php',
+		'inc/infrastructure/wordpress/dev-localhost-url.php',
 		'inc/infrastructure/wordpress/log.php',
 		'inc/infrastructure/wordpress/plugin-settings.php',
 		'inc/assets/loader.php',

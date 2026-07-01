@@ -30,6 +30,7 @@ Invoke-MrtDockerVue -Mode BuildVerify -StreamOutput -ExitOnError
 Invoke-MrtEnsureSvLocale
 Set-MrtWpDebug
 Invoke-MrtDevResetImport
+Sync-MrtDevSiteUrl
 
 Write-Host "`nDone. Front: $script:MrtDevSiteUrl  Admin: $script:MrtDevSiteUrl/wp-admin (admin / admin)`n" -ForegroundColor Green
 Complete-MrtScriptTimings
