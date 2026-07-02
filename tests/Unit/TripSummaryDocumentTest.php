@@ -61,6 +61,20 @@ final class TripSummaryDocumentTest extends TestCase {
 		self::assertStringContainsString( '<td class="price-value">80 kr</td>', $html );
 	}
 
+	public function test_leg_footnotes_render_under_card(): void {
+		$input             = self::SAMPLE_INPUT;
+		$input['legs'][0]['footnotes'] = array(
+			'Säg till konduktören i god tid om du vill stiga av.',
+		);
+		$html = MRT_trip_summary_build_html( $input );
+
+		self::assertStringContainsString( '<div class="trip-footnotes">', $html );
+		self::assertStringContainsString(
+			'Säg till konduktören i god tid om du vill stiga av.',
+			$html
+		);
+	}
+
 	public function test_round_trip_legs_use_side_by_side_table(): void {
 		$input                 = self::SAMPLE_INPUT;
 		$input['tripTypeLabel'] = 'Tur och retur';

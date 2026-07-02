@@ -96,7 +96,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertSame( '', $meta['behov_hint'] );
 	}
 
-	public function test_pickup_only_at_trip_start_hides_pickup_footnote(): void {
+	public function test_pickup_only_at_trip_start_shows_pickup_footnote(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array_merge(
 				array( 'departure_time' => '09:00' ),
@@ -107,7 +107,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 			false
 		);
 
-		self::assertSame( '', $meta['behov_hint'] );
+		self::assertSame( 'pickup', $meta['behov_hint'] );
 	}
 
 	public function test_dropoff_only_at_trip_end_keeps_dropoff_footnote(): void {
@@ -136,7 +136,7 @@ final class StopTimeWizardDisplayTest extends TestCase {
 		self::assertSame( 'both', $meta['behov_hint'] );
 	}
 
-	public function test_on_request_with_time_shows_ca_without_x_suffix(): void {
+	public function test_on_request_with_time_shows_ca_and_dropoff_hint_at_alighting(): void {
 		$meta = MRT_journey_stop_wizard_time_meta(
 			array_merge(
 				array(
@@ -145,11 +145,14 @@ final class StopTimeWizardDisplayTest extends TestCase {
 					'approximate_time' => 1,
 				),
 				MRT_test_stop_modes_both_on_request()
-			)
+			),
+			'arrival',
+			false,
+			true
 		);
 
 		self::assertSame( 'Ca 10.09', $meta['time_label'] );
-		self::assertSame( '', $meta['behov_hint'] );
+		self::assertSame( 'dropoff', $meta['behov_hint'] );
 	}
 
 	public function test_dropoff_only_with_time_keeps_dropoff_footnote_at_alighting(): void {

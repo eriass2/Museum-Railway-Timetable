@@ -131,12 +131,37 @@ function MRT_trip_summary_leg_segments_html( array $leg ): string {
 /**
  * @param array<string, mixed> $leg Trip leg.
  */
+function MRT_trip_summary_leg_footnotes_html( array $leg ): string {
+	$footnotes = $leg['footnotes'] ?? array();
+	if ( ! is_array( $footnotes ) || $footnotes === array() ) {
+		return '';
+	}
+
+	$items = '';
+	foreach ( $footnotes as $note ) {
+		$text = trim( (string) $note );
+		if ( $text !== '' ) {
+			$items .= '<p class="trip-footnote">' . esc_html( $text ) . '</p>';
+		}
+	}
+
+	if ( $items === '' ) {
+		return '';
+	}
+
+	return '<div class="trip-footnotes">' . $items . '</div>';
+}
+
+/**
+ * @param array<string, mixed> $leg Trip leg.
+ */
 function MRT_trip_summary_leg_card_html( array $leg ): string {
 	return '<section class="card"><h2>' . esc_html( (string) ( $leg['heading'] ?? '' ) ) . '</h2>'
 		. '<p class="time">' . esc_html( (string) ( $leg['timeRange'] ?? '' ) ) . '</p>'
 		. '<p class="route">' . esc_html( (string) ( $leg['route'] ?? '' ) )
 		. ' · ' . esc_html( (string) ( $leg['date'] ?? '' ) ) . '</p>'
-		. MRT_trip_summary_leg_segments_html( $leg ) . '</section>';
+		. MRT_trip_summary_leg_segments_html( $leg )
+		. MRT_trip_summary_leg_footnotes_html( $leg ) . '</section>';
 }
 
 /**

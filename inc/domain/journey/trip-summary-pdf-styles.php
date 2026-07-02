@@ -30,6 +30,8 @@ h1 { margin: 0 0 2mm; font-size: 14pt; font-weight: bold; }
 .segments { margin: 1.5mm 0 0; padding: 1.5mm 0 0; border-top: 1px dotted #ccc; list-style: none; padding-left: 0; }
 .segments li { margin: 0 0 1mm; font-size: 8.5pt; }
 .transfer { font-size: 8pt; background: #fff9c4; padding: 1mm 2mm; }
+.trip-footnotes { margin: 1.5mm 0 0; padding: 1.5mm 0 0; border-top: 1px dotted #ccc; }
+.trip-footnote { margin: 0 0 1mm; font-size: 8pt; font-weight: bold; color: #333; }
 .prices { margin-top: 3mm; padding-top: 3mm; border-top: 1px solid #ccc; }
 .prices h2 { margin: 0 0 2mm; font-size: 9.5pt; font-weight: bold; }
 .prices h3 { margin: 0 0 1.5mm; font-size: 8.5pt; font-weight: bold; }

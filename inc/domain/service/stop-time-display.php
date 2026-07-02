@@ -31,9 +31,10 @@ function MRT_stop_time_restriction_footnote_flags(
 	$both_no_time = $pickup_on_request && $dropoff_on_request && ! $has_time;
 	$pickup_only  = $pickup_on_request && ! $dropoff_on_request;
 	$dropoff_only = ! $pickup_on_request && $dropoff_on_request;
+	$both_on_request = $pickup_on_request && $dropoff_on_request;
 	$at_endpoint  = $is_first_in_leg || $is_last_in_leg;
 
-	if ( $both_no_time ) {
+	if ( $both_on_request && ! $has_time ) {
 		return array(
 			'pickup_restriction'  => false,
 			'dropoff_restriction' => $at_endpoint,
@@ -41,8 +42,16 @@ function MRT_stop_time_restriction_footnote_flags(
 		);
 	}
 
+	if ( $both_on_request && $has_time ) {
+		return array(
+			'pickup_restriction'  => $is_first_in_leg,
+			'dropoff_restriction' => $is_last_in_leg,
+			'on_request_both'     => false,
+		);
+	}
+
 	return array(
-		'pickup_restriction'  => false,
+		'pickup_restriction'  => $pickup_only && $is_first_in_leg,
 		'dropoff_restriction' => $dropoff_only && $is_last_in_leg,
 		'on_request_both'     => false,
 	);

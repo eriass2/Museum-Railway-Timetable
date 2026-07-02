@@ -56,6 +56,8 @@ const backdropStyle = computed(() => {
 :root {
   /* Shell-specific; max-width scale in assets/mrt-layout-tokens.css */
   --mrt-app-bleed-outset: min(50px, 5vw);
+  /* Photo bleed behind wizard only — fixed height so expand does not reflow cover. */
+  --mrt-wizard-hero-bleed-height: min(90svh, 52rem);
 }
 </style>
 
@@ -96,17 +98,21 @@ const backdropStyle = computed(() => {
     max-width: none;
     margin-left: calc(-1 * var(--mrt-app-bleed-outset));
     margin-right: calc(100% - 100svw + var(--mrt-app-bleed-outset));
+    background-color: var(--mrt-wizard-green-dark, #1e4d6b);
   }
 
   .mrt-app-shell--bleed-bg .mrt-app-shell__backdrop {
     display: block;
     position: absolute;
     z-index: 0;
-    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--mrt-wizard-hero-bleed-height);
     background-color: var(--mrt-wizard-green-dark, #1e4d6b);
     background-image: var(--mrt-app-shell-bg-image, none);
     background-size: cover;
-    background-position: center;
+    background-position: center top;
     background-repeat: no-repeat;
     pointer-events: none;
   }

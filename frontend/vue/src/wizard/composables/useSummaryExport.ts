@@ -5,6 +5,7 @@ import type { PriceTableLabels } from '../../shared/priceLabels';
 import { printElement } from '../../utils/printElement';
 import { downloadTripSummaryPdf } from '../utils/downloadTripSummaryPdf';
 import { buildTripSummaryInput } from '../utils/tripSummaryBuild';
+import { enrichTripSummaryInputWithFootnotes } from '../utils/tripSummaryFootnotes';
 import type { TripSummaryTextInput } from '../utils/tripSummaryText';
 import { cfgStr } from '../utils/wizardLabels';
 
@@ -54,7 +55,13 @@ export function useSummaryExport(options: SummaryExportOptions) {
     pdfError.value = '';
     pdfDownloading.value = true;
     try {
-      const result = await downloadTripSummaryPdf(buildSummaryInput(), config);
+      const input = await enrichTripSummaryInputWithFootnotes(
+        buildSummaryInput(),
+        store,
+        config,
+        cfg.value,
+      );
+      const result = await downloadTripSummaryPdf(input, config);
       if (!result.ok) {
         pdfError.value = result.message?.trim() || pdfErrorLabel.value;
       }

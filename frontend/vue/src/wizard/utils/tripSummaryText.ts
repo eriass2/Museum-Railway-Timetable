@@ -6,6 +6,8 @@ export type TripSummaryLeg = {
   route: string;
   date: string;
   segments?: ConnectionLegSummaryItem[];
+  /** Behovsuppehåll footnotes (pickup/dropoff copy from wizard cfg). */
+  footnotes?: string[];
 };
 
 export type TripSummaryPriceRow = {
@@ -50,6 +52,10 @@ export function buildTripSummaryText(input: TripSummaryTextInput): string {
         const routePart = detail.route ? ` (${detail.route})` : '';
         lines.push(`  ${detail.vehicleLabel} · ${detail.timeRange}${routePart}`);
       }
+    }
+    const legFootnotes = leg.footnotes?.filter((note) => note.trim() !== '') ?? [];
+    if (legFootnotes.length > 0) {
+      lines.push(...legFootnotes.map((note) => `  ${note}`));
     }
     lines.push('');
   }

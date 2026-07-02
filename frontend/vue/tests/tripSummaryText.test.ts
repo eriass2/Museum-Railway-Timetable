@@ -77,6 +77,25 @@ describe('buildTripSummaryText', () => {
     expect(text).toContain('Buss B1 mot Fjällnora · 17:22 – 17:30 (Selknä → Fjällnora)');
   });
 
+  it('includes behov footnotes under each leg', () => {
+    const text = buildTripSummaryText({
+      title: 'Din resa',
+      downloadName: 'Uppsala → Lövstahagen',
+      tripTypeLabel: 'Enkel resa',
+      legs: [
+        {
+          heading: 'Utresa',
+          route: 'Uppsala Östra → Lövstahagen',
+          timeRange: '10.00 – 11.43',
+          date: '15 juli 2026',
+          footnotes: ['Säg till konduktören i god tid om du vill stiga av.'],
+        },
+      ],
+    });
+
+    expect(text).toContain('Säg till konduktören i god tid om du vill stiga av.');
+  });
+
   it('omits price block when empty', () => {
     const text = buildTripSummaryText({
       title: 'Din resa',

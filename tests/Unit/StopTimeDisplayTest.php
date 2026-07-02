@@ -112,4 +112,17 @@ final class StopTimeDisplayTest extends TestCase {
 		self::assertFalse( $flags['pickup_restriction'] );
 		self::assertTrue( $flags['dropoff_restriction'] );
 	}
+
+	public function test_wizard_footnote_flags_show_pickup_only_at_boarding(): void {
+		$flags = MRT_stop_time_restriction_footnote_flags( true, false, true, true, false );
+		self::assertTrue( $flags['pickup_restriction'] );
+		self::assertFalse( $flags['dropoff_restriction'] );
+	}
+
+	public function test_wizard_footnote_flags_show_dropoff_when_both_on_request_with_time_at_alighting(): void {
+		$flags = MRT_stop_time_restriction_footnote_flags( true, true, true, false, true );
+		self::assertFalse( $flags['pickup_restriction'] );
+		self::assertTrue( $flags['dropoff_restriction'] );
+		self::assertFalse( $flags['on_request_both'] );
+	}
 }

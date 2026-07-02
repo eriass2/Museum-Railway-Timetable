@@ -94,6 +94,7 @@ function MRT_trip_summary_parse_leg( array $leg_raw ): ?array {
 		'timeRange'  => $time_range,
 		'date'       => $date,
 		'segments'   => MRT_trip_summary_parse_segments( $leg_raw['segments'] ?? null ),
+		'footnotes'  => MRT_trip_summary_parse_notes( $leg_raw['footnotes'] ?? null ),
 	);
 
 	return $leg;
