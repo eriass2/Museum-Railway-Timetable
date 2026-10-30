@@ -13,7 +13,23 @@ final class StopTimeDisplayTest extends TestCase {
 
 	public function test_format_time_display_replaces_colon_with_dot(): void {
 		self::assertSame( '10.13', MRT_format_time_display( '10:13' ) );
+		self::assertSame( '25.10', MRT_format_time_display( '25:10' ) );
 		self::assertSame( '', MRT_format_time_display( null ) );
+	}
+
+	public function test_time_past_midnight_stays_in_the_cell(): void {
+		self::assertSame(
+			'Ca 25.10',
+			MRT_format_stop_time_display(
+				array_merge(
+					array(
+						'departure_time'   => '25:10',
+						'approximate_time' => 1,
+					),
+					MRT_test_stop_modes_both_scheduled()
+				)
+			)
+		);
 	}
 
 	public function test_pickup_only_mid_trip_shows_p_suffix(): void {
