@@ -16,7 +16,10 @@ require_once MRT_PATH . 'inc/domain/service/route-stoptimes-editor.php';
 require_once MRT_PATH . 'inc/domain/service/service-end-station.php';
 
 /**
- * Save all stop times for a service.
+ * Replace all stop times for a service.
+ *
+ * Old rows are removed before the new ones are inserted, inside a transaction.
+ * The unique stop-sequence index would reject a second row with the same sequence.
  *
  * @param int                      $service_id Service post ID.
  * @param array<int, array<string, mixed>> $stops Stop rows from client.
@@ -32,21 +35,19 @@ function MRT_save_service_stoptimes_bulk( int $service_id, array $stops ) {
 	}
 
 	global $wpdb;
-	$inserted     = 0;
-	$inserted_ids = array();
+	$wpdb->query( 'START TRANSACTION' );
+	if ( ! MRT_delete_service_stoptime_rows( $wpdb, $service_id ) ) {
+		$wpdb->query( 'ROLLBACK' );
+		return new WP_Error( 'db_delete', __( 'Failed to replace stop times.', MRT_TEXT_DOMAIN ) );
+	}
 	foreach ( $prepared as $row ) {
 		$inserted_id = MRT_insert_prepared_stoptime_for_save_all( $wpdb, $row, $service_id );
 		if ( $inserted_id === false ) {
-			MRT_cleanup_inserted_stoptimes_for_save_all( $wpdb, $inserted_ids );
+			$wpdb->query( 'ROLLBACK' );
 			return new WP_Error( 'db_insert', __( 'Failed to save stop times.', MRT_TEXT_DOMAIN ) );
 		}
-		$inserted_ids[] = $inserted_id;
-		++$inserted;
 	}
-	if ( ! MRT_delete_old_stoptimes_after_save_all( $wpdb, $service_id, $inserted_ids ) ) {
-		MRT_cleanup_inserted_stoptimes_for_save_all( $wpdb, $inserted_ids );
-		return new WP_Error( 'db_delete', __( 'Failed to replace stop times.', MRT_TEXT_DOMAIN ) );
-	}
+	$wpdb->query( 'COMMIT' );
 	MRT_sync_service_end_station_from_stops( $service_id, $stops );
 	return true;
 }

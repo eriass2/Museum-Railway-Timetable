@@ -38,7 +38,7 @@ final class StoptimesSaveBulkTest extends TestCase {
 				array(
 					'station_id' => 1,
 					'stops_here' => '1',
-					'arrival'    => '99:00',
+					'arrival'    => '25:60',
 				),
 			)
 		);
@@ -74,8 +74,10 @@ final class StoptimesSaveBulkTest extends TestCase {
 			self::fail( 'WP_Error: ' . $result->get_error_code() );
 		}
 		self::assertSame( true, $result );
-		self::assertSame( 2, $GLOBALS['wpdb']->insert_count );
-		self::assertTrue( $GLOBALS['wpdb']->query_called );
+		self::assertSame(
+			array( 'START TRANSACTION', 'DELETE', 'INSERT', 'INSERT', 'COMMIT' ),
+			$GLOBALS['wpdb']->events
+		);
 	}
 
 	public function test_save_service_stoptimes_bulk_rolls_back_on_insert_failure(): void {
@@ -96,6 +98,10 @@ final class StoptimesSaveBulkTest extends TestCase {
 
 		self::assertInstanceOf( WP_Error::class, $result );
 		self::assertSame( 'db_insert', $result->get_error_code() );
+		self::assertSame(
+			array( 'START TRANSACTION', 'DELETE', 'INSERT', 'ROLLBACK' ),
+			$wpdb->events
+		);
 	}
 
 	public function test_get_service_stoptimes_editor_payload_requires_route(): void {
@@ -161,13 +167,8 @@ final class StoptimesSaveBulkSuccessDb {
 
 	public int $insert_id = 100;
 
-	public int $insert_count = 0;
-
-	public bool $delete_called = false;
-
-	public bool $query_called = false;
-
-	public int $cleanup_count = 0;
+	/** @var array<int, string> */
+	public array $events = array();
 
 	public function prepare( string $query, ...$args ): string {
 		foreach ( $args as $arg ) {
@@ -182,7 +183,7 @@ final class StoptimesSaveBulkSuccessDb {
 	 */
 	public function insert( $table, $data, $format ) {
 		unset( $table, $data, $format );
-		++$this->insert_count;
+		$this->events[] = 'INSERT';
 		++$this->insert_id;
 		return 1;
 	}
@@ -193,13 +194,12 @@ final class StoptimesSaveBulkSuccessDb {
 	 */
 	public function delete( $table, $data, $where_format = null ) {
 		unset( $table, $data, $where_format );
-		$this->delete_called = true;
+		$this->events[] = 'DELETE';
 		return 1;
 	}
 
 	public function query( string $query ) {
-		unset( $query );
-		$this->query_called = true;
+		$this->events[] = $query;
 		return 1;
 	}
 }
@@ -212,7 +212,8 @@ final class StoptimesSaveBulkFailInsertDb {
 	/** @var string */
 	public $last_error = 'insert failed';
 
-	public int $cleanup_count = 0;
+	/** @var array<int, string> */
+	public array $events = array();
 
 	public function prepare( string $query, ...$args ): string {
 		unset( $args );
@@ -225,6 +226,7 @@ final class StoptimesSaveBulkFailInsertDb {
 	 */
 	public function insert( $table, $data, $format ) {
 		unset( $table, $data, $format );
+		$this->events[] = 'INSERT';
 		return false;
 	}
 
@@ -234,8 +236,13 @@ final class StoptimesSaveBulkFailInsertDb {
 	 */
 	public function delete( $table, $data, $where_format = null ) {
 		unset( $table, $data, $where_format );
-		++$this->cleanup_count;
+		$this->events[] = 'DELETE';
 		return 1;
+	}
+
+	public function query( string $query ) {
+		$this->events[] = $query;
+		return true;
 	}
 }
 

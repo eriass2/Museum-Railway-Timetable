@@ -167,25 +167,18 @@ final class StoptimesSaveAllTest extends TestCase {
         self::assertSame(88, MRT_insert_prepared_stoptime_for_save_all($wpdb, $row, 10));
     }
 
-    public function test_delete_old_stoptimes_keeps_replacement_ids(): void {
+    public function test_delete_service_stoptimes_removes_rows_for_the_service(): void {
         $wpdb = new class {
             public string $prefix = 'wp_';
-            public string $last_error = '';
-            public string $last_query = '';
+            public ?array $deleted = null;
 
-            public function prepare(string $query, ...$args): string {
-                unset($args);
-                return $query;
-            }
-
-            public function query(string $query) {
-                $this->last_query = $query;
-                return 1;
+            public function delete($table, $data, $where_format = null) {
+                $this->deleted = [$table, $data, $where_format];
+                return 2;
             }
         };
 
-        self::assertTrue(MRT_delete_old_stoptimes_after_save_all($wpdb, 10, [88, 89]));
-        self::assertStringContainsString('service_post_id = %d', $wpdb->last_query);
-        self::assertStringContainsString('id NOT IN (88,89)', $wpdb->last_query);
+        self::assertTrue(MRT_delete_service_stoptime_rows($wpdb, 10));
+        self::assertSame(['wp_mrt_stoptimes', ['service_post_id' => 10], ['%d']], $wpdb->deleted);
     }
 }

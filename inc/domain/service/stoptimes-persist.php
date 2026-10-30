@@ -160,31 +160,11 @@ function MRT_insert_prepared_stoptime_for_save_all( $wpdb, array $row, int $serv
 }
 
 /**
- * @param wpdb       $wpdb WordPress DB object.
- * @param array<int> $inserted_ids Row IDs to delete.
+ * Remove every stop time for a service. Call inside a transaction before inserting replacements.
+ *
+ * @param wpdb $wpdb WordPress DB object.
  */
-function MRT_cleanup_inserted_stoptimes_for_save_all( $wpdb, array $inserted_ids ): void {
+function MRT_delete_service_stoptime_rows( $wpdb, int $service_id ): bool {
 	$table = $wpdb->prefix . 'mrt_stoptimes';
-	foreach ( $inserted_ids as $id ) {
-		$wpdb->delete( $table, array( 'id' => (int) $id ), array( '%d' ) );
-	}
-}
-
-/**
- * @param wpdb       $wpdb WordPress DB object.
- * @param int        $service_id Service ID.
- * @param array<int> $replacement_ids Replacement row IDs.
- */
-function MRT_delete_old_stoptimes_after_save_all( $wpdb, int $service_id, array $replacement_ids ): bool {
-	$table = $wpdb->prefix . 'mrt_stoptimes';
-	if ( $replacement_ids === array() ) {
-		return $wpdb->delete( $table, array( 'service_post_id' => $service_id ), array( '%d' ) ) !== false;
-	}
-
-	$in  = implode( ',', array_map( 'intval', $replacement_ids ) );
-	$sql = $wpdb->prepare(
-		"DELETE FROM $table WHERE service_post_id = %d AND id NOT IN ($in)",
-		$service_id
-	);
-	return $wpdb->query( $sql ) !== false;
+	return $wpdb->delete( $table, array( 'service_post_id' => $service_id ), array( '%d' ) ) !== false;
 }
