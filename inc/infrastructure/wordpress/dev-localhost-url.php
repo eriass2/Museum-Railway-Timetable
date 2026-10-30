@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * localhost:PORT from the current HTTP request (development Docker only).
+ * Localhost host and port from the current HTTP request (development Docker only).
  */
 function MRT_dev_request_localhost_host(): ?string {
 	if ( ! isset( $_SERVER['HTTP_HOST'] ) ) {

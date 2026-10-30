@@ -56,13 +56,12 @@ function MRT_enqueue_lennakatten_traffic_info_tokens(): void {
 		return;
 	}
 
-	$color_deps = array( 'mrt-traffic-info-tokens' );
-	if ( function_exists( 'MRT_has_imported_brand_tokens' ) && MRT_has_imported_brand_tokens() ) {
-		// Imported CSV tokens on :root — no static color pack required.
-	} elseif ( wp_style_is( 'mrt-brand-lennakatten-colors', 'enqueued' )
-		|| wp_style_is( 'mrt-brand-lennakatten-colors', 'done' ) ) {
+	$color_deps   = array( 'mrt-traffic-info-tokens' );
+	$has_imported = function_exists( 'MRT_has_imported_brand_tokens' ) && MRT_has_imported_brand_tokens();
+	if ( ! $has_imported && ( wp_style_is( 'mrt-brand-lennakatten-colors', 'enqueued' )
+		|| wp_style_is( 'mrt-brand-lennakatten-colors', 'done' ) ) ) {
 		$color_deps[] = 'mrt-brand-lennakatten-colors';
-	} else {
+	} elseif ( ! $has_imported ) {
 		wp_enqueue_style(
 			'mrt-brand-lennakatten-colors',
 			MRT_URL . 'assets/brand/lennakatten-color-tokens.css',

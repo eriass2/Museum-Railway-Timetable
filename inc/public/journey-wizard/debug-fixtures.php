@@ -198,7 +198,7 @@ function MRT_debug_is_fixture_service_id( int $service_id ): bool {
 /**
  * Stop rows for connection-detail when expanding debug wizard cards (dev only).
  *
- * @return array<int, array<string, mixed>>
+ * @return array<int, list<array<string, bool|string>>>
  */
 function MRT_debug_fixture_connection_stops_by_service(): array {
 	return array(

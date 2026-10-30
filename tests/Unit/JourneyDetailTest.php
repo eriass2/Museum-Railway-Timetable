@@ -141,7 +141,7 @@ final class JourneyDetailTest extends TestCase {
 		self::assertFalse( $detail['stops'][1]['approximate_time'] );
 	}
 
-	public function test_connection_journey_detail_hides_pickup_footnote_at_origin(): void {
+	public function test_connection_journey_detail_shows_pickup_footnote_at_boarding(): void {
 		$GLOBALS['mrt_test_posts'] = array(
 			101 => new WP_Post( (object) array( 'ID' => 101, 'post_title' => 'Start' ) ),
 			102 => new WP_Post( (object) array( 'ID' => 102, 'post_title' => 'End' ) ),
@@ -169,7 +169,7 @@ final class JourneyDetailTest extends TestCase {
 
 		$detail = MRT_get_connection_journey_detail( 501, 101, 102 );
 
-		self::assertSame( '', $detail['stops'][0]['behov_hint'] );
+		self::assertSame( 'pickup', $detail['stops'][0]['behov_hint'] );
 		self::assertSame( 'dropoff', $detail['stops'][1]['behov_hint'] );
 	}
 
