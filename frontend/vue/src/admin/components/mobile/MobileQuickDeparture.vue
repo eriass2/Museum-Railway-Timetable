@@ -50,8 +50,13 @@ const {
       <input
         id="mrt-mobile-departure"
         v-model="departure"
-        type="time"
-        class="widefat"
+        type="text"
+        inputmode="numeric"
+        maxlength="5"
+        placeholder="HH:MM"
+        spellcheck="false"
+        autocomplete="off"
+        class="widefat mrt-service-time"
         :disabled="!canEdit || loading"
       />
     </p>

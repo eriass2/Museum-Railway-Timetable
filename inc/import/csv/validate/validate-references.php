@@ -236,7 +236,7 @@ function MRT_csv_validate_time_field( array $row, string $field, array &$errors 
 	if ( $val === '' ) {
 		return;
 	}
-	if ( ! preg_match( '/^\d{2}:\d{2}$/', $val ) ) {
+	if ( ! preg_match( '/^\d{2}:[0-5]\d$/', $val ) ) {
 		MRT_csv_add_row_error( $row, "Invalid {$field} (expected HH:MM).", $errors );
 	}
 }

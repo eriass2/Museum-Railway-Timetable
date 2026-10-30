@@ -23,7 +23,8 @@ function MRT_get_current_datetime() {
 }
 
 /**
- * Validate time format (HH:MM)
+ * Validate a service-day time (HH:MM). Hours may pass 24, so 25:10 stays 25:10.
+ * The value must fit CHAR(5): two hour digits and minutes 00–59.
  *
  * @param string $s Time string
  * @return bool True if valid or empty
@@ -33,7 +34,7 @@ function MRT_validate_time_hhmm( $s ) {
 	if ( $s === '' || $s === null ) {
 		return true;
 	}
-	return (bool) preg_match( '/^(?:[01]\d|2[0-3]):[0-5]\d$/', $s );
+	return (bool) preg_match( '/^\d{2}:[0-5]\d$/', $s );
 }
 
 /**
@@ -47,7 +48,7 @@ function MRT_validate_date( $s ) {
 }
 
 /**
- * Parse HH:MM to minutes since midnight
+ * Parse HH:MM to minutes from the service-day start. 25:10 is 1510.
  *
  * @param string $hhmm Time string
  * @return int|null Minutes or null if invalid
@@ -61,7 +62,7 @@ function MRT_time_hhmm_to_minutes( $hhmm ) {
 }
 
 /**
- * Compare two HH:MM times (same calendar day)
+ * Compare two service-day times. 25:10 is later than 23:50.
  *
  * @param string $a First time
  * @param string $b Second time
@@ -77,7 +78,7 @@ function MRT_compare_hhmm( $a, $b ) {
 }
 
 /**
- * Add minutes to HH:MM, wrap within same day (cap 23:59)
+ * Add minutes to a service-day time. Result stays within 00:00–99:59.
  *
  * @param string $hhmm Base time
  * @param int    $add  Minutes to add
@@ -88,14 +89,14 @@ function MRT_add_minutes_to_hhmm( $hhmm, $add ) {
 	if ( $base === null ) {
 		return null;
 	}
-	$total = min( 23 * 60 + 59, max( 0, $base + (int) $add ) );
+	$total = min( 99 * 60 + 59, max( 0, $base + (int) $add ) );
 	$h     = intdiv( $total, 60 );
 	$m     = $total % 60;
 	return sprintf( '%02d:%02d', $h, $m );
 }
 
 /**
- * Duration in whole minutes between two HH:MM (same day; no overnight)
+ * Duration in whole minutes between two service-day times. Null when arrival is earlier.
  *
  * @param string $dep Departure HH:MM
  * @param string $arr Arrival HH:MM

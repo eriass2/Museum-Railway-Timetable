@@ -1,8 +1,10 @@
 /** Shared date/time helpers (mirror inc/domain/datetime/datetime.php where applicable). */
 
 const YMD_RE = /^\d{4}-\d{2}-\d{2}$/;
-const HHMM_RE = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
-const HHMM_LOOSE_RE = /^\d{1,2}:\d{2}$/;
+/** Service-day HH:MM. Hours may pass 24; the value must fit CHAR(5). */
+const HHMM_RE = /^\d{2}:[0-5]\d$/;
+const HHMM_LOOSE_RE = /^(\d{1,2}):([0-5]\d)$/;
+const SERVICE_DAY_MAX_MINUTES = 99 * 60 + 59;
 
 export function validateYmd(value: string): boolean {
   return YMD_RE.test(value);
@@ -22,7 +24,7 @@ export function hhmmToMinutes(hhmm: string): number | null {
 }
 
 export function minutesToHhmm(minutes: number): string {
-  const clamped = Math.max(0, Math.min(1439, Math.floor(minutes)));
+  const clamped = Math.max(0, Math.min(SERVICE_DAY_MAX_MINUTES, Math.floor(minutes)));
   const h = Math.floor(clamped / 60);
   const m = clamped % 60;
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;

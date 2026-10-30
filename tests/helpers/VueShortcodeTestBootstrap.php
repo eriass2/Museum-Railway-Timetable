@@ -31,15 +31,7 @@ function MRT_test_boot_journey_wizard_shortcode(): void {
 	MRT_test_install_vue_mount_stub();
 
 	if ( ! function_exists( 'MRT_journey_wizard_debug_presets' ) ) {
-		/**
-		 * @return array<string, array<string, mixed>>
-		 */
-		function MRT_journey_wizard_debug_presets(): array {
-			return array(
-				'date'     => array(),
-				'outbound' => array(),
-			);
-		}
+		require_once ABSPATH . 'inc/public/journey-wizard/debug-fixtures.php';
 	}
 
 	require_once ABSPATH . 'inc/public/journey-wizard/timetable.php';

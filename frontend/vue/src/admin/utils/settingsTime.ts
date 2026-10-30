@@ -1,8 +1,9 @@
 import { hhmmToMinutes, minutesToHhmm } from '../../utils/datetime';
 
-/** Convert minutes-from-midnight to HTML time input value (HH:MM). */
+/** Convert a clock time to an HTML time input. HTML time cannot pass 23:59. */
 export function minutesToTimeInput(minutes: number): string {
-  return minutesToHhmm(minutes);
+  const clock = Math.max(0, Math.min(23 * 60 + 59, Math.floor(minutes)));
+  return minutesToHhmm(clock);
 }
 
 /** Parse HTML time input (HH:MM) to minutes-from-midnight. */

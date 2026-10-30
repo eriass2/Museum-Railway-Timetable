@@ -65,8 +65,13 @@ const { draft, saving, openDialog, closeDialog, save } = useOverviewGridCellDial
         <span>{{ adminStr(cfg, 'stopTimesColArrival') }}</span>
         <input
           v-model="draft.arrival"
-          type="time"
-          class="mrt-input"
+          type="text"
+          inputmode="numeric"
+          maxlength="5"
+          placeholder="HH:MM"
+          spellcheck="false"
+          autocomplete="off"
+          class="mrt-input mrt-service-time"
           :disabled="!draft.stopsHere"
           @change="draft.stopsHere = true"
         />
@@ -75,8 +80,13 @@ const { draft, saving, openDialog, closeDialog, save } = useOverviewGridCellDial
         <span>{{ adminStr(cfg, 'stopTimesColDeparture') }}</span>
         <input
           v-model="draft.departure"
-          type="time"
-          class="mrt-input"
+          type="text"
+          inputmode="numeric"
+          maxlength="5"
+          placeholder="HH:MM"
+          spellcheck="false"
+          autocomplete="off"
+          class="mrt-input mrt-service-time"
           :disabled="!draft.stopsHere"
           @change="draft.stopsHere = true"
         />

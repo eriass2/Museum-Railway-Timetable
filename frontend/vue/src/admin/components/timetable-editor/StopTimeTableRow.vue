@@ -18,16 +18,26 @@ defineProps<{
     <td>
       <input
         v-model="row.arrival_time"
-        type="time"
-        class="mrt-input"
+        type="text"
+        inputmode="numeric"
+        maxlength="5"
+        placeholder="HH:MM"
+        spellcheck="false"
+        autocomplete="off"
+        class="mrt-input mrt-service-time"
         :disabled="!canEditTimes"
       />
     </td>
     <td>
       <input
         v-model="row.departure_time"
-        type="time"
-        class="mrt-input"
+        type="text"
+        inputmode="numeric"
+        maxlength="5"
+        placeholder="HH:MM"
+        spellcheck="false"
+        autocomplete="off"
+        class="mrt-input mrt-service-time"
         :disabled="!canEditTimes"
       />
     </td>

@@ -15,12 +15,24 @@ final class StoptimesSaveAllTest extends TestCase {
         $result = MRT_prepare_stoptimes_for_save_all([[
             'station_id' => 1,
             'stops_here' => '1',
-            'arrival' => '25:00',
+            'arrival' => '25:60',
             'departure' => '09:00',
         ]]);
 
         self::assertInstanceOf(WP_Error::class, $result);
         self::assertSame('invalid_time', $result->get_error_code());
+    }
+
+    public function test_prepare_stoptimes_keeps_time_past_midnight(): void {
+        $result = MRT_prepare_stoptimes_for_save_all([[
+            'station_id' => 1,
+            'stops_here' => '1',
+            'departure' => '25:10',
+        ]]);
+
+        self::assertIsArray($result);
+        self::assertSame('25:10', $result[0]['arrival_time']);
+        self::assertSame('25:10', $result[0]['departure_time']);
     }
 
     public function test_prepare_stoptimes_omits_non_stopping_rows(): void {
@@ -155,25 +167,18 @@ final class StoptimesSaveAllTest extends TestCase {
         self::assertSame(88, MRT_insert_prepared_stoptime_for_save_all($wpdb, $row, 10));
     }
 
-    public function test_delete_old_stoptimes_keeps_replacement_ids(): void {
+    public function test_delete_service_stoptimes_removes_rows_for_the_service(): void {
         $wpdb = new class {
             public string $prefix = 'wp_';
-            public string $last_error = '';
-            public string $last_query = '';
+            public ?array $deleted = null;
 
-            public function prepare(string $query, ...$args): string {
-                unset($args);
-                return $query;
-            }
-
-            public function query(string $query) {
-                $this->last_query = $query;
-                return 1;
+            public function delete($table, $data, $where_format = null) {
+                $this->deleted = [$table, $data, $where_format];
+                return 2;
             }
         };
 
-        self::assertTrue(MRT_delete_old_stoptimes_after_save_all($wpdb, 10, [88, 89]));
-        self::assertStringContainsString('service_post_id = %d', $wpdb->last_query);
-        self::assertStringContainsString('id NOT IN (88,89)', $wpdb->last_query);
+        self::assertTrue(MRT_delete_service_stoptime_rows($wpdb, 10));
+        self::assertSame(['wp_mrt_stoptimes', ['service_post_id' => 10], ['%d']], $wpdb->deleted);
     }
 }

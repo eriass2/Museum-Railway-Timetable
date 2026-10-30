@@ -67,7 +67,7 @@ watch(serviceId, () => {
 </template>
 
 <style scoped>
-.mrt-admin-stoptimes :deep(input[type='time']) {
+.mrt-admin-stoptimes :deep(input.mrt-service-time) {
   max-width: 8em;
 }
 </style>

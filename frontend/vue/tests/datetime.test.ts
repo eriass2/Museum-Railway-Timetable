@@ -15,23 +15,29 @@ describe('datetime', () => {
     expect(validateYmd('2026-06-09')).toBe(true);
     expect(validateYmd('2026-6-09')).toBe(false);
     expect(validateHhmm('15:00')).toBe(true);
+    expect(validateHhmm('25:10')).toBe(true);
     expect(validateHhmm('')).toBe(true);
-    expect(validateHhmm('25:00')).toBe(false);
+    expect(validateHhmm('25:60')).toBe(false);
   });
 
   it('converts between minutes and HH:MM', () => {
     expect(hhmmToMinutes('15:00')).toBe(900);
     expect(minutesToHhmm(900)).toBe('15:00');
+    expect(hhmmToMinutes('25:10')).toBe(1510);
+    expect(minutesToHhmm(1510)).toBe('25:10');
     expect(hhmmToMinutes('bad')).toBeNull();
   });
 
   it('pads loose HH:MM input', () => {
     expect(padHhmm('9:05')).toBe('09:05');
+    expect(padHhmm('25:10')).toBe('25:10');
+    expect(padHhmm('25:60')).toBe('');
     expect(padHhmm('')).toBe('');
   });
 
   it('formats display strings', () => {
     expect(formatHhmmForDisplay('10:30')).toBe('10.30');
+    expect(formatHhmmForDisplay('25:10')).toBe('25.10');
     expect(formatHhmmForDisplay('')).toBe('—');
     expect(formatYmdForDisplay('2026-03-15', ['januari', 'februari', 'mars'])).toBe('15 mars 2026');
   });

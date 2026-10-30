@@ -17,6 +17,8 @@ Lagras i `{prefix}_mrt_stoptimes` tillsammans med tider och fyra mode-fält (sch
 |--------------------|-----|-------------------|
 | 0 | HH:MM | `10.35` |
 | 1 | HH:MM | `Ca 10.13` (Ca direkt före siffrorna) |
+| 0 | tid efter midnatt | `25.10` |
+| 1 | tid efter midnatt | `Ca 25.10` |
 | — | ingen tid, P+A | `X` (behovsuppehåll) |
 
 **P/A/X** styrs av modes/fotnoter. **Ca** styrs enbart av `approximate_time`.
