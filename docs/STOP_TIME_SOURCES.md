@@ -70,8 +70,8 @@ Tecken mappas **per kolumn** i B (Ank respektive Avg). Ett tecken i en kolumn ge
 
 | Kolumn | Betydelse |
 |--------|-----------|
-| `arrival_time` | Ank `HH:MM` (NULL om ej i B) |
-| `departure_time` | Avg `HH:MM` (NULL om ej i B) |
+| `arrival_time` | Ank `HH:MM` (NULL om ej i B). Timmar kan passera 24, till exempel `25:10` |
+| `departure_time` | Avg `HH:MM` (NULL om ej i B). Samma timspann, `00`–`99` |
 
 Endpoint-trimning oförändrad (första stopp utan ankomst, sista utan avgång).
 
@@ -218,6 +218,8 @@ flowchart TB
 3. Lägg till: `ank_pickup_mode`, `ank_dropoff_mode`, `avg_pickup_mode`, `avg_dropoff_mode`, `in_service_timetable` (+ behåll `approximate_time`).
 4. Samma PR: PHP, REST, Vue, CSV, tester.
 5. `.\scripts\docker-dev-reset.ps1` + omimport.
+
+Aktuell version är `4`. `service_seq` är en unik nyckel på `(service_post_id, stop_sequence)`. Finns dubbletter höjs versionen inte och inga rader tas bort.
 
 ---
 

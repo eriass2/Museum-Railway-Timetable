@@ -229,8 +229,8 @@ Flera rader per tur om flera tågtyper ska kopplas.
 | `service_code` | ja | string | FK |
 | `sequence` | ja | int | 1-baserad ordning längs rutten |
 | `station_code` | ja | string | FK |
-| `arrival_time` | nej | time | `HH:MM` eller tomt |
-| `departure_time` | nej | time | `HH:MM` eller tomt |
+| `arrival_time` | nej | time | `HH:MM` (timmar 00–99, till exempel `25:10`) eller tomt |
+| `departure_time` | nej | time | `HH:MM` (timmar 00–99, till exempel `25:10`) eller tomt |
 | `pickup_allowed` | ja | 0\|1 | Får stiga på |
 | `dropoff_allowed` | ja | 0\|1 | Får stiga av |
 | `approximate_time` | nej | 0\|1 | Visa **Ca** före tiden i reseplaneraren (default 0) |
@@ -351,7 +351,7 @@ Validering körs **alltid före** någon databasändring.
 - `sequence` unik per `service_code` respektive `route_code`.
 - `station_code` i `stoptimes` ingår i turens rutt.
 - Datum: giltigt `YYYY-MM-DD`.
-- Tider: giltigt `HH:MM` eller tomt.
+- Tider: `HH:MM` med timmar 00–99 och minuter 00–59, eller tomt. `25:10` är giltigt.
 
 ### 5.2 Delimport
 

@@ -383,7 +383,7 @@ CREATE TABLE {prefix}_mrt_stoptimes (
         dropoff_allowed TINYINT(1) DEFAULT 1,
         approximate_time TINYINT(1) DEFAULT 0,
         PRIMARY KEY (id),
-    KEY service_seq (service_post_id, stop_sequence),
+    UNIQUE KEY service_seq (service_post_id, stop_sequence),
     KEY station (station_post_id)
 )
 ```
@@ -393,12 +393,12 @@ CREATE TABLE {prefix}_mrt_stoptimes (
 - `service_post_id` (BIGINT) - Foreign key to `wp_posts.ID` (mrt_service)
 - `station_post_id` (BIGINT) - Foreign key to `wp_posts.ID` (mrt_station)
 - `stop_sequence` (INT) - Order of stop in service route (1, 2, 3, ...)
-- `arrival_time` (CHAR(5)) - Arrival time in HH:MM format (nullable)
-  - Can be NULL if the train stops but the time is not fixed
-  - Example: "09:15" or NULL
-- `departure_time` (CHAR(5)) - Departure time in HH:MM format (nullable)
-  - Can be NULL if the train stops but the time is not fixed
-  - Example: "09:20" or NULL
+- `arrival_time` (CHAR(5)) - Arrival time as `HH:MM` from the service-day start (nullable)
+  - Hours may pass 24, through `99:59`. `25:10` is 25 hours and 10 minutes after the service day starts
+  - Example: "09:15", "25:10", or NULL
+- `departure_time` (CHAR(5)) - Departure time as `HH:MM` from the service-day start (nullable)
+  - Same hour range as arrival. `25:10` sorts after `23:59`
+  - Example: "09:20", "25:10", or NULL
 - `pickup_allowed` (TINYINT) - Whether passengers can board (default: 1)
 - `dropoff_allowed` (TINYINT) - Whether passengers can alight (default: 1)
 - `approximate_time` (TINYINT) - Show **Ca** prefix in journey wizard (default: 0). See [STOP_TIME_CA.md](STOP_TIME_CA.md).
@@ -411,7 +411,7 @@ CREATE TABLE {prefix}_mrt_stoptimes (
 
 **Indexes:**
 - Primary key on `id`
-- Composite index on `(service_post_id, stop_sequence)` for efficient service route queries
+- Unique index `service_seq` on `(service_post_id, stop_sequence)` (schema version 4)
 - Index on `station_post_id` for efficient station queries
 
 **Usage:**
@@ -606,10 +606,10 @@ The plugin provides a visual overview of timetables that groups services (trips)
 
 ### Constraints
 - **Stop Times**: `service_post_id` and `station_post_id` must reference valid posts
-- **Stop Sequence**: Must be unique per service (enforced in application logic)
+- **Stop Sequence**: Unique per service, enforced by `UNIQUE KEY service_seq`
 
 ### Validation
-- Time formats: HH:MM (24-hour format)
+- Time formats: `HH:MM`, hours `00`–`99` and minutes `00`–`59`. `25:10` is valid. `25:60` is not
 - Date formats: YYYY-MM-DD
 - Station types: Whitelist validation (station, halt, depot, museum)
 - Display order: Integer >= 0
