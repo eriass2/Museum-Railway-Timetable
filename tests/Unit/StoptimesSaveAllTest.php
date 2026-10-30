@@ -15,12 +15,24 @@ final class StoptimesSaveAllTest extends TestCase {
         $result = MRT_prepare_stoptimes_for_save_all([[
             'station_id' => 1,
             'stops_here' => '1',
-            'arrival' => '25:00',
+            'arrival' => '25:60',
             'departure' => '09:00',
         ]]);
 
         self::assertInstanceOf(WP_Error::class, $result);
         self::assertSame('invalid_time', $result->get_error_code());
+    }
+
+    public function test_prepare_stoptimes_keeps_time_past_midnight(): void {
+        $result = MRT_prepare_stoptimes_for_save_all([[
+            'station_id' => 1,
+            'stops_here' => '1',
+            'departure' => '25:10',
+        ]]);
+
+        self::assertIsArray($result);
+        self::assertSame('25:10', $result[0]['arrival_time']);
+        self::assertSame('25:10', $result[0]['departure_time']);
     }
 
     public function test_prepare_stoptimes_omits_non_stopping_rows(): void {

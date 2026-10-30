@@ -62,9 +62,9 @@ test.describe('Vue admin timetable flow', () => {
 
     await page.locator('.nav-tab', { hasText: 'Stopptider' }).click();
     await page.getByRole('button', { name: 'Stopptider' }).first().click();
-    const depInput = page.locator('.mrt-admin-stoptimes input[type="time"]').first();
+    const depInput = page.locator('.mrt-admin-stoptimes input.mrt-service-time').first();
     await expect(depInput).toBeVisible({ timeout: 15_000 });
-    await depInput.fill('09:30');
+    await depInput.fill('25:10');
     await page.getByRole('button', { name: 'Spara stopptider' }).click();
     await expect(page.getByText('Stopptider sparade')).toBeVisible({ timeout: 15_000 });
 
